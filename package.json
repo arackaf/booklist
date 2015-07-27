@@ -1,0 +1,13 @@
+{
+  "name": "Booklist",
+  "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "4.x"
+  },
+  "devDependencies": {
+    "mongodb": "^2.0.39",
+    "body-parser": "^1.13.2",
+    "apac": "^1.0.0"
+  }
+}
