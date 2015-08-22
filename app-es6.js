@@ -1,5 +1,3 @@
-'use strict';
-
 var express = require('express');
 var app = express();
 var path = require("path");
@@ -7,15 +5,13 @@ var bodyParser = require('body-parser');
 var AmazonSearch = require('./amazonDataAccess/AmazonSearch.js');
 var BookDAO = require('./dataAccess/BookDAO.js');
 
+
 var aSearch = new AmazonSearch(),
     bookDAO = new BookDAO(1);
-aSearch.lookupBook('0679764410').then(function (book) {
-    return bookDAO.saveBook(book);
-}).then(function () {
-    return console.log('Book Saved');
-});
+aSearch.lookupBook('0679764410').then(book => bookDAO.saveBook(book)).then(() => console.log('Book Saved'));
 
-0 && MongoClient.connect('mongodb://localhost:27017/mongotest').then(function (db) {
+
+0 && MongoClient.connect('mongodb://localhost:27017/mongotest').then(function(db){
     try {
         //db.collections(function(e, cols) {
         //    cols.forEach(function(col) {
@@ -26,7 +22,7 @@ aSearch.lookupBook('0679764410').then(function (book) {
         var foo = db.collection('foo');
         var fooResults = foo.find();
 
-        fooResults.forEach(function (item) {
+        fooResults.forEach(function(item){
             console.log(item);
         });
 
@@ -35,16 +31,14 @@ aSearch.lookupBook('0679764410').then(function (book) {
     } catch (ex) {
         console.log(ex);
     } finally {
-        setTimeout(function () {
-            db.close();
-        }, 2000);
+        setTimeout(function(){ db.close(); }, 2000);
     }
 });
 
 if (0) {
 
-    app.use(bodyParser.json()); // to support JSON-encoded bodies
-    app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
+    app.use(bodyParser.json());       // to support JSON-encoded bodies
+    app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
         extended: true
     }));
 
