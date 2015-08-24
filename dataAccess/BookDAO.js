@@ -21,36 +21,40 @@ var DAO = (function () {
             var _this = this;
 
             var result = MongoClient.connect('mongodb://localhost:27017/mongotest');
-            Promise.resolve(result).then(function (db) {
-                return _this.db = db;
+
+            //handling error like this will keep the resulting promise in error state
+            result['catch'](function (err) {
+                _this.logError('Error connecting ' + err);
             });
             return result;
         }
     }, {
         key: 'confirmSingleResult',
         value: function confirmSingleResult(res) {
-            if (+res.result.n !== 1) {
+            var numInserted = +res.result.n;
+            if (!numInserted) {
                 throw 'Object not inserted';
+            }
+            if (numInserted > 1) {
+                throw 'Expected 1 object to be inserted.  Actual ' + numInserted;
             }
         }
     }, {
-        key: 'processSingleResultAndClose',
-        value: function processSingleResultAndClose(p) {
-            var _this2 = this;
-
-            return p.then(function (result) {
-                _this2.confirmSingleResult(result);
-                _this2.dispose();
-            }, function (err) {
-                _this2.dispose();
-                console.log(err);
-                throw err;
-            });
+        key: 'logError',
+        value: function logError(err) {
+            console.log(err);
+        }
+    }, {
+        key: 'logErrorAndReThrow',
+        value: function logErrorAndReThrow(err) {
+            this.logError(err);
+            throw err;
         }
     }, {
         key: 'dispose',
-        value: function dispose() {
-            this.db.close();
+        value: function dispose(db) {
+            db.close();
+            console.log('DISPOSED');
         }
     }]);
 
@@ -70,12 +74,45 @@ var BookDAO = (function (_DAO) {
     _createClass(BookDAO, [{
         key: 'saveBook',
         value: function saveBook(book) {
-            var _this3 = this;
+            var db, result;
+            return regeneratorRuntime.async(function saveBook$(context$2$0) {
+                while (1) switch (context$2$0.prev = context$2$0.next) {
+                    case 0:
+                        context$2$0.next = 2;
+                        return regeneratorRuntime.awrap(_get(Object.getPrototypeOf(BookDAO.prototype), 'open', this).call(this));
 
-            return _get(Object.getPrototypeOf(BookDAO.prototype), 'open', this).call(this).then(function (db) {
-                book.userId = _this3.userId;
-                return _get(Object.getPrototypeOf(BookDAO.prototype), 'processSingleResultAndClose', _this3).call(_this3, db.collection('books').insert(book));
-            });
+                    case 2:
+                        db = context$2$0.sent;
+                        context$2$0.prev = 3;
+
+                        book.userId = this.userId;
+                        context$2$0.next = 7;
+                        return regeneratorRuntime.awrap(db.collection('books').insert(book));
+
+                    case 7:
+                        result = context$2$0.sent;
+
+                        _get(Object.getPrototypeOf(BookDAO.prototype), 'confirmSingleResult', this).call(this, result);
+                        context$2$0.next = 14;
+                        break;
+
+                    case 11:
+                        context$2$0.prev = 11;
+                        context$2$0.t0 = context$2$0['catch'](3);
+
+                        _get(Object.getPrototypeOf(BookDAO.prototype), 'logErrorAndReThrow', this).call(this, context$2$0.t0);
+
+                    case 14:
+                        context$2$0.prev = 14;
+
+                        _get(Object.getPrototypeOf(BookDAO.prototype), 'dispose', this).call(this, db);
+                        return context$2$0.finish(14);
+
+                    case 17:
+                    case 'end':
+                        return context$2$0.stop();
+                }
+            }, null, this, [[3, 11, 14, 17]]);
         }
     }]);
 

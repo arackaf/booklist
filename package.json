@@ -3,7 +3,9 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.0.1",
   "dependencies": {
-    "express": "4.x"
+    "express": "4.x",
+    "promise": "^7.0.4",
+    "regenerator": "^0.8.36"
   },
   "devDependencies": {
     "mongodb": "^2.0.39",
