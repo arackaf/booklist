@@ -3,26 +3,32 @@ var MongoClient = require('mongodb').MongoClient;
 class DAO{
     open(){
         let result = MongoClient.connect('mongodb://localhost:27017/mongotest');
-        Promise.resolve(result).then(db => this.db = db);
+
+        //handling error like this will keep the resulting promise in error state
+        result.catch(err => {
+            this.logError('Error connecting ' + err);
+        });
         return result;
     }
     confirmSingleResult(res){
-        if (+res.result.n !== 1) {
+        let numInserted = +res.result.n;
+        if (!numInserted) {
             throw 'Object not inserted';
         }
+        if (numInserted > 1){
+            throw 'Expected 1 object to be inserted.  Actual ' + numInserted;
+        }
     }
-    processSingleResultAndClose(p){
-        return p.then(result => {
-            this.confirmSingleResult(result);
-            this.dispose();
-        }, err => {
-            this.dispose();
-            console.log(err);
-            throw err;
-        });
+    logError(err){
+        console.log(err);
     }
-    dispose(){
-        this.db.close();
+    logErrorAndReThrow(err){
+        this.logError(err);
+        throw err;
+    }
+    dispose(db){
+        db.close();
+        console.log('DISPOSED');
     }
 }
 
@@ -31,13 +37,17 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    saveBook(book){
-        return super.open().then(db => {
+    async saveBook(book){
+        let db = await super.open();
+        try {
             book.userId = this.userId;
-            return super.processSingleResultAndClose(
-                db.collection('books').insert(book)
-            );
-        });
+            let result = await db.collection('books').insert(book);
+            super.confirmSingleResult(result);
+        } catch (err){
+            super.logErrorAndReThrow(err);
+        } finally {
+            super.dispose(db);
+        }
     }
 }
 

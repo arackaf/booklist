@@ -5,10 +5,12 @@ var bodyParser = require('body-parser');
 var AmazonSearch = require('./amazonDataAccess/AmazonSearch.js');
 var BookDAO = require('./dataAccess/BookDAO.js');
 
+require('regenerator/runtime');
+global.Promise = require('promise');
 
 var aSearch = new AmazonSearch(),
     bookDAO = new BookDAO(1);
-aSearch.lookupBook('0679764410').then(book => bookDAO.saveBook(book)).then(() => console.log('Book Saved'));
+aSearch.lookupBook('0679764410').then(book => bookDAO.saveBook(book)).then(() => console.log('Book Saved'), err => console.log('Oops - error', err));
 
 
 0 && MongoClient.connect('mongodb://localhost:27017/mongotest').then(function(db){
