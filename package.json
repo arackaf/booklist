@@ -5,7 +5,8 @@
   "dependencies": {
     "express": "4.x",
     "promise": "^7.0.4",
-    "regenerator": "^0.8.36"
+    "regenerator": "^0.8.36",
+    "es6-symbol": "^2.0.1"
   },
   "devDependencies": {
     "mongodb": "^2.0.39",

@@ -40,17 +40,6 @@ var DAO = (function () {
             }
         }
     }, {
-        key: 'logError',
-        value: function logError(err) {
-            console.log(err);
-        }
-    }, {
-        key: 'logErrorAndReThrow',
-        value: function logErrorAndReThrow(err) {
-            this.logError(err);
-            throw err;
-        }
-    }, {
         key: 'dispose',
         value: function dispose(db) {
             db.close();
@@ -93,26 +82,18 @@ var BookDAO = (function (_DAO) {
                         result = context$2$0.sent;
 
                         _get(Object.getPrototypeOf(BookDAO.prototype), 'confirmSingleResult', this).call(this, result);
-                        context$2$0.next = 14;
-                        break;
 
-                    case 11:
-                        context$2$0.prev = 11;
-                        context$2$0.t0 = context$2$0['catch'](3);
-
-                        _get(Object.getPrototypeOf(BookDAO.prototype), 'logErrorAndReThrow', this).call(this, context$2$0.t0);
-
-                    case 14:
-                        context$2$0.prev = 14;
+                    case 9:
+                        context$2$0.prev = 9;
 
                         _get(Object.getPrototypeOf(BookDAO.prototype), 'dispose', this).call(this, db);
-                        return context$2$0.finish(14);
+                        return context$2$0.finish(9);
 
-                    case 17:
+                    case 12:
                     case 'end':
                         return context$2$0.stop();
                 }
-            }, null, this, [[3, 11, 14, 17]]);
+            }, null, this, [[3,, 9, 12]]);
         }
     }]);
 

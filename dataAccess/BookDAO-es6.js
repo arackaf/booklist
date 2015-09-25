@@ -19,13 +19,6 @@ class DAO{
             throw 'Expected 1 object to be inserted.  Actual ' + numInserted;
         }
     }
-    logError(err){
-        console.log(err);
-    }
-    logErrorAndReThrow(err){
-        this.logError(err);
-        throw err;
-    }
     dispose(db){
         db.close();
         console.log('DISPOSED');
@@ -43,8 +36,6 @@ class BookDAO extends DAO {
             book.userId = this.userId;
             let result = await db.collection('books').insert(book);
             super.confirmSingleResult(result);
-        } catch (err){
-            super.logErrorAndReThrow(err);
         } finally {
             super.dispose(db);
         }
