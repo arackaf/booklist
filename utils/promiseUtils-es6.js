@@ -1,5 +1,3 @@
-var Promise = global.Promise;
-
 Promise.delayed = function(f){
     let resolve,
         p = new Promise(res => resolve = res),

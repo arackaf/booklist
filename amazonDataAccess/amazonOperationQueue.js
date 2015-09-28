@@ -76,4 +76,7 @@ function currentlyNeededDelay() {
     return Math.max(neededDelay, 0); //might be negative, in which case we need no delay
 }
 
-module.exports = new AmazonQueue();
+module.exports = {
+    AmazonQueue: AmazonQueue,
+    amazonOperationQueue: new AmazonQueue()
+};

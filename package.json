@@ -6,7 +6,11 @@
     "express": "4.x",
     "promise": "^7.0.4",
     "regenerator": "^0.8.36",
-    "es6-symbol": "^2.0.1"
+    "es6-symbol": "^2.0.1",
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3",
+	"gulp": "^3.9.0",
+    "gulp-mocha": "^2.1.3"
   },
   "devDependencies": {
     "mongodb": "^2.0.39",
