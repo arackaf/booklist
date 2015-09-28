@@ -10,7 +10,7 @@ var path = require("path");
 var bodyParser = require('body-parser');
 var AmazonSearch = require('./amazonDataAccess/AmazonSearch.js');
 var BookDAO = require('./dataAccess/BookDAO.js');
-var amazonOperationQueue = require('./amazonDataAccess/amazonOperationQueue');
+var { amazonOperationQueue } = require('./amazonDataAccess/amazonOperationQueue');
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies

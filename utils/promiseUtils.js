@@ -1,7 +1,5 @@
 "use strict";
 
-var Promise = global.Promise;
-
 Promise.delayed = function (f) {
     var resolve = undefined,
         p = new Promise(function (res) {
