@@ -24,6 +24,9 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 app.listen(3000);
 
+var easyControllers = require('easy-express-controllers').easyControllers;
+easyControllers.createController(app, 'bookController');
+
 app.get('/react', function (request, response) {
     response.sendFile(path.join(__dirname + '/react/default.htm'));
 });
