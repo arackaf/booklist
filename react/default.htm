@@ -17,6 +17,24 @@
             })
         }
 
+        function details(){
+            $.ajax('/bookController/details', {
+                method: 'get',
+                success: function(res){
+                    debugger;
+                }
+            })
+        }
+
+        function save(){
+            $.ajax('/bookController/save', {
+                method: 'post',
+                success: function(res){
+                    debugger;
+                }
+            })
+        }
+
     </script>
 
 </head>
@@ -27,5 +45,9 @@
         ISBN <input name="book1" >
         <button onclick="go()">Run</button>
     </div>
+
+    <button onclick="details()">Book details</button>
+    <button onclick="save()">Book save</button>
+
 </body>
 </html>
