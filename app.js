@@ -24,6 +24,8 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 app.listen(3000);
 
+app.use(express['static']('scripts'));
+
 app.get('/react', function (request, response) {
     response.sendFile(path.join(__dirname + '/react/default.htm'));
 });
