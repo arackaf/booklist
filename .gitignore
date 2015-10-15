@@ -4,3 +4,6 @@ utils/awsCredentials.js
 startMongo.bat
 react/components/firstComponent.js
 react/store.js
+react/modules/bookEntry/bookEntry.js
+react/modules/bookEntry/components/bookEntryItem.js
+react/modules/bookEntry/components/bookEntryList.js
