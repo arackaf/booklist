@@ -8,6 +8,8 @@
     <script type="text/javascript" src="/scripts/system.js"></script>
     <script type="text/javascript" src="/scripts/react.js"></script>
     <script type="text/javascript" src="/scripts/react-dom.js"></script>
+    <script type="text/javascript" src="/scripts/redux.js"></script>
+    <script type="text/javascript" src="/scripts/react-redux.js"></script>
 
     <script type="text/javascript">
 
@@ -16,8 +18,12 @@
             defaultJSExtensions: true
         });
 
-        System.import('/react/components/firstComponent').then(function(C){
-            ReactDOM.render(React.createElement(C, { from: 'Adam' }), document.getElementById('home'));
+        Promise.all([
+            System.import('/react/components/firstComponent')
+        ]).then(function(arr){
+            var C = arr[0];
+
+            //ReactDOM.render(React.createElement(C, { from: 'Adam' }), document.getElementById('home'));
         });
 
 
@@ -42,12 +48,18 @@
             })
         }
 
+        function updateFrom(){
+            store.dispatch({ type: 'SET_FROM', from: 'Mark' })
+        }
+
     </script>
 
 </head>
 <body>
 
     <div id="home"></div>
+
+    <button onclick="updateFrom()">Do it</button>
 
     <div style="display: none;">
         <h1>Hello world</h1>
