@@ -24,16 +24,12 @@ app.use(express.static(__dirname + '/'));
 app.get('/react', function (request, response) {
     response.sendFile(path.join(__dirname + '/react/default.htm'));
 });
-//0618918248
 app.post('/react/getBookInfo', function (request, response) {
     let search = new AmazonSearch();
     let p = Promise.delayed(resolve => {
         search.lookupBook(request.body.isbn).then(response => resolve(response));
     });
 
-    //let p = Promise.delayed(res => {
-    //    res({ title: 'Adam', age: 33 });
-    //});
     amazonOperationQueue.push(p);
 
     p.then(obj => response.send(obj));
