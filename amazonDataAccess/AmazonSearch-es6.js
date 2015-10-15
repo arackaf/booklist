@@ -8,7 +8,6 @@ var awsCredentials = require('../utils/awsCredentials'), //not checked in - you'
 class AmazonSearch{
     constructor(){ }
     lookupBook(isbn){
-        console.log('SEARCHING', isbn);
         return new Promise(function(resolve, reject){
             opHelper.execute('ItemLookup', {
                 'SearchIndex': 'Books',
@@ -16,7 +15,11 @@ class AmazonSearch{
                 'ResponseGroup': 'ItemAttributes,EditorialReview',
                 'ItemId': isbn
             }, nodeCallback(function (results, xml) { // you can add a third parameter for the raw xml response, "results" here are currently parsed using xml2js
-                resolve(projectResponse(results.ItemLookupResponse.Items[0].Item[0]));
+                if (!results.ItemLookupResponse || !results.ItemLookupResponse.Items || !results.ItemLookupResponse.Items[0] || !results.ItemLookupResponse.Items[0].Item || !results.ItemLookupResponse.Items[0].Item[0]){
+                    resolve({ success: false });
+                } else {
+                    resolve(projectResponse(results.ItemLookupResponse.Items[0].Item[0]));
+                }
             }));
         });
     }
@@ -29,7 +32,7 @@ function projectResponse(item){
             isbn: attributes.ISBN[0],
             ean: attributes.EAN[0],
             author: attributes.Author[0],
-            pages: attributes.NumberOfPages[0],
+            pages: (attributes.NumberOfPages && attributes.NumberOfPages[0]) || '',
             publicationDate: attributes.PublicationDate[0],
             editorialReviews: []
         },
