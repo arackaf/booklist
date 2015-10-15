@@ -8,6 +8,7 @@ var awsCredentials = require('../utils/awsCredentials'), //not checked in - you'
 class AmazonSearch{
     constructor(){ }
     lookupBook(isbn){
+        console.log('SEARCHING', isbn);
         return new Promise(function(resolve, reject){
             opHelper.execute('ItemLookup', {
                 'SearchIndex': 'Books',

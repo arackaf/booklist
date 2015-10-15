@@ -22,13 +22,26 @@
 
 
         function go(){
-            $.ajax('/react/book/post', {
+            $.ajax('/react/getBookInfo', {
                 method: 'post',
                 success: function(res){
                     debugger;
                 }
             })
         }
+
+        window.ajaxUtil = {
+            post: function(url, data, callback){
+                debugger;
+                $.ajax(url, {
+                    method: 'post',
+                    data: data,
+                    success: function(res){
+                        callback(res);
+                    }
+                })
+            }
+        };
 
         function updateFrom(){
             store.dispatch({ type: 'SET_FROM', from: 'Mark' })

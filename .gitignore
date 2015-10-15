@@ -7,3 +7,4 @@ react/store.js
 react/modules/bookEntry/bookEntry.js
 react/modules/bookEntry/components/bookEntryItem.js
 react/modules/bookEntry/components/bookEntryList.js
+app.js
