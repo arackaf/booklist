@@ -18,26 +18,8 @@
             defaultJSExtensions: true
         });
 
-        Promise.all([
-            System.import('/react/components/firstComponent')
-        ]).then(function(arr){
-            var C = arr[0];
+        System.import('/react/modules/bookEntry/bookEntry')
 
-            //ReactDOM.render(React.createElement(C, { from: 'Adam' }), document.getElementById('home'));
-        });
-
-
-//        System.import('/react-build').then(function(React){
-//            debugger;
-//            //alert(typeof React);
-//            //alert(typeof React.Component);
-//        });
-
-//        System.import('/react-dom-build').then(function(reactDom){
-//            debugger;
-//            //alert(typeof reactDom);
-//            //alert(typeof reactDom.render);
-//        });
 
         function go(){
             $.ajax('/react/book/post', {
