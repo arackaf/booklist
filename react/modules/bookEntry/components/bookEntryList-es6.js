@@ -10,7 +10,7 @@ class BookEntryList extends React.Component {
                 { this.props.entryList.map((entry, i) =>
                         <div key={'Book' + i}>
                             <BookEntryItem
-                                isbn={entry.isbn}
+                                { ...entry }
                                 isbnChange={e => this.isbnChanged(entry, e)}
                                 entryFinished={() => this.entryFinished(entry)}
                                 index={i}
@@ -26,7 +26,17 @@ class BookEntryList extends React.Component {
         this.props.dispatch({ type: 'UPDATE_ISBN', isbn: e.target.value, entry });
     }
     entryFinished(entry){
-        this.props.dispatch({ type: 'CURRENT_INPUT_FINISHED', entry });
+        let index = this.props.entryList.indexOf(entry);
+
+        this.props.dispatch({ type: 'CURRENT_INPUT_FINISHED', index });
+
+        if (entry.isbn.length == 10 || entry.isbn.length == 13){
+            this.props.dispatch({ type: 'PRE_FETCH', index });
+
+            ajaxUtil.post('/react/getBookInfo', { isbn: entry.isbn }, bookInfo => {
+                this.props.dispatch({ type: 'FETCH_RESULTS', index, bookInfo });
+            });
+        }
     }
 
 }

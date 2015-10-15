@@ -1,7 +1,11 @@
 class BookEntryItem extends React.Component{
     render(){
         return (
-            <span>Input ISBN<input ref='input' value={this.props.isbn} onChange={this.props.isbnChange} onKeyDown={evt => this.keyDown(evt)}  /></span>
+            <span>
+                Input ISBN<input ref='input' value={this.props.isbn} onChange={this.props.isbnChange} onKeyDown={evt => this.keyDown(evt)}  />
+                { this.props.retrieving ? <span>loading....</span> : null }
+                { this.props.fetchedTitle ? <span>Preview: { this.props.fetchedTitle }</span> : null }
+            </span>
         );
     }
     componentDidMount(){
