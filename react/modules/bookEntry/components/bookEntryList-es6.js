@@ -38,19 +38,6 @@ class BookEntryList extends React.Component {
             });
         }
     }
-
 }
 
 module.exports = BookEntryList;
-
-/*
-
- } else if (action.type === 'UPDATE_ISBN'){
- let objectToUpdate = Object.assign({}, state.entryList[action.index], { isbn: action.isbn }),
- newEntryList = state.entryList.concat();
-
- newEntryList[action.index] = objectToUpdate;
- return Object.assign({}, state, { entryList: newEntryList });
- }
-
-* */
