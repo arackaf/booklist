@@ -5,9 +5,33 @@
     <title>React Demo</title>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="system.js"></script>
+    <script type="text/javascript" src="/scripts/system.js"></script>
+    <script type="text/javascript" src="/scripts/react.js"></script>
+    <script type="text/javascript" src="/scripts/react-dom.js"></script>
 
     <script type="text/javascript">
+
+        System.config({
+            baseURL: "/node_modules",
+            defaultJSExtensions: true
+        });
+
+        System.import('/react/components/firstComponent').then(function(C){
+            ReactDOM.render(React.createElement(C, { from: 'Adam' }), document.getElementById('home'));
+        });
+
+
+//        System.import('/react-build').then(function(React){
+//            debugger;
+//            //alert(typeof React);
+//            //alert(typeof React.Component);
+//        });
+
+//        System.import('/react-dom-build').then(function(reactDom){
+//            debugger;
+//            //alert(typeof reactDom);
+//            //alert(typeof reactDom.render);
+//        });
 
         function go(){
             $.ajax('/react/book/post', {
@@ -22,11 +46,16 @@
 
 </head>
 <body>
-    <h1>Hello world</h1>
 
-    <div action="/react" method="post">
-        ISBN <input name="book1" >
-        <button onclick="go()">Run</button>
+    <div id="home"></div>
+
+    <div style="display: none;">
+        <h1>Hello world</h1>
+
+        <div action="/react" method="post">
+            ISBN <input name="book1" >
+            <button onclick="go()">Run</button>
+        </div>
     </div>
 </body>
 </html>

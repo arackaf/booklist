@@ -2,3 +2,4 @@
 node_modules/
 utils/awsCredentials.js
 startMongo.bat
+react/components/firstComponent.js
