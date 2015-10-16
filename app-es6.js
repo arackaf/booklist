@@ -21,6 +21,9 @@ app.listen(3000);
 
 app.use(express.static(__dirname + '/'));
 
+var easyControllers = require('easy-express-controllers').easyControllers;
+easyControllers.createController(app, 'bookController');
+
 app.get('/react', function (request, response) {
     response.sendFile(path.join(__dirname + '/react/default.htm'));
 });
