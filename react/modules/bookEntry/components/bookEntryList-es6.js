@@ -19,8 +19,14 @@ class BookEntryList extends React.Component {
                             <br /><br />
                         </div>
                 )}
+                <button onClick={() => this.saveAll()}>Retrieve and save all</button>
+                <br />
+                <br />
             </div>
         );
+    }
+    saveAll(){
+        console.log('clicked');
     }
     isbnChanged(entry, e){
         this.props.dispatch({ type: 'UPDATE_ISBN', isbn: e.target.value, entry });
@@ -33,7 +39,7 @@ class BookEntryList extends React.Component {
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
             this.props.dispatch({ type: 'PRE_FETCH', index });
 
-            ajaxUtil.post('/react/getBookInfo', { isbn: entry.isbn }, bookInfo => {
+            ajaxUtil.post('/book/saveFromIsbn', { isbn: entry.isbn }, bookInfo => {
                 this.props.dispatch({ type: 'FETCH_RESULTS', index, bookInfo });
             });
         }
