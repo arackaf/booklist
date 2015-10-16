@@ -1,7 +1,13 @@
+let { initialize } = require('./actions/bookActionCreators');
+
 let Provider = ReactRedux.Provider,
     BookEntryList = require('./components/bookEntryList');
 
 let store = require('/react/store');
+let reducer = require('./reducers/bookEntryReducer');
+
+store.replaceReducer(reducer);
+store.dispatch(initialize());
 
 function projectState(state){
     return state;
