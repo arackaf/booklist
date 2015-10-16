@@ -1,4 +1,4 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS } = require('./bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS, INITIALIZE } = require('./bookActionNames');
 
 function updateIsbn(isbn, entry){
     return { type: UPDATE_ISBN, isbn, entry };
@@ -28,12 +28,17 @@ function loadAndSaveBook(index, isbn){
     }
 }
 
+function initialize(){
+    return { type: INITIALIZE };
+}
+
 module.exports = {
     updateIsbn,
     currentInputFinished,
     initializeEntryList,
     getBook,
     getBookResults,
-    loadAndSaveBook
+    loadAndSaveBook,
+    initialize
 };
 

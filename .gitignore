@@ -14,3 +14,4 @@ controllers/bookController.js
 controllers/book.js
 react/modules/bookEntry/actions/bookActionCreators.js
 react/modules/bookEntry/actions/bookActionNames.js
+react/modules/bookEntry/reducers/bookEntryReducer.js
