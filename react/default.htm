@@ -46,6 +46,24 @@
             store.dispatch({ type: 'SET_FROM', from: 'Mark' })
         }
 
+        function details(){
+            $.ajax('/bookController/details', {
+                method: 'get',
+                success: function(res){
+                    debugger;
+                }
+            })
+        }
+
+        function save(){
+            $.ajax('/bookController/save', {
+                method: 'post',
+                success: function(res){
+                    debugger;
+                }
+            })
+        }
+
     </script>
 
 </head>
@@ -63,5 +81,9 @@
             <button onclick="go()">Run</button>
         </div>
     </div>
+
+    <button onclick="details()">Book details</button>
+    <button onclick="save()">Book save</button>
+
 </body>
 </html>
