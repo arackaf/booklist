@@ -20,11 +20,20 @@ function getBookResults(index, bookInfo){
     return { type: GET_BOOK_RESULTS, index, bookInfo };
 }
 
+function loadAndSaveBook(index, isbn){
+    return function(dispatch) {
+        dispatch(getBook(index));
+
+        ajaxUtil.post('/book/saveFromIsbn', { isbn }, bookInfo => dispatch(getBookResults(index, bookInfo)));
+    }
+}
+
 module.exports = {
     updateIsbn,
     currentInputFinished,
     initializeEntryList,
     getBook,
-    getBookResults
+    getBookResults,
+    loadAndSaveBook
 };
 

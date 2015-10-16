@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, currentInputFinished, initializeEntryList, getBook, getBookResults } = require('../actions/bookActionCreators');
+    { updateIsbn, currentInputFinished, initializeEntryList, getBook, getBookResults, loadAndSaveBook } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
     componentDidMount(){
@@ -38,11 +38,7 @@ class BookEntryList extends React.Component {
         this.props.dispatch(currentInputFinished(index));
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
-            this.props.dispatch(getBook(index));
-
-            ajaxUtil.post('/book/saveFromIsbn', { isbn: entry.isbn }, bookInfo => {
-                this.props.dispatch(getBookResults(index, bookInfo));
-            });
+            this.props.dispatch(loadAndSaveBook(index, entry.isbn));
         }
     }
 }
