@@ -1,10 +1,7 @@
-//function eventualSortOfBookSavingControllerAction() {
-//    var aSearch = new AmazonSearch(),
-//        bookDAO = new BookDAO(1);
-//    aSearch.lookupBook('0679764410').then(book => bookDAO.saveBook(book)).then(() => console.log('Book Saved'), err => console.log('Oops - error', err));
-//}
-
 const { httpPost, route, nonRoutable } = require('easy-express-controllers');
+const AmazonSearch = require('../amazonDataAccess/AmazonSearch.js');
+const { amazonOperationQueue } = require('../amazonDataAccess/amazonOperationQueue');
+const BookDAO = require('../dataAccess/BookDAO');
 
 class bookController{
     constructor(){}
@@ -12,8 +9,22 @@ class bookController{
         this.send({ title: 'Two Roads to Sumpter' });
     }
     @httpPost
-    save(){
-        this.send({ saved: true });
+    async saveFromIsbn(isbn){
+        let search = new AmazonSearch();
+        let p = Promise.delayed(resolve => {
+            search.lookupBook(isbn).then(response => resolve(response));
+        });
+        amazonOperationQueue.push(p);
+
+        let bookFromAmazon = await p;
+
+        if (bookFromAmazon.failure){
+            this.send({ failure: true });
+        } else {
+            let bookDao = new BookDAO();
+            await bookDao.saveBook(bookFromAmazon);
+            this.send(bookFromAmazon);
+        }
     }
 }
 
