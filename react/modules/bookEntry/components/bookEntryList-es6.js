@@ -1,8 +1,9 @@
-let BookEntryItem = require('./bookEntryItem');
+let BookEntryItem = require('./bookEntryItem'),
+    { updateIsbn, currentInputFinished, initializeEntryList, getBook, getBookResults } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
     componentDidMount(){
-        this.props.dispatch({ type: 'INITIALIZE_ENTRY_LIST', count: 10 });
+        this.props.dispatch(initializeEntryList(10));
     }
     render() {
         return (
@@ -29,18 +30,18 @@ class BookEntryList extends React.Component {
         console.log('clicked');
     }
     isbnChanged(entry, e){
-        this.props.dispatch({ type: 'UPDATE_ISBN', isbn: e.target.value, entry });
+        this.props.dispatch(updateIsbn(e.target.value, entry));
     }
     entryFinished(entry){
         let index = this.props.entryList.indexOf(entry);
 
-        this.props.dispatch({ type: 'CURRENT_INPUT_FINISHED', index });
+        this.props.dispatch(currentInputFinished(index));
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
-            this.props.dispatch({ type: 'PRE_FETCH', index });
+            this.props.dispatch(getBook(index));
 
             ajaxUtil.post('/book/saveFromIsbn', { isbn: entry.isbn }, bookInfo => {
-                this.props.dispatch({ type: 'FETCH_RESULTS', index, bookInfo });
+                this.props.dispatch(getBookResults(index, bookInfo));
             });
         }
     }

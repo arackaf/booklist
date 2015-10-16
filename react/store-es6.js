@@ -1,3 +1,5 @@
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS } = require('./modules/bookEntry/actions/bookActionNames');
+
 const initialState = {
     entryList: [],
     activeInput: -1
@@ -11,36 +13,36 @@ function reducer(state = initialState, action = {}){
 
     //PRE_FETCH check since this is fire back-to-back to CURRENT_INPUT_FINISHED and react seems to not re-render when with back-to-back updates,
     //so the new currentIndex is being swalled
-    if (action.type !== 'PRE_FETCH') {
+    if (action.type !== GET_BOOK) {
         delete state.activeInput;
     }
 
     switch(action.type) {
-        case 'INITIALIZE_ENTRY_LIST':
+        case INITIALIZE_ENTRY_LIST:
             return Object.assign({}, state, {
                 activeInput: 0,
                 entryList: Array.from({length: action.count}).map(() => ({ isbn: '', fetched: false, fetching: false }))
             });
-        case 'UPDATE_ISBN':
+        case UPDATE_ISBN:
             var objectToUpdate = Object.assign({}, action.entry, { isbn: action.isbn }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[newEntryList.indexOf(action.entry)] = objectToUpdate;
             return Object.assign({}, state, { entryList: newEntryList });
-        case 'CURRENT_INPUT_FINISHED':
+        case CURRENT_INPUT_FINISHED:
             if (action.index === state.entryList.length - 1) {
                 //finish last item - highlight finished button
                 return Object.assign({}, state, { activeInput: 'READY' });
             } else {
                 return Object.assign({}, state, { activeInput: action.index + 1 });
             }
-        case 'PRE_FETCH':
+        case GET_BOOK:
             var updatedObject = Object.assign({}, state.entryList[action.index], { retrieving: true }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = updatedObject;
             return Object.assign({}, state, { entryList: newEntryList });
-        case 'FETCH_RESULTS':
+        case GET_BOOK_RESULTS:
             let searchResult = action.bookInfo;
 
             var updatedObject = Object.assign({}, state.entryList[action.index], { retrieving: false, retrieveFailure: searchResult.failure, fetchedTitle: searchResult.title, fetchedInfo: searchResult }),
