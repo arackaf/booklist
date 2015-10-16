@@ -12,3 +12,5 @@ amazonDataAccess/AmazonSearch.js
 dataAccess/BookDAO.js
 controllers/bookController.js
 controllers/book.js
+react/modules/bookEntry/actions/bookActionCreators.js
+react/modules/bookEntry/actions/bookActionNames.js
