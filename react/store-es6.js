@@ -5,6 +5,8 @@ const initialState = {
     activeInput: -1
 };
 
+const thunkMiddleware = require('./redux-thunk');
+
 function reducer(state = initialState, action = {}){
     //not very fluxy - but active input is only occasionally sent down - this allows an entry to focus as needed
     //focus isn't (as far as I can tell) bindable through the normal React pipeline, so I have to do this manually in
@@ -54,7 +56,11 @@ function reducer(state = initialState, action = {}){
     return state;
 }
 
-let store = Redux.createStore(reducer);
+const createStoreWithMiddleware = Redux.applyMiddleware(
+    thunkMiddleware
+)(Redux.createStore);
+
+let store = createStoreWithMiddleware(reducer);
 window.store = store;
 
 module.exports = store;

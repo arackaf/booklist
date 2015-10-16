@@ -14,12 +14,11 @@
     <script type="text/javascript">
 
         System.config({
-            baseURL: "/node_modules",
+            baseURL: "/",
             defaultJSExtensions: true
         });
 
-        System.import('/react/modules/bookEntry/bookEntry')
-
+        System.import('/react/modules/bookEntry/bookEntry');
 
         function go(){
             $.ajax('/react/getBookInfo', {
