@@ -9,3 +9,5 @@ react/modules/bookEntry/components/bookEntryItem.js
 react/modules/bookEntry/components/bookEntryList.js
 app.js
 amazonDataAccess/AmazonSearch.js
+dataAccess/BookDAO.js
+controllers/bookController.js
