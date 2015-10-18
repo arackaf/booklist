@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "dependencies": {
     "chai": "^3.3.0",
-    "easy-express-controllers": "0.0.14",
+    "easy-express-controllers": "0.0.20",
     "es6-symbol": "^2.0.1",
     "express": "4.x",
     "gulp": "^3.9.0",
