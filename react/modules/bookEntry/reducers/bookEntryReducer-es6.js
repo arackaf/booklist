@@ -1,4 +1,4 @@
-const { INITIALIZE, UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS } = require('../actions/bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS } = require('../actions/bookActionNames');
 
 const initialState = {
     entryList: [],
@@ -18,8 +18,6 @@ function reducer(state = initialState, action = {}){
     }
 
     switch(action.type) {
-        case INITIALIZE:
-            return initialState;
         case INITIALIZE_ENTRY_LIST:
             return Object.assign({}, state, {
                 activeInput: 0,
