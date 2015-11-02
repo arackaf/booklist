@@ -1,5 +1,5 @@
-const rootReducer = require('./applicationRoot/rootReducer');
-const thunkMiddleware = require('./redux-thunk');
+const rootReducer = require('./rootReducer');
+const thunkMiddleware = require('./../util/redux-thunk');
 
 function getNewReducer(reducerObj){
     if (!reducerObj) return Redux.combineReducers({ root: rootReducer });
