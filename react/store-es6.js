@@ -14,7 +14,7 @@ const createStoreWithMiddleware = Redux.applyMiddleware(
     thunkMiddleware
 )(Redux.createStore);
 
-let store = createStoreWithMiddleware(getNewReducer());
+const store = createStoreWithMiddleware(getNewReducer());
 window.store = store;
 
 module.exports = {

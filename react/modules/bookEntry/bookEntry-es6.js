@@ -1,25 +1,10 @@
-let Provider = ReactRedux.Provider,
-    BookEntryList = require('./components/bookEntryList'),
-    Header = require('../../applicationRoot/rootComponents/Header');
+let BookEntryList = require('./components/bookEntryList'),
+    renderUI = require('../../applicationRoot/renderUI');
 
 let { store, getNewReducer } = require('/react/store');
 let reducer = require('./reducers/bookEntryReducer');
 
 getNewReducer({ name: 'bookEntry', reducer });
+BookEntryList = ReactRedux.connect(state => state.bookEntry)(BookEntryList);
 
-function projectState(state){
-    return state.bookEntry;
-}
-
-BookEntryList = ReactRedux.connect(projectState)(BookEntryList);
-
-ReactDOM.render(
-    <Provider store={store}>
-        <div>
-            <Header />
-            <br /><br />
-            <BookEntryList count="10" />
-        </div>
-    </Provider>,
-    document.getElementById('home')
-);
+renderUI(<BookEntryList count="10" />);
