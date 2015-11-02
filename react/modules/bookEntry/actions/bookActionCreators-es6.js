@@ -1,4 +1,4 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED } = require('./bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING } = require('./bookActionNames');
 
 function updateIsbn(isbn, entry){
     return { type: UPDATE_ISBN, isbn, entry };
@@ -32,10 +32,15 @@ function deleted(index){
     return { type: BOOK_DELETED, index };
 }
 
+function deleteBookBegin(index){
+    return { type: BOOK_DELETING, index };
+}
+
 function deleteBook(index, id){
     return function(dispatch){
+        dispatch(deleteBookBegin(index));
         ajaxUtil.post('/book/deleteBook', { id }, resp => {
-            debugger;
+
             if (resp.success){
                 dispatch(deleted(index));
             }

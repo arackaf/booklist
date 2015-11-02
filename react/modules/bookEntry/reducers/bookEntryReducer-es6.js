@@ -1,4 +1,4 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED } = require('../actions/bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING } = require('../actions/bookActionNames');
 
 const initialState = {
     entryList: [],
@@ -54,6 +54,11 @@ function reducer(state = initialState, action = {}){
             var newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = { isbn: '', fetched: false, fetching: false };
+            return Object.assign({}, state, { entryList: newEntryList });
+        case BOOK_DELETING:
+            var newEntryList = state.entryList.concat();
+
+            newEntryList[action.index].deleting = true;
             return Object.assign({}, state, { entryList: newEntryList });
     }
     return state;

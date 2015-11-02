@@ -19,3 +19,4 @@ react/applicationRoot/rootComponents/header.js
 react/applicationRoot/rootReducer.js
 react/applicationRoot/renderUI.js
 react/reactStartup.js
+react/applicationRoot/rootComponents/ajaxButton.js
