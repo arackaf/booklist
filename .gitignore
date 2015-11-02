@@ -17,3 +17,4 @@ react/modules/bookEntry/actions/bookActionNames.js
 react/modules/bookEntry/reducers/bookEntryReducer.js
 react/applicationRoot/rootComponents/header.js
 react/applicationRoot/rootReducer.js
+react/applicationRoot/renderUI.js
