@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 
 class DAO{
     open(){
@@ -36,6 +37,14 @@ class BookDAO extends DAO {
             book.userId = this.userId;
             let result = await db.collection('books').insert(book);
             super.confirmSingleResult(result);
+        } finally {
+            super.dispose(db);
+        }
+    }
+    async deleteBook(id){
+        let db = await super.open();
+        try {
+            db.collection('books').remove({ _id: ObjectId(id) });
         } finally {
             super.dispose(db);
         }
