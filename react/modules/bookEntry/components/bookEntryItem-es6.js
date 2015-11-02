@@ -4,7 +4,7 @@ class BookEntryItem extends React.Component{
             <span>
                 Input ISBN<input ref='input' value={this.props.isbn} onChange={this.props.isbnChange} onKeyDown={evt => this.keyDown(evt)} disabled={this.props.retrieving}  />
                 { this.props.retrieving ? <span>loading....</span> : null }
-                { this.props.fetchedTitle ? <span>Preview: { this.props.fetchedTitle }</span> : null }
+                { this.props.fetchedTitle ? <span>Saved: { this.props.fetchedTitle } <button onClick={this.props.deleteBook}>Delete</button></span> : null }
                 { this.props.retrieveFailure ? <span>Could not find isbn: { this.props.isbn }</span> : null }
             </span>
         );

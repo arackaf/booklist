@@ -26,6 +26,12 @@ class bookController{
             this.send(bookFromAmazon);
         }
     }
+    @httpPost
+    async deleteBook(id){
+        let bookDao = new BookDAO();
+        await bookDao.deleteBook(id);
+        this.send({ success: true });
+    }
 }
 
 module.exports = bookController;

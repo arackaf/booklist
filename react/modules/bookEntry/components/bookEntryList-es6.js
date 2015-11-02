@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, currentInputFinished, initializeEntryList, getBook, getBookResults, loadAndSaveBook } = require('../actions/bookActionCreators');
+    { updateIsbn, currentInputFinished, initializeEntryList, getBook, getBookResults, loadAndSaveBook, deleteBook } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
     componentDidMount(){
@@ -16,6 +16,7 @@ class BookEntryList extends React.Component {
                                 entryFinished={() => this.entryFinished(entry)}
                                 index={i}
                                 activeInput={this.props.activeInput}
+                                deleteBook={() => this.deleteBook(entry)}
                             />
                             <br /><br />
                         </div>
@@ -28,6 +29,9 @@ class BookEntryList extends React.Component {
     }
     saveAll(){
         console.log('clicked');
+    }
+    deleteBook(entry){
+        this.props.dispatch(deleteBook(this.props.entryList.indexOf(entry), entry.fetchedInfo._id));
     }
     isbnChanged(entry, e){
         this.props.dispatch(updateIsbn(e.target.value, entry));
