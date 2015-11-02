@@ -35,7 +35,7 @@
                     method: 'post',
                     data: data,
                     success: function(res){
-                        callback(res);
+                        setTimeout(() => callback(res), 2000);
                     }
                 })
             }
