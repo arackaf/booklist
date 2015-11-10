@@ -1,4 +1,4 @@
-const AjaxButton = require('/react/applicationRoot/rootComponents/ajaxButton');
+const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
 
 class BookEntryItem extends React.Component{
     render(){
