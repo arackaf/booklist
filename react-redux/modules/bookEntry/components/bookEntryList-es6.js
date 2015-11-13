@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook } = require('../actions/bookActionCreators');
+    { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
     render() {
@@ -25,7 +25,7 @@ class BookEntryList extends React.Component {
         );
     }
     saveAll(){
-        console.log('clicked');
+        this.props.dispatch(saveAllPending());
     }
     deleteBook(entry){
         this.props.dispatch(deleteBook(this.props.entryList.indexOf(entry), entry.fetchedInfo._id));
