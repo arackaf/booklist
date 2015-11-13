@@ -1,4 +1,4 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING } = require('../actions/bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS } = require('../actions/bookActionNames');
 
 const initialState = {
     activeInput: 0,
@@ -37,10 +37,15 @@ function reducer(state = initialState, action = {}){
 
             newEntryList[action.index] = updatedObject;
             return Object.assign({}, state, { entryList: newEntryList });
+        case GETTING_BOOKS:
+            var newEntryList = state.entryList.concat();
+            action.indexes.forEach(i => newEntryList[i].retrieving = true);
+
+            return Object.assign({}, state, { entryList: newEntryList });
         case GET_BOOK_RESULTS:
             let searchResult = action.bookInfo;
 
-            var updatedObject = Object.assign({}, state.entryList[action.index], { retrieving: false, retrieveFailure: searchResult.failure, fetchedTitle: searchResult.title, fetchedInfo: searchResult }),
+            var updatedObject = Object.assign({}, state.entryList[action.index], { fetched: true, retrieving: false, retrieveFailure: searchResult.failure, fetchedTitle: searchResult.title, fetchedInfo: searchResult }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = updatedObject;
