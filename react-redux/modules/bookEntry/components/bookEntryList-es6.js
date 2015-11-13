@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending } = require('../actions/bookActionCreators');
+    { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
     render() {
@@ -21,6 +21,7 @@ class BookEntryList extends React.Component {
                 <button onClick={() => this.saveAll()}>Retrieve and save all</button>
                 <br />
                 <br />
+                <button onClick={() => this.resetList()}>Reset list</button>
             </div>
         );
     }
@@ -41,6 +42,9 @@ class BookEntryList extends React.Component {
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
             this.props.dispatch(loadAndSaveBook(index, entry.isbn));
         }
+    }
+    resetList(){
+        this.props.dispatch(resetList());
     }
 }
 

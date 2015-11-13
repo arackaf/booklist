@@ -1,4 +1,4 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS } = require('./bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('./bookActionNames');
 
 function updateIsbn(isbn, entry){
     return { type: UPDATE_ISBN, isbn, entry };
@@ -58,6 +58,10 @@ function deleteBook(index, id){
     }
 }
 
+function resetList(){
+    return { type: RESET_LIST };
+}
+
 module.exports = {
     updateIsbn,
     currentInputFinished,
@@ -65,6 +69,7 @@ module.exports = {
     getBookResults,
     loadAndSaveBook,
     deleteBook,
-    saveAllPending
+    saveAllPending,
+    resetList
 };
 
