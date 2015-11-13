@@ -1,10 +1,7 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, currentInputFinished, initializeEntryList, getBook, getBookResults, loadAndSaveBook, deleteBook } = require('../actions/bookActionCreators');
+    { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
-    componentDidMount(){
-        this.props.dispatch(initializeEntryList(10));
-    }
     render() {
         return (
             <div>

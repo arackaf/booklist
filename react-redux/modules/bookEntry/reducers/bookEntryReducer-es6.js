@@ -1,8 +1,8 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, INITIALIZE_ENTRY_LIST, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING } = require('../actions/bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING } = require('../actions/bookActionNames');
 
 const initialState = {
-    entryList: [],
-    activeInput: -1
+    activeInput: 0,
+    entryList: Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }))
 };
 
 function reducer(state = initialState, action = {}){
@@ -18,11 +18,6 @@ function reducer(state = initialState, action = {}){
     }
 
     switch(action.type) {
-        case INITIALIZE_ENTRY_LIST:
-            return Object.assign({}, state, {
-                activeInput: 0,
-                entryList: Array.from({length: action.count}).map(() => ({ isbn: '', fetched: false, fetching: false }))
-            });
         case UPDATE_ISBN:
             var objectToUpdate = Object.assign({}, action.entry, { isbn: action.isbn }),
                 newEntryList = state.entryList.concat();
