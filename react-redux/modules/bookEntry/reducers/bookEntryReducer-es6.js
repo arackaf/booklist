@@ -45,7 +45,7 @@ function reducer(state = initialState, action = {}){
         case GET_BOOK_RESULTS:
             let searchResult = action.bookInfo;
 
-            var updatedObject = Object.assign({}, state.entryList[action.index], { fetched: true, retrieving: false, retrieveFailure: searchResult.failure, fetchedTitle: searchResult.title, fetchedInfo: searchResult }),
+            var updatedObject = Object.assign({}, state.entryList[action.index], { fetched: true, retrieving: false, retrieveFailure: searchResult.failure, fetchedTitle: searchResult.title, fetchedInfo: searchResult, fetchedIsbn: state.entryList[action.index].isbn }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = updatedObject;
