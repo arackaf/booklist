@@ -1,11 +1,11 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS } = require('../actions/bookActionNames');
+const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('../actions/bookActionNames');
 
-const initialState = {
+const initialState = () => ({
     activeInput: 0,
     entryList: Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }))
-};
+});
 
-function reducer(state = initialState, action = {}){
+function reducer(state = initialState(), action = {}){
     //not very fluxy - but active input is only occasionally sent down - this allows an entry to focus as needed
     //focus isn't (as far as I can tell) bindable through the normal React pipeline, so I have to do this manually in
     //componentDidXXX, and so to avoid setting this precisely on every blur and focus, I just send it down when needed
@@ -60,6 +60,8 @@ function reducer(state = initialState, action = {}){
 
             newEntryList[action.index].deleting = true;
             return Object.assign({}, state, { entryList: newEntryList });
+        case RESET_LIST:
+            return initialState();
     }
     return state;
 }
