@@ -19,10 +19,9 @@ function reducer(state = initialState(), action = {}){
 
     switch(action.type) {
         case UPDATE_ISBN:
-            var objectToUpdate = Object.assign({}, action.entry, { isbn: action.isbn }),
-                newEntryList = state.entryList.concat();
+            var newEntryList = state.entryList.concat();
+            Object.assign(newEntryList[action.index], { isbn: action.isbn });
 
-            newEntryList[newEntryList.indexOf(action.entry)] = objectToUpdate;
             return Object.assign({}, state, { entryList: newEntryList });
         case CURRENT_INPUT_FINISHED:
             if (action.index === state.entryList.length - 1) {
