@@ -1,7 +1,7 @@
 const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('./bookActionNames');
 
-function updateIsbn(isbn, entry){
-    return { type: UPDATE_ISBN, isbn, entry };
+function updateIsbn(isbn, index){
+    return { type: UPDATE_ISBN, isbn, index };
 }
 
 function currentInputFinished(index){

@@ -32,7 +32,7 @@ class BookEntryList extends React.Component {
         this.props.dispatch(deleteBook(this.props.entryList.indexOf(entry), entry.fetchedInfo._id));
     }
     isbnChanged(entry, e){
-        this.props.dispatch(updateIsbn(e.target.value, entry));
+        this.props.dispatch(updateIsbn(e.target.value, this.props.entryList.indexOf(entry)));
     }
     entryFinished(entry){
         let index = this.props.entryList.indexOf(entry);
