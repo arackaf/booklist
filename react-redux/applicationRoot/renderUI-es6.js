@@ -1,6 +1,6 @@
 const Provider = ReactRedux.Provider;
 const Header = require('./rootComponents/Header');
-const { store } = require('/react-redux/store');
+const { store } = require('/react-redux/applicationRoot/store');
 
 function renderUI(component){
     ReactDOM.render(
