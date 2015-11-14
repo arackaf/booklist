@@ -20,3 +20,4 @@ react-redux/applicationRoot/rootReducer.js
 react-redux/applicationRoot/renderUI.js
 react-redux/reactStartup.js
 react-redux/applicationRoot/rootComponents/ajaxButton.js
+tests/reduxBookEntryTests.js

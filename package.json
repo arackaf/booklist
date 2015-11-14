@@ -24,7 +24,8 @@
     "react-redux": "^3.1.0",
     "redux": "^3.0.2",
     "redux-thunk": "^1.0.0",
-    "regenerator": "^0.8.36"
+    "regenerator": "^0.8.36",
+    "sinon": "^1.17.1"
   },
   "devDependencies": {
     "apac": "^1.0.0",
