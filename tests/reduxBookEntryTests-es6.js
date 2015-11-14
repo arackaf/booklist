@@ -11,9 +11,15 @@ describe('book entry tests', function(){
     });
 
     it('should accept dispatches', function(){
-        let initState = reducer(undefined);
-        let state = reducer(initState, updateIsbn('123', initState.entryList[0]));
+        let state = applyToReducer(updateIsbn('123', 0), updateIsbn('234', 1));
         assert.strictEqual(state.entryList[0].isbn, '123');
+        assert.strictEqual(state.entryList[1].isbn, '234');
     });
 
+
+    function applyToReducer(...actions){
+        let state = reducer();
+        actions.forEach(a => state = reducer(state, a));
+        return state;
+    }
 });
