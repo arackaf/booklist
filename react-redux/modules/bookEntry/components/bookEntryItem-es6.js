@@ -11,15 +11,8 @@ class BookEntryItem extends React.Component{
             </span>
         );
     }
-    componentDidMount(){
-        if (this.props.index == 0){
-            ReactDOM.findDOMNode(this.refs.input).focus();
-        }
-    }
-    componentDidUpdate(){
-        if (this.props.index == this.props.activeInput){
-            ReactDOM.findDOMNode(this.refs.input).focus();
-        }
+    focusInput(){
+        ReactDOM.findDOMNode(this.refs.input).focus();
     }
     keyDown(evt){
         if (evt.keyCode == 13){

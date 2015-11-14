@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/bookActionCreators');
+    { updateIsbn, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/bookActionCreators');
 
 class BookEntryList extends React.Component {
     render() {
@@ -8,11 +8,11 @@ class BookEntryList extends React.Component {
                 { this.props.entryList.map((entry, i) =>
                         <div key={'Book' + i}>
                             <BookEntryItem
+                                ref={'Book' + i}
                                 { ...entry }
                                 isbnChange={e => this.isbnChanged(entry, e)}
                                 entryFinished={() => this.entryFinished(entry)}
                                 index={i}
-                                activeInput={this.props.activeInput}
                                 deleteBook={() => this.deleteBook(entry)}
                             />
                             <br /><br />
@@ -25,6 +25,9 @@ class BookEntryList extends React.Component {
             </div>
         );
     }
+    componentDidMount(){
+        this.refs.Book0.focusInput();
+    }
     saveAll(){
         this.props.dispatch(saveAllPending());
     }
@@ -36,8 +39,9 @@ class BookEntryList extends React.Component {
     }
     entryFinished(entry){
         let index = this.props.entryList.indexOf(entry);
-
-        this.props.dispatch(currentInputFinished(index));
+        if (index < this.props.entryList.length - 1){
+            this.refs['Book' + (index + 1)].focusInput();
+        }
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
             this.props.dispatch(loadAndSaveBook(index, entry.isbn));
