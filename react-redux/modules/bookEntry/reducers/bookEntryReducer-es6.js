@@ -11,10 +11,8 @@ function reducer(state = initialState(), action = {}){
     //componentDidXXX, and so to avoid setting this precisely on every blur and focus, I just send it down when needed
     //ie, after the user hit enter, to move to the next input
 
-    //PRE_FETCH check since this is fire back-to-back to CURRENT_INPUT_FINISHED and react seems to not re-render when with back-to-back updates,
-    //so the new currentIndex is being swalled
     if (action.type !== GET_BOOK) {
-        delete state.activeInput;
+        state = Object.assign({}, state, { activeInput: undefined });
     }
 
     switch(action.type) {
