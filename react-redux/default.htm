@@ -22,63 +22,12 @@
 
         System.import('/react-redux/reactStartup');
 
-        function go(){
-            $.ajax('/react/getBookInfo', {
-                method: 'post',
-                success: function(res){
-                    debugger;
-                }
-            })
-        }
-
-        window.ajaxUtil = {
-            post: function(url, data, callback){
-                return $.ajax(url, {
-                    method: 'post',
-                    data: data,
-                    success: function(res){
-                        setTimeout(() => callback(res), 1500);
-                    }
-                })
-            }
-        };
-
-        function details(){
-            $.ajax('/bookController/details', {
-                method: 'get',
-                success: function(res){
-                    debugger;
-                }
-            })
-        }
-
-        function save(){
-            $.ajax('/bookController/save', {
-                method: 'post',
-                success: function(res){
-                    debugger;
-                }
-            })
-        }
-
     </script>
 
 </head>
 <body>
 
     <div id="home"></div>
-
-    <div style="display: none;">
-        <h1>Hello world</h1>
-
-        <div action="/react" method="post">
-            ISBN <input name="book1" >
-            <button onclick="go()">Run</button>
-        </div>
-    </div>
-
-    <button onclick="details()">Book details</button>
-    <button onclick="save()">Book save</button>
 
 </body>
 </html>
