@@ -23,3 +23,4 @@ react-redux/applicationRoot/rootComponents/ajaxButton.js
 tests/reduxBookEntryTests.js
 react-redux/applicationRoot/store.js
 react-redux/applicationRoot/rootComponents/bootstrapButton.js
+utils/ajaxUtil.js
