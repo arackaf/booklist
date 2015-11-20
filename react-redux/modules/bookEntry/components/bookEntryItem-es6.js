@@ -23,7 +23,19 @@ class BookEntryItem extends React.Component{
                         <BootstrapButton preset='info-xs' onClick={() => this.expand()}>D</BootstrapButton>
                     </span> : null }
                 { this.props.retrieveFailure && !this.props.retrieving ? <span>Could not find isbn: { this.props.fetchedIsbn }</span> : null }
-                { this.state.expanded ? <div>Blah blah blah<br />Blah blah blah<br />Blah blah blah <br/><button onClick={() => this.collapse()}>U</button></div> : null }
+                { this.state.expanded ?
+                    <div className='row'>
+                        <div className='col-md-1'></div>
+                        <div className='col-md-1'>
+                            <img src={this.props.fetchedInfo.smallImage} />
+                        </div>
+                        <div className='col-md-10'>
+                            <span>{this.props.fetchedTitle}</span><br/>
+                            <span>{this.props.fetchedInfo.author}</span><br/>
+                            <span>{this.props.fetchedInfo.publicationDate ? <span>{'Published ' + this.props.fetchedInfo.publicationDate } <br/></span> : null}</span>
+                            <span>{this.props.fetchedInfo.pages ? <span>{this.props.fetchedInfo.pages + ' pages' } <br/></span> : null}</span>
+                        </div>
+                    </div> : null }
             </span>
         );
     }
