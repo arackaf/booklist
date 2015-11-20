@@ -1,23 +1,17 @@
 const { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../react-redux/modules/bookEntry/actions/bookActionCreators');
 
-global.Redux = require('../scripts/redux');
-const assert = require('chai').assert;
-const reducer = require('../react-redux/modules/bookEntry/reducers/bookEntryReducer');
-const sinon = require('sinon');
-
 const Redux = require('redux');
 const thunkMiddleware = require('../react-redux/util/redux-thunk');
+const sinon = require('sinon');
+const assert = require('chai').assert;
 
-const bookLookupResults = {
-    '123': { title: 'title 123' },
-    '234': { failure: true }
-};
-
-var store;
+const reducer = require('../react-redux/modules/bookEntry/reducers/bookEntryReducer');
 
 const createStoreWithMiddleware = Redux.applyMiddleware(
     thunkMiddleware
 )(Redux.createStore);
+
+var store;
 
 global.ajaxUtil = {
     post(){ }
@@ -46,12 +40,12 @@ describe('book entry tests', function(){
     });
 
 
-    it('should get multiple books properly', function(){
+    it('should get and set multiple books properly', function(){
         var mock = sinon.mock(ajaxUtil);
 
-        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '123' })).callsArgWith(2, { title: 'title 123',  isbn: '123', retrieveFailure: undefined });
-        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '234' })).callsArgWith(2, { title: 'title 234',  isbn: '234', retrieveFailure: undefined });
-        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '345' })).callsArgWith(2, { title: 'title 345',  isbn: '345', retrieveFailure: undefined });
+        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '123' })).callsArgWith(2, { title: 'title 123',  isbn: '123' });
+        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '234' })).callsArgWith(2, { title: 'title 234',  isbn: '234' });
+        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '345' })).callsArgWith(2, { title: 'title 345',  isbn: '345' });
 
         let state = applyToStore(updateIsbn('123', 1), updateIsbn('234', 5), updateIsbn('345', 2), saveAllPending());
 
