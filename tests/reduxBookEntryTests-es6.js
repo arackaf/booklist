@@ -49,21 +49,28 @@ describe('book entry tests', function(){
     it('should get multiple books properly', function(){
         var mock = sinon.mock(ajaxUtil);
 
-        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '123' }));
-        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '234' }));
-        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '345' }));
+        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '123' })).callsArgWith(2, { title: 'title 123',  isbn: '123', retrieveFailure: undefined });
+        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '234' })).callsArgWith(2, { title: 'title 234',  isbn: '234', retrieveFailure: undefined });
+        mock.expects('post').withArgs(sinon.match.any, sinon.match({ isbn: '345' })).callsArgWith(2, { title: 'title 345',  isbn: '345', retrieveFailure: undefined });
 
         let state = applyToStore(updateIsbn('123', 1), updateIsbn('234', 5), updateIsbn('345', 2), saveAllPending());
 
         mock.verify();
-        //checkBook({ fetchedTitle: 'title 123',  isbn: '123', retrieveFailure: undefined }, state.entryList[1]);
-        //checkBook({ isbn: '234', retrieving: true }, state.entryList[1]);
+        checkBooks(state, {
+            1: { fetchedTitle: 'title 123',  isbn: '123', retrieveFailure: undefined },
+            5: { fetchedTitle: 'title 234',  isbn: '234', retrieveFailure: undefined },
+            2: { fetchedTitle: 'title 345',  isbn: '345', retrieveFailure: undefined }
+        });
     });
 
 
     function applyToStore(...actions){
         actions.forEach(a => store.dispatch(a));
         return store.getState().bookEntry;
+    }
+
+    function checkBooks(state, obj){
+        Object.keys(obj).forEach(index => checkBook(obj[index], state.entryList[index]));
     }
 
     function checkBook(bookProperties, bookInState){
