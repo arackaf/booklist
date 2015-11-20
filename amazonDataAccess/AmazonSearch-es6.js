@@ -11,7 +11,7 @@ class AmazonSearch{
             opHelper.execute('ItemLookup', {
                 'SearchIndex': 'Books',
                 'IdType': 'ISBN',
-                'ResponseGroup': 'ItemAttributes,EditorialReview',
+                'ResponseGroup': 'ItemAttributes,EditorialReview,Images',
                 'ItemId': isbn
             }, nodeCallback(function (results, xml) { // you can add a third parameter for the raw xml response, "results" here are currently parsed using xml2js
                 if (!results.ItemLookupResponse || !results.ItemLookupResponse.Items || !results.ItemLookupResponse.Items[0] || !results.ItemLookupResponse.Items[0].Item || !results.ItemLookupResponse.Items[0].Item[0] || !results.ItemLookupResponse.Items[0].Item[0].ItemAttributes || !results.ItemLookupResponse.Items[0].Item[0].ItemAttributes[0]){
@@ -32,6 +32,8 @@ function projectResponse(item){
             ean: safeAccess(attributes, 'EAN'),
             author: safeAccess(attributes, 'Author'),
             pages: safeAccess(attributes, 'NumberOfPages'),
+            smallImage: safeAccess(safeAccessObject(item, 'SmallImage'), 'URL'),
+            mediumImage: safeAccess(safeAccessObject(item, 'MediumImage'), 'URL'),
             publicationDate: safeAccess(attributes, 'PublicationDate'),
             editorialReviews: []
         },
@@ -44,6 +46,10 @@ function projectResponse(item){
 
     function safeAccess(obj, path){
         return (obj[path] && obj[path][0]) || '';
+    }
+
+    function safeAccessObject(obj, path){
+        return (obj[path] && obj[path][0]) || {};
     }
 }
 
