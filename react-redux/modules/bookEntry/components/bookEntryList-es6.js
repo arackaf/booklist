@@ -4,7 +4,7 @@ let BookEntryItem = require('./bookEntryItem'),
 class BookEntryList extends React.Component {
     render() {
         return (
-            <div>
+            <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
                 { this.props.entryList.map((entry, i) =>
                         <div key={'Book' + i}>
                             <BookEntryItem
@@ -15,7 +15,7 @@ class BookEntryList extends React.Component {
                                 index={i}
                                 deleteBook={() => this.deleteBook(entry)}
                             />
-                            <br /><br />
+                            <br />
                         </div>
                 )}
                 <button onClick={() => this.saveAll()}>Retrieve and save all</button>
