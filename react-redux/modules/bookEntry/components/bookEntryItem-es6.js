@@ -6,11 +6,8 @@ class BookEntryItem extends React.Component{
         super();
         this.state = { expanded: false };
     }
-    expand(){
-        this.setState({ expanded: true });
-    }
-    collapse(){
-        this.setState({ expanded: false });
+    toggle(){
+        this.setState({ expanded: !this.state.expanded });
     }
     render(){
         return (
@@ -27,20 +24,26 @@ class BookEntryItem extends React.Component{
                     <div className='col-md-9 pull-left'>
                         { this.props.retrieving ? <span>loading....</span> : null }
                         { this.props.fetchedTitle ?
-                            <span>Saved: { this.props.fetchedTitle }&nbsp;
-                                <AjaxButton preset='danger-xs' running={this.props.deleting} onClick={this.props.deleteBook} text='Delete' runningText='Deleting' />&nbsp;
-                                <BootstrapButton preset='info-xs' onClick={() => this.expand()}>D</BootstrapButton>
-                        </span> : null
+                            <div className="row">
+                                <div className="col-xs-11">
+                                    <BootstrapButton preset='info-xs' onClick={() => this.toggle()}><i className={this.state.expanded ? 'fa fa-angle-double-up' : 'fa fa-angle-double-down'}></i></BootstrapButton>&nbsp;
+                                    Saved: { this.props.fetchedTitle }
+                                </div>
+                                <div className="col-xs-1">
+                                    <AjaxButton preset='danger-xs' running={this.props.deleting} onClick={this.props.deleteBook} text='Delete' runningText='Deleting' />
+                                </div>
+                            </div> : null
                         }
                         { this.props.retrieveFailure && !this.props.retrieving ? <span>Could not find isbn: { this.props.fetchedIsbn }</span> : null }
                     </div>
                 </div>
                 { this.state.expanded ?
-                    <div className='row'>
-                        <div className='col-xs-2'>
+                    <div className='row' style={{ 'margin-top': 10 }}>
+                        <div className='col-md-2 hidden-xs'></div>
+                        <div className='col-md-1 col-xs-3'>
                             <img src={this.props.fetchedInfo.smallImage} />
                         </div>
-                        <div className='col-md-10'>
+                        <div className='col-md-9 col-xs-9'>
                             <span>{this.props.fetchedTitle}</span><br/>
                             <span>{this.props.fetchedInfo.author}</span><br/>
                             <span>{this.props.fetchedInfo.publicationDate ? <span>{'Published ' + this.props.fetchedInfo.publicationDate } <br/></span> : null}</span>
