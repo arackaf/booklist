@@ -27,3 +27,9 @@ utils/ajaxUtil.js
 react-redux/modules/bookEntry/actions/actionCreators.js
 react-redux/modules/bookEntry/actions/actionNames.js
 react-redux/modules/bookEntry/reducers/reducer.js
+react-redux/modules/bookList/actions/actionCreators.js
+react-redux/modules/bookList/actions/actionNames.js
+react-redux/modules/bookList/bookList.js
+react-redux/modules/bookList/components/bookViewList.js
+react-redux/modules/bookList/components/bookViewListItem.js
+react-redux/modules/bookList/reducers/reducer.js
