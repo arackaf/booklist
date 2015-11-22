@@ -1,4 +1,4 @@
-const { UPDATE_ISBN, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('./bookActionNames');
+const { UPDATE_ISBN, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('./actionNames');
 
 function updateIsbn(isbn, index){
     return { type: UPDATE_ISBN, isbn, index };

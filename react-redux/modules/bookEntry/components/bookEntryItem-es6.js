@@ -38,7 +38,7 @@ class BookEntryItem extends React.Component{
                     </div>
                 </div>
                 { this.state.expanded ?
-                    <div className='row' style={{ 'margin-top': 10 }}>
+                    <div className='row' style={{ marginTop: 10 }}>
                         <div className='col-md-2 hidden-xs'></div>
                         <div className='col-md-1 col-xs-3'>
                             <img src={this.props.fetchedInfo.smallImage} />

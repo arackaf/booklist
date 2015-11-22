@@ -1,5 +1,5 @@
 let BookEntryList = require('./components/bookEntryList');
-let reducer = require('./reducers/bookEntryReducer');
+let reducer = require('./reducers/reducer');
 
 BookEntryList = ReactRedux.connect(state => state.bookEntry)(BookEntryList);
 

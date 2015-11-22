@@ -24,3 +24,6 @@ tests/reduxBookEntryTests.js
 react-redux/applicationRoot/store.js
 react-redux/applicationRoot/rootComponents/bootstrapButton.js
 utils/ajaxUtil.js
+react-redux/modules/bookEntry/actions/actionCreators.js
+react-redux/modules/bookEntry/actions/actionNames.js
+react-redux/modules/bookEntry/reducers/reducer.js
