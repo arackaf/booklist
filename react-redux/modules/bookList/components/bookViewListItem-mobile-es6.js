@@ -1,17 +1,17 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
 
-class BookViewListItem extends React.Component{
+class BookViewListItemMobile extends React.Component{
     constructor(){
         super();
     }
     render(){
         return (
             <div>
-                Hey there
+                Hey there - MOBILE
             </div>
         );
     }
 }
 
-module.exports = BookViewListItem;
+module.exports = BookViewListItemMobile;
