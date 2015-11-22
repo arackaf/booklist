@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/bookActionCreators');
+    { updateIsbn, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 class BookEntryList extends React.Component {
     render() {
