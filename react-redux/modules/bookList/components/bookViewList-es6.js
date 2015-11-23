@@ -1,10 +1,13 @@
-let { } = require('../actions/actionCreators');
+let { loadBooks } = require('../actions/actionCreators');
 
 class BookEntryList extends React.Component {
     constructor(){
         super();
         this.state = { listItem: null };
         this.switchToDesktop();
+    }
+    componentDidMount(){
+        setTimeout(() => this.props.dispatch(loadBooks()), 2000);
     }
     switchToDesktop(){
         System.import('./modules/bookList/components/bookViewListItem-desktop').then(component => this.setState({ listItem: component }));

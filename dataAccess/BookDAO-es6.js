@@ -31,6 +31,14 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
+    async searchBooks(){
+        let db = await super.open();
+        try {
+            return await db.collection('books').find({}).toArray();
+        } finally {
+            super.dispose(db);
+        }
+    }
     async saveBook(book){
         let db = await super.open();
         try {
