@@ -1,2 +1,4 @@
 module.exports = {
+    LOAD_BOOKS: 'LOAD_BOOKS',
+    LOAD_BOOKS_RESULTS: 'LOAD_BOOKS_RESULTS'
 };

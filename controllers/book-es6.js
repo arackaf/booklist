@@ -32,6 +32,12 @@ class bookController{
         await bookDao.deleteBook(id);
         this.send({ success: true });
     }
+    async searchBooks(){
+        let bookDao = new BookDAO(),
+            bookResults = await bookDao.searchBooks();
+
+        this.send({ results: bookResults })
+    }
 }
 
 module.exports = bookController;
