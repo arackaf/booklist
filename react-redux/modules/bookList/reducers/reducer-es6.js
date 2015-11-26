@@ -1,7 +1,7 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS } = require('../actions/actionNames');
 
 const initialState = () => ({
-    viewList: []
+    bookList: []
 });
 
 function reducer(state = initialState(), action = {}){

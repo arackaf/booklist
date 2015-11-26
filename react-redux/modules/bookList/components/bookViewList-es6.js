@@ -3,17 +3,18 @@ let { loadBooks } = require('../actions/actionCreators');
 class BookEntryList extends React.Component {
     constructor(){
         super();
-        this.state = { listItem: null };
+
+        this.state = { listComponent: null };
         this.switchToDesktop();
     }
     componentDidMount(){
-        setTimeout(() => this.props.dispatch(loadBooks()), 2000);
+        this.props.dispatch(loadBooks());
     }
     switchToDesktop(){
-        System.import('./modules/bookList/components/bookViewListItem-desktop').then(component => this.setState({ listItem: component }));
+        System.import('./modules/bookList/components/bookViewList-desktop').then(component => this.setState({ listComponent: component }));
     }
     switchToMobile(){
-        System.import('./modules/bookList/components/bookViewListItem-mobile').then(component => this.setState({ listItem: component }));
+        System.import('./modules/bookList/components/bookViewList-mobile').then(component => this.setState({ listComponent: component }));
     }
     render() {
         return (
@@ -22,8 +23,8 @@ class BookEntryList extends React.Component {
                 <button onClick={() => this.switchToMobile()}>Mobile</button>
                 Root list -> <br/><br/>
 
-                { this.state.listItem ?
-                    Array.from({ length: 10 }).map((o, i) => React.createElement(this.state.listItem, { key: 'el' + i })) : '<Loading...>' }
+                { this.state.listComponent ?
+                    React.createElement(this.state.listComponent, { list: this.props.bookList }) : '<Loading...>' }
 
             </div>
         );
