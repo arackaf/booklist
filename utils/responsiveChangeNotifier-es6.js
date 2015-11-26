@@ -22,7 +22,7 @@ class ResponsiveNotifier{
         this.notifySize();
     }
     dispose(){
-        $(window).off(this.notifySize);
+        $(window).off('resize', this.notifySize);
     }
 }
 

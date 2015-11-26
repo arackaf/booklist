@@ -1,9 +1,23 @@
 
-const renderUI = require('/react-redux/applicationRoot/renderUI');
+const { renderUI, clearUI } = require('/react-redux/applicationRoot/renderUI');
 const { store, getNewReducer } = require('/react-redux/applicationRoot/store');
 require('/utils/ajaxUtil');
 
-System.import('./modules/bookList/bookList').then(module => {
-    getNewReducer({ name: module.name, reducer: module.reducer });
-    renderUI(module.component);
-});
+window.onhashchange = function () {
+    loadCurrentModule();
+};
+loadCurrentModule();
+
+let oldModuleName;
+
+function loadCurrentModule() {
+    let hash = window.location.hash.replace('#', ''),
+        module = hash.split('/')[0] || 'bookList';
+
+    System.import(`./modules/${module}/${module}`).then(module => {
+        clearUI();
+        getNewReducer({ name: module.name, reducer: module.reducer, oldModule: oldModuleName });
+        renderUI(module.component);
+        oldModuleName = module.name;
+    });
+}

@@ -2,6 +2,13 @@ const Provider = ReactRedux.Provider;
 const Header = require('./rootComponents/Header');
 const { store } = require('/react-redux/applicationRoot/store');
 
+function clearUI(){
+    ReactDOM.render(
+        <div></div>,
+        document.getElementById('home')
+    );
+}
+
 function renderUI(component){
     ReactDOM.render(
         <Provider store={store}>
@@ -15,4 +22,4 @@ function renderUI(component){
     );
 }
 
-module.exports = renderUI;
+module.exports = { renderUI, clearUI };
