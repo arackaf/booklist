@@ -29,7 +29,6 @@ function responsiveMobileDesktopMixin(self, stateName, config){
     const originalComponentWillDismount = self.componentWillUnmount;
     self.componentWillUnmount = function(){
         this.responsiveNotifier.dispose();
-        console.log('notifier diposed');
         typeof originalComponentWillDismount === 'function' && originalComponentWillDismount.call(this);
     };
 
