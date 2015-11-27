@@ -2,11 +2,11 @@ const { loadBooks } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
 function BookListLoading() {
-    return <div>Loading ...</div>
+    return <div style={{ height: '150' }}>Loading ...</div>
 }
 
 function BookListNoResults() {
-    return <div>No results</div>
+    return <div style={{ height: '150' }}>No results</div>
 }
 
 class BookViewingList extends React.Component {
