@@ -8,16 +8,13 @@ window.onhashchange = function () {
 };
 loadCurrentModule();
 
-let oldModuleName;
-
 function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
         module = hash.split('/')[0] || 'bookList';
 
     System.import(`./modules/${module}/${module}`).then(module => {
         clearUI();
-        getNewReducer({ name: module.name, reducer: module.reducer, oldModule: oldModuleName });
+        getNewReducer({ name: module.name, reducer: module.reducer });
         renderUI(module.component);
-        oldModuleName = module.name;
     });
 }

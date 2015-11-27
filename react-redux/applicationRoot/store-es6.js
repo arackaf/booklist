@@ -4,6 +4,12 @@ const thunkMiddleware = require('./../util/redux-thunk');
 function getNewReducer(reducerObj){
     if (!reducerObj) return Redux.combineReducers({ root: rootReducer });
 
+    store.replaceReducer(function(){
+        return {
+            root: rootReducer()
+        }
+    });
+
     store.replaceReducer(Redux.combineReducers({
         [reducerObj.name]: reducerObj.reducer,
         root: rootReducer
