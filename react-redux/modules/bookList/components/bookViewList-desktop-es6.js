@@ -10,6 +10,9 @@ class BookViewListDesktop extends React.Component{
                         <th></th>
                         <th>Title</th>
                         <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Published</th>
+                        <th>Pages</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,6 +21,9 @@ class BookViewListDesktop extends React.Component{
                         <td><img src={book.smallImage} /></td>
                         <td>{book.title}</td>
                         <td>{book.author}</td>
+                        <td>{book.isbn}</td>
+                        <td>{book.publicationDate}</td>
+                        <td>{book.pages}</td>
                     </tr>
                 )}
                 </tbody>
