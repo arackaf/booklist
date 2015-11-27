@@ -7,13 +7,22 @@ class BookViewListDesktop extends React.Component{
     }
     render(){
         return (
-            <div>
-            { this.props.list.map((book, i) =>
-                <div key={'book' + i}>
-                    Hey there - DESKTOP
-                </div>
-            )}
-            </div>
+            <table className="table table-striped">
+                <thead>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Author</th>
+                </thead>
+                <tbody>
+                { this.props.list.map((book, i) =>
+                    <tr>
+                        <td><img src={book.smallImage} /></td>
+                        <td>{book.title}</td>
+                        <td>{book.author}</td>
+                    </tr>
+                )}
+                </tbody>
+            </table>
         );
     }
 }
