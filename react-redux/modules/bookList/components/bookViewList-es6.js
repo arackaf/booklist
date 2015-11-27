@@ -2,7 +2,7 @@ const { loadBooks } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
 function BookListLoading() {
-    return <div style={{ height: '150' }}>Loading ...</div>
+    return <div style={{ height: '150' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
 }
 
 function BookListNoResults() {
