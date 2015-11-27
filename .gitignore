@@ -37,3 +37,5 @@ react-redux/modules/bookList/components/bookViewListItem-desktop.js
 react-redux/modules/bookList/components/bookViewListItem-mobile.js
 utils/responsiveChangeNotifier.js
 react-redux/util/responsiveUiLoaders.js
+react-redux/modules/bookList/components/bookViewList-desktop.js
+react-redux/modules/bookList/components/bookViewList-mobile.js
