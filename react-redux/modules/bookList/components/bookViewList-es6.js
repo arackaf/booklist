@@ -1,7 +1,15 @@
 const { loadBooks } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
-class BookEntryList extends React.Component {
+function BookListLoading() {
+    return <div>Loading ...</div>
+}
+
+function BookListNoResults() {
+    return <div>No results</div>
+}
+
+class BookViewingList extends React.Component {
     constructor(){
         super();
 
@@ -15,17 +23,18 @@ class BookEntryList extends React.Component {
     }
     render() {
         return (
-            <div>
-                <button onClick={() => this.switchToDesktop()}>Desktop</button>
-                <button onClick={() => this.switchToMobile()}>Mobile</button>
-                Root list -> <br/><br/>
+            <div className="panel panel-default" style={{ margin: '15' }}>
+                <div className="panel-body">
+                    <button onClick={() => this.switchToDesktop()}>Desktop</button>
+                    <button onClick={() => this.switchToMobile()}>Mobile</button>
+                    Root list -> <br/><br/>
 
-                { this.state.listComponent ?
-                    React.createElement(this.state.listComponent, { list: this.props.bookList }) : '<Loading...>' }
-
+                    { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
+                        (this.props.bookList.length ? React.createElement(this.state.listComponent, { list: this.props.bookList }) : <BookListNoResults />) }
+                </div>
             </div>
         );
     }
 }
 
-module.exports = BookEntryList;
+module.exports = BookViewingList;
