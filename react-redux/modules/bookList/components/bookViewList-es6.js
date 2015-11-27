@@ -27,7 +27,7 @@ class BookViewingList extends React.Component {
                 <div className="panel-body">
                     <button onClick={() => this.switchToDesktop()}>Desktop</button>
                     <button onClick={() => this.switchToMobile()}>Mobile</button>
-                    Root list -> <br/><br/>
+                    <br/><br/>
 
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
                         (this.props.bookList.length ? React.createElement(this.state.listComponent, { list: this.props.bookList }) : <BookListNoResults />) }
