@@ -24,12 +24,17 @@
 
         System.import('/react-redux/reactStartup');
 
+        function logout(){
+            ajaxUtil.post('/react-redux/logout', { }, function(){ });
+        }
+
     </script>
 
 </head>
 <body>
-    <a href="#bookEntry">Book entry</a>
-    <a href="#bookList">Book list</a>
+    <a href="#bookEntry">Book entry</a> |
+    <a href="#bookList">Book list</a> | 
+    <a style="cursor: pointer" onclick="logout()">logout</a>
 
 
     <div id="home"></div>

@@ -16,7 +16,7 @@
             var password =  document.getElementById('password').value;
 
             ajaxUtil.post('/react-redux/login', { username: username, password: password }, function(resp) {
-                alert(resp.id);
+                window.location = '/react-redux';
             });
         }
     </script>

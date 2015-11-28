@@ -62,3 +62,8 @@ app.post('/react-redux/login', passport.authenticate('local'), function(req, res
     //response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
     response.send(req.user);
 });
+
+app.post('/react-redux/logout', function(req, res){
+    req.logout();
+    res.send({});
+});
