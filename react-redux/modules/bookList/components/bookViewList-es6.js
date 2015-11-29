@@ -15,7 +15,7 @@ class BookViewingList extends React.Component {
 
         responsiveMobileDesktopMixin(this, 'listComponent', {
             mobile:  './modules/bookList/components/bookViewList-mobile',
-            desktop: './modules/bookList/components/bookViewList-desktop'
+            desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: state => state.bookList }
         });
     }
     componentDidMount(){
@@ -37,7 +37,7 @@ class BookViewingList extends React.Component {
 
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
                         (this.props.bookList.length ?
-                            React.createElement(this.state.listComponent, { list: this.props.bookList, ...this.props, addSubject: s => this.addSubject(s), editSubjectsFor: index => this.editSubjectsFor(index) })
+                            React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s), editSubjectsFor: index => this.editSubjectsFor(index) })
                             : <BookListNoResults />)
                     }
                 </div>
