@@ -1,4 +1,4 @@
-const { loadBooks } = require('../actions/actionCreators');
+const { loadBooks, editSubjectsForBook, addSubjectToBook } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
 function BookListLoading() {
@@ -21,6 +21,12 @@ class BookViewingList extends React.Component {
     componentDidMount(){
         this.props.dispatch(loadBooks());
     }
+    editSubjectsFor(index){
+        this.props.dispatch(editSubjectsForBook(index));
+    }
+    addSubject(subject){
+        this.props.dispatch(addSubjectToBook(subject));
+    }
     render() {
         return (
             <div className="panel panel-default" style={{ margin: '15' }}>
@@ -30,7 +36,10 @@ class BookViewingList extends React.Component {
                     <br/><br/>
 
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
-                        (this.props.bookList.length ? React.createElement(this.state.listComponent, { list: this.props.bookList }) : <BookListNoResults />) }
+                        (this.props.bookList.length ?
+                            React.createElement(this.state.listComponent, { list: this.props.bookList, ...this.props, addSubject: s => this.addSubject(s), editSubjectsFor: index => this.editSubjectsFor(index) })
+                            : <BookListNoResults />)
+                    }
                 </div>
             </div>
         );
