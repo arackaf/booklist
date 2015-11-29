@@ -1,4 +1,4 @@
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS } = require('./actionNames');
+const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS } = require('./actionNames');
 
 function loadBooks(){
     return function(dispatch, getState){
@@ -10,7 +10,21 @@ function loadBooks(){
     }
 }
 
+function editSubjectsForBook(index){
+    return { type: EDIT_SUBJECTS_FOR, index };
+}
+
+function addSubjectToBook(subject){
+    return function(dispatch, getState) {
+        dispatch({ type: MODIFY_SUBJECTS });
+
+        setTimeout(() => dispatch({ type: MODIFY_SUBJECTS_RESULTS, subject: subject }), 1000);
+    }
+}
+
 module.exports = {
-    loadBooks
+    loadBooks,
+    editSubjectsForBook,
+    addSubjectToBook
 };
 

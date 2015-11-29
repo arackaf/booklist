@@ -3,13 +3,13 @@ const Modal = ReactBootstrap.Modal;
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
-        this.state = { modalShown: false, editSubjectsFor: null };
+        this.state = { subjectsModalShown: false, editSubjectsFor: null };
     }
-    openModal(){
-        this.setState({ modalShown: true });
+    editSubjectsFor(i){
+        this.props.editSubjectsFor(i);
     }
-    closeSubjectsModal(){
-        this.setState({ modalShown: false });
+    componentWillReceiveProps(newProps){
+        this.setState({ subjectsModalShown: newProps.editSubjectsAtIndex >= 0, editSubjectsFor: newProps.list[newProps.editSubjectsAtIndex] || {} });
     }
     render(){
         return (
@@ -32,7 +32,10 @@ class BookViewListDesktop extends React.Component{
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
                             <td>{book.author}</td>
-                            <td><button onClick={() => this.openModal()}>Open</button></td>
+                            <td>
+                                { book.subjects.map(s => <li>{s}</li>) }
+                                <button onClick={() => this.editSubjectsFor(i)}>Open</button>
+                            </td>
                             <td>{book.isbn}</td>
                             <td>{book.publicationDate}</td>
                             <td>{book.pages}</td>
@@ -40,15 +43,19 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
-                <Modal show={this.state.modalShown} onHide={() => this.closeSubjectsModal()}>
+                <Modal show={this.state.subjectsModalShown} onHide={() => this.editSubjectsFor(-1)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <h4>Text in a modal</h4>
+                        <ul>
+                            <li>History <button onClick={() => this.props.addSubject('History')}>add</button></li>
+                            <li>Science <button onClick={() => this.props.addSubject('Science')}>add</button></li>
+                            <li>Math <button onClick={() => this.props.addSubject('Math')}>add</button></li>
+                        </ul>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onHide={() => this.closeSubjectsModal()}>Close</button>
+                        <button onHide={() => this.editSubjectsFor(-1)}>Close</button>
                     </Modal.Footer>
                 </Modal>
             </div>
