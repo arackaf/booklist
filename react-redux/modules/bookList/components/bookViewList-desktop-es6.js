@@ -5,9 +5,6 @@ class BookViewListDesktop extends React.Component{
         super();
         this.state = { subjectsModalShown: false, editSubjectsFor: null };
     }
-    editSubjectsFor(i){
-        this.props.editSubjectsFor(i);
-    }
     componentWillReceiveProps(newProps){
         this.setState({ subjectsModalShown: newProps.editSubjectsAtIndex >= 0, editSubjectsFor: newProps.bookList[newProps.editSubjectsAtIndex] || {} });
     }
@@ -34,7 +31,7 @@ class BookViewListDesktop extends React.Component{
                             <td>{book.author}</td>
                             <td>
                                 { book.subjects.map(s => <li>{s}</li>) }
-                                <button onClick={() => this.editSubjectsFor(i)}>Open</button>
+                                <button onClick={() => this.props.editSubjectsFor(i)}>Open</button>
                             </td>
                             <td>{book.isbn}</td>
                             <td>{book.publicationDate}</td>
@@ -43,7 +40,7 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
-                <Modal show={this.state.subjectsModalShown} onHide={() => this.editSubjectsFor(-1)}>
+                <Modal show={this.state.subjectsModalShown} onHide={() => this.props.editSubjectsFor(-1)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
@@ -55,7 +52,7 @@ class BookViewListDesktop extends React.Component{
                         </ul>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onHide={() => this.editSubjectsFor(-1)}>Close</button>
+                        <button onHide={() => this.props.editSubjectsFor(-1)}>Close</button>
                     </Modal.Footer>
                 </Modal>
             </div>
