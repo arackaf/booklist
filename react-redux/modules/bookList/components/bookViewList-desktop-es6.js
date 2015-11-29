@@ -9,7 +9,7 @@ class BookViewListDesktop extends React.Component{
         this.props.editSubjectsFor(i);
     }
     componentWillReceiveProps(newProps){
-        this.setState({ subjectsModalShown: newProps.editSubjectsAtIndex >= 0, editSubjectsFor: newProps.list[newProps.editSubjectsAtIndex] || {} });
+        this.setState({ subjectsModalShown: newProps.editSubjectsAtIndex >= 0, editSubjectsFor: newProps.bookList[newProps.editSubjectsAtIndex] || {} });
     }
     render(){
         return (
@@ -27,7 +27,7 @@ class BookViewListDesktop extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                    { this.props.list.map((book, i) =>
+                    { this.props.bookList.map((book, i) =>
                         <tr key={'bookDesktop' + i}>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
