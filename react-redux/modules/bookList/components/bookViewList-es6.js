@@ -1,4 +1,4 @@
-const { loadBooks, editSubjectsForBook, addSubjectToBook } = require('../actions/actionCreators');
+const { loadBooks, editSubjectsForBook, addSubjectToBook, loadSubjects } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
 function BookListLoading() {
@@ -20,6 +20,7 @@ class BookViewingList extends React.Component {
     }
     componentDidMount(){
         this.props.dispatch(loadBooks());
+        this.props.dispatch(loadSubjects());
     }
     editSubjectsFor(index){
         this.props.dispatch(editSubjectsForBook(index));
@@ -34,6 +35,11 @@ class BookViewingList extends React.Component {
                     <button onClick={() => this.switchToDesktop()}>Desktop</button>
                     <button onClick={() => this.switchToMobile()}>Mobile</button>
                     <br/><br/>
+
+                    <ul>
+                        { this.props.subjects.map(s => <li key={s._id}>{s.name}</li>) }
+                    </ul>
+
 
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
                         (this.props.bookList.length ?

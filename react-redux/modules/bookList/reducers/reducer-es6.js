@@ -1,7 +1,8 @@
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS } = require('../actions/actionNames');
+const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS } = require('../actions/actionNames');
 
 const initialState = () => ({
-    bookList: []
+    bookList: [],
+    subjects: []
 });
 
 var i = 0;
@@ -22,6 +23,10 @@ function reducer(state = initialState(), action = {}){
             list[state.editSubjectsAtIndex].subjects.push(action.subject);
 
             return Object.assign({}, state, { bookList: list });
+        case LOAD_SUBJECTS:
+            return Object.assign({}, state);
+        case LOAD_SUBJECTS_RESULTS:
+            return Object.assign({}, state, { subjects: action.subjects });
     }
 
     return state;
