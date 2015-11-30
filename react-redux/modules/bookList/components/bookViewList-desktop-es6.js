@@ -1,12 +1,28 @@
 const Modal = ReactBootstrap.Modal;
 
+const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
-        this.state = { subjectsModalShown: false, editSubjectsFor: null };
+        this.state = { subjectsModalShown: false, editSubjectsFor: null, subjectsAdding: [], subjectsRemoving: [] };
     }
     componentWillReceiveProps(newProps){
         this.setState({ subjectsModalShown: newProps.editSubjectsAtIndex >= 0, editSubjectsFor: newProps.bookList[newProps.editSubjectsAtIndex] || {} });
+    }
+    toggleAddSubjectPending(subject, toggledOn){
+        this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
+    }
+    toggleRemoveSubjectPending(subject, toggledOn){
+        this[editSubjectStateCollection](subject, toggledOn, 'subjectsRemoving');
+    }
+    [editSubjectStateCollection](subject, toggledOn, stateName){
+        let updated = this.state[stateName].concat();
+        if (toggledOn){
+            updated.push(subject);
+        } else {
+            updated = updated.filter(s => s._id !== subject._id);
+        }
+        this.setState({ [stateName]: updated });
     }
     render(){
         return (
@@ -45,14 +61,26 @@ class BookViewListDesktop extends React.Component{
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <ul>
-                            <li>History <button onClick={() => this.props.addSubject('History')}>add</button></li>
-                            <li>Science <button onClick={() => this.props.addSubject('Science')}>add</button></li>
-                            <li>Math <button onClick={() => this.props.addSubject('Math')}>add</button></li>
-                        </ul>
+                        <b>Add</b> { this.state.subjectsAdding.map(s => <span key={'addingS' + s._id}>{s.name}</span>) }
+                        <div className="panel panel-default" style={{ maxHeight: 100, overflow: 'scroll' }}>
+                            <div className="panel-body">
+                                <ul>
+                                    { this.props.subjects.map(s => <li key={'addS' + s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <b>Remove</b> { this.state.subjectsRemoving.map(s => <span key={'removingS' + s._id}>{s.name}</span>) }
+                        <div className="panel panel-default" style={{ maxHeight: 100, overflow: 'scroll' }}>
+                            <div className="panel-body">
+                                <ul>
+                                    { this.props.subjects.map(s => <li key={'remS' + s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                </ul>
+                            </div>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onHide={() => this.props.editSubjectsFor(-1)}>Close</button>
+                        <button onClick={() => this.props.editSubjectsFor(-1)}>Close</button>
                     </Modal.Footer>
                 </Modal>
             </div>
