@@ -54,7 +54,7 @@ class BookViewListDesktop extends React.Component{
                     </thead>
                     <tbody>
                     { this.props.bookList.map((book, i) =>
-                        <tr key={'bookDesktop' + i}>
+                        <tr key={'bookDesktop' + book._id}>
                             <td>
                                 <BootstrapButton preset='primary-xs' onClick={() => this.toggleBook(book)}><i className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')}></i></BootstrapButton>
                             </td>

@@ -14,7 +14,7 @@ function reducer(state = initialState(), action = {}){
             return Object.assign({}, state, { loading: true });
         case LOAD_BOOKS_RESULTS:
             setBookResultsSubjects(action.bookList, state.subjects);
-            return Object.assign({}, state, { loading: false, bookList: i++ % 2 == 0 ? action.bookList : [] });
+            return Object.assign({}, state, { loading: false, bookList: true || i++ % 2 == 0 ? action.bookList : [] });
         case EDIT_SUBJECTS_FOR:
             return Object.assign({}, state);
         case MODIFY_SUBJECTS:
