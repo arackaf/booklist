@@ -1,4 +1,5 @@
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS } = require('../actions/actionNames');
+const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } = require('../actions/actionNames');
 
 const initialState = () => ({
     bookList: [],
@@ -24,6 +25,15 @@ function reducer(state = initialState(), action = {}){
             return Object.assign({}, state);
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjects: action.subjects });
+        case TOGGLE_SELECT_BOOK:
+            var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: b._id == action._id ? !b.selected : b.selected }))
+            return Object.assign({}, state, { bookList: newBookList, selectedCount: newBookList.filter(b => b.selected).length });
+        case SELECT_ALL_BOOKS:
+            var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: true }));
+            return Object.assign({}, state, { bookList: newBookList, selectedCount: newBookList.length });
+        case DE_SELECT_ALL_BOOKS:
+            var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: false }));
+            return Object.assign({}, state, { bookList: newBookList, selectedCount: 0 });
     }
 
     return state;
