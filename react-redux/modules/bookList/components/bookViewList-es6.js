@@ -1,4 +1,4 @@
-const { loadBooks } = require('../actions/actionCreators');
+const { loadBooks, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
 function BookListLoading() {
@@ -15,11 +15,17 @@ class BookViewingList extends React.Component {
 
         responsiveMobileDesktopMixin(this, 'listComponent', {
             mobile:  './modules/bookList/components/bookViewList-mobile',
-            desktop: './modules/bookList/components/bookViewList-desktop'
+            desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: state => state.bookList }
         });
     }
     componentDidMount(){
-        this.props.dispatch(loadBooks());
+        this.props.dispatch(loadBooksAndSubjects());
+    }
+    editSubjectsFor(index){
+        this.props.dispatch(editSubjectsForBook(index));
+    }
+    addSubject(subject){
+        this.props.dispatch(addSubjectToBook(subject));
     }
     render() {
         return (
@@ -29,8 +35,16 @@ class BookViewingList extends React.Component {
                     <button onClick={() => this.switchToMobile()}>Mobile</button>
                     <br/><br/>
 
+                    <ul>
+                        { this.props.subjects.map(s => <li key={s._id}>{s.name}</li>) }
+                    </ul>
+
+
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
-                        (this.props.bookList.length ? React.createElement(this.state.listComponent, { list: this.props.bookList }) : <BookListNoResults />) }
+                        (this.props.bookList.length ?
+                            React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s), editSubjectsFor: index => this.editSubjectsFor(index) })
+                            : <BookListNoResults />)
+                    }
                 </div>
             </div>
         );
