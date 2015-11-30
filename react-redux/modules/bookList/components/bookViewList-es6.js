@@ -21,9 +21,6 @@ class BookViewingList extends React.Component {
     componentDidMount(){
         this.props.dispatch(loadBooksAndSubjects());
     }
-    editSubjectsFor(index){
-        this.props.dispatch(editSubjectsForBook(index));
-    }
     addSubject(subject){
         this.props.dispatch(addSubjectToBook(subject));
     }
@@ -42,7 +39,7 @@ class BookViewingList extends React.Component {
 
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
                         (this.props.bookList.length ?
-                            React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s), editSubjectsFor: index => this.editSubjectsFor(index) })
+                            React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
                             : <BookListNoResults />)
                     }
                 </div>

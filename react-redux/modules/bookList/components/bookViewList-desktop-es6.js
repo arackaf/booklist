@@ -1,13 +1,17 @@
+const {  } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
-        this.state = { subjectsModalShown: false, editSubjectsFor: null, subjectsAdding: [], subjectsRemoving: [] };
+        this.state = { subjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [] };
     }
-    componentWillReceiveProps(newProps){
-        this.setState({ subjectsModalShown: newProps.editSubjectsAtIndex >= 0, editSubjectsFor: newProps.bookList[newProps.editSubjectsAtIndex] || {} });
+    closeModal(){
+        this.setState({ subjectsModalShown: false });
+    }
+    singleSelectBook(book){
+        this.setState({ subjectsModalShown: true, editSubjectsFor: [book] });
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
@@ -47,7 +51,7 @@ class BookViewListDesktop extends React.Component{
                             <td>{book.author}</td>
                             <td>
                                 { book.subjects.map(s => <li key={s._id}>{s.name}</li>) }
-                                <button onClick={() => this.props.editSubjectsFor(i)}>Open</button>
+                                <button onClick={() => this.singleSelectBook(book)}>Open</button>
                             </td>
                             <td>{book.isbn}</td>
                             <td>{book.publicationDate}</td>
@@ -56,9 +60,12 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
-                <Modal show={this.state.subjectsModalShown} onHide={() => this.props.editSubjectsFor(-1)}>
+                <Modal show={this.state.subjectsModalShown} onHide={() => this.closeModal()}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>
+                            Edit subjects for:
+                            <div>{this.state.editSubjectsFor.map(b => <h5 key={'addForB' + b._id}>{b.title}</h5>)}</div>
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div>
@@ -84,7 +91,7 @@ class BookViewListDesktop extends React.Component{
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onClick={() => this.props.editSubjectsFor(-1)}>Close</button>
+                        <button onClick={() => this.closeModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
             </div>
