@@ -61,8 +61,10 @@ class BookViewListDesktop extends React.Component{
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <b>Add</b> { this.state.subjectsAdding.map(s => <span key={'addingS' + s._id}>{s.name}</span>) }
-                        <div className="panel panel-default" style={{ maxHeight: 100, overflow: 'scroll' }}>
+                        <div>
+                            <b>Add</b> { this.state.subjectsAdding.map(s => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={'addingS' + s._id}>{s.name}</span>) }
+                        </div>
+                        <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
                                     { this.props.subjects.map(s => <li key={'addS' + s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
@@ -70,8 +72,10 @@ class BookViewListDesktop extends React.Component{
                             </div>
                         </div>
 
-                        <b>Remove</b> { this.state.subjectsRemoving.map(s => <span key={'removingS' + s._id}>{s.name}</span>) }
-                        <div className="panel panel-default" style={{ maxHeight: 100, overflow: 'scroll' }}>
+                        <div>
+                            <b>Remove</b> { this.state.subjectsRemoving.map(s => <span className="label label-danger" style={{ marginRight: 5, display: 'inline-block' }} key={'removingS' + s._id}>{s.name}</span>) }
+                        </div>
+                        <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
                                     { this.props.subjects.map(s => <li key={'remS' + s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
