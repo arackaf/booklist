@@ -30,7 +30,7 @@ class BookViewListDesktop extends React.Component{
                             <td>{book.title}</td>
                             <td>{book.author}</td>
                             <td>
-                                { book.subjects.map(s => <li>{s}</li>) }
+                                { book.subjects.map(s => <li key={s._id}>{s.name}</li>) }
                                 <button onClick={() => this.props.editSubjectsFor(i)}>Open</button>
                             </td>
                             <td>{book.isbn}</td>
