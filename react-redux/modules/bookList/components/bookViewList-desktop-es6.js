@@ -1,4 +1,5 @@
-const {  } = require('../actions/actionCreators');
+const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
+const { toggleSelectBook } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
@@ -12,6 +13,9 @@ class BookViewListDesktop extends React.Component{
     }
     singleSelectBook(book){
         this.setState({ subjectsModalShown: true, editSubjectsFor: [book] });
+    }
+    multiBookSubjectsModal(){
+        this.setState({ subjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected) })
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
@@ -28,12 +32,17 @@ class BookViewListDesktop extends React.Component{
         }
         this.setState({ [stateName]: updated });
     }
+    toggleBook(book){
+        this.props.dispatch(toggleSelectBook(book._id));
+    }
     render(){
         return (
             <div>
+                { this.props.selectedCount ? <BootstrapButton preset="primary-sm" onClick={() => this.multiBookSubjectsModal()}>Set subjects</BootstrapButton> : null }
                 <table className="table table-striped">
                     <thead>
                         <tr>
+                            <th></th>
                             <th></th>
                             <th>Title</th>
                             <th>Author</th>
@@ -46,6 +55,9 @@ class BookViewListDesktop extends React.Component{
                     <tbody>
                     { this.props.bookList.map((book, i) =>
                         <tr key={'bookDesktop' + i}>
+                            <td>
+                                <BootstrapButton preset='primary-xs' onClick={() => this.toggleBook(book)}><i className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')}></i></BootstrapButton>
+                            </td>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
                             <td>{book.author}</td>
