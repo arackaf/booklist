@@ -1,5 +1,5 @@
 window.ajaxUtil = {
-    post(url, data, callback){
+    post(url, data, callback = () => null){
         return $.ajax(url, {
             method: 'post',
             data: data,
@@ -8,7 +8,7 @@ window.ajaxUtil = {
             }
         })
     },
-    ['get'](url, data, callback){
+    ['get'](url, data, callback = () => null){
         return $.ajax(url, {
             method: 'get',
             data: data,
