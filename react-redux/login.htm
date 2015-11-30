@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React Demo</title>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/fontawesome/css/font-awesome.min.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap-toolkit.js"></script>
+    <script type="text/javascript" src="/utils/ajaxUtil.js"></script>
+
+    <script type="text/javascript">
+        function login(){
+            var username =  document.getElementById('username').value;
+            var password =  document.getElementById('password').value;
+
+            ajaxUtil.post('/react-redux/login', { username: username, password: password }, function(resp) {
+                window.location = '/react-redux';
+            });
+        }
+    </script>
+
+</head>
+<body>
+
+    <div>
+        <div>
+
+            username: <input id="username" />
+            password <input id="password" type="password" />
+
+            <button onclick="login()">Login</button>
+
+        </div>
+    </div>
+
+</body>
+</html>
