@@ -6,16 +6,26 @@ const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
-        this.state = { subjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [] };
+        this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [],
+                       editingSubject: null, editSubjectsModalShown: false, newSubjectParent: '', newSubjectName: '' };
     }
-    closeModal(){
-        this.setState({ subjectsModalShown: false });
+    closeEditBooksSubjectsModal(){
+        this.setState({ booksSubjectsModalShown: false });
+    }
+    closeEditSubjectsModal(){
+        this.setState({ editSubjectsModalShown: false });
     }
     singleSelectBook(book){
-        this.setState({ subjectsModalShown: true, editSubjectsFor: [book] });
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book] });
     }
     multiBookSubjectsModal(){
-        this.setState({ subjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected) })
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected) })
+    }
+    editSubjectsModal(){
+        this.setState({ editSubjectsModalShown: true })
+    }
+    editSubject(s){
+        this.setState({ editingSubject: s, newSubjectParent: '', newSubjectName: '' });
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
@@ -39,6 +49,8 @@ class BookViewListDesktop extends React.Component{
         return (
             <div>
                 { this.props.selectedCount ? <BootstrapButton preset="primary-sm" onClick={() => this.multiBookSubjectsModal()}>Set subjects</BootstrapButton> : null }
+                &nbsp;&nbsp;&nbsp;
+                <BootstrapButton preset="primary-sm" onClick={() => this.editSubjectsModal()}>Edit subjects</BootstrapButton>
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -72,7 +84,7 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
-                <Modal show={this.state.subjectsModalShown} onHide={() => this.closeModal()}>
+                <Modal show={this.state.booksSubjectsModalShown} onHide={() => this.closeEditBooksSubjectsModal()}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects for:
@@ -103,9 +115,36 @@ class BookViewListDesktop extends React.Component{
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onClick={() => this.closeModal()}>Close</button>
+                        <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
+                <Modal show={this.state.editSubjectsModalShown} onHide={() => this.closeEditSubjectsModal()}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Edit subjects
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ul>
+                            { this.props.subjects.map(s => <li key={'sToEdit' + s._id}><BootstrapButton onClick={() => this.editSubject(s)} preset="primary-xs"><i className="fa fa-edit"></i></BootstrapButton> {s.name}</li>) }
+                        </ul>
+
+                        { this.state.editingSubject ?
+                            <div>
+                                New name: <input onChange={(e) => this.setState({ newSubjectName: e.target.value })} value={this.state.newSubjectName} />
+                                New Parent:
+                                <select value={this.state.newSubjectParent} onChange={(e) => this.setState({ newSubjectParent: e.target.value })}>
+                                    <option value="">New</option>
+                                    { this.props.subjects.map(s => <option value={s._id}>{s.name}</option>) }
+                                </select>
+                            </div>
+                            : null
+                        }
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button onClick={() => this.closeEditSubjectsModal()}>Close</button>
+                    </Modal.Footer>
+                </Modal>                
             </div>
         );
     }
