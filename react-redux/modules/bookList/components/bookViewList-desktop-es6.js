@@ -16,10 +16,10 @@ class BookViewListDesktop extends React.Component{
         this.setState({ editSubjectsModalShown: false });
     }
     singleSelectBook(book){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book] });
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book], editSubjectsFor: [], subjectsAdding: [] });
     }
     multiBookSubjectsModal(){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected) })
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), editSubjectsFor: [], subjectsAdding: [] })
     }
     editSubjectsModal(){
         this.setState({ editSubjectsModalShown: true })
