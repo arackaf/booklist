@@ -24,7 +24,7 @@ function reducer(state = initialState(), action = {}){
         case LOAD_SUBJECTS:
             return Object.assign({}, state);
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { subjects: action.subjects });
+            return Object.assign({}, state, { subjects: stackSubjects(action.subjects) });
         case TOGGLE_SELECT_BOOK:
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: b._id == action._id ? !b.selected : b.selected }))
             return Object.assign({}, state, { bookList: newBookList, selectedCount: newBookList.filter(b => b.selected).length });
@@ -37,6 +37,14 @@ function reducer(state = initialState(), action = {}){
     }
 
     return state;
+}
+
+function stackSubjects(subjects){
+    subjects.forEach(s => {
+        s.children = [];
+        s.children.push(...subjects.filter(sc => sc.path === `,${s._id},`));
+    });
+    return subjects.filter(s => s.path == null);
 }
 
 function setBookResultsSubjects(books, subjects){

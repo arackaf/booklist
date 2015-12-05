@@ -41,3 +41,4 @@ react-redux/modules/bookList/components/bookViewList-desktop.js
 react-redux/modules/bookList/components/bookViewList-mobile.js
 controllers/subject.js
 dataAccess/subjectDAO.js
+tests/subjectStackingTests.js
