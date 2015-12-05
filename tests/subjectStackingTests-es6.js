@@ -20,6 +20,23 @@ describe('subject stacking', function() {
         verifySubjects(subjects, [{ _id: 1, name: 'a' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }] }]);
     });
 
+    it('should stack 3 deep', function () {
+        let subjects = loadSubjects([{ _id: 1, name: 'a' }, { _id: 2, name: 'b', path: ',1,' }, { _id: 3, name: 'c', path: ',1,2,' }]);
+        verifySubjects(subjects, [{ _id: 1, name: 'a', children: [{ _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }] }] }]);
+    });
+
+    it('should stack 3 deep with peers', function () {
+        let subjects = loadSubjects([
+            { _id: 1, name: 'a' },
+            { _id: 2, name: 'b', path: ',1,' },
+            { _id: 3, name: 'c', path: ',1,2,' },
+            { _id: 22, name: 'b2', path: ',1,' },
+            { _id: 32, name: 'c2', path: ',1,2,' }
+        ]);
+        verifySubjects(subjects, [
+            { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }] }]);
+    });
+
     function loadSubjects(subjects){
         return apply({ type: LOAD_SUBJECTS_RESULTS, subjects }).subjects;
     }

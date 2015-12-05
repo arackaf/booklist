@@ -42,7 +42,7 @@ function reducer(state = initialState(), action = {}){
 function stackSubjects(subjects){
     subjects.forEach(s => {
         s.children = [];
-        s.children.push(...subjects.filter(sc => sc.path === `,${s._id},`));
+        s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
     });
     return subjects.filter(s => s.path == null);
 }
