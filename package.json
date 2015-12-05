@@ -27,7 +27,7 @@
     "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.0",
     "react-redux": "^3.1.0",
-    "redux": "^3.0.2",
+    "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
     "regenerator": "^0.8.36",
     "sinon": "^1.17.1"
