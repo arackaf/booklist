@@ -26,7 +26,7 @@ gulp.task('default', function() {
                         this.emit('end');
                     }
                 }))
-                .pipe(babel({ stage: 1 }))
+                .pipe(babel({ stage: 1, blacklist: ['regenerator'] }))
                 .pipe(rename(function (path) {
                     path.basename = path.basename.replace(/-es6$/, '');
                 }))
