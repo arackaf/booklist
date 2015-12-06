@@ -1,5 +1,5 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } = require('./actionNames');
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SET_NEW_SUBJECT_PARENT } = require('./actionNames');
 
 function loadBooksAndSubjects(){
     return function(dispatch, getState){
@@ -48,11 +48,16 @@ function toggleSelectBook(_id){
     return { type: TOGGLE_SELECT_BOOK, _id }
 }
 
+function setNewSubjectParent(subjectId, newSubjectId){
+    return { type: SET_NEW_SUBJECT_PARENT, subjectId, newSubjectId };
+}
+
 module.exports = {
     loadBooks,
     editSubjectsForBook,
     addSubjectToBook,
     loadBooksAndSubjects,
-    toggleSelectBook
+    toggleSelectBook,
+    setNewSubjectParent
 };
 

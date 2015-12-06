@@ -37,6 +37,18 @@ describe('subject stacking', function() {
             { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }] }]);
     });
 
+    it('should flatten nested subjects properly', function(){ //testing a test utility
+        let flattened = [...flattenAllSubjects([{ _id: 1, name: 'a', children: [{ _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }] }] }])];
+        verifySubjects(flattened, [{ _id: 1, name: 'a' }, { _id: 2, name: 'b' }, { _id: 3, name: 'c' }]);
+    });
+
+    it('should flatten nested subjects properly 2', function(){
+        let flattened = [...flattenAllSubjects([
+            { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }] }
+        ])];
+        verifySubjects(flattened, [{ _id: 1, name: 'a' }, { _id: 22, name: 'b2' }, { _id: 2, name: 'b' }, { _id: 3, name: 'c' }, { _id: 32, name: 'c2' }]);
+    });
+
     function loadSubjects(subjects){
         return apply({ type: LOAD_SUBJECTS_RESULTS, subjects }).subjects;
     }
@@ -53,7 +65,17 @@ describe('subject stacking', function() {
         expected.forEach(se => {
             let matchingSubject = actual.find(sa => se._id == sa._id && se.name == sa.name);
             assert.isObject(matchingSubject, `subject not found ${se._id} ${se.name}`);
-            verifySubjects(matchingSubject.children, se.children || []); //I don't feel like adding children to every test object
+            verifySubjects(matchingSubject.children || [], se.children || []); //I don't feel like adding children to every test object
         });
+    }
+
+    function *flattenAllSubjects(subjects){
+        for (let i = 0; i < subjects.length; i++){
+            if (subjects[i].children) {
+                yield* flattenAllSubjects(subjects[i].children);
+            }
+            subjects[i].children = [];
+            yield subjects[i];
+        }
     }
 });
