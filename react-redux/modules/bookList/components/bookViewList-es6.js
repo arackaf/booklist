@@ -9,6 +9,16 @@ function BookListNoResults() {
     return <div style={{ height: '150' }}>No results</div>
 }
 
+class HierarchicalSubjectList extends React.Component {
+    render(){
+        return (
+            <ul>
+                { this.props.subjects.map(s => <li key={s._id}>{s.name} {s.children.length ? <HierarchicalSubjectList subjects={s.children} /> : null}</li>) }
+            </ul>
+        )
+    }
+}
+
 class BookViewingList extends React.Component {
     constructor(){
         super();
@@ -32,9 +42,7 @@ class BookViewingList extends React.Component {
                     <button onClick={() => this.switchToMobile()}>Mobile</button>
                     <br/><br/>
 
-                    <ul>
-                        { this.props.subjects.map(s => <li key={s._id}>{s.name}</li>) }
-                    </ul>
+                    <HierarchicalSubjectList subjects={this.props.subjects} />
 
 
                     { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
