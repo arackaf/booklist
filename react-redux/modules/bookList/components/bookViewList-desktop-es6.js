@@ -1,7 +1,7 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const { toggleSelectBook } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
-
+const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 class BookViewListDesktop extends React.Component{
     constructor(){
@@ -125,9 +125,7 @@ class BookViewListDesktop extends React.Component{
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <ul>
-                            { this.props.subjects.map(s => <li key={'sToEdit' + s._id}><BootstrapButton onClick={() => this.editSubject(s)} preset="primary-xs"><i className="fa fa-edit"></i></BootstrapButton> {s.name}</li>) }
-                        </ul>
+                        <HierarchicalSubjectList subjects={this.props.subjects} onEdit={s => this.editSubject(s)} />
 
                         { this.state.editingSubject ?
                             <div>
