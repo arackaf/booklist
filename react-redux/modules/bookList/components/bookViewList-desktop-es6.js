@@ -1,8 +1,9 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
-const { toggleSelectBook } = require('../actions/actionCreators');
+const { toggleSelectBook, editSubject } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
+
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
@@ -25,7 +26,8 @@ class BookViewListDesktop extends React.Component{
         this.setState({ editSubjectsModalShown: true })
     }
     editSubject(s){
-        this.setState({ editingSubject: s, newSubjectParent: '', newSubjectName: '' });
+        debugger;
+        this.props.dispatch(editSubject(s._id));
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
@@ -127,13 +129,13 @@ class BookViewListDesktop extends React.Component{
                     <Modal.Body>
                         <HierarchicalSubjectList subjects={this.props.subjects} onEdit={s => this.editSubject(s)} />
 
-                        { this.state.editingSubject ?
+                        { this.props.editingSubject ?
                             <div>
                                 New name: <input onChange={(e) => this.setState({ newSubjectName: e.target.value })} value={this.state.newSubjectName} />
                                 New Parent:
                                 <select value={this.state.newSubjectParent} onChange={(e) => this.setState({ newSubjectParent: e.target.value })}>
                                     <option value="">New</option>
-                                    { this.props.subjects.map(s => <option value={s._id}>{s.name}</option>) }
+                                    { this.props.eligibleParents.map(s => <option value={s._id}>{s.name}</option>) }
                                 </select>
                             </div>
                             : null

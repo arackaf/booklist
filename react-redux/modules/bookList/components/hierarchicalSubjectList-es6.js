@@ -18,10 +18,15 @@ class HierarchicalSubjectItem extends React.Component {
                         <a onClick={() => this.props.onEdit(this)}><i className="fa fa-edit"></i></a>
                         <Collapse in={this.state.childrenVisible}>
                             <div>
-                                <HierarchicalSubjectList subjects={this.props.children} />
+                                <HierarchicalSubjectList onEdit={this.props.onEdit} subjects={this.props.children} />
                             </div>
                         </Collapse>
-                    </div>: <span>{this.props.name}</span>}
+                    </div>
+                    :
+                    <div>
+                        <span>{this.props.name}</span>&nbsp;
+                        <a onClick={() => this.props.onEdit(this)}><i className="fa fa-edit"></i></a>
+                    </div>}
             </li>
         )
     }
@@ -31,7 +36,7 @@ class HierarchicalSubjectList extends React.Component {
     render() {
         return (
             <ul>
-                { this.props.subjects.map(s => <HierarchicalSubjectItem onEdit={this.props.onEdit} key={`s-${s._id}`} {...s} />) }
+                { this.props.subjects.map(s => <HierarchicalSubjectItem onEdit={() => this.props.onEdit(s)} key={`s-${s._id}`} {...s} />) }
             </ul>
         )
     }
