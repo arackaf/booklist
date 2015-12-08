@@ -1,5 +1,5 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } = require('../actions/actionNames');
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, EDIT_SUBJECT } = require('../actions/actionNames');
 
 const initialState = () => ({
     bookList: [],
@@ -34,6 +34,14 @@ function reducer(state = initialState(), action = {}){
         case DE_SELECT_ALL_BOOKS:
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: false }));
             return Object.assign({}, state, { bookList: newBookList, selectedCount: 0 });
+        case EDIT_SUBJECT:
+            var editingSubject = Object.assign({}, state.subjects.find(s => s._id == action._id));
+
+            var eligibleParents = state.subjects
+                .filter(s => s._id !== action._id && (!s.path || !new RegExp(`,${s._id},`).test(action._id)))
+                .map(o => Object.assign({}, o));
+
+            return Object.assign({}, state, { editingSubject, eligibleParents });
     }
 
     return state;
