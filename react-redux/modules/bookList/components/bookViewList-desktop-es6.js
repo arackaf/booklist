@@ -25,8 +25,8 @@ class BookViewListDesktop extends React.Component{
     editSubjectsModal(){
         this.setState({ editSubjectsModalShown: true })
     }
-    editSubject(s){
-        this.props.dispatch(editSubject(s._id));
+    editSubject(_id){
+        this.props.dispatch(editSubject(_id));
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
@@ -126,7 +126,7 @@ class BookViewListDesktop extends React.Component{
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <HierarchicalSubjectList subjects={this.props.subjects} onEdit={s => this.editSubject(s)} />
+                        <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.editSubject(_id)} />
 
                         { this.props.editingSubject ?
                             <div>
