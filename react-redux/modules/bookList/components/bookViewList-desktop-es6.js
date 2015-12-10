@@ -26,7 +26,6 @@ class BookViewListDesktop extends React.Component{
         this.setState({ editSubjectsModalShown: true })
     }
     editSubject(s){
-        debugger;
         this.props.dispatch(editSubject(s._id));
     }
     toggleAddSubjectPending(subject, toggledOn){
@@ -56,7 +55,7 @@ class BookViewListDesktop extends React.Component{
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                             <th></th>
                             <th>Title</th>
                             <th>Author</th>
@@ -70,7 +69,7 @@ class BookViewListDesktop extends React.Component{
                     { this.props.bookList.map((book, i) =>
                         <tr key={'bookDesktop' + book._id}>
                             <td>
-                                <BootstrapButton preset='primary-xs' onClick={() => this.toggleBook(book)}><i className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')}></i></BootstrapButton>
+                                <i onClick={() => this.toggleBook(book)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
                             </td>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
