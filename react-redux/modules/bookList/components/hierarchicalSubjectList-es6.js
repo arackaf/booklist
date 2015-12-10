@@ -13,8 +13,7 @@ class HierarchicalSubjectItem extends React.Component {
             <li key={this.props._id}>
                 {this.props.children.length ?
                     <div>
-                        <a onClick={() => this.toggleChildren()}><i className="fa fa-arrows-v"></i></a>&nbsp;
-                        <span>{this.props.name}</span>&nbsp;
+                        <a onClick={() => this.toggleChildren()}>{this.props.name}</a>&nbsp;
                         <a onClick={() => this.props.onEdit(this)}><i className="fa fa-edit"></i></a>
                         <Collapse in={this.state.childrenVisible}>
                             <div>
