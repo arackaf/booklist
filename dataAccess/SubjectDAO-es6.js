@@ -7,8 +7,20 @@ class SubjectDAO extends DAO {
     }
     async updateSubjectParent(_id, newParent){
         let db = await super.open();
-        try{
 
+        try{
+            let newParentObj = await db.collection('subjects').findOne({ _id: newParent }),
+                newParentPath = (newParentObj.path || ',') + `${newParentObj._id},`,
+                newDescendantPathPiece = `${newParentPath}${_id},`
+
+            await db.collection('subjects').update({ _id: _id }, { $set: { path: newParentPath } });
+            let descendantsToUpdate = await db.collection('subjects').find({ path: { $regex: `.*,${_id},` } }).toArray();
+
+            descendantsToUpdate.forEach(s => console.log('updating descendant', s._id));
+
+            await Promise.all(descendantsToUpdate.map(s =>
+                db.collection('subjects').update({ _id: s._id }, { $set: { path: s.path.replace(new RegExp(`.*,${_id},`), newDescendantPathPiece) } })
+            ));
         } finally {
             super.dispose(db);
         }
