@@ -35,18 +35,10 @@ function reducer(state = initialState(), action = {}){
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: false }));
             return Object.assign({}, state, { bookList: newBookList, selectedCount: 0 });
         case EDIT_SUBJECT:
-            var editingSubject = Object.assign({}, state.subjects.find(s => s._id == action._id));
+            var editingSubject = Object.assign({}, [...flattenedSubjects(state.subjects)].find(s => s._id == action._id));
 
             var eligibleParents = [...flattenedSubjects(state.subjects)]
-                .filter(s => {
-                    let name = s.name;
-                    let sid = s._id;
-                    let path = s.path;
-                    let result = s._id !== action._id && (!s.path || !new RegExp(`,${action._id},`).test(s.path));
-                    let regexTest = new RegExp(`,${action._id},`).test(s.path);
-
-                    debugger;
-                    return s._id !== action._id && (!s.path || !new RegExp(`,${action._id},`).test(s.path)) })
+                .filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path) && !new RegExp(`,${s._id},$`).test(editingSubject.path)))
                 .map(o => Object.assign({}, o));
 
             return Object.assign({}, state, { editingSubject, eligibleParents });
