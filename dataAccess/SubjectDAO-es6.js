@@ -16,8 +16,6 @@ class SubjectDAO extends DAO {
             await db.collection('subjects').update({ _id: _id }, { $set: { path: newParentPath } });
             let descendantsToUpdate = await db.collection('subjects').find({ path: { $regex: `.*,${_id},` } }).toArray();
 
-            descendantsToUpdate.forEach(s => console.log('updating descendant', s._id));
-
             await Promise.all(descendantsToUpdate.map(s =>
                 db.collection('subjects').update({ _id: s._id }, { $set: { path: s.path.replace(new RegExp(`.*,${_id},`), newDescendantPathPiece) } })
             ));
