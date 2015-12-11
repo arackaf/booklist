@@ -21,7 +21,6 @@ class DAO{
     }
     dispose(db){
         db.close();
-        console.log('DISPOSED');
     }
 }
 
