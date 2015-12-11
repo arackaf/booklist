@@ -6,7 +6,7 @@ class BookEntryList extends React.Component {
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
                 { this.props.entryList.map((entry, i) =>
-                        <div key={'Book' + i}>
+                        <div key={i}>
                             <BookEntryItem
                                 ref={'Book' + i}
                                 { ...entry }
