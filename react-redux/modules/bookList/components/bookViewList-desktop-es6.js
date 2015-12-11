@@ -67,7 +67,7 @@ class BookViewListDesktop extends React.Component{
                     </thead>
                     <tbody>
                     { this.props.bookList.map((book, i) =>
-                        <tr key={'bookDesktop' + book._id}>
+                        <tr key={book._id}>
                             <td>
                                 <i onClick={() => this.toggleBook(book)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
                             </td>
@@ -89,28 +89,28 @@ class BookViewListDesktop extends React.Component{
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects for:
-                            <div>{this.state.editSubjectsFor.map(b => <h5 key={'addForB' + b._id}>{b.title}</h5>)}</div>
+                            <div>{this.state.editSubjectsFor.map(b => <h5 key={b._id}>{b.title}</h5>)}</div>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div>
-                            <b>Add</b> { this.state.subjectsAdding.map(s => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={'addingS' + s._id}>{s.name}</span>) }
+                            <b>Add</b> { this.state.subjectsAdding.map(s => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={s._id}>{s.name}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.map(s => <li key={'addS' + s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                    { this.props.subjects.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
                                 </ul>
                             </div>
                         </div>
 
                         <div>
-                            <b>Remove</b> { this.state.subjectsRemoving.map(s => <span className="label label-danger" style={{ marginRight: 5, display: 'inline-block' }} key={'removingS' + s._id}>{s.name}</span>) }
+                            <b>Remove</b> { this.state.subjectsRemoving.map(s => <span className="label label-danger" style={{ marginRight: 5, display: 'inline-block' }} key={s._id}>{s.name}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.map(s => <li key={'remS' + s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                    { this.props.subjects.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
                                 </ul>
                             </div>
                         </div>
@@ -134,7 +134,7 @@ class BookViewListDesktop extends React.Component{
                                 New Parent:
                                 <select value={this.state.newSubjectParent} onChange={(e) => this.setState({ newSubjectParent: e.target.value })}>
                                     <option value="">New</option>
-                                    { this.props.eligibleParents.map(s => <option value={s._id}>{s.name}</option>) }
+                                    { this.props.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
                             </div>
                             : null

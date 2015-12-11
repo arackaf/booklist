@@ -35,7 +35,7 @@ class HierarchicalSubjectList extends React.Component {
     render() {
         return (
             <ul>
-                { this.props.subjects.map(s => <HierarchicalSubjectItem onEdit={this.props.onEdit} key={`s-${s._id}`} {...s} />) }
+                { this.props.subjects.map(s => <HierarchicalSubjectItem onEdit={this.props.onEdit} key={s._id} {...s} />) }
             </ul>
         )
     }
