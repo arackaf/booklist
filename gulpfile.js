@@ -5,6 +5,8 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     fs = require('fs');
 
+require('regenerator/runtime');
+
 gulp.task('test', function () {
     gulp.src('tests/**/!(*-es6.js)') //we don't want es6 files - just the transpiled results
         .pipe(mocha());

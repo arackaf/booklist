@@ -44,3 +44,4 @@ dataAccess/subjectDAO.js
 tests/subjectStackingTests.js
 react-redux/modules/bookList/components/hierarchicalSubjectList.js
 dataAccess/DAO.js
+tests/subjectMongoUpdateTests.js
