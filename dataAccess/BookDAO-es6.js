@@ -1,5 +1,4 @@
-var ObjectId = require('mongodb').ObjectID;
-
+const ObjectId = require('mongodb').ObjectID;
 const DAO = require('./DAO');
 
 class BookDAO extends DAO {
