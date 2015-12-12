@@ -21,18 +21,18 @@ class SubjectDAO extends DAO {
         let db = await super.open();
 
         try{
-            let newParentObj = await db.collection('subjects').findOne({ _id: newParent }),
+            let newParentObj = await db.collection('subjects').findOne({ _id: ObjectId(newParent) }),
                 newParentPath = (newParentObj.path || ',') + `${newParentObj._id},`,
                 newDescendantPathPiece = `${newParentPath}${_id},`;
 
-            await db.collection('subjects').update({ _id: _id }, { $set: { path: newParentPath } });
+            await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { path: newParentPath } });
             let descendantsToUpdate = await db.collection('subjects').find({ path: { $regex: `.*,${_id},` } }).toArray();
 
             await Promise.all(descendantsToUpdate.map(s =>
                 db.collection('subjects').update({ _id: s._id }, { $set: { path: s.path.replace(new RegExp(`.*,${_id},`), newDescendantPathPiece) } })
             ));
 
-            return await db.collection('subjects').find({ $or: [{ path: { $regex: `.*,${_id},` } }, { _id: _id }] }).toArray();
+            return await db.collection('subjects').find({ $or: [{ path: { $regex: `.*,${_id},` } }, { _id: ObjectId(_id) }] }).toArray();
         } finally {
             super.dispose(db);
         }
