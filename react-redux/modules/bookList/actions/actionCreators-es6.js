@@ -56,6 +56,12 @@ function editSubject(_id){
     return { type: EDIT_SUBJECT, _id };
 }
 
+function updateSubject(_id, newName, newParent){
+    return function(dispatch) {
+        ajaxUtil.post('/subject/setInfo', {_id, newName, newParent});
+    }
+}
+
 module.exports = {
     loadBooks,
     editSubjectsForBook,
@@ -63,6 +69,7 @@ module.exports = {
     loadBooksAndSubjects,
     toggleSelectBook,
     setNewSubjectParent,
-    editSubject
+    editSubject,
+    updateSubject
 };
 

@@ -1,5 +1,5 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
-const { toggleSelectBook, editSubject } = require('../actions/actionCreators');
+const { toggleSelectBook, editSubject, updateSubject } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
@@ -45,6 +45,9 @@ class BookViewListDesktop extends React.Component{
     }
     toggleBook(book){
         this.props.dispatch(toggleSelectBook(book._id));
+    }
+    updateSubject(){
+        this.props.dispatch(updateSubject(this.props.editingSubject._id, this.state.newSubjectName, this.state.newSubjectParent));
     }
     render(){
         return (
@@ -133,9 +136,10 @@ class BookViewListDesktop extends React.Component{
                                 New name: <input onChange={(e) => this.setState({ newSubjectName: e.target.value })} value={this.state.newSubjectName} />
                                 New Parent:
                                 <select value={this.state.newSubjectParent} onChange={(e) => this.setState({ newSubjectParent: e.target.value })}>
-                                    <option value="">New</option>
+                                    <option value="">None</option>
                                     { this.props.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
+                                <BootstrapButton onClick={() => this.updateSubject()}>Save</BootstrapButton>
                             </div>
                             : null
                         }
