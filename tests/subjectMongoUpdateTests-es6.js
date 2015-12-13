@@ -46,6 +46,12 @@ describe('subject update', function() {
         return await verifyPaths(subjects, {_id: subjects[0]._id, path: null}, {_id: subjects[1]._id, path: ',1,' }, { _id: subjects[2]._id, path: ',1,2,' }, { _id: subjects[3]._id, path: ',1,2,20,' });
     });
 
+    it('Move a child which is also a parent up', async function(){
+        let subjects = await insertSubjects({_id: 1}, {_id: 2}, {_id: 20, path: ',2,'}, {_id: 201, path: ',2,20,'});
+        await subjectDaoInst.updateSubjectParent(subjects[2]._id, null);
+        return await verifyPaths(subjects, {_id: subjects[0]._id, path: null}, {_id: subjects[1]._id, path: null }, { _id: subjects[2]._id, path: null }, { _id: subjects[3]._id, path: ',20,' });
+    });
+
     it('Should update the child and grandchildren w/ siblings of a subject whose parent changes', async function(){
         let subjects = await insertSubjects({_id: 1}, {_id: 2}, {_id: 20, path: ',2,'}, {_id: 201, path: ',2,20,'}, {_id: 202, path: ',2,20,'});
         await subjectDaoInst.updateSubjectParent(subjects[1]._id, subjects[0]._id);

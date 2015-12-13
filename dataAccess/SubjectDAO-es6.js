@@ -21,9 +21,9 @@ class SubjectDAO extends DAO {
         let db = await super.open();
 
         try{
-            let newParentObj = await db.collection('subjects').findOne({ _id: ObjectId(newParent) }),
-                newParentPath = (newParentObj.path || ',') + `${newParentObj._id},`,
-                newDescendantPathPiece = `${newParentPath}${_id},`;
+            let newParentObj = await (newParent ? db.collection('subjects').findOne({ _id: ObjectId(newParent) }) : null),
+                newParentPath = newParentObj ? (newParentObj.path || ',') + `${newParentObj._id},` : null,
+                newDescendantPathPiece = `${newParentPath || ','}${_id},`;
 
             await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { path: newParentPath } });
             let descendantsToUpdate = await db.collection('subjects').find({ path: { $regex: `.*,${_id},` } }).toArray();
