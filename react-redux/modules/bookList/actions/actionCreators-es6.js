@@ -58,7 +58,9 @@ function editSubject(_id){
 
 function updateSubject(_id, newName, newParent){
     return function(dispatch) {
-        ajaxUtil.post('/subject/setInfo', {_id, newName, newParent});
+        ajaxUtil.post('/subject/setInfo', {_id, newName, newParent}, resp => {
+            debugger;
+        });
     }
 }
 

@@ -119,6 +119,12 @@ describe('subject update', function() {
         return verifyReturnedSubjects(resultSubjects, ids[1]._id, ids[2]._id, ids[3]._id, ids[4]._id);
     });
 
+    it('set subject parent right return 3', async function(){
+        let ids = await insertSubjects({_id: 1}, {_id: 2}, {_id: 3, path: `,2,`}, {_id: 4, path: `,2,3,`}, {_id: 5, path: `,2,3,`});
+        let resultSubjects = await subjectDaoInst.updateSubjectParent(ids[4]._id, null);
+        return verifyReturnedSubjects(resultSubjects, ids[4]._id);
+    });
+
     async function insertSubjects(...subjects){
         let lookup = { };
         subjects.forEach(s => {
