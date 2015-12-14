@@ -12,9 +12,9 @@ class subjectController{
     @httpPost
     async setInfo(_id, newName, newParent){
         let subjectDao = new SubjectDAO(),
-            { affectedSubjects, newInfo } = await subjectDao.updateSubjectInfo(_id, newName, newParent || null);
+            { affectedSubjects, existingParent } = await subjectDao.updateSubjectInfo(_id, newName, newParent || null);
 
-        this.send({ affectedSubjects, newInfo });
+        this.send({ affectedSubjects, existingParent });
     }
 }
 
