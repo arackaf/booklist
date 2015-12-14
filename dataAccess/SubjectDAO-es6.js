@@ -12,7 +12,8 @@ class SubjectDAO extends DAO {
         try{
             await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { name: newName } });
             //just call it every time for now - when drag and drop implemented, this'll be separate
-            return await this.updateSubjectParent(_id, newParent);
+            let affectedSubjects = await this.updateSubjectParent(_id, newParent);
+            return { affectedSubjects, newInfo: { name: newName } };
         } finally{
             super.dispose(db);
         }
