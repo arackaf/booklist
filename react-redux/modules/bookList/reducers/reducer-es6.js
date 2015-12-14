@@ -1,5 +1,7 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, EDIT_SUBJECT } = require('../actions/actionNames');
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, EDIT_SUBJECT,
+        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
+    } = require('../actions/actionNames');
 
 const initialState = () => ({
     bookList: [],
@@ -16,7 +18,7 @@ function reducer(state = initialState(), action = {}){
             setBookResultsSubjects(action.bookList, state.subjects);
             return Object.assign({}, state, { loading: false, bookList: true || i++ % 2 == 0 ? action.bookList : [] });
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { subjects: stackSubjects(action.subjects) });
+            return Object.assign({}, state, { subjects: stackAndGetTopLevelSubjects(action.subjects) });
         case TOGGLE_SELECT_BOOK:
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: b._id == action._id ? !b.selected : b.selected }))
             return Object.assign({}, state, { bookList: newBookList, selectedCount: newBookList.filter(b => b.selected).length });
@@ -34,6 +36,22 @@ function reducer(state = initialState(), action = {}){
                 .map(o => Object.assign({}, o));
 
             return Object.assign({}, state, { editingSubject, eligibleParents });
+
+        case UPDATE_SUBJECT_RESULTS:
+            if (action.existingParent == action.newParent) {
+                //parent's the same - update name and we're done
+                let existingSubjects = [...flattenedSubjects(state.subjects)],
+                    tweakedSubjects = existingSubjects.map(s => s._id == action._id ? Object.assign({}, s, { name: action.newName }) : s);
+
+                return Object.assign({}, state, { subjects: stackAndGetTopLevelSubjects(tweakedSubjects) });
+            } else {
+                //not the most efficient code ... flatten all subjects, rip out those that were affected, re-stack
+                let existingSubjects = [...flattenedSubjects(state.subjects)],
+                    affectedIds = action.affectedSubjects.map(s => '' + s._id),
+                    tweakedSubjects = existingSubjects.map(s => Object.assign({}, s)).filter(s => affectedIds.indexOf('' + s._id) == -1);
+
+                return Object.assign({}, state, { subjects: stackAndGetTopLevelSubjects(tweakedSubjects.concat(action.affectedSubjects)) });
+            }
     }
 
     return state;
@@ -48,12 +66,20 @@ function *flattenedSubjects(subjects){
     }
 }
 
+function stackAndGetTopLevelSubjects(subjects){
+    subjects.forEach(s => {
+        s.children = [];
+        s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
+    });
+    return stackSubjects(subjects).filter(s => s.path == null);
+}
+
 function stackSubjects(subjects){
     subjects.forEach(s => {
         s.children = [];
         s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
     });
-    return subjects.filter(s => s.path == null);
+    return subjects;
 }
 
 function setBookResultsSubjects(books, subjects){

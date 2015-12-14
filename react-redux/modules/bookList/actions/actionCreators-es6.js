@@ -1,5 +1,6 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SET_NEW_SUBJECT_PARENT, EDIT_SUBJECT } = require('./actionNames');
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SET_NEW_SUBJECT_PARENT, EDIT_SUBJECT,
+        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('./actionNames');
 
 function loadBooksAndSubjects(){
     return function(dispatch, getState){
@@ -59,7 +60,7 @@ function editSubject(_id){
 function updateSubject(_id, newName, newParent){
     return function(dispatch) {
         ajaxUtil.post('/subject/setInfo', {_id, newName, newParent}, resp => {
-            debugger;
+            dispatch({ type: UPDATE_SUBJECT_RESULTS, _id, newName, newParent, affectedSubjects: resp.affectedSubjects, existingParent: resp.existingParent });
         });
     }
 }
