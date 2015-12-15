@@ -13,12 +13,13 @@ describe('subject update', function() {
     beforeEach(async function(done){
         dao = new DAO();
         db = await dao.open();
-        subjectDaoInst = new SubjectDAO;
+        subjectDaoInst = new SubjectDAO(-1);
         done();
     });
 
     afterEach(async function(done){
         await db.collection('subjects').remove({ userId: -1 });
+        await db.collection('subjects').remove({ userId: -2 });
         dao.dispose(db);
         done();
     });
@@ -32,6 +33,15 @@ describe('subject update', function() {
         let subjects = await insertSubjects({_id: 1}, {_id: 2});
         await subjectDaoInst.updateSubjectParent(subjects[1]._id, subjects[0]._id);
         return await verifyPaths(subjects, {_id: subjects[0]._id, path: null}, {_id: subjects[1]._id, path: ',1,' });
+    });
+
+    it('Update basic parent - security check', async function(){
+        let subjects = await insertSubjects({_id: 1, userId: -2}, {_id: 2, userId: -2});
+        await subjectDaoInst.updateSubjectParent(subjects[1]._id, subjects[0]._id);
+
+        let subjectInServer = await db.collection('subjects').findOne({_id: ObjectId(subjects[1]._id) });
+        console.log(subjectInServer);
+        assert(subjectInServer.path == null);
     });
 
     it('Should update the child of a subject whose parent changes', async function(){
