@@ -33,6 +33,9 @@ class SubjectDAO extends DAO {
         let db = await super.open();
 
         try{
+            let existingSubject = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+            if (existingSubject == null) return;
+
             let newParentObj = await (newParent ? db.collection('subjects').findOne({ _id: ObjectId(newParent) }) : null),
                 newParentPath = newParentObj ? (newParentObj.path || ',') + `${newParentObj._id},` : null,
                 newDescendantPathPiece = `${newParentPath || ','}${_id},`;
@@ -49,10 +52,10 @@ class SubjectDAO extends DAO {
             super.dispose(db);
         }
     }
-    async loadSubjects(userId){
+    async loadSubjects(){
         let db = await super.open();
         try {
-            return await db.collection('subjects').find({ userId: +userId }).toArray();
+            return await db.collection('subjects').find({ userId: +this.userId }).toArray();
         } finally {
             super.dispose(db);
         }
