@@ -33,8 +33,14 @@ class SubjectDAO extends DAO {
         let db = await super.open();
 
         try{
-            let existingSubject = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
-            if (existingSubject == null) return;
+            //security checks - make sure you own the subject, and also the new parent (if applicable)
+            if (newParent == null){
+                let existingSubject = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+                if (existingSubject == null) return;
+            } else {
+                let existingSubjectAndParent = await db.collection('subjects').find({ _id: { $in: [ObjectId(_id), ObjectId(newParent)] }, userId: this.userId }).toArray();
+                if (existingSubjectAndParent.length !== 2) return;
+            }
 
             let newParentObj = await (newParent ? db.collection('subjects').findOne({ _id: ObjectId(newParent) }) : null),
                 newParentPath = newParentObj ? (newParentObj.path || ',') + `${newParentObj._id},` : null,

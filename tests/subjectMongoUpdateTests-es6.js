@@ -40,8 +40,15 @@ describe('subject update', function() {
         await subjectDaoInst.updateSubjectParent(subjects[1]._id, subjects[0]._id);
 
         let subjectInServer = await db.collection('subjects').findOne({_id: ObjectId(subjects[1]._id) });
-        console.log(subjectInServer);
-        assert(subjectInServer.path == null);
+        assert(subjectInServer.path == null, 'subject was moved and shouldnt have been');
+    });
+
+    it('Set basic parent - security check on new parent', async function(){
+        let subjects = await insertSubjects({_id: 1, userId: -2}, {_id: 2, userId: -1});
+        await subjectDaoInst.updateSubjectParent(subjects[1]._id, subjects[0]._id);
+
+        let subjectInServer = await db.collection('subjects').findOne({_id: ObjectId(subjects[1]._id) });
+        assert(subjectInServer.path == null, 'subject was moved and shouldnt have been');
     });
 
     it('Should update the child of a subject whose parent changes', async function(){
