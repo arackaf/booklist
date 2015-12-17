@@ -111,14 +111,28 @@ describe('subject update', function() {
         return await verifyPaths(subjects, {_id: subjects[0]._id, path: null}, {_id: subjects[1]._id }, { _id: subjects[2]._id, path: ',2,' }, { _id: subjects[3]._id, path: ',1,' }, {_id: subjects[4]._id, path: ',1,201,'}, {_id: subjects[5]._id, path: ',1,201,'});
     });
 
-    //TODO: kill these tests when drag and drop implemented
-    it('TEMP TEST 1 -- set parent info', async function(){
+    it('UpdateSubjectInfo set new name', async function(){
+        let subjects = await insertSubjects({_id: 1, name: 'subject'}, {_id: 2, name: 'lala'});
+        await subjectDaoInst.updateSubjectInfo(subjects[0]._id, 'foo', null);
+
+        let updatedSub = await db.collection('subjects').findOne({ _id: ObjectId(subjects[0]._id) });
+        assert.strictEqual(updatedSub.name, 'foo');
+    });
+
+    it('UpdateSubjectInfo set new name - updateParent not called if not needed', async function(){
+        let subjects = await insertSubjects({_id: 1, name: 'subject'}, {_id: 2, name: 'lala'});
+
+        subjectDaoInst.updateSubjectParent = () => { throw 'I was called'; };
+        await subjectDaoInst.updateSubjectInfo(subjects[0]._id, 'foo', null);
+    });
+
+    it('UpdateSubjectInfo -- set parent info', async function(){
         let subjects = await insertSubjects({_id: 1}, {_id: 2}, {_id: 20, path: ',2,'}, {_id: 201, path: ',2,20,'});
         await subjectDaoInst.updateSubjectInfo(subjects[1]._id, 'foo', subjects[0]._id);
         return await verifyPaths(subjects, {_id: subjects[0]._id, path: null}, {_id: subjects[1]._id, path: ',1,' }, { _id: subjects[2]._id, path: ',1,2,' }, { _id: subjects[3]._id, path: ',1,2,20,' });
     });
 
-    it('TEMP TEST 2 -- set parent info', async function(){
+    it('UpdateSubjectInfo -- set parent info', async function(){
         let subjects = await insertSubjects({_id: 1}, {_id: 2}, {_id: 20, path: ',2,'}, {_id: 201, path: ',2,20,'}, {_id: 202, path: ',2,20,'});
         await subjectDaoInst.updateSubjectInfo(subjects[1]._id, 'foo', subjects[0]._id);
         return await verifyPaths(subjects, {_id: subjects[0]._id, path: null}, {_id: subjects[1]._id, path: ',1,' }, { _id: subjects[2]._id, path: ',1,2,' }, { _id: subjects[3]._id, path: ',1,2,20,' }, { _id: subjects[4]._id, path: ',1,2,20,' });
