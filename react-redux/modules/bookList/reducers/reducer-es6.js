@@ -1,6 +1,6 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, EDIT_SUBJECT,
-        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
+        EDIT_SUBJECT, EDIT_SUBJECTS, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
     } = require('../actions/actionNames');
 
 const initialState = () => ({
@@ -28,6 +28,10 @@ function reducer(state = initialState(), action = {}){
         case DE_SELECT_ALL_BOOKS:
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: false }));
             return Object.assign({}, state, { bookList: newBookList, selectedCount: 0 });
+        case EDIT_SUBJECTS:
+            return Object.assign({}, state, { editSubjectsModalShown: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
+        case STOP_EDITING_SUBJECTS:
+            return Object.assign({}, state, { editSubjectsModalShown: null });
         case EDIT_SUBJECT:
             var editingSubject = Object.assign({}, [...flattenedSubjects(state.subjects)].find(s => s._id == action._id));
 

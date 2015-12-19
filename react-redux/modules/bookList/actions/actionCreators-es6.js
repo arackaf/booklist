@@ -1,5 +1,6 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SET_NEW_SUBJECT_PARENT, EDIT_SUBJECT,
+        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SET_NEW_SUBJECT_PARENT,
+        EDIT_SUBJECT, EDIT_SUBJECTS, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('./actionNames');
 
 function loadBooksAndSubjects(){
@@ -53,6 +54,14 @@ function setNewSubjectParent(subjectId, newSubjectId){
     return { type: SET_NEW_SUBJECT_PARENT, subjectId, newSubjectId };
 }
 
+function editSubjects(){
+    return { type: EDIT_SUBJECTS };
+}
+
+function stopEditingSubjects(){
+    return { type: STOP_EDITING_SUBJECTS };
+}
+
 function editSubject(_id){
     return { type: EDIT_SUBJECT, _id };
 }
@@ -72,6 +81,8 @@ module.exports = {
     loadBooksAndSubjects,
     toggleSelectBook,
     setNewSubjectParent,
+    editSubjects,
+    stopEditingSubjects,
     editSubject,
     updateSubject
 };

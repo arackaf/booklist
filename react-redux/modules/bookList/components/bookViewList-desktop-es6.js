@@ -1,5 +1,5 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
-const { toggleSelectBook, editSubject, updateSubject } = require('../actions/actionCreators');
+const { toggleSelectBook, editSubjects, stopEditingSubjects, editSubject, updateSubject } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
@@ -8,13 +8,10 @@ class BookViewListDesktop extends React.Component{
     constructor(){
         super();
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [],
-                       editingSubject: null, editSubjectsModalShown: false, newSubjectParent: '', newSubjectName: '' };
+                       editingSubject: null, newSubjectParent: '', newSubjectName: '' };
     }
     closeEditBooksSubjectsModal(){
         this.setState({ booksSubjectsModalShown: false });
-    }
-    closeEditSubjectsModal(){
-        this.setState({ editSubjectsModalShown: false });
     }
     singleSelectBook(book){
         this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book], editSubjectsFor: [], subjectsAdding: [] });
@@ -23,7 +20,13 @@ class BookViewListDesktop extends React.Component{
         this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), editSubjectsFor: [], subjectsAdding: [] })
     }
     editSubjectsModal(){
-        this.setState({ editSubjectsModalShown: true })
+        this.props.dispatch(editSubjects());
+    }
+    closeEditSubjectsModal(){
+        this.props.dispatch(stopEditingSubjects());
+    }
+    editSubjects(){
+        this.props.dispatch(editSubjects());
     }
     editSubject(_id){
         this.props.dispatch(editSubject(_id));
@@ -122,7 +125,7 @@ class BookViewListDesktop extends React.Component{
                         <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={this.state.editSubjectsModalShown} onHide={() => this.closeEditSubjectsModal()}>
+                <Modal show={!!this.props.editSubjectsModalShown} onHide={() => this.closeEditSubjectsModal()}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects
