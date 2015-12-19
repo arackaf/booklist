@@ -1,5 +1,5 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
-const { toggleSelectBook, editSubjects, stopEditingSubjects, editSubject, updateSubject } = require('../actions/actionCreators');
+const { toggleSelectBook, editSubjects, stopEditingSubjects, setNewSubjectName, setNewSubjectParent, editSubject, updateSubject } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
@@ -27,6 +27,12 @@ class BookViewListDesktop extends React.Component{
     }
     editSubjects(){
         this.props.dispatch(editSubjects());
+    }
+    setNewSubjectName(newName){
+        this.props.dispatch(setNewSubjectName(newName));
+    }
+    setNewSubjectParent(newParent){
+        this.props.dispatch(setNewSubjectParent(newParent));
     }
     editSubject(_id){
         this.props.dispatch(editSubject(_id));
@@ -125,7 +131,7 @@ class BookViewListDesktop extends React.Component{
                         <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={!!this.props.editSubjectsModalShown} onHide={() => this.closeEditSubjectsModal()}>
+                <Modal show={!!this.props.editSubjectsModal} onHide={() => this.closeEditSubjectsModal()}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects
@@ -134,13 +140,15 @@ class BookViewListDesktop extends React.Component{
                     <Modal.Body>
                         <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.editSubject(_id)} />
 
-                        { this.props.editingSubject ?
+                        { this.props.editSubjectsModal && this.props.editSubjectsModal.editingSubject ?
                             <div>
-                                New name: <input onChange={(e) => this.setState({ newSubjectName: e.target.value })} value={this.state.newSubjectName} />
+                                { this.props.editSubjectsModal.editingSubject._id ? `Edit subject ${this.props.editSubjectsModal.editingSubject.name}` : 'New Subject' }
+                                <br/>
+                                New name: <input value={this.props.editSubjectsModal.newSubjectName} onChange={(e) => this.setNewSubjectName(e.target.value)} />
                                 New Parent:
-                                <select value={this.state.newSubjectParent} onChange={(e) => this.setState({ newSubjectParent: e.target.value })}>
+                                <select value={this.props.editSubjectsModal.newSubjectParent} onChange={(e) => this.setNewSubjectParent(e.target.value)}>
                                     <option value="">None</option>
-                                    { this.props.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
+                                    { this.props.editSubjectsModal.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
                                 <BootstrapButton onClick={() => this.updateSubject()}>Save</BootstrapButton>
                             </div>

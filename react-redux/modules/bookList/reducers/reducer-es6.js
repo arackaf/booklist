@@ -1,6 +1,6 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, EDIT_SUBJECTS_FOR, MODIFY_SUBJECTS, MODIFY_SUBJECTS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
-        EDIT_SUBJECT, EDIT_SUBJECTS, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
+        EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
     } = require('../actions/actionNames');
 
 const initialState = () => ({
@@ -20,7 +20,7 @@ function reducer(state = initialState(), action = {}){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjects: stackAndGetTopLevelSubjects(action.subjects) });
         case TOGGLE_SELECT_BOOK:
-            var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: b._id == action._id ? !b.selected : b.selected }))
+            var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: b._id == action._id ? !b.selected : b.selected }));
             return Object.assign({}, state, { bookList: newBookList, selectedCount: newBookList.filter(b => b.selected).length });
         case SELECT_ALL_BOOKS:
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: true }));
@@ -29,9 +29,13 @@ function reducer(state = initialState(), action = {}){
             var newBookList = state.bookList.map(b => Object.assign({}, b, { selected: false }));
             return Object.assign({}, state, { bookList: newBookList, selectedCount: 0 });
         case EDIT_SUBJECTS:
-            return Object.assign({}, state, { editSubjectsModalShown: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
+            return Object.assign({}, state, { editSubjectsModal: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
+        case SET_NEW_SUBJECT_NAME:
+            return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { newSubjectName: action.value }) });
+        case SET_NEW_SUBJECT_PARENT:
+            return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { newSubjectParent: action.value }) });
         case STOP_EDITING_SUBJECTS:
-            return Object.assign({}, state, { editSubjectsModalShown: null });
+            return Object.assign({}, state, { editSubjectsModal: null });
         case EDIT_SUBJECT:
             var editingSubject = Object.assign({}, [...flattenedSubjects(state.subjects)].find(s => s._id == action._id));
 
@@ -39,8 +43,7 @@ function reducer(state = initialState(), action = {}){
                 .filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path) && !new RegExp(`,${s._id},$`).test(editingSubject.path)))
                 .map(o => Object.assign({}, o));
 
-            return Object.assign({}, state, { editingSubject, eligibleParents });
-
+            return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { editingSubject, eligibleParents }) });
         case UPDATE_SUBJECT_RESULTS:
             if (action.existingParent == action.newParent) {
                 //parent's the same - update name and we're done
