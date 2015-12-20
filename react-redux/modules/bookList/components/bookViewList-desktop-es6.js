@@ -19,15 +19,6 @@ class BookViewListDesktop extends React.Component{
     multiBookSubjectsModal(){
         this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), editSubjectsFor: [], subjectsAdding: [] })
     }
-    editSubjectsModal(){
-        this.props.dispatch(editSubjects());
-    }
-    closeEditSubjectsModal(){
-        this.props.dispatch(stopEditingSubjects());
-    }
-    editSubjects(){
-        this.props.dispatch(editSubjects());
-    }
     setNewSubjectName(newName){
         this.props.dispatch(setNewSubjectName(newName));
     }
@@ -52,9 +43,6 @@ class BookViewListDesktop extends React.Component{
         }
         this.setState({ [stateName]: updated });
     }
-    toggleBook(book){
-        this.props.dispatch(toggleSelectBook(book._id));
-    }
     updateSubject(){
         this.props.dispatch(updateSubject(this.props.editingSubject._id, this.state.newSubjectName, this.state.newSubjectParent));
     }
@@ -63,7 +51,7 @@ class BookViewListDesktop extends React.Component{
             <div>
                 { this.props.selectedCount ? <BootstrapButton preset="primary-sm" onClick={() => this.multiBookSubjectsModal()}>Set subjects</BootstrapButton> : null }
                 &nbsp;&nbsp;&nbsp;
-                <BootstrapButton preset="primary-sm" onClick={() => this.editSubjectsModal()}>Edit subjects</BootstrapButton>
+                <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -78,10 +66,10 @@ class BookViewListDesktop extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                    { this.props.bookList.map((book, i) =>
+                    { this.props.bookList.map(book =>
                         <tr key={book._id}>
                             <td>
-                                <i onClick={() => this.toggleBook(book)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
+                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
                             </td>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
@@ -131,7 +119,7 @@ class BookViewListDesktop extends React.Component{
                         <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={!!this.props.editSubjectsModal} onHide={() => this.closeEditSubjectsModal()}>
+                <Modal show={!!this.props.editSubjectsModal} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects
@@ -156,7 +144,7 @@ class BookViewListDesktop extends React.Component{
                         }
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onClick={() => this.closeEditSubjectsModal()}>Close</button>
+                        <button onClick={this.props.stopEditingSubjects}>Close</button>
                     </Modal.Footer>
                 </Modal>                
             </div>
