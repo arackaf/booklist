@@ -19,15 +19,6 @@ class BookViewListDesktop extends React.Component{
     multiBookSubjectsModal(){
         this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), editSubjectsFor: [], subjectsAdding: [] })
     }
-    setNewSubjectName(newName){
-        this.props.dispatch(setNewSubjectName(newName));
-    }
-    setNewSubjectParent(newParent){
-        this.props.dispatch(setNewSubjectParent(newParent));
-    }
-    editSubject(_id){
-        this.props.dispatch(editSubject(_id));
-    }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
     }
@@ -44,7 +35,7 @@ class BookViewListDesktop extends React.Component{
         this.setState({ [stateName]: updated });
     }
     updateSubject(){
-        this.props.dispatch(updateSubject(this.props.editingSubject._id, this.state.newSubjectName, this.state.newSubjectParent));
+        this.props.updateSubject();
     }
     render(){
         return (
@@ -126,15 +117,15 @@ class BookViewListDesktop extends React.Component{
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.editSubject(_id)} />
+                        <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
 
                         { this.props.editSubjectsModal && this.props.editSubjectsModal.editingSubject ?
                             <div>
                                 { this.props.editSubjectsModal.editingSubject._id ? `Edit subject ${this.props.editSubjectsModal.editingSubject.name}` : 'New Subject' }
                                 <br/>
-                                New name: <input value={this.props.editSubjectsModal.newSubjectName} onChange={(e) => this.setNewSubjectName(e.target.value)} />
+                                New name: <input value={this.props.editSubjectsModal.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
                                 New Parent:
-                                <select value={this.props.editSubjectsModal.newSubjectParent} onChange={(e) => this.setNewSubjectParent(e.target.value)}>
+                                <select value={this.props.editSubjectsModal.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
                                     <option value="">None</option>
                                     { this.props.editSubjectsModal.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
