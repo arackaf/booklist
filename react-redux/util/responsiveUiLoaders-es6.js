@@ -44,17 +44,19 @@ function responsiveMobileDesktopMixin(self, stateName, config){
 
     function loadComponent(componentObjOrPath){
         let componentPath,
-            connectComponentWith;
+            connectComponentWith,
+            mapDispatchWith;
 
         if (typeof componentObjOrPath === 'object'){
             componentPath = componentObjOrPath.path;
             connectComponentWith = componentObjOrPath.connectWith;
+            mapDispatchWith = componentObjOrPath.mapDispatchWith;
         } else {
             componentPath = componentObjOrPath;
         }
         System.import(componentPath).then(component => {
             if (connectComponentWith){
-                component = ReactRedux.connect(state => state.bookList)(component);
+                component = ReactRedux.connect(state => state.bookList, mapDispatchWith)(component);
             }
             self.setState({ [stateName]: component })
         });

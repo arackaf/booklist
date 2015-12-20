@@ -1,5 +1,6 @@
 let BookViewList = require('./components/bookViewList');
-let reducer = require('./reducers/reducer');
+const reducer = require('./reducers/reducer');
+const actionCreators = require('./actions/actionCreators');
 
 BookViewList = ReactRedux.connect(state => state.bookList)(BookViewList);
 
