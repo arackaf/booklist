@@ -7,17 +7,16 @@ const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
-        this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [],
-                       editingSubject: null, newSubjectParent: '', newSubjectName: '' };
+        this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
     closeEditBooksSubjectsModal(){
         this.setState({ booksSubjectsModalShown: false });
     }
     singleSelectBook(book){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book], editSubjectsFor: [], subjectsAdding: [] });
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book], subjectsRemoving: [], subjectsAdding: [] });
     }
     multiBookSubjectsModal(){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), editSubjectsFor: [], subjectsAdding: [] })
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), subjectsRemoving: [], subjectsAdding: [] })
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
