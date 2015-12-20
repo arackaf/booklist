@@ -62,19 +62,19 @@ describe('Subject filtering for editing', function(){
         verifySubjects(subjects, [{ _id: 3, name: 'c' }]);
     });
 
-    it('Should not let you set the current parent as the new parent', function(){
+    it('Should let you set the current parent as the new parent', function(){
         let subjects = loadSubjectsAndEdit([{ _id: 1, name: 'a' }, { _id: 2, name: 'b', path: ',1,' }, { _id: 3, name: 'c' }], 2);
-        verifySubjects(subjects, [{ _id: 3, name: 'c' }]);
+        verifySubjects(subjects, [{ _id: 3, name: 'c' }, { _id: 3, name: 'c' }]);
     });
 
     it('Should let you set a sibling as the new parent', function(){
         let subjects = loadSubjectsAndEdit([{ _id: 1, name: 'a' }, { _id: 2, name: 'b', path: ',1,' }, { _id: 22, name: 'ba', path: ',1,' }, { _id: 3, name: 'c' }], 2);
-        verifySubjects(subjects, [{ _id: 3, name: 'c' }, { _id: 22, name: 'ba' }]);
+        verifyTopLevelSubjectsOnly(subjects, [{ _id: 1, name: 'a' }, { _id: 3, name: 'c' }, { _id: 22, name: 'ba' }]);
     });
 
     it('Should not let you set the current parent as the new parent', function(){
         let subjects = loadSubjectsAndEdit([{ _id: 1, name: 'a' }, { _id: 2, name: 'b', path: ',1,' }, { _id: 22, name: 'ba', path: ',1,' }, { _id: 3, name: 'c', path: ',1,2,' }], 3);
-        verifyTopLevelSubjectsOnly(subjects, [{ _id: 1, name: 'a' }, { _id: 22, name: 'ba' }]);
+        verifyTopLevelSubjectsOnly(subjects, [{ _id: 1, name: 'a' }, { _id: 2, name: 'b', path: ',1,' }, { _id: 22, name: 'ba' }]);
     });
 });
 
@@ -214,7 +214,7 @@ function loadSubjectsAndEdit(subjects, _id){
     return apply(
         { type: LOAD_SUBJECTS_RESULTS, subjects },
         { type: EDIT_SUBJECT, _id }
-    ).eligibleParents;
+    ).editSubjectsModal.eligibleParents;
 }
 
 

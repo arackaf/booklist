@@ -37,13 +37,21 @@ function reducer(state = initialState(), action = {}){
         case STOP_EDITING_SUBJECTS:
             return Object.assign({}, state, { editSubjectsModal: null });
         case EDIT_SUBJECT:
-            var editingSubject = Object.assign({}, [...flattenedSubjects(state.subjects)].find(s => s._id == action._id));
+            var editingSubject = Object.assign({}, [...flattenedSubjects(state.subjects)].find(s => s._id == action._id)),
+                newSubjectParent;
 
             var eligibleParents = [...flattenedSubjects(state.subjects)]
-                .filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path) && !new RegExp(`,${s._id},$`).test(editingSubject.path)))
+                .filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path)))
                 .map(o => Object.assign({}, o));
 
-            return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { editingSubject, eligibleParents }) });
+            if (editingSubject.path == null){
+                newSubjectParent = null;
+            } else {
+                let hierarchy = editingSubject.path.split(',');
+                newSubjectParent = hierarchy[hierarchy.length - 2];
+            }
+
+            return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { newSubjectName: editingSubject.name, newSubjectParent, editingSubject, eligibleParents }) });
         case UPDATE_SUBJECT_RESULTS:
             if ((action.existingParent || null) == (action.newParent || null)) {
                 //parent's the same - update name and we're done
