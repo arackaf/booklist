@@ -34,9 +34,6 @@ class BookViewListDesktop extends React.Component{
         }
         this.setState({ [stateName]: updated });
     }
-    updateSubject(){
-        this.props.updateSubject();
-    }
     render(){
         return (
             <div>
@@ -129,7 +126,7 @@ class BookViewListDesktop extends React.Component{
                                     <option value="">None</option>
                                     { this.props.editSubjectsModal.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
-                                <BootstrapButton onClick={() => this.updateSubject()}>Save</BootstrapButton>
+                                <BootstrapButton onClick={() => this.props.updateSubject()}>Save</BootstrapButton>
                             </div>
                             : null
                         }

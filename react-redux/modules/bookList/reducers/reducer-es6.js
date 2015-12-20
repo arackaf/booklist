@@ -45,19 +45,19 @@ function reducer(state = initialState(), action = {}){
 
             return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { editingSubject, eligibleParents }) });
         case UPDATE_SUBJECT_RESULTS:
-            if (action.existingParent == action.newParent) {
+            if ((action.existingParent || null) == (action.newParent || null)) {
                 //parent's the same - update name and we're done
                 let existingSubjects = [...flattenedSubjects(state.subjects)],
                     tweakedSubjects = existingSubjects.map(s => s._id == action._id ? Object.assign({}, s, { name: action.newName }) : s);
 
-                return Object.assign({}, state, { subjects: stackAndGetTopLevelSubjects(tweakedSubjects) });
+                return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { editingSubject: null }), subjects: stackAndGetTopLevelSubjects(tweakedSubjects) });
             } else {
                 //not the most efficient code ... flatten all subjects, rip out those that were affected, re-stack
                 let existingSubjects = [...flattenedSubjects(state.subjects)],
                     affectedIds = action.affectedSubjects.map(s => '' + s._id),
                     tweakedSubjects = existingSubjects.map(s => Object.assign({}, s)).filter(s => affectedIds.indexOf('' + s._id) == -1);
 
-                return Object.assign({}, state, { subjects: stackAndGetTopLevelSubjects(tweakedSubjects.concat(action.affectedSubjects)) });
+                return Object.assign({}, state, { editSubjectsModal: Object.assign({}, state.editSubjectsModal, { editingSubject: null }), subjects: stackAndGetTopLevelSubjects(tweakedSubjects.concat(action.affectedSubjects)) });
             }
     }
 
