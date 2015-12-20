@@ -71,8 +71,10 @@ function editSubject(_id){
     return { type: EDIT_SUBJECT, _id };
 }
 
-function updateSubject(_id, newName, newParent){
-    return function(dispatch) {
+function updateSubject(){
+    return function(dispatch, getState) {
+        let { editingSubject: { _id }, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.editSubjectsModal;
+
         ajaxUtil.post('/subject/setInfo', {_id, newName, newParent}, resp => {
             dispatch({ type: UPDATE_SUBJECT_RESULTS, _id, newName, newParent, affectedSubjects: resp.affectedSubjects, existingParent: resp.existingParent });
         });
