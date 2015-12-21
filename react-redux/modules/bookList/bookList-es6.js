@@ -1,17 +1,18 @@
 let BookViewList = require('./components/bookViewList');
 const reducer = require('./reducers/reducer');
 const actionCreators = require('./actions/actionCreators');
+const { createSelector } = require('/node_modules/reselect/lib/index');
 
-const { setBookResultsSubjects, stackAndGetTopLevelSubjects } = require('./util/booksSubjectsHelpers');
+const { setBookResultsSubjects } = require('./util/booksSubjectsHelpers');
 
-const booksSelector = state => ({
-    loading: state.books.loading,
-    list: setBookResultsSubjects(state.books.list, state.subjects.list)
-});
+const stackedBooklistSelector = createSelector(
+    [state => state.books.list, state => state.subjects.list],
+    setBookResultsSubjects
+);
 
-const bookListSelector = ({ bookList }) => ({
-    subjects: bookList.subjects,
-    books: booksSelector(bookList)
+const bookListSelector = state => ({
+    subjects: state.bookList.subjects,
+    books: Object.assign({}, state.bookList, { list: stackedBooklistSelector(state.bookList) })
 });
 
 BookViewList = ReactRedux.connect(bookListSelector)(BookViewList);
