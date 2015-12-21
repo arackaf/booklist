@@ -46,3 +46,5 @@ react-redux/modules/bookList/components/hierarchicalSubjectList.js
 dataAccess/DAO.js
 tests/subjectMongoUpdateTests.js
 react-redux/modules/bookList/util/booksSubjectsHelpers.js
+tests/hashUtilTests.js
+utils/hashManager.js
