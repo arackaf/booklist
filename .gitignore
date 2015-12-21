@@ -48,3 +48,4 @@ tests/subjectMongoUpdateTests.js
 react-redux/modules/bookList/util/booksSubjectsHelpers.js
 tests/hashUtilTests.js
 utils/hashManager.js
+react-redux/modules/bookList/components/bookSearch-desktop.js
