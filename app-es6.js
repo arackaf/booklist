@@ -50,7 +50,11 @@ var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6\.js$/i.test(f) });
 
 app.get('/react-redux', function (request, response) {
-    response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
+    if (!request.user){
+        response.redirect('/react-redux/login');
+    } else {
+        response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
+    }
 });
 
 app.get('/react-redux/login', function (request, response) {
