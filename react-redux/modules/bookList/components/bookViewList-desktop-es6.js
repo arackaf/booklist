@@ -3,6 +3,7 @@ const { toggleSelectBook, editSubjects, stopEditingSubjects, setNewSubjectName, 
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
+const BookSearchDesktop = require('./BookSearch-desktop');
 
 class BookViewListDesktop extends React.Component{
     constructor(){
@@ -36,6 +37,8 @@ class BookViewListDesktop extends React.Component{
     render(){
         return (
             <div>
+                <BookSearchDesktop></BookSearchDesktop>
+                <br />
                 { this.props.selectedCount ? <BootstrapButton preset="primary-sm" onClick={() => this.multiBookSubjectsModal()}>Set subjects</BootstrapButton> : null }
                 &nbsp;&nbsp;&nbsp;
                 <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
