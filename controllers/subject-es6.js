@@ -3,8 +3,8 @@ const SubjectDAO = require('../dataAccess/SubjectDAO');
 
 class subjectController{
     constructor(){}
-    async all(userId){
-        let subjectDao = new SubjectDAO(userId),
+    async all(){
+        let subjectDao = new SubjectDAO(this.request.user.id),
             subjects = await subjectDao.loadSubjects();
 
         this.send({ results: subjects })

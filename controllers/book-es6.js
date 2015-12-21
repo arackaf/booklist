@@ -33,7 +33,7 @@ class bookController{
         this.send({ success: true });
     }
     async searchBooks(){
-        let bookDao = new BookDAO(),
+        let bookDao = new BookDAO(this.request.user.id),
             bookResults = await bookDao.searchBooks();
 
         this.send({ results: bookResults })

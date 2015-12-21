@@ -8,7 +8,7 @@ function loadBooksAndSubjects(){
         dispatch({ type: LOAD_BOOKS });
 
         Promise.all([
-            ajaxUtil.get('/subject/all', { userId: 1 }),
+            ajaxUtil.get('/subject/all'),
             booksSearch()
         ]).then(([subjectsResp, booksResp]) => {
             dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
