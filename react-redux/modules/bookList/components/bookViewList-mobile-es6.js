@@ -43,7 +43,7 @@ class BookViewListMobile extends React.Component{
             <div>
                 <a style={{ cursor: 'pointer' }} onClick={() => this.toggleImages()}>Show images</a>
                 <div className="list-group">
-                    { this.props.bookList.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
+                    { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
                 </div>
             </div>
         );

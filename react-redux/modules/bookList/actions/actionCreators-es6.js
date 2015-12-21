@@ -33,7 +33,7 @@ function booksSearch(){
 }
 
 function booksResults(resp){
-    return { type: LOAD_BOOKS_RESULTS, bookList: resp.results };
+    return { type: LOAD_BOOKS_RESULTS, books: resp.results };
 }
 
 function editSubjectsForBook(index){
@@ -75,7 +75,7 @@ function editSubject(_id){
 
 function updateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject: { _id }, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.editSubjectsModal;
+        let { editingSubject: { _id }, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.subjects.editSubjectsPacket;
 
         ajaxUtil.post('/subject/setInfo', {_id, newName, newParent}, resp => {
             dispatch({ type: UPDATE_SUBJECT_RESULTS, _id, newName, newParent, affectedSubjects: resp.affectedSubjects, existingParent: resp.existingParent });

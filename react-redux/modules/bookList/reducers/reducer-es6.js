@@ -16,8 +16,8 @@ const initialSubjectsState = () => ({
 });
 
 const initialState = () => ({
-    books: initialBooksState(),
-    subjects: initialSubjectsState()
+    books: bookListReducer(),
+    subjects: subjectsReducer()
 });
 
 function bookListReducer(state = initialBooksState(), subjects, action = {}){
@@ -25,8 +25,8 @@ function bookListReducer(state = initialBooksState(), subjects, action = {}){
         case LOAD_BOOKS:
             return Object.assign({}, state, { loading: true });
         case LOAD_BOOKS_RESULTS:
-            setBookResultsSubjects(action.list, subjects);
-            return Object.assign({}, state, { loading: false, list: action.bookList});
+            setBookResultsSubjects(action.books, subjects);
+            return Object.assign({}, state, { loading: false, list: action.books});
         case TOGGLE_SELECT_BOOK:
             var newBookList = state.list.map(b => Object.assign({}, b, { selected: b._id == action._id ? !b.selected : b.selected }));
             return Object.assign({}, state, { list: newBookList, selectedCount: newBookList.filter(b => b.selected).length });
