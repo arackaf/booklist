@@ -2,7 +2,6 @@ let BookViewList = require('./components/bookViewList');
 const reducer = require('./reducers/reducer');
 const actionCreators = require('./actions/actionCreators');
 const { createSelector } = require('/node_modules/reselect/lib/index');
-
 const { setBookResultsSubjects } = require('./util/booksSubjectsHelpers');
 
 const stackedBooklistSelector = createSelector(
