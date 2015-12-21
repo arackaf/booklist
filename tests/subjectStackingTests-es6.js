@@ -1,9 +1,5 @@
-const { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../react-redux/modules/bookList/actions/actionCreators');
-
 const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../react-redux/modules/bookList/actions/actionNames');
 
-const Redux = require('redux');
-const sinon = require('sinon');
 const assert = require('chai').assert;
 
 const reducer = require('../react-redux/modules/bookList/reducers/reducer');
