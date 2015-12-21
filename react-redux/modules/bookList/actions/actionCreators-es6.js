@@ -14,9 +14,7 @@ function loadBooksAndSubjects(){
             ajaxUtil.get('/subject/all', { userId: 1 }),
             booksSearch()
         ]).then(([subjectsResp, booksResp]) => {
-            let stackedSubjects = stackAndGetTopLevelSubjects(subjectsResp.results);
-            dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: stackedSubjects });
-            setBookResultsSubjects(booksResp.results, stackedSubjects);
+            dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
             dispatch(booksResults(booksResp)); //have the subjects in place before loading books
         });
     }

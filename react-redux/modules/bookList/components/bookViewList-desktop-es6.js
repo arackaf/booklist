@@ -16,7 +16,7 @@ class BookViewListDesktop extends React.Component{
         this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book], subjectsRemoving: [], subjectsAdding: [] });
     }
     multiBookSubjectsModal(){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.bookList.filter(b => b.selected), subjectsRemoving: [], subjectsAdding: [] })
+        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.books.list.filter(b => b.selected), subjectsRemoving: [], subjectsAdding: [] })
     }
     toggleAddSubjectPending(subject, toggledOn){
         this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
@@ -53,7 +53,7 @@ class BookViewListDesktop extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                    { this.props.bookList.map(book =>
+                    { this.props.books.list.map(book =>
                         <tr key={book._id}>
                             <td>
                                 <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
@@ -106,7 +106,7 @@ class BookViewListDesktop extends React.Component{
                         <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={!!this.props.editSubjectsModal} onHide={this.props.stopEditingSubjects}>
+                <Modal show={!!this.props.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects
@@ -115,15 +115,15 @@ class BookViewListDesktop extends React.Component{
                     <Modal.Body>
                         <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
 
-                        { this.props.editSubjectsModal && this.props.editSubjectsModal.editingSubject ?
+                        { this.props.editSubjectsPacket && this.props.editSubjectsPacket.editingSubject ?
                             <div>
-                                { this.props.editSubjectsModal.editingSubject._id ? `Edit subject ${this.props.editSubjectsModal.editingSubject.name}` : 'New Subject' }
+                                { this.props.editSubjectsPacket.editingSubject._id ? `Edit subject ${this.props.editSubjectsPacket.editingSubject.name}` : 'New Subject' }
                                 <br/>
-                                New name: <input value={this.props.editSubjectsModal.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
+                                New name: <input value={this.props.editSubjectsPacket.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
                                 New Parent:
-                                <select value={this.props.editSubjectsModal.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
+                                <select value={this.props.editSubjectsPacket.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
                                     <option value="">None</option>
-                                    { this.props.editSubjectsModal.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
+                                    { this.props.editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
                                 <BootstrapButton onClick={() => this.props.updateSubject()}>Save</BootstrapButton>
                             </div>

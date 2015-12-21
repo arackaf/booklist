@@ -214,7 +214,7 @@ function loadSubjectsAndEdit(subjects, _id){
     return apply(
         { type: LOAD_SUBJECTS_RESULTS, subjects },
         { type: EDIT_SUBJECT, _id }
-    ).editSubjectsModal.eligibleParents;
+    ).subjects.editSubjectsPacket.eligibleParents;
 }
 
 
@@ -222,11 +222,11 @@ function loadSubjectsThenUpdate(subjects, info){
     return apply(
         { type: LOAD_SUBJECTS_RESULTS, subjects },
         { type: UPDATE_SUBJECT_RESULTS, _id: info._id, newName: info.newName, existingParent: info.existingParent, newParent: info.newParent, affectedSubjects: info.affectedSubjects }
-    ).subjects;
+    ).subjects.list;
 }
 
 function loadSubjects(subjects){
-    return apply({ type: LOAD_SUBJECTS_RESULTS, subjects }).subjects;
+    return apply({ type: LOAD_SUBJECTS_RESULTS, subjects }).subjects.list;
 }
 
 function apply(...actions){
