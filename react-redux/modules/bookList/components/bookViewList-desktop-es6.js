@@ -65,7 +65,7 @@ class BookViewListDesktop extends React.Component{
                             <td>{book.title}</td>
                             <td>{book.author}</td>
                             <td>
-                                { book.subjects.map(s => <li key={s._id}>{s.name}</li>) }
+                                { book.subjectObjects.map(s => <li key={s._id}>{s.name}</li>) }
                                 <button onClick={() => this.singleSelectBook(book)}>Open</button>
                             </td>
                             <td>{book.isbn}</td>

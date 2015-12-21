@@ -8,7 +8,7 @@ const initialState = () => ({
 
 function reducer(state = initialState(), action = {}){
     return {
-        books: booksReducer(state.books, state.subjects.list, action),
+        books: booksReducer(state.books, action),
         subjects: subjectsReducer(state.subjects, action)
     };
 }
