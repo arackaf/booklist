@@ -3,8 +3,6 @@ const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('./actionNames');
 
-const { setBookResultsSubjects, stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
-
 function loadBooksAndSubjects(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_SUBJECTS });
