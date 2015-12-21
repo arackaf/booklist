@@ -59,7 +59,7 @@ class BookViewListDesktop extends React.Component{
                     { this.props.books.list.map(book =>
                         <tr key={book._id}>
                             <td>
-                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
+                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (this.props.books.selectedBooks[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
                             </td>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
