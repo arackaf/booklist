@@ -4,7 +4,9 @@ class BookSearchDesktop extends React.Component {
     constructor() {
         super();
         this.hashManager = new hashUtil();
-        this.state = {textSearch: ''};
+
+        let hashObj = this.hashManager.getCurrentHashInfo();
+        this.state = {textSearch: hashObj.parameters.bookSearch || ''};
     }
     render(){
         return (
