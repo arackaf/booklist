@@ -33,8 +33,8 @@ class BookViewingList extends React.Component {
                     <button onClick={() => this.switchToMobile()}>Mobile</button>
                     <br/><br/>
 
-                    { !this.state.listComponent || this.props.loading ? <BookListLoading /> :
-                        (this.props.bookList.length ?
+                    { !this.state.listComponent || this.props.books.loading ? <BookListLoading /> :
+                        (this.props.books.list.length ?
                             React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
                             : <BookListNoResults />)
                     }

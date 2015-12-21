@@ -86,7 +86,7 @@ class BookViewListDesktop extends React.Component{
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
                                 </ul>
                             </div>
                         </div>
@@ -97,7 +97,7 @@ class BookViewListDesktop extends React.Component{
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
                                 </ul>
                             </div>
                         </div>
@@ -106,24 +106,24 @@ class BookViewListDesktop extends React.Component{
                         <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={!!this.props.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
+                <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
+                        <HierarchicalSubjectList subjects={this.props.subjects.list} onEdit={_id => this.props.editSubject(_id)} />
 
-                        { this.props.editSubjectsPacket && this.props.editSubjectsPacket.editingSubject ?
+                        { this.props.subjects.editSubjectsPacket && this.props.subjects.editSubjectsPacket.editingSubject ?
                             <div>
-                                { this.props.editSubjectsPacket.editingSubject._id ? `Edit subject ${this.props.editSubjectsPacket.editingSubject.name}` : 'New Subject' }
+                                { this.props.subjects.editSubjectsPacket.editingSubject._id ? `Edit subject ${this.props.subjects.editSubjectsPacket.editingSubject.name}` : 'New Subject' }
                                 <br/>
-                                New name: <input value={this.props.editSubjectsPacket.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
+                                New name: <input value={this.props.subjects.editSubjectsPacket.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
                                 New Parent:
-                                <select value={this.props.editSubjectsPacket.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
+                                <select value={this.props.subjects.editSubjectsPacket.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
                                     <option value="">None</option>
-                                    { this.props.editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
+                                    { this.props.subjects.editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
                                 <BootstrapButton onClick={() => this.props.updateSubject()}>Save</BootstrapButton>
                             </div>
