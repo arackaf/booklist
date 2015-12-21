@@ -30,6 +30,7 @@
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
     "regenerator": "^0.8.36",
+    "reselect": "^2.0.1",
     "sinon": "^1.17.1"
   },
   "devDependencies": {
