@@ -56,7 +56,7 @@ function responsiveMobileDesktopMixin(self, stateName, config){
         }
         System.import(componentPath).then(component => {
             if (connectComponentWith){
-                component = ReactRedux.connect(state => state.bookList, mapDispatchWith)(component);
+                component = ReactRedux.connect(connectComponentWith, mapDispatchWith)(component);
             }
             self.setState({ [stateName]: component })
         });

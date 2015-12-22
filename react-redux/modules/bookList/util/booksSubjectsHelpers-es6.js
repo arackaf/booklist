@@ -1,12 +1,10 @@
-function setBookResultsSubjects(books, subjects){
-    let subjectLookup = { };
-    subjects.forEach(s => subjectLookup[s._id] = s.name);
-
-    books.forEach(b => b.subjectObjects = b.subjects.map(s => ({ _id: s, name: subjectLookup[s] || '<subject not found>' })));
+function setBookResultsSubjects(books, subjectsHash){
+    books.forEach(b => b.subjectObjects = b.subjects.map(s => subjectsHash[s] || { name: '<subject not found>' }));
     return books;
 }
 
-function stackAndGetTopLevelSubjects(subjects){
+function stackAndGetTopLevelSubjects(subjectsHash){
+    let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
     subjects.forEach(s => {
         s.children = [];
         s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));

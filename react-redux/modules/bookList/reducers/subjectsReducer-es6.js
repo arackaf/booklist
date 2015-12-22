@@ -3,14 +3,14 @@ const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME
 const { stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
 
 const initialSubjectsState = () => ({
-    list: [],
+    list: {},
     editSubjectsPacket: null
 });
 
 function subjectsReducer(state = initialSubjectsState(), action = {}){
     switch(action.type){
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { list: stackAndGetTopLevelSubjects(action.subjects) });
+            return Object.assign({}, state, { list: subjectsToHash(action.subjects) });
         case EDIT_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
         case SET_NEW_SUBJECT_NAME:
@@ -52,6 +52,12 @@ function subjectsReducer(state = initialSubjectsState(), action = {}){
             }
     }
     return state;
+}
+
+function subjectsToHash(subjects){
+    let hash = {};
+    subjects.forEach(s => hash[s._id] = s);
+    return hash;
 }
 
 function *flattenedSubjects(subjects){
