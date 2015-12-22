@@ -26,7 +26,10 @@ const booksWithSubjectsSelector = createSelector(
     setBookResultsSubjects
 );
 
-const stackedSubjectsSelector = state => stackAndGetTopLevelSubjects(state.list);
+const stackedSubjectsSelector = createSelector(
+    [state => state.list],
+    stackAndGetTopLevelSubjects
+);
 
 const bookListSelector = state => ({
     subjects: Object.assign({}, state.bookList.subjects, {list: stackedSubjectsSelector(state.bookList.subjects)}),
