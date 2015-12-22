@@ -9,15 +9,7 @@ function stackAndGetTopLevelSubjects(subjectsHash){
         s.children = [];
         s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
     });
-    return stackSubjects(subjects).filter(s => s.path == null);
-}
-
-function stackSubjects(subjects){
-    subjects.forEach(s => {
-        s.children = [];
-        s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
-    });
-    return subjects;
+    return subjects.filter(s => s.path == null);
 }
 
 module.exports = { setBookResultsSubjects, stackAndGetTopLevelSubjects };
