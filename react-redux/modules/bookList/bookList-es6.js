@@ -1,8 +1,7 @@
 let BookViewList = require('./components/bookViewList');
-const reducer = require('./reducers/reducer');
-const actionCreators = require('./actions/actionCreators');
+const { reducer, selector } = require('./reducers/reducer');
 
-BookViewList = ReactRedux.connect(state => state.bookList)(BookViewList);
+BookViewList = ReactRedux.connect(selector)(BookViewList);
 
 module.exports = {
     name: 'bookList',

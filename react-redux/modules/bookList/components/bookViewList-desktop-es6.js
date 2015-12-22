@@ -2,6 +2,7 @@ const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/boo
 const { toggleSelectBook, editSubjects, stopEditingSubjects, setNewSubjectName, setNewSubjectParent, editSubject, updateSubject } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
+const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 const BookSearchDesktop = require('./BookSearch-desktop');
 
@@ -37,7 +38,7 @@ class BookViewListDesktop extends React.Component{
     render(){
         return (
             <div>
-                <BookSearchDesktop></BookSearchDesktop>
+                <BookSearchDesktop openSubjectsFilterModal={this.props.openSubjectsFilterModal} closeSubjectsFilterModal={this.props.openSubjectsFilterModal}></BookSearchDesktop>
                 <br />
                 { this.props.selectedCount ? <BootstrapButton preset="primary-sm" onClick={() => this.multiBookSubjectsModal()}>Set subjects</BootstrapButton> : null }
                 &nbsp;&nbsp;&nbsp;
@@ -59,13 +60,13 @@ class BookViewListDesktop extends React.Component{
                     { this.props.books.list.map(book =>
                         <tr key={book._id}>
                             <td>
-                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (book.selected ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
+                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (this.props.books.selectedBooks[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
                             </td>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
                             <td>{book.author}</td>
                             <td>
-                                { book.subjects.map(s => <li key={s._id}>{s.name}</li>) }
+                                { book.subjectObjects.map(s => <li key={s._id}>{s.name}</li>) }
                                 <button onClick={() => this.singleSelectBook(book)}>Open</button>
                             </td>
                             <td>{book.isbn}</td>
@@ -75,6 +76,29 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
+
+
+                <Modal show={!!this.props.filters.subjectsFilterModal} onHide={this.props.closeSubjectsFilterModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Filter subjects
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {this.props.filters.subjectsFilterModal
+                            ? <HierarchicalSelectableSubjectList
+                                subjectsFilterModal={this.props.filters.subjectsFilterModal}
+                                toggleFilteredSubject={this.props.toggleFilteredSubject}
+                                subjects={this.props.subjects.list}/>
+                            : null
+                        }
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button onClick={this.props.closeSubjectsFilterModal}>Close</button>
+                    </Modal.Footer>
+                </Modal>
+
+
                 <Modal show={this.state.booksSubjectsModalShown} onHide={() => this.closeEditBooksSubjectsModal()}>
                     <Modal.Header closeButton>
                         <Modal.Title>

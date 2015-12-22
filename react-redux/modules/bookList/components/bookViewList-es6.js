@@ -2,6 +2,8 @@ const { loadBooks, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects }
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 const actionCreators = require('../actions/actionCreators');
 
+const { selector } = require('../reducers/reducer');
+
 function BookListLoading() {
     return <div style={{ height: '150' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
 }
@@ -15,8 +17,8 @@ class BookViewingList extends React.Component {
         super();
 
         responsiveMobileDesktopMixin(this, 'listComponent', {
-            mobile:  { path: './modules/bookList/components/bookViewList-mobile', connectWith: state => state.bookList },
-            desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: state => state.bookList, mapDispatchWith: actionCreators }
+            mobile:  { path: './modules/bookList/components/bookViewList-mobile', connectWith: selector },
+            desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: selector, mapDispatchWith: actionCreators }
         });
     }
     componentDidMount(){
