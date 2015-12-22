@@ -1,5 +1,5 @@
 const { TOGGLE_FILTER_SUBJECT, OPEN_SUBJECTS_FILTER_MODAL, CLOSE_SUBJECTS_FILTER_MODAL, TOGGLE_FILTERED_SUBJECT } = require('../actions/actionNames');
-const Immutable = require('/node_modules/immutable/dist/immutable');
+const Immutable = require('../../../../utils/immutable');
 
 const initialState = () => ({
     searchText: '',
