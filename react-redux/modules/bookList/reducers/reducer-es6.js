@@ -3,7 +3,7 @@ const { subjectsReducer } = require('./subjectsReducer');
 const filtersReducer = require('./filtersReducer');
 
 const actionCreators = require('../actions/actionCreators');
-const { createSelector } = require('/node_modules/reselect/lib/index');
+const { createSelector } = require('../../../util/reselect');
 const { setBookResultsSubjects } = require('../util/booksSubjectsHelpers');
 const { stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
 
