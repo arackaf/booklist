@@ -5,14 +5,14 @@ const filtersReducer = require('./filtersReducer');
 const initialState = () => ({
     books: booksReducer(),
     subjects: subjectsReducer(),
-    filterInfo: filtersReducer()
+    filters: filtersReducer()
 });
 
 function reducer(state = initialState(), action = {}){
     return {
         books: booksReducer(state.books, action),
         subjects: subjectsReducer(state.subjects, action),
-        filters: filtersReducer(state.filterInfo)
+        filters: filtersReducer(state.filters, action)
     };
 }
 

@@ -51,3 +51,4 @@ utils/hashManager.js
 react-redux/modules/bookList/components/bookSearch-desktop.js
 react-redux/modules/bookList/reducers/booksReducer.js
 react-redux/modules/bookList/reducers/filtersReducer.js
+react-redux/modules/bookList/components/hierarchicalSelectableSubjectList.js
