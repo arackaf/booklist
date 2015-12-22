@@ -24,7 +24,7 @@ class SubjectDAO extends DAO {
             if (existingParent != newParent) {
                 var affectedSubjects = await this.updateSubjectParent(_id, newParent);
             }
-            return { affectedSubjects: affectedSubjects || [], existingParent };
+            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name: newName })], existingParent };
         } finally{
             super.dispose(db);
         }

@@ -1,9 +1,9 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('./actionNames');
-
-const { setBookResultsSubjects, stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
+        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
+        OPEN_SUBJECTS_FILTER_MODAL, CLOSE_SUBJECTS_FILTER_MODAL, TOGGLE_FILTERED_SUBJECT
+} = require('./actionNames');
 
 function loadBooksAndSubjects(){
     return function(dispatch, getState){
@@ -83,6 +83,18 @@ function updateSubject(){
     }
 }
 
+function openSubjectsFilterModal(){
+    return { type: OPEN_SUBJECTS_FILTER_MODAL };
+}
+
+function closeSubjectsFilterModal(){
+    return { type: CLOSE_SUBJECTS_FILTER_MODAL };
+}
+
+function toggleFilteredSubject(_id){
+    return { type: TOGGLE_FILTERED_SUBJECT, _id }
+}
+
 module.exports = {
     loadBooks,
     editSubjectsForBook,
@@ -94,6 +106,9 @@ module.exports = {
     setNewSubjectParent,
     stopEditingSubjects,
     editSubject,
-    updateSubject
+    updateSubject,
+    openSubjectsFilterModal,
+    closeSubjectsFilterModal,
+    toggleFilteredSubject
 };
 

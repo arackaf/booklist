@@ -2,7 +2,7 @@ const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESU
 
 const assert = require('chai').assert;
 
-const reducer = require('../react-redux/modules/bookList/reducers/reducer');
+const { reducer, selector } = require('../react-redux/modules/bookList/reducers/reducer');
 
 describe('subject stacking', function() {
 
@@ -83,11 +83,7 @@ describe('Subject updating', function() {
             { _id: 22, name: 'b2', path: ',1,' },
             { _id: 32, name: 'c2', path: ',1,2,' }
         ], {
-            affectedSubjects: [],
-            _id: 1,
-            newName: 'a2',
-            newParent: null,
-            existingParent: null
+            affectedSubjects: [{ _id: 1, name: 'a2' }]
         });
         verifySubjects(subjects, [
             { _id: 1, name: 'a2', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }] }
@@ -102,11 +98,7 @@ describe('Subject updating', function() {
             { _id: 22, name: 'b2', path: ',1,' },
             { _id: 32, name: 'c2', path: ',1,2,' }
         ], {
-            affectedSubjects: [],
-            _id: 2,
-            newName: 'bA',
-            newParent: 1,
-            existingParent: 1
+            affectedSubjects: [{ _id: 2, name: 'bA', path: ',1,' }],
         });
         verifySubjects(subjects, [
             { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'bA', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }] }
@@ -121,11 +113,7 @@ describe('Subject updating', function() {
             { _id: 22, name: 'b2', path: ',1,' },
             { _id: 32, name: 'c2', path: ',1,2,' }
         ], {
-            affectedSubjects: [],
-            _id: 3,
-            newName: 'cA',
-            newParent: 2,
-            existingParent: 2
+            affectedSubjects: [{ _id: 3, name: 'cA', path: ',1,2,' }]
         });
         verifySubjects(subjects, [
             { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'cA' }, { _id: 32, name: 'c2' }] }] }
@@ -228,7 +216,8 @@ function loadSubjects(subjects){
 function apply(...actions){
     let state = reducer(undefined);
     actions.forEach(a => state = reducer(state, a));
-    return state;
+
+    return selector({ bookList: state });
 }
 
 function verifyTopLevelSubjectsOnly(actual, expected){
