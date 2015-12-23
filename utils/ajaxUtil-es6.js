@@ -3,18 +3,14 @@ window.ajaxUtil = {
         return $.ajax(url, {
             method: 'post',
             data: data,
-            success: function(res){
-                setTimeout(() => callback(res), 1500);
-            }
-        })
+            success: callback
+        });
     },
     ['get'](url, data, callback = () => null){
         return $.ajax(url, {
             method: 'get',
             data: data,
-            success: function(res){
-                setTimeout(() => callback(res), 1500);
-            }
-        })
+            success: callback
+        });
     }
 };
