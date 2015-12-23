@@ -1,0 +1,4 @@
+{
+  "verbose": true,
+  "ignore": ["**/**-es6.js", "node_modules/*", "react-redux/*"]
+}
