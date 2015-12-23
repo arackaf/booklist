@@ -12,9 +12,12 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
 var passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy;
+    LocalStrategy = require('passport-local').Strategy,
+    RememberMeStrategy = require('passport-remember-me').Strategy;
 
-const userObj = { name: 'adam', id: 1, username: 'adam', password: 'pwd', msg: 'nice work!' };
+const adamToken = 'foooooooooo';
+const userObj = { name: 'adam', id: 1, username: 'adam', password: 'pwd', msg: 'nice work!', token: adamToken };
+
 passport.use(new LocalStrategy(
     function(username, password, done) {
         if (username == 'adam' && password == 'password'){
@@ -22,6 +25,25 @@ passport.use(new LocalStrategy(
         } else {
             return done(null, false, { message: 'Incorrect login' });
         }
+    }
+));
+
+function consumeRememberMeToken(token, fn) {
+    if (token == adamToken) return fn(null, userObj);
+    else return fn(null, null);
+}
+
+passport.use(new RememberMeStrategy(
+    function(token, done) {
+        consumeRememberMeToken(token, function(err, userObj) {
+            if (err) { return done(err); }
+            if (!userObj) { return done(null, false); }
+
+            return done(null, userObj);
+        });
+    },
+    function(user, done) {
+        return done(null, adamToken);
     }
 ));
 
@@ -41,6 +63,7 @@ app.use(cookieParser());
 app.use(session({ secret: 'adam_booklist', saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.authenticate('remember-me'));
 
 app.listen(3000);
 
@@ -64,6 +87,7 @@ app.get('/react-redux/login', function (request, response) {
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
     //response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
+    response.cookie('remember_me', req.user.token, { path: '/', httpOnly: true, maxAge: 604800000 });
     response.send(req.user);
 });
 
