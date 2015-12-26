@@ -13,6 +13,26 @@ const initialState = () => ({
     filters: filtersReducer()
 });
 
+
+const bookSubjectManagerInitialState = () => ({
+    selected: {},
+    addingSubjects: {},
+    removingSubjects: {},
+    isActive: false
+});
+
+const ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK = 'ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK',
+      TOGGLE_SELECT_BOOK_FOR_SUBJECT_MODIFICATION = 'TOGGLE_SELECT_BOOK_FOR_SUBJECT_MODIFICATION',
+      ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS = 'ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS';
+
+function bookSubjectManagerReducer(state = bookSubjectManagerInitialState(), action = {}){
+    switch (action.type){
+        case TOGGLE_SELECT_BOOK_FOR_SUBJECT_MODIFICATION:
+            return Object.assign({}, state, { selected: { ...state.selected, [action._id]: action.selected ? action._id : undefined } });
+    }
+    return state;
+}
+
 function reducer(state = initialState(), action = {}){
     return {
         books: booksReducer(state.books, action),
