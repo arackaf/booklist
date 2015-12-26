@@ -40,7 +40,7 @@ class BookViewListDesktop extends React.Component{
             <div>
                 <BookSearchDesktop openSubjectsFilterModal={this.props.openSubjectsFilterModal} closeSubjectsFilterModal={this.props.openSubjectsFilterModal}></BookSearchDesktop>
                 <br />
-                { this.props.selectedCount ? <BootstrapButton preset="primary-sm" onClick={() => this.multiBookSubjectsModal()}>Set subjects</BootstrapButton> : null }
+                <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;
                 <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
                 <table className="table table-striped">
@@ -67,7 +67,7 @@ class BookViewListDesktop extends React.Component{
                             <td>{book.author}</td>
                             <td>
                                 { book.subjectObjects.map(s => <li key={s._id}>{s.name}</li>) }
-                                <button onClick={() => this.singleSelectBook(book)}>Open</button>
+                                <button onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Open</button>
                             </td>
                             <td>{book.isbn}</td>
                             <td>{book.publicationDate}</td>
@@ -99,40 +99,54 @@ class BookViewListDesktop extends React.Component{
                 </Modal>
 
 
-                <Modal show={this.state.booksSubjectsModalShown} onHide={() => this.closeEditBooksSubjectsModal()}>
+                <Modal show={this.props.booksSubjectsModifier.isActive} onHide={this.props.cancelSubjectModification}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects for:
-                            <div>{this.state.editSubjectsFor.map(b => <h5 key={b._id}>{b.title}</h5>)}</div>
+                            <div>{Object.keys(this.props.booksSubjectsModifier.selected).map(_id => <h5 key={_id}>{_id}</h5>)}</div>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div>
-                            <b>Add</b> { this.state.subjectsAdding.map(s => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={s._id}>{s.name}</span>) }
+                            <b>Add</b> { Object.keys(this.props.booksSubjectsModifier.addingSubjects).map(_id => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={_id}>{_id}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                    {
+                                        null ?
+                                            this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleAddSubjectPending(s, e.target.checked)}/> {s.name} </li>)
+                                            : null
+                                    }
                                 </ul>
                             </div>
                         </div>
 
                         <div>
-                            <b>Remove</b> { this.state.subjectsRemoving.map(s => <span className="label label-danger" style={{ marginRight: 5, display: 'inline-block' }} key={s._id}>{s.name}</span>) }
+                            <b>Remove</b>
+                            {
+                                null ?
+                                this.state.subjectsRemoving.map(s => <span className="label label-danger" style={{ marginRight: 5, display: 'inline-block' }} key={s._id}>{s.name}</span>)
+                                : null
+                            }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>) }
+                                    {
+                                        null ?
+                                        this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>)
+                                        : null
+                                    }
                                 </ul>
                             </div>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onClick={() => this.closeEditBooksSubjectsModal()}>Close</button>
+                        <button onClick={this.props.cancelSubjectModification}>Cancel</button>
                     </Modal.Footer>
                 </Modal>
+
                 <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
                         <Modal.Title>
