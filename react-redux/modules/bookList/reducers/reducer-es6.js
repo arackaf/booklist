@@ -57,6 +57,15 @@ const stackedSubjectsSelector = createSelector(
     stackAndGetTopLevelSubjects
 );
 
+const booksSubjectsModifierSelector = createSelector(
+    [state => state.booksSubjectsModifier],
+    subjectsModifier => ({
+        isActive: subjectsModifier.isActive,
+        selected: subjectsModifier.selected,
+        addingSubjects: subjectsModifier.addingSubjects
+    })
+);
+
 const bookListSelector = state => ({
     subjects: Object.assign({}, state.bookList.subjects, {list: stackedSubjectsSelector(state.bookList.subjects)}),
     books: Object.assign({}, state.bookList.books, {list: booksWithSubjectsSelector(state.bookList)}),
