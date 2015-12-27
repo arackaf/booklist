@@ -56,13 +56,19 @@ const stackedSubjectsSelector = createSelector(
 );
 
 const booksSubjectsModifierSelector = createSelector(
-    [state => state.booksSubjectsModifier, state => state.books.selectedBooks],
-    (subjectsModifier, selectedBooks) => ({
-        singleBookModify: subjectsModifier.singleBookModify,
-        selectedBooksModify: subjectsModifier.selectedBooksModify,
-        addingSubjects: subjectsModifier.addingSubjects,
-        modifyingBooks: subjectsModifier.modifyingBooks
-    })
+    [state => state.booksSubjectsModifier, state => state.books],
+    (subjectsModifier, books) => {
+        let modifyingBookIds =
+            subjectsModifier.singleBookModify
+                ? [subjectsModifier.singleBookModify]
+                : (subjectsModifier.selectedBooksModify ? Object.keys(books.selectedBooks) : []);
+
+        return {
+            modifyingBooks: modifyingBookIds.filter(_id => _id).map(_id => books.booksHash[_id]),
+            addingSubjects: subjectsModifier.addingSubjects,
+            removingSubjects: subjectsModifier.removingSubjects
+        };
+    }
 );
 
 const bookListSelector = state => ({
