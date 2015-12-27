@@ -50,10 +50,6 @@ function addSubjectToBook(subject){
     }
 }
 
-function toggleSelectBook(_id){
-    return { type: TOGGLE_SELECT_BOOK, _id }
-}
-
 function editSubjects(){
     return { type: EDIT_SUBJECTS };
 }
@@ -118,7 +114,6 @@ module.exports = {
     editSubjectsForBook,
     addSubjectToBook,
     loadBooksAndSubjects,
-    toggleSelectBook,
     editSubjects,
     setNewSubjectName,
     setNewSubjectParent,
