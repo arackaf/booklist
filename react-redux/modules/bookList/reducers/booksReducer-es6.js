@@ -6,6 +6,8 @@ function booksReducer(state = initialBooksState(), action = {}){
             return Object.assign({}, state, { loading: true });
         case LOAD_BOOKS_RESULTS:
             return Object.assign({}, state, { loading: false, list: action.books});
+        case TOGGLE_SELECT_BOOK:
+            return Object.assign({}, state, { selectedBooks: { ...state.selectedBooks, [action._id]: !state.selectedBooks[action._id] } });
         case SELECT_ALL_BOOKS:
             var newBookList = state.list.map(b => Object.assign({}, b, { selected: true }));
             return Object.assign({}, state, { list: newBookList, selectedCount: newBookList.length });

@@ -7,7 +7,7 @@ const { createSelector } = require('../../../util/reselect');
 const { setBookResultsSubjects } = require('../util/booksSubjectsHelpers');
 const { stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
 
-const { ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, TOGGLE_SELECT_BOOK_FOR_SUBJECT_MODIFICATION, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION }
+const { ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION }
     = require('../actions/actionNames');
 
 const initialState = () => ({
@@ -18,22 +18,20 @@ const initialState = () => ({
 
 
 const bookSubjectManagerInitialState = () => ({
-    selected: {},
+    singleBookModify: null,
+    selectedBooksModify: false,
     addingSubjects: {},
-    removingSubjects: {},
-    isActive: false
+    removingSubjects: {}
 });
 
 function bookSubjectManagerReducer(state = bookSubjectManagerInitialState(), action = {}){
     switch (action.type){
-        case TOGGLE_SELECT_BOOK_FOR_SUBJECT_MODIFICATION:
-            return Object.assign({}, state, { selected: { ...state.selected, [action._id]: !state.selected[action._id] } });
         case ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK:
-            return Object.assign({}, state, { selected: { [action._id]: true }, isActive: true });
+            return Object.assign({}, state, { singleBookModify: action._id });
         case ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS:
-            return Object.assign({}, state, { isActive: true });
+            return Object.assign({}, state, { selectedBooksModify: true });
         case CANCEL_SUBJECT_MODIFICATION:
-            return Object.assign({}, state, { isActive: false });
+            return Object.assign({}, state, { singleBookModify: null, selectedBooksModify: false });
     }
     return state;
 }
@@ -58,11 +56,12 @@ const stackedSubjectsSelector = createSelector(
 );
 
 const booksSubjectsModifierSelector = createSelector(
-    [state => state.booksSubjectsModifier],
-    subjectsModifier => ({
-        isActive: subjectsModifier.isActive,
-        selected: subjectsModifier.selected,
-        addingSubjects: subjectsModifier.addingSubjects
+    [state => state.booksSubjectsModifier, state => state.books.selectedBooks],
+    (subjectsModifier, selectedBooks) => ({
+        singleBookModify: subjectsModifier.singleBookModify,
+        selectedBooksModify: subjectsModifier.selectedBooksModify,
+        addingSubjects: subjectsModifier.addingSubjects,
+        modifyingBooks: subjectsModifier.modifyingBooks
     })
 );
 
@@ -70,7 +69,7 @@ const bookListSelector = state => ({
     subjects: Object.assign({}, state.bookList.subjects, {list: stackedSubjectsSelector(state.bookList.subjects)}),
     books: Object.assign({}, state.bookList.books, {list: booksWithSubjectsSelector(state.bookList)}),
     filters: state.bookList.filters,
-    booksSubjectsModifier: state.bookList.booksSubjectsModifier
+    booksSubjectsModifier: booksSubjectsModifierSelector(state.bookList, state.bookList)
 });
 
 module.exports = { reducer, selector: bookListSelector };
