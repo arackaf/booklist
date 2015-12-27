@@ -5,7 +5,7 @@ function booksReducer(state = initialBooksState(), action = {}){
         case LOAD_BOOKS:
             return Object.assign({}, state, { loading: true });
         case LOAD_BOOKS_RESULTS:
-            return Object.assign({}, state, { loading: false, list: action.books});
+            return Object.assign({}, state, { loading: false, booksHash: createBooksHash(action.books) });
         case TOGGLE_SELECT_BOOK:
             return Object.assign({}, state, { selectedBooks: { ...state.selectedBooks, [action._id]: !state.selectedBooks[action._id] } });
         case SELECT_ALL_BOOKS:
@@ -18,8 +18,14 @@ function booksReducer(state = initialBooksState(), action = {}){
     return state;
 }
 
+function createBooksHash(booksArr){
+    let result = {};
+    booksArr.forEach(book => result[book._id] = book);
+    return result;
+}
+
 const initialBooksState = () => ({
-    list: [],
+    booksHash: {},
     loading: false,
     selectedBooks: {}
 });

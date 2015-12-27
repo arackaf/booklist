@@ -1,4 +1,5 @@
-function setBookResultsSubjects(books, subjectsHash){
+function setBookResultsSubjects(booksHash, subjectsHash){
+    let books = Object.keys(booksHash).map(_id => booksHash[_id]);
     books.forEach(b => b.subjectObjects = b.subjects.map(s => subjectsHash[s] || { name: '<subject not found>' }));
     return books;
 }
