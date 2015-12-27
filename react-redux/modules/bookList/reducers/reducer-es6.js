@@ -46,7 +46,7 @@ function reducer(state = initialState(), action = {}){
 }
 
 const booksWithSubjectsSelector = createSelector(
-    [state => state.books.list, state => state.subjects.list],
+    [state => state.books.booksHash, state => state.subjects.list],
     setBookResultsSubjects
 );
 
