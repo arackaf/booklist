@@ -27,7 +27,7 @@ const bookSubjectManagerInitialState = () => ({
 function bookSubjectManagerReducer(state = bookSubjectManagerInitialState(), action = {}){
     switch (action.type){
         case TOGGLE_SELECT_BOOK_FOR_SUBJECT_MODIFICATION:
-            return Object.assign({}, state, { selected: { ...state.selected, [action._id]: action.selected ? action._id : undefined } });
+            return Object.assign({}, state, { selected: { ...state.selected, [action._id]: !state.selected[action._id] } });
         case ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK:
             return Object.assign({}, state, { selected: { [action._id]: true }, isActive: true });
         case ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS:
