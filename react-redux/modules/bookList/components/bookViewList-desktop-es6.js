@@ -99,16 +99,20 @@ class BookViewListDesktop extends React.Component{
                 </Modal>
 
 
-                <Modal show={!!this.props.booksSubjectsModifier.singleBookModify} onHide={this.props.cancelSubjectModification}>
+                <Modal show={!!this.props.booksSubjectsModifier.modifyingBooks.length} onHide={this.props.cancelSubjectModification}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects for:
-                            <div><h5 key={this.props.booksSubjectsModifier.singleBookModify}>{this.props.booksSubjectsModifier.singleBookModify}</h5></div>
+                            <div>{ this.props.booksSubjectsModifier.modifyingBooks.map(book => <h5 key={book._id}>{book.title}</h5>) }</div>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div>
-                            <b>Add</b> { Object.keys(this.props.booksSubjectsModifier.addingSubjects).map(_id => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={_id}>{_id}</span>) }
+                            <b>Add</b> {
+                                null ?
+                                Object.keys(this.props.booksSubjectsModifier.addingSubjects).map(_id => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={_id}>{_id}</span>)
+                                : null
+                            }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
