@@ -120,20 +120,12 @@ class BookViewListDesktop extends React.Component{
 
                         <div>
                             <b>Remove</b>
-                            {
-                                null ?
-                                this.state.subjectsRemoving.map(s => <span className="label label-danger" style={{ marginRight: 5, display: 'inline-block' }} key={s._id}>{s.name}</span>)
-                                : null
-                            }
+                            { Object.keys(this.props.booksSubjectsModifier.removingSubjects).filter(_id => this.props.booksSubjectsModifier.removingSubjects[_id]).map(_id => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={_id}>{_id}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    {
-                                        null ?
-                                        this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" onChange={e => this.toggleRemoveSubjectPending(s, e.target.checked)} /> {s.name}</li>)
-                                        : null
-                                    }
+                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.removingSubjects[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name} </li>) }
                                 </ul>
                             </div>
                         </div>
