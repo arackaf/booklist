@@ -3,7 +3,7 @@ const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
         OPEN_SUBJECTS_FILTER_MODAL, CLOSE_SUBJECTS_FILTER_MODAL, TOGGLE_FILTERED_SUBJECT,
-        ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK,
+        ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION,
         ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION
 } = require('./actionNames');
 
@@ -101,6 +101,14 @@ function enableSubjectModificationToggledBooks(){
     return { type: ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS }
 }
 
+function toggleSubjectModificationAdd(_id){
+    return { type: TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, _id }
+}
+
+function toggleSubjectModificationRemove(_id){
+    return { type: TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, _id }
+}
+
 function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
 }
@@ -126,6 +134,8 @@ module.exports = {
     toggleFilteredSubject,
     enableSubjectModificationSingleBook,
     enableSubjectModificationToggledBooks,
-    cancelSubjectModification
+    cancelSubjectModification,
+    toggleSubjectModificationAdd,
+    toggleSubjectModificationRemove
 };
 
