@@ -60,7 +60,7 @@ class BookViewListDesktop extends React.Component{
                     { this.props.books.list.map(book =>
                         <tr key={book._id}>
                             <td>
-                                <i onClick={() => this.props.toggleSelectBookForSubjectModification(book._id)} className={'fa ' + (this.props.booksSubjectsModifier.selected[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
+                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (this.props.books.selectedBooks[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
                             </td>
                             <td><img src={book.smallImage} /></td>
                             <td>{book.title}</td>
@@ -99,11 +99,11 @@ class BookViewListDesktop extends React.Component{
                 </Modal>
 
 
-                <Modal show={this.props.booksSubjectsModifier.isActive} onHide={this.props.cancelSubjectModification}>
+                <Modal show={!!this.props.booksSubjectsModifier.singleBookModify} onHide={this.props.cancelSubjectModification}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects for:
-                            <div>{Object.keys(this.props.booksSubjectsModifier.selected).map(_id => <h5 key={_id}>{_id}</h5>)}</div>
+                            <div><h5 key={this.props.booksSubjectsModifier.singleBookModify}>{this.props.booksSubjectsModifier.singleBookModify}</h5></div>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
