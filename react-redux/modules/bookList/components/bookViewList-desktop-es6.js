@@ -108,24 +108,24 @@ class BookViewListDesktop extends React.Component{
                     </Modal.Header>
                     <Modal.Body>
                         <div>
-                            <b>Add</b> { Object.keys(this.props.booksSubjectsModifier.addingSubjects).filter(_id => this.props.booksSubjectsModifier.addingSubjects[_id]).map(_id => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={_id}>{_id}</span>) }
+                            <b>Add</b> { this.props.booksSubjectsModifier.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.addingSubjects[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name} </li>) }
+                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name} </li>) }
                                 </ul>
                             </div>
                         </div>
 
                         <div>
                             <b>Remove</b>
-                            { Object.keys(this.props.booksSubjectsModifier.removingSubjects).filter(_id => this.props.booksSubjectsModifier.removingSubjects[_id]).map(_id => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={_id}>{_id}</span>) }
+                            { this.props.booksSubjectsModifier.removingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                             <div className="panel-body">
                                 <ul>
-                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.removingSubjects[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name} </li>) }
+                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name} </li>) }
                                 </ul>
                             </div>
                         </div>
