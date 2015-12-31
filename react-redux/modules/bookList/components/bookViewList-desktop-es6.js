@@ -3,37 +3,12 @@ const { toggleSelectBook, editSubjects, stopEditingSubjects, setNewSubjectName, 
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
-const editSubjectStateCollection = Symbol('editSubjectStateCollection');
 const BookSearchDesktop = require('./BookSearch-desktop');
 
 class BookViewListDesktop extends React.Component{
     constructor(){
         super();
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
-    }
-    closeEditBooksSubjectsModal(){
-        this.setState({ booksSubjectsModalShown: false });
-    }
-    singleSelectBook(book){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: [book], subjectsRemoving: [], subjectsAdding: [] });
-    }
-    multiBookSubjectsModal(){
-        this.setState({ booksSubjectsModalShown: true, editSubjectsFor: this.props.books.list.filter(b => b.selected), subjectsRemoving: [], subjectsAdding: [] })
-    }
-    toggleAddSubjectPending(subject, toggledOn){
-        this[editSubjectStateCollection](subject, toggledOn, 'subjectsAdding');
-    }
-    toggleRemoveSubjectPending(subject, toggledOn){
-        this[editSubjectStateCollection](subject, toggledOn, 'subjectsRemoving');
-    }
-    [editSubjectStateCollection](subject, toggledOn, stateName){
-        let updated = this.state[stateName].concat();
-        if (toggledOn){
-            updated.push(subject);
-        } else {
-            updated = updated.filter(s => s._id !== subject._id);
-        }
-        this.setState({ [stateName]: updated });
     }
     render(){
         return (
