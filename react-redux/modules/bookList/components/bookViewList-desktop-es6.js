@@ -154,7 +154,7 @@ class BookViewListDesktop extends React.Component{
                                     <option value="">None</option>
                                     { this.props.subjects.editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
-                                <BootstrapButton onClick={() => this.props.updateSubject()}>Save</BootstrapButton>
+                                <BootstrapButton onClick={this.props.updateSubject}>Save</BootstrapButton>
                             </div>
                             : null
                         }
