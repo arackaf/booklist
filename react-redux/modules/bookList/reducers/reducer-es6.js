@@ -59,33 +59,35 @@ const stackedSubjectsSelector = createSelector(
     stackAndGetTopLevelSubjects
 );
 
+const modifyingBooksSelector = createSelector(
+    [state => state.booksSubjectsModifier.singleBookModify, state => state.booksSubjectsModifier.selectedBooksModify, state => state.books],
+    (singleBookModify, selectedBooksModify, books) => {
+        let modifyingBookIds = singleBookModify ? [singleBookModify] : (selectedBooksModify ? Object.keys(books.selectedBooks) : []);
+        return modifyingBookIds.filter(_id => _id).map(_id => books.booksHash[_id]);
+    }
+);
+
 const addingSubjectsSelector = createSelector(
     [state => state.booksSubjectsModifier.addingSubjects, state => state.subjects.list],
     (adding, subjects) => Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id])
 );
 
-//const booksSubjectsModifierSelector = createSelector(
-const booksSubjectsModifierSelector = state => {
-    //[state => state.booksSubjectsModifier, state => state.books, state => state.subjects],
-    //(subjMod, books, subjects) => {
+const removingSubjectsSelector = createSelector(
+    [state => state.booksSubjectsModifier.removingSubjects, state => state.subjects.list],
+    (removing, subjects) => Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id])
+);
 
-    let subjMod = state.booksSubjectsModifier,
-        books = state.books,
-        subjects = state.subjects;
-
-    let modifyingBookIds =
-        subjMod.singleBookModify
-            ? [subjMod.singleBookModify]
-            : (subjMod.selectedBooksModify ? Object.keys(books.selectedBooks) : []);
-
-    return {
-        modifyingBooks: modifyingBookIds.filter(_id => _id).map(_id => books.booksHash[_id]),
-        addingSubjects: addingSubjectsSelector(state),
-        removingSubjects: Object.keys(subjMod.removingSubjects).filter(_id => subjMod.removingSubjects[_id]).map(_id => subjects.list[_id]),
-        addingSubjectIds: subjMod.addingSubjects,
-        removingSubjectIds: subjMod.removingSubjects
-    };
-};
+const booksSubjectsModifierSelector = createSelector(
+    [state => state.booksSubjectsModifier.addingSubjects, state => state.booksSubjectsModifier.removingSubjects,
+        modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector],
+    (addingSubjectIds, removingSubjectIds, modifyingBooks, addingSubjects, removingSubjects) => ({
+        addingSubjectIds,
+        removingSubjectIds,
+        modifyingBooks,
+        addingSubjects,
+        removingSubjects
+    })
+);
 
 const bookListSelector = state => ({
     subjects: Object.assign({}, state.bookList.subjects, {list: stackedSubjectsSelector(state.bookList.subjects)}),
