@@ -53,3 +53,4 @@ react-redux/modules/bookList/reducers/booksReducer.js
 react-redux/modules/bookList/reducers/filtersReducer.js
 react-redux/modules/bookList/components/hierarchicalSelectableSubjectList.js
 react-redux/modules/bookList/reducers/subjectsReducer.js
+react-redux/modules/bookList/reducers/booksSubjectModifier.js
