@@ -1,4 +1,12 @@
+const { createSelector } = require('../../../util/reselect');
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } = require('../actions/actionNames');
+const { setBookResultsSubjects } = require('../util/booksSubjectsHelpers');
+
+const initialBooksState = () => ({
+    booksHash: {},
+    loading: false,
+    selectedBooks: {}
+});
 
 function booksReducer(state = initialBooksState(), action = {}){
     switch(action.type) {
@@ -24,10 +32,11 @@ function createBooksHash(booksArr){
     return result;
 }
 
-const initialBooksState = () => ({
-    booksHash: {},
-    loading: false,
-    selectedBooks: {}
-});
+const booksWithSubjectsSelector = createSelector(
+    [state => state.books.booksHash, state => state.subjects.list],
+    setBookResultsSubjects
+);
 
-module.exports = { booksReducer };
+const booksSelector = state => Object.assign({}, state.books, { list: booksWithSubjectsSelector(state) });
+
+module.exports = { booksReducer, booksSelector };
