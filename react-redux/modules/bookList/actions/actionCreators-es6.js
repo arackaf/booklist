@@ -4,7 +4,7 @@ const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
         OPEN_SUBJECTS_FILTER_MODAL, CLOSE_SUBJECTS_FILTER_MODAL, TOGGLE_FILTERED_SUBJECT,
         ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION,
-        ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION
+        ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION, SET_TEXT_SEARCH
 } = require('./actionNames');
 
 function loadBooksAndSubjects(){
@@ -117,6 +117,10 @@ function cancelSubjectModification(){
     return { type: CANCEL_SUBJECT_MODIFICATION }
 }
 
+function setSearchFilterText(value){
+    return { type: SET_TEXT_SEARCH, value }
+}
+
 module.exports = {
     loadBooks,
     toggleSelectBook,
@@ -132,6 +136,7 @@ module.exports = {
     openSubjectsFilterModal,
     closeSubjectsFilterModal,
     toggleFilteredSubject,
+    setSearchFilterText,
     enableSubjectModificationSingleBook,
     enableSubjectModificationToggledBooks,
     cancelSubjectModification,
