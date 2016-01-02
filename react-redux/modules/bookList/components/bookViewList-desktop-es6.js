@@ -13,7 +13,12 @@ class BookViewListDesktop extends React.Component{
     render(){
         return (
             <div>
-                <BookSearchDesktop openSubjectsFilterModal={this.props.openSubjectsFilterModal} closeSubjectsFilterModal={this.props.openSubjectsFilterModal}></BookSearchDesktop>
+                <BookSearchDesktop
+                    x="23"
+                    searchFilters={this.props.filters}
+                    setSearchText={this.props.setSearchFilterText}
+                    openSubjectsFilterModal={this.props.openSubjectsFilterModal}
+                    closeSubjectsFilterModal={this.props.openSubjectsFilterModal}></BookSearchDesktop>
                 <br />
                 <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;
