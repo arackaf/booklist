@@ -18,6 +18,9 @@ class BookSearchDesktop extends React.Component {
             this.setState({ textSearch: newProps.searchFilters.searchText });
         }
     }
+    componentWillUnmount(){
+        window.removeEventListener("hashchange", this._hashChangeSubscription);
+    }
     render(){
         return (
             <div>
