@@ -47,7 +47,8 @@ class BookSearchDesktop extends React.Component {
                     <Modal.Body>
                         <HierarchicalSelectableSubjectList
                             toggleFilteredSubject={this.props.toggleFilteredSubject}
-                            subjects={this.props.allSubjects} />
+                            subjects={this.props.allSubjects}
+                            selectedSubjects={this.props.searchFilters.subjects} />
                     </Modal.Body>
                     <Modal.Footer>
                         <button onClick={() => this.closeSubjectsFilterModal()}>Close</button>
