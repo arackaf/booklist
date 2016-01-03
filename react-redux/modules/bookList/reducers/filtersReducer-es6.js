@@ -9,11 +9,17 @@ const initialState = () => ({
 function filtersReducer(state = initialState(), action = {}){
     switch(action.type){
         case TOGGLE_FILTERED_SUBJECT:
-            return Object.assign({}, state, { subjects: { ...subjects, [action._id]: !state.subjects[action._id] } });
+            return Object.assign({}, state, { subjects: { ...state.subjects, [action._id]: !state.subjects[action._id] } });
         case SET_TEXT_SEARCH:
             return Object.assign({}, state, { searchText: action.value });
     }
     return state;
 }
 
-module.exports = filtersReducer;
+function selectedSubjectIds(obj){
+    return Object.keys(obj).filter(k => obj[k]);
+}
+
+const filtersSelector = state => Object.assign({}, state.filters, { selectedSubjectIds: selectedSubjectIds(state.filters.subjects) });
+
+module.exports = { filtersReducer, filtersSelector };

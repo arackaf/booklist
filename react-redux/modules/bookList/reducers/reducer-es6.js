@@ -1,6 +1,6 @@
 const { booksReducer, booksSelector } = require('./booksReducer');
 const { subjectsReducer, subjectsSelector } = require('./subjectsReducer');
-const filtersReducer = require('./filtersReducer');
+const { filtersReducer, filtersSelector } = require('./filtersReducer');
 
 const actionCreators = require('../actions/actionCreators');
 const { bookSubjectManagerReducer, booksSubjectsModifierSelector } = require('./booksSubjectModifier');
@@ -23,7 +23,7 @@ function reducer(state = initialState(), action = {}){
 const bookListSelector = state => ({
     subjects: subjectsSelector(state.bookList),
     books: booksSelector(state.bookList),
-    filters: state.bookList.filters,
+    filters: filtersSelector(state.bookList),
     booksSubjectsModifier: booksSubjectsModifierSelector(state.bookList)
 });
 

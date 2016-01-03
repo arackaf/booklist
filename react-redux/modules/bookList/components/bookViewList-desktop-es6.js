@@ -1,8 +1,7 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
-const { toggleSelectBook, editSubjects, stopEditingSubjects, setNewSubjectName, setNewSubjectParent, editSubject, updateSubject } = require('../actions/actionCreators');
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
-const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
+
 const BookSearchDesktop = require('./BookSearch-desktop');
 
 class BookViewListDesktop extends React.Component{
@@ -14,8 +13,9 @@ class BookViewListDesktop extends React.Component{
         return (
             <div>
                 <BookSearchDesktop
-                    x="23"
                     searchFilters={this.props.filters}
+                    allSubjects={this.props.subjects.list}
+                    toggleFilteredSubject={this.props.toggleFilteredSubject}
                     setSearchText={this.props.setSearchFilterText}
                     openSubjectsFilterModal={this.props.openSubjectsFilterModal}
                     closeSubjectsFilterModal={this.props.openSubjectsFilterModal}></BookSearchDesktop>
@@ -56,28 +56,6 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
-
-
-                <Modal show={!!this.props.filters.subjectsFilterModal} onHide={this.props.closeSubjectsFilterModal}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>
-                            Filter subjects
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {this.props.filters.subjectsFilterModal
-                            ? <HierarchicalSelectableSubjectList
-                                subjectsFilterModal={this.props.filters.subjectsFilterModal}
-                                toggleFilteredSubject={this.props.toggleFilteredSubject}
-                                subjects={this.props.subjects.list}/>
-                            : null
-                        }
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button onClick={this.props.closeSubjectsFilterModal}>Close</button>
-                    </Modal.Footer>
-                </Modal>
-
 
                 <Modal show={!!this.props.booksSubjectsModifier.modifyingBooks.length} onHide={this.props.cancelSubjectModification}>
                     <Modal.Header closeButton>
