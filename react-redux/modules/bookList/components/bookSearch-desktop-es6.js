@@ -36,6 +36,7 @@ class BookSearchDesktop extends React.Component {
                 <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
                 <input onKeyDown={evt => this.keyDown(evt)} onChange={evt => this.searchFilterTyped(evt)} value={this.state.textSearch} />
                 <span>{'Current search: ' + this.props.searchFilters.searchText}</span>
+                <span title={this.props.searchFilters.selectedSubjectIds.length}>{this.props.searchFilters.selectedSubjectIds.length ? `${this.props.searchFilters.selectedSubjectIds.length} subjects filtered` : null}</span>
 
 
                 <Modal show={this.state.subjectFiltersModalOpen} onHide={() => this.closeSubjectsFilterModal()}>
