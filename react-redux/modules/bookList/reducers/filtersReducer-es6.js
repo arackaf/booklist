@@ -3,6 +3,7 @@ const { TOGGLE_FILTERED_SUBJECT, SET_TEXT_SEARCH } = require('../actions/actionN
 const initialState = () => ({
     searchText: '',
     subjects: {},
+    pendingSubjects: {},
     withChildSubjects: false
 });
 
