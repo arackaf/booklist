@@ -3,7 +3,7 @@ const { subjectsReducer, subjectsSelector } = require('./subjectsReducer');
 const { filtersReducer, filtersSelector } = require('./filtersReducer');
 
 const actionCreators = require('../actions/actionCreators');
-const { bookSubjectManagerReducer, booksSubjectsModifierSelector } = require('./booksSubjectModifier');
+const { bookSubjectManagerReducer, booksSubjectsModifierSelector } = require('./booksSubjectModifierReducer');
 
 const initialState = () => ({
     books: booksReducer(),
