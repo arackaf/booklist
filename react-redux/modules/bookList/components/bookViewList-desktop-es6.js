@@ -16,9 +16,9 @@ class BookViewListDesktop extends React.Component{
                     searchFilters={this.props.filters}
                     allSubjects={this.props.subjects.list}
                     toggleFilteredSubject={this.props.toggleFilteredSubject}
-                    setSearchText={this.props.setSearchFilterText}
-                    openSubjectsFilterModal={this.props.openSubjectsFilterModal}
-                    closeSubjectsFilterModal={this.props.openSubjectsFilterModal}></BookSearchDesktop>
+                    applyPendingFilteredSubjects={this.props.applyPendingFilteredSubjects}
+                    cancelPendingFilteredSubjects={this.props.cancelPendingFilteredSubjects}
+                    setSearchText={this.props.setSearchFilterText}></BookSearchDesktop>
                 <br />
                 <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;
