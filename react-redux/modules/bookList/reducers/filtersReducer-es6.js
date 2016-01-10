@@ -21,10 +21,10 @@ function filtersReducer(state = initialState(), action = {}){
     return state;
 }
 
-function selectedSubjectIds(obj){
-    return Object.keys(obj).filter(k => obj[k]);
+function projectselectedSubjects(selectedSubjectsIds, subjects){
+    return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]);
 }
 
-const filtersSelector = state => Object.assign({}, state.filters, { selectedSubjectIds: selectedSubjectIds(state.filters.subjects) });
+const filtersSelector = state => Object.assign({}, state.filters, { selectedSubjects: projectselectedSubjects(state.filters.subjects, state.subjects.list) });
 
 module.exports = { filtersReducer, filtersSelector };
