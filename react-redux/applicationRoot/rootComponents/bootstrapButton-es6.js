@@ -3,7 +3,7 @@ const buttonTypes = ['default', 'primary', 'success', 'info', 'warning', 'danger
 const buttonSizes = ['lg', 'sm', 'xs'];
 
 buttonTypes.forEach(t => {
-    cssPresets[t] = t; //default size
+    cssPresets[t] = `btn-${t}`; //default size
     buttonSizes.forEach(s => {
         cssPresets[`${t}-${s}`] = `btn-${t} btn-${s}`;
     });
@@ -12,7 +12,7 @@ buttonTypes.forEach(t => {
 class BootstrapButton extends React.Component{
     constructor(props){
         super();
-        this.state = { btnCss: 'btn ' + (cssPresets[props.preset] || props.css || '') };
+        this.state = { btnCss: (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '') };
     }
     render(){
         return (
