@@ -57,8 +57,8 @@ class BookSearchDesktop extends React.Component {
                             selectedSubjects={this.props.searchFilters.pendingSubjects} />
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onClick={() => this.closeSubjectsFilterModal()}>Close</button>
-                        <button onClick={() => this.applySubjectsFilters()}>Filter</button>
+                        <BootstrapButton preset="default" className="pull-left" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
+                        <BootstrapButton preset="primary" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
                     </Modal.Footer>
                 </Modal>
 
