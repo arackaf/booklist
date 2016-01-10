@@ -39,11 +39,18 @@ describe('subject stacking', function() {
         assert.strictEqual(Object.keys(state.pendingSubjects).length, 0);
     });
 
+    it('shouldToggle1SubjectAndApply_WithSelectedData', function(){
+        let state = apply(toggleFilteredSubject(1), applyPendingFilteredSubjects());
+
+        assert.strictEqual(state.selectedSubjects.length, 1);
+        assert.strictEqual('Subject 1', state.selectedSubjects[0].name);
+    });
+
 });
 
 function apply(...actions){
     let state = filtersReducer(undefined);
     actions.forEach(a => state = filtersReducer(state, a));
 
-    return filtersSelector({ filters: state });
+    return filtersSelector({ filters: state, subjects: { list: { 1: { name: 'Subject 1' } } } });
 }
