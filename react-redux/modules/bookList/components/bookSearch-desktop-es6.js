@@ -28,7 +28,12 @@ class BookSearchDesktop extends React.Component {
         this.setState({ subjectFiltersModalOpen: true });
     }
     closeSubjectsFilterModal(){
+        this.props.cancelPendingFilteredSubjects();
         this.setState({ subjectFiltersModalOpen: false });
+    }
+    applySubjectsFilters(){
+        this.setState({ subjectFiltersModalOpen: false });
+        this.props.applyPendingFilteredSubjects();
     }
     render(){
         return (
@@ -36,7 +41,7 @@ class BookSearchDesktop extends React.Component {
                 <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
                 <input onKeyDown={evt => this.keyDown(evt)} onChange={evt => this.searchFilterTyped(evt)} value={this.state.textSearch} />
                 <span>{'Current search: ' + this.props.searchFilters.searchText}</span>
-                <span title={this.props.searchFilters.selectedSubjectIds.length}>{this.props.searchFilters.selectedSubjectIds.length ? `${this.props.searchFilters.selectedSubjectIds.length} subjects filtered` : null}</span>
+                <span title={this.props.searchFilters.selectedSubjects.length}>{this.props.searchFilters.selectedSubjects.length ? `${this.props.searchFilters.selectedSubjects.length} subjects filtered` : null}</span>
 
 
                 <Modal show={this.state.subjectFiltersModalOpen} onHide={() => this.closeSubjectsFilterModal()}>
@@ -49,10 +54,11 @@ class BookSearchDesktop extends React.Component {
                         <HierarchicalSelectableSubjectList
                             toggleFilteredSubject={this.props.toggleFilteredSubject}
                             subjects={this.props.allSubjects}
-                            selectedSubjects={this.props.searchFilters.subjects} />
+                            selectedSubjects={this.props.searchFilters.pendingSubjects} />
                     </Modal.Body>
                     <Modal.Footer>
                         <button onClick={() => this.closeSubjectsFilterModal()}>Close</button>
+                        <button onClick={() => this.applySubjectsFilters()}>Filter</button>
                     </Modal.Footer>
                 </Modal>
 
