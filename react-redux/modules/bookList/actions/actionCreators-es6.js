@@ -85,8 +85,8 @@ function toggleFilteredSubject(_id){
     return { type: TOGGLE_FILTERED_SUBJECT, _id }
 }
 
-function applyPendingFilteredSubjects(){
-    return { type: APPLY_PENDING_FILTERED_SUBJECTS }
+function applyPendingFilteredSubjects(searchChildSubjects){
+    return { type: APPLY_PENDING_FILTERED_SUBJECTS, searchChildSubjects }
 }
 
 function cancelPendingFilteredSubjects(){
