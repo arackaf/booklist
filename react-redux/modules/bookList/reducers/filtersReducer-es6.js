@@ -3,6 +3,7 @@ const { TOGGLE_FILTERED_SUBJECT, SET_TEXT_SEARCH, APPLY_PENDING_FILTERED_SUBJECT
 const initialState = () => ({
     searchText: '',
     subjects: {},
+    searchChildSubjects: false,
     pendingSubjects: {},
     withChildSubjects: false
 });
@@ -12,7 +13,7 @@ function filtersReducer(state = initialState(), action = {}){
         case TOGGLE_FILTERED_SUBJECT:
             return Object.assign({}, state, { pendingSubjects: { ...state.pendingSubjects, [action._id]: !state.pendingSubjects[action._id] } });
         case APPLY_PENDING_FILTERED_SUBJECTS:
-            return Object.assign({}, state, { subjects: { ...state.pendingSubjects } });
+            return Object.assign({}, state, { subjects: { ...state.pendingSubjects }, searchChildSubjects: action.searchChildSubjects });
         case CANCEL_PENDING_FILTERED_SUBJECTS:
             return Object.assign({}, state, { pendingSubjects: { ...state.subjects } });
         case SET_TEXT_SEARCH:

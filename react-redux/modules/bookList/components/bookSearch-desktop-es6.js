@@ -51,6 +51,7 @@ class BookSearchDesktop extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <label>Also search child subjects <input type="checkbox" defaultValue={this.props.searchFilters.searchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
                             toggleFilteredSubject={this.props.toggleFilteredSubject}
                             subjects={this.props.allSubjects}
