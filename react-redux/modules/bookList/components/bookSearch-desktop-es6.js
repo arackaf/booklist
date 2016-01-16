@@ -7,9 +7,10 @@ const hashUtil = require('/utils/hashManager');
 class BookSearchDesktop extends React.Component {
     constructor(props) {
         super();
+        this.togglePendingSubject = this.togglePendingSubject.bind(this);
         this.hashManager = new hashUtil();
 
-        this.state = { textSearch: this.hashManager.getCurrentHashValueOf('bookSearch') || '' };
+        this.state = { textSearch: this.hashManager.getCurrentHashValueOf('bookSearch') || '', pendingSubjects: {} };
         this._hashChangeSubscription = () => props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
@@ -25,15 +26,17 @@ class BookSearchDesktop extends React.Component {
         window.removeEventListener("hashchange", this._hashChangeSubscription);
     }
     openSubjectsFilterModal(){
-        this.setState({ subjectFiltersModalOpen: true });
+        this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.searchFilters.subjects });
     }
     closeSubjectsFilterModal(){
-        this.props.cancelPendingFilteredSubjects();
         this.setState({ subjectFiltersModalOpen: false });
     }
     applySubjectsFilters(){
+        this.props.setFilteredSubjects(this.state.pendingSubjects);
         this.setState({ subjectFiltersModalOpen: false });
-        this.props.applyPendingFilteredSubjects();
+    }
+    togglePendingSubject(_id){
+        this.setState({ pendingSubjects: { ...this.state.pendingSubjects, [_id]: !this.state.pendingSubjects[_id] } });
     }
     render(){
         return (
@@ -53,9 +56,9 @@ class BookSearchDesktop extends React.Component {
                     <Modal.Body>
                         <label>Also search child subjects <input type="checkbox" defaultValue={this.props.searchFilters.searchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
-                            toggleFilteredSubject={this.props.toggleFilteredSubject}
+                            toggleFilteredSubject={this.togglePendingSubject}
                             subjects={this.props.allSubjects}
-                            selectedSubjects={this.props.searchFilters.pendingSubjects} />
+                            selectedSubjects={this.state.pendingSubjects} />
                     </Modal.Body>
                     <Modal.Footer>
                         <BootstrapButton preset="default" className="pull-left" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>

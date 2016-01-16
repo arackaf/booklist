@@ -1,21 +1,16 @@
-const { TOGGLE_FILTERED_SUBJECT, SET_TEXT_SEARCH, APPLY_PENDING_FILTERED_SUBJECTS, CANCEL_PENDING_FILTERED_SUBJECTS } = require('../actions/actionNames');
+const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/actionNames');
 
 const initialState = () => ({
     searchText: '',
     subjects: {},
     searchChildSubjects: false,
-    pendingSubjects: {},
     withChildSubjects: false
 });
 
 function filtersReducer(state = initialState(), action = {}){
     switch(action.type){
-        case TOGGLE_FILTERED_SUBJECT:
-            return Object.assign({}, state, { pendingSubjects: { ...state.pendingSubjects, [action._id]: !state.pendingSubjects[action._id] } });
-        case APPLY_PENDING_FILTERED_SUBJECTS:
-            return Object.assign({}, state, { subjects: { ...state.pendingSubjects }, searchChildSubjects: action.searchChildSubjects });
-        case CANCEL_PENDING_FILTERED_SUBJECTS:
-            return Object.assign({}, state, { pendingSubjects: { ...state.subjects } });
+        case SET_FILTERED_SUBJECTS:
+            return Object.assign({}, state, { subjects: { ...action.subjects }, searchChildSubjects: action.searchChildSubjects });
         case SET_TEXT_SEARCH:
             return Object.assign({}, state, { searchText: action.value });
     }
