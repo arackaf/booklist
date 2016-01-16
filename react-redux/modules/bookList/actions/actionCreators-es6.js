@@ -2,7 +2,7 @@ const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
-        TOGGLE_FILTERED_SUBJECT, APPLY_PENDING_FILTERED_SUBJECTS, CANCEL_PENDING_FILTERED_SUBJECTS,
+        SET_FILTERED_SUBJECTS,
         ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION,
         ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION, SET_TEXT_SEARCH
 } = require('./actionNames');
@@ -81,16 +81,8 @@ function updateSubject(){
     }
 }
 
-function toggleFilteredSubject(_id){
-    return { type: TOGGLE_FILTERED_SUBJECT, _id }
-}
-
-function applyPendingFilteredSubjects(searchChildSubjects){
-    return { type: APPLY_PENDING_FILTERED_SUBJECTS, searchChildSubjects }
-}
-
-function cancelPendingFilteredSubjects(){
-    return { type: CANCEL_PENDING_FILTERED_SUBJECTS }
+function setFilteredSubjects(subjects, searchChildSubjects){
+    return { type: SET_FILTERED_SUBJECTS, subjects, searchChildSubjects }
 }
 
 function enableSubjectModificationSingleBook(_id){
@@ -133,9 +125,7 @@ module.exports = {
     stopEditingSubjects,
     editSubject,
     updateSubject,
-    toggleFilteredSubject,
-    applyPendingFilteredSubjects,
-    cancelPendingFilteredSubjects,
+    setFilteredSubjects,
     setSearchFilterText,
     enableSubjectModificationSingleBook,
     enableSubjectModificationToggledBooks,
