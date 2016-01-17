@@ -9,6 +9,7 @@ class BookViewListDesktop extends React.Component{
         super();
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
+
     render(){
         return (
             <div>

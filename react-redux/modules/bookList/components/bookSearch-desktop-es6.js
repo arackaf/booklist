@@ -11,7 +11,12 @@ class BookSearchDesktop extends React.Component {
         this.hashManager = new hashUtil();
 
         this.state = { textSearch: this.hashManager.getCurrentHashValueOf('bookSearch') || '', pendingSubjects: {} };
-        this._hashChangeSubscription = () => props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
+        this._hashChangeSubscription = () => {
+            props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
+            let subjectsSelected = {};
+            (this.hashManager.getCurrentHashValueOf('filterSubjects') || '').split('-').forEach(_id => subjectsSelected[_id] = true);
+            props.setFilteredSubjects(subjectsSelected);
+        };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     componentDidMount(){
@@ -33,7 +38,7 @@ class BookSearchDesktop extends React.Component {
     }
     applySubjectsFilters(){
         this.setState({ subjectFiltersModalOpen: false });
-        this.props.setFilteredSubjects(this.state.pendingSubjects);
+        this.hashManager.setValueOf('filterSubjects', Object.keys(this.state.pendingSubjects).join('-'));
     }
     togglePendingSubject(_id){
         this.setState({ pendingSubjects: { ...this.state.pendingSubjects, [_id]: !this.state.pendingSubjects[_id] } });
