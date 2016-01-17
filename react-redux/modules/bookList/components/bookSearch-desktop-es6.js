@@ -32,8 +32,8 @@ class BookSearchDesktop extends React.Component {
         this.setState({ subjectFiltersModalOpen: false });
     }
     applySubjectsFilters(){
-        this.props.setFilteredSubjects(this.state.pendingSubjects);
         this.setState({ subjectFiltersModalOpen: false });
+        this.props.setFilteredSubjects(this.state.pendingSubjects);
     }
     togglePendingSubject(_id){
         this.setState({ pendingSubjects: { ...this.state.pendingSubjects, [_id]: !this.state.pendingSubjects[_id] } });
@@ -59,6 +59,10 @@ class BookSearchDesktop extends React.Component {
                             toggleFilteredSubject={this.togglePendingSubject}
                             subjects={this.props.allSubjects}
                             selectedSubjects={this.state.pendingSubjects} />
+
+                        { this.props.searchFilters.selectedSubjects.length ?
+                            <span>Selected subjects: <span>{this.props.searchFilters.selectedSubjects.map(s => s.name).join(', ')}</span></span>
+                            : null }
                     </Modal.Body>
                     <Modal.Footer>
                         <BootstrapButton preset="default" className="pull-left" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
