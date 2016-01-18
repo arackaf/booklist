@@ -2,19 +2,26 @@ const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/boo
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 
+const hashUtil = require('/utils/hashManager');
+
 const BookSearchDesktop = require('./BookSearch-desktop');
 
 class BookViewListDesktop extends React.Component{
-    constructor(){
+    constructor(props){
         super();
+
+        this.hashManager = new hashUtil();
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
-
+    componentWillMount(){
+        this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
+    }
     render(){
         return (
             <div>
                 <BookSearchDesktop
                     searchFilters={this.props.filters}
+                    searchText={'foo'}
                     allSubjects={this.props.subjects.list}
                     setFilteredSubjects={this.props.setFilteredSubjects}
                     setSearchText={this.props.setSearchFilterText}></BookSearchDesktop>
