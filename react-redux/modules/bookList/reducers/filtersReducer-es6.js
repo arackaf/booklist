@@ -10,9 +10,7 @@ const initialState = () => ({
 function filtersReducer(state = initialState(), action = {}){
     switch(action.type){
         case SET_FILTERED_SUBJECTS:
-            let result = Object.assign({}, state, { searchChildSubjects: action.searchChildSubjects });
-            result.subjects = action.subjects;
-            return result;
+            return Object.assign({}, state, { subjects: { ...action.subjects }, searchChildSubjects: action.searchChildSubjects });
         case SET_TEXT_SEARCH:
             return Object.assign({}, state, { searchText: action.value });
     }
