@@ -10,7 +10,7 @@ class BookSearchDesktop extends React.Component {
         this.togglePendingSubject = this.togglePendingSubject.bind(this);
         this.hashManager = new hashUtil();
 
-        this.state = { textSearch: this.hashManager.getCurrentHashValueOf('bookSearch') || '', pendingSubjects: {} };
+        this.state = { pendingSubjects: {} };
         this._hashChangeSubscription = () => {
             props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
             let subjectsSelected = {},
@@ -22,12 +22,9 @@ class BookSearchDesktop extends React.Component {
         };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
-    componentDidMount(){
-        this.props.setSearchText(this.state.textSearch);
-    }
     componentWillReceiveProps(newProps){
         if (this.props.searchFilters.searchText !== newProps.searchFilters.searchText) {
-            this.setState({ textSearch: newProps.searchFilters.searchText });
+            this.refs.searchInput.value = newProps.searchFilters.searchText;
         }
     }
     componentWillUnmount(){
@@ -50,7 +47,7 @@ class BookSearchDesktop extends React.Component {
         return (
             <div>
                 <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
-                <input onKeyDown={evt => this.keyDown(evt)} onChange={evt => this.searchFilterTyped(evt)} value={this.state.textSearch} />
+                <input onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
                 <span>{'Current search: ' + this.props.searchFilters.searchText}</span>
                 <span title={this.props.searchFilters.selectedSubjects.length}>{this.props.searchFilters.selectedSubjects.length ? `${this.props.searchFilters.selectedSubjects.length} subjects filtered` : null}</span>
 
@@ -81,13 +78,10 @@ class BookSearchDesktop extends React.Component {
             </div>
         )
     }
-    keyDown(evt){
+    searchFilterKeyDown(evt){
         if (evt.which == 13){
-            this.hashManager.setValueOf('bookSearch', this.state.textSearch);
+            this.hashManager.setValueOf('bookSearch', evt.target.value);
         }
-    }
-    searchFilterTyped(evt){
-        this.setState({ textSearch: evt.target.value });
     }
 }
 
