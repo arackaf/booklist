@@ -3,12 +3,12 @@ const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME
 const { createSelector } = require('../../../util/reselect');
 const { stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
 
-const initialSubjectsState = () => ({
+const initialSubjectsState = {
     list: {},
     editSubjectsPacket: null
-});
+};
 
-function subjectsReducer(state = initialSubjectsState(), action = {}){
+function subjectsReducer(state = initialSubjectsState, action = {}){
     switch(action.type){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { list: subjectsToHash(action.subjects) });

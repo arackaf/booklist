@@ -2,13 +2,13 @@ const { createSelector } = require('../../../util/reselect');
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } = require('../actions/actionNames');
 const { setBookResultsSubjects } = require('../util/booksSubjectsHelpers');
 
-const initialBooksState = () => ({
+const initialBooksState = {
     booksHash: {},
     loading: false,
     selectedBooks: {}
-});
+};
 
-function booksReducer(state = initialBooksState(), action = {}){
+function booksReducer(state = initialBooksState, action){
     switch(action.type) {
         case LOAD_BOOKS:
             return Object.assign({}, state, { loading: true });
