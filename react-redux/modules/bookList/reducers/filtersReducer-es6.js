@@ -1,13 +1,13 @@
 const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/actionNames');
 
-const initialState = () => ({
+const initialState = {
     searchText: '',
     subjects: {},
     searchChildSubjects: false,
     withChildSubjects: false
-});
+};
 
-function filtersReducer(state = initialState(), action = {}){
+function filtersReducer(state = initialState, action){
     switch(action.type){
         case SET_FILTERED_SUBJECTS:
             return Object.assign({}, state, { subjects: { ...action.subjects }, searchChildSubjects: action.searchChildSubjects });
