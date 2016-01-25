@@ -3,8 +3,7 @@ const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/actionNam
 const initialState = {
     searchText: '',
     subjects: {},
-    searchChildSubjects: false,
-    withChildSubjects: false
+    searchChildSubjects: false
 };
 
 function filtersReducer(state = initialState, action){
