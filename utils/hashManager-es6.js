@@ -99,9 +99,10 @@ class HashUtility {
 
         if (allPairs.length) {
             result += '?' + allPairs.join('&');
+            return result
+        } else {
+            return "";
         }
-
-        return result;
     }
     removeFromHash(...keys){
         var hashInfo = this.parseHashTag(window.location.hash);
@@ -126,7 +127,10 @@ class HashUtility {
         this.setHash(hashInfo);
     }
     setHash(hashInfo){
-        window.location.hash = this.createHashTag(hashInfo);
+        let oldHash = window.location.hash,
+            newHash = this.createHashTag(hashInfo);
+
+        window.location.hash = newHash;
     }
     getCurrentHashInfo(){
         return this.parseHashTag(window.location.hash);
