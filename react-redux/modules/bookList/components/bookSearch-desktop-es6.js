@@ -40,9 +40,10 @@ class BookSearchDesktop extends React.Component {
     applySubjectsFilters(){
         this.setState({ subjectFiltersModalOpen: false });
 
+        let filterSubjectsVal = Object.keys(this.state.pendingSubjects).filter(k => this.state.pendingSubjects[k]).join('-');
         this.hashManager.setValues(
-            'filterSubjects', Object.keys(this.state.pendingSubjects).filter(k => this.state.pendingSubjects[k]).join('-'),
-            'searchChildSubjects', this.state.searchChildSubjects ? 'true' : null
+            'filterSubjects', filterSubjectsVal,
+            'searchChildSubjects', this.state.searchChildSubjects && filterSubjectsVal ? 'true' : null
         );
     }
     togglePendingSubject(_id){
