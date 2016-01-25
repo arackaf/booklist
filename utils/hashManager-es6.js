@@ -5,6 +5,8 @@ class SerializedHash {
         this.parameters = parameters || {};
     }
     addOrSetValue(key, value) {
+        if (value == null || value === '') return;
+
         if (this.parameters.hasOwnProperty(key)) {
             this.addValue(key, value);
         } else {
@@ -88,9 +90,7 @@ class HashUtility {
                 if (Array.isArray(hashObject.parameters[k])) {
                     hashObject.parameters[k].forEach(val => allPairs.push(`${k}=${encodeURIComponent(val)}`));
                 } else {
-                    if (hashObject.parameters[k] === '') {
-                        allPairs.push(k);
-                    } else {
+                    if (hashObject.parameters[k] !== '') {
                         allPairs.push(`${k}=${encodeURIComponent(hashObject.parameters[k])}`);
                     }
                 }
