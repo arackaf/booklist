@@ -118,6 +118,13 @@ class HashUtility {
         hashInfo.setValue(key, value);
         this.setHash(hashInfo);
     }
+    setValues(...pairs){
+        var hashInfo = this.parseHashTag(window.location.hash);
+        for (let i = 0; i < pairs.length; i += 2){
+            hashInfo.setValue(pairs[i], pairs[i + 1]);
+        }
+        this.setHash(hashInfo);
+    }
     setHash(hashInfo){
         window.location.hash = this.createHashTag(hashInfo);
     }
