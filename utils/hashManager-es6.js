@@ -5,6 +5,8 @@ class SerializedHash {
         this.parameters = parameters || {};
     }
     addOrSetValue(key, value) {
+        if (value == null || value === '') return;
+
         if (this.parameters.hasOwnProperty(key)) {
             this.addValue(key, value);
         } else {
@@ -88,9 +90,7 @@ class HashUtility {
                 if (Array.isArray(hashObject.parameters[k])) {
                     hashObject.parameters[k].forEach(val => allPairs.push(`${k}=${encodeURIComponent(val)}`));
                 } else {
-                    if (hashObject.parameters[k] === '') {
-                        allPairs.push(k);
-                    } else {
+                    if (hashObject.parameters[k] !== '' && hashObject.parameters[k] != null) {
                         allPairs.push(`${k}=${encodeURIComponent(hashObject.parameters[k])}`);
                     }
                 }
@@ -99,9 +99,10 @@ class HashUtility {
 
         if (allPairs.length) {
             result += '?' + allPairs.join('&');
+            return result
+        } else {
+            return "";
         }
-
-        return result;
     }
     removeFromHash(...keys){
         var hashInfo = this.parseHashTag(window.location.hash);
@@ -118,8 +119,18 @@ class HashUtility {
         hashInfo.setValue(key, value);
         this.setHash(hashInfo);
     }
+    setValues(...pairs){
+        var hashInfo = this.parseHashTag(window.location.hash);
+        for (let i = 0; i < pairs.length; i += 2){
+            hashInfo.setValue(pairs[i], pairs[i + 1]);
+        }
+        this.setHash(hashInfo);
+    }
     setHash(hashInfo){
-        window.location.hash = this.createHashTag(hashInfo);
+        let oldHash = window.location.hash,
+            newHash = this.createHashTag(hashInfo);
+
+        window.location.hash = newHash;
     }
     getCurrentHashInfo(){
         return this.parseHashTag(window.location.hash);

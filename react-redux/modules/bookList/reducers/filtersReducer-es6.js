@@ -1,30 +1,25 @@
-const { TOGGLE_FILTER_SUBJECT, OPEN_SUBJECTS_FILTER_MODAL, CLOSE_SUBJECTS_FILTER_MODAL, TOGGLE_FILTERED_SUBJECT } = require('../actions/actionNames');
-const Immutable = require('../../../../utils/immutable');
+const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/actionNames');
 
-const initialState = () => ({
+const initialState = {
     searchText: '',
-    subjects: Immutable.Set(),
-    subjectsFilterModal: null
-});
+    subjects: {},
+    searchChildSubjects: false
+};
 
-function filtersReducer(state = initialState(), action = {}){
+function filtersReducer(state = initialState, action){
     switch(action.type){
-        case TOGGLE_FILTER_SUBJECT:
-            let newSubjects = Object.assign({}, state.subjects);
-            if (newSubjects[action._id]) delete newSubjects[action._id];
-            else newSubjects[action._id] = true;
-
-            return Object.assign({}, state, { subjects: newSubjects });
-        case OPEN_SUBJECTS_FILTER_MODAL:
-            return Object.assign({}, state, { subjectsFilterModal: { subjects: Immutable.Set(state.subjects) } });
-        case TOGGLE_FILTERED_SUBJECT:
-            let newFilterSubjects = state.subjectsFilterModal.subjects;
-            newFilterSubjects = newFilterSubjects.has(action._id) ? newFilterSubjects.delete(action._id) : newFilterSubjects.add(action._id);
-            return Object.assign({}, state, { subjectsFilterModal: Object.assign({}, state.subjectsFilterModal, { subjects: newFilterSubjects }) });
-        case CLOSE_SUBJECTS_FILTER_MODAL:
-            return Object.assign({}, state, { subjectsFilterModal: null });
+        case SET_FILTERED_SUBJECTS:
+            return Object.assign({}, state, { subjects: { ...action.subjects }, searchChildSubjects: action.searchChildSubjects });
+        case SET_TEXT_SEARCH:
+            return Object.assign({}, state, { searchText: action.value });
     }
     return state;
 }
 
-module.exports = filtersReducer;
+function projectselectedSubjects(selectedSubjectsIds, subjects){
+    return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]);
+}
+
+const filtersSelector = state => Object.assign({}, state.filters, { selectedSubjects: projectselectedSubjects(state.filters.subjects, state.subjects.list) });
+
+module.exports = { filtersReducer, filtersSelector };

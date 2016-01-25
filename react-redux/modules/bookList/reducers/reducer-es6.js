@@ -1,29 +1,21 @@
-const { booksReducer, booksSelector } = require('./booksReducer');
-const { subjectsReducer, subjectsSelector } = require('./subjectsReducer');
-const filtersReducer = require('./filtersReducer');
+const { booksReducer: books, booksSelector } = require('./booksReducer');
+const { subjectsReducer: subjects, subjectsSelector } = require('./subjectsReducer');
+const { filtersReducer: filters, filtersSelector } = require('./filtersReducer');
+const { bookSubjectManagerReducer: booksSubjectsModifier, booksSubjectsModifierSelector } = require('./booksSubjectModifierReducer');
 
 const actionCreators = require('../actions/actionCreators');
-const { bookSubjectManagerReducer, booksSubjectsModifierSelector } = require('./booksSubjectModifier');
 
-const initialState = () => ({
-    books: booksReducer(),
-    subjects: subjectsReducer(),
-    filters: filtersReducer()
+const reducer = Redux.combineReducers({
+    books,
+    subjects,
+    filters,
+    booksSubjectsModifier
 });
-
-function reducer(state = initialState(), action = {}){
-    return {
-        books: booksReducer(state.books, action),
-        subjects: subjectsReducer(state.subjects, action),
-        filters: filtersReducer(state.filters, action),
-        booksSubjectsModifier: bookSubjectManagerReducer(state.booksSubjectsModifier, action)
-    };
-}
 
 const bookListSelector = state => ({
     subjects: subjectsSelector(state.bookList),
     books: booksSelector(state.bookList),
-    filters: state.bookList.filters,
+    filters: filtersSelector(state.bookList),
     booksSubjectsModifier: booksSubjectsModifierSelector(state.bookList)
 });
 
