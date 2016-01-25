@@ -90,7 +90,7 @@ class HashUtility {
                 if (Array.isArray(hashObject.parameters[k])) {
                     hashObject.parameters[k].forEach(val => allPairs.push(`${k}=${encodeURIComponent(val)}`));
                 } else {
-                    if (hashObject.parameters[k] !== '') {
+                    if (hashObject.parameters[k] !== '' && hashObject.parameters[k] != null) {
                         allPairs.push(`${k}=${encodeURIComponent(hashObject.parameters[k])}`);
                     }
                 }
