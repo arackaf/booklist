@@ -214,7 +214,7 @@ function loadSubjects(subjects){
 }
 
 function apply(...actions){
-    let state = reducer(undefined);
+    let state = reducer(undefined, {});
     actions.forEach(a => state = reducer(state, a));
 
     return selector({ bookList: state });
