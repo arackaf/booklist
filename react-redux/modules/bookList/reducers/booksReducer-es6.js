@@ -23,12 +23,22 @@ function booksReducer(state = initialBooksState, action){
             var newBookList = state.list.map(b => Object.assign({}, b, { selected: false }));
             return Object.assign({}, state, { list: newBookList, selectedCount: 0 });
         case SET_BOOKS_SUBJECTS:
-            //var result = Object.assign({}, state, { bookHash: { ...state.booksHash } });
-            //action.books.forEach(book => {
-            //    action.addSubjects.forEach(s => {
-            //        //if (s)
-            //    });
-            //});
+            var newBookHash = { ...state.booksHash };
+
+            action.books.forEach(_id => {
+                let book = { ...newBookHash[_id] },
+                    booksSubjectsHash = {};
+
+                book.subjects.forEach(_id => booksSubjectsHash[_id] = true);
+
+                action.add.forEach(sAdd => booksSubjectsHash[sAdd] = true);
+                action.remove.forEach(sAdd => booksSubjectsHash[sAdd] = false);
+
+                book.subjects = Object.keys(booksSubjectsHash).filter(_id => booksSubjectsHash[_id]);
+                newBookHash[_id] = book;
+            });
+
+            return Object.assign({}, state, { booksHash: newBookHash });
     }
     return state;
 }

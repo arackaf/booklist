@@ -19,7 +19,7 @@ describe('books subject updating', function() {
             { books: [1], add: [9], remove: [] }
         );
 
-        assert.strictEqual(books.booksHash[1].subjects[0], 9);
+        sameMembers(books.booksHash[1].subjects, [9]);
     });
 
     it('should set to existing', function () {
@@ -28,7 +28,7 @@ describe('books subject updating', function() {
             { books: [1], add: [9], remove: [] }
         );
 
-        assert.sameMembers(books.booksHash[1].subjects, [8, 9]);
+        sameMembers(books.booksHash[1].subjects, [8, 9]);
     });
 
     it('should add duplicate is ignored', function () {
@@ -38,7 +38,7 @@ describe('books subject updating', function() {
         );
 
         assert.strictEqual(books.booksHash[1].subjects.length, 1);
-        assert.sameMembers(books.booksHash[1].subjects, [8]);
+        sameMembers(books.booksHash[1].subjects, [8]);
     });
 
     it('should add 2 - 1 is a duplicate and ignored', function () {
@@ -48,7 +48,7 @@ describe('books subject updating', function() {
         );
 
         assert.strictEqual(books.booksHash[1].subjects.length, 2);
-        assert.sameMembers(books.booksHash[1].subjects, [8, 9]);
+        sameMembers(books.booksHash[1].subjects, [8, 9]);
     });
 
     it('should remove a subject', function () {
@@ -57,7 +57,7 @@ describe('books subject updating', function() {
             { books: [1], add: [], remove: [8] }
         );
 
-        assert.sameMembers(books.booksHash[1].subjects, []);
+        sameMembers(books.booksHash[1].subjects, []);
     });
 
     it('should remove a subject and leave the other', function () {
@@ -66,7 +66,7 @@ describe('books subject updating', function() {
             { books: [1], add: [], remove: [8] }
         );
 
-        assert.sameMembers(books.booksHash[1].subjects, [9]);
+        sameMembers(books.booksHash[1].subjects, [9]);
     });
 
     it('should do all', function () {
@@ -76,10 +76,17 @@ describe('books subject updating', function() {
         );
 
         assert.strictEqual(books.booksHash[1].subjects.length, 3);
-        assert.sameMembers(books.booksHash[1].subjects, [9, 10, 11]);
+        sameMembers(books.booksHash[1].subjects, [9, 10, 11]);
     });
 
 });
+
+function sameMembers(actual, expected){
+    expected = expected.map(id => '' + id);
+    actual = actual.map(id => '' + id);
+
+    assert.sameMembers(actual, expected);
+}
 
 function loadBooks(books){
     return apply(
