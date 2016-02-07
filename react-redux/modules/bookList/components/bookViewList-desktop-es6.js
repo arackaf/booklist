@@ -16,6 +16,13 @@ class BookViewListDesktop extends React.Component{
     componentWillMount(){
         this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
     }
+    setBooksSubjects(){
+        let modifier = this.props.booksSubjectsModifier;
+        this.props.setBooksSubjects(
+            modifier.modifyingBooks.map(b => b._id),
+            modifier.addingSubjects.map(s => s._id),
+            modifier.removingSubjects.map(s => s._id));
+    }
     render(){
         return (
             <div>
@@ -72,6 +79,9 @@ class BookViewListDesktop extends React.Component{
                     </Modal.Header>
                     <Modal.Body>
                         <div>
+                            <BootstrapButton preset="primary-xs" className="pull-right" onClick={this.props.subjectModificationClearSubjects}>Reset subjects</BootstrapButton>
+                        </div>
+                        <div>
                             <b>Add</b> { this.props.booksSubjectsModifier.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
                         </div>
                         <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
@@ -95,7 +105,8 @@ class BookViewListDesktop extends React.Component{
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button onClick={this.props.cancelSubjectModification}>Cancel</button>
+                        <BootstrapButton preset="primary" onClick={() => this.setBooksSubjects()}>Set</BootstrapButton>
+                        <BootstrapButton preset="" onClick={this.props.cancelSubjectModification}>Cancel</BootstrapButton>
                     </Modal.Footer>
                 </Modal>
 
