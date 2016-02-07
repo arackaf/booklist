@@ -1,7 +1,7 @@
 const { createSelector } = require('../../../util/reselect');
 
 const { ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION,
-    TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION }
+    TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, CLEAR_SUBJECT_MODIFICATION_SUBJECTS }
     = require('../actions/actionNames');
 
 const bookSubjectManagerInitialState = () => ({
@@ -17,6 +17,8 @@ function bookSubjectManagerReducer(state = bookSubjectManagerInitialState(), act
             return Object.assign({}, state, { singleBookModify: action._id });
         case ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS:
             return Object.assign({}, state, { selectedBooksModify: true });
+        case CLEAR_SUBJECT_MODIFICATION_SUBJECTS:
+            return Object.assign({}, state, { addingSubjects: {}, removingSubjects: {} });
         case CANCEL_SUBJECT_MODIFICATION:
             return Object.assign({}, state, { singleBookModify: null, selectedBooksModify: false });
         case TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION:
