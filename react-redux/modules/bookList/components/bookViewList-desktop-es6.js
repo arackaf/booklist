@@ -22,6 +22,8 @@ class BookViewListDesktop extends React.Component{
             modifier.modifyingBooks.map(b => b._id),
             modifier.addingSubjects.map(s => s._id),
             modifier.removingSubjects.map(s => s._id));
+
+        this.props.cancelSubjectModification();
     }
     render(){
         return (
