@@ -5,6 +5,7 @@ const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 const hashUtil = require('/utils/hashManager');
 
 const BookSearchDesktop = require('./BookSearch-desktop');
+const BookSubjectSetterDesktop = require('./BookSubjectSetter-desktop');
 
 class BookViewListDesktop extends React.Component{
     constructor(props){
@@ -72,45 +73,13 @@ class BookViewListDesktop extends React.Component{
                     </tbody>
                 </table>
 
-                <Modal show={!!this.props.booksSubjectsModifier.modifyingBooks.length} onHide={this.props.cancelSubjectModification}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>
-                            Edit subjects for:
-                            <div>{ this.props.booksSubjectsModifier.modifyingBooks.map(book => <h5 key={book._id}>{book.title}</h5>) }</div>
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div>
-                            <BootstrapButton preset="primary-xs" className="pull-right" onClick={this.props.subjectModificationClearSubjects}>Reset subjects</BootstrapButton>
-                        </div>
-                        <div>
-                            <b>Add</b> { this.props.booksSubjectsModifier.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
-                        </div>
-                        <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
-                            <div className="panel-body">
-                                <ul>
-                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name} </li>) }
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div>
-                            <b>Remove</b>
-                            { this.props.booksSubjectsModifier.removingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
-                        </div>
-                        <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
-                            <div className="panel-body">
-                                <ul>
-                                    { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.booksSubjectsModifier.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name} </li>) }
-                                </ul>
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <BootstrapButton preset="primary" onClick={() => this.setBooksSubjects()}>Set</BootstrapButton>
-                        <BootstrapButton preset="" onClick={this.props.cancelSubjectModification}>Cancel</BootstrapButton>
-                    </Modal.Footer>
-                </Modal>
+                <BookSubjectSetterDesktop
+                    booksSubjectsModifier={this.props.booksSubjectsModifier}
+                    subjects={this.props.subjects}
+                    subjectModificationClearSubjects={this.props.subjectModificationClearSubjects}
+                    toggleSubjectModificationAdd={this.props.toggleSubjectModificationAdd}
+                    toggleSubjectModificationRemove={this.props.toggleSubjectModificationRemove}
+                ></BookSubjectSetterDesktop>
 
                 <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
