@@ -58,3 +58,5 @@ react-redux/modules/bookList/reducers/booksSubjectModifierReducer.js
 tests/booksFiltersTests.js
 tests/booksSubjectsUpdateTests.js
 react-redux/modules/bookList/components/bookSubjectSetter-desktop.js
+react-redux/modules/bookList/actions/bookSubjectModify/actionCreators.js
+react-redux/modules/bookList/actions/bookSubjectModify/actionNames.js

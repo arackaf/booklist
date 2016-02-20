@@ -1,12 +1,15 @@
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SET_BOOKS_SUBJECTS,
-        SET_FILTERED_SUBJECTS,
-        ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION,
-        ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CLEAR_SUBJECT_MODIFICATION_SUBJECTS, CANCEL_SUBJECT_MODIFICATION, SET_TEXT_SEARCH,
+        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
+        SET_FILTERED_SUBJECTS, SET_TEXT_SEARCH,
         SETTING_BOOKS_SUBJECTS
 } = require('./actionNames');
+
+const {
+    enableSubjectModificationSingleBook,
+    enableSubjectModificationToggledBooks
+} = require('./bookSubjectModify/actionCreators');
 
 function loadBooksAndSubjects(){
     return function(dispatch, getState){
@@ -86,46 +89,12 @@ function setFilteredSubjects(subjects, searchChildSubjects){
     return { type: SET_FILTERED_SUBJECTS, subjects, searchChildSubjects }
 }
 
-function enableSubjectModificationSingleBook(_id){
-    return { type: ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, _id }
-}
-
-function enableSubjectModificationToggledBooks(){
-    return { type: ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS }
-}
-
-function subjectModificationClearSubjects(){
-    return { type: CLEAR_SUBJECT_MODIFICATION_SUBJECTS };
-}
-
-function toggleSubjectModificationAdd(_id){
-    return { type: TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, _id }
-}
-
-function toggleSubjectModificationRemove(_id){
-    return { type: TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, _id }
-}
-
 function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
 }
 
-function cancelBookSubjectModification(){
-    return { type: CANCEL_SUBJECT_MODIFICATION }
-}
-
 function setSearchFilterText(value){
     return { type: SET_TEXT_SEARCH, value }
-}
-
-function setBooksSubjects(books, add, remove){
-    return function(dispatch, getState){
-        dispatch({ type: SETTING_BOOKS_SUBJECTS });
-        ajaxUtil.post('/bookBulk/setSubjects', { books, add, remove }, resp => {
-            dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove });
-            dispatch(cancelBookSubjectModification())
-        });
-    }
 }
 
 module.exports = {
@@ -143,11 +112,6 @@ module.exports = {
     setFilteredSubjects,
     setSearchFilterText,
     enableSubjectModificationSingleBook,
-    enableSubjectModificationToggledBooks,
-    cancelBookSubjectModification,
-    toggleSubjectModificationAdd,
-    toggleSubjectModificationRemove,
-    setBooksSubjects,
-    subjectModificationClearSubjects
+    enableSubjectModificationToggledBooks
 };
 
