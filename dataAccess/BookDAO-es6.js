@@ -36,25 +36,15 @@ class BookDAO extends DAO {
         let db = await super.open();
         try{
             await db.collection('books').update(
-                    { _id: { $in: books.map(_id => ObjectId(_id)) } },
-                    {
-                        $addToSet: { subjects: { $each: (add || []).map(_id => ObjectId(_id)) } }
-                    },
-                    false,
-                    true
+                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { $addToSet: { subjects: { $each: (add || []).map(_id => ObjectId(_id)) } } }, false, true
             );
 
             await db.collection('books').update(
                 { _id: { $in: books.map(_id => ObjectId(_id)) } },
-                {
-                    $pullAll: { subjects: (remove || []).map(_id => ObjectId(_id)) }
-                },
-                false,
-                true
+                { $pullAll: { subjects: (remove || []).map(_id => ObjectId(_id)) } }, false, true
             );
 
-        } catch(err){
-            console.log(err);
         } finally {
             super.dispose(db);
         }
