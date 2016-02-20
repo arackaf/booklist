@@ -1,19 +1,18 @@
-const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
 const { createSelector } = require('../../../util/reselect');
 
 const { ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS, SETTING_BOOKS_SUBJECTS,
     TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, CLEAR_SUBJECT_MODIFICATION_SUBJECTS }
     = require('../actions/actionNames');
 
-const bookSubjectManagerInitialState = () => ({
+const bookSubjectManagerInitialState = {
     singleBookModify: null,
     selectedBooksModify: false,
     addingSubjects: {},
     removingSubjects: {},
     settingBooksSubjects: false
-});
+};
 
-function bookSubjectManagerReducer(state = bookSubjectManagerInitialState(), action = {}){
+function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, action){
     switch (action.type){
         case SETTING_BOOKS_SUBJECTS:
             return Object.assign({}, state, { settingBooksSubjects: true });
@@ -54,15 +53,14 @@ const removingSubjectsSelector = createSelector(
 );
 
 const booksSubjectsModifierSelector = createSelector(
-    [state => state.booksSubjectsModifier.addingSubjects, state => state.booksSubjectsModifier.removingSubjects, state => state.booksSubjectsModifier.settingBooksSubjects,
-        modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector],
-    (addingSubjectIds, removingSubjectIds, settingBooksSubjects, modifyingBooks, addingSubjects, removingSubjects) => ({
-        addingSubjectIds,
-        removingSubjectIds,
+    [state => state.booksSubjectsModifier, modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector],
+    (booksSubjectsModifier, modifyingBooks, addingSubjects, removingSubjects) => ({
+        addingSubjectIds: booksSubjectsModifier.addingSubjects,
+        removingSubjectIds: booksSubjectsModifier.removingSubjects,
+        settingBooksSubjects: booksSubjectsModifier.settingBooksSubjects,
         modifyingBooks,
         addingSubjects,
-        removingSubjects,
-        settingBooksSubjects
+        removingSubjects
     })
 );
 
