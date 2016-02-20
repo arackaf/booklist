@@ -5,9 +5,6 @@ const BookDAO = require('../dataAccess/BookDAO');
 
 class bookController{
     constructor(){}
-    details(){
-        this.send({ title: 'Two Roads to Sumpter' });
-    }
     @httpPost
     async saveFromIsbn(isbn){
         let search = new AmazonSearch();

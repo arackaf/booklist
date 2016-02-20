@@ -27,7 +27,34 @@ class BookDAO extends DAO {
     async deleteBook(id){
         let db = await super.open();
         try {
-            db.collection('books').remove({ _id: ObjectId(id) });
+            await db.collection('books').remove({ _id: ObjectId(id) });
+        } finally {
+            super.dispose(db);
+        }
+    }
+    async setBooksSubjects(books, add, remove){
+        let db = await super.open();
+        try{
+            await db.collection('books').update(
+                    { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                    {
+                        $addToSet: { subjects: { $each: (add || []).map(_id => ObjectId(_id)) } }
+                    },
+                    false,
+                    true
+            );
+
+            await db.collection('books').update(
+                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                {
+                    $pullAll: { subjects: (remove || []).map(_id => ObjectId(_id)) }
+                },
+                false,
+                true
+            );
+
+        } catch(err){
+            console.log(err);
         } finally {
             super.dispose(db);
         }
