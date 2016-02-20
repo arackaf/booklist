@@ -2,6 +2,15 @@ const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/boo
 const Modal = ReactBootstrap.Modal;
 
 class BookSubjectSetterDesktop extends React.Component {
+    setBooksSubjects(){
+        let modifier = this.props.booksSubjectsModifier;
+        this.props.setBooksSubjects(
+            modifier.modifyingBooks.map(b => b._id),
+            modifier.addingSubjects.map(s => s._id),
+            modifier.removingSubjects.map(s => s._id));
+
+        this.props.cancelSubjectModification();
+    }
     render(){
         return (
             <Modal show={!!this.props.booksSubjectsModifier.modifyingBooks.length} onHide={this.props.cancelSubjectModification}>

@@ -17,15 +17,6 @@ class BookViewListDesktop extends React.Component{
     componentWillMount(){
         this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
     }
-    setBooksSubjects(){
-        let modifier = this.props.booksSubjectsModifier;
-        this.props.setBooksSubjects(
-            modifier.modifyingBooks.map(b => b._id),
-            modifier.addingSubjects.map(s => s._id),
-            modifier.removingSubjects.map(s => s._id));
-
-        this.props.cancelSubjectModification();
-    }
     render(){
         return (
             <div>
@@ -79,7 +70,9 @@ class BookViewListDesktop extends React.Component{
                     subjectModificationClearSubjects={this.props.subjectModificationClearSubjects}
                     toggleSubjectModificationAdd={this.props.toggleSubjectModificationAdd}
                     toggleSubjectModificationRemove={this.props.toggleSubjectModificationRemove}
-                ></BookSubjectSetterDesktop>
+                    setBooksSubjects={this.props.setBooksSubjects}
+                    cancelSubjectModification={this.props.cancelSubjectModification}>
+                </BookSubjectSetterDesktop>
 
                 <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>

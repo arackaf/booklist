@@ -119,7 +119,9 @@ function setSearchFilterText(value){
 
 function setBooksSubjects(books, add, remove){
     return function(dispatch, getState){
-        dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove });
+        ajaxUtil.post('/bookBulk/setSubjects', { books, add, remove }, resp => {
+            dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove });
+        });
     }
 }
 
