@@ -1,5 +1,6 @@
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const Modal = ReactBootstrap.Modal;
+const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
 
 class BookSubjectSetterDesktop extends React.Component {
     setBooksSubjects(){
@@ -8,12 +9,10 @@ class BookSubjectSetterDesktop extends React.Component {
             modifier.modifyingBooks.map(b => b._id),
             modifier.addingSubjects.map(s => s._id),
             modifier.removingSubjects.map(s => s._id));
-
-        this.props.cancelSubjectModification();
     }
     render(){
         return (
-            <Modal show={!!this.props.booksSubjectsModifier.modifyingBooks.length} onHide={this.props.cancelSubjectModification}>
+            <Modal show={!!this.props.booksSubjectsModifier.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         Edit subjects for:
@@ -48,8 +47,8 @@ class BookSubjectSetterDesktop extends React.Component {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <BootstrapButton preset="primary" onClick={() => this.setBooksSubjects()}>Set</BootstrapButton>
-                    <BootstrapButton preset="" onClick={this.props.cancelSubjectModification}>Cancel</BootstrapButton>
+                    <AjaxButton preset="primary" running={this.props.booksSubjectsModifier.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
+                    <BootstrapButton preset="" onClick={this.props.cancelBookSubjectModification}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );
