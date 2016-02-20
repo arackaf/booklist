@@ -9,7 +9,7 @@ class bookController{
         async setSubjects(books, add, remove){
         let bookDao = new BookDAO();
         await bookDao.setBooksSubjects(books, add, remove);
-        setTimeout(() => this.send({ success: true }), 2000);
+        this.send({ success: true });
     }
 }
 
