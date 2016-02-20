@@ -12,11 +12,13 @@ const reducer = Redux.combineReducers({
     booksSubjectsModifier
 });
 
-const bookListSelector = state => ({
-    subjects: subjectsSelector(state.bookList),
-    books: booksSelector(state.bookList),
-    filters: filtersSelector(state.bookList),
-    booksSubjectsModifier: booksSubjectsModifierSelector(state.bookList)
-});
+const bookListSelector = state => {
+    return {
+        subjects: subjectsSelector(state.bookList),
+        books: booksSelector(state.bookList),
+        filters: filtersSelector(state.bookList),
+        booksSubjectsModifier: booksSubjectsModifierSelector(state.bookList)
+    }
+};
 
 module.exports = { reducer, selector: bookListSelector };

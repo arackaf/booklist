@@ -64,15 +64,7 @@ class BookViewListDesktop extends React.Component{
                     </tbody>
                 </table>
 
-                <BookSubjectSetterDesktop
-                    booksSubjectsModifier={this.props.booksSubjectsModifier}
-                    subjects={this.props.subjects}
-                    subjectModificationClearSubjects={this.props.subjectModificationClearSubjects}
-                    toggleSubjectModificationAdd={this.props.toggleSubjectModificationAdd}
-                    toggleSubjectModificationRemove={this.props.toggleSubjectModificationRemove}
-                    setBooksSubjects={this.props.setBooksSubjects}
-                    cancelBookSubjectModification={this.props.cancelBookSubjectModification}>
-                </BookSubjectSetterDesktop>
+                <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
 
                 <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
