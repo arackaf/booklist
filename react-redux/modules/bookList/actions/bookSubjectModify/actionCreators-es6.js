@@ -9,11 +9,11 @@ const {
     CLEAR_SUBJECT_MODIFICATION_SUBJECTS
 } = require('./actionNames');
 
-function cancelBookSubjectModification(){
+export function cancelBookSubjectModification(){
     return { type: CANCEL_BOOKS_SUBJECT_MODIFICATION }
 }
 
-function setBooksSubjects(books, add, remove){
+export function setBooksSubjects(books, add, remove){
     return function(dispatch, getState){
         dispatch({ type: SETTING_BOOKS_SUBJECTS });
         ajaxUtil.post('/bookBulk/setSubjects', { books, add, remove }, resp => {
@@ -23,32 +23,22 @@ function setBooksSubjects(books, add, remove){
     }
 }
 
-function toggleSubjectModificationAdd(_id){
+export function toggleSubjectModificationAdd(_id){
     return { type: TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, _id }
 }
 
-function toggleSubjectModificationRemove(_id){
+export function toggleSubjectModificationRemove(_id){
     return { type: TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, _id }
 }
 
-function enableSubjectModificationSingleBook(_id){
+export function enableSubjectModificationSingleBook(_id){
     return { type: ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, _id }
 }
 
-function enableSubjectModificationToggledBooks(){
+export function enableSubjectModificationToggledBooks(){
     return { type: ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS }
 }
 
-function subjectModificationClearSubjects(){
+export function subjectModificationClearSubjects(){
     return { type: CLEAR_SUBJECT_MODIFICATION_SUBJECTS };
 }
-
-module.exports = {
-    setBooksSubjects,
-    cancelBookSubjectModification,
-    enableSubjectModificationSingleBook,
-    enableSubjectModificationToggledBooks,
-    toggleSubjectModificationAdd,
-    toggleSubjectModificationRemove,
-    subjectModificationClearSubjects
-};
