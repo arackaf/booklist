@@ -2,7 +2,8 @@ const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/boo
 const Modal = ReactBootstrap.Modal;
 const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
 const { booksSubjectsModifierSelector } = require('../reducers/booksSubjectModifierReducer');
-const bookSubjectActionCreators = require('../actions/bookSubjectModify/actionCreators');
+
+import * as bookSubjectActionCreators from '../actions/bookSubjectModify/actionCreators';
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
     setBooksSubjects(){
@@ -56,6 +57,6 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
     }
 }
 
-const BookSubjectSetterDesktop = ReactRedux.connect(state => booksSubjectsModifierSelector(state.bookList), bookSubjectActionCreators)(BookSubjectSetterDesktopUnConnected);
+const BookSubjectSetterDesktop = ReactRedux.connect(state => booksSubjectsModifierSelector(state.bookList), { ...bookSubjectActionCreators })(BookSubjectSetterDesktopUnConnected);
 
 module.exports = BookSubjectSetterDesktop;
