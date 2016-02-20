@@ -29,8 +29,6 @@ var bookController = (function () {
         value: function setSubjects(books, add, remove) {
             var bookDao;
             return regeneratorRuntime.async(function setSubjects$(context$2$0) {
-                var _this = this;
-
                 while (1) switch (context$2$0.prev = context$2$0.next) {
                     case 0:
                         bookDao = new BookDAO();
@@ -38,9 +36,7 @@ var bookController = (function () {
                         return regeneratorRuntime.awrap(bookDao.setBooksSubjects(books, add, remove));
 
                     case 3:
-                        setTimeout(function () {
-                            return _this.send({ success: true });
-                        }, 2000);
+                        this.send({ success: true });
 
                     case 4:
                     case 'end':
