@@ -71,7 +71,7 @@ class BookViewListDesktop extends React.Component{
                     toggleSubjectModificationAdd={this.props.toggleSubjectModificationAdd}
                     toggleSubjectModificationRemove={this.props.toggleSubjectModificationRemove}
                     setBooksSubjects={this.props.setBooksSubjects}
-                    cancelSubjectModification={this.props.cancelSubjectModification}>
+                    cancelBookSubjectModification={this.props.cancelBookSubjectModification}>
                 </BookSubjectSetterDesktop>
 
                 <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
