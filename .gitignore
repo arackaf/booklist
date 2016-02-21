@@ -62,3 +62,4 @@ react-redux/modules/bookList/actions/bookSubjectModify/actionCreators.js
 react-redux/modules/bookList/actions/bookSubjectModify/actionNames.js
 react-redux/modules/bookList/actions/bookSearch/actionCreators.js
 react-redux/modules/bookList/actions/bookSearch/actionNames.js
+react-redux/modules/bookList/reducers/bookSearchReducer.js
