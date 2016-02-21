@@ -4,7 +4,11 @@ const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubje
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const hashUtil = require('/utils/hashManager');
 
-class BookSearchDesktop extends React.Component {
+const { filtersSelector } = require('../reducers/filtersReducer');
+
+import * as bookSearchActionCreators from '../actions/bookSearch/actionCreators';
+
+class BookSearchDesktopUnConnected extends React.Component {
     constructor(props) {
         super();
         this.togglePendingSubject = this.togglePendingSubject.bind(this);
@@ -12,7 +16,7 @@ class BookSearchDesktop extends React.Component {
 
         this.state = { pendingSubjects: {} };
         this._hashChangeSubscription = () => {
-            props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
+            props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
             let subjectsSelected = {},
                 selectedSubjectsHashString = this.hashManager.getCurrentHashValueOf('filterSubjects');
             if (selectedSubjectsHashString){
@@ -24,7 +28,7 @@ class BookSearchDesktop extends React.Component {
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     componentDidMount(){
-        this.props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
+        this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
         this._hashChangeSubscription();
     }
     componentWillReceiveProps(newProps){
@@ -94,5 +98,7 @@ class BookSearchDesktop extends React.Component {
         }
     }
 }
+
+const BookSearchDesktop = ReactRedux.connect(state => filtersSelector(state.bookList), { ...bookSearchActionCreators })(BookSearchDesktopUnConnected);
 
 module.exports = BookSearchDesktop;
