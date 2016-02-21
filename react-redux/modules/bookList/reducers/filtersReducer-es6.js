@@ -1,4 +1,4 @@
-const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/actionNames');
+const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/bookSearch/actionNames');
 
 const initialState = {
     searchText: '',

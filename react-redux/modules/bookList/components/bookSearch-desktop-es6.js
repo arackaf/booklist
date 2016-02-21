@@ -24,6 +24,7 @@ class BookSearchDesktop extends React.Component {
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     componentDidMount(){
+        this.props.setSearchText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
         this._hashChangeSubscription();
     }
     componentWillReceiveProps(newProps){
