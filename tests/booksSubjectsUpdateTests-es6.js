@@ -1,4 +1,5 @@
-const { LOAD_BOOKS_RESULTS, SET_BOOKS_SUBJECTS } = require('../react-redux/modules/bookList/actions/actionNames');
+const { LOAD_BOOKS_RESULTS } = require('../react-redux/modules/bookList/actions/actionNames');
+const { SET_BOOKS_SUBJECTS } = require('../react-redux/modules/bookList/actions/bookSubjectModify/actionNames');
 const { booksResults } = require('../react-redux/modules/bookList/actions/actionCreators');
 
 const assert = require('chai').assert;
