@@ -1,4 +1,4 @@
-const {
+import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK,
     ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS,
     TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION,
@@ -7,7 +7,7 @@ const {
     SET_BOOKS_SUBJECTS,
     CANCEL_BOOKS_SUBJECT_MODIFICATION,
     CLEAR_SUBJECT_MODIFICATION_SUBJECTS
-} = require('./actionNames');
+} from './actionNames';
 
 export function cancelBookSubjectModification(){
     return { type: CANCEL_BOOKS_SUBJECT_MODIFICATION }

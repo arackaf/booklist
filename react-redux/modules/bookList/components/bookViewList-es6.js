@@ -1,6 +1,7 @@
 const { loadBooks, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
-const actionCreators = require('../actions/actionCreators');
+
+import * as actionCreators from '../actions/actionCreators';
 
 const { selector } = require('../reducers/reducer');
 
