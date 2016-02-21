@@ -32,15 +32,15 @@ class BookSearchDesktopUnConnected extends React.Component {
         this._hashChangeSubscription();
     }
     componentWillReceiveProps(newProps){
-        if (this.props.searchFilters.searchText !== newProps.searchFilters.searchText) {
-            this.refs.searchInput.value = newProps.searchFilters.searchText;
+        if (this.props.searchText !== newProps.searchText) {
+            this.refs.searchInput.value = newProps.searchText;
         }
     }
     componentWillUnmount(){
         window.removeEventListener("hashchange", this._hashChangeSubscription);
     }
     openSubjectsFilterModal(){
-        this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.searchFilters.subjects, searchChildSubjects: this.props.searchFilters.searchChildSubjects });
+        this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
     }
     closeSubjectsFilterModal(){
         this.setState({ subjectFiltersModalOpen: false });
@@ -62,9 +62,9 @@ class BookSearchDesktopUnConnected extends React.Component {
             <div>
                 <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
                 <input onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
-                <span>{'Current search: ' + this.props.searchFilters.searchText}</span>
-                <span title={this.props.searchFilters.selectedSubjects.length}>{this.props.searchFilters.selectedSubjects.length ? `${this.props.searchFilters.selectedSubjects.length} subjects filtered.` : null}</span>
-                <span>{'Search child subjects: ' + !!this.props.searchFilters.searchChildSubjects}</span>
+                <span>{'Current search: ' + this.props.searchText}</span>
+                <span title={this.props.selectedSubjects.length}>{this.props.selectedSubjects.length ? `${this.props.selectedSubjects.length} subjects filtered.` : null}</span>
+                <span>{'Search child subjects: ' + !!this.props.searchChildSubjects}</span>
 
                 <Modal show={this.state.subjectFiltersModalOpen} onHide={() => this.closeSubjectsFilterModal()}>
                     <Modal.Header closeButton>
@@ -79,8 +79,8 @@ class BookSearchDesktopUnConnected extends React.Component {
                             subjects={this.props.allSubjects}
                             selectedSubjects={this.state.pendingSubjects} />
 
-                        { this.props.searchFilters.selectedSubjects.length ?
-                            <span>Selected subjects: <span>{this.props.searchFilters.selectedSubjects.map(s => s.name).join(', ')}</span></span>
+                        { this.props.selectedSubjects.length ?
+                            <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
                             : null }
                     </Modal.Body>
                     <Modal.Footer>
