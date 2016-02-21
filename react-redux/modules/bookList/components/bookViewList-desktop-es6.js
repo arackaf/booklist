@@ -19,9 +19,7 @@ class BookViewListDesktop extends React.Component{
             <div>
                 <BookSearchDesktop
                     searchFilters={this.props.filters}
-                    allSubjects={this.props.subjects.list}
-                    setFilteredSubjects={this.props.setFilteredSubjects}
-                    setSearchText={this.props.setSearchFilterText}></BookSearchDesktop>
+                    allSubjects={this.props.subjects.list}></BookSearchDesktop>
                 <br />
                 <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;
