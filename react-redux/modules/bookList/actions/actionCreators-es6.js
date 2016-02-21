@@ -1,17 +1,17 @@
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
+import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
         SET_FILTERED_SUBJECTS, SET_TEXT_SEARCH,
         SETTING_BOOKS_SUBJECTS
-} = require('./actionNames');
+} from './actionNames';
 
-const {
+export {
     enableSubjectModificationSingleBook,
     enableSubjectModificationToggledBooks
-} = require('./bookSubjectModify/actionCreators');
+} from './bookSubjectModify/actionCreators';
 
-function loadBooksAndSubjects(){
+export function loadBooksAndSubjects(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_SUBJECTS });
         dispatch({ type: LOAD_BOOKS });
@@ -26,7 +26,7 @@ function loadBooksAndSubjects(){
     }
 }
 
-function loadBooks(){
+export function loadBooks(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_BOOKS });
 
@@ -34,19 +34,19 @@ function loadBooks(){
     }
 }
 
-function booksSearch(){
+export function booksSearch(){
     return ajaxUtil.get('/book/searchBooks', { });
 }
 
-function booksResults(resp){
+export function booksResults(resp){
     return { type: LOAD_BOOKS_RESULTS, books: resp.results };
 }
 
-function editSubjectsForBook(index){
+export function editSubjectsForBook(index){
     return { type: EDIT_SUBJECTS_FOR, index };
 }
 
-function addSubjectToBook(subject){
+export function addSubjectToBook(subject){
     return function(dispatch, getState) {
         dispatch({ type: MODIFY_SUBJECTS });
 
@@ -54,28 +54,28 @@ function addSubjectToBook(subject){
     }
 }
 
-function editSubjects(){
+export function editSubjects(){
     return { type: EDIT_SUBJECTS };
 }
 
-function setNewSubjectName(newName){
+export function setNewSubjectName(newName){
     return { type: SET_NEW_SUBJECT_NAME, value: newName };
 
 }
 
-function setNewSubjectParent(newParent){
+export function setNewSubjectParent(newParent){
     return { type: SET_NEW_SUBJECT_PARENT, value: newParent };
 }
 
-function stopEditingSubjects(){
+export function stopEditingSubjects(){
     return { type: STOP_EDITING_SUBJECTS };
 }
 
-function editSubject(_id){
+export function editSubject(_id){
     return { type: EDIT_SUBJECT, _id };
 }
 
-function updateSubject(){
+export function updateSubject(){
     return function(dispatch, getState) {
         let { editingSubject: { _id }, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.subjects.editSubjectsPacket;
 
@@ -85,33 +85,14 @@ function updateSubject(){
     }
 }
 
-function setFilteredSubjects(subjects, searchChildSubjects){
+export function setFilteredSubjects(subjects, searchChildSubjects){
     return { type: SET_FILTERED_SUBJECTS, subjects, searchChildSubjects }
 }
 
-function toggleSelectBook(_id, selected){
+export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
 }
 
-function setSearchFilterText(value){
+export function setSearchFilterText(value){
     return { type: SET_TEXT_SEARCH, value }
 }
-
-module.exports = {
-    loadBooks,
-    toggleSelectBook,
-    editSubjectsForBook,
-    addSubjectToBook,
-    loadBooksAndSubjects,
-    editSubjects,
-    setNewSubjectName,
-    setNewSubjectParent,
-    stopEditingSubjects,
-    editSubject,
-    updateSubject,
-    setFilteredSubjects,
-    setSearchFilterText,
-    enableSubjectModificationSingleBook,
-    enableSubjectModificationToggledBooks
-};
-
