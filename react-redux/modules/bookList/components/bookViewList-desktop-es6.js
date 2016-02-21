@@ -7,6 +7,8 @@ const hashUtil = require('/utils/hashManager');
 const BookSearchDesktop = require('./BookSearch-desktop');
 const BookSubjectSetterDesktop = require('./BookSubjectSetter-desktop');
 
+import { setFilteredSubjects, setSearchFilterText } from '../actions/bookSearch/actionCreators';
+
 class BookViewListDesktop extends React.Component{
     constructor(props){
         super();
@@ -15,7 +17,7 @@ class BookViewListDesktop extends React.Component{
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
     componentWillMount(){
-        this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
+        setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
     }
     render(){
         return (
@@ -24,8 +26,8 @@ class BookViewListDesktop extends React.Component{
                     searchFilters={this.props.filters}
                     searchText={'foo'}
                     allSubjects={this.props.subjects.list}
-                    setFilteredSubjects={this.props.setFilteredSubjects}
-                    setSearchText={this.props.setSearchFilterText}></BookSearchDesktop>
+                    setFilteredSubjects={setFilteredSubjects}
+                    setSearchText={setSearchFilterText}></BookSearchDesktop>
                 <br />
                 <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;

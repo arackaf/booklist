@@ -1,9 +1,7 @@
 import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS,
-        SET_FILTERED_SUBJECTS, SET_TEXT_SEARCH,
-        SETTING_BOOKS_SUBJECTS
+        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
 } from './actionNames';
 
 export {
@@ -85,14 +83,6 @@ export function updateSubject(){
     }
 }
 
-export function setFilteredSubjects(subjects, searchChildSubjects){
-    return { type: SET_FILTERED_SUBJECTS, subjects, searchChildSubjects }
-}
-
 export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
-}
-
-export function setSearchFilterText(value){
-    return { type: SET_TEXT_SEARCH, value }
 }
