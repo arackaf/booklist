@@ -4,7 +4,7 @@ const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubje
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const hashUtil = require('/utils/hashManager');
 
-const { filtersSelector } = require('../reducers/filtersReducer');
+const { bookSearchSelector } = require('../reducers/bookSearchReducer');
 
 import * as bookSearchActionCreators from '../actions/bookSearch/actionCreators';
 
@@ -99,6 +99,6 @@ class BookSearchDesktopUnConnected extends React.Component {
     }
 }
 
-const BookSearchDesktop = ReactRedux.connect(state => filtersSelector(state.bookList), { ...bookSearchActionCreators })(BookSearchDesktopUnConnected);
+const BookSearchDesktop = ReactRedux.connect(state => bookSearchSelector(state.bookList), { ...bookSearchActionCreators })(BookSearchDesktopUnConnected);
 
 module.exports = BookSearchDesktop;
