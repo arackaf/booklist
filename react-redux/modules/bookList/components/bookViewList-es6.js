@@ -22,8 +22,10 @@ class BookViewingList extends React.Component {
             desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: selector, mapDispatchWith: actionCreators }
         });
     }
-    componentDidMount(){
-        this.props.dispatch(loadBooksAndSubjects());
+    componentWillReceiveProps(newProps){
+        if (newProps.bookSearch.isDirty){
+            this.props.dispatch(loadBooksAndSubjects());
+        }
     }
     addSubject(subject){
         this.props.dispatch(addSubjectToBook(subject));
@@ -36,10 +38,9 @@ class BookViewingList extends React.Component {
                     <button onClick={() => this.switchToMobile()}>Mobile</button>
                     <br/><br/>
 
-                    { !this.state.listComponent || this.props.books.loading ? <BookListLoading /> :
-                        (this.props.books.list.length ?
-                            React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
-                            : <BookListNoResults />)
+                    { !this.state.listComponent
+                        ? <BookListLoading />
+                        : React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
                     }
                 </div>
             </div>

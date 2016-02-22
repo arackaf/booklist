@@ -21,7 +21,7 @@ export function loadBooksAndSubjects(){
 
         Promise.all([
             ajaxUtil.get('/subject/all'),
-            booksSearch()
+            booksSearch(getState().bookList.bookSearch)
         ]).then(([subjectsResp, booksResp]) => {
             dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
             dispatch(booksResults(booksResp)); //have the subjects in place before loading books
@@ -33,12 +33,12 @@ export function loadBooks(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_BOOKS });
 
-        Promise.resolve(booksSearch()).then(resp => dispatch(booksResults(resp)));
+        Promise.resolve(booksSearch(getState().bookList.bookSearch)).then(resp => dispatch(booksResults(resp)));
     }
 }
 
-export function booksSearch(){
-    return ajaxUtil.get('/book/searchBooks', { });
+export function booksSearch(bookSearchState){
+    return ajaxUtil.get('/book/searchBooks', { search: bookSearchState.searchText });
 }
 
 export function booksResults(resp){

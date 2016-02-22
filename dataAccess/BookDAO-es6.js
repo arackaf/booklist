@@ -6,10 +6,14 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks(){
+    async searchBooks(search){
         let db = await super.open();
         try {
-            return await db.collection('books').find({ userId: +this.userId }).toArray();
+            let query = { userId: +this.userId };
+            if (search){
+                query.title = new RegExp(search, 'gi');
+            }
+            return await db.collection('books').find(query).toArray();
         } finally {
             super.dispose(db);
         }
