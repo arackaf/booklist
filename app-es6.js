@@ -72,26 +72,27 @@ app.listen(3000);
 
 app.use(express.static(__dirname + '/'));
 
-//var WebSocketServer = require('ws').Server,
-//    wss = new WebSocketServer({ port: 3001 });
-
 app.ws('/bookEntryWS', function(ws, req) {
     ws.on('message', function(msg) {
         console.log('express-ws --- ', msg);
     });
     console.log('socket', req.user);
-});
 
-//wss.on('connection', function(socket){
-//    console.log('connection');
-//
-//    //Object.keys(socket.upgradeReq.headers).sort().forEach(p => console.log(p, typeof socket.upgradeReq.headers[p]));
-//    //console.log(socket.upgradeReq.headers.cookie);
-//    //console.log('hello', socket.upgradeReq.user);
-//    socket.on('message', function(message, req){
-//        console.log('message received', message, req);
-//    });
-//});
+    ws.on('close', function(){
+        console.log('client closed it');
+    });
+
+    var X = setInterval(() => {
+        if (ws.readyState == 1) {
+            ws.send('Hellooooooo from node')
+        }
+    }, 3000);
+
+    setTimeout(() => {
+        clearInterval(X);
+        ws.close();
+    }, 12000)
+});
 
 
 var easyControllers = require('easy-express-controllers').easyControllers;

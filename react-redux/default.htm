@@ -34,13 +34,24 @@
             return 'ws://' + window.location.host + (path || '');
         }
 
-        var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
-
-        ws.onopen = function(){
-            console.log('client open');
-            ws.send('my message');
-            setTimeout(function(){ ws.send('my message2') }, 3000);
-        };
+//        var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
+//
+//        var i = 1;
+//        ws.onopen = function(){
+//            console.log('client open');
+//            ws.send('my message');
+//            setInterval(function(){
+//                if (ws.readyState === WebSocket.OPEN) {
+//                    ws.send('my message from client', i++)
+//                } else {
+//                    console.log('connection closed');
+//                }
+//            }, 3000);
+//        };
+//
+//        ws.onmessage = function(data){
+//            console.log('from node', data.data);
+//        };
 
     </script>
 
