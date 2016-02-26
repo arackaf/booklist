@@ -65,9 +65,34 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate('remember-me'));
 
+
+var expressWs = require('express-ws')(app);
+
 app.listen(3000);
 
 app.use(express.static(__dirname + '/'));
+
+//var WebSocketServer = require('ws').Server,
+//    wss = new WebSocketServer({ port: 3001 });
+
+app.ws('/', function(ws, req) {
+    ws.on('message', function(msg) {
+        console.log('express-ws --- ', msg);
+    });
+    console.log('socket', req.user);
+});
+
+//wss.on('connection', function(socket){
+//    console.log('connection');
+//
+//    //Object.keys(socket.upgradeReq.headers).sort().forEach(p => console.log(p, typeof socket.upgradeReq.headers[p]));
+//    //console.log(socket.upgradeReq.headers.cookie);
+//    //console.log('hello', socket.upgradeReq.user);
+//    socket.on('message', function(message, req){
+//        console.log('message received', message, req);
+//    });
+//});
+
 
 var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6\.js$/i.test(f) });

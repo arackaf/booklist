@@ -30,6 +30,14 @@
             ajaxUtil.post('/react-redux/logout', { }, function(){ });
         }
 
+        var ws = new WebSocket('ws://localhost:3000');
+
+        ws.onopen = function(){
+            console.log('client open');
+            ws.send('my message');
+            setTimeout(function(){ ws.send('my message2') }, 3000);
+        };
+
     </script>
 
     <style type="text/css">
