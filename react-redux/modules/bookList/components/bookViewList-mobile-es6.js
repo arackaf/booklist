@@ -1,3 +1,6 @@
+//just for now - need something to fire off search changes, if for no other reason than to get an initial search up
+const BookSearchDesktop = require('./BookSearch-desktop');
+
 class BookViewListMobileItem extends React.Component{
     constructor(){
         super();
@@ -41,6 +44,8 @@ class BookViewListMobile extends React.Component{
     render(){
         return (
             <div>
+                <BookSearchDesktop allSubjects={this.props.subjects.list}></BookSearchDesktop>
+
                 <a style={{ cursor: 'pointer' }} onClick={() => this.toggleImages()}>Show images</a>
                 <div className="list-group">
                     { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
