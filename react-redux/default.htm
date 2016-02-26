@@ -30,7 +30,11 @@
             ajaxUtil.post('/react-redux/logout', { }, function(){ });
         }
 
-        var ws = new WebSocket('ws://localhost:3000');
+        function webSocketAddress(path){
+            return 'ws://' + window.location.host + (path || '');
+        }
+
+        var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
 
         ws.onopen = function(){
             console.log('client open');
