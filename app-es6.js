@@ -75,7 +75,7 @@ app.use(express.static(__dirname + '/'));
 //var WebSocketServer = require('ws').Server,
 //    wss = new WebSocketServer({ port: 3001 });
 
-app.ws('/', function(ws, req) {
+app.ws('/bookEntryWS', function(ws, req) {
     ws.on('message', function(msg) {
         console.log('express-ws --- ', msg);
     });
