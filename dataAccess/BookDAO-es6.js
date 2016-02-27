@@ -6,7 +6,7 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks(search){
+    async searchBooks(search, subjects, withChildren){
         let db = await super.open();
         try {
             let query = { userId: +this.userId };
