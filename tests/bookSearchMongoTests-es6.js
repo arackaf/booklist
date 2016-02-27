@@ -61,9 +61,14 @@ describe('book search', function() {
         return await verifyResults({ subjects: [3] }, lookup, 1);
     });
 
-    it('Prelim - basic both searches', async function(){
+    it('Prelim - basic both searches - no results', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Jefferson'}, {_id: 3, title: 'other', subjects: [] });
-        return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup, 1, 2);
+        return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup);
+    });
+
+    it('Prelim - basic both searches', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Jefferson Davis', subjects: [3]}, {_id: 3, title: 'other', subjects: [] });
+        return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup, 2);
     });
 
     it('Prelim - basic both searches - bad ids', async function(){
