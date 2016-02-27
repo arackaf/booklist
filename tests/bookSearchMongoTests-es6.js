@@ -9,7 +9,6 @@ describe('book search', function() {
         db,
         bookDaoInst;
 
-
     const subjects = [
         { _id: 1, name: 'History', path: null, userId: -1 },
         { _id: 2, name: 'American History', path: ',1,', userId: -1 },
@@ -52,29 +51,46 @@ describe('book search', function() {
         done();
     });
 
-    it('Prelim - test util functions', async function(){
+    it('Prelim - basic search', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Thomas Jefferson' }, {_id: 2, title: 'Thomas Kuhn'}, {_id: 3, title: 'Thomas Jefferson', userId: -2});
         return await verifyResults({search: 'Thomas'}, lookup, 1, 2);
     });
 
-    async function verifyResults(searchPacket, lookup, ...resultIds){
-        let results = await bookDaoInst.searchBooks(searchPacket.search);
+    it('Prelim - basic subject search', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'other', subjects: [] });
+        return await verifyResults({ subjects: [3] }, lookup, 1);
+    });
+
+    it('Prelim - basic both searches', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Jefferson'}, {_id: 3, title: 'other', subjects: [] });
+        return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup, 1, 2);
+    });
+
+    it('Prelim - basic both searches - bad ids', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3], userId: -2 }, {_id: 2, title: 'Jefferson', userId: -2}, {_id: 3, title: 'other', subjects: [] });
+        return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup);
+    });
+
+    async function verifyResults(searchPacket, bookIdLookup, ...resultIds){
+        let subjectSearch = (searchPacket.subjects || []).map(sid => ObjectId(subjects.find(s => s.oldId == sid)._id)),
+            results = await bookDaoInst.searchBooks(searchPacket.search, subjectSearch);
 
         assert.strictEqual(results.length, resultIds.length);
 
         resultIds.forEach(_id => {
-            let found = results.find(b => '' + b._id == '' + lookup[_id]);
+            let found = results.find(b => '' + b._id == '' + bookIdLookup[_id]);
             assert.isObject(found);
         });
     }
 
     async function insertBooks(...books){
         let lookup = { };
-        books.forEach(s => {
-            s.userId = s.userId || -1;
-            s.oldId = s._id;
-            s._id = ObjectId();
-            lookup[s.oldId] = '' + s._id;
+        books.forEach(b => {
+            b.userId = b.userId || -1;
+            b.oldId = b._id;
+            b._id = ObjectId();
+            b.subjects = (b.subjects || []).map(sid => ObjectId(subjects.find(s => s.oldId == sid)._id));
+            lookup[b.oldId] = '' + b._id;
         });
 
         await Promise.all(books.map(s => db.collection('books').insert(s)));

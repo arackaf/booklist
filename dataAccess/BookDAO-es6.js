@@ -7,11 +7,23 @@ class BookDAO extends DAO {
         this.userId = userId;
     }
     async searchBooks(search, subjects, withChildren){
+        subjects = subjects || [];
         let db = await super.open();
         try {
             let query = { userId: +this.userId };
             if (search){
                 query.title = new RegExp(search, 'gi');
+            }
+            if (subjects.length){
+                query.subjects = { $in: subjects }
+            }
+            if (query.title && query.subjects){
+                query.$or = [
+                    { subjects: query.subjects },
+                    { title: query.title }
+                ];
+                delete query.subjects;
+                delete query.title;
             }
             return await db.collection('books').find(query).toArray();
         } finally {
