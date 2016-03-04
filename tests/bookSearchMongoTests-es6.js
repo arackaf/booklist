@@ -26,6 +26,9 @@ describe('book search', function() {
             s._id = ObjectId();
         });
 
+        const fixedPath = path => `,${path.split(',').filter(id => id).map(sid => subjects.find(s => s.oldId == sid)._id).join(',')},`;
+        subjects.forEach(s => s.path = !s.path ? s.path : fixedPath(s.path));
+
         await Promise.all(subjects.map(s => db.collection('subjects').insert(s)));
         subjects.forEach(s => {
             s._id = s._id + ''
@@ -76,9 +79,15 @@ describe('book search', function() {
         return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup);
     });
 
+
+    it('Prelim - basic child subject search', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'other', subjects: [] });
+        return await verifyResults({ subjects: [1], searchChildSubjects: true }, lookup, 1);
+    });
+
     async function verifyResults(searchPacket, bookIdLookup, ...resultIds){
         let subjectSearch = (searchPacket.subjects || []).map(sid => ObjectId(subjects.find(s => s.oldId == sid)._id)),
-            results = await bookDaoInst.searchBooks(searchPacket.search, subjectSearch);
+            results = await bookDaoInst.searchBooks(searchPacket.search, subjectSearch, searchPacket.searchChildSubjects);
 
         assert.strictEqual(results.length, resultIds.length);
 
@@ -90,6 +99,7 @@ describe('book search', function() {
 
     async function insertBooks(...books){
         let lookup = { };
+
         books.forEach(b => {
             b.userId = b.userId || -1;
             b.oldId = b._id;
