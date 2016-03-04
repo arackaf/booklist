@@ -6,7 +6,7 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks(search, subjects, withChildren){
+    async searchBooks(search, subjects, searchChildSubjects){
         subjects = (subjects || []).map(_id => ObjectId(_id));
         let db = await super.open();
         try {
@@ -14,7 +14,15 @@ class BookDAO extends DAO {
             if (search){
                 query.title = new RegExp(search, 'gi');
             }
+
             if (subjects.length){
+                if (searchChildSubjects){
+                    let allPaths = subjects.map(s => `,${s},`).join('|');
+                    let childIds = (await db.collection('subjects').find({ path: { $regex: allPaths }, userId: this.userId }, { _id: 1 }).toArray()).map(o => o._id);
+
+                    subjects.push(...childIds);
+                }
+
                 query.subjects = { $in: subjects }
             }
             //may implement $or another way
