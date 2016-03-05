@@ -13,7 +13,8 @@ describe('book search', function() {
         { _id: 1, name: 'History', path: null, userId: -1 },
         { _id: 2, name: 'American History', path: ',1,', userId: -1 },
         { _id: 3, name: 'Civil War', path: ',1,2,', userId: -1 },
-        { _id: 4, name: 'Science', path: null, userId: -1 }
+        { _id: 4, name: 'Science', path: null, userId: -1 },
+        { _id: 5, name: 'Physics', path: ',4,', userId: -1 }
     ];
 
     before(async function(done){
@@ -30,9 +31,7 @@ describe('book search', function() {
         subjects.forEach(s => s.path = !s.path ? s.path : fixedPath(s.path));
 
         await Promise.all(subjects.map(s => db.collection('subjects').insert(s)));
-        subjects.forEach(s => {
-            s._id = s._id + ''
-        });
+        subjects.forEach(s => s._id = s._id + '');
 
         done();
     });
@@ -54,35 +53,55 @@ describe('book search', function() {
         done();
     });
 
-    it('Prelim - basic search', async function(){
+    it('searches a basic title text', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Thomas Jefferson' }, {_id: 2, title: 'Thomas Kuhn'}, {_id: 3, title: 'Thomas Jefferson', userId: -2});
         return await verifyResults({search: 'Thomas'}, lookup, 1, 2);
     });
 
-    it('Prelim - basic subject search', async function(){
+    it('searches a subject', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'other', subjects: [] });
         return await verifyResults({ subjects: [3] }, lookup, 1);
     });
 
-    it('Prelim - basic both searches - no results', async function(){
+    it('searches both - no results', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Jefferson'}, {_id: 3, title: 'other', subjects: [] });
         return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup);
     });
 
-    it('Prelim - basic both searches', async function(){
+    it('searches both', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Jefferson Davis', subjects: [3]}, {_id: 3, title: 'other', subjects: [] });
         return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup, 2);
     });
 
-    it('Prelim - basic both searches - bad ids', async function(){
+    it('searches both - bad ids', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3], userId: -2 }, {_id: 2, title: 'Jefferson', userId: -2}, {_id: 3, title: 'other', subjects: [] });
         return await verifyResults({ search: 'Jeff', subjects: [3] }, lookup);
     });
 
 
-    it('Prelim - basic child subject search', async function(){
+    it('searches basic child subject chain', async function(){
         let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'other', subjects: [] });
         return await verifyResults({ subjects: [1], searchChildSubjects: true }, lookup, 1);
+    });
+
+    it('searches 2 subject chains', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Physics book', subjects: [5] }, {_id: 3, title: 'other', subjects: [] });
+        return await verifyResults({ subjects: [1, 4], searchChildSubjects: true }, lookup, 1, 2);
+    });
+
+    it('searches 2 subject chains with a specific match', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Physics book', subjects: [5] }, {_id: 3, title: 'Science book', subjects: [4] }, {_id: 4, title: 'other', subjects: [] });
+        return await verifyResults({ subjects: [1, 4], searchChildSubjects: true }, lookup, 1, 2, 3);
+    });
+
+    it('does not search subject chains when not told to do so', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Physics book', subjects: [5] }, {_id: 3, title: 'Science book', subjects: [4] }, {_id: 4, title: 'other', subjects: [] });
+        return await verifyResults({ subjects: [1, 4], searchChildSubjects: false }, lookup, 3);
+    });
+
+    it('intersects subject chain searches with title searches', async function(){
+        let lookup = await insertBooks({_id: 1, title: 'Civil War', subjects: [3] }, {_id: 2, title: 'Physics book', subjects: [5] }, {_id: 3, title: 'Science book', subjects: [4] }, {_id: 4, title: 'other', subjects: [] });
+        return await verifyResults({ search: 'civil', subjects: [1, 4], searchChildSubjects: true }, lookup, 1);
     });
 
     async function verifyResults(searchPacket, bookIdLookup, ...resultIds){
