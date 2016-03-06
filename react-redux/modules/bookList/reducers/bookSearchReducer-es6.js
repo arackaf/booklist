@@ -25,6 +25,6 @@ function projectselectedSubjects(selectedSubjectsIds, subjects){
     return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]);
 }
 
-const bookSearchSelector = state => Object.assign({}, state.bookSearch, { selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.list) });
+const bookSearchSelector = state => Object.assign({}, state.bookSearch, { selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash) });
 
 module.exports = { bookSearchReducer, bookSearchSelector };

@@ -1,9 +1,10 @@
 const { createSelector } = require('../../../util/reselect');
 
-const {
-    ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS, SETTING_BOOKS_SUBJECTS,
-    TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, CLEAR_SUBJECT_MODIFICATION_SUBJECTS
-} = require('../actions/bookSubjectModify/actionNames');
+import {
+    ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,
+    SETTING_BOOKS_SUBJECTS, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, CLEAR_SUBJECT_MODIFICATION_SUBJECTS,
+    FINISHED_SUBJECT_MODIFICATION
+} from '../actions/bookSubjectModify/actionNames';
 
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
@@ -29,6 +30,8 @@ function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, actio
             return Object.assign({}, state, { singleBookModify: null, selectedBooksModify: false });
         case TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION:
             return Object.assign({}, state, { addingSubjects: { ...state.addingSubjects, [action._id]: !state.addingSubjects[action._id] } });
+        case FINISHED_SUBJECT_MODIFICATION:
+            return Object.assign({}, state, { addingSubjects: {}, removingSubjects: {}, singleBookModify: null, selectedBooksModify: false });
         case TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION:
             return Object.assign({}, state, { removingSubjects: { ...state.removingSubjects, [action._id]: !state.removingSubjects[action._id] } });
     }
@@ -44,12 +47,12 @@ const modifyingBooksSelector = createSelector(
 );
 
 const addingSubjectsSelector = createSelector(
-    [state => state.booksSubjectsModifier.addingSubjects, state => state.subjects.list],
+    [state => state.booksSubjectsModifier.addingSubjects, state => state.subjects.subjectHash],
     (adding, subjects) => Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id])
 );
 
 const removingSubjectsSelector = createSelector(
-    [state => state.booksSubjectsModifier.removingSubjects, state => state.subjects.list],
+    [state => state.booksSubjectsModifier.removingSubjects, state => state.subjects.subjectHash],
     (removing, subjects) => Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id])
 );
 

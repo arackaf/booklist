@@ -4,14 +4,14 @@ const { createSelector } = require('../../../util/reselect');
 import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../util/booksSubjectsHelpers';
 
 const initialSubjectsState = {
-    list: {},
+    subjectHash: {},
     editSubjectsPacket: null
 };
 
 function subjectsReducer(state = initialSubjectsState, action = {}){
     switch(action.type){
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { list: subjectsToHash(action.subjects) });
+            return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects) });
         case EDIT_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
         case SET_NEW_SUBJECT_NAME:
@@ -21,9 +21,9 @@ function subjectsReducer(state = initialSubjectsState, action = {}){
         case STOP_EDITING_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: null });
         case EDIT_SUBJECT:
-            var editingSubject = state.list[action._id],
+            var editingSubject = state.subjectHash[action._id],
                 newSubjectParent,
-                eligibleParents = flattenedSubjects(state.list).filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path)));
+                eligibleParents = flattenedSubjects(state.subjectHash).filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path)));
 
             if (editingSubject.path == null){
                 newSubjectParent = null;
@@ -35,7 +35,7 @@ function subjectsReducer(state = initialSubjectsState, action = {}){
             return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { newSubjectName: editingSubject.name, newSubjectParent, editingSubject, eligibleParents }) });
         case UPDATE_SUBJECT_RESULTS:
             let changedSubjects = subjectsToHash(action.affectedSubjects);
-            return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editingSubject: null }), list: Object.assign({}, state.list, changedSubjects) });
+            return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editingSubject: null }), subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });
     }
     return state;
 }
@@ -51,10 +51,10 @@ function flattenedSubjects(subjects){
 }
 
 const stackedSubjectsSelector = createSelector(
-    [state => state.list],
-    list => ({
-        list: stackAndGetTopLevelSubjects(list),
-        allSubjectsSorted: allSubjectsSorted(list)
+    [state => state.subjectHash],
+    subjectHash => ({
+        list: stackAndGetTopLevelSubjects(subjectHash),
+        allSubjectsSorted: allSubjectsSorted(subjectHash)
     })
 );
 
