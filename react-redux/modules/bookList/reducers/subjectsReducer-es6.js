@@ -1,7 +1,7 @@
 const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../actions/actionNames');
 
 const { createSelector } = require('../../../util/reselect');
-const { stackAndGetTopLevelSubjects } = require('../util/booksSubjectsHelpers');
+import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../util/booksSubjectsHelpers';
 
 const initialSubjectsState = {
     list: {},
@@ -52,9 +52,12 @@ function flattenedSubjects(subjects){
 
 const stackedSubjectsSelector = createSelector(
     [state => state.list],
-    stackAndGetTopLevelSubjects
+    list => ({
+        list: stackAndGetTopLevelSubjects(list),
+        allSubjectsSorted: allSubjectsSorted(list)
+    })
 );
 
-const subjectsSelector = state => Object.assign({}, state.subjects, {list: stackedSubjectsSelector(state.subjects)});
+const subjectsSelector = state => Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
 
 module.exports = { subjectsReducer, subjectsSelector };
