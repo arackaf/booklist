@@ -51,7 +51,7 @@ function createBooksHash(booksArr){
 }
 
 const booksWithSubjectsSelector = createSelector(
-    [state => state.books.booksHash, state => state.subjects.list],
+    [state => state.books.booksHash, state => state.subjects.subjectHash],
     setBookResultsSubjects
 );
 

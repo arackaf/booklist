@@ -6,7 +6,8 @@ import {
     SETTING_BOOKS_SUBJECTS,
     SET_BOOKS_SUBJECTS,
     CANCEL_BOOKS_SUBJECT_MODIFICATION,
-    CLEAR_SUBJECT_MODIFICATION_SUBJECTS
+    CLEAR_SUBJECT_MODIFICATION_SUBJECTS,
+    FINISHED_SUBJECT_MODIFICATION
 } from './actionNames';
 
 export function cancelBookSubjectModification(){
@@ -18,7 +19,7 @@ export function setBooksSubjects(books, add, remove){
         dispatch({ type: SETTING_BOOKS_SUBJECTS });
         ajaxUtil.post('/bookBulk/setSubjects', { books, add, remove }, resp => {
             dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove });
-            dispatch(cancelBookSubjectModification())
+            dispatch({ type: FINISHED_SUBJECT_MODIFICATION });
         });
     }
 }
