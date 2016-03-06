@@ -73,8 +73,9 @@ var expressWs = require('express-ws')(app);
 app.listen(3000);
 
 app.use('/static/', express.static(__dirname + '/static/'));
-app.use('/node_modules/react-bootstrap/dist/', express.static(__dirname + '/node_modules/react-bootstrap/dist/'));
+app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
 app.use('/react-redux/', express.static(__dirname + '/react-redux/'));
+app.use('/utils/', express.static(__dirname + '/utils/'));
 
 app.ws('/bookEntryWS', function(ws, req) {
     ws.on('message', function(msg) {
