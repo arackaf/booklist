@@ -31,7 +31,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                     <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                         <div className="panel-body">
                             <ul>
-                                { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name} </li>) }
+                                { this.props.subjects.allSubjectsSorted.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name} </li>) }
                             </ul>
                         </div>
                     </div>
@@ -43,7 +43,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                     <div className="panel panel-default" style={{ maxHeight: 150, marginTop: 5, overflow: 'scroll' }}>
                         <div className="panel-body">
                             <ul>
-                                { this.props.subjects.list.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name} </li>) }
+                                { this.props.subjects.allSubjectsSorted.map(s => <li key={s._id}><input type="checkbox" checked={!!this.props.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name} </li>) }
                             </ul>
                         </div>
                     </div>
