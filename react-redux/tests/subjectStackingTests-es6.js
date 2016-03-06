@@ -1,8 +1,8 @@
-const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../react-redux/modules/bookList/actions/actionNames');
+const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../../react-redux/modules/bookList/actions/actionNames');
 
 const assert = require('chai').assert;
 
-const { reducer, selector } = require('../react-redux/modules/bookList/reducers/reducer');
+const { reducer, selector } = require('../../react-redux/modules/bookList/reducers/reducer');
 
 describe('subject stacking', function() {
 
