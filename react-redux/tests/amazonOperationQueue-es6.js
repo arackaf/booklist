@@ -1,9 +1,9 @@
 global.Symbol = require('es6-symbol');
 global.Promise = require('promise');
-require('../utils/promiseUtils');
+require('../../utils/promiseUtils');
 
 var assert = require('chai').assert;
-var { AmazonQueue } = require('../amazonDataAccess/amazonOperationQueue');
+var { AmazonQueue } = require('../../amazonDataAccess/amazonOperationQueue');
 AmazonQueue.AWS_DELAY = 100; //we'll make the delay 100ms to make the tests a little quicker
 
 //to handle the boilerplate of resolving all these promises I'm kicking off - would rather not have unresolved promises just lingering around

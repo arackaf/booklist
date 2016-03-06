@@ -1,8 +1,8 @@
 const assert = require('chai').assert;
 const ObjectId = require('mongodb').ObjectID;
 
-const DAO = require('../dataAccess/DAO');
-const SubjectDAO = require('../dataAccess/SubjectDAO');
+const DAO = require('../../dataAccess/DAO');
+const SubjectDAO = require('../../dataAccess/SubjectDAO');
 
 let dao,
     db,

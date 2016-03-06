@@ -2,11 +2,11 @@
 
 global.Symbol = require('es6-symbol');
 global.Promise = require('promise');
-require('../utils/promiseUtils');
+require('../../utils/promiseUtils');
 
 var assert = require('chai').assert;
 
-var _require = require('../amazonDataAccess/amazonOperationQueue');
+var _require = require('../../amazonDataAccess/amazonOperationQueue');
 
 var AmazonQueue = _require.AmazonQueue;
 

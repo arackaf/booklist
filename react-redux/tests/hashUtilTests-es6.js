@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 
-const hashUtil = require('../utils/hashManager');
+const hashUtil = require('../../utils/hashManager');
 
 describe('Hash management', function() {
     var hashManager;

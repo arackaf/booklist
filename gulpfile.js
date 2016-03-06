@@ -10,7 +10,7 @@ require('regenerator/runtime');
 gulp.task('test', function () {
     global.Redux = require('Redux');
 
-    gulp.src('tests/**/!(*-es6.js)') //we don't want es6 files - just the transpiled results
+    gulp.src('react-redux/tests/**/!(*-es6.js)') //we don't want es6 files - just the transpiled results
         .pipe(mocha());
 });
 
