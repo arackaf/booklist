@@ -210,7 +210,7 @@ function loadSubjectsThenUpdate(subjects, info){
 }
 
 function loadSubjects(subjects){
-    return apply({ type: LOAD_SUBJECTS_RESULTS, subjects }).subjects.subjectHash;
+    return apply({ type: LOAD_SUBJECTS_RESULTS, subjects }).subjects.list;
 }
 
 function apply(...actions){
