@@ -38,7 +38,11 @@ export function loadBooks(){
 }
 
 export function booksSearch(bookSearchState){
-    return ajaxUtil.get('/book/searchBooks', { search: bookSearchState.searchText, subjects: Object.keys(bookSearchState.subjects) });
+    return ajaxUtil.get('/book/searchBooks', {
+        search: bookSearchState.searchText,
+        subjects: Object.keys(bookSearchState.subjects),
+        searchChildSubjects: bookSearchState.searchChildSubjects
+    });
 }
 
 export function booksResults(resp){
