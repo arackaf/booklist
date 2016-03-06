@@ -22,6 +22,8 @@
     "gulp-watch": "~4.1.1",
     "immutable": "^3.7.6",
     "mocha": "^2.3.3",
+    "nodemailer": "^2.3.0",
+    "nodemailer-smtp-transport": "^2.4.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "promise": "^7.0.4",
