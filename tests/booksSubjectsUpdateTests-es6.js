@@ -106,5 +106,5 @@ function apply(...actions){
     let state = booksReducer(undefined, {});
     actions.forEach(a => state = booksReducer(state, a));
 
-    return booksSelector({ books: state, subjects: { list: [] } });
+    return booksSelector({ books: state, subjects: { subjectHash: {}, list: [] } });
 }
