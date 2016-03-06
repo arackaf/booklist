@@ -4,12 +4,14 @@ require('regenerator/runtime');
 global.Promise = require('promise');
 require('./utils/promiseUtils');
 
-var express = require('express');
-var app = express();
-var path = require("path");
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
+const express = require('express');
+const app = express();
+const path = require("path");
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const nodemailer = require('nodemailer');
+import { authInfo, myAddresses } from './utils/mailAuthenticationInfo';
 
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -112,12 +114,31 @@ app.get('/react-redux/login', function (request, response) {
 
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
-    //response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
+
+    //handleSayHello()
+    function handleSayHello() {
+        // Not the movie transporter!
+        let mailTransport = nodemailer.createTransport(authInfo);
+        let emailInfo = Object.assign({}, myAddresses, {
+            subject: 'You logged in!',
+            html: '<h2>You logged in</h2>'
+        });
+
+        mailTransport.sendMail(emailInfo, function(err, info){
+            if(err){
+                console.log(err);
+            }else{
+                console.log('Message sent: ' + info.response);
+            }
+        });
+    }
+
     response.cookie('remember_me', req.user.token, { path: '/', httpOnly: true, maxAge: 604800000 });
     response.send(req.user);
 });
 
-app.post('/react-redux/logout', function(req, res){
+app.post('/react-redux/logout', function(req, response){
+    response.clearCookie('remember_me');
     req.logout();
-    res.send({});
+    response.send({});
 });
