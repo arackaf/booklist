@@ -1,4 +1,4 @@
-var awsCredentials = require('../utils/awsCredentials'), //not checked in - you'll need to use your own
+var awsCredentials = require('../private/awsCredentials'), //not checked in - you'll need to use your own
     OperationHelper = require('apac').OperationHelper,
     opHelper = new OperationHelper(awsCredentials),
     { nodeCallback } = require('../utils/nodeHelpers.js'),

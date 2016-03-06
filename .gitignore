@@ -66,3 +66,6 @@ react-redux/modules/bookList/reducers/bookSearchReducer.js
 tests/bookSearchMongoTests.js
 utils/mailAuthenticationInfo-es6.js
 utils/mailAuthenticationInfo.js
+private/mailAuthenticationInfo-es6.js
+private/awsCredentials.js
+private/mailAuthenticationInfo.js
