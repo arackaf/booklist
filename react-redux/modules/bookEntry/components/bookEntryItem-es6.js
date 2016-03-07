@@ -9,6 +9,11 @@ class BookEntryItem extends React.Component{
     toggle(){
         this.setState({ expanded: !this.state.expanded });
     }
+    componentWillReceiveProps(newProps){
+        if (!newProps.fetchedInfo){
+            this.setState({ expanded: false });
+        }
+    }
     render(){
         return (
             <div>
