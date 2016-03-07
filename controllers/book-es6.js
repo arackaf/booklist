@@ -18,7 +18,7 @@ class bookController{
         if (bookFromAmazon.failure){
             this.send({ failure: true });
         } else {
-            let bookDao = new BookDAO();
+            let bookDao = new BookDAO(+this.request.user.id);
             await bookDao.saveBook(bookFromAmazon);
             this.send(bookFromAmazon);
         }

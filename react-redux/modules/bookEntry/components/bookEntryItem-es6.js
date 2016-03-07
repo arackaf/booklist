@@ -30,7 +30,7 @@ class BookEntryItem extends React.Component{
                                     Saved: { this.props.fetchedTitle }
                                 </div>
                                 <div className="col-xs-1">
-                                    <AjaxButton preset='danger-xs' running={this.props.deleting} onClick={this.props.deleteBook} text='Delete' runningText='Deleting' />
+                                    <AjaxButton preset='danger-xs' running={this.props.deleting} onClick={this.props.deleteBook} text='Delete' runningText='Deleting'>Delete</AjaxButton>
                                 </div>
                             </div> : null
                         }
