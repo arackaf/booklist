@@ -1,10 +1,11 @@
 const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('../actions/actionNames');
 
-const initialState = () => ({
-    entryList: Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }))
-});
+const initialArray = Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
+const initialState = {
+    entryList: initialArray
+};
 
-function reducer(state = initialState(), action = {}){
+function reducer(state = initialState, action){
     switch(action.type) {
         case UPDATE_ISBN:
             var newEntryList = state.entryList.concat();
