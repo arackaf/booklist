@@ -1,6 +1,6 @@
 const { httpPost, route, nonRoutable } = require('easy-express-controllers');
 const AmazonSearch = require('../amazonDataAccess/AmazonSearch.js');
-const { amazonOperationQueue } = require('../amazonDataAccess/amazonOperationQueue');
+import amazonOperationQueue from '../amazonDataAccess/amazonOperationQueue';
 const BookDAO = require('../dataAccess/bookDAO');
 
 import pendingBookEntryDAO from '../dataAccess/pendingBookEntryDAO';
@@ -21,17 +21,17 @@ class bookController{
         await pendingEntryDao.add(addingItem);
         amazonOperationQueue.push(p);
 
-        this.send({ failure: false });
-        //let bookFromAmazon = await p;
-        //pendingEntryDao.remove(addingItem._id);
+        //this.send({ failure: false });
+        let bookFromAmazon = await p;
+        pendingEntryDao.remove(addingItem._id);
 
-        //if (bookFromAmazon.failure){
-        //    this.send({ failure: true });
-        //} else {
-        //    let bookDao = new BookDAO(+this.request.user.id);
-        //    await bookDao.saveBook(bookFromAmazon);
-        //    this.send(bookFromAmazon);
-        //}
+        if (bookFromAmazon.failure){
+            this.send({ failure: true });
+        } else {
+            let bookDao = new BookDAO(+this.request.user.id);
+            await bookDao.saveBook(bookFromAmazon);
+            this.send(bookFromAmazon);
+        }
     }
     @httpPost
     async deleteBook(id){
