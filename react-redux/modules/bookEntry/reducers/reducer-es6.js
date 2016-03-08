@@ -42,7 +42,7 @@ function reducer(state = initialState, action){
             newEntryList[action.index].deleting = true;
             return Object.assign({}, state, { entryList: newEntryList });
         case RESET_LIST:
-            return initialState();
+            return initialState;
     }
     return state;
 }
