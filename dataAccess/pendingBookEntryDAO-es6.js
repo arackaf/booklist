@@ -7,7 +7,12 @@ class PendingBookEntryDAO extends DAO {
         this.userId = userId;
     }
     async getLatest(count){
-        return (await db.getCollection('pendingEntries').find({}).sort({ _id: 1 }).limit(count)).toArray()
+        let db = await super.open();
+        try {
+            return (await db.collection('pendingEntries').find({}).sort({_id: 1}).limit(count).toArray());
+        } finally {
+            super.dispose(db);
+        }
     }
     async add(item){
         let db = await super.open();

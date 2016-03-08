@@ -3,7 +3,7 @@ let _timer = Symbol('aws'),
     _startOp = Symbol('startItem');
 
 //Amazon only allows 1 request per second.  This class implements a queue that ensures this limit is not violated
-class AmazonQueue{
+export class AmazonQueue{
     constructor(){
         this.queue = [];
         this[_lastRun] = 0;
@@ -46,7 +46,4 @@ function currentlyNeededDelay(lastRun = 0){
     return Math.max(neededDelay, 0); //might be negative, in which case we need no delay
 }
 
-module.exports = {
-    AmazonQueue,
-    amazonOperationQueue: new AmazonQueue()
-};
+export default new AmazonQueue();

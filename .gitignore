@@ -71,3 +71,4 @@ private/awsCredentials.js
 private/mailAuthenticationInfo.js
 dataAccess/pendingBookEntryDAO.js
 app/bookEntryQueueManager.js
+amazonDataAccess/amazonOperationQueue.js

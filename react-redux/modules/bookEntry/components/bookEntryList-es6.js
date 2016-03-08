@@ -8,7 +8,6 @@ class BookEntryList extends React.Component {
         var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
 
         ws.onopen = function(){
-            console.log("holy shit it's open");
         };
 
         ws.onmessage = function(data){

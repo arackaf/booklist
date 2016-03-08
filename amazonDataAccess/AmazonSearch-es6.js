@@ -53,4 +53,4 @@ function projectResponse(item){
     }
 }
 
-module.exports = AmazonSearch;
+export default AmazonSearch;
