@@ -19,6 +19,9 @@ class DAO{
             throw 'Expected 1 object to be inserted.  Actual ' + numInserted;
         }
     }
+    logError(err){
+        console.log(err)
+    }
     dispose(db){
         db.close();
     }
