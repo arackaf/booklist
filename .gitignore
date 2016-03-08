@@ -72,3 +72,4 @@ private/mailAuthenticationInfo.js
 dataAccess/pendingBookEntryDAO.js
 app/bookEntryQueueManager.js
 amazonDataAccess/amazonOperationQueue.js
+react-redux/tests/reduxBookEntryTests.js
