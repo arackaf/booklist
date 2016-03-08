@@ -42,8 +42,10 @@ class BookDAO extends DAO {
     async saveBook(book){
         let db = await super.open();
         try {
+
             book.userId = this.userId;
             let result = await db.collection('books').insert(book);
+
             super.confirmSingleResult(result);
         } finally {
             super.dispose(db);
@@ -76,5 +78,4 @@ class BookDAO extends DAO {
     }
 }
 
-
-module.exports = BookDAO;
+export default BookDAO;

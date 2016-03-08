@@ -80,7 +80,8 @@ app.use('/utils/', express.static(__dirname + '/utils/'));
 
 app.ws('/bookEntryWS', function(ws, req) {
 
-    bookEntryQueueManager.subscriberAdded(req.user.id, ws);
+    bookEntryQueueManager.subscriberAdded(req.user.id, ws)
+        .then(() => bookEntryQueueManager.initialize());
 
     ws.on('message', function(msg) {
         console.log('express-ws --- ', msg);
