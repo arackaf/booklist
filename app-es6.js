@@ -12,6 +12,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 import { authInfo, myAddresses } from './utils/mailAuthenticationInfo';
+import bookEntryQueueManager from './app/bookEntryQueueManager';
 
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -78,25 +79,28 @@ app.use('/react-redux/', express.static(__dirname + '/react-redux/'));
 app.use('/utils/', express.static(__dirname + '/utils/'));
 
 app.ws('/bookEntryWS', function(ws, req) {
+
+    bookEntryQueueManager.subscriberAdded(req.user.id, ws);
+
     ws.on('message', function(msg) {
         console.log('express-ws --- ', msg);
     });
-    console.log('socket', req.user);
+    //console.log('socket', req.user);
 
     ws.on('close', function(){
         console.log('client closed it');
     });
 
-    var X = setInterval(() => {
-        if (ws.readyState == 1) {
-            ws.send('Hellooooooo from node')
-        }
-    }, 3000);
+    //var X = setInterval(() => {
+    //    if (ws.readyState == 1) {
+    //        ws.send('Hellooooooo from node')
+    //    }
+    //}, 3000);
 
-    setTimeout(() => {
-        clearInterval(X);
-        ws.close();
-    }, 12000)
+    //setTimeout(() => {
+    //    clearInterval(X);
+    //    ws.close();
+    //}, 12000)
 });
 
 

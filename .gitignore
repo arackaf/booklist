@@ -70,3 +70,4 @@ private/mailAuthenticationInfo-es6.js
 private/awsCredentials.js
 private/mailAuthenticationInfo.js
 dataAccess/pendingBookEntryDAO.js
+app/bookEntryQueueManager.js
