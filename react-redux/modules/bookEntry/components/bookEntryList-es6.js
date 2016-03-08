@@ -2,6 +2,19 @@ let BookEntryItem = require('./bookEntryItem'),
     { updateIsbn, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 class BookEntryList extends React.Component {
+    constructor(){
+        super();
+
+        var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
+
+        ws.onopen = function(){
+            console.log("holy shit it's open");
+        };
+
+        ws.onmessage = function(data){
+            console.log('from node:', data.data);
+        };
+    }
     render() {
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>

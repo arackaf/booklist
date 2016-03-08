@@ -21,16 +21,17 @@ class bookController{
         await pendingEntryDao.add(addingItem);
         amazonOperationQueue.push(p);
 
-        let bookFromAmazon = await p;
-        pendingEntryDao.remove(addingItem._id);
+        this.send({ failure: false });
+        //let bookFromAmazon = await p;
+        //pendingEntryDao.remove(addingItem._id);
 
-        if (bookFromAmazon.failure){
-            this.send({ failure: true });
-        } else {
-            let bookDao = new BookDAO(+this.request.user.id);
-            await bookDao.saveBook(bookFromAmazon);
-            this.send(bookFromAmazon);
-        }
+        //if (bookFromAmazon.failure){
+        //    this.send({ failure: true });
+        //} else {
+        //    let bookDao = new BookDAO(+this.request.user.id);
+        //    await bookDao.saveBook(bookFromAmazon);
+        //    this.send(bookFromAmazon);
+        //}
     }
     @httpPost
     async deleteBook(id){
