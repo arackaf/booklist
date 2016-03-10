@@ -8,36 +8,39 @@ class BookEntryQueueManager {
         this.pendingBooksDao = new PendingBookEntryDao();
         this.localQueue = [];
         this.wsSubscriptions = new Map();
+        this.amazonSearch = new AmazonSearch()
     }
     async initialize(){
+        this.running = true;
         this.localQueue = await this.pendingBooksDao.getLatest(10);
         if (this.localQueue.length) {
             await this.runQueue();
+        } else {
+            this.running = false;
         }
     }
     async runQueue(){
-        let item = this.localQueue.shift(),
-            search = new AmazonSearch(),
-            p = Promise.delayed(resolve => {
-                search.lookupBook(item.isbn).then(response => resolve(response));
-            });
+        let allItems = this.localQueue.map(item => this.pendingItemToPromise(item));
+        amazonOperationQueue.push(allItems);
 
-        amazonOperationQueue.push(p);
-        let bookFromAmazon = await p;
-
-        if (bookFromAmazon.failure){
-            //this.send({ failure: true });
-        } else {
+        await Promise.all(allItems).then(() => this.initialize());
+    }
+    pendingItemToPromise(item){
+        return Promise.delayed(resolve => {
+            this.amazonSearch.lookupBook(item.isbn).then(response => resolve(response));
+        }).then(bookFromAmazon => new Promise(async res => {
             let bookDao = new BookDAO(item.userId);
-            await bookDao.saveBook(bookFromAmazon);
-            //await this.pendingBooksDao.remove(item._id);
-            this.bookAdded(item.userId, bookFromAmazon);
-            //this.send(bookFromAmazon);
-        }
 
-        if (this.localQueue.length){
-            //this.runQueue();
-        }
+            if (bookFromAmazon.failure){
+                //TODO: log it
+            } else {
+                //TODO: Log it
+                await bookDao.saveBook(bookFromAmazon);
+                await this.pendingBooksDao.remove(item._id);
+                this.bookAdded(item.userId, bookFromAmazon);
+            }
+            res();
+        }));
     }
     async subscriberAdded(userId, ws){
         let pending = await this.pendingBooksDao.getPendingForUser(userId);
@@ -45,6 +48,7 @@ class BookEntryQueueManager {
         this.wsSubscriptions.set(userId, ws);
     }
     bookAdded(userId, bookFromAmazon){
+        //TODO: check if closed
         this.wsSubscriptions.get(userId).send(JSON.stringify(Object.assign({}, bookFromAmazon, { saveMessage: 'saved' })));
     }
 }

@@ -143,3 +143,5 @@ app.post('/react-redux/logout', function(req, response){
     req.logout();
     response.send({});
 });
+
+bookEntryQueueManager.initialize();
