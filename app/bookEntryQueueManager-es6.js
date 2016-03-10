@@ -42,14 +42,20 @@ class BookEntryQueueManager {
             res();
         }));
     }
-    async subscriberAdded(userId, ws){
-        let pending = await this.pendingBooksDao.getPendingForUser(userId);
-        ws.send(JSON.stringify({ pending }));
-        this.wsSubscriptions.set(userId, ws);
-    }
     bookAdded(userId, bookFromAmazon){
         //TODO: check if closed
         this.wsSubscriptions.get(userId).send(JSON.stringify(Object.assign({}, bookFromAmazon, { saveMessage: 'saved' })));
+    }
+    async subscriberAdded(userId, ws) {
+        let pending = await this.pendingBooksDao.getPendingForUser(userId);
+        ws.send(JSON.stringify({pending}));
+        this.wsSubscriptions.set(userId, ws);
+    }
+    async addPendingBook(item){
+        await this.pendingBooksDao.add(item);
+        if (!this.running){
+            this.initialize();
+        }
     }
 }
 
