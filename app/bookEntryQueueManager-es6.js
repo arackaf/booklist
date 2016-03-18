@@ -36,8 +36,8 @@ class BookEntryQueueManager {
                     //TODO: log it
                 } else {
                     //TODO: Log and save it
-                    //await bookDao.saveBook(bookFromAmazon);
-                    //await this.pendingBooksDao.remove(item._id);
+                    await bookDao.saveBook(bookFromAmazon);
+                    await this.pendingBooksDao.remove(item._id);
                     //this.bookAdded(item.userId, bookFromAmazon);
                 }
                 resolve();
