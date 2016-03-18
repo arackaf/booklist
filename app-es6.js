@@ -13,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 import { authInfo, myAddresses } from './utils/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
+import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -144,4 +145,24 @@ app.post('/react-redux/logout', function(req, response){
     response.send({});
 });
 
-bookEntryQueueManager.initialize();
+
+let toEnter = [
+    '1617291412',
+    '0393329216',
+    '1449344682',
+    '1449340040',
+    '9781449334994',
+    '0262510871',
+    '161729134X',
+    '1937785653',
+    '193435659X',
+    '1937785335',
+    '1783287314',
+    '1484212614',
+    '1491904240',
+    '1449369278'
+];
+
+let pendingDao = new PendingBookEntryDao();
+let allPromises = toEnter.map(isbn => pendingDao.add({ userId: 1, isbn }));
+Promise.all(allPromises).then(() => bookEntryQueueManager.initialize());
