@@ -13,6 +13,7 @@ class BookEntryQueueManager {
     async initialize(){
         this.running = true;
         this.localQueue = await this.pendingBooksDao.getLatest(10);
+
         if (this.localQueue.length) {
             await this.runQueue();
         } else {
@@ -21,30 +22,33 @@ class BookEntryQueueManager {
     }
     async runQueue(){
         let allItems = this.localQueue.map(item => this.pendingItemToPromise(item));
-        amazonOperationQueue.push(allItems);
 
+        allItems.forEach(op => amazonOperationQueue.push(op));
         await Promise.all(allItems).then(() => this.initialize());
     }
     pendingItemToPromise(item){
         return Promise.delayed(resolve => {
-            this.amazonSearch.lookupBook(item.isbn).then(response => resolve(response));
-        }).then(bookFromAmazon => new Promise(async res => {
-            let bookDao = new BookDAO(item.userId);
+            this.amazonSearch.lookupBook(item.isbn).then(async bookFromAmazon => {
+                let bookDao = new BookDAO(item.userId);
 
-            if (bookFromAmazon.failure){
-                //TODO: log it
-            } else {
-                //TODO: Log it
-                await bookDao.saveBook(bookFromAmazon);
-                await this.pendingBooksDao.remove(item._id);
-                this.bookAdded(item.userId, bookFromAmazon);
-            }
-            res();
-        }));
+                if (bookFromAmazon.failure){
+                    //TODO: log it
+                } else {
+                    //TODO: Log and save it
+                    //await bookDao.saveBook(bookFromAmazon);
+                    //await this.pendingBooksDao.remove(item._id);
+                    //this.bookAdded(item.userId, bookFromAmazon);
+                }
+                resolve();
+            });
+        });
     }
     bookAdded(userId, bookFromAmazon){
         //TODO: check if closed
-        this.wsSubscriptions.get(userId).send(JSON.stringify(Object.assign({}, bookFromAmazon, { saveMessage: 'saved' })));
+        let ws = this.wsSubscriptions.get(userId);
+        if (ws){
+            ws.send(JSON.stringify(Object.assign({}, bookFromAmazon, { saveMessage: 'saved' })));
+        }
     }
     async subscriberAdded(userId, ws) {
         let pending = await this.pendingBooksDao.getPendingForUser(userId);

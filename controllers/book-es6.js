@@ -11,26 +11,14 @@ class bookController{
     async saveFromIsbn(isbn){
         const userId = +this.request.user.id;
 
-        let search = new AmazonSearch(),
-            pendingEntryDao = new pendingBookEntryDAO(userId),
-            p = Promise.delayed(resolve => {
-                search.lookupBook(isbn).then(response => resolve(response));
-            });
+        try {
+            let pendingEntryDao = new pendingBookEntryDAO(userId),
+                addingItem = {userId, isbn};
+            await pendingEntryDao.add(addingItem);
 
-        let addingItem = { userId, isbn };
-        await pendingEntryDao.add(addingItem);
-        amazonOperationQueue.push(p);
-
-        //this.send({ failure: false });
-        let bookFromAmazon = await p;
-        pendingEntryDao.remove(addingItem._id);
-
-        if (bookFromAmazon.failure){
-            this.send({ failure: true });
-        } else {
-            let bookDao = new BookDAO(+this.request.user.id);
-            await bookDao.saveBook(bookFromAmazon);
-            this.send(bookFromAmazon);
+            this.send({success: true});
+        } catch(er) {
+            this.send({ failure: true })
         }
     }
     @httpPost
