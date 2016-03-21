@@ -30,6 +30,7 @@
     "react": "^0.14.0",
     "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.0",
+    "react-motion": "^0.4.2",
     "react-redux": "^4.4.0",
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
