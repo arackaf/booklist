@@ -81,16 +81,11 @@ app.use('/utils/', express.static(__dirname + '/utils/'));
 
 app.ws('/bookEntryWS', function(ws, req) {
 
-    //bookEntryQueueManager.subscriberAdded(req.user.id, ws)
-        //.then(() => bookEntryQueueManager.initialize());
+    bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 
-    ws.on('message', function(msg) {
-        console.log('express-ws --- ', msg);
-    });
-
-    ws.on('close', function(){
-        console.log('client closed it');
-    });
+    //ws.on('message', function(msg) {
+    //    console.log('express-ws --- ', msg);
+    //});
 
     //setTimeout(() => {
     //    clearInterval(X);
