@@ -1,8 +1,21 @@
-const { UPDATE_ISBN, CURRENT_INPUT_FINISHED, GET_BOOK, GET_BOOK_RESULTS, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('../actions/actionNames');
+import {
+    UPDATE_ISBN,
+    GET_BOOK,
+    GET_BOOK_RESULTS,
+    BOOK_DELETED,
+    BOOK_DELETING,
+    SAVE_ALL_PENDING,
+    GETTING_BOOKS,
+    RESET_LIST,
+    SET_PENDING,
+    BOOK_SAVED,
+} from '../actions/actionNames';
 
 const initialArray = Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
 const initialState = {
-    entryList: initialArray
+    entryList: initialArray,
+    pendingNumber: 0,
+    booksJustSaved: []
 };
 
 function reducer(state = initialState, action){

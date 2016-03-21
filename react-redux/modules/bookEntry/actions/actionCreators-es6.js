@@ -1,10 +1,22 @@
-const { UPDATE_ISBN, GET_BOOK, GET_BOOK_RESULTS, DELETE_BOOK, BOOK_DELETED, BOOK_DELETING, SAVE_ALL_PENDING, GETTING_BOOKS, RESET_LIST } = require('./actionNames');
+import {
+    UPDATE_ISBN,
+    GET_BOOK,
+    GET_BOOK_RESULTS,
+    DELETE_BOOK,
+    BOOK_DELETED,
+    BOOK_DELETING,
+    SAVE_ALL_PENDING,
+    GETTING_BOOKS,
+    RESET_LIST,
+    SET_PENDING,
+    BOOK_SAVED
+} from './actionNames';
 
-function updateIsbn(isbn, index){
+export function updateIsbn(isbn, index){
     return { type: UPDATE_ISBN, isbn, index };
 }
 
-function getBook(index){
+export function getBook(index){
     return { type: GET_BOOK, index };
 }
 
@@ -12,11 +24,11 @@ function gettingBooks(indexes){
     return { type: GETTING_BOOKS, indexes }
 }
 
-function getBookResults(index, bookInfo){
+export function getBookResults(index, bookInfo){
     return { type: GET_BOOK_RESULTS, index, bookInfo };
 }
 
-function loadAndSaveBook(index, isbn){
+export function loadAndSaveBook(index, isbn){
     return function(dispatch) {
         dispatch(getBook(index));
 
@@ -24,7 +36,7 @@ function loadAndSaveBook(index, isbn){
     }
 }
 
-function saveAllPending(){
+export function saveAllPending(){
     return function(dispatch, getState){
         let state = getState(),
             toSave = state.bookEntry.entryList.map((b, i) => ({ b, i })).filter(({ b }) => !b.fetched && !b.fetching && b.isbn.length);
@@ -42,7 +54,7 @@ function deleteBookBegin(index){
     return { type: BOOK_DELETING, index };
 }
 
-function deleteBook(index, id){
+export function deleteBook(index, id){
     return function(dispatch){
         dispatch(deleteBookBegin(index));
         ajaxUtil.post('/book/deleteBook', { id }, resp => {
@@ -54,17 +66,14 @@ function deleteBook(index, id){
     }
 }
 
-function resetList(){
+export function resetList(){
     return { type: RESET_LIST };
 }
 
-module.exports = {
-    updateIsbn,
-    getBook,
-    getBookResults,
-    loadAndSaveBook,
-    deleteBook,
-    saveAllPending,
-    resetList
-};
+export function setPending(number){
+    return { type: SET_PENDING, number }
+}
 
+export function bookSaved(book){
+    return { type: BOOK_SAVED, book }
+}
