@@ -1,15 +1,30 @@
 let BookEntryItem = require('./bookEntryItem'),
     { updateIsbn, bookSaved, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
+const { TransitionMotion, spring } = ReactMotion;
+
 class BookEntryList extends React.Component {
+    willLeave() {
+        return { opacity: spring(0) };
+    }
     render() {
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
-                <ul style={{border: '1px solid red'}}>{
-                    this.props.booksJustSaved.map(book => (
-                        <li key={book._id}>{book.title}</li>
-                    ))
-                }</ul>
+
+                <TransitionMotion
+                    willLeave={this.willLeave}
+                    styles={this.props.booksJustSaved.map(book => ({
+                      style: { opacity: 1 },
+                      data: book,
+                      key: book._id
+                    }))}>
+                    {styles =>
+                        <ul style={{border: '1px solid red'}}>{
+                            styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
+                        }</ul>
+                    }
+                </TransitionMotion>
+
                 <br /><br />
                 { this.props.entryList.map((entry, i) =>
                         <div key={i}>
