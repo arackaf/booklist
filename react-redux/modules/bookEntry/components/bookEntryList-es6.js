@@ -2,18 +2,6 @@ let BookEntryItem = require('./bookEntryItem'),
     { updateIsbn, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 class BookEntryList extends React.Component {
-    constructor(){
-        super();
-
-        var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
-
-        ws.onopen = function(){
-        };
-
-        ws.onmessage = function(data){
-            console.log('from node:', data.data);
-        };
-    }
     render() {
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
@@ -38,7 +26,18 @@ class BookEntryList extends React.Component {
         );
     }
     componentDidMount(){
+        this.ws = new WebSocket(webSocketAddress('/bookEntryWS'));
+
+        this.ws.onmessage = function(data){
+            console.log('from node:', data.data);
+        };
+
         this.refs.Book0.focusInput();
+    }
+    componentWillUnmount(){
+        try {
+            this.ws.close();
+        } catch(e){}
     }
     saveAll(){
         this.props.dispatch(saveAllPending());

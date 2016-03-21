@@ -48,19 +48,29 @@ class BookEntryQueueManager {
         //TODO: check if closed
         let ws = this.wsSubscriptions.get(userId);
         if (ws){
-            ws.send(JSON.stringify(Object.assign({}, bookFromAmazon, { saveMessage: 'saved' })));
+            if (ws.readyState === 1) {
+                ws.send(JSON.stringify(Object.assign({}, bookFromAmazon, {saveMessage: 'saved'})));
+            } else {
+                this.wsClosed(userId);
+            }
         }
     }
     async subscriberAdded(userId, ws) {
         let pending = await this.pendingBooksDao.getPendingForUser(userId);
         ws.send(JSON.stringify({pending}));
         this.wsSubscriptions.set(userId, ws);
+
+        ws.on('close', () => this.wsClosed(userId));
     }
     async addPendingBook(item){
         await this.pendingBooksDao.add(item);
         if (!this.running){
             this.initialize();
         }
+    }
+    wsClosed(userId){
+        console.log('closing', userId);
+        this.wsSubscriptions.delete(userId);
     }
 }
 
