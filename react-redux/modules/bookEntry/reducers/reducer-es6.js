@@ -56,6 +56,10 @@ function reducer(state = initialState, action){
             return Object.assign({}, state, { entryList: newEntryList });
         case RESET_LIST:
             return initialState;
+        case SET_PENDING:
+            return Object.assign({}, state, { pendingNumber: action.number });
+        case BOOK_SAVED:
+            return Object.assign({}, state, { booksJustSaved: [action.book].concat(state.booksJustSaved.slice(0, 10)) });
     }
     return state;
 }

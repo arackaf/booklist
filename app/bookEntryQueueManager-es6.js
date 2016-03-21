@@ -29,16 +29,17 @@ class BookEntryQueueManager {
     pendingItemToPromise(item){
         return Promise.delayed(resolve => {
             this.amazonSearch.lookupBook(item.isbn).then(async bookFromAmazon => {
-                console.log(bookFromAmazon);
                 let bookDao = new BookDAO(item.userId);
 
                 if (bookFromAmazon.failure){
                     //TODO: log it
                 } else {
                     //TODO: Log and save it
-                    await bookDao.saveBook(Object.assign(bookFromAmazon, { subjects: [] }));
+                    let newBook = Object.assign(bookFromAmazon, { subjects: [] });
+                    await bookDao.saveBook(newBook);
                     await this.pendingBooksDao.remove(item._id);
-                    this.bookAdded(item.userId, bookFromAmazon);
+                    console.log(newBook);
+                    this.bookAdded(item.userId, newBook);
                 }
                 resolve();
             });
@@ -49,7 +50,7 @@ class BookEntryQueueManager {
         let ws = this.wsSubscriptions.get(userId);
         if (ws){
             if (ws.readyState === 1) {
-                ws.send(JSON.stringify(Object.assign({}, bookFromAmazon, {saveMessage: 'saved'})));
+                ws.send(JSON.stringify(Object.assign({ _messageType: 'bookAdded' }, bookFromAmazon, {saveMessage: 'saved'})));
             } else {
                 this.wsClosed(userId);
             }
@@ -57,7 +58,7 @@ class BookEntryQueueManager {
     }
     async subscriberAdded(userId, ws) {
         let pending = await this.pendingBooksDao.getPendingForUser(userId);
-        ws.send(JSON.stringify({pending}));
+        ws.send(JSON.stringify({ _messageType: 'initial', pending}));
         this.wsSubscriptions.set(userId, ws);
 
         ws.on('close', () => this.wsClosed(userId));
