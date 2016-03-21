@@ -1,10 +1,16 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
+    { updateIsbn, bookSaved, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 class BookEntryList extends React.Component {
     render() {
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
+                <ul style={{border: '1px solid red'}}>{
+                    this.props.booksJustSaved.map(book => (
+                        <li key={book._id}>{book.title}</li>
+                    ))
+                }</ul>
+                <br /><br />
                 { this.props.entryList.map((entry, i) =>
                         <div key={i}>
                             <BookEntryItem
@@ -28,8 +34,14 @@ class BookEntryList extends React.Component {
     componentDidMount(){
         this.ws = new WebSocket(webSocketAddress('/bookEntryWS'));
 
-        this.ws.onmessage = function(data){
-            console.log('from node:', data.data);
+        this.ws.onmessage = ({ data }) => {
+            let packet = JSON.parse(data);
+            if (packet._messageType == 'initial'){
+                //this.props.setPending
+            } else if (packet._messageType == 'bookAdded') {
+                this.props.dispatch(bookSaved(packet));
+            }
+            packet.title && console.log('from node:', packet.title);
         };
 
         this.refs.Book0.focusInput();
