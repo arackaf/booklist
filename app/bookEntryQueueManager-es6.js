@@ -58,7 +58,7 @@ class BookEntryQueueManager {
     }
     async subscriberAdded(userId, ws) {
         let pending = await this.pendingBooksDao.getPendingForUser(userId);
-        ws.send(JSON.stringify({ _messageType: 'initial', pending}));
+        ws.send(JSON.stringify({ _messageType: 'initial', pending }));
         this.wsSubscriptions.set(userId, ws);
 
         ws.on('close', () => this.wsClosed(userId));
