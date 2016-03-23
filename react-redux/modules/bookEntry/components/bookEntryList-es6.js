@@ -1,20 +1,25 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, bookSaved, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
+    { updateIsbn, bookSaved, setPending, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 const { TransitionMotion, spring } = ReactMotion;
 
 class BookEntryList extends React.Component {
-    willLeave() {
-        return { opacity: spring(0) };
-    }
     render() {
+        let pending = this.props.pendingNumber;
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
 
+                { pending ?
+                    <div>
+                        <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`}</span>
+                    </div>
+                    : null
+                }
+
                 <TransitionMotion
-                    willLeave={this.willLeave}
+                    willEnter={() => ({ opacity: 0.1 })}
                     styles={this.props.booksJustSaved.map(book => ({
-                      style: { opacity: 1 },
+                      style: { opacity: spring(1) },
                       data: book,
                       key: book._id
                     }))}>
@@ -52,7 +57,7 @@ class BookEntryList extends React.Component {
         this.ws.onmessage = ({ data }) => {
             let packet = JSON.parse(data);
             if (packet._messageType == 'initial'){
-                //this.props.setPending
+                this.props.dispatch(setPending(packet.pending));
             } else if (packet._messageType == 'bookAdded') {
                 this.props.dispatch(bookSaved(packet));
             }
