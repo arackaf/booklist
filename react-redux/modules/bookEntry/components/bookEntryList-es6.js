@@ -2,34 +2,47 @@ let BookEntryItem = require('./bookEntryItem'),
     { updateIsbn, bookSaved, setPending, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 const { TransitionMotion, spring } = ReactMotion;
+const Collapse = ReactBootstrap.Collapse;
 
 class BookEntryList extends React.Component {
+    constructor(){
+        super();
+        this.state = { showIncomingQueue: false };
+    }
+    toggleIncomingQueue(){
+        this.setState({ showIncomingQueue: !this.state.showIncomingQueue });
+    }
     render() {
-        let pending = this.props.pendingNumber;
+        let pending = this.props.pendingNumber,
+            toggleClass = this.state.showIncomingQueue ? 'fa-angle-double-up' : 'fa-angle-double-down',
+            toggleShow = <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>;
+
         return (
             <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
-
-
-                    <div>
-                        { pending ?
-                            <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`}</span>
-                            : <span className="label label-success">All pending books saved</span>
-                        }
-                    </div>
-
-                <TransitionMotion
-                    willEnter={() => ({ opacity: 0.1 })}
-                    styles={this.props.booksJustSaved.map(book => ({
-                      style: { opacity: spring(1) },
-                      data: book,
-                      key: book._id
-                    }))}>
-                    {styles =>
-                        <ul style={{border: '1px solid red'}}>{
-                            styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
-                        }</ul>
+                <div>
+                    { pending ?
+                        <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
+                        : <span className="label label-success">All pending books saved { toggleShow }</span>
                     }
-                </TransitionMotion>
+                </div>
+
+                <Collapse in={this.state.showIncomingQueue}>
+                    <div>
+                        <TransitionMotion
+                            willEnter={() => ({ opacity: 0.1 })}
+                            styles={this.props.booksJustSaved.map(book => ({
+                              style: { opacity: spring(1) },
+                              data: book,
+                              key: book._id
+                            }))}>
+                            {styles =>
+                                <ul>{
+                                    styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
+                                }</ul>
+                            }
+                        </TransitionMotion>
+                    </div>
+                </Collapse>
 
                 <br /><br />
                 { this.props.entryList.map((entry, i) =>
