@@ -74,3 +74,5 @@ app/bookEntryQueueManager.js
 amazonDataAccess/amazonOperationQueue.js
 react-redux/tests/reduxBookEntryTests.js
 npm-debug.log
+private/salt.js
+dataAccess/userDAO.js

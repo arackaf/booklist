@@ -159,5 +159,5 @@ let toEnter = [
 ];
 
 let pendingDao = new PendingBookEntryDao();
-let allPromises = toEnter.map(isbn => pendingDao.add({ userId: 1, isbn }));
-Promise.all(allPromises).then(() => bookEntryQueueManager.initialize());
+//let allPromises = toEnter.map(isbn => pendingDao.add({ userId: 1, isbn }));
+//Promise.all(allPromises).then(() => bookEntryQueueManager.initialize());
