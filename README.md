@@ -1,8 +1,8 @@
 # booklist
 
-This repo is where I learn and play with new technologies.  The idea is to implement a fully functioning book collection website—basically a more realistic 
-version of ToDo.  The progress is limited to what little free time I can find in life, and is applied to whatever areas are relevant to the technologies I'm 
-most interested in learning; many parts of this application are likely to be grossly incomplete at any given time.
+This is my attempt at a fully functioning book collection website as a way to become more closely acquainted with modern development tools I'm 
+interested in, but don't get to use professionally. Progress is limited to what little free time I can find, which means it's slow; expect many parts of this
+to be grossly incomplete at any given time.
 
 All iterations will share the same data, data access, controllers, and AWS access code.  Controllers are sniffed out and wired with my easy-express-controllers 
 project (https://www.npmjs.com/package/easy-express-controllers); data access is through Mongo; and all book info is looked up with my own AWS credentials, 
