@@ -1,6 +1,7 @@
 import DAO from './DAO';
 import md5 from 'blueimp-md5';
 import salt from '../private/salt';
+import { ObjectID } from 'mongodb';
 
 class UserDAO extends DAO {
     async createUser(email, password){
@@ -18,7 +19,15 @@ class UserDAO extends DAO {
     async lookupUser(email, password){
         let db = await super.open();
         try {
-            return await db.collection('users').findOne({ email, password: this.saltAndHashPassword(password) })
+            return await db.collection('users').findOne({ email, password: this.saltAndHashPassword(password) });
+        } finally{
+            super.dispose(db);
+        }
+    }
+    async findById(_id){
+        let db = await super.open();
+        try {
+            return await db.collection('users').findOne({ _id: ObjectID(_id) });
         } finally{
             super.dispose(db);
         }
