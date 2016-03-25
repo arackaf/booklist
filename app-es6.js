@@ -14,6 +14,7 @@ const nodemailer = require('nodemailer');
 import { authInfo, myAddresses } from './utils/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
+import UserDao from './dataAccess/userDAO';
 
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -23,12 +24,17 @@ const adamToken = 'foooooooooo';
 const userObj = { name: 'adam', id: 1, username: 'adam', password: 'pwd', msg: 'nice work!', token: adamToken };
 
 passport.use(new LocalStrategy(
-    function(username, password, done) {
-        if (username == 'adam' && password == 'password'){
-            return done(null, userObj);
-        } else {
-            return done(null, false, { message: 'Incorrect login' });
-        }
+    function(email, password, done) {
+        let userDao = new UserDao();
+
+        userDao.lookupUser(email, password).then(userResult => {
+            if (userResult) {
+                userResult.id = userResult._id;
+                done(null, userResult);
+            } else {
+                done(null, false, {message: 'Incorrect login'});
+            }
+        });
     }
 ));
 
@@ -52,11 +58,15 @@ passport.use(new RememberMeStrategy(
 ));
 
 passport.serializeUser(function(user, done) {
-    done(null, user.name);
+    done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-    done(undefined, userObj);
+    let userDao = new UserDao();
+    userDao.findById(id).then(
+        userObj => done(undefined, userObj),
+        error => done(error)
+    );
 });
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
