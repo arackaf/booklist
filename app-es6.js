@@ -20,9 +20,6 @@ var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
 
-const adamToken = 'foooooooooo';
-const userObj = { name: 'adam', id: 1, username: 'adam', password: 'pwd', msg: 'nice work!', token: adamToken };
-
 passport.use(new LocalStrategy(
     function(email, password, done) {
         let userDao = new UserDao();
@@ -38,22 +35,30 @@ passport.use(new LocalStrategy(
     }
 ));
 
-function consumeRememberMeToken(token, fn) {
-    if (token == adamToken) return fn(null, userObj);
-    else return fn(null, null);
+function consumeRememberMeToken(token, done) {
+    let userDao = new UserDao();
+
+    userDao.lookupUserByToken(token).then(userResult => {
+        if (userResult) {
+            userResult.id = userResult._id;
+            done(null, userResult);
+        } else {
+            done(null, null);
+        }
+    });
 }
 
 passport.use(new RememberMeStrategy(
     function(token, done) {
-        consumeRememberMeToken(token, function(err, userObj) {
+        consumeRememberMeToken(token, function(err, userResult) {
             if (err) { return done(err); }
-            if (!userObj) { return done(null, false); }
+            if (!userResult) { return done(null, false); }
 
-            return done(null, userObj);
+            done(null, userResult);
         });
     },
     function(user, done) {
-        return done(null, adamToken);
+        return done(null, user.token);
     }
 ));
 
@@ -64,7 +69,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
     let userDao = new UserDao();
     userDao.findById(id).then(
-        userObj => done(undefined, userObj),
+        user => done(undefined, user),
         error => done(error)
     );
 });

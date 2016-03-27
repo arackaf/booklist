@@ -24,6 +24,14 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
+    async lookupUserByToken(token){
+        let db = await super.open();
+        try {
+            return await db.collection('users').findOne({ token });
+        } finally{
+            super.dispose(db);
+        }
+    }
     async findById(_id){
         let db = await super.open();
         try {
