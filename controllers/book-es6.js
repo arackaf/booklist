@@ -1,8 +1,7 @@
 const { httpPost, route, nonRoutable } = require('easy-express-controllers');
 const AmazonSearch = require('../amazonDataAccess/AmazonSearch.js');
 import amazonOperationQueue from '../amazonDataAccess/amazonOperationQueue';
-const BookDAO = require('../dataAccess/bookDAO');
-
+import BookDAO from '../dataAccess/bookDAO';
 import pendingBookEntryDAO from '../dataAccess/pendingBookEntryDAO';
 
 class bookController{

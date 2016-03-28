@@ -18,6 +18,7 @@ class BookEntryQueueManager {
             await this.runQueue();
         } else {
             this.running = false;
+            setTimeout(() => this.initialize(), 2500);
         }
     }
     async runQueue(){
