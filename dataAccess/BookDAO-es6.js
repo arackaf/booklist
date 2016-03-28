@@ -10,7 +10,7 @@ class BookDAO extends DAO {
         subjects = (subjects || []).map(_id => ObjectId(_id));
         let db = await super.open();
         try {
-            let query = { userId: +this.userId };
+            let query = { userId: this.userId };
             if (search){
                 query.title = new RegExp(search, 'gi');
             }

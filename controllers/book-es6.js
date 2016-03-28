@@ -8,7 +8,7 @@ class bookController{
     constructor(){}
     @httpPost
     async saveFromIsbn(isbn){
-        const userId = +this.request.user.id;
+        const userId = this.request.user.id;
 
         try {
             let pendingEntryDao = new pendingBookEntryDAO(userId),
