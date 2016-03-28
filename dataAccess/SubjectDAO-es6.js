@@ -61,7 +61,7 @@ class SubjectDAO extends DAO {
     async loadSubjects(){
         let db = await super.open();
         try {
-            return await db.collection('subjects').find({ userId: +this.userId }).toArray();
+            return await db.collection('subjects').find({ userId: this.userId }).toArray();
         } finally {
             super.dispose(db);
         }

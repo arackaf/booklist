@@ -69,7 +69,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
     let userDao = new UserDao();
     userDao.findById(id).then(
-        user => done(undefined, user),
+        user => done(undefined, Object.assign(user, { id: user._id })),
         error => done(error)
     );
 });
@@ -176,3 +176,5 @@ let toEnter = [
 let pendingDao = new PendingBookEntryDao();
 //let allPromises = toEnter.map(isbn => pendingDao.add({ userId: 1, isbn }));
 //Promise.all(allPromises).then(() => bookEntryQueueManager.initialize());
+
+bookEntryQueueManager.initialize();
