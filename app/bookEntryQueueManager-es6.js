@@ -18,7 +18,7 @@ class BookEntryQueueManager {
             await this.runQueue();
         } else {
             this.running = false;
-            setTimeout(() => this.initialize(), 2500);
+            setTimeout(() => this.initialize(), 5000);
         }
     }
     async runQueue(){
@@ -39,7 +39,6 @@ class BookEntryQueueManager {
                     let newBook = Object.assign(bookFromAmazon, { subjects: [] });
                     await bookDao.saveBook(newBook);
                     await this.pendingBooksDao.remove(item._id);
-                    console.log(newBook);
                     this.bookAdded(item.userId, newBook);
                 }
                 resolve();
@@ -47,7 +46,6 @@ class BookEntryQueueManager {
         });
     }
     bookAdded(userId, bookFromAmazon){
-        //TODO: check if closed
         let ws = this.wsSubscriptions.get(userId);
         if (ws){
             if (ws.readyState === 1) {
@@ -64,14 +62,24 @@ class BookEntryQueueManager {
 
         ws.on('close', () => this.wsClosed(userId));
     }
-    async addPendingBook(item){
-        await this.pendingBooksDao.add(item);
+    async addPendingBook(userId, pendingBook){
+        await this.pendingBooksDao.add(pendingBook);
+        this.wsMessagePendingBookAdded(userId);
         if (!this.running){
             this.initialize();
         }
     }
+    wsMessagePendingBookAdded(userId){
+        let ws = this.wsSubscriptions.get(userId);
+        if (ws){
+            if (ws.readyState === 1) {
+                ws.send(JSON.stringify(Object.assign({ _messageType: 'pendingBookAdded' })));
+            } else {
+                this.wsClosed(userId);
+            }
+        }
+    }
     wsClosed(userId){
-        console.log('closing', userId);
         this.wsSubscriptions.delete(userId);
     }
 }

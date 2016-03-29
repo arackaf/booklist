@@ -3,6 +3,7 @@ const AmazonSearch = require('../amazonDataAccess/AmazonSearch.js');
 import amazonOperationQueue from '../amazonDataAccess/amazonOperationQueue';
 import BookDAO from '../dataAccess/bookDAO';
 import pendingBookEntryDAO from '../dataAccess/pendingBookEntryDAO';
+import bookEntryQueueManager from '../app/bookEntryQueueManager';
 
 class bookController{
     constructor(){}
@@ -11,9 +12,8 @@ class bookController{
         const userId = this.request.user.id;
 
         try {
-            let pendingEntryDao = new pendingBookEntryDAO(userId),
-                addingItem = {userId, isbn};
-            await pendingEntryDao.add(addingItem);
+            let addingItem = {userId, isbn};
+            await bookEntryQueueManager.addPendingBook(userId, addingItem);
 
             this.send({success: true});
         } catch(er) {

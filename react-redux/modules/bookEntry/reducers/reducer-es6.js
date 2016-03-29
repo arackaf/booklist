@@ -9,6 +9,7 @@ import {
     RESET_LIST,
     SET_PENDING,
     BOOK_SAVED,
+    INCREMENT_PENDING
 } from '../actions/actionNames';
 
 const initialArray = Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
@@ -58,6 +59,8 @@ function reducer(state = initialState, action){
             return initialState;
         case SET_PENDING:
             return Object.assign({}, state, { pendingNumber: action.number });
+        case INCREMENT_PENDING:
+            return Object.assign({}, state, { pendingNumber: (state.pendingNumber || 0) + 1 });
         case BOOK_SAVED:
             return Object.assign({}, state, { booksJustSaved: [action.book].concat(state.booksJustSaved.slice(0, 3)), pendingNumber: (state.pendingNumber - 1) || 0 });
     }

@@ -1,5 +1,5 @@
 let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, bookSaved, setPending, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
+    { updateIsbn, bookSaved, setPending, incrementPending, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
 
 const { TransitionMotion, spring } = ReactMotion;
 const Collapse = ReactBootstrap.Collapse;
@@ -70,10 +70,13 @@ class BookEntryList extends React.Component {
 
         this.ws.onmessage = ({ data }) => {
             let packet = JSON.parse(data);
+            console.log(packet);
             if (packet._messageType == 'initial'){
                 this.props.dispatch(setPending(packet.pending));
             } else if (packet._messageType == 'bookAdded') {
                 this.props.dispatch(bookSaved(packet));
+            } else if (packet._messageType == 'pendingBookAdded'){
+                this.props.dispatch(incrementPending());
             }
             packet.title && console.log('from node:', packet.title);
         };

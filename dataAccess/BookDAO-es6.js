@@ -42,7 +42,6 @@ class BookDAO extends DAO {
     async saveBook(book){
         let db = await super.open();
         try {
-
             book.userId = this.userId;
             let result = await db.collection('books').insert(book);
 

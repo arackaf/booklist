@@ -26,7 +26,7 @@ passport.use(new LocalStrategy(
 
         userDao.lookupUser(email, password).then(userResult => {
             if (userResult) {
-                userResult.id = userResult._id;
+                userResult.id = '' + userResult._id;
                 done(null, userResult);
             } else {
                 done(null, false, {message: 'Incorrect login'});
@@ -40,7 +40,7 @@ function consumeRememberMeToken(token, done) {
 
     userDao.lookupUserByToken(token).then(userResult => {
         if (userResult) {
-            userResult.id = userResult._id;
+            userResult.id = '' + userResult._id;
             done(null, userResult);
         } else {
             done(null, null);
@@ -69,7 +69,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
     let userDao = new UserDao();
     userDao.findById(id).then(
-        user => done(undefined, Object.assign(user, { id: user._id })),
+        user => done(undefined, Object.assign(user, { id: '' + user._id })),
         error => done(error)
     );
 });
