@@ -9,7 +9,8 @@ import {
     GETTING_BOOKS,
     RESET_LIST,
     SET_PENDING,
-    BOOK_SAVED
+    BOOK_SAVED,
+    INCREMENT_PENDING
 } from './actionNames';
 
 export function updateIsbn(isbn, index){
@@ -72,6 +73,10 @@ export function resetList(){
 
 export function setPending(number){
     return { type: SET_PENDING, number }
+}
+
+export function incrementPending(){
+    return { type: INCREMENT_PENDING }
 }
 
 export function bookSaved(book){
