@@ -76,3 +76,4 @@ react-redux/tests/reduxBookEntryTests.js
 npm-debug.log
 private/salt.js
 dataAccess/userDAO.js
+react-redux/applicationRoot/rootComponents/mainNavigation.js
