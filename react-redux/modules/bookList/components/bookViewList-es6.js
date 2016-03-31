@@ -1,6 +1,7 @@
 const { loadBooks, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
+import MainNavigationBar from '/react-redux/applicationRoot/rootComponents/mainNavigation';
 import * as actionCreators from '../actions/actionCreators';
 
 const { selector } = require('../reducers/reducer');
@@ -32,16 +33,19 @@ class BookViewingList extends React.Component {
     }
     render() {
         return (
-            <div className="panel panel-default" style={{ margin: '15' }}>
-                <div className="panel-body">
-                    <button onClick={() => this.switchToDesktop()}>Desktop</button>
-                    <button onClick={() => this.switchToMobile()}>Mobile</button>
-                    <br/><br/>
+            <div>
+                <MainNavigationBar></MainNavigationBar>
+                <div className="panel panel-default" style={{ margin: '15' }}>
+                    <div className="panel-body">
+                        <button onClick={() => this.switchToDesktop()}>Desktop</button>
+                        <button onClick={() => this.switchToMobile()}>Mobile</button>
+                        <br/><br/>
 
-                    { !this.state.listComponent
-                        ? <BookListLoading />
-                        : React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
-                    }
+                        { !this.state.listComponent
+                            ? <BookListLoading />
+                            : React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
+                        }
+                    </div>
                 </div>
             </div>
         );
