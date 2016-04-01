@@ -9,17 +9,14 @@ class MainNavigationBar extends React.Component {
 
                     <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul className="nav navbar-nav">
-                            <li className="active"><a href="#bookEntry">Book entry</a></li>
-                            <li><a href="#bookList">Your books</a></li>
+                            <li className={this.props.isBookEntry ? 'active' : ''}><a href={this.props.isBookEntry ? undefined : '#bookEntry'}>Book entry</a></li>
+                            <li className={this.props.isBookList ? 'active' : ''}><a href={this.props.isBookList ? undefined : '#bookList'}>You books</a></li>
                             <li><a>Logout</a></li>
                         </ul>
                     </div>
-
                 </div>
             </nav>
         );
-
-        return <br />;
     }
 }
 
