@@ -34,7 +34,7 @@ class BookViewingList extends React.Component {
     render() {
         return (
             <div>
-                <MainNavigationBar></MainNavigationBar>
+                <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '15' }}>
                     <div className="panel-body">
                         <button onClick={() => this.switchToDesktop()}>Desktop</button>
