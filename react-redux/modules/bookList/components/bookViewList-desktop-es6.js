@@ -19,6 +19,8 @@ class BookViewListDesktop extends React.Component{
                 <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;
                 <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
+
+                { this.props.books.list.length &&
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -52,7 +54,7 @@ class BookViewListDesktop extends React.Component{
                     )}
                     </tbody>
                 </table>
-
+                }
                 <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
 
                 <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
