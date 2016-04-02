@@ -8,7 +8,7 @@ class MainNavigationBar extends React.Component {
     }
     render() {
         return (
-            <Navbar>
+            <Navbar fluid={true}>
                 <Navbar.Header>
                     <Navbar.Brand>
                         <a style={{ cursor: 'default' }}>Book Tracker</a>
