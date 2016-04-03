@@ -27,10 +27,6 @@
 
         System.import('/react-redux/reactStartup');
 
-        function logout(){
-            ajaxUtil.post('/react-redux/logout', { }, function(){ });
-        }
-
         function webSocketAddress(path){
             return 'ws://' + window.location.host + (path || '');
         }
@@ -58,15 +54,12 @@
 
     <style type="text/css">
         a { cursor: pointer; }
+        ul.nav > li.active a { cursor: default }
+
     </style>
 
 </head>
 <body>
-    <a href="#bookEntry">Book entry</a> |
-    <a href="#bookList">Book list</a> | 
-    <a style="cursor: pointer" onclick="logout()">logout</a>
-
-
     <div id="home"></div>
 
 </body>

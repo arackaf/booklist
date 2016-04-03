@@ -4,9 +4,12 @@ const NavItem = ReactBootstrap.NavItem;
 
 class MainNavigationBar extends React.Component {
     logout(){
-        alert('log out');
+        ajaxUtil.post('/react-redux/logout', { }, () => window.location = '/react-redux/login');
     }
     render() {
+        let isBookEntry = this.props.isBookEntry,
+            isBookList = this.props.isBookList;
+
         return (
             <Navbar fluid={true}>
                 <Navbar.Header>
@@ -17,8 +20,8 @@ class MainNavigationBar extends React.Component {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                        <NavItem href={this.props.isBookEntry ? undefined : '#bookEntry'}>Book entry</NavItem>
-                        <NavItem href={this.props.isBookList ? undefined : '#bookList'}>Your books</NavItem>
+                        <NavItem active={isBookEntry} href={isBookEntry ? undefined : '#bookEntry'}>Book entry</NavItem>
+                        <NavItem active={isBookList} href={isBookList ? undefined : '#bookList'}>Your books</NavItem>
                         <NavItem onClick={this.logout}>Logout</NavItem>
                     </Nav>
                 </Navbar.Collapse>
