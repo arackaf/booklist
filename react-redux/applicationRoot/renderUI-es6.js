@@ -13,8 +13,6 @@ function renderUI(component){
     ReactDOM.render(
         <Provider store={store}>
             <div>
-                <Header />
-                <br /><br />
                 { component }
             </div>
         </Provider>,
