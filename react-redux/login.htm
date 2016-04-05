@@ -24,15 +24,33 @@
 </head>
 <body>
 
-    <div>
-        <div>
+    <div style="padding: 50px; max-width: 700px; margin-right: auto; margin-left: auto">
 
-            username: <input id="username" />
-            password <input id="password" type="password" />
+        <div class="panel panel-default">
+            <div class="panel-body">
 
-            <button onclick="login()">Login</button>
+                <form>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input class="form-control" id="username" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input class="form-control" id="password" type="password" />
+                    </div>
 
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Remember me
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" onclick="login()">Login</button>
+                </form>
+
+
+            </div>
         </div>
+
     </div>
 
 </body>
