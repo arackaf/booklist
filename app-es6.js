@@ -113,15 +113,12 @@ var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6\.js$/i.test(f) });
 
 app.get('/react-redux', function (request, response) {
-    if (!request.user){
-        response.redirect('/react-redux/login');
+    if (!!request.user) {
+        response.cookie('logged_in', 'true', { maxAge: 900000 });
     } else {
-        response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
+        response.clearCookie('logged_in');
     }
-});
-
-app.get('/react-redux/login', function (request, response) {
-    response.sendFile(path.join(__dirname + '/react-redux/login.htm'));
+    response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
 });
 
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
@@ -145,6 +142,7 @@ app.post('/react-redux/login', passport.authenticate('local'), function(req, res
         });
     }
 
+    response.cookie('logged_in', 'true', { maxAge: 900000 });
     response.cookie('remember_me', req.user.token, { path: '/', httpOnly: true, maxAge: 604800000 });
     response.send(req.user);
 });
