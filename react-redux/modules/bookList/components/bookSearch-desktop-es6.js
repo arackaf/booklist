@@ -1,4 +1,7 @@
 const Modal = ReactBootstrap.Modal;
+const Navbar = ReactBootstrap.Navbar;
+const Nav = ReactBootstrap.Nav;
+const NavItem = ReactBootstrap.NavItem;
 const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
@@ -60,11 +63,34 @@ class BookSearchDesktopUnConnected extends React.Component {
     render(){
         return (
             <div>
-                <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
+                <Navbar fluid={true}>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <a style={{ cursor: 'default' }}>Search filters</a>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Navbar.Form pullLeft>
+                            <div className="form-group">
+                                <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>
+                            </div>
+                            {' '}
+                            <div className="form-group">
+                                <input className="form-control" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
+                            </div>
+                        </Navbar.Form>
+                    </Navbar.Collapse>
+                </Navbar>
+
+                {
+                null
+                /*<BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
                 <input onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
                 <span>{'Current search: ' + this.props.searchText}</span>
                 <span title={this.props.selectedSubjects.length}>{this.props.selectedSubjects.length ? `${this.props.selectedSubjects.length} subjects filtered.` : null}</span>
-                <span>{'Search child subjects: ' + !!this.props.searchChildSubjects}</span>
+                <span>{'Search child subjects: ' + !!this.props.searchChildSubjects}</span>*/
+                }
 
                 <Modal show={this.state.subjectFiltersModalOpen} onHide={() => this.closeSubjectsFilterModal()}>
                     <Modal.Header closeButton>

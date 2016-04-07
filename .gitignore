@@ -77,3 +77,4 @@ npm-debug.log
 private/salt.js
 dataAccess/userDAO.js
 react-redux/applicationRoot/rootComponents/mainNavigation.js
+react-redux/modules/authenticate/loginScreen.js
