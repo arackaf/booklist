@@ -79,3 +79,4 @@ dataAccess/userDAO.js
 react-redux/applicationRoot/rootComponents/mainNavigation.js
 react-redux/modules/authenticate/loginScreen.js
 react-redux/modules/bookList/components/bookFilters.js
+react-redux/modules/bookList/components/bookSearch.js
