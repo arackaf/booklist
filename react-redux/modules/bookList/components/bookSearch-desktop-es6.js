@@ -3,6 +3,7 @@ const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 const NavDropdown = ReactBootstrap.NavDropdown;
+const DropDownButton = ReactBootstrap.DropDownButton;
 const MenuItem = ReactBootstrap.MenuItem;
 const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 
@@ -29,6 +30,8 @@ class BookSearchDesktopUnConnected extends React.Component {
             }
 
             props.setFilteredSubjects(subjectsSelected, this.hashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null);
+
+            this.state = { menuOpen: false };
         };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
@@ -62,6 +65,17 @@ class BookSearchDesktopUnConnected extends React.Component {
     togglePendingSubject(_id){
         this.setState({ pendingSubjects: { ...this.state.pendingSubjects, [_id]: !this.state.pendingSubjects[_id] } });
     }
+    dropdownToggle(newValue){
+        if (this._forceOpen){
+            this.setState({ menuOpen: true });
+            this._forceOpen = false;
+        } else {
+            this.setState({ menuOpen: newValue });
+        }
+    }
+    menuItemClickedThatShouldntCloseDropdown(){
+        this._forceOpen = true;
+    }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
             selectedSubjectsHeader = selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's');
@@ -88,9 +102,9 @@ class BookSearchDesktopUnConnected extends React.Component {
                         <Nav>
                             {
                             selectedSubjectsCount ?
-                                <NavDropdown eventKey={3} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                                <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.filter(s => s).map(s =>
-                                        <MenuItem className="default-cursor no-hover" key={s._id}>
+                                        <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
                                             <span className="label label-info"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
                                         </MenuItem>)
                                     }
