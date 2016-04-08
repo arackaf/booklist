@@ -18,10 +18,7 @@ function loadCurrentModule() {
 
     let loggedIn = /logged_in/ig.test(document.cookie);
     if (!loggedIn){
-        System.import('./modules/authenticate/loginScreen').then(login => {
-            clearUI();
-            renderUI(React.createElement(login));
-        });
+        forceLogin();
         return;
     }
 
@@ -35,3 +32,12 @@ function loadCurrentModule() {
         renderUI(module.component);
     });
 }
+
+function forceLogin(){
+    System.import('./modules/authenticate/loginScreen').then(login => {
+        clearUI();
+        renderUI(React.createElement(login));
+    });
+}
+
+export default { loadCurrentModule, forceLogin }

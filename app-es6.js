@@ -143,7 +143,9 @@ app.post('/react-redux/login', passport.authenticate('local'), function(req, res
     }
 
     response.cookie('logged_in', 'true', { maxAge: 900000 });
-    response.cookie('remember_me', req.user.token, { path: '/', httpOnly: true, maxAge: 604800000 });
+    if (req.body.rememberme == 1) {
+        response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: 604800000});
+    }
     response.send(req.user);
 });
 
