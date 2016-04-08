@@ -2,8 +2,8 @@ const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/boo
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 
-const BookSearchDesktop = require('./BookSearch-desktop');
-const BookSubjectSetterDesktop = require('./BookSubjectSetter-desktop');
+import BookFilters from './bookFilters';
+import BookSubjectSetterDesktop from './BookSubjectSetter-desktop';
 
 class BookViewListDesktop extends React.Component{
     constructor(props){
@@ -14,7 +14,7 @@ class BookViewListDesktop extends React.Component{
     render(){
         return (
             <div>
-                <BookSearchDesktop allSubjects={this.props.subjects.list}></BookSearchDesktop>
+                <BookFilters allSubjects={this.props.subjects.list}></BookFilters>
                 <br />
                 <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
                 &nbsp;&nbsp;&nbsp;
@@ -90,4 +90,4 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-module.exports = BookViewListDesktop;
+export default BookViewListDesktop;
