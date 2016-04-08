@@ -22,7 +22,8 @@ function bookSearchReducer(state = initialState, action){
 }
 
 function projectselectedSubjects(selectedSubjectsIds, subjects){
-    return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]);
+    //last filter since subjects might not be loaded yet
+    return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]).filter(s => s);
 }
 
 const bookSearchSelector = state => Object.assign({}, state.bookSearch, { selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash) });

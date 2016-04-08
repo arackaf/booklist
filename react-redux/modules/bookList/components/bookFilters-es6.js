@@ -40,6 +40,7 @@ class BookFilters extends React.Component {
         this._hashChangeSubscription();
     }
     componentWillReceiveProps(newProps){
+        console.log(newProps);
         if (this.props.searchText !== newProps.searchText) {
             this.refs.searchInput.value = newProps.searchText;
         }
@@ -103,7 +104,7 @@ class BookFilters extends React.Component {
                             {
                             selectedSubjectsCount ?
                                 <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
-                                    { this.props.selectedSubjects.filter(s => s).map(s =>
+                                    { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
                                             <span className="label label-primary"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
                                         </MenuItem>)
