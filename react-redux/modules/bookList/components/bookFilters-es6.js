@@ -14,7 +14,7 @@ const { bookSearchSelector } = require('../reducers/bookSearchReducer');
 
 import * as bookSearchActionCreators from '../actions/bookSearch/actionCreators';
 
-class BookSearchDesktopUnConnected extends React.Component {
+class BookFilters extends React.Component {
     constructor(props) {
         super();
         this.togglePendingSubject = this.togglePendingSubject.bind(this);
@@ -78,7 +78,7 @@ class BookSearchDesktopUnConnected extends React.Component {
     }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
-            selectedSubjectsHeader = selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's');
+            selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's');
 
         return (
             <div>
@@ -105,24 +105,20 @@ class BookSearchDesktopUnConnected extends React.Component {
                                 <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.filter(s => s).map(s =>
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <span className="label label-info"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                            <span className="label label-primary"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
                                         </MenuItem>)
                                     }
-                                </NavDropdown>
-                                : null
+
+                                    { !!this.props.searchChildSubjects ?
+                                        <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
+                                            <span className="label label-success">Searching child subjects</span>
+                                        </MenuItem> : null
+                                    }
+                                </NavDropdown> : null
                             }
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-
-                {
-                null
-                /*<BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>&nbsp;
-                <input onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
-                <span>{'Current search: ' + this.props.searchText}</span>
-                <span title={this.props.selectedSubjects.length}>{this.props.selectedSubjects.length ? `${this.props.selectedSubjects.length} subjects filtered.` : null}</span>
-                <span>{'Search child subjects: ' + !!this.props.searchChildSubjects}</span>*/
-                }
 
                 <Modal show={this.state.subjectFiltersModalOpen} onHide={() => this.closeSubjectsFilterModal()}>
                     <Modal.Header closeButton>
@@ -157,6 +153,6 @@ class BookSearchDesktopUnConnected extends React.Component {
     }
 }
 
-const BookSearchDesktop = ReactRedux.connect(state => bookSearchSelector(state.bookList), { ...bookSearchActionCreators })(BookSearchDesktopUnConnected);
+const BookFiltersConnected = ReactRedux.connect(state => bookSearchSelector(state.bookList), { ...bookSearchActionCreators })(BookFilters);
 
-module.exports = BookSearchDesktop;
+export default BookFiltersConnected;
