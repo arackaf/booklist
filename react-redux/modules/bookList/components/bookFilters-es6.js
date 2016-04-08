@@ -20,7 +20,7 @@ class BookFilters extends React.Component {
         this.togglePendingSubject = this.togglePendingSubject.bind(this);
         this.hashManager = new hashUtil();
 
-        this.state = { pendingSubjects: {} };
+        this.state = { pendingSubjects: {}, menuOpen: false };
         this._hashChangeSubscription = () => {
             props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
             let subjectsSelected = {},
@@ -30,8 +30,6 @@ class BookFilters extends React.Component {
             }
 
             props.setFilteredSubjects(subjectsSelected, this.hashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null);
-
-            this.state = { menuOpen: false };
         };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
