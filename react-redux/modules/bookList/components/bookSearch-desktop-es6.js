@@ -2,6 +2,8 @@ const Modal = ReactBootstrap.Modal;
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
+const NavDropdown = ReactBootstrap.NavDropdown;
+const MenuItem = ReactBootstrap.MenuItem;
 const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
@@ -61,6 +63,9 @@ class BookSearchDesktopUnConnected extends React.Component {
         this.setState({ pendingSubjects: { ...this.state.pendingSubjects, [_id]: !this.state.pendingSubjects[_id] } });
     }
     render(){
+        let selectedSubjectsCount = this.props.selectedSubjects.length,
+            selectedSubjectsHeader = selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's');
+
         return (
             <div>
                 <Navbar fluid={true}>
@@ -80,6 +85,15 @@ class BookSearchDesktopUnConnected extends React.Component {
                                 <input className="form-control" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
                             </div>
                         </Navbar.Form>
+                        <Nav>
+                            {
+                            selectedSubjectsCount ?
+                                <NavDropdown eventKey={3} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                                    { this.props.selectedSubjects.filter(s => s).map(s => <MenuItem className="default-cursor no-hover" key={s._id}><span className="label label-info">{s.name}</span></MenuItem>) }
+                                </NavDropdown>
+                                : null
+                            }
+                        </Nav>
                     </Navbar.Collapse>
                 </Navbar>
 
@@ -106,7 +120,7 @@ class BookSearchDesktopUnConnected extends React.Component {
                             selectedSubjects={this.state.pendingSubjects} />
 
                         { this.props.selectedSubjects.length ?
-                            <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
+                            <span>Selected subjects: <span>{this.props.selectedSubjects.filter(s => s).map(s => s.name).join(', ')}</span></span>
                             : null }
                     </Modal.Body>
                     <Modal.Footer>
