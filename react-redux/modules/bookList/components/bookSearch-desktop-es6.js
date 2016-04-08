@@ -89,7 +89,11 @@ class BookSearchDesktopUnConnected extends React.Component {
                             {
                             selectedSubjectsCount ?
                                 <NavDropdown eventKey={3} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
-                                    { this.props.selectedSubjects.filter(s => s).map(s => <MenuItem className="default-cursor no-hover" key={s._id}><span className="label label-info">{s.name}</span></MenuItem>) }
+                                    { this.props.selectedSubjects.filter(s => s).map(s =>
+                                        <MenuItem className="default-cursor no-hover" key={s._id}>
+                                            <span className="label label-info"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                        </MenuItem>)
+                                    }
                                 </NavDropdown>
                                 : null
                             }
@@ -120,7 +124,7 @@ class BookSearchDesktopUnConnected extends React.Component {
                             selectedSubjects={this.state.pendingSubjects} />
 
                         { this.props.selectedSubjects.length ?
-                            <span>Selected subjects: <span>{this.props.selectedSubjects.filter(s => s).map(s => s.name).join(', ')}</span></span>
+                            <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
                             : null }
                     </Modal.Body>
                     <Modal.Footer>
