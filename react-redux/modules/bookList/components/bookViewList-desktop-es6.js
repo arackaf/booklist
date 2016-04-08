@@ -2,7 +2,7 @@ const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/boo
 const Modal = ReactBootstrap.Modal;
 const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 
-import BookFilters from './bookFilters';
+import BookFilters from './bookSearch';
 import BookSubjectSetterDesktop from './BookSubjectSetter-desktop';
 
 class BookViewListDesktop extends React.Component{

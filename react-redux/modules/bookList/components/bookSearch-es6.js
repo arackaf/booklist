@@ -38,7 +38,6 @@ class BookFilters extends React.Component {
         this._hashChangeSubscription();
     }
     componentWillReceiveProps(newProps){
-        console.log(newProps);
         if (this.props.searchText !== newProps.searchText) {
             this.refs.searchInput.value = newProps.searchText;
         }
