@@ -34,6 +34,7 @@ function loadCurrentModule() {
 }
 
 function forceLogin(){
+    currentModule = null;
     System.import('./modules/authenticate/loginScreen').then(login => {
         clearUI();
         renderUI(React.createElement(login));
