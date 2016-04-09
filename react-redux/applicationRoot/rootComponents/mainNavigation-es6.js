@@ -1,10 +1,12 @@
+import reactStartup from 'react-redux/reactStartup';
+
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 
 class MainNavigationBar extends React.Component {
     logout(){
-        ajaxUtil.post('/react-redux/logout', { }, () => window.location = '/react-redux/login');
+        ajaxUtil.post('/react-redux/logout', { }, () => reactStartup.forceLogin());
     }
     render() {
         let isBookEntry = this.props.isBookEntry,
