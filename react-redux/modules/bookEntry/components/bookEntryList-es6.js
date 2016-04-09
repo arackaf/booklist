@@ -4,6 +4,8 @@ let BookEntryItem = require('./bookEntryItem'),
 const { TransitionMotion, spring } = ReactMotion;
 const Collapse = ReactBootstrap.Collapse;
 
+import MainNavigationBar from '/react-redux/applicationRoot/rootComponents/mainNavigation';
+
 class BookEntryList extends React.Component {
     constructor(){
         super();
@@ -18,50 +20,53 @@ class BookEntryList extends React.Component {
             toggleShow = <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>;
 
         return (
-            <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
-                <div>
-                    { pending ?
-                        <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
-                        : <span className="label label-success">All pending books saved { toggleShow }</span>
-                    }
-                </div>
-
-                <Collapse in={this.state.showIncomingQueue}>
+            <div>
+                <MainNavigationBar isBookEntry={true}></MainNavigationBar>
+                <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
                     <div>
-                        <TransitionMotion
-                            willEnter={() => ({ opacity: 0.1 })}
-                            styles={this.props.booksJustSaved.map(book => ({
-                              style: { opacity: spring(1) },
-                              data: book,
-                              key: book._id
-                            }))}>
-                            {styles =>
-                                <ul>{
-                                    styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
-                                }</ul>
-                            }
-                        </TransitionMotion>
+                        { pending ?
+                            <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
+                            : <span className="label label-success">All pending books saved { toggleShow }</span>
+                        }
                     </div>
-                </Collapse>
 
-                <br /><br />
-                { this.props.entryList.map((entry, i) =>
-                        <div key={i}>
-                            <BookEntryItem
-                                ref={'Book' + i}
-                                { ...entry }
-                                isbnChange={e => this.isbnChanged(entry, e)}
-                                entryFinished={() => this.entryFinished(entry)}
-                                index={i}
-                                deleteBook={() => this.deleteBook(entry)}
-                            />
-                            <br />
+                    <Collapse in={this.state.showIncomingQueue}>
+                        <div>
+                            <TransitionMotion
+                                willEnter={() => ({ opacity: 0.1 })}
+                                styles={this.props.booksJustSaved.map(book => ({
+                                  style: { opacity: spring(1) },
+                                  data: book,
+                                  key: book._id
+                                }))}>
+                                {styles =>
+                                    <ul>{
+                                        styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
+                                    }</ul>
+                                }
+                            </TransitionMotion>
                         </div>
-                )}
-                <button onClick={() => this.saveAll()}>Retrieve and save all</button>
-                <br />
-                <br />
-                <button onClick={() => this.resetList()}>Reset list</button>
+                    </Collapse>
+
+                    <br /><br />
+                    { this.props.entryList.map((entry, i) =>
+                            <div key={i}>
+                                <BookEntryItem
+                                    ref={'Book' + i}
+                                    { ...entry }
+                                    isbnChange={e => this.isbnChanged(entry, e)}
+                                    entryFinished={() => this.entryFinished(entry)}
+                                    index={i}
+                                    deleteBook={() => this.deleteBook(entry)}
+                                />
+                                <br />
+                            </div>
+                    )}
+                    <button onClick={() => this.saveAll()}>Retrieve and save all</button>
+                    <br />
+                    <br />
+                    <button onClick={() => this.resetList()}>Reset list</button>
+                </div>
             </div>
         );
     }
