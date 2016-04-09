@@ -1,4 +1,9 @@
 import reactStartup from 'react-redux/reactStartup';
+import AjaxButton from 'react-redux/applicationRoot/rootComponents/ajaxButton';
+
+const Navbar = ReactBootstrap.Navbar;
+const Nav = ReactBootstrap.Nav;
+const NavItem = ReactBootstrap.NavItem;
 
 class Login extends React.Component{
     constructor(){
@@ -12,8 +17,11 @@ class Login extends React.Component{
             password = this.refs.password.value,
             rememberme = this.refs.rememberme.checked ? 1 : 0;
 
+        this.setState({ running: true });
         ajaxUtil.post('/react-redux/login', { username, password, rememberme }, resp => {
             reactStartup.loadCurrentModule();
+        }, () => {
+            this.setState({ running: false, errorCode: 'c2' });
         });
     }
     createUser(evt){
@@ -31,9 +39,10 @@ class Login extends React.Component{
             this.setState({ errorCode: null });
         }
 
+        this.setState({ running: true });
         ajaxUtil.post('/react-redux/createUser', { username, password, rememberme }, resp => {
             if (resp.errorCode){
-                this.setState({ errorCode: resp.errorCode });
+                this.setState({ errorCode: resp.errorCode, running: false });
             } else {
                 ajaxUtil.post('/react-redux/login', { username, password, rememberme }, () => {
                     window.location.hash = '#bookEntry'; //new user - send them to where they can enter some books
@@ -49,61 +58,75 @@ class Login extends React.Component{
     }
     render(){
         return (
-            <div style={{ padding: 50, maxWidth: 700, marginRight: 'auto', marginLeft: 'auto'}}>
-                <div className="panel panel-default">
-                    <div className="panel-body">
-                        <form>
-                            <div className="form-group">
-                                <label htmlFor="username">Email address</label>
-                                <input className="form-control" ref="username" id="username" />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">Password</label>
-                                <input className="form-control" ref="password" id="password" type="password" />
-                            </div>
-
-                            { this.state.newUser ?
+            <div>
+                <Navbar fluid={true}>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <a style={{ cursor: 'default' }}>Book Tracker</a>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                </Navbar>
+                <div style={{ padding: 50, maxWidth: 700, marginRight: 'auto', marginLeft: 'auto'}}>
+                    <div className="panel panel-default">
+                        <div className="panel-body">
+                            <form>
                                 <div className="form-group">
-                                    <label htmlFor="password">Confirm password</label>
-                                    <input className="form-control" ref="confirmPassword" type="password" />
-                                </div> : null
-                            }
-
-                            <div className="checkbox">
-                                <label>
-                                    <input type="checkbox" ref="rememberme" /> Remember me
-                                </label>
-                            </div>
-                            { this.state.newUser ?
-
-                                <button onClick={evt => this.createUser(evt)} className="btn btn-primary">Create user</button>
-                                : <button onClick={evt => this.login(evt)} className="btn btn-primary">Login</button>
-                            }
-                            { this.state.errorCode == 's1' ?
-                                <div className="alert alert-danger margin-top">
-                                    This user already exists
-                                </div> : null }
-                            { this.state.errorCode == 'c1' ?
-                                <div className="alert alert-danger margin-top">
-                                    Passwords do not match
-                                </div> : null }
-                            <hr />
-
-                            { this.state.newUser ?
-
-                                <div className="form-group">
-                                    <h4>Existing user?</h4>
-                                    <a onClick={() => this.switchToLogin()} className="btn btn-info">Click to login</a>
+                                    <label htmlFor="username">Email address</label>
+                                    <input className="form-control" ref="username" id="username" />
                                 </div>
-                                :
                                 <div className="form-group">
-                                    <h4>New user?</h4>
-                                    <a onClick={() => this.switchToCreate()} className="btn btn-info">Click to create account</a>
+                                    <label htmlFor="password">Password</label>
+                                    <input className="form-control" ref="password" id="password" type="password" />
                                 </div>
 
-                            }
+                                { this.state.newUser ?
+                                    <div className="form-group">
+                                        <label htmlFor="password">Confirm password</label>
+                                        <input className="form-control" ref="confirmPassword" type="password" />
+                                    </div> : null
+                                }
 
-                        </form>
+                                <div className="checkbox">
+                                    <label>
+                                        <input type="checkbox" ref="rememberme" /> Remember me
+                                    </label>
+                                </div>
+                                { this.state.newUser ?
+
+                                    <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running} preset="primary">Create user</AjaxButton>
+                                    : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running} preset="primary">Login</AjaxButton>
+                                }
+                                { this.state.errorCode == 's1' ?
+                                    <div className="alert alert-danger margin-top">
+                                        This user already exists
+                                    </div> : null }
+                                { this.state.errorCode == 'c1' ?
+                                    <div className="alert alert-danger margin-top">
+                                        Passwords do not match
+                                    </div> : null }
+                                { this.state.errorCode == 'c2' ?
+                                    <div className="alert alert-danger margin-top">
+                                        No login found for this Email / Password
+                                    </div> : null }
+                                <hr />
+
+                                { this.state.newUser ?
+
+                                    <div className="form-group">
+                                        <h4>Existing user?</h4>
+                                        <a onClick={() => this.switchToLogin()} className="btn btn-info">Click to login</a>
+                                    </div>
+                                    :
+                                    <div className="form-group">
+                                        <h4>New user?</h4>
+                                        <a onClick={() => this.switchToCreate()} className="btn btn-info">Click to create account</a>
+                                    </div>
+
+                                }
+
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

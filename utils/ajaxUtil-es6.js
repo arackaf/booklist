@@ -1,16 +1,18 @@
 window.ajaxUtil = {
-    post(url, data, callback = () => null){
+    post(url, data, callback = () => null, errorCallback = () => null){
         return $.ajax(url, {
             method: 'post',
             data: data,
-            success: callback
+            success: callback,
+            error: errorCallback
         });
     },
-    ['get'](url, data, callback = () => null){
+    ['get'](url, data, callback = () => null, errorCallback = () => null){
         return $.ajax(url, {
             method: 'get',
             data: data,
-            success: callback
+            success: callback,
+            error: errorCallback
         });
     }
 };
