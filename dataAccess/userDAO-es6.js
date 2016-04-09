@@ -19,7 +19,7 @@ class UserDAO extends DAO {
     async lookupUser(email, password){
         let db = await super.open();
         try {
-            return await db.collection('users').findOne({ email, password: this.saltAndHashPassword(password) });
+            return await db.collection('users').findOne({ email: new RegExp(email, 'i'), password: this.saltAndHashPassword(password) });
         } finally{
             super.dispose(db);
         }
@@ -27,7 +27,7 @@ class UserDAO extends DAO {
     async checkUserExists(email, password){
         let db = await super.open();
         try {
-            return !!(await db.collection('users').findOne({ email }));
+            return !!(await db.collection('users').findOne({ email: new RegExp(email, 'i') }));
         } finally{
             super.dispose(db);
         }
