@@ -5,6 +5,13 @@ const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 
+const errorCodes = {
+    s1: 'This user already exists',
+    c1: 'Passwords do not match',
+    c2: 'No login found for this Email / Password',
+    c3: 'Password is required'
+}
+
 class Login extends React.Component{
     constructor(){
         super();
@@ -34,6 +41,9 @@ class Login extends React.Component{
 
         if (password !== confirmPassword){
             this.setState({ errorCode: 'c1' });
+            return;
+        } else if (!password){
+            this.setState({ errorCode: 'c3' });
             return;
         } else {
             this.setState({ errorCode: null });
@@ -97,17 +107,9 @@ class Login extends React.Component{
                                     <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running} preset="primary">Create user</AjaxButton>
                                     : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running} preset="primary">Login</AjaxButton>
                                 }
-                                { this.state.errorCode == 's1' ?
+                                { this.state.errorCode ?
                                     <div className="alert alert-danger margin-top">
-                                        This user already exists
-                                    </div> : null }
-                                { this.state.errorCode == 'c1' ?
-                                    <div className="alert alert-danger margin-top">
-                                        Passwords do not match
-                                    </div> : null }
-                                { this.state.errorCode == 'c2' ?
-                                    <div className="alert alert-danger margin-top">
-                                        No login found for this Email / Password
+                                        {errorCodes[this.state.errorCode]}
                                     </div> : null }
                                 <hr />
 
