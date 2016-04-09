@@ -7,7 +7,7 @@ class UserDAO extends DAO {
     async createUser(email, password){
         let db = await super.open();
         try {
-            let newUser = { email, password: this.saltAndHashPassword(password) }
+            let newUser = { email, password: this.saltAndHashPassword(password), token: 'abcdef' };
             await db.collection('users').insert(newUser);
             return newUser;
         } catch(eee){
@@ -20,6 +20,14 @@ class UserDAO extends DAO {
         let db = await super.open();
         try {
             return await db.collection('users').findOne({ email, password: this.saltAndHashPassword(password) });
+        } finally{
+            super.dispose(db);
+        }
+    }
+    async checkUserExists(email, password){
+        let db = await super.open();
+        try {
+            return !!(await db.collection('users').findOne({ email }));
         } finally{
             super.dispose(db);
         }

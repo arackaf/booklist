@@ -155,6 +155,22 @@ app.post('/react-redux/logout', function(req, response){
     response.send({});
 });
 
+app.post('/react-redux/createUser', function(req, response){
+    let userDao = new UserDao(),
+        username = req.body.username,
+        password = req.body.password;
+
+    userDao.checkUserExists(username, password).then(exists => {
+        if (exists) {
+            response.send({ errorCode: 's1' });
+        } else {
+            userDao.createUser(username, password).then(() => {
+                response.send({});
+            });
+        }
+    });
+});
+
 
 let toEnter = [
     '1617291412',
