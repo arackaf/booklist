@@ -33,10 +33,12 @@ class BookEntryQueueManager {
                 let bookDao = new BookDAO(item.userId);
 
                 if (bookFromAmazon.failure){
+                    await this.pendingBooksDao.remove(item._id);
+                    this.bookLookupFailed(item.userId, item.isbn);
                     //TODO: log it
                 } else {
                     //TODO: Log and save it
-                    let newBook = Object.assign(bookFromAmazon, { subjects: [] });
+                    let newBook = Object.assign(bookFromAmazon, {subjects: []});
                     await bookDao.saveBook(newBook);
                     await this.pendingBooksDao.remove(item._id);
                     this.bookAdded(item.userId, newBook);
@@ -46,14 +48,10 @@ class BookEntryQueueManager {
         });
     }
     bookAdded(userId, bookFromAmazon){
-        let ws = this.wsSubscriptions.get(userId);
-        if (ws){
-            if (ws.readyState === 1) {
-                ws.send(JSON.stringify(Object.assign({ _messageType: 'bookAdded' }, bookFromAmazon, {saveMessage: 'saved'})));
-            } else {
-                this.wsClosed(userId);
-            }
-        }
+        this.runWsAction(userId, ws => ws.send(JSON.stringify(Object.assign({ _messageType: 'bookAdded' }, bookFromAmazon, {saveMessage: 'saved'}))));
+    }
+    bookLookupFailed(userId, isbn){
+        this.runWsAction(userId, ws => ws.send(JSON.stringify({ _messageType: 'bookLookupFailed', isbn })));
     }
     async subscriberAdded(userId, ws) {
         let pending = await this.pendingBooksDao.getPendingForUser(userId);
@@ -67,10 +65,13 @@ class BookEntryQueueManager {
         this.wsMessagePendingBookAdded(userId);
     }
     wsMessagePendingBookAdded(userId){
+        this.runWsAction(userId, ws => ws.send(JSON.stringify(Object.assign({ _messageType: 'pendingBookAdded' }))));
+    }
+    runWsAction(userId, action){
         let ws = this.wsSubscriptions.get(userId);
         if (ws){
             if (ws.readyState === 1) {
-                ws.send(JSON.stringify(Object.assign({ _messageType: 'pendingBookAdded' })));
+                action(ws);
             } else {
                 this.wsClosed(userId);
             }

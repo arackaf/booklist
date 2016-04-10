@@ -6,7 +6,8 @@ import {
     BOOK_SAVED,
     INCREMENT_PENDING,
     GET_BOOK,
-    BOOK_QUEUED
+    BOOK_QUEUED,
+    BOOK_LOOKUP_FAILED
 } from './actionNames';
 
 export function updateIsbn(isbn, index){
@@ -54,4 +55,8 @@ export function incrementPending(){
 
 export function bookSaved(book){
     return { type: BOOK_SAVED, book }
+}
+
+export function bookLookupFailed(isbn){
+    return { type: BOOK_LOOKUP_FAILED, isbn }
 }

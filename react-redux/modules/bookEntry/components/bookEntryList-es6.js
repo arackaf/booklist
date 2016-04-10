@@ -82,15 +82,15 @@ class BookEntryList extends React.Component {
 
         this.ws.onmessage = ({ data }) => {
             let packet = JSON.parse(data);
-            console.log(packet);
             if (packet._messageType == 'initial'){
                 this.props.setPending(packet.pending);
             } else if (packet._messageType == 'bookAdded') {
                 this.props.bookSaved(packet);
             } else if (packet._messageType == 'pendingBookAdded'){
                 this.props.incrementPending();
+            } else if (packet._messageType == 'bookLookupFailed'){
+                this.props.bookLookupFailed(packet.isbn);
             }
-            packet.title && console.log('from node:', packet.title);
         };
 
         this.refs.Book0.focusInput();
