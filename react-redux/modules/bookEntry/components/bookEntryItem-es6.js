@@ -18,15 +18,16 @@ class BookEntryItem extends React.Component{
         return (
             <div>
                 <div className='row'>
-                    <div className='col-md-3 form-horizontal'>
-                        <div className='form-group'>
+                    <div className='col-sm-8 form-horizontal'>
+                        <div className='form-group row'>
                             <label className='control-label col-sm-4'>Input ISBN </label>
                             <div className='col-sm-8'>
                                 <input className='form-control' ref='input' value={this.props.isbn} onChange={this.props.isbnChange} onKeyDown={evt => this.keyDown(evt)} disabled={this.props.retrieving}  />
                             </div>
                         </div>
                     </div>
-                    <div className='col-md-9 pull-left'>
+                    <div className='col-sm-4 pull-left'>
+                        <span className="label label-success">Book is queued</span>
                         { this.props.retrieving ? <span>loading....</span> : null }
                         { this.props.fetchedTitle ?
                             <div className="row">
