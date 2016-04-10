@@ -65,9 +65,6 @@ class BookEntryQueueManager {
     async addPendingBook(userId, pendingBook){
         await this.pendingBooksDao.add(pendingBook);
         this.wsMessagePendingBookAdded(userId);
-        if (!this.running){
-            this.initialize();
-        }
     }
     wsMessagePendingBookAdded(userId){
         let ws = this.wsSubscriptions.get(userId);
