@@ -1,16 +1,13 @@
 import {
     UPDATE_ISBN,
     GET_BOOK,
-    GET_BOOK_RESULTS,
-    BOOK_DELETED,
-    BOOK_DELETING,
     SAVE_ALL_PENDING,
-    GETTING_BOOKS,
     RESET_LIST,
     SET_PENDING,
     BOOK_SAVED,
     INCREMENT_PENDING,
-    BOOK_QUEUED
+    BOOK_QUEUED,
+    BOOK_LOOKUP_FAILED
 } from '../actions/actionNames';
 
 const initialArray = () => Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
@@ -19,6 +16,8 @@ const initialState = {
     pendingNumber: null,
     booksJustSaved: []
 };
+
+const MAX_BOOKS_DISPLAYED = 20;
 
 function reducer(state = initialState, action){
     switch(action.type) {
@@ -46,7 +45,10 @@ function reducer(state = initialState, action){
         case INCREMENT_PENDING:
             return Object.assign({}, state, { pendingNumber: (state.pendingNumber || 0) + 1 });
         case BOOK_SAVED:
-            return Object.assign({}, state, { booksJustSaved: [action.book].concat(state.booksJustSaved.slice(0, 3)), pendingNumber: (state.pendingNumber - 1) || 0 });
+            return Object.assign({}, state, { booksJustSaved: [action.book].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
+        case BOOK_LOOKUP_FAILED:
+            let entry = { _id: '' +new Date(), title: `Failed lookup for ${action.isbn}` };
+            return Object.assign({}, state, { booksJustSaved: [entry].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
     }
     return state;
 }
