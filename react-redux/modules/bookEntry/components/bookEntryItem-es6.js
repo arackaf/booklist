@@ -69,4 +69,4 @@ class BookEntryItem extends React.Component{
     }
 }
 
-module.exports = BookEntryItem;
+export default BookEntryItem;

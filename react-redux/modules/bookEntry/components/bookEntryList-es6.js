@@ -1,9 +1,9 @@
-let BookEntryItem = require('./bookEntryItem'),
-    { updateIsbn, bookSaved, setPending, incrementPending, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../actions/actionCreators');
+import BookEntryItem from './bookEntryItem';
 
 const { TransitionMotion, spring } = ReactMotion;
 const Collapse = ReactBootstrap.Collapse;
 
+import * as bookEntryActionCreators from '../actions/actionCreators';
 import MainNavigationBar from '/react-redux/applicationRoot/rootComponents/mainNavigation';
 
 class BookEntryList extends React.Component {
@@ -77,11 +77,11 @@ class BookEntryList extends React.Component {
             let packet = JSON.parse(data);
             console.log(packet);
             if (packet._messageType == 'initial'){
-                this.props.dispatch(setPending(packet.pending));
+                this.props.setPending(packet.pending);
             } else if (packet._messageType == 'bookAdded') {
-                this.props.dispatch(bookSaved(packet));
+                this.props.bookSaved(packet);
             } else if (packet._messageType == 'pendingBookAdded'){
-                this.props.dispatch(incrementPending());
+                this.props.incrementPending();
             }
             packet.title && console.log('from node:', packet.title);
         };
@@ -94,13 +94,13 @@ class BookEntryList extends React.Component {
         } catch(e){}
     }
     saveAll(){
-        this.props.dispatch(saveAllPending());
+        this.props.saveAllPending();
     }
     deleteBook(entry){
-        this.props.dispatch(deleteBook(this.props.entryList.indexOf(entry), entry.fetchedInfo._id));
+        this.props.deleteBook(this.props.entryList.indexOf(entry), entry.fetchedInfo._id);
     }
     isbnChanged(entry, e){
-        this.props.dispatch(updateIsbn(e.target.value, this.props.entryList.indexOf(entry)));
+        this.props.updateIsbn(e.target.value, this.props.entryList.indexOf(entry));
     }
     entryFinished(entry){
         let index = this.props.entryList.indexOf(entry);
@@ -109,12 +109,14 @@ class BookEntryList extends React.Component {
         }
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
-            this.props.dispatch(loadAndSaveBook(index, entry.isbn));
+            this.props.loadAndSaveBook(index, entry.isbn);
         }
     }
     resetList(){
-        this.props.dispatch(resetList());
+        this.props.resetList();
     }
 }
 
-module.exports = BookEntryList;
+const BookEntryListConnected = ReactRedux.connect(state => state, { ...bookEntryActionCreators })(BookEntryList);
+
+export default BookEntryListConnected;
