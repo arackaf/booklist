@@ -12,9 +12,9 @@ import {
     INCREMENT_PENDING
 } from '../actions/actionNames';
 
-const initialArray = Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
+const initialArray = () => Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
 const initialState = {
-    entryList: initialArray,
+    entryList: initialArray(),
     pendingNumber: null,
     booksJustSaved: []
 };
@@ -56,7 +56,7 @@ function reducer(state = initialState, action){
             newEntryList[action.index].deleting = true;
             return Object.assign({}, state, { entryList: newEntryList });
         case RESET_LIST:
-            return initialState;
+            return Object.assign({}, state, { entryList: initialArray() });
         case SET_PENDING:
             return Object.assign({}, state, { pendingNumber: action.number });
         case INCREMENT_PENDING:
