@@ -23,50 +23,54 @@ class BookEntryList extends React.Component {
             <div>
                 <MainNavigationBar isBookEntry={true}></MainNavigationBar>
                 <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
-                    <div>
-                        { pending == null ? null :
-                            (pending
-                                ? <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
-                                : <span className="label label-success">All pending books saved { toggleShow }</span>)
-                        }
-                    </div>
+                    <div className="row">
+                        <div style={{ marginBottom: 30 }} className="col-md-6 col-md-push-6">
+                            <div>
+                                { pending == null ? null :
+                                    (pending
+                                        ? <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
+                                        : <span className="label label-success">All pending books saved { toggleShow }</span>)
+                                }
+                            </div>
 
-                    <Collapse in={this.state.showIncomingQueue}>
-                        <div>
-                            <TransitionMotion
-                                willEnter={() => ({ opacity: 0.1 })}
-                                styles={this.props.booksJustSaved.map(book => ({
+                            <Collapse in={this.state.showIncomingQueue}>
+                                <div>
+                                    <TransitionMotion
+                                        willEnter={() => ({ opacity: 0.1 })}
+                                        styles={this.props.booksJustSaved.map(book => ({
                                   style: { opacity: spring(1) },
                                   data: book,
                                   key: book._id
                                 }))}>
-                                {styles =>
-                                    <ul>{
-                                        styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
-                                    }</ul>
-                                }
-                            </TransitionMotion>
+                                        {styles =>
+                                            <ul>{
+                                                styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
+                                            }</ul>
+                                        }
+                                    </TransitionMotion>
+                                </div>
+                            </Collapse>
                         </div>
-                    </Collapse>
-
-                    <br /><br />
-                    { this.props.entryList.map((entry, i) =>
-                            <div key={i}>
-                                <BookEntryItem
-                                    ref={'Book' + i}
-                                    { ...entry }
-                                    isbnChange={e => this.isbnChanged(entry, e)}
-                                    entryFinished={() => this.entryFinished(entry)}
-                                    index={i}
-                                    deleteBook={() => this.deleteBook(entry)}
-                                />
-                                <br />
-                            </div>
-                    )}
-                    <button onClick={() => this.saveAll()}>Retrieve and save all</button>
-                    <br />
-                    <br />
-                    <button onClick={() => this.resetList()}>Reset list</button>
+                        <div className="col-md-6 col-md-pull-6">
+                            { this.props.entryList.map((entry, i) =>
+                                <div key={i}>
+                                    <BookEntryItem
+                                        ref={'Book' + i}
+                                        { ...entry }
+                                        isbnChange={e => this.isbnChanged(entry, e)}
+                                        entryFinished={() => this.entryFinished(entry)}
+                                        index={i}
+                                        deleteBook={() => this.deleteBook(entry)}
+                                    />
+                                    <br />
+                                </div>
+                            )}
+                            <button onClick={() => this.saveAll()}>Retrieve and save all</button>
+                            <br />
+                            <br />
+                            <button onClick={() => this.resetList()}>Reset list</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
