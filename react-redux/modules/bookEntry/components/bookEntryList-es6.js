@@ -17,7 +17,9 @@ class BookEntryList extends React.Component {
     render() {
         let pending = this.props.pendingNumber,
             toggleClass = this.state.showIncomingQueue ? 'fa-angle-double-up' : 'fa-angle-double-down',
-            toggleShow = <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>;
+            toggleShow = this.props.booksJustSaved.length ?
+                <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>
+                : null;
 
         return (
             <div>
@@ -38,10 +40,10 @@ class BookEntryList extends React.Component {
                                     <TransitionMotion
                                         willEnter={() => ({ opacity: 0.1 })}
                                         styles={this.props.booksJustSaved.map(book => ({
-                                  style: { opacity: spring(1) },
-                                  data: book,
-                                  key: book._id
-                                }))}>
+                                          style: { opacity: spring(1) },
+                                          data: book,
+                                          key: book._id
+                                        }))}>
                                         {styles =>
                                             <ul>{
                                                 styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
@@ -101,9 +103,6 @@ class BookEntryList extends React.Component {
     saveAll(){
         this.props.saveAllPending();
     }
-    deleteBook(entry){
-        this.props.deleteBook(this.props.entryList.indexOf(entry), entry.fetchedInfo._id);
-    }
     isbnChanged(entry, e){
         this.props.updateIsbn(e.target.value, this.props.entryList.indexOf(entry));
     }
@@ -114,7 +113,7 @@ class BookEntryList extends React.Component {
         }
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
-            this.props.loadAndSaveBook(index, entry.isbn);
+            this.props.enterBook(index, entry.isbn);
         }
     }
 }
