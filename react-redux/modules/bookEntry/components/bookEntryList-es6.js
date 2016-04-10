@@ -68,7 +68,7 @@ class BookEntryList extends React.Component {
                             <button onClick={() => this.saveAll()}>Retrieve and save all</button>
                             <br />
                             <br />
-                            <button onClick={() => this.resetList()}>Reset list</button>
+                            <button onClick={this.props.resetList}>Reset list</button>
                         </div>
                     </div>
                 </div>
@@ -116,9 +116,6 @@ class BookEntryList extends React.Component {
         if (entry.isbn.length == 10 || entry.isbn.length == 13){
             this.props.loadAndSaveBook(index, entry.isbn);
         }
-    }
-    resetList(){
-        this.props.resetList();
     }
 }
 
