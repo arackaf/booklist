@@ -15,7 +15,7 @@ import {
 const initialArray = Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
 const initialState = {
     entryList: initialArray,
-    pendingNumber: 0,
+    pendingNumber: null,
     booksJustSaved: []
 };
 
