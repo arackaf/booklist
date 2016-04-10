@@ -24,9 +24,10 @@ class BookEntryList extends React.Component {
                 <MainNavigationBar isBookEntry={true}></MainNavigationBar>
                 <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
                     <div>
-                        { pending ?
-                            <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
-                            : <span className="label label-success">All pending books saved { toggleShow }</span>
+                        { pending == null ? null :
+                            (pending
+                                ? <span className="label label-info">{`${pending} Book${pending === 1 ? '' : 's'} currently outstanding`} { toggleShow }</span>
+                                : <span className="label label-success">All pending books saved { toggleShow }</span>)
                         }
                     </div>
 
