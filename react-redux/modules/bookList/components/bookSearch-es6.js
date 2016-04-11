@@ -103,13 +103,14 @@ class BookFilters extends React.Component {
                                 <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <span className="label label-primary"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                            <span className="label label-default"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
                                         </MenuItem>)
                                     }
 
+                                    { !!this.props.searchChildSubjects ? <MenuItem divider /> : null }
                                     { !!this.props.searchChildSubjects ?
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
-                                            <span className="label label-success">Searching child subjects</span>
+                                            <span className="label label-primary">Searching child subjects</span>
                                         </MenuItem> : null
                                     }
                                 </NavDropdown> : null
