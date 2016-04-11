@@ -3,12 +3,23 @@ import md5 from 'blueimp-md5';
 import salt from '../private/salt';
 import { ObjectID } from 'mongodb';
 
+const newUsersSubjects = [
+    { name: 'History', path: null },
+    { name: 'Science', path: null },
+    { name: 'Literature', path: null },
+    { name: 'Economics', path: null },
+    { name: 'Law', path: null },
+    { name: 'Technology', path: null }
+]
+
 class UserDAO extends DAO {
     async createUser(email, password){
         let db = await super.open();
         try {
             let newUser = { email, password: this.saltAndHashPassword(password), token: this.saltAndHashToken(email) };
             await db.collection('users').insert(newUser);
+            let subjectsToInsert = newUsersSubjects.map(s => ({ ...s, userId: '' + newUser._id }));
+            await db.collection('subjects').insert(subjectsToInsert);
             return newUser;
         } catch(eee){
             console.log(eee);

@@ -16,46 +16,52 @@ class BookViewListDesktop extends React.Component{
             <div>
                 <BookFilters allSubjects={this.props.subjects.list}></BookFilters>
                 <br />
-                <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
-                &nbsp;&nbsp;&nbsp;
-                <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
 
-                { this.props.books.list.length &&
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th></th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Genres</th>
-                            <th>ISBN</th>
-                            <th>Published</th>
-                            <th>Pages</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    { this.props.books.list.map(book =>
-                        <tr key={book._id}>
-                            <td>
-                                <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (this.props.books.selectedBooks[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
-                            </td>
-                            <td><img src={book.smallImage} /></td>
-                            <td>{book.title}</td>
-                            <td>{book.author}</td>
-                            <td>
-                                { book.subjectObjects.map(s => <div><span className="label label-default" key={s._id}>{s.name}</span></div>) }
-                                <div style={{ marginTop: 5 }}>
-                                    <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
-                                </div>
-                            </td>
-                            <td>{book.isbn}</td>
-                            <td>{book.publicationDate}</td>
-                            <td>{book.pages}</td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
+                { this.props.books.list.length ?
+                <div>
+                    <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
+                    &nbsp;&nbsp;&nbsp;
+                    <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Genres</th>
+                                <th>ISBN</th>
+                                <th>Published</th>
+                                <th>Pages</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        { this.props.books.list.map(book =>
+                            <tr key={book._id}>
+                                <td>
+                                    <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (this.props.books.selectedBooks[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
+                                </td>
+                                <td><img src={book.smallImage} /></td>
+                                <td>{book.title}</td>
+                                <td>{book.author}</td>
+                                <td>
+                                    { book.subjectObjects.map(s => <div><span className="label label-default" key={s._id}>{s.name}</span></div>) }
+                                    <div style={{ marginTop: 5 }}>
+                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
+                                    </div>
+                                </td>
+                                <td>{book.isbn}</td>
+                                <td>{book.publicationDate}</td>
+                                <td>{book.pages}</td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
+                </div>
+                :
+                <div className="alert alert-warning">
+                    No books found
+                </div>
                 }
                 <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
 
