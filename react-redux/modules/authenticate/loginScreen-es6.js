@@ -61,10 +61,10 @@ class Login extends React.Component{
         });
     }
     switchToLogin(){
-        this.setState({ newUser: false });
+        this.setState({ newUser: false, errorCode: null });
     }
     switchToCreate(){
-        this.setState({ newUser: true });
+        this.setState({ newUser: true, errorCode: null });
     }
     render(){
         return (

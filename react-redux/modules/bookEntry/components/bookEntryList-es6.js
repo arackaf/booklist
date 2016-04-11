@@ -37,6 +37,12 @@ class BookEntryList extends React.Component {
 
                             <Collapse in={this.state.showIncomingQueue}>
                                 <div>
+                                    <div className="alert alert-info margin-top alert-slim">
+                                        Your entered and failed books will show up here, fleetingly, though everything is being logged.
+                                        <br /><br />
+                                        Eventually there'll be a dedicated module to let you see what's been saved and what failed to be found, and of course saved books will show up in your books list.
+                                    </div>
+
                                     <TransitionMotion
                                         willEnter={() => ({ opacity: 0.1 })}
                                         styles={this.props.booksJustSaved.map(book => ({
