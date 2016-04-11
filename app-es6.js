@@ -121,6 +121,10 @@ app.get('/react-redux', function (request, response) {
     response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
 });
 
+app.get('/favicon.ico', function (request, response) {
+    response.sendFile(path.join(__dirname + '/favicon.ico'));
+});
+
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
 
