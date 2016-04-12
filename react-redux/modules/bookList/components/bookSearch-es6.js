@@ -128,6 +128,7 @@ class BookFilters extends React.Component {
                     <Modal.Body>
                         <label>Also search child subjects <input type="checkbox" onChange={evt => this.setState({ searchChildSubjects: evt.target.checked })} checked={this.state.searchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
+                            style={{ paddingLeft: 5 }}
                             toggleFilteredSubject={this.togglePendingSubject}
                             subjects={this.props.allSubjects}
                             selectedSubjects={this.state.pendingSubjects} />
