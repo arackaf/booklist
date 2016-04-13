@@ -1,6 +1,6 @@
 # booklist
 
-This is my attempt at a fully functioning book collection website as a way to become more closely acquainted with modern development tools I'm 
+This is my attempt at a fully functioning book collection website as a way to learn and try out modern development tools I'm 
 interested in, but don't get to use professionally. Progress is limited to what little free time I can find, which means it's slow; expect many parts of this
 to be grossly incomplete at any given time.
 
