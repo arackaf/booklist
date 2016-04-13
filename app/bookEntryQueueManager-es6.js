@@ -1,4 +1,5 @@
 import PendingBookEntryDao from '../dataAccess/pendingBookEntryDAO';
+import CompletedEntriesDao from '../dataAccess/completedEntriesDAO';
 import AmazonSearch from '../amazonDataAccess/AmazonSearch.js';
 import amazonOperationQueue from '../amazonDataAccess/amazonOperationQueue';
 import BookDAO from '../dataAccess/bookDAO';
@@ -6,6 +7,7 @@ import BookDAO from '../dataAccess/bookDAO';
 class BookEntryQueueManager {
     constructor(){
         this.pendingBooksDao = new PendingBookEntryDao();
+        this.completedEntriesDao = new CompletedEntriesDao();
         this.localQueue = [];
         this.wsSubscriptions = new Map();
         this.amazonSearch = new AmazonSearch()
@@ -35,13 +37,13 @@ class BookEntryQueueManager {
                 if (bookFromAmazon.failure){
                     await this.pendingBooksDao.remove(item._id);
                     this.bookLookupFailed(item.userId, item.isbn);
-                    //TODO: log it
+                    await this.completedEntriesDao.logFailedEntry(item.userId, item.isbn);
                 } else {
-                    //TODO: Log and save it
                     let newBook = Object.assign(bookFromAmazon, {subjects: []});
                     await bookDao.saveBook(newBook);
                     await this.pendingBooksDao.remove(item._id);
                     this.bookAdded(item.userId, newBook);
+                    await this.completedEntriesDao.logCompletedEntry(item.userId, item.isbn, bookFromAmazon);
                 }
                 resolve();
             });
