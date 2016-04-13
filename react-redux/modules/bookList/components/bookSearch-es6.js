@@ -33,6 +33,16 @@ class BookFilters extends React.Component {
         };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
+    removeFilterSubject(_id){
+        let selectedSubjectsHashString = this.hashManager.getCurrentHashValueOf('filterSubjects'),
+            subjectsArr = selectedSubjectsHashString.split('-');
+        subjectsArr = subjectsArr.filter(sId => sId != _id);
+
+        this.hashManager.setValueOf('filterSubjects', subjectsArr.join('-'));
+        if (!subjectsArr.length){
+            setTimeout(() => this.setState({ menuOpen: false }), 1);
+        }
+    }
     componentDidMount(){
         this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
         this._hashChangeSubscription();
@@ -103,7 +113,7 @@ class BookFilters extends React.Component {
                                 <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <span className="label label-default"><span style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                            <span className="label label-default"><span onClick={() => this.removeFilterSubject(s._id)} style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
                                         </MenuItem>)
                                     }
 
