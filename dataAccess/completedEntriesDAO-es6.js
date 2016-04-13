@@ -1,0 +1,21 @@
+const DAO = require('./DAO');
+
+export default class CompletedEntriesDao extends DAO {
+    async logCompletedEntry(userId, isbn, bookFound){
+        let db = await super.open();
+        try {
+            let bookInfo = { title: bookFound.title, author: bookFound.author, smallImage: bookFound.smallImage, mediumImage: bookFound.mediumImage };
+            return await db.collection('completedEntries').insert(Object.assign({}, bookInfo, { userId, requestedIsbn: isbn, success: true }));
+        } finally {
+            super.dispose(db);
+        }
+    }
+    async logFailedEntry(userId, isbn){
+        let db = await super.open();
+        try {
+            return await db.collection('completedEntries').insert(Object.assign({}, { userId, requestedIsbn: isbn, success: false }));
+        } finally {
+            super.dispose(db);
+        }
+    }
+}
