@@ -22,14 +22,17 @@ class BookFilters extends React.Component {
 
         this.state = { pendingSubjects: {}, menuOpen: false };
         this._hashChangeSubscription = () => {
-            props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
             let subjectsSelected = {},
                 selectedSubjectsHashString = this.hashManager.getCurrentHashValueOf('filterSubjects');
             if (selectedSubjectsHashString){
                 selectedSubjectsHashString.split('-').forEach(_id => subjectsSelected[_id] = true);
             }
 
-            props.setFilteredSubjects(subjectsSelected, this.hashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null);
+            this.props.setFilters(
+                this.hashManager.getCurrentHashValueOf('bookSearch') || '',
+                subjectsSelected,
+                this.hashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null
+            );
         };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
@@ -44,7 +47,6 @@ class BookFilters extends React.Component {
         }
     }
     componentDidMount(){
-        this.props.setSearchFilterText(this.hashManager.getCurrentHashValueOf('bookSearch') || '');
         this._hashChangeSubscription();
     }
     componentWillReceiveProps(newProps){

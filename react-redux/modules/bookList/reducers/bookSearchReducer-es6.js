@@ -1,6 +1,5 @@
 import { LOAD_BOOKS } from '../actions/actionNames';
-
-const { SET_TEXT_SEARCH, SET_FILTERED_SUBJECTS } = require('../actions/bookSearch/actionNames');
+import { SET_FILTERS } from '../actions/bookSearch/actionNames';
 
 const initialState = {
     searchText: '',
@@ -11,14 +10,29 @@ const initialState = {
 
 function bookSearchReducer(state = initialState, action){
     switch(action.type){
-        case SET_FILTERED_SUBJECTS:
-            return Object.assign({}, state, { subjects: { ...action.subjects }, searchChildSubjects: action.searchChildSubjects, isDirty: true });
-        case SET_TEXT_SEARCH:
-            return Object.assign({}, state, { searchText: action.value, isDirty: true });
+        case SET_FILTERS:
+            let newIsDirty =
+                state.searchText != action.text ||
+                subjectsDifferent(state.subjects, action.subjects) ||
+                state.searchChildSubjects != action.searchChildSubjects;
+
+            return Object.assign({},
+                state,
+                {
+                    searchText: action.text,
+                    subjects: { ...action.subjects },
+                    searchChildSubjects: action.searchChildSubjects,
+                    isDirty: newIsDirty
+                }
+            );
         case LOAD_BOOKS:
             return Object.assign({}, state, { isDirty: false });
     }
     return state;
+}
+
+function subjectsDifferent(oldSubjects, newSubjects){
+    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
 }
 
 function projectselectedSubjects(selectedSubjectsIds, subjects){
