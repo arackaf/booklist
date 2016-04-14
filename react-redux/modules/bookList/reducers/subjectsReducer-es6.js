@@ -5,13 +5,14 @@ import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../util/booksSub
 
 const initialSubjectsState = {
     subjectHash: {},
-    editSubjectsPacket: null
+    editSubjectsPacket: null,
+    loaded: false
 };
 
 function subjectsReducer(state = initialSubjectsState, action = {}){
     switch(action.type){
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects) });
+            return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
         case EDIT_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
         case SET_NEW_SUBJECT_NAME:

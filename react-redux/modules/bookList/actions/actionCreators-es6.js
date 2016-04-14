@@ -14,17 +14,12 @@ export {
     setSearchFilterText
 } from './bookSearch/actionCreators';
 
-export function loadBooksAndSubjects(){
+export function loadSubjects(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_SUBJECTS });
-        dispatch({ type: LOAD_BOOKS });
 
-        Promise.all([
-            ajaxUtil.get('/subject/all'),
-            booksSearch(getState().bookList.bookSearch)
-        ]).then(([subjectsResp, booksResp]) => {
+        Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
             dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
-            dispatch(booksResults(booksResp)); //have the subjects in place before loading books
         });
     }
 }
@@ -33,7 +28,7 @@ export function loadBooks(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_BOOKS });
 
-        Promise.resolve(booksSearch(getState().bookList.bookSearch)).then(resp => dispatch(booksResults(resp)));
+        Promise.resolve(booksSearch(getState().bookList.bookSearch)).then(booksResp => dispatch(booksResults(booksResp)));
     }
 }
 
