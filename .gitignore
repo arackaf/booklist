@@ -81,3 +81,4 @@ react-redux/modules/authenticate/loginScreen.js
 react-redux/modules/bookList/components/bookFilters.js
 react-redux/modules/bookList/components/bookSearch.js
 dataAccess/completedEntriesDAO.js
+react-redux/tests/bookSearchReducerTests.js
