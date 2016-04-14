@@ -95,11 +95,24 @@ class BookFilters extends React.Component {
                 <Navbar fluid={true}>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <a style={{ cursor: 'default' }}>Search filters</a>
+                            <a style={{ cursor: 'default' }}>Your books</a>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
+                        <Nav>
+                            <NavItem disabled={true}>Set subjects</NavItem>
+                            <NavItem>Edit subjects</NavItem>
+                        </Nav>
+                        <Navbar.Header>
+                            <Navbar.Brand>
+                                <a style={{ cursor: 'default' }}>XXX</a>
+                            </Navbar.Brand>
+                        </Navbar.Header>
+                        <Nav>
+                            <NavItem disabled={true}>Set subjects</NavItem>
+                            <NavItem>Edit subjects</NavItem>
+                        </Nav>
                         <Navbar.Form pullLeft>
                             <div className="form-group">
                                 <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>
