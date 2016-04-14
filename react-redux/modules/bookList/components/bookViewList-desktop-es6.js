@@ -36,7 +36,7 @@ class BookViewListDesktop extends React.Component{
                             </tr>
                         </thead>
                         <tbody>
-                        { this.props.books.list.map(book =>
+                        { this.props.subjects.loaded ? this.props.books.list.map(book =>
                             <tr key={book._id}>
                                 <td>
                                     <i onClick={() => this.props.toggleSelectBook(book._id)} className={'fa ' + (this.props.books.selectedBooks[book._id] ? 'fa-check-square-o' : 'fa-square-o')} style={{ cursor: 'pointer' }}></i>
@@ -54,7 +54,7 @@ class BookViewListDesktop extends React.Component{
                                 <td>{book.publicationDate}</td>
                                 <td>{book.pages}</td>
                             </tr>
-                        )}
+                        ) : null}
                         </tbody>
                     </table>
                 </div>

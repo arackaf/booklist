@@ -1,4 +1,4 @@
-const { loadBooks, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects } = require('../actions/actionCreators');
+const { loadBooks, loadSubjects, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects } = require('../actions/actionCreators');
 const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
 
 import MainNavigationBar from '/react-redux/applicationRoot/rootComponents/mainNavigation';
@@ -23,9 +23,12 @@ class BookViewingList extends React.Component {
             desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: selector, mapDispatchWith: actionCreators }
         });
     }
+    componentDidMount(){
+        this.props.dispatch(loadSubjects());
+    }
     componentWillReceiveProps(newProps){
         if (newProps.bookSearch.isDirty){
-            this.props.dispatch(loadBooksAndSubjects());
+            this.props.dispatch(loadBooks());
         }
     }
     addSubject(subject){
