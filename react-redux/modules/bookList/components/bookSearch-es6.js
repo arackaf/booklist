@@ -101,25 +101,25 @@ class BookFilters extends React.Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
-                            <NavItem disabled={true}>Set subjects</NavItem>
+                            <NavItem disabled={!this.props.selectedBooksCount}>Set subjects</NavItem>
                             <NavItem>Edit subjects</NavItem>
                         </Nav>
                         <Navbar.Header>
                             <Navbar.Brand>
-                                <a style={{ cursor: 'default' }}>XXX</a>
+                                <a style={{ cursor: 'default' }}>Filters</a>
                             </Navbar.Brand>
                         </Navbar.Header>
-                        <Nav>
-                            <NavItem disabled={true}>Set subjects</NavItem>
-                            <NavItem>Edit subjects</NavItem>
-                        </Nav>
                         <Navbar.Form pullLeft>
                             <div className="form-group">
-                                <BootstrapButton preset="primary-sm" onClick={() => this.openSubjectsFilterModal()}>Filter by subject</BootstrapButton>
-                            </div>
-                            {' '}
-                            <div className="form-group">
-                                <input className="form-control" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
+                                <div className="input-group">
+                                    <span className="input-group-btn">
+                                        <BootstrapButton preset="default" onClick={() => this.openSubjectsFilterModal()}>By subject</BootstrapButton>
+                                    </span>
+                                    <input className="form-control" placeholder="Title search" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
+                                    <span className="input-group-btn">
+                                        <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
+                                    </span>
+                                </div>
                             </div>
                         </Navbar.Form>
                         <Nav>
@@ -163,8 +163,8 @@ class BookFilters extends React.Component {
                             : null }
                     </Modal.Body>
                     <Modal.Footer>
-                        <BootstrapButton preset="default" className="pull-left" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
-                        <BootstrapButton preset="primary" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
+                        <BootstrapButton preset="primary" className="pull-left" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
+                        <BootstrapButton preset="default" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
                     </Modal.Footer>
                 </Modal>
 
@@ -175,6 +175,9 @@ class BookFilters extends React.Component {
         if (evt.which == 13){
             this.hashManager.setValueOf('bookSearch', evt.target.value);
         }
+    }
+    setSearchText(){
+        this.hashManager.setValueOf('bookSearch', this.refs.searchInput.value);
     }
 }
 

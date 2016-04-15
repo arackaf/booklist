@@ -55,6 +55,11 @@ const booksWithSubjectsSelector = createSelector(
     setBookResultsSubjects
 );
 
-const booksSelector = state => Object.assign({}, state.books, { list: booksWithSubjectsSelector(state) });
+const booksSelector = state => Object.assign({},
+    state.books,
+    {
+        list: booksWithSubjectsSelector(state),
+        selectedBooksCount: Object.keys(state.books.selectedBooks).filter(k => state.books.selectedBooks[k]).length
+    });
 
 module.exports = { booksReducer, booksSelector };
