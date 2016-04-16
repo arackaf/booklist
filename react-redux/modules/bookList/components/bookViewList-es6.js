@@ -50,6 +50,10 @@ class BookViewingList extends React.Component {
                         }
                     </div>
                 </div>
+                <div className="well well-sm">
+                    <img width="16" height="16" src="/static/main-icon.png" />
+                    <a className="pull-right">Desktop site</a>
+                </div>
             </div>
         );
     }

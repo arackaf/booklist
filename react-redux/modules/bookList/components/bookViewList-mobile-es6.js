@@ -47,7 +47,7 @@ class BookViewListMobile extends React.Component{
                     selectedBooksCount={this.props.books.selectedBooksCount}
                     allSubjects={this.props.subjects.list}
                 ></BookFilters>
-                
+
                 <a style={{ cursor: 'pointer' }} onClick={() => this.toggleImages()}>Show images</a>
                 <div className="list-group">
                     { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
