@@ -122,9 +122,9 @@ class BookFilters extends React.Component {
                                 </div>
                             </div>
                         </Navbar.Form>
-                        <Nav>
-                            {
-                            selectedSubjectsCount ?
+                        { selectedSubjectsCount ?
+                            <Nav>
+
                                 <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
@@ -138,9 +138,9 @@ class BookFilters extends React.Component {
                                             <span className="label label-primary">Searching child subjects</span>
                                         </MenuItem> : null
                                     }
-                                </NavDropdown> : null
-                            }
-                        </Nav>
+                                </NavDropdown>
+                            </Nav> : null
+                        }
                     </Navbar.Collapse>
                 </Navbar>
 
@@ -167,7 +167,6 @@ class BookFilters extends React.Component {
                         <BootstrapButton preset="default" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
                     </Modal.Footer>
                 </Modal>
-
             </div>
         )
     }
