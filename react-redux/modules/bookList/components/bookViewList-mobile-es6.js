@@ -48,9 +48,11 @@ class BookViewListMobile extends React.Component{
                     allSubjects={this.props.subjects.list}
                 ></BookFilters>
 
-                <a style={{ cursor: 'pointer' }} onClick={() => this.toggleImages()}>Show images</a>
-                <div className="list-group">
-                    { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
+                <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15 }}>
+                    <a style={{ cursor: 'pointer' }} onClick={() => this.toggleImages()}>Show images</a>
+                    <div className="list-group">
+                        { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
+                    </div>
                 </div>
             </div>
         );

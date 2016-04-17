@@ -92,7 +92,7 @@ class BookFilters extends React.Component {
 
         return (
             <div>
-                <Navbar fluid={true}>
+                <Navbar style={{ border: 0, borderRadius: 0 }} fluid={true}>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <a style={{ cursor: 'default' }}>Your books</a>

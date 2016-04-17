@@ -13,7 +13,7 @@ class MainNavigationBar extends React.Component {
             isBookList = this.props.isBookList;
 
         return (
-            <Navbar fluid={true}>
+            <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
                 <Navbar.Header>
                     <Navbar.Brand>
                         <a style={{ cursor: 'default' }}>Book Tracker</a>
