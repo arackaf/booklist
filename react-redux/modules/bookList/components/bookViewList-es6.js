@@ -52,7 +52,10 @@ class BookViewingList extends React.Component {
                 </div>
                 <div className="well well-sm">
                     <img width="16" height="16" src="/static/main-icon.png" />
-                    <a className="pull-right">Desktop site</a>
+                    <span>Track my books</span>
+                    { this.state.isMobile ?
+                        <a className="pull-right">Desktop site</a> : null
+                    }
                 </div>
             </div>
         );

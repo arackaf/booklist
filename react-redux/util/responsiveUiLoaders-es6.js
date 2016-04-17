@@ -36,6 +36,7 @@ function responsiveMobileDesktopMixin(self, stateName, config){
         if (self.overridden) return;
 
         let isMobile = responsiveBsSizes.indexOf(currentSize) <= mobileCutoffIndex;
+        self.setState({ isMobile });
         if (isMobile !== currentlyMobile){
             currentlyMobile = isMobile;
             loadComponent(currentlyMobile ? config.mobile : config.desktop);
