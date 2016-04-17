@@ -39,7 +39,7 @@ class BookViewingList extends React.Component {
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10' }}>
-                    <div className="panel-body">
+                    <div className="panel-body" style={{ padding: 0 }}>
                         { !this.state.listComponent
                             ? <BookListLoading />
                             : React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
