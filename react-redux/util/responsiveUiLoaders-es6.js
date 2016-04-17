@@ -18,12 +18,12 @@ function responsiveMobileDesktopMixin(self, stateName, config){
 
     self.switchToMobile = function(){
         this.overridden = true;
-        loadComponent.call(self, config.mobile);
+        loadComponent.call(self, config.mobile, true);
     };
 
     self.switchToDesktop = function(){
         this.overridden = true;
-        loadComponent.call(self, config.desktop);
+        loadComponent.call(self, config.desktop, false);
     };
 
     const originalComponentWillDismount = self.componentWillUnmount;
@@ -36,14 +36,13 @@ function responsiveMobileDesktopMixin(self, stateName, config){
         if (self.overridden) return;
 
         let isMobile = responsiveBsSizes.indexOf(currentSize) <= mobileCutoffIndex;
-        self.setState({ isMobile });
         if (isMobile !== currentlyMobile){
             currentlyMobile = isMobile;
-            loadComponent(currentlyMobile ? config.mobile : config.desktop);
+            loadComponent(currentlyMobile ? config.mobile : config.desktop, isMobile);
         }
     }
 
-    function loadComponent(componentObjOrPath){
+    function loadComponent(componentObjOrPath, isMobile){
         let componentPath,
             connectComponentWith,
             mapDispatchWith;
@@ -59,7 +58,7 @@ function responsiveMobileDesktopMixin(self, stateName, config){
             if (connectComponentWith){
                 component = ReactRedux.connect(connectComponentWith, mapDispatchWith)(component);
             }
-            self.setState({ [stateName]: component })
+            self.setState({ [stateName]: component, isMobile });
         });
     }
 }

@@ -18,7 +18,6 @@ class BookViewListDesktop extends React.Component{
                     selectedBooksCount={this.props.books.selectedBooksCount}
                     allSubjects={this.props.subjects.list}
                 ></BookFilters>
-                <br />
 
                 { this.props.books.list.length ?
                 <div>

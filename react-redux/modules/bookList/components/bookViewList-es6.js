@@ -40,10 +40,6 @@ class BookViewingList extends React.Component {
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10' }}>
                     <div className="panel-body">
-                        <button onClick={() => this.switchToDesktop()}>Desktop</button>
-                        <button onClick={() => this.switchToMobile()}>Mobile</button>
-                        <br/><br/>
-
                         { !this.state.listComponent
                             ? <BookListLoading />
                             : React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
@@ -54,7 +50,7 @@ class BookViewingList extends React.Component {
                     <img width="16" height="16" src="/static/main-icon.png" />
                     <span>Track my books</span>
                     { this.state.isMobile ?
-                        <a className="pull-right">Desktop site</a> : null
+                        <a onClick={() => this.switchToDesktop()} className="pull-right">Desktop site</a> : null
                     }
                 </div>
             </div>
