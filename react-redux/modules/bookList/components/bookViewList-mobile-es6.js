@@ -1,4 +1,5 @@
 import BookFilters from './bookSearch';
+const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 
 class BookViewListMobileItem extends React.Component{
     constructor(){
@@ -49,7 +50,7 @@ class BookViewListMobile extends React.Component{
                 ></BookFilters>
 
                 <div style={{ paddingBottom: 15 }}>
-                    <a style={{ marginLeft: 10 }} onClick={() => this.toggleImages()}>Show images</a>
+                    <BootstrapButton style={{ margin: 5 }} onClick={() => this.toggleImages()} preset="info-xs">{ this.state.showImages ? 'Hide covers' : 'Show covers' }</BootstrapButton>
                     <div style={{ border: 0 }} className="list-group docked-to-panel">
                         { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
                     </div>
