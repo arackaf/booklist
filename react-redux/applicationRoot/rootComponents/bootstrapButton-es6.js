@@ -16,7 +16,7 @@ class BootstrapButton extends React.Component{
     }
     render(){
         return (
-            <button className={this.state.btnCss} onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</button>
+            <button className={this.state.btnCss} style={{ ...this.props.style }} onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</button>
         )
     }
 }
