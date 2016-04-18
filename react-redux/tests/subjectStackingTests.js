@@ -106,8 +106,7 @@ describe('Subject updating', function () {
             affectedSubjects: [{ _id: 2, name: 'b2', path: ',99,' }, { _id: 3, name: 'c', path: ',99,2,' }, { _id: 32, name: 'c2', path: ',99,2,' }],
             _id: 2,
             newName: 'b2',
-            newParent: 99,
-            existingParent: 1
+            newParent: 99
         });
         verifySubjects(subjects, [{ _id: 99, name: '99', children: [{ _id: 2, name: 'b2', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }] }, { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }] }], 'top level');
     });
@@ -117,8 +116,7 @@ describe('Subject updating', function () {
             affectedSubjects: [{ _id: 2, name: 'b2', path: null }, { _id: 3, name: 'c', path: ',99,2,' }, { _id: 32, name: 'c2', path: ',99,2,' }],
             _id: 2,
             newName: 'b2',
-            newParent: null,
-            existingParent: 1
+            newParent: null
         });
         verifySubjects(subjects, [{ _id: 2, name: 'b2', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] }, { _id: 99, name: '99', children: [] }, { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }] }], 'top level');
     });
@@ -128,8 +126,7 @@ describe('Subject updating', function () {
             affectedSubjects: [{ _id: 99, name: '99a', path: ',1,2,32,' }],
             _id: 99,
             newName: '99a',
-            newParent: 32,
-            existingParent: 1
+            newParent: 32
         });
         verifySubjects(subjects, [{ _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2', children: [{ _id: 99, name: '99a' }] }] }] }], 'top level');
     });
@@ -140,7 +137,7 @@ function loadSubjectsAndEdit(subjects, _id) {
 }
 
 function loadSubjectsThenUpdate(subjects, info) {
-    return apply({ type: LOAD_SUBJECTS_RESULTS, subjects: subjects }, { type: UPDATE_SUBJECT_RESULTS, _id: info._id, newName: info.newName, existingParent: info.existingParent, newParent: info.newParent, affectedSubjects: info.affectedSubjects }).subjects.list;
+    return apply({ type: LOAD_SUBJECTS_RESULTS, subjects: subjects }, { type: UPDATE_SUBJECT_RESULTS, _id: info._id, newName: info.newName, newParent: info.newParent, affectedSubjects: info.affectedSubjects }).subjects.list;
 }
 
 function loadSubjects(subjects) {

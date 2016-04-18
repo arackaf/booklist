@@ -1,3 +1,4 @@
+const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const Collapse = ReactBootstrap.Collapse;
 
 class HierarchicalSubjectItem extends React.Component {
@@ -34,9 +35,11 @@ class HierarchicalSubjectItem extends React.Component {
 class HierarchicalSubjectList extends React.Component {
     render() {
         return (
-            <ul>
-                { this.props.subjects.map(s => <HierarchicalSubjectItem onEdit={this.props.onEdit} key={s._id} {...s} />) }
-            </ul>
+            <div>
+                <ul>
+                    { this.props.subjects.map(s => <HierarchicalSubjectItem onEdit={this.props.onEdit} key={s._id} {...s} />) }
+                </ul>
+            </div>
         )
     }
 }

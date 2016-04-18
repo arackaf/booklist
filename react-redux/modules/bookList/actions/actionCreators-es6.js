@@ -1,6 +1,6 @@
 import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
-        EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
+        NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS
 } from './actionNames';
 
@@ -77,12 +77,17 @@ export function editSubject(_id){
     return { type: EDIT_SUBJECT, _id };
 }
 
-export function updateSubject(){
-    return function(dispatch, getState) {
-        let { editingSubject: { _id }, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.subjects.editSubjectsPacket;
+export function newSubject(){
+    return { type: NEW_SUBJECT };
+}
 
-        ajaxUtil.post('/subject/setInfo', {_id, newName, newParent}, resp => {
-            dispatch({ type: UPDATE_SUBJECT_RESULTS, _id, newName, newParent, affectedSubjects: resp.affectedSubjects, existingParent: resp.existingParent });
+export function createOrUpdateSubject(){
+    return function(dispatch, getState) {
+        let { editingSubject, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.subjects.editSubjectsPacket,
+            request = { _id: editingSubject ? editingSubject._id : null, newName, newParent };
+
+        ajaxUtil.post('/subject/setInfo', request, resp => {
+            dispatch({ type: UPDATE_SUBJECT_RESULTS, newName, newParent, affectedSubjects: resp.affectedSubjects });
         });
     }
 }
