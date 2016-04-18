@@ -136,8 +136,7 @@ describe('Subject updating', function() {
             ],
             _id: 2,
             newName: 'b2',
-            newParent: 99,
-            existingParent: 1
+            newParent: 99
         });
         verifySubjects(subjects, [
             { _id: 99, name: '99', children: [ { _id: 2, name: 'b2', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] } ] },
@@ -161,8 +160,7 @@ describe('Subject updating', function() {
             ],
             _id: 2,
             newName: 'b2',
-            newParent: null,
-            existingParent: 1
+            newParent: null
         });
         verifySubjects(subjects, [
             { _id: 2, name: 'b2', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2' }] },
@@ -185,8 +183,7 @@ describe('Subject updating', function() {
             ],
             _id: 99,
             newName: '99a',
-            newParent: 32,
-            existingParent: 1
+            newParent: 32
         });
         verifySubjects(subjects, [
             { _id: 1, name: 'a', children: [{ _id: 22, name: 'b2' }, { _id: 2, name: 'b', children: [{ _id: 3, name: 'c' }, { _id: 32, name: 'c2', children: [{ _id: 99, name: '99a' }]}] }] }
@@ -205,7 +202,7 @@ function loadSubjectsAndEdit(subjects, _id){
 function loadSubjectsThenUpdate(subjects, info){
     return apply(
         { type: LOAD_SUBJECTS_RESULTS, subjects },
-        { type: UPDATE_SUBJECT_RESULTS, _id: info._id, newName: info.newName, existingParent: info.existingParent, newParent: info.newParent, affectedSubjects: info.affectedSubjects }
+        { type: UPDATE_SUBJECT_RESULTS, _id: info._id, newName: info.newName, newParent: info.newParent, affectedSubjects: info.affectedSubjects }
     ).subjects.list;
 }
 

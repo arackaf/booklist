@@ -12,6 +12,7 @@ class BookViewListDesktop extends React.Component{
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
     render(){
+        let editSubjectsPacket = this.props.subjects.editSubjectsPacket;
         return (
             <div>
                 <BookFilters
@@ -67,18 +68,20 @@ class BookViewListDesktop extends React.Component{
                 }
                 <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
 
-                <Modal show={!!this.props.subjects.editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
+                <Modal show={!!editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Edit subjects
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <BootstrapButton onClick={this.props.newSubject} preset="primary">New subject</BootstrapButton>
+                        <br />
                         <HierarchicalSubjectList subjects={this.props.subjects.list} onEdit={_id => this.props.editSubject(_id)} />
 
-                        { this.props.subjects.editSubjectsPacket && this.props.subjects.editSubjectsPacket.editingSubject ?
+                        { editSubjectsPacket && editSubjectsPacket.editing ?
                             <div>
-                                { this.props.subjects.editSubjectsPacket.editingSubject._id ? `Edit subject ${this.props.subjects.editSubjectsPacket.editingSubject.name}` : 'New Subject' }
+                                { this.props.subjects.editSubjectsPacket.editingSubject ? `Edit subject ${this.props.subjects.editSubjectsPacket.editingSubject.name}` : 'New Subject' }
                                 <br/>
                                 New name: <input value={this.props.subjects.editSubjectsPacket.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
                                 New Parent:
@@ -86,7 +89,7 @@ class BookViewListDesktop extends React.Component{
                                     <option value="">None</option>
                                     { this.props.subjects.editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                 </select>
-                                <BootstrapButton onClick={this.props.updateSubject}>Save</BootstrapButton>
+                                <BootstrapButton onClick={this.props.createOrUpdateSubject}>Save</BootstrapButton>
                             </div>
                             : null
                         }

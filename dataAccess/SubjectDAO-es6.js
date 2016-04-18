@@ -10,6 +10,17 @@ class SubjectDAO extends DAO {
         let db = await super.open();
 
         try{
+            if (!_id){
+                let newPath = null;
+                if (newParent){
+                    let existingParent = await db.collection('subjects').findOne({ _id: ObjectId(newParent) });
+                    newPath = (existingParent.path || ',') + ('' + existingParent._id) + ',';
+                }
+                let newSubject = { name: newName, path: newPath, userId: this.userId };
+                await db.collection('subjects').insert(newSubject);
+                return { affectedSubjects: [newSubject] };
+            }
+
             let existing = await db.collection('subjects').findOne({ _id: ObjectId(_id) });
             await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { name: newName } });
 
@@ -24,7 +35,7 @@ class SubjectDAO extends DAO {
             if (existingParent != newParent) {
                 var affectedSubjects = await this.updateSubjectParent(_id, newParent);
             }
-            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name: newName })], existingParent };
+            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name: newName })] };
         } finally{
             super.dispose(db);
         }
