@@ -1,9 +1,9 @@
-const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const Modal = ReactBootstrap.Modal;
-const HierarchicalSubjectList = require('./hierarchicalSubjectList');
 
 import BookFilters from './bookSearch';
 import BookSubjectSetterDesktop from './BookSubjectSetter-desktop';
+import SubjectEditModal from './subject-edit/subjectEditModal';
+import BootstrapButton from '/react-redux/applicationRoot/rootComponents/bootstrapButton';
 
 class BookViewListDesktop extends React.Component{
     constructor(props){
@@ -67,37 +67,12 @@ class BookViewListDesktop extends React.Component{
                 </div>
                 }
                 <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
+                <SubjectEditModal
+                    editSubjectsPacket={this.props.subjects.editSubjectsPacket}
+                    subjects={this.props.subjects.list}>
+                </SubjectEditModal>
 
-                <Modal show={!!editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>
-                            Edit subjects
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <BootstrapButton onClick={this.props.newSubject} preset="primary">New subject</BootstrapButton>
-                        <br />
-                        <HierarchicalSubjectList subjects={this.props.subjects.list} onEdit={_id => this.props.editSubject(_id)} />
 
-                        { editSubjectsPacket && editSubjectsPacket.editing ?
-                            <div>
-                                { this.props.subjects.editSubjectsPacket.editingSubject ? `Edit subject ${this.props.subjects.editSubjectsPacket.editingSubject.name}` : 'New Subject' }
-                                <br/>
-                                New name: <input value={this.props.subjects.editSubjectsPacket.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
-                                New Parent:
-                                <select value={this.props.subjects.editSubjectsPacket.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
-                                    <option value="">None</option>
-                                    { this.props.subjects.editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
-                                </select>
-                                <BootstrapButton onClick={this.props.createOrUpdateSubject}>Save</BootstrapButton>
-                            </div>
-                            : null
-                        }
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button onClick={this.props.stopEditingSubjects}>Close</button>
-                    </Modal.Footer>
-                </Modal>                
             </div>
         );
     }
