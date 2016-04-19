@@ -1,11 +1,11 @@
-const { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../../react-redux/modules/bookEntry/actions/actionCreators');
+const { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../../react-redux/modules/scan/actions/actionCreators');
 
 const Redux = require('redux');
 const thunkMiddleware = require('../../react-redux/util/redux-thunk');
 const sinon = require('sinon');
 const assert = require('chai').assert;
 
-const reducer = require('../../react-redux/modules/bookEntry/reducers/reducer');
+const reducer = require('../../react-redux/modules/scan/reducers/reducer');
 
 const createStoreWithMiddleware = Redux.applyMiddleware(
     thunkMiddleware
