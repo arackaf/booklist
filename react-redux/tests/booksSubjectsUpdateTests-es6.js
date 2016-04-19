@@ -1,10 +1,10 @@
-const { LOAD_BOOKS_RESULTS } = require('../../react-redux/modules/bookList/actions/actionNames');
-const { SET_BOOKS_SUBJECTS } = require('../../react-redux/modules/bookList/actions/bookSubjectModify/actionNames');
-const { booksResults } = require('../../react-redux/modules/bookList/actions/actionCreators');
+const { LOAD_BOOKS_RESULTS } = require('../../react-redux/modules/books/actions/actionNames');
+const { SET_BOOKS_SUBJECTS } = require('../../react-redux/modules/books/actions/bookSubjectModify/actionNames');
+const { booksResults } = require('../../react-redux/modules/books/actions/actionCreators');
 
 const assert = require('chai').assert;
 
-const { booksReducer, booksSelector } = require('../../react-redux/modules/bookList/reducers/booksReducer');
+const { booksReducer, booksSelector } = require('../../react-redux/modules/books/reducers/booksReducer');
 
 describe('books subject updating', function() {
 

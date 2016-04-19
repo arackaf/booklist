@@ -1,7 +1,7 @@
-import { bookSearchReducer as reducer } from '../modules/bookList/reducers/bookSearchReducer';
-import { setFilters } from '../modules/bookList/actions/bookSearch/actionCreators';
+import { bookSearchReducer as reducer } from '../modules/books/reducers/bookSearchReducer';
+import { setFilters } from '../modules/books/actions/bookSearch/actionCreators';
 
-import { LOAD_BOOKS } from '../modules/bookList/actions/actionNames';
+import { LOAD_BOOKS } from '../modules/books/actions/actionNames';
 
 const assert = require('chai').assert;
 

@@ -55,7 +55,7 @@ class Login extends React.Component{
                 this.setState({ errorCode: resp.errorCode, running: false });
             } else {
                 ajaxUtil.post('/react-redux/login', { username, password, rememberme }, () => {
-                    window.location.hash = '#bookEntry'; //new user - send them to where they can enter some books
+                    window.location.hash = '#books'; //new user - send them to where they can enter some books
                 });
             }
         });
