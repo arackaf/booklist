@@ -1,6 +1,6 @@
 const Modal = ReactBootstrap.Modal;
 
-import BookFilters from './bookSearch';
+import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './BookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from '/react-redux/applicationRoot/rootComponents/bootstrapButton';
@@ -15,10 +15,10 @@ class BookViewListDesktop extends React.Component{
         let editSubjectsPacket = this.props.subjects.editSubjectsPacket;
         return (
             <div>
-                <BookFilters
+                <BooksMenuBar
                     selectedBooksCount={this.props.books.selectedBooksCount}
                     allSubjects={this.props.subjects.list}
-                ></BookFilters>
+                ></BooksMenuBar>
 
                 { this.props.books.list.length ?
                 <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15 }}>
