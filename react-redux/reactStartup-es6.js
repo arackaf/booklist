@@ -14,7 +14,7 @@ loadCurrentModule();
 
 function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
-        module = hash.split('/')[0] || 'bookList';
+        module = hash.split('/')[0] || 'books';
 
     let loggedIn = /logged_in/ig.test(document.cookie);
     if (!loggedIn){

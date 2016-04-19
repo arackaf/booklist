@@ -1,8 +1,8 @@
-const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../../react-redux/modules/bookList/actions/actionNames');
+const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../../react-redux/modules/books/actions/actionNames');
 
 const assert = require('chai').assert;
 
-const { reducer, selector } = require('../../react-redux/modules/bookList/reducers/reducer');
+const { reducer, selector } = require('../../react-redux/modules/books/reducers/reducer');
 
 describe('subject stacking', function() {
 
@@ -214,7 +214,7 @@ function apply(...actions){
     let state = reducer(undefined, {});
     actions.forEach(a => state = reducer(state, a));
 
-    return selector({ bookList: state });
+    return selector({ books: state });
 }
 
 function verifyTopLevelSubjectsOnly(actual, expected){

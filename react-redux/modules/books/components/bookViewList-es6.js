@@ -19,8 +19,8 @@ class BookViewingList extends React.Component {
         super();
 
         responsiveMobileDesktopMixin(this, 'listComponent', {
-            mobile:  { path: './modules/bookList/components/bookViewList-mobile', connectWith: selector },
-            desktop: { path: './modules/bookList/components/bookViewList-desktop', connectWith: selector, mapDispatchWith: actionCreators }
+            mobile:  { path: './modules/books/components/bookViewList-mobile', connectWith: selector },
+            desktop: { path: './modules/books/components/bookViewList-desktop', connectWith: selector, mapDispatchWith: actionCreators }
         });
     }
     componentDidMount(){
