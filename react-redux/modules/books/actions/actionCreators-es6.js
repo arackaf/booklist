@@ -28,7 +28,7 @@ export function loadBooks(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_BOOKS });
 
-        Promise.resolve(booksSearch(getState().bookList.bookSearch)).then(booksResp => dispatch(booksResults(booksResp)));
+        Promise.resolve(booksSearch(getState().books.bookSearch)).then(booksResp => dispatch(booksResults(booksResp)));
     }
 }
 
@@ -83,7 +83,7 @@ export function newSubject(){
 
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject, newSubjectName: newName, newSubjectParent: newParent } = getState().bookList.subjects.editSubjectsPacket,
+        let { editingSubject, newSubjectName: newName, newSubjectParent: newParent } = getState().books.subjects.editSubjectsPacket,
             request = { _id: editingSubject ? editingSubject._id : null, newName, newParent };
 
         ajaxUtil.post('/subject/setInfo', request, resp => {

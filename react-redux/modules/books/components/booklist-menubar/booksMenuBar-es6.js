@@ -180,6 +180,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.bookList), { ...bookSearchActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;
