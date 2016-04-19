@@ -115,3 +115,4 @@ react-redux/modules/books/reducers/booksReducer.js
 react-redux/modules/books/reducers/booksSubjectModifierReducer.js
 react-redux/modules/books/components/booklist-menubar/hierarchicalSelectableSubjectList.js
 react-redux/modules/books/components/subject-edit/hierarchicalSubjectList.js
+react-redux/modules/scan/scan.js

@@ -214,7 +214,7 @@ function apply(...actions){
     let state = reducer(undefined, {});
     actions.forEach(a => state = reducer(state, a));
 
-    return selector({ bookList: state });
+    return selector({ books: state });
 }
 
 function verifyTopLevelSubjectsOnly(actual, expected){

@@ -3,8 +3,6 @@ const { subjectsReducer: subjects, subjectsSelector } = require('./subjectsReduc
 const { bookSearchReducer: bookSearch, bookSearchSelector } = require('./bookSearchReducer');
 const { bookSubjectManagerReducer: booksSubjectsModifier, booksSubjectsModifierSelector } = require('./booksSubjectModifierReducer');
 
-const actionCreators = require('../actions/actionCreators');
-
 const reducer = Redux.combineReducers({
     books,
     subjects,
@@ -14,10 +12,10 @@ const reducer = Redux.combineReducers({
 
 const bookListSelector = state => {
     return {
-        subjects: subjectsSelector(state.bookList),
-        books: booksSelector(state.bookList),
-        bookSearch: bookSearchSelector(state.bookList),
-        booksSubjectsModifier: booksSubjectsModifierSelector(state.bookList)
+        subjects: subjectsSelector(state.books),
+        books: booksSelector(state.books),
+        bookSearch: bookSearchSelector(state.books),
+        booksSubjectsModifier: booksSubjectsModifierSelector(state.books)
     }
 };
 
