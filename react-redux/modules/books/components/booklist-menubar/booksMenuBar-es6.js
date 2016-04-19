@@ -12,7 +12,7 @@ const hashUtil = require('/utils/hashManager');
 
 const { bookSearchSelector } = require('../../reducers/bookSearchReducer');
 
-import * as bookSearchActionCreators from '../../actions/bookSearch/actionCreators';
+import * as bookSearchActionCreators from '../../actions/actionCreators';
 
 class BooksMenuBar extends React.Component {
     constructor(props) {
@@ -101,8 +101,8 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
-                            <NavItem disabled={!this.props.selectedBooksCount}>Set subjects</NavItem>
-                            <NavItem>Edit subjects</NavItem>
+                            <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount}>Set subjects</NavItem>
+                            <NavItem onClick={this.props.editSubjects}>Edit subjects</NavItem>
                         </Nav>
                         <Navbar.Header>
                             <Navbar.Brand>
