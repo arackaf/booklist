@@ -28,7 +28,7 @@
     "passport-local": "1.0.0",
     "promise": "7.0.4",
     "react": "0.14.0",
-    "react-bootstrap": "0.28.5",
+    "react-bootstrap": "0.29.0",
     "react-dom": "0.14.0",
     "react-motion": "0.4.2",
     "react-redux": "4.4.0",
