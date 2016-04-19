@@ -34,7 +34,7 @@ export function getBook(index){
 export function saveAllPending(){
     return function(dispatch, getState){
         let state = getState(),
-            toSave = state.bookEntry.entryList.map((b, i) => ({ b, i })).filter(({ b }) => !b.fetched && !b.fetching && b.isbn.length);
+            toSave = state.scan.entryList.map((b, i) => ({ b, i })).filter(({ b }) => !b.fetched && !b.fetching && b.isbn.length);
 
         dispatch(gettingBooks(toSave.map(({ i }) => i)));
         toSave.forEach(({ b: book, i: index }) => enterBook(index, book.isbn));

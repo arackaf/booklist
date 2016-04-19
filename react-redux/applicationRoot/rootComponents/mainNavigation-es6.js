@@ -22,7 +22,7 @@ class MainNavigationBar extends React.Component {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                        <NavItem active={isBookEntry} href={isBookEntry ? undefined : '#bookEntry'}>Book entry</NavItem>
+                        <NavItem active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem>
                         <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>Your books</NavItem>
                         <NavItem onClick={this.logout}>Logout</NavItem>
                     </Nav>
