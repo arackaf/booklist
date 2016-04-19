@@ -84,3 +84,5 @@ dataAccess/completedEntriesDAO.js
 react-redux/tests/bookSearchReducerTests.js
 react-redux/modules/bookList/components/subject-edit/hierarchicalSubjectList.js
 react-redux/modules/bookList/components/subject-edit/subjectEditModal.js
+react-redux/modules/bookList/components/booklist-menubar/booksMenuBar.js
+react-redux/modules/bookList/components/booklist-menubar/hierarchicalSelectableSubjectList.js

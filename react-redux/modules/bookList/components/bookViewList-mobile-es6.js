@@ -1,4 +1,4 @@
-import BookFilters from './bookSearch';
+import BooksMenuBar from './booklist-menubar/booksMenuBar';
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 
 class BookViewListMobileItem extends React.Component{
@@ -44,10 +44,10 @@ class BookViewListMobile extends React.Component{
     render(){
         return (
             <div>
-                <BookFilters
+                <BooksMenuBar
                     selectedBooksCount={this.props.books.selectedBooksCount}
                     allSubjects={this.props.subjects.list}
-                ></BookFilters>
+                ></BooksMenuBar>
 
                 <div style={{ paddingBottom: 15 }}>
                     <BootstrapButton style={{ margin: 5 }} onClick={() => this.toggleImages()} preset="info-xs">{ this.state.showImages ? 'Hide covers' : 'Show covers' }</BootstrapButton>

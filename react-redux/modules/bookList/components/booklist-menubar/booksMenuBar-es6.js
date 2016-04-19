@@ -10,11 +10,11 @@ const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubje
 const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
 const hashUtil = require('/utils/hashManager');
 
-const { bookSearchSelector } = require('../reducers/bookSearchReducer');
+const { bookSearchSelector } = require('../../reducers/bookSearchReducer');
 
-import * as bookSearchActionCreators from '../actions/bookSearch/actionCreators';
+import * as bookSearchActionCreators from '../../actions/bookSearch/actionCreators';
 
-class BookFilters extends React.Component {
+class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
         this.togglePendingSubject = this.togglePendingSubject.bind(this);
@@ -180,6 +180,6 @@ class BookFilters extends React.Component {
     }
 }
 
-const BookFiltersConnected = ReactRedux.connect(state => bookSearchSelector(state.bookList), { ...bookSearchActionCreators })(BookFilters);
+const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.bookList), { ...bookSearchActionCreators })(BooksMenuBar);
 
-export default BookFiltersConnected;
+export default BooksMenuBarConnected;
