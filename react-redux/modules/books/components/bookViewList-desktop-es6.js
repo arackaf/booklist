@@ -22,9 +22,6 @@ class BookViewListDesktop extends React.Component{
 
                 { this.props.books.list.length ?
                 <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15 }}>
-                    <BootstrapButton preset="primary-sm" onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</BootstrapButton>
-                    &nbsp;&nbsp;&nbsp;
-                    <BootstrapButton preset="primary-sm" onClick={this.props.editSubjects}>Edit subjects</BootstrapButton>
                     <table className="table table-striped">
                         <thead>
                             <tr>
