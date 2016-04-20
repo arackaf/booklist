@@ -41,7 +41,7 @@ function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, actio
 const modifyingBooksSelector = createSelector(
     [state => state.booksSubjectsModifier.singleBookModify, state => state.booksSubjectsModifier.selectedBooksModify, state => state.books],
     (singleBookModify, selectedBooksModify, books) => {
-        let modifyingBookIds = singleBookModify ? [singleBookModify] : (selectedBooksModify ? Object.keys(books.selectedBooks) : []);
+        let modifyingBookIds = singleBookModify ? [singleBookModify] : (selectedBooksModify ? Object.keys(books.selectedBooks).filter(k => books.selectedBooks[k]) : []);
         return modifyingBookIds.filter(_id => _id).map(_id => books.booksHash[_id]);
     }
 );
