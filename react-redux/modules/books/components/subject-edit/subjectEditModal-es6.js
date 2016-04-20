@@ -16,9 +16,10 @@ class subjectEditModal extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <BootstrapButton onClick={this.props.newSubject} preset="primary">New subject</BootstrapButton>
+                    <BootstrapButton onClick={this.props.newSubject} preset="info-xs">New subject</BootstrapButton>
                     <br />
-                    <HierarchicalSubjectList subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
+                    <br />
+                    <HierarchicalSubjectList style={{ paddingLeft: 5 }} subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
 
                     { editSubjectsPacket && editSubjectsPacket.editing ?
                         <div>
