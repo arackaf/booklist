@@ -9,10 +9,6 @@ export {
     enableSubjectModificationToggledBooks
 } from './bookSubjectModify/actionCreators';
 
-export {
-    setFilteredSubjects,
-    setSearchFilterText
-} from './bookSearch/actionCreators';
 
 export function loadSubjects(){
     return function(dispatch, getState){
