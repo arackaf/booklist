@@ -1,5 +1,5 @@
 import { bookSearchReducer as reducer } from '../modules/books/reducers/bookSearchReducer';
-import { setFilters } from '../modules/books/actions/bookSearch/actionCreators';
+import { setFilters } from '../modules/books/actions/actionCreators';
 
 import { LOAD_BOOKS } from '../modules/books/actions/actionNames';
 
