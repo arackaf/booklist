@@ -19,6 +19,8 @@ class SubjectDAO extends DAO {
             { $pull: { subjects: _id } }, { upsert: false, multi: true }
         );
 
+        await db.collection('subjects').remove({ _id: ObjectId(_id) });
+
         return { booksUpdated: booksToUpdate.map(String) };
     }
     async updateSubjectInfo(_id, newName, newParent){

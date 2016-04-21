@@ -1,4 +1,4 @@
-const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../actions/actionNames');
+import { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED } from '../actions/actionNames';
 
 const { createSelector } = require('../../../util/reselect');
 import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../util/booksSubjectsHelpers';
@@ -41,6 +41,12 @@ function subjectsReducer(state = initialSubjectsState, action = {}){
         case UPDATE_SUBJECT_RESULTS:
             let changedSubjects = subjectsToHash(action.affectedSubjects);
             return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editing: false, editingSubject: null }), subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });
+        case SUBJECT_DELETED:
+            let editSubjectsPacket = Object.assign({}, state.editSubjectsPacket, { editing: false });
+            let subjectHash = { ...state.subjectHash };
+            delete subjectHash[action.subjectId];
+
+            return Object.assign({}, state, { editSubjectsPacket, subjectHash });
     }
     return state;
 }

@@ -1,5 +1,5 @@
 const { createSelector } = require('../../../util/reselect');
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } = require('../actions/actionNames');
+const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } = require('../actions/actionNames');
 const { SET_BOOKS_SUBJECTS } = require('../actions/bookSubjectModify/actionNames');
 const { setBookResultsSubjects } = require('../util/booksSubjectsHelpers');
 
@@ -39,6 +39,13 @@ function booksReducer(state = initialBooksState, action){
                 newBookHash[_id] = book;
             });
 
+            return Object.assign({}, state, { booksHash: newBookHash });
+        case SUBJECT_DELETED:
+            var newBookHash = Object.assign({}, state.booksHash);
+            action.booksUpdated.forEach(_id => {
+                let bookEntry = newBookHash[_id];
+                newBookHash[_id] = { ...bookEntry, subjects: bookEntry.subjects.filter(sid => sid != action.subjectId) };
+            });
             return Object.assign({}, state, { booksHash: newBookHash });
     }
     return state;
