@@ -40,6 +40,7 @@ class subjectEditModal extends React.Component {
                                         </select>
                                     </div>
                                     <BootstrapButton preset="primary" onClick={e => { this.props.createOrUpdateSubject(); e.preventDefault();} }>Save</BootstrapButton>
+                                    <BootstrapButton className="pull-right" preset="danger" onClick={e => { this.props.deleteSubject(); e.preventDefault();} }>Delete</BootstrapButton>
                                 </form>
                             </div>
                         </div>
