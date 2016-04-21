@@ -1,7 +1,7 @@
 import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
         TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SET_FILTERS
+        UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SET_FILTERS, SUBJECT_DELETED
 } from './actionNames';
 
 export {
@@ -92,7 +92,7 @@ export function deleteSubject(){
     return function(dispatch, getState) {
         let request = { _id: getState().books.subjects.editSubjectsPacket.editingSubject._id + '' };
         ajaxUtil.post('/subject/delete', request, resp => {
-            //dispatch({ type: UPDATE_SUBJECT_RESULTS, newName, newParent, affectedSubjects: resp.affectedSubjects });
+            dispatch({ type: SUBJECT_DELETED, subjectId: request._id, booksUpdated: resp.booksUpdated });
         });
     }
 }
