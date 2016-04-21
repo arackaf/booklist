@@ -82,8 +82,6 @@ class HashUtility {
             result += '/' + hashObject.submodule;
         }
 
-        result += '/';
-
         var allPairs = [];
         if (hashObject.parameters) {
             Object.keys(hashObject.parameters).forEach(k => {
@@ -98,11 +96,9 @@ class HashUtility {
         }
 
         if (allPairs.length) {
-            result += '?' + allPairs.join('&');
-            return result
-        } else {
-            return "";
+            result += '/?' + allPairs.join('&');
         }
+        return result;
     }
     removeFromHash(...keys){
         var hashInfo = this.parseHashTag(window.location.hash);
