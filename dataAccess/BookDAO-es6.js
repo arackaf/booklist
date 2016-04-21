@@ -63,12 +63,12 @@ class BookDAO extends DAO {
         try{
             await db.collection('books').update(
                 { _id: { $in: books.map(_id => ObjectId(_id)) } },
-                { $addToSet: { subjects: { $each: (add || []).map(_id => ObjectId(_id)) } } }, false, true
+                { $addToSet: { subjects: { $each: (add || []) } } }, { upsert: false, multi: true }
             );
 
             await db.collection('books').update(
                 { _id: { $in: books.map(_id => ObjectId(_id)) } },
-                { $pullAll: { subjects: (remove || []).map(_id => ObjectId(_id)) } }, false, true
+                { $pullAll: { subjects: (remove || []) } }, { upsert: false, multi: true }
             );
 
         } finally {

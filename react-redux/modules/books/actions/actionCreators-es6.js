@@ -88,6 +88,15 @@ export function createOrUpdateSubject(){
     }
 }
 
+export function deleteSubject(){
+    return function(dispatch, getState) {
+        let request = { _id: getState().books.subjects.editSubjectsPacket.editingSubject._id + '' };
+        ajaxUtil.post('/subject/delete', request, resp => {
+            //dispatch({ type: UPDATE_SUBJECT_RESULTS, newName, newParent, affectedSubjects: resp.affectedSubjects });
+        });
+    }
+}
+
 export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
 }

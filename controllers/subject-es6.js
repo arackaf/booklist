@@ -16,6 +16,12 @@ class subjectController{
 
         this.send({ affectedSubjects });
     }
+    @httpPost
+    async delete(_id){
+        let subjectDao = new SubjectDAO(this.request.user.id);
+        let { booksUpdated } = await subjectDao.deleteSubject(_id);
+        this.send({ success: true, booksUpdated });
+    }
 }
 
 module.exports = subjectController;

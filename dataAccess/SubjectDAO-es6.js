@@ -6,6 +6,21 @@ class SubjectDAO extends DAO {
         super();
         this.userId = userId;
     }
+    async deleteSubject(_id){
+        let db = await super.open();
+        let subjectToDelete = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+
+        if (!subjectToDelete) return;
+
+        let booksToUpdate = (await db.collection('books').find({ subjects: _id, userId: this.userId }, {_id: 1}).toArray()).map(o => o._id);
+
+        await db.collection('books').update(
+            { _id: { $in: booksToUpdate } },
+            { $pull: { subjects: _id } }, { upsert: false, multi: true }
+        );
+
+        return { booksUpdated: booksToUpdate.map(String) };
+    }
     async updateSubjectInfo(_id, newName, newParent){
         let db = await super.open();
 
