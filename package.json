@@ -1,5 +1,9 @@
 {
   "name": "Booklist",
+  "main": "app.js",
+  "engines" : {
+    "node": "4.1.1"
+  },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.0.1",
   "dependencies": {
