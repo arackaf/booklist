@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var ObjectId = require('mongodb').ObjectID;
 
 var DAO = require('../../dataAccess/DAO');
-var SubjectDAO = require('../../dataAccess/SubjectDAO');
+var SubjectDAO = require('../../dataAccess/subjectDAO');
 
 var dao = undefined,
     db = undefined,
