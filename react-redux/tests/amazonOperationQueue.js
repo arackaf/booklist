@@ -1,7 +1,5 @@
 'use strict';
 
-global.Symbol = require('es6-symbol');
-global.Promise = require('promise');
 require('../../utils/promiseUtils');
 
 var assert = require('chai').assert;

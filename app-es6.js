@@ -1,5 +1,3 @@
-global.Symbol = require('es6-symbol');
-
 require('regenerator/runtime');
 require('./utils/promiseUtils');
 
@@ -84,10 +82,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate('remember-me'));
 
-
 var expressWs = require('express-ws')(app);
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 
 app.use('/static/', express.static(__dirname + '/static/'));
 app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
