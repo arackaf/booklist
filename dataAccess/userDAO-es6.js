@@ -1,4 +1,4 @@
-import DAO from './DAO';
+import DAO from './dao';
 import md5 from 'blueimp-md5';
 import salt from '../private/salt';
 import { ObjectID } from 'mongodb';
