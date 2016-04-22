@@ -2,7 +2,7 @@ const assert = require('chai').assert;
 const ObjectId = require('mongodb').ObjectID;
 
 const DAO = require('../../dataAccess/DAO');
-const BookDAO = require('../../dataAccess/BookDAO');
+const BookDAO = require('../../dataAccess/bookDAO');
 
 describe('book search', function() {
     let dao,
