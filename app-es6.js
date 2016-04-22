@@ -1,7 +1,6 @@
 global.Symbol = require('es6-symbol');
 
 require('regenerator/runtime');
-global.Promise = require('promise');
 require('./utils/promiseUtils');
 
 const express = require('express');
@@ -14,6 +13,7 @@ const nodemailer = require('nodemailer');
 import { authInfo, myAddresses } from './utils/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
+import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
 import UserDao from './dataAccess/userDAO';
 
 var passport = require('passport'),
@@ -175,26 +175,20 @@ app.post('/react-redux/createUser', function(req, response){
     });
 });
 
+process.on('uncaughtException', function (err) {
+    try{
+        let logger = new ErrorLoggerDao();
+        logger.log('exception', err);
+    } catch(e) { }
+});
 
-let toEnter = [
-    '1617291412',
-    '0735658366',
-    '1449344682',
-    '1449340040',
-    '9781449334994',
-    '0262510871',
-    '161729134X',
-    '1937785653',
-    '193435659X',
-    '1937785335',
-    '1783287314',
-    '1484212614',
-    '1491904240',
-    '1449369278'
-];
+process.on('unhandledRejection', function (err, p) {
+    try{
+        let logger = new ErrorLoggerDao();
+        logger.log('promise rejection', err);
+    } catch(e) { }
+});
 
-let pendingDao = new PendingBookEntryDao();
-//let allPromises = toEnter.map(isbn => pendingDao.add({ userId: 1, isbn }));
-//Promise.all(allPromises).then(() => bookEntryQueueManager.initialize());
 
 bookEntryQueueManager.initialize();
+

@@ -23,7 +23,9 @@ class DAO{
         console.log(err)
     }
     dispose(db){
-        db.close();
+        try {
+            db.close();
+        } catch(err){ } //maybe closed by error or something
     }
 }
 
