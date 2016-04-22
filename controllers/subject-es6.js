@@ -1,5 +1,5 @@
 const { httpPost, route, nonRoutable } = require('easy-express-controllers');
-const SubjectDAO = require('../dataAccess/SubjectDAO');
+const SubjectDAO = require('../dataAccess/subjectDAO');
 
 class subjectController{
     constructor(){}

@@ -16,7 +16,7 @@ var _require2 = require('../amazonDataAccess/amazonOperationQueue');
 
 var amazonOperationQueue = _require2.amazonOperationQueue;
 
-var BookDAO = require('../dataAccess/BookDAO');
+var BookDAO = require('../dataAccess/bookDAO');
 
 var bookController = (function () {
     function bookController() {
