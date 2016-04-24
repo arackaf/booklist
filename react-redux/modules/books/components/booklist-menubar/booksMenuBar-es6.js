@@ -41,7 +41,13 @@ class BooksMenuBar extends React.Component {
             subjectsArr = selectedSubjectsHashString.split('-');
         subjectsArr = subjectsArr.filter(sId => sId != _id);
 
-        this.hashManager.setValueOf('filterSubjects', subjectsArr.join('-'));
+        let filterSubjectsVal = subjectsArr.join('-');
+
+        this.hashManager.setValues(
+            'filterSubjects', filterSubjectsVal,
+            'searchChildSubjects', this.props.searchChildSubjects && filterSubjectsVal ? 'true' : null
+        );
+
         if (!subjectsArr.length){
             setTimeout(() => this.setState({ menuOpen: false }), 1);
         }
@@ -67,6 +73,7 @@ class BooksMenuBar extends React.Component {
         this.setState({ subjectFiltersModalOpen: false });
 
         let filterSubjectsVal = Object.keys(this.state.pendingSubjects).filter(k => this.state.pendingSubjects[k]).join('-');
+
         this.hashManager.setValues(
             'filterSubjects', filterSubjectsVal,
             'searchChildSubjects', this.state.searchChildSubjects && filterSubjectsVal ? 'true' : null
