@@ -15,7 +15,7 @@ export function loadSubjects(){
         dispatch({ type: LOAD_SUBJECTS });
 
         Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
-            dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
+            dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
         });
     }
 }
