@@ -1,5 +1,5 @@
 const Provider = ReactRedux.Provider;
-const Header = require('./rootComponents/Header');
+const Header = require('./rootComponents/header');
 const { store } = require('/react-redux/applicationRoot/store');
 
 function clearUI(){
