@@ -10,12 +10,12 @@ class BookEntryItem extends React.Component{
                         <div className='form-group row'>
                             <label className='control-label col-sm-4'>Input ISBN </label>
                             <div className='col-sm-8'>
-                                <input className='form-control' ref='input' value={this.props.isbn} onChange={this.props.isbnChange} onKeyDown={evt => this.keyDown(evt)} disabled={this.props.retrieving}  />
+                                <input className='form-control' ref='input' value={this.props.isbn} onChange={this.props.isbnChange} onKeyDown={evt => this.keyDown(evt)} disabled={this.props.queueing}  />
                             </div>
                         </div>
                     </div>
                     <div className='col-sm-4 pull-left'>
-                        { this.props.retrieving ? <span className="label label-default">Queuing</span> : null }
+                        { this.props.queueing ? <span className="label label-default">Queuing</span> : null }
                         { this.props.queued ? <span className="label label-success">Book is queued</span> : null }
                     </div>
                 </div>

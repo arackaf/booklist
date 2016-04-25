@@ -10,7 +10,7 @@ import {
     BOOK_LOOKUP_FAILED
 } from '../actions/actionNames';
 
-const initialArray = () => Array.from({ length: 10 }).map(() => ({ isbn: '', fetched: false, fetching: false }));
+const initialArray = () => Array.from({ length: 10 }).map(() => ({ isbn: '', queued: false, queueing: false }));
 const initialState = {
     entryList: initialArray(),
     pendingNumber: null,
@@ -23,17 +23,17 @@ function reducer(state = initialState, action){
     switch(action.type) {
         case UPDATE_ISBN:
             var newEntryList = state.entryList.concat();
-            Object.assign(newEntryList[action.index], { isbn: action.isbn, retrieving: false, queued: false });
+            Object.assign(newEntryList[action.index], { isbn: action.isbn, queueing: false, queued: false });
 
             return Object.assign({}, state, { entryList: newEntryList });
         case GET_BOOK:
-            var updatedObject = Object.assign({}, state.entryList[action.index], { retrieving: true }),
+            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: true }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = updatedObject;
             return Object.assign({}, state, { entryList: newEntryList });
         case BOOK_QUEUED:
-            var updatedObject = Object.assign({}, state.entryList[action.index], { retrieving: false, queued: true }),
+            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: false, queued: true }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = updatedObject;
