@@ -3,6 +3,7 @@ var MongoClient = require('mongodb').MongoClient;
 class DAO{
     open(){
         let result = MongoClient.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/mongotest');
+        //let result = MongoClient.connect('mongodb://adam:rackis_password@olympia.modulusmongo.net:27017/puZ5iqab');
 
         //handling error like this will keep the resulting promise in error state
         result.catch(err => {
