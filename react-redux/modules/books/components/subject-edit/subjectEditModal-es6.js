@@ -1,6 +1,6 @@
 const Modal = ReactBootstrap.Modal;
 
-import BootstrapButton from '/react-redux/applicationRoot/rootComponents/bootstrapButton';
+import BootstrapButton from 'root-components/bootstrapButton';
 import * as actionCreators from '../../actions/actionCreators';
 import HierarchicalSubjectList from './hierarchicalSubjectList';
 

@@ -1,5 +1,5 @@
-const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
-const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
+const BootstrapButton = require('root-components/bootstrapButton');
+const AjaxButton = require('root-components/ajaxButton');
 
 class BookEntryItem extends React.Component{
     render(){

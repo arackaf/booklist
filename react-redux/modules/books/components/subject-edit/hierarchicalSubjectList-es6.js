@@ -1,4 +1,4 @@
-const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
+const BootstrapButton = require('root-components/bootstrapButton');
 const Collapse = ReactBootstrap.Collapse;
 
 class HierarchicalSubjectItem extends React.Component {

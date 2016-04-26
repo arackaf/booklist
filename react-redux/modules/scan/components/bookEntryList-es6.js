@@ -4,7 +4,7 @@ const { TransitionMotion, spring } = ReactMotion;
 const Collapse = ReactBootstrap.Collapse;
 
 import * as bookEntryActionCreators from '../actions/actionCreators';
-import MainNavigationBar from '/react-redux/applicationRoot/rootComponents/mainNavigation';
+import MainNavigationBar from 'root-components/mainNavigation';
 
 class BookEntryList extends React.Component {
     constructor(){

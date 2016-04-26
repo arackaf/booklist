@@ -3,7 +3,7 @@ const Modal = ReactBootstrap.Modal;
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
-import BootstrapButton from '/react-redux/applicationRoot/rootComponents/bootstrapButton';
+import BootstrapButton from 'root-components/bootstrapButton';
 
 class BookViewListDesktop extends React.Component{
     constructor(props){

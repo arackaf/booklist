@@ -1,8 +1,8 @@
 
-const { renderUI, clearUI } = require('/react-redux/applicationRoot/renderUI');
-const { store, getNewReducer } = require('/react-redux/applicationRoot/store');
+const { renderUI, clearUI } = require('application-root/renderUI');
+const { store, getNewReducer } = require('application-root/store');
 
-require('/utils/ajaxUtil');
+require('global-utils/ajaxUtil');
 
 let currentModule;
 
@@ -26,7 +26,7 @@ function loadCurrentModule() {
     currentModule = module;
 
 
-    System.import(`./modules/${module}/${module}`).then(module => {
+    System.import(`react-redux/modules/${module}/${module}`).then(module => {
         clearUI();
         getNewReducer({ name: module.name, reducer: module.reducer });
         renderUI(module.component);
