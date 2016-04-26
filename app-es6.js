@@ -64,10 +64,23 @@ passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
 
+let cache = {
+
+};
+
 passport.deserializeUser(function(id, done) {
+    return done(undefined, { id: '' + id, _id: '' + id });
+
+    if (cache[id]){
+        return done(undefined, cache[id]);
+    }
     let userDao = new UserDao();
     userDao.findById(id).then(
-        user => done(undefined, Object.assign(user, { id: '' + user._id })),
+        user => {
+            Object.assign(user, { id: '' + user._id });
+            //cache[id] = user;
+            done(undefined, user);
+        },
         error => done(error)
     );
 });
