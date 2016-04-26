@@ -1,6 +1,6 @@
-const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
+const BootstrapButton = require('root-components/bootstrapButton');
 const Modal = ReactBootstrap.Modal;
-const AjaxButton = require('/react-redux/applicationRoot/rootComponents/ajaxButton');
+const AjaxButton = require('root-components/ajaxButton');
 const { booksSubjectsModifierSelector } = require('../reducers/booksSubjectModifierReducer');
 
 import * as bookSubjectActionCreators from '../actions/bookSubjectModify/actionCreators';

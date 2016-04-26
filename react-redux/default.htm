@@ -20,10 +20,23 @@
 
     <script type="text/javascript">
 
-        System.config({
+        var systemJsConfig = {
             baseURL: "/",
-            defaultJSExtensions: true
-        });
+            defaultJSExtensions: true,
+            map: {
+                'react-redux-util': 'react-redux/util',
+                'root-components': 'react-redux/applicationRoot/rootComponents',
+                'application-root': 'react-redux/applicationRoot',
+                'react-startup': 'react-redux/reactStartup',
+                'global-utils': 'utils',
+                'module-roots': 'react-redux/modules'
+            },
+            bundles: {
+                'react-redux/dist/books/books.js': ['react-redux/modules/books/books']
+            }
+        };
+
+        System.config(systemJsConfig);
 
         System.import('/react-redux/reactStartup');
 

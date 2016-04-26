@@ -1,5 +1,5 @@
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
-const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
+const BootstrapButton = require('root-components/bootstrapButton');
 
 class BookViewListMobileItem extends React.Component{
     constructor(){

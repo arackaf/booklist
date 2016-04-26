@@ -1,4 +1,4 @@
-let ResponsiveNotifier = require('/utils/responsiveChangeNotifier');
+let ResponsiveNotifier = require('global-utils/responsiveChangeNotifier');
 
 const responsiveBsSizes = ['xs', 'sm', 'md', 'lg'];
 

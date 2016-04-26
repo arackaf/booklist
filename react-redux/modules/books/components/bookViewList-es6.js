@@ -1,7 +1,9 @@
 const { loadBooks, loadSubjects, editSubjectsForBook, addSubjectToBook, loadBooksAndSubjects } = require('../actions/actionCreators');
-const { responsiveMobileDesktopMixin } = require('/react-redux/util/responsiveUiLoaders');
+const { responsiveMobileDesktopMixin } = require('react-redux-util/responsiveUiLoaders');
 
-import MainNavigationBar from '/react-redux/applicationRoot/rootComponents/mainNavigation';
+import x from './bookViewList-desktop';
+
+import MainNavigationBar from 'root-components/mainNavigation';
 import * as actionCreators from '../actions/actionCreators';
 
 const { selector } = require('../reducers/reducer');

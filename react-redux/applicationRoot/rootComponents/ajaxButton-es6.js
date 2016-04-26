@@ -1,4 +1,4 @@
-const BootstrapButton = require('/react-redux/applicationRoot/rootComponents/bootstrapButton');
+const BootstrapButton = require('./bootstrapButton');
 
 class AjaxButton extends BootstrapButton {
     render(){

@@ -1,5 +1,5 @@
-import reactStartup from 'react-redux/reactStartup';
-import AjaxButton from 'react-redux/applicationRoot/rootComponents/ajaxButton';
+import reactStartup from 'react-startup';
+import AjaxButton from 'root-components/ajaxButton';
 
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;

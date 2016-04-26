@@ -1,4 +1,4 @@
-import reactStartup from 'react-redux/reactStartup';
+import reactStartup from 'react-startup';
 
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
