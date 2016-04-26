@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
-import { authInfo, myAddresses } from './utils/mailAuthenticationInfo';
+import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
