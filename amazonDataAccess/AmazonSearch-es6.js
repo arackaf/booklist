@@ -1,8 +1,7 @@
 var awsCredentials = require('../private/awsCredentials'), //not checked in - you'll need to use your own
     OperationHelper = require('apac').OperationHelper,
     opHelper = new OperationHelper(awsCredentials),
-    { nodeCallback } = require('../utils/nodeHelpers.js'),
-    Promise = require('promise');
+    { nodeCallback } = require('../utils/nodeHelpers.js');
 
 class AmazonSearch{
     constructor(){ }
