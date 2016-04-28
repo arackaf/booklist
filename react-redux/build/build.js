@@ -6,8 +6,11 @@ var Builder = require('systemjs-builder');
 var gulpUglify = require('gulp-uglify');
 var gulpRename = require('gulp-rename');
 var gulp = require('gulp');
+var glob = require('glob');
 
-var builder = new Builder('../../');
+var builder = new Builder({
+    baseURL: '../../'
+});
 builder.config({
     defaultJSExtensions: true,
     map: {
@@ -19,18 +22,28 @@ builder.config({
     }
 });
 
-var p1 = builder.bundle('react-redux/modules/books/books', '../dist/books/books-unminified.js');
+var files = glob.sync('../../react-redux/applicationRoot/**/*.js').filter(function (file) {
+    return !/-es6.js$/.test(file);
+}).map(function (file) {
+    return file.replace('../../', '');
+});
 
-Promise.all([p1]).then(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 1);
+var paths = files.join(' + ');
 
-    var p1Results = _ref2[0];
+var p1 = builder.bundle('react-redux/reactStartup + ' + paths, '../dist/shared-unminified.js');
+var p2 = builder.bundle('react-redux/modules/books/books', '../dist/books/books-unminified.js');
+
+Promise.all([p1, p2]).then(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2);
+
+    var shared = _ref2[0];
+    var p1Results = _ref2[1];
 
     p1Results.modules.forEach(function (m) {
         return console.log(m, '\n');
     });
 
-    gulp.src(['../dist/books/books-unminified.js'], { base: './' }).pipe(gulpUglify()).pipe(gulpRename(function (path) {
+    gulp.src(['../dist/**/*-unminified.js'], { base: './' }).pipe(gulpUglify()).pipe(gulpRename(function (path) {
         path.basename = path.basename.replace(/-unminified$/, '');
         console.log('Finished compressing ' + path.basename);
     })).pipe(gulp.dest('')).on('end', function () {
