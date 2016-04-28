@@ -118,3 +118,4 @@ react-redux/modules/books/components/subject-edit/hierarchicalSubjectList.js
 react-redux/modules/scan/scan.js
 dataAccess/errorLoggerDAO.js
 react-redux/tests/bookSearchMongoTests.js
+react-redux/dist/
