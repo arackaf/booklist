@@ -105,7 +105,7 @@ describe('book search', function() {
     });
 
     async function verifyResults(searchPacket, bookIdLookup, ...resultIds){
-        let subjectSearch = (searchPacket.subjects || []).map(sid => ObjectId(subjects.find(s => s.oldId == sid)._id)),
+        let subjectSearch = (searchPacket.subjects || []).map(sid => subjects.find(s => s.oldId == sid)._id + ''),
             results = await bookDaoInst.searchBooks(searchPacket.search, subjectSearch, searchPacket.searchChildSubjects);
 
         assert.strictEqual(results.length, resultIds.length);
@@ -123,7 +123,7 @@ describe('book search', function() {
             b.userId = b.userId || -1;
             b.oldId = b._id;
             b._id = ObjectId();
-            b.subjects = (b.subjects || []).map(sid => ObjectId(subjects.find(s => s.oldId == sid)._id));
+            b.subjects = (b.subjects || []).map(sid => subjects.find(s => s.oldId == sid)._id);
             lookup[b.oldId] = '' + b._id;
         });
 
