@@ -119,3 +119,6 @@ react-redux/modules/scan/scan.js
 dataAccess/errorLoggerDAO.js
 react-redux/tests/bookSearchMongoTests.js
 react-redux/dist/
+react-redux/util/ajaxUtil.js
+react-redux/util/hashManager.js
+react-redux/util/responsiveChangeNotifier.js

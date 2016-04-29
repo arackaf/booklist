@@ -9,29 +9,28 @@ var gulp = require('gulp');
 var glob = require('glob');
 
 var builder = new Builder({
-    baseURL: '../../'
+    baseURL: '../'
 });
 builder.config({
     defaultJSExtensions: true,
     map: {
-        'react-redux-util': 'react-redux/util',
-        'root-components': 'react-redux/applicationRoot/rootComponents',
-        'application-root': 'react-redux/applicationRoot',
-        'react-startup': 'react-redux/reactStartup',
-        'global-utils': 'utils'
+        'react-redux-util': 'util',
+        'root-components': 'applicationRoot/rootComponents',
+        'application-root': 'applicationRoot',
+        'react-startup': 'reactStartup'
     }
 });
 
 var files = glob.sync('../../react-redux/applicationRoot/**/*.js').filter(function (file) {
     return !/-es6.js$/.test(file);
 }).map(function (file) {
-    return file.replace('../../', '');
+    return file.replace('../../react-redux/', '');
 });
 
 var paths = files.join(' + ');
 
-var p1 = builder.bundle('react-redux/reactStartup + ' + paths, '../dist/shared-unminified.js');
-var p2 = builder.bundle('react-redux/modules/books/books', '../dist/books/books-unminified.js');
+var p1 = builder.bundle('reactStartup + ' + paths, '../dist/shared-unminified.js');
+var p2 = builder.bundle('modules/books/books', '../dist/books/books-unminified.js');
 
 Promise.all([p1, p2]).then(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2);

@@ -2,7 +2,7 @@
 const { renderUI, clearUI } = require('application-root/renderUI');
 const { store, getNewReducer } = require('application-root/store');
 
-require('global-utils/ajaxUtil');
+require('react-redux-util/ajaxUtil');
 
 let currentModule;
 

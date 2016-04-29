@@ -5,27 +5,26 @@ const gulp = require('gulp');
 const glob = require('glob');
 
 let builder = new Builder({
-    baseURL: '../../'
+    baseURL: '../'
 });
 builder.config({
     defaultJSExtensions: true,
     map: {
-        'react-redux-util': 'react-redux/util',
-        'root-components': 'react-redux/applicationRoot/rootComponents',
-        'application-root': 'react-redux/applicationRoot',
-        'react-startup': 'react-redux/reactStartup',
-        'global-utils': 'utils'
+        'react-redux-util': 'util',
+        'root-components': 'applicationRoot/rootComponents',
+        'application-root': 'applicationRoot',
+        'react-startup': 'reactStartup'
     }
 });
 
 const files = glob.sync('../../react-redux/applicationRoot/**/*.js')
                   .filter(file => !/-es6.js$/.test(file))
-                  .map(file => file.replace('../../', ''));
+                  .map(file => file.replace('../../react-redux/', ''));
 
 let paths = files.join(' + ');
 
-let p1 = builder.bundle('react-redux/reactStartup + ' + paths, '../dist/shared-unminified.js');
-let p2 = builder.bundle('react-redux/modules/books/books', '../dist/books/books-unminified.js');
+let p1 = builder.bundle('reactStartup + ' + paths, '../dist/shared-unminified.js');
+let p2 = builder.bundle('modules/books/books', '../dist/books/books-unminified.js');
 
 Promise.all([p1, p2]).then(([shared, p1Results]) => {
     p1Results.modules.forEach(m => console.log(m, '\n'));
