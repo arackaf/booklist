@@ -2,7 +2,7 @@
 
 var assert = require('chai').assert;
 
-var hashUtil = require('../../utils/hashManager');
+var hashUtil = require('../util/hashManager');
 
 describe('Hash management', function () {
     var hashManager;

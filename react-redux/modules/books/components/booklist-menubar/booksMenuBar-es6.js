@@ -8,7 +8,7 @@ const MenuItem = ReactBootstrap.MenuItem;
 const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 
 const BootstrapButton = require('root-components/bootstrapButton');
-const hashUtil = require('global-utils/hashManager');
+const hashUtil = require('react-redux-util/hashManager');
 
 const { bookSearchSelector } = require('../../reducers/bookSearchReducer');
 
