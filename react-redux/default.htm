@@ -18,26 +18,27 @@
     <script type="text/javascript" src="/static/bootstrap/js/bootstrap-toolkit.js"></script>
     <script type="text/javascript" src="/node_modules/react-bootstrap/dist/react-bootstrap.min.js"></script>
 
+    <script type="text/javascript" src="/react-redux/dist/bundlePaths.js"></script>
+
     <script type="text/javascript">
 
+
         var systemJsConfig = {
-            baseURL: "/",
+            baseURL: "./",
             defaultJSExtensions: true,
             map: {
-                'react-redux-util': 'react-redux/util',
-                'root-components': 'react-redux/applicationRoot/rootComponents',
-                'application-root': 'react-redux/applicationRoot',
-                'react-startup': 'react-redux/reactStartup',
-                'module-roots': 'react-redux/modules'
+                'react-redux-util': 'util',
+                'root-components': 'applicationRoot/rootComponents',
+                'application-root': 'applicationRoot',
+                'react-startup': 'reactStartup',
+                'module-roots': 'modules'
             },
-            bundles: {
-                'react-redux/dist/books/books.js': ['react-redux/modules/books/books']
-            }
+            //bundles: gBundlePaths
         };
 
         System.config(systemJsConfig);
 
-        System.import('/react-redux/reactStartup');
+        System.import('react-startup');
 
         function webSocketAddress(path){
             return 'ws://' + window.location.host + (path || '');
