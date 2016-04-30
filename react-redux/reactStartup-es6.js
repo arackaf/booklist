@@ -25,8 +25,7 @@ function loadCurrentModule() {
     if (module === currentModule) return;
     currentModule = module;
 
-
-    System.import(`react-redux/modules/${module}/${module}`).then(module => {
+    System.import(`./modules/${module}/${module}`).then(module => {
         clearUI();
         getNewReducer({ name: module.name, reducer: module.reducer });
         renderUI(module.component);

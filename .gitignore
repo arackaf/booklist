@@ -122,3 +122,4 @@ react-redux/dist/
 react-redux/util/ajaxUtil.js
 react-redux/util/hashManager.js
 react-redux/util/responsiveChangeNotifier.js
+react-redux/build/build.js
