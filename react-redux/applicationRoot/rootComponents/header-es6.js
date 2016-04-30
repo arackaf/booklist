@@ -1,6 +1,6 @@
 let Provider = ReactRedux.Provider;
 
-let { store } = require('application-root/store');
+let { store } = require('../store');
 
 function projectState(state){
     return state;

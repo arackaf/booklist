@@ -1,4 +1,4 @@
-let ResponsiveNotifier = require('react-redux-util/responsiveChangeNotifier');
+let ResponsiveNotifier = require('./responsiveChangeNotifier');
 
 const responsiveBsSizes = ['xs', 'sm', 'md', 'lg'];
 

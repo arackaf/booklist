@@ -1,6 +1,6 @@
 const Provider = ReactRedux.Provider;
 const Header = require('./rootComponents/header');
-const { store } = require('application-root/store');
+const { store } = require('./store');
 
 function clearUI(){
     ReactDOM.render(
