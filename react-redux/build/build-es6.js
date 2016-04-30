@@ -22,22 +22,25 @@ const files = glob.sync('../../react-redux/applicationRoot/**/*.js')
                   .filter(file => !/-es6.js$/.test(file))
                   .map(file => file.replace('../../react-redux/', ''));
 
-let paths = files.join(' + ');
+let paths = files.join(' + '),
+    buildOutputs = {},
+    builds = [
+        { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
+        { module: 'modules/scan/scan', path: 'modules/scan/scan - (' + paths + ')' },
+        { module: 'reactStartup + ' + paths, path: 'reactStartup', saveTo: '../dist/reactStartup' }
+    ];
 
-let p1 = builder.bundle('reactStartup + ' + paths, '../dist/shared-unminified.js').then(results => ({ name: 'reactStartup', results }));
-let p2 = builder.bundle('modules/books/books', '../dist/books/books-unminified.js').then(results => ({ name: 'modules/books/books', results }));
-let p3 = builder.bundle('modules/scan/scan', '../dist/scan/scan-unminified.js').then(results => ({ name: 'modules/scan/scan', results }));
 
-let buildOutputs = {};
-Promise.all([p1, p2, p3]).then(results => {
-    results.forEach(({ name, results }) => {
-        buildOutputs[name] = { modules: results.modules };
+
+Promise.all(builds.map(buildEntryToPromise)).then(results => {
+    results.forEach(({ module, path, saveTo, results }) => {
+        buildOutputs[saveTo.replace('../dist', 'dist')] = { modules: results.modules };
     });
 
     gulp.src(['../dist/**/*-unminified.js'], {base: './'})
         .pipe(gulpUglify())
         .pipe(gulpRename(function (path) {
-            path.basename = path.basename.replace(/-unminified$/, '');
+            path.basename = path.basename.replace(/-unminified$/, '-build');
             console.log(`Finished compressing ${path.basename}`);
         }))
         .pipe(gulp.dest(''))
@@ -60,4 +63,9 @@ var gBundlePaths = {
 `
 
     fs.writeFileSync('../dist/bundlePaths.js', fileContents);
+}
+
+function buildEntryToPromise(entry){
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' });
+    return builder.bundle(adjustedEntry.path, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
 }
