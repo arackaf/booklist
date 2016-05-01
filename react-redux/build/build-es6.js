@@ -19,20 +19,18 @@ builder.config({
     }
 });
 
-    const sharedFilesToBuild = [
-        ...globToTranspiledFiles('../../react-redux/applicationRoot/**/*.js'),
-        ...globToTranspiledFiles('../../react-redux/util/**/*.js')
-    ];
+const sharedFilesToBuild = [
+    ...globToTranspiledFiles('../../react-redux/applicationRoot/**/*.js'),
+    ...globToTranspiledFiles('../../react-redux/util/**/*.js')
+];
 
 let paths = sharedFilesToBuild.join(' + '),
     buildOutputs = {},
     builds = [
         { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
         { module: 'modules/scan/scan', path: 'modules/scan/scan - (' + paths + ')' },
-        { module: 'reactStartup + ' + paths, path: 'reactStartup', saveTo: '../dist/reactStartup' }
+        { module: 'reactStartup', path: 'reactStartup + ' + paths, saveTo: '../dist/reactStartup' }
     ];
-
-
 
 Promise.all(builds.map(buildEntryToPromise)).then(results => {
     results.forEach(({ module, path, saveTo, results }) => {
@@ -51,7 +49,7 @@ Promise.all(builds.map(buildEntryToPromise)).then(results => {
 
 function createBundlesFileForBrowser(){
     let bundleMap = new Map();
-    
+
     let moduleEntries = Object.keys(buildOutputs).map(name => {
         buildOutputs[name].modules.forEach(bundleContentItem => {
             if (!bundleMap.has(bundleContentItem)) {
@@ -61,7 +59,7 @@ function createBundlesFileForBrowser(){
         });
         let entry = buildOutputs[name],
             modulesArray = entry.modules.map(n => `'${n}'`).join(', ');
-        return `'${name}': [${modulesArray}]`;
+        return `'${name.replace(/-unminified.js$/, '-build.js')}': [${modulesArray}]`;
     }).join(',\n\t');
 
     for (let dep of bundleMap.keys()){
