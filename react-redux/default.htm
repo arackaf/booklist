@@ -22,6 +22,7 @@
 
     <script type="text/javascript">
 
+        var effectiveBundles = /localhost:3000/.test(window.location.href) && false ? undefined : gBundlePaths;
 
         var systemJsConfig = {
             baseURL: "./",
@@ -33,7 +34,7 @@
                 'react-startup': 'reactStartup',
                 'module-roots': 'modules'
             },
-            //bundles: gBundlePaths
+            bundles: effectiveBundles
         };
 
         System.config(systemJsConfig);
