@@ -4,6 +4,7 @@ const gulpRename = require('gulp-rename');
 const gulp = require('gulp');
 const glob = require('glob');
 const fs = require('fs');
+const colors = require('colors');
 
 let builder = new Builder({
     baseURL: '../'
@@ -18,11 +19,12 @@ builder.config({
     }
 });
 
-const files = glob.sync('../../react-redux/applicationRoot/**/*.js')
-                  .filter(file => !/-es6.js$/.test(file))
-                  .map(file => file.replace('../../react-redux/', ''));
+    const sharedFilesToBuild = [
+        ...globToTranspiledFiles('../../react-redux/applicationRoot/**/*.js'),
+        ...globToTranspiledFiles('../../react-redux/util/**/*.js')
+    ];
 
-let paths = files.join(' + '),
+let paths = sharedFilesToBuild.join(' + '),
     buildOutputs = {},
     builds = [
         { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
@@ -48,12 +50,26 @@ Promise.all(builds.map(buildEntryToPromise)).then(results => {
 }).catch(err => console.log(err));
 
 function createBundlesFileForBrowser(){
-    console.log(Object.keys(buildOutputs).length);
+    let bundleMap = new Map();
+    
     let moduleEntries = Object.keys(buildOutputs).map(name => {
+        buildOutputs[name].modules.forEach(bundleContentItem => {
+            if (!bundleMap.has(bundleContentItem)) {
+                bundleMap.set(bundleContentItem, []);
+            }
+            bundleMap.get(bundleContentItem).push(name)
+        });
         let entry = buildOutputs[name],
             modulesArray = entry.modules.map(n => `'${n}'`).join(', ');
         return `'${name}': [${modulesArray}]`;
     }).join(',\n\t');
+
+    for (let dep of bundleMap.keys()){
+        let containedIn = bundleMap.get(dep);
+        if (containedIn.length > 1){
+            console.log(colors.yellow(`${dep} is contained in\n\t${containedIn.join('\n\t')}\n`));
+        }
+    }
 
     let fileContents =
 `
@@ -63,6 +79,12 @@ var gBundlePaths = {
 `
 
     fs.writeFileSync('../dist/bundlePaths.js', fileContents);
+}
+
+function globToTranspiledFiles(globPattern){
+    return glob.sync(globPattern)
+               .filter(file => !/-es6.js$/.test(file))
+               .map(file => file.replace('../../react-redux/', ''));
 }
 
 function buildEntryToPromise(entry){
