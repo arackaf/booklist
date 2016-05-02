@@ -10,12 +10,13 @@ window.onhashchange = function () {
     loadCurrentModule();
 };
 
-loadCurrentModule();
+const validModules = new Set(['books', 'scan']);
 
+loadCurrentModule();
 function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
         originalModule = hash.split('/')[0] || '',
-        module = hash.split('/')[0] || 'books';
+        module = (hash.split('/')[0] || 'books').toLowerCase();
 
     let loggedIn = isLoggedIn();
     if (!loggedIn){
@@ -23,6 +24,11 @@ function loadCurrentModule() {
             return forceLogin();
         } else {
             module = 'home';
+        }
+    } else {
+        if (!validModules.has(module)){
+            window.location.hash = 'books';
+            return;
         }
     }
 
