@@ -5,6 +5,7 @@ const gulp = require('gulp');
 const glob = require('glob');
 const fs = require('fs');
 const colors = require('colors');
+const concat = require('gulp-concat');
 
 let builder = new Builder({
     baseURL: '../'
@@ -20,8 +21,8 @@ builder.config({
 });
 
 const sharedFilesToBuild = [
-    ...globToTranspiledFiles('../../react-redux/applicationRoot/**/*.js'),
-    ...globToTranspiledFiles('../../react-redux/util/**/*.js')
+    ...globToTranspiledFiles('../applicationRoot/**/*.js'),
+    ...globToTranspiledFiles('../util/**/*.js')
 ];
 
 let paths = sharedFilesToBuild.join(' + '),
@@ -77,12 +78,16 @@ var gBundlePaths = {
 `
 
     fs.writeFileSync('../dist/bundlePaths.js', fileContents);
+
+    const scriptsToCombine = ['system', 'react-dom', 'redux', 'react-motion', 'react-redux', 'bootstrap-toolkit'];
+    gulp.src(scriptsToCombine.map(s => `../../static/scripts/${s}.js`).concat('../dist/bundlePaths.js'))
+        .pipe(concat('scripts-combined.js', { newLine: '\r\n\r\n;\r\n\r\n' }))
+        .pipe(gulp.dest('../dist/'));
 }
 
 function globToTranspiledFiles(globPattern){
     return glob.sync(globPattern)
-               .filter(file => !/-es6.js$/.test(file))
-               .map(file => file.replace('../../react-redux/', ''));
+               .filter(file => !/-es6.js$/.test(file));
 }
 
 function buildEntryToPromise(entry){
