@@ -14,13 +14,19 @@ loadCurrentModule();
 
 function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
+        originalModule = hash.split('/')[0] || '',
         module = hash.split('/')[0] || 'books';
 
-    let loggedIn = /logged_in/ig.test(document.cookie);
+    let loggedIn = isLoggedIn();
     if (!loggedIn){
-        forceLogin();
-        return;
+        if (originalModule && module != 'home'){
+            return forceLogin();
+        } else {
+            module = 'home';
+        }
     }
+
+    if (module === 'home') return goHome();
 
     if (module === currentModule) return;
     currentModule = module;
@@ -40,4 +46,20 @@ function forceLogin(){
     });
 }
 
-export default { loadCurrentModule, forceLogin }
+function goHome(){
+    currentModule = null;
+    System.import('./modules/home/home').then(home => {
+        clearUI();
+        renderUI(React.createElement(home));
+    });
+}
+
+function isLoggedIn(){
+    return /logged_in/ig.test(document.cookie);
+}
+
+export default {
+    loadCurrentModule,
+    forceLogin,
+    get isLoggedIn(){ return isLoggedIn(); }
+}
