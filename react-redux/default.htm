@@ -5,23 +5,16 @@
     <title>Book tracker</title>
 
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
-    <script type="text/javascript" src="/static/scripts/system.js"></script>
     <script type="text/javascript" src="/static/scripts/react.js"></script>
-    <script type="text/javascript" src="/static/scripts/react-dom.js"></script>
-    <script type="text/javascript" src="/static/scripts/redux.js"></script>
-    <script type="text/javascript" src="/static/scripts/react-motion.js"></script>
-    <script type="text/javascript" src="/static/scripts/react-redux.js"></script>
+    <script type="text/javascript" src="/react-redux/dist/scripts-combined.js"></script>
 
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
-    <script type="text/javascript" src="/static/bootstrap/js/bootstrap-toolkit.js"></script>
     <script type="text/javascript" src="/node_modules/react-bootstrap/dist/react-bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="/react-redux/dist/bundlePaths.js"></script>
 
     <script type="text/javascript">
 
-        var effectiveBundles = /localhost:3000/.test(window.location.href) && false ? undefined : gBundlePaths;
+        var effectiveBundles = /localhost:3000/.test(window.location.href) ? undefined : gBundlePaths;
 
         var systemJsConfig = {
             baseURL: "./",
@@ -30,8 +23,7 @@
                 'react-redux-util': 'util',
                 'root-components': 'applicationRoot/rootComponents',
                 'application-root': 'applicationRoot',
-                'react-startup': 'reactStartup',
-                'module-roots': 'modules'
+                'react-startup': 'reactStartup'
             },
             bundles: effectiveBundles
         };
