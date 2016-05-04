@@ -6,7 +6,7 @@ const NavItem = ReactBootstrap.NavItem;
 
 class MainNavigationBar extends React.Component {
     logout(){
-        ajaxUtil.post('/react-redux/logout', { }, () => reactStartup.forceLogin());
+        ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     }
     render() {
         let isBookEntry = this.props.isBookEntry,
