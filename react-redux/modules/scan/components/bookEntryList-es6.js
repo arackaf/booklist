@@ -17,7 +17,7 @@ class BookEntryList extends React.Component {
     render() {
         let pending = this.props.pendingNumber,
             toggleClass = this.state.showIncomingQueue ? 'fa-angle-double-up' : 'fa-angle-double-down',
-            toggleShow = this.props.booksJustSaved.length ?
+            toggleShow = this.props.booksJustSaved.length || pending ?
                 <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>
                 : null;
 
