@@ -10,18 +10,18 @@ window.onhashchange = function () {
     loadCurrentModule();
 };
 
-const validModules = new Set(['books', 'scan']);
+const validModules = new Set(['books', 'scan', 'home']);
 
 loadCurrentModule();
 function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
         originalModule = hash.split('/')[0] || '',
-        module = (hash.split('/')[0] || 'books').toLowerCase();
+        module = (hash.split('/')[0] || 'home').toLowerCase();
 
     let loggedIn = isLoggedIn();
     if (!loggedIn){
         if (originalModule && module != 'home'){
-            return forceLogin();
+            module = 'authenticate';
         } else {
             module = 'home';
         }
@@ -39,16 +39,10 @@ function loadCurrentModule() {
 
     System.import(`./modules/${module}/${module}`).then(module => {
         clearUI();
-        getNewReducer({ name: module.name, reducer: module.reducer });
-        renderUI(module.component);
-    });
-}
-
-function forceLogin(){
-    currentModule = null;
-    System.import('./modules/authenticate/loginScreen').then(login => {
-        clearUI();
-        renderUI(React.createElement(login));
+        if (module.reducer) {
+            getNewReducer({name: module.name, reducer: module.reducer});
+        }
+        renderUI(React.createElement(module.component));
     });
 }
 
@@ -66,6 +60,5 @@ function isLoggedIn(){
 
 export default {
     loadCurrentModule,
-    forceLogin,
     get isLoggedIn(){ return isLoggedIn(); }
 }
