@@ -6,5 +6,5 @@ BookViewList = ReactRedux.connect(selector)(BookViewList);
 module.exports = {
     name: 'books',
     reducer: reducer,
-    component: <BookViewList />
+    component: BookViewList
 };
