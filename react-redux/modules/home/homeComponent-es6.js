@@ -1,4 +1,4 @@
-import reactStartup from 'react-startup';
+import { isLoggedIn, goHome } from 'react-startup';
 
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
@@ -42,7 +42,7 @@ class HomeIfNotLoggedIn extends React.Component{
 class Home extends React.Component{
     constructor(){
         super();
-        this.state = { isLoggedIn: reactStartup.isLoggedIn };
+        this.state = { isLoggedIn: isLoggedIn() };
     }
     render(){
         return (

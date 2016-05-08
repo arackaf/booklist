@@ -1,8 +1,8 @@
-import reactStartup from 'react-startup';
-
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
+
+import { goHome } from 'react-startup';
 
 class MainNavigationBar extends React.Component {
     logout(){
@@ -16,7 +16,7 @@ class MainNavigationBar extends React.Component {
             <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a style={{ cursor: 'default' }}>Book Tracker</a>
+                        <a onClick={goHome} style={{ cursor: 'default' }}>My Library</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>

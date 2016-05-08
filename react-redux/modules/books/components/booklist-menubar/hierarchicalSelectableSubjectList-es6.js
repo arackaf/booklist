@@ -25,7 +25,7 @@ class HierarchicalSelectableSubjectItem extends React.Component {
                     { this.props.children.length ?
                     <Collapse in={childrenVisible}>
                         <div>
-                            <HierarchicalSelectableSubjectList style={{ paddingLeft: 25 }} selectedSubjects={this.props.selectedSubjects} toggleFilteredSubject={this.props.toggleFilteredSubject} subjects={this.props.subjects} subjects={this.props.children} />
+                            <HierarchicalSelectableSubjectList style={{ paddingLeft: 25 }} selectedSubjects={this.props.selectedSubjects} toggleFilteredSubject={this.props.toggleFilteredSubject} subjects={this.props.children} />
                         </div>
                     </Collapse> : null }
                 </div>

@@ -1,4 +1,4 @@
-
+import HashUtility, { SerializedHash } from 'react-redux-util/hashManager';
 const { renderUI, clearUI } = require('application-root/renderUI');
 const { store, getNewReducer } = require('application-root/store');
 
@@ -13,7 +13,7 @@ window.onhashchange = function () {
 const validModules = new Set(['books', 'scan', 'home']);
 
 loadCurrentModule();
-function loadCurrentModule() {
+export function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
         originalModule = hash.split('/')[0] || '',
         module = (hash.split('/')[0] || 'home').toLowerCase();
@@ -44,11 +44,14 @@ function loadCurrentModule() {
     });
 }
 
-function isLoggedIn(){
+export const globalHashManager = new HashUtility();
+
+export function isLoggedIn(){
     return /logged_in/ig.test(document.cookie);
 }
 
-export default {
-    loadCurrentModule,
-    get isLoggedIn(){ return isLoggedIn(); }
+export function goHome(){
+    let currentModule = globalHashManager.getCurrentHashInfo().module || 'home';
+    if (currentModule === 'home') return;
+    globalHashManager.setHash(new SerializedHash('home'));
 }

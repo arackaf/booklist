@@ -1,4 +1,4 @@
-class SerializedHash {
+export class SerializedHash {
     constructor(module, submodule, parameters) {
         this.module = module || '';
         this.submodule = submodule || '';
@@ -41,7 +41,7 @@ class SerializedHash {
 }
 
 
-class HashUtility {
+export default class HashUtility {
     constructor() {
     }
     parseHashTag(hash) {
@@ -139,5 +139,3 @@ class HashUtility {
         return hashObject.getValue(name);
     }
 }
-
-module.exports = HashUtility;
