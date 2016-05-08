@@ -32,8 +32,6 @@ function loadCurrentModule() {
         }
     }
 
-    if (module === 'home') return goHome();
-
     if (module === currentModule) return;
     currentModule = module;
 
@@ -43,14 +41,6 @@ function loadCurrentModule() {
             getNewReducer({name: module.name, reducer: module.reducer});
         }
         renderUI(React.createElement(module.component));
-    });
-}
-
-function goHome(){
-    currentModule = null;
-    System.import('./modules/home/home').then(home => {
-        clearUI();
-        renderUI(React.createElement(home));
     });
 }
 
