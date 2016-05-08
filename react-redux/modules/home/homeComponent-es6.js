@@ -10,7 +10,19 @@ class HomeIfLoggedIn extends React.Component{
         return (
             <div>
                 <MainNavigationBar></MainNavigationBar>
-                <div>You're logged in.  Use the menu ago to go somewhere useful.  Eventually there'll be some sort of dashboard here.</div>
+
+                <div className="row">
+                    <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
+                    <div style={{ marginLeft: 10, marginRight: 10 }} className="col-md-10 col-lg-6">
+                        <div className="panel panel-default">
+                            <div className="panel-body">
+                                Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
+                                to either view your library, or scan some books in.
+                            </div>
+                        </div>
+                    </div>
+                    <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
+                </div>
             </div>
         )
     }
