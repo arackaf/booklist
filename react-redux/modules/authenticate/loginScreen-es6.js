@@ -1,4 +1,4 @@
-import reactStartup from 'react-startup';
+import { loadCurrentModule, goHome } from 'react-startup';
 import AjaxButton from 'root-components/ajaxButton';
 
 const Navbar = ReactBootstrap.Navbar;
@@ -25,11 +25,7 @@ class Login extends React.Component{
             rememberme = this.refs.rememberme.checked ? 1 : 0;
 
         this.setState({ running: true });
-        ajaxUtil.post('/react-redux/login', { username, password, rememberme }, resp => {
-            reactStartup.loadCurrentModule();
-        }, () => {
-            this.setState({ running: false, errorCode: 'c2' });
-        });
+        ajaxUtil.post('/react-redux/login', { username, password, rememberme }, loadCurrentModule, () => this.setState({ running: false, errorCode: 'c2' }));
     }
     createUser(evt){
         evt.preventDefault();
@@ -72,7 +68,7 @@ class Login extends React.Component{
                 <Navbar fluid={true}>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <a style={{ cursor: 'default' }}>Book Tracker</a>
+                            <a onClick={goHome} style={{ cursor: 'default' }}>My Library</a>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
@@ -126,7 +122,6 @@ class Login extends React.Component{
                                     </div>
 
                                 }
-
                             </form>
                         </div>
                     </div>

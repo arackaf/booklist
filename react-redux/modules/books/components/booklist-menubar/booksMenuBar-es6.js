@@ -8,42 +8,41 @@ const MenuItem = ReactBootstrap.MenuItem;
 const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 
 const BootstrapButton = require('root-components/bootstrapButton');
-const hashUtil = require('react-redux-util/hashManager');
 
 const { bookSearchSelector } = require('../../reducers/bookSearchReducer');
 
 import * as bookSearchActionCreators from '../../actions/actionCreators';
+import { globalHashManager } from 'react-startup';
 
 class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
         this.togglePendingSubject = this.togglePendingSubject.bind(this);
-        this.hashManager = new hashUtil();
 
         this.state = { pendingSubjects: {}, menuOpen: false };
         this._hashChangeSubscription = () => {
             let subjectsSelected = {},
-                selectedSubjectsHashString = this.hashManager.getCurrentHashValueOf('filterSubjects');
+                selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
             if (selectedSubjectsHashString){
                 selectedSubjectsHashString.split('-').forEach(_id => subjectsSelected[_id] = true);
             }
 
             this.props.setFilters(
-                this.hashManager.getCurrentHashValueOf('bookSearch') || '',
+                globalHashManager.getCurrentHashValueOf('bookSearch') || '',
                 subjectsSelected,
-                this.hashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null
+                globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null
             );
         };
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     removeFilterSubject(_id){
-        let selectedSubjectsHashString = this.hashManager.getCurrentHashValueOf('filterSubjects'),
+        let selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects'),
             subjectsArr = selectedSubjectsHashString.split('-');
         subjectsArr = subjectsArr.filter(sId => sId != _id);
 
         let filterSubjectsVal = subjectsArr.join('-');
 
-        this.hashManager.setValues(
+        globalHashManager.setValues(
             'filterSubjects', filterSubjectsVal,
             'searchChildSubjects', this.props.searchChildSubjects && filterSubjectsVal ? 'true' : null
         );
@@ -74,7 +73,7 @@ class BooksMenuBar extends React.Component {
 
         let filterSubjectsVal = Object.keys(this.state.pendingSubjects).filter(k => this.state.pendingSubjects[k]).join('-');
 
-        this.hashManager.setValues(
+        globalHashManager.setValues(
             'filterSubjects', filterSubjectsVal,
             'searchChildSubjects', this.state.searchChildSubjects && filterSubjectsVal ? 'true' : null
         );
@@ -179,11 +178,11 @@ class BooksMenuBar extends React.Component {
     }
     searchFilterKeyDown(evt){
         if (evt.which == 13){
-            this.hashManager.setValueOf('bookSearch', evt.target.value);
+            globalHashManager.setValueOf('bookSearch', evt.target.value);
         }
     }
     setSearchText(){
-        this.hashManager.setValueOf('bookSearch', this.refs.searchInput.value);
+        globalHashManager.setValueOf('bookSearch', this.refs.searchInput.value);
     }
 }
 
