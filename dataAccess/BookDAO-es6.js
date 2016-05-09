@@ -34,7 +34,7 @@ class BookDAO extends DAO {
             //    delete query.subjects;
             //    delete query.title;
             //}
-            return await db.collection('books').find(query).toArray();
+            return (await db.collection('books').find(query).toArray()).map(addCreatedOn);
         } finally {
             super.dispose(db);
         }
@@ -75,6 +75,11 @@ class BookDAO extends DAO {
             super.dispose(db);
         }
     }
+}
+
+function addCreatedOn(book){
+    book.dateAdded = +book._id.getTimestamp();
+    return book;
 }
 
 export default BookDAO;

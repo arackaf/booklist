@@ -1,6 +1,10 @@
 export function setBookResultsSubjects(booksHash, subjectsHash){
     let books = Object.keys(booksHash).map(_id => booksHash[_id]);
-    books.forEach(b => b.subjectObjects = b.subjects.map(s => subjectsHash[s] || { name: '<subject not found>' }));
+    books.forEach(b => {
+        b.subjectObjects = b.subjects.map(s => subjectsHash[s] || { name: '<subject not found>' })
+        let d = new Date(+b.dateAdded);
+        b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
+    });
     return books;
 }
 
