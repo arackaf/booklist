@@ -30,6 +30,7 @@ class BookViewListDesktop extends React.Component{
                                 <th>Title</th>
                                 <th>Author</th>
                                 <th>Genres</th>
+                                <th>Added</th>
                                 <th>ISBN</th>
                                 <th>Published</th>
                                 <th>Pages</th>
@@ -50,6 +51,7 @@ class BookViewListDesktop extends React.Component{
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
                                     </div>
                                 </td>
+                                <td>{book.dateAddedDisplay}</td>
                                 <td>{book.isbn}</td>
                                 <td>{book.publicationDate}</td>
                                 <td>{book.pages}</td>
