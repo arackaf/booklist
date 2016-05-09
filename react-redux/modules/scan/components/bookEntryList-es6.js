@@ -5,11 +5,16 @@ const Collapse = ReactBootstrap.Collapse;
 
 import * as bookEntryActionCreators from '../actions/actionCreators';
 import MainNavigationBar from 'root-components/mainNavigation';
+import BootstrapButton from 'root-components/bootstrapButton';
+
 
 class BookEntryList extends React.Component {
     constructor(){
         super();
-        this.state = { showIncomingQueue: false };
+        this.state = { showIncomingQueue: false, showScanInstructions: false };
+    }
+    toggleScanInstructions(){
+        this.setState({ showScanInstructions: !this.state.showScanInstructions });
     }
     toggleIncomingQueue(){
         this.setState({ showIncomingQueue: !this.state.showIncomingQueue });
@@ -17,6 +22,8 @@ class BookEntryList extends React.Component {
     render() {
         let pending = this.props.pendingNumber,
             toggleClass = this.state.showIncomingQueue ? 'fa-angle-double-up' : 'fa-angle-double-down',
+            toggleInstructionClass = this.state.showScanInstructions ? 'fa-angle-double-up' : 'fa-angle-double-down',
+            toggleInstructions = <a onClick={() => this.toggleScanInstructions()}><i className={`fa fa-question-circle`}></i></a>,
             toggleShow = this.props.booksJustSaved.length || pending ?
                 <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>
                 : null;
@@ -60,6 +67,17 @@ class BookEntryList extends React.Component {
                             </Collapse>
                         </div>
                         <div className="col-md-6 col-md-pull-6">
+                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions}</h4>
+                            <Collapse in={this.state.showScanInstructions}>
+                                <div>
+                                    <div style={{ height: 10 }}></div>
+                                    <div style={{ margin: 0 }} className="alert alert-info alert-slim">
+                                        Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode
+                                        scanner to search for each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                                    </div>
+                                </div>
+                            </Collapse>
+                            <br />
                             { this.props.entryList.map((entry, i) =>
                                 <div key={i}>
                                     <BookEntryItem
@@ -73,10 +91,11 @@ class BookEntryList extends React.Component {
                                     <br />
                                 </div>
                             )}
-                            <button onClick={() => this.saveAll()}>Retrieve and save all</button>
-                            <br />
-                            <br />
-                            <button onClick={this.props.resetList}>Reset list</button>
+                            <div>
+                                <BootstrapButton preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
+                                <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                            </div>
+
                         </div>
                     </div>
                 </div>
