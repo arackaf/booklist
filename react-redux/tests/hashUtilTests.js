@@ -1,14 +1,18 @@
 'use strict';
 
-var assert = require('chai').assert;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var hashUtil = require('../util/hashManager');
+var _utilHashManager = require('../util/hashManager');
+
+var _utilHashManager2 = _interopRequireDefault(_utilHashManager);
+
+var assert = require('chai').assert;
 
 describe('Hash management', function () {
     var hashManager;
 
     beforeEach(function () {
-        hashManager = new hashUtil();
+        hashManager = new _utilHashManager2['default']();
     });
 
     it('should parse a hash', function () {
