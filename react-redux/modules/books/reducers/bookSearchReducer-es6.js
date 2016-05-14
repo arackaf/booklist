@@ -1,8 +1,10 @@
-import { LOAD_BOOKS, SET_FILTERS } from '../actions/actionNames';
+import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION } from '../actions/actionNames';
 
 const initialState = {
     searchText: '',
     subjects: {},
+    sort: '',
+    sortDirection: '',
     searchChildSubjects: false,
     isDirty: false
 };
@@ -26,6 +28,8 @@ function bookSearchReducer(state = initialState, action){
             );
         case LOAD_BOOKS:
             return Object.assign({}, state, { isDirty: false });
+        case SET_SORT_DIRECTION:
+            return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction, isDirty: true });
     }
     return state;
 }

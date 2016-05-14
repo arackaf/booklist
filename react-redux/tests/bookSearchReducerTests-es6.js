@@ -9,17 +9,11 @@ describe('book search', function() {
     before(function(){
     });
 
-    after(function(){
+    after(function(){ });
 
-    });
+    beforeEach(function(){ });
 
-    beforeEach(function(){
-
-    });
-
-    afterEach(function(){
-
-    });
+    afterEach(function(){ });
 
     it('set isDirty to true', async function(){
         assert.strictEqual(true, apply(setFilters('', {}, null)).isDirty);

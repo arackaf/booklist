@@ -55,11 +55,11 @@ class HomeIfNotLoggedIn extends React.Component{
                     This site is my own little passion project, the purpose of which is to track your library.  You scan in your books (or manually type in the isbn)
                     and the books' info is fetched from Amazon, and stored for you.  You can then flexibly search and categorize your library.
                     <br /><br />
-                    So basically this site is of use to the extremely small percentage of people who read a lot, own the books they read, and read non-eBooks.  As I said, this is more
-                    of a passion project than anything.
+                    So basically this site is of use to the extremely small percentage of people for whom the following are <i>all</i> true: they read a lot,
+                    own the books they read, and read non-eBooks.  As I said, this is more of a passion project than anything.
                     <br /><br />
-                    It's free to sign up, and store up to 500 books.  In the remote chance someone actually wants to store more than that, there'll be some sort of nominal
-                    fee to help defray storage costs.
+                    It's free to sign up, and store up to 500 books.  In the remote chance someone actually wants to store more than that, there'll be some sort
+                    of nominal fee to help defray storage costs.
                     <br /><br />
                     <a className="btn btn-primary" href="#login">Login or create an account</a>
                 </MainHomePane>

@@ -26,9 +26,9 @@ class bookController{
         await bookDao.deleteBook(id);
         this.send({ success: true });
     }
-    async searchBooks(search, subjects, searchChildSubjects){
+    async searchBooks(search, subjects, searchChildSubjects, sort, sortDirection){
         let bookDao = new BookDAO(this.request.user.id),
-            bookResults = await bookDao.searchBooks(search, subjects, searchChildSubjects);
+            bookResults = await bookDao.searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection });
 
         this.send({ results: bookResults })
     }

@@ -11,6 +11,15 @@ class BookViewListDesktop extends React.Component{
 
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
+    setSort(column){
+        let currentSort = this.props.bookSearch.sort;
+        let newDirection = 1;
+        if (currentSort === column){
+            newDirection = this.props.bookSearch.sortDirection == 1 ? -1 : 1;
+        }
+
+        this.props.setSortOrder(column, newDirection);
+    }
     render(){
         let editSubjectsPacket = this.props.subjects.editSubjectsPacket;
         return (
@@ -27,7 +36,7 @@ class BookViewListDesktop extends React.Component{
                             <tr>
                                 <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                 <th></th>
-                                <th>Title</th>
+                                <th><a onClick={() => this.setSort('title')}>Title</a></th>
                                 <th>Author</th>
                                 <th>Genres</th>
                                 <th>Added</th>
