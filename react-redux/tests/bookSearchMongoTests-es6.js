@@ -106,7 +106,7 @@ describe('book search', function() {
 
     async function verifyResults(searchPacket, bookIdLookup, ...resultIds){
         let subjectSearch = (searchPacket.subjects || []).map(sid => subjects.find(s => s.oldId == sid)._id + ''),
-            results = await bookDaoInst.searchBooks(searchPacket.search, subjectSearch, searchPacket.searchChildSubjects);
+            results = await bookDaoInst.searchBooks({ search: searchPacket.search, subjects: subjectSearch, searchChildSubjects: searchPacket.searchChildSubjects });
 
         assert.strictEqual(results.length, resultIds.length);
 

@@ -6,13 +6,20 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks(search, subjects, searchChildSubjects){
+    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection }){
         subjects = subjects || [];
         let db = await super.open();
         try {
-            let query = { userId: this.userId };
+            let query = { userId: this.userId },
+                sortObj = { _id: -1 };
+
             if (search){
                 query.title = new RegExp(search, 'gi');
+            }
+
+            if (sort){
+                console.log('setting', sort, +sortDirection);
+                sortObj = { [sort]: +sortDirection };
             }
 
             if (subjects.length){
@@ -23,7 +30,7 @@ class BookDAO extends DAO {
                     subjects.push(...childIds);
                 }
 
-                query.subjects = { $in: subjects }
+                query.subjects = { $in: subjects };
             }
             //may implement $or another way
             //if (query.title && query.subjects){
@@ -34,7 +41,9 @@ class BookDAO extends DAO {
             //    delete query.subjects;
             //    delete query.title;
             //}
-            return (await db.collection('books').find(query).toArray()).map(addCreatedOn);
+            return (await db.collection('books').find(query).sort(sortObj).toArray()).map(addCreatedOn);
+        } catch(err){
+            console.log(err);
         } finally {
             super.dispose(db);
         }
