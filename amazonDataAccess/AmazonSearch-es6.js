@@ -30,13 +30,17 @@ function projectResponse(item){
             isbn: safeAccess(attributes, 'ISBN'),
             ean: safeAccess(attributes, 'EAN'),
             author: safeAccess(attributes, 'Author'),
-            pages: safeAccess(attributes, 'NumberOfPages'),
+            pages: +safeAccess(attributes, 'NumberOfPages') || undefined,
             smallImage: safeAccess(safeAccessObject(item, 'SmallImage'), 'URL'),
             mediumImage: safeAccess(safeAccessObject(item, 'MediumImage'), 'URL'),
             publicationDate: safeAccess(attributes, 'PublicationDate'),
             editorialReviews: []
         },
         editorialReviews = item.EditorialReviews && item.EditorialReviews[0] && item.EditorialReviews[0].EditorialReview;
+
+    if (typeof result.pages === 'undefined'){
+        delete result.pages;
+    }
 
     if (editorialReviews){
         result.editorialReviews = editorialReviews.map(({ Source, Content }) => ({ source: Source[0], content: Content[0]  }));
