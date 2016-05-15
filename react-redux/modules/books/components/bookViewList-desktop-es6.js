@@ -35,7 +35,7 @@ class BookViewListDesktop extends React.Component{
 
                 { this.props.books.list.length ?
                 <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15, position: 'relative' }}>
-                    <div className="loading">
+                    <div className="wait-for-loading">
                         <i className="fa fa-5x fa-spin fa-spinner"></i>
                     </div>
                     <table className="table table-striped">
