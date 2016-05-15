@@ -21,7 +21,11 @@ class BookViewListDesktop extends React.Component{
         this.props.setSortOrder(column, newDirection);
     }
     render(){
+
         let editSubjectsPacket = this.props.subjects.editSubjectsPacket;
+        let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
+            sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
+
         return (
             <div>
                 <BooksMenuBar
@@ -36,13 +40,13 @@ class BookViewListDesktop extends React.Component{
                             <tr>
                                 <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                 <th></th>
-                                <th><a onClick={() => this.setSort('title')}>Title</a></th>
+                                <th><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
                                 <th>Author</th>
                                 <th>Genres</th>
-                                <th>Added</th>
+                                <th><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
                                 <th>ISBN</th>
                                 <th>Published</th>
-                                <th>Pages</th>
+                                <th><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
                             </tr>
                         </thead>
                         <tbody>
