@@ -135,18 +135,29 @@ app.post('/react-redux/logout', function(req, response){
 app.post('/react-redux/createUser', function(req, response){
     let userDao = new UserDao(),
         username = req.body.username,
-        password = req.body.password;
+        password = req.body.password,
+        rememberMe = req.body.rememberme == 1;
 
     userDao.checkUserExists(username, password).then(exists => {
         if (exists) {
             response.send({ errorCode: 's1' });
         } else {
-            userDao.createUser(username, password).then(() => {
+            userDao.createUser(username, password, rememberMe).then(() => {
                 userDao.sendActivationCode(username);
                 response.send({});
             });
         }
     });
+});
+
+app.get('/react-redux/activate/:code', function(req, response){
+    let userDao = new UserDao(),
+        code = req.params.code;
+
+    console.log('activating', code);
+    userDao.activateUser(code).then(({ alreadyActivated, invalid, success }) => {
+        console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
+    }, err => console.log(':(', err));
 });
 
 process.on('uncaughtException', function (err) {

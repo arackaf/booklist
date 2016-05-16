@@ -13,11 +13,15 @@ const newUsersSubjects = [
     { name: 'Technology', path: null }
 ]
 
+const siteRoot = 'http://localhost:3000/react-redux';
+
 class UserDAO extends DAO {
-    async createUser(email, password){
+    async createUser(email, password, rememberMe){
         let db = await super.open();
         try {
-            let newUser = { email, password: this.saltAndHashPassword(password), token: this.saltAndHashToken(email) };
+            let activationToken = this.getActivationToken(email),
+                newUser = { email, password: this.saltAndHashPassword(password), token: this.saltAndHashToken(email), rememberMe, activationToken };
+
             await db.collection('users').insert(newUser);
             let subjectsToInsert = newUsersSubjects.map(s => ({ ...s, userId: '' + newUser._id }));
             await db.collection('subjects').insert(subjectsToInsert);
@@ -52,6 +56,32 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
+    async activateUser(activationToken){
+        let db = await super.open();
+        try {
+            let user = await db.collection('users').findOne({ activationToken });
+
+            if (!user){
+                return { invalid: true }
+            }
+            if (user.activated){
+                return { alreadyActivated: true };
+            }
+
+            await db.collection('users').update(
+                { _id: user._id },
+                {
+                    $set: { activated: true },
+                    $unset: { rememberMe: '' }
+                }
+            )
+            return { success: true };
+        } catch(err){
+            console.log('oops', err)
+        } finally{
+            super.dispose(db);
+        }
+    }
     async findById(_id){
         let db = await super.open();
         try {
@@ -61,7 +91,14 @@ class UserDAO extends DAO {
         }
     }
     async sendActivationCode(email){
-        await sendEmail({ to: email, subject: 'Subject', html: '<h2>Activate it, yo</h2>' });
+        let code = this.getActivationToken(email),
+            url = `${siteRoot}/activate/${code}`;
+
+        await sendEmail({
+            to: email,
+            subject: 'Activate your My Library account',
+            html: `To activate your account, simply click <a href="${url}">here</a>.\n\n\nOr paste this url into a browser ${url}`
+        });
     }
     saltAndHashPassword(password){
         return md5(`${salt}${password}${salt}`);
