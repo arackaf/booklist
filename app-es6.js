@@ -7,8 +7,6 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const nodemailer = require('nodemailer');
-import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
@@ -121,24 +119,6 @@ app.get('/favicon.ico', function (request, response) {
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
 
-    //handleSayHello()
-    function handleSayHello() {
-        // Not the movie transporter!
-        let mailTransport = nodemailer.createTransport(authInfo);
-        let emailInfo = Object.assign({}, myAddresses, {
-            subject: 'You logged in!',
-            html: '<h2>You logged in</h2>'
-        });
-
-        mailTransport.sendMail(emailInfo, function(err, info){
-            if(err){
-                console.log(err);
-            }else{
-                console.log('Message sent: ' + info.response);
-            }
-        });
-    }
-
     response.cookie('logged_in', 'true', { maxAge: 900000 });
     if (req.body.rememberme == 1) {
         response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: 604800000});
@@ -162,6 +142,7 @@ app.post('/react-redux/createUser', function(req, response){
             response.send({ errorCode: 's1' });
         } else {
             userDao.createUser(username, password).then(() => {
+                userDao.sendActivationCode(username);
                 response.send({});
             });
         }
