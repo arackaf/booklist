@@ -80,7 +80,10 @@ class Login extends React.Component{
                     <div className="panel panel-default">
                         <div className="panel-body">
                             { this.state.pendingActivation ?
-                            <h2>Activate it</h2> :
+                            <div className="alert alert-success">
+                                Success!  Now check your email, please.  You should be receiving a link to activate your account.
+                                (Check your spam folder if it's not there)
+                            </div> :
                             <form>
                                 <div className="form-group">
                                     <label htmlFor="username">Email address</label>
@@ -109,12 +112,15 @@ class Login extends React.Component{
                                     </label>
                                 </div>
                                 { this.state.newUser ?
-
-                                    <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running}
-                                                preset="primary">Create user</AjaxButton>
-                                    : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running}
-                                                  preset="primary">Login</AjaxButton>
+                                    <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running} preset="primary">Create user</AjaxButton>
+                                    : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running} preset="primary">Login</AjaxButton>
                                 }
+
+                                { this.state.newUser ? <div className="alert alert-info margin-top">
+                                    Your email address will never ever be sold, given away, etc. I will not send you
+                                    anything, ever.  I'm collecting it only so I have a place to send a password reset to.
+                                </div> : null }
+
                                 { this.state.errorCode ?
                                     <div className="alert alert-danger margin-top">
                                         {errorCodes[this.state.errorCode]}
