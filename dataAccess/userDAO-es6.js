@@ -2,6 +2,7 @@ import DAO from './dao';
 import md5 from 'blueimp-md5';
 import salt from '../private/salt';
 import { ObjectID } from 'mongodb';
+import sendEmail from '../app/sendEmail';
 
 const newUsersSubjects = [
     { name: 'History', path: null },
@@ -59,11 +60,17 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
+    async sendActivationCode(email){
+        await sendEmail({ to: email, subject: 'Subject', html: '<h2>Activate it, yo</h2>' });
+    }
     saltAndHashPassword(password){
         return md5(`${salt}${password}${salt}`);
     }
     saltAndHashToken(email){
         return md5(`${salt}${email}${salt}`);
+    }
+    getActivationToken(email){
+        return md5(`${salt}${salt}${email}${salt}${salt}`);
     }
 }
 

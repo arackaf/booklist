@@ -35,6 +35,11 @@ class Login extends React.Component{
             confirmPassword = this.refs.confirmPassword.value,
             rememberme = this.refs.rememberme.checked ? 1 : 0;
 
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!re.test(username)){
+            return this.setState({ invalidEmail: true });
+        }
+
         if (password !== confirmPassword){
             this.setState({ errorCode: 'c1' });
             return;
@@ -50,17 +55,15 @@ class Login extends React.Component{
             if (resp.errorCode){
                 this.setState({ errorCode: resp.errorCode, running: false });
             } else {
-                ajaxUtil.post('/react-redux/login', { username, password, rememberme }, () => {
-                    window.location.hash = '#books'; //new user - send them to where they can enter some books
-                });
+                this.setState({ pendingActivation: true });
             }
         });
     }
     switchToLogin(){
-        this.setState({ newUser: false, errorCode: null });
+        this.setState({ newUser: false, errorCode: null, invalidEmail: false });
     }
     switchToCreate(){
-        this.setState({ newUser: true, errorCode: null });
+        this.setState({ newUser: true, errorCode: null, invalidEmail: false });
     }
     render(){
         return (
@@ -76,32 +79,41 @@ class Login extends React.Component{
                 <div style={{ padding: 50, maxWidth: 700, marginRight: 'auto', marginLeft: 'auto'}}>
                     <div className="panel panel-default">
                         <div className="panel-body">
+                            { this.state.pendingActivation ?
+                            <h2>Activate it</h2> :
                             <form>
                                 <div className="form-group">
                                     <label htmlFor="username">Email address</label>
-                                    <input className="form-control" ref="username" id="username" />
+                                    <input className="form-control" ref="username" id="username"/>
+                                    { this.state.invalidEmail ?
+                                        <div className="alert alert-danger margin-top">
+                                        Invalid email
+                                        </div> : null
+                                    }
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="password">Password</label>
-                                    <input className="form-control" ref="password" id="password" type="password" />
+                                    <input className="form-control" ref="password" id="password" type="password"/>
                                 </div>
 
                                 { this.state.newUser ?
                                     <div className="form-group">
                                         <label htmlFor="password">Confirm password</label>
-                                        <input className="form-control" ref="confirmPassword" type="password" />
+                                        <input className="form-control" ref="confirmPassword" type="password"/>
                                     </div> : null
                                 }
 
                                 <div className="checkbox">
                                     <label>
-                                        <input type="checkbox" ref="rememberme" /> Remember me
+                                        <input type="checkbox" ref="rememberme"/> Remember me
                                     </label>
                                 </div>
                                 { this.state.newUser ?
 
-                                    <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running} preset="primary">Create user</AjaxButton>
-                                    : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running} preset="primary">Login</AjaxButton>
+                                    <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running}
+                                                preset="primary">Create user</AjaxButton>
+                                    : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running}
+                                                  preset="primary">Login</AjaxButton>
                                 }
                                 { this.state.errorCode ?
                                     <div className="alert alert-danger margin-top">
@@ -113,16 +125,19 @@ class Login extends React.Component{
 
                                     <div className="form-group">
                                         <h4>Existing user?</h4>
-                                        <a onClick={() => this.switchToLogin()} className="btn btn-info">Click to login</a>
+                                        <a onClick={() => this.switchToLogin()} className="btn btn-info">Click to
+                                            login</a>
                                     </div>
                                     :
                                     <div className="form-group">
                                         <h4>New user?</h4>
-                                        <a onClick={() => this.switchToCreate()} className="btn btn-info">Click to create account</a>
+                                        <a onClick={() => this.switchToCreate()} className="btn btn-info">Click to
+                                            create account</a>
                                     </div>
 
                                 }
                             </form>
+                            }
                         </div>
                     </div>
                 </div>
