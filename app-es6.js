@@ -155,8 +155,16 @@ app.get('/react-redux/activate/:code', function(req, response){
         code = req.params.code;
 
     console.log('activating', code);
-    userDao.activateUser(code).then(({ alreadyActivated, invalid, success }) => {
-        console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
+    userDao.activateUser(code).then(result => {
+        //console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
+        if (result.success){
+            req.login(result, function(){
+                //todo: tie to remember me when creating
+                response.cookie('remember_me', result.token, {path: '/', httpOnly: true, maxAge: 604800000});
+                response.redirect('/react-redux');
+            })
+        }
+
     }, err => console.log(':(', err));
 });
 

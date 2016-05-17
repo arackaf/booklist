@@ -75,7 +75,7 @@ class UserDAO extends DAO {
                     $unset: { rememberMe: '' }
                 }
             )
-            return { success: true };
+            return { success: true, username: user.email, _id: user._id, id: user._id, token: user.token };
         } catch(err){
             console.log('oops', err)
         } finally{
