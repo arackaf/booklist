@@ -139,8 +139,10 @@ class BookEntryList extends React.Component {
         let index = this.props.entryList.indexOf(entry);
         if (index < this.props.entryList.length - 1){
             this.refs['Book' + (index + 1)].focusInput();
+            this.refs['Book' + (index + 1)].selectInput();
         } else {
             this.refs['Book0'].focusInput();
+            this.refs['Book0'].selectInput();
         }
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){

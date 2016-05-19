@@ -25,6 +25,9 @@ class BookEntryItem extends React.Component{
     focusInput(){
         ReactDOM.findDOMNode(this.refs.input).focus();
     }
+    selectInput(){
+        ReactDOM.findDOMNode(this.refs.input).select();
+    }
     keyDown(evt){
         if (evt.keyCode == 13){
             this.props.entryFinished();
