@@ -29,6 +29,7 @@
     "react": "0.14.0",
     "react-bootstrap": "0.29.0",
     "react-dom": "0.14.0",
+    "react-dropzone": "^3.4.0",
     "react-motion": "0.4.2",
     "react-redux": "4.4.0",
     "redux": "3.0.4",
