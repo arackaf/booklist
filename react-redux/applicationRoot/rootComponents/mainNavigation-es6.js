@@ -16,7 +16,7 @@ class MainNavigationBar extends React.Component {
             <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a onClick={goHome} style={{ cursor: 'default' }}>My Library</a>
+                        <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
