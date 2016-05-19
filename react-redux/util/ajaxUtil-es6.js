@@ -3,6 +3,7 @@ window.ajaxUtil = {
         return $.ajax(url, {
             method: 'post',
             data: data,
+            processData: false,
             success: callback,
             error: errorCallback
         });

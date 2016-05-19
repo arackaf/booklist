@@ -5,6 +5,10 @@ const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 import MainNavigationBar from 'root-components/mainNavigation';
 
+import DropzoneRoot from 'react-redux-util/react-dropzone';
+
+const Dropzone = DropzoneRoot.Dropzone;
+
 const MainHomePane = props =>
     <div className="row">
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
@@ -19,6 +23,11 @@ const MainHomePane = props =>
     </div>
 
 class HomeIfLoggedIn extends React.Component{
+    onDrop(files) {
+        console.log('Received files: ', files);
+
+        ajaxUtil.post('/react-redux/upload', { fileUploaded: files[0] });
+    }
     render(){
         return (
             <div>
@@ -26,6 +35,15 @@ class HomeIfLoggedIn extends React.Component{
                 <MainHomePane>
                     Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
                     to either view your library, or scan some books in.
+                    <br />
+                    <br />
+
+                    <div>
+                        <Dropzone  onDrop={this.onDrop} multiple={false}>
+                            <div>Try dropping some files here, or click to select files to upload.</div>
+                        </Dropzone>
+                    </div>
+
                 </MainHomePane>
             </div>
         )
