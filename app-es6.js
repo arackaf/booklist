@@ -14,6 +14,9 @@ import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
 import UserDao from './dataAccess/userDAO';
 
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
@@ -152,8 +155,8 @@ app.post('/react-redux/logout', function(req, response){
     response.send({});
 });
 
-app.post('/react-redux/upload', function(req, response){
-    console.log(req.body.fileUploaded, req.fileUploaded);
+app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
+    console.log(req.file);
 });
 app.post('/react-redux/createUser', function(req, response){
     let userDao = new UserDao(),

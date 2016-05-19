@@ -26,7 +26,12 @@ class HomeIfLoggedIn extends React.Component{
     onDrop(files) {
         console.log('Received files: ', files);
 
-        ajaxUtil.post('/react-redux/upload', { fileUploaded: files[0] });
+        let request = new FormData();
+        request.append('fileUploaded', files[0]);
+
+        debugger;
+
+        ajaxUtil.post('/react-redux/upload', request);
     }
     render(){
         return (

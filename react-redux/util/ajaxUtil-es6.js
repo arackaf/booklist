@@ -4,6 +4,7 @@ window.ajaxUtil = {
             method: 'post',
             data: data,
             processData: false,
+            contentType: false,
             success: callback,
             error: errorCallback
         });
