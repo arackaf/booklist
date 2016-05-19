@@ -156,7 +156,7 @@ app.post('/react-redux/logout', function(req, response){
 });
 
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
-    console.log(req.file);
+    console.log(req.file, req.body.devName);
 });
 app.post('/react-redux/createUser', function(req, response){
     let userDao = new UserDao(),
