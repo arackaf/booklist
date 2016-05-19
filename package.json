@@ -21,6 +21,7 @@
     "express-session": "1.12.1",
     "express-ws": "1.0.0",
     "mongodb": "2.0.39",
+    "multer": "^1.1.0",
     "nodemailer": "2.3.0",
     "nodemailer-smtp-transport": "2.4.1",
     "passport": "0.3.2",
