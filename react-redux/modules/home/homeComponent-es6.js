@@ -28,6 +28,7 @@ class HomeIfLoggedIn extends React.Component{
 
         let request = new FormData();
         request.append('fileUploaded', files[0]);
+        request.append('devName', 'Why, Adam Rackis, of course');
 
         debugger;
 
