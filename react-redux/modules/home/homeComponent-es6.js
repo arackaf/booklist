@@ -30,8 +30,6 @@ class HomeIfLoggedIn extends React.Component{
         request.append('fileUploaded', files[0]);
         request.append('devName', 'Why, Adam Rackis, of course');
 
-        debugger;
-
         ajaxUtil.post('/react-redux/upload', request);
     }
     render(){

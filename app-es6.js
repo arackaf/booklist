@@ -1,5 +1,6 @@
 require('regenerator/runtime');
 require('./utils/promiseUtils');
+require('./private/awsS3Credentials');
 
 const express = require('express');
 const app = express();
@@ -8,6 +9,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+
 import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
@@ -156,7 +159,30 @@ app.post('/react-redux/logout', function(req, response){
 });
 
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
-    console.log(req.file, req.body.devName);
+
+    var AWS = require('aws-sdk');
+    AWS.config.region = 'us-east-1';
+
+    fs.readFile('./uploads/beefcake.jpg', function (err, data) {
+        console.log('file read', err, data);
+        if (err) throw err; // Something went wrong!
+
+        let s3bucket = new AWS.S3({ params: { Bucket: 'my-library-cover-uploads' } });
+        let params = {
+            Key: 'the/file/b.jpg',
+            Body: data
+        };
+
+        s3bucket.upload(params, function (err, data) {
+            if (err) {
+                console.log(err, ':(')
+            } else {
+                console.log(data, 'hooray! :)')
+            }
+        });
+    });
+
+    //console.log(req.file, req.body.devName);
 });
 app.post('/react-redux/createUser', function(req, response){
     let userDao = new UserDao(),
@@ -190,4 +216,3 @@ process.on('unhandledRejection', function (err, p) {
 
 
 bookEntryQueueManager.initialize();
-
