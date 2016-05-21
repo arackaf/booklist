@@ -21,6 +21,7 @@
     "express": "4.x",
     "express-session": "1.12.1",
     "express-ws": "1.0.0",
+    "lwip": "0.0.9",
     "mongodb": "2.0.39",
     "multer": "1.1.0",
     "nodemailer": "2.3.0",

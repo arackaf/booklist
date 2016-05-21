@@ -10,6 +10,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
+const lwip = require('lwip');
 
 import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
@@ -159,31 +160,9 @@ app.post('/react-redux/logout', function(req, response){
 });
 
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
-
-    var AWS = require('aws-sdk');
-    AWS.config.region = 'us-east-1';
-
-    fs.readFile('./uploads/beefcake.jpg', function (err, data) {
-        console.log('file read', err, data);
-        if (err) throw err; // Something went wrong!
-
-        let s3bucket = new AWS.S3({ params: { Bucket: 'my-library-cover-uploads' } });
-        let params = {
-            Key: 'the/file/b.jpg',
-            Body: data
-        };
-
-        s3bucket.upload(params, function (err, data) {
-            if (err) {
-                console.log(err, ':(')
-            } else {
-                console.log(data, 'hooray! :)')
-            }
-        });
-    });
-
-    //console.log(req.file, req.body.devName);
+    console.log(req.file, req.body.devName);
 });
+
 app.post('/react-redux/createUser', function(req, response){
     let userDao = new UserDao(),
         username = req.body.username,
@@ -212,6 +191,54 @@ process.on('unhandledRejection', function (err, p) {
         let logger = new ErrorLoggerDao();
         logger.log('promise rejection', err);
     } catch(e) { }
+});
+
+var AWS = require('aws-sdk');
+AWS.config.region = 'us-east-1';
+
+fs.readFile('./uploads/beefcake.jpg', function (err, data) {
+    console.log('file read', err, data);
+    if (err) throw err; // Something went wrong!
+
+    let s3bucket = new AWS.S3({ params: { Bucket: 'my-library-cover-uploads' } });
+    let params = {
+        Key: 'the/file/x.jpg',
+        Body: data
+    };
+
+    s3bucket.upload(params, function (err, data) {
+        if (err) {
+            console.log(err, ':(')
+        } else {
+            console.log(data, 'hooray! :)')
+        }
+    });
+});
+
+lwip.open('./uploads/li_large.jpg', function (err, image) {
+    if (err){
+        console.log('err', err)
+    }
+
+    let width = image.width(),
+        height = image.height();
+
+    let ratio = height / width;
+    let newWidth = (height * 50) / width;
+
+    console.log('opened', width, height);
+    image.resize(50, newWidth, function(err, image){
+        console.log('resized', image, typeof image.writePath);
+
+        image.writeFile('./uploads/li_finished.jpg', err => {
+            console.log('root?')
+            if (err) {
+                console.log(err);
+            }else {
+                console.log('written?');
+            }
+        });
+    });
 });
 
 
