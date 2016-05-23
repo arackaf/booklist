@@ -127,3 +127,4 @@ react-redux/modules/home/homeComponent.js
 react-redux/modules/home/home.js
 uploads/
 private/awsS3Credentials.js
+react-redux/modules/scan/components/manualBookEntry.js
