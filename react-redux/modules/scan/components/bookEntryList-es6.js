@@ -92,14 +92,19 @@ class BookEntryList extends React.Component {
                                         index={i}
                                         deleteBook={() => this.deleteBook(entry)}
                                     />
-                                    <br />
                                 </div>
                             )}
-                            <div>
-                                <BootstrapButton preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
-                                <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                            <div className='row'>
+                                <div className='col-sm-8 form-horizontal'>
+                                    <BootstrapButton className="pull-right" preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                                </div>
+                                <div className='col-sm-4 pull-left'>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
