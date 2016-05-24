@@ -7,7 +7,11 @@ class ManualBookEntry extends React.Component {
     constructor(){
         super();
 
-        this.state = { bookSaving: { authors: [''] } };
+        this.state = { bookSaving: { isbn: '', authors: [''] } };
+
+        this.syncStateFromInput = name => evt => this.setState({ bookSaving: { ...this.state.bookSaving, [name]: evt.target.value } });
+
+
     }
     addAuthor(evt){
         evt.preventDefault();
@@ -21,24 +25,27 @@ class ManualBookEntry extends React.Component {
         this.props.onClosing()
     }
     render(){
+        let bookSaving = this.state.bookSaving;
+
         return (
             <Modal show={!!this.props.isOpen} onHide={() => this.closeModal()}>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         Manually enter a book
+                        <div>{JSON.stringify(this.state.bookSaving)}</div>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form>
                         <div className="form-group">
                             <label>Title</label>
-                            <input ref="title" className="form-control" placeholder="Title (required)" />
+                            <input onChange={this.syncStateFromInput('title')} value={bookSaving.title} className="form-control" placeholder="Title (required)" />
                         </div>
                         <div className="row">
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>ISBN</label>
-                                    <input ref="isbn" className="form-control" placeholder="ISBN" />
+                                    <input onChange={this.syncStateFromInput('isbn')} value={bookSaving.isbn} className="form-control" placeholder="ISBN" />
                                 </div>
                             </div>
 
@@ -85,7 +92,8 @@ class ManualBookEntry extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton preset="primary" running={false} runningText='Saving' onClick={() => this.save()}>Set</AjaxButton>
+                    <AjaxButton className="pull-left" preset="primary" running={false} runningText='Saving' onClick={() => this.save()}>Set</AjaxButton>
+                    <BootstrapButton preset="danger" onClick={() => this.closeModal()}>Clear</BootstrapButton>
                     <BootstrapButton preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
