@@ -4,6 +4,16 @@ import BootstrapButton from 'root-components/bootstrapButton';
 const Modal = ReactBootstrap.Modal;
 
 class ManualBookEntry extends React.Component {
+    constructor(){
+        super();
+
+        this.state = { bookSaving: { authors: [''] } };
+    }
+    addAuthor(evt){
+        evt.preventDefault();
+        let bookSaving = this.state.bookSaving;
+        this.setState({ bookSaving: Object.assign({}, bookSaving, { authorsChanged: true, authors: bookSaving.authors.concat('') }) });
+    }
     save(){
 
     }
@@ -55,24 +65,21 @@ class ManualBookEntry extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-xs-4">
-                                <div className="form-group">
-                                    <label>Author</label>
-                                    <input ref="author" className="form-control" placeholder="Author" />
+                            {this.state.bookSaving.authors.map((a, $index) =>
+                                <div className="col-xs-4">
+                                    <div className="form-group">
+                                        <label>Author</label>
+                                        <input className="form-control" placeholder={`Author ${$index + 1}`} />
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="col-xs-4">
-                                <div className="form-group">
-                                    <label>Author 2</label>
-                                    <input ref="author2" className="form-control" placeholder="Author 2" />
-                                </div>
-                            </div>
-                            <div className="col-xs-4">
-                                <div className="form-group">
-                                    <label>Author 3</label>
-                                    <input ref="author3" className="form-control" placeholder="Author 3" />
-                                </div>
+                            )}
+                            <div className="col-xs-12">
+                                <BootstrapButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapButton>
+                                { this.state.bookSaving.authorsChanged ?
+                                    <div style={{ marginLeft: 5 }} className="label label-primary">
+                                        Add as many authors as the book has. Blanks will be ignored.
+                                    </div> : null
+                                }
                             </div>
                         </div>
                     </form>
