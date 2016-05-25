@@ -57,7 +57,11 @@ class BookViewListDesktop extends React.Component{
                                 </td>
                                 <td><img src={book.smallImage} /></td>
                                 <td>{book.title}</td>
-                                <td>{book.author}</td>
+                                <td>
+                                    <ul className="list-unstyled">
+                                        {book.authors.map(author => <li>{author}</li>)}
+                                    </ul>
+                                </td>
                                 <td>
                                     { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
                                     <div style={{ marginTop: 5 }}>
@@ -66,7 +70,7 @@ class BookViewListDesktop extends React.Component{
                                 </td>
                                 <td>{book.dateAddedDisplay}</td>
                                 <td>{book.isbn}</td>
-                                <td>{book.publicationDate}</td>
+                                <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
                                 <td>{book.pages}</td>
                             </tr>
                         ) : null}
