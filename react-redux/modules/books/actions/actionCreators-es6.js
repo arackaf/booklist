@@ -9,6 +9,7 @@ export {
     enableSubjectModificationToggledBooks
 } from './bookSubjectModify/actionCreators';
 
+export * from './bookEdit/actionCreators'
 
 export function loadSubjects(){
     return function(dispatch, getState){

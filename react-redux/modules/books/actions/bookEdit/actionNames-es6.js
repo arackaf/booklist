@@ -1,0 +1,3 @@
+export const EDIT_BOOK = 'EDIT_BOOK';
+export const STOP_EDITING_BOOK = 'CANCEL_EDIT_BOOK';
+export const SAVE_EDITING_BOOK = 'SAVE_EDITING_BOOK';

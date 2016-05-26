@@ -21,21 +21,6 @@ class BookViewListDesktop extends React.Component{
 
         this.props.setSortOrder(column, newDirection);
     }
-    editBook(book){
-        this.setState({
-            isEditing: true,
-            bookEditing: book
-        });
-    }
-    editBookEnding(){
-        this.setState({
-            isEditing: false,
-            bookEditing: null
-        });
-    }
-    updateBook(book){
-
-    }
     render(){
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
@@ -70,7 +55,7 @@ class BookViewListDesktop extends React.Component{
                                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.books.selectedBooks[book._id]} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
-                                <td>{book.title}<br /><a onClick={() => this.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>
+                                <td>{book.title}<br /><a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>
                                 <td>
                                     <ul className="list-unstyled">
                                         {book.authors.map(author => <li>{author}</li>)}
@@ -102,11 +87,15 @@ class BookViewListDesktop extends React.Component{
                     subjects={this.props.subjects.list}>
                 </SubjectEditModal>
 
+
                 <ManualBookEntry
-                    isOpen={this.props.bookIsEditing}
-                    bookToEdit={this.props.bookEditing}
-                    onClosing={() => this.props.cancelBookEditing()}
-                    saveBook={book => this.props.updateBook(book)} />
+                    bookToEdit={this.props.bookEdit.editingBook}
+                    isOpen={this.props.bookEdit.isEditing}
+                    isSaving={this.props.bookEdit.editingBookSaving}
+                    isSaved={this.props.bookEdit.editingBookSaved}
+                    saveBook={book => this.props.saveEditingBook(book)}
+                    onClosing={this.props.stopEditingBook} />
+
             </div>
         );
     }
