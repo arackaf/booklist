@@ -38,16 +38,27 @@ class ManualBookEntry extends React.Component {
     componentWillReceiveProps(nextProps){
         if (this.props.bookToEdit !== nextProps.bookToEdit){
             let bookToStart = nextProps.bookToEdit;
-            this.setState({
-                bookEditing: bookToStart,
-                titleMissing: false,
-                authorsChanged: false
-            });
             this.revertTo = bookToStart;
+            this.revert();
         }
     }
     revert(){
-        this.setState({ bookEditing: this.revertTo });
+        this.setState({
+            bookEditing: this.revertTo,
+            titleMissing: false,
+            authorsChanged: false,
+            pendingSmallImage: ''
+        });
+    }
+    onDrop(files) {
+        let request = new FormData();
+        request.append('fileUploaded', files[0]);
+        request.append('devName', 'Why, Adam Rackis, of course');
+
+        ajaxUtil.post('/react-redux/upload', request, res => this.setState({ pendingSmallImage: res.smallImagePath }));
+    }
+    clearPendingSmallImage(){
+        this.setState({ pendingSmallImage: '' });
     }
     render(){
         let bookEditing = this.state.bookEditing;
@@ -123,11 +134,17 @@ class ManualBookEntry extends React.Component {
                         <div className="row">
                             <div className="col-xs-6">
                                 <Dropzone style={{ border: '3px groove', padding: 40 }} onDrop={files => this.onDrop(files)} multiple={false}>
-                                    <div>Upload an image.</div>
+                                    <div>Click or drag to upload an image.</div>
                                 </Dropzone>
                             </div>
                             <div className="col-xs-6">
-                                Preview
+                                {this.state.pendingSmallImage ?
+                                    <div>
+                                        <img src={this.state.pendingSmallImage} />
+                                        <br />
+                                        <br />
+                                        <BootstrapButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>Clear image</BootstrapButton>
+                                    </div> : null}
                             </div>
                         </div>
                     </form> : null }

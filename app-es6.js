@@ -196,7 +196,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
             let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
 
             image.writeFile(resizedDestination, err => {
-                response.send({ success: true, path: '/' + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+                response.send({ success: true, smallImagePath: '/' + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
                 if (err) {
                     console.log(err);
                 }else {
