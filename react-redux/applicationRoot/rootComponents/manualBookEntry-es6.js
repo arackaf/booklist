@@ -1,5 +1,6 @@
 import AjaxButton from 'root-components/ajaxButton';
 import BootstrapButton from 'root-components/bootstrapButton';
+import { Dropzone } from 'react-redux-util/react-dropzone';
 
 const Modal = ReactBootstrap.Modal;
 
@@ -114,6 +115,19 @@ class ManualBookEntry extends React.Component {
                                         Add as many authors as the book has. Blanks will be ignored.
                                     </div> : null
                                 }
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <div className="row">
+                            <div className="col-xs-6">
+                                <Dropzone style={{ border: '3px groove', padding: 40 }} onDrop={files => this.onDrop(files)} multiple={false}>
+                                    <div>Upload an image.</div>
+                                </Dropzone>
+                            </div>
+                            <div className="col-xs-6">
+                                Preview
                             </div>
                         </div>
                     </form> : null }
