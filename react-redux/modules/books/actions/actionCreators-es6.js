@@ -43,18 +43,6 @@ export function booksResults(resp){
     return { type: LOAD_BOOKS_RESULTS, books: resp.results };
 }
 
-export function editSubjectsForBook(index){
-    return { type: EDIT_SUBJECTS_FOR, index };
-}
-
-export function addSubjectToBook(subject){
-    return function(dispatch, getState) {
-        dispatch({ type: MODIFY_SUBJECTS });
-
-        setTimeout(() => dispatch({ type: MODIFY_SUBJECTS_RESULTS, subject: subject }), 1000);
-    }
-}
-
 export function editSubjects(){
     return { type: EDIT_SUBJECTS };
 }
