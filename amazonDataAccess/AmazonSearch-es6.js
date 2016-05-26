@@ -34,9 +34,12 @@ function projectResponse(item){
             smallImage: safeAccess(safeAccessObject(item, 'SmallImage'), 'URL'),
             mediumImage: safeAccess(safeAccessObject(item, 'MediumImage'), 'URL'),
             publicationDate: safeAccess(attributes, 'PublicationDate'),
+            publisher: safeAccess(attributes, 'Publisher'),
             editorialReviews: []
         },
         editorialReviews = item.EditorialReviews && item.EditorialReviews[0] && item.EditorialReviews[0].EditorialReview;
+
+        result.authors = attributes.Author;
 
     if (typeof result.pages === 'undefined'){
         delete result.pages;
