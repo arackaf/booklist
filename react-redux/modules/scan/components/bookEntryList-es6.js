@@ -27,12 +27,7 @@ class BookEntryList extends React.Component {
     }
     saveNewBook(book){
         this.setState({ isSavingManual: true });
-        ajaxUtil.post('/book/saveManual', { book }, () => {
-            this.setState({
-                isSavingManual: false,
-                saveManualMessage: 'Book saved. You can enter another, or hit cancel to close'
-            });
-        });
+        return ajaxUtil.post('/book/saveManual', { book })
     }
     render() {
         let pending = this.props.pendingNumber,
@@ -122,8 +117,7 @@ class BookEntryList extends React.Component {
                 <ManualBookEntry
                     isOpen={this.state.inManualEntry}
                     onClosing={() => this.manualEntryEnding()}
-                    isSaving={this.state.isSavingManual}
-                    saveMessage={this.state.saveManualMessage}
+                    saveMessage={'Book saved. You can clear and enter another, or hit cancel to close'}
                     saveBook={book => this.saveNewBook(book)} />
 
             </div>
