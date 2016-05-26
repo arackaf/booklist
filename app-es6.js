@@ -19,7 +19,6 @@ import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
 import UserDao from './dataAccess/userDAO';
 
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
 
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -137,13 +136,7 @@ app.post('/react-redux/login', passport.authenticate('local'), function(req, res
             html: '<h2>You logged in</h2>'
         });
 
-        mailTransport.sendMail(emailInfo, function(err, info){
-            if(err){
-                console.log(err);
-            }else{
-                console.log('Message sent: ' + info.response);
-            }
-        });
+        mailTransport.sendMail(emailInfo, function(err, info){ });
     }
 
     response.cookie('logged_in', 'true', { maxAge: 900000 });
@@ -159,8 +152,35 @@ app.post('/react-redux/logout', function(req, response){
     response.send({});
 });
 
+const multerBookCoverUploadStorage = multer.diskStorage({
+    destination: './uploads',
+    filename: function (req, file, cb) {
+        if (!req.user.id){
+            cb('Not logged in');
+        } else {
+            let path = `${req.user.id}/coverUpload/${file.originalname}`,
+                fullPath = __dirname + '/' + path;
+
+            fs.stat(fullPath, function(err, results){
+                if (err){
+                    fs.mkdir(fullPath, (err, res) => {
+                        if (err){
+                            console.log(err);
+                        }
+                        cb(path)
+                    });
+                } else {
+                    cb(path);
+                }
+            })
+        }
+    }
+});
+const upload = multer({ storage: multerBookCoverUploadStorage });
+
+//TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
-    console.log(req.file, req.body.devName);
+    response.send({ success: true });
 });
 
 app.post('/react-redux/createUser', function(req, response){
@@ -196,6 +216,7 @@ process.on('unhandledRejection', function (err, p) {
 var AWS = require('aws-sdk');
 AWS.config.region = 'us-east-1';
 
+/*
 fs.readFile('./uploads/beefcake.jpg', function (err, data) {
     console.log('file read', err, data);
     if (err) throw err; // Something went wrong!
@@ -240,6 +261,6 @@ lwip.open('./uploads/li_large.jpg', function (err, image) {
         });
     });
 });
-
+*/
 
 bookEntryQueueManager.initialize();
