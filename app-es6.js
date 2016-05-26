@@ -10,6 +10,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
+const mkdirp = require('mkdirp');
 const lwip = require('lwip');
 
 import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
@@ -92,6 +93,7 @@ app.use('/static/', express.static(__dirname + '/static/'));
 app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
 app.use('/react-redux/', express.static(__dirname + '/react-redux/'));
 app.use('/utils/', express.static(__dirname + '/utils/'));
+app.use('/uploads/', express.static(__dirname + '/uploads/'));
 
 app.ws('/bookEntryWS', function(ws, req) {
 
@@ -153,34 +155,56 @@ app.post('/react-redux/logout', function(req, response){
 });
 
 const multerBookCoverUploadStorage = multer.diskStorage({
-    destination: './uploads',
-    filename: function (req, file, cb) {
+    destination(req, file, cb){
         if (!req.user.id){
             cb('Not logged in');
         } else {
-            let path = `${req.user.id}/coverUpload/${file.originalname}`,
-                fullPath = __dirname + '/' + path;
+            let path = `./uploads/${req.user.id}/coverUpload`;
 
-            fs.stat(fullPath, function(err, results){
+            fs.stat(path, function(err){
                 if (err){
-                    fs.mkdir(fullPath, (err, res) => {
-                        if (err){
-                            console.log(err);
-                        }
-                        cb(path)
-                    });
+                    mkdirp(path, (err, res) => cb(err, path));
                 } else {
-                    cb(path);
+                    cb(null, path);
                 }
-            })
+            });
         }
+    },
+    filename(req, file, cb) {
+        cb(null, file.originalname);
     }
 });
 const upload = multer({ storage: multerBookCoverUploadStorage });
 
 //TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
-    response.send({ success: true });
+    let pathResultX = path.normalize(req.file.path).replace(/\\/g, '/');
+    let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/');
+
+    console.log(pathResult);
+
+    lwip.open(`${pathResult}/${req.file.originalname}`, function (err, image) {
+        if (err){
+            return console.log('err', err)
+        }
+
+        let width = image.width(),
+            height = image.height(),
+            newWidth = (height * 50) / width;
+
+        image.resize(50, newWidth, function(err, image){
+            let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+
+            image.writeFile(resizedDestination, err => {
+                response.send({ success: true, path: '/' + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+                if (err) {
+                    console.log(err);
+                }else {
+                    console.log('written?');
+                }
+            });
+        });
+    });
 });
 
 app.post('/react-redux/createUser', function(req, response){

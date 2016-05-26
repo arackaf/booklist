@@ -23,6 +23,10 @@ const MainHomePane = props =>
     </div>
 
 class HomeIfLoggedIn extends React.Component{
+    constructor(){
+        super();
+        this.state = {};
+    }
     onDrop(files) {
         console.log('Received files: ', files);
 
@@ -30,7 +34,7 @@ class HomeIfLoggedIn extends React.Component{
         request.append('fileUploaded', files[0]);
         request.append('devName', 'Why, Adam Rackis, of course');
 
-        ajaxUtil.post('/react-redux/upload', request);
+        ajaxUtil.post('/react-redux/upload', request, res => this.setState({ toShow: res.path }));
     }
     render(){
         return (
@@ -43,10 +47,12 @@ class HomeIfLoggedIn extends React.Component{
                     <br />
 
                     <div>
-                        <Dropzone  onDrop={this.onDrop} multiple={false}>
+                        <Dropzone onDrop={files => this.onDrop(files)} multiple={false}>
                             <div>Try dropping some files here, or click to select files to upload.</div>
                         </Dropzone>
                     </div>
+
+                    { this.state.toShow ? <img src={this.state.toShow} /> : null }
 
                 </MainHomePane>
             </div>
