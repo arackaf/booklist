@@ -3,7 +3,8 @@ import {
     STOP_EDITING_BOOK,
     SAVE_EDITING_BOOK,
     EDITING_BOOK_SAVING,
-    EDITING_BOOK_SAVED
+    EDITING_BOOK_SAVED,
+    EDIT_BOOK_RESET
 } from '../actions/bookEdit/actionNames';
 
 const initialState = {
@@ -23,6 +24,8 @@ export default function reducer(state = initialState, action){
             return { ...state, editingBookSaving: true };
         case EDITING_BOOK_SAVED:
             return { ...state, editingBookSaving: false, editingBookSaved: true, isEditing: false }; //close the modal immediately
+        case EDIT_BOOK_RESET:
+            return { ...initialState };
     }
     return state;
 }

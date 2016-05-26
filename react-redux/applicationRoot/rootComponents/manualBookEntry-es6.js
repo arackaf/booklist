@@ -19,7 +19,7 @@ class ManualBookEntry extends React.Component {
     addAuthor(evt){
         evt.preventDefault();
         let bookEditing = this.state.bookEditing;
-        this.setState({ bookEditing: Object.assign({}, bookEditing, { authorsChanged: true, authors: bookEditing.authors.concat('') }) });
+        this.setState({ authorsChanged: true, bookEditing: Object.assign({}, bookEditing, { authors: bookEditing.authors.concat('') }) });
     }
     save(){
         if (!this.state.bookEditing.title){
@@ -27,7 +27,8 @@ class ManualBookEntry extends React.Component {
         } else {
             this.setState({ titleMissing: false });
 
-            this.props.saveBook(this.state.bookEditing);
+            //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits 
+            this.props.saveBook({ ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a) });
         }
     }
     closeModal(){
@@ -38,7 +39,8 @@ class ManualBookEntry extends React.Component {
             let bookToStart = nextProps.bookToEdit;
             this.setState({
                 bookEditing: bookToStart,
-                titleMissing: false
+                titleMissing: false,
+                authorsChanged: false
             });
             this.revertTo = bookToStart;
         }
@@ -97,7 +99,7 @@ class ManualBookEntry extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            {this.state.bookEditing.authors.map((author, $index) =>
+                            {(this.state.bookEditing.authors || []).map((author, $index) =>
                                 <div className="col-xs-4">
                                     <div className="form-group">
                                         <label>Author</label>
@@ -107,7 +109,7 @@ class ManualBookEntry extends React.Component {
                             )}
                             <div className="col-xs-12">
                                 <BootstrapButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapButton>
-                                { this.state.bookEditing.authorsChanged ?
+                                { this.state.authorsChanged ?
                                     <div style={{ marginLeft: 5 }} className="label label-primary">
                                         Add as many authors as the book has. Blanks will be ignored.
                                     </div> : null

@@ -3,7 +3,8 @@ import {
     STOP_EDITING_BOOK,
     SAVE_EDITING_BOOK,
     EDITING_BOOK_SAVING,
-    EDITING_BOOK_SAVED
+    EDITING_BOOK_SAVED,
+    EDIT_BOOK_RESET
 } from './actionNames';
 
 export function editBook(book){
@@ -16,6 +17,7 @@ export function saveEditingBook(book){
 
         ajaxUtil.post('/book/update', { book }, () => {
             dispatch({ type: EDITING_BOOK_SAVED, book });
+            setTimeout(() => dispatch({ type: EDIT_BOOK_RESET }), 250);
         });
     };
 }
