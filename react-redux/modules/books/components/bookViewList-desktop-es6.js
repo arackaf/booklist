@@ -94,6 +94,7 @@ class BookViewListDesktop extends React.Component{
                     isSaving={this.props.bookEdit.editingBookSaving}
                     isSaved={this.props.bookEdit.editingBookSaved}
                     saveBook={book => this.props.saveEditingBook(book)}
+                    saveMessage={'Saved'}
                     onClosing={this.props.stopEditingBook} />
 
             </div>
