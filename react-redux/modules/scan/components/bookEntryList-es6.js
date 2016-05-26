@@ -6,7 +6,7 @@ const Collapse = ReactBootstrap.Collapse;
 import * as bookEntryActionCreators from '../actions/actionCreators';
 import MainNavigationBar from 'root-components/mainNavigation';
 import BootstrapButton from 'root-components/bootstrapButton';
-import ManualBookEntry from './manualBookEntry';
+import ManualBookEntry from 'root-components/manualBookEntry';
 
 class BookEntryList extends React.Component {
     constructor(){
@@ -19,7 +19,7 @@ class BookEntryList extends React.Component {
     toggleIncomingQueue(){
         this.setState({ showIncomingQueue: !this.state.showIncomingQueue });
     }
-    beginEntry(){
+    manuallyEnterBook(){
         this.setState({ inManualEntry: true });
     }
     manualEntryEnding(){
@@ -73,7 +73,7 @@ class BookEntryList extends React.Component {
                             </Collapse>
                         </div>
                         <div className="col-md-6 col-md-pull-6">
-                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} <a className="btn btn-xs btn-primary" onClick={() => this.beginEntry()}>Manual entry</a></h4>
+                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} <a className="btn btn-xs btn-primary" onClick={() => this.manuallyEnterBook()}>Manual entry</a></h4>
                             <Collapse in={this.state.showScanInstructions}>
                                 <div>
                                     <div style={{ height: 10 }}></div>
