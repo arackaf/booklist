@@ -33,9 +33,10 @@ class BookViewListDesktop extends React.Component{
             bookEditing: null
         });
     }
-    render(){
+    updateBook(book){
 
-        let editSubjectsPacket = this.props.subjects.editSubjectsPacket;
+    }
+    render(){
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
 
@@ -101,7 +102,11 @@ class BookViewListDesktop extends React.Component{
                     subjects={this.props.subjects.list}>
                 </SubjectEditModal>
 
-                <ManualBookEntry isOpen={this.state.isEditing} bookToEdit={this.state.bookEditing} onClosing={() => this.editBookEnding()} />
+                <ManualBookEntry
+                    isOpen={this.props.bookIsEditing}
+                    bookToEdit={this.props.bookEditing}
+                    onClosing={() => this.props.cancelBookEditing()}
+                    saveBook={book => this.props.updateBook(book)} />
             </div>
         );
     }
