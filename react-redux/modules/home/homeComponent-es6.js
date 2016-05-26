@@ -5,9 +5,8 @@ const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 import MainNavigationBar from 'root-components/mainNavigation';
 
-import DropzoneRoot from 'react-redux-util/react-dropzone';
+import { Dropzone } from 'react-redux-util/react-dropzone';
 
-const Dropzone = DropzoneRoot.Dropzone;
 
 const MainHomePane = props =>
     <div className="row">
