@@ -49,11 +49,9 @@ class ManualBookEntry extends React.Component {
     render(){
         let bookEditing = this.state.bookEditing;
 
-        //modal collects an existing book to edit, or just puts in a default empty one.
-
-        //modal then collects form data, modifying this current book, and eventually calls save method passed from above.
-        //When that promise resolves, form stays disabled until the user resets the modal to add another.  Or if an existing
-        //book is being edited, then the parent component will likely just close the form when save is complete
+        //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
+        //Modal eventually calls save method passed from above.
+        //Parent component passes in a new book as needed to restart editing
         return (
             <Modal show={!!this.props.isOpen} onHide={() => this.closeModal()}>
                 <Modal.Header closeButton>
