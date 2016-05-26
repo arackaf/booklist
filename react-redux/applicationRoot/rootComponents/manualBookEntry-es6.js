@@ -3,15 +3,6 @@ import BootstrapButton from 'root-components/bootstrapButton';
 
 const Modal = ReactBootstrap.Modal;
 
-const defaultEmptyBook = () => ({
-    title: '',
-    isbn: '',
-    pages: '',
-    publisher: '',
-    publicationDate: '',
-    authors: ['']
-});
-
 class ManualBookEntry extends React.Component {
     constructor(){
         super();
@@ -34,26 +25,17 @@ class ManualBookEntry extends React.Component {
         if (!this.state.bookEditing.title){
             this.setState({ titleMissing: true });
         } else {
-            this.setState({
-                titleMissing: false,
-                suspended: true,
-                isSaving: true
-            });
+            this.setState({ titleMissing: false });
 
-            Promise.resolve(this.props.saveBook(this.state.bookEditing)).then(() => {
-                this.setState({
-                    saveMessage: this.props.saveMessage,
-                    isSaving: false
-                });
-            });
+            this.props.saveBook(this.state.bookEditing);
         }
     }
     closeModal(){
         this.props.onClosing()
     }
     componentWillReceiveProps(nextProps){
-        if (!this.props.isOpen && nextProps.isOpen){
-            let bookToStart = nextProps.bookToEdit || defaultEmptyBook();
+        if (this.props.bookToEdit !== nextProps.bookToEdit){
+            let bookToStart = nextProps.bookToEdit;
             this.setState({
                 bookEditing: bookToStart,
                 titleMissing: false
@@ -62,15 +44,16 @@ class ManualBookEntry extends React.Component {
         }
     }
     revert(){
-        this.setState({
-            bookEditing: this.revertTo,
-            suspended: false,
-            saveMessage: ''
-        });
+        this.setState({ bookEditing: this.revertTo });
     }
     render(){
         let bookEditing = this.state.bookEditing;
 
+        //modal collects an existing book to edit, or just puts in a default empty one.
+
+        //modal then collects form data, modifying this current book, and eventually calls save method passed from above.
+        //When that promise resolves, form stays disabled until the user resets the modal to add another.  Or if an existing
+        //book is being edited, then the parent component will likely just close the form when save is complete
         return (
             <Modal show={!!this.props.isOpen} onHide={() => this.closeModal()}>
                 <Modal.Header closeButton>
@@ -134,14 +117,14 @@ class ManualBookEntry extends React.Component {
                             </div>
                         </div>
                     </form> : null }
-                    { this.state.saveMessage ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.state.saveMessage}</div> : null }
+                    { this.props.isSaved ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.saveMessage}</div> : null }
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton className="pull-right" preset="primary" running={this.state.isSaving} disabled={this.state.suspended} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
+                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
                     <br /><br /><br />
-                    <BootstrapButton className="xpull-right" preset="danger" onClick={() => this.revert()}>Clear</BootstrapButton>&nbsp;&nbsp;
-                    <BootstrapButton className="xpull-right" preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
+                    <BootstrapButton preset="danger" onClick={() => this.props.isSaved ? this.props.startOver() : this.revert()}>Clear</BootstrapButton>&nbsp;&nbsp;
+                    <BootstrapButton preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );

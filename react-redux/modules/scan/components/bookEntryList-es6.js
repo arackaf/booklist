@@ -8,6 +8,15 @@ import MainNavigationBar from 'root-components/mainNavigation';
 import BootstrapButton from 'root-components/bootstrapButton';
 import ManualBookEntry from 'root-components/manualBookEntry';
 
+const defaultEmptyBook = () => ({
+    title: '',
+    isbn: '',
+    pages: '',
+    publisher: '',
+    publicationDate: '',
+    authors: ['']
+});
+
 class BookEntryList extends React.Component {
     constructor(){
         super();
@@ -20,14 +29,19 @@ class BookEntryList extends React.Component {
         this.setState({ showIncomingQueue: !this.state.showIncomingQueue });
     }
     manuallyEnterBook(){
-        this.setState({ inManualEntry: true });
+        this.setState({
+            inManualEntry: true,
+            isSavingManual: false,
+            manualSaved: false,
+            manualBook: defaultEmptyBook()
+        });
     }
     manualEntryEnding(){
-        this.setState({ inManualEntry: false });
+        this.setState({ inManualEntry: false, bookToEdit: null });
     }
     saveNewBook(book){
         this.setState({ isSavingManual: true });
-        return ajaxUtil.post('/book/saveManual', { book })
+        ajaxUtil.post('/book/saveManual', { book }).then(() => this.setState({ isSavingManual: false, manualSaved: true }));
     }
     render() {
         let pending = this.props.pendingNumber,
@@ -115,10 +129,14 @@ class BookEntryList extends React.Component {
                 </div>
 
                 <ManualBookEntry
+                    bookToEdit={this.state.manualBook}
                     isOpen={this.state.inManualEntry}
-                    onClosing={() => this.manualEntryEnding()}
+                    isSaving={this.state.isSavingManual}
+                    isSaved={this.state.manualSaved}
+                    saveBook={book => this.saveNewBook(book)}
                     saveMessage={'Book saved. You can clear and enter another, or hit cancel to close'}
-                    saveBook={book => this.saveNewBook(book)} />
+                    startOver={() => this.manuallyEnterBook()}
+                    onClosing={() => this.manualEntryEnding()} />
 
             </div>
         );
