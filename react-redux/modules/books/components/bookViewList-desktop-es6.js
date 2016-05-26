@@ -4,6 +4,7 @@ import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'root-components/bootstrapButton';
+import ManualBookEntry from 'root-components/manualBookEntry';
 
 class BookViewListDesktop extends React.Component{
     constructor(props){
@@ -19,6 +20,18 @@ class BookViewListDesktop extends React.Component{
         }
 
         this.props.setSortOrder(column, newDirection);
+    }
+    editBook(book){
+        this.setState({
+            isEditing: true,
+            bookEditing: book
+        });
+    }
+    editBookEnding(){
+        this.setState({
+            isEditing: false,
+            bookEditing: null
+        });
     }
     render(){
 
@@ -56,7 +69,7 @@ class BookViewListDesktop extends React.Component{
                                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.books.selectedBooks[book._id]} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
-                                <td>{book.title}</td>
+                                <td>{book.title}<br /><a onClick={() => this.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>
                                 <td>
                                     <ul className="list-unstyled">
                                         {book.authors.map(author => <li>{author}</li>)}
@@ -88,7 +101,7 @@ class BookViewListDesktop extends React.Component{
                     subjects={this.props.subjects.list}>
                 </SubjectEditModal>
 
-
+                <ManualBookEntry isOpen={this.state.isEditing} bookToEdit={this.state.bookEditing} onClosing={() => this.editBookEnding()} />
             </div>
         );
     }
