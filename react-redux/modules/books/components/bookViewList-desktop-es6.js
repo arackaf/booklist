@@ -27,17 +27,18 @@ class BookViewListDesktop extends React.Component{
             sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
 
         return (
-            <div>
+            <div style={{ position: 'relative', minHeight: 500 }}>
+                { this.props.books.loading ?
+                    <div className="wait-for-loading">
+                        <i className="fa fa-5x fa-spin fa-spinner"></i>
+                    </div> : null }
                 <BooksMenuBar
                     selectedBooksCount={this.props.books.selectedBooksCount}
                     allSubjects={this.props.subjects.list}
                 ></BooksMenuBar>
 
                 { this.props.books.list.length ?
-                <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15, position: 'relative' }}>
-                    <div className="wait-for-loading">
-                        <i className="fa fa-5x fa-spin fa-spinner"></i>
-                    </div>
+                <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15 }}>
                     <table className="table table-striped">
                         <thead>
                             <tr>
