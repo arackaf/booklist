@@ -74,6 +74,10 @@ class BookEntryList extends React.Component {
                                     <div style={{ margin: 0 }} className="alert alert-info alert-slim">
                                         Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode
                                         scanner to search for each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                                        <br /> <br />
+                                        After you enter the isbn in the last textbox, focus will jump back to the first.  This is to make scanning a large number
+                                        of books with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else
+                                        they may get overridden.
                                     </div>
                                 </div>
                             </Collapse>
@@ -88,14 +92,19 @@ class BookEntryList extends React.Component {
                                         index={i}
                                         deleteBook={() => this.deleteBook(entry)}
                                     />
-                                    <br />
                                 </div>
                             )}
-                            <div>
-                                <BootstrapButton preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
-                                <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                            <div className='row'>
+                                <div className='col-sm-8 form-horizontal'>
+                                    <BootstrapButton className="pull-right" preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                                </div>
+                                <div className='col-sm-4 pull-left'>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -135,6 +144,10 @@ class BookEntryList extends React.Component {
         let index = this.props.entryList.indexOf(entry);
         if (index < this.props.entryList.length - 1){
             this.refs['Book' + (index + 1)].focusInput();
+            this.refs['Book' + (index + 1)].selectInput();
+        } else {
+            this.refs['Book0'].focusInput();
+            this.refs['Book0'].selectInput();
         }
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){

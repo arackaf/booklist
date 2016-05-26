@@ -1,10 +1,42 @@
 const ObjectId = require('mongodb').ObjectID;
 const DAO = require('./dao');
 
+const AmazonSearch = require('../amazonDataAccess/AmazonSearch');
+
 class BookDAO extends DAO {
     constructor(userId){
         super();
         this.userId = userId;
+    }
+    async fixBooks(){
+        let db = await super.open();
+        try {
+            let books = await db.collection('books').find({  }).toArray();
+            console.log('books length', books.length);
+            this.doBooks(books);
+        } catch (err){
+            console.log(err)
+        } finally {
+            super.dispose(db);
+        }
+
+    }
+    async doBooks(bookResults){
+        let db = await super.open();
+        if (!bookResults.length) return;
+
+        let aSearch = new AmazonSearch();
+
+        try {
+            let book = await aSearch.lookupBook(bookResults[0].isbn);
+            db.collection('books').update({ _id: ObjectId(bookResults[0]._id) }, { $set: { authors: book.authors, publisher: book.publisher } });
+            console.log('done with', bookResults[0].title);
+            setTimeout(() => this.doBooks(bookResults.slice(1)), 1000);
+        } catch(err){
+            console.log(err);
+        } finally{
+            super.dispose(db);
+        }
     }
     async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection }){
         subjects = subjects || [];
