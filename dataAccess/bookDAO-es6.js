@@ -105,9 +105,22 @@ class BookDAO extends DAO {
             let result = await db.collection('books').insert(bookToInsert);
 
             super.confirmSingleResult(result);
-        } catch(err){
-            console.log(err);
         } finally {
+            super.dispose(db);
+        }
+    }
+    async update(book){
+        let db = await super.open();
+        try {
+
+            //coming right from the client, so we'll sanitize
+            const validProperties = ['title', 'isbn', 'pages', 'publisher', 'publicationDate'];
+
+            let $set = {};
+            validProperties.forEach(prop => $set[prop] = (book[prop] || '').substr(0, 500));
+            $set.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
+            await db.collection('books').update({ _id: ObjectId(book._id), userId: this.userId }, { $set });
+        } finally{
             super.dispose(db);
         }
     }
