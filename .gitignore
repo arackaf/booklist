@@ -125,3 +125,4 @@ react-redux/util/responsiveChangeNotifier.js
 react-redux/build/build.js
 react-redux/modules/home/homeComponent.js
 react-redux/modules/home/home.js
+private/awsS3Credentials.js
