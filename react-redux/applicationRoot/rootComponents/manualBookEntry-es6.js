@@ -133,7 +133,7 @@ class ManualBookEntry extends React.Component {
                         <br />
                         <div className="row">
                             <div className="col-xs-6">
-                                <Dropzone style={{ border: '3px groove', padding: 40 }} onDrop={files => this.onDrop(files)} multiple={false}>
+                                <Dropzone style={{ border: '3px groove', padding: 30 }} onDrop={files => this.onDrop(files)} multiple={false}>
                                     <div>Click or drag to upload an image.</div>
                                 </Dropzone>
                             </div>
