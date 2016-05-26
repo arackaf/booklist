@@ -34,8 +34,18 @@ class ManualBookEntry extends React.Component {
         if (!this.state.bookEditing.title){
             this.setState({ titleMissing: true });
         } else {
-            this.setState({ titleMissing: false });
-            this.props.saveBook(this.state.bookEditing);
+            this.setState({
+                titleMissing: false,
+                suspended: true,
+                isSaving: true
+            });
+
+            Promise.resolve(this.props.saveBook(this.state.bookEditing)).then(() => {
+                this.setState({
+                    saveMessage: this.props.saveMessage,
+                    isSaving: false
+                });
+            });
         }
     }
     closeModal(){
@@ -43,11 +53,20 @@ class ManualBookEntry extends React.Component {
     }
     componentWillReceiveProps(nextProps){
         if (!this.props.isOpen && nextProps.isOpen){
+            let bookToStart = nextProps.bookToEdit || defaultEmptyBook();
             this.setState({
-                bookEditing: nextProps.bookToEdit || defaultEmptyBook(),
+                bookEditing: bookToStart,
                 titleMissing: false
             });
+            this.revertTo = bookToStart;
         }
+    }
+    revert(){
+        this.setState({
+            bookEditing: this.revertTo,
+            suspended: false,
+            saveMessage: ''
+        });
     }
     render(){
         let bookEditing = this.state.bookEditing;
@@ -57,7 +76,6 @@ class ManualBookEntry extends React.Component {
                 <Modal.Header closeButton>
                     <Modal.Title>
                         Manually enter a book
-                        <div>{JSON.stringify(this.state.bookEditing || {})}</div>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -85,7 +103,7 @@ class ManualBookEntry extends React.Component {
                         <div className="row">
                             <div className="col-xs-6">
                                 <div className="form-group">
-                                    <label>Published</label>
+                                    <label>Publisher</label>
                                     <input onChange={this.syncStateFromInput('publisher')} value={bookEditing.publisher} className="form-control" placeholder="Publisher" />
                                 </div>
                             </div>
@@ -116,13 +134,14 @@ class ManualBookEntry extends React.Component {
                             </div>
                         </div>
                     </form> : null }
-                    { this.props.saveMessage ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.saveMessage}</div> : null }
+                    { this.state.saveMessage ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.state.saveMessage}</div> : null }
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton className="pull-left" preset="primary" running={this.props.isSaving} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
-                    <BootstrapButton preset="danger" onClick={() => this.closeModal()}>Clear</BootstrapButton>
-                    <BootstrapButton preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
+                    <AjaxButton className="pull-right" preset="primary" running={this.state.isSaving} disabled={this.state.suspended} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
+                    <br /><br /><br />
+                    <BootstrapButton className="xpull-right" preset="danger" onClick={() => this.revert()}>Clear</BootstrapButton>&nbsp;&nbsp;
+                    <BootstrapButton className="xpull-right" preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );
