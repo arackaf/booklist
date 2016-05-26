@@ -6,7 +6,16 @@ const Collapse = ReactBootstrap.Collapse;
 import * as bookEntryActionCreators from '../actions/actionCreators';
 import MainNavigationBar from 'root-components/mainNavigation';
 import BootstrapButton from 'root-components/bootstrapButton';
+import ManualBookEntry from 'root-components/manualBookEntry';
 
+const defaultEmptyBook = () => ({
+    title: '',
+    isbn: '',
+    pages: '',
+    publisher: '',
+    publicationDate: '',
+    authors: ['']
+});
 
 class BookEntryList extends React.Component {
     constructor(){
@@ -18,6 +27,21 @@ class BookEntryList extends React.Component {
     }
     toggleIncomingQueue(){
         this.setState({ showIncomingQueue: !this.state.showIncomingQueue });
+    }
+    manuallyEnterBook(){
+        this.setState({
+            inManualEntry: true,
+            isSavingManual: false,
+            manualSaved: false,
+            manualBook: defaultEmptyBook()
+        });
+    }
+    manualEntryEnding(){
+        this.setState({ inManualEntry: false, bookToEdit: null });
+    }
+    saveNewBook(book){
+        this.setState({ isSavingManual: true });
+        ajaxUtil.post('/book/saveManual', { book }).then(() => this.setState({ isSavingManual: false, manualSaved: true }));
     }
     render() {
         let pending = this.props.pendingNumber,
@@ -67,7 +91,7 @@ class BookEntryList extends React.Component {
                             </Collapse>
                         </div>
                         <div className="col-md-6 col-md-pull-6">
-                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions}</h4>
+                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} <a className="btn btn-xs btn-primary" onClick={() => this.manuallyEnterBook()}>Manual entry</a></h4>
                             <Collapse in={this.state.showScanInstructions}>
                                 <div>
                                     <div style={{ height: 10 }}></div>
@@ -92,17 +116,33 @@ class BookEntryList extends React.Component {
                                         index={i}
                                         deleteBook={() => this.deleteBook(entry)}
                                     />
-                                    <br />
                                 </div>
                             )}
-                            <div>
-                                <BootstrapButton preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
-                                <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                            <div className='row'>
+                                <div className='col-sm-8 form-horizontal'>
+                                    <BootstrapButton className="pull-right" preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                                </div>
+                                <div className='col-sm-4 pull-left'>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
+
+                <ManualBookEntry
+                    bookToEdit={this.state.manualBook}
+                    isOpen={this.state.inManualEntry}
+                    isSaving={this.state.isSavingManual}
+                    isSaved={this.state.manualSaved}
+                    saveBook={book => this.saveNewBook(book)}
+                    saveMessage={'Book saved. You can clear and enter another, or hit cancel to close'}
+                    startOver={() => this.manuallyEnterBook()}
+                    onClosing={() => this.manualEntryEnding()} />
+
             </div>
         );
     }

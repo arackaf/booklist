@@ -10,7 +10,7 @@ Promise.delayed = function (f) {
     });
 
     result.start = function () {
-        return (resolve(), result);
+        return resolve(), result;
     };
     return result;
 };
