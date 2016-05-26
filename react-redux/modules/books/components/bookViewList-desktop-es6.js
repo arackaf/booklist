@@ -4,6 +4,7 @@ import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'root-components/bootstrapButton';
+import ManualBookEntry from 'root-components/manualBookEntry';
 
 class BookViewListDesktop extends React.Component{
     constructor(props){
@@ -21,13 +22,11 @@ class BookViewListDesktop extends React.Component{
         this.props.setSortOrder(column, newDirection);
     }
     render(){
-
-        let editSubjectsPacket = this.props.subjects.editSubjectsPacket;
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
 
         return (
-            <div>
+            <div style={{ minHeight: 500 }}>
                 <BooksMenuBar
                     selectedBooksCount={this.props.books.selectedBooksCount}
                     allSubjects={this.props.subjects.list}
@@ -56,8 +55,12 @@ class BookViewListDesktop extends React.Component{
                                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.books.selectedBooks[book._id]} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
-                                <td>{book.title}</td>
-                                <td>{book.author}</td>
+                                <td>{book.title}<br /><a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>
+                                <td>
+                                    <ul className="list-unstyled">
+                                        {book.authors.map(author => <li>{author}</li>)}
+                                    </ul>
+                                </td>
                                 <td>
                                     { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
                                     <div style={{ marginTop: 5 }}>
@@ -66,7 +69,7 @@ class BookViewListDesktop extends React.Component{
                                 </td>
                                 <td>{book.dateAddedDisplay}</td>
                                 <td>{book.isbn}</td>
-                                <td>{book.publicationDate}</td>
+                                <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
                                 <td>{book.pages}</td>
                             </tr>
                         ) : null}
@@ -84,6 +87,15 @@ class BookViewListDesktop extends React.Component{
                     subjects={this.props.subjects.list}>
                 </SubjectEditModal>
 
+
+                <ManualBookEntry
+                    bookToEdit={this.props.bookEdit.editingBook}
+                    isOpen={this.props.bookEdit.isEditing}
+                    isSaving={this.props.bookEdit.editingBookSaving}
+                    isSaved={this.props.bookEdit.editingBookSaved}
+                    saveBook={book => this.props.saveEditingBook(book)}
+                    saveMessage={'Saved'}
+                    onClosing={this.props.stopEditingBook} />
 
             </div>
         );

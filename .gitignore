@@ -127,3 +127,8 @@ react-redux/modules/home/homeComponent.js
 react-redux/modules/home/home.js
 uploads/
 private/awsS3Credentials.js
+react-redux/modules/scan/components/manualBookEntry.js
+react-redux/applicationRoot/rootComponents/manualBookEntry.js
+react-redux/modules/books/actions/bookEdit/actionCreators.js
+react-redux/modules/books/actions/bookEdit/actionNames.js
+react-redux/modules/books/reducers/editBookReducer.js
