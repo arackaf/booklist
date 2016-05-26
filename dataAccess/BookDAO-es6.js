@@ -59,6 +59,26 @@ class BookDAO extends DAO {
             super.dispose(db);
         }
     }
+    async saveManual(book){
+        let db = await super.open();
+        try {
+            let bookToInsert = {};
+            bookToInsert.userId = this.userId;
+
+            //coming right from the client, so we'll sanitize
+            const validProperties = ['title', 'isbn', 'pages', 'publisher', 'publicationDate'];
+            validProperties.forEach(prop => bookToInsert[prop] = (book[prop] || '').substr(0, 500));
+            bookToInsert.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
+
+            let result = await db.collection('books').insert(bookToInsert);
+
+            super.confirmSingleResult(result);
+        } catch(err){
+            console.log(err);
+        } finally {
+            super.dispose(db);
+        }
+    }
     async deleteBook(id){
         let db = await super.open();
         try {

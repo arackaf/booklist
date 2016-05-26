@@ -26,6 +26,12 @@ class bookController{
         await bookDao.deleteBook(id);
         this.send({ success: true });
     }
+    @httpPost
+    async saveManual(book){
+        let bookDao = new BookDAO(this.request.user.id);
+        await bookDao.saveManual(book);
+        this.send({ success: true });
+    }
     async searchBooks(search, subjects, searchChildSubjects, sort, sortDirection){
         let bookDao = new BookDAO(this.request.user.id),
             bookResults = await bookDao.searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection });
