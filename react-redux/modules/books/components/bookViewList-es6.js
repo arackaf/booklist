@@ -41,7 +41,11 @@ class BookViewingList extends React.Component {
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10' }}>
-                    <div className="panel-body" style={{ padding: 0 }}>
+                    <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
+                        { this.props.books.loading ?
+                            <div className="wait-for-loading">
+                                <i className="fa fa-5x fa-spin fa-spinner"></i>
+                            </div> : null }
                         { !this.state.listComponent
                             ? <BookListLoading />
                             : React.createElement(this.state.listComponent, { addSubject: s => this.addSubject(s) })
