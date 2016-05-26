@@ -31,14 +31,22 @@ class ManualBookEntry extends React.Component {
         this.setState({ bookEditing: Object.assign({}, bookEditing, { authorsChanged: true, authors: bookEditing.authors.concat('') }) });
     }
     save(){
-
+        if (!this.state.bookEditing.title){
+            this.setState({ titleMissing: true });
+        } else {
+            this.setState({ titleMissing: false });
+            this.props.saveBook(this.state.bookEditing);
+        }
     }
     closeModal(){
         this.props.onClosing()
     }
     componentWillReceiveProps(nextProps){
         if (!this.props.isOpen && nextProps.isOpen){
-            this.setState({ bookEditing: nextProps.bookToEdit || defaultEmptyBook() });
+            this.setState({
+                bookEditing: nextProps.bookToEdit || defaultEmptyBook(),
+                titleMissing: false
+            });
         }
     }
     render(){
@@ -55,7 +63,7 @@ class ManualBookEntry extends React.Component {
                 <Modal.Body>
                     {this.state.bookEditing ?
                     <form>
-                        <div className="form-group">
+                        <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
                             <label>Title</label>
                             <input onChange={this.syncStateFromInput('title')} value={bookEditing.title} className="form-control" placeholder="Title (required)" />
                         </div>
@@ -108,10 +116,11 @@ class ManualBookEntry extends React.Component {
                             </div>
                         </div>
                     </form> : null }
+                    { this.props.saveMessage ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.saveMessage}</div> : null }
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton className="pull-left" preset="primary" running={false} runningText='Saving' onClick={() => this.save()}>Set</AjaxButton>
+                    <AjaxButton className="pull-left" preset="primary" running={this.props.isSaving} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
                     <BootstrapButton preset="danger" onClick={() => this.closeModal()}>Clear</BootstrapButton>
                     <BootstrapButton preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
                 </Modal.Footer>

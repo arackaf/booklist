@@ -25,6 +25,15 @@ class BookEntryList extends React.Component {
     manualEntryEnding(){
         this.setState({ inManualEntry: false });
     }
+    saveNewBook(book){
+        this.setState({ isSavingManual: true });
+        ajaxUtil.post('/book/saveManual', { book }, () => {
+            this.setState({
+                isSavingManual: false,
+                saveManualMessage: 'Book saved. You can enter another, or hit cancel to close'
+            });
+        });
+    }
     render() {
         let pending = this.props.pendingNumber,
             toggleClass = this.state.showIncomingQueue ? 'fa-angle-double-up' : 'fa-angle-double-down',
@@ -110,7 +119,12 @@ class BookEntryList extends React.Component {
                     </div>
                 </div>
 
-                <ManualBookEntry isOpen={this.state.inManualEntry} onClosing={() => this.manualEntryEnding()} />
+                <ManualBookEntry
+                    isOpen={this.state.inManualEntry}
+                    onClosing={() => this.manualEntryEnding()}
+                    isSaving={this.state.isSavingManual}
+                    saveMessage={this.state.saveManualMessage}
+                    saveBook={book => this.saveNewBook(book)} />
 
             </div>
         );
