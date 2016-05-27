@@ -36,6 +36,8 @@ let paths = sharedFilesToBuild.join(' + '),
     builds = [
         { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
         { module: 'modules/scan/scan', path: 'modules/scan/scan - (' + paths + ')' },
+        { module: 'modules/home/home', path: 'modules/home/home - (' + paths + ')' },
+        { module: 'modules/authenticate/authenticate', path: 'modules/authenticate/authenticate - (' + paths + ')' },
         { module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
     ];
 

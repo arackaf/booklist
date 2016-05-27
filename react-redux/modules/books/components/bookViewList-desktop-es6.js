@@ -63,7 +63,7 @@ class BookViewListDesktop extends React.Component{
                                 </td>
                                 <td>
                                     { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
-                                    <div style={{ marginTop: 5 }}>
+                                    <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
                                     </div>
                                 </td>
