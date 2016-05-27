@@ -138,4 +138,7 @@ export default class HashUtility {
         var hashObject = this.parseHashTag(window.location.hash);
         return hashObject.getValue(name);
     }
+    overwriteToNewHash(newHash){
+        location.replace(location.href.replace(/#.*/, newHash));
+    }
 }

@@ -18,6 +18,9 @@ import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
 import UserDao from './dataAccess/userDAO';
 
+const hour = 3600000;
+const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
+
 const multer  = require('multer');
 
 var passport = require('passport'),
@@ -127,11 +130,9 @@ app.get('/favicon.ico', function (request, response) {
 
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
-
-        mailTransport.sendMail(emailInfo, function(err, info){ });
     response.cookie('logged_in', 'true', { maxAge: 900000 });
     if (req.body.rememberme == 1) {
-        response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: 604800000});
+        response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: rememberMeExpiration });
     }
     response.send(req.user);
 });
@@ -271,15 +272,17 @@ app.get('/react-redux/activate/:code', function(req, response){
     let userDao = new UserDao(),
         code = req.params.code;
 
-    console.log('activating', code);
     userDao.activateUser(code).then(result => {
         //console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
         if (result.success){
             req.login(result, function(){
-                //todo: tie to remember me when creating
-                response.cookie('remember_me', result.token, {path: '/', httpOnly: true, maxAge: 604800000});
-                response.redirect('/react-redux');
+                if (result.rememberMe) {
+                    response.cookie('remember_me', result.token, { path: '/', httpOnly: true, maxAge: rememberMeExpiration });
+                }
+                response.redirect('/react-redux/#activate');
             })
+        } else {
+            response.redirect('/react-redux/#activate');
         }
 
     }, err => console.log(':(', err));

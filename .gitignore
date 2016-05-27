@@ -133,3 +133,6 @@ react-redux/applicationRoot/rootComponents/manualBookEntry.js
 react-redux/modules/books/actions/bookEdit/actionCreators.js
 react-redux/modules/books/actions/bookEdit/actionNames.js
 react-redux/modules/books/reducers/editBookReducer.js
+react-redux/modules/activate/activate.js
+react-redux/modules/activate/activateComponent.js
+utils/promiseUtils.js
