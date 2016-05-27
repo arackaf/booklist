@@ -37,6 +37,7 @@
 
         System.config(systemJsConfig);
 
+        System.amdDefine('react', function(){ return React; });
         System.import('react-startup');
 
         function webSocketAddress(path){
