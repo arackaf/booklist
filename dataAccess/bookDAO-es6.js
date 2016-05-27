@@ -123,6 +123,16 @@ class BookDAO extends DAO {
             let $set = {};
             validProperties.forEach(prop => $set[prop] = (book[prop] || '').substr(0, 500));
             $set.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
+
+            if (book.smallImage){
+                try {
+                    let smallImageSavedToAws = await this.saveToAws(book.smallImage);
+                    $set.smallImage = smallImageSavedToAws;
+                } catch(err){
+                    //for now just proceed and save the rest of the book
+                }
+            }
+
             await db.collection('books').update({ _id: ObjectId(book._id), userId: this.userId }, { $set });
         } finally{
             super.dispose(db);
