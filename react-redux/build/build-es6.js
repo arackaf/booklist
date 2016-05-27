@@ -20,6 +20,9 @@ builder.config({
         'react': 'util/harmless-stub-for-build' //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
     },
     meta: {
+        'util/react-dropzone': {
+            format: 'global'
+        }
     }
 });
 
