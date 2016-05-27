@@ -135,6 +135,7 @@ class BookEntryList extends React.Component {
 
                 <ManualBookEntry
                     title={'Manually enter a book'}
+                    dragTitle={'Click or drag to upload a cover image'}
                     bookToEdit={this.state.manualBook}
                     isOpen={this.state.inManualEntry}
                     isSaving={this.state.isSavingManual}
