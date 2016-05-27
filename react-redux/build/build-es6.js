@@ -16,7 +16,13 @@ builder.config({
         'react-redux-util': 'util',
         'root-components': 'applicationRoot/rootComponents',
         'application-root': 'applicationRoot',
-        'react-startup': 'reactStartup'
+        'react-startup': 'reactStartup',
+        'react': 'util/harmless-stub-for-build' //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
+    },
+    meta: {
+        'util/react-dropzone': {
+            format: 'global'
+        }
     }
 });
 
@@ -30,7 +36,9 @@ let paths = sharedFilesToBuild.join(' + '),
     builds = [
         { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
         { module: 'modules/scan/scan', path: 'modules/scan/scan - (' + paths + ')' },
-        { module: 'reactStartup', path: 'reactStartup + ' + paths, saveTo: '../dist/reactStartup' }
+        { module: 'modules/home/home', path: 'modules/home/home - (' + paths + ')' },
+        { module: 'modules/authenticate/authenticate', path: 'modules/authenticate/authenticate - (' + paths + ')' },
+        { module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
     ];
 
 Promise.all(builds.map(buildEntryToPromise)).then(results => {

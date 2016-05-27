@@ -5,6 +5,7 @@ const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 import MainNavigationBar from 'root-components/mainNavigation';
 
+
 const MainHomePane = props =>
     <div className="row">
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
@@ -19,6 +20,10 @@ const MainHomePane = props =>
     </div>
 
 class HomeIfLoggedIn extends React.Component{
+    constructor(){
+        super();
+        this.state = {};
+    }
     render(){
         return (
             <div>
@@ -26,6 +31,9 @@ class HomeIfLoggedIn extends React.Component{
                 <MainHomePane>
                     Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
                     to either view your library, or scan some books in.
+                    <br />
+                    <br />
+
                 </MainHomePane>
             </div>
         )
