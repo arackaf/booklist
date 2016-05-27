@@ -178,10 +178,7 @@ const upload = multer({ storage: multerBookCoverUploadStorage });
 
 //TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
-    let pathResultX = path.normalize(req.file.path).replace(/\\/g, '/');
     let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/');
-
-    console.log(pathResult);
 
     lwip.open(`${pathResult}/${req.file.originalname}`, function (err, image) {
         if (err){
@@ -197,11 +194,6 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
 
             image.writeFile(resizedDestination, err => {
                 response.send({ success: true, smallImagePath: '/' + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-                if (err) {
-                    console.log(err);
-                }else {
-                    console.log('written?');
-                }
             });
         });
     });
@@ -237,8 +229,8 @@ process.on('unhandledRejection', function (err, p) {
     } catch(e) { }
 });
 
-var AWS = require('aws-sdk');
-AWS.config.region = 'us-east-1';
+//var AWS = require('aws-sdk');
+//AWS.config.region = 'us-east-1';
 
 /*
 fs.readFile('./uploads/beefcake.jpg', function (err, data) {

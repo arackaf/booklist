@@ -29,7 +29,7 @@ class ManualBookEntry extends React.Component {
             this.setState({ titleMissing: false });
 
             //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits 
-            this.props.saveBook({ ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a) });
+            this.props.saveBook({ ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a), smallImage: this.state.pendingSmallImage });
         }
     }
     closeModal(){
@@ -55,7 +55,7 @@ class ManualBookEntry extends React.Component {
         request.append('fileUploaded', files[0]);
         request.append('devName', 'Why, Adam Rackis, of course');
 
-        ajaxUtil.post('/react-redux/upload', request, res => this.setState({ pendingSmallImage: res.smallImagePath }));
+        ajaxUtil.postWithFiles('/react-redux/upload', request, res => this.setState({ pendingSmallImage: res.smallImagePath }));
     }
     clearPendingSmallImage(){
         this.setState({ pendingSmallImage: '' });
