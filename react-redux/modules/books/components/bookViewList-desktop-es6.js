@@ -90,6 +90,7 @@ class BookViewListDesktop extends React.Component{
 
                 <ManualBookEntry
                     title={this.props.bookEdit.editingBook ? `Edit ${this.props.bookEdit.editingBook.title}` : ''}
+                    dragTitle={this.props.bookEdit.editingBook ? `Click or drag to upload a ${this.props.bookEdit.editingBook.smallImage ? 'new' : ''} cover image` : ''}
                     bookToEdit={this.props.bookEdit.editingBook}
                     isOpen={this.props.bookEdit.isEditing}
                     isSaving={this.props.bookEdit.editingBookSaving}
