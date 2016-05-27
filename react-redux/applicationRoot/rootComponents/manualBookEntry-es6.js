@@ -134,13 +134,12 @@ class ManualBookEntry extends React.Component {
                                 <BootstrapButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapButton>
                                 { this.state.authorsChanged ?
                                     <div style={{ marginLeft: 5 }} className="label label-primary">
-                                        Add as many authors as the book has. Blanks will be ignored.
+                                        Add as many authors as needed. Blanks will be ignored.
                                     </div> : null
                                 }
                             </div>
                         </div>
 
-                        <br />
                         <br />
                         <div className="row">
                             <div className="col-xs-6">
@@ -161,13 +160,11 @@ class ManualBookEntry extends React.Component {
                         </div>
                     </form> : null }
                     { this.props.isSaved ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.saveMessage}</div> : null }
-
+                    <hr style={{ marginTop: 10, marginBottom: 10 }} />
+                    <BootstrapButton preset="danger-xs" onClick={() => this.props.isSaved ? this.props.startOver() : this.revert()}>Clear all</BootstrapButton>
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
-                    <br /><br /><br />
-                    <BootstrapButton preset="danger" onClick={() => this.props.isSaved ? this.props.startOver() : this.revert()}>Clear</BootstrapButton>&nbsp;&nbsp;
-                    <BootstrapButton preset="default" onClick={() => this.closeModal()}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );
