@@ -3,6 +3,14 @@ window.ajaxUtil = {
         return $.ajax(url, {
             method: 'post',
             data: data,
+            success: callback,
+            error: errorCallback
+        });
+    },
+    postWithFiles(url, data, callback = () => null, errorCallback = () => null){
+        return $.ajax(url, {
+            method: 'post',
+            data: data,
             processData: false,
             contentType: false,
             success: callback,

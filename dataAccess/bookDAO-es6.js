@@ -1,7 +1,10 @@
 const ObjectId = require('mongodb').ObjectID;
 const DAO = require('./dao');
-
+const path = require('path');
+const fs = require('fs');
 const AmazonSearch = require('../amazonDataAccess/AmazonSearch');
+const AWS = require('aws-sdk');
+AWS.config.region = 'us-east-1';
 
 class BookDAO extends DAO {
     constructor(userId){
@@ -14,8 +17,6 @@ class BookDAO extends DAO {
             let books = await db.collection('books').find({  }).toArray();
             console.log('books length', books.length);
             this.doBooks(books);
-        } catch (err){
-            console.log(err)
         } finally {
             super.dispose(db);
         }
@@ -32,8 +33,6 @@ class BookDAO extends DAO {
             db.collection('books').update({ _id: ObjectId(bookResults[0]._id) }, { $set: { authors: book.authors, publisher: book.publisher } });
             console.log('done with', bookResults[0].title);
             setTimeout(() => this.doBooks(bookResults.slice(1)), 1000);
-        } catch(err){
-            console.log(err);
         } finally{
             super.dispose(db);
         }
@@ -50,7 +49,6 @@ class BookDAO extends DAO {
             }
 
             if (sort){
-                console.log('setting', sort, +sortDirection);
                 sortObj = { [sort]: +sortDirection };
             }
 
@@ -74,8 +72,6 @@ class BookDAO extends DAO {
             //    delete query.title;
             //}
             return (await db.collection('books').find(query).sort(sortObj).toArray()).map(addCreatedOn);
-        } catch(err){
-            console.log(err);
         } finally {
             super.dispose(db);
         }
@@ -102,6 +98,14 @@ class BookDAO extends DAO {
             validProperties.forEach(prop => bookToInsert[prop] = (book[prop] || '').substr(0, 500));
             bookToInsert.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
 
+            if (book.smallImage){
+                try {
+                    let smallImageSavedToAws = await this.saveToAws(book.smallImage);
+                    bookToInsert.smallImage = smallImageSavedToAws;
+                } catch(err){
+                    //for now just proceed and save the rest of the book
+                }
+            }
             let result = await db.collection('books').insert(bookToInsert);
 
             super.confirmSingleResult(result);
@@ -123,6 +127,24 @@ class BookDAO extends DAO {
         } finally{
             super.dispose(db);
         }
+    }
+    saveToAws(webPath){
+        return new Promise((res, rej) => {
+            fs.readFile('.' + webPath, (err, data) => {
+                if (err) return rej(err);
+
+                let s3bucket = new AWS.S3({params: {Bucket: 'my-library-cover-uploads'}}),
+                    params = {
+                        Key: `bookCovers/${this.userId}/${path.basename(webPath)}`,
+                        Body: data
+                    };
+
+                s3bucket.upload(params, function (err) {
+                    if (err) rej(err);
+                    else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
+                });
+            });
+        })
     }
     async deleteBook(id){
         let db = await super.open();
