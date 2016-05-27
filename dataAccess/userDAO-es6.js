@@ -13,7 +13,7 @@ const newUsersSubjects = [
     { name: 'Technology', path: null }
 ]
 
-const siteRoot = 'http://localhost:3000/react-redux';
+const siteRoot = process.env.NODE_ENV == 'production' ? 'http://mylibrary-62212.onmodulus.net/react-redux' : 'http://localhost:3000/react-redux';
 
 class UserDAO extends DAO {
     async createUser(email, password, rememberMe){
