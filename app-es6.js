@@ -187,7 +187,6 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                     if (err) {
                         console.log('ERROR', pathToFileUploaded, err);
                     }
-                    debugger;
                     let exifData = exif.create(data).parse(),
                         batchImage = null;
 
