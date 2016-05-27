@@ -28,8 +28,12 @@ class ManualBookEntry extends React.Component {
         } else {
             this.setState({ titleMissing: false });
 
-            //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits 
-            this.props.saveBook({ ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a), smallImage: this.state.pendingSmallImage });
+            //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
+            let bookToSave = { ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a) };
+            if (this.state.pendingSmallImage){
+                bookToSave.smallImage = this.state.pendingSmallImage; //only send it if there is one
+            }
+            this.props.saveBook(bookToSave);
         }
     }
     closeModal(){
@@ -47,15 +51,22 @@ class ManualBookEntry extends React.Component {
             bookEditing: this.revertTo,
             titleMissing: false,
             authorsChanged: false,
-            pendingSmallImage: ''
+            pendingSmallImage: '',
+            smallCoverUploadError: ''
         });
     }
     onDrop(files) {
         let request = new FormData();
         request.append('fileUploaded', files[0]);
-        request.append('devName', 'Why, Adam Rackis, of course');
 
-        ajaxUtil.postWithFiles('/react-redux/upload', request, res => this.setState({ pendingSmallImage: res.smallImagePath }));
+        ajaxUtil.postWithFiles('/react-redux/upload', request, res => {
+            if (res.error){
+                this.setState({ pendingSmallImage: '', smallCoverUploadError: res.error });
+            } else {
+                this.setState({ pendingSmallImage: res.smallImagePath, smallCoverUploadError: '' });
+            }
+
+        });
     }
     clearPendingSmallImage(){
         this.setState({ pendingSmallImage: '' });
@@ -145,6 +156,7 @@ class ManualBookEntry extends React.Component {
                                         <br />
                                         <BootstrapButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>Clear image</BootstrapButton>
                                     </div> : null}
+                                {this.state.smallCoverUploadError ? <div className="label label-danger">{this.state.smallCoverUploadError}</div> : null}
                             </div>
                         </div>
                     </form> : null }

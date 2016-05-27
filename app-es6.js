@@ -19,7 +19,7 @@ import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
 import UserDao from './dataAccess/userDAO';
 
-const multer  = require('multer')
+const multer  = require('multer');
 
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -178,6 +178,11 @@ const upload = multer({ storage: multerBookCoverUploadStorage });
 
 //TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
+    //req.body.___ still has manual fields sent over
+    if (req.file.size > 500000){
+        return response.send({ success: false, error: 'Max size is 500K' });
+    }
+
     let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/');
 
     lwip.open(`${pathResult}/${req.file.originalname}`, function (err, image) {
