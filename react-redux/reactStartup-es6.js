@@ -10,7 +10,7 @@ window.onhashchange = function () {
     loadCurrentModule();
 };
 
-const validModules = new Set(['books', 'scan', 'home']);
+const validModules = new Set(['books', 'scan', 'home', 'activate']);
 
 loadCurrentModule();
 export function loadCurrentModule() {
