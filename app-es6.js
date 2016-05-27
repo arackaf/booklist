@@ -190,17 +190,21 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
             return console.log('err', err)
         }
 
-        let width = image.width(),
-            height = image.height(),
-            newWidth = (height * 50) / width;
+        if (image.width() > 55) {
+            let width = image.width(),
+                height = image.height(),
+                newWidth = (height * 50) / width;
 
-        image.resize(50, newWidth, function(err, image){
-            let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+            image.resize(50, newWidth, function (err, image) {
+                let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
 
-            image.writeFile(resizedDestination, err => {
-                response.send({ success: true, smallImagePath: '/' + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+                image.writeFile(resizedDestination, err => {
+                    response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+                });
             });
-        });
+        } else {
+            response.send({success: true, smallImagePath: `/${pathResult}/${req.file.originalname}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+        }
     });
 });
 
