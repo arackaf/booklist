@@ -70,7 +70,7 @@ class ManualBookEntry extends React.Component {
             <Modal show={!!this.props.isOpen} onHide={() => this.closeModal()}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Manually enter a book
+                        {this.props.title}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

@@ -134,6 +134,7 @@ class BookEntryList extends React.Component {
                 </div>
 
                 <ManualBookEntry
+                    title={'Manually enter a book'}
                     bookToEdit={this.state.manualBook}
                     isOpen={this.state.inManualEntry}
                     isSaving={this.state.isSavingManual}

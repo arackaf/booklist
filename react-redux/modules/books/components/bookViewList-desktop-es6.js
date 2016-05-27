@@ -89,6 +89,7 @@ class BookViewListDesktop extends React.Component{
 
 
                 <ManualBookEntry
+                    title={this.props.bookEdit.editingBook ? `Edit ${this.props.bookEdit.editingBook.title}` : ''}
                     bookToEdit={this.props.bookEdit.editingBook}
                     isOpen={this.props.bookEdit.isEditing}
                     isSaving={this.props.bookEdit.editingBookSaving}
