@@ -12,6 +12,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const lwip = require('lwip');
+const exif = require('exif-parser');
 
 import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
 import bookEntryQueueManager from './app/bookEntryQueueManager';
@@ -179,17 +180,70 @@ const upload = multer({ storage: multerBookCoverUploadStorage });
 //TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, response){
     //req.body.___ still has manual fields sent over
-    if (req.file.size > 500000){
+    if (req.file.size > 900000){
         return response.send({ success: false, error: 'Max size is 500K' });
     }
 
-    let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/');
+    let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/'),
+        pathToFileUploaded = `${pathResult}/${req.file.originalname}`,
+        ext = (path.extname(pathToFileUploaded) || '').toLowerCase();
 
-    lwip.open(`${pathResult}/${req.file.originalname}`, function (err, image) {
-        if (err){
-            return console.log('err', err)
-        }
+    try {
+        lwip.open(pathToFileUploaded, function (err, image) {
+            if (err) {
+                return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
+            }
 
+            if (ext == '.jpg' || ext == '.jpeg') {
+                fs.readFile(pathToFileUploaded, (err, data) => {
+                    if (err) {
+                        console.log('ERROR', pathToFileUploaded, err);
+                    }
+                    debugger;
+                    let exifData = exif.create(data).parse(),
+                        batchImage = null;
+
+                    if (exifData && exifData.tags) {
+                        switch (exifData.tags.Orientation) {
+                            case 2:
+                                batchImage = image.batch().flip('x'); // top-right - flip horizontal
+                                break;
+                            case 3:
+                                batchImage = image.batch().rotate(180); // bottom-right - rotate 180
+                                break;
+                            case 4:
+                                batchImage = image.batch().flip('y'); // bottom-left - flip vertically
+                                break;
+                            case 5:
+                                batchImage = image.batch().rotate(90).flip('x'); // left-top - rotate 90 and flip horizontal
+                                break;
+                            case 6:
+                                batchImage = image.batch().rotate(90); // right-top - rotate 90
+                                break;
+                            case 7:
+                                batchImage = image.batch().rotate(270).flip('x'); // right-bottom - rotate 270 and flip horizontal
+                                break;
+                            case 8:
+                                batchImage = image.batch().rotate(270); // left-bottom - rotate 270
+                                break;
+                        }
+                    }
+
+                    if (batchImage) {
+                        batchImage.exec((err, image) => processImageAsNeeded(image))
+                    } else {
+                        processImageAsNeeded(image);
+                    }
+                });
+            } else {
+                processImageAsNeeded(image);
+            }
+        });
+    } catch (err){
+        return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
+    }
+
+    function processImageAsNeeded(image) {
         if (image.width() > 55) {
             let width = image.width(),
                 height = image.height(),
@@ -203,9 +257,9 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                 });
             });
         } else {
-            response.send({success: true, smallImagePath: `/${pathResult}/${req.file.originalname}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+            response.send({success: true, smallImagePath: `/${pathResult}/${req.file.originalname}`}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
         }
-    });
+    }
 });
 
 app.post('/react-redux/createUser', function(req, response){

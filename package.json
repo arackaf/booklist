@@ -19,6 +19,7 @@
     "cookie-parser": "1.4.0",
     "easy-express-controllers": "0.0.22",
     "es6-symbol": "2.0.1",
+    "exif-parser": "0.1.9",
     "express": "4.x",
     "express-session": "1.12.1",
     "express-ws": "1.0.0",
