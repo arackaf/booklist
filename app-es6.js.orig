@@ -8,11 +8,16 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+<<<<<<< HEAD
+=======
+const nodemailer = require('nodemailer');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const lwip = require('lwip');
 const exif = require('exif-parser');
 
+import { authInfo, myAddresses } from './private/mailAuthenticationInfo';
+>>>>>>> master
 import bookEntryQueueManager from './app/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
@@ -128,7 +133,21 @@ app.get('/favicon.ico', function (request, response) {
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
 
+<<<<<<< HEAD
+=======
+    //handleSayHello()
+    function handleSayHello() {
+        // Not the movie transporter!
+        let mailTransport = nodemailer.createTransport(authInfo);
+        let emailInfo = Object.assign({}, myAddresses, {
+            subject: 'You logged in!',
+            html: '<h2>You logged in</h2>'
+        });
+
         mailTransport.sendMail(emailInfo, function(err, info){ });
+    }
+
+>>>>>>> master
     response.cookie('logged_in', 'true', { maxAge: 900000 });
     if (req.body.rememberme == 1) {
         response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: 604800000});

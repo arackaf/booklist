@@ -6,7 +6,16 @@ const Collapse = ReactBootstrap.Collapse;
 import * as bookEntryActionCreators from '../actions/actionCreators';
 import MainNavigationBar from 'root-components/mainNavigation';
 import BootstrapButton from 'root-components/bootstrapButton';
+import ManualBookEntry from 'root-components/manualBookEntry';
 
+const defaultEmptyBook = () => ({
+    title: '',
+    isbn: '',
+    pages: '',
+    publisher: '',
+    publicationDate: '',
+    authors: ['']
+});
 
 class BookEntryList extends React.Component {
     constructor(){
@@ -18,6 +27,21 @@ class BookEntryList extends React.Component {
     }
     toggleIncomingQueue(){
         this.setState({ showIncomingQueue: !this.state.showIncomingQueue });
+    }
+    manuallyEnterBook(){
+        this.setState({
+            inManualEntry: true,
+            isSavingManual: false,
+            manualSaved: false,
+            manualBook: defaultEmptyBook()
+        });
+    }
+    manualEntryEnding(){
+        this.setState({ inManualEntry: false, bookToEdit: null });
+    }
+    saveNewBook(book){
+        this.setState({ isSavingManual: true });
+        ajaxUtil.post('/book/saveManual', { book }).then(() => this.setState({ isSavingManual: false, manualSaved: true }));
     }
     render() {
         let pending = this.props.pendingNumber,
@@ -67,13 +91,17 @@ class BookEntryList extends React.Component {
                             </Collapse>
                         </div>
                         <div className="col-md-6 col-md-pull-6">
-                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions}</h4>
+                            <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} <a className="btn btn-xs btn-primary" onClick={() => this.manuallyEnterBook()}>Manual entry</a></h4>
                             <Collapse in={this.state.showScanInstructions}>
                                 <div>
                                     <div style={{ height: 10 }}></div>
                                     <div style={{ margin: 0 }} className="alert alert-info alert-slim">
                                         Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode
                                         scanner to search for each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                                        <br /> <br />
+                                        After you enter the isbn in the last textbox, focus will jump back to the first.  This is to make scanning a large number
+                                        of books with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else
+                                        they may get overridden.
                                     </div>
                                 </div>
                             </Collapse>
@@ -88,17 +116,35 @@ class BookEntryList extends React.Component {
                                         index={i}
                                         deleteBook={() => this.deleteBook(entry)}
                                     />
-                                    <br />
                                 </div>
                             )}
-                            <div>
-                                <BootstrapButton preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
-                                <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                            <div className='row'>
+                                <div className='col-sm-8 form-horizontal'>
+                                    <BootstrapButton className="pull-right" preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                                </div>
+                                <div className='col-sm-4 pull-left'>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
+
+                <ManualBookEntry
+                    title={'Manually enter a book'}
+                    dragTitle={'Click or drag to upload a cover image. The uploaded image will be scaled down as needed'}
+                    bookToEdit={this.state.manualBook}
+                    isOpen={this.state.inManualEntry}
+                    isSaving={this.state.isSavingManual}
+                    isSaved={this.state.manualSaved}
+                    saveBook={book => this.saveNewBook(book)}
+                    saveMessage={'Book saved. You can clear and enter another, or hit cancel to close'}
+                    startOver={() => this.manuallyEnterBook()}
+                    onClosing={() => this.manualEntryEnding()} />
+
             </div>
         );
     }
@@ -135,6 +181,10 @@ class BookEntryList extends React.Component {
         let index = this.props.entryList.indexOf(entry);
         if (index < this.props.entryList.length - 1){
             this.refs['Book' + (index + 1)].focusInput();
+            this.refs['Book' + (index + 1)].selectInput();
+        } else {
+            this.refs['Book0'].focusInput();
+            this.refs['Book0'].selectInput();
         }
 
         if (entry.isbn.length == 10 || entry.isbn.length == 13){

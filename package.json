@@ -2,7 +2,8 @@
   "name": "Booklist",
   "main": "app.js",
   "engines": {
-    "node": "4.1.1"
+    "node": "4.4.4",
+    "npm": "3.9.3"
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
@@ -12,15 +13,20 @@
   },
   "dependencies": {
     "apac": "1.0.0",
+    "aws-sdk": "2.3.14",
     "blueimp-md5": "2.3.0",
     "body-parser": "1.13.2",
     "cookie-parser": "1.4.0",
     "easy-express-controllers": "0.0.22",
     "es6-symbol": "2.0.1",
+    "exif-parser": "0.1.9",
     "express": "4.x",
     "express-session": "1.12.1",
     "express-ws": "1.0.0",
+    "lwip": "0.0.9",
+    "mkdirp": "0.5.1",
     "mongodb": "2.0.39",
+    "multer": "1.1.0",
     "nodemailer": "2.3.0",
     "nodemailer-smtp-transport": "2.4.1",
     "passport": "0.3.2",
@@ -29,6 +35,7 @@
     "react": "0.14.0",
     "react-bootstrap": "0.29.0",
     "react-dom": "0.14.0",
+    "react-dropzone": "3.4.0",
     "react-motion": "0.4.2",
     "react-redux": "4.4.0",
     "redux": "3.0.4",
