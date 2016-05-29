@@ -141,7 +141,7 @@ class BookEntryList extends React.Component {
                     isSaving={this.state.isSavingManual}
                     isSaved={this.state.manualSaved}
                     saveBook={book => this.saveNewBook(book)}
-                    saveMessage={'Book saved. You can clear and enter another, or hit cancel to close'}
+                    saveMessage={'Book saved. You can enter another, or close'}
                     startOver={() => this.manuallyEnterBook()}
                     onClosing={() => this.manualEntryEnding()} />
 

@@ -25,6 +25,9 @@ class BookViewListDesktop extends React.Component{
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
 
+        let editingBook = this.props.bookEdit.editingBook,
+            dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
+
         return (
             <div style={{ minHeight: 500 }}>
                 <BooksMenuBar
@@ -89,9 +92,9 @@ class BookViewListDesktop extends React.Component{
 
 
                 <ManualBookEntry
-                    title={this.props.bookEdit.editingBook ? `Edit ${this.props.bookEdit.editingBook.title}` : ''}
-                    dragTitle={this.props.bookEdit.editingBook ? `Click or drag to upload a ${this.props.bookEdit.editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : ''}
-                    bookToEdit={this.props.bookEdit.editingBook}
+                    title={editingBook ? `Edit ${editingBook.title}` : ''}
+                    dragTitle={dragTitle}
+                    bookToEdit={editingBook}
                     isOpen={this.props.bookEdit.isEditing}
                     isSaving={this.props.bookEdit.editingBookSaving}
                     isSaved={this.props.bookEdit.editingBookSaved}
