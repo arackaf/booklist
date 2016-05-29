@@ -11,6 +11,8 @@ class ManualBookEntry extends React.Component {
         this.state = { bookEditing: null };
 
         this.syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
+        this.SyncedInput = props => <input onChange={this.syncStateFromInput(props.syncName)} value={this.state.bookEditing[props.syncName]} { ...props } />
+
         this.syncAuthor = index => evt => {
             let newAuthors = this.state.bookEditing.authors.concat();
             newAuthors[index] = evt.target.value;
@@ -41,7 +43,7 @@ class ManualBookEntry extends React.Component {
     }
     componentWillReceiveProps(nextProps){
         if (this.props.bookToEdit !== nextProps.bookToEdit){
-            let bookToStart = nextProps.bookToEdit;
+            let bookToStart = { ...nextProps.bookToEdit };
             this.revertTo = bookToStart;
             this.revert();
         }
@@ -72,7 +74,7 @@ class ManualBookEntry extends React.Component {
         this.setState({ pendingSmallImage: '' });
     }
     render(){
-        let bookEditing = this.state.bookEditing;
+        let SyncedInput = this.SyncedInput;
 
         //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
         //Modal eventually calls save method passed from above.
@@ -89,20 +91,21 @@ class ManualBookEntry extends React.Component {
                     <form>
                         <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
                             <label>Title</label>
-                            <input onChange={this.syncStateFromInput('title')} value={bookEditing.title} className="form-control" placeholder="Title (required)" />
+
+                            <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" />
                         </div>
                         <div className="row">
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>ISBN</label>
-                                    <input onChange={this.syncStateFromInput('isbn')} value={bookEditing.isbn} className="form-control" placeholder="ISBN" />
+                                    <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" />
                                 </div>
                             </div>
 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Pages</label>
-                                    <input onChange={this.syncStateFromInput('pages')} value={bookEditing.pages} type="number" className="form-control" placeholder="Number of pages" />
+                                    <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" />
                                 </div>
                             </div>
                         </div>
@@ -110,14 +113,14 @@ class ManualBookEntry extends React.Component {
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Publisher</label>
-                                    <input onChange={this.syncStateFromInput('publisher')} value={bookEditing.publisher} className="form-control" placeholder="Publisher" />
+                                    <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" />
                                 </div>
                             </div>
 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Published</label>
-                                    <input onChange={this.syncStateFromInput('publicationDate')} value={bookEditing.publicationDate} className="form-control" placeholder="Publication date" />
+                                    <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" />
                                 </div>
                             </div>
                         </div>
