@@ -65,8 +65,14 @@ class BooksMenuBar extends React.Component {
     openSubjectsFilterModal(){
         this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
     }
+    openFullFilterModal(){
+        this.setState({ fullFiltersOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
+    }
     closeSubjectsFilterModal(){
         this.setState({ subjectFiltersModalOpen: false });
+    }
+    closeFullFilterModal(){
+        this.setState({ fullFiltersOpen: false });
     }
     applySubjectsFilters(){
         this.setState({ subjectFiltersModalOpen: false });
@@ -121,16 +127,16 @@ class BooksMenuBar extends React.Component {
                                     <span className="input-group-btn">
                                         <BootstrapButton preset="default" onClick={() => this.openSubjectsFilterModal()}>By subject</BootstrapButton>
                                     </span>
-                                    <input className="form-control" placeholder="Title search" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
+                                    <input className="form-control" placeholder="Quick title search" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
                                     <span className="input-group-btn">
                                         <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
+                                        <button className="btn btn-default" onClick={() => this.openFullFilterModal()} type="button">Full search pane</button>
                                     </span>
                                 </div>
                             </div>
                         </Navbar.Form>
                         { selectedSubjectsCount ?
                             <Nav>
-
                                 <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
@@ -167,6 +173,70 @@ class BooksMenuBar extends React.Component {
                         { this.props.selectedSubjects.length ?
                             <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
                             : null }
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <BootstrapButton preset="primary" className="pull-left" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
+                        <BootstrapButton preset="default" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
+                    </Modal.Footer>
+                </Modal>
+
+                <Modal show={this.state.fullFiltersOpen} onHide={() => this.closeFullFilterModal()}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Full search
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <form>
+                            <div className="row">
+                                <div className="col-xs-6">
+                                    <div className={"form-group"}>
+                                        <label>Title</label>
+                                        <input ref="title_search" className="form-control" placeholder="Search title" />
+                                    </div>
+                                </div>
+                                <div className="col-xs-6">
+                                    <div className="form-group">
+                                        <label>Pages</label>
+                                        <div className="form-inline">
+                                            <div style={{ marginRight: 10 }} className="form-group">
+                                                <select className="form-control">
+                                                    <option> {'<'} </option>
+                                                    <option> {'>'} </option>
+                                                </select>
+                                            </div>
+                                            <div className="form-group">
+                                                <input ref="pages_search" type="number" className="form-control" placeholder="Number of pages" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-xs-6">
+                                    <div className="form-group">
+                                        <label>Publisher</label>
+                                        <input ref="publisher_search" className="form-control" placeholder="Publisher" />
+                                    </div>
+                                </div>
+                                <div className="col-xs-6">
+                                    <div className="form-group">
+                                        <label>Author</label>
+                                        <input ref="author_search" className="form-control" placeholder="Author" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <h4>Search subjects</h4>
+                        <HierarchicalSelectableSubjectList
+                            style={{ paddingLeft: 5 }}
+                            toggleFilteredSubject={this.togglePendingSubject}
+                            subjects={this.props.allSubjects}
+                            selectedSubjects={this.state.pendingSubjects} />
+
+                        { this.props.selectedSubjects.length ?
+                            <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
+                            : null }
+                        <label>Also search child subjects <input type="checkbox" onChange={evt => this.setState({ searchChildSubjects: evt.target.checked })} checked={this.state.searchChildSubjects} /></label>
                     </Modal.Body>
                     <Modal.Footer>
                         <BootstrapButton preset="primary" className="pull-left" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
