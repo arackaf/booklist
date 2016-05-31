@@ -8,7 +8,7 @@ import {
     INCREMENT_PENDING,
     BOOK_QUEUED,
     BOOK_LOOKUP_FAILED
-} from '../actions/actionNames';
+} from './actionNames';
 
 const initialArray = () => Array.from({ length: 10 }).map(() => ({ isbn: '', queued: false, queueing: false }));
 const initialState = {

@@ -136,3 +136,5 @@ react-redux/modules/books/reducers/editBookReducer.js
 react-redux/modules/activate/activate.js
 react-redux/modules/activate/activateComponent.js
 utils/promiseUtils.js
+react-redux/modules/scan/reducers/actionCreators.js
+react-redux/modules/scan/reducers/actionNames.js
