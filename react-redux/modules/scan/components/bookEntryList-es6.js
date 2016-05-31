@@ -3,7 +3,7 @@ import BookEntryItem from './bookEntryItem';
 const { TransitionMotion, spring } = ReactMotion;
 const Collapse = ReactBootstrap.Collapse;
 
-import * as bookEntryActionCreators from '../actions/actionCreators';
+import * as bookEntryActionCreators from '../reducers/actionCreators';
 import MainNavigationBar from 'root-components/mainNavigation';
 import BootstrapButton from 'root-components/bootstrapButton';
 import ManualBookEntry from 'root-components/manualBookEntry';
