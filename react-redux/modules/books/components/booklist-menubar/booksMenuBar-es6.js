@@ -14,6 +14,7 @@ const { bookSearchSelector } = require('../../reducers/bookSearchReducer');
 import * as bookSearchActionCreators from '../../actions/actionCreators';
 import { globalHashManager } from 'react-startup';
 
+
 class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
@@ -190,7 +191,7 @@ class BooksMenuBar extends React.Component {
                         <form>
                             <div className="row">
                                 <div className="col-xs-6">
-                                    <div className={"form-group"}>
+                                    <div className="form-group">
                                         <label>Title</label>
                                         <input ref="title_search" className="form-control" placeholder="Search title" />
                                     </div>
