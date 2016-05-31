@@ -9,9 +9,9 @@ const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubje
 
 const BootstrapButton = require('root-components/bootstrapButton');
 
-const { bookSearchSelector } = require('../../reducers/bookSearchReducer');
+const { bookSearchSelector } = require('modules/books/reducers/bookSearch/reducer');
 
-import * as bookSearchActionCreators from '../../actions/actionCreators';
+import * as bookSearchActionCreators from '../../reducers/actionCreators';
 import { globalHashManager } from 'react-startup';
 
 

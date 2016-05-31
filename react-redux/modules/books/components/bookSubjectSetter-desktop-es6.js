@@ -1,9 +1,9 @@
 const BootstrapButton = require('root-components/bootstrapButton');
 const Modal = ReactBootstrap.Modal;
 const AjaxButton = require('root-components/ajaxButton');
-const { booksSubjectsModifierSelector } = require('../reducers/booksSubjectModifierReducer');
+const { booksSubjectsModifierSelector } = require('../reducers/booksSubjectModification/reducer');
 
-import * as bookSubjectActionCreators from '../actions/bookSubjectModify/actionCreators';
+import * as bookSubjectActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
     setBooksSubjects(){

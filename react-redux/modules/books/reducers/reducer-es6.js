@@ -1,9 +1,8 @@
-const { booksReducer: books, booksSelector } = require('./booksReducer');
-const { subjectsReducer: subjects, subjectsSelector } = require('./subjectsReducer');
-const { bookSearchReducer: bookSearch, bookSearchSelector } = require('./bookSearchReducer');
-const { bookSubjectManagerReducer: booksSubjectsModifier, booksSubjectsModifierSelector } = require('./booksSubjectModifierReducer');
-
-import bookEdit from './editBookReducer';
+const { booksReducer: books, booksSelector } = require('./books/reducer');
+const { subjectsReducer: subjects, subjectsSelector } = require('./subjects/reducer');
+const { bookSearchReducer: bookSearch, bookSearchSelector } = require('./bookSearch/reducer');
+const { bookSubjectManagerReducer: booksSubjectsModifier, booksSubjectsModifierSelector } = require('./booksSubjectModification/reducer');
+import bookEdit from './editBook/reducer';
 
 const reducer = Redux.combineReducers({
     books,

@@ -1,4 +1,4 @@
-import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION } from '../actions/actionNames';
+import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION } from '../actionNames';
 
 const initialState = {
     searchText: '',

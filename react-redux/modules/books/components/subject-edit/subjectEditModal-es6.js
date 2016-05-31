@@ -1,7 +1,7 @@
 const Modal = ReactBootstrap.Modal;
 
 import BootstrapButton from 'root-components/bootstrapButton';
-import * as actionCreators from '../../actions/actionCreators';
+import * as actionCreators from '../../reducers/actionCreators';
 import HierarchicalSubjectList from './hierarchicalSubjectList';
 
 class subjectEditModal extends React.Component {

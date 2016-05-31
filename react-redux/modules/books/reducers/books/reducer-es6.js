@@ -1,11 +1,11 @@
-const { createSelector } = require('../../../util/reselect');
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } = require('../actions/actionNames');
-const { SET_BOOKS_SUBJECTS } = require('../actions/bookSubjectModify/actionNames');
-const { adjustBooksForDisplay } = require('../util/booksSubjectsHelpers');
+const { createSelector } = require('react-redux-util/reselect');
+const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } = require('../actionNames');
+const { SET_BOOKS_SUBJECTS } = require('../booksSubjectModification/actionNames');
+const { adjustBooksForDisplay } = require('../../util/booksSubjectsHelpers');
 
 import {
     EDITING_BOOK_SAVED
-} from '../actions/bookEdit/actionNames';
+} from '../editBook/actionNames';
 
 const initialBooksState = {
     booksHash: {},
