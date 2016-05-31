@@ -7,9 +7,9 @@ import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS,
 export {
     enableSubjectModificationSingleBook,
     enableSubjectModificationToggledBooks
-} from './bookSubjectModify/actionCreators';
+} from './booksSubjectModification/actionCreators';
 
-export * from './bookEdit/actionCreators';
+export * from './editBook/actionCreators';
 
 export function loadSubjects(){
     return function(dispatch, getState){

@@ -5,7 +5,7 @@ import {
     EDITING_BOOK_SAVING,
     EDITING_BOOK_SAVED,
     EDIT_BOOK_RESET
-} from '../actions/bookEdit/actionNames';
+} from './actionNames';
 
 const initialState = {
     isEditing: false,

@@ -1,10 +1,10 @@
-const { createSelector } = require('../../../util/reselect');
+const { createSelector } = require('react-redux-util/reselect');
 
 import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,
     SETTING_BOOKS_SUBJECTS, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, CLEAR_SUBJECT_MODIFICATION_SUBJECTS,
     FINISHED_SUBJECT_MODIFICATION
-} from '../actions/bookSubjectModify/actionNames';
+} from './actionNames';
 
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
