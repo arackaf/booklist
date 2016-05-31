@@ -60,7 +60,12 @@ function booksReducer(state = initialBooksState, action){
 
 function createBooksHash(booksArr){
     let result = {};
-    booksArr.forEach(book => result[book._id] = book);
+    booksArr.forEach(book => {
+        if (!book.subjects){
+            book.subjects = [];
+        }
+        result[book._id] = book
+    });
     return result;
 }
 
