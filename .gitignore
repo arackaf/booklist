@@ -138,3 +138,14 @@ react-redux/modules/activate/activateComponent.js
 utils/promiseUtils.js
 react-redux/modules/scan/reducers/actionCreators.js
 react-redux/modules/scan/reducers/actionNames.js
+react-redux/modules/books/reducers/actionCreators.js
+react-redux/modules/books/reducers/actionNames.js
+react-redux/modules/books/reducers/bookSearch/reducer.js
+react-redux/modules/books/reducers/books/reducer.js
+react-redux/modules/books/reducers/booksSubjectModification/actionCreators.js
+react-redux/modules/books/reducers/booksSubjectModification/actionNames.js
+react-redux/modules/books/reducers/booksSubjectModification/reducer.js
+react-redux/modules/books/reducers/editBook/actionCreators.js
+react-redux/modules/books/reducers/editBook/actionNames.js
+react-redux/modules/books/reducers/editBook/reducer.js
+react-redux/modules/books/reducers/subjects/reducer.js
