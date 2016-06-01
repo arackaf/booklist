@@ -1,4 +1,4 @@
-const { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../../react-redux/modules/scan/actions/actionCreators');
+const { updateIsbn, currentInputFinished, getBook, getBookResults, loadAndSaveBook, deleteBook, saveAllPending, resetList } = require('../../react-redux/modules/scan/reducers/actionCreators');
 
 const Redux = require('redux');
 const thunkMiddleware = require('../../react-redux/util/redux-thunk');
