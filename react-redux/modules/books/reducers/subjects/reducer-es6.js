@@ -1,6 +1,6 @@
 import { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED } from '../actionNames';
 
-const { createSelector } = require('react-redux-util/reselect');
+const { createSelector } = require('reselect');
 import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../../util/booksSubjectsHelpers';
 
 const initialSubjectsState = {

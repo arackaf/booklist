@@ -1,4 +1,4 @@
-const { createSelector } = require('react-redux-util/reselect');
+const { createSelector } = require('reselect');
 
 import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,

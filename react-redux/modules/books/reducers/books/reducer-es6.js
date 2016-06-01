@@ -1,4 +1,4 @@
-const { createSelector } = require('react-redux-util/reselect');
+const { createSelector } = require('reselect');
 const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } = require('../actionNames');
 const { SET_BOOKS_SUBJECTS } = require('../booksSubjectModification/actionNames');
 const { adjustBooksForDisplay } = require('../../util/booksSubjectsHelpers');

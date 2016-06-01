@@ -1,4 +1,4 @@
-const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../../react-redux/modules/books/actions/actionNames');
+const { LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } = require('../../react-redux/modules/books/reducers/actionNames');
 
 const assert = require('chai').assert;
 
