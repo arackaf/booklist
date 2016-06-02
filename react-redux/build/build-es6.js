@@ -17,7 +17,8 @@ builder.config({
         'root-components': 'applicationRoot/rootComponents',
         'application-root': 'applicationRoot',
         'react-startup': 'reactStartup',
-        'react': 'util/harmless-stub-for-build' //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
+        'react': 'util/harmless-stub-for-build', //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
+        'reselect': 'util/reselect'
     },
     meta: {
         'util/react-dropzone': {
