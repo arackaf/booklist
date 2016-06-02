@@ -8,7 +8,9 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
   "scripts": {
-    "react-build": "node ./react-redux/build/build.js",
+    "preinstall": "npm run build",
+    "build": "npm run react-redux-build",
+    "react-redux-build": "cd react-redux/build && node build",
     "start": "node ./app.js"
   },
   "dependencies": {
