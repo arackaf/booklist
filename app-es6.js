@@ -98,31 +98,24 @@ app.use('/utils/', express.static(__dirname + '/utils/'));
 app.use('/uploads/', express.static(__dirname + '/uploads/'));
 
 app.ws('/bookEntryWS', function(ws, req) {
-
     bookEntryQueueManager.subscriberAdded(req.user.id, ws);
-
-    //ws.on('message', function(msg) {
-    //    console.log('express-ws --- ', msg);
-    //});
-
-    //setTimeout(() => {
-    //    clearInterval(X);
-    //    ws.close();
-    //}, 12000)
 });
 
 
 var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6\.js$/i.test(f) });
 
-app.get('/react-redux', function (request, response) {
+app.get('/', (req, res) => res.redirect('/react-redux'));
+app.get('/react-redux', browseToReactRedux);
+
+function browseToReactRedux(request, response){
     if (!!request.user) {
         response.cookie('logged_in', 'true', { maxAge: 900000 });
     } else {
         response.clearCookie('logged_in');
     }
     response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
-});
+}
 
 app.get('/favicon.ico', function (request, response) {
     response.sendFile(path.join(__dirname + '/favicon.ico'));
