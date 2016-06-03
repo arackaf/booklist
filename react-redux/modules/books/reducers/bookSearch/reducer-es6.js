@@ -1,4 +1,5 @@
-import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION, BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE } from '../actionNames';
+import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION, } from '../actionNames';
+import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE } from './actionNames';
 
 const initialState = {
     searchText: '',
