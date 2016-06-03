@@ -1,4 +1,4 @@
-import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION } from '../actionNames';
+import { LOAD_BOOKS, SET_FILTERS, SET_SORT_DIRECTION, BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE } from '../actionNames';
 
 const initialState = {
     searchText: '',
@@ -6,7 +6,9 @@ const initialState = {
     sort: '',
     sortDirection: '',
     searchChildSubjects: false,
-    isDirty: false
+    isDirty: false,
+    editingFilters: false,
+    pendingSubjects: {}
 };
 
 function bookSearchReducer(state = initialState, action){
@@ -30,6 +32,12 @@ function bookSearchReducer(state = initialState, action){
             return Object.assign({}, state, { isDirty: false });
         case SET_SORT_DIRECTION:
             return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction, isDirty: true });
+        case BEGIN_FILTER_CHANGE:
+            return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.subjects } });
+        case TOGGLE_PENDING_SUBJECT:
+            return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.pendingSubjects, [action._id]: !state.pendingSubjects[action._id] } });
+        case END_FILTER_CHANGE:
+            return Object.assign({}, state, { editingFilters: false });
     }
     return state;
 }

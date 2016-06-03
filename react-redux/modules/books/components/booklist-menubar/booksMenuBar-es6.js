@@ -18,7 +18,6 @@ import { globalHashManager } from 'react-startup';
 class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
-        this.togglePendingSubject = this.togglePendingSubject.bind(this);
 
         this.state = { pendingSubjects: {}, menuOpen: false };
         this._hashChangeSubscription = () => {
@@ -64,7 +63,8 @@ class BooksMenuBar extends React.Component {
         window.removeEventListener("hashchange", this._hashChangeSubscription);
     }
     openSubjectsFilterModal(){
-        this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
+        this.props.beginFilterChange();
+        //this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
     }
     openFullFilterModal(){
         this.setState({ fullFiltersOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
@@ -78,15 +78,12 @@ class BooksMenuBar extends React.Component {
     applySubjectsFilters(){
         this.setState({ subjectFiltersModalOpen: false });
 
-        let filterSubjectsVal = Object.keys(this.state.pendingSubjects).filter(k => this.state.pendingSubjects[k]).join('-');
+        let filterSubjectsVal = Object.keys(this.props.pendingSubjects).filter(k => this.props.pendingSubjects[k]).join('-');
 
         globalHashManager.setValues(
             'filterSubjects', filterSubjectsVal,
             'searchChildSubjects', this.state.searchChildSubjects && filterSubjectsVal ? 'true' : null
         );
-    }
-    togglePendingSubject(_id){
-        this.setState({ pendingSubjects: { ...this.state.pendingSubjects, [_id]: !this.state.pendingSubjects[_id] } });
     }
     dropdownToggle(newValue){
         if (this._forceOpen){
@@ -157,7 +154,7 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Collapse>
                 </Navbar>
 
-                <Modal show={this.state.subjectFiltersModalOpen} onHide={() => this.closeSubjectsFilterModal()}>
+                <Modal show={this.props.editingFilters} onHide={this.props.closeSubjectsFilterModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Filter subjects
@@ -167,9 +164,9 @@ class BooksMenuBar extends React.Component {
                         <label>Also search child subjects <input type="checkbox" onChange={evt => this.setState({ searchChildSubjects: evt.target.checked })} checked={this.state.searchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
                             style={{ paddingLeft: 5 }}
-                            toggleFilteredSubject={this.togglePendingSubject}
+                            toggleFilteredSubject={this.props.togglePendingSubject}
                             subjects={this.props.allSubjects}
-                            selectedSubjects={this.state.pendingSubjects} />
+                            selectedSubjects={this.props.pendingSubjects} />
 
                         { this.props.selectedSubjects.length ?
                             <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
