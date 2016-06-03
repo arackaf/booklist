@@ -11,7 +11,8 @@ const BootstrapButton = require('root-components/bootstrapButton');
 
 const { bookSearchSelector } = require('modules/books/reducers/bookSearch/reducer');
 
-import * as bookSearchActionCreators from '../../reducers/actionCreators';
+import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
+import * as mainActionCreatorsTEMP from '../../reducers/actionCreators';
 import { globalHashManager } from 'react-startup';
 
 
@@ -62,28 +63,11 @@ class BooksMenuBar extends React.Component {
     componentWillUnmount(){
         window.removeEventListener("hashchange", this._hashChangeSubscription);
     }
-    openSubjectsFilterModal(){
-        this.props.beginFilterChange();
-        //this.setState({ subjectFiltersModalOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
-    }
     openFullFilterModal(){
         this.setState({ fullFiltersOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
     }
-    closeSubjectsFilterModal(){
-        this.setState({ subjectFiltersModalOpen: false });
-    }
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });
-    }
-    applySubjectsFilters(){
-        this.setState({ subjectFiltersModalOpen: false });
-
-        let filterSubjectsVal = Object.keys(this.props.pendingSubjects).filter(k => this.props.pendingSubjects[k]).join('-');
-
-        globalHashManager.setValues(
-            'filterSubjects', filterSubjectsVal,
-            'searchChildSubjects', this.state.searchChildSubjects && filterSubjectsVal ? 'true' : null
-        );
     }
     dropdownToggle(newValue){
         if (this._forceOpen){
@@ -123,7 +107,7 @@ class BooksMenuBar extends React.Component {
                             <div className="form-group">
                                 <div className="input-group">
                                     <span className="input-group-btn">
-                                        <BootstrapButton preset="default" onClick={() => this.openSubjectsFilterModal()}>By subject</BootstrapButton>
+                                        <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>By subject</BootstrapButton>
                                     </span>
                                     <input className="form-control" placeholder="Quick title search" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
                                     <span className="input-group-btn">
@@ -154,7 +138,7 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Collapse>
                 </Navbar>
 
-                <Modal show={this.props.editingFilters} onHide={this.props.closeSubjectsFilterModal}>
+                <Modal show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             Filter subjects
@@ -173,8 +157,8 @@ class BooksMenuBar extends React.Component {
                             : null }
                     </Modal.Body>
                     <Modal.Footer>
-                        <BootstrapButton preset="primary" className="pull-left" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
-                        <BootstrapButton preset="default" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
+                        <BootstrapButton preset="primary" className="pull-left" onClick={this.props.applyFilters}>Filter</BootstrapButton>
+                        <BootstrapButton preset="default" onClick={this.props.endFilterChanging}>Close</BootstrapButton>
                     </Modal.Footer>
                 </Modal>
 
@@ -254,6 +238,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP })(BooksMenuBar);
 
 export default BooksMenuBarConnected;
