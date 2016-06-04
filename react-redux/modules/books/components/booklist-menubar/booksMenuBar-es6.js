@@ -25,28 +25,15 @@ class BooksMenuBar extends React.Component {
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     removeFilterSubject(_id){
-        let selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects'),
-            subjectsArr = selectedSubjectsHashString.split('-');
-        subjectsArr = subjectsArr.filter(sId => sId != _id);
+        let isLastSubject = this.props.selectedSubjects.length === 1;
+        this.props.removeFilterSubject(_id);
 
-        let filterSubjectsVal = subjectsArr.join('-');
-
-        globalHashManager.setValues(
-            'filterSubjects', filterSubjectsVal,
-            'searchChildSubjects', this.props.searchChildSubjects && filterSubjectsVal ? 'true' : null
-        );
-
-        if (!subjectsArr.length){
+        if (isLastSubject){
             setTimeout(() => this.setState({ menuOpen: false }), 1);
         }
     }
     componentDidMount(){
         this.props.syncFiltersToHash();
-    }
-    componentWillReceiveProps(newProps){
-        if (this.props.searchText !== newProps.searchText) {
-            this.refs.searchInput.value = newProps.searchText;
-        }
     }
     componentWillUnmount(){
         window.removeEventListener("hashchange", this._hashChangeSubscription);
@@ -67,14 +54,6 @@ class BooksMenuBar extends React.Component {
     }
     menuItemClickedThatShouldntCloseDropdown(){
         this._forceOpen = true;
-    }
-    searchFilterKeyDown(evt){
-        if (evt.which == 13){
-            globalHashManager.setValueOf('bookSearch', evt.target.value);
-        }
-    }
-    setSearchText(){
-        globalHashManager.setValueOf('bookSearch', this.refs.searchInput.value);
     }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
@@ -105,7 +84,7 @@ class BooksMenuBar extends React.Component {
                                     <span className="input-group-btn">
                                         <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>By subject</BootstrapButton>
                                     </span>
-                                    <input className="form-control" placeholder="Quick title search" onKeyDown={evt => this.searchFilterKeyDown(evt)} ref="searchInput" />
+                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.pendingSearchModified} onChange={this.props.pendingSearchModified} value={this.props.pendingSearch} />
                                     <span className="input-group-btn">
                                         <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
                                         <button className="btn btn-default" onClick={() => this.openFullFilterModal()} type="button">Full search pane</button>
@@ -141,7 +120,7 @@ class BooksMenuBar extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <label>Also search child subjects <input type="checkbox" onChange={evt => this.setState({ searchChildSubjects: evt.target.checked })} checked={this.state.searchChildSubjects} /></label>
+                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingChildSubjects} checked={this.props.pendingSearchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
                             style={{ paddingLeft: 5 }}
                             toggleFilteredSubject={this.props.togglePendingSubject}

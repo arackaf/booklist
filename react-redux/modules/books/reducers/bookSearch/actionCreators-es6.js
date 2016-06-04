@@ -1,4 +1,13 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS } from './actionNames';
+import {
+    BEGIN_FILTER_CHANGE,
+    TOGGLE_PENDING_SUBJECT,
+    END_FILTER_CHANGE,
+    SET_SORT_DIRECTION,
+    SET_FILTERS,
+    SET_PENDING_SEARCH,
+    APPLY_PENDING_SEARCH,
+    SET_PENDING_CHILD_SUBJECTS
+} from './actionNames';
 import { loadBooks } from '../actionCreators';
 
 import { globalHashManager } from 'react-startup';
@@ -22,7 +31,7 @@ export function applyFilters(){
 
         globalHashManager.setValues(
             'filterSubjects', filterSubjectsVal,
-            'searchChildSubjects', state.searchChildSubjects && filterSubjectsVal ? 'true' : null
+            'searchChildSubjects', state.pendingSearchChildSubjects && filterSubjectsVal ? 'true' : null
         );
         dispatch(endFilterChanging());
     }
@@ -62,7 +71,40 @@ export function syncFiltersToHash(){
 
             dispatch(loadBooks());
         }
-    }
+    };
+}
+
+export function setPendingSearch(value){
+    return { type: SET_PENDING_SEARCH, value }
+}
+
+export function pendingSearchModified(evt){
+    return function(dispatch, getState) {
+        if (evt.which == 13) {
+            let pendingSearch = getState().books.bookSearch.pendingSearch;
+            globalHashManager.setValueOf('bookSearch', pendingSearch);
+        } else {
+            dispatch(setPendingSearch(evt.target.value));
+        }
+    };
+}
+
+export function removeFilterSubject(_id) {
+    return function(dispatch, getState) {
+        let state = getState().books.bookSearch,
+            newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
+
+        globalHashManager.setValues(
+            'filterSubjects', newSubjects,
+            'searchChildSubjects', state.searchChildSubjects && newSubjects ? 'true' : null
+        );
+    };
+}
+
+export function setPendingChildSubjects(evt){
+    return function(dispatch, getState){
+        dispatch({ type: SET_PENDING_CHILD_SUBJECTS, value: evt.target.checked })
+    };
 }
 
 function subjectsDifferent(oldSubjects, newSubjects){
