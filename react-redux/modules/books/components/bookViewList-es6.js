@@ -5,6 +5,7 @@ import x from './bookViewList-desktop';
 
 import MainNavigationBar from 'root-components/mainNavigation';
 import * as actionCreators from '../reducers/actionCreators';
+import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 
 const { selector } = require('../reducers/reducer');
 
@@ -22,7 +23,7 @@ class BookViewingList extends React.Component {
 
         responsiveMobileDesktopMixin(this, 'listComponent', {
             mobile:  { path: './modules/books/components/bookViewList-mobile', connectWith: selector },
-            desktop: { path: './modules/books/components/bookViewList-desktop', connectWith: selector, mapDispatchWith: actionCreators }
+            desktop: { path: './modules/books/components/bookViewList-desktop', connectWith: selector, mapDispatchWith:  { ...actionCreators, ...actionCreatorsBookSearch } }
         });
     }
     componentDidMount(){
