@@ -1,4 +1,3 @@
-import { LOAD_BOOKS } from '../actionNames';
 import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS } from './actionNames';
 
 const initialState = {
@@ -7,7 +6,6 @@ const initialState = {
     sort: '',
     sortDirection: '',
     searchChildSubjects: false,
-    isDirty: false,
     editingFilters: false,
     pendingSubjects: {}
 };
@@ -15,24 +13,16 @@ const initialState = {
 function bookSearchReducer(state = initialState, action){
     switch(action.type){
         case SET_FILTERS:
-            let newIsDirty =
-                state.searchText != action.text ||
-                subjectsDifferent(state.subjects, action.subjects) ||
-                state.searchChildSubjects != action.searchChildSubjects;
-
             return Object.assign({},
                 state,
                 {
                     searchText: action.text,
                     subjects: { ...action.subjects },
                     searchChildSubjects: action.searchChildSubjects,
-                    isDirty: newIsDirty
                 }
             );
-        case LOAD_BOOKS:
-            return Object.assign({}, state, { isDirty: false });
         case SET_SORT_DIRECTION:
-            return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction, isDirty: true });
+            return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction });
         case BEGIN_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.subjects } });
         case TOGGLE_PENDING_SUBJECT:
@@ -41,10 +31,6 @@ function bookSearchReducer(state = initialState, action){
             return Object.assign({}, state, { editingFilters: false });
     }
     return state;
-}
-
-function subjectsDifferent(oldSubjects, newSubjects){
-    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
 }
 
 function projectselectedSubjects(selectedSubjectsIds, subjects){

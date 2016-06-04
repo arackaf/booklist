@@ -21,19 +21,7 @@ class BooksMenuBar extends React.Component {
         super();
 
         this.state = { pendingSubjects: {}, menuOpen: false };
-        this._hashChangeSubscription = () => {
-            let subjectsSelected = {},
-                selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
-            if (selectedSubjectsHashString){
-                selectedSubjectsHashString.split('-').forEach(_id => subjectsSelected[_id] = true);
-            }
-
-            this.props.setFilters(
-                globalHashManager.getCurrentHashValueOf('bookSearch') || '',
-                subjectsSelected,
-                globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null
-            );
-        };
+        this._hashChangeSubscription = props.syncFiltersToHash;
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     removeFilterSubject(_id){
@@ -53,7 +41,7 @@ class BooksMenuBar extends React.Component {
         }
     }
     componentDidMount(){
-        this._hashChangeSubscription();
+        this.props.syncFiltersToHash();
     }
     componentWillReceiveProps(newProps){
         if (this.props.searchText !== newProps.searchText) {
@@ -79,6 +67,14 @@ class BooksMenuBar extends React.Component {
     }
     menuItemClickedThatShouldntCloseDropdown(){
         this._forceOpen = true;
+    }
+    searchFilterKeyDown(evt){
+        if (evt.which == 13){
+            globalHashManager.setValueOf('bookSearch', evt.target.value);
+        }
+    }
+    setSearchText(){
+        globalHashManager.setValueOf('bookSearch', this.refs.searchInput.value);
     }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
@@ -227,14 +223,6 @@ class BooksMenuBar extends React.Component {
                 </Modal>
             </div>
         )
-    }
-    searchFilterKeyDown(evt){
-        if (evt.which == 13){
-            globalHashManager.setValueOf('bookSearch', evt.target.value);
-        }
-    }
-    setSearchText(){
-        globalHashManager.setValueOf('bookSearch', this.refs.searchInput.value);
     }
 }
 

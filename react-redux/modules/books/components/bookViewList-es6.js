@@ -23,11 +23,6 @@ class BookViewingList extends React.Component {
     componentDidMount(){
         this.props.dispatch(loadSubjects());
     }
-    componentWillReceiveProps(newProps){
-        if (newProps.bookSearch.isDirty){
-            this.props.dispatch(loadBooks());
-        }
-    }
     render() {
         return (
             <div>
