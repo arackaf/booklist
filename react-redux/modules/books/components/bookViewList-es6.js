@@ -1,13 +1,7 @@
-const { loadBooks, loadSubjects } = require('../reducers/actionCreators');
-const { responsiveMobileDesktopMixin } = require('react-redux-util/responsiveUiLoaders');
-
-import x from './bookViewList-desktop';
+import { loadBooks, loadSubjects } from '../reducers/actionCreators';
+import { responsiveMobileDesktopMixin } from 'react-redux-util/responsiveUiLoaders';
 
 import MainNavigationBar from 'root-components/mainNavigation';
-import * as actionCreators from '../reducers/actionCreators';
-import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
-
-const { selector } = require('../reducers/reducer');
 
 function BookListLoading() {
     return <div style={{ height: '150' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
@@ -22,8 +16,8 @@ class BookViewingList extends React.Component {
         super();
 
         responsiveMobileDesktopMixin(this, 'listComponent', {
-            mobile:  { path: './modules/books/components/bookViewList-mobile', connectWith: selector },
-            desktop: { path: './modules/books/components/bookViewList-desktop', connectWith: selector, mapDispatchWith:  { ...actionCreators, ...actionCreatorsBookSearch } }
+            mobile:  { path: './modules/books/components/bookViewList-mobile' },
+            desktop: { path: './modules/books/components/bookViewList-desktop' }
         });
     }
     componentDidMount(){

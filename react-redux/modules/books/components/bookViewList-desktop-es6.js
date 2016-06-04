@@ -1,10 +1,12 @@
-const Modal = ReactBootstrap.Modal;
-
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'root-components/bootstrapButton';
 import ManualBookEntry from 'root-components/manualBookEntry';
+
+import * as actionCreators from '../reducers/actionCreators';
+import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+import { selector } from '../reducers/reducer';
 
 class BookViewListDesktop extends React.Component{
     constructor(props){
@@ -107,4 +109,5 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-export default BookViewListDesktop;
+const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreators, ...actionCreatorsBookSearch  })(BookViewListDesktop);
+export default BookEntryListConnected;
