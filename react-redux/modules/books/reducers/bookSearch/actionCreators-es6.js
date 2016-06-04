@@ -1,4 +1,4 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION } from './actionNames';
+import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS } from './actionNames';
 
 import { globalHashManager } from 'react-startup';
 
@@ -29,4 +29,8 @@ export function applyFilters(){
 
 export function setSortOrder(sort, direction){
     return { type: SET_SORT_DIRECTION, sort, direction };
+}
+
+export function setFilters(text, subjects, searchChildSubjects){
+    return { type: SET_FILTERS, text, subjects, searchChildSubjects }
 }
