@@ -1,4 +1,5 @@
 import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS } from './actionNames';
+import { loadBooks } from '../actionCreators';
 
 import { globalHashManager } from 'react-startup';
 
@@ -33,4 +34,37 @@ export function setSortOrder(sort, direction){
 
 export function setFilters(text, subjects, searchChildSubjects){
     return { type: SET_FILTERS, text, subjects, searchChildSubjects }
+}
+
+export function syncFiltersToHash(){
+    return function(dispatch, getState){
+        let state = getState().books.bookSearch;
+
+        let subjectsSelected = {},
+            selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
+        if (selectedSubjectsHashString){
+            selectedSubjectsHashString.split('-').forEach(_id => subjectsSelected[_id] = true);
+        }
+
+        let hashSearch = (globalHashManager.getCurrentHashValueOf('bookSearch') || ''),
+            hashSearchChildren = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null;
+
+        let newIsDirty =
+            state.searchText !=  hashSearch ||
+            subjectsDifferent(state.subjects, subjectsSelected) ||
+            state.searchChildSubjects != hashSearchChildren;
+
+        if (newIsDirty) {
+            dispatch(setFilters(
+                hashSearch,
+                subjectsSelected,
+                hashSearchChildren));
+
+            dispatch(loadBooks());
+        }
+    }
+}
+
+function subjectsDifferent(oldSubjects, newSubjects){
+    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
 }
