@@ -1,6 +1,10 @@
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 const BootstrapButton = require('root-components/bootstrapButton');
 
+import * as actionCreators from '../reducers/actionCreators';
+import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+import { selector } from '../reducers/reducer';
+
 class BookViewListMobileItem extends React.Component{
     constructor(){
         super();
@@ -60,4 +64,5 @@ class BookViewListMobile extends React.Component{
     }
 }
 
-module.exports = BookViewListMobile;
+const BookViewListMobileConnected = ReactRedux.connect(selector, { ...actionCreators, ...actionCreatorsBookSearch  })(BookViewListMobile);
+export default BookViewListMobileConnected;
