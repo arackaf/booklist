@@ -15,6 +15,14 @@ import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreat
 import * as mainActionCreatorsTEMP from '../../reducers/actionCreators';
 import { globalHashManager } from 'react-startup';
 
+const InputForPending = props => {
+    let name = props.name,
+        actionName = `setPending${name[0].toUpperCase()}${name.slice(1)}`,
+        parentProps = props.parentProps;
+    delete props.name;
+    delete props.parentProps;
+    return <input { ...props } className="form-control" onKeyDown={parentProps[actionName]} onChange={parentProps[actionName]} value={parentProps.pending[name]} />;
+}
 
 class BooksMenuBar extends React.Component {
     constructor(props) {
@@ -84,7 +92,7 @@ class BooksMenuBar extends React.Component {
                                     <span className="input-group-btn">
                                         <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>By subject</BootstrapButton>
                                     </span>
-                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.pendingSearchModified} onChange={this.props.pendingSearchModified} value={this.props.pending.searchText} />
+                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.setPendingSearchText} onChange={this.props.setPendingSearchText} value={this.props.pending.searchText} />
                                     <span className="input-group-btn">
                                         <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
                                         <button className="btn btn-default" onClick={() => this.openFullFilterModal()} type="button">Full search pane</button>
@@ -116,30 +124,6 @@ class BooksMenuBar extends React.Component {
                 <Modal show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            Filter subjects
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
-                        <HierarchicalSelectableSubjectList
-                            style={{ paddingLeft: 5 }}
-                            toggleFilteredSubject={this.props.togglePendingSubject}
-                            subjects={this.props.allSubjects}
-                            selectedSubjects={this.props.pending.subjects} />
-
-                        { this.props.selectedSubjects.length ?
-                            <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
-                            : null }
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <BootstrapButton preset="primary" className="pull-left" onClick={this.props.applyFilters}>Filter</BootstrapButton>
-                        <BootstrapButton preset="default" onClick={this.props.endFilterChanging}>Close</BootstrapButton>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal show={this.state.fullFiltersOpen} onHide={() => this.closeFullFilterModal()}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>
                             Full search
                         </Modal.Title>
                     </Modal.Header>
@@ -149,7 +133,7 @@ class BooksMenuBar extends React.Component {
                                 <div className="col-xs-6">
                                     <div className="form-group">
                                         <label>Title</label>
-                                        <input ref="title_search" className="form-control" placeholder="Search title" />
+                                        <InputForPending name="searchText" parentProps={this.props} placeholder="Search title" />
                                     </div>
                                 </div>
                                 <div className="col-xs-6">
@@ -183,21 +167,18 @@ class BooksMenuBar extends React.Component {
                             </div>
                         </form>
 
-                        <h4>Search subjects</h4>
+                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
                             style={{ paddingLeft: 5 }}
-                            toggleFilteredSubject={this.togglePendingSubject}
+                            toggleFilteredSubject={this.props.togglePendingSubject}
                             subjects={this.props.allSubjects}
-                            selectedSubjects={this.state.pendingSubjects} />
+                            selectedSubjects={this.props.pending.subjects} />
 
-                        { this.props.selectedSubjects.length ?
-                            <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
-                            : null }
-                        <label>Also search child subjects <input type="checkbox" onChange={evt => this.setState({ searchChildSubjects: evt.target.checked })} checked={this.state.searchChildSubjects} /></label>
+                        { this.props.selectedSubjects.length ? <span>Selected subjects: {this.props.selectedSubjects.map(s => s.name).join(', ')}</span> : null }
                     </Modal.Body>
                     <Modal.Footer>
-                        <BootstrapButton preset="primary" className="pull-left" onClick={() => this.applySubjectsFilters()}>Filter</BootstrapButton>
-                        <BootstrapButton preset="default" onClick={() => this.closeSubjectsFilterModal()}>Close</BootstrapButton>
+                        <BootstrapButton preset="primary" className="pull-left" onClick={this.props.applyFilters}>Filter</BootstrapButton>
+                        <BootstrapButton preset="default" onClick={this.props.endFilterChanging}>Close</BootstrapButton>
                     </Modal.Footer>
                 </Modal>
             </div>

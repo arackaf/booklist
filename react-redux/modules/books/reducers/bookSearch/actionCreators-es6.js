@@ -29,6 +29,7 @@ export function applyFilters(){
             filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-');
 
         globalHashManager.setValues(
+            'search', state.pending.searchText,
             'filterSubjects', filterSubjectsVal,
             'searchChildSubjects', state.pending.searchChildSubjects && filterSubjectsVal ? 'true' : null
         );
@@ -40,8 +41,8 @@ export function setSortOrder(sort, direction){
     return { type: SET_SORT_DIRECTION, sort, direction };
 }
 
-export function setFilters(text, subjects, searchChildSubjects){
-    return { type: SET_FILTERS, text, subjects, searchChildSubjects }
+export function setFilters(searchText, subjects, searchChildSubjects){
+    return { type: SET_FILTERS, searchText, subjects, searchChildSubjects }
 }
 
 export function syncFiltersToHash(){
@@ -54,7 +55,7 @@ export function syncFiltersToHash(){
             selectedSubjectsHashString.split('-').forEach(_id => subjectsSelected[_id] = true);
         }
 
-        let hashSearch = (globalHashManager.getCurrentHashValueOf('bookSearch') || ''),
+        let hashSearch = (globalHashManager.getCurrentHashValueOf('search') || ''),
             hashSearchChildren = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null;
 
         let newIsDirty =
@@ -92,7 +93,11 @@ export function removeFilterSubject(_id) {
 function createPendingActionCreator(name, getEvtValue = evt => evt.target.value){
     return function (evt) {
         return function (dispatch, getState) {
-            dispatch({type: SET_PENDING, field: name, value: getEvtValue(evt)})
+            if (evt.which === 13){
+                dispatch(applyFilters());
+            } else {
+                dispatch({type: SET_PENDING, field: name, value: getEvtValue(evt)})
+            }
         };
     }
 }
