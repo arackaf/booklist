@@ -1,40 +1,41 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS, SET_PENDING_SEARCH, SET_PENDING_CHILD_SUBJECTS } from './actionNames';
+import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS, SET_PENDING } from './actionNames';
 
-const initialState = {
+const searchFields = {
     searchText: '',
     subjects: {},
+    searchChildSubjects: false,
+    author: '',
+    publisher: '',
+    pages: '',
+    pagesOperator: '>'
+}
+
+const initialState = {
     sort: '',
     sortDirection: '',
-    searchChildSubjects: false,
     editingFilters: false,
-    pendingSearchChildSubjects: false,
-    pendingSubjects: {},
-    pendingSearch: ''
+    ...searchFields,
+    pending: {
+        ...searchFields
+    }
 };
 
 function bookSearchReducer(state = initialState, action){
     switch(action.type){
         case SET_FILTERS:
-            return Object.assign({},
-                state,
-                {
-                    searchText: action.text,
-                    pendingSearch: action.text,
-                    subjects: { ...action.subjects },
-                    searchChildSubjects: !!action.searchChildSubjects,
-                    pendingSearchChildSubjects: !!action.searchChildSubjects
-                }
-            );
+            let newSearchFields = {};
+            Object.keys(searchFields).forEach(k => newSearchFields[k] = action[k]);
+            return { ...state, ...newSearchFields, pending: { ...newSearchFields } };
+        case SET_PENDING:
+            return { ...state, pending: { ...state.pending, [action.field]: action.value } };
+
+
         case SET_SORT_DIRECTION:
             return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction });
         case BEGIN_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.subjects } });
         case TOGGLE_PENDING_SUBJECT:
-            return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.pendingSubjects, [action._id]: !state.pendingSubjects[action._id] } });
-        case SET_PENDING_SEARCH:
-            return Object.assign({}, state, { pendingSearch: action.value });
-        case SET_PENDING_CHILD_SUBJECTS:
-            return Object.assign({}, state, { pendingSearchChildSubjects: action.value });
+            return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: !state.pending.subjects[action._id] } } });
         case END_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: false });
     }

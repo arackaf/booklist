@@ -4,9 +4,8 @@ import {
     END_FILTER_CHANGE,
     SET_SORT_DIRECTION,
     SET_FILTERS,
-    SET_PENDING_SEARCH,
-    APPLY_PENDING_SEARCH,
-    SET_PENDING_CHILD_SUBJECTS
+    SET_PENDING,
+    APPLY_PENDING_SEARCH
 } from './actionNames';
 import { loadBooks } from '../actionCreators';
 
@@ -27,11 +26,11 @@ export function endFilterChanging(){
 export function applyFilters(){
     return function(dispatch, getState) {
         let state = getState().books.bookSearch,
-            filterSubjectsVal = Object.keys(state.pendingSubjects).filter(k => state.pendingSubjects[k]).join('-');
+            filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-');
 
         globalHashManager.setValues(
             'filterSubjects', filterSubjectsVal,
-            'searchChildSubjects', state.pendingSearchChildSubjects && filterSubjectsVal ? 'true' : null
+            'searchChildSubjects', state.pending.searchChildSubjects && filterSubjectsVal ? 'true' : null
         );
         dispatch(endFilterChanging());
     }
@@ -74,19 +73,8 @@ export function syncFiltersToHash(){
     };
 }
 
-export function setPendingSearch(value){
-    return { type: SET_PENDING_SEARCH, value }
-}
-
-export function pendingSearchModified(evt){
-    return function(dispatch, getState) {
-        if (evt.which == 13) {
-            let pendingSearch = getState().books.bookSearch.pendingSearch;
-            globalHashManager.setValueOf('bookSearch', pendingSearch);
-        } else {
-            dispatch(setPendingSearch(evt.target.value));
-        }
-    };
+function subjectsDifferent(oldSubjects, newSubjects){
+    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
 }
 
 export function removeFilterSubject(_id) {
@@ -101,12 +89,29 @@ export function removeFilterSubject(_id) {
     };
 }
 
-export function setPendingChildSubjects(evt){
-    return function(dispatch, getState){
-        dispatch({ type: SET_PENDING_CHILD_SUBJECTS, value: evt.target.checked })
-    };
+function createPendingActionCreator(name, getEvtValue = evt => evt.target.value){
+    return function (evt) {
+        return function (dispatch, getState) {
+            dispatch({type: SET_PENDING, field: name, value: getEvtValue(evt)})
+        };
+    }
 }
 
-function subjectsDifferent(oldSubjects, newSubjects){
-    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
+export const setPendingSearchText = createPendingActionCreator('searchText');
+export const setPendingSubjects = createPendingActionCreator('subjects');
+export const setPendingSearchChildSubjects = createPendingActionCreator('searchChildSubjects', evt => evt.target.checked);
+export const setPendingAuthor = createPendingActionCreator('author');
+export const setPendingPublisher = createPendingActionCreator('publisher');
+export const setPendingPages = createPendingActionCreator('pages');
+export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
+
+export function pendingSearchModified(evt){
+    return function(dispatch, getState) {
+        if (evt.which == 13) {
+            let pendingSearch = getState().books.bookSearch.pending.searchText;
+            globalHashManager.setValueOf('bookSearch', pendingSearch);
+        } else {
+            dispatch(setPendingSearchText(evt));
+        }
+    };
 }

@@ -84,7 +84,7 @@ class BooksMenuBar extends React.Component {
                                     <span className="input-group-btn">
                                         <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>By subject</BootstrapButton>
                                     </span>
-                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.pendingSearchModified} onChange={this.props.pendingSearchModified} value={this.props.pendingSearch} />
+                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.pendingSearchModified} onChange={this.props.pendingSearchModified} value={this.props.pending.searchText} />
                                     <span className="input-group-btn">
                                         <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
                                         <button className="btn btn-default" onClick={() => this.openFullFilterModal()} type="button">Full search pane</button>
@@ -120,12 +120,12 @@ class BooksMenuBar extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingChildSubjects} checked={this.props.pendingSearchChildSubjects} /></label>
+                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
                         <HierarchicalSelectableSubjectList
                             style={{ paddingLeft: 5 }}
                             toggleFilteredSubject={this.props.togglePendingSubject}
                             subjects={this.props.allSubjects}
-                            selectedSubjects={this.props.pendingSubjects} />
+                            selectedSubjects={this.props.pending.subjects} />
 
                         { this.props.selectedSubjects.length ?
                             <span>Selected subjects: <span>{this.props.selectedSubjects.map(s => s.name).join(', ')}</span></span>
