@@ -90,7 +90,7 @@ var gBundlePaths = {
     const scriptsToCombine = ['system', 'react-dom', 'redux', 'react-motion', 'react-redux', 'bootstrap-toolkit'];
     gulp.src(scriptsToCombine.map(s => `../../static/scripts/${s}.js`).concat('../dist/bundlePaths.js'))
         .pipe(concat('scripts-combined.js', { newLine: '\r\n\r\n;\r\n\r\n' }))
-        .pipe(gulp.dest('../dist/'));
+        .pipe(gulp.dest('../'));
 }
 
 function globToTranspiledFiles(globPattern){
