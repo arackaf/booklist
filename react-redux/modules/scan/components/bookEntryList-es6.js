@@ -1,6 +1,7 @@
 import BookEntryItem from './bookEntryItem';
 
-const { TransitionMotion, spring } = ReactMotion;
+const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 const Collapse = ReactBootstrap.Collapse;
 
 import * as bookEntryActionCreators from '../actions/actionCreators';
@@ -73,20 +74,12 @@ class BookEntryList extends React.Component {
                                         <br /><br />
                                         Eventually there'll be a dedicated module to let you see what's been saved and what failed to be found, and of course saved books will show up in your books list.
                                     </div>
-
-                                    <TransitionMotion
-                                        willEnter={() => ({ opacity: 0.1 })}
-                                        styles={this.props.booksJustSaved.map(book => ({
-                                          style: { opacity: spring(1) },
-                                          data: book,
-                                          key: book._id
-                                        }))}>
-                                        {styles =>
-                                            <ul>{
-                                                styles.map(({ style, data: book, key }) => <li key={key} style={{...style}}>{book.title}</li>)
-                                            }</ul>
-                                        }
-                                    </TransitionMotion>
+                                    
+                                    <ul>
+                                        <ReactCSSTransitionGroup transitionName="book-scan-results" transitionLeaveTimeout={300}>
+                                            {this.props.booksJustSaved.map(book => <li key={book._id}>{book.title}</li>)}
+                                        </ReactCSSTransitionGroup>
+                                    </ul>
                                 </div>
                             </Collapse>
                         </div>

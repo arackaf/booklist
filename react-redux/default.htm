@@ -5,7 +5,7 @@
     <title>Book tracker</title>
 
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
-    <script type="text/javascript" src="/static/scripts/react.js"></script>
+    <script type="text/javascript" src="/static/scripts/react-with-addons.min.js"></script>
     <script type="text/javascript" src="/react-redux/scripts-combined.js"></script>
 
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
@@ -89,6 +89,24 @@
 
         .wait-for-loading { background:rgba(0,0,0,0.1); position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index:1000; }
         .wait-for-loading > i { position: fixed; top: 50%; left: 50%; opacity:0.2; }
+
+        .book-scan-results-enter {
+            opacity: 0.01;
+        }
+
+        .book-scan-results-enter.book-scan-results-enter-active {
+            opacity: 1;
+            transition: opacity 500ms ease-in;
+        }
+
+        .book-scan-results-leave {
+            opacity: 1;
+        }
+
+        .book-scan-results-leave.book-scan-results-leave-active {
+            opacity: 0.01;
+            transition: opacity 300ms ease-in;
+        }
 
     </style>
 
