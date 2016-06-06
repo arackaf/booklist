@@ -41,7 +41,7 @@ class BooksMenuBar extends React.Component {
         }
     }
     componentDidMount(){
-        this.props.syncFiltersToHash();
+        this.props.syncFiltersToHash(true);
     }
     componentWillUnmount(){
         window.removeEventListener("hashchange", this._hashChangeSubscription);
@@ -92,7 +92,7 @@ class BooksMenuBar extends React.Component {
                                     <span className="input-group-btn">
                                         <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>By subject</BootstrapButton>
                                     </span>
-                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.setPendingSearchText} onChange={this.props.setPendingSearchText} value={this.props.pending.searchText} />
+                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.setPendingSearchText} onChange={this.props.setPendingSearchText} value={this.props.pending.search} />
                                     <span className="input-group-btn">
                                         <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
                                         <button className="btn btn-default" onClick={() => this.openFullFilterModal()} type="button">Full search pane</button>
@@ -133,7 +133,7 @@ class BooksMenuBar extends React.Component {
                                 <div className="col-xs-6">
                                     <div className="form-group">
                                         <label>Title</label>
-                                        <InputForPending name="searchText" parentProps={this.props} placeholder="Search title" />
+                                        <InputForPending name="search" parentProps={this.props} placeholder="Search title" />
                                     </div>
                                 </div>
                                 <div className="col-xs-6">

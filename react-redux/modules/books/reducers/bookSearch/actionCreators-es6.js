@@ -30,7 +30,7 @@ export function applyFilters(){
             pending = state.pending;
 
         globalHashManager.setValues(
-            'search', pending.searchText,
+            'search', pending.search,
             'filterSubjects', filterSubjectsVal,
             'searchChildSubjects', pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
             'author', pending.author,
@@ -50,7 +50,7 @@ export function setFilters(packet){
     return { type: SET_FILTERS, packet }
 }
 
-export function syncFiltersToHash(){
+export function syncFiltersToHash(initial){
     return function(dispatch, getState){
         let state = getState().books.bookSearch;
 
@@ -60,13 +60,13 @@ export function syncFiltersToHash(){
             selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
         }
 
-        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null;
+        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
+            packet = { searchChildSubjects, subjects };
 
-        let packet = { searchChildSubjects, subjects };
+        ['search', 'author', 'publisher', 'pages', 'pagesOperator'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        let newIsDirty = isDirty(state, packet);
 
-        ['searchText', 'author', 'publisher', 'pages', 'pagesOperator'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
-        let newIsDirty = isDirty(state.searchFields, packet);
-        if (newIsDirty) {
+        if (initial || newIsDirty) {
             dispatch(setFilters(packet));
 
             dispatch(loadBooks());
@@ -79,7 +79,7 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
-    return ['searchText', 'author', 'publisher', 'pages'].filter(prop => oldState[prop] != newState[prop]).length;
+    return !!['search', 'author', 'publisher', 'pages'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
 function subjectsDifferent(oldSubjects, newSubjects){
@@ -110,7 +110,7 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
     }
 }
 
-export const setPendingSearchText = createPendingActionCreator('searchText');
+export const setPendingSearch = createPendingActionCreator('search');
 export const setPendingSubjects = createPendingActionCreator('subjects');
 export const setPendingSearchChildSubjects = createPendingActionCreator('searchChildSubjects', evt => evt.target.checked);
 export const setPendingAuthor = createPendingActionCreator('author');
