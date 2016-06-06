@@ -141,13 +141,13 @@ class BooksMenuBar extends React.Component {
                                         <label>Pages</label>
                                         <div className="form-inline">
                                             <div style={{ marginRight: 10 }} className="form-group">
-                                                <select className="form-control">
-                                                    <option> {'<'} </option>
-                                                    <option> {'>'} </option>
+                                                <select onChange={this.props.setPendingPagesOperator} value={this.props.pending.pagesOperator} className="form-control">
+                                                    <option value="lt">{'<'}</option>
+                                                    <option value="gt">{'>'}</option>
                                                 </select>
                                             </div>
                                             <div className="form-group">
-                                                <input ref="pages_search" type="number" className="form-control" placeholder="Number of pages" />
+                                                <InputForPending name="pages" parentProps={this.props} type="number" placeholder="Number of pages" />
                                             </div>
                                         </div>
                                     </div>
@@ -155,13 +155,13 @@ class BooksMenuBar extends React.Component {
                                 <div className="col-xs-6">
                                     <div className="form-group">
                                         <label>Publisher</label>
-                                        <input ref="publisher_search" className="form-control" placeholder="Publisher" />
+                                        <InputForPending name="publisher" parentProps={this.props} placeholder="Publisher" />
                                     </div>
                                 </div>
                                 <div className="col-xs-6">
                                     <div className="form-group">
                                         <label>Author</label>
-                                        <input ref="author_search" className="form-control" placeholder="Author" />
+                                        <InputForPending name="author" parentProps={this.props} placeholder="Author" />
                                     </div>
                                 </div>
                             </div>

@@ -26,12 +26,17 @@ export function endFilterChanging(){
 export function applyFilters(){
     return function(dispatch, getState) {
         let state = getState().books.bookSearch,
-            filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-');
+            filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-'),
+            pending = state.pending;
 
         globalHashManager.setValues(
-            'search', state.pending.searchText,
+            'search', pending.searchText,
             'filterSubjects', filterSubjectsVal,
-            'searchChildSubjects', state.pending.searchChildSubjects && filterSubjectsVal ? 'true' : null
+            'searchChildSubjects', pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
+            'author', pending.author,
+            'publisher', pending.publisher,
+            'pagesOperator', pending.pages != '' ? pending.pagesOperator : null,
+            'pages', pending.pages
         );
         dispatch(endFilterChanging());
     }
@@ -41,37 +46,40 @@ export function setSortOrder(sort, direction){
     return { type: SET_SORT_DIRECTION, sort, direction };
 }
 
-export function setFilters(searchText, subjects, searchChildSubjects){
-    return { type: SET_FILTERS, searchText, subjects, searchChildSubjects }
+export function setFilters(packet){
+    return { type: SET_FILTERS, packet }
 }
 
 export function syncFiltersToHash(){
     return function(dispatch, getState){
         let state = getState().books.bookSearch;
 
-        let subjectsSelected = {},
+        let subjects = {},
             selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
         if (selectedSubjectsHashString){
-            selectedSubjectsHashString.split('-').forEach(_id => subjectsSelected[_id] = true);
+            selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
         }
 
-        let hashSearch = (globalHashManager.getCurrentHashValueOf('search') || ''),
-            hashSearchChildren = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? 'true' : null;
+        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null;
 
-        let newIsDirty =
-            state.searchText !=  hashSearch ||
-            subjectsDifferent(state.subjects, subjectsSelected) ||
-            state.searchChildSubjects != hashSearchChildren;
+        let packet = { searchChildSubjects, subjects };
 
+        ['searchText', 'author', 'publisher', 'pages', 'pagesOperator'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        let newIsDirty = isDirty(state.searchFields, packet);
         if (newIsDirty) {
-            dispatch(setFilters(
-                hashSearch,
-                subjectsSelected,
-                hashSearchChildren));
+            dispatch(setFilters(packet));
 
             dispatch(loadBooks());
         }
     };
+}
+
+function isDirty(oldState, newState){
+    if (subjectsDifferent(oldState.subjects, newState.subjects)) return true;
+    if (oldState.pagesOperator != newState.pagesOperator){
+        if (newState.pages !== '') return true;
+    }
+    return ['searchText', 'author', 'publisher', 'pages'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
 function subjectsDifferent(oldSubjects, newSubjects){
@@ -109,14 +117,3 @@ export const setPendingAuthor = createPendingActionCreator('author');
 export const setPendingPublisher = createPendingActionCreator('publisher');
 export const setPendingPages = createPendingActionCreator('pages');
 export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
-
-export function pendingSearchModified(evt){
-    return function(dispatch, getState) {
-        if (evt.which == 13) {
-            let pendingSearch = getState().books.bookSearch.pending.searchText;
-            globalHashManager.setValueOf('bookSearch', pendingSearch);
-        } else {
-            dispatch(setPendingSearchText(evt));
-        }
-    };
-}
