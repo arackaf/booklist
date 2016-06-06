@@ -1,7 +1,7 @@
 import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS, SET_PENDING } from './actionNames';
 
 const searchFields = {
-    searchText: '',
+    search: '',
     subjects: {},
     searchChildSubjects: false,
     author: '',
@@ -25,7 +25,7 @@ function bookSearchReducer(state = initialState, action){
         case SET_FILTERS:
             let newSearchFields = {};
             Object.keys(searchFields).forEach(k => newSearchFields[k] = action[k]);
-            return { ...state, ...newSearchFields, pending: { ...newSearchFields } };
+            return { ...state, ...action.packet, pending: { ...action.packet } };
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
 
