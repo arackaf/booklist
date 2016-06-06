@@ -90,13 +90,9 @@ class BooksMenuBar extends React.Component {
                             <div className="form-group">
                                 <div className="input-group">
                                     <span className="input-group-btn">
-                                        <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>By subject</BootstrapButton>
+                                        <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
                                     </span>
-                                    <input className="form-control" placeholder="Quick title search" onKeyDown={this.props.setPendingSearchText} onChange={this.props.setPendingSearchText} value={this.props.pending.search} />
-                                    <span className="input-group-btn">
-                                        <button className="btn btn-default" onClick={() => this.setSearchText()} type="button"><i className="fa fa-search"></i></button>
-                                        <button className="btn btn-default" onClick={() => this.openFullFilterModal()} type="button">Full search pane</button>
-                                    </span>
+                                    <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
                                 </div>
                             </div>
                         </Navbar.Form>
