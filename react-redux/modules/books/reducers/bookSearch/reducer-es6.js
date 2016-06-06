@@ -28,8 +28,6 @@ function bookSearchReducer(state = initialState, action){
             return { ...state, ...action.packet, pending: { ...action.packet } };
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
-
-
         case SET_SORT_DIRECTION:
             return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction });
         case BEGIN_FILTER_CHANGE:
