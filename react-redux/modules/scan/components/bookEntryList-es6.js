@@ -47,7 +47,6 @@ class BookEntryList extends React.Component {
     render() {
         let pending = this.props.pendingNumber,
             toggleClass = this.state.showIncomingQueue ? 'fa-angle-double-up' : 'fa-angle-double-down',
-            toggleInstructionClass = this.state.showScanInstructions ? 'fa-angle-double-up' : 'fa-angle-double-down',
             toggleInstructions = <a onClick={() => this.toggleScanInstructions()}><i className={`fa fa-question-circle`}></i></a>,
             toggleShow = this.props.booksJustSaved.length || pending ?
                 <a onClick={() => this.toggleIncomingQueue()}><i style={{ color: 'white' }} className={`fa fa-white ${toggleClass}`}></i></a>
@@ -77,7 +76,7 @@ class BookEntryList extends React.Component {
                                     
                                     <ul>
                                         <ReactCSSTransitionGroup transitionName="book-scan-results" transitionLeaveTimeout={300}>
-                                            {this.props.booksJustSaved.map(book => <li key={book._id}>{book.title}</li>)}
+                                            {this.props.booksJustSaved.map(book => <li style={{ color: book.success ? 'green' : 'red' }} key={book._id}>{book.title}</li>)}
                                         </ReactCSSTransitionGroup>
                                     </ul>
                                 </div>
