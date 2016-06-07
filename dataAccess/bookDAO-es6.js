@@ -6,20 +6,32 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection }){
+    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator }){
         subjects = subjects || [];
         let db = await super.open();
         try {
             let query = { userId: this.userId },
                 sortObj = { _id: -1 };
 
+            console.log(pagesOperator);
             if (search){
                 query.title = new RegExp(search, 'gi');
             }
-
             if (sort){
-                console.log('setting', sort, +sortDirection);
                 sortObj = { [sort]: +sortDirection };
+            }
+            if (author){
+                query.authors = { $in: [new RegExp(author, 'gi')] };
+            }
+            if (publisher){
+                query.publisher = new RegExp(publisher, 'gi');
+            }
+            if (pages){
+                if (pagesOperator == 'gt'){
+                    query.pages = { $gt: +pages };
+                } else {
+                    query.pages = { $lt: +pages };
+                }
             }
 
             if (subjects.length){
