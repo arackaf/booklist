@@ -43,11 +43,12 @@ export function applyFilters(){
 }
 
 export function setSortOrder(sort, direction){
-    return { type: SET_SORT_DIRECTION, sort, direction };
-}
-
-export function setFilters(packet){
-    return { type: SET_FILTERS, packet }
+    return function(dispatch, getState){
+        globalHashManager.setValues(
+            'sort', sort,
+            'sortDirection', direction == 1 ? 'asc' : 'desc'
+        );
+    };
 }
 
 export function syncFiltersToHash(initial){
@@ -63,7 +64,8 @@ export function syncFiltersToHash(initial){
         let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
             packet = { searchChildSubjects, subjects };
 
-        ['search', 'author', 'publisher', 'pages', 'pagesOperator'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
         let newIsDirty = isDirty(state, packet);
 
         if (initial || newIsDirty) {
@@ -72,6 +74,10 @@ export function syncFiltersToHash(initial){
             dispatch(loadBooks());
         }
     };
+}
+
+export function setFilters(packet){
+    return { type: SET_FILTERS, packet }
 }
 
 function isDirty(oldState, newState){

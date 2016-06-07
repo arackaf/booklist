@@ -1,4 +1,4 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_SORT_DIRECTION, SET_FILTERS, SET_PENDING } from './actionNames';
+import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING } from './actionNames';
 
 const searchFields = {
     search: '',
@@ -28,8 +28,6 @@ function bookSearchReducer(state = initialState, action){
             return { ...state, ...action.packet, pending: { ...action.packet } };
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
-        case SET_SORT_DIRECTION:
-            return Object.assign({}, state, { sort: action.sort, sortDirection: action.direction });
         case BEGIN_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.subjects } });
         case TOGGLE_PENDING_SUBJECT:
