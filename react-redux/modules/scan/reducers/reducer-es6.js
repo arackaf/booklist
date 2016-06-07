@@ -45,9 +45,9 @@ function reducer(state = initialState, action){
         case INCREMENT_PENDING:
             return Object.assign({}, state, { pendingNumber: (state.pendingNumber || 0) + 1 });
         case BOOK_SAVED:
-            return Object.assign({}, state, { booksJustSaved: [action.book].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
+            return Object.assign({}, state, { booksJustSaved: [{ ...action.book, success: true }].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
         case BOOK_LOOKUP_FAILED:
-            let entry = { _id: '' +new Date(), title: `Failed lookup for ${action.isbn}` };
+            let entry = { _id: '' +new Date(), title: `Failed lookup for ${action.isbn}`, success: false };
             return Object.assign({}, state, { booksJustSaved: [entry].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
     }
     return state;
