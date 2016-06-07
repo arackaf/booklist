@@ -35,7 +35,11 @@ function booksSearch(bookSearchState){
         subjects: Object.keys(bookSearchState.subjects),
         searchChildSubjects: bookSearchState.searchChildSubjects,
         sort: bookSearchState.sort,
-        sortDirection: bookSearchState.sortDirection
+        sortDirection: bookSearchState.sortDirection,
+        author: bookSearchState.author,
+        publisher: bookSearchState.publisher,
+        pages: bookSearchState.pages,
+        pagesOperator: bookSearchState.pagesOperator
     });
 }
 
