@@ -19,8 +19,6 @@ const InputForPending = props => {
     let name = props.name,
         actionName = `setPending${name[0].toUpperCase()}${name.slice(1)}`,
         parentProps = props.parentProps;
-    delete props.name;
-    delete props.parentProps;
     return <input { ...props } className="form-control" onKeyDown={parentProps[actionName]} onChange={parentProps[actionName]} value={parentProps.pending[name]} />;
 }
 
