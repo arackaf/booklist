@@ -5,7 +5,6 @@ import BootstrapButton from 'root-components/bootstrapButton';
 import ManualBookEntry from 'root-components/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
@@ -113,5 +112,5 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreatorsSubjects, ...actionCreatorsBookSearch, ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook })(BookViewListDesktop);
+const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreatorsBookSearch, ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook })(BookViewListDesktop);
 export default BookEntryListConnected;
