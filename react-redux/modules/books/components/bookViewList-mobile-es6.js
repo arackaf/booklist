@@ -1,8 +1,8 @@
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 const BootstrapButton = require('root-components/bootstrapButton');
 
-import * as actionCreators from '../reducers/actionCreators';
-import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+//import * as actionCreators from '../reducers/actionCreators';
+//import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 import { selector } from '../reducers/reducer';
 
 class BookViewListMobileItem extends React.Component{

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { LOAD_BOOKS, LOAD_BOOKS_RESULTS } from './actionNames';
-import { TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } from '../actionNames';
+import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } from './actionNames';
+import { SUBJECT_DELETED } from '../subjects/actionNames';
 
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
 import { adjustBooksForDisplay } from '../../util/booksSubjectsHelpers';
