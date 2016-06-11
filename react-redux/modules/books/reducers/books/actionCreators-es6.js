@@ -1,8 +1,11 @@
-import { LOAD_BOOKS, LOAD_BOOKS_RESULTS } from './actionNames';
+import { TOGGLE_SELECT_BOOK, LOAD_BOOKS, LOAD_BOOKS_RESULTS } from './actionNames';
+
+export function toggleSelectBook(_id, selected){
+    return { type: TOGGLE_SELECT_BOOK, _id, selected }
+}
 
 export function loadBooks(){
     return function(dispatch, getState){
-        debugger;
         dispatch({ type: LOAD_BOOKS });
 
         Promise.resolve(booksSearch(getState().books.bookSearch)).then(booksResp => dispatch(booksResults(booksResp)));
