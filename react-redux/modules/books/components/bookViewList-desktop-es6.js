@@ -6,6 +6,7 @@ import ManualBookEntry from 'root-components/manualBookEntry';
 
 import * as actionCreators from '../reducers/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
@@ -110,5 +111,5 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreators, ...actionCreatorsBookSearch  })(BookViewListDesktop);
+const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreators, ...actionCreatorsBookSearch, ...actionCreatorsBooks })(BookViewListDesktop);
 export default BookEntryListConnected;

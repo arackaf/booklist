@@ -1,4 +1,4 @@
-import { TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
+import { SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED
 } from './actionNames';
@@ -9,6 +9,7 @@ export {
 } from './booksSubjectModification/actionCreators';
 
 export * from './editBook/actionCreators';
+
 
 export function editSubjects(){
     return { type: EDIT_SUBJECTS };
@@ -52,8 +53,4 @@ export function deleteSubject(){
             dispatch({ type: SUBJECT_DELETED, subjectId: request._id, booksUpdated: resp.booksUpdated });
         });
     }
-}
-
-export function toggleSelectBook(_id, selected){
-    return { type: TOGGLE_SELECT_BOOK, _id, selected }
 }
