@@ -1,7 +1,9 @@
-const { createSelector } = require('reselect');
-const { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } = require('../actionNames');
-const { SET_BOOKS_SUBJECTS } = require('../booksSubjectModification/actionNames');
-const { adjustBooksForDisplay } = require('../../util/booksSubjectsHelpers');
+import { createSelector } from 'reselect';
+import { LOAD_BOOKS, LOAD_BOOKS_RESULTS } from './actionNames';
+import { TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, SUBJECT_DELETED } from '../actionNames';
+
+import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
+import { adjustBooksForDisplay } from '../../util/booksSubjectsHelpers';
 
 import {
     EDITING_BOOK_SAVED
@@ -13,7 +15,7 @@ const initialBooksState = {
     selectedBooks: {}
 };
 
-function booksReducer(state = initialBooksState, action){
+export function booksReducer(state = initialBooksState, action){
     switch(action.type) {
         case LOAD_BOOKS:
             return Object.assign({}, state, { loading: true });
@@ -74,11 +76,9 @@ const booksWithSubjectsSelector = createSelector(
     adjustBooksForDisplay
 );
 
-const booksSelector = state => Object.assign({},
+export const booksSelector = state => Object.assign({},
     state.books,
     {
         list: booksWithSubjectsSelector(state),
         selectedBooksCount: Object.keys(state.books.selectedBooks).filter(k => state.books.selectedBooks[k]).length
     });
-
-module.exports = { booksReducer, booksSelector };

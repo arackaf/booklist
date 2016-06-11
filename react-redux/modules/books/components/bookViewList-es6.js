@@ -1,5 +1,5 @@
 import { loadSubjects } from '../reducers/subjects/actionCreators';
-import { loadBooks } from '../reducers/actionCreators';
+import { loadBooks } from '../reducers/books/actionCreators';
 import { responsiveMobileDesktopMixin } from 'react-redux-util/responsiveUiLoaders';
 
 import MainNavigationBar from 'root-components/mainNavigation';
