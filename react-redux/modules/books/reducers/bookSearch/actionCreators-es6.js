@@ -7,7 +7,8 @@ import {
     SET_PENDING,
     APPLY_PENDING_SEARCH
 } from './actionNames';
-import { loadBooks } from '../actionCreators';
+
+import { loadBooks } from '../books/actionCreators';
 
 import { globalHashManager } from 'react-startup';
 

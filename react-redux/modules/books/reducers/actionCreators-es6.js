@@ -1,5 +1,4 @@
-import { LOAD_BOOKS, LOAD_BOOKS_RESULTS,
-        TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
+import { TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS,
         NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED
 } from './actionNames';
@@ -11,39 +10,12 @@ export {
 
 export * from './editBook/actionCreators';
 
-export function loadBooks(){
-    return function(dispatch, getState){
-        dispatch({ type: LOAD_BOOKS });
-
-        Promise.resolve(booksSearch(getState().books.bookSearch)).then(booksResp => dispatch(booksResults(booksResp)));
-    }
-}
-
-function booksSearch(bookSearchState){
-    return ajaxUtil.get('/book/searchBooks', {
-        search: bookSearchState.search,
-        subjects: Object.keys(bookSearchState.subjects),
-        searchChildSubjects: bookSearchState.searchChildSubjects,
-        sort: bookSearchState.sort,
-        sortDirection: bookSearchState.sortDirection,
-        author: bookSearchState.author,
-        publisher: bookSearchState.publisher,
-        pages: bookSearchState.pages,
-        pagesOperator: bookSearchState.pagesOperator
-    });
-}
-
-export function booksResults(resp){
-    return { type: LOAD_BOOKS_RESULTS, books: resp.results };
-}
-
 export function editSubjects(){
     return { type: EDIT_SUBJECTS };
 }
 
 export function setNewSubjectName(newName){
     return { type: SET_NEW_SUBJECT_NAME, value: newName };
-
 }
 
 export function setNewSubjectParent(newParent){
