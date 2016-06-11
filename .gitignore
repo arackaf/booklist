@@ -152,3 +152,5 @@ react-redux/modules/books/reducers/editBook/reducer.js
 react-redux/modules/books/reducers/subjects/reducer.js
 react-redux/modules/books/reducers/bookSearch/actionCreators.js
 react-redux/modules/books/reducers/bookSearch/actionNames.js
+react-redux/modules/books/reducers/subjects/actionCreators.js
+react-redux/modules/books/reducers/subjects/actionNames.js

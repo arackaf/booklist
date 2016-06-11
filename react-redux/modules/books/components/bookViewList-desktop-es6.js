@@ -6,6 +6,7 @@ import ManualBookEntry from 'root-components/manualBookEntry';
 
 import * as actionCreators from '../reducers/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+
 import { selector } from '../reducers/reducer';
 
 class BookViewListDesktop extends React.Component{
