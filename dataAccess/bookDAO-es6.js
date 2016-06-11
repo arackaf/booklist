@@ -54,8 +54,6 @@ class BookDAO extends DAO {
             //    delete query.title;
             //}
             return (await db.collection('books').find(query).sort(sortObj).toArray()).map(addCreatedOn);
-        } catch(err){
-            console.log(err);
         } finally {
             super.dispose(db);
         }
@@ -71,11 +69,46 @@ class BookDAO extends DAO {
             super.dispose(db);
         }
     }
+    async saveManual(book){
+        let db = await super.open();
+        try {
+            let bookToInsert = {};
+            bookToInsert.userId = this.userId;
+
+            //coming right from the client, so we'll sanitize
+            const validProperties = ['title', 'isbn', 'pages', 'publisher', 'publicationDate', 'smallImage'];
+            validProperties.forEach(prop => bookToInsert[prop] = (book[prop] || '').substr(0, 500));
+            bookToInsert.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
+
+            let result = await db.collection('books').insert(bookToInsert);
+
+            super.confirmSingleResult(result);
+        } catch(err){
+            console.log(err);
+        } finally {
+            super.dispose(db);
+        }
+    }
     async deleteBook(id){
         let db = await super.open();
         try {
             await db.collection('books').remove({ _id: ObjectId(id) });
         } finally {
+            super.dispose(db);
+        }
+    }
+    async update(book){
+        let db = await super.open();
+        try {
+
+            //coming right from the client, so we'll sanitize
+            const validProperties = ['title', 'isbn', 'pages', 'publisher', 'publicationDate', 'smallImage'];
+
+            let $set = {};
+            validProperties.forEach(prop => $set[prop] = (book[prop] || '').substr(0, 500));
+            $set.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
+            await db.collection('books').update({ _id: ObjectId(book._id), userId: this.userId }, { $set });
+        } finally{
             super.dispose(db);
         }
     }
