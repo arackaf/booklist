@@ -12,7 +12,9 @@ const BootstrapButton = require('root-components/bootstrapButton');
 const { bookSearchSelector } = require('modules/books/reducers/bookSearch/reducer');
 
 import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
-import * as mainActionCreatorsTEMP from '../../reducers/actionCreators';
+import * as mainActionCreatorsTEMP from '../../reducers/books/actionCreators';
+import * as mainActionCreatorsTEMP2 from '../../reducers/subjects/actionCreators';
+import * as mainActionCreatorsTEMP3 from '../../reducers/booksSubjectModification/actionCreators';
 import { globalHashManager } from 'react-startup';
 
 const InputForPending = props => {
@@ -180,6 +182,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP })(BooksMenuBar);
+const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP, ...mainActionCreatorsTEMP2, ...mainActionCreatorsTEMP3 })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

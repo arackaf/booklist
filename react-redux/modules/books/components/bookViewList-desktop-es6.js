@@ -4,9 +4,11 @@ import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'root-components/bootstrapButton';
 import ManualBookEntry from 'root-components/manualBookEntry';
 
-import * as actionCreators from '../reducers/actionCreators';
-import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
+import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
+import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
+import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
@@ -111,5 +113,5 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreators, ...actionCreatorsBookSearch, ...actionCreatorsBooks })(BookViewListDesktop);
+const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreatorsSubjects, ...actionCreatorsBookSearch, ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook })(BookViewListDesktop);
 export default BookEntryListConnected;
