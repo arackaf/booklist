@@ -51,11 +51,6 @@ class BookViewListMobile extends React.Component{
     render(){
         return (
             <div>
-                <BooksMenuBar
-                    selectedBooksCount={this.props.books.selectedBooksCount}
-                    allSubjects={this.props.subjects.list}
-                ></BooksMenuBar>
-
                 <div style={{ paddingBottom: 15 }}>
                     <BootstrapButton style={{ margin: 5 }} onClick={() => this.toggleImages()} preset="info-xs">{ this.state.showImages ? 'Hide covers' : 'Show covers' }</BootstrapButton>
                     <div style={{ border: 0 }} className="list-group docked-to-panel">
