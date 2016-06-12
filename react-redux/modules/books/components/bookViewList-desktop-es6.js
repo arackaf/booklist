@@ -1,13 +1,6 @@
-import BooksMenuBar from './booklist-menubar/booksMenuBar';
-import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
-import SubjectEditModal from './subject-edit/subjectEditModal';
-import BootstrapButton from 'root-components/bootstrapButton';
-import ManualBookEntry from 'root-components/manualBookEntry';
-
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
-import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
+import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
@@ -30,16 +23,8 @@ class BookViewListDesktop extends React.Component{
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
 
-        let editingBook = this.props.bookEdit.editingBook,
-            dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
-
         return (
             <div style={{ minHeight: 500 }}>
-                <BooksMenuBar
-                    selectedBooksCount={this.props.books.selectedBooksCount}
-                    allSubjects={this.props.subjects.list}
-                ></BooksMenuBar>
-
                 { this.props.books.list.length ?
                 <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15 }}>
                     <table className="table table-striped">
@@ -89,28 +74,10 @@ class BookViewListDesktop extends React.Component{
                     No books found
                 </div> : null)
                 }
-                <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
-                <SubjectEditModal
-                    editSubjectsPacket={this.props.subjects.editSubjectsPacket}
-                    subjects={this.props.subjects.list}>
-                </SubjectEditModal>
-
-
-                <ManualBookEntry
-                    title={editingBook ? `Edit ${editingBook.title}` : ''}
-                    dragTitle={dragTitle}
-                    bookToEdit={editingBook}
-                    isOpen={this.props.bookEdit.isEditing}
-                    isSaving={this.props.bookEdit.editingBookSaving}
-                    isSaved={this.props.bookEdit.editingBookSaved}
-                    saveBook={book => this.props.saveEditingBook(book)}
-                    saveMessage={'Saved'}
-                    onClosing={this.props.stopEditingBook} />
-
             </div>
         );
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreatorsBookSearch, ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook })(BookViewListDesktop);
+const BookEntryListConnected = ReactRedux.connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook })(BookViewListDesktop);
 export default BookEntryListConnected;
