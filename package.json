@@ -44,6 +44,7 @@
     "redux-thunk": "1.0.0",
     "regenerator": "0.8.36",
     "reselect": "2.0.1",
+    "simple-react-bootstrap-navbar": "0.0.8-beta.5",
     "ws": "1.0.1"
   },
   "devDependencies": {
@@ -63,6 +64,7 @@
     "gulp-util": "3.0.3",
     "gulp-watch": "4.1.1",
     "mocha": "2.3.3",
+    "simple-react-bootstrap-navbar": "0.0.8-beta.5",
     "sinon": "1.17.1",
     "systemjs-builder": "0.15.15"
   }
