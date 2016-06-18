@@ -1,4 +1,4 @@
-import { isLoggedIn, goHome } from 'react-startup';
+import { isLoggedIn, goHome } from 'reactStartup';
 
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;

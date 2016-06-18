@@ -20,13 +20,11 @@
             baseURL: "./",
             defaultJSExtensions: true,
             map: {
-                'react-redux-util': 'util',
                 'root-components': 'applicationRoot/rootComponents',
                 'application-root': 'applicationRoot',
-                'react-startup': 'reactStartup',
                 reselect: 'util/reselect',
-                redux: '/node_modules/redux/dist/redux.js',
-                'react-redux': '/node_modules/react-redux/dist/react-redux.js'
+                redux: 'node_modules/redux/dist/redux.js',
+                'react-redux': 'node_modules/react-redux/dist/react-redux.js'
             },
             bundles: effectiveBundles,
             meta: {
@@ -41,7 +39,7 @@
         System.config(systemJsConfig);
 
         System.amdDefine('react', function(){ return React; });
-        System.import('react-startup');
+        System.import('reactStartup');
 
         function webSocketAddress(path){
             return 'ws://' + window.location.host + (path || '');

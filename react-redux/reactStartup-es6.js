@@ -1,8 +1,8 @@
-import HashUtility, { SerializedHash } from 'react-redux-util/hashManager';
+import HashUtility, { SerializedHash } from 'util/hashManager';
 import { renderUI, clearUI } from 'application-root/renderUI';
 import { store, getNewReducer } from 'application-root/store';
 
-import 'react-redux-util/ajaxUtil';
+import 'util/ajaxUtil';
 
 let currentModule;
 

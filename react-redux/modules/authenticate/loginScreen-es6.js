@@ -1,4 +1,4 @@
-import { loadCurrentModule, goHome } from 'react-startup';
+import { loadCurrentModule, goHome } from 'reactStartup';
 import AjaxButton from 'root-components/ajaxButton';
 
 const Navbar = ReactBootstrap.Navbar;

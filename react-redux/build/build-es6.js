@@ -13,12 +13,12 @@ let builder = new Builder({
 builder.config({
     defaultJSExtensions: true,
     map: {
-        'react-redux-util': 'util',
         'root-components': 'applicationRoot/rootComponents',
         'application-root': 'applicationRoot',
-        'react-startup': 'reactStartup',
         'react': 'util/harmless-stub-for-build', //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
-        'reselect': 'util/reselect'
+        'reselect': 'util/reselect',
+        'redux': 'node_modules/redux/dist/redux.js',
+        'react-redux': 'node_modules/react-redux/dist/react-redux.js'
     },
     meta: {
         'util/react-dropzone': {
@@ -29,17 +29,18 @@ builder.config({
 
 const sharedFilesToBuild = [
     ...globToTranspiledFiles('../applicationRoot/**/*.js'),
-    ...globToTranspiledFiles('../util/**/*.js')
+    ...globToTranspiledFiles('../util/**/*.js'),
+    'reactStartup'
 ];
 
 let paths = sharedFilesToBuild.join(' + '),
     buildOutputs = {},
     builds = [
-        { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
-        { module: 'modules/scan/scan', path: 'modules/scan/scan - (' + paths + ')' },
-        { module: 'modules/home/home', path: 'modules/home/home - (' + paths + ')' },
-        { module: 'modules/authenticate/authenticate', path: 'modules/authenticate/authenticate - (' + paths + ')' },
-        { module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
+        //{ module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
+        { module: 'modules/scan/scan' },
+        //{ module: 'modules/home/home', path: 'modules/home/home - (' + paths + ')' },
+        //{ module: 'modules/authenticate/authenticate', path: 'modules/authenticate/authenticate - (' + paths + ')' },
+        //{ module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
     ];
 
 Promise.all(builds.map(buildEntryToPromise)).then(results => {
@@ -100,6 +101,7 @@ function globToTranspiledFiles(globPattern){
 }
 
 function buildEntryToPromise(entry){
-    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' });
-    return builder.bundle(adjustedEntry.path, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' }),
+        whatToBuild = adjustedEntry.module ? adjustedEntry.module + ` - ( ${paths} ) ` : adjustedEntry.path;
+    return builder.bundle(whatToBuild, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
 }

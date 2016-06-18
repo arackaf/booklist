@@ -1,4 +1,4 @@
-import { isLoggedIn, globalHashManager } from 'react-startup';
+import { isLoggedIn, globalHashManager } from 'reactStartup';
 
 const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
