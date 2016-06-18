@@ -8,7 +8,7 @@ const MenuItem = ReactBootstrap.MenuItem;
 
 import HierarchicalSelectableSubjectList from './hierarchicalSelectableSubjectList';
 
-import BootstrapButton from 'root-components/bootstrapButton';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 
 import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 

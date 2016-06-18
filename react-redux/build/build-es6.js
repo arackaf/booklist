@@ -13,7 +13,6 @@ let builder = new Builder({
 builder.config({
     defaultJSExtensions: true,
     map: {
-        'root-components': 'applicationRoot/rootComponents',
         'react': 'util/harmless-stub-for-build', //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
         'reselect': 'util/reselect',
         'redux': 'node_modules/redux/dist/redux.js',

@@ -2,12 +2,12 @@ import { loadSubjects } from '../reducers/subjects/actionCreators';
 import { loadBooks } from '../reducers/books/actionCreators';
 import responsiveMobileDesktopMixin from 'util/responsiveUiLoaders';
 
-import MainNavigationBar from 'root-components/mainNavigation';
+import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
-import BootstrapButton from 'root-components/bootstrapButton';
-import ManualBookEntry from 'root-components/manualBookEntry';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
