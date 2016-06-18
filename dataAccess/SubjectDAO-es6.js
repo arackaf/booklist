@@ -1,5 +1,5 @@
 import DAO from './dao';
-const ObjectId = require('mongodb').ObjectID;
+import { ObjectId } from 'mongodb';
 
 class SubjectDAO extends DAO {
     constructor(userId){
@@ -97,4 +97,4 @@ class SubjectDAO extends DAO {
 }
 
 
-module.exports = SubjectDAO;
+export default SubjectDAO;

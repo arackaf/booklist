@@ -1,4 +1,4 @@
-const ObjectId = require('mongodb').ObjectID;
+import { ObjectId } from 'mongodb';
 import DAO from './dao';
 
 class PendingBookEntryDAO extends DAO {
