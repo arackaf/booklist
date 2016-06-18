@@ -3,7 +3,7 @@ const { reducer, selector } = require('./reducers/reducer');
 
 BookViewList = ReactRedux.connect(selector)(BookViewList);
 
-module.exports = {
+export default {
     name: 'books',
     reducer: reducer,
     component: BookViewList

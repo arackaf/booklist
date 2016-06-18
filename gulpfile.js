@@ -10,9 +10,13 @@ var gulp = require('gulp'),
 
 require('regenerator/runtime');
 
-function isNodeFile(file){
-    console.log(Object.keys(file).join(','));
-    return true;
+function isNodeFolder(file){
+    console.log(file.path);
+    return file.path.indexOf('\\dataAccess\\') >= 0
+            || file.path.indexOf('\\amazonDataAccess\\') >= 0
+            || file.path.indexOf('\\app\\') >= 0
+            || file.path.indexOf('\\utils\\') >= 0
+            || file.path.indexOf('\\build-es6.js') >= 0;
 }
 
 gulp.task('test', function () {
@@ -37,10 +41,6 @@ gulp.task('initial-transpile', function () {
         .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
 });
 
-function isNodeFolder(file){
-    return file.path.indexOf('\\dataAccess\\') >= 0;
-}
-
 gulp.task('transpile-watch', function() {
     return gulp.watch(['./**/**-es6.js', '!./controllers/**/*', '!./node_modules/**/*'], function(obj){
         if (obj.type === 'changed') {
@@ -63,7 +63,7 @@ gulp.task('transpile-watch', function() {
                     }
                 }))
                 .pipe(gulpIf(isNodeFolder, babel({
-                    presets: ['stage-2', 'react', 'es2015']
+                    presets: ['stage-2', 'es2015']
                 }), babel({
                     presets: ['stage-2', 'react'],
                     plugins: ['transform-es2015-modules-commonjs']
