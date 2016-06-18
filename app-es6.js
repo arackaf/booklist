@@ -1,6 +1,7 @@
-require('regenerator/runtime');
-require('./utils/promiseUtils');
-require('./private/awsS3Credentials');
+import 'regenerator/runtime';
+
+import './utils/promiseUtils';
+import './private/awsS3Credentials';
 
 const express = require('express');
 const app = express();

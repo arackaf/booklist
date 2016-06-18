@@ -1,4 +1,4 @@
-const DAO = require('./dao');
+import DAO from './dao';
 
 export default class CompletedEntriesDao extends DAO {
     async logCompletedEntry(userId, isbn, bookFound){

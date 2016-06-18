@@ -1,4 +1,4 @@
-const DAO = require('./dao');
+import DAO from './dao';
 
 class ErrorLoggerDAO extends DAO {
     constructor(userId) {
