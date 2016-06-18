@@ -10,6 +10,7 @@ import BootstrapButton from 'root-components/bootstrapButton';
 import ManualBookEntry from 'root-components/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
+import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 
 import { selector } from '../reducers/reducer';
@@ -32,7 +33,7 @@ class BookViewingList extends React.Component {
         });
     }
     componentDidMount(){
-        this.props.dispatch(loadSubjects());
+        this.props.loadSubjects();
     }
     render() {
         let editingBook = this.props.bookEdit.editingBook,
@@ -87,7 +88,7 @@ class BookViewingList extends React.Component {
     }
 }
 
-const BookViewingListConnected = ReactRedux.connect(selector, { ...actionCreatorsEditBook })(BookViewingList);
+const BookViewingListConnected = ReactRedux.connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects })(BookViewingList);
 export default BookViewingListConnected;
 
-module.exports = BookViewingList;
+module.exports = BookViewingListConnected;

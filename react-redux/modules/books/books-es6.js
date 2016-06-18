@@ -1,7 +1,5 @@
-let BookViewList = require('./components/bookViewList');
+import BookViewList from './components/bookViewList';
 const { reducer, selector } = require('./reducers/reducer');
-
-BookViewList = ReactRedux.connect(selector)(BookViewList);
 
 export default {
     name: 'books',
