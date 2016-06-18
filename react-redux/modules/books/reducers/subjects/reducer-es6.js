@@ -11,7 +11,7 @@ const initialSubjectsState = {
     loaded: false
 };
 
-function subjectsReducer(state = initialSubjectsState, action = {}){
+export function subjectsReducer(state = initialSubjectsState, action = {}){
     switch(action.type){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
@@ -71,6 +71,4 @@ const stackedSubjectsSelector = createSelector(
     })
 );
 
-const subjectsSelector = state => Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
-
-module.exports = { subjectsReducer, subjectsSelector };
+export const subjectsSelector = state => Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
