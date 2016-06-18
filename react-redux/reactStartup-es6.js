@@ -1,6 +1,6 @@
 import HashUtility, { SerializedHash } from 'react-redux-util/hashManager';
-const { renderUI, clearUI } = require('application-root/renderUI');
-const { store, getNewReducer } = require('application-root/store');
+import { renderUI, clearUI } from 'application-root/renderUI';
+import { store, getNewReducer } from 'application-root/store';
 
 require('react-redux-util/ajaxUtil');
 
@@ -35,7 +35,8 @@ export function loadCurrentModule() {
     if (module === currentModule) return;
     currentModule = module;
 
-    System.import(`./modules/${module}/${module}`).then(({ default: module }) => {
+    System.import(`./modules/${module}/${module}`).then(module => {
+        //debugger;
         clearUI();
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});

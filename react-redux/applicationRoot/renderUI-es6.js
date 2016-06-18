@@ -1,15 +1,15 @@
 const Provider = ReactRedux.Provider;
-const Header = require('./rootComponents/header');
-const { store } = require('./store');
+import Header from './rootComponents/header';
+import { store } from './store';
 
-function clearUI(){
+export function clearUI(){
     ReactDOM.render(
         <div></div>,
         document.getElementById('home')
     );
 }
 
-function renderUI(component){
+export function renderUI(component){
     ReactDOM.render(
         <Provider store={store}>
             <div>
@@ -19,5 +19,3 @@ function renderUI(component){
         document.getElementById('home')
     );
 }
-
-module.exports = { renderUI, clearUI };

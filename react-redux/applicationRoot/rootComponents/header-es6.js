@@ -1,6 +1,6 @@
 let Provider = ReactRedux.Provider;
 
-let { store } = require('../store');
+import { store } from '../store';
 
 function projectState(state){
     return state;

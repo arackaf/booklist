@@ -44,4 +44,4 @@ class HierarchicalSelectableSubjectList extends React.Component {
     }
 }
 
-module.exports = HierarchicalSelectableSubjectList;
+export default HierarchicalSelectableSubjectList;

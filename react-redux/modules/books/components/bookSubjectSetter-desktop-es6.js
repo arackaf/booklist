@@ -63,4 +63,4 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
 
 const BookSubjectSetterDesktop = ReactRedux.connect(state => booksSubjectsModifierSelector(state.books), { ...bookSubjectActionCreators })(BookSubjectSetterDesktopUnConnected);
 
-module.exports = BookSubjectSetterDesktop;
+export default BookSubjectSetterDesktop;

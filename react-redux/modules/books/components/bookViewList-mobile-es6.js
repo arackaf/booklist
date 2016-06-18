@@ -1,5 +1,5 @@
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
-const BootstrapButton = require('root-components/bootstrapButton');
+import BootstrapButton from 'root-components/bootstrapButton';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';

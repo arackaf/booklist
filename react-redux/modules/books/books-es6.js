@@ -1,5 +1,5 @@
 import BookViewList from './components/bookViewList';
-const { reducer, selector } = require('./reducers/reducer');
+import { reducer, selector } from './reducers/reducer';
 
 export default {
     name: 'books',

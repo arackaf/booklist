@@ -26,4 +26,4 @@ class ResponsiveNotifier{
     }
 }
 
-module.exports = ResponsiveNotifier;
+export default ResponsiveNotifier;
