@@ -1,6 +1,6 @@
 import HashUtility, { SerializedHash } from 'util/hashManager';
-import { renderUI, clearUI } from 'application-root/renderUI';
-import { store, getNewReducer } from 'application-root/store';
+import { renderUI, clearUI } from 'applicationRoot/renderUI';
+import { store, getNewReducer } from 'applicationRoot/store';
 
 import 'util/ajaxUtil';
 
