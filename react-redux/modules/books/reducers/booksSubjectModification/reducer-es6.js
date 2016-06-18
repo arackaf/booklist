@@ -1,4 +1,4 @@
-const { createSelector } = require('reselect');
+import { createSelector } from 'reselect';
 
 import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,
@@ -14,7 +14,7 @@ const bookSubjectManagerInitialState = {
     settingBooksSubjects: false
 };
 
-function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, action){
+export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, action){
     switch (action.type){
         case SETTING_BOOKS_SUBJECTS:
             return Object.assign({}, state, { settingBooksSubjects: true });
@@ -56,7 +56,7 @@ const removingSubjectsSelector = createSelector(
     (removing, subjects) => Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id])
 );
 
-const booksSubjectsModifierSelector = createSelector(
+export const booksSubjectsModifierSelector = createSelector(
     [state => state.booksSubjectsModifier, modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector],
     (booksSubjectsModifier, modifyingBooks, addingSubjects, removingSubjects) => ({
         addingSubjectIds: booksSubjectsModifier.addingSubjects,
@@ -67,5 +67,3 @@ const booksSubjectsModifierSelector = createSelector(
         removingSubjects
     })
 );
-
-module.exports = { bookSubjectManagerReducer, booksSubjectsModifierSelector };
