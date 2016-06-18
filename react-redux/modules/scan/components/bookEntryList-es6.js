@@ -2,7 +2,7 @@ import BookEntryItem from './bookEntryItem';
 import { connect } from 'react-redux';
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
-const Collapse = ReactBootstrap.Collapse;
+import { Collapse } from 'react-bootstrap';
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
 import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';

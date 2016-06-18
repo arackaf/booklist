@@ -1,16 +1,17 @@
 import { Provider } from 'react-redux';
 import Header from './rootComponents/header';
 import { store } from './store';
+import { render } from 'react-dom';
 
 export function clearUI(){
-    ReactDOM.render(
+    render(
         <div></div>,
         document.getElementById('home')
     );
 }
 
 export function renderUI(component){
-    ReactDOM.render(
+    render(
         <Provider store={store}>
             <div>
                 { component }

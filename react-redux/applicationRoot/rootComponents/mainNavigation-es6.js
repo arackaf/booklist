@@ -1,6 +1,8 @@
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
+import {
+    Navbar,
+    Nav,
+    NavItem
+} from 'react-bootstrap';
 
 import { goHome } from 'reactStartup';
 

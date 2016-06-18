@@ -87,7 +87,7 @@ var gBundlePaths = {
 
     fs.writeFileSync('../dist/bundlePaths.js', fileContents);
 
-    const scriptsToCombine = ['system', 'react-dom', 'redux', 'react-redux', 'bootstrap-toolkit'];
+    const scriptsToCombine = ['system', 'bootstrap-toolkit'];
     gulp.src(scriptsToCombine.map(s => `../../static/scripts/${s}.js`).concat('../dist/bundlePaths.js'))
         .pipe(concat('scripts-combined.js', { newLine: '\r\n\r\n;\r\n\r\n' }))
         .pipe(gulp.dest('../'));
