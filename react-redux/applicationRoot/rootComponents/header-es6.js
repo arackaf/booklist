@@ -1,5 +1,4 @@
-let Provider = ReactRedux.Provider;
-
+import { Provider, connect } from 'react-redux';
 import { store } from '../store';
 
 function projectState(state){
@@ -14,6 +13,6 @@ class Header extends React.Component {
     }
 }
 
-Header = ReactRedux.connect(projectState)(Header);
+Header = connect(projectState)(Header);
 
 export default Header;

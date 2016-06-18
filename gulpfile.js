@@ -11,6 +11,7 @@ var gulp = require('gulp'),
 require('regenerator/runtime');
 
 function isClientFile(file){
+    if (file.path.indexOf('\\react-redux\\build\\') >= 0 ) return false;
     return file.path.indexOf('\\react-redux\\') >= 0 || file.path.indexOf('\\transpileTest\\') >= 0;
 }
 
