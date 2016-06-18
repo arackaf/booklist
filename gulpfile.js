@@ -10,13 +10,8 @@ var gulp = require('gulp'),
 
 require('regenerator/runtime');
 
-function isNodeFolder(file){
-    console.log(file.path);
-    return file.path.indexOf('\\dataAccess\\') >= 0
-            || file.path.indexOf('\\amazonDataAccess\\') >= 0
-            || file.path.indexOf('\\app\\') >= 0
-            || file.path.indexOf('\\utils\\') >= 0
-            || file.path.indexOf('\\build-es6.js') >= 0;
+function isClientFile(file){
+    return file.path.indexOf('\\react-redux\\') >= 0 || file.path.indexOf('\\transpileTest\\') >= 0;
 }
 
 gulp.task('test', function () {
@@ -26,13 +21,13 @@ gulp.task('test', function () {
         .pipe(mocha());
 });
 
-gulp.task('initial-transpile', function () {
+gulp.task('transpile-all', function () {
     gulp.src(['./**/**-es6.js', '!./controllers/**/*', '!./node_modules/**/*'])
-        .pipe(gulpIf(isNodeFolder, babel({
-            presets: ['stage-2', 'es2015']
-        }), babel({
+        .pipe(gulpIf(isClientFile, babel({
             presets: ['stage-2', 'react'],
             plugins: ['transform-es2015-modules-commonjs']
+        }), babel({
+            presets: ['stage-2', 'es2015']
         })))
         .pipe(rename(function (path) {
             path.basename = path.basename.replace(/-es6$/, '');
@@ -62,11 +57,11 @@ gulp.task('transpile-watch', function() {
                         this.emit('end');
                     }
                 }))
-                .pipe(gulpIf(isNodeFolder, babel({
-                    presets: ['stage-2', 'es2015']
-                }), babel({
+                .pipe(gulpIf(isClientFile, babel({
                     presets: ['stage-2', 'react'],
                     plugins: ['transform-es2015-modules-commonjs']
+                }), babel({
+                    presets: ['stage-2', 'es2015']
                 })))
                 .pipe(rename(function (path) {
                     path.basename = path.basename.replace(/-es6$/, '');

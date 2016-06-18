@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     babel = require('gulp-babel');
 
-gulp.task('default', function() {
+gulp.task('transpile-watch', function() {
     return gulp.watch('../**/**-es6.js', function(obj){
         if (obj.type === 'changed') {
             gulp.src(obj.path, { base: './' })
@@ -34,4 +34,14 @@ gulp.task('default', function() {
                 .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
         }
     });
+});
+
+gulp.task('transpile-all', function () {
+    gulp.src(['./**/**-es6.js'])
+        .pipe(babel({ stage: 1 }))
+        .pipe(rename(function (path) {
+            path.basename = path.basename.replace(/-es6$/, '');
+        }))
+        .pipe(gulp.dest(''))
+        .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
 });
