@@ -16,4 +16,4 @@ class Header extends React.Component {
 
 Header = ReactRedux.connect(projectState)(Header);
 
-module.exports = Header;
+export default Header;

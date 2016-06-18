@@ -21,4 +21,4 @@ class BootstrapButton extends React.Component{
     }
 }
 
-module.exports = BootstrapButton;
+export default BootstrapButton;
