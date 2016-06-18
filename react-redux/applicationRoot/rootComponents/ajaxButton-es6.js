@@ -1,4 +1,4 @@
-const BootstrapButton = require('./bootstrapButton');
+import BootstrapButton from './bootstrapButton';
 
 class AjaxButton extends BootstrapButton {
     render(){
