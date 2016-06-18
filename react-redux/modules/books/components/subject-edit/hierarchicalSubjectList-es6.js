@@ -1,4 +1,4 @@
-import BootstrapButton from 'root-components/bootstrapButton';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 const Collapse = ReactBootstrap.Collapse;
 
 class HierarchicalSubjectItem extends React.Component {

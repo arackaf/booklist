@@ -1,5 +1,5 @@
-import BootstrapButton from 'root-components/bootstrapButton';
-import AjaxButton from 'root-components/ajaxButton';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 
 class BookEntryItem extends React.Component{
     render(){

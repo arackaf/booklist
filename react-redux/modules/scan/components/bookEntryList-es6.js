@@ -5,9 +5,9 @@ const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 const Collapse = ReactBootstrap.Collapse;
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
-import MainNavigationBar from 'root-components/mainNavigation';
-import BootstrapButton from 'root-components/bootstrapButton';
-import ManualBookEntry from 'root-components/manualBookEntry';
+import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
 
 const defaultEmptyBook = () => ({
     title: '',
