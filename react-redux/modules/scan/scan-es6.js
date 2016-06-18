@@ -3,7 +3,7 @@ let reducer = require('./reducers/reducer');
 
 BookEntryList = ReactRedux.connect(state => state.scan)(BookEntryList);
 
-module.exports = {
+export default {
     name: 'scan',
     reducer: reducer,
     component: BookEntryList
