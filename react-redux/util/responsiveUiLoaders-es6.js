@@ -50,7 +50,7 @@ function responsiveMobileDesktopMixin(self, stateName, config){
         } else {
             componentPath = componentObjOrPath;
         }
-        System.import(componentPath).then(component => {
+        System.import(componentPath).then(({ default: component }) => {
             self.setState({ [stateName]: component, isMobile });
         });
     }
