@@ -3,8 +3,7 @@ var gulp = require('gulp'),
     plumber = require('gulp-plumber'),
     gprint = require('gulp-print'),
     notify = require('gulp-notify'),
-    babel = require('gulp-babel'),
-    through = require('through2');
+    babel = require('gulp-babel');
 
 gulp.task('default', function() {
     return gulp.watch('../**/**-es6.js', function(obj){
@@ -17,7 +16,7 @@ gulp.task('default', function() {
                             var fileParts = error.fileName.split('\\');
                             try {
                                 notify.onError(error.name + ' in ' + fileParts[fileParts.length - 1])(error);
-                            } catch(e) { console.log(e, 'errrrrr'); } //gulp-notify may break if not run in Win 8
+                            } catch(e) {} //gulp-notify may break if not run in Win 8
                             console.log(error.name + ' in ' + error.fileName);
                         } else{
                             notify.onError('Oh snap, file system error! :(')(error);
@@ -28,7 +27,6 @@ gulp.task('default', function() {
                     }
                 }))
                 .pipe(babel({ stage: 1 }))
-                .pipe(logFileHelpers())
                 .pipe(rename(function (path) {
                     path.basename = path.basename.replace(/-es6$/, '');
                 }))

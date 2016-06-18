@@ -48,7 +48,7 @@ Promise.all(builds.map(buildEntryToPromise)).then(results => {
     });
 
     gulp.src(['../dist/**/*-unminified.js'], {base: './'})
-        .pipe(gulpUglify())
+        //.pipe(gulpUglify())
         .pipe(gulpRename(function (path) {
             path.basename = path.basename.replace(/-unminified$/, '-build');
             console.log(`Finished compressing ${path.basename}`);
