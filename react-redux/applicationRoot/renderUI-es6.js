@@ -1,4 +1,4 @@
-const Provider = ReactRedux.Provider;
+import { Provider } from 'react-redux';
 import Header from './rootComponents/header';
 import { store } from './store';
 

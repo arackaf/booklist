@@ -1,5 +1,5 @@
 import BookEntryItem from './bookEntryItem';
-
+import { connect } from 'react-redux';
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 const Collapse = ReactBootstrap.Collapse;
@@ -185,6 +185,6 @@ class BookEntryList extends React.Component {
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(state => state.scan, { ...bookEntryActionCreators })(BookEntryList);
+const BookEntryListConnected = connect(state => state.scan, { ...bookEntryActionCreators })(BookEntryList);
 
 export default BookEntryListConnected;
