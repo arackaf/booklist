@@ -1,3 +1,4 @@
+import React from 'react';
 import { Provider } from 'react-redux';
 import Header from './rootComponents/header';
 import { store } from './store';

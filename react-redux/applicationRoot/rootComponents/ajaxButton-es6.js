@@ -1,3 +1,4 @@
+import React from 'react';
 import BootstrapButton from './bootstrapButton';
 
 class AjaxButton extends BootstrapButton {

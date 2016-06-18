@@ -13,15 +13,13 @@ let builder = new Builder({
 builder.config({
     defaultJSExtensions: true,
     map: {
-        'react': 'util/harmless-stub-for-build', //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
-        'reselect': 'util/reselect',
-        'redux': 'node_modules/redux/dist/redux.js',
-        'react-redux': 'node_modules/react-redux/dist/react-redux.js'
-    },
-    meta: {
-        'util/react-dropzone': {
-            format: 'global'
-        }
+        'react': 'node_modules/react/dist/react-with-addons.min.js',
+        'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.min.js',
+        'react-dom': 'node_modules/react-dom/dist/react-dom.min.js',
+        'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
+        'react-redux': 'node_modules/react-redux/dist/react-redux.min.js',
+        'redux': 'node_modules/redux/dist/redux.min.js',
+        'reselect': 'node_modules/reselect/lib/index.js'
     }
 });
 
@@ -100,6 +98,6 @@ function globToTranspiledFiles(globPattern){
 
 function buildEntryToPromise(entry){
     let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' }),
-        whatToBuild = adjustedEntry.module ? adjustedEntry.module + ` - ( ${paths} ) ` : adjustedEntry.path;
+        whatToBuild = adjustedEntry.module ? adjustedEntry.module + ` - ( ${paths} ) - node_modules/* ` : adjustedEntry.path;
     return builder.bundle(whatToBuild, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
 }

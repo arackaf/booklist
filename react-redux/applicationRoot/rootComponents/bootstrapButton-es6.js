@@ -1,3 +1,5 @@
+import React, { Component } from 'react';
+
 const cssPresets = { };
 const buttonTypes = ['default', 'primary', 'success', 'info', 'warning', 'danger'];
 const buttonSizes = ['lg', 'sm', 'xs'];
@@ -9,7 +11,7 @@ buttonTypes.forEach(t => {
     });
 });
 
-class BootstrapButton extends React.Component{
+class BootstrapButton extends Component{
     constructor(props){
         super();
         this.state = { btnCss: (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '') };
