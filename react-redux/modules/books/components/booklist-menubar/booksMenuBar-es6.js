@@ -5,11 +5,12 @@ const NavItem = ReactBootstrap.NavItem;
 const NavDropdown = ReactBootstrap.NavDropdown;
 const DropDownButton = ReactBootstrap.DropDownButton;
 const MenuItem = ReactBootstrap.MenuItem;
-const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
 
-const BootstrapButton = require('root-components/bootstrapButton');
+import HierarchicalSelectableSubjectList from './hierarchicalSelectableSubjectList';
 
-const { bookSearchSelector } = require('modules/books/reducers/bookSearch/reducer');
+import BootstrapButton from 'root-components/bootstrapButton';
+
+import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 
 import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
 import * as mainActionCreatorsTEMP from '../../reducers/books/actionCreators';

@@ -75,7 +75,7 @@ class BookEntryList extends React.Component {
                                     </div>
                                     
                                     <ul>
-                                        <ReactCSSTransitionGroup transitionName="book-scan-results" transitionLeaveTimeout={300}>
+                                        <ReactCSSTransitionGroup transitionEnterTimeout={0} transitionName="book-scan-results" transitionLeaveTimeout={300}>
                                             {this.props.booksJustSaved.map(book => <li style={{ color: book.success ? 'green' : 'red' }} key={book._id}>{book.title}</li>)}
                                         </ReactCSSTransitionGroup>
                                     </ul>
@@ -185,6 +185,6 @@ class BookEntryList extends React.Component {
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(state => state, { ...bookEntryActionCreators })(BookEntryList);
+const BookEntryListConnected = ReactRedux.connect(state => state.scan, { ...bookEntryActionCreators })(BookEntryList);
 
 export default BookEntryListConnected;

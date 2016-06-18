@@ -2,7 +2,7 @@ let ResponsiveNotifier = require('./responsiveChangeNotifier');
 
 const responsiveBsSizes = ['xs', 'sm', 'md', 'lg'];
 
-function responsiveMobileDesktopMixin(self, stateName, config){
+export default function responsiveMobileDesktopMixin(self, stateName, config){
     let currentlyMobile;
 
     const cutoff = config.cutoff || 'sm';
@@ -55,5 +55,3 @@ function responsiveMobileDesktopMixin(self, stateName, config){
         });
     }
 }
-
-module.exports = { responsiveMobileDesktopMixin };

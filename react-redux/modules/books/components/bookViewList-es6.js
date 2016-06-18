@@ -1,6 +1,6 @@
 import { loadSubjects } from '../reducers/subjects/actionCreators';
 import { loadBooks } from '../reducers/books/actionCreators';
-import { responsiveMobileDesktopMixin } from 'react-redux-util/responsiveUiLoaders';
+import responsiveMobileDesktopMixin from 'react-redux-util/responsiveUiLoaders';
 
 import MainNavigationBar from 'root-components/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
@@ -90,5 +90,3 @@ class BookViewingList extends React.Component {
 
 const BookViewingListConnected = ReactRedux.connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects })(BookViewingList);
 export default BookViewingListConnected;
-
-module.exports = BookViewingListConnected;
