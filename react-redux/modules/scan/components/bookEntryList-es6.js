@@ -1,6 +1,9 @@
+import React, { Component } from 'react';
 import BookEntryItem from './bookEntryItem';
 import { connect } from 'react-redux';
-const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+import { addons } from 'react';
+const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 
 import { Collapse } from 'react-bootstrap';
 
@@ -18,7 +21,7 @@ const defaultEmptyBook = () => ({
     authors: ['']
 });
 
-class BookEntryList extends React.Component {
+class BookEntryList extends Component {
     constructor(){
         super();
         this.state = { showIncomingQueue: false, showScanInstructions: false };

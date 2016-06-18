@@ -1,6 +1,7 @@
 import HashUtility, { SerializedHash } from 'util/hashManager';
 import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
+import { createElement } from 'react';
 
 import 'util/ajaxUtil';
 
@@ -40,7 +41,7 @@ export function loadCurrentModule() {
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});
         }
-        renderUI(React.createElement(module.component));
+        renderUI(createElement(module.component));
     });
 }
 

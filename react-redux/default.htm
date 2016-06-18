@@ -5,7 +5,6 @@
     <title>Book tracker</title>
 
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
-    <script type="text/javascript" src="/static/scripts/react-with-addons.js"></script>
     <script type="text/javascript" src="/react-redux/scripts-combined.js"></script>
 
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
@@ -19,25 +18,18 @@
             baseURL: "./",
             defaultJSExtensions: true,
             map: {
-                reselect: 'util/reselect',
-                redux: 'node_modules/redux/dist/redux.js',
+                'react': 'node_modules/react/dist/react-with-addons.js',
+                'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.js',
                 'react-dom': 'node_modules/react-dom/dist/react-dom.js',
+                'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
                 'react-redux': 'node_modules/react-redux/dist/react-redux.js',
-                'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.js'
+                redux: 'node_modules/redux/dist/redux.js',
+                reselect: 'node_modules/reselect/lib/index.js'
             },
-            bundles: effectiveBundles,
-            meta: {
-                'util/react-dropzone': {
-                    format: 'global'
-                }
-            }
+            bundles: effectiveBundles
         };
 
-        window.react = React;
-
         System.config(systemJsConfig);
-
-        System.amdDefine('react', function(){ return React; });
         System.import('reactStartup');
 
         function webSocketAddress(path){

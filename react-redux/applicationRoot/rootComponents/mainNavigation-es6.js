@@ -1,3 +1,5 @@
+import React, { Component } from 'react';
+
 import {
     Navbar,
     Nav,
@@ -6,7 +8,7 @@ import {
 
 import { goHome } from 'reactStartup';
 
-class MainNavigationBar extends React.Component {
+class MainNavigationBar extends Component {
     logout(){
         ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     }

@@ -1,8 +1,9 @@
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 import { findDOMNode } from 'react-dom';
+import React, { Component } from 'react';
 
-class BookEntryItem extends React.Component{
+class BookEntryItem extends Component{
     render(){
         return (
             <div>
