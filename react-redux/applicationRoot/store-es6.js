@@ -1,7 +1,7 @@
-const rootReducer = require('./rootReducer');
-const thunkMiddleware = require('./../util/redux-thunk');
+import rootReducer from './rootReducer';
+import thunkMiddleware from './../util/redux-thunk';
 
-function getNewReducer(reducerObj){
+export function getNewReducer(reducerObj){
     if (!reducerObj) return Redux.combineReducers({ root: rootReducer });
 
     store.replaceReducer(function(){
@@ -20,9 +20,4 @@ const createStoreWithMiddleware = Redux.applyMiddleware(
     thunkMiddleware
 )(Redux.createStore);
 
-const store = createStoreWithMiddleware(getNewReducer());
-
-module.exports = {
-    store,
-    getNewReducer
-};
+export const store = createStoreWithMiddleware(getNewReducer());
