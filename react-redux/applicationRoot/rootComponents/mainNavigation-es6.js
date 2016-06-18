@@ -2,7 +2,7 @@ const Navbar = ReactBootstrap.Navbar;
 const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 
-import { goHome } from 'react-startup';
+import { goHome } from 'reactStartup';
 
 class MainNavigationBar extends React.Component {
     logout(){

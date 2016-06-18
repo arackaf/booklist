@@ -16,7 +16,7 @@ import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreat
 import * as mainActionCreatorsTEMP from '../../reducers/books/actionCreators';
 import * as mainActionCreatorsTEMP2 from '../../reducers/subjects/actionCreators';
 import * as mainActionCreatorsTEMP3 from '../../reducers/booksSubjectModification/actionCreators';
-import { globalHashManager } from 'react-startup';
+import { globalHashManager } from 'reactStartup';
 
 const InputForPending = props => {
     let name = props.name,
