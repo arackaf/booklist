@@ -1,4 +1,4 @@
-const DAO = require('./dao');
+import DAO from './dao';
 const ObjectId = require('mongodb').ObjectID;
 
 class SubjectDAO extends DAO {

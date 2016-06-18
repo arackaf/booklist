@@ -24,10 +24,12 @@ gulp.task('test', function () {
 
 gulp.task('initial-transpile', function () {
     gulp.src(['./**/**-es6.js', '!./controllers/**/*', '!./node_modules/**/*'])
-        .pipe(babel({
+        .pipe(gulpIf(isNodeFolder, babel({
+            presets: ['stage-2', 'es2015']
+        }), babel({
             presets: ['stage-2', 'react'],
-            plugins: ['transform-es2015-modules-commonjs', 'transform-regenerator']
-        }))
+            plugins: ['transform-es2015-modules-commonjs']
+        })))
         .pipe(rename(function (path) {
             path.basename = path.basename.replace(/-es6$/, '');
         }))

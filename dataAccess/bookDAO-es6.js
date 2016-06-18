@@ -1,5 +1,5 @@
 const ObjectId = require('mongodb').ObjectID;
-const DAO = require('./dao');
+import DAO from './dao';
 
 const path = require('path');
 const fs = require('fs');
