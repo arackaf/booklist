@@ -1,5 +1,5 @@
-const BootstrapButton = require('root-components/bootstrapButton');
-const AjaxButton = require('root-components/ajaxButton');
+import BootstrapButton from 'root-components/bootstrapButton';
+import AjaxButton from 'root-components/ajaxButton';
 
 class BookEntryItem extends React.Component{
     render(){
