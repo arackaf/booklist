@@ -5,7 +5,6 @@ const Nav = ReactBootstrap.Nav;
 const NavItem = ReactBootstrap.NavItem;
 import MainNavigationBar from 'root-components/mainNavigation';
 
-
 const MainHomePane = props =>
     <div className="row">
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
@@ -83,7 +82,7 @@ class Home extends React.Component{
     }
     render(){
         return (
-            <div className="container-fluid">
+            <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
                 { this.state.isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn /> }
             </div>
         );

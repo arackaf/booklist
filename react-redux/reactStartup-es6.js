@@ -35,8 +35,7 @@ export function loadCurrentModule() {
     if (module === currentModule) return;
     currentModule = module;
 
-    System.import(`./modules/${module}/${module}`).then(module => {
-        debugger;
+    System.import(`./modules/${module}/${module}`).then(({ default: module }) => {
         clearUI();
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});
