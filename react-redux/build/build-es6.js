@@ -15,28 +15,39 @@ const sharedFilesToBuild = [
 ];
 
 let allSharedUtilities = sharedFilesToBuild.join(' + '),
-    buildOutputs = {},
     builds = [
         'scan', /* 'books', 'home', 'authenticate', */
         { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' ) - react-bootstrap + reselect', saveTo: '../dist/reactStartup' }
     ];
 
-Promise.all(builds.map(buildEntryToPromise)).then(results => {
-    results.forEach(({ module, path, saveTo, results }) => {
-        buildOutputs[saveTo.replace('../dist', 'dist')] = { modules: results.modules };
-    });
+Promise.all([
+    runBuild('dist-es5', undefined),
+    runBuild('dist-es6', undefined)
+]).then(([buildOutputs]) => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs));
 
-    gulp.src(['../dist/**/*-unminified.js'], { base: './' })
-        //.pipe(gulpUglify())
-        .pipe(gulpRename(function (path) {
-            path.basename = path.basename.replace(/-unminified$/, '-build');
-            console.log(`Finished compressing ${path.basename}`);
-        }))
-        .pipe(gulp.dest(''))
-        .on('end', checkBundlesForDupsAndCreateConfigForBrowser);
-}).catch(err => console.log(err));
+function runBuild(distFolder, babelOptions){
+    let buildOutputs = {}
+    return Promise
+        .all(builds.map(createSingleBuild.bind(null, distFolder)))
+        .then(results =>
+            new Promise(function(res){
+                results.forEach(({ module, path, saveTo, results }) => {
+                    buildOutputs[saveTo.replace(`../${distFolder}`, distFolder)] = { modules: results.modules };
+                });
 
-function buildEntryToPromise(entry){
+                gulp.src([`../${distFolder}/**/*-unminified.js`], { base: './' })
+                    //.pipe(gulpUglify())
+                    .pipe(gulpRename(function (path) {
+                        path.basename = path.basename.replace(/-unminified$/, '-build');
+                        console.log(`Finished compressing ${path.basename}`);
+                    }))
+                    .pipe(gulp.dest(''))
+                    .on('end', () => res(buildOutputs));
+            })
+        )
+}
+
+function createSingleBuild(distFolder, entry){
     if (typeof entry === 'string'){
         entry = { module: `modules/${entry}/${entry}`, excludeNpm: true };
     }
@@ -49,12 +60,12 @@ function buildEntryToPromise(entry){
     }
     let builder = new Builder(config);
 
-    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' }),
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
         whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
     return builder.bundle(whatToBuild, adjustedEntry.saveTo, { meta: { 'node_modules/*': { build: false } }, exclude: ['node_modules/*'] }).then(results => Object.assign(adjustedEntry, { results }));
 }
 
-function checkBundlesForDupsAndCreateConfigForBrowser(){
+function checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs){
     let bundleMap = new Map();
 
     let moduleEntries = Object.keys(buildOutputs).map(name => {
