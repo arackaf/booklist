@@ -72,14 +72,14 @@
     <script>
         var isEs6 = false;
 
-        typeof Promise === 'function' ? new Promise(function(res) {
+        new Promise(function(res) {
             setTimeout(res, 500);
             window["Reflect.supports"]("all", function (results, timestamp) {
                 var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring', 'forOf', 'generator', 'letConst',
                     'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
                 isEs6 = !needed.filter(function (prop) { return !results[prop] }).length;
             });
-        }).then(loadSystemJs) : loadSystemJs();
+        }).then(loadSystemJs);
 
         function loadSystemJs() {
             alert(isEs6);
