@@ -1,5 +1,8 @@
 const Builder = require('systemjs-builder');
+const babel = require('gulp-babel');
 const gulpUglify = require('gulp-uglify');
+const gulpIf = require('gulp-if');
+const lazypipe = require('lazypipe');
 const gulpRename = require('gulp-rename');
 const gulp = require('gulp');
 const glob = require('glob');
@@ -21,7 +24,7 @@ let allSharedUtilities = sharedFilesToBuild.join(' + '),
     ];
 
 Promise.all([
-    runBuild('dist-es5', undefined),
+    runBuild('dist-es5', { presets: ['es2015'] }),
     runBuild('dist-es6', undefined)
 ]).then(([buildOutputs]) => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs));
 
@@ -31,19 +34,18 @@ function runBuild(distFolder, babelOptions){
         .all(builds.map(createSingleBuild.bind(null, distFolder)))
         .then(results =>
             new Promise(function(res){
-                results.forEach(({ module, path, saveTo, results }) => {
-                    buildOutputs[saveTo.replace(`../${distFolder}`, distFolder)] = { modules: results.modules };
-                });
+                results.forEach(({ saveTo, results }) => buildOutputs[saveTo.replace(`../${distFolder}`, distFolder)] = { modules: results.modules });
 
                 gulp.src([`../${distFolder}/**/*-unminified.js`], { base: './' })
                     //.pipe(gulpUglify())
+                    .pipe(gulpIf(babelOptions, lazypipe().pipe(babel, babelOptions).pipe(gulp.dest, '')()))
                     .pipe(gulpRename(function (path) {
                         path.basename = path.basename.replace(/-unminified$/, '-build');
                         console.log(`Finished compressing ${path.basename}`);
                     }))
                     .pipe(gulp.dest(''))
                     .on('end', () => res(buildOutputs));
-            })
+            }).catch(err => console.log(err))
         )
 }
 

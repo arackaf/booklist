@@ -19,7 +19,5 @@
     "redux": "3.0.4",
     "redux-thunk": "1.0.0",
     "reselect": "2.0.1"
-  },
-  "devDependencies": {
   }
 }
