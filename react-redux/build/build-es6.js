@@ -8,22 +8,17 @@ const colors = require('colors');
 const concat = require('gulp-concat');
 const { liveConfig } = require('../systemJsConfiguration/systemJs.paths');
 
-let builder = new Builder({
-    baseURL: '../',
-    ...liveConfig
-});
-
 const sharedFilesToBuild = [
     ...globToTranspiledFiles('../applicationRoot/**/*.js'),
     ...globToTranspiledFiles('../util/**/*.js'),
     'reactStartup'
 ];
 
-let paths = sharedFilesToBuild.join(' + '),
+let allSharedUtilities = sharedFilesToBuild.join(' + '),
     buildOutputs = {},
     builds = [
         'scan', /* 'books', 'home', 'authenticate', */
-        //{ module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
+        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' ) - react-bootstrap + reselect', saveTo: '../dist/reactStartup' }
     ];
 
 Promise.all(builds.map(buildEntryToPromise)).then(results => {
@@ -38,10 +33,28 @@ Promise.all(builds.map(buildEntryToPromise)).then(results => {
             console.log(`Finished compressing ${path.basename}`);
         }))
         .pipe(gulp.dest(''))
-        .on('end', createBundlesFileForBrowser);
+        .on('end', checkBundlesForDupsAndCreateConfigForBrowser);
 }).catch(err => console.log(err));
 
-function createBundlesFileForBrowser(){
+function buildEntryToPromise(entry){
+    if (typeof entry === 'string'){
+        entry = { module: `modules/${entry}/${entry}`, excludeNpm: true };
+    }
+    let config = {
+        baseURL: '../',
+        ...liveConfig
+    };
+    if (entry.allowNpm) {
+        config.meta['node_modules/*'] = { build: false };
+    }
+    let builder = new Builder(config);
+
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' }),
+        whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
+    return builder.bundle(whatToBuild, adjustedEntry.saveTo, { meta: { 'node_modules/*': { build: false } }, exclude: ['node_modules/*'] }).then(results => Object.assign(adjustedEntry, { results }));
+}
+
+function checkBundlesForDupsAndCreateConfigForBrowser(){
     let bundleMap = new Map();
 
     let moduleEntries = Object.keys(buildOutputs).map(name => {
@@ -76,13 +89,4 @@ var gBundlePathsTranspiled = {
 function globToTranspiledFiles(globPattern){
     return glob.sync(globPattern)
                .filter(file => !/-es6.js$/.test(file));
-}
-
-function buildEntryToPromise(entry){
-    if (typeof entry === 'string'){
-        entry = { module: `modules/${entry}/${entry}` };
-    }
-    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' }),
-        whatToBuild = adjustedEntry.module ? adjustedEntry.module + ` - ( ${paths} ) - node_modules/* ` : adjustedEntry.path;
-    return builder.bundle(whatToBuild, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
 }
