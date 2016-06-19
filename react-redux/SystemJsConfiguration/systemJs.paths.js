@@ -1,7 +1,3 @@
-function isDev(){
-    return /localhost:3000/.test(window.location.href);
-}
-
 var systemJsDevConfig = {
     defaultJSExtensions: true,
     map: {
