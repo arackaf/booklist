@@ -20,7 +20,7 @@ const sharedFilesToBuild = [
 let allSharedUtilities = sharedFilesToBuild.join(' + '),
     builds = [
         'scan', /* 'books', 'home', 'authenticate', */
-        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' ) - react-bootstrap + reselect', saveTo: '../dist/reactStartup' }
+        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react', 'react-bootstrap'] }
     ];
 
 Promise.all([
@@ -51,14 +51,14 @@ function runBuild(distFolder, babelOptions){
 
 function createSingleBuild(distFolder, entry){
     if (typeof entry === 'string'){
-        entry = { module: `modules/${entry}/${entry}`, excludeNpm: true };
+        entry = { module: `modules/${entry}/${entry}` };
     }
     let config = {
         baseURL: '../',
         ...liveConfig
     };
-    if (entry.allowNpm) {
-        config.meta['node_modules/*'] = { build: false };
+    if (entry.exclude){
+        entry.exclude.forEach(item => config.meta[item] = { build: false });
     }
     let builder = new Builder(config);
 
