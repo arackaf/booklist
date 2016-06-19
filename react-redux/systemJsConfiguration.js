@@ -1,6 +1,7 @@
 
 var gBundlePathsTranspiled = {
-	'dist/modules/scan/scan-build.js': ['modules/scan/scan.js', 'modules/scan/reducers/reducer.js', 'modules/scan/reducers/actionNames.js', 'modules/scan/components/bookEntryList.js', 'modules/scan/reducers/actionCreators.js', 'modules/scan/components/bookEntryItem.js']
+	'dist/modules/scan/scan-build.js': ['modules/scan/scan.js', 'modules/scan/reducers/reducer.js', 'modules/scan/reducers/actionNames.js', 'modules/scan/components/bookEntryList.js', 'modules/scan/reducers/actionCreators.js', 'modules/scan/components/bookEntryItem.js'],
+	'dist/reactStartup-build.js': ['util/responsiveUiLoaders.js', 'util/responsiveChangeNotifier.js', 'util/bootstrap-toolkit.js', 'node_modules/reselect/lib/index.js', 'applicationRoot/rootComponents/manualBookEntry.js', 'node_modules/react-dropzone/dist/index.js', 'applicationRoot/rootComponents/bootstrapButton.js', 'applicationRoot/rootComponents/ajaxButton.js', 'applicationRoot/rootComponents/mainNavigation.js', 'reactStartup.js', 'util/ajaxUtil.js', 'applicationRoot/store.js', 'node_modules/redux/dist/redux.min.js', 'node_modules/redux-thunk/lib/index.js', 'applicationRoot/rootReducer.js', 'applicationRoot/renderUI.js', 'applicationRoot/rootComponents/header.js', 'node_modules/react-redux/dist/react-redux.min.js', 'util/hashManager.js']
 }
 var systemJsDevConfig = {
     defaultJSExtensions: true,
@@ -13,6 +14,9 @@ var systemJsDevConfig = {
         redux: 'node_modules/redux/dist/redux.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         reselect: 'node_modules/reselect/lib/index.js'
+    },
+    meta: {
+
     }
 }
 
@@ -27,15 +31,15 @@ var systemJsLiveConfig = {
         'redux': 'node_modules/redux/dist/redux.min.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         'reselect': 'node_modules/reselect/lib/index.js'
+    },
+    meta: {
+
     }
 }
 
-if (typeof module !== 'undefined'){
+if (module){
     module.exports.devConfig = systemJsDevConfig;
     module.exports.liveConfig = systemJsLiveConfig;
 } else {
-    window.systemJsConfigs = {
-        dev: systemJsDevConfig,
-        live: systemJsLiveConfig
-    };
+    window.systemJsBaseConfig = isDev() ? systemJsDevConfig : systemJsLiveConfig;
 }

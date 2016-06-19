@@ -9,6 +9,9 @@ var systemJsDevConfig = {
         redux: 'node_modules/redux/dist/redux.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         reselect: 'node_modules/reselect/lib/index.js'
+    },
+    meta: {
+
     }
 }
 
@@ -23,6 +26,9 @@ var systemJsLiveConfig = {
         'redux': 'node_modules/redux/dist/redux.min.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         'reselect': 'node_modules/reselect/lib/index.js'
+    },
+    meta: {
+
     }
 }
 
