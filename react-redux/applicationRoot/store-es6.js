@@ -1,5 +1,5 @@
 import rootReducer from './rootReducer';
-import thunkMiddleware from './../util/redux-thunk';
+import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 
 export function getNewReducer(reducerObj){

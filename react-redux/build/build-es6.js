@@ -19,6 +19,7 @@ builder.config({
         'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
         'react-redux': 'node_modules/react-redux/dist/react-redux.min.js',
         'redux': 'node_modules/redux/dist/redux.min.js',
+        'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         'reselect': 'node_modules/reselect/lib/index.js'
     }
 });
@@ -84,11 +85,6 @@ var gBundlePaths = {
 `
 
     fs.writeFileSync('../dist/bundlePaths.js', fileContents);
-
-    const scriptsToCombine = ['system', 'bootstrap-toolkit'];
-    gulp.src(scriptsToCombine.map(s => `../../static/scripts/${s}.js`).concat('../dist/bundlePaths.js'))
-        .pipe(concat('scripts-combined.js', { newLine: '\r\n\r\n;\r\n\r\n' }))
-        .pipe(gulp.dest('../'));
 }
 
 function globToTranspiledFiles(globPattern){
