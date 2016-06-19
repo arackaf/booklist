@@ -78,6 +78,7 @@
                 var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
                               'forOf', 'generator', 'letConst', 'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
                 isEs6 = !needed.some(function (prop) { return !results[prop] });
+                res();
             });
         }).then(loadSystemJs);
 
