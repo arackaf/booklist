@@ -13,40 +13,9 @@
 
     <script type="text/javascript">
 
-        var effectiveBundles = /localhost:3000/.test(window.location.href) ? undefined : gBundlePaths;
-
-        if (/localhost:3000/.test(window.location.href)){
-            System.config(systemJsConfigs.dev);
-        } else {
-            System.config(Object.assign({}, systemJsConfigs.dev, { bundles: gBundlePathsTranspiled }));
-        }
-
-
-        //System.config(systemJsConfig);
-        System.import('reactStartup');
-
         function webSocketAddress(path){
             return 'ws://' + window.location.host + (path || '');
         }
-
-//        var ws = new WebSocket(webSocketAddress('/bookEntryWS'));
-//
-//        var i = 1;
-//        ws.onopen = function(){
-//            console.log('client open');
-//            ws.send('my message');
-//            setInterval(function(){
-//                if (ws.readyState === WebSocket.OPEN) {
-//                    ws.send('my message from client', i++)
-//                } else {
-//                    console.log('connection closed');
-//                }
-//            }, 3000);
-//        };
-//
-//        ws.onmessage = function(data){
-//            console.log('from node', data.data);
-//        };
 
     </script>
 
@@ -98,6 +67,33 @@
 </head>
 <body>
     <div id="home"></div>
+
+    <script src="https://featuretests.io/rs.js"></script>
+    <script>
+        var isEs6 = false;
+
+        typeof Promise === 'function' ? new Promise(function(res) {
+            setTimeout(res, 500);
+            window["Reflect.supports"]("all", function (results, timestamp) {
+                var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring', 'forOf', 'generator', 'letConst',
+                    'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
+                isEs6 = !needed.filter(function (prop) { return !results[prop] }).length;
+            });
+        }).then(loadSystemJs) : loadSystemJs();
+
+        function loadSystemJs() {
+            alert(isEs6);
+            var effectiveBundles = /localhost:3000/.test(window.location.href) ? undefined : gBundlePaths;
+
+            if (/localhost:3000/.test(window.location.href)) {
+                System.config(systemJsConfigs.dev);
+            } else {
+                System.config(Object.assign({}, systemJsConfigs.dev, {bundles: gBundlePathsTranspiled}));
+            }
+
+            System.import('reactStartup');
+        }
+    </script>
 
 </body>
 </html>
