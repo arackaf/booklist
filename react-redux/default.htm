@@ -74,21 +74,20 @@
 
         new Promise(function(res) {
             setTimeout(res, 500);
-            window["Reflect.supports"]("all", function (results, timestamp) {
-                var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring', 'forOf', 'generator', 'letConst',
-                    'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
-                isEs6 = !needed.filter(function (prop) { return !results[prop] }).length;
+            window["Reflect.supports"]("all", function (results) {
+                var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
+                              'forOf', 'generator', 'letConst', 'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
+                isEs6 = !needed.some(function (prop) { return !results[prop] });
             });
         }).then(loadSystemJs);
 
         function loadSystemJs() {
-            alert(isEs6);
             var effectiveBundles = /localhost:3000/.test(window.location.href) ? undefined : gBundlePaths;
 
             if (/localhost:3000/.test(window.location.href)) {
                 System.config(systemJsConfigs.dev);
             } else {
-                System.config(Object.assign({}, systemJsConfigs.dev, {bundles: gBundlePathsTranspiled}));
+                System.config(Object.assign({}, systemJsConfigs.live, { bundles: gBundlePathsTranspiled }));
             }
 
             System.import('reactStartup');
