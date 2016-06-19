@@ -11,14 +11,6 @@
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
 
-    <script type="text/javascript">
-
-        function webSocketAddress(path){
-            return 'ws://' + window.location.host + (path || '');
-        }
-
-    </script>
-
     <style type="text/css">
         a { cursor: pointer; }
         a.no-underline { text-decoration: none; }
@@ -71,6 +63,9 @@
     <script src="https://featuretests.io/rs.js"></script>
     <script>
         var isEs6 = false;
+        function webSocketAddress(path){
+            return 'ws://' + window.location.host + (path || '');
+        }
 
         new Promise(function(res) {
             setTimeout(res, 500);
