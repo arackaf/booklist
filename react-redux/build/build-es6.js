@@ -6,22 +6,11 @@ const glob = require('glob');
 const fs = require('fs');
 const colors = require('colors');
 const concat = require('gulp-concat');
+const { liveConfig } = require('../systemJs.paths');
 
 let builder = new Builder({
-    baseURL: '../'
-});
-builder.config({
-    defaultJSExtensions: true,
-    map: {
-        'react': 'node_modules/react/dist/react-with-addons.min.js',
-        'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.min.js',
-        'react-dom': 'node_modules/react-dom/dist/react-dom.min.js',
-        'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
-        'react-redux': 'node_modules/react-redux/dist/react-redux.min.js',
-        'redux': 'node_modules/redux/dist/redux.min.js',
-        'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
-        'reselect': 'node_modules/reselect/lib/index.js'
-    }
+    baseURL: '../',
+    ...liveConfig
 });
 
 const sharedFilesToBuild = [
@@ -33,10 +22,7 @@ const sharedFilesToBuild = [
 let paths = sharedFilesToBuild.join(' + '),
     buildOutputs = {},
     builds = [
-        //{ module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
-        { module: 'modules/scan/scan' },
-        //{ module: 'modules/home/home', path: 'modules/home/home - (' + paths + ')' },
-        //{ module: 'modules/authenticate/authenticate', path: 'modules/authenticate/authenticate - (' + paths + ')' },
+        'scan', /* 'books', 'home', 'authenticate', */
         //{ module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
     ];
 
@@ -77,14 +63,11 @@ function createBundlesFileForBrowser(){
         }
     }
 
-    let fileContents =
-`
-var gBundlePaths = {
+    fs.writeFileSync('../bundlePathsTranspiled.js', `
+var gBundlePathsTranspiled = {
 \t${moduleEntries}
-}
-`
-
-    fs.writeFileSync('../dist/bundlePaths.js', fileContents);
+}`
+    );
 }
 
 function globToTranspiledFiles(globPattern){
@@ -93,6 +76,9 @@ function globToTranspiledFiles(globPattern){
 }
 
 function buildEntryToPromise(entry){
+    if (typeof entry === 'string'){
+        entry = { module: `modules/${entry}/${entry}` };
+    }
     let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' }),
         whatToBuild = adjustedEntry.module ? adjustedEntry.module + ` - ( ${paths} ) - node_modules/* ` : adjustedEntry.path;
     return builder.bundle(whatToBuild, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
