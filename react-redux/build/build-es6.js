@@ -6,7 +6,7 @@ const glob = require('glob');
 const fs = require('fs');
 const colors = require('colors');
 const concat = require('gulp-concat');
-const { liveConfig } = require('../systemJs.paths');
+const { liveConfig } = require('../systemJsConfiguration/systemJs.paths');
 
 let builder = new Builder({
     baseURL: '../',
@@ -31,7 +31,7 @@ Promise.all(builds.map(buildEntryToPromise)).then(results => {
         buildOutputs[saveTo.replace('../dist', 'dist')] = { modules: results.modules };
     });
 
-    gulp.src(['../dist/**/*-unminified.js'], {base: './'})
+    gulp.src(['../dist/**/*-unminified.js'], { base: './' })
         //.pipe(gulpUglify())
         .pipe(gulpRename(function (path) {
             path.basename = path.basename.replace(/-unminified$/, '-build');
@@ -63,11 +63,14 @@ function createBundlesFileForBrowser(){
         }
     }
 
-    fs.writeFileSync('../bundlePathsTranspiled.js', `
+    fs.writeFileSync('../systemJsConfiguration/bundlePathsTranspiled.js', `
 var gBundlePathsTranspiled = {
 \t${moduleEntries}
-}`
-    );
+}`);
+
+    gulp.src('../systemJsConfiguration/**/*.js', { base: './' })
+        .pipe(concat('../systemJsConfiguration.js'))
+        .pipe(gulp.dest(''));
 }
 
 function globToTranspiledFiles(globPattern){

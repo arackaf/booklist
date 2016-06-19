@@ -6,6 +6,7 @@
 
     <script type="text/javascript" src="system.js"></script>
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
+    <script type="text/javascript" src="systemJsConfiguration.js"></script>
 
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
@@ -14,23 +15,14 @@
 
         var effectiveBundles = /localhost:3000/.test(window.location.href) ? undefined : gBundlePaths;
 
-        var systemJsConfig = {
-            baseURL: "./",
-            defaultJSExtensions: true,
-            map: {
-                'react': 'node_modules/react/dist/react-with-addons.js',
-                'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.js',
-                'react-dom': 'node_modules/react-dom/dist/react-dom.js',
-                'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
-                'react-redux': 'node_modules/react-redux/dist/react-redux.js',
-                redux: 'node_modules/redux/dist/redux.js',
-                'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
-                reselect: 'node_modules/reselect/lib/index.js'
-            },
-            bundles: effectiveBundles
-        };
+        if (/localhost:3000/.test(window.location.href)){
+            System.config(systemJsConfigs.dev);
+        } else {
+            System.config(Object.assign({}, systemJsConfigs.dev, { bundles: gBundlePathsTranspiled }));
+        }
 
-        System.config(systemJsConfig);
+
+        //System.config(systemJsConfig);
         System.import('reactStartup');
 
         function webSocketAddress(path){
