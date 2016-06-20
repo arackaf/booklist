@@ -1,5 +1,5 @@
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import AjaxButton from 'root-components/ajaxButton';
+import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModification/reducer';
 import * as bookSubjectActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
