@@ -1,3 +1,4 @@
+import React from 'react';
 import { Collapse } from 'react-bootstrap';
 
 class HierarchicalSelectableSubjectItem extends React.Component {

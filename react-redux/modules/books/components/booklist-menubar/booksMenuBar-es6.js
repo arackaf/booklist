@@ -1,3 +1,5 @@
+import React from 'react';
+import { connect } from 'react-redux';
 import {
     Modal,
     Nav,
@@ -185,6 +187,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP, ...mainActionCreatorsTEMP2, ...mainActionCreatorsTEMP3 })(BooksMenuBar);
+const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP, ...mainActionCreatorsTEMP2, ...mainActionCreatorsTEMP3 })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

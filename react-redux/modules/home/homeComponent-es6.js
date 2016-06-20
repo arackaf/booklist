@@ -1,3 +1,4 @@
+import React from 'react';
 import { isLoggedIn, goHome } from 'reactStartup';
 
 import {
