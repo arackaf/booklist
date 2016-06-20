@@ -1,10 +1,12 @@
-const Modal = ReactBootstrap.Modal;
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
-const NavDropdown = ReactBootstrap.NavDropdown;
-const DropDownButton = ReactBootstrap.DropDownButton;
-const MenuItem = ReactBootstrap.MenuItem;
+import {
+    Modal,
+    Nav,
+    Navbar,
+    NavItem,
+    NavDropdown,
+    DropDownButton,
+    MenuItem
+} from 'react-bootstrap';
 
 import HierarchicalSelectableSubjectList from './hierarchicalSelectableSubjectList';
 

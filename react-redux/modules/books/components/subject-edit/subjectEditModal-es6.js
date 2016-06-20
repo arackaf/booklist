@@ -1,4 +1,4 @@
-const Modal = ReactBootstrap.Modal;
+import { Modal } from 'react-bootstrap';
 
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import * as actionCreators from '../../reducers/subjects/actionCreators';

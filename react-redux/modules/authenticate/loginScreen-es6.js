@@ -1,9 +1,11 @@
 import { loadCurrentModule, goHome } from 'reactStartup';
 import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
+import {
+    Nav,
+    Navbar,
+    NavItem
+} from 'react-bootstrap';
 
 const errorCodes = {
     s1: 'This user already exists',
