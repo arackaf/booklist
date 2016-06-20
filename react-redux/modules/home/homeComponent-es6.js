@@ -1,8 +1,11 @@
 import { isLoggedIn, goHome } from 'reactStartup';
 
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
+import {
+    Nav,
+    Navbar,
+    NavItem
+} from 'react-bootstrap';
+
 import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 
 const MainHomePane = props =>

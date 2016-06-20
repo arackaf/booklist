@@ -1,4 +1,4 @@
-const Collapse = ReactBootstrap.Collapse;
+import { Collapse } from 'react-bootstrap';
 
 class HierarchicalSelectableSubjectItem extends React.Component {
     constructor(){
