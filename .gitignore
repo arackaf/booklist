@@ -162,3 +162,5 @@ react-redux/tests/subjectMongoUpdateTests.js
 react-redux/tests/amazonOperationQueue.js
 react-redux/dist-es5/
 react-redux/dist-es6/
+react-redux/systemJsConfiguration.js
+react-redux/systemJsConfiguration/bundlePathsTranspiled.js

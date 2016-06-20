@@ -34,11 +34,11 @@ function runBuild(distFolder, babelOptions){
         .all(builds.map(createSingleBuild.bind(null, distFolder)))
         .then(results =>
             new Promise(function(res){
-                results.forEach(({ saveTo, results }) => buildOutputs[saveTo.replace(`../${distFolder}`, distFolder)] = { modules: results.modules });
+                results.forEach(({ saveTo, results }) => buildOutputs[saveTo.replace(`../dist`, 'dist-bundles')] = { modules: results.modules });
 
                 gulp.src([`../${distFolder}/**/*-unminified.js`], { base: './' })
-                    //.pipe(gulpUglify())
                     .pipe(gulpIf(babelOptions, lazypipe().pipe(babel, babelOptions).pipe(gulp.dest, '')()))
+                    .pipe(gulpIf(babelOptions, gulpUglify()))
                     .pipe(gulpRename(function (path) {
                         path.basename = path.basename.replace(/-unminified$/, '-build');
                         console.log(`Finished compressing ${path.basename}`);
@@ -62,7 +62,7 @@ function createSingleBuild(distFolder, entry){
     }
     let builder = new Builder(config);
 
-    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo :  `../dist/` + entry.module) + '-unminified.js' }),
         whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
     return builder.bundle(whatToBuild, adjustedEntry.saveTo, { meta: { 'node_modules/*': { build: false } }, exclude: ['node_modules/*'] }).then(results => Object.assign(adjustedEntry, { results }));
 }
