@@ -67,25 +67,28 @@
             return 'ws://' + window.location.host + (path || '');
         }
 
-        new Promise(function(res) {
-            setTimeout(res, 500);
-            window["Reflect.supports"]("all", function (results) {
-                var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
-                              'forOf', 'generator', 'letConst', 'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
-                isEs6 = !needed.some(function (prop) { return !results[prop] });
-                res();
-            });
-        }).then(loadSystemJs);
+        var isDev = !/localhost:3000/.test(window.location.href);
+        if (isDev){
+            loadSystemJs();
+        } else {
+            new Promise(function (res) {
+                setTimeout(res, 500);
+                window["Reflect.supports"]("all", function (results) {
+                    var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
+                                  'forOf', 'generator', 'letConst', 'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
+                    isEs6 = !needed.some(function (prop) { return !results[prop] });
+                    res();
+                });
+            }).then(loadSystemJs);
+        }
 
         function loadSystemJs() {
-            var effectiveBundles = /localhost:3000/.test(window.location.href) ? undefined : gBundlePaths;
-
-            if (/localhost:3000/.test(window.location.href)) {
-                System.config(systemJsConfigs.dev);
-            } else {
-                System.config(Object.assign({}, systemJsConfigs.live, { bundles: gBundlePathsTranspiled }));
+            var config = isDev ? systemJsConfigs.dev : systemJsConfigs.live;
+            if (!isDev){
+                config.map['dist-bundles'] = isEs6 ? 'dist-es6' : 'dist-es5';
+                config.bundles = gBundlePathsTranspiled;
             }
-
+            System.config(config);
             System.import('reactStartup');
         }
     </script>
