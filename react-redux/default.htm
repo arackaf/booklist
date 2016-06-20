@@ -67,7 +67,7 @@
             return 'ws://' + window.location.host + (path || '');
         }
 
-        var isDev = !/localhost:3000/.test(window.location.href);
+        var isDev = /localhost:3000/.test(window.location.href);
         if (isDev){
             loadSystemJs();
         } else {
@@ -83,7 +83,7 @@
         }
 
         function loadSystemJs() {
-            var config = isDev ? systemJsConfigs.dev : systemJsConfigs.live;
+            var config = isDev ? systemJsDevConfig : systemJsLiveConfig;
             if (!isDev){
                 config.map['dist-bundles'] = isEs6 ? 'dist-es6' : 'dist-es5';
                 config.bundles = gBundlePathsTranspiled;

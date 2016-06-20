@@ -19,7 +19,7 @@ const sharedFilesToBuild = [
 
 let allSharedUtilities = sharedFilesToBuild.join(' + '),
     builds = [
-        'scan', /* 'books', 'home', 'authenticate', */
+        'scan', 'books', 'home', 'authenticate',
         { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react', 'react-bootstrap'] }
     ];
 
@@ -46,7 +46,7 @@ function runBuild(distFolder, babelOptions){
                     .pipe(gulp.dest(''))
                     .on('end', () => res(buildOutputs));
             }).catch(err => console.log(err))
-        )
+        ).catch(err => console.log(err));
 }
 
 function createSingleBuild(distFolder, entry){
@@ -62,7 +62,7 @@ function createSingleBuild(distFolder, entry){
     }
     let builder = new Builder(config);
 
-    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo :  `../dist/` + entry.module) + '-unminified.js' }),
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
         whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
     return builder.bundle(whatToBuild, adjustedEntry.saveTo, { meta: { 'node_modules/*': { build: false } }, exclude: ['node_modules/*'] }).then(results => Object.assign(adjustedEntry, { results }));
 }
