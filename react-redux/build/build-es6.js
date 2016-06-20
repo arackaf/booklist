@@ -26,7 +26,7 @@ let allSharedUtilities = sharedFilesToBuild.join(' + '),
 Promise.all([
     runBuild('dist-es5', { presets: ['es2015'] }),
     runBuild('dist-es6', undefined)
-]).then(([buildOutputs]) => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs));
+]).then(([buildOutputs]) => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs)).catch(err => console.log(err));
 
 function runBuild(distFolder, babelOptions){
     let buildOutputs = {}
@@ -34,7 +34,7 @@ function runBuild(distFolder, babelOptions){
         .all(builds.map(createSingleBuild.bind(null, distFolder)))
         .then(results =>
             new Promise(function(res){
-                results.forEach(({ saveTo, results }) => buildOutputs[saveTo.replace(`../dist`, 'dist-bundles')] = { modules: results.modules });
+                results.forEach(({ saveTo, results }) => buildOutputs[saveTo] = { modules: results.modules });
 
                 gulp.src([`../${distFolder}/**/*-unminified.js`], { base: './' })
                     .pipe(gulpIf(babelOptions, lazypipe().pipe(babel, babelOptions).pipe(gulp.dest, '')()))
@@ -64,13 +64,14 @@ function createSingleBuild(distFolder, entry){
 
     let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
         whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
-    return builder.bundle(whatToBuild, adjustedEntry.saveTo, { meta: { 'node_modules/*': { build: false } }, exclude: ['node_modules/*'] }).then(results => Object.assign(adjustedEntry, { results }));
+    return builder.bundle(whatToBuild, adjustedEntry.saveTo)
+                  .then(results => Object.assign(adjustedEntry, { results }));
 }
 
 function checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs){
     let bundleMap = new Map();
-
     let moduleEntries = Object.keys(buildOutputs).map(name => {
+        let keyName = name.replace('../dist-es5', 'dist-bundles');
         buildOutputs[name].modules.forEach(bundleContentItem => {
             if (!bundleMap.has(bundleContentItem)) {
                 bundleMap.set(bundleContentItem, []);
@@ -79,7 +80,7 @@ function checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs){
         });
         let entry = buildOutputs[name],
             modulesArray = entry.modules.map(n => `'${n}'`).join(', ');
-        return `'${name.replace(/-unminified.js$/, '-build.js')}': [${modulesArray}]`;
+        return `'${keyName.replace(/-unminified.js$/, '-build.js')}': [${modulesArray}]`;
     }).join(',\n\t');
 
     for (let dep of bundleMap.keys()){

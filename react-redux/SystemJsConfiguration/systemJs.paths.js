@@ -32,9 +32,9 @@ var systemJsLiveConfig = {
     }
 }
 
-if (module){
+if (typeof module != 'undefined'){
     module.exports.devConfig = systemJsDevConfig;
     module.exports.liveConfig = systemJsLiveConfig;
 } else {
-    window.systemJsBaseConfig = isDev() ? systemJsDevConfig : systemJsLiveConfig;
+    //leave the global variables because meh
 }
