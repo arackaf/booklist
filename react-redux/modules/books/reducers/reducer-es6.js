@@ -1,10 +1,11 @@
+import { combineReducers } from 'redux';
 import { booksReducer as books, booksSelector } from './books/reducer';
 import { subjectsReducer as subjects, subjectsSelector } from './subjects/reducer';
 import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
 import bookEdit from './editBook/reducer';
 
-export const reducer = Redux.combineReducers({
+export const reducer = combineReducers({
     books,
     subjects,
     bookSearch,

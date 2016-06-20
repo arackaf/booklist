@@ -1,3 +1,4 @@
+import React from 'react';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import { Collapse } from 'react-bootstrap';
 

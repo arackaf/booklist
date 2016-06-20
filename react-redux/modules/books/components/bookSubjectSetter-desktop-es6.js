@@ -1,3 +1,5 @@
+import React from 'react';
+import { connect } from 'react-redux';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModification/reducer';
@@ -61,6 +63,6 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
     }
 }
 
-const BookSubjectSetterDesktop = ReactRedux.connect(state => booksSubjectsModifierSelector(state.books), { ...bookSubjectActionCreators })(BookSubjectSetterDesktopUnConnected);
+const BookSubjectSetterDesktop = connect(state => booksSubjectsModifierSelector(state.books), { ...bookSubjectActionCreators })(BookSubjectSetterDesktopUnConnected);
 
 export default BookSubjectSetterDesktop;
