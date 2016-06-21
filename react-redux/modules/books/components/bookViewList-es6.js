@@ -18,11 +18,11 @@ import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import { selector } from '../reducers/reducer';
 
 function BookListLoading() {
-    return <div style={{ height: '150' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
+    return <div style={{ height: '150px' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
 }
 
 function BookListNoResults() {
-    return <div style={{ height: '150' }}>No results</div>
+    return <div style={{ height: '150px' }}>No results</div>
 }
 
 class BookViewingList extends React.Component {
@@ -44,7 +44,7 @@ class BookViewingList extends React.Component {
         return (
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
-                <div className="panel panel-default" style={{ margin: '10' }}>
+                <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar
                         selectedBooksCount={this.props.books.selectedBooksCount}
                         allSubjects={this.props.subjects.list}
