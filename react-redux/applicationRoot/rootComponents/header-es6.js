@@ -1,12 +1,12 @@
-let Provider = ReactRedux.Provider;
-
-let { store } = require('../store');
+import React, { Component } from 'react';
+import { Provider, connect } from 'react-redux';
+import { store } from '../store';
 
 function projectState(state){
     return state;
 }
 
-class Header extends React.Component {
+class Header extends Component {
     render() {
         return (
             <div>{ this.props.root.module }</div>
@@ -14,6 +14,6 @@ class Header extends React.Component {
     }
 }
 
-Header = ReactRedux.connect(projectState)(Header);
+Header = connect(projectState)(Header);
 
-module.exports = Header;
+export default Header;

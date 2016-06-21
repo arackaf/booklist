@@ -1,3 +1,5 @@
+import ResponsiveBootstrapToolkit from 'util/bootstrap-toolkit';
+
 class ResponsiveNotifier{
     constructor(cb){
         this.notifySize = function notifySize(){
@@ -26,4 +28,4 @@ class ResponsiveNotifier{
     }
 }
 
-module.exports = ResponsiveNotifier;
+export default ResponsiveNotifier;

@@ -20,7 +20,7 @@ const initialState = {
     }
 };
 
-function bookSearchReducer(state = initialState, action){
+export function bookSearchReducer(state = initialState, action){
     switch(action.type){
         case SET_FILTERS:
             let newSearchFields = {};
@@ -43,6 +43,4 @@ function projectselectedSubjects(selectedSubjectsIds, subjects){
     return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]).filter(s => s);
 }
 
-const bookSearchSelector = state => Object.assign({}, state.bookSearch, { selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash) });
-
-module.exports = { bookSearchReducer, bookSearchSelector };
+export const bookSearchSelector = state => Object.assign({}, state.bookSearch, { selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash) });

@@ -1,6 +1,6 @@
-const DAO = require('./dao');
+import DAO from './dao';
 
-export default class CompletedEntriesDao extends DAO {
+class CompletedEntriesDao extends DAO {
     async logCompletedEntry(userId, isbn, bookFound){
         let db = await super.open();
         try {
@@ -19,3 +19,5 @@ export default class CompletedEntriesDao extends DAO {
         }
     }
 }
+
+export default CompletedEntriesDao;

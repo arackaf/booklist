@@ -1,66 +1,77 @@
 const Builder = require('systemjs-builder');
+const babel = require('gulp-babel');
 const gulpUglify = require('gulp-uglify');
+const gulpIf = require('gulp-if');
+const lazypipe = require('lazypipe');
 const gulpRename = require('gulp-rename');
 const gulp = require('gulp');
 const glob = require('glob');
 const fs = require('fs');
 const colors = require('colors');
 const concat = require('gulp-concat');
-
-let builder = new Builder({
-    baseURL: '../'
-});
-builder.config({
-    defaultJSExtensions: true,
-    map: {
-        'react-redux-util': 'util',
-        'root-components': 'applicationRoot/rootComponents',
-        'application-root': 'applicationRoot',
-        'react-startup': 'reactStartup',
-        'react': 'util/harmless-stub-for-build', //stubbing it here just so builder can find SOMETHING and not error out before excluding the file anyway
-        'reselect': 'util/reselect'
-    },
-    meta: {
-        'util/react-dropzone': {
-            format: 'global'
-        }
-    }
-});
+const { liveConfig } = require('../systemJsConfiguration/systemJs.paths');
 
 const sharedFilesToBuild = [
     ...globToTranspiledFiles('../applicationRoot/**/*.js'),
-    ...globToTranspiledFiles('../util/**/*.js')
+    ...globToTranspiledFiles('../util/**/*.js'),
+    'reactStartup'
 ];
 
-let paths = sharedFilesToBuild.join(' + '),
-    buildOutputs = {},
+let allSharedUtilities = sharedFilesToBuild.join(' + '),
     builds = [
-        { module: 'modules/books/books', path: 'modules/books/books - (' + paths + ')' },
-        { module: 'modules/scan/scan', path: 'modules/scan/scan - (' + paths + ')' },
-        { module: 'modules/home/home', path: 'modules/home/home - (' + paths + ')' },
-        { module: 'modules/authenticate/authenticate', path: 'modules/authenticate/authenticate - (' + paths + ')' },
-        { module: 'reactStartup', path: 'reactStartup + ' + paths + ' - react', saveTo: '../dist/reactStartup' }
+        'scan', 'books', 'home', 'authenticate',
+        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react', 'react-bootstrap'] }
     ];
 
-Promise.all(builds.map(buildEntryToPromise)).then(results => {
-    results.forEach(({ module, path, saveTo, results }) => {
-        buildOutputs[saveTo.replace('../dist', 'dist')] = { modules: results.modules };
-    });
+Promise.all([
+    runBuild('dist-es5', { presets: ['es2015'] }),
+    runBuild('dist-es6', undefined)
+]).then(([buildOutputs]) => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs)).catch(err => console.log(err));
 
-    gulp.src(['../dist/**/*-unminified.js'], {base: './'})
-        .pipe(gulpUglify())
-        .pipe(gulpRename(function (path) {
-            path.basename = path.basename.replace(/-unminified$/, '-build');
-            console.log(`Finished compressing ${path.basename}`);
-        }))
-        .pipe(gulp.dest(''))
-        .on('end', createBundlesFileForBrowser);
-}).catch(err => console.log(err));
+function runBuild(distFolder, babelOptions){
+    let buildOutputs = {}
+    return Promise
+        .all(builds.map(createSingleBuild.bind(null, distFolder)))
+        .then(results =>
+            new Promise(function(res){
+                results.forEach(({ saveTo, results }) => buildOutputs[saveTo] = { modules: results.modules });
 
-function createBundlesFileForBrowser(){
+                gulp.src([`../${distFolder}/**/*-unminified.js`], { base: './' })
+                    .pipe(gulpIf(babelOptions, lazypipe().pipe(babel, babelOptions).pipe(gulp.dest, '')()))
+                    .pipe(gulpIf(babelOptions, gulpUglify()))
+                    .pipe(gulpRename(function (path) {
+                        path.basename = path.basename.replace(/-unminified$/, '-build');
+                        console.log(`Finished compressing ${path.basename}`);
+                    }))
+                    .pipe(gulp.dest(''))
+                    .on('end', () => res(buildOutputs));
+            }).catch(err => console.log(err))
+        ).catch(err => console.log(err));
+}
+
+function createSingleBuild(distFolder, entry){
+    if (typeof entry === 'string'){
+        entry = { module: `modules/${entry}/${entry}` };
+    }
+    let config = {
+        baseURL: '../',
+        ...liveConfig
+    };
+    if (entry.exclude){
+        entry.exclude.forEach(item => config.meta[item] = { build: false });
+    }
+    let builder = new Builder(config);
+
+    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
+        whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
+    return builder.bundle(whatToBuild, adjustedEntry.saveTo)
+                  .then(results => Object.assign(adjustedEntry, { results }));
+}
+
+function checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs){
     let bundleMap = new Map();
-
     let moduleEntries = Object.keys(buildOutputs).map(name => {
+        let keyName = name.replace('../dist-es5', 'dist-bundles');
         buildOutputs[name].modules.forEach(bundleContentItem => {
             if (!bundleMap.has(bundleContentItem)) {
                 bundleMap.set(bundleContentItem, []);
@@ -69,7 +80,7 @@ function createBundlesFileForBrowser(){
         });
         let entry = buildOutputs[name],
             modulesArray = entry.modules.map(n => `'${n}'`).join(', ');
-        return `'${name.replace(/-unminified.js$/, '-build.js')}': [${modulesArray}]`;
+        return `'${keyName.replace(/-unminified.js$/, '-build.js')}': [${modulesArray}]`;
     }).join(',\n\t');
 
     for (let dep of bundleMap.keys()){
@@ -79,27 +90,17 @@ function createBundlesFileForBrowser(){
         }
     }
 
-    let fileContents =
-`
-var gBundlePaths = {
+    fs.writeFileSync('../systemJsConfiguration/bundlePathsTranspiled.js', `
+var gBundlePathsTranspiled = {
 \t${moduleEntries}
-}
-`
+}`);
 
-    fs.writeFileSync('../dist/bundlePaths.js', fileContents);
-
-    const scriptsToCombine = ['system', 'react-dom', 'redux', 'react-redux', 'bootstrap-toolkit'];
-    gulp.src(scriptsToCombine.map(s => `../../static/scripts/${s}.js`).concat('../dist/bundlePaths.js'))
-        .pipe(concat('scripts-combined.js', { newLine: '\r\n\r\n;\r\n\r\n' }))
-        .pipe(gulp.dest('../'));
+    gulp.src('../systemJsConfiguration/**/*.js', { base: './' })
+        .pipe(concat('../systemJsConfiguration.js'))
+        .pipe(gulp.dest(''));
 }
 
 function globToTranspiledFiles(globPattern){
     return glob.sync(globPattern)
                .filter(file => !/-es6.js$/.test(file));
-}
-
-function buildEntryToPromise(entry){
-    let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo || '../dist/' + entry.module) + '-unminified.js' });
-    return builder.bundle(adjustedEntry.path, adjustedEntry.saveTo).then(results => Object.assign(adjustedEntry, { results }));
 }

@@ -1,9 +1,12 @@
-import { isLoggedIn, globalHashManager } from 'react-startup';
+import { isLoggedIn, globalHashManager } from 'reactStartup';
 
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
-import MainNavigationBar from 'root-components/mainNavigation';
+import {
+    Nav,
+    Navbar,
+    NavItem
+} from 'react-bootstrap';
+
+import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 
 const MainActivatePane = props =>
     <div className="row">

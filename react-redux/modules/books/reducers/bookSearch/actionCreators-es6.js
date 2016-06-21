@@ -10,7 +10,7 @@ import {
 
 import { loadBooks } from '../books/actionCreators';
 
-import { globalHashManager } from 'react-startup';
+import { globalHashManager } from 'reactStartup';
 
 export function beginFilterChange(){
     return { type: BEGIN_FILTER_CHANGE };

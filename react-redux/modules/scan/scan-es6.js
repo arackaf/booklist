@@ -1,9 +1,7 @@
-let BookEntryList = require('./components/bookEntryList');
-let reducer = require('./reducers/reducer');
+import BookEntryList from './components/bookEntryList';
+import reducer from './reducers/reducer';
 
-BookEntryList = ReactRedux.connect(state => state.scan)(BookEntryList);
-
-module.exports = {
+export default {
     name: 'scan',
     reducer: reducer,
     component: BookEntryList

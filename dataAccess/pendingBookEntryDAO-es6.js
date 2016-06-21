@@ -1,5 +1,5 @@
-const ObjectId = require('mongodb').ObjectID;
-const DAO = require('./dao');
+import { ObjectId } from 'mongodb';
+import DAO from './dao';
 
 class PendingBookEntryDAO extends DAO {
     constructor(userId) {

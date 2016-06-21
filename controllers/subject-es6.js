@@ -1,5 +1,5 @@
-const { httpPost, route, nonRoutable } = require('easy-express-controllers');
-const SubjectDAO = require('../dataAccess/subjectDAO');
+import { httpPost, route, nonRoutable } from 'easy-express-controllers';
+import SubjectDAO from '../dataAccess/subjectDAO';
 
 class subjectController{
     constructor(){}
@@ -24,4 +24,4 @@ class subjectController{
     }
 }
 
-module.exports = subjectController;
+export default subjectController;

@@ -156,3 +156,10 @@ react-redux/modules/books/reducers/subjects/actionCreators.js
 react-redux/modules/books/reducers/subjects/actionNames.js
 react-redux/modules/books/reducers/books/actionCreators.js
 react-redux/modules/books/reducers/books/actionNames.js
+react-redux/modules/authenticate/authenticate.js
+react-redux/tests/hashUtilTests.js
+react-redux/tests/subjectMongoUpdateTests.js
+react-redux/tests/amazonOperationQueue.js
+react-redux/dist-es5/
+react-redux/dist-es6/
+react-redux/systemJsConfiguration/bundlePathsTranspiled.js

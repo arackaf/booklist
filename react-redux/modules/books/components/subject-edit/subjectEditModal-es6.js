@@ -1,6 +1,8 @@
-const Modal = ReactBootstrap.Modal;
+import React from 'react';
+import { connect } from 'react-redux';
+import { Modal } from 'react-bootstrap';
 
-import BootstrapButton from 'root-components/bootstrapButton';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import * as actionCreators from '../../reducers/subjects/actionCreators';
 import HierarchicalSubjectList from './hierarchicalSubjectList';
 
@@ -55,6 +57,6 @@ class subjectEditModal extends React.Component {
     }
 }
 
-const subjectEditModalConnected = ReactRedux.connect(state => state, { ...actionCreators })(subjectEditModal);
+const subjectEditModalConnected = connect(state => state, { ...actionCreators })(subjectEditModal);
 
 export default subjectEditModalConnected;

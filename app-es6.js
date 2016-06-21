@@ -1,6 +1,7 @@
-require('regenerator/runtime');
-require('./utils/promiseUtils');
-require('./private/awsS3Credentials');
+import 'regenerator/runtime';
+
+import './utils/promiseUtils';
+import './private/awsS3Credentials';
 
 const express = require('express');
 const app = express();
@@ -103,7 +104,7 @@ app.ws('/bookEntryWS', function(ws, req) {
 
 
 var easyControllers = require('easy-express-controllers').easyControllers;
-easyControllers.createAllControllers(app, { fileTest: f => !/-es6\.js$/i.test(f) });
+easyControllers.createAllControllers(app, { fileTest: f => /book.js$/.test(f) || /bookBulk.js$/.test(f) || /subject.js$/.test(f) });
 
 app.get('/', (req, res) => res.redirect('/react-redux'));
 app.get('/react-redux', browseToReactRedux);

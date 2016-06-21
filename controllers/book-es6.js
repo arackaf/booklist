@@ -1,5 +1,5 @@
-const { httpPost, route, nonRoutable } = require('easy-express-controllers');
-const AmazonSearch = require('../amazonDataAccess/AmazonSearch.js');
+import { httpPost, route, nonRoutable } from 'easy-express-controllers';
+import AmazonSearch from '../amazonDataAccess/AmazonSearch.js';
 import amazonOperationQueue from '../amazonDataAccess/amazonOperationQueue';
 import BookDAO from '../dataAccess/bookDAO';
 import pendingBookEntryDAO from '../dataAccess/pendingBookEntryDAO';
@@ -46,4 +46,4 @@ class bookController{
     }
 }
 
-module.exports = bookController;
+export default bookController;
