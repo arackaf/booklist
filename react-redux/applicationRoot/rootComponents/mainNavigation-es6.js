@@ -1,10 +1,14 @@
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
+import React, { Component } from 'react';
 
-import { goHome } from 'react-startup';
+import {
+    Navbar,
+    Nav,
+    NavItem
+} from 'react-bootstrap';
 
-class MainNavigationBar extends React.Component {
+import { goHome } from 'reactStartup';
+
+class MainNavigationBar extends Component {
     logout(){
         ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     }

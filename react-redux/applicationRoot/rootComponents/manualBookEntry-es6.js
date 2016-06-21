@@ -1,10 +1,11 @@
-import AjaxButton from 'root-components/ajaxButton';
-import BootstrapButton from 'root-components/bootstrapButton';
-import { Dropzone } from 'react-redux-util/react-dropzone';
+import React, { Component } from 'react';
+import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import Dropzone from 'react-dropzone';
 
-const Modal = ReactBootstrap.Modal;
+import { Modal } from 'react-bootstrap';
 
-class ManualBookEntry extends React.Component {
+class ManualBookEntry extends Component {
     constructor(){
         super();
 

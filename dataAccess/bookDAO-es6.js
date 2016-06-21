@@ -1,10 +1,10 @@
-const ObjectId = require('mongodb').ObjectID;
-const DAO = require('./dao');
+import { ObjectId } from 'mongodb';
+import DAO from './dao';
 
-const path = require('path');
-const fs = require('fs');
-const AmazonSearch = require('../amazonDataAccess/AmazonSearch');
-const AWS = require('aws-sdk');
+import path from 'path';
+import fs from 'fs';
+import AmazonSearch from '../amazonDataAccess/AmazonSearch';
+import AWS from 'aws-sdk';
 AWS.config.region = 'us-east-1';
 
 class BookDAO extends DAO {
@@ -153,7 +153,9 @@ class BookDAO extends DAO {
         }
     }
     async setBooksSubjects(books, add, remove){
+        console.log('opening');
         let db = await super.open();
+        console.log('openned');
         try{
             await db.collection('books').update(
                 { _id: { $in: books.map(_id => ObjectId(_id)) } },
@@ -165,7 +167,7 @@ class BookDAO extends DAO {
                 { $pullAll: { subjects: (remove || []) } }, { upsert: false, multi: true }
             );
 
-        } finally {
+        } catch(errr){ console.log(errr); } finally {
             super.dispose(db);
         }
     }

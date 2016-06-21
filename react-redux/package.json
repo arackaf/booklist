@@ -1,0 +1,23 @@
+{
+  "name": "Booklist",
+  "main": "app.js",
+  "engines": {
+    "node": "4.4.4",
+    "npm": "3.9.3"
+  },
+  "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
+  "version": "0.1.0",
+  "scripts": {
+  },
+  "dependencies": {
+    "react": "15.1.0",
+    "react-addons-css-transition-group": "15.1.0",
+    "react-bootstrap": "0.29.0",
+    "react-dom": "0.14.0",
+    "react-dropzone": "3.4.0",
+    "react-redux": "4.4.5",
+    "redux": "3.0.4",
+    "redux-thunk": "1.0.0",
+    "reselect": "2.0.1"
+  }
+}

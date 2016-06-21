@@ -1,21 +1,26 @@
-const Modal = ReactBootstrap.Modal;
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
-const NavDropdown = ReactBootstrap.NavDropdown;
-const DropDownButton = ReactBootstrap.DropDownButton;
-const MenuItem = ReactBootstrap.MenuItem;
-const HierarchicalSelectableSubjectList = require('./hierarchicalSelectableSubjectList');
+import React from 'react';
+import { connect } from 'react-redux';
+import {
+    Modal,
+    Nav,
+    Navbar,
+    NavItem,
+    NavDropdown,
+    DropDownButton,
+    MenuItem
+} from 'react-bootstrap';
 
-const BootstrapButton = require('root-components/bootstrapButton');
+import HierarchicalSelectableSubjectList from './hierarchicalSelectableSubjectList';
 
-const { bookSearchSelector } = require('modules/books/reducers/bookSearch/reducer');
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+
+import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 
 import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
 import * as mainActionCreatorsTEMP from '../../reducers/books/actionCreators';
 import * as mainActionCreatorsTEMP2 from '../../reducers/subjects/actionCreators';
 import * as mainActionCreatorsTEMP3 from '../../reducers/booksSubjectModification/actionCreators';
-import { globalHashManager } from 'react-startup';
+import { globalHashManager } from 'reactStartup';
 
 const InputForPending = props => {
     let name = props.name,
@@ -182,6 +187,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = ReactRedux.connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP, ...mainActionCreatorsTEMP2, ...mainActionCreatorsTEMP3 })(BooksMenuBar);
+const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP, ...mainActionCreatorsTEMP2, ...mainActionCreatorsTEMP3 })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

@@ -1,13 +1,16 @@
+import React, { Component } from 'react';
 import BookEntryItem from './bookEntryItem';
+import { connect } from 'react-redux';
 
-const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+import { addons } from 'react';
+const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 
-const Collapse = ReactBootstrap.Collapse;
+import { Collapse } from 'react-bootstrap';
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
-import MainNavigationBar from 'root-components/mainNavigation';
-import BootstrapButton from 'root-components/bootstrapButton';
-import ManualBookEntry from 'root-components/manualBookEntry';
+import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
 
 const defaultEmptyBook = () => ({
     title: '',
@@ -18,7 +21,7 @@ const defaultEmptyBook = () => ({
     authors: ['']
 });
 
-class BookEntryList extends React.Component {
+class BookEntryList extends Component {
     constructor(){
         super();
         this.state = { showIncomingQueue: false, showScanInstructions: false };
@@ -75,7 +78,7 @@ class BookEntryList extends React.Component {
                                     </div>
                                     
                                     <ul>
-                                        <ReactCSSTransitionGroup transitionName="book-scan-results" transitionLeaveTimeout={300}>
+                                        <ReactCSSTransitionGroup transitionEnterTimeout={0} transitionName="book-scan-results" transitionLeaveTimeout={300}>
                                             {this.props.booksJustSaved.map(book => <li style={{ color: book.success ? 'green' : 'red' }} key={book._id}>{book.title}</li>)}
                                         </ReactCSSTransitionGroup>
                                     </ul>
@@ -185,6 +188,6 @@ class BookEntryList extends React.Component {
     }
 }
 
-const BookEntryListConnected = ReactRedux.connect(state => state, { ...bookEntryActionCreators })(BookEntryList);
+const BookEntryListConnected = connect(state => state.scan, { ...bookEntryActionCreators })(BookEntryList);
 
 export default BookEntryListConnected;

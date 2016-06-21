@@ -1,8 +1,8 @@
-let ResponsiveNotifier = require('./responsiveChangeNotifier');
+import ResponsiveNotifier from './responsiveChangeNotifier';
 
 const responsiveBsSizes = ['xs', 'sm', 'md', 'lg'];
 
-function responsiveMobileDesktopMixin(self, stateName, config){
+export default function responsiveMobileDesktopMixin(self, stateName, config){
     let currentlyMobile;
 
     const cutoff = config.cutoff || 'sm';
@@ -50,10 +50,8 @@ function responsiveMobileDesktopMixin(self, stateName, config){
         } else {
             componentPath = componentObjOrPath;
         }
-        System.import(componentPath).then(component => {
+        System.import(componentPath).then(({ default: component }) => {
             self.setState({ [stateName]: component, isMobile });
         });
     }
 }
-
-module.exports = { responsiveMobileDesktopMixin };

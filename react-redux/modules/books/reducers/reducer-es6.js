@@ -1,10 +1,11 @@
-const { booksReducer: books, booksSelector } = require('./books/reducer');
-const { subjectsReducer: subjects, subjectsSelector } = require('./subjects/reducer');
-const { bookSearchReducer: bookSearch, bookSearchSelector } = require('./bookSearch/reducer');
-const { bookSubjectManagerReducer: booksSubjectsModifier, booksSubjectsModifierSelector } = require('./booksSubjectModification/reducer');
+import { combineReducers } from 'redux';
+import { booksReducer as books, booksSelector } from './books/reducer';
+import { subjectsReducer as subjects, subjectsSelector } from './subjects/reducer';
+import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearch/reducer';
+import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
 import bookEdit from './editBook/reducer';
 
-const reducer = Redux.combineReducers({
+export const reducer = combineReducers({
     books,
     subjects,
     bookSearch,
@@ -12,7 +13,7 @@ const reducer = Redux.combineReducers({
     bookEdit
 });
 
-const bookListSelector = state => {
+export const selector = state => {
     return {
         subjects: subjectsSelector(state.books),
         books: booksSelector(state.books),
@@ -21,5 +22,3 @@ const bookListSelector = state => {
         bookEdit: state.books.bookEdit //no selector on bookEdit
     }
 };
-
-module.exports = { reducer, selector: bookListSelector };

@@ -1,25 +1,28 @@
+import React from 'react';
+import { connect} from 'react-redux';
 import { loadSubjects } from '../reducers/subjects/actionCreators';
 import { loadBooks } from '../reducers/books/actionCreators';
-import { responsiveMobileDesktopMixin } from 'react-redux-util/responsiveUiLoaders';
+import responsiveMobileDesktopMixin from 'util/responsiveUiLoaders';
 
-import MainNavigationBar from 'root-components/mainNavigation';
+import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
 import SubjectEditModal from './subject-edit/subjectEditModal';
-import BootstrapButton from 'root-components/bootstrapButton';
-import ManualBookEntry from 'root-components/manualBookEntry';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
+import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
 function BookListLoading() {
-    return <div style={{ height: '150' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
+    return <div style={{ height: '150px' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
 }
 
 function BookListNoResults() {
-    return <div style={{ height: '150' }}>No results</div>
+    return <div style={{ height: '150px' }}>No results</div>
 }
 
 class BookViewingList extends React.Component {
@@ -32,7 +35,7 @@ class BookViewingList extends React.Component {
         });
     }
     componentDidMount(){
-        this.props.dispatch(loadSubjects());
+        this.props.loadSubjects();
     }
     render() {
         let editingBook = this.props.bookEdit.editingBook,
@@ -41,7 +44,7 @@ class BookViewingList extends React.Component {
         return (
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
-                <div className="panel panel-default" style={{ margin: '10' }}>
+                <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar
                         selectedBooksCount={this.props.books.selectedBooksCount}
                         allSubjects={this.props.subjects.list}
@@ -87,7 +90,5 @@ class BookViewingList extends React.Component {
     }
 }
 
-const BookViewingListConnected = ReactRedux.connect(selector, { ...actionCreatorsEditBook })(BookViewingList);
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects })(BookViewingList);
 export default BookViewingListConnected;
-
-module.exports = BookViewingList;

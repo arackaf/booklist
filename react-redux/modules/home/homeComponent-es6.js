@@ -1,10 +1,13 @@
-import { isLoggedIn, goHome } from 'react-startup';
+import React from 'react';
+import { isLoggedIn, goHome } from 'reactStartup';
 
-const Navbar = ReactBootstrap.Navbar;
-const Nav = ReactBootstrap.Nav;
-const NavItem = ReactBootstrap.NavItem;
-import MainNavigationBar from 'root-components/mainNavigation';
+import {
+    Nav,
+    Navbar,
+    NavItem
+} from 'react-bootstrap';
 
+import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 
 const MainHomePane = props =>
     <div className="row">
@@ -83,7 +86,7 @@ class Home extends React.Component{
     }
     render(){
         return (
-            <div className="container-fluid">
+            <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
                 { this.state.isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn /> }
             </div>
         );

@@ -1,8 +1,9 @@
-const rootReducer = require('./rootReducer');
-const thunkMiddleware = require('./../util/redux-thunk');
+import rootReducer from './rootReducer';
+import thunkMiddleware from 'redux-thunk';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
 
-function getNewReducer(reducerObj){
-    if (!reducerObj) return Redux.combineReducers({ root: rootReducer });
+export function getNewReducer(reducerObj){
+    if (!reducerObj) return combineReducers({ root: rootReducer });
 
     store.replaceReducer(function(){
         return {
@@ -10,19 +11,14 @@ function getNewReducer(reducerObj){
         }
     });
 
-    store.replaceReducer(Redux.combineReducers({
+    store.replaceReducer(combineReducers({
         [reducerObj.name]: reducerObj.reducer,
         root: rootReducer
     }));
 }
 
-const createStoreWithMiddleware = Redux.applyMiddleware(
+const createStoreWithMiddleware = applyMiddleware(
     thunkMiddleware
-)(Redux.createStore);
+)(createStore);
 
-const store = createStoreWithMiddleware(getNewReducer());
-
-module.exports = {
-    store,
-    getNewReducer
-};
+export const store = createStoreWithMiddleware(getNewReducer());

@@ -1,5 +1,6 @@
-const BootstrapButton = require('root-components/bootstrapButton');
-const Collapse = ReactBootstrap.Collapse;
+import React from 'react';
+import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import { Collapse } from 'react-bootstrap';
 
 class HierarchicalSubjectItem extends React.Component {
     constructor(){
@@ -45,4 +46,4 @@ class HierarchicalSubjectList extends React.Component {
     }
 }
 
-module.exports = HierarchicalSubjectList;
+export default HierarchicalSubjectList;

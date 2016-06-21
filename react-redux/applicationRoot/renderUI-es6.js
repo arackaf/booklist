@@ -1,16 +1,18 @@
-const Provider = ReactRedux.Provider;
-const Header = require('./rootComponents/header');
-const { store } = require('./store');
+import React from 'react';
+import { Provider } from 'react-redux';
+import Header from './rootComponents/header';
+import { store } from './store';
+import { render } from 'react-dom';
 
-function clearUI(){
-    ReactDOM.render(
+export function clearUI(){
+    render(
         <div></div>,
         document.getElementById('home')
     );
 }
 
-function renderUI(component){
-    ReactDOM.render(
+export function renderUI(component){
+    render(
         <Provider store={store}>
             <div>
                 { component }
@@ -19,5 +21,3 @@ function renderUI(component){
         document.getElementById('home')
     );
 }
-
-module.exports = { renderUI, clearUI };
