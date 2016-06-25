@@ -163,3 +163,6 @@ react-redux/tests/amazonOperationQueue.js
 react-redux/dist-es5/
 react-redux/dist-es6/
 react-redux/systemJsConfiguration/bundlePathsTranspiled.js
+react-redux/modules/books/reducers/ui/actionCreators.js
+react-redux/modules/books/reducers/ui/actionNames.js
+react-redux/modules/books/reducers/ui/reducer.js

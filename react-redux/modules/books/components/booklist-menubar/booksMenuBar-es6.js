@@ -16,10 +16,11 @@ import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 
 import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 
+import * as booksActionCreators from '../../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
-import * as mainActionCreatorsTEMP from '../../reducers/books/actionCreators';
-import * as mainActionCreatorsTEMP2 from '../../reducers/subjects/actionCreators';
-import * as mainActionCreatorsTEMP3 from '../../reducers/booksSubjectModification/actionCreators';
+import * as subjectsActionCreators from '../../reducers/subjects/actionCreators';
+import * as booksSubjectModificationActionCreators from '../../reducers/booksSubjectModification/actionCreators';
+import * as uiActionCreators from '../../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
 const InputForPending = props => {
@@ -92,7 +93,7 @@ class BooksMenuBar extends React.Component {
                             </Navbar.Brand>
                         </Navbar.Header>
                         <Navbar.Form pullLeft>
-                            <div className="form-group">
+                            <div className="form-group" style={{ marginRight: '5px' }}>
                                 <div className="input-group">
                                     <span className="input-group-btn">
                                         <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
@@ -100,6 +101,13 @@ class BooksMenuBar extends React.Component {
                                     <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
                                 </div>
                             </div>
+
+                            <div className="btn-group" role="group">
+                                <button type="button" onClick={this.props.setDesktop} className={'btn btn-default ' + (this.props.isDesktop ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
+                                <button type="button" onClick={this.props.setMobile} className={'btn btn-default ' + (this.props.isMobile ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
+                                { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
+                            </div>
+
                         </Navbar.Form>
                         { selectedSubjectsCount ?
                             <Nav>
@@ -187,6 +195,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...mainActionCreatorsTEMP, ...mainActionCreatorsTEMP2, ...mainActionCreatorsTEMP3 })(BooksMenuBar);
+const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

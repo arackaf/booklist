@@ -4,13 +4,15 @@ import { subjectsReducer as subjects, subjectsSelector } from './subjects/reduce
 import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
 import bookEdit from './editBook/reducer';
+import ui from './ui/reducer';
 
 export const reducer = combineReducers({
     books,
     subjects,
     bookSearch,
     booksSubjectsModifier,
-    bookEdit
+    bookEdit,
+    ui
 });
 
 export const selector = state => {
@@ -19,6 +21,7 @@ export const selector = state => {
         books: booksSelector(state.books),
         bookSearch: bookSearchSelector(state.books),
         booksSubjectsModifier: booksSubjectsModifierSelector(state.books),
-        bookEdit: state.books.bookEdit //no selector on bookEdit
+        bookEdit: state.books.bookEdit, //no selector on bookEdit
+        ui: state.books.ui //no selector on ui
     }
 };
