@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import DAO from './dao';
 
+import moment from 'moment';
 import path from 'path';
 import fs from 'fs';
 import AmazonSearch from '../amazonDataAccess/AmazonSearch';
@@ -58,7 +59,7 @@ class BookDAO extends DAO {
             //    delete query.subjects;
             //    delete query.title;
             //}
-            return (await db.collection('books').find(query).sort(sortObj).toArray()).map(addCreatedOn);
+            return (await db.collection('books').find(query).sort(sortObj).toArray()).map(adjustForClient);
         } finally {
             super.dispose(db);
         }
@@ -173,8 +174,11 @@ class BookDAO extends DAO {
     }
 }
 
-function addCreatedOn(book){
+function adjustForClient(book){
     book.dateAdded = +book._id.getTimestamp();
+    if (/\d{4}-\d{2}-\d{2}/.test(book.publicationDate)){
+        book.publicationDate = moment(book.publicationDate).format('MMMM Do YYYY');
+    }
     return book;
 }
 

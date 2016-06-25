@@ -39,10 +39,10 @@ class BookViewListDesktop extends React.Component{
                                 <th><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
                                 <th>Author</th>
                                 <th>Genres</th>
-                                <th><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
-                                <th>ISBN</th>
                                 <th>Published</th>
+                                <th>ISBN</th>
                                 <th><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
+                                <th><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,10 +64,10 @@ class BookViewListDesktop extends React.Component{
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
                                     </div>
                                 </td>
-                                <td>{book.dateAddedDisplay}</td>
-                                <td>{book.isbn}</td>
                                 <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
+                                <td>{book.isbn}</td>
                                 <td>{book.pages}</td>
+                                <td>{book.dateAddedDisplay}</td>
                             </tr>
                         ) : null}
                         </tbody>
