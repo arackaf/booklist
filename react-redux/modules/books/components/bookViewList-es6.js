@@ -4,6 +4,9 @@ import { loadSubjects } from '../reducers/subjects/actionCreators';
 import { loadBooks } from '../reducers/books/actionCreators';
 import responsiveMobileDesktopMixin from 'util/responsiveUiLoaders';
 
+import DesktopView from './bookViewList-desktop';
+import MobileView from './bookViewList-mobile';
+
 import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
@@ -64,9 +67,10 @@ class BookViewingList extends React.Component {
                             <div className="wait-for-loading">
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
                             </div> : null }
-                        { !this.state.listComponent
-                            ? <BookListLoading />
-                            : React.createElement(this.state.listComponent, { })
+
+                        { this.props.ui.isDesktop ? <DesktopView />
+                            : this.props.ui.isMobile ? <MobileView />
+                            : null
                         }
                     </div>
                 </div>
