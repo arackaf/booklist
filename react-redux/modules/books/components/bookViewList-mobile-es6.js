@@ -10,59 +10,34 @@ import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
-class BookViewListMobileItem extends React.Component{
-    constructor(){
-        super();
-        this.state = { expanded: false };
-    }
-    toggle(){
-        this.setState({ expanded: !this.state.expanded });
-    }
-    render(){
-        return (
-            <a onClick={() => this.toggle()} className="list-group-item" style={{ cursor: 'pointer' }}>
-                <div className="row">
-                    <div className="col-xs-3 col-sm-1">
-                        {this.state.expanded || this.props.showImg ? <img src={this.props.smallImage} /> : null}
-                    </div>
-                    <div className="col-xs-9 col-sm-11">
-                        <h4 className="list-group-item-heading">{this.props.title}</h4>
-                        <p className="list-group-item-text">{this.props.author || 'no author'}</p>
-                        { !this.state.expanded ? null :
-                            <div>
-                                {this.props.publicationDate ? <p className="list-group-item-text">{'Published ' + this.props.publicationDate}</p> : null}
-                                {this.props.pages ? <p className="list-group-item-text">{this.props.pages + ' pages'}</p> : null}
-                                {this.props.isbn ? <p className="list-group-item-text">{'ISBN ' + this.props.isbn}</p> : null}
-                            </div>
-                        }
-                    </div>
-                </div>
-            </a>
-        );
-    }
-}
-
-class BookViewListMobile extends React.Component{
-    constructor(){
-        super();
-        this.state = { showImages: false };
-    }
-    toggleImages(){
-        this.setState({ showImages: !this.state.showImages });
-    }
-    render(){
-        return (
-            <div>
-                <div style={{ paddingBottom: 15 }}>
-                    <BootstrapButton style={{ margin: 5 }} onClick={() => this.toggleImages()} preset="info-xs">{ this.state.showImages ? 'Hide covers' : 'Show covers' }</BootstrapButton>
-                    <div style={{ border: 0 }} className="list-group docked-to-panel">
-                        { this.props.books.list.map((book, i) => <BookViewListMobileItem showImg={this.state.showImages} key={book._id} {...book} /> )}
-                    </div>
+const BookViewListMobileItem = props => (
+    <a className="list-group-item" style={{ cursor: 'pointer' }}>
+        <div className="row">
+            <div className="col-xs-3 col-sm-1">
+                <img src={props.smallImage} />
+            </div>
+            <div className="col-xs-9 col-sm-11">
+                <h4 className="list-group-item-heading">{props.title}</h4>
+                <p className="list-group-item-text">{props.authors.join(', ') || 'No author'}</p>
+                <div>
+                    {props.publicationDate ? <p className="list-group-item-text">{'Published ' + props.publicationDate}</p> : null}
+                    {props.pages ? <p className="list-group-item-text">{props.pages + ' pages'}</p> : null}
+                    {props.isbn ? <p className="list-group-item-text">{'ISBN ' + props.isbn}</p> : null}
                 </div>
             </div>
-        );
-    }
-}
+        </div>
+    </a>
+);
+
+const BookViewListMobile = props => (
+    <div>
+        <div style={{ paddingBottom: 15 }}>
+            <div style={{ border: 0 }} className="list-group docked-to-panel">
+                { props.books.list.map((book, i) => <BookViewListMobileItem key={book._id} {...book} /> )}
+            </div>
+        </div>
+    </div>
+);
 
 const BookViewListMobileConnected = connect(selector, { ...actionCreatorsBookSearch, ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook })(BookViewListMobile);
 export default BookViewListMobileConnected;
