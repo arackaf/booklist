@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 class DAO{
     open(){
-        let result = MongoClient.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/mongotest');
+        let result = MongoClient.connect(process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/mongotest');
 
         //handling error like this will keep the resulting promise in error state
         result.catch(err => {
