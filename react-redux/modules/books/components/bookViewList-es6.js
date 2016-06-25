@@ -63,13 +63,15 @@ class BookViewingList extends React.Component {
                     ></BooksMenuBar>
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
-                        { this.props.books.loading ?
+                        { this.props.books.loading || !this.props.subjects.loaded ?
                             <div className="wait-for-loading">
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
                             </div> : null }
 
-                        { this.props.ui.isDesktop ? <DesktopView />
-                            : this.props.ui.isMobile ? <MobileView />
+                        {this.props.subjects.loaded ?
+                            (this.props.ui.isDesktop ? <DesktopView />
+                                : this.props.ui.isMobile ? <MobileView />
+                                : null)
                             : null
                         }
                     </div>
