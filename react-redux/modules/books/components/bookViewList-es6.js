@@ -39,7 +39,7 @@ class BookViewingList extends React.Component {
     }
     componentDidMount(){
         try {
-            if (document.documentElement.clientWidth < 700) {
+            if (window.screen.width < 700) {
                 this.props.setMobile();
             } else {
                 this.props.setDesktop();
