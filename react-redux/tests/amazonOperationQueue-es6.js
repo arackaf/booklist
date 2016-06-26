@@ -1,4 +1,4 @@
-require('../../utils/promiseUtils');
+require('./promiseUtils');
 
 var assert = require('chai').assert;
 var { AmazonQueue } = require('../../amazonDataAccess/amazonOperationQueue');
