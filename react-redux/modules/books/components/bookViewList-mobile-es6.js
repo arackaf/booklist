@@ -46,12 +46,6 @@ const BookViewListMobile = props => (
         <div style={{ paddingBottom: 15 }}>
             <div style={{ border: 0 }} className="list-group docked-to-panel">
                 { props.books.list.map((book, i) => <BookViewListMobileItem key={book._id} {...book} /> )}
-
-                {(!props.books.list.length && !props.books.loading ?
-                    <div className="alert alert-warning">
-                        No books found
-                    </div> : null)}
-
             </div>
         </div>
     </div>
