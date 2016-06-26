@@ -30,8 +30,8 @@ class BookViewListDesktop extends React.Component{
         return (
             <div style={{ minHeight: 500 }}>
                 { this.props.books.list.length ?
-                <div style={{ paddingLeft: 15, paddingRight: 15, paddingBottom: 15 }}>
-                    <table className="table table-striped">
+                <div>
+                    <table className="table table-striped no-padding-top">
                         <thead>
                             <tr>
                                 <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
