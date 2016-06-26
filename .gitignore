@@ -166,3 +166,7 @@ react-redux/systemJsConfiguration/bundlePathsTranspiled.js
 react-redux/modules/books/reducers/ui/actionCreators.js
 react-redux/modules/books/reducers/ui/actionNames.js
 react-redux/modules/books/reducers/ui/reducer.js
+app-helpers/bookEntryQueueManager.js
+app-helpers/nodeHelpers.js
+app-helpers/promiseUtils.js
+app-helpers/sendEmail.js

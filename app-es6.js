@@ -1,6 +1,6 @@
 import 'regenerator/runtime';
 
-import './utils/promiseUtils';
+import './app-helpers/promiseUtils';
 import './private/awsS3Credentials';
 
 const express = require('express');
@@ -14,7 +14,7 @@ const mkdirp = require('mkdirp');
 const lwip = require('lwip');
 const exif = require('exif-parser');
 
-import bookEntryQueueManager from './app/bookEntryQueueManager';
+import bookEntryQueueManager from './app-helpers/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
 import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
 import UserDao from './dataAccess/userDAO';
