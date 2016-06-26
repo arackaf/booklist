@@ -2,18 +2,17 @@ import rootReducer from './rootReducer';
 import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 
+let asyncReducers = { };
 export function getNewReducer(reducerObj){
     if (!reducerObj) return combineReducers({ root: rootReducer });
 
-    store.replaceReducer(function(){
-        return {
-            root: rootReducer()
-        }
-    });
+    if (asyncReducers[reducerObj.name]) return; //registering an async reducer we already have - do nothing and get out
+
+    asyncReducers[reducerObj.name] = reducerObj.reducer;
 
     store.replaceReducer(combineReducers({
-        [reducerObj.name]: reducerObj.reducer,
-        root: rootReducer
+        root: rootReducer,
+        ...asyncReducers
     }));
 }
 
