@@ -34,7 +34,7 @@ class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
 
-        this.state = { pendingSubjects: {}, menuOpen: false };
+        this.state = { menuOpen: false };
         this._hashChangeSubscription = props.syncFiltersToHash;
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
@@ -47,13 +47,10 @@ class BooksMenuBar extends React.Component {
         }
     }
     componentDidMount(){
-        this.props.syncFiltersToHash(true);
+        this.props.syncFiltersToHash();
     }
     componentWillUnmount(){
         window.removeEventListener("hashchange", this._hashChangeSubscription);
-    }
-    openFullFilterModal(){
-        this.setState({ fullFiltersOpen: true, pendingSubjects: this.props.subjects, searchChildSubjects: this.props.searchChildSubjects });
     }
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });

@@ -51,8 +51,8 @@ export function setSortOrder(sort, direction){
         );
     };
 }
-
-export function syncFiltersToHash(initial){
+let initial = true;
+export function syncFiltersToHash(){
     return function(dispatch, getState){
         let state = getState().books.bookSearch;
 
@@ -74,6 +74,7 @@ export function syncFiltersToHash(initial){
 
             dispatch(loadBooks());
         }
+        initial = false;
     };
 }
 

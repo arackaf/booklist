@@ -2,8 +2,12 @@ import { LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_S
          UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED
 } from './actionNames';
 
+let subjectsLoadedOrLoading = false;
 export function loadSubjects(){
     return function(dispatch, getState){
+        if (subjectsLoadedOrLoading) return;
+        subjectsLoadedOrLoading = true;
+
         dispatch({ type: LOAD_SUBJECTS });
 
         Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
