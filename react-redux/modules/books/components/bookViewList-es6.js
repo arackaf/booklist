@@ -19,14 +19,6 @@ import * as actionCreatorsUi from '../reducers/ui/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
-function BookListLoading() {
-    return <div style={{ height: '150px' }}>Loading <i className="fa fa-spinner fa-spin"></i></div>
-}
-
-function BookListNoResults() {
-    return <div style={{ height: '150px' }}>No results</div>
-}
-
 class BookViewingList extends React.Component {
     constructor(){
         super();
@@ -62,12 +54,15 @@ class BookViewingList extends React.Component {
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
                             </div> : null }
 
+                        {(!this.props.books.list.length && !this.props.books.loading) ?
+                            <div className="alert alert-warning">
+                                No books found
+                            </div> : null }
+
                         {this.props.subjects.loaded ?
                             (this.props.ui.isDesktop ? <DesktopView />
                                 : this.props.ui.isMobile ? <MobileView />
-                                : null)
-                            : null
-                        }
+                                : null) : null }
                     </div>
                 </div>
                 <div className="well well-sm">

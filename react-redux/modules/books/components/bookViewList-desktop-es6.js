@@ -72,12 +72,7 @@ class BookViewListDesktop extends React.Component{
                         ) : null}
                         </tbody>
                     </table>
-                </div>
-                : (!this.props.books.loading ?
-                    <div className="alert alert-warning">
-                        No books found
-                    </div> : null)
-                }
+                </div> : null }
             </div>
         );
     }
