@@ -2,7 +2,6 @@ import React from 'react';
 import { connect} from 'react-redux';
 import { loadSubjects } from '../reducers/subjects/actionCreators';
 import { loadBooks } from '../reducers/books/actionCreators';
-import responsiveMobileDesktopMixin from 'util/responsiveUiLoaders';
 
 import DesktopView from './bookViewList-desktop';
 import MobileView from './bookViewList-mobile';
@@ -31,11 +30,6 @@ function BookListNoResults() {
 class BookViewingList extends React.Component {
     constructor(){
         super();
-
-        responsiveMobileDesktopMixin(this, 'listComponent', {
-            mobile:  { path: './modules/books/components/bookViewList-mobile' },
-            desktop: { path: './modules/books/components/bookViewList-desktop' }
-        });
     }
     componentDidMount(){
         try {
@@ -79,9 +73,6 @@ class BookViewingList extends React.Component {
                 <div className="well well-sm">
                     <img width="16" height="16" src="/static/main-icon.png" />
                     <span>Track my books</span>
-                    { this.state.isMobile ?
-                        <a onClick={() => this.switchToDesktop()} className="pull-right">Desktop site</a> : null
-                    }
                 </div>
 
                 <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
