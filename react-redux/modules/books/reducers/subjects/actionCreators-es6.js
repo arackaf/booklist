@@ -1,21 +1,21 @@
+import { LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
+         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
+} from './actionNames';
 
-    import { LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-             UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED
-    } from './actionNames';
+let subjectsLoadedOrLoading = false;
+export function loadSubjects(){
+    return function(dispatch, getState){
+        if (subjectsLoadedOrLoading) return;
+        subjectsLoadedOrLoading = true;
 
-    let subjectsLoadedOrLoading = false;
-    export function loadSubjects(){
-        return function(dispatch, getState){
-            if (subjectsLoadedOrLoading) return;
-            subjectsLoadedOrLoading = true;
+        dispatch({ type: LOAD_SUBJECTS });
 
-            dispatch({ type: LOAD_SUBJECTS });
-
-            Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
-                dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
-            });
-        }
+        Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
+            dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
+            dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
+        });
     }
+}
 
 export function editSubjects(){
     return { type: EDIT_SUBJECTS };

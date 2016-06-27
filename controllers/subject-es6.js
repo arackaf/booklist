@@ -5,9 +5,9 @@ class subjectController{
     constructor(){}
     async all(){
         let subjectDao = new SubjectDAO(this.request.user.id),
-            subjects = await subjectDao.loadSubjects();
+            { subjects, labelColors } = await subjectDao.loadSubjects();
 
-        this.send({ results: subjects })
+        this.send({ results: subjects, colors: labelColors });
     }
     @httpPost
     async setInfo(_id, newName, newParent){

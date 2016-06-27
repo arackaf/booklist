@@ -1,5 +1,6 @@
 import {
-    LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED
+    LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT,
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
 } from './actionNames';
 
 const { createSelector } = require('reselect');
@@ -8,6 +9,7 @@ import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../../util/books
 const initialSubjectsState = {
     subjectHash: {},
     editSubjectsPacket: null,
+    colors: [],
     loaded: false
 };
 
@@ -49,6 +51,8 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
             delete subjectHash[action.subjectId];
 
             return Object.assign({}, state, { editSubjectsPacket, subjectHash });
+        case LOAD_COLORS:
+            return Object.assign({}, state, { colors: action.colors });
     }
     return state;
 }
