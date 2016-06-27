@@ -41,6 +41,12 @@ class BookViewingList extends React.Component {
 
         return (
             <div>
+
+                <div style={{ width: '300px', height: '300px', border: '1px solid red', margin: '30px' }}>
+                    { this.props.subjects.colors.map((cp, i) => <div className="color-choice" style={{ backgroundColor: cp.backgroundColor }}>{i + 1}</div>) }
+                </div>
+                <br /><br /><br /><br /><br />
+
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar

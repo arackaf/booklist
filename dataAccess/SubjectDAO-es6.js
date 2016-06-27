@@ -89,7 +89,12 @@ class SubjectDAO extends DAO {
     async loadSubjects(){
         let db = await super.open();
         try {
-            return await db.collection('subjects').find({ userId: this.userId }).toArray();
+            let [subjects, labelColors] = await Promise.all([
+                db.collection('subjects').find({ userId: this.userId }).toArray(),
+                db.collection('labelColors').find({ }).sort({ order: 1 }).toArray()
+            ]);
+
+            return { subjects, labelColors };
         } finally {
             super.dispose(db);
         }

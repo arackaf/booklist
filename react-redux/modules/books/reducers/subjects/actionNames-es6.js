@@ -1,5 +1,6 @@
 export const LOAD_SUBJECTS = 'LOAD_SUBJECTS';
 export const LOAD_SUBJECTS_RESULTS = 'LOAD_SUBJECTS_RESULTS';
+export const LOAD_COLORS = 'LOAD_COLORS';
 
 export const EDIT_SUBJECT = 'EDIT_SUBJECT';
 export const NEW_SUBJECT = 'NEW_SUBJECT';
