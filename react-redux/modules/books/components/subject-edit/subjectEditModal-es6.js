@@ -11,7 +11,7 @@ class subjectEditModal extends React.Component {
         let editSubjectsPacket = this.props.editSubjectsPacket;
         let editingSubject;
 
-        if (editSubjectsPacket){
+        if (editSubjectsPacket && editSubjectsPacket.editingSubject){
             editingSubject = editSubjectsPacket.editingSubject;
         }
 
@@ -37,11 +37,11 @@ class subjectEditModal extends React.Component {
                                 <form>
                                     <div className="form-group">
                                         <label>Subject name</label>
-                                        <input className="form-control" value={editSubjectsPacket.newSubjectName} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
+                                        <input className="form-control" value={editSubjectsPacket.name} onChange={(e) => this.props.setNewSubjectName(e.target.value)} />
                                     </div>
                                     <div className="form-group">
                                         <label>Parent</label>
-                                        <select className="form-control" value={editSubjectsPacket.newSubjectParent} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
+                                        <select className="form-control" value={editSubjectsPacket.parentId} onChange={(e) => this.props.setNewSubjectParent(e.target.value)}>
                                             <option value="">None</option>
                                             { editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                         </select>
@@ -51,7 +51,7 @@ class subjectEditModal extends React.Component {
                                     </div>
                                     <br style={{ clear: 'both' }} />
                                     <br />
-                                    Preview: <div className="label label-default" style={{ backgroundColor: editSubjectsPacket.newBackgroundColor }}>{ editingSubject.name }</div>
+                                    Preview: <div className="label label-default" style={{ backgroundColor: editSubjectsPacket.backgroundColor }}>{ editSubjectsPacket.name }</div>
 
                                     <br /><br />
 

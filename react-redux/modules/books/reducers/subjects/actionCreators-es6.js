@@ -49,7 +49,7 @@ export function newSubject(){
 
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject, newSubjectName: newName, newSubjectParent: newParent } = getState().books.subjects.editSubjectsPacket,
+        let { editingSubject, name: newName, parentId: newParent } = getState().books.subjects.editSubjectsPacket,
             request = { _id: editingSubject ? editingSubject._id : null, newName, newParent };
 
         ajaxUtil.post('/subject/setInfo', request, resp => {
