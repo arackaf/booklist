@@ -31,8 +31,8 @@ export function setNewSubjectParent(newParent){
     return { type: SET_NEW_SUBJECT_PARENT, value: newParent };
 }
 
-export function setNewSubjectBackgroundColor(color){
-    return { type: SET_NEW_SUBJECT_BG_COLOR, color };
+export function setNewSubjectBackgroundColor(value){
+    return { type: SET_NEW_SUBJECT_BG_COLOR, value };
 }
 
 export function stopEditingSubjects(){
