@@ -1,5 +1,7 @@
-import { LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-         UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
+import {
+    LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME,
+    SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED,
+    LOAD_COLORS, SET_NEW_SUBJECT_BG_COLOR
 } from './actionNames';
 
 let subjectsLoadedOrLoading = false;
@@ -27,6 +29,10 @@ export function setNewSubjectName(newName){
 
 export function setNewSubjectParent(newParent){
     return { type: SET_NEW_SUBJECT_PARENT, value: newParent };
+}
+
+export function setNewSubjectBackgroundColor(color){
+    return { type: SET_NEW_SUBJECT_BG_COLOR, color };
 }
 
 export function stopEditingSubjects(){

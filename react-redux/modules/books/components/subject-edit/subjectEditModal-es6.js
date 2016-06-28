@@ -9,6 +9,11 @@ import HierarchicalSubjectList from './hierarchicalSubjectList';
 class subjectEditModal extends React.Component {
     render(){
         let editSubjectsPacket = this.props.editSubjectsPacket;
+        let editingSubject;
+
+        if (editSubjectsPacket){
+            editingSubject = editSubjectsPacket.editingSubject;
+        }
 
         return (
             <Modal show={!!editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
@@ -26,7 +31,7 @@ class subjectEditModal extends React.Component {
                     { editSubjectsPacket && editSubjectsPacket.editing ?
                         <div className="panel panel-info">
                             <div className="panel-heading">
-                                { editSubjectsPacket.editingSubject ? `Edit ${editSubjectsPacket.editingSubject.name}` : 'New Subject' }
+                                { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
                             </div>
                             <div className="panel-body">
                                 <form>
@@ -41,6 +46,15 @@ class subjectEditModal extends React.Component {
                                             { editSubjectsPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                         </select>
                                     </div>
+                                    <div>
+                                        { this.props.colors.map(cp => <div className="color-choice" onClick={() => this.props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
+                                    </div>
+                                    <br style={{ clear: 'both' }} />
+                                    <br />
+                                    Preview: <div className="label label-default" style={{ backgroundColor: editSubjectsPacket.newBackgroundColor }}>{ editingSubject.name }</div>
+
+                                    <br /><br />
+
                                     <BootstrapButton preset="primary" onClick={e => { this.props.createOrUpdateSubject(); e.preventDefault();} }>Save</BootstrapButton>
                                     <BootstrapButton className="pull-right" preset="danger" onClick={e => { this.props.deleteSubject(); e.preventDefault();} }>Delete</BootstrapButton>
                                 </form>
