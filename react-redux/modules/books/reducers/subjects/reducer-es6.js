@@ -18,32 +18,32 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
         case EDIT_SUBJECTS:
-            return Object.assign({}, state, { editSubjectsPacket: { newSubjectName: '', newSubjectParent: '', editingSubjectId: '' } });
+            return Object.assign({}, state, { editSubjectsPacket: {  } });
         case SET_NEW_SUBJECT_NAME:
-            return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { newSubjectName: action.value }) });
+            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, name: action.value } });
         case SET_NEW_SUBJECT_PARENT:
-            return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { newSubjectParent: action.value }) });
+            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, parentId: action.value } });
         case SET_NEW_SUBJECT_BG_COLOR:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, newBackgroundColor: action.color } });
+            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, backgroundColor: action.color } });
         case STOP_EDITING_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: null });
         case NEW_SUBJECT:
             var eligibleParents = flattenedSubjects(state.subjectHash);
 
-            return Object.assign({}, state, { editSubjectsPacket: { editing: true, newSubjectName: '', newSubjectParent: '', newBackgroundColor: '', newTextColor: '', editingSubject: null, eligibleParents } });
+            return Object.assign({}, state, { editSubjectsPacket: { editing: true, editingSubject: null, eligibleParents, parentId: '', name: '' } });
         case EDIT_SUBJECT:
             var editingSubject = state.subjectHash[action._id],
-                newSubjectParent,
+                parentId,
                 eligibleParents = flattenedSubjects(state.subjectHash).filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path)));
 
             if (editingSubject.path == null){
-                newSubjectParent = null;
+                parentId = null;
             } else {
                 let hierarchy = editingSubject.path.split(',');
-                newSubjectParent = hierarchy[hierarchy.length - 2];
+                parentId = hierarchy[hierarchy.length - 2];
             }
 
-            return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editing: true, newSubjectName: editingSubject.name, newSubjectParent: newSubjectParent || '', newBackgroundColor: '', newTextColor: '', editingSubject, eligibleParents }) });
+            return Object.assign({}, state, { editSubjectsPacket: { editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents } });
         case UPDATE_SUBJECT_RESULTS:
             let changedSubjects = subjectsToHash(action.affectedSubjects);
             return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editing: false, editingSubject: null }), subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });
