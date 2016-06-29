@@ -52,7 +52,7 @@ class SubjectDAO extends DAO {
             if (existingParent != newParent) {
                 var affectedSubjects = await this.updateSubjectParent(_id, newParent);
             }
-            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name: name })] };
+            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name, backgroundColor, textColor })] };
         } finally{
             super.dispose(db);
         }
@@ -90,7 +90,7 @@ class SubjectDAO extends DAO {
         let db = await super.open();
         try {
             let [subjects, labelColors] = await Promise.all([
-                db.collection('subjects').find({ userId: this.userId }).toArray(),
+                db.collection('subjects').find({ userId: this.userId }).sort({ name: 1 }).toArray(),
                 db.collection('labelColors').find({ }).sort({ order: 1 }).toArray()
             ]);
 
