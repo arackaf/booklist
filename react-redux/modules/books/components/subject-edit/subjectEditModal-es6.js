@@ -15,6 +15,8 @@ class subjectEditModal extends React.Component {
             editingSubject = editSubjectsPacket.editingSubject;
         }
 
+        let textColors = ['#ffffff', '#000000'];
+
         return (
             <Modal show={!!editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
                 <Modal.Header closeButton>
@@ -47,11 +49,17 @@ class subjectEditModal extends React.Component {
                                         </select>
                                     </div>
                                     <div>
+                                        <div>Label color</div>
                                         { this.props.colors.map(cp => <div className="color-choice" onClick={() => this.props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
                                     </div>
                                     <br style={{ clear: 'both' }} />
+                                    <div>
+                                        <div>Text color</div>
+                                        { textColors.map(tc => <div className="color-choice" onClick={() => this.props.setNewSubjectTextColor(tc) } style={{ backgroundColor: tc }}></div>) }
+                                    </div>
+                                    <br style={{ clear: 'both' }} />
                                     <br />
-                                    Preview: <div className="label label-default" style={{ backgroundColor: editSubjectsPacket.backgroundColor }}>{ editSubjectsPacket.name }</div>
+                                    Preview: <div className="label label-default" style={{ backgroundColor: editSubjectsPacket.backgroundColor, color: editSubjectsPacket.textColor }}>{ editSubjectsPacket.name }</div>
 
                                     <br /><br />
 

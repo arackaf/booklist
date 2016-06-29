@@ -10,9 +10,9 @@ class subjectController{
         this.send({ results: subjects, colors: labelColors });
     }
     @httpPost
-    async setInfo(_id, newName, newParent){
+    async setInfo(_id, name, backgroundColor, textColor, parentId){
         let subjectDao = new SubjectDAO(this.request.user.id),
-            { affectedSubjects } = await subjectDao.updateSubjectInfo(_id, newName, newParent || null);
+            { affectedSubjects } = await subjectDao.updateSubjectInfo(_id, name, backgroundColor, textColor, parentId || null);
 
         this.send({ affectedSubjects });
     }

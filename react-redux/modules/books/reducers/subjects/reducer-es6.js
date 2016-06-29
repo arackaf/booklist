@@ -1,6 +1,6 @@
 import {
-    LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT,
-    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS, SET_NEW_SUBJECT_BG_COLOR
+    LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
 } from './actionNames';
 
 const { createSelector } = require('reselect');
@@ -19,12 +19,8 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
         case EDIT_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: {  } });
-        case SET_NEW_SUBJECT_NAME:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, name: action.value } });
-        case SET_NEW_SUBJECT_PARENT:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, parentId: action.value } });
-        case SET_NEW_SUBJECT_BG_COLOR:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, backgroundColor: action.value } });
+        case SET_NEW_SUBJECT_VALUE:
+            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, [action.field]: action.value } });
         case STOP_EDITING_SUBJECTS:
             return Object.assign({}, state, { editSubjectsPacket: null });
         case NEW_SUBJECT:

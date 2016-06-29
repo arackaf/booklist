@@ -1,7 +1,6 @@
 import {
-    LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME,
-    SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED,
-    LOAD_COLORS, SET_NEW_SUBJECT_BG_COLOR
+    LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
 } from './actionNames';
 
 let subjectsLoadedOrLoading = false;
@@ -23,16 +22,20 @@ export function editSubjects(){
     return { type: EDIT_SUBJECTS };
 }
 
-export function setNewSubjectName(newName){
-    return { type: SET_NEW_SUBJECT_NAME, value: newName };
+export function setNewSubjectName(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'name', value };
 }
 
-export function setNewSubjectParent(newParent){
-    return { type: SET_NEW_SUBJECT_PARENT, value: newParent };
+export function setNewSubjectParent(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'parentId', value };
 }
 
 export function setNewSubjectBackgroundColor(value){
-    return { type: SET_NEW_SUBJECT_BG_COLOR, value };
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'backgroundColor', value };
+}
+
+export function setNewSubjectTextColor(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'textColor', value };
 }
 
 export function stopEditingSubjects(){
@@ -49,12 +52,10 @@ export function newSubject(){
 
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject, name: newName, parentId: newParent } = getState().books.subjects.editSubjectsPacket,
-            request = { _id: editingSubject ? editingSubject._id : null, newName, newParent };
+        let { editingSubject, name, parentId, backgroundColor, textColor } = getState().books.subjects.editSubjectsPacket,
+            request = { _id: editingSubject ? editingSubject._id : null, name, parentId, backgroundColor, textColor };
 
-        ajaxUtil.post('/subject/setInfo', request, resp => {
-            dispatch({ type: UPDATE_SUBJECT_RESULTS, newName, newParent, affectedSubjects: resp.affectedSubjects });
-        });
+        ajaxUtil.post('/subject/setInfo', request, resp => dispatch({ type: UPDATE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
     }
 }
 
