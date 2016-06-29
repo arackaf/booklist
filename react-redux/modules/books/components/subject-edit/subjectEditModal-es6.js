@@ -25,15 +25,20 @@ class subjectEditModal extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{ paddingBottom: 0 }}>
-                    <BootstrapButton onClick={this.props.newSubject} preset="info-xs">New subject</BootstrapButton>
-                    <br />
-                    <br />
-                    <HierarchicalSubjectList style={{ paddingLeft: 5 }} subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
+                    <div className="row">
+                        <div className="col-xs-11">
+                            <HierarchicalSubjectList style={{ paddingLeft: 5 }} subjects={this.props.subjects} onEdit={_id => this.props.editSubject(_id)} />
+                        </div>
+                        <div className="col-xs-1">
+                            <BootstrapButton onClick={this.props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
+                        </div>
+                    </div>
 
                     { editSubjectsPacket && editSubjectsPacket.editing ?
                         <div className="panel panel-info">
                             <div className="panel-heading">
                                 { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
+                                <BootstrapButton preset="default-xs" className="pull-right">Cancel</BootstrapButton>
                             </div>
                             <div className="panel-body">
                                 <form>
