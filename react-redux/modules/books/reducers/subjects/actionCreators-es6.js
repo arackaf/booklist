@@ -1,6 +1,6 @@
 import {
     LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
-    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS, CANCEL_SUBJECT_EDIT
 } from './actionNames';
 
 let subjectsLoadedOrLoading = false;
@@ -48,6 +48,10 @@ export function editSubject(_id){
 
 export function newSubject(){
     return { type: NEW_SUBJECT };
+}
+
+export function cancelSubjectEdit(){
+    return { type: CANCEL_SUBJECT_EDIT };
 }
 
 export function createOrUpdateSubject(){

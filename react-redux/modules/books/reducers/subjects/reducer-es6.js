@@ -1,6 +1,6 @@
 import {
     LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
-    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED, LOAD_COLORS, CANCEL_SUBJECT_EDIT
 } from './actionNames';
 
 const { createSelector } = require('reselect');
@@ -40,6 +40,8 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
             }
 
             return Object.assign({}, state, { editSubjectsPacket: { editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents } });
+        case CANCEL_SUBJECT_EDIT:
+            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, editing: false } });
         case UPDATE_SUBJECT_RESULTS:
             let changedSubjects = subjectsToHash(action.affectedSubjects);
             return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editing: false, editingSubject: null }), subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });

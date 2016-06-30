@@ -16,6 +16,7 @@ class subjectEditModal extends React.Component {
         }
 
         let textColors = ['#ffffff', '#000000'];
+        //onClick={e => { this.props.deleteSubject(); e.preventDefault();} }
 
         return (
             <Modal show={!!editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
@@ -38,7 +39,7 @@ class subjectEditModal extends React.Component {
                         <div className="panel panel-info">
                             <div className="panel-heading">
                                 { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
-                                <BootstrapButton preset="default-xs" className="pull-right">Cancel</BootstrapButton>
+                                <BootstrapButton preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
                             </div>
                             <div className="panel-body">
                                 <form>
@@ -83,8 +84,8 @@ class subjectEditModal extends React.Component {
                                     </div>
                                     <br style={{ clear: 'both' }} />
 
-                                    <BootstrapButton preset="primary" onClick={e => { this.props.createOrUpdateSubject(); e.preventDefault();} }>Save</BootstrapButton>
-                                    <BootstrapButton className="pull-right" preset="danger" onClick={e => { this.props.deleteSubject(); e.preventDefault();} }>Delete</BootstrapButton>
+                                    <a className="btn btn-default" onClick={this.props.cancelSubjectEdit}>Cancel</a>
+                                    <a className="btn btn-primary pull-right" onClick={e => { this.props.createOrUpdateSubject(); e.preventDefault();} }>Save</a>
                                 </form>
                             </div>
                         </div>
