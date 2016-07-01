@@ -46,7 +46,7 @@ class BookViewListDesktop extends React.Component{
                             </tr>
                         </thead>
                         <tbody>
-                        { this.props.subjects.loaded ? this.props.books.list.map(book =>
+                        { this.props.books.list.map(book =>
                             <tr key={book._id}>
                                 <td>
                                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.books.selectedBooks[book._id]} />
@@ -69,7 +69,7 @@ class BookViewListDesktop extends React.Component{
                                 <td>{book.pages}</td>
                                 <td>{book.dateAddedDisplay}</td>
                             </tr>
-                        ) : null}
+                        )}
                         </tbody>
                     </table>
                 </div> : null }
