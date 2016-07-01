@@ -49,13 +49,6 @@ export function booksReducer(state = initialBooksState, action){
             });
 
             return Object.assign({}, state, { booksHash: newBookHash });
-        case SUBJECT_DELETED:
-            var newBookHash = Object.assign({}, state.booksHash);
-            action.booksUpdated.forEach(_id => {
-                let bookEntry = newBookHash[_id];
-                newBookHash[_id] = { ...bookEntry, subjects: bookEntry.subjects.filter(sid => sid != action.subjectId) };
-            });
-            return Object.assign({}, state, { booksHash: newBookHash });
     }
     return state;
 }

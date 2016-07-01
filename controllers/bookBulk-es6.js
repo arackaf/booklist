@@ -7,7 +7,6 @@ class bookController{
     constructor(){}
     @httpPost
     async setSubjects(books, add, remove){
-        console.log(books, add, remove);
         try {
             let bookDao = new BookDAO();
             await bookDao.setBooksSubjects(books, add, remove);
