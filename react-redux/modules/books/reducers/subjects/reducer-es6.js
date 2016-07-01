@@ -48,7 +48,8 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
         case SUBJECT_DELETED:
             let editSubjectsPacket = Object.assign({}, state.editSubjectsPacket, { editing: false });
             let subjectHash = { ...state.subjectHash };
-            delete subjectHash[action.subjectId];
+
+            action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
 
             return Object.assign({}, state, { editSubjectsPacket, subjectHash });
         case LOAD_COLORS:

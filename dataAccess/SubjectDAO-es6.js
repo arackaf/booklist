@@ -22,7 +22,7 @@ class SubjectDAO extends DAO {
 
         await db.collection('subjects').remove({ _id: { $in: subjectsToDelete } });
 
-        return { };
+        return { subjectsDeleted: subjectsToDeleteString };
     }
     async updateSubjectInfo(_id, name, backgroundColor, textColor, newParent){
         let db = await super.open();

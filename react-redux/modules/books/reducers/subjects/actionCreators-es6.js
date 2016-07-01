@@ -67,7 +67,7 @@ export function deleteSubject(){
     return function(dispatch, getState) {
         let request = { _id: getState().books.subjects.editSubjectsPacket.editingSubject._id + '' };
         ajaxUtil.post('/subject/delete', request, resp => {
-            dispatch({ type: SUBJECT_DELETED, subjectId: request._id, booksUpdated: resp.booksUpdated });
+            dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted });
         });
     }
 }
