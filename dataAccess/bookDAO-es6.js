@@ -154,9 +154,7 @@ class BookDAO extends DAO {
         }
     }
     async setBooksSubjects(books, add, remove){
-        console.log('opening');
         let db = await super.open();
-        console.log('openned');
         try{
             await db.collection('books').update(
                 { _id: { $in: books.map(_id => ObjectId(_id)) } },

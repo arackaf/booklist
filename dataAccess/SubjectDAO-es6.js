@@ -8,20 +8,21 @@ class SubjectDAO extends DAO {
     }
     async deleteSubject(_id){
         let db = await super.open();
-        let subjectToDelete = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+        let subjectsToDelete =
+            (await db.collection('subjects').find({ $or: [{ _id: ObjectId(_id) }, { path: { $regex: `.*,${_id},` } }], userId: this.userId }).toArray()).map(o => o._id);
 
-        if (!subjectToDelete) return;
+        let subjectsToDeleteString = subjectsToDelete.map(_id => '' + _id);
 
-        let booksToUpdate = (await db.collection('books').find({ subjects: _id, userId: this.userId }, {_id: 1}).toArray()).map(o => o._id);
+        if (!subjectsToDelete.length) return;
 
         await db.collection('books').update(
-            { _id: { $in: booksToUpdate } },
-            { $pull: { subjects: _id } }, { upsert: false, multi: true }
+            { userId: this.userId, subjects: { $in: subjectsToDeleteString } },
+            { $pull: { subjects: { $in: subjectsToDeleteString } } }, { upsert: false, multi: true }
         );
 
-        await db.collection('subjects').remove({ _id: ObjectId(_id) });
+        await db.collection('subjects').remove({ _id: { $in: subjectsToDelete } });
 
-        return { booksUpdated: booksToUpdate.map(String) };
+        return { };
     }
     async updateSubjectInfo(_id, name, backgroundColor, textColor, newParent){
         let db = await super.open();
