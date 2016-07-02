@@ -65,7 +65,7 @@ class subjectEditModal extends React.Component {
                                                 <div>
                                                     { this.props.colors.map(cp => <div className="color-choice" onClick={() => this.props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
 
-                                                    <CustomColorPicker onColorChosen={this.props.setNewSubjectBackgroundColor} initialColor="FF0000" />
+                                                    <CustomColorPicker onColorChosen={this.props.setNewSubjectBackgroundColor} initialColor="FF20FF" />
                                                 </div>
                                             </div>
                                         </div>
