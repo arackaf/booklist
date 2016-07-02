@@ -11,19 +11,14 @@ class CustomColorPicker extends React.Component {
     get valueElementId(){ return `${this.uniqueId}_value` }
     get styleElementId(){ return `${this.uniqueId}_style` }
     componentDidMount(){
-        let self = this;
-        this.colorPicker = document.getElementById(this.uniqueId);
-        this.picker = new jscolor(this.colorPicker, { valueElement: this.valueElementId, styleElement: this.styleElementId });
+        let onColorChosen = this.props.onColorChosen,
+            rootElement = document.getElementById(this.uniqueId);
 
-        this._colorChanged = function(){
-            self.props.onColorChosen('#' + this.value);
+        this._colorChosen = function(){
+            let hexColor = this.rgb.map(num => (~~num).toString(16)).map(num => num == 0 ? '00' : num).join('');
+            onColorChosen('#' + hexColor)
         }
-        document.getElementById(this.valueElementId).addEventListener('change', this._colorChanged);
-    }
-    componentWillUnmount(){
-        let rtrrt = this.colorPicker;
-        debugger;
-        document.getElementById(`${this.uniqueId}_value`).removeEventListener('change', this._colorChanged);
+        new jscolor(rootElement, { valueElement: this.valueElementId, styleElement: this.styleElementId, onFineChange: this._colorChosen });
     }
     shouldComponentUpdate(){ return false; }
     render(){
