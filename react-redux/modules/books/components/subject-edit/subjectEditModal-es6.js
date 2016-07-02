@@ -5,6 +5,7 @@ import { Modal } from 'react-bootstrap';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import * as actionCreators from '../../reducers/subjects/actionCreators';
 import HierarchicalSubjectList from './hierarchicalSubjectList';
+import CustomColorPicker from './customColorPicker';
 
 class subjectEditModal extends React.Component {
     render(){
@@ -63,6 +64,8 @@ class subjectEditModal extends React.Component {
                                                 <label>Label color</label>
                                                 <div>
                                                     { this.props.colors.map(cp => <div className="color-choice" onClick={() => this.props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
+
+                                                    <CustomColorPicker initialColor="FF0000" />
                                                 </div>
                                             </div>
                                         </div>
