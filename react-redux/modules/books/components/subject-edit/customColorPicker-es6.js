@@ -24,9 +24,8 @@ class CustomColorPicker extends React.Component {
     render(){
         return (
             <div>
-                <a id={`${this.uniqueId}`} onchange="alert('hi')"
-                    style={{ width: '80px', height: '20px' }}>Custom</a>
-                <input style={{ display: 'none' }} id={this.valueElementId} value="ff0000" />
+                <a id={`${this.uniqueId}`} style={{ width: '80px', height: '20px' }}>Custom</a>
+                <input style={{ display: 'none' }} id={this.valueElementId} value={this.props.initialColor} />
                 <input style={{ display: 'none' }} id={this.styleElementId} id="styleInput" />
             </div>
         );
