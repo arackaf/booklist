@@ -11,22 +11,21 @@ class CustomColorPicker extends React.Component {
     get valueElementId(){ return `${this.uniqueId}_value` }
     get styleElementId(){ return `${this.uniqueId}_style` }
     componentDidMount(){
-        let onColorChosen = this.props.onColorChosen,
-            rootElement = document.getElementById(this.uniqueId);
+        let onColorChosen = this.props.onColorChosen;
 
         this._colorChosen = function(){
             let hexColor = this.rgb.map(n => (~~n).toString(16)).map(n => n.length == 1 ? `0${n}` : n).join('');
             onColorChosen('#' + hexColor)
         }
-        new jscolor(rootElement, { valueElement: this.valueElementId, styleElement: this.styleElementId, onFineChange: this._colorChosen });
+        new jscolor(this.rootElement, { valueElement: this.valueElementId, styleElement: this.styleElementId, onFineChange: this._colorChosen });
     }
     shouldComponentUpdate(){ return false; }
     render(){
         return (
             <div>
-                <a id={`${this.uniqueId}`} style={{ width: '80px', height: '20px' }}>Custom</a>
+                <a id={`${this.uniqueId}`} ref={ el => this.rootElement = el } style={{ width: '80px', height: '20px' }}>Custom</a>
                 <input style={{ display: 'none' }} id={this.valueElementId} value={this.props.initialColor} />
-                <input style={{ display: 'none' }} id={this.styleElementId} id="styleInput" />
+                <input style={{ display: 'none' }} id={this.styleElementId} />
             </div>
         );
     }
