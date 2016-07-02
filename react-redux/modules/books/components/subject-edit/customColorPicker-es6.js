@@ -15,7 +15,7 @@ class CustomColorPicker extends React.Component {
             rootElement = document.getElementById(this.uniqueId);
 
         this._colorChosen = function(){
-            let hexColor = this.rgb.map(num => (~~num).toString(16)).map(num => num == 0 ? '00' : num).join('');
+            let hexColor = this.rgb.map(n => (~~n).toString(16)).map(n => n.length == 1 ? `0${n}` : n).join('');
             onColorChosen('#' + hexColor)
         }
         new jscolor(rootElement, { valueElement: this.valueElementId, styleElement: this.styleElementId, onFineChange: this._colorChosen });
