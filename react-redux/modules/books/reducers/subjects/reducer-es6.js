@@ -9,7 +9,7 @@ import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../../util/books
 
 const initialSubjectsState = {
     subjectHash: {},
-    editSubjectsPacket: null,
+    editSubjectPacket: null,
     colors: [],
     loaded: false
 };
@@ -19,15 +19,15 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
         case EDIT_SUBJECTS:
-            return Object.assign({}, state, { editSubjectsPacket: {  } });
+            return Object.assign({}, state, { editSubjectPacket: {  } });
         case SET_NEW_SUBJECT_VALUE:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, [action.field]: action.value } });
+            return Object.assign({}, state, { editSubjectPacket: { ...state.editSubjectPacket, [action.field]: action.value } });
         case STOP_EDITING_SUBJECTS:
-            return Object.assign({}, state, { editSubjectsPacket: null });
+            return Object.assign({}, state, { editSubjectPacket: null });
         case NEW_SUBJECT:
             var eligibleParents = flattenedSubjects(state.subjectHash);
 
-            return Object.assign({}, state, { editSubjectsPacket: { editing: true, editingSubject: null, eligibleParents, parentId: '', name: '' } });
+            return Object.assign({}, state, { editSubjectPacket: { editing: true, editingSubject: null, eligibleParents, parentId: '', name: '' } });
         case EDIT_SUBJECT:
             var editingSubject = state.subjectHash[action._id],
                 parentId,
@@ -40,30 +40,29 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
                 parentId = hierarchy[hierarchy.length - 2];
             }
 
-            return Object.assign({}, state, { editSubjectsPacket: { editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents } });
+            return Object.assign({}, state, { editSubjectPacket: { editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents } });
         case CANCEL_SUBJECT_EDIT:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, editing: false } });
+            return Object.assign({}, state, { editSubjectPacket: { ...state.editSubjectPacket, editing: false } });
         case UPDATE_SUBJECT_RESULTS:
             let changedSubjects = subjectsToHash(action.affectedSubjects);
-            return Object.assign({}, state, { editSubjectsPacket: Object.assign({}, state.editSubjectsPacket, { editing: false, editingSubject: null }), subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });
+            return Object.assign({}, state, { editSubjectPacket: Object.assign({}, state.editSubjectPacket, { editing: false, editingSubject: null }), subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });
         case BEGIN_SUBJECT_DELETE:
             let childSubjectRegex = new RegExp(`.*,${action._id},.*`),
                 affectedChildren = Object.keys(state.subjectHash).filter(k => childSubjectRegex.test(state.subjectHash[k].path)).length,
                 subjectName = state.subjectHash[action._id].name;
 
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, deleteInfo: { affectedChildren, subjectName, _id: action._id } } });
+            return Object.assign({}, state, { editSubjectPacket: { ...state.editSubjectPacket, deleteInfo: { affectedChildren, subjectName, _id: action._id } } });
         case CANCEL_SUBJECT_DELETE:
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, deleteInfo: null } });
+            return Object.assign({}, state, { editSubjectPacket: { ...state.editSubjectPacket, deleteInfo: null } });
         case SUBJECT_DELETING:
-            debugger;
-            return Object.assign({}, state, { editSubjectsPacket: { ...state.editSubjectsPacket, deleteInfo: { ...state.editSubjectsPacket.deleteInfo, deleting: true } } });
+            return Object.assign({}, state, { editSubjectPacket: { ...state.editSubjectPacket, deleteInfo: { ...state.editSubjectPacket.deleteInfo, deleting: true } } });
         case SUBJECT_DELETED:
-            let editSubjectsPacket = Object.assign({}, state.editSubjectsPacket, { editing: false });
+            let editSubjectPacket = Object.assign({}, state.editSubjectPacket, { editing: false });
             let subjectHash = { ...state.subjectHash };
 
             action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
 
-            return Object.assign({}, state, { editSubjectsPacket, subjectHash });
+            return Object.assign({}, state, { editSubjectPacket, subjectHash });
         case LOAD_COLORS:
             return Object.assign({}, state, { colors: action.colors });
     }
