@@ -57,7 +57,7 @@ export function cancelSubjectEdit(){
 
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject, name, parentId, backgroundColor, textColor } = getState().books.subjects.editSubjectsPacket,
+        let { editingSubject, name, parentId, backgroundColor, textColor } = getState().books.subjects.editSubjectPacket,
             request = { _id: editingSubject ? editingSubject._id : null, name, parentId, backgroundColor, textColor };
 
         ajaxUtil.post('/subject/setInfo', request, resp => dispatch({ type: UPDATE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));

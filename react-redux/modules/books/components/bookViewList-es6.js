@@ -72,7 +72,7 @@ class BookViewingList extends React.Component {
 
                 <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
                 <SubjectEditModal
-                    editSubjectsPacket={this.props.subjects.editSubjectsPacket}
+                    editSubjectPacket={this.props.subjects.editSubjectPacket}
                     subjects={this.props.subjects.list}
                     colors={this.props.subjects.colors}>
                 </SubjectEditModal>

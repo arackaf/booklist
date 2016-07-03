@@ -195,7 +195,7 @@ function loadSubjectsAndEdit(subjects, _id){
     return apply(
         { type: LOAD_SUBJECTS_RESULTS, subjects },
         { type: EDIT_SUBJECT, _id }
-    ).subjects.editSubjectsPacket.eligibleParents;
+    ).subjects.editSubjectPacket.eligibleParents;
 }
 
 
