@@ -82,7 +82,7 @@ function flattenedSubjects(subjects){
 const stackedSubjectsSelector = createSelector(
     [state => state.subjectHash],
     subjectHash => ({
-        list: stackAndGetTopLevelSubjects(subjectHash),
+        subjects: stackAndGetTopLevelSubjects(subjectHash),
         allSubjectsSorted: allSubjectsSorted(subjectHash)
     })
 );
