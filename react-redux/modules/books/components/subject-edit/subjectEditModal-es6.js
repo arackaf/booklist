@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
+import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import * as actionCreators from '../../reducers/subjects/actionCreators';
 import HierarchicalSubjectList from './hierarchicalSubjectList';
@@ -17,6 +18,12 @@ class subjectEditModal extends React.Component {
         }
 
         let textColors = ['#ffffff', '#000000'];
+
+        let deleteWarning = '';
+        if (editSubjectsPacket && editSubjectsPacket.deleteInfo){
+            let deleteInfo = editSubjectsPacket.deleteInfo;
+            deleteWarning = `${deleteInfo.subjectName} has ${deleteInfo.affectedChildren} ${deleteInfo.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;
+        }
 
         return (
             <Modal show={!!editSubjectsPacket} onHide={this.props.stopEditingSubjects}>
@@ -42,7 +49,26 @@ class subjectEditModal extends React.Component {
                                 <BootstrapButton onClick={e => this.props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
                             </div>
                             <div className="panel-body">
-                                <form>
+                                <div>
+                                    { editSubjectsPacket.deleteInfo ?
+                                        <div className="row">
+                                            <div className="col-xs-12">
+                                                <h4>Delete subject { editSubjectsPacket.deleteInfo.subjectName }</h4>
+
+                                                { editSubjectsPacket.deleteInfo.affectedChildren ?
+                                                    <div className="alter alter-warning">
+                                                        {deleteWarning}
+                                                    </div> : null
+                                                }
+
+                                                <div style={{ marginTop: '5px'}}>
+                                                    <BootstrapButton onClick={this.props.cancelDeleteSubject} preset="default-sm">Cancel</BootstrapButton>
+                                                    <AjaxButton running={this.props.editSubjectsPacket.deleteInfo.deleting} runningText="Deleting" onClick={() => this.props.deleteSubject(editSubjectsPacket.deleteInfo._id)} preset="danger-sm" className="pull-right">Delete</AjaxButton>
+                                                </div>
+                                                <hr />
+                                            </div>
+                                        </div> : null
+                                    }
                                     <div className="row">
                                         <div className="col-xs-6">
                                             <div className="form-group">
@@ -88,7 +114,7 @@ class subjectEditModal extends React.Component {
 
                                     <a className="btn btn-default" onClick={this.props.cancelSubjectEdit}>Cancel</a>
                                     <a className="btn btn-primary pull-right" onClick={e => { this.props.createOrUpdateSubject(); e.preventDefault();} }>Save</a>
-                                </form>
+                                </div>
                             </div>
                         </div>
                         : null

@@ -1,7 +1,7 @@
 import {
     LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
     STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
-    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETED
+    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED
 } from './actionNames';
 
 let subjectsLoadedOrLoading = false;
@@ -75,8 +75,9 @@ export function cancelDeleteSubject(){
 export function deleteSubject(_id){
     return function(dispatch, getState) {
         let request = { _id: _id + '' };
+        dispatch({ type: SUBJECT_DELETING });
         ajaxUtil.post('/subject/delete', request, resp => {
-            dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id });
+            setTimeout(() => dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id }), 1000);
         });
     }
 }
