@@ -43,10 +43,7 @@ class BookViewingList extends React.Component {
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar
-                        selectedBooksCount={this.props.books.selectedBooksCount}
-                        allSubjects={this.props.subjects.list}
-                    ></BooksMenuBar>
+                    <BooksMenuBar />
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
                         { this.props.books.loading || !this.props.subjects.loaded ?
