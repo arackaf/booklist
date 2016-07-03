@@ -7,6 +7,7 @@ import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import * as actionCreators from '../../reducers/subjects/actionCreators';
 import HierarchicalSubjectList from './hierarchicalSubjectList';
 import CustomColorPicker from './customColorPicker';
+import { subjectsSelector } from '../../reducers/subjects/reducer';
 
 const SubjectEditDeleteInfo = props => {
     let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;
@@ -130,6 +131,6 @@ const subjectEditModal = props => {
     );
 }
 
-const subjectEditModalConnected = connect(state => state, { ...actionCreators })(subjectEditModal);
+const subjectEditModalConnected = connect(state => subjectsSelector(state.books), { ...actionCreators })(subjectEditModal);
 
 export default subjectEditModalConnected;

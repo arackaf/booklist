@@ -70,12 +70,8 @@ class BookViewingList extends React.Component {
                     <span>Track my books</span>
                 </div>
 
-                <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
-                <SubjectEditModal
-                    editSubjectPacket={this.props.subjects.editSubjectPacket}
-                    subjects={this.props.subjects.list}
-                    colors={this.props.subjects.colors}>
-                </SubjectEditModal>
+                <BookSubjectSetterDesktop subjects={this.props.subjects} />
+                <SubjectEditModal />
 
                 <ManualBookEntry
                     title={editingBook ? `Edit ${editingBook.title}` : ''}
