@@ -1,5 +1,8 @@
 import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING } from './actionNames';
 
+import { subjectsSelector } from '../subjects/reducer';
+import { booksSelector } from '../books/reducer';
+
 const searchFields = {
     search: '',
     subjects: {},
@@ -43,11 +46,16 @@ function projectselectedSubjects(selectedSubjectsIds, subjects){
     return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]).filter(s => s);
 }
 
-export const bookSearchSelector = state =>
-    Object.assign(
-        {},
+export const bookSearchSelector = state => {
+    let subjectsState = subjectsSelector(state);
+    let booksState = booksSelector(state);
+
+    return Object.assign({},
         state.bookSearch,
         {
             selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash),
-            ...state.ui
+            ...state.ui,
+            subjects: subjectsState.subjects,
+            selectedBooksCount: booksState.selectedBooksCount
         });
+}

@@ -177,7 +177,7 @@ class BooksMenuBar extends React.Component {
                         <HierarchicalSelectableSubjectList
                             style={{ paddingLeft: 5 }}
                             toggleFilteredSubject={this.props.togglePendingSubject}
-                            subjects={this.props.allSubjects}
+                            subjects={this.props.subjects}
                             selectedSubjects={this.props.pending.subjects} />
 
                         { this.props.selectedSubjects.length ? <span>Selected subjects: {this.props.selectedSubjects.map(s => s.name).join(', ')}</span> : null }
