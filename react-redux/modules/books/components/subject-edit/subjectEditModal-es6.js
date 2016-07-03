@@ -39,7 +39,7 @@ class subjectEditModal extends React.Component {
                         <div className="panel panel-info">
                             <div className="panel-heading">
                                 { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
-                                <BootstrapButton onClick={e => this.props.deleteSubject()} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
+                                <BootstrapButton onClick={e => this.props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
                             </div>
                             <div className="panel-body">
                                 <form>
