@@ -67,7 +67,7 @@ class BookViewingList extends React.Component {
                     <span>Track my books</span>
                 </div>
 
-                <BookSubjectSetterDesktop subjects={this.props.subjects} />
+                <BookSubjectSetterDesktop />
                 <SubjectEditModal />
 
                 <ManualBookEntry
