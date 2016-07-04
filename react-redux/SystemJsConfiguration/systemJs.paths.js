@@ -8,10 +8,13 @@ var systemJsDevConfig = {
         'react-redux': 'node_modules/react-redux/dist/react-redux.js',
         redux: 'node_modules/redux/dist/redux.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
-        reselect: 'node_modules/reselect/lib/index.js'
+        reselect: 'node_modules/reselect/lib/index.js',
+        jscolor: 'util/jscolor.js'
     },
     meta: {
-
+        jscolor: {
+            format: 'global'
+        }
     }
 }
 
@@ -25,10 +28,13 @@ var systemJsLiveConfig = {
         'react-redux': 'node_modules/react-redux/dist/react-redux.min.js',
         'redux': 'node_modules/redux/dist/redux.min.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
-        'reselect': 'node_modules/reselect/lib/index.js'
+        'reselect': 'node_modules/reselect/lib/index.js',
+        jscolor: 'util/jscolor.min.js'
     },
     meta: {
-
+        jscolor: {
+            format: 'global'
+        }
     }
 }
 

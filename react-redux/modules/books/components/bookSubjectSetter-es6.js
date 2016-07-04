@@ -33,7 +33,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                     </div>
                     <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
                         <div className="panel-body" style={{ paddingTop: 0 }}>
-                            { this.props.subjects.allSubjectsSorted.map(s =>
+                            { this.props.allSubjectsSorted.map(s =>
                                 <div className="checkbox" key={s._id}>
                                     <label><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name}</label>
                                 </div>)
@@ -46,7 +46,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                     </div>
                     <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
                         <div className="panel-body" style={{ paddingTop: 0 }}>
-                            { this.props.subjects.allSubjectsSorted.map(s =>
+                            { this.props.allSubjectsSorted.map(s =>
                                 <div className="checkbox" key={s._id}>
                                     <label><input type="checkbox" checked={!!this.props.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name}</label>
                                 </div>)

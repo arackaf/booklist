@@ -170,3 +170,6 @@ app-helpers/bookEntryQueueManager.js
 app-helpers/nodeHelpers.js
 app-helpers/promiseUtils.js
 app-helpers/sendEmail.js
+react-redux/modules/books/components/subject-edit/customColorPicker.js
+react-redux/modules/books/components/subject-edit/subjectEditTree.js
+react-redux/modules/books/components/booklist-menubar/bookSelectTree.js

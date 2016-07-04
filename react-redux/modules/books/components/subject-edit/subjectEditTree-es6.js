@@ -15,8 +15,11 @@ class HierarchicalSubjectItem extends React.Component {
             <li key={this.props._id}>
                 {this.props.children.length ?
                     <div>
-                        <a onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-edit"></i></a>&nbsp;
-                        <a onClick={() => this.toggleChildren()}>{this.props.name}</a>
+                        <span className="label label-default" style={{ backgroundColor: this.props.backgroundColor, color: this.props.textColor || 'white' }}>
+                            <a style={{ color: 'inherit' }} onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-fw fa-pencil"></i></a>&nbsp;{this.props.name}
+                            <a style={{ color: 'inherit' }} onClick={() => this.toggleChildren()}><i className={'fa fa-fw fa-angle-' + (this.state.childrenVisible ? 'up' : 'down')}></i></a>
+                        </span>
+
                         <Collapse in={this.state.childrenVisible}>
                             <div>
                                 <HierarchicalSubjectList style={{ paddingLeft: 25 }} onEdit={this.props.onEdit} subjects={this.props.children} />
@@ -25,9 +28,10 @@ class HierarchicalSubjectItem extends React.Component {
                     </div>
                     :
                     <div>
-                        <a onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-edit"></i></a>&nbsp;
-                        <span>{this.props.name}</span>
-
+                        <span className="label label-default" style={{ backgroundColor: this.props.backgroundColor, color: this.props.textColor || 'white' }}>
+                            <a style={{ color: 'inherit' }} onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-fw fa-pencil"></i></a>
+                            &nbsp;{this.props.name}
+                        </span>
                     </div>}
             </li>
         )

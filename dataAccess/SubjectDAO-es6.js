@@ -8,22 +8,23 @@ class SubjectDAO extends DAO {
     }
     async deleteSubject(_id){
         let db = await super.open();
-        let subjectToDelete = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+        let subjectsToDelete =
+            (await db.collection('subjects').find({ $or: [{ _id: ObjectId(_id) }, { path: { $regex: `.*,${_id},` } }], userId: this.userId }).toArray()).map(o => o._id);
 
-        if (!subjectToDelete) return;
+        let subjectsToDeleteString = subjectsToDelete.map(_id => '' + _id);
 
-        let booksToUpdate = (await db.collection('books').find({ subjects: _id, userId: this.userId }, {_id: 1}).toArray()).map(o => o._id);
+        if (!subjectsToDelete.length) return;
 
         await db.collection('books').update(
-            { _id: { $in: booksToUpdate } },
-            { $pull: { subjects: _id } }, { upsert: false, multi: true }
+            { userId: this.userId, subjects: { $in: subjectsToDeleteString } },
+            { $pull: { subjects: { $in: subjectsToDeleteString } } }, { upsert: false, multi: true }
         );
 
-        await db.collection('subjects').remove({ _id: ObjectId(_id) });
+        await db.collection('subjects').remove({ _id: { $in: subjectsToDelete } });
 
-        return { booksUpdated: booksToUpdate.map(String) };
+        return { subjectsDeleted: subjectsToDeleteString };
     }
-    async updateSubjectInfo(_id, newName, newParent){
+    async updateSubjectInfo(_id, name, backgroundColor, textColor, newParent){
         let db = await super.open();
 
         try{
@@ -33,13 +34,13 @@ class SubjectDAO extends DAO {
                     let existingParent = await db.collection('subjects').findOne({ _id: ObjectId(newParent) });
                     newPath = (existingParent.path || ',') + ('' + existingParent._id) + ',';
                 }
-                let newSubject = { name: newName, path: newPath, userId: this.userId };
+                let newSubject = { name, backgroundColor, textColor, path: newPath, userId: this.userId };
                 await db.collection('subjects').insert(newSubject);
                 return { affectedSubjects: [newSubject] };
             }
 
             let existing = await db.collection('subjects').findOne({ _id: ObjectId(_id) });
-            await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { name: newName } });
+            await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { name, backgroundColor, textColor } });
 
             let existingParent;
             if (existing.path == null){
@@ -52,7 +53,7 @@ class SubjectDAO extends DAO {
             if (existingParent != newParent) {
                 var affectedSubjects = await this.updateSubjectParent(_id, newParent);
             }
-            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name: newName })] };
+            return { affectedSubjects: affectedSubjects || [Object.assign(existing, { name, backgroundColor, textColor })] };
         } finally{
             super.dispose(db);
         }
@@ -89,7 +90,12 @@ class SubjectDAO extends DAO {
     async loadSubjects(){
         let db = await super.open();
         try {
-            return await db.collection('subjects').find({ userId: this.userId }).toArray();
+            let [subjects, labelColors] = await Promise.all([
+                db.collection('subjects').find({ userId: this.userId }).sort({ name: 1 }).toArray(),
+                db.collection('labelColors').find({ }).sort({ order: 1 }).toArray()
+            ]);
+
+            return { subjects, labelColors };
         } finally {
             super.dispose(db);
         }
