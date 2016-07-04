@@ -15,17 +15,17 @@ class BookViewListDesktop extends React.Component{
         this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     }
     setSort(column){
-        let currentSort = this.props.bookSearch.sort;
+        let currentSort = this.props.currentSort;
         let newDirection = 1;
         if (currentSort === column){
-            newDirection = this.props.bookSearch.sortDirection == 1 ? -1 : 1;
+            newDirection = this.props.sortDirection == 1 ? -1 : 1;
         }
 
         this.props.setSortOrder(column, newDirection);
     }
     render(){
-        let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.bookSearch.sortDirection == 1 ? 'up' : 'down')}></i>,
-            sortIconIf = column => column == this.props.bookSearch.sort ? potentialSortIcon : null;
+        let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.sortDirection == 1 ? 'up' : 'down')}></i>,
+            sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
         return (
             <div style={{ minHeight: 500 }}>

@@ -19,6 +19,7 @@ export const selector = state => {
     let booksSelected = booksSelector(state.books),
         subjectsSelected = subjectsSelector(state.books),
         bookEdit = state.books.bookEdit,
+        bookSearch = bookSearchSelector(state.books),
         ui = state.books.ui;
 
     return {
@@ -27,8 +28,8 @@ export const selector = state => {
         books: booksSelected.list,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,
-        bookSearch: bookSearchSelector(state.books),
-        booksSubjectsModifier: booksSubjectsModifierSelector(state.books),
+        currentSort: bookSearch.sort,
+        sortDirection: bookSearch.sortDirection,
         isEditingBook: bookEdit.isEditing,
         editingBook: bookEdit.editingBook,
         editingBookSaving: bookEdit.editingBookSaving,
