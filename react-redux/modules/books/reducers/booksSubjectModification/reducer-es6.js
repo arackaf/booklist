@@ -6,6 +6,8 @@ import {
     FINISHED_SUBJECT_MODIFICATION
 } from './actionNames';
 
+import { subjectsSelector } from '../subjects/reducer';
+
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
     selectedBooksModify: false,
@@ -57,13 +59,15 @@ const removingSubjectsSelector = createSelector(
 );
 
 export const booksSubjectsModifierSelector = createSelector(
-    [state => state.booksSubjectsModifier, modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector],
-    (booksSubjectsModifier, modifyingBooks, addingSubjects, removingSubjects) => ({
+    [state => state.booksSubjectsModifier, modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector, subjectsSelector],
+    (booksSubjectsModifier, modifyingBooks, addingSubjects, removingSubjects, subjectsState) => ({
         addingSubjectIds: booksSubjectsModifier.addingSubjects,
         removingSubjectIds: booksSubjectsModifier.removingSubjects,
         settingBooksSubjects: booksSubjectsModifier.settingBooksSubjects,
         modifyingBooks,
         addingSubjects,
-        removingSubjects
+        removingSubjects,
+        subjects: subjectsState.subjects,
+        allSubjectsSorted: subjectsState.allSubjectsSorted
     })
 );
