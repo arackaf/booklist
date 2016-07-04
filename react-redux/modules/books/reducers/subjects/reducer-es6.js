@@ -88,4 +88,6 @@ const stackedSubjectsSelector = createSelector(
     })
 );
 
-export const subjectsSelector = state => Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
+export const subjectsSelector = state => {
+    return Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
+}

@@ -29,7 +29,7 @@ class BookViewListDesktop extends React.Component{
 
         return (
             <div style={{ minHeight: 500 }}>
-                { this.props.books.list.length ?
+                { this.props.books.length ?
                 <div>
                     <table className="table table-striped no-padding-top">
                         <thead>
@@ -46,10 +46,10 @@ class BookViewListDesktop extends React.Component{
                             </tr>
                         </thead>
                         <tbody>
-                        { this.props.books.list.map(book =>
+                        { this.props.books.map(book =>
                             <tr key={book._id}>
                                 <td>
-                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.books.selectedBooks[book._id]} />
+                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.selectedBooks[book._id]} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
                                 <td>{book.title}<br /><a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>

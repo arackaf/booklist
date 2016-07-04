@@ -8,7 +8,7 @@ import MobileView from './bookViewList-mobile';
 
 import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
-import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
+import BookSubjectSetter from './bookSubjectSetter';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
@@ -46,19 +46,19 @@ class BookViewingList extends React.Component {
                     <BooksMenuBar />
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
-                        { this.props.books.loading || !this.props.subjects.loaded ?
+                        { this.props.booksLoading || !this.props.subjectsLoaded ?
                             <div className="wait-for-loading">
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
                             </div> : null }
 
-                        {(!this.props.books.list.length && !this.props.books.loading) ?
+                        {(!this.props.books.length && !this.props.booksLoading) ?
                             <div className="alert alert-warning">
                                 No books found
                             </div> : null }
 
-                        {this.props.subjects.loaded ?
-                            (this.props.ui.isDesktop ? <DesktopView />
-                                : this.props.ui.isMobile ? <MobileView />
+                        {this.props.subjectsLoaded ?
+                            (this.props.isDesktop ? <DesktopView />
+                                : this.props.isMobile ? <MobileView />
                                 : null) : null }
                     </div>
                 </div>
@@ -67,7 +67,7 @@ class BookViewingList extends React.Component {
                     <span>Track my books</span>
                 </div>
 
-                <BookSubjectSetterDesktop />
+                <BookSubjectSetter />
                 <SubjectEditModal />
 
                 <ManualBookEntry
