@@ -5,7 +5,7 @@ import { Modal } from 'react-bootstrap';
 import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import * as actionCreators from '../../reducers/subjects/actionCreators';
-import HierarchicalSubjectList from './hierarchicalSubjectList';
+import SubjectEditTree from './subjectEditTree';
 import CustomColorPicker from './customColorPicker';
 import { subjectsSelector } from '../../reducers/subjects/reducer';
 
@@ -53,7 +53,7 @@ const subjectEditModal = props => {
             <Modal.Body style={{ paddingBottom: 0 }}>
                 <div className="row">
                     <div className="col-xs-11">
-                        <HierarchicalSubjectList style={{ paddingLeft: 5 }} subjects={props.subjects} onEdit={_id => props.editSubject(_id)} />
+                        <SubjectEditTree style={{ paddingLeft: 5 }} subjects={props.subjects} onEdit={_id => props.editSubject(_id)} />
                     </div>
                     <div className="col-xs-1">
                         <BootstrapButton onClick={props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
