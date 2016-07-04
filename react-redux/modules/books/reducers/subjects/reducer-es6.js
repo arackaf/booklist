@@ -5,7 +5,6 @@ import {
 } from './actionNames';
 
 const { createSelector } = require('reselect');
-import { stackAndGetTopLevelSubjects, allSubjectsSorted } from '../../util/booksSubjectsHelpers';
 
 const initialSubjectsState = {
     subjectHash: {},
@@ -82,12 +81,29 @@ function flattenedSubjects(subjects){
 const stackedSubjectsSelector = createSelector(
     [state => state.subjectHash],
     subjectHash => ({
-        subjects:
-            stackAndGetTopLevelSubjects(subjectHash),
+        subjects: stackAndGetTopLevelSubjects(subjectHash),
         allSubjectsSorted: allSubjectsSorted(subjectHash)
     })
 );
 
 export const subjectsSelector = state => {
     return Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
+}
+
+function stackAndGetTopLevelSubjects(subjectsHash){
+    let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
+    subjects.forEach(s => {
+        s.children = [];
+        s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
+    });
+    return subjects.filter(s => s.path == null);
+}
+
+function allSubjectsSorted(subjectsHash){
+    let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
+    return subjects.sort(({ name: name1 }, { name: name2 }) => {
+        let name1After = name1.toLowerCase() > name2.toLowerCase(),
+            bothEqual = name1.toLowerCase() === name2.toLowerCase();
+        return bothEqual ? 0 : (name1After ? 1 : -1);
+    });
 }

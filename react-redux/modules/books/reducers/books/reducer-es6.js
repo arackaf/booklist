@@ -3,7 +3,6 @@ import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, D
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
-import { adjustBooksForDisplay } from '../../util/booksSubjectsHelpers';
 
 import {
     EDITING_BOOK_SAVED
@@ -75,3 +74,14 @@ export const booksSelector = state => Object.assign({},
         list: booksWithSubjectsSelector(state),
         selectedBooksCount: Object.keys(state.books.selectedBooks).filter(k => state.books.selectedBooks[k]).length
     });
+
+function adjustBooksForDisplay(booksHash, subjectsHash){
+    let books = Object.keys(booksHash).map(_id => booksHash[_id]);
+    books.forEach(b => {
+        b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
+        b.authors = b.authors || [];
+        let d = new Date(+b.dateAdded);
+        b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
+    });
+    return books;
+}
