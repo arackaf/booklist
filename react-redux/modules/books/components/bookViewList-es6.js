@@ -36,7 +36,7 @@ class BookViewingList extends React.Component {
         this.props.loadSubjects();
     }
     render() {
-        let editingBook = this.props.bookEdit.editingBook,
+        let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
 
         return (
@@ -74,9 +74,9 @@ class BookViewingList extends React.Component {
                     title={editingBook ? `Edit ${editingBook.title}` : ''}
                     dragTitle={dragTitle}
                     bookToEdit={editingBook}
-                    isOpen={this.props.bookEdit.isEditing}
-                    isSaving={this.props.bookEdit.editingBookSaving}
-                    isSaved={this.props.bookEdit.editingBookSaved}
+                    isOpen={this.props.isEditingBook}
+                    isSaving={this.props.editingBookSaving}
+                    isSaved={this.props.editingBookSaved}
                     saveBook={book => this.props.saveEditingBook(book)}
                     saveMessage={'Saved'}
                     onClosing={this.props.stopEditingBook} />
