@@ -1,32 +1,42 @@
+import {
+    LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
+    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED
+} from './actionNames';
 
-    import { LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_NAME, SET_NEW_SUBJECT_PARENT, STOP_EDITING_SUBJECTS,
-             UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, SUBJECT_DELETED
-    } from './actionNames';
+let subjectsLoadedOrLoading = false;
+export function loadSubjects(){
+    return function(dispatch, getState){
+        if (subjectsLoadedOrLoading) return;
+        subjectsLoadedOrLoading = true;
 
-    let subjectsLoadedOrLoading = false;
-    export function loadSubjects(){
-        return function(dispatch, getState){
-            if (subjectsLoadedOrLoading) return;
-            subjectsLoadedOrLoading = true;
+        dispatch({ type: LOAD_SUBJECTS });
 
-            dispatch({ type: LOAD_SUBJECTS });
-
-            Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
-                dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
-            });
-        }
+        Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
+            dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
+            dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
+        });
     }
+}
 
 export function editSubjects(){
     return { type: EDIT_SUBJECTS };
 }
 
-export function setNewSubjectName(newName){
-    return { type: SET_NEW_SUBJECT_NAME, value: newName };
+export function setNewSubjectName(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'name', value };
 }
 
-export function setNewSubjectParent(newParent){
-    return { type: SET_NEW_SUBJECT_PARENT, value: newParent };
+export function setNewSubjectParent(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'parentId', value };
+}
+
+export function setNewSubjectBackgroundColor(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'backgroundColor', value };
+}
+
+export function setNewSubjectTextColor(value){
+    return { type: SET_NEW_SUBJECT_VALUE, field: 'textColor', value };
 }
 
 export function stopEditingSubjects(){
@@ -41,22 +51,33 @@ export function newSubject(){
     return { type: NEW_SUBJECT };
 }
 
+export function cancelSubjectEdit(){
+    return { type: CANCEL_SUBJECT_EDIT };
+}
+
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject, newSubjectName: newName, newSubjectParent: newParent } = getState().books.subjects.editSubjectsPacket,
-            request = { _id: editingSubject ? editingSubject._id : null, newName, newParent };
+        let { editingSubject, name, parentId, backgroundColor, textColor } = getState().books.subjects.editSubjectPacket,
+            request = { _id: editingSubject ? editingSubject._id : null, name, parentId, backgroundColor, textColor };
 
-        ajaxUtil.post('/subject/setInfo', request, resp => {
-            dispatch({ type: UPDATE_SUBJECT_RESULTS, newName, newParent, affectedSubjects: resp.affectedSubjects });
-        });
+        ajaxUtil.post('/subject/setInfo', request, resp => dispatch({ type: UPDATE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
     }
 }
 
-export function deleteSubject(){
+export function beginDeleteSubject(_id){
+    return { type: BEGIN_SUBJECT_DELETE, _id };
+}
+
+export function cancelDeleteSubject(){
+    return { type: CANCEL_SUBJECT_DELETE };
+}
+
+export function deleteSubject(_id){
     return function(dispatch, getState) {
-        let request = { _id: getState().books.subjects.editSubjectsPacket.editingSubject._id + '' };
+        let request = { _id: _id + '' };
+        dispatch({ type: SUBJECT_DELETING });
         ajaxUtil.post('/subject/delete', request, resp => {
-            dispatch({ type: SUBJECT_DELETED, subjectId: request._id, booksUpdated: resp.booksUpdated });
+            setTimeout(() => dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id }), 1000);
         });
     }
 }

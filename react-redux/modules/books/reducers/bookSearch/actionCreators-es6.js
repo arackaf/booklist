@@ -87,7 +87,7 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
-    return !!['search', 'author', 'publisher', 'pages'].filter(prop => oldState[prop] != newState[prop]).length;
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
 function subjectsDifferent(oldSubjects, newSubjects){

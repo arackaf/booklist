@@ -16,12 +16,25 @@ export const reducer = combineReducers({
 });
 
 export const selector = state => {
+    let booksSelected = booksSelector(state.books),
+        subjectsSelected = subjectsSelector(state.books),
+        bookEdit = state.books.bookEdit,
+        bookSearch = bookSearchSelector(state.books),
+        ui = state.books.ui;
+
     return {
-        subjects: subjectsSelector(state.books),
-        books: booksSelector(state.books),
-        bookSearch: bookSearchSelector(state.books),
-        booksSubjectsModifier: booksSubjectsModifierSelector(state.books),
-        bookEdit: state.books.bookEdit, //no selector on bookEdit
-        ui: state.books.ui //no selector on ui
+        subjects: subjectsSelected.list,
+        subjectsLoaded: subjectsSelected.loaded,
+        books: booksSelected.list,
+        selectedBooks: booksSelected.selectedBooks,
+        booksLoading: booksSelected.loading,
+        currentSort: bookSearch.sort,
+        sortDirection: bookSearch.sortDirection,
+        isEditingBook: bookEdit.isEditing,
+        editingBook: bookEdit.editingBook,
+        editingBookSaving: bookEdit.editingBookSaving,
+        editingBookSaved: bookEdit.editingBookSaved,
+        isDesktop: ui.isDesktop,
+        isMobile: ui.isMobile
     }
 };

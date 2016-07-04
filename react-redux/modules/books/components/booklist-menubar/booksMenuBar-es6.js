@@ -10,7 +10,7 @@ import {
     MenuItem
 } from 'react-bootstrap';
 
-import HierarchicalSelectableSubjectList from './hierarchicalSelectableSubjectList';
+import BookSelectTree from './bookSelectTree';
 
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 
@@ -174,10 +174,10 @@ class BooksMenuBar extends React.Component {
                         </form>
 
                         <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
-                        <HierarchicalSelectableSubjectList
+                        <BookSelectTree
                             style={{ paddingLeft: 5 }}
                             toggleFilteredSubject={this.props.togglePendingSubject}
-                            subjects={this.props.allSubjects}
+                            subjects={this.props.subjects}
                             selectedSubjects={this.props.pending.subjects} />
 
                         { this.props.selectedSubjects.length ? <span>Selected subjects: {this.props.selectedSubjects.map(s => s.name).join(', ')}</span> : null }

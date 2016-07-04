@@ -8,7 +8,7 @@ import MobileView from './bookViewList-mobile';
 
 import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
-import BookSubjectSetterDesktop from './bookSubjectSetter-desktop';
+import BookSubjectSetter from './bookSubjectSetter';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
@@ -36,32 +36,29 @@ class BookViewingList extends React.Component {
         this.props.loadSubjects();
     }
     render() {
-        let editingBook = this.props.bookEdit.editingBook,
+        let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
 
         return (
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar
-                        selectedBooksCount={this.props.books.selectedBooksCount}
-                        allSubjects={this.props.subjects.list}
-                    ></BooksMenuBar>
+                    <BooksMenuBar />
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
-                        { this.props.books.loading || !this.props.subjects.loaded ?
+                        { this.props.booksLoading || !this.props.subjectsLoaded ?
                             <div className="wait-for-loading">
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
                             </div> : null }
 
-                        {(!this.props.books.list.length && !this.props.books.loading) ?
+                        {(!this.props.books.length && !this.props.booksLoading) ?
                             <div className="alert alert-warning">
                                 No books found
                             </div> : null }
 
-                        {this.props.subjects.loaded ?
-                            (this.props.ui.isDesktop ? <DesktopView />
-                                : this.props.ui.isMobile ? <MobileView />
+                        {this.props.subjectsLoaded ?
+                            (this.props.isDesktop ? <DesktopView />
+                                : this.props.isMobile ? <MobileView />
                                 : null) : null }
                     </div>
                 </div>
@@ -70,19 +67,16 @@ class BookViewingList extends React.Component {
                     <span>Track my books</span>
                 </div>
 
-                <BookSubjectSetterDesktop subjects={this.props.subjects}></BookSubjectSetterDesktop>
-                <SubjectEditModal
-                    editSubjectsPacket={this.props.subjects.editSubjectsPacket}
-                    subjects={this.props.subjects.list}>
-                </SubjectEditModal>
+                <BookSubjectSetter />
+                <SubjectEditModal />
 
                 <ManualBookEntry
                     title={editingBook ? `Edit ${editingBook.title}` : ''}
                     dragTitle={dragTitle}
                     bookToEdit={editingBook}
-                    isOpen={this.props.bookEdit.isEditing}
-                    isSaving={this.props.bookEdit.editingBookSaving}
-                    isSaved={this.props.bookEdit.editingBookSaved}
+                    isOpen={this.props.isEditingBook}
+                    isSaving={this.props.editingBookSaving}
+                    isSaved={this.props.editingBookSaved}
                     saveBook={book => this.props.saveEditingBook(book)}
                     saveMessage={'Saved'}
                     onClosing={this.props.stopEditingBook} />
