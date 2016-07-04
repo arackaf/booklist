@@ -15,9 +15,9 @@ class HierarchicalSubjectItem extends React.Component {
             <li key={this.props._id}>
                 {this.props.children.length ?
                     <div>
-                        <span className="label label-default" style={{ backgroundColor: this.props.backgroundColor, color: this.props.textColor }}>
-                            <a style={{ color: 'white' }} onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-fw fa-pencil"></i></a>&nbsp;{this.props.name}
-                            <a style={{ color: 'white' }} onClick={() => this.toggleChildren()}><i className={'fa fa-fw fa-angle-' + (this.state.childrenVisible ? 'up' : 'down')}></i></a>
+                        <span className="label label-default" style={{ backgroundColor: this.props.backgroundColor, color: this.props.textColor || 'white' }}>
+                            <a style={{ color: 'inherit' }} onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-fw fa-pencil"></i></a>&nbsp;{this.props.name}
+                            <a style={{ color: 'inherit' }} onClick={() => this.toggleChildren()}><i className={'fa fa-fw fa-angle-' + (this.state.childrenVisible ? 'up' : 'down')}></i></a>
                         </span>
 
                         <Collapse in={this.state.childrenVisible}>
@@ -28,8 +28,8 @@ class HierarchicalSubjectItem extends React.Component {
                     </div>
                     :
                     <div>
-                        <span className="label label-default" style={{ backgroundColor: this.props.backgroundColor, color: this.props.textColor }}>
-                            <a style={{ color: 'white' }} onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-fw fa-pencil"></i></a>
+                        <span className="label label-default" style={{ backgroundColor: this.props.backgroundColor, color: this.props.textColor || 'white' }}>
+                            <a style={{ color: 'inherit' }} onClick={() => this.props.onEdit(this.props._id)}><i className="fa fa-fw fa-pencil"></i></a>
                             &nbsp;{this.props.name}
                         </span>
                     </div>}
