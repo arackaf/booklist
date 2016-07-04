@@ -17,8 +17,8 @@ class HierarchicalSelectableSubjectItem extends React.Component {
                 <div>
                     <div className="checkbox" style={{ display: 'inline-block', marginTop: 0, marginBottom: 0 }}>
                         <span style={{ backgroundColor: this.props.backgroundColor }} className="label label-default">
-                            <label>
-                                <input style={{ marginTop: 0 }} type="checkbox" onChange={() => this.props.toggleFilteredSubject(this.props._id)} checked={!!this.props.selectedSubjects[this.props._id]} />
+                            <label onClick={() => this.props.toggleFilteredSubject(this.props._id)} style={{ paddingLeft: 0 }}>
+                                <i className={`fa fa-${!!this.props.selectedSubjects[this.props._id] ? 'check-' : ''}square-o`} style={{ marginRight: '5px', minWidth: '10px' }}></i>
                                 {this.props.name}
                             </label>
                             { this.props.children.length ? <a style={{ marginLeft: 5, color: 'white' }} onClick={() => this.toggleChildren()}><i className={'fa fa-' + (childrenVisible ? 'angle-up' : 'angle-down')}></i></a> : null }
