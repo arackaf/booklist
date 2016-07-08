@@ -95,6 +95,7 @@ app.listen(process.env.PORT || 3000);
 app.use('/static/', express.static(__dirname + '/static/'));
 app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
 app.use('/react-redux/', express.static(__dirname + '/react-redux/'));
+app.use('/react-mobx/', express.static(__dirname + '/react-mobx/'));
 app.use('/utils/', express.static(__dirname + '/utils/'));
 app.use('/uploads/', express.static(__dirname + '/uploads/'));
 
@@ -107,7 +108,9 @@ var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => /book.js$/.test(f) || /bookBulk.js$/.test(f) || /subject.js$/.test(f) });
 
 app.get('/', (req, res) => res.redirect('/react-redux'));
+
 app.get('/react-redux', browseToReactRedux);
+app.get('/react-mobx', browseToReactMobX);
 
 function browseToReactRedux(request, response){
     if (!!request.user) {
@@ -118,8 +121,32 @@ function browseToReactRedux(request, response){
     response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
 }
 
+function browseToReactMobX(request, response){
+    if (!!request.user) {
+        response.cookie('logged_in', 'true', { maxAge: 900000 });
+    } else {
+        response.clearCookie('logged_in');
+    }
+    response.sendFile(path.join(__dirname + '/react-mobx/default.htm'));
+}
+
 app.get('/favicon.ico', function (request, response) {
     response.sendFile(path.join(__dirname + '/favicon.ico'));
+});
+
+app.post('/react-mobx/login', passport.authenticate('local'), function(req, response) {
+    // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
+    response.cookie('logged_in', 'true', { maxAge: 900000 });
+    if (req.body.rememberme == 1) {
+        response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: rememberMeExpiration });
+    }
+    response.send(req.user);
+});
+
+app.post('/react-mobx/logout', function(req, response){
+    response.clearCookie('remember_me');
+    req.logout();
+    response.send({});
 });
 
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {

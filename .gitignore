@@ -239,3 +239,4 @@ react-mobx/modules/scan/reducers/actionCreators.js
 react-mobx/modules/scan/reducers/actionNames.js
 react-mobx/modules/scan/reducers/reducer.js
 react-mobx/modules/scan/scan.js
+react-redux/modules/books/components/bookSubjectSetter.js
