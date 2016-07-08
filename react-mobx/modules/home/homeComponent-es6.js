@@ -49,12 +49,17 @@ class MobXTest extends React.Component {
         return (
             <div>
                 <span>All books:</span>
-                <ul>{ this.props.bookList.books.map(b => <li>{b.title} <button onClick={() => b.toggleRead()}>Toggle Read</button></li>) }</ul>
+                <ul>{ this.props.bookList.books.map(b =>
+                    <li>
+                        {b.title} <i className={'fa fa-' + (b.isRead ? 'check' : 'cross')}></i>
+                        <button className="btn btn-xs btn-primary" onClick={() => b.toggleRead()}>Toggle Read</button>
+                    </li>) }
+                </ul>
 
                 <br />
 
                 <span>Read books:</span>
-                <ul>{ this.props.bookList.readBooks.map(b => <li>{b.title} <button onClick={() => b.toggleRead()}>Toggle Read</button></li>) }</ul>
+                <ul>{ this.props.bookList.readBooks.map(b => <li>{b.title}</li>) }</ul>
             </div>
         );
     }
