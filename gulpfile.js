@@ -12,6 +12,7 @@ require('regenerator/runtime');
 
 function isClientFile(file){
     if (file.path.indexOf('\\react-redux\\build\\') >= 0 ) return false;
+    if (file.path.indexOf('\\react-mobx\\build\\') >= 0 ) return false;
     return file.path.indexOf('\\react-redux\\') >= 0 || file.path.indexOf('\\transpileTest\\') >= 0 || file.path.indexOf('\\react-mobx\\') >= 0;
 }
 
@@ -25,8 +26,11 @@ gulp.task('test', function () {
 gulp.task('transpile-all', function () {
     gulp.src(['./**/**-es6.js', '!./controllers/**/*', '!./node_modules/**/*'])
         .pipe(gulpIf(isClientFile, babel({
-            presets: ['stage-2', 'react'],
-            plugins: ['transform-es2015-modules-commonjs']
+            presets: ['stage-1', 'react'],
+            plugins: [
+                'transform-decorators-legacy',
+                'transform-es2015-modules-commonjs'
+            ]
         }), babel({
             presets: ['stage-2', 'es2015']
         })))
@@ -59,8 +63,11 @@ gulp.task('transpile-watch', function() {
                     }
                 }))
                 .pipe(gulpIf(isClientFile, babel({
-                    presets: ['stage-2', 'react'],
-                    plugins: ['transform-es2015-modules-commonjs']
+                    presets: ['stage-1', 'react'],
+                    plugins: [
+                        'transform-decorators-legacy',
+                        'transform-es2015-modules-commonjs'
+                    ]
                 }), babel({
                     presets: ['stage-2', 'es2015']
                 })))

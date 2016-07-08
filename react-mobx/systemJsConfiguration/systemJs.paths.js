@@ -9,7 +9,9 @@ var systemJsDevConfig = {
         redux: 'node_modules/redux/dist/redux.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         reselect: 'node_modules/reselect/lib/index.js',
-        jscolor: 'util/jscolor.js'
+        jscolor: 'util/jscolor.js',
+        'mobx': 'node_modules/mobx/lib/mobx.js',
+        'mobx-react': 'node_modules/mobx-react/index.js'
     },
     meta: {
         jscolor: {
@@ -29,7 +31,9 @@ var systemJsLiveConfig = {
         'redux': 'node_modules/redux/dist/redux.min.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         'reselect': 'node_modules/reselect/lib/index.js',
-        jscolor: 'util/jscolor.min.js'
+        jscolor: 'util/jscolor.min.js',
+        'mobx': 'node_modules/mobx/lib/mobx.min.js',
+        'mobx-react': 'node_modules/mobx-react/index.js'
     },
     meta: {
         jscolor: {
