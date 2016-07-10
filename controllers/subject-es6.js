@@ -24,4 +24,4 @@ class subjectController{
     }
 }
 
-export default subjectController;
+module.exports = subjectController;
