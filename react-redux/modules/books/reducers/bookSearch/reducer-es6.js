@@ -1,4 +1,4 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING } from './actionNames';
+import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID } from './actionNames';
 
 import { subjectsSelector } from '../subjects/reducer';
 import { booksSelector } from '../books/reducer';
@@ -20,7 +20,8 @@ const initialState = {
     ...searchFields,
     pending: {
         ...searchFields
-    }
+    },
+    viewingUserId: ''
 };
 
 export function bookSearchReducer(state = initialState, action){
@@ -37,6 +38,8 @@ export function bookSearchReducer(state = initialState, action){
             return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: !state.pending.subjects[action._id] } } });
         case END_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: false });
+        case SET_VIEWING_USERID:
+            return Object.assign({}, state, { viewingUserId: action._id });
     }
     return state;
 }
