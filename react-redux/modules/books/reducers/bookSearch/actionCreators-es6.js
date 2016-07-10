@@ -5,7 +5,8 @@ import {
     SET_SORT_DIRECTION,
     SET_FILTERS,
     SET_PENDING,
-    APPLY_PENDING_SEARCH
+    APPLY_PENDING_SEARCH,
+    SET_VIEWING_USERID
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
@@ -87,6 +88,11 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
+    
+    if ((oldState.viewingUserId || '') != (newState.userId || '')){
+        location.reload();
+    }
+
     return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection', 'userId'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
@@ -125,3 +131,7 @@ export const setPendingAuthor = createPendingActionCreator('author');
 export const setPendingPublisher = createPendingActionCreator('publisher');
 export const setPendingPages = createPendingActionCreator('pages');
 export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
+
+export function setViewingUserId(_id){
+    return { type: SET_VIEWING_USERID, _id }
+}
