@@ -13,11 +13,13 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator }){
+    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
         subjects = subjects || [];
-        let db = await super.open();
+        let db = await super.open(),
+            userIdToUse = userId || this.userId;
+
         try {
-            let query = { userId: this.userId },
+            let query = { userId: userIdToUse },
                 sortObj = { _id: -1 };
 
             if (search){
@@ -43,7 +45,7 @@ class BookDAO extends DAO {
             if (subjects.length){
                 if (searchChildSubjects){
                     let allPaths = subjects.map(s => `,${s},`).join('|');
-                    let childIds = (await db.collection('subjects').find({ path: { $regex: allPaths }, userId: this.userId }, { _id: 1 }).toArray()).map(o => '' + o._id);
+                    let childIds = (await db.collection('subjects').find({ path: { $regex: allPaths }, userId: userIdToUse }, { _id: 1 }).toArray()).map(o => '' + o._id);
 
                     subjects.push(...childIds);
                 }

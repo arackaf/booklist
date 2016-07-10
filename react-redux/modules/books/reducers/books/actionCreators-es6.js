@@ -22,7 +22,10 @@ function booksSearch(bookSearchState){
         author: bookSearchState.author,
         publisher: bookSearchState.publisher,
         pages: bookSearchState.pages,
-        pagesOperator: bookSearchState.pagesOperator
+        pagesOperator: bookSearchState.pagesOperator,
+        userId: bookSearchState.userId,
+        userIdd: 'hello world',
+        xxx: 'xxx',
     });
 }
 
