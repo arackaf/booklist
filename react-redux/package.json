@@ -7,9 +7,9 @@
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-plugin-transform-es2015-modules-commonjs": "6.8.0",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-react": "6.5.0",
@@ -37,5 +37,8 @@
     "redux-thunk": "1.0.0",
     "reselect": "2.0.1",
     "systemjs-builder": "0.15.15"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-decorators-legacy": "^1.3.4"
   }
 }
