@@ -27,20 +27,20 @@ class bookController{
         this.send({ success: true });
     }
     @httpPost
-    async saveManual(book){
+    async saveManual({ book }){
         let bookDao = new BookDAO(this.request.user.id);
         await bookDao.saveManual(book);
         this.send({ success: true });
     }
     @httpPost
-    async update(book){
+    async update({ book }){
         let bookDao = new BookDAO(this.request.user.id);
         await bookDao.update(book);
         this.send({ success: true });
     }
-    async searchBooks(){
+    async searchBooks(params){
         let bookDao = new BookDAO(this.request.user.id),
-            bookResults = await bookDao.searchBooks({ ...this.request.query });
+            bookResults = await bookDao.searchBooks({ ...params });
 
         this.send({ results: bookResults })
     }
