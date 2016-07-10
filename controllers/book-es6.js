@@ -46,4 +46,4 @@ class bookController{
     }
 }
 
-export default bookController;
+module.exports = bookController;
