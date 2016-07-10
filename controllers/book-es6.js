@@ -38,9 +38,9 @@ class bookController{
         await bookDao.update(book);
         this.send({ success: true });
     }
-    async searchBooks(search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator){
+    async searchBooks(){
         let bookDao = new BookDAO(this.request.user.id),
-            bookResults = await bookDao.searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator });
+            bookResults = await bookDao.searchBooks({ ...this.request.query });
 
         this.send({ results: bookResults })
     }

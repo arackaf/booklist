@@ -65,7 +65,7 @@ export function syncFiltersToHash(){
         let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
             packet = { searchChildSubjects, subjects };
 
-        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort', 'userId'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
         packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
         let newIsDirty = isDirty(state, packet);
 
