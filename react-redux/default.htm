@@ -76,7 +76,6 @@
         <button><i class="fa fa-fw fa-spin fa-spinner"></i></button>
     </div>
 
-    <script src="https://featuretests.io/rs.js"></script>
     <script>
         var isEs6 = false;
         function webSocketAddress(path){
@@ -84,10 +83,16 @@
         }
 
         var isDev = /localhost:3000/.test(window.location.href);
+        loadSystemJs();
+
+        /*
         if (isDev){
             loadSystemJs();
         } else {
             new Promise(function (res) {
+
+                //< script src="https://featuretests.io/rs.js"></ script >
+
                 setTimeout(res, 500);
                 window["Reflect.supports"]("all", function (results) {
                     var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
@@ -97,6 +102,7 @@
                 });
             }).then(loadSystemJs);
         }
+         */
 
         function loadSystemJs() {
             var config = isDev ? systemJsDevConfig : systemJsLiveConfig;
