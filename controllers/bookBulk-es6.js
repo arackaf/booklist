@@ -6,7 +6,7 @@ import BookDAO from '../dataAccess/bookDAO';
 class bookController{
     constructor(){}
     @httpPost
-    async setSubjects(books, add, remove){
+    async setSubjects({ books, add, remove }){
         try {
             let bookDao = new BookDAO();
             await bookDao.setBooksSubjects(books, add, remove);
