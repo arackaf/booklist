@@ -13,6 +13,7 @@ import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
 
+import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsUi from '../reducers/ui/actionCreators';
@@ -34,6 +35,10 @@ class BookViewingList extends React.Component {
             this.props.setDesktop();
         }
         this.props.loadSubjects();
+
+        if (this.props.reloadBooksOnActivate){
+            this.props.loadBooks();
+        }
     }
     render() {
         let editingBook = this.props.editingBook,
@@ -85,5 +90,5 @@ class BookViewingList extends React.Component {
     }
 }
 
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi })(BookViewingList);
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi, ...actionCreatorsBooks })(BookViewingList);
 export default BookViewingListConnected;

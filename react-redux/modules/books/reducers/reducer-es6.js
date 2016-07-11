@@ -16,16 +16,17 @@ export const reducer = combineReducers({
 });
 
 export const selector = state => {
-    let booksSelected = booksSelector(state.books),
-        subjectsSelected = subjectsSelector(state.books),
+    let booksSelected = booksSelector(state);
+    let subjectsSelected = subjectsSelector(state),
         bookEdit = state.books.bookEdit,
-        bookSearch = bookSearchSelector(state.books),
+        bookSearch = bookSearchSelector(state),
         ui = state.books.ui;
 
     return {
         subjects: subjectsSelected.list,
         subjectsLoaded: subjectsSelected.loaded,
         books: booksSelected.list,
+        reloadBooksOnActivate: booksSelected.reloadOnActivate,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,
         currentSort: bookSearch.sort,

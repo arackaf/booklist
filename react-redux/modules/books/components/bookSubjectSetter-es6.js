@@ -63,6 +63,6 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
     }
 }
 
-const BookSubjectSetterDesktop = connect(state => booksSubjectsModifierSelector(state.books), { ...bookSubjectActionCreators })(BookSubjectSetterDesktopUnConnected);
+const BookSubjectSetterDesktop = connect(booksSubjectsModifierSelector, { ...bookSubjectActionCreators })(BookSubjectSetterDesktopUnConnected);
 
 export default BookSubjectSetterDesktop;

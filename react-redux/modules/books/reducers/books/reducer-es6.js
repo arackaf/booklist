@@ -11,7 +11,8 @@ import {
 const initialBooksState = {
     booksHash: {},
     loading: false,
-    selectedBooks: {}
+    selectedBooks: {},
+    reloadOnActivate: true
 };
 
 export function booksReducer(state = initialBooksState, action){
@@ -64,15 +65,15 @@ function createBooksHash(booksArr){
 }
 
 const booksWithSubjectsSelector = createSelector(
-    [state => state.books.booksHash, state => state.subjects.subjectHash],
+    [state => state.books.books.booksHash, state => state.books.subjects.subjectHash],
     adjustBooksForDisplay
 );
 
 export const booksSelector = state => Object.assign({},
-    state.books,
+    state.books.books,
     {
         list: booksWithSubjectsSelector(state),
-        selectedBooksCount: Object.keys(state.books.selectedBooks).filter(k => state.books.selectedBooks[k]).length
+        selectedBooksCount: Object.keys(state.books.books.selectedBooks).filter(k => state.books.books.selectedBooks[k]).length
     });
 
 function adjustBooksForDisplay(booksHash, subjectsHash){
