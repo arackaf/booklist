@@ -49,10 +49,10 @@ class BookViewListDesktop extends React.Component{
                         { this.props.books.map(book =>
                             <tr key={book._id}>
                                 <td>
-                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.selectedBooks[book._id]} />
+                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
-                                <td>{book.title}<br /><a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>
+                                <td>{book.title}<br />{ !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }</td>
                                 <td>
                                     <ul className="list-unstyled">
                                         {book.authors.map(author => <li>{author}</li>)}
@@ -61,7 +61,7 @@ class BookViewListDesktop extends React.Component{
                                 <td>
                                     { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
+                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
                                 </td>
                                 <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
