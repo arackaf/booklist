@@ -22,9 +22,6 @@ import { selector } from '../reducers/reducer';
 import { globalHashManager } from 'reactStartup';
 
 class BookViewingList extends React.Component {
-    constructor(props){
-        super();
-    }
     componentDidMount(){
         try {
             if (window.screen.width < 700) {

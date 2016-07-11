@@ -47,15 +47,19 @@ function projectselectedSubjects(selectedSubjectsIds, subjects){
 }
 
 export const bookSearchSelector = state => {
-    let subjectsState = subjectsSelector(state);
-    let booksState = booksSelector(state);
+    let books = state.books,
+        root = state.root;
+
+    let subjectsState = subjectsSelector(books);
+    let booksState = booksSelector(books);
 
     return Object.assign({},
-        state.bookSearch,
+        books.bookSearch,
         {
-            selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash),
-            ...state.ui,
+            selectedSubjects: projectselectedSubjects(books.bookSearch.subjects, books.subjects.subjectHash),
+            ...books.ui,
             subjects: subjectsState.subjects,
-            selectedBooksCount: booksState.selectedBooksCount
+            selectedBooksCount: booksState.selectedBooksCount,
+            viewingPublic: root.isPublic
         });
 }

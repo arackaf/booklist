@@ -19,14 +19,15 @@ export const selector = state => {
     let booksSelected = booksSelector(state.books),
         subjectsSelected = subjectsSelector(state.books),
         bookEdit = state.books.bookEdit,
-        bookSearch = bookSearchSelector(state.books),
-        ui = state.books.ui;
+        bookSearch = bookSearchSelector(state),
+        ui = state.books.ui,
+        root = state.root;
 
     return {
         subjects: subjectsSelected.list,
         subjectsLoaded: subjectsSelected.loaded,
         books: booksSelected.list,
-        viewingPublic: !!state.books.bookSearch.viewingUserId,
+        viewingPublic: root.isPublic,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,
         currentSort: bookSearch.sort,

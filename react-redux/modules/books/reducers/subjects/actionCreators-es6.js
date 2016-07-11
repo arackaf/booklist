@@ -10,11 +10,11 @@ export function loadSubjects(){
         if (subjectsLoadedOrLoading) return;
         subjectsLoadedOrLoading = true;
 
-        let state = getState().books.bookSearch;
+        let publicUserId = getState().root.publicUserId;
 
         dispatch({ type: LOAD_SUBJECTS });
 
-        Promise.resolve(ajaxUtil.get('/subject/all', { userId: state.viewingUserId })).then(subjectsResp => {
+        Promise.resolve(ajaxUtil.get('/subject/all', { userId: publicUserId })).then(subjectsResp => {
             dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
             dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
         });

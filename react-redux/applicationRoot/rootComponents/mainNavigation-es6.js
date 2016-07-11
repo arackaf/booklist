@@ -48,7 +48,7 @@ const PublicViewingMainNavBar = props => {
             <Navbar.Collapse>
                 <Nav>
                     <NavItem disabled={true}>Book entry</NavItem>
-                    <NavItem active={true} href={isBookList ? undefined : '#books'}>XXX</NavItem>
+                    <NavItem active={true} href={isBookList ? undefined : '#books'}>{props.publicBooksHeader}</NavItem>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
