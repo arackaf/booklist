@@ -24,11 +24,6 @@ import { globalHashManager } from 'reactStartup';
 class BookViewingList extends React.Component {
     constructor(props){
         super();
-
-        let viewingUserId = globalHashManager.getCurrentHashValueOf('userId');
-        if (viewingUserId){
-            props.setViewingUserId(viewingUserId);
-        }
     }
     componentDidMount(){
         try {

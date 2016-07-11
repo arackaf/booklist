@@ -39,7 +39,7 @@ export function loadCurrentModule() {
     }
 
     if (publicModule){
-        let userId = globalHashManager.currentParameters.userId;
+        var userId = globalHashManager.currentParameters.userId;
         var publicUserPromise = userId ? (publicUserCache[userId] || (publicUserCache[userId] = fetchPublicUserInfo(userId))) : null;
 
         if (module === 'view') {
@@ -54,7 +54,7 @@ export function loadCurrentModule() {
         publicUserPromise
     ]).then(([{ default: module }, publicUserInfo]) => {
         if (publicUserInfo){
-            store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader });
+            store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
         }
 
         clearUI();
