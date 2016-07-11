@@ -41,7 +41,11 @@ export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState
 }
 
 const modifyingBooksSelector = createSelector(
-    [state => state.books.booksSubjectsModifier.singleBookModify, state => state.books.booksSubjectsModifier.selectedBooksModify, state => state.books.books],
+    [
+        ({ booksModule }) => booksModule.booksSubjectsModifier.singleBookModify,
+        ({ booksModule }) => booksModule.booksSubjectsModifier.selectedBooksModify,
+        ({ booksModule }) => booksModule.books
+    ],
     (singleBookModify, selectedBooksModify, books) => {
         let modifyingBookIds = singleBookModify ? [singleBookModify] : (selectedBooksModify ? Object.keys(books.selectedBooks).filter(k => books.selectedBooks[k]) : []);
         return modifyingBookIds.filter(_id => _id).map(_id => books.booksHash[_id]);
@@ -49,17 +53,29 @@ const modifyingBooksSelector = createSelector(
 );
 
 const addingSubjectsSelector = createSelector(
-    [state => state.books.booksSubjectsModifier.addingSubjects, state => state.books.subjects.subjectHash],
+    [
+        ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjects,
+        ({ booksModule }) => booksModule.subjects.subjectHash
+    ],
     (adding, subjects) => Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id])
 );
 
 const removingSubjectsSelector = createSelector(
-    [state => state.books.booksSubjectsModifier.removingSubjects, state => state.books.subjects.subjectHash],
+    [
+        ({ booksModule }) => booksModule.booksSubjectsModifier.removingSubjects,
+        ({ booksModule }) => booksModule.subjects.subjectHash
+    ],
     (removing, subjects) => Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id])
 );
 
 export const booksSubjectsModifierSelector = createSelector(
-    [state => state.books.booksSubjectsModifier, modifyingBooksSelector, addingSubjectsSelector, removingSubjectsSelector, subjectsSelector],
+    [
+        ({ booksModule }) => booksModule.booksSubjectsModifier,
+        modifyingBooksSelector,
+        addingSubjectsSelector,
+        removingSubjectsSelector,
+        subjectsSelector
+    ],
     (booksSubjectsModifier, modifyingBooks, addingSubjects, removingSubjects, subjectsState) => ({
         addingSubjectIds: booksSubjectsModifier.addingSubjects,
         removingSubjectIds: booksSubjectsModifier.removingSubjects,

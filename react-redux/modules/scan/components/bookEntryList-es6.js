@@ -188,6 +188,6 @@ class BookEntryList extends Component {
     }
 }
 
-const BookEntryListConnected = connect(state => state.scan, { ...bookEntryActionCreators })(BookEntryList);
+const BookEntryListConnected = connect(state => state.scanModule, { ...bookEntryActionCreators })(BookEntryList);
 
 export default BookEntryListConnected;
