@@ -11,7 +11,7 @@ window.onhashchange = function () {
     loadCurrentModule();
 };
 
-const validModules = new Set(['books', 'scan', 'home', 'activate']);
+const validModules = new Set(['books', 'scan', 'home', 'activate', 'view']);
 
 loadCurrentModule();
 export function loadCurrentModule() {
@@ -19,8 +19,15 @@ export function loadCurrentModule() {
         originalModule = hash.split('/')[0] || '',
         module = (hash.split('/')[0] || 'home').toLowerCase();
 
-    let loggedIn = isLoggedIn();
-    if (!loggedIn){
+    if (module === 'view' && !/userId=.+/.test(hash)){
+        location.hash = 'books';
+        return;
+    }
+
+    let loggedIn = isLoggedIn(),
+        loginOverride = module === 'view' && /userId=.+/.test(hash);
+
+    if (!loggedIn && !loginOverride){
         if (originalModule && module != 'home'){
             module = 'authenticate';
         } else {
@@ -33,6 +40,9 @@ export function loadCurrentModule() {
         }
     }
 
+    if (loginOverride){
+        module = 'books';
+    }
     if (module === currentModule) return;
     currentModule = module;
 

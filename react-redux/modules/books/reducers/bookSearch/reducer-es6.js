@@ -53,8 +53,6 @@ export const bookSearchSelector = state => {
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
 
-    debugger;
-
     return Object.assign({},
         state.bookSearch,
         {
