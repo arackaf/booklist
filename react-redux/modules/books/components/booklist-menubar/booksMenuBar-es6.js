@@ -192,6 +192,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;
