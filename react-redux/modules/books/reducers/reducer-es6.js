@@ -20,13 +20,15 @@ export const selector = state => {
     let subjectsSelected = subjectsSelector(state),
         bookEdit = state.books.bookEdit,
         bookSearch = bookSearchSelector(state),
-        ui = state.books.ui;
+        ui = state.books.ui,
+        root = state.root;
 
     return {
         subjects: subjectsSelected.list,
         subjectsLoaded: subjectsSelected.loaded,
         books: booksSelected.list,
         reloadBooksOnActivate: booksSelected.reloadOnActivate,
+        viewingPublic: root.isPublic,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,
         currentSort: bookSearch.sort,

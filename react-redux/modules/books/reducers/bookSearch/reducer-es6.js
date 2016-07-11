@@ -1,4 +1,4 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING } from './actionNames';
+import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID } from './actionNames';
 
 import { subjectsSelector } from '../subjects/reducer';
 import { booksSelector } from '../books/reducer';
@@ -47,8 +47,11 @@ function projectselectedSubjects(selectedSubjectsIds, subjects){
 }
 
 export const bookSearchSelector = state => {
-    let subjectsState = subjectsSelector(state);
-    let booksState = booksSelector(state);
+    let books = state.books,
+        root = state.root;
+
+    let subjectsState = subjectsSelector(books);
+    let booksState = booksSelector(books);
 
     let books = state.books;
 
@@ -58,6 +61,7 @@ export const bookSearchSelector = state => {
             selectedSubjects: projectselectedSubjects(books.bookSearch.subjects, books.subjects.subjectHash),
             ...books.ui,
             subjects: subjectsState.subjects,
-            selectedBooksCount: booksState.selectedBooksCount
+            selectedBooksCount: booksState.selectedBooksCount,
+            viewingPublic: root.isPublic
         });
 }

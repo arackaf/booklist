@@ -104,7 +104,7 @@ app.ws('/bookEntryWS', function(ws, req) {
 
 
 var easyControllers = require('easy-express-controllers').easyControllers;
-easyControllers.createAllControllers(app, { fileTest: f => /book.js$/.test(f) || /bookBulk.js$/.test(f) || /subject.js$/.test(f) });
+easyControllers.createAllControllers(app, { fileTest: f => /book.js$/.test(f) || /bookBulk.js$/.test(f) || /subject.js$/.test(f) || /user.js$/.test(f) });
 
 app.get('/', (req, res) => res.redirect('/react-redux'));
 app.get('/react-redux', browseToReactRedux);
