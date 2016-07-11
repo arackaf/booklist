@@ -16,8 +16,8 @@ export const reducer = combineReducers({
 });
 
 export const selector = state => {
-    let booksSelected = booksSelector(state);
-    let subjectsSelected = subjectsSelector(state),
+    let booksSelected = booksSelector(state),
+        subjectsSelected = subjectsSelector(state),
         bookEdit = state.books.bookEdit,
         bookSearch = bookSearchSelector(state),
         ui = state.books.ui,
