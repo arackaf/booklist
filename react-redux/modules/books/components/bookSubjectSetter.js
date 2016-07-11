@@ -205,8 +205,6 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
     return BookSubjectSetterDesktopUnConnected;
 }(_react2.default.Component);
 
-var BookSubjectSetterDesktop = (0, _reactRedux.connect)(function (state) {
-    return (0, _reducer.booksSubjectsModifierSelector)(state.books);
-}, _extends({}, bookSubjectActionCreators))(BookSubjectSetterDesktopUnConnected);
+var BookSubjectSetterDesktop = (0, _reactRedux.connect)(_reducer.booksSubjectsModifierSelector, _extends({}, bookSubjectActionCreators))(BookSubjectSetterDesktopUnConnected);
 
 exports.default = BookSubjectSetterDesktop;

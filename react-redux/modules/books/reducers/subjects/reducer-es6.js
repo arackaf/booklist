@@ -87,7 +87,7 @@ const stackedSubjectsSelector = createSelector(
 );
 
 export const subjectsSelector = state => {
-    return Object.assign({}, state.subjects, { ...stackedSubjectsSelector(state.subjects) });
+    return Object.assign({}, state.books.subjects, { ...stackedSubjectsSelector(state.books.subjects) });
 }
 
 function stackAndGetTopLevelSubjects(subjectsHash){

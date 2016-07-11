@@ -131,6 +131,6 @@ const subjectEditModal = props => {
     );
 }
 
-const subjectEditModalConnected = connect(state => subjectsSelector(state.books), { ...actionCreators })(subjectEditModal);
+const subjectEditModalConnected = connect(subjectsSelector, { ...actionCreators })(subjectEditModal);
 
 export default subjectEditModalConnected;
