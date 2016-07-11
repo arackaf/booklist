@@ -53,12 +53,15 @@ export const bookSearchSelector = state => {
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
 
+    debugger;
+
     return Object.assign({},
         state.bookSearch,
         {
             selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash),
             ...state.ui,
             subjects: subjectsState.subjects,
-            selectedBooksCount: booksState.selectedBooksCount
+            selectedBooksCount: booksState.selectedBooksCount,
+            viewingPublic: !!state.bookSearch.viewingUserId
         });
 }

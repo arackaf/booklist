@@ -26,6 +26,7 @@ export const selector = state => {
         subjects: subjectsSelected.list,
         subjectsLoaded: subjectsSelected.loaded,
         books: booksSelected.list,
+        viewingPublic: !!state.books.bookSearch.viewingUserId,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,
         currentSort: bookSearch.sort,
