@@ -88,9 +88,10 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
-    
+
     if ((oldState.viewingUserId || '') != (newState.userId || '')){
         location.reload();
+        return false;
     }
 
     return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection', 'userId'].filter(prop => oldState[prop] != newState[prop]).length;
