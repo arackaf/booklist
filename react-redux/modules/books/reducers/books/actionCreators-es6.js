@@ -9,7 +9,7 @@ export function loadBooks(){
         dispatch({ type: LOAD_BOOKS });
 
         let state = getState(),
-            bookSearch = state.books.bookSearch,
+            bookSearch = state.booksModule.bookSearch,
             root = state.root;
 
         Promise.resolve(booksSearch(bookSearch, root.publicUserId)).then(booksResp => dispatch(booksResults(booksResp)));

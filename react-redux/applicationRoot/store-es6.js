@@ -8,7 +8,7 @@ export function getNewReducer(reducerObj){
 
     if (asyncReducers[reducerObj.name]) return; //registering an async reducer we already have - do nothing and get out
 
-    asyncReducers[reducerObj.name] = reducerObj.reducer;
+    asyncReducers[`${reducerObj.name}Module`] = reducerObj.reducer;
 
     store.replaceReducer(combineReducers({
         root: rootReducer,

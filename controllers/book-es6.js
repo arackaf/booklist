@@ -8,7 +8,7 @@ import bookEntryQueueManager from '../app-helpers/bookEntryQueueManager';
 class bookController{
     constructor(){}
     @httpPost
-    async saveFromIsbn(isbn){
+    async saveFromIsbn({ isbn }){
         const userId = this.request.user.id;
 
         try {
@@ -21,7 +21,7 @@ class bookController{
         }
     }
     @httpPost
-    async deleteBook(id){
+    async deleteBook({ id }){
         let bookDao = new BookDAO();
         await bookDao.deleteBook(id);
         this.send({ success: true });

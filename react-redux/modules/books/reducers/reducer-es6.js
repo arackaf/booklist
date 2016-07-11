@@ -18,9 +18,9 @@ export const reducer = combineReducers({
 export const selector = state => {
     let booksSelected = booksSelector(state),
         subjectsSelected = subjectsSelector(state),
-        bookEdit = state.books.bookEdit,
+        bookEdit = state.booksModule.bookEdit,
         bookSearch = bookSearchSelector(state),
-        ui = state.books.ui,
+        ui = state.booksModule.ui,
         root = state.root;
 
     return {
@@ -39,5 +39,5 @@ export const selector = state => {
         editingBookSaved: bookEdit.editingBookSaved,
         isDesktop: ui.isDesktop,
         isMobile: ui.isMobile
-    }
+    };
 };

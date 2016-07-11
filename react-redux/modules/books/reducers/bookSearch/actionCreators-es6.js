@@ -27,7 +27,7 @@ export function endFilterChanging(){
 
 export function applyFilters(){
     return function(dispatch, getState) {
-        let state = getState().books.bookSearch,
+        let state = getState().booksModule.bookSearch,
             filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-'),
             pending = state.pending;
 
@@ -57,7 +57,7 @@ export function syncFiltersToHash(){
     return function(dispatch, getState){
         let state = getState(),
             root = state.root,
-            bookSearch = state.books.bookSearch;
+            bookSearch = state.booksModule.bookSearch;
 
         let subjects = {},
             selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
@@ -105,7 +105,7 @@ function subjectsDifferent(oldSubjects, newSubjects){
 
 export function removeFilterSubject(_id) {
     return function(dispatch, getState) {
-        let state = getState().books.bookSearch,
+        let state = getState().booksModule.bookSearch,
             newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
 
         globalHashManager.setValues(
