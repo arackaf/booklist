@@ -55,7 +55,9 @@ export function setSortOrder(sort, direction){
 let initial = true;
 export function syncFiltersToHash(){
     return function(dispatch, getState){
-        let state = getState().books.bookSearch;
+        let state = getState(),
+            root = state.root,
+            bookSearch = state.books.bookSearch;
 
         let subjects = {},
             selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
@@ -66,9 +68,14 @@ export function syncFiltersToHash(){
         let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
             packet = { searchChildSubjects, subjects };
 
-        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort', 'userId'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        if ((root.publicUserId || '') != (globalHashManager.getCurrentHashValueOf('userId') || '')){
+            location.reload();
+            return;
+        }
+
+        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
         packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
-        let newIsDirty = isDirty(state, packet);
+        let newIsDirty = isDirty(bookSearch, packet);
 
         if (initial || newIsDirty) {
             dispatch(setFilters(packet));
@@ -89,12 +96,7 @@ function isDirty(oldState, newState){
         if (newState.pages !== '') return true;
     }
 
-    if ((oldState.viewingUserId || '') != (newState.userId || '')){
-        location.reload();
-        return false;
-    }
-
-    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection', 'userId'].filter(prop => oldState[prop] != newState[prop]).length;
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
 function subjectsDifferent(oldSubjects, newSubjects){
