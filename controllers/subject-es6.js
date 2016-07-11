@@ -3,9 +3,9 @@ import SubjectDAO from '../dataAccess/subjectDAO';
 
 class subjectController{
     constructor(){}
-    async all(){
+    async all({ userId }){
         let subjectDao = new SubjectDAO(this.request.user.id),
-            { subjects, labelColors } = await subjectDao.loadSubjects();
+            { subjects, labelColors } = await subjectDao.loadSubjects(userId);
 
         this.send({ results: subjects, colors: labelColors });
     }
