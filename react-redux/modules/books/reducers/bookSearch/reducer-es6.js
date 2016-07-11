@@ -50,10 +50,8 @@ export const bookSearchSelector = state => {
     let books = state.books,
         root = state.root;
 
-    let subjectsState = subjectsSelector(books);
-    let booksState = booksSelector(books);
-
-    let books = state.books;
+    let subjectsState = subjectsSelector(state);
+    let booksState = booksSelector(state);
 
     return Object.assign({},
         books.bookSearch,
