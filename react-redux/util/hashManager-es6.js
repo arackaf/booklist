@@ -131,8 +131,11 @@ export default class HashUtility {
     getCurrentHashInfo(){
         return this.parseHashTag(window.location.hash);
     }
-    get getCurrentHashParameters(){
+    get currentParameters(){
         return this.parseHashTag(window.location.hash).parameters;
+    }
+    get currentModule(){
+        return this.parseHashTag(window.location.hash).module;
     }
     getCurrentHashValueOf(name){
         var hashObject = this.parseHashTag(window.location.hash);

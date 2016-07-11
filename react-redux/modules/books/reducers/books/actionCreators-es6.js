@@ -8,11 +8,15 @@ export function loadBooks(){
     return function(dispatch, getState){
         dispatch({ type: LOAD_BOOKS });
 
-        Promise.resolve(booksSearch(getState().books.bookSearch)).then(booksResp => dispatch(booksResults(booksResp)));
+        let state = getState(),
+            bookSearch = state.books.bookSearch,
+            root = state.root;
+
+        Promise.resolve(booksSearch(bookSearch, root.publicUserId)).then(booksResp => dispatch(booksResults(booksResp)));
     }
 }
 
-function booksSearch(bookSearchState){
+function booksSearch(bookSearchState, publicUserId){
     return ajaxUtil.get('/book/searchBooks', {
         search: bookSearchState.search,
         subjects: Object.keys(bookSearchState.subjects),
@@ -23,7 +27,7 @@ function booksSearch(bookSearchState){
         publisher: bookSearchState.publisher,
         pages: bookSearchState.pages,
         pagesOperator: bookSearchState.pagesOperator,
-        userId: bookSearchState.userId
+        userId: publicUserId
     });
 }
 

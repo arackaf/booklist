@@ -5,7 +5,8 @@ import {
     SET_SORT_DIRECTION,
     SET_FILTERS,
     SET_PENDING,
-    APPLY_PENDING_SEARCH
+    APPLY_PENDING_SEARCH,
+    SET_VIEWING_USERID
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
@@ -54,7 +55,9 @@ export function setSortOrder(sort, direction){
 let initial = true;
 export function syncFiltersToHash(){
     return function(dispatch, getState){
-        let state = getState().books.bookSearch;
+        let state = getState(),
+            root = state.root,
+            bookSearch = state.books.bookSearch;
 
         let subjects = {},
             selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
@@ -65,9 +68,14 @@ export function syncFiltersToHash(){
         let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
             packet = { searchChildSubjects, subjects };
 
-        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort', 'userId'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+        if ((root.publicUserId || '') != (globalHashManager.getCurrentHashValueOf('userId') || '')){
+            location.reload();
+            return;
+        }
+
+        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
         packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
-        let newIsDirty = isDirty(state, packet);
+        let newIsDirty = isDirty(bookSearch, packet);
 
         if (initial || newIsDirty) {
             dispatch(setFilters(packet));
@@ -87,7 +95,8 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
-    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection', 'userId'].filter(prop => oldState[prop] != newState[prop]).length;
+
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
 function subjectsDifferent(oldSubjects, newSubjects){
@@ -125,3 +134,7 @@ export const setPendingAuthor = createPendingActionCreator('author');
 export const setPendingPublisher = createPendingActionCreator('publisher');
 export const setPendingPages = createPendingActionCreator('pages');
 export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
+
+export function setViewingUserId(_id){
+    return { type: SET_VIEWING_USERID, _id }
+}

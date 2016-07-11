@@ -40,6 +40,14 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
+    async getPublicName(_id){
+        let db = await super.open();
+        try {
+            return await db.collection('users').findOne({ _id: ObjectID(_id), isPublic: true });
+        } finally {
+            super.dispose(db);
+        }
+    }
     async checkUserExists(email, password){
         let db = await super.open();
         try {

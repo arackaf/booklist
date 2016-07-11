@@ -81,8 +81,8 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
-                            <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount}>Set subjects</NavItem>
-                            <NavItem onClick={this.props.editSubjects}>Edit subjects</NavItem>
+                            <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set subjects</NavItem>
+                            <NavItem onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavItem>
                         </Nav>
                         <Navbar.Header>
                             <Navbar.Brand>
@@ -192,6 +192,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

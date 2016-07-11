@@ -17,13 +17,12 @@ import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsUi from '../reducers/ui/actionCreators';
+import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 
 import { selector } from '../reducers/reducer';
+import { globalHashManager } from 'reactStartup';
 
 class BookViewingList extends React.Component {
-    constructor(){
-        super();
-    }
     componentDidMount(){
         try {
             if (window.screen.width < 700) {
@@ -90,5 +89,5 @@ class BookViewingList extends React.Component {
     }
 }
 
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi, ...actionCreatorsBooks })(BookViewingList);
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi, ...actionCreatorsBooks, ...actionCreatorsSearch })(BookViewingList);
 export default BookViewingListConnected;
