@@ -6,9 +6,13 @@ import {
     NavItem
 } from 'react-bootstrap';
 
-import { goHome } from 'reactStartup';
+import { goHome, globalHashManager } from 'reactStartup';
 
 class MainNavigationBar extends Component {
+    constructor(){
+        super();
+        this.state = { viewingPublic: !!globalHashManager.currentModule };
+    }
     logout(){
         ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     }
@@ -16,23 +20,42 @@ class MainNavigationBar extends Component {
         let isBookEntry = this.props.isBookEntry,
             isBookList = this.props.isBookList;
 
-        return (
-            <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
-                <Navbar.Header>
-                    <Navbar.Brand>
-                        <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    <Nav>
-                        <NavItem active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem>
-                        <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>Your books</NavItem>
-                        <NavItem onClick={this.logout}>Logout</NavItem>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-        );
+        if (!this.state.viewingPublic) {
+            return (
+                <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav>
+                            <NavItem active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem>
+                            <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>Your books</NavItem>
+                            <NavItem onClick={this.logout}>Logout</NavItem>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+            );
+        } else  {
+            return (
+                <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav>
+                            <NavItem disabled={true}>Book entry</NavItem>
+                            <NavItem active={true} href={isBookList ? undefined : '#books'}>Adam's books</NavItem>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+            );
+        }
     }
 }
 
