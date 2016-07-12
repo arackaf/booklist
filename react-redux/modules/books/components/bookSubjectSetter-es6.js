@@ -6,6 +6,89 @@ import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModificat
 import * as bookSubjectActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal } from 'react-bootstrap';
+import Autosuggest from 'react-autosuggest';
+
+const languages = [
+    {
+        name: 'C',
+        year: 1972
+    },
+    {
+        name: 'Elm',
+        year: 2012
+    },
+    {
+        name: 'C#',
+        year: 2003
+    },
+    {
+        name: 'Java',
+        year: 1996
+    }
+];
+
+function getSuggestions(value) {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+
+    return inputLength === 0 ? [] : languages.filter(lang =>
+        lang.name.toLowerCase().slice(0, inputLength) === inputValue
+    );
+}
+
+function getSuggestionValue(suggestion) { // when suggestion selected, this function tells
+    return suggestion.name;                 // what should be the value of the input
+}
+
+function renderSuggestion(suggestion) {
+    return (
+        <span>{suggestion.name}</span>
+    );
+}
+
+class Example extends React.Component {
+    constructor() {
+        super();
+
+        this.state = {
+            value: '',
+            suggestions: getSuggestions('')
+        };
+
+        this.onChange = this.onChange.bind(this);
+        this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
+    }
+
+    onChange(event, { newValue }) {
+        this.setState({
+            value: newValue
+        });
+    }
+
+    onSuggestionsUpdateRequested({ value }) {
+        this.setState({
+            suggestions: getSuggestions(value)
+        });
+    }
+
+    render() {
+        const { value, suggestions } = this.state;
+        const inputProps = {
+            placeholder: 'Type a programming language',
+            value,
+            onChange: this.onChange
+        };
+
+        return (
+            <Autosuggest className="auto-suggest-label"
+                         suggestions={suggestions}
+                         onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+                         getSuggestionValue={getSuggestionValue}
+                         renderSuggestion={renderSuggestion}
+                         inputProps={inputProps} />
+        );
+    }
+}
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
     setBooksSubjects(){
@@ -24,6 +107,9 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+
+                    <Example />
+
                     <div>
                         <BootstrapButton preset="primary-xs" className="pull-right" onClick={this.props.subjectModificationClearSubjects}>Reset subjects</BootstrapButton>
                     </div>
