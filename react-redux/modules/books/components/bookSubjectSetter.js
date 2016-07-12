@@ -62,14 +62,21 @@ function getSuggestions(value) {
     var inputValue = value.trim().toLowerCase();
     var inputLength = inputValue.length;
 
-    return inputLength === 0 ? [] : languages.filter(function (lang) {
+    //if (inputLength === 0 && !force) return [];
+    if (inputLength === 0) return languages;
+    //if (force) return languages;
+
+    return languages.filter(function (lang) {
         return lang.name.toLowerCase().slice(0, inputLength) === inputValue;
     });
 }
 
 function getSuggestionValue(suggestion) {
-    // when suggestion selected, this function tells
-    return suggestion.name; // what should be the value of the input
+    // when suggestion selected, this function tells what should be the value of the input
+    languages = languages.filter(function (s) {
+        return s != suggestion;
+    });
+    return suggestion.name;
 }
 
 function renderSuggestion(suggestion) {
@@ -90,11 +97,17 @@ var Example = function (_React$Component) {
 
         _this.state = {
             value: '',
-            suggestions: getSuggestions('')
+            suggestions: getSuggestions(''),
+            isFocus: false
         };
 
         _this.onChange = _this.onChange.bind(_this);
-        _this.onSuggestionsUpdateRequested = _this.onSuggestionsUpdateRequested.bind(_this);
+        _this.shouldRenderSuggestions = function () {
+            return true;
+        };
+        _this.onSuggestionsUpdateRequested = function () {
+            return true;
+        };
         return _this;
     }
 
@@ -108,13 +121,15 @@ var Example = function (_React$Component) {
             });
         }
     }, {
-        key: 'onSuggestionsUpdateRequested',
-        value: function onSuggestionsUpdateRequested(_ref2) {
-            var value = _ref2.value;
-
-            this.setState({
-                suggestions: getSuggestions(value)
-            });
+        key: 'onBlue',
+        value: function onBlue() {
+            this.setState({ isFocus: false });
+        }
+    }, {
+        key: 'shouldRenderSuggestions',
+        value: function shouldRenderSuggestions() {
+            console.log('should render', this.state.isFocus);
+            return this.state.isFocus;
         }
     }, {
         key: 'render',
@@ -122,6 +137,7 @@ var Example = function (_React$Component) {
             var _state = this.state;
             var value = _state.value;
             var suggestions = _state.suggestions;
+            var isFocus = _state.isFocus;
 
             var inputProps = {
                 placeholder: 'Type a programming language',
@@ -131,6 +147,7 @@ var Example = function (_React$Component) {
 
             return _react2.default.createElement(_reactAutosuggest2.default, { className: 'auto-suggest-label',
                 suggestions: suggestions,
+                shouldRenderSuggestions: this.shouldRenderSuggestions,
                 onSuggestionsUpdateRequested: this.onSuggestionsUpdateRequested,
                 getSuggestionValue: getSuggestionValue,
                 renderSuggestion: renderSuggestion,
