@@ -8,7 +8,7 @@ import * as bookSubjectActionCreators from '../reducers/booksSubjectModification
 import { Modal } from 'react-bootstrap';
 import Autosuggest from 'react-autosuggest';
 
-const languages = [
+let languages = [
     {
         name: 'C',
         year: 1972
@@ -31,13 +31,16 @@ function getSuggestions(value) {
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
 
-    return inputLength === 0 ? [] : languages.filter(lang =>
-        lang.name.toLowerCase().slice(0, inputLength) === inputValue
-    );
+    //if (inputLength === 0 && !force) return [];
+    if (inputLength === 0) return languages;
+    //if (force) return languages;
+
+    return languages.filter(lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue);
 }
 
-function getSuggestionValue(suggestion) { // when suggestion selected, this function tells
-    return suggestion.name;                 // what should be the value of the input
+function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
+    languages = languages.filter(s => s != suggestion);
+    return suggestion.name;
 }
 
 function renderSuggestion(suggestion) {
@@ -52,11 +55,13 @@ class Example extends React.Component {
 
         this.state = {
             value: '',
-            suggestions: getSuggestions('')
+            suggestions: getSuggestions(''),
+            isFocus: false
         };
 
         this.onChange = this.onChange.bind(this);
-        this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
+        this.shouldRenderSuggestions = () => true;
+        this.onSuggestionsUpdateRequested = () => true;
     }
 
     onChange(event, { newValue }) {
@@ -65,14 +70,17 @@ class Example extends React.Component {
         });
     }
 
-    onSuggestionsUpdateRequested({ value }) {
-        this.setState({
-            suggestions: getSuggestions(value)
-        });
+    onBlue(){
+        this.setState({ isFocus: false });
+    }
+
+    shouldRenderSuggestions(){
+        console.log('should render', this.state.isFocus);
+        return this.state.isFocus;
     }
 
     render() {
-        const { value, suggestions } = this.state;
+        const { value, suggestions, isFocus } = this.state;
         const inputProps = {
             placeholder: 'Type a programming language',
             value,
@@ -82,6 +90,7 @@ class Example extends React.Component {
         return (
             <Autosuggest className="auto-suggest-label"
                          suggestions={suggestions}
+                         shouldRenderSuggestions={this.shouldRenderSuggestions}
                          onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
                          getSuggestionValue={getSuggestionValue}
                          renderSuggestion={renderSuggestion}
