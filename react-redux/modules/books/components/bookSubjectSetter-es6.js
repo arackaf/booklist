@@ -45,7 +45,7 @@ function getSuggestionValue(suggestion) { // when suggestion selected, this func
 
 function renderSuggestion(suggestion) {
     return (
-        <span>{suggestion.name}</span>
+        <span className="label label-default">{suggestion.name}</span>
     );
 }
 
@@ -66,9 +66,7 @@ class Example extends React.Component {
         }
 
         this.onSuggestionSelected = (evt, val) => {
-            debugger;
             this.onChange(null, { newValue: '' });
-
             setTimeout(() => this.input.blur(), 1);
         }
     }
@@ -79,7 +77,6 @@ class Example extends React.Component {
             placeholder: 'Type a programming language',
             value,
             onChange: this.onChange
-            //onFocus: (evt) => { this.setState({ suggestions: getSuggestions('') }) }
         };
 
         return (
@@ -93,7 +90,6 @@ class Example extends React.Component {
                              renderSuggestion={renderSuggestion}
                              ref={el => { if (el && el.input){ this.input = el.input; } }}
                              inputProps={inputProps} />
-                <button xstyle={{ display: 'none' }} ref={el => this.dummy = el} />
             </div>
         );
     }
@@ -123,31 +119,8 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                         <BootstrapButton preset="primary-xs" className="pull-right" onClick={this.props.subjectModificationClearSubjects}>Reset subjects</BootstrapButton>
                     </div>
                     <br />
-                    <div>
-                        <b>Add</b> { this.props.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
-                    </div>
-                    <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
-                        <div className="panel-body" style={{ paddingTop: 0 }}>
-                            { this.props.allSubjectsSorted.map(s =>
-                                <div className="checkbox" key={s._id}>
-                                    <label><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name}</label>
-                                </div>)
-                            }
-                        </div>
-                    </div>
 
-                    <div>
-                        <b>Remove</b> { this.props.removingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
-                    </div>
-                    <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
-                        <div className="panel-body" style={{ paddingTop: 0 }}>
-                            { this.props.allSubjectsSorted.map(s =>
-                                <div className="checkbox" key={s._id}>
-                                    <label><input type="checkbox" checked={!!this.props.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name}</label>
-                                </div>)
-                            }
-                        </div>
-                    </div>
+
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton preset="primary" running={this.props.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
@@ -155,6 +128,34 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                 </Modal.Footer>
             </Modal>
         );
+
+        /*
+         <div>
+         <b>Add</b> { this.props.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
+         </div>
+         <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
+         <div className="panel-body" style={{ paddingTop: 0 }}>
+         { this.props.allSubjectsSorted.map(s =>
+         <div className="checkbox" key={s._id}>
+         <label><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name}</label>
+         </div>)
+         }
+         </div>
+         </div>
+
+         <div>
+         <b>Remove</b> { this.props.removingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
+         </div>
+         <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
+         <div className="panel-body" style={{ paddingTop: 0 }}>
+         { this.props.allSubjectsSorted.map(s =>
+         <div className="checkbox" key={s._id}>
+         <label><input type="checkbox" checked={!!this.props.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name}</label>
+         </div>)
+         }
+         </div>
+         </div>
+         */
     }
 }
 

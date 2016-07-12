@@ -80,7 +80,7 @@ function getSuggestionValue(suggestion) {
 function renderSuggestion(suggestion) {
     return _react2.default.createElement(
         'span',
-        null,
+        { className: 'label label-default' },
         suggestion.name
     );
 }
@@ -108,9 +108,7 @@ var Example = function (_React$Component) {
         };
 
         _this.onSuggestionSelected = function (evt, val) {
-            debugger;
             _this.onChange(null, { newValue: '' });
-
             setTimeout(function () {
                 return _this.input.blur();
             }, 1);
@@ -131,7 +129,6 @@ var Example = function (_React$Component) {
                 placeholder: 'Type a programming language',
                 value: value,
                 onChange: this.onChange
-                //onFocus: (evt) => { this.setState({ suggestions: getSuggestions('') }) }
             };
 
             return _react2.default.createElement(
@@ -151,10 +148,7 @@ var Example = function (_React$Component) {
                             _this2.input = el.input;
                         }
                     },
-                    inputProps: inputProps }),
-                _react2.default.createElement('button', { xstyle: { display: 'none' }, ref: function ref(el) {
-                        return _this2.dummy = el;
-                    } })
+                    inputProps: inputProps })
             );
         }
     }]);
@@ -223,87 +217,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                             'Reset subjects'
                         )
                     ),
-                    _react2.default.createElement('br', null),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement(
-                            'b',
-                            null,
-                            'Add'
-                        ),
-                        ' ',
-                        this.props.addingSubjects.map(function (subject) {
-                            return _react2.default.createElement(
-                                'span',
-                                { className: 'label label-primary', style: { marginRight: 5, display: 'inline-block' }, key: subject._id },
-                                subject.name
-                            );
-                        })
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'panel panel-default', style: { maxHeight: 150, overflow: 'scroll' } },
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'panel-body', style: { paddingTop: 0 } },
-                            this.props.allSubjectsSorted.map(function (s) {
-                                return _react2.default.createElement(
-                                    'div',
-                                    { className: 'checkbox', key: s._id },
-                                    _react2.default.createElement(
-                                        'label',
-                                        null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this4.props.addingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this4.props.toggleSubjectModificationAdd(s._id);
-                                            } }),
-                                        ' ',
-                                        s.name
-                                    )
-                                );
-                            })
-                        )
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement(
-                            'b',
-                            null,
-                            'Remove'
-                        ),
-                        ' ',
-                        this.props.removingSubjects.map(function (subject) {
-                            return _react2.default.createElement(
-                                'span',
-                                { className: 'label label-primary', style: { marginRight: 5, display: 'inline-block' }, key: subject._id },
-                                subject.name
-                            );
-                        })
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'panel panel-default', style: { maxHeight: 150, overflow: 'scroll' } },
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'panel-body', style: { paddingTop: 0 } },
-                            this.props.allSubjectsSorted.map(function (s) {
-                                return _react2.default.createElement(
-                                    'div',
-                                    { className: 'checkbox', key: s._id },
-                                    _react2.default.createElement(
-                                        'label',
-                                        null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this4.props.removingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this4.props.toggleSubjectModificationRemove(s._id);
-                                            } }),
-                                        ' ',
-                                        s.name
-                                    )
-                                );
-                            })
-                        )
-                    )
+                    _react2.default.createElement('br', null)
                 ),
                 _react2.default.createElement(
                     _reactBootstrap.Modal.Footer,
@@ -322,6 +236,33 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                     )
                 )
             );
+
+            /*
+             <div>
+             <b>Add</b> { this.props.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
+             </div>
+             <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
+             <div className="panel-body" style={{ paddingTop: 0 }}>
+             { this.props.allSubjectsSorted.map(s =>
+             <div className="checkbox" key={s._id}>
+             <label><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name}</label>
+             </div>)
+             }
+             </div>
+             </div>
+               <div>
+             <b>Remove</b> { this.props.removingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
+             </div>
+             <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
+             <div className="panel-body" style={{ paddingTop: 0 }}>
+             { this.props.allSubjectsSorted.map(s =>
+             <div className="checkbox" key={s._id}>
+             <label><input type="checkbox" checked={!!this.props.removingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationRemove(s._id)}/> {s.name}</label>
+             </div>)
+             }
+             </div>
+             </div>
+             */
         }
     }]);
 
