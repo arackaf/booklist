@@ -30,6 +30,10 @@ var bookSubjectActionCreators = _interopRequireWildcard(_actionCreators);
 
 var _reactBootstrap = require('react-bootstrap');
 
+var _reactAutosuggest = require('react-autosuggest');
+
+var _reactAutosuggest2 = _interopRequireDefault(_reactAutosuggest);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -40,8 +44,105 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
-    _inherits(BookSubjectSetterDesktopUnConnected, _React$Component);
+var languages = [{
+    name: 'C',
+    year: 1972
+}, {
+    name: 'Elm',
+    year: 2012
+}, {
+    name: 'C#',
+    year: 2003
+}, {
+    name: 'Java',
+    year: 1996
+}];
+
+function getSuggestions(value) {
+    var inputValue = value.trim().toLowerCase();
+    var inputLength = inputValue.length;
+
+    return inputLength === 0 ? [] : languages.filter(function (lang) {
+        return lang.name.toLowerCase().slice(0, inputLength) === inputValue;
+    });
+}
+
+function getSuggestionValue(suggestion) {
+    // when suggestion selected, this function tells
+    return suggestion.name; // what should be the value of the input
+}
+
+function renderSuggestion(suggestion) {
+    return _react2.default.createElement(
+        'span',
+        null,
+        suggestion.name
+    );
+}
+
+var Example = function (_React$Component) {
+    _inherits(Example, _React$Component);
+
+    function Example() {
+        _classCallCheck(this, Example);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Example).call(this));
+
+        _this.state = {
+            value: '',
+            suggestions: getSuggestions('')
+        };
+
+        _this.onChange = _this.onChange.bind(_this);
+        _this.onSuggestionsUpdateRequested = _this.onSuggestionsUpdateRequested.bind(_this);
+        return _this;
+    }
+
+    _createClass(Example, [{
+        key: 'onChange',
+        value: function onChange(event, _ref) {
+            var newValue = _ref.newValue;
+
+            this.setState({
+                value: newValue
+            });
+        }
+    }, {
+        key: 'onSuggestionsUpdateRequested',
+        value: function onSuggestionsUpdateRequested(_ref2) {
+            var value = _ref2.value;
+
+            this.setState({
+                suggestions: getSuggestions(value)
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _state = this.state;
+            var value = _state.value;
+            var suggestions = _state.suggestions;
+
+            var inputProps = {
+                placeholder: 'Type a programming language',
+                value: value,
+                onChange: this.onChange
+            };
+
+            return _react2.default.createElement(_reactAutosuggest2.default, { className: 'auto-suggest-label',
+                suggestions: suggestions,
+                onSuggestionsUpdateRequested: this.onSuggestionsUpdateRequested,
+                getSuggestionValue: getSuggestionValue,
+                renderSuggestion: renderSuggestion,
+                inputProps: inputProps });
+        }
+    }]);
+
+    return Example;
+}(_react2.default.Component);
+
+var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
+    _inherits(BookSubjectSetterDesktopUnConnected, _React$Component2);
 
     function BookSubjectSetterDesktopUnConnected() {
         _classCallCheck(this, BookSubjectSetterDesktopUnConnected);
@@ -63,7 +164,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             return _react2.default.createElement(
                 _reactBootstrap.Modal,
@@ -91,6 +192,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
                 _react2.default.createElement(
                     _reactBootstrap.Modal.Body,
                     null,
+                    _react2.default.createElement(Example, null),
                     _react2.default.createElement(
                         'div',
                         null,
@@ -131,8 +233,8 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
                                     _react2.default.createElement(
                                         'label',
                                         null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this2.props.addingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this2.props.toggleSubjectModificationAdd(s._id);
+                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this3.props.addingSubjectIds[s._id], onChange: function onChange() {
+                                                return _this3.props.toggleSubjectModificationAdd(s._id);
                                             } }),
                                         ' ',
                                         s.name
@@ -171,8 +273,8 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
                                     _react2.default.createElement(
                                         'label',
                                         null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this2.props.removingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this2.props.toggleSubjectModificationRemove(s._id);
+                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this3.props.removingSubjectIds[s._id], onChange: function onChange() {
+                                                return _this3.props.toggleSubjectModificationRemove(s._id);
                                             } }),
                                         ' ',
                                         s.name
@@ -188,7 +290,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component) {
                     _react2.default.createElement(
                         _ajaxButton2.default,
                         { preset: 'primary', running: this.props.settingBooksSubjects, runningText: 'Setting', onClick: function onClick() {
-                                return _this2.setBooksSubjects();
+                                return _this3.setBooksSubjects();
                             } },
                         'Set'
                     ),
