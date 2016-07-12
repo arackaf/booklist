@@ -63,7 +63,7 @@ function getSuggestions(value) {
     var inputLength = inputValue.length;
 
     //if (inputLength === 0 && !force) return [];
-    if (inputLength === 0) return languages;
+    if (inputLength === 0) return languages.concat();
     //if (force) return languages;
 
     return languages.filter(function (lang) {
@@ -73,9 +73,7 @@ function getSuggestions(value) {
 
 function getSuggestionValue(suggestion) {
     // when suggestion selected, this function tells what should be the value of the input
-    languages = languages.filter(function (s) {
-        return s != suggestion;
-    });
+    //languages = languages.filter(s => s != suggestion);
     return suggestion.name;
 }
 
@@ -97,61 +95,67 @@ var Example = function (_React$Component) {
 
         _this.state = {
             value: '',
-            suggestions: getSuggestions(''),
-            isFocus: false
+            suggestions: getSuggestions('')
         };
 
-        _this.onChange = _this.onChange.bind(_this);
-        _this.shouldRenderSuggestions = function () {
-            return true;
+        _this.onChange = function (event, _ref) {
+            var newValue = _ref.newValue;
+
+            _this.setState({
+                value: newValue,
+                suggestions: getSuggestions(newValue)
+            });
         };
-        _this.onSuggestionsUpdateRequested = function () {
-            return true;
+
+        _this.onSuggestionSelected = function (evt, val) {
+            debugger;
+            _this.onChange(null, { newValue: '' });
+
+            setTimeout(function () {
+                return _this.input.blur();
+            }, 1);
         };
         return _this;
     }
 
     _createClass(Example, [{
-        key: 'onChange',
-        value: function onChange(event, _ref) {
-            var newValue = _ref.newValue;
-
-            this.setState({
-                value: newValue
-            });
-        }
-    }, {
-        key: 'onBlue',
-        value: function onBlue() {
-            this.setState({ isFocus: false });
-        }
-    }, {
-        key: 'shouldRenderSuggestions',
-        value: function shouldRenderSuggestions() {
-            console.log('should render', this.state.isFocus);
-            return this.state.isFocus;
-        }
-    }, {
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             var _state = this.state;
             var value = _state.value;
             var suggestions = _state.suggestions;
-            var isFocus = _state.isFocus;
 
             var inputProps = {
                 placeholder: 'Type a programming language',
                 value: value,
                 onChange: this.onChange
+                //onFocus: (evt) => { this.setState({ suggestions: getSuggestions('') }) }
             };
 
-            return _react2.default.createElement(_reactAutosuggest2.default, { className: 'auto-suggest-label',
-                suggestions: suggestions,
-                shouldRenderSuggestions: this.shouldRenderSuggestions,
-                onSuggestionsUpdateRequested: this.onSuggestionsUpdateRequested,
-                getSuggestionValue: getSuggestionValue,
-                renderSuggestion: renderSuggestion,
-                inputProps: inputProps });
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(_reactAutosuggest2.default, { className: 'auto-suggest-label',
+                    suggestions: suggestions,
+                    shouldRenderSuggestions: function shouldRenderSuggestions() {
+                        return true;
+                    },
+                    onSuggestionsUpdateRequested: this.onSuggestionsUpdateRequested,
+                    getSuggestionValue: getSuggestionValue,
+                    onSuggestionSelected: this.onSuggestionSelected,
+                    renderSuggestion: renderSuggestion,
+                    ref: function ref(el) {
+                        if (el && el.input) {
+                            _this2.input = el.input;
+                        }
+                    },
+                    inputProps: inputProps }),
+                _react2.default.createElement('button', { xstyle: { display: 'none' }, ref: function ref(el) {
+                        return _this2.dummy = el;
+                    } })
+            );
         }
     }]);
 
@@ -181,7 +185,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
     }, {
         key: 'render',
         value: function render() {
-            var _this3 = this;
+            var _this4 = this;
 
             return _react2.default.createElement(
                 _reactBootstrap.Modal,
@@ -250,8 +254,8 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                                     _react2.default.createElement(
                                         'label',
                                         null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this3.props.addingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this3.props.toggleSubjectModificationAdd(s._id);
+                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this4.props.addingSubjectIds[s._id], onChange: function onChange() {
+                                                return _this4.props.toggleSubjectModificationAdd(s._id);
                                             } }),
                                         ' ',
                                         s.name
@@ -290,8 +294,8 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                                     _react2.default.createElement(
                                         'label',
                                         null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this3.props.removingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this3.props.toggleSubjectModificationRemove(s._id);
+                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this4.props.removingSubjectIds[s._id], onChange: function onChange() {
+                                                return _this4.props.toggleSubjectModificationRemove(s._id);
                                             } }),
                                         ' ',
                                         s.name
@@ -307,7 +311,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                     _react2.default.createElement(
                         _ajaxButton2.default,
                         { preset: 'primary', running: this.props.settingBooksSubjects, runningText: 'Setting', onClick: function onClick() {
-                                return _this3.setBooksSubjects();
+                                return _this4.setBooksSubjects();
                             } },
                         'Set'
                     ),

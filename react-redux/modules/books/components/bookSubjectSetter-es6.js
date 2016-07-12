@@ -32,14 +32,14 @@ function getSuggestions(value) {
     const inputLength = inputValue.length;
 
     //if (inputLength === 0 && !force) return [];
-    if (inputLength === 0) return languages;
+    if (inputLength === 0) return languages.concat();
     //if (force) return languages;
 
     return languages.filter(lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue);
 }
 
 function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
-    languages = languages.filter(s => s != suggestion);
+    //languages = languages.filter(s => s != suggestion);
     return suggestion.name;
 }
 
@@ -55,46 +55,46 @@ class Example extends React.Component {
 
         this.state = {
             value: '',
-            suggestions: getSuggestions(''),
-            isFocus: false
+            suggestions: getSuggestions('')
         };
 
-        this.onChange = this.onChange.bind(this);
-        this.shouldRenderSuggestions = () => true;
-        this.onSuggestionsUpdateRequested = () => true;
-    }
+        this.onChange = (event, { newValue }) => {
+            this.setState({
+                value: newValue,
+                suggestions: getSuggestions(newValue)
+            });
+        }
 
-    onChange(event, { newValue }) {
-        this.setState({
-            value: newValue
-        });
-    }
+        this.onSuggestionSelected = (evt, val) => {
+            debugger;
+            this.onChange(null, { newValue: '' });
 
-    onBlue(){
-        this.setState({ isFocus: false });
-    }
-
-    shouldRenderSuggestions(){
-        console.log('should render', this.state.isFocus);
-        return this.state.isFocus;
+            setTimeout(() => this.input.blur(), 1);
+        }
     }
 
     render() {
-        const { value, suggestions, isFocus } = this.state;
+        const { value, suggestions } = this.state;
         const inputProps = {
             placeholder: 'Type a programming language',
             value,
             onChange: this.onChange
+            //onFocus: (evt) => { this.setState({ suggestions: getSuggestions('') }) }
         };
 
         return (
-            <Autosuggest className="auto-suggest-label"
-                         suggestions={suggestions}
-                         shouldRenderSuggestions={this.shouldRenderSuggestions}
-                         onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
-                         getSuggestionValue={getSuggestionValue}
-                         renderSuggestion={renderSuggestion}
-                         inputProps={inputProps} />
+            <div>
+                <Autosuggest className="auto-suggest-label"
+                             suggestions={suggestions}
+                             shouldRenderSuggestions={() => true}
+                             onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+                             getSuggestionValue={getSuggestionValue}
+                             onSuggestionSelected={this.onSuggestionSelected}
+                             renderSuggestion={renderSuggestion}
+                             ref={el => { if (el && el.input){ this.input = el.input; } }}
+                             inputProps={inputProps} />
+                <button xstyle={{ display: 'none' }} ref={el => this.dummy = el} />
+            </div>
         );
     }
 }
