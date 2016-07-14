@@ -2,8 +2,8 @@ import { createSelector } from 'reselect';
 
 import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,
-    SETTING_BOOKS_SUBJECTS, TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION, TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION, CLEAR_SUBJECT_MODIFICATION_SUBJECTS,
-    FINISHED_SUBJECT_MODIFICATION
+    SETTING_BOOKS_SUBJECTS, CLEAR_SUBJECT_MODIFICATION_SUBJECTS,
+    FINISHED_SUBJECT_MODIFICATION, ADDING_SUBJECT_SEARCH_CHANGE, SUBJECT_SELECTED_TO_ADD
 } from './actionNames';
 
 import { subjectsSelector } from '../subjects/reducer';
@@ -13,7 +13,8 @@ const bookSubjectManagerInitialState = {
     selectedBooksModify: false,
     addingSubjects: {},
     removingSubjects: {},
-    settingBooksSubjects: false
+    settingBooksSubjects: false,
+    addingSubjectSearch: ''
 };
 
 export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, action){
@@ -30,12 +31,12 @@ export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState
             return Object.assign({}, state, { addingSubjects: {}, removingSubjects: {} });
         case CANCEL_BOOKS_SUBJECT_MODIFICATION:
             return Object.assign({}, state, { singleBookModify: null, selectedBooksModify: false });
-        case TOGGLE_SUBJECT_ADD_FOR_SUBJECT_MODIFICATION:
-            return Object.assign({}, state, { addingSubjects: { ...state.addingSubjects, [action._id]: !state.addingSubjects[action._id] } });
         case FINISHED_SUBJECT_MODIFICATION:
             return Object.assign({}, state, { addingSubjects: {}, removingSubjects: {}, singleBookModify: null, selectedBooksModify: false });
-        case TOGGLE_SUBJECT_REMOVE_FOR_SUBJECT_MODIFICATION:
-            return Object.assign({}, state, { removingSubjects: { ...state.removingSubjects, [action._id]: !state.removingSubjects[action._id] } });
+        case ADDING_SUBJECT_SEARCH_CHANGE:
+            return Object.assign({}, state, { addingSubjectSearch: action.value });
+        case SUBJECT_SELECTED_TO_ADD:
+            return Object.assign({}, state, { addingSubjectSearch: '', addingSubjects: { ...state.addingSubjects, [action._id]: true } })
     }
     return state;
 }
@@ -55,9 +56,13 @@ const modifyingBooksSelector = createSelector(
 const addingSubjectsSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjects,
-        ({ booksModule }) => booksModule.subjects.subjectHash
+        ({ booksModule }) => booksModule.subjects.subjectHash,
+        subjectsSelector
     ],
-    (adding, subjects) => Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id])
+    (adding, subjects, subjectsSelected) => ({
+        addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
+        eligibleToAdd: subjectsSelected.subjects
+    })
 );
 
 const removingSubjectsSelector = createSelector(
@@ -76,14 +81,16 @@ export const booksSubjectsModifierSelector = createSelector(
         removingSubjectsSelector,
         subjectsSelector
     ],
-    (booksSubjectsModifier, modifyingBooks, addingSubjects, removingSubjects, subjectsState) => ({
+    (booksSubjectsModifier, modifyingBooks, { addingSubjects, eligibleToAdd }, removingSubjects, subjectsState) => ({
         addingSubjectIds: booksSubjectsModifier.addingSubjects,
         removingSubjectIds: booksSubjectsModifier.removingSubjects,
         settingBooksSubjects: booksSubjectsModifier.settingBooksSubjects,
         modifyingBooks,
         addingSubjects,
+        eligibleToAdd,
         removingSubjects,
         subjects: subjectsState.subjects,
-        allSubjectsSorted: subjectsState.allSubjectsSorted
+        allSubjectsSorted: subjectsState.allSubjectsSorted,
+        addingSubjectSearch: booksSubjectsModifier.addingSubjectSearch
     })
 );

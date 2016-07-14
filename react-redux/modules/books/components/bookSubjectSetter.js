@@ -26,7 +26,7 @@ var _reducer = require('../reducers/booksSubjectModification/reducer');
 
 var _actionCreators = require('../reducers/booksSubjectModification/actionCreators');
 
-var bookSubjectActionCreators = _interopRequireWildcard(_actionCreators);
+var bookSubjectModificationActionCreators = _interopRequireWildcard(_actionCreators);
 
 var _reactBootstrap = require('react-bootstrap');
 
@@ -44,36 +44,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var languages = [{
-    name: 'C',
-    year: 1972
-}, {
-    name: 'Elm',
-    year: 2012
-}, {
-    name: 'C#',
-    year: 2003
-}, {
-    name: 'Java',
-    year: 1996
-}];
-
-function getSuggestions(value) {
-    var inputValue = value.trim().toLowerCase();
-    var inputLength = inputValue.length;
-
-    //if (inputLength === 0 && !force) return [];
-    if (inputLength === 0) return languages.concat();
-    //if (force) return languages;
-
-    return languages.filter(function (lang) {
-        return lang.name.toLowerCase().slice(0, inputLength) === inputValue;
-    });
-}
-
 function getSuggestionValue(suggestion) {
     // when suggestion selected, this function tells what should be the value of the input
-    //languages = languages.filter(s => s != suggestion);
     return suggestion.name;
 }
 
@@ -93,22 +65,16 @@ var Example = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Example).call(this));
 
-        _this.state = {
-            value: '',
-            suggestions: getSuggestions('')
-        };
-
         _this.onChange = function (event, _ref) {
             var newValue = _ref.newValue;
 
-            _this.setState({
-                value: newValue,
-                suggestions: getSuggestions(newValue)
-            });
+            _this.props.onChange(newValue);
         };
 
-        _this.onSuggestionSelected = function (evt, val) {
-            _this.onChange(null, { newValue: '' });
+        _this.onSuggestionSelected = function (evt, _ref2) {
+            var suggestion = _ref2.suggestion;
+
+            _this.props.onSuggestionSelected(_extends({}, suggestion));
             setTimeout(function () {
                 return _this.input.blur();
             }, 1);
@@ -121,25 +87,14 @@ var Example = function (_React$Component) {
         value: function render() {
             var _this2 = this;
 
-            var _state = this.state;
-            var value = _state.value;
-            var suggestions = _state.suggestions;
-
-            var inputProps = {
-                placeholder: 'Type a programming language',
-                value: value,
-                onChange: this.onChange
-            };
-
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(_reactAutosuggest2.default, { className: 'auto-suggest-label',
-                    suggestions: suggestions,
+                    suggestions: this.props.suggestions,
                     shouldRenderSuggestions: function shouldRenderSuggestions() {
                         return true;
                     },
-                    onSuggestionsUpdateRequested: this.onSuggestionsUpdateRequested,
                     getSuggestionValue: getSuggestionValue,
                     onSuggestionSelected: this.onSuggestionSelected,
                     renderSuggestion: renderSuggestion,
@@ -148,7 +103,7 @@ var Example = function (_React$Component) {
                             _this2.input = el.input;
                         }
                     },
-                    inputProps: inputProps })
+                    inputProps: _extends({}, this.props.inputProps) })
             );
         }
     }]);
@@ -207,7 +162,54 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                 _react2.default.createElement(
                     _reactBootstrap.Modal.Body,
                     null,
-                    _react2.default.createElement(Example, null),
+                    _react2.default.createElement(Example, {
+                        inputProps: { placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange },
+                        suggestions: this.props.eligibleToAdd,
+                        onSuggestionSelected: this.props.subjectSelectedToAdd
+                    }),
+                    _react2.default.createElement('br', null),
+                    _react2.default.createElement('br', null),
+                    _react2.default.createElement('br', null),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement(
+                            'b',
+                            null,
+                            'Add'
+                        ),
+                        ' ',
+                        this.props.addingSubjects.map(function (subject) {
+                            return _react2.default.createElement(
+                                'span',
+                                { className: 'label label-primary', style: { marginRight: 5, display: 'inline-block' }, key: subject._id },
+                                subject.name
+                            );
+                        })
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'panel panel-default', style: { maxHeight: 150, overflow: 'scroll' } },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'panel-body', style: { paddingTop: 0 } },
+                            this.props.allSubjectsSorted.map(function (s) {
+                                return _react2.default.createElement(
+                                    'div',
+                                    { className: 'checkbox', key: s._id },
+                                    _react2.default.createElement(
+                                        'label',
+                                        null,
+                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this4.props.addingSubjectIds[s._id], onChange: function onChange() {
+                                                return _this4.props.toggleSubjectModificationAdd(s._id);
+                                            } }),
+                                        ' ',
+                                        s.name
+                                    )
+                                );
+                            })
+                        )
+                    ),
                     _react2.default.createElement(
                         'div',
                         null,
@@ -269,6 +271,6 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
     return BookSubjectSetterDesktopUnConnected;
 }(_react2.default.Component);
 
-var BookSubjectSetterDesktop = (0, _reactRedux.connect)(_reducer.booksSubjectsModifierSelector, _extends({}, bookSubjectActionCreators))(BookSubjectSetterDesktopUnConnected);
+var BookSubjectSetterDesktop = (0, _reactRedux.connect)(_reducer.booksSubjectsModifierSelector, _extends({}, bookSubjectModificationActionCreators))(BookSubjectSetterDesktopUnConnected);
 
 exports.default = BookSubjectSetterDesktop;
