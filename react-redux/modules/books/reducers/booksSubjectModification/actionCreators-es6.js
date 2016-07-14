@@ -7,7 +7,9 @@ import {
     SET_BOOKS_SUBJECTS,
     CANCEL_BOOKS_SUBJECT_MODIFICATION,
     CLEAR_SUBJECT_MODIFICATION_SUBJECTS,
-    FINISHED_SUBJECT_MODIFICATION
+    FINISHED_SUBJECT_MODIFICATION,
+    ADDING_SUBJECT_SEARCH_CHANGE,
+    SUBJECT_SELECTED_TO_ADD
 } from './actionNames';
 
 export function cancelBookSubjectModification(){
@@ -42,4 +44,12 @@ export function enableSubjectModificationToggledBooks(){
 
 export function subjectModificationClearSubjects(){
     return { type: CLEAR_SUBJECT_MODIFICATION_SUBJECTS };
+}
+
+export function addingSearchValueChange(value){
+    return { type: ADDING_SUBJECT_SEARCH_CHANGE, value };
+}
+
+export function subjectSelectedToAdd(subject){
+    return { type: SUBJECT_SELECTED_TO_ADD, _id: subject._id };
 }
