@@ -71,14 +71,15 @@
         }
 
         .react-autosuggest__container {
-            position: relative;
+            /*position: relative;*/
+            float: left;
         }
 
         .react-autosuggest__input {
             border-top: 0;
             border-left: 0;
             border-right: 0;
-            width: 100%;
+            width: 100px;
         }
 
         .react-autosuggest__input:focus {
@@ -87,7 +88,7 @@
 
         .react-autosuggest__suggestions-container {
             position: absolute;
-            width: 100%;
+            width: calc(100% - 30px);
             padding: 0;
             margin-top: -2px;
             list-style-type: none;
