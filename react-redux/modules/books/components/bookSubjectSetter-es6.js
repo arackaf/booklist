@@ -56,6 +56,12 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
             this.props.removingSubjects.map(s => s._id));
     }
     render(){
+        let subjectSelectedToAdd = this.props.addingSubjectSet.bind(null, true),
+            subjectSelectedToRemove = this.props.removingSubjectSet.bind(null, true);
+
+        let dontAddSubject = this.props.addingSubjectSet.bind(null, false),
+            dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
+
         return (
             <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
                 <Modal.Header closeButton>
@@ -71,12 +77,12 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <Example
                                 inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
                                 suggestions={this.props.eligibleToAdd}
-                                onSuggestionSelected={this.props.subjectSelectedToAdd} />
+                                onSuggestionSelected={subjectSelectedToAdd} />
 
                             <div style={{ float: 'left', display: 'inline' }}>
                                 { this.props.addingSubjects.map(s =>
                                     <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
-                                        <a style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                        <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                     </span>) }
                             </div>
                         </div>
@@ -89,12 +95,12 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <Example
                                 inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
                                 suggestions={this.props.eligibleToRemove}
-                                onSuggestionSelected={this.props.subjectSelectedToRemove} />
+                                onSuggestionSelected={subjectSelectedToRemove} />
 
                             <div style={{ float: 'left', display: 'inline' }}>
                                 { this.props.removingSubjects.map(s =>
                                     <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
-                                        <a style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                        <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                     </span>) }
                             </div>
                         </div>
