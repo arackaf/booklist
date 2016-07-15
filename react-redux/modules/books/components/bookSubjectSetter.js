@@ -175,77 +175,50 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                             _react2.default.createElement(
                                 'div',
                                 { style: { float: 'left', display: 'inline' } },
-                                _react2.default.createElement(
-                                    'span',
-                                    { className: 'label label-default' },
-                                    'Hello'
-                                ),
-                                _react2.default.createElement(
-                                    'span',
-                                    { className: 'label label-default' },
-                                    'World'
-                                ),
-                                _react2.default.createElement(
-                                    'span',
-                                    { className: 'label label-default' },
-                                    'Blah'
-                                )
+                                this.props.addingSubjects.map(function (s) {
+                                    return _react2.default.createElement(
+                                        'span',
+                                        { style: { color: s.textColor || 'white', backgroundColor: s.backgroundColor }, className: 'label label-default margin-left' },
+                                        _react2.default.createElement(
+                                            'a',
+                                            { style: { color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' } },
+                                            'X'
+                                        ),
+                                        s.name
+                                    );
+                                })
                             )
                         )
                     ),
                     _react2.default.createElement('br', null),
-                    _react2.default.createElement('br', null),
-                    _react2.default.createElement('br', null),
                     _react2.default.createElement(
                         'div',
-                        null,
-                        _react2.default.createElement(
-                            'b',
-                            null,
-                            'Add'
-                        ),
-                        ' ',
-                        this.props.addingSubjects.map(function (subject) {
-                            return _react2.default.createElement(
-                                'span',
-                                { className: 'label label-primary', style: { marginRight: 5, display: 'inline-block' }, key: subject._id },
-                                subject.name
-                            );
-                        })
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'panel panel-default', style: { maxHeight: 150, overflow: 'scroll' } },
+                        { style: { position: 'relative' }, className: 'row' },
                         _react2.default.createElement(
                             'div',
-                            { className: 'panel-body', style: { paddingTop: 0 } },
-                            this.props.allSubjectsSorted.map(function (s) {
-                                return _react2.default.createElement(
-                                    'div',
-                                    { className: 'checkbox', key: s._id },
-                                    _react2.default.createElement(
-                                        'label',
-                                        null,
-                                        _react2.default.createElement('input', { type: 'checkbox', checked: !!_this4.props.addingSubjectIds[s._id], onChange: function onChange() {
-                                                return _this4.props.toggleSubjectModificationAdd(s._id);
-                                            } }),
-                                        ' ',
+                            { className: 'col-xs-12' },
+                            _react2.default.createElement(Example, {
+                                inputProps: { placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange },
+                                suggestions: this.props.eligibleToRemove,
+                                onSuggestionSelected: this.props.subjectSelectedToRemove }),
+                            _react2.default.createElement(
+                                'div',
+                                { style: { float: 'left', display: 'inline' } },
+                                this.props.removingSubjects.map(function (s) {
+                                    return _react2.default.createElement(
+                                        'span',
+                                        { style: { color: s.textColor || 'white', backgroundColor: s.backgroundColor }, className: 'label label-default margin-left' },
+                                        _react2.default.createElement(
+                                            'a',
+                                            { style: { color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' } },
+                                            'X'
+                                        ),
                                         s.name
-                                    )
-                                );
-                            })
+                                    );
+                                })
+                            )
                         )
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement(
-                            _bootstrapButton2.default,
-                            { preset: 'primary-xs', className: 'pull-right', onClick: this.props.subjectModificationClearSubjects },
-                            'Reset subjects'
-                        )
-                    ),
-                    _react2.default.createElement('br', null)
+                    )
                 ),
                 _react2.default.createElement(
                     _reactBootstrap.Modal.Footer,

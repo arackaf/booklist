@@ -74,38 +74,31 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                                 onSuggestionSelected={this.props.subjectSelectedToAdd} />
 
                             <div style={{ float: 'left', display: 'inline' }}>
-                                <span className="label label-default">Hello</span>
-                                <span className="label label-default">World</span>
-                                <span className="label label-default">Blah</span>
+                                { this.props.addingSubjects.map(s =>
+                                    <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
+                                        <a style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                    </span>) }
                             </div>
                         </div>
-
-
-
                     </div>
 
-                    <br /><br /><br />
-
-
-                    <div>
-                        <b>Add</b> { this.props.addingSubjects.map(subject => <span className="label label-primary" style={{ marginRight: 5, display: 'inline-block' }} key={subject._id}>{subject.name}</span>) }
-                    </div>
-                    <div className="panel panel-default" style={{ maxHeight: 150, overflow: 'scroll' }}>
-                        <div className="panel-body" style={{ paddingTop: 0 }}>
-                            { this.props.allSubjectsSorted.map(s =>
-                                <div className="checkbox" key={s._id}>
-                                    <label><input type="checkbox" checked={!!this.props.addingSubjectIds[s._id]} onChange={() => this.props.toggleSubjectModificationAdd(s._id)}/> {s.name}</label>
-                                </div>)
-                            }
-                        </div>
-                    </div>
-
-                    <div>
-                        <BootstrapButton preset="primary-xs" className="pull-right" onClick={this.props.subjectModificationClearSubjects}>Reset subjects</BootstrapButton>
-                    </div>
                     <br />
 
+                    <div style={{ position: 'relative' }} className="row">
+                        <div className="col-xs-12">
+                            <Example
+                                inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
+                                suggestions={this.props.eligibleToRemove}
+                                onSuggestionSelected={this.props.subjectSelectedToRemove} />
 
+                            <div style={{ float: 'left', display: 'inline' }}>
+                                { this.props.removingSubjects.map(s =>
+                                    <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
+                                        <a style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                    </span>) }
+                            </div>
+                        </div>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton preset="primary" running={this.props.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
