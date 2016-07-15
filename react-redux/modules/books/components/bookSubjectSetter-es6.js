@@ -66,11 +66,23 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
-                    <Example
-                        inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
-                        suggestions={this.props.eligibleToAdd}
-                        onSuggestionSelected={this.props.subjectSelectedToAdd}
-                    />
+                    <div style={{ position: 'relative' }} className="row">
+                        <div className="col-xs-12">
+                            <Example
+                                inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
+                                suggestions={this.props.eligibleToAdd}
+                                onSuggestionSelected={this.props.subjectSelectedToAdd} />
+
+                            <div style={{ float: 'left', display: 'inline' }}>
+                                <span className="label label-default">Hello</span>
+                                <span className="label label-default">World</span>
+                                <span className="label label-default">Blah</span>
+                            </div>
+                        </div>
+
+
+
+                    </div>
 
                     <br /><br /><br />
 

@@ -162,11 +162,37 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                 _react2.default.createElement(
                     _reactBootstrap.Modal.Body,
                     null,
-                    _react2.default.createElement(Example, {
-                        inputProps: { placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange },
-                        suggestions: this.props.eligibleToAdd,
-                        onSuggestionSelected: this.props.subjectSelectedToAdd
-                    }),
+                    _react2.default.createElement(
+                        'div',
+                        { style: { position: 'relative' }, className: 'row' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-xs-12' },
+                            _react2.default.createElement(Example, {
+                                inputProps: { placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange },
+                                suggestions: this.props.eligibleToAdd,
+                                onSuggestionSelected: this.props.subjectSelectedToAdd }),
+                            _react2.default.createElement(
+                                'div',
+                                { style: { float: 'left', display: 'inline' } },
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'label label-default' },
+                                    'Hello'
+                                ),
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'label label-default' },
+                                    'World'
+                                ),
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'label label-default' },
+                                    'Blah'
+                                )
+                            )
+                        )
+                    ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement('br', null),
