@@ -2,8 +2,8 @@ import { createSelector } from 'reselect';
 
 import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,
-    SETTING_BOOKS_SUBJECTS, FINISHED_SUBJECT_MODIFICATION, ADDING_SUBJECT_SEARCH_CHANGE, SUBJECT_SELECTED_TO_ADD, REMOVING_SUBJECT_SEARCH_CHANGE,
-    SUBJECT_SELECTED_TO_REMOVE
+    SETTING_BOOKS_SUBJECTS, FINISHED_SUBJECT_MODIFICATION, ADDING_SUBJECT_SEARCH_CHANGE, REMOVING_SUBJECT_SEARCH_CHANGE,
+    ADDING_SUBJECT_SET, REMOVING_SUBJECT_SET
 } from './actionNames';
 
 import { subjectsSelector } from '../subjects/reducer';
@@ -34,12 +34,12 @@ export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState
             return Object.assign({}, state, { addingSubjects: {}, removingSubjects: {}, singleBookModify: null, selectedBooksModify: false });
         case ADDING_SUBJECT_SEARCH_CHANGE:
             return Object.assign({}, state, { addingSubjectSearch: action.value });
-        case SUBJECT_SELECTED_TO_ADD:
-            return Object.assign({}, state, { addingSubjectSearch: '', addingSubjects: { ...state.addingSubjects, [action._id]: true } });
+        case ADDING_SUBJECT_SET:
+            return Object.assign({}, state, { addingSubjectSearch: '', addingSubjects: { ...state.addingSubjects, [action._id]: action.value } });
         case REMOVING_SUBJECT_SEARCH_CHANGE:
             return Object.assign({}, state, { removingSubjectSearch: action.value });
-        case SUBJECT_SELECTED_TO_REMOVE:
-            return Object.assign({}, state, { removingSubjectSearch: '', removingSubjects: { ...state.removingSubjects, [action._id]: true } })
+        case REMOVING_SUBJECT_SET:
+            return Object.assign({}, state, { removingSubjectSearch: '', removingSubjects: { ...state.removingSubjects, [action._id]: action.value } })
     }
     return state;
 }

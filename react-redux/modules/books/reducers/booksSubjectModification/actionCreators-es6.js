@@ -6,9 +6,9 @@ import {
     CANCEL_BOOKS_SUBJECT_MODIFICATION,
     FINISHED_SUBJECT_MODIFICATION,
     ADDING_SUBJECT_SEARCH_CHANGE,
-    SUBJECT_SELECTED_TO_ADD,
     REMOVING_SUBJECT_SEARCH_CHANGE,
-    SUBJECT_SELECTED_TO_REMOVE
+    ADDING_SUBJECT_SET,
+    REMOVING_SUBJECT_SET
 } from './actionNames';
 
 export function cancelBookSubjectModification(){
@@ -37,14 +37,14 @@ export function addingSearchValueChange(value){
     return { type: ADDING_SUBJECT_SEARCH_CHANGE, value };
 }
 
-export function subjectSelectedToAdd(subject){
-    return { type: SUBJECT_SELECTED_TO_ADD, _id: subject._id };
+export function addingSubjectSet(value, subject){
+    return { type: ADDING_SUBJECT_SET, _id: subject._id, value };
 }
 
 export function removingSearchValueChange(value){
     return { type: REMOVING_SUBJECT_SEARCH_CHANGE, value };
 }
 
-export function subjectSelectedToRemove(subject){
-    return { type: SUBJECT_SELECTED_TO_REMOVE, _id: subject._id };
+export function removingSubjectSet(value, subject){
+    return { type: REMOVING_SUBJECT_SET, _id: subject._id, value };
 }

@@ -136,6 +136,12 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
         value: function render() {
             var _this4 = this;
 
+            var subjectSelectedToAdd = this.props.addingSubjectSet.bind(null, true),
+                subjectSelectedToRemove = this.props.removingSubjectSet.bind(null, true);
+
+            var dontAddSubject = this.props.addingSubjectSet.bind(null, false),
+                dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
+
             return _react2.default.createElement(
                 _reactBootstrap.Modal,
                 { show: !!this.props.modifyingBooks.length, onHide: this.props.cancelBookSubjectModification },
@@ -171,7 +177,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                             _react2.default.createElement(Example, {
                                 inputProps: { placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange },
                                 suggestions: this.props.eligibleToAdd,
-                                onSuggestionSelected: this.props.subjectSelectedToAdd }),
+                                onSuggestionSelected: subjectSelectedToAdd }),
                             _react2.default.createElement(
                                 'div',
                                 { style: { float: 'left', display: 'inline' } },
@@ -181,7 +187,9 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                                         { style: { color: s.textColor || 'white', backgroundColor: s.backgroundColor }, className: 'label label-default margin-left' },
                                         _react2.default.createElement(
                                             'a',
-                                            { style: { color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' } },
+                                            { onClick: function onClick() {
+                                                    return dontAddSubject(s);
+                                                }, style: { color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' } },
                                             'X'
                                         ),
                                         s.name
@@ -200,7 +208,7 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                             _react2.default.createElement(Example, {
                                 inputProps: { placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange },
                                 suggestions: this.props.eligibleToRemove,
-                                onSuggestionSelected: this.props.subjectSelectedToRemove }),
+                                onSuggestionSelected: subjectSelectedToRemove }),
                             _react2.default.createElement(
                                 'div',
                                 { style: { float: 'left', display: 'inline' } },
@@ -210,7 +218,9 @@ var BookSubjectSetterDesktopUnConnected = function (_React$Component2) {
                                         { style: { color: s.textColor || 'white', backgroundColor: s.backgroundColor }, className: 'label label-default margin-left' },
                                         _react2.default.createElement(
                                             'a',
-                                            { style: { color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' } },
+                                            { onClick: function onClick() {
+                                                    return dontRemoveSubject(s);
+                                                }, style: { color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' } },
                                             'X'
                                         ),
                                         s.name
