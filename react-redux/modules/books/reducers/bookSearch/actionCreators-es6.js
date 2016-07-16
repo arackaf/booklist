@@ -52,11 +52,13 @@ export function applyFilters(){
     return function(dispatch, getState) {
         let state = getState().booksModule.bookSearch,
             filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-'),
+            filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
             pending = state.pending;
 
         globalHashManager.setValues(
             'search', pending.search,
-            'filterSubjects', filterSubjectsVal,
+            'subjects', filterSubjectsVal,
+            'tags', filterTagsVal,
             'searchChildSubjects', pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
             'author', pending.author,
             'publisher', pending.publisher,
@@ -83,13 +85,18 @@ export function syncFiltersToHash(){
             bookSearch = state.booksModule.bookSearch;
 
         let subjects = {},
-            selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
+            selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('subjects');
         if (selectedSubjectsHashString){
             selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
         }
+        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null;
+        let tags = {},
+            selectedTagsHashString = globalHashManager.getCurrentHashValueOf('tags');
 
-        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
-            packet = { searchChildSubjects, subjects };
+        if (selectedTagsHashString){
+            selectedTagsHashString.split('-').forEach(_id => tags[_id] = true);
+        }
+        let packet = { searchChildSubjects, subjects, tags };
 
         if ((root.publicUserId || '') != (globalHashManager.getCurrentHashValueOf('userId') || '')){
             location.reload();
@@ -114,7 +121,8 @@ export function setFilters(packet){
 }
 
 function isDirty(oldState, newState){
-    if (subjectsDifferent(oldState.subjects, newState.subjects)) return true;
+    if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
+    if (itemsDifferent(oldState.tags, newState.tags)) return true;
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
@@ -122,8 +130,8 @@ function isDirty(oldState, newState){
     return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
-function subjectsDifferent(oldSubjects, newSubjects){
-    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
+function itemsDifferent(oldItems, newItems){
+    return Object.keys(oldItems).filter(k => oldItems[k]).sort().join('-') !== Object.keys(newItems).filter(k => newItems[k]).sort().join('-');
 }
 
 export function removeFilterSubject(_id) {
@@ -132,7 +140,7 @@ export function removeFilterSubject(_id) {
             newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
 
         globalHashManager.setValues(
-            'filterSubjects', newSubjects,
+            'subjects', newSubjects,
             'searchChildSubjects', state.searchChildSubjects && newSubjects ? 'true' : null
         );
     };
