@@ -5,9 +5,8 @@ import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
 import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModification/reducer';
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
-import { Modal } from 'react-bootstrap';
+import { Modal, Tabs, Tab } from 'react-bootstrap';
 import Autosuggest from 'react-autosuggest';
-
 
 function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
     return suggestion.name;
@@ -72,39 +71,49 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
-                    <div style={{ position: 'relative' }} className="row">
-                        <div className="col-xs-12">
-                            <Example
-                                inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
-                                suggestions={this.props.eligibleToAdd}
-                                onSuggestionSelected={subjectSelectedToAdd} />
+                    <Tabs animation={false} defaultActiveKey={1}>
+                        <Tab eventKey={1} title="Choose subjects" style={{ minHeight: '150px' }}>
+                            <br />
+                            <div style={{ position: 'relative' }} className="row">
+                                <div className="col-xs-12">
+                                    <Example
+                                        inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
+                                        suggestions={this.props.eligibleToAdd}
+                                        onSuggestionSelected={subjectSelectedToAdd} />
 
-                            <div style={{ float: 'left', display: 'inline' }}>
-                                { this.props.addingSubjects.map(s =>
-                                    <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
+                                    <div style={{ float: 'left', display: 'inline' }}>
+                                        { this.props.addingSubjects.map(s =>
+                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
                                         <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                     </span>) }
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <br />
+                            <br />
 
-                    <div style={{ position: 'relative' }} className="row">
-                        <div className="col-xs-12">
-                            <Example
-                                inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
-                                suggestions={this.props.eligibleToRemove}
-                                onSuggestionSelected={subjectSelectedToRemove} />
+                            <div style={{ position: 'relative' }} className="row">
+                                <div className="col-xs-12">
+                                    <Example
+                                        inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
+                                        suggestions={this.props.eligibleToRemove}
+                                        onSuggestionSelected={subjectSelectedToRemove} />
 
-                            <div style={{ float: 'left', display: 'inline' }}>
-                                { this.props.removingSubjects.map(s =>
-                                    <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
+                                    <div style={{ float: 'left', display: 'inline' }}>
+                                        { this.props.removingSubjects.map(s =>
+                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
                                         <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                     </span>) }
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+
+                        </Tab>
+                        <Tab eventKey={2} title="For books" style={{ minHeight: '150px' }}>
+                            <br />
+                            Hello world
+                        </Tab>
+                    </Tabs>
 
                     <br />
 
