@@ -13,9 +13,11 @@ function getSuggestionValue(suggestion) { // when suggestion selected, this func
     return suggestion.name;
 }
 
-function renderSuggestion(suggestion) {
+function renderSuggestion(s) {
     return (
-        <span className="label label-default">{suggestion.name}</span>
+        <span style={{ backgroundColor: s.backgroundColor, color: s.textColor || 'white', marginLeft: (s.childLevel * 15) + 'px' }} className="label label-default">
+            {s.name}
+        </span>
     );
 }
 

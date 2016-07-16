@@ -58,6 +58,15 @@ const modifyingBooksSelector = createSelector(
     }
 );
 
+const unwindSubjects = (subjects, currentLevel = 0) => {
+    let result = [];
+    subjects.forEach(s => {
+        result.push({ ...s, childLevel: currentLevel });
+        result.push(...unwindSubjects(s.children, currentLevel + 1));
+    });
+    return result;
+};
+
 const addingSubjectsSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjects,
@@ -66,7 +75,7 @@ const addingSubjectsSelector = createSelector(
     ],
     (adding, subjects, subjectsSelected) => ({
         addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
-        eligibleToAdd: subjectsSelected.subjects
+        eligibleToAdd: unwindSubjects(subjectsSelected.subjects)
     })
 );
 
@@ -76,9 +85,9 @@ const removingSubjectsSelector = createSelector(
         ({ booksModule }) => booksModule.subjects.subjectHash,
         subjectsSelector
     ],
-    (removing, subjects, subjectsSelector) => ({
+    (removing, subjects, subjectsSelected) => ({
         removingSubjects: Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id]),
-        eligibleToRemove: subjectsSelector.subjects
+        eligibleToRemove: unwindSubjects(subjectsSelected.subjects)
     })
 );
 
