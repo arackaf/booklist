@@ -1,13 +1,15 @@
 import {
     BEGIN_FILTER_CHANGE,
     SET_PENDING_SUBJECT,
+    SET_PENDING_TAG,
     END_FILTER_CHANGE,
     SET_SORT_DIRECTION,
     SET_FILTERS,
     SET_PENDING,
     APPLY_PENDING_SEARCH,
     SET_VIEWING_USERID,
-    SET_SEARCH_SUBJECTS_VALUE
+    SET_SEARCH_SUBJECTS_VALUE,
+    SET_SEARCH_TAGS_VALUE
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
@@ -22,12 +24,24 @@ export function setSearchSubjectsValue(obj){
     return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value || '' };
 }
 
+export function setSearchTagsValue(obj){
+    return { type: SET_SEARCH_TAGS_VALUE, value: obj.target.value || '' };
+}
+
 export function addPendingSubject({ _id }){
     return { type: SET_PENDING_SUBJECT, _id, value: true };
 }
 
 export function removePendingSubject(_id){
     return { type: SET_PENDING_SUBJECT, _id, value: false };
+}
+
+export function addPendingTag({ _id }){
+    return { type: SET_PENDING_TAG, _id, value: true };
+}
+
+export function removePendingTag(_id){
+    return { type: SET_PENDING_TAG, _id, value: false };
 }
 
 export function endFilterChanging(){

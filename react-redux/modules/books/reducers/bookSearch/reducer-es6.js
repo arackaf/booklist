@@ -1,11 +1,13 @@
-import { BEGIN_FILTER_CHANGE, SET_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID, SET_SEARCH_SUBJECTS_VALUE } from './actionNames';
+import { BEGIN_FILTER_CHANGE, SET_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID, SET_SEARCH_SUBJECTS_VALUE, SET_SEARCH_TAGS_VALUE, SET_PENDING_TAG } from './actionNames';
 
 import { subjectsSelector, filterSubjects } from '../subjects/reducer';
 import { booksSelector } from '../books/reducer';
+import { tagsSelector } from '../tags/reducer';
 
 const searchFields = {
     search: '',
     subjects: {},
+    tags: {},
     searchChildSubjects: false,
     author: '',
     publisher: '',
@@ -21,34 +23,36 @@ const initialState = {
     pending: {
         ...searchFields
     },
-    searchSubjectsValue: ''
+    searchSubjectsValue: '',
+    searchTagsValue: ''
 };
 
 export function bookSearchReducer(state = initialState, action){
     switch(action.type){
         case SET_SEARCH_SUBJECTS_VALUE:
             return { ...state, searchSubjectsValue: action.value };
+        case SET_SEARCH_TAGS_VALUE:
+            return { ...state, searchTagsValue: action.value };
         case SET_FILTERS:
-            let newSearchFields = {};
-            Object.keys(searchFields).forEach(k => newSearchFields[k] = action[k]);
-            return { ...state, ...action.packet, pending: { ...action.packet } };
+            return { ...state, ...action.packet, pending: { ...state.pending, ...action.packet } };
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
         case BEGIN_FILTER_CHANGE:
-            let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: '' });
+            let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: '', searchTagsValue: '' });
             Object.keys(searchFields).forEach(k => state.pending[k] = state[k]);
             return result;
         case SET_PENDING_SUBJECT:
             return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: action.value } } });
+        case SET_PENDING_TAG:
+            return Object.assign({}, state, { pending: { ...state.pending, tags: { ...state.pending.tags, [action._id]: action.value } } });
         case END_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: false });
     }
     return state;
 }
 
-function projectSelectedSubjects(subjectIds, subjects){
-    //last filter since subjects might not be loaded yet
-    return Object.keys(subjectIds).filter(k => subjectIds[k]).map(_id => subjects[_id]).filter(s => s);
+function projectSelectedItems(ids, hash){
+    return Object.keys(ids).filter(k => ids[k]).map(_id => hash[_id]).filter(s => s);
 }
 
 export const bookSearchSelector = state => {
@@ -58,17 +62,20 @@ export const bookSearchSelector = state => {
 
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
+    let tagsState = tagsSelector(state);
 
     return Object.assign({},
         booksModule.bookSearch,
         {
-            selectedSubjects: projectSelectedSubjects(bookSearch.subjects, booksModule.subjects.subjectHash),
-            pendingSelectedSubjects: projectSelectedSubjects(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
+            selectedSubjects: projectSelectedItems(bookSearch.subjects, booksModule.subjects.subjectHash),
+            pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
+            pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
             ...booksModule.ui,
             subjects: subjectsState.subjects,
             allSubjectsSorted: subjectsState.allSubjectsSorted,
             selectedBooksCount: booksState.selectedBooksCount,
             viewingPublic: root.isPublic,
-            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue)
+            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
+            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue)
         });
 }
