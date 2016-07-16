@@ -190,12 +190,11 @@ class BooksMenuBar extends React.Component {
                             </div>
                         </div>
 
-                        <br /><br />
-                       <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
-
-                        <br /><br />
-
-                        { this.props.selectedSubjects.length ? <span>Selected subjects: {this.props.selectedSubjects.map(s => s.name).join(', ')}</span> : null }
+                        <div className="checkbox">
+                            <label>
+                                <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /> Also search child subjects
+                            </label>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <BootstrapButton preset="primary" className="pull-left" onClick={this.props.applyFilters}>Filter</BootstrapButton>
