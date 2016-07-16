@@ -35,7 +35,9 @@ export function bookSearchReducer(state = initialState, action){
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
         case BEGIN_FILTER_CHANGE:
-            return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.subjects }, searchSubjectsValue: '' });
+            let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: '' });
+            Object.keys(searchFields).forEach(k => state.pending[k] = state[k]);
+            return result;
         case SET_PENDING_SUBJECT:
             return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: action.value } } });
         case END_FILTER_CHANGE:
