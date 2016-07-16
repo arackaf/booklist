@@ -1,6 +1,6 @@
 import { BEGIN_FILTER_CHANGE, SET_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID, SET_SEARCH_SUBJECTS_VALUE } from './actionNames';
 
-import { subjectsSelector } from '../subjects/reducer';
+import { subjectsSelector, filterSubjects } from '../subjects/reducer';
 import { booksSelector } from '../books/reducer';
 
 const searchFields = {
@@ -53,6 +53,7 @@ function projectSelectedSubjects(subjectIds, subjects){
 
 export const bookSearchSelector = state => {
     let booksModule = state.booksModule,
+        bookSearch = state.booksModule.bookSearch,
         root = state.root;
 
     let subjectsState = subjectsSelector(state);
@@ -61,13 +62,13 @@ export const bookSearchSelector = state => {
     return Object.assign({},
         booksModule.bookSearch,
         {
-            selectedSubjects: projectSelectedSubjects(booksModule.bookSearch.subjects, booksModule.subjects.subjectHash),
+            selectedSubjects: projectSelectedSubjects(bookSearch.subjects, booksModule.subjects.subjectHash),
             pendingSelectedSubjects: projectSelectedSubjects(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
             ...booksModule.ui,
             subjects: subjectsState.subjects,
             allSubjectsSorted: subjectsState.allSubjectsSorted,
             selectedBooksCount: booksState.selectedBooksCount,
             viewingPublic: root.isPublic,
-            eligibleFilterSubjects: subjectsState.subjectsUnwound
+            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue)
         });
 }
