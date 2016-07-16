@@ -175,3 +175,4 @@ react-redux/modules/books/components/subject-edit/subjectEditTree.js
 react-redux/modules/books/components/booklist-menubar/bookSelectTree.js
 controllers/bookBulk.js
 controllers/user.js
+react-redux/modules/books/components/bookSubjectSetter.js
