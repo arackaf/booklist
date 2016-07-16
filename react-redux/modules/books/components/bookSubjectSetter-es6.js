@@ -36,17 +36,18 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                         <Tab eventKey={1} title="Choose subjects" style={{ minHeight: '150px' }}>
                             <br />
                             <div style={{ position: 'relative' }} className="row">
-                                <div className="col-xs-12">
+                                <div className="col-xs-3">
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
                                         suggestions={this.props.eligibleToAdd}
                                         onSuggestionSelected={subjectSelectedToAdd} />
-
-                                    <div style={{ float: 'left', display: 'inline' }}>
+                                </div>
+                                <div className="col-xs-9">
+                                    <div>
                                         { this.props.addingSubjects.map(s =>
-                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
-                                        <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
-                                    </span>) }
+                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
+                                                <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                            </span>) }
                                     </div>
                                 </div>
                             </div>
@@ -54,17 +55,18 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <br />
 
                             <div style={{ position: 'relative' }} className="row">
-                                <div className="col-xs-12">
+                                <div className="col-xs-3">
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
                                         suggestions={this.props.eligibleToRemove}
                                         onSuggestionSelected={subjectSelectedToRemove} />
-
-                                    <div style={{ float: 'left', display: 'inline' }}>
+                                </div>
+                                <div className="col-xs-9">
+                                    <div>
                                         { this.props.removingSubjects.map(s =>
-                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor }} className="label label-default margin-left">
-                                        <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
-                                    </span>) }
+                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
+                                                <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                            </span>) }
                                     </div>
                                 </div>
                             </div>
