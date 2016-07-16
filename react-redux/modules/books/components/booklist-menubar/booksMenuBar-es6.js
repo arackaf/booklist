@@ -176,6 +176,25 @@ class BooksMenuBar extends React.Component {
                         <div className="row" style={{ position: 'relative' }}>
                             <div className="col-xs-3">
                                 <GenericLabelSelect
+                                    inputProps={{ placeholder: 'Tags', value: this.props.searchTagsValue, onChange: this.props.setSearchSubjectsValue }}
+                                    suggestions={this.props.eligibleFilterTags}
+                                    onSuggestionSelected={this.props.addPendingTag} />
+                            </div>
+                            <div className="col-xs-9">
+                                <div>
+                                    {this.props.pendingSelectedTags.map(t =>
+                                        <span className="label label-default margin-left" style={{ backgroundColor: t.backgroundColor, color: t.textColor || 'white', display: 'inline-table' }}>
+                                            <a onClick={() => this.props.removePendingTag(t._id)} style={{ color: t.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{t.name}
+                                        </span>)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div className="row" style={{ position: 'relative' }}>
+                            <div className="col-xs-3">
+                                <GenericLabelSelect
                                     inputProps={{ placeholder: 'Subjects', value: this.props.searchSubjectsValue, onChange: this.props.setSearchSubjectsValue }}
                                     suggestions={this.props.eligibleFilterSubjects}
                                     onSuggestionSelected={this.props.addPendingSubject} />
