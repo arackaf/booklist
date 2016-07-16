@@ -1,12 +1,13 @@
 import {
     BEGIN_FILTER_CHANGE,
-    TOGGLE_PENDING_SUBJECT,
+    SET_PENDING_SUBJECT,
     END_FILTER_CHANGE,
     SET_SORT_DIRECTION,
     SET_FILTERS,
     SET_PENDING,
     APPLY_PENDING_SEARCH,
-    SET_VIEWING_USERID
+    SET_VIEWING_USERID,
+    SET_SEARCH_SUBJECTS_VALUE
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
@@ -17,8 +18,16 @@ export function beginFilterChange(){
     return { type: BEGIN_FILTER_CHANGE };
 }
 
-export function togglePendingSubject(_id){
-    return { type: TOGGLE_PENDING_SUBJECT, _id };
+export function setSearchSubjectsValue(obj){
+    return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value };
+}
+
+export function addPendingSubject(_id){
+    return { type: SET_PENDING_SUBJECT, _id, value: true };
+}
+
+export function removePendingSubject(_id){
+    return { type: SET_PENDING_SUBJECT, _id, value: false };
 }
 
 export function endFilterChanging(){
