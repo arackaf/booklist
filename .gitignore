@@ -176,3 +176,7 @@ react-redux/modules/books/components/booklist-menubar/bookSelectTree.js
 controllers/bookBulk.js
 controllers/user.js
 react-redux/modules/books/components/bookSubjectSetter.js
+controllers/tag.js
+react-redux/modules/books/reducers/tags/actionCreators.js
+react-redux/modules/books/reducers/tags/actionNames.js
+react-redux/modules/books/reducers/tags/reducer.js
