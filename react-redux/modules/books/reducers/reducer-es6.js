@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { booksReducer as books, booksSelector } from './books/reducer';
 import { subjectsReducer as subjects, subjectsSelector } from './subjects/reducer';
+import { tagsReducer as tags, tagsSelector } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
 import bookEdit from './editBook/reducer';
@@ -12,12 +13,14 @@ export const reducer = combineReducers({
     bookSearch,
     booksSubjectsModifier,
     bookEdit,
-    ui
+    ui,
+    tags
 });
 
 export const selector = state => {
     let booksSelected = booksSelector(state),
         subjectsSelected = subjectsSelector(state),
+        tagsSelected = tagsSelector(state),
         bookEdit = state.booksModule.bookEdit,
         bookSearch = bookSearchSelector(state),
         ui = state.booksModule.ui,
@@ -26,6 +29,8 @@ export const selector = state => {
     return {
         subjects: subjectsSelected.list,
         subjectsLoaded: subjectsSelected.loaded,
+        tags: tagsSelected.allTagsSorted,
+        tagsLoaded: tagsSelected.loaded,
         books: booksSelected.list,
         reloadBooksOnActivate: booksSelected.reloadOnActivate,
         viewingPublic: root.isPublic,
