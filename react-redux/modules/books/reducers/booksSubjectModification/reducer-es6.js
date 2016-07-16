@@ -58,11 +58,21 @@ const modifyingBooksSelector = createSelector(
     }
 );
 
-const unwindSubjects = (subjects, currentLevel = 0) => {
+const unwindSubjects = (subjects, search, currentLevel = 0) => {
+    if (typeof search === 'string'){
+        if (!search){
+            search = () => true;
+        } else {
+            let regex = new RegExp(search, 'i');
+            search = txt => regex.test(txt);
+        }
+    }
     let result = [];
     subjects.forEach(s => {
-        result.push({ ...s, childLevel: currentLevel });
-        result.push(...unwindSubjects(s.children, currentLevel + 1));
+        if (search(s.name)) {
+            result.push({...s, childLevel: currentLevel});
+        }
+        result.push(...unwindSubjects(s.children, search, currentLevel + 1));
     });
     return result;
 };
@@ -70,24 +80,26 @@ const unwindSubjects = (subjects, currentLevel = 0) => {
 const addingSubjectsSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjects,
+        ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjectSearch,
         ({ booksModule }) => booksModule.subjects.subjectHash,
         subjectsSelector
     ],
-    (adding, subjects, subjectsSelected) => ({
+    (adding, addingSubjectSearch, subjects, subjectsSelected) => ({
         addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
-        eligibleToAdd: unwindSubjects(subjectsSelected.subjects)
+        eligibleToAdd: unwindSubjects(subjectsSelected.subjects, addingSubjectSearch)
     })
 );
 
 const removingSubjectsSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksSubjectsModifier.removingSubjects,
+        ({ booksModule }) => booksModule.booksSubjectsModifier.removingSubjectSearch,
         ({ booksModule }) => booksModule.subjects.subjectHash,
         subjectsSelector
     ],
-    (removing, subjects, subjectsSelected) => ({
+    (removing, removingSubjectSearch, subjects, subjectsSelected) => ({
         removingSubjects: Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id]),
-        eligibleToRemove: unwindSubjects(subjectsSelected.subjects)
+        eligibleToRemove: unwindSubjects(subjectsSelected.subjects, removingSubjectSearch)
     })
 );
 
