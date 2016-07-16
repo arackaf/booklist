@@ -1,12 +1,8 @@
 import { createSelector } from 'reselect';
 import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
-
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
-
-import {
-    EDITING_BOOK_SAVED
-} from '../editBook/actionNames';
+import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 const initialBooksState = {
     booksHash: {},
@@ -65,7 +61,11 @@ function createBooksHash(booksArr){
 }
 
 const booksWithSubjectsSelector = createSelector(
-    [({ booksModule }) => booksModule.books.booksHash, ({ booksModule }) => booksModule.subjects.subjectHash],
+    [
+        ({ booksModule }) => booksModule.books.booksHash,
+        ({ booksModule }) => booksModule.subjects.subjectHash,
+        ({ booksModule }) => booksModule.tags.tagHash
+    ],
     adjustBooksForDisplay
 );
 
@@ -80,11 +80,13 @@ export const booksSelector = state => {
         });
 }
 
-function adjustBooksForDisplay(booksHash, subjectsHash){
+function adjustBooksForDisplay(booksHash, subjectsHash, tagHash){
     let books = Object.keys(booksHash).map(_id => booksHash[_id]);
     books.forEach(b => {
         b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
+        b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
         b.authors = b.authors || [];
+
         let d = new Date(+b.dateAdded);
         b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
     });
