@@ -8,7 +8,8 @@ import {
     ADDING_SUBJECT_SEARCH_CHANGE,
     REMOVING_SUBJECT_SEARCH_CHANGE,
     ADDING_SUBJECT_SET,
-    REMOVING_SUBJECT_SET
+    REMOVING_SUBJECT_SET,
+    RESET_SUBJECTS
 } from './actionNames';
 
 export function cancelBookSubjectModification(){
@@ -47,4 +48,8 @@ export function removingSearchValueChange(value){
 
 export function removingSubjectSet(value, subject){
     return { type: REMOVING_SUBJECT_SET, _id: subject._id, value };
+}
+
+export function resetSubjects(){
+    return { type: RESET_SUBJECTS };
 }

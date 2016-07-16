@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import {
     ENABLE_SUBJECT_MODIFICATION_FOR_SINGLE_BOOK, ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS, CANCEL_BOOKS_SUBJECT_MODIFICATION, SET_BOOKS_SUBJECTS,
     SETTING_BOOKS_SUBJECTS, FINISHED_SUBJECT_MODIFICATION, ADDING_SUBJECT_SEARCH_CHANGE, REMOVING_SUBJECT_SEARCH_CHANGE,
-    ADDING_SUBJECT_SET, REMOVING_SUBJECT_SET
+    ADDING_SUBJECT_SET, REMOVING_SUBJECT_SET, RESET_SUBJECTS
 } from './actionNames';
 
 import { subjectsSelector } from '../subjects/reducer';
@@ -40,6 +40,8 @@ export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState
             return Object.assign({}, state, { removingSubjectSearch: action.value });
         case REMOVING_SUBJECT_SET:
             return Object.assign({}, state, { removingSubjectSearch: '', removingSubjects: { ...state.removingSubjects, [action._id]: action.value } })
+        case RESET_SUBJECTS:
+            return Object.assign({}, state, { addingSubjects: {}, removingSubjects: {} });
     }
     return state;
 }
