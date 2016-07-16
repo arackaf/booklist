@@ -16,10 +16,6 @@ class GenericLabelSelect extends React.Component {
     constructor() {
         super();
 
-        this.onChange = (event, { newValue }) => {
-            this.props.onChange(newValue);
-        }
-
         this.onSuggestionSelected = (evt, { suggestion }) => {
             this.props.onSuggestionSelected({ ...suggestion });
             setTimeout(() => this.input.blur(), 1);

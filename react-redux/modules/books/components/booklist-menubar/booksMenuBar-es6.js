@@ -173,10 +173,22 @@ class BooksMenuBar extends React.Component {
                             </div>
                         </form>
 
-                        <GenericLabelSelect
-                            inputProps={{ placeholder: 'Subjects', value: this.props.searchSubjectsValue, onChange: this.props.setSearchSubjectsValue }}
-                            suggestions={this.props.allSubjectsSorted}
-                            onSuggestionSelected={this.props.addPendingSubject} />
+                        <div className="row" style={{ position: 'relative' }}>
+                            <div className="col-xs-3">
+                                <GenericLabelSelect
+                                    inputProps={{ placeholder: 'Subjects', value: this.props.searchSubjectsValue, onChange: this.props.setSearchSubjectsValue }}
+                                    suggestions={this.props.eligibleFilterSubjects}
+                                    onSuggestionSelected={this.props.addPendingSubject} />
+                            </div>
+                            <div className="col-xs-9">
+                                <div>
+                                    {this.props.pendingSelectedSubjects.map(s =>
+                                        <span className="label label-default margin-left" style={{ backgroundColor: s.backgroundColor, color: s.textColor || 'white', display: 'inline-table' }}>
+                                            <a onClick={() => this.props.removePendingSubject(s._id)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                        </span>)}
+                                </div>
+                            </div>
+                        </div>
 
                         <br /><br />
                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>

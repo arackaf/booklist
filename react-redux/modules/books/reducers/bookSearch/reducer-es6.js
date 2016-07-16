@@ -44,9 +44,9 @@ export function bookSearchReducer(state = initialState, action){
     return state;
 }
 
-function projectselectedSubjects(selectedSubjectsIds, subjects){
+function projectSelectedSubjects(subjectIds, subjects){
     //last filter since subjects might not be loaded yet
-    return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]).filter(s => s);
+    return Object.keys(subjectIds).filter(k => subjectIds[k]).map(_id => subjects[_id]).filter(s => s);
 }
 
 export const bookSearchSelector = state => {
@@ -59,11 +59,13 @@ export const bookSearchSelector = state => {
     return Object.assign({},
         booksModule.bookSearch,
         {
-            selectedSubjects: projectselectedSubjects(booksModule.bookSearch.subjects, booksModule.subjects.subjectHash),
+            selectedSubjects: projectSelectedSubjects(booksModule.bookSearch.subjects, booksModule.subjects.subjectHash),
+            pendingSelectedSubjects: projectSelectedSubjects(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
             ...booksModule.ui,
             subjects: subjectsState.subjects,
             allSubjectsSorted: subjectsState.allSubjectsSorted,
             selectedBooksCount: booksState.selectedBooksCount,
-            viewingPublic: root.isPublic
+            viewingPublic: root.isPublic,
+            eligibleFilterSubjects: subjectsState.subjectsUnwound
         });
 }

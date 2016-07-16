@@ -19,10 +19,10 @@ export function beginFilterChange(){
 }
 
 export function setSearchSubjectsValue(obj){
-    return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value };
+    return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value || '' };
 }
 
-export function addPendingSubject(_id){
+export function addPendingSubject({ _id }){
     return { type: SET_PENDING_SUBJECT, _id, value: true };
 }
 
