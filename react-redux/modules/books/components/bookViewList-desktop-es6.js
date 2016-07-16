@@ -38,7 +38,8 @@ class BookViewListDesktop extends React.Component{
                                 <th></th>
                                 <th><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
                                 <th>Author</th>
-                                <th>Genres</th>
+                                <th>Subjects</th>
+                                <th>Tags</th>
                                 <th>Published</th>
                                 <th>ISBN</th>
                                 <th><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
@@ -60,6 +61,12 @@ class BookViewListDesktop extends React.Component{
                                 </td>
                                 <td>
                                     { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
+                                    <div style={{ marginTop: 5, minHeight: 40 }}>
+                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    { book.tagObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
