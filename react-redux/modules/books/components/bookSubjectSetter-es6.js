@@ -6,48 +6,7 @@ import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModificat
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal, Tabs, Tab } from 'react-bootstrap';
-import Autosuggest from 'react-autosuggest';
-
-function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
-    return suggestion.name;
-}
-
-function renderSuggestion(s) {
-    return (
-        <span style={{ backgroundColor: s.backgroundColor, color: s.textColor || 'white', marginLeft: (s.childLevel * 15) + 'px' }} className="label label-default">
-            {s.name}
-        </span>
-    );
-}
-
-class Example extends React.Component {
-    constructor() {
-        super();
-
-        this.onChange = (event, { newValue }) => {
-            this.props.onChange(newValue);
-        }
-
-        this.onSuggestionSelected = (evt, { suggestion }) => {
-            this.props.onSuggestionSelected({ ...suggestion });
-            setTimeout(() => this.input.blur(), 1);
-        }
-    }
-    render() {
-        return (
-            <div>
-                <Autosuggest className="auto-suggest-label"
-                             suggestions={this.props.suggestions}
-                             shouldRenderSuggestions={() => true}
-                             getSuggestionValue={getSuggestionValue}
-                             onSuggestionSelected={this.onSuggestionSelected}
-                             renderSuggestion={renderSuggestion}
-                             ref={el => { if (el && el.input){ this.input = el.input; } }}
-                             inputProps={ {...this.props.inputProps} } />
-            </div>
-        );
-    }
-}
+import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
     setBooksSubjects(){
@@ -78,7 +37,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-12">
-                                    <Example
+                                    <GenericLabelSelect
                                         inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
                                         suggestions={this.props.eligibleToAdd}
                                         onSuggestionSelected={subjectSelectedToAdd} />
@@ -96,7 +55,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
 
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-12">
-                                    <Example
+                                    <GenericLabelSelect
                                         inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
                                         suggestions={this.props.eligibleToRemove}
                                         onSuggestionSelected={subjectSelectedToRemove} />
