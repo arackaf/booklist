@@ -30,7 +30,7 @@
     "react": "15.1.0",
     "react-addons-css-transition-group": "15.1.0",
     "react-autosuggest": "^3.7.4",
-    "react-bootstrap": "0.29.0",
+    "react-bootstrap": "0.29.5",
     "react-dom": "0.14.0",
     "react-dropzone": "3.4.0",
     "react-redux": "4.4.5",
