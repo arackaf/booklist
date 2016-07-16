@@ -6,7 +6,7 @@ import {
     ADDING_SUBJECT_SET, REMOVING_SUBJECT_SET, RESET_SUBJECTS
 } from './actionNames';
 
-import { subjectsSelector } from '../subjects/reducer';
+import { subjectsSelector, filterSubjects } from '../subjects/reducer';
 
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
@@ -58,25 +58,6 @@ const modifyingBooksSelector = createSelector(
     }
 );
 
-const unwindSubjects = (subjects, search, currentLevel = 0) => {
-    if (typeof search === 'string'){
-        if (!search){
-            search = () => true;
-        } else {
-            let regex = new RegExp(search, 'i');
-            search = txt => regex.test(txt);
-        }
-    }
-    let result = [];
-    subjects.forEach(s => {
-        if (search(s.name)) {
-            result.push({...s, childLevel: currentLevel});
-        }
-        result.push(...unwindSubjects(s.children, search, currentLevel + 1));
-    });
-    return result;
-};
-
 const addingSubjectsSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjects,
@@ -86,7 +67,7 @@ const addingSubjectsSelector = createSelector(
     ],
     (adding, addingSubjectSearch, subjects, subjectsSelected) => ({
         addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
-        eligibleToAdd: unwindSubjects(subjectsSelected.subjects, addingSubjectSearch)
+        eligibleToAdd: filterSubjects(subjectsSelected.subjectsUnwound, addingSubjectSearch)
     })
 );
 
@@ -99,7 +80,7 @@ const removingSubjectsSelector = createSelector(
     ],
     (removing, removingSubjectSearch, subjects, subjectsSelected) => ({
         removingSubjects: Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id]),
-        eligibleToRemove: unwindSubjects(subjectsSelected.subjects, removingSubjectSearch)
+        eligibleToRemove: filterSubjects(subjectsSelected.subjectsUnwound, removingSubjectSearch)
     })
 );
 

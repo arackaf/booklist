@@ -78,12 +78,32 @@ function flattenedSubjects(subjects){
     return Object.keys(subjects).map(k => subjects[k]);
 }
 
+const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
+    let name1After = name1.toLowerCase() > name2.toLowerCase(),
+        bothEqual = name1.toLowerCase() === name2.toLowerCase();
+    return bothEqual ? 0 : (name1After ? 1 : -1);
+};
+
+const unwindSubjects = subjects => {
+    let result = [];
+    subjects.concat().sort(subjectSortCompare).forEach(s => {
+        result.push(s);
+        result.push(...unwindSubjects(s.children));
+    });
+    return result;
+};
+
 const stackedSubjectsSelector = createSelector(
     [state => state.subjectHash],
-    subjectHash => ({
-        subjects: stackAndGetTopLevelSubjects(subjectHash),
-        allSubjectsSorted: allSubjectsSorted(subjectHash)
-    })
+    subjectHash => {
+        let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
+
+        return {
+            subjects: mainSubjectsCollection,
+            allSubjectsSorted: allSubjectsSorted(subjectHash),
+            subjectsUnwound: unwindSubjects(mainSubjectsCollection)
+        };
+    }
 );
 
 export const subjectsSelector = ({ booksModule }) => {
@@ -95,15 +115,22 @@ function stackAndGetTopLevelSubjects(subjectsHash){
     subjects.forEach(s => {
         s.children = [];
         s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
+        s.childLevel = !s.path ? 0 : (s.path.match(/\,/g) || []).length - 1;
     });
     return subjects.filter(s => s.path == null);
 }
 
 function allSubjectsSorted(subjectsHash){
     let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
-    return subjects.sort(({ name: name1 }, { name: name2 }) => {
-        let name1After = name1.toLowerCase() > name2.toLowerCase(),
-            bothEqual = name1.toLowerCase() === name2.toLowerCase();
-        return bothEqual ? 0 : (name1After ? 1 : -1);
-    });
+    return subjects.sort(subjectSortCompare);
 }
+
+export const filterSubjects = (subjects, search) => {
+    if (!search){
+        search = () => true;
+    } else {
+        let regex = new RegExp(search, 'i');
+        search = txt => regex.test(txt);
+    }
+    return subjects.filter(s => search(s.name))
+};

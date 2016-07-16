@@ -23,6 +23,8 @@ import * as booksSubjectModificationActionCreators from '../../reducers/booksSub
 import * as uiActionCreators from '../../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
+import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
+
 const InputForPending = props => {
     let name = props.name,
         actionName = `setPending${name[0].toUpperCase()}${name.slice(1)}`,
@@ -173,12 +175,22 @@ class BooksMenuBar extends React.Component {
                             </div>
                         </form>
 
-                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
-                        <BookSelectTree
-                            style={{ paddingLeft: 5 }}
-                            toggleFilteredSubject={this.props.togglePendingSubject}
-                            subjects={this.props.subjects}
-                            selectedSubjects={this.props.pending.subjects} />
+                        <GenericLabelSelect
+                            inputProps={{ placeholder: 'Subjects', value: this.props.searchSubjectsValue, onChange: this.props.setSearchSubjectsValue }}
+                            suggestions={this.props.allSubjectsSorted}
+                            onSuggestionSelected={this.props.addPendingSubject} />
+
+                        <br /><br />
+                       <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
+
+                        <br /><br />
+
+                        { null &&
+                            <BookSelectTree
+                                style={{ paddingLeft: 5 }}
+                                toggleFilteredSubject={this.props.togglePendingSubject}
+                                subjects={this.props.subjects}
+                                selectedSubjects={this.props.pending.subjects} /> }
 
                         { this.props.selectedSubjects.length ? <span>Selected subjects: {this.props.selectedSubjects.map(s => s.name).join(', ')}</span> : null }
                     </Modal.Body>
