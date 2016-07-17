@@ -17,7 +17,9 @@ import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 import * as booksActionCreators from '../../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
 import * as subjectsActionCreators from '../../reducers/subjects/actionCreators';
+import * as tagsActionCreators from '../../reducers/tags/actionCreators';
 import * as booksSubjectModificationActionCreators from '../../reducers/booksSubjectModification/actionCreators';
+import * as booksTagModificationActionCreators from '../../reducers/booksTagModification/actionCreators';
 import * as uiActionCreators from '../../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
@@ -105,6 +107,7 @@ class BooksMenuBar extends React.Component {
                         <Nav>
                             <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set subjects</NavItem>
                             <NavItem onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavItem>
+                            <NavItem onClick={this.props.enableTagModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set tags</NavItem>
                         </Nav>
                         <Navbar.Header>
                             <Navbar.Brand>
@@ -263,6 +266,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...uiActionCreators, ...tagsActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

@@ -13,6 +13,14 @@ class bookController{
             this.send({success: true});
         } catch(errr){ console.log(errr); }
     }
+    @httpPost
+    async setTags({ books, add, remove }){
+        try {
+            let bookDao = new BookDAO();
+            await bookDao.setBooksTags(books, add, remove);
+            this.send({success: true});
+        } catch(errr){ console.log(errr); }
+    }
 }
 
 module.exports = bookController;

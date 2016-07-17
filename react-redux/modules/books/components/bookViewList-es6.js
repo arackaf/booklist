@@ -9,6 +9,7 @@ import MobileView from './bookViewList-mobile';
 import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetter from './bookSubjectSetter';
+import BookTagSetter from './bookTagSetter';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
@@ -74,6 +75,7 @@ class BookViewingList extends React.Component {
                 </div>
 
                 <BookSubjectSetter />
+                <BookTagSetter />
                 <SubjectEditModal />
 
                 <ManualBookEntry

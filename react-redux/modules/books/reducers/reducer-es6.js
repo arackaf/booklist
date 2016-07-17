@@ -4,6 +4,7 @@ import { subjectsReducer as subjects, subjectsSelector } from './subjects/reduce
 import { tagsReducer as tags, tagsSelector } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
+import { bookTagManagerReducer as booksTagsModifier, booksTagsModifierSelector } from './booksTagModification/reducer';
 import bookEdit from './editBook/reducer';
 import ui from './ui/reducer';
 
@@ -12,6 +13,7 @@ export const reducer = combineReducers({
     subjects,
     bookSearch,
     booksSubjectsModifier,
+    booksTagsModifier,
     bookEdit,
     ui,
     tags
