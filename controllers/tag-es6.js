@@ -16,12 +16,12 @@ class tagController{
 
         this.send({ tag });
     }
-    //@httpPost
-    //async delete({ _id }){
-    //    let subjectDao = new SubjectDAO(this.request.user.id);
-    //    let { subjectsDeleted } = await subjectDao.deleteSubject(_id);
-    //    this.send({ success: true, subjectsDeleted });
-    //}
+    @httpPost
+    async delete({ _id }){
+        let tagDao = new tagDAO(this.request.user.id);
+        let { tagDeleted } = await tagDao.deleteTag(_id);
+        this.send({ success: true, tagDeleted });
+    }
 }
 
 module.exports = tagController;
