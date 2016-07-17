@@ -20,6 +20,7 @@ function booksSearch(bookSearchState, publicUserId){
     return ajaxUtil.get('/book/searchBooks', {
         search: bookSearchState.search,
         subjects: Object.keys(bookSearchState.subjects),
+        tags: Object.keys(bookSearchState.tags),
         searchChildSubjects: bookSearchState.searchChildSubjects,
         sort: bookSearchState.sort,
         sortDirection: bookSearchState.sortDirection,
