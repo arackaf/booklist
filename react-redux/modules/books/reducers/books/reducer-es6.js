@@ -70,6 +70,12 @@ export function booksReducer(state = initialBooksState, action){
 function createBooksHash(booksArr){
     let result = {};
     booksArr.forEach(book => {
+        if (!book.subjects){
+            book.subjects = [];
+        }
+        if (!book.tags){
+            book.tags = [];
+        }
         result[book._id] = book
     });
     return result;
