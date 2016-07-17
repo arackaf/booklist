@@ -34,7 +34,7 @@ class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
 
-        this.state = { menuOpen: false };
+        this.state = { subjectsMenuOpen: false, tagsMenuOpen: false };
         this._hashChangeSubscription = props.syncFiltersToHash;
         window.addEventListener("hashchange", this._hashChangeSubscription);
     }
@@ -43,7 +43,15 @@ class BooksMenuBar extends React.Component {
         this.props.removeFilterSubject(_id);
 
         if (isLastSubject){
-            setTimeout(() => this.setState({ menuOpen: false }), 1);
+            setTimeout(() => this.setState({ subjectsMenuOpen: false }), 1);
+        }
+    }
+    removeFilterTag(_id){
+        let isLastTag = this.props.selectedTags.length === 1;
+        this.props.removeFilterTag(_id);
+
+        if (isLastTag){
+            setTimeout(() => this.setState({ tagsMenuOpen: false }), 1);
         }
     }
     componentDidMount(){
@@ -55,20 +63,33 @@ class BooksMenuBar extends React.Component {
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });
     }
-    dropdownToggle(newValue){
-        if (this._forceOpen){
-            this.setState({ menuOpen: true });
-            this._forceOpen = false;
+    subjectsDropdownToggle(newValue){
+        if (this._subjectsForceOpen){
+            this.setState({ subjectsMenuOpen: true });
+            this._subjectsForceOpen = false;
         } else {
-            this.setState({ menuOpen: newValue });
+            this.setState({ subjectsMenuOpen: newValue });
         }
     }
-    menuItemClickedThatShouldntCloseDropdown(){
-        this._forceOpen = true;
+    tagsDropdownToggle(newValue){
+        if (this._tagsForceOpen){
+            this.setState({ tagsMenuOpen: true });
+            this._tagsForceOpen = false;
+        } else {
+            this.setState({ tagsMenuOpen: newValue });
+        }
+    }
+    subjectMenuItemClickedThatShouldntCloseDropdown(){
+        this._subjectsForceOpen = true;
+    }
+    tagMenuItemClickedThatShouldntCloseDropdown(){
+        this._tagsForceOpen = true;
     }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
-            selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's');
+            selectedTagsCount = this.props.selectedTags.length,
+            selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
+            selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedSubjectsCount === 1 ? '' : 's');
 
         return (
             <div>
@@ -108,18 +129,30 @@ class BooksMenuBar extends React.Component {
                         </Navbar.Form>
                         { selectedSubjectsCount ?
                             <Nav>
-                                <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                                <NavDropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
-                                        <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
+                                        <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
                                             <span className="label label-default"><span onClick={() => this.removeFilterSubject(s._id)} style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
                                         </MenuItem>)
                                     }
 
                                     { !!this.props.searchChildSubjects ? <MenuItem divider /> : null }
                                     { !!this.props.searchChildSubjects ?
-                                        <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
+                                        <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
                                             <span className="label label-primary">Searching child subjects</span>
                                         </MenuItem> : null
+                                    }
+                                </NavDropdown>
+                            </Nav> : null
+                        }
+
+                        { selectedTagsCount ?
+                            <Nav>
+                                <NavDropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
+                                    { this.props.selectedTags.map(s =>
+                                        <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
+                                            <span className="label label-default"><span onClick={() => this.removeFilterTag(s._id)} style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                        </MenuItem>)
                                     }
                                 </NavDropdown>
                             </Nav> : null
