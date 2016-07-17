@@ -221,9 +221,9 @@ class BooksMenuBar extends React.Component {
                             <div className="col-xs-9">
                                 <div>
                                     {this.props.pendingSelectedTags.map(t =>
-                                        <span className="label label-default margin-left" style={{ backgroundColor: t.backgroundColor, color: t.textColor || 'white', display: 'inline-table' }}>
-                                            <a onClick={() => this.props.removePendingTag(t._id)} style={{ color: t.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{t.name}
-                                        </span>)}
+                                        <RemovableLabelDisplay className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)}>
+                                            {t.name}
+                                        </RemovableLabelDisplay> )}
                                 </div>
                             </div>
                         </div>
