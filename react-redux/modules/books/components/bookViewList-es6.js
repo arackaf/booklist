@@ -11,6 +11,7 @@ import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetter from './bookSubjectSetter';
 import BookTagSetter from './bookTagSetter';
 import SubjectEditModal from './subject-edit/subjectEditModal';
+import TagEditModal from './tag-edit/tagEditModal';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
 
@@ -77,6 +78,7 @@ class BookViewingList extends React.Component {
                 <BookSubjectSetter />
                 <BookTagSetter />
                 <SubjectEditModal />
+                <TagEditModal />
 
                 <ManualBookEntry
                     title={editingBook ? `Edit ${editingBook.title}` : ''}
