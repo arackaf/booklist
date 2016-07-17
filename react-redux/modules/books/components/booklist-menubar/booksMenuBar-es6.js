@@ -90,7 +90,7 @@ class BooksMenuBar extends React.Component {
         let selectedSubjectsCount = this.props.selectedSubjects.length,
             selectedTagsCount = this.props.selectedTags.length,
             selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
-            selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedSubjectsCount === 1 ? '' : 's');
+            selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
         return (
             <div>
