@@ -68,6 +68,7 @@ export const bookSearchSelector = state => {
         booksModule.bookSearch,
         {
             selectedSubjects: projectSelectedItems(bookSearch.subjects, booksModule.subjects.subjectHash),
+            selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
             pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
             pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
             ...booksModule.ui,

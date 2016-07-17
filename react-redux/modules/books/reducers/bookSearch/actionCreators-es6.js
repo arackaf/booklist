@@ -146,6 +146,15 @@ export function removeFilterSubject(_id) {
     };
 }
 
+export function removeFilterTag(_id){
+    return function(dispatch, getState) {
+        let state = getState().booksModule.bookSearch,
+            newTags = Object.keys(state.tags).filter(sId => sId != _id).join('-');
+
+        globalHashManager.setValues('tags', newTags);
+    };
+}
+
 function createPendingActionCreator(name, getEvtValue = evt => evt.target.value){
     return function (evt) {
         return function (dispatch, getState) {
