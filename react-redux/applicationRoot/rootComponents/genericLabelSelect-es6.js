@@ -1,4 +1,5 @@
 import Autosuggest from 'react-autosuggest';
+import { LabelDisplay } from 'applicationRoot/rootComponents/labelDisplay';
 
 function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
     return suggestion.name;
@@ -6,9 +7,9 @@ function getSuggestionValue(suggestion) { // when suggestion selected, this func
 
 function renderSuggestion(s) {
     return (
-        <span style={{ backgroundColor: s.backgroundColor, color: s.textColor || 'white', marginLeft: (s.childLevel * 15) + 'px' }} className="label label-default">
+        <LabelDisplay item={s} style={{ marginLeft: (s.childLevel * 15) + 'px' }}>
             {s.name}
-        </span>
+        </LabelDisplay>
     );
 }
 

@@ -1,5 +1,6 @@
 export const LabelDisplay = props => {
-    let extraStyles = props.style || {},
+    let item = props.item,
+        extraStyles = props.style || {},
         extraClasses = props.className || '';
 
     return (
@@ -10,8 +11,8 @@ export const LabelDisplay = props => {
 };
 
 export const RemovableLabelDisplay = props => {
-    let extraStyles = props.style || {},
-        item = props.item,
+    let item = props.item,
+        extraStyles = props.style || {},
         extraClasses = props.className || '';
 
     return (
