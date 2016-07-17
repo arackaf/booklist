@@ -13,8 +13,7 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
-        subjects = subjects || [];
+    async searchBooks({ search, subjects = [], searchChildSubjects, tags = [], sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
         let db = await super.open(),
             userIdToUse = userId || this.userId;
 
@@ -51,6 +50,10 @@ class BookDAO extends DAO {
                 }
 
                 query.subjects = { $in: subjects };
+            }
+            
+            if (tags.length){
+                query.tags = { $in: tags };
             }
             //may implement $or another way
             //if (query.title && query.subjects){
