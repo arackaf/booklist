@@ -5,6 +5,7 @@ import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
+import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
 
 import { selector } from '../reducers/reducer';
 
@@ -68,7 +69,7 @@ class BookViewListDesktop extends React.Component{
                                 <td>
                                     { book.tagObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
+                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
                                 </td>
                                 <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
@@ -85,5 +86,5 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-const BookEntryListConnected = connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch })(BookViewListDesktop);
+const BookEntryListConnected = connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch, ...actionCreatorsBookTagModification })(BookViewListDesktop);
 export default BookEntryListConnected;
