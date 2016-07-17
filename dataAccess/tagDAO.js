@@ -116,6 +116,62 @@ var TagDAO = function (_DAO) {
 
             return loadTags;
         }()
+    }, {
+        key: 'updateTagInfo',
+        value: function () {
+            var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(_id, name, backgroundColor, textColor) {
+                var db, newPath, newTag;
+                return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                    while (1) {
+                        switch (_context3.prev = _context3.next) {
+                            case 0:
+                                _context3.next = 2;
+                                return _get(Object.getPrototypeOf(TagDAO.prototype), 'open', this).call(this);
+
+                            case 2:
+                                db = _context3.sent;
+                                _context3.prev = 3;
+
+                                if (_id) {
+                                    _context3.next = 10;
+                                    break;
+                                }
+
+                                newPath = null;
+                                newTag = { name: name, backgroundColor: backgroundColor, textColor: textColor, path: newPath, userId: this.userId };
+                                _context3.next = 9;
+                                return db.collection('tags').insert(newTag);
+
+                            case 9:
+                                return _context3.abrupt('return', { tag: newTag });
+
+                            case 10:
+                                _context3.next = 12;
+                                return db.collection('tags').update({ _id: (0, _mongodb.ObjectId)(_id), userId: this.userId }, { $set: { name: name, backgroundColor: backgroundColor, textColor: textColor } });
+
+                            case 12:
+                                return _context3.abrupt('return', { tag: { _id: _id, name: name, backgroundColor: backgroundColor, textColor: textColor } });
+
+                            case 13:
+                                _context3.prev = 13;
+
+                                _get(Object.getPrototypeOf(TagDAO.prototype), 'dispose', this).call(this, db);
+                                return _context3.finish(13);
+
+                            case 16:
+                            case 'end':
+                                return _context3.stop();
+                        }
+                    }
+                }, _callee3, this, [[3,, 13, 16]]);
+            }));
+
+            function updateTagInfo(_x3, _x4, _x5, _x6) {
+                return ref.apply(this, arguments);
+            }
+
+            return updateTagInfo;
+        }()
     }]);
 
     return TagDAO;

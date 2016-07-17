@@ -27,6 +27,24 @@ class TagDAO extends DAO {
             super.dispose(db);
         }
     }
+    async updateTagInfo(_id, name, backgroundColor, textColor){
+        let db = await super.open();
+
+        try{
+            if (!_id){
+                let newPath = null;
+                let newTag = { name, backgroundColor, textColor, path: newPath, userId: this.userId };
+                await db.collection('tags').insert(newTag);
+                return { tag: newTag };
+            }
+
+            await db.collection('tags').update({ _id: ObjectId(_id), userId: this.userId }, { $set: { name, backgroundColor, textColor } });
+            
+            return { tag: { _id, name, backgroundColor, textColor } };
+        } finally{
+            super.dispose(db);
+        }
+    }
 }
 
 
