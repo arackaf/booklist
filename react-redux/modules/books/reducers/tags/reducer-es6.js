@@ -2,8 +2,6 @@ import {
     LOAD_TAGS_RESULTS
 } from './actionNames';
 
-const { createSelector } = require('reselect');
-
 const initialTagsState = {
     tagHash: {},
     colors: [],
@@ -36,3 +34,13 @@ function allTagssSorted(tagHash){
         return bothEqual ? 0 : (name1After ? 1 : -1);
     });
 }
+
+export const filterTags = (tags, search) => {
+    if (!search){
+        search = () => true;
+    } else {
+        let regex = new RegExp(search, 'i');
+        search = txt => regex.test(txt);
+    }
+    return tags.filter(s => search(s.name))
+};

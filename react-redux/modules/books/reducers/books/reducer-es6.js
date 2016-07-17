@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
+import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
 import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 const initialBooksState = {
@@ -45,6 +46,23 @@ export function booksReducer(state = initialBooksState, action){
             });
 
             return Object.assign({}, state, { booksHash: newBookHash });
+        case SET_BOOKS_TAGS:
+            var newBookHash = { ...state.booksHash };
+
+            action.books.forEach(_id => {
+                var book = { ...newBookHash[_id] },
+                    booksTagsHash = {};
+
+                book.tags.forEach(_id => booksTagsHash[_id] = true);
+
+                action.add.forEach(sAdd => booksTagsHash[sAdd] = true);
+                action.remove.forEach(sAdd => booksTagsHash[sAdd] = false);
+
+                book.tags = Object.keys(booksTagsHash).filter(_id => booksTagsHash[_id]);
+                newBookHash[_id] = book;
+            });
+
+            return Object.assign({}, state, { booksHash: newBookHash });
     }
     return state;
 }
@@ -52,9 +70,6 @@ export function booksReducer(state = initialBooksState, action){
 function createBooksHash(booksArr){
     let result = {};
     booksArr.forEach(book => {
-        if (!book.subjects){
-            book.subjects = [];
-        }
         result[book._id] = book
     });
     return result;

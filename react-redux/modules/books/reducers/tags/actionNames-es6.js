@@ -1,3 +1,4 @@
+export const LOAD_TAGS_COLORS = 'LOAD_COLORS_TAGS';
 export const LOAD_TAGS = 'LOAD_TAGS';
 export const LOAD_TAGS_RESULTS = 'LOAD_TAGS_RESULTS';
 

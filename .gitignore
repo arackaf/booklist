@@ -182,3 +182,7 @@ react-redux/modules/books/reducers/tags/actionNames.js
 react-redux/modules/books/reducers/tags/reducer.js
 react-redux/applicationRoot/rootComponents/GenericLabelSelect.js
 react-redux/applicationRoot/rootComponents/labelDisplay.js
+react-redux/modules/books/reducers/booksTagModification/actionCreators.js
+react-redux/modules/books/reducers/booksTagModification/actionNames.js
+react-redux/modules/books/reducers/booksTagModification/reducer.js
+react-redux/modules/books/components/bookTagSetter.js

@@ -2,51 +2,51 @@ import React from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
 import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
-import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModification/reducer';
-import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
+import { booksTagsModifierSelector } from '../reducers/booksTagModification/reducer';
+import * as bookTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import { Modal, Tabs, Tab } from 'react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
 
-class BookSubjectSetterDesktopUnConnected extends React.Component {
-    setBooksSubjects(){
-        this.props.setBooksSubjects(
+class BookTagSetterDesktopUnConnected extends React.Component {
+    setBooksTags(){
+        this.props.setBooksTags(
             this.props.modifyingBooks.map(b => b._id),
-            this.props.addingSubjects.map(s => s._id),
-            this.props.removingSubjects.map(s => s._id));
+            this.props.addingTags.map(s => s._id),
+            this.props.removingTags.map(s => s._id));
     }
     render(){
-        let subjectSelectedToAdd = this.props.addingSubjectSet.bind(null, true),
-            subjectSelectedToRemove = this.props.removingSubjectSet.bind(null, true);
+        let tagSelectedToAdd = this.props.addingTagSet.bind(null, true),
+            tagSelectedToRemove = this.props.removingTagSet.bind(null, true);
 
-        let dontAddSubject = this.props.addingSubjectSet.bind(null, false),
-            dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
+        let dontAddTag = this.props.addingTagSet.bind(null, false),
+            dontRemoveTag = this.props.removingTagSet.bind(null, false);
 
         return (
-            <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
+            <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookTagModification}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Edit subjects for:
+                        Edit tags for:
                         <div>{ this.props.modifyingBooks.map(book => <h5 key={book._id}>{book.title}</h5>) }</div>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <Tabs animation={false} defaultActiveKey={1}>
-                        <Tab eventKey={1} title="Choose subjects" style={{ minHeight: '150px' }}>
+                        <Tab eventKey={1} title="Choose tags" style={{ minHeight: '150px' }}>
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSearchValueChange }}
+                                        inputProps={{ placeholder: 'Adding', value: this.props.addingTagSearch, onChange: this.props.addingSearchValueChange }}
                                         suggestions={this.props.eligibleToAdd}
-                                        onSuggestionSelected={subjectSelectedToAdd} />
+                                        onSuggestionSelected={tagSelectedToAdd} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.addingSubjects.map(s =>
+                                        { this.props.addingTags.map(s =>
                                             <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
-                                                <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                                <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
                                     </div>
                                 </div>
@@ -57,15 +57,15 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
+                                        inputProps={{ placeholder: 'Removing', value: this.props.removingTagSearch, onChange: this.props.removingSearchValueChange }}
                                         suggestions={this.props.eligibleToRemove}
-                                        onSuggestionSelected={subjectSelectedToRemove} />
+                                        onSuggestionSelected={tagSelectedToRemove} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.removingSubjects.map(s =>
+                                        { this.props.removingTags.map(s =>
                                             <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
-                                                <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
+                                                <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
                                     </div>
                                 </div>
@@ -80,18 +80,18 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
 
                     <br />
 
-                    <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
+                    <BootstrapButton onClick={this.props.resetTags} className="pull-right" preset="default-xs">Reset tags</BootstrapButton>
                     <br />
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton preset="primary" running={this.props.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
-                    <BootstrapButton preset="" onClick={this.props.cancelBookSubjectModification}>Cancel</BootstrapButton>
+                    <AjaxButton preset="primary" running={this.props.settingBooksTags} runningText='Setting' onClick={() => this.setBooksTags()}>Set</AjaxButton>
+                    <BootstrapButton preset="" onClick={this.props.cancelBookTagModification}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );
     }
 }
 
-const BookSubjectSetterDesktop = connect(booksSubjectsModifierSelector, { ...bookSubjectModificationActionCreators })(BookSubjectSetterDesktopUnConnected);
+const BookTagSetterDesktop = connect(booksTagsModifierSelector, { ...bookTagModificationActionCreators })(BookTagSetterDesktopUnConnected);
 
-export default BookSubjectSetterDesktop;
+export default BookTagSetterDesktop;
