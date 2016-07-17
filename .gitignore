@@ -181,3 +181,4 @@ react-redux/modules/books/reducers/tags/actionCreators.js
 react-redux/modules/books/reducers/tags/actionNames.js
 react-redux/modules/books/reducers/tags/reducer.js
 react-redux/applicationRoot/rootComponents/GenericLabelSelect.js
+react-redux/applicationRoot/rootComponents/labelDisplay.js

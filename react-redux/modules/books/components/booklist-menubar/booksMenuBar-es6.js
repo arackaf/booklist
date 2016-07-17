@@ -22,6 +22,7 @@ import * as uiActionCreators from '../../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
 import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
+import { RemovableLabelDisplay } from 'applicationRoot/rootComponents/labelDisplay';
 
 const InputForPending = props => {
     let name = props.name,
@@ -132,7 +133,9 @@ class BooksMenuBar extends React.Component {
                                 <NavDropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <span className="label label-default"><span onClick={() => this.removeFilterSubject(s._id)} style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                            <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)}>
+                                                {s.name}
+                                            </RemovableLabelDisplay>
                                         </MenuItem>)
                                     }
 
@@ -149,9 +152,11 @@ class BooksMenuBar extends React.Component {
                         { selectedTagsCount ?
                             <Nav>
                                 <NavDropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
-                                    { this.props.selectedTags.map(s =>
-                                        <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <span className="label label-default"><span onClick={() => this.removeFilterTag(s._id)} style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                    { this.props.selectedTags.map(t =>
+                                        <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
+                                            <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)}>
+                                                {t.name}
+                                            </RemovableLabelDisplay>
                                         </MenuItem>)
                                     }
                                 </NavDropdown>
