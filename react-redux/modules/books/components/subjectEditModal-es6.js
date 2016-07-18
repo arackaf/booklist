@@ -4,9 +4,9 @@ import { Modal } from 'react-bootstrap';
 
 import AjaxButton from 'applicationRoot/components/ajaxButton';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
-import * as actionCreators from '../../reducers/subjects/actionCreators';
+import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import { subjectsSelector } from '../../reducers/subjects/reducer';
+import { subjectsSelector } from '../reducers/subjects/reducer';
 import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
 
 const SubjectEditDeleteInfo = props => {

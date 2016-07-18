@@ -4,9 +4,9 @@ import { Modal } from 'react-bootstrap';
 
 import AjaxButton from 'applicationRoot/components/ajaxButton';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
-import * as actionCreators from '../../reducers/tags/actionCreators';
+import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import { tagsSelector } from '../../reducers/tags/reducer';
+import { tagsSelector } from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
 
 const TagEditDeleteInfo = props => {
