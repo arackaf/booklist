@@ -51,7 +51,7 @@ class BookViewListDesktop extends React.Component{
                         { this.props.books.map(book =>
                             <tr key={book._id}>
                                 <td>
-                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
+                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
                                 <td>{book.title}<br />{ !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }</td>
