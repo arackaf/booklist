@@ -79,7 +79,7 @@ export function deleteSubject(_id){
         let request = { _id: _id + '' };
         dispatch({ type: SUBJECT_DELETING });
         ajaxUtil.post('/subject/delete', request, resp => {
-            setTimeout(() => dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id }), 1000);
+            dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id });
         });
     }
 }

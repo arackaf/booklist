@@ -19,8 +19,8 @@ class tagController{
     @httpPost
     async delete({ _id }){
         let tagDao = new tagDAO(this.request.user.id);
-        let { tagDeleted } = await tagDao.deleteTag(_id);
-        this.send({ success: true, tagDeleted });
+        await tagDao.deleteTag(_id);
+        this.send({ success: true });
     }
 }
 

@@ -73,7 +73,7 @@ export function deleteTag(_id){
         let request = { _id: _id + '' };
         dispatch({ type: TAG_DELETING });
         ajaxUtil.post('/tag/delete', request, resp => {
-            setTimeout(() => dispatch({ type: TAG_DELETED, tagsDeleted: resp.tagsDeleted, _id }), 1000);
+            dispatch({ type: TAG_DELETED, _id });
         });
     }
 }

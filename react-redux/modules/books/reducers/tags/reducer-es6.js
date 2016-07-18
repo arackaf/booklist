@@ -53,7 +53,7 @@ export function tagsReducer(state = initialTagsState, action = {}){
             let editTagPacket = Object.assign({}, state.editTagPacket, { editing: false });
             let tagHash = { ...state.tagHash };
 
-            action.tagsDeleted.forEach(_id => delete tagHash[_id]);
+            delete tagHash[action._id];
 
             return Object.assign({}, state, { editTagPacket, tagHash });
         case LOAD_COLORS:
