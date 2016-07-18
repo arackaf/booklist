@@ -23,7 +23,7 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import * as uiActionCreators from '../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
-import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 import { RemovableLabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 const InputForPending = props => {
