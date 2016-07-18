@@ -10,7 +10,7 @@ import {
     MenuItem
 } from 'react-bootstrap';
 
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
 import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 
@@ -23,8 +23,8 @@ import * as booksTagModificationActionCreators from '../../reducers/booksTagModi
 import * as uiActionCreators from '../../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
-import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
-import { RemovableLabelDisplay } from 'applicationRoot/rootComponents/labelDisplay';
+import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
+import { RemovableLabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 const InputForPending = props => {
     let name = props.name,

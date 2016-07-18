@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import AjaxButton from 'applicationRoot/components/ajaxButton';
 import { booksTagsModifierSelector } from '../reducers/booksTagModification/reducer';
 import * as bookTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import { Modal, Tabs, Tab } from 'react-bootstrap';
-import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
 
 class BookTagSetterDesktopUnConnected extends React.Component {
     setBooksTags(){

@@ -1,5 +1,5 @@
 import Autosuggest from 'react-autosuggest';
-import { LabelDisplay } from 'applicationRoot/rootComponents/labelDisplay';
+import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
     return suggestion.name;
