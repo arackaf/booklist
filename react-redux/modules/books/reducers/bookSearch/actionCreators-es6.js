@@ -98,11 +98,6 @@ export function syncFiltersToHash(){
         }
         let packet = { searchChildSubjects, subjects, tags };
 
-        if ((root.publicUserId || '') != (globalHashManager.getCurrentHashValueOf('userId') || '')){
-            location.reload();
-            return;
-        }
-
         ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
         packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
         let newIsDirty = isDirty(bookSearch, packet);
