@@ -7,7 +7,7 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { subjectsSelector } from '../reducers/subjects/reducer';
-import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 const SubjectEditDeleteInfo = props => {
     let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;

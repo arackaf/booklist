@@ -6,7 +6,7 @@ import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModificat
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal, Tabs, Tab } from 'react-bootstrap';
-import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
     setBooksSubjects(){

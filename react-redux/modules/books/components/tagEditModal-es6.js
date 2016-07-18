@@ -7,7 +7,7 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { tagsSelector } from '../reducers/tags/reducer';
-import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 const TagEditDeleteInfo = props => {
     let deleteWarning = `${props.tagName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant tags' : 'child tag'} which will also be deleted.`;
