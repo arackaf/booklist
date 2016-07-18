@@ -14,13 +14,13 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
 import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 
-import * as booksActionCreators from '../../reducers/books/actionCreators';
-import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
-import * as subjectsActionCreators from '../../reducers/subjects/actionCreators';
-import * as tagsActionCreators from '../../reducers/tags/actionCreators';
-import * as booksSubjectModificationActionCreators from '../../reducers/booksSubjectModification/actionCreators';
-import * as booksTagModificationActionCreators from '../../reducers/booksTagModification/actionCreators';
-import * as uiActionCreators from '../../reducers/ui/actionCreators';
+import * as booksActionCreators from '../reducers/books/actionCreators';
+import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
+import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
+import * as tagsActionCreators from '../reducers/tags/actionCreators';
+import * as booksSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
+import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
+import * as uiActionCreators from '../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
 import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'

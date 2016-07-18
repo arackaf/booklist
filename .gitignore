@@ -189,3 +189,6 @@ react-redux/modules/books/components/bookTagSetter.js
 react-redux/modules/books/components/tag-edit/tagEditModal.js
 dataAccess/tagDAO.js
 react-redux/applicationRoot/components/customColorPicker.js
+react-redux/modules/books/components/booksMenuBar.js
+react-redux/modules/books/components/subjectEditModal.js
+react-redux/modules/books/components/tagEditModal.js

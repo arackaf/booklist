@@ -7,11 +7,11 @@ import DesktopView from './bookViewList-desktop';
 import MobileView from './bookViewList-mobile';
 
 import MainNavigationBar from 'applicationRoot/components/mainNavigation';
-import BooksMenuBar from './booklist-menubar/booksMenuBar';
+import BooksMenuBar from './booksMenuBar';
 import BookSubjectSetter from './bookSubjectSetter';
 import BookTagSetter from './bookTagSetter';
-import SubjectEditModal from './subject-edit/subjectEditModal';
-import TagEditModal from './tag-edit/tagEditModal';
+import SubjectEditModal from './subjectEditModal';
+import TagEditModal from './tagEditModal';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
