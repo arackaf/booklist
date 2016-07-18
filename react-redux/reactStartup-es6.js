@@ -12,6 +12,7 @@ window.onhashchange = function () {
     loadCurrentModule();
 };
 
+let initial = true;
 const validModules = new Set(['books', 'scan', 'home', 'activate', 'view']);
 
 export const globalHashManager = new HashUtility();
@@ -40,12 +41,26 @@ export function loadCurrentModule() {
 
     if (publicModule){
         var userId = globalHashManager.currentParameters.userId;
+
+        //switching to a new public viewing - reload page
+        if (!initial && store.getState().root.publicUserId != userId){
+            location.reload();
+            return;
+        }
+
         var publicUserPromise = userId ? (publicUserCache[userId] || (publicUserCache[userId] = fetchPublicUserInfo(userId))) : null;
 
         if (module === 'view') {
             module = 'books';
         }
+    } else if (store.getState().root.publicUserId){
+        //leaving public viewing - reload page
+        location.reload();
+        return;
     }
+
+    initial = false;
+
     if (module === currentModule) return;
     currentModule = module;
 
