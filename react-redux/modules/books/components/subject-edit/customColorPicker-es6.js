@@ -20,7 +20,9 @@ class CustomColorPicker extends React.Component {
         this.jscolorInstance = new jscolor(this.rootElement, { valueElement: this.valueElementId, styleElement: this.styleElementId, onFineChange: this._colorChosen });
     }
     shouldComponentUpdate(props){
-        this.jscolorInstance.fromString(props.currentColor);
+        if (props.currentColor) {
+            this.jscolorInstance.fromString(props.currentColor);
+        }
         return false;
     }
     render(){

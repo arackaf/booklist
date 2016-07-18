@@ -187,3 +187,4 @@ react-redux/modules/books/reducers/booksTagModification/actionNames.js
 react-redux/modules/books/reducers/booksTagModification/reducer.js
 react-redux/modules/books/components/bookTagSetter.js
 react-redux/modules/books/components/tag-edit/tagEditModal.js
+dataAccess/tagDAO.js

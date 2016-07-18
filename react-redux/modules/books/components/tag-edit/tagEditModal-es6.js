@@ -57,7 +57,7 @@ const tagEditModal = props => {
                             inputProps={{ placeholder: 'Edit tag', value: '', onChange: () => {} }}
                             //inputProps={{ placeholder: 'Adding', value: this.props.addingTagSearch, onChange: this.props.addingSearchValueChange }}
                             suggestions={props.allTagsSorted}
-                            onSuggestionSelected={item => {debugger; props.editTag(item._id); }} />
+                            onSuggestionSelected={item => props.editTag(item._id)} />
                     </div>
                     <div className="col-xs-1">
                         <BootstrapButton onClick={props.newTag} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>

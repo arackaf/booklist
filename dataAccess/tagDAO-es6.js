@@ -9,7 +9,12 @@ class TagDAO extends DAO {
     async deleteTag(_id){
         let db = await super.open();
 
-        await db.collection('tags').remove({ _id: ObjectId(_id), userId: this.userId });
+        await db.collection('books').update(
+            {userId: this.userId, tags: { $in: [_id] }},
+            {$pull: {tags: _id}}, {upsert: false, multi: true}
+        );
+
+        await db.collection('tags').remove({_id: ObjectId(_id), userId: this.userId});
     }
     async loadTags(userId){
         let db = await super.open();
