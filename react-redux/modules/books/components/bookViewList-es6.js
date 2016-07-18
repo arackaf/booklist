@@ -6,14 +6,14 @@ import { loadBooks } from '../reducers/books/actionCreators';
 import DesktopView from './bookViewList-desktop';
 import MobileView from './bookViewList-mobile';
 
-import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
 import BookSubjectSetter from './bookSubjectSetter';
 import BookTagSetter from './bookTagSetter';
 import SubjectEditModal from './subject-edit/subjectEditModal';
 import TagEditModal from './tag-edit/tagEditModal';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';

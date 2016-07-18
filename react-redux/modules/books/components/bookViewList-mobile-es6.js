@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import BooksMenuBar from './booklist-menubar/booksMenuBar';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';

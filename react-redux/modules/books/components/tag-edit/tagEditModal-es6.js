@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
-import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import AjaxButton from 'applicationRoot/components/ajaxButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../../reducers/tags/actionCreators';
-import CustomColorPicker from '../subject-edit/customColorPicker';
+import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { tagsSelector } from '../../reducers/tags/reducer';
-import GenericLabelSelect from 'applicationRoot/rootComponents/GenericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/GenericLabelSelect'
 
 const TagEditDeleteInfo = props => {
     let deleteWarning = `${props.tagName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant tags' : 'child tag'} which will also be deleted.`;

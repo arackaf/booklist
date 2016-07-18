@@ -7,7 +7,7 @@ import {
     NavItem
 } from 'react-bootstrap';
 
-import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 const MainHomePane = props =>
     <div className="row">
