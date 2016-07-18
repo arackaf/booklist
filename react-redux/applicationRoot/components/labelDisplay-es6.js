@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const LabelDisplay = props => {
     let item = props.item,
         extraStyles = props.style || {},
