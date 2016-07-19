@@ -1,19 +1,22 @@
 import {
     LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
     STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, LOAD_COLORS, CANCEL_TAG_EDIT,
-    BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED
+    BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
 const initialTagsState = {
     tagHash: {},
     colors: [],
-    loaded: false
+    loaded: false,
+    tagSearch: ''
 };
 
 export function tagsReducer(state = initialTagsState, action = {}){
     switch(action.type){
         case LOAD_TAGS_RESULTS:
             return Object.assign({}, state, { tagHash: tagsToHash(action.tags), loaded: true });
+        case SET_TAG_SEARCH_VALUE:
+            return Object.assign({}, state, { tagSearch: action.value });
         case EDIT_TAGS:
             return Object.assign({}, state, { editTagPacket: {  } });
         case SET_NEW_TAG_VALUE:
@@ -68,8 +71,24 @@ function tagsToHash(tags){
     return hash;
 }
 
+export const filterTags = (tags, search) => {
+    if (!search){
+        search = () => true;
+    } else {
+        let regex = new RegExp(search, 'i');
+        search = txt => regex.test(txt);
+    }
+    return tags.filter(s => search(s.name));
+};
+
 export const tagsSelector = ({ booksModule }) => {
-    return Object.assign({}, booksModule.tags, { allTagsSorted: allTagssSorted(booksModule.tags.tagHash) });
+    let allTagsSorted = allTagssSorted(booksModule.tags.tagHash),
+        tagsSearched = filterTags(allTagsSorted, booksModule.tags.tagSearch);
+
+    return Object.assign({}, booksModule.tags, {
+        allTagsSorted,
+        tagsSearched
+    });
 }
 
 function allTagssSorted(tagHash){
@@ -80,13 +99,3 @@ function allTagssSorted(tagHash){
         return bothEqual ? 0 : (name1After ? 1 : -1);
     });
 }
-
-export const filterTags = (tags, search) => {
-    if (!search){
-        search = () => true;
-    } else {
-        let regex = new RegExp(search, 'i');
-        search = txt => regex.test(txt);
-    }
-    return tags.filter(s => search(s.name))
-};

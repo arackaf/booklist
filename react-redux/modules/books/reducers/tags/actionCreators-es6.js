@@ -1,7 +1,7 @@
 import {
     LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
     STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, LOAD_COLORS, CANCEL_TAG_EDIT,
-    BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED
+    BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
 let tagsLoadedOrLoading = false;
@@ -17,6 +17,10 @@ export function loadTags(){
             dispatch({type: LOAD_COLORS, colors: tagsResp.colors });
         });
     }
+}
+
+export function setTagSearchValue(value){
+    return { type: SET_TAG_SEARCH_VALUE, value: value.target.value };
 }
 
 export function editTags(){

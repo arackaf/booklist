@@ -54,9 +54,8 @@ const tagEditModal = props => {
                 <div className="row">
                     <div className="col-xs-11">
                         <GenericLabelSelect
-                            inputProps={{ placeholder: 'Edit tag', value: '', onChange: () => {} }}
-                            //inputProps={{ placeholder: 'Adding', value: this.props.addingTagSearch, onChange: this.props.addingSearchValueChange }}
-                            suggestions={props.allTagsSorted}
+                            inputProps={{ placeholder: 'Edit tag', value: props.tagSearch, onChange: props.setTagSearchValue }}
+                            suggestions={props.tagsSearched}
                             onSuggestionSelected={item => props.editTag(item._id)} />
                     </div>
                     <div className="col-xs-1">
