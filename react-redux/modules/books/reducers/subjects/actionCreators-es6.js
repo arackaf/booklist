@@ -1,7 +1,7 @@
 import {
     LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
     STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
-    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED
+    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
 let subjectsLoadedOrLoading = false;
@@ -19,6 +19,10 @@ export function loadSubjects(){
             dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
         });
     }
+}
+
+export function setSubjectSearchValue(value){
+    return { type: SET_SUBJECT_SEARCH_VALUE, value: value.target.value };
 }
 
 export function editSubjects(){

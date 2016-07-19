@@ -1,7 +1,7 @@
 import {
     LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
     STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
-    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED
+    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
 const { createSelector } = require('reselect');
@@ -10,13 +10,16 @@ const initialSubjectsState = {
     subjectHash: {},
     editSubjectPacket: null,
     colors: [],
-    loaded: false
+    loaded: false,
+    subjectSearch: ''
 };
 
 export function subjectsReducer(state = initialSubjectsState, action = {}){
     switch(action.type){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
+        case SET_SUBJECT_SEARCH_VALUE:
+            return Object.assign({}, state, { subjectSearch: action.value });
         case EDIT_SUBJECTS:
             return Object.assign({}, state, { editSubjectPacket: {  } });
         case SET_NEW_SUBJECT_VALUE:
@@ -93,15 +96,19 @@ const unwindSubjects = subjects => {
     return result;
 };
 
-const stackedSubjectsSelector = createSelector(
-    [state => state.subjectHash],
-    subjectHash => {
-        let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
+const stackedSubjectsSelector = createSelector([
+    state => state.subjectHash,
+    state => state.subjectSearch
+],
+    (subjectHash, subjectSearch) => {
+        let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
+            subjectsUnwound = unwindSubjects(mainSubjectsCollection);
 
         return {
             subjects: mainSubjectsCollection,
             allSubjectsSorted: allSubjectsSorted(subjectHash),
-            subjectsUnwound: unwindSubjects(mainSubjectsCollection)
+            subjectsUnwound: subjectsUnwound,
+            subjectsSearched: filterSubjects(subjectsUnwound, subjectSearch)
         };
     }
 );
