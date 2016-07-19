@@ -102,7 +102,7 @@ const subjectEditModal = props => {
                                             <div>
                                                 { props.colors.map(cp => <div className="color-choice" onClick={() => props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
 
-                                                <CustomColorPicker onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editSubjectPacket.backgroundColor} />
+                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editSubjectPacket.backgroundColor} />
                                             </div>
                                         </div>
                                     </div>
