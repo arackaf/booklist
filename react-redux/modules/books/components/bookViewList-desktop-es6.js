@@ -6,6 +6,7 @@ import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
 import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
+import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 import { selector } from '../reducers/reducer';
 
@@ -61,13 +62,13 @@ class BookViewListDesktop extends React.Component{
                                     </ul>
                                 </td>
                                 <td>
-                                    { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
+                                    { book.subjectObjects.map(s => <div><LabelDisplay item={s} /></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
                                 </td>
                                 <td>
-                                    { book.tagObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
+                                    { book.tagObjects.map(s => <div><LabelDisplay item={s} /></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>

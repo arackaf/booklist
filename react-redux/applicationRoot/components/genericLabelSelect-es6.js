@@ -8,9 +8,7 @@ function getSuggestionValue(suggestion) { // when suggestion selected, this func
 
 function renderSuggestion(s) {
     return (
-        <LabelDisplay item={s} style={{ marginLeft: (s.childLevel * 15) + 'px' }}>
-            {s.name}
-        </LabelDisplay>
+        <LabelDisplay item={s} style={{ marginLeft: (s.childLevel * 15) + 'px' }} />
     );
 }
 

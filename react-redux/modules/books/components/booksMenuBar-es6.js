@@ -137,9 +137,7 @@ class BooksMenuBar extends React.Component {
                                 <NavDropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
                                         <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)}>
-                                                {s.name}
-                                            </RemovableLabelDisplay>
+                                            <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
                                         </MenuItem>)
                                     }
 
@@ -158,9 +156,7 @@ class BooksMenuBar extends React.Component {
                                 <NavDropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
                                     { this.props.selectedTags.map(t =>
                                         <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
-                                            <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)}>
-                                                {t.name}
-                                            </RemovableLabelDisplay>
+                                            <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
                                         </MenuItem>)
                                     }
                                 </NavDropdown>
@@ -225,9 +221,7 @@ class BooksMenuBar extends React.Component {
                             <div className="col-xs-9">
                                 <div>
                                     {this.props.pendingSelectedTags.map(t =>
-                                        <RemovableLabelDisplay className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)}>
-                                            {t.name}
-                                        </RemovableLabelDisplay> )}
+                                        <RemovableLabelDisplay className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)} />)}
                                 </div>
                             </div>
                         </div>
@@ -244,9 +238,7 @@ class BooksMenuBar extends React.Component {
                             <div className="col-xs-9">
                                 <div>
                                     {this.props.pendingSelectedSubjects.map(s =>
-                                        <span className="label label-default margin-left" style={{ backgroundColor: s.backgroundColor, color: s.textColor || 'white', display: 'inline-table' }}>
-                                            <a onClick={() => this.props.removePendingSubject(s._id)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
-                                        </span>)}
+                                        <RemovableLabelDisplay className="margin-left" item={s} doRemove={() => this.props.removePendingSubject(s._id)} />)}
                                 </div>
                             </div>
                         </div>
