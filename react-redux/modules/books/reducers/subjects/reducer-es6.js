@@ -4,7 +4,7 @@ import {
     BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-const { createSelector } = require('reselect');
+import { createSelector } from 'reselect';
 
 const initialSubjectsState = {
     subjectHash: {},
@@ -96,25 +96,30 @@ const unwindSubjects = subjects => {
     return result;
 };
 
-const stackedSubjectsSelector = createSelector([
-    state => state.subjectHash,
-    state => state.subjectSearch
-],
-    (subjectHash, subjectSearch) => {
+const stackedSubjectsSelector = createSelector([state => state.subjectHash],
+    subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
             subjectsUnwound = unwindSubjects(mainSubjectsCollection);
 
         return {
             subjects: mainSubjectsCollection,
             allSubjectsSorted: allSubjectsSorted(subjectHash),
-            subjectsUnwound: subjectsUnwound,
-            subjectsSearched: filterSubjects(subjectsUnwound, subjectSearch)
+            subjectsUnwound: subjectsUnwound
         };
     }
 );
 
+const searchSubjectsSelector = createSelector([
+    stackedSubjectsSelector,
+    state => state.subjectSearch
+],
+    (stackedSubjects, subjectSearch) => {
+        return { ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) };
+    }
+);
+
 export const subjectsSelector = ({ booksModule }) => {
-    return Object.assign({}, booksModule.subjects, { ...stackedSubjectsSelector(booksModule.subjects) });
+    return Object.assign({}, booksModule.subjects, { ...searchSubjectsSelector(booksModule.subjects) });
 }
 
 function stackAndGetTopLevelSubjects(subjectsHash){

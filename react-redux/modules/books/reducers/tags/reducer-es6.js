@@ -4,6 +4,8 @@ import {
     BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
+import { createSelector } from 'reselect';
+
 const initialTagsState = {
     tagHash: {},
     colors: [],
@@ -81,15 +83,28 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-export const tagsSelector = ({ booksModule }) => {
-    let allTagsSorted = allTagssSorted(booksModule.tags.tagHash),
-        tagsSearched = filterTags(allTagsSorted, booksModule.tags.tagSearch);
+const tagsSorted = createSelector(
+    [state => state.tagHash],
+    tagHash => {
+        let allTagsSorted = allTagssSorted(tagHash);
+        return { allTagsSorted };
+    }
+);
 
-    return Object.assign({}, booksModule.tags, {
-        allTagsSorted,
-        tagsSearched
-    });
-}
+const tagsSearched = createSelector(
+    [
+        tagsSorted,
+        state => state.tagSearch
+    ],
+    (tags, tagSearch) => {
+        let tagsSearched = filterTags(tags.allTagsSorted, tagSearch);
+        return { ...tags, tagsSearched };
+    }
+);
+
+export const tagsSelector = ({ booksModule }) => {
+    return Object.assign({}, booksModule.tags, tagsSearched(booksModule.tags));
+};
 
 function allTagssSorted(tagHash){
     let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
