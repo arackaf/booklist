@@ -26,8 +26,7 @@ class BookTagSetterDesktopUnConnected extends React.Component {
             <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookTagModification}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Edit tags for:
-                        <div>{ this.props.modifyingBooks.map(book => <h5 key={book._id}>{book.title}</h5>) }</div>
+                        Edit tags:
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -71,17 +70,19 @@ class BookTagSetterDesktopUnConnected extends React.Component {
                                 </div>
                             </div>
 
+                            <br />
+                            <BootstrapButton onClick={this.props.resetTags} className="pull-right" preset="default-xs">Reset tags</BootstrapButton>
+                            <br />
+
                         </Tab>
                         <Tab eventKey={2} title="For books" style={{ minHeight: '150px' }}>
                             <br />
-                            Hello world
+                            <ul className="list-unstyled">
+                                { this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>) }
+                            </ul>
+                            <br />
                         </Tab>
                     </Tabs>
-
-                    <br />
-
-                    <BootstrapButton onClick={this.props.resetTags} className="pull-right" preset="default-xs">Reset tags</BootstrapButton>
-                    <br />
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton preset="primary" running={this.props.settingBooksTags} runningText='Setting' onClick={() => this.setBooksTags()}>Set</AjaxButton>
