@@ -71,7 +71,7 @@ const subjectEditModal = props => {
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
-                            <BootstrapButton onClick={e => props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
+                            { editingSubject && editingSubject._id ? <BootstrapButton onClick={e => props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                         </div>
                         <div className="panel-body">
                             <div>
