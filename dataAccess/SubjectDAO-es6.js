@@ -31,7 +31,9 @@ class SubjectDAO extends DAO {
             if (!_id){
                 let newPath = null;
                 if (newParent){
-                    let existingParent = await db.collection('subjects').findOne({ _id: ObjectId(newParent) });
+                    let existingParent = await db.collection('subjects').findOne({ _id: ObjectId(newParent), userId: this.userId });
+                    if (!existingParent) return;
+
                     newPath = (existingParent.path || ',') + ('' + existingParent._id) + ',';
                 }
                 let newSubject = { name, backgroundColor, textColor, path: newPath, userId: this.userId };
@@ -39,7 +41,9 @@ class SubjectDAO extends DAO {
                 return { affectedSubjects: [newSubject] };
             }
 
-            let existing = await db.collection('subjects').findOne({ _id: ObjectId(_id) });
+            let existing = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+            if (!existing) return;
+
             await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { name, backgroundColor, textColor } });
 
             let existingParent;
