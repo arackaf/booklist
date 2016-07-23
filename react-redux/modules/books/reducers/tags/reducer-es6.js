@@ -26,7 +26,7 @@ export function tagsReducer(state = initialTagsState, action = {}){
         case STOP_EDITING_TAGS:
             return Object.assign({}, state, { editTagPacket: null });
         case NEW_TAG:
-            return Object.assign({}, state, { editTagPacket: { editing: true, editingTag: null, parentId: '', name: '' } });
+            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, editingTag: null, parentId: '', name: '' } });
         case EDIT_TAG:
             var editingTag = state.tagHash[action._id],
                 parentId;
