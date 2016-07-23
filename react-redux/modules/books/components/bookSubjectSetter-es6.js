@@ -71,17 +71,16 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                                 </div>
                             </div>
 
+                            <br />
+                            <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
+                            <br />
+
                         </Tab>
                         <Tab eventKey={2} title="For books" style={{ minHeight: '150px' }}>
                             <br />
                             Hello world
                         </Tab>
                     </Tabs>
-
-                    <br />
-
-                    <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
-                    <br />
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton preset="primary" running={this.props.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
