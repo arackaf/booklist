@@ -26,8 +26,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
             <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Edit subjects for:
-                        <div>{ this.props.modifyingBooks.map(book => <h5 key={book._id}>{book.title}</h5>) }</div>
+                        Edit subjects:
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -73,12 +72,15 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
 
                             <br />
                             <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
-                            <br />
+                            <br style={{ clear: 'both' }} />
 
                         </Tab>
                         <Tab eventKey={2} title="For books" style={{ minHeight: '150px' }}>
                             <br />
-                            Hello world
+                            <ul className="list-unstyled" style={{ marginLeft: '10px' }}>
+                                { this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>) }
+                            </ul>
+                            <br />
                         </Tab>
                     </Tabs>
                 </Modal.Body>
