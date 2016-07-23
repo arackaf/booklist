@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AjaxButton from 'applicationRoot/components/ajaxButton';
-import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, { BootstrapAnchorButton } from 'applicationRoot/components/bootstrapButton';
 import Dropzone from 'react-dropzone';
 
 import { Modal } from 'react-bootstrap';
@@ -135,7 +135,7 @@ class ManualBookEntry extends Component {
                                 </div>
                             )}
                             <div className="col-xs-12">
-                                <BootstrapButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapButton>
+                                <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapAnchorButton>
                                 { this.state.authorsChanged ?
                                     <div style={{ marginLeft: 5 }} className="label label-primary">
                                         Add as many authors as needed. Blanks will be ignored.
@@ -157,7 +157,7 @@ class ManualBookEntry extends Component {
                                         <img src={this.state.pendingSmallImage} />
                                         <br />
                                         <br />
-                                        <BootstrapButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>Clear image</BootstrapButton>
+                                        <BootstrapAnchorButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>Clear image</BootstrapAnchorButton>
                                     </div> : null}
                                 {this.state.smallCoverUploadError ? <div className="label label-danger">{this.state.smallCoverUploadError}</div> : null}
                             </div>
