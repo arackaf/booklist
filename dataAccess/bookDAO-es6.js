@@ -91,6 +91,12 @@ class BookDAO extends DAO {
             validProperties.forEach(prop => bookToInsert[prop] = (book[prop] || '').substr(0, 500));
             bookToInsert.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
 
+            if (bookToInsert.pages || bookToInsert.pages === '0'){
+                bookToInsert.pages = +bookToInsert.pages;
+            } else {
+                delete bookToInsert.pages;
+            }
+
             if (book.smallImage){
                 try {
                     let smallImageSavedToAws = await this.saveToAws(book.smallImage);
