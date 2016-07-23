@@ -42,7 +42,7 @@ export function subjectsReducer(state = initialSubjectsState, action = {}){
                 parentId = hierarchy[hierarchy.length - 2];
             }
 
-            return Object.assign({}, state, { editSubjectPacket: { subjectSearch: '', editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents } });
+            return Object.assign({}, state, { subjectSearch: '', editSubjectPacket: { editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents } });
         case CANCEL_SUBJECT_EDIT:
             return Object.assign({}, state, { editSubjectPacket: { ...state.editSubjectPacket, editing: false } });
         case UPDATE_SUBJECT_RESULTS:
