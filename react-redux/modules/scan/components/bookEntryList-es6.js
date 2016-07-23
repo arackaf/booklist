@@ -45,7 +45,14 @@ class BookEntryList extends Component {
     }
     saveNewBook(book){
         this.setState({ isSavingManual: true });
-        ajaxUtil.post('/book/saveManual', { book }).then(() => this.setState({ isSavingManual: false, manualSaved: true }));
+        ajaxUtil.post('/book/saveManual', { book }).then(() => {
+            this.setState({
+                isSavingManual: false,
+                manualSaved: true,
+                manualBook: defaultEmptyBook()
+            });
+            setTimeout(() => this.setState({ manualSaved: false }), 2000);
+        });
     }
     render() {
         let pending = this.props.pendingNumber,
@@ -136,7 +143,6 @@ class BookEntryList extends Component {
                     isSaving={this.state.isSavingManual}
                     isSaved={this.state.manualSaved}
                     saveBook={book => this.saveNewBook(book)}
-                    saveMessage={'Book saved. You can enter another, or close'}
                     startOver={() => this.manuallyEnterBook()}
                     onClosing={() => this.manualEntryEnding()} />
 

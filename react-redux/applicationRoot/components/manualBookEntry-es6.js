@@ -163,12 +163,12 @@ class ManualBookEntry extends Component {
                             </div>
                         </div>
                     </form> : null }
-                    { this.props.isSaved ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.saveMessage}</div> : null }
+                    { false && this.props.successMessage ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.successMessage}</div> : null }
                     <hr style={{ marginTop: 10, marginBottom: 10 }} />
                     <BootstrapButton preset="danger-xs" onClick={() => this.props.isSaved ? this.props.startOver() : this.revert()}>Clear all</BootstrapButton>
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
+                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>{!this.props.isSaved ? 'Save' : <span>Saved <i className="fa fa-fw fa-check"></i></span>}</AjaxButton>
                 </Modal.Footer>
             </Modal>
         );
