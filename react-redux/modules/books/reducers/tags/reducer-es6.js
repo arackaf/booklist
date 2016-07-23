@@ -38,7 +38,7 @@ export function tagsReducer(state = initialTagsState, action = {}){
                 parentId = hierarchy[hierarchy.length - 2];
             }
 
-            return Object.assign({}, state, { editTagPacket: { editing: true, ...editingTag, parentId: parentId || '', editingTag } });
+            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, ...editingTag, parentId: parentId || '', editingTag } });
         case CANCEL_TAG_EDIT:
             return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, editing: false } });
         case UPDATE_TAG_RESULTS:

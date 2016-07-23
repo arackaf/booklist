@@ -68,7 +68,7 @@ const tagEditModal = props => {
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             { editingTag ? `Edit ${editingTag.name}` : 'New Tag' }
-                            <BootstrapButton onClick={e => props.beginDeleteTag(editingTag._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
+                            { editingTag && editingTag._id ? <BootstrapButton onClick={e => props.beginDeleteTag(editingTag._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                         </div>
                         <div className="panel-body">
                             <div>
