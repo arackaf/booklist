@@ -51,7 +51,7 @@ class BookViewingList extends React.Component {
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar />
+                    <BooksMenuBar searchParameters={this.props.hashParameters} />
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
                         { this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?

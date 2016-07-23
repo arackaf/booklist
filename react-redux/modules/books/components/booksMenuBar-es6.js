@@ -58,7 +58,11 @@ class BooksMenuBar extends React.Component {
         }
     }
     componentDidMount(){
+        console.log('mount', this.props.searchParameters);
         this.props.syncFiltersToHash();
+    }
+    componentDidUpdate(prevProps){
+        console.log('update', this.props.searchParameters, 'changed?', this.props.searchParameters !== prevProps.searchParameters);
     }
     componentWillUnmount(){
         window.removeEventListener("hashchange", this._hashChangeSubscription);
