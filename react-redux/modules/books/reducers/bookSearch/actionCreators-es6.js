@@ -81,7 +81,6 @@ let initial = true;
 export function syncFiltersToHash(){
     return function(dispatch, getState){
         let state = getState(),
-            root = state.root,
             bookSearch = state.booksModule.bookSearch;
 
         let subjects = {},
