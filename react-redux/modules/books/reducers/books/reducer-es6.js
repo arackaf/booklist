@@ -9,13 +9,14 @@ const initialBooksState = {
     booksHash: {},
     loading: false,
     selectedBooks: {},
-    reloadOnActivate: true
+    reloadOnActivate: false,
+    initialQueryFired: false
 };
 
 export function booksReducer(state = initialBooksState, action){
     switch(action.type) {
         case LOAD_BOOKS:
-            return Object.assign({}, state, { loading: true });
+            return Object.assign({}, state, { loading: true, initialQueryFired: true });
         case LOAD_BOOKS_RESULTS:
             return Object.assign({}, state, { loading: false, booksHash: createBooksHash(action.books) });
         case EDITING_BOOK_SAVED:
