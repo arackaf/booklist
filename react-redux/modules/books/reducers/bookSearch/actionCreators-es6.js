@@ -104,7 +104,6 @@ export function booksActivated(searchProps){
 }
 
 export function syncFiltersToHash(searchProps){
-    console.log('search props', searchProps);
     return function(dispatch, getState){
         let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
@@ -126,11 +125,7 @@ const getNextFilters = searchProps =>
         sortDirection: searchProps.sortDirection == 'asc' ? 1 : -1
     });
 
-const idStringToObject = (str = '') => {
-    let result = {};
-    str.split('-').filter(_id => _id).forEach(_id => result[_id] = true);
-    return result;
-}
+const idStringToObject = (str = '') => str.split('-').filter(s => s).reduce((obj, val) => (obj[val] = true, obj), {});
 
 export function setFilters(packet){
     return { type: SET_FILTERS, packet }
