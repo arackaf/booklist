@@ -97,7 +97,7 @@ export function booksActivated(){
             dispatch(loadTags());
         }
 
-        if (booksState.reloadOnActivate || !booksState.reloadOnActivate){
+        if (booksState.reloadOnActivate || !booksState.initialQueryFired){
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
