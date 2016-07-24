@@ -47,20 +47,13 @@ class BooksMenuBar extends React.Component {
             setTimeout(() => this.setState({ subjectsMenuOpen: false }), 1);
         }
     }
-    removeFilterTag(_id){
+    removeFilterTag(_id) {
         let isLastTag = this.props.selectedTags.length === 1;
         this.props.removeFilterTag(_id);
 
-        if (isLastTag){
+        if (isLastTag) {
             setTimeout(() => this.setState({ tagsMenuOpen: false }), 1);
         }
-    }
-    componentDidMount(){
-        console.log('mount', this.props.searchParameters);
-        this.props.syncFiltersToHash();
-    }
-    componentDidUpdate(prevProps){
-        console.log('update', this.props.searchParameters, 'changed?', this.props.searchParameters !== prevProps.searchParameters);
     }
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });

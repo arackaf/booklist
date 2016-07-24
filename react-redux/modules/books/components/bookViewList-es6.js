@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect} from 'react-redux';
-import { loadSubjects } from '../reducers/subjects/actionCreators';
-import { loadBooks } from '../reducers/books/actionCreators';
 
 import DesktopView from './bookViewList-desktop';
 import MobileView from './bookViewList-mobile';
@@ -38,8 +36,8 @@ class BookViewingList extends React.Component {
         }
         this.props.loadSubjects();
         this.props.loadTags();
-
-        if (this.props.reloadBooksOnActivate){
+        
+        if (this.props.reloadBooksOnActivate || !this.props.initialBookQueryFired){
             this.props.loadBooks();
         }
     }
