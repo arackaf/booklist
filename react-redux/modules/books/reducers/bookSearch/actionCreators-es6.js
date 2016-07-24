@@ -77,41 +77,62 @@ export function setSortOrder(sort, direction){
         );
     };
 }
-let initial = true;
-export function syncFiltersToHash(){
+
+export function booksActivated(){
     return function(dispatch, getState){
-        let state = getState(),
-            bookSearch = state.booksModule.bookSearch;
+        let nextSearchFilters = getNextFilters(),
+            state = getState(),
+            booksState = state.booksModule.books,
+            searchState = state.booksModule.bookSearch;
 
-        let subjects = {},
-            selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('subjects');
-        if (selectedSubjectsHashString){
-            selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
-        }
-        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null;
-        let tags = {},
-            selectedTagsHashString = globalHashManager.getCurrentHashValueOf('tags');
-
-        if (selectedTagsHashString){
-            selectedTagsHashString.split('-').forEach(_id => tags[_id] = true);
-        }
-        let packet = { searchChildSubjects, subjects, tags };
-
-        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
-        packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
-        let newIsDirty = isDirty(bookSearch, packet);
-
-        if (initial || newIsDirty) {
-            dispatch(setFilters(packet));
-
+        if (booksState.reloadOnActivate || !booksState.reloadOnActivate){
+            dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
-        initial = false;
+    }
+}
+
+export function syncFiltersToHash(){
+    return function(dispatch, getState){
+        let nextSearchFilters = getNextFilters(),
+            state = getState(),
+            searchState = state.booksModule.bookSearch,
+            newIsDirty = isDirty(searchState, nextSearchFilters);
+
+        if (newIsDirty){
+            dispatch(setFilters(nextSearchFilters));
+            dispatch(loadBooks());
+        }
     };
+}
+
+function getNextFilters(){
+    let subjects = {},
+        selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('subjects');
+    if (selectedSubjectsHashString){
+        selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
+    }
+    let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null;
+    let tags = {},
+        selectedTagsHashString = globalHashManager.getCurrentHashValueOf('tags');
+
+    if (selectedTagsHashString){
+        selectedTagsHashString.split('-').forEach(_id => tags[_id] = true);
+    }
+    let packet = { searchChildSubjects, subjects, tags };
+
+    ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
+    packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
+
+    return packet;
 }
 
 export function setFilters(packet){
     return { type: SET_FILTERS, packet }
+}
+
+function itemsDifferent(oldItems, newItems){
+    return Object.keys(oldItems).filter(k => oldItems[k]).sort().join('-') !== Object.keys(newItems).filter(k => newItems[k]).sort().join('-');
 }
 
 function isDirty(oldState, newState){
@@ -122,10 +143,6 @@ function isDirty(oldState, newState){
     }
 
     return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
-}
-
-function itemsDifferent(oldItems, newItems){
-    return Object.keys(oldItems).filter(k => oldItems[k]).sort().join('-') !== Object.keys(newItems).filter(k => newItems[k]).sort().join('-');
 }
 
 export function removeFilterSubject(_id) {
