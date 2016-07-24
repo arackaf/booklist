@@ -33,11 +33,11 @@ class BookViewingList extends React.Component {
             this.props.setDesktop();
         }
 
-        this.props.booksActivated();
+        this.props.booksActivated(this.props.hashParameters);
     }
     componentDidUpdate(prevProps){
         if (this.props.hashParameters !== prevProps.hashParameters){
-            this.props.syncFiltersToHash();
+            this.props.syncFiltersToHash(this.props.hashParameters);
         }
     }
     render() {
