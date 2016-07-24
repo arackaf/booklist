@@ -76,7 +76,6 @@ export function loadCurrentModule() {
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});
         }
-        console.log('render ui')
         renderUI(createElement(module.component, { hashParameters: globalHashManager.currentParameters }));
     });
 }

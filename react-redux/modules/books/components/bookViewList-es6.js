@@ -36,9 +36,12 @@ class BookViewingList extends React.Component {
         }
         this.props.loadSubjects();
         this.props.loadTags();
-        
-        if (this.props.reloadBooksOnActivate || !this.props.initialBookQueryFired){
-            this.props.loadBooks();
+
+        this.props.booksActivated();
+    }
+    componentDidUpdate(prevProps){
+        if (this.props.hashParameters !== prevProps.hashParameters){
+            this.props.syncFiltersToHash();
         }
     }
     render() {
@@ -49,7 +52,7 @@ class BookViewingList extends React.Component {
             <div>
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar searchParameters={this.props.hashParameters} />
+                    <BooksMenuBar />
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
                         { this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?
