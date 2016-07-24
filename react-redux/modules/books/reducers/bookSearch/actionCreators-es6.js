@@ -13,6 +13,8 @@ import {
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
+import { loadSubjects } from '../subjects/actionCreators';
+import { loadTags } from '../tags/actionCreators';
 
 import { globalHashManager } from 'reactStartup';
 
@@ -83,7 +85,17 @@ export function booksActivated(){
         let nextSearchFilters = getNextFilters(),
             state = getState(),
             booksState = state.booksModule.books,
-            searchState = state.booksModule.bookSearch;
+            subjectsState = state.booksModule.subjects,
+            tagsState = state.booksModule.tags;
+
+        //not the most beautiful thing, but I'll use this activation to make sure initial subject and tag load calls are made
+        if (!subjectsState.initialQueryFired){
+            dispatch(loadSubjects());
+        }
+
+        if (!tagsState.initialQueryFired){
+            dispatch(loadTags());
+        }
 
         if (booksState.reloadOnActivate || !booksState.reloadOnActivate){
             dispatch(setFilters(nextSearchFilters));

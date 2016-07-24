@@ -14,8 +14,6 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
-import * as actionCreatorsTags from '../reducers/tags/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsUi from '../reducers/ui/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
@@ -34,8 +32,6 @@ class BookViewingList extends React.Component {
         }catch(err){
             this.props.setDesktop();
         }
-        this.props.loadSubjects();
-        this.props.loadTags();
 
         this.props.booksActivated();
     }
@@ -95,6 +91,6 @@ class BookViewingList extends React.Component {
         );
     }
 }
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsUi, ...actionCreatorsSearch })(BookViewingList);
 
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi, ...actionCreatorsBooks, ...actionCreatorsSearch, ...actionCreatorsTags })(BookViewingList);
 export default BookViewingListConnected;

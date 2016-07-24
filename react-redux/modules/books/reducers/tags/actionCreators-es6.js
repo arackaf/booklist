@@ -12,6 +12,8 @@ export function loadTags(){
 
         let publicUserId = getState().root.publicUserId;
 
+        dispatch({ type: LOAD_TAGS });
+
         Promise.resolve(ajaxUtil.get('/tag/all', { userId: publicUserId })).then(tagsResp => {
             dispatch({type: LOAD_TAGS_RESULTS, tags: tagsResp.results});
             dispatch({type: LOAD_COLORS, colors: tagsResp.colors });
