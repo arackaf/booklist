@@ -3,7 +3,6 @@ import {
     SET_PENDING_SUBJECT,
     SET_PENDING_TAG,
     END_FILTER_CHANGE,
-    SET_SORT_DIRECTION,
     SET_FILTERS,
     SET_PENDING,
     APPLY_PENDING_SEARCH,
@@ -80,9 +79,9 @@ export function setSortOrder(sort, direction){
     };
 }
 
-export function booksActivated(){
+export function booksActivated(searchProps){
     return function(dispatch, getState){
-        let nextSearchFilters = getNextFilters(),
+        let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
             booksState = state.booksModule.books,
             subjectsState = state.booksModule.subjects,
@@ -104,9 +103,10 @@ export function booksActivated(){
     }
 }
 
-export function syncFiltersToHash(){
+export function syncFiltersToHash(searchProps){
+    console.log('search props', searchProps);
     return function(dispatch, getState){
-        let nextSearchFilters = getNextFilters(),
+        let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
             searchState = state.booksModule.bookSearch,
             newIsDirty = isDirty(searchState, nextSearchFilters);
@@ -118,25 +118,18 @@ export function syncFiltersToHash(){
     };
 }
 
-function getNextFilters(){
-    let subjects = {},
-        selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('subjects');
-    if (selectedSubjectsHashString){
-        selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
-    }
-    let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null;
-    let tags = {},
-        selectedTagsHashString = globalHashManager.getCurrentHashValueOf('tags');
+const getNextFilters = searchProps =>
+    Object.assign({}, searchProps, {
+        subjects: idStringToObject(searchProps.subjects),
+        tags: idStringToObject(searchProps.tags),
+        searchChildSubjects: searchProps.searchChildSubjects ? true : null,
+        sortDirection: searchProps.sortDirection == 'asc' ? 1 : -1
+    });
 
-    if (selectedTagsHashString){
-        selectedTagsHashString.split('-').forEach(_id => tags[_id] = true);
-    }
-    let packet = { searchChildSubjects, subjects, tags };
-
-    ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
-    packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
-
-    return packet;
+const idStringToObject = (str = '') => {
+    let result = {};
+    str.split('-').filter(_id => _id).forEach(_id => result[_id] = true);
+    return result;
 }
 
 export function setFilters(packet){

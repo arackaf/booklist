@@ -34,7 +34,7 @@ export function bookSearchReducer(state = initialState, action){
         case SET_SEARCH_TAGS_VALUE:
             return { ...state, searchTagsValue: action.value };
         case SET_FILTERS:
-            return { ...state, ...action.packet, pending: { ...state.pending, ...action.packet } };
+            return { ...state, ...searchFields, ...action.packet, pending: { ...state.pending, ...searchFields, ...action.packet } };
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
         case BEGIN_FILTER_CHANGE:
