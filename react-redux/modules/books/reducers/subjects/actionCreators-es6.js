@@ -4,12 +4,8 @@ import {
     BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-let subjectsLoadedOrLoading = false;
 export function loadSubjects(){
     return function(dispatch, getState){
-        if (subjectsLoadedOrLoading) return;
-        subjectsLoadedOrLoading = true;
-
         let publicUserId = getState().root.publicUserId;
 
         dispatch({ type: LOAD_SUBJECTS });
