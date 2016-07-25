@@ -38,8 +38,6 @@ class BooksMenuBar extends React.Component {
         super();
 
         this.state = { subjectsMenuOpen: false, tagsMenuOpen: false };
-        this._hashChangeSubscription = props.syncFiltersToHash;
-        window.addEventListener("hashchange", this._hashChangeSubscription);
     }
     removeFilterSubject(_id){
         let isLastSubject = this.props.selectedSubjects.length === 1;
@@ -49,19 +47,13 @@ class BooksMenuBar extends React.Component {
             setTimeout(() => this.setState({ subjectsMenuOpen: false }), 1);
         }
     }
-    removeFilterTag(_id){
+    removeFilterTag(_id) {
         let isLastTag = this.props.selectedTags.length === 1;
         this.props.removeFilterTag(_id);
 
-        if (isLastTag){
+        if (isLastTag) {
             setTimeout(() => this.setState({ tagsMenuOpen: false }), 1);
         }
-    }
-    componentDidMount(){
-        this.props.syncFiltersToHash();
-    }
-    componentWillUnmount(){
-        window.removeEventListener("hashchange", this._hashChangeSubscription);
     }
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });

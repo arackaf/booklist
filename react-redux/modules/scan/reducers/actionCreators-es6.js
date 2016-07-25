@@ -4,6 +4,7 @@ import {
     RESET_LIST,
     SET_PENDING,
     BOOK_SAVED,
+    MANUAL_BOOK_SAVED,
     INCREMENT_PENDING,
     GET_BOOK,
     BOOK_QUEUED,
@@ -58,6 +59,10 @@ export function incrementPending(){
 
 export function bookSaved(book){
     return { type: BOOK_SAVED, book }
+}
+
+export function manualBookSaved(book){
+    return { type: MANUAL_BOOK_SAVED, book };
 }
 
 export function bookLookupFailed(isbn){

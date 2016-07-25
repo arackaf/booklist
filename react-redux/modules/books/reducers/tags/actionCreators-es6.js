@@ -4,13 +4,11 @@ import {
     BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
-let tagsLoadedOrLoading = false;
 export function loadTags(){
     return function(dispatch, getState){
-        if (tagsLoadedOrLoading) return;
-        tagsLoadedOrLoading = true;
-
         let publicUserId = getState().root.publicUserId;
+
+        dispatch({ type: LOAD_TAGS });
 
         Promise.resolve(ajaxUtil.get('/tag/all', { userId: publicUserId })).then(tagsResp => {
             dispatch({type: LOAD_TAGS_RESULTS, tags: tagsResp.results});

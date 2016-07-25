@@ -61,7 +61,7 @@ export function loadCurrentModule() {
 
     initial = false;
 
-    if (module === currentModule) return;
+    //if (module === currentModule) return;
     currentModule = module;
 
     Promise.all([
@@ -72,11 +72,11 @@ export function loadCurrentModule() {
             store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
         }
 
-        clearUI();
+        //clearUI();
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});
         }
-        renderUI(createElement(module.component));
+        renderUI(createElement(module.component, { hashParameters: globalHashManager.currentParameters }));
     });
 }
 

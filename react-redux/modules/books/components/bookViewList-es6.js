@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect} from 'react-redux';
-import { loadSubjects } from '../reducers/subjects/actionCreators';
-import { loadBooks } from '../reducers/books/actionCreators';
 
 import DesktopView from './bookViewList-desktop';
 import MobileView from './bookViewList-mobile';
@@ -16,8 +14,6 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
-import * as actionCreatorsTags from '../reducers/tags/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsUi from '../reducers/ui/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
@@ -36,11 +32,12 @@ class BookViewingList extends React.Component {
         }catch(err){
             this.props.setDesktop();
         }
-        this.props.loadSubjects();
-        this.props.loadTags();
 
-        if (this.props.reloadBooksOnActivate){
-            this.props.loadBooks();
+        this.props.booksActivated(this.props.hashParameters);
+    }
+    componentDidUpdate(prevProps){
+        if (this.props.hashParameters !== prevProps.hashParameters){
+            this.props.syncFiltersToHash(this.props.hashParameters);
         }
     }
     render() {
@@ -94,6 +91,6 @@ class BookViewingList extends React.Component {
         );
     }
 }
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsUi, ...actionCreatorsSearch })(BookViewingList);
 
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi, ...actionCreatorsBooks, ...actionCreatorsSearch, ...actionCreatorsTags })(BookViewingList);
 export default BookViewingListConnected;
