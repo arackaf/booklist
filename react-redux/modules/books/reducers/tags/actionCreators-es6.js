@@ -4,12 +4,8 @@ import {
     BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
-let tagsLoadedOrLoading = false;
 export function loadTags(){
     return function(dispatch, getState){
-        if (tagsLoadedOrLoading) return;
-        tagsLoadedOrLoading = true;
-
         let publicUserId = getState().root.publicUserId;
 
         dispatch({ type: LOAD_TAGS });
