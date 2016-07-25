@@ -5,6 +5,8 @@ import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
 import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
 import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
+import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';
+
 const initialBooksState = {
     booksHash: {},
     loading: false,
@@ -16,7 +18,7 @@ const initialBooksState = {
 export function booksReducer(state = initialBooksState, action){
     switch(action.type) {
         case LOAD_BOOKS:
-            return Object.assign({}, state, { loading: true, initialQueryFired: true });
+            return Object.assign({}, state, { loading: true, initialQueryFired: true, reloadOnActivate: false });
         case LOAD_BOOKS_RESULTS:
             return Object.assign({}, state, { loading: false, booksHash: createBooksHash(action.books) });
         case EDITING_BOOK_SAVED:
@@ -64,6 +66,9 @@ export function booksReducer(state = initialBooksState, action){
             });
 
             return Object.assign({}, state, { booksHash: newBookHash });
+        case BOOK_SAVED:
+        case MANUAL_BOOK_SAVED:
+            return Object.assign({}, state, { reloadOnActivate: true });
     }
     return state;
 }
