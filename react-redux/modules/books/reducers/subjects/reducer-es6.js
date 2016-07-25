@@ -1,5 +1,5 @@
 import {
-    LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
+    LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
     STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
     BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
@@ -11,11 +11,14 @@ const initialSubjectsState = {
     editSubjectPacket: null,
     colors: [],
     loaded: false,
-    subjectSearch: ''
+    subjectSearch: '',
+    initialQueryFired: false
 };
 
 export function subjectsReducer(state = initialSubjectsState, action = {}){
     switch(action.type){
+        case LOAD_SUBJECTS:
+            return Object.assign({}, state, { initialQueryFired: true });
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
         case SET_SUBJECT_SEARCH_VALUE:

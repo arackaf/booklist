@@ -51,6 +51,7 @@ class BookEntryList extends Component {
                 manualSaved: true,
                 manualBook: defaultEmptyBook()
             });
+            this.props.manualBookSaved(book);
             setTimeout(() => this.setState({ manualSaved: false }), 2000);
         });
     }
