@@ -131,10 +131,6 @@ export function setFilters(packet){
     return { type: SET_FILTERS, packet }
 }
 
-function itemsDifferent(oldItems, newItems){
-    return Object.keys(oldItems).filter(k => oldItems[k]).sort().join('-') !== Object.keys(newItems).filter(k => newItems[k]).sort().join('-');
-}
-
 function isDirty(oldState, newState){
     if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
     if (itemsDifferent(oldState.tags, newState.tags)) return true;
@@ -144,6 +140,9 @@ function isDirty(oldState, newState){
 
     return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
 }
+
+const itemsDifferent = (oldItems, newItems) =>
+    Object.keys(oldItems).filter(k => oldItems[k]).sort().join('-') !== Object.keys(newItems).filter(k => newItems[k]).sort().join('-');
 
 export function removeFilterSubject(_id) {
     return function(dispatch, getState) {
