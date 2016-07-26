@@ -1,5 +1,9 @@
 import React from 'react';
+import BookStore from '../model/bookStore';
 
+import { observer } from "mobx-react";
+
+@observer
 class BookViewingList extends React.Component {
     constructor(){
         super();
@@ -10,7 +14,7 @@ class BookViewingList extends React.Component {
     render() {
         return (
             <div>
-                <h1>Hello!</h1>
+                {BookStore.books.map(book => <div>{book.title}</div>)}
             </div>
         );
     }

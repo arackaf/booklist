@@ -268,3 +268,5 @@ react-mobx/applicationRoot/components/header.js
 react-mobx/applicationRoot/components/labelDisplay.js
 react-mobx/applicationRoot/components/mainNavigation.js
 react-mobx/applicationRoot/components/manualBookEntry.js
+react-mobx/modules/books/model/bookLoader.js
+react-mobx/modules/books/model/bookStore.js
