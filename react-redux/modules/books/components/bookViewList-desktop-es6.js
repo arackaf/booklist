@@ -5,6 +5,8 @@ import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
 import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
+import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
+import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 import { selector } from '../reducers/reducer';
 
@@ -38,7 +40,8 @@ class BookViewListDesktop extends React.Component{
                                 <th></th>
                                 <th><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
                                 <th>Author</th>
-                                <th>Genres</th>
+                                <th>Subjects</th>
+                                <th>Tags</th>
                                 <th>Published</th>
                                 <th>ISBN</th>
                                 <th><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
@@ -49,19 +52,25 @@ class BookViewListDesktop extends React.Component{
                         { this.props.books.map(book =>
                             <tr key={book._id}>
                                 <td>
-                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={this.props.selectedBooks[book._id]} />
+                                    <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
-                                <td>{book.title}<br /><a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a></td>
+                                <td>{book.title}<br />{ !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }</td>
                                 <td>
                                     <ul className="list-unstyled">
                                         {book.authors.map(author => <li>{author}</li>)}
                                     </ul>
                                 </td>
                                 <td>
-                                    { book.subjectObjects.map(s => <div key={s._id}><span className="label label-default">{s.name}</span></div>) }
+                                    { book.subjectObjects.map(s => <div><LabelDisplay item={s} /></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)}>Modify</button>
+                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    { book.tagObjects.map(s => <div><LabelDisplay item={s} /></div>) }
+                                    <div style={{ marginTop: 5, minHeight: 40 }}>
+                                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
                                 </td>
                                 <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
@@ -78,5 +87,5 @@ class BookViewListDesktop extends React.Component{
     }
 }
 
-const BookEntryListConnected = connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch })(BookViewListDesktop);
+const BookEntryListConnected = connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch, ...actionCreatorsBookTagModification })(BookViewListDesktop);
 export default BookEntryListConnected;

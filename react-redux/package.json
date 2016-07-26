@@ -7,9 +7,9 @@
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-plugin-transform-es2015-modules-commonjs": "6.8.0",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-react": "6.5.0",
@@ -29,7 +29,8 @@
     "lazypipe": "1.0.1",
     "react": "15.1.0",
     "react-addons-css-transition-group": "15.1.0",
-    "react-bootstrap": "0.29.0",
+    "react-autosuggest": "^3.7.4",
+    "react-bootstrap": "0.29.5",
     "react-dom": "0.14.0",
     "react-dropzone": "3.4.0",
     "react-redux": "4.4.5",
@@ -37,5 +38,8 @@
     "redux-thunk": "1.0.0",
     "reselect": "2.0.1",
     "systemjs-builder": "0.15.15"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-decorators-legacy": "^1.3.4"
   }
 }

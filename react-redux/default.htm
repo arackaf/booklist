@@ -15,11 +15,14 @@
         a { cursor: pointer; }
         a.no-underline { text-decoration: none; }
         ul.nav > li.active a { cursor: default }
+        .margin-left { margin-left: 10px; }
         .margin-top { margin-top: 10px; }
         .margin-bottom { margin-bottom: 10px; }
 
         li.default-cursor a { cursor: default }
         ul.nav li > a { outline: none }
+
+        ul.nav-tabs > li > a { color: #555 }
 
         .dropdown-menu > li.no-hover > a:focus, .dropdown-menu > li.no-hover > a:hover {
             background-color: inherit
@@ -66,6 +69,70 @@
             z-index: 980; /* tweak to make the color picker happy :-\  */
         }
 
+        .XXXreact-autosuggest__suggestions-container{
+            position: absolute; width: 90%; background-color: #2b669a;
+        }
+
+        .react-autosuggest__container {
+            /*position: relative;*/
+            float: left;
+        }
+
+        .react-autosuggest__input {
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            width: 100px;
+        }
+
+        .react-autosuggest__input:focus {
+            outline: none;
+        }
+
+        .react-autosuggest__suggestions-container {
+            position: absolute;
+            /*width: calc(100% - 30px);*/
+            padding: 0;
+            margin-top: -2px;
+            list-style-type: none;
+            border: 1px solid #aaa;
+            background-color: #fff;
+            border-radius: 2px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            z-index: 2;
+        }
+
+        .react-autosuggest__suggestion {
+            cursor: pointer;
+            padding: 6px 6px;
+            border-top: 1px solid white;
+            border-bottom: 1px solid white;
+        }
+
+        .react-autosuggest__suggestion--focused {
+            border-top: 1px solid #aaa;
+            border-bottom: 1px solid #aaa;
+        }
+
+        .react-autosuggest__suggestion--focused:first-child {
+            border-top: 1px solid white;
+        }
+
+        .react-autosuggest__suggestion--focused:last-child {
+            border-bottom: 1px solid white;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none;   /* Chrome/Safari/Opera */
+            -khtml-user-select: none;    /* Konqueror */
+            -moz-user-select: none;      /* Firefox */
+            -ms-user-select: none;       /* Internet Explorer/Edge */
+            user-select: none;           /* Non-prefixed version, currently not supported by any browser */
+            cursor: default;
+        }
+
     </style>
 
 </head>
@@ -76,7 +143,6 @@
         <button><i class="fa fa-fw fa-spin fa-spinner"></i></button>
     </div>
 
-    <script src="https://featuretests.io/rs.js"></script>
     <script>
         var isEs6 = false;
         function webSocketAddress(path){
@@ -84,10 +150,16 @@
         }
 
         var isDev = /localhost:3000/.test(window.location.href);
+        loadSystemJs();
+
+        /*
         if (isDev){
             loadSystemJs();
         } else {
             new Promise(function (res) {
+
+                //< script src="https://featuretests.io/rs.js"></ script >
+
                 setTimeout(res, 500);
                 window["Reflect.supports"]("all", function (results) {
                     var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
@@ -97,6 +169,7 @@
                 });
             }).then(loadSystemJs);
         }
+         */
 
         function loadSystemJs() {
             var config = isDev ? systemJsDevConfig : systemJsLiveConfig;

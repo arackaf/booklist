@@ -1,28 +1,27 @@
 import React from 'react';
 import { connect} from 'react-redux';
-import { loadSubjects } from '../reducers/subjects/actionCreators';
-import { loadBooks } from '../reducers/books/actionCreators';
 
 import DesktopView from './bookViewList-desktop';
 import MobileView from './bookViewList-mobile';
 
-import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
-import BooksMenuBar from './booklist-menubar/booksMenuBar';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
+import BooksMenuBar from './booksMenuBar';
 import BookSubjectSetter from './bookSubjectSetter';
-import SubjectEditModal from './subject-edit/subjectEditModal';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
+import BookTagSetter from './bookTagSetter';
+import SubjectEditModal from './subjectEditModal';
+import TagEditModal from './tagEditModal';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
-import * as actionCreatorsSubjects from '../reducers/subjects/actionCreators';
+import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsUi from '../reducers/ui/actionCreators';
+import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 
 import { selector } from '../reducers/reducer';
+import { globalHashManager } from 'reactStartup';
 
 class BookViewingList extends React.Component {
-    constructor(){
-        super();
-    }
     componentDidMount(){
         try {
             if (window.screen.width < 700) {
@@ -33,7 +32,13 @@ class BookViewingList extends React.Component {
         }catch(err){
             this.props.setDesktop();
         }
-        this.props.loadSubjects();
+
+        this.props.booksActivated(this.props.hashParameters);
+    }
+    componentDidUpdate(prevProps){
+        if (this.props.hashParameters !== prevProps.hashParameters){
+            this.props.syncFiltersToHash(this.props.hashParameters);
+        }
     }
     render() {
         let editingBook = this.props.editingBook,
@@ -46,7 +51,7 @@ class BookViewingList extends React.Component {
                     <BooksMenuBar />
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
-                        { this.props.booksLoading || !this.props.subjectsLoaded ?
+                        { this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?
                             <div className="wait-for-loading">
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
                             </div> : null }
@@ -56,7 +61,7 @@ class BookViewingList extends React.Component {
                                 No books found
                             </div> : null }
 
-                        {this.props.subjectsLoaded ?
+                        {this.props.subjectsLoaded && this.props.tagsLoaded ?
                             (this.props.isDesktop ? <DesktopView />
                                 : this.props.isMobile ? <MobileView />
                                 : null) : null }
@@ -68,7 +73,9 @@ class BookViewingList extends React.Component {
                 </div>
 
                 <BookSubjectSetter />
+                <BookTagSetter />
                 <SubjectEditModal />
+                <TagEditModal />
 
                 <ManualBookEntry
                     title={editingBook ? `Edit ${editingBook.title}` : ''}
@@ -84,6 +91,6 @@ class BookViewingList extends React.Component {
         );
     }
 }
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsUi, ...actionCreatorsSearch })(BookViewingList);
 
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSubjects, ...actionCreatorsUi })(BookViewingList);
 export default BookViewingListConnected;

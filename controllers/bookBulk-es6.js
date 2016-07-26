@@ -6,13 +6,21 @@ import BookDAO from '../dataAccess/bookDAO';
 class bookController{
     constructor(){}
     @httpPost
-    async setSubjects(books, add, remove){
+    async setSubjects({ books, add, remove }){
         try {
             let bookDao = new BookDAO();
             await bookDao.setBooksSubjects(books, add, remove);
             this.send({success: true});
         } catch(errr){ console.log(errr); }
     }
+    @httpPost
+    async setTags({ books, add, remove }){
+        try {
+            let bookDao = new BookDAO();
+            await bookDao.setBooksTags(books, add, remove);
+            this.send({success: true});
+        } catch(errr){ console.log(errr); }
+    }
 }
 
-export default bookController;
+module.exports = bookController;

@@ -1,14 +1,19 @@
 import {
     BEGIN_FILTER_CHANGE,
-    TOGGLE_PENDING_SUBJECT,
+    SET_PENDING_SUBJECT,
+    SET_PENDING_TAG,
     END_FILTER_CHANGE,
-    SET_SORT_DIRECTION,
     SET_FILTERS,
     SET_PENDING,
-    APPLY_PENDING_SEARCH
+    APPLY_PENDING_SEARCH,
+    SET_VIEWING_USERID,
+    SET_SEARCH_SUBJECTS_VALUE,
+    SET_SEARCH_TAGS_VALUE
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
+import { loadSubjects } from '../subjects/actionCreators';
+import { loadTags } from '../tags/actionCreators';
 
 import { globalHashManager } from 'reactStartup';
 
@@ -16,8 +21,28 @@ export function beginFilterChange(){
     return { type: BEGIN_FILTER_CHANGE };
 }
 
-export function togglePendingSubject(_id){
-    return { type: TOGGLE_PENDING_SUBJECT, _id };
+export function setSearchSubjectsValue(obj){
+    return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value || '' };
+}
+
+export function setSearchTagsValue(obj){
+    return { type: SET_SEARCH_TAGS_VALUE, value: obj.target.value || '' };
+}
+
+export function addPendingSubject({ _id }){
+    return { type: SET_PENDING_SUBJECT, _id, value: true };
+}
+
+export function removePendingSubject(_id){
+    return { type: SET_PENDING_SUBJECT, _id, value: false };
+}
+
+export function addPendingTag({ _id }){
+    return { type: SET_PENDING_TAG, _id, value: true };
+}
+
+export function removePendingTag(_id){
+    return { type: SET_PENDING_TAG, _id, value: false };
 }
 
 export function endFilterChanging(){
@@ -26,13 +51,15 @@ export function endFilterChanging(){
 
 export function applyFilters(){
     return function(dispatch, getState) {
-        let state = getState().books.bookSearch,
+        let state = getState().booksModule.bookSearch,
             filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-'),
+            filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
             pending = state.pending;
 
         globalHashManager.setValues(
             'search', pending.search,
-            'filterSubjects', filterSubjectsVal,
+            'subjects', filterSubjectsVal,
+            'tags', filterTagsVal,
             'searchChildSubjects', pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
             'author', pending.author,
             'publisher', pending.publisher,
@@ -51,58 +78,90 @@ export function setSortOrder(sort, direction){
         );
     };
 }
-let initial = true;
-export function syncFiltersToHash(){
-    return function(dispatch, getState){
-        let state = getState().books.bookSearch;
 
-        let subjects = {},
-            selectedSubjectsHashString = globalHashManager.getCurrentHashValueOf('filterSubjects');
-        if (selectedSubjectsHashString){
-            selectedSubjectsHashString.split('-').forEach(_id => subjects[_id] = true);
+export function booksActivated(searchProps){
+    return function(dispatch, getState){
+        let nextSearchFilters = getNextFilters(searchProps),
+            state = getState(),
+            booksState = state.booksModule.books,
+            subjectsState = state.booksModule.subjects,
+            tagsState = state.booksModule.tags;
+
+        //not the most beautiful thing, but I'll use this activation to make sure initial subject and tag load calls are made
+        if (!subjectsState.initialQueryFired){
+            dispatch(loadSubjects());
         }
 
-        let searchChildSubjects = globalHashManager.getCurrentHashValueOf('searchChildSubjects') ? true : null,
-            packet = { searchChildSubjects, subjects };
+        if (!tagsState.initialQueryFired){
+            dispatch(loadTags());
+        }
 
-        ['search', 'author', 'publisher', 'pages', 'pagesOperator', 'sort'].forEach(prop => packet[prop] = globalHashManager.getCurrentHashValueOf(prop) || '');
-        packet.sortDirection = globalHashManager.getCurrentHashValueOf('sortDirection') == 'asc' ? 1 : -1;
-        let newIsDirty = isDirty(state, packet);
-
-        if (initial || newIsDirty) {
-            dispatch(setFilters(packet));
-
+        if (booksState.reloadOnActivate || !booksState.initialQueryFired){
+            dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
-        initial = false;
+    }
+}
+
+export function syncFiltersToHash(searchProps){
+    return function(dispatch, getState){
+        let nextSearchFilters = getNextFilters(searchProps),
+            state = getState(),
+            searchState = state.booksModule.bookSearch,
+            newIsDirty = isDirty(searchState, nextSearchFilters);
+
+        if (newIsDirty){
+            dispatch(setFilters(nextSearchFilters));
+            dispatch(loadBooks());
+        }
     };
 }
+
+const getNextFilters = searchProps =>
+    Object.assign({}, searchProps, {
+        subjects: idStringToObject(searchProps.subjects),
+        tags: idStringToObject(searchProps.tags),
+        searchChildSubjects: searchProps.searchChildSubjects ? true : null,
+        sortDirection: searchProps.sortDirection == 'asc' ? 1 : -1
+    });
+
+const idStringToObject = (str = '') => str.split('-').filter(s => s).reduce((obj, val) => (obj[val] = true, obj), {});
 
 export function setFilters(packet){
     return { type: SET_FILTERS, packet }
 }
 
 function isDirty(oldState, newState){
-    if (subjectsDifferent(oldState.subjects, newState.subjects)) return true;
+    if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
+    if (itemsDifferent(oldState.tags, newState.tags)) return true;
     if (oldState.pagesOperator != newState.pagesOperator){
         if (newState.pages !== '') return true;
     }
+
     return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
 }
 
-function subjectsDifferent(oldSubjects, newSubjects){
-    return Object.keys(oldSubjects).filter(k => oldSubjects[k]).sort().join('-') !== Object.keys(newSubjects).filter(k => newSubjects[k]).sort().join('-');
-}
+const itemsDifferent = (oldItems, newItems) =>
+    Object.keys(oldItems).filter(k => oldItems[k]).sort().join('-') !== Object.keys(newItems).filter(k => newItems[k]).sort().join('-');
 
 export function removeFilterSubject(_id) {
     return function(dispatch, getState) {
-        let state = getState().books.bookSearch,
+        let state = getState().booksModule.bookSearch,
             newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
 
         globalHashManager.setValues(
-            'filterSubjects', newSubjects,
+            'subjects', newSubjects,
             'searchChildSubjects', state.searchChildSubjects && newSubjects ? 'true' : null
         );
+    };
+}
+
+export function removeFilterTag(_id){
+    return function(dispatch, getState) {
+        let state = getState().booksModule.bookSearch,
+            newTags = Object.keys(state.tags).filter(sId => sId != _id).join('-');
+
+        globalHashManager.setValues('tags', newTags);
     };
 }
 
@@ -125,3 +184,7 @@ export const setPendingAuthor = createPendingActionCreator('author');
 export const setPendingPublisher = createPendingActionCreator('publisher');
 export const setPendingPages = createPendingActionCreator('pages');
 export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
+
+export function setViewingUserId(_id){
+    return { type: SET_VIEWING_USERID, _id }
+}

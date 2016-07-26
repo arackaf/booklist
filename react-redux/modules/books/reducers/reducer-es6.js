@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import { booksReducer as books, booksSelector } from './books/reducer';
 import { subjectsReducer as subjects, subjectsSelector } from './subjects/reducer';
+import { tagsReducer as tags, tagsSelector } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
+import { bookTagManagerReducer as booksTagsModifier, booksTagsModifierSelector } from './booksTagModification/reducer';
 import bookEdit from './editBook/reducer';
 import ui from './ui/reducer';
 
@@ -11,21 +13,30 @@ export const reducer = combineReducers({
     subjects,
     bookSearch,
     booksSubjectsModifier,
+    booksTagsModifier,
     bookEdit,
-    ui
+    ui,
+    tags
 });
 
 export const selector = state => {
-    let booksSelected = booksSelector(state.books),
-        subjectsSelected = subjectsSelector(state.books),
-        bookEdit = state.books.bookEdit,
-        bookSearch = bookSearchSelector(state.books),
-        ui = state.books.ui;
+    let booksSelected = booksSelector(state),
+        subjectsSelected = subjectsSelector(state),
+        tagsSelected = tagsSelector(state),
+        bookEdit = state.booksModule.bookEdit,
+        bookSearch = bookSearchSelector(state),
+        ui = state.booksModule.ui,
+        root = state.root;
 
     return {
         subjects: subjectsSelected.list,
         subjectsLoaded: subjectsSelected.loaded,
+        tags: tagsSelected.allTagsSorted,
+        tagsLoaded: tagsSelected.loaded,
         books: booksSelected.list,
+        reloadBooksOnActivate: booksSelected.reloadOnActivate,
+        initialBookQueryFired: booksSelected.initialQueryFired,
+        viewingPublic: root.isPublic,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,
         currentSort: bookSearch.sort,
@@ -36,5 +47,5 @@ export const selector = state => {
         editingBookSaved: bookEdit.editingBookSaved,
         isDesktop: ui.isDesktop,
         isMobile: ui.isMobile
-    }
+    };
 };

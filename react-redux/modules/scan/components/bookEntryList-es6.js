@@ -8,9 +8,9 @@ const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 import { Collapse } from 'react-bootstrap';
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
-import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import ManualBookEntry from 'applicationRoot/rootComponents/manualBookEntry';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 const defaultEmptyBook = () => ({
     title: '',
@@ -45,7 +45,15 @@ class BookEntryList extends Component {
     }
     saveNewBook(book){
         this.setState({ isSavingManual: true });
-        ajaxUtil.post('/book/saveManual', { book }).then(() => this.setState({ isSavingManual: false, manualSaved: true }));
+        ajaxUtil.post('/book/saveManual', { book }).then(() => {
+            this.setState({
+                isSavingManual: false,
+                manualSaved: true,
+                manualBook: defaultEmptyBook()
+            });
+            this.props.manualBookSaved(book);
+            setTimeout(() => this.setState({ manualSaved: false }), 2000);
+        });
     }
     render() {
         let pending = this.props.pendingNumber,
@@ -136,7 +144,6 @@ class BookEntryList extends Component {
                     isSaving={this.state.isSavingManual}
                     isSaved={this.state.manualSaved}
                     saveBook={book => this.saveNewBook(book)}
-                    saveMessage={'Book saved. You can enter another, or close'}
                     startOver={() => this.manuallyEnterBook()}
                     onClosing={() => this.manualEntryEnding()} />
 
@@ -188,6 +195,6 @@ class BookEntryList extends Component {
     }
 }
 
-const BookEntryListConnected = connect(state => state.scan, { ...bookEntryActionCreators })(BookEntryList);
+const BookEntryListConnected = connect(state => state.scanModule, { ...bookEntryActionCreators })(BookEntryList);
 
 export default BookEntryListConnected;

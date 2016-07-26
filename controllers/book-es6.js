@@ -8,7 +8,7 @@ import bookEntryQueueManager from '../app-helpers/bookEntryQueueManager';
 class bookController{
     constructor(){}
     @httpPost
-    async saveFromIsbn(isbn){
+    async saveFromIsbn({ isbn }){
         const userId = this.request.user.id;
 
         try {
@@ -21,29 +21,29 @@ class bookController{
         }
     }
     @httpPost
-    async deleteBook(id){
+    async deleteBook({ id }){
         let bookDao = new BookDAO();
         await bookDao.deleteBook(id);
         this.send({ success: true });
     }
     @httpPost
-    async saveManual(book){
+    async saveManual({ book }){
         let bookDao = new BookDAO(this.request.user.id);
         await bookDao.saveManual(book);
         this.send({ success: true });
     }
     @httpPost
-    async update(book){
+    async update({ book }){
         let bookDao = new BookDAO(this.request.user.id);
         await bookDao.update(book);
         this.send({ success: true });
     }
-    async searchBooks(search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator){
-        let bookDao = new BookDAO(this.request.user.id),
-            bookResults = await bookDao.searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator });
+    async searchBooks(params){
+        let bookDao = new BookDAO(this.request.user ? this.request.user.id : null),
+            bookResults = await bookDao.searchBooks({ ...params });
 
         this.send({ results: bookResults })
     }
 }
 
-export default bookController;
+module.exports = bookController;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import Header from './rootComponents/header';
+import Header from './components/header';
 import { store } from './store';
 import { render } from 'react-dom';
 

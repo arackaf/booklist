@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import AjaxButton from 'applicationRoot/components/ajaxButton';
+import BootstrapButton, { BootstrapAnchorButton } from 'applicationRoot/components/bootstrapButton';
 import Dropzone from 'react-dropzone';
 
 import { Modal } from 'react-bootstrap';
@@ -135,7 +135,7 @@ class ManualBookEntry extends Component {
                                 </div>
                             )}
                             <div className="col-xs-12">
-                                <BootstrapButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapButton>
+                                <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="primary-xs"><i className="fa fa-fw fa-plus"></i> Add author</BootstrapAnchorButton>
                                 { this.state.authorsChanged ?
                                     <div style={{ marginLeft: 5 }} className="label label-primary">
                                         Add as many authors as needed. Blanks will be ignored.
@@ -157,18 +157,18 @@ class ManualBookEntry extends Component {
                                         <img src={this.state.pendingSmallImage} />
                                         <br />
                                         <br />
-                                        <BootstrapButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>Clear image</BootstrapButton>
+                                        <BootstrapAnchorButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>Clear image</BootstrapAnchorButton>
                                     </div> : null}
                                 {this.state.smallCoverUploadError ? <div className="label label-danger">{this.state.smallCoverUploadError}</div> : null}
                             </div>
                         </div>
                     </form> : null }
-                    { this.props.isSaved ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.saveMessage}</div> : null }
+                    { false && this.props.successMessage ? <div className="alert alert-success alert-slim" style={{ marginTop: 10, marginBottom: 0 }}>{this.props.successMessage}</div> : null }
                     <hr style={{ marginTop: 10, marginBottom: 10 }} />
                     <BootstrapButton preset="danger-xs" onClick={() => this.props.isSaved ? this.props.startOver() : this.revert()}>Clear all</BootstrapButton>
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>Set</AjaxButton>
+                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>{!this.props.isSaved ? 'Save' : <span>Saved <i className="fa fa-fw fa-check"></i></span>}</AjaxButton>
                 </Modal.Footer>
             </Modal>
         );

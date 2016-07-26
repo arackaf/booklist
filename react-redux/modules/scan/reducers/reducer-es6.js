@@ -33,7 +33,7 @@ function reducer(state = initialState, action){
             newEntryList[action.index] = updatedObject;
             return Object.assign({}, state, { entryList: newEntryList });
         case BOOK_QUEUED:
-            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: false, queued: true }),
+            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: false, queued: true, isbn: '' }),
                 newEntryList = state.entryList.concat();
 
             newEntryList[action.index] = updatedObject;
