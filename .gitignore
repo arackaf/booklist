@@ -260,3 +260,11 @@ react-mobx/modules/scan/reducers/reducer.js
 react-mobx/modules/scan/scan.js
 react-redux/modules/books/components/bookSubjectSetter.js
 react-mobx/reactStartup.js
+react-mobx/applicationRoot/components/ajaxButton.js
+react-mobx/applicationRoot/components/bootstrapButton.js
+react-mobx/applicationRoot/components/customColorPicker.js
+react-mobx/applicationRoot/components/genericLabelSelect.js
+react-mobx/applicationRoot/components/header.js
+react-mobx/applicationRoot/components/labelDisplay.js
+react-mobx/applicationRoot/components/mainNavigation.js
+react-mobx/applicationRoot/components/manualBookEntry.js

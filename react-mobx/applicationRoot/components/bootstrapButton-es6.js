@@ -23,4 +23,16 @@ class BootstrapButton extends Component{
     }
 }
 
+export class BootstrapAnchorButton extends Component{
+    constructor(props){
+        super();
+        this.state = { btnCss: (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '') };
+    }
+    render(){
+        return (
+            <a className={this.state.btnCss} style={{ ...this.props.style }} onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</a>
+        )
+    }
+}
+
 export default BootstrapButton;
