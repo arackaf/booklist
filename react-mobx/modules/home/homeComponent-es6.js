@@ -8,7 +8,7 @@ import {
     NavItem
 } from 'react-bootstrap';
 
-import MainNavigationBar from 'applicationRoot/rootComponents/mainNavigation';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 import { observable, computed } from 'mobx';
 import { observer } from "mobx-react";
