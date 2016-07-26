@@ -31,7 +31,9 @@ class SubjectDAO extends DAO {
             if (!_id){
                 let newPath = null;
                 if (newParent){
-                    let existingParent = await db.collection('subjects').findOne({ _id: ObjectId(newParent) });
+                    let existingParent = await db.collection('subjects').findOne({ _id: ObjectId(newParent), userId: this.userId });
+                    if (!existingParent) return;
+
                     newPath = (existingParent.path || ',') + ('' + existingParent._id) + ',';
                 }
                 let newSubject = { name, backgroundColor, textColor, path: newPath, userId: this.userId };
@@ -39,7 +41,9 @@ class SubjectDAO extends DAO {
                 return { affectedSubjects: [newSubject] };
             }
 
-            let existing = await db.collection('subjects').findOne({ _id: ObjectId(_id) });
+            let existing = await db.collection('subjects').findOne({ _id: ObjectId(_id), userId: this.userId });
+            if (!existing) return;
+
             await db.collection('subjects').update({ _id: ObjectId(_id) }, { $set: { name, backgroundColor, textColor } });
 
             let existingParent;
@@ -87,11 +91,14 @@ class SubjectDAO extends DAO {
             super.dispose(db);
         }
     }
-    async loadSubjects(){
+    async loadSubjects(userId){
         let db = await super.open();
+
+        let userIdToUse = userId || this.userId;
+
         try {
             let [subjects, labelColors] = await Promise.all([
-                db.collection('subjects').find({ userId: this.userId }).sort({ name: 1 }).toArray(),
+                db.collection('subjects').find({ userId: userIdToUse }).sort({ name: 1 }).toArray(),
                 db.collection('labelColors').find({ }).sort({ order: 1 }).toArray()
             ]);
 

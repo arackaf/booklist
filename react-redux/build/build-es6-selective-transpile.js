@@ -23,9 +23,12 @@ let allSharedUtilities = sharedFilesToBuild.join(' + '),
         { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react', 'react-bootstrap'] }
     ];
 
-runBuild('dist-es5').then(buildOutputs => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs)).catch(err => console.log(err));
+Promise.all([
+    runBuild('dist-es5', { presets: ['es2015'] }),
+    runBuild('dist-es6', undefined)
+]).then(([buildOutputs]) => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs)).catch(err => console.log(err));
 
-function runBuild(distFolder){
+function runBuild(distFolder, babelOptions){
     let buildOutputs = {}
     return Promise
         .all(builds.map(createSingleBuild.bind(null, distFolder)))
@@ -34,7 +37,8 @@ function runBuild(distFolder){
                 results.forEach(({ saveTo, results }) => buildOutputs[saveTo] = { modules: results.modules });
 
                 gulp.src([`../${distFolder}/**/*-unminified.js`], { base: './' })
-                    .pipe(gulpUglify())
+                    .pipe(gulpIf(babelOptions, lazypipe().pipe(babel, babelOptions).pipe(gulp.dest, '')()))
+                    .pipe(gulpIf(babelOptions, gulpUglify()))
                     .pipe(gulpRename(function (path) {
                         path.basename = path.basename.replace(/-unminified$/, '-build');
                         console.log(`Finished compressing ${path.basename}`);

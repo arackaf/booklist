@@ -1,22 +1,24 @@
 import {
     LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, NEW_SUBJECT, EDIT_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
     STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
-    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED
+    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-let subjectsLoadedOrLoading = false;
 export function loadSubjects(){
     return function(dispatch, getState){
-        if (subjectsLoadedOrLoading) return;
-        subjectsLoadedOrLoading = true;
+        let publicUserId = getState().root.publicUserId;
 
         dispatch({ type: LOAD_SUBJECTS });
 
-        Promise.resolve(ajaxUtil.get('/subject/all')).then(subjectsResp => {
+        Promise.resolve(ajaxUtil.get('/subject/all', { userId: publicUserId })).then(subjectsResp => {
             dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
             dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
         });
     }
+}
+
+export function setSubjectSearchValue(value){
+    return { type: SET_SUBJECT_SEARCH_VALUE, value: value.target.value };
 }
 
 export function editSubjects(){
@@ -57,7 +59,7 @@ export function cancelSubjectEdit(){
 
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
-        let { editingSubject, name, parentId, backgroundColor, textColor } = getState().books.subjects.editSubjectPacket,
+        let { editingSubject, name, parentId, backgroundColor, textColor } = getState().booksModule.subjects.editSubjectPacket,
             request = { _id: editingSubject ? editingSubject._id : null, name, parentId, backgroundColor, textColor };
 
         ajaxUtil.post('/subject/setInfo', request, resp => dispatch({ type: UPDATE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
@@ -77,7 +79,7 @@ export function deleteSubject(_id){
         let request = { _id: _id + '' };
         dispatch({ type: SUBJECT_DELETING });
         ajaxUtil.post('/subject/delete', request, resp => {
-            setTimeout(() => dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id }), 1000);
+            dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id });
         });
     }
 }

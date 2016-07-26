@@ -20,13 +20,15 @@ class CustomColorPicker extends React.Component {
         this.jscolorInstance = new jscolor(this.rootElement, { valueElement: this.valueElementId, styleElement: this.styleElementId, onFineChange: this._colorChosen });
     }
     shouldComponentUpdate(props){
-        this.jscolorInstance.fromString(props.currentColor);
+        if (props.currentColor) {
+            this.jscolorInstance.fromString(props.currentColor);
+        }
         return false;
     }
     render(){
         return (
             <div>
-                <a id={`${this.uniqueId}`} ref={ el => this.rootElement = el } style={{ width: '80px', height: '20px' }}>Custom</a>
+                <a id={`${this.uniqueId}`} ref={ el => this.rootElement = el } style={{ width: '80px', height: '20px', ...(this.props.labelStyle || {}) }}>Custom</a>
                 <input style={{ display: 'none' }} ref={el => this.valueElement = el} id={this.valueElementId} defaultValue={this.props.currentColor} />
                 <input style={{ display: 'none' }} id={this.styleElementId} />
             </div>

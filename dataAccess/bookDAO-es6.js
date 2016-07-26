@@ -13,11 +13,12 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks({ search, subjects, searchChildSubjects, sort, sortDirection, author, publisher, pages, pagesOperator }){
-        subjects = subjects || [];
-        let db = await super.open();
+    async searchBooks({ search, subjects = [], searchChildSubjects, tags = [], sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
+        let db = await super.open(),
+            userIdToUse = userId || this.userId;
+
         try {
-            let query = { userId: this.userId },
+            let query = { userId: userIdToUse },
                 sortObj = { _id: -1 };
 
             if (search){
@@ -43,12 +44,16 @@ class BookDAO extends DAO {
             if (subjects.length){
                 if (searchChildSubjects){
                     let allPaths = subjects.map(s => `,${s},`).join('|');
-                    let childIds = (await db.collection('subjects').find({ path: { $regex: allPaths }, userId: this.userId }, { _id: 1 }).toArray()).map(o => '' + o._id);
+                    let childIds = (await db.collection('subjects').find({ path: { $regex: allPaths }, userId: userIdToUse }, { _id: 1 }).toArray()).map(o => '' + o._id);
 
                     subjects.push(...childIds);
                 }
 
                 query.subjects = { $in: subjects };
+            }
+            
+            if (tags.length){
+                query.tags = { $in: tags };
             }
             //may implement $or another way
             //if (query.title && query.subjects){
@@ -85,6 +90,12 @@ class BookDAO extends DAO {
             const validProperties = ['title', 'isbn', 'pages', 'publisher', 'publicationDate'];
             validProperties.forEach(prop => bookToInsert[prop] = (book[prop] || '').substr(0, 500));
             bookToInsert.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
+
+            if (bookToInsert.pages || bookToInsert.pages === '0'){
+                bookToInsert.pages = +bookToInsert.pages;
+            } else {
+                delete bookToInsert.pages;
+            }
 
             if (book.smallImage){
                 try {
@@ -123,7 +134,7 @@ class BookDAO extends DAO {
     async deleteBook(id){
         let db = await super.open();
         try {
-            await db.collection('books').remove({ _id: ObjectId(id) });
+            await db.collection('books').remove({ _id: ObjectId(id), userId: this.userId });
         } finally {
             super.dispose(db);
         }
@@ -164,6 +175,23 @@ class BookDAO extends DAO {
             await db.collection('books').update(
                 { _id: { $in: books.map(_id => ObjectId(_id)) } },
                 { $pullAll: { subjects: (remove || []) } }, { upsert: false, multi: true }
+            );
+
+        } catch(errr){ console.log(errr); } finally {
+            super.dispose(db);
+        }
+    }
+    async setBooksTags(books, add, remove){
+        let db = await super.open();
+        try{
+            await db.collection('books').update(
+                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { $addToSet: { tags: { $each: (add || []) } } }, { upsert: false, multi: true }
+            );
+
+            await db.collection('books').update(
+                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { $pullAll: { tags: (remove || []) } }, { upsert: false, multi: true }
             );
 
         } catch(errr){ console.log(errr); } finally {

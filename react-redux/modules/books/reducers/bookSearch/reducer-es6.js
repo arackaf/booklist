@@ -1,11 +1,13 @@
-import { BEGIN_FILTER_CHANGE, TOGGLE_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING } from './actionNames';
+import { BEGIN_FILTER_CHANGE, SET_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID, SET_SEARCH_SUBJECTS_VALUE, SET_SEARCH_TAGS_VALUE, SET_PENDING_TAG } from './actionNames';
 
-import { subjectsSelector } from '../subjects/reducer';
+import { subjectsSelector, filterSubjects } from '../subjects/reducer';
 import { booksSelector } from '../books/reducer';
+import { tagsSelector } from '../tags/reducer';
 
 const searchFields = {
     search: '',
     subjects: {},
+    tags: {},
     searchChildSubjects: false,
     author: '',
     publisher: '',
@@ -20,42 +22,61 @@ const initialState = {
     ...searchFields,
     pending: {
         ...searchFields
-    }
+    },
+    searchSubjectsValue: '',
+    searchTagsValue: ''
 };
 
 export function bookSearchReducer(state = initialState, action){
     switch(action.type){
+        case SET_SEARCH_SUBJECTS_VALUE:
+            return { ...state, searchSubjectsValue: action.value };
+        case SET_SEARCH_TAGS_VALUE:
+            return { ...state, searchTagsValue: action.value };
         case SET_FILTERS:
-            let newSearchFields = {};
-            Object.keys(searchFields).forEach(k => newSearchFields[k] = action[k]);
-            return { ...state, ...action.packet, pending: { ...action.packet } };
+            return { ...state, ...searchFields, ...action.packet, pending: { ...state.pending, ...searchFields, ...action.packet } };
         case SET_PENDING:
             return { ...state, pending: { ...state.pending, [action.field]: action.value } };
         case BEGIN_FILTER_CHANGE:
-            return Object.assign({}, state, { editingFilters: true, pendingSubjects: { ...state.subjects } });
-        case TOGGLE_PENDING_SUBJECT:
-            return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: !state.pending.subjects[action._id] } } });
+            let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: '', searchTagsValue: '' });
+            Object.keys(searchFields).forEach(k => state.pending[k] = state[k]);
+            return result;
+        case SET_PENDING_SUBJECT:
+            return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: action.value } } });
+        case SET_PENDING_TAG:
+            return Object.assign({}, state, { pending: { ...state.pending, tags: { ...state.pending.tags, [action._id]: action.value } } });
         case END_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: false });
     }
     return state;
 }
 
-function projectselectedSubjects(selectedSubjectsIds, subjects){
-    //last filter since subjects might not be loaded yet
-    return Object.keys(selectedSubjectsIds).filter(k => selectedSubjectsIds[k]).map(_id => subjects[_id]).filter(s => s);
+function projectSelectedItems(ids, hash){
+    return Object.keys(ids).filter(k => ids[k]).map(_id => hash[_id]).filter(s => s);
 }
 
 export const bookSearchSelector = state => {
+    let booksModule = state.booksModule,
+        bookSearch = state.booksModule.bookSearch,
+        root = state.root;
+
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
+    let tagsState = tagsSelector(state);
 
     return Object.assign({},
-        state.bookSearch,
+        booksModule.bookSearch,
         {
-            selectedSubjects: projectselectedSubjects(state.bookSearch.subjects, state.subjects.subjectHash),
-            ...state.ui,
+            selectedSubjects: projectSelectedItems(bookSearch.subjects, booksModule.subjects.subjectHash),
+            selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
+            pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
+            pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
+            ...booksModule.ui,
             subjects: subjectsState.subjects,
-            selectedBooksCount: booksState.selectedBooksCount
+            allSubjectsSorted: subjectsState.allSubjectsSorted,
+            selectedBooksCount: booksState.selectedBooksCount,
+            viewingPublic: root.isPublic,
+            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
+            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue)
         });
 }

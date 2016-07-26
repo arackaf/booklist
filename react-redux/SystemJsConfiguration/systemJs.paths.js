@@ -1,7 +1,9 @@
 var systemJsDevConfig = {
     defaultJSExtensions: true,
     map: {
+        'React': 'node_modules/react/dist/react-with-addons.js',
         'react': 'node_modules/react/dist/react-with-addons.js',
+        'react-autosuggest': 'node_modules/react-autosuggest/dist/standalone/autosuggest.js',
         'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.js',
         'react-dom': 'node_modules/react-dom/dist/react-dom.js',
         'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
@@ -21,7 +23,9 @@ var systemJsDevConfig = {
 var systemJsLiveConfig = {
     defaultJSExtensions: true,
     map: {
+        'React': 'node_modules/react/dist/react-with-addons.min.js',
         'react': 'node_modules/react/dist/react-with-addons.min.js',
+        'react-autosuggest': 'node_modules/react-autosuggest/dist/standalone/autosuggest.min.js',
         'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.min.js',
         'react-dom': 'node_modules/react-dom/dist/react-dom.min.js',
         'react-dropzone': 'node_modules/react-dropzone/dist/index.js',

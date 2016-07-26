@@ -10,18 +10,21 @@ import {
     MenuItem
 } from 'react-bootstrap';
 
-import BookSelectTree from './bookSelectTree';
-
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
 import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
 
-import * as booksActionCreators from '../../reducers/books/actionCreators';
-import * as bookSearchActionCreators from '../../reducers/bookSearch/actionCreators';
-import * as subjectsActionCreators from '../../reducers/subjects/actionCreators';
-import * as booksSubjectModificationActionCreators from '../../reducers/booksSubjectModification/actionCreators';
-import * as uiActionCreators from '../../reducers/ui/actionCreators';
+import * as booksActionCreators from '../reducers/books/actionCreators';
+import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
+import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
+import * as tagsActionCreators from '../reducers/tags/actionCreators';
+import * as booksSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
+import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
+import * as uiActionCreators from '../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
+
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
+import { RemovableLabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 const InputForPending = props => {
     let name = props.name,
@@ -34,41 +37,54 @@ class BooksMenuBar extends React.Component {
     constructor(props) {
         super();
 
-        this.state = { menuOpen: false };
-        this._hashChangeSubscription = props.syncFiltersToHash;
-        window.addEventListener("hashchange", this._hashChangeSubscription);
+        this.state = { subjectsMenuOpen: false, tagsMenuOpen: false };
     }
     removeFilterSubject(_id){
         let isLastSubject = this.props.selectedSubjects.length === 1;
         this.props.removeFilterSubject(_id);
 
         if (isLastSubject){
-            setTimeout(() => this.setState({ menuOpen: false }), 1);
+            setTimeout(() => this.setState({ subjectsMenuOpen: false }), 1);
         }
     }
-    componentDidMount(){
-        this.props.syncFiltersToHash();
-    }
-    componentWillUnmount(){
-        window.removeEventListener("hashchange", this._hashChangeSubscription);
+    removeFilterTag(_id) {
+        let isLastTag = this.props.selectedTags.length === 1;
+        this.props.removeFilterTag(_id);
+
+        if (isLastTag) {
+            setTimeout(() => this.setState({ tagsMenuOpen: false }), 1);
+        }
     }
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });
     }
-    dropdownToggle(newValue){
-        if (this._forceOpen){
-            this.setState({ menuOpen: true });
-            this._forceOpen = false;
+    subjectsDropdownToggle(newValue){
+        if (this._subjectsForceOpen){
+            this.setState({ subjectsMenuOpen: true });
+            this._subjectsForceOpen = false;
         } else {
-            this.setState({ menuOpen: newValue });
+            this.setState({ subjectsMenuOpen: newValue });
         }
     }
-    menuItemClickedThatShouldntCloseDropdown(){
-        this._forceOpen = true;
+    tagsDropdownToggle(newValue){
+        if (this._tagsForceOpen){
+            this.setState({ tagsMenuOpen: true });
+            this._tagsForceOpen = false;
+        } else {
+            this.setState({ tagsMenuOpen: newValue });
+        }
+    }
+    subjectMenuItemClickedThatShouldntCloseDropdown(){
+        this._subjectsForceOpen = true;
+    }
+    tagMenuItemClickedThatShouldntCloseDropdown(){
+        this._tagsForceOpen = true;
     }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
-            selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's');
+            selectedTagsCount = this.props.selectedTags.length,
+            selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
+            selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
         return (
             <div>
@@ -81,8 +97,10 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
-                            <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount}>Set subjects</NavItem>
-                            <NavItem onClick={this.props.editSubjects}>Edit subjects</NavItem>
+                            <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set subjects</NavItem>
+                            <NavItem onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavItem>
+                            <NavItem onClick={this.props.enableTagModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set tags</NavItem>
+                            <NavItem onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavItem>
                         </Nav>
                         <Navbar.Header>
                             <Navbar.Brand>
@@ -108,18 +126,30 @@ class BooksMenuBar extends React.Component {
                         </Navbar.Form>
                         { selectedSubjectsCount ?
                             <Nav>
-                                <NavDropdown open={this.state.menuOpen} onToggle={val => this.dropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                                <NavDropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                     { this.props.selectedSubjects.map(s =>
-                                        <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <span className="label label-default"><span onClick={() => this.removeFilterSubject(s._id)} style={{ cursor: 'pointer' }}>X</span><span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>{s.name}</span></span>
+                                        <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
+                                            <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
                                         </MenuItem>)
                                     }
 
                                     { !!this.props.searchChildSubjects ? <MenuItem divider /> : null }
                                     { !!this.props.searchChildSubjects ?
-                                        <MenuItem onClick={() => this.menuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
+                                        <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
                                             <span className="label label-primary">Searching child subjects</span>
                                         </MenuItem> : null
+                                    }
+                                </NavDropdown>
+                            </Nav> : null
+                        }
+
+                        { selectedTagsCount ?
+                            <Nav>
+                                <NavDropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
+                                    { this.props.selectedTags.map(t =>
+                                        <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
+                                            <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
+                                        </MenuItem>)
                                     }
                                 </NavDropdown>
                             </Nav> : null
@@ -173,14 +203,43 @@ class BooksMenuBar extends React.Component {
                             </div>
                         </form>
 
-                        <label>Also search child subjects <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /></label>
-                        <BookSelectTree
-                            style={{ paddingLeft: 5 }}
-                            toggleFilteredSubject={this.props.togglePendingSubject}
-                            subjects={this.props.subjects}
-                            selectedSubjects={this.props.pending.subjects} />
+                        <div className="row" style={{ position: 'relative' }}>
+                            <div className="col-xs-3">
+                                <GenericLabelSelect
+                                    inputProps={{ placeholder: 'Tags', value: this.props.searchTagsValue, onChange: this.props.setSearchSubjectsValue }}
+                                    suggestions={this.props.eligibleFilterTags}
+                                    onSuggestionSelected={this.props.addPendingTag} />
+                            </div>
+                            <div className="col-xs-9">
+                                <div>
+                                    {this.props.pendingSelectedTags.map(t =>
+                                        <RemovableLabelDisplay className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)} />)}
+                                </div>
+                            </div>
+                        </div>
 
-                        { this.props.selectedSubjects.length ? <span>Selected subjects: {this.props.selectedSubjects.map(s => s.name).join(', ')}</span> : null }
+                        <br />
+
+                        <div className="row" style={{ position: 'relative' }}>
+                            <div className="col-xs-3">
+                                <GenericLabelSelect
+                                    inputProps={{ placeholder: 'Subjects', value: this.props.searchSubjectsValue, onChange: this.props.setSearchSubjectsValue }}
+                                    suggestions={this.props.eligibleFilterSubjects}
+                                    onSuggestionSelected={this.props.addPendingSubject} />
+                            </div>
+                            <div className="col-xs-9">
+                                <div>
+                                    {this.props.pendingSelectedSubjects.map(s =>
+                                        <RemovableLabelDisplay className="margin-left" item={s} doRemove={() => this.props.removePendingSubject(s._id)} />)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="checkbox">
+                            <label>
+                                <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /> Also search child subjects
+                            </label>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <BootstrapButton preset="primary" className="pull-left" onClick={this.props.applyFilters}>Filter</BootstrapButton>
@@ -192,6 +251,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = connect(state => bookSearchSelector(state.books), { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...uiActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...uiActionCreators, ...tagsActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;

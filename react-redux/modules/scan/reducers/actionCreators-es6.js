@@ -4,6 +4,7 @@ import {
     RESET_LIST,
     SET_PENDING,
     BOOK_SAVED,
+    MANUAL_BOOK_SAVED,
     INCREMENT_PENDING,
     GET_BOOK,
     BOOK_QUEUED,
@@ -38,7 +39,7 @@ export function getBook(index){
 export function saveAllPending(){
     return function(dispatch, getState){
         let state = getState(),
-            toSave = state.scan.entryList.map((b, i) => ({ b, i })).filter(({ b }) => !b.queued && !b.queueing && b.isbn.length);
+            toSave = state.scanModule.entryList.map((b, i) => ({ b, i })).filter(({ b }) => !b.queued && !b.queueing && b.isbn.length);
 
         toSave.forEach(({ b: book, i: index }) => executeEnterBook(index, book.isbn, dispatch));
     }
@@ -58,6 +59,10 @@ export function incrementPending(){
 
 export function bookSaved(book){
     return { type: BOOK_SAVED, book }
+}
+
+export function manualBookSaved(book){
+    return { type: MANUAL_BOOK_SAVED, book };
 }
 
 export function bookLookupFailed(isbn){

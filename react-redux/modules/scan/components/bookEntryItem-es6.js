@@ -1,5 +1,5 @@
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import AjaxButton from 'applicationRoot/components/ajaxButton';
 import { findDOMNode } from 'react-dom';
 import React, { Component } from 'react';
 

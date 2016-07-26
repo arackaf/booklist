@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
-import AjaxButton from 'applicationRoot/rootComponents/ajaxButton';
-import BootstrapButton from 'applicationRoot/rootComponents/bootstrapButton';
-import * as actionCreators from '../../reducers/subjects/actionCreators';
-import SubjectEditTree from './subjectEditTree';
-import CustomColorPicker from './customColorPicker';
-import { subjectsSelector } from '../../reducers/subjects/reducer';
+import AjaxButton from 'applicationRoot/components/ajaxButton';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import * as actionCreators from '../reducers/subjects/actionCreators';
+import CustomColorPicker from 'applicationRoot/components/customColorPicker';
+import { subjectsSelector } from '../reducers/subjects/reducer';
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 const SubjectEditDeleteInfo = props => {
     let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;
@@ -53,18 +53,25 @@ const subjectEditModal = props => {
             <Modal.Body style={{ paddingBottom: 0 }}>
                 <div className="row">
                     <div className="col-xs-11">
-                        <SubjectEditTree style={{ paddingLeft: 5 }} subjects={props.subjects} onEdit={_id => props.editSubject(_id)} />
+                        <GenericLabelSelect
+                            inputProps={{ placeholder: 'Edit tag', value: props.subjectSearch, onChange: props.setSubjectSearchValue }}
+                            //inputProps={{ placeholder: 'Adding', value: this.props.addingTagSearch, onChange: this.props.addingSearchValueChange }}
+                            suggestions={props.subjectsSearched}
+                            onSuggestionSelected={item => props.editSubject(item._id)} />
+
                     </div>
                     <div className="col-xs-1">
                         <BootstrapButton onClick={props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
                     </div>
                 </div>
 
+                <br />
+
                 { editSubjectPacket && editSubjectPacket.editing ?
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
-                            <BootstrapButton onClick={e => props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton>
+                            { editingSubject && editingSubject._id ? <BootstrapButton onClick={e => props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                         </div>
                         <div className="panel-body">
                             <div>
@@ -95,7 +102,7 @@ const subjectEditModal = props => {
                                             <div>
                                                 { props.colors.map(cp => <div className="color-choice" onClick={() => props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
 
-                                                <CustomColorPicker onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editSubjectPacket.backgroundColor} />
+                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editSubjectPacket.backgroundColor} />
                                             </div>
                                         </div>
                                     </div>
@@ -131,6 +138,6 @@ const subjectEditModal = props => {
     );
 }
 
-const subjectEditModalConnected = connect(state => subjectsSelector(state.books), { ...actionCreators })(subjectEditModal);
+const subjectEditModalConnected = connect(subjectsSelector, { ...actionCreators })(subjectEditModal);
 
 export default subjectEditModalConnected;

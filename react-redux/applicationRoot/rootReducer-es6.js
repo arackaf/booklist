@@ -1,11 +1,17 @@
-let applicationData = {
-    get module(){
-        return 'Book entry';
-    }
+const initialState = {
+    publicUserId: '',
+    publicName: '',
+    publicBooksHeader: '',
+    isPublic: false
 };
 
-function rootReducer(state = {}){
-    return Object.assign({}, applicationData);
-}
+export default function rootReducer(state = initialState, action){
+    switch(action.type){
+        case 'SET_PUBLIC_INFO':
+            return { ...state, isPublic: true, publicName: action.name, publicBooksHeader: action.booksHeader, publicUserId: action._id };
+        case 'RESET_PUBLIC_INFO':
+            return { ...state, isPublic: false, publicName: '', publicBooksHeader: '', publicUserId: '' };
+    }
 
-module.exports = rootReducer;
+    return state;
+}
