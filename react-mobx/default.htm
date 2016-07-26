@@ -79,7 +79,6 @@
         <button><i class="fa fa-fw fa-spin fa-spinner"></i></button>
     </div>
 
-    <script src="https://featuretests.io/rs.js"></script>
     <script>
         var isEs6 = false;
         function webSocketAddress(path){
@@ -87,19 +86,26 @@
         }
 
         var isDev = /localhost:3000/.test(window.location.href);
-        if (isDev){
+        loadSystemJs();
+
+        /*
+         if (isDev){
             loadSystemJs();
-        } else {
+         } else {
             new Promise(function (res) {
-                setTimeout(res, 500);
-                window["Reflect.supports"]("all", function (results) {
-                    var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
-                                  'forOf', 'generator', 'letConst', 'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
-                    isEs6 = !needed.some(function (prop) { return !results[prop] });
-                    res();
-                });
-            }).then(loadSystemJs);
-        }
+
+            //< script src="https://featuretests.io/rs.js"></ script >
+
+            setTimeout(res, 500);
+            window["Reflect.supports"]("all", function (results) {
+                var needed = ['arrow', 'class', 'classes', 'conciseMethodProperty', 'constLoop', 'defaultParameter', 'destructuring',
+                              'forOf', 'generator', 'letConst', 'letLoop', 'letLoopScope', 'letTDZ', 'spreadRest', 'templateString']
+                isEs6 = !needed.some(function (prop) { return !results[prop] });
+                res();
+            });
+         }).then(loadSystemJs);
+         }
+         */
 
         function loadSystemJs() {
             var config = isDev ? systemJsDevConfig : systemJsLiveConfig;
