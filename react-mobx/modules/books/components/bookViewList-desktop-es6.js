@@ -2,6 +2,10 @@ import React from 'react';
 import { observer } from "mobx-react";
 import BookStore from '../model/bookStore';
 
+function sortIconIf(arg){
+    return arg;
+}
+
 @observer
 class BookViewListDesktop extends React.Component{
     render(){
@@ -9,7 +13,7 @@ class BookViewListDesktop extends React.Component{
             <div style={{ minHeight: 500 }}>
                 <h1>{BookStore.books.length}</h1>
                 <h1>{BookStore.rawBooks.length}</h1>
-                { this.props.store.rawBooks.length ?
+                { this.props.store.books.length ?
                     <div>
                         <table className="table table-striped no-padding-top">
                             <thead>
@@ -27,10 +31,10 @@ class BookViewListDesktop extends React.Component{
                                 </tr>
                             </thead>
                             <tbody>
-                            { this.props.books.map(book =>
+                            { this.props.store.books.map(book =>
                                 <tr key={book._id}>
                                     <td>
-                                        <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
+                                        { null && <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} /> }
                                     </td>
                                     <td><img src={book.smallImage} /></td>
                                     <td>{book.title}<br />{ !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }</td>
@@ -40,13 +44,13 @@ class BookViewListDesktop extends React.Component{
                                         </ul>
                                     </td>
                                     <td>
-                                        { book.subjectObjects.map(s => <div><LabelDisplay item={s} /></div>) }
+                                        { book.subjectObjects.map(s => <div>{null && <LabelDisplay item={s} />}</div>) }
                                         <div style={{ marginTop: 5, minHeight: 40 }}>
                                             <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                         </div>
                                     </td>
                                     <td>
-                                        { book.tagObjects.map(s => <div><LabelDisplay item={s} /></div>) }
+                                        { book.tagObjects.map(s => <div>{null && <LabelDisplay item={s} />}</div>) }
                                         <div style={{ marginTop: 5, minHeight: 40 }}>
                                             <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                         </div>

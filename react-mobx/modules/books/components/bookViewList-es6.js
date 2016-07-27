@@ -18,8 +18,7 @@ class BookViewingList extends React.Component {
                 <h1>{BookStore.books.length}</h1>
                 <h1>{BookStore.rawBooks.length}</h1>
 
-                <BookViewListDesktop
-                    store={BookStore} />
+                <BookViewListDesktop store={BookStore} />
             </div>
         );
     }
