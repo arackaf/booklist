@@ -1,5 +1,6 @@
 import React from 'react';
 import BookStore from '../model/bookStore';
+import BookViewListDesktop from './bookViewList-desktop';
 
 import { observer } from "mobx-react";
 
@@ -14,7 +15,11 @@ class BookViewingList extends React.Component {
     render() {
         return (
             <div>
-                {BookStore.books.map(book => <div>{book.title}</div>)}
+                <h1>{BookStore.books.length}</h1>
+                <h1>{BookStore.rawBooks.length}</h1>
+
+                <BookViewListDesktop
+                    store={BookStore} />
             </div>
         );
     }
