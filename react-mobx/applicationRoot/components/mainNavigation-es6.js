@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 import {
     Navbar,
@@ -64,5 +63,4 @@ class MainNavigationBar extends React.Component {
         )
     }
 }
-const MainNavigationBarConnected = connect(state => state.root)(MainNavigationBar);
-export default MainNavigationBarConnected;
+export default MainNavigationBar;

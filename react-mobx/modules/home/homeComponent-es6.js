@@ -8,7 +8,6 @@ import {
     NavItem
 } from 'react-bootstrap';
 
-import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 import { observable, computed } from 'mobx';
 import { observer } from "mobx-react";
@@ -67,7 +66,7 @@ class MobXTest extends React.Component {
 
 const bookList = new BookList();
 
-render(<MobXTest bookList={bookList} />, document.getElementById('mobx-temp-home'));
+//render(<MobXTest bookList={bookList} />, document.getElementById('mobx-temp-home'));
 
 
 
@@ -92,7 +91,6 @@ class HomeIfLoggedIn extends React.Component{
     render(){
         return (
             <div>
-                <MainNavigationBar></MainNavigationBar>
                 <MainHomePane>
                     Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
                     to either view your library, or scan some books in.
