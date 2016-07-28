@@ -1,14 +1,16 @@
 import { observable, computed } from 'mobx';
 
 import BooksLoader from './bookLoader';
+import BookSearch from './bookSearch';
 
 class BookStore{
     constructor(){
-        this._booksLoader = new BooksLoader();
-        this._booksLoader.load();
+        this.bookSearch = new BookSearch();
+        this.booksLoader = new BooksLoader();
+        this.booksLoader.load();
     }
-    @computed get books(){ return this._booksLoader.books; }
-    @computed get rawBooks(){ return this._booksLoader.rawBooks; }
+    @computed get books(){ return this.booksLoader.books; }
+    @computed get rawBooks(){ return this.booksLoader.rawBooks; }
 }
 
 export default new BookStore();
