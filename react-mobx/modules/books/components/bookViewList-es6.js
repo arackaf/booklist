@@ -1,6 +1,7 @@
 import React from 'react';
 import BookStore from '../model/bookStore';
 import BookViewListDesktop from './bookViewList-desktop';
+import BookSearch from './bookSearchModal';
 
 import { observer } from "mobx-react";
 
@@ -16,7 +17,9 @@ class BookViewingList extends React.Component {
         return (
             <div>
                 <br /><br /><br />
+                <BookSearch />
                 <BookViewListDesktop store={BookStore} />
+
             </div>
         );
     }

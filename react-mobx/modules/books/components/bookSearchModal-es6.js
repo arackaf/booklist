@@ -1,7 +1,10 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
-import { bookSearch } from '../model/bookStore';
+import BookStore from '../model/bookStore';
+const bookSearch = BookStore.bookSearch;
+
 import { observer } from "mobx-react";
 
 const InputForPending = props => {
@@ -9,6 +12,7 @@ const InputForPending = props => {
         updateMethod = bookSearch.setPendingField.bind(bookSearch, name);
     return <input { ...props } className="form-control" onKeyDown={updateMethod} onChange={updateMethod} value={bookSearch.pendingSearch[name]} />;
 }
+
 
 @observer
 class BookSearchModal extends React.Component{
@@ -108,3 +112,5 @@ class BookSearchModal extends React.Component{
         );
     }
 }
+
+export default BookSearchModal;
