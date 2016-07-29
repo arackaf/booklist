@@ -28,12 +28,10 @@ class BookSearch{
     setPendingField(property, evt){
         this.pendingSearch[property] = evt.target.value;
     }
-
     setSearchFieldsFromHashPacket(hashPacket){
         Object.assign(this.activeSearch, this.getNextFilters(hashPacket));
         this.pendingSearch = this.activeSearch;
     }
-
     getNextFilters(hashPacket) {
         return Object.assign({}, hashPacket, {
             subjects: this.idStringToObject(hashPacket.subjects),

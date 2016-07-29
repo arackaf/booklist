@@ -7,12 +7,15 @@ const bookSearch = BookStore.bookSearch;
 
 import { observer } from "mobx-react";
 
-const InputForPending = props => {
-    let name = props.name,
-        updateMethod = bookSearch.setPendingField.bind(bookSearch, name);
-    return <input { ...props } className="form-control" onKeyDown={updateMethod} onChange={updateMethod} value={bookSearch.pendingSearch[name]} />;
+@observer
+class InputForPending extends React.Component{
+    render(){
+        let props = this.props,
+            name = props.name,
+            updateMethod = bookSearch.setPendingField.bind(bookSearch, name);
+        return <input { ...props } className="form-control"  onKeyDown={updateMethod} onChange={updateMethod} value={bookSearch.pendingSearch[name]} />;
+    }
 }
-
 
 @observer
 class BookSearchModal extends React.Component{
