@@ -22,8 +22,15 @@ class BookViewingList extends React.Component {
                 <BootstrapButton preset="primary" onClick={() => bookSearch.beginSearchChange()}>Open</BootstrapButton>
                 <br /><br /><br />
                 <BookSearch />
-                <BookViewListDesktop store={BookStore} />
 
+                <div className="row">
+                    <div className="col-xs-3">
+                        Hello
+                    </div>
+                    <div className="col-xs-9">
+                        <BookViewListDesktop store={BookStore} />
+                    </div>
+                </div>
             </div>
         );
     }
