@@ -10,7 +10,6 @@ class BookStore{
         this.booksLoader.load();
     }
     @computed get books(){ return this.booksLoader.books; }
-    @computed get rawBooks(){ return this.booksLoader.rawBooks; }
 }
 
 export default new BookStore();

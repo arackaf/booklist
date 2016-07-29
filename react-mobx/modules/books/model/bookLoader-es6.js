@@ -2,8 +2,7 @@ import { observable, computed } from 'mobx';
 import { observer } from "mobx-react";
 
 class BookLoader {
-    @observable rawBooks = []
-    @computed get books(){ return this.rawBooks.map(b => this.adjustBookForDisplay(b)); }
+    @observable books = []
     load(bookSearch = {}, publicUserId = ''){
         Promise.resolve(ajaxUtil.get('/book/searchBooks', {
             search: bookSearch.search,
@@ -18,7 +17,7 @@ class BookLoader {
             pagesOperator: bookSearch.pagesOperator,
             userId: publicUserId
         })).then(resp => {
-            this.rawBooks = resp.results;
+            this.books = resp.results.map(book => this.adjustBookForDisplay(book));
         });
     }
     adjustBookForDisplay(rawBook){

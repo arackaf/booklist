@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import BookStore from '../model/bookStore';
 
 function sortIconIf(arg){
+    return '';
     return arg;
 }
 
@@ -11,8 +12,6 @@ class BookViewListDesktop extends React.Component{
     render(){
         return (
             <div style={{ minHeight: 500 }}>
-                <h1>{BookStore.books.length}</h1>
-                <h1>{BookStore.rawBooks.length}</h1>
                 { this.props.store.books.length ?
                     <div>
                         <table className="table table-striped no-padding-top">
