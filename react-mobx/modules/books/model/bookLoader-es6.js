@@ -1,6 +1,15 @@
 import { observable, computed } from 'mobx';
 import { observer } from "mobx-react";
 
+class Book {
+    @observable selected = false;
+
+    toggle = () => this.selected = !this.selected;
+    constructor(book){
+        Object.assign(this, book);
+    }
+}
+
 class BookLoader {
     @observable books = []
     load(bookSearch = {}, publicUserId = ''){
@@ -21,7 +30,7 @@ class BookLoader {
         });
     }
     adjustBookForDisplay(rawBook){
-        let book = Object.assign({}, rawBook);
+        let book = new Book(rawBook);
         book.subjectObjects = (book.subjects || []).map(_id => ({ _id, name: 'soon' })); //.map(s => subjectsHash[s]).filter(s => s);
         book.tagObjects = (book.tags || []).map(_id => ({ _id, name: 'soon' })); //.map(s => tagHash[s]).filter(s => s);
         book.authors = book.authors || [];

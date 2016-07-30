@@ -9,6 +9,22 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import { observer } from "mobx-react";
 
 @observer
+class SubjectsDisplay extends React.Component{
+    render(){
+        return (
+            <ul>
+                {this.props.subjects.map(s =>
+                    <li>
+                        {s.name}
+                        { s.children.length ? <SubjectsDisplay subjects={s.children} /> : null }
+                    </li>
+                )}
+            </ul>
+        )
+    }
+}
+
+@observer
 class BookViewingList extends React.Component {
     constructor(){
         super();
@@ -25,7 +41,7 @@ class BookViewingList extends React.Component {
 
                 <div className="row">
                     <div className="col-xs-3">
-                        Hello
+                        <SubjectsDisplay subjects={BookStore.subjectLoader.stackedSubjects} />
                     </div>
                     <div className="col-xs-9">
                         <BookViewListDesktop store={BookStore} />
