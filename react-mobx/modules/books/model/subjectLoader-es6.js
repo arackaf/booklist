@@ -6,6 +6,7 @@ class Subject{
     @observable name = '';
     @observable path = '';
     @observable children = [];
+    @computed get childLevel(){ return !this.path ? 0 : (this.path.match(/\,/g) || []).length - 1; };
 
     constructor(subject){
         Object.assign(this, subject);
@@ -14,18 +15,16 @@ class Subject{
 
 class SubjectLoader {
     @observable subjects = []
+    @computed get stackedSubjects(){
+        //this.subjects.forEach(s => {
+        //    s.children = this.subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path));
+        //});
+        return this.subjects.filter(s => s.path == null);
+    }
     load(){
         Promise.resolve(ajaxUtil.get('/subject/all', { })).then(resp => {
-            debugger;
+            this.subjects = resp.results.map(s => new Subject(s));
         });
-    }
-    stackAndGetTopLevelSubjects(subjects){
-        subjects.forEach(s => {
-            s.children = [];
-            s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
-            s.childLevel = !s.path ? 0 : (s.path.match(/\,/g) || []).length - 1;
-        });
-        return subjects.filter(s => s.path == null);
     }
 }
 
