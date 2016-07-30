@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
-import AjaxButton from 'applicationRoot/components/ajaxButton';
+import AjaxButton, { AjaxButtonAnchor } from 'applicationRoot/components/ajaxButton';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
@@ -124,7 +124,7 @@ const subjectEditModal = props => {
                                 <br style={{ clear: 'both' }} />
 
                                 <a className="btn btn-default" onClick={props.cancelSubjectEdit}>Cancel</a>
-                                <a className="btn btn-primary pull-right" onClick={e => { props.createOrUpdateSubject(); e.preventDefault();} }>Save</a>
+                                <AjaxButtonAnchor className="btn btn-primary pull-right" running={editSubjectPacket.saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
                             </div>
                         </div>
                     </div>
