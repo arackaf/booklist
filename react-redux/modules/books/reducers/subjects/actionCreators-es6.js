@@ -62,6 +62,7 @@ export function createOrUpdateSubject(){
         let { editingSubject, name, parentId, backgroundColor, textColor } = getState().booksModule.subjects.editSubjectPacket,
             request = { _id: editingSubject ? editingSubject._id : null, name, parentId, backgroundColor, textColor };
 
+        dispatch({ type: UPDATE_SUBJECT });
         ajaxUtil.post('/subject/setInfo', request, resp => dispatch({ type: UPDATE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
     }
 }

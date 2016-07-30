@@ -12,4 +12,14 @@ class AjaxButton extends BootstrapButton {
     }
 }
 
+export class AjaxButtonAnchor extends BootstrapButton {
+    render(){
+        let result = this.props.running
+            ? <a className={this.state.btnCss} disabled={true}><i className="fa fa-fw fa-spin fa-spinner"></i>{ (this.props.runningText || this.props.text) ? ' ' + this.props.runningText || this.props.text : this.props.children}</a>
+            : <a className={this.state.btnCss} disabled={this.props.disabled || false} onClick={this.props.onClick}>{ this.props.children }</a>;
+
+        return result;
+    }
+}
+
 export default AjaxButton;
