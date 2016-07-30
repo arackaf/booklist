@@ -34,17 +34,13 @@ const SubjectEditDeleteInfo = props => {
 }
 
 const subjectEditModal = props => {
-    let editSubjectPacket = props.editSubjectPacket;
-    let editingSubject;
-
-    if (editSubjectPacket && editSubjectPacket.editingSubject){
-        editingSubject = editSubjectPacket.editingSubject;
-    }
+    let editingSubject = props.editingSubject,
+        eligibleParents = props.eligibleParents;
 
     let textColors = ['#ffffff', '#000000'];
 
     return (
-        <Modal show={!!editSubjectPacket} onHide={props.stopEditingSubjects}>
+        <Modal show={props.editModalOpen} onHide={props.stopEditingSubjects}>
             <Modal.Header closeButton>
                 <Modal.Title>
                     Edit subjects
@@ -67,7 +63,7 @@ const subjectEditModal = props => {
 
                 <br />
 
-                { editSubjectPacket && editSubjectPacket.editing ?
+                { editingSubject ?
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
@@ -75,24 +71,24 @@ const subjectEditModal = props => {
                         </div>
                         <div className="panel-body">
                             <div>
-                                { editSubjectPacket.deleteInfo ?
+                                { props.deletingSubjectId ?
                                     <SubjectEditDeleteInfo
-                                        { ...props.editSubjectPacket.deleteInfo }
+                                        { ...props.deleteInfo }
                                         cancelDeleteSubject={props.cancelDeleteSubject}
                                         deleteSubject={props.deleteSubject} /> : null }
                                 <div className="row">
                                     <div className="col-xs-6">
                                         <div className="form-group">
                                             <label>Subject name</label>
-                                            <input className="form-control" value={editSubjectPacket.name} onChange={(e) => props.setNewSubjectName(e.target.value)} />
+                                            <input className="form-control" value={editingSubject.name} onChange={(e) => props.setNewSubjectName(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="col-xs-6">
                                         <div className="form-group">
                                             <label>Parent</label>
-                                            <select className="form-control" value={editSubjectPacket.parentId} onChange={(e) => props.setNewSubjectParent(e.target.value)}>
+                                            <select className="form-control" value={editingSubject.parentId} onChange={(e) => props.setNewSubjectParent(e.target.value)}>
                                                 <option value="">None</option>
-                                                { editSubjectPacket.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
+                                                { eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                             </select>
                                         </div>
                                     </div>
@@ -102,7 +98,7 @@ const subjectEditModal = props => {
                                             <div>
                                                 { props.colors.map(cp => <div className="color-choice" onClick={() => props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
 
-                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editSubjectPacket.backgroundColor} />
+                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editingSubject.backgroundColor} />
                                             </div>
                                         </div>
                                     </div>
@@ -117,14 +113,14 @@ const subjectEditModal = props => {
                                     <div className="col-xs-12">
                                         <div style={{ marginTop: '10px' }} className="form-group">
                                             <label>Preview &nbsp;&nbsp;</label>
-                                            <div className="label label-default" style={{ backgroundColor: editSubjectPacket.backgroundColor, color: editSubjectPacket.textColor }}>{ editSubjectPacket.name }</div>
+                                            <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor }}>{ editingSubject.name }</div>
                                         </div>
                                     </div>
                                 </div>
                                 <br style={{ clear: 'both' }} />
 
                                 <a className="btn btn-default" onClick={props.cancelSubjectEdit}>Cancel</a>
-                                <AjaxButtonAnchor className="btn btn-primary pull-right" running={editSubjectPacket.saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
+                                <AjaxButtonAnchor className="btn btn-primary pull-right" running={props.saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
                             </div>
                         </div>
                     </div>

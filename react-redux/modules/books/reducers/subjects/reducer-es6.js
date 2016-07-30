@@ -8,84 +8,74 @@ import { createSelector } from 'reselect';
 
 const initialSubjectsState = {
     subjectHash: {},
-    editSubjectPacket: null,
+    editingSubjectId: null,
+    deletingSubjectId: null,
+    editingSubject: null,
+    editModalOpen: false,
+    saving: false,
+    deleting: false,
     colors: [],
     loaded: false,
     subjectSearch: '',
     initialQueryFired: false
 };
 
-export function subjectsReducer(state = initialSubjectsState, action){
-    state = Object.assign({}, state, { editSubjectPacket: subjectEditingReducer(state, action) });
+const emptySubject = { _id: '', name: '', path: null, backgroundColor: '', textColor: '' };
+const newSubjectEditing = { subjectSearch: '', deletingSubjectId: null };
+const doneEditingSubject = { saving: false, editingSubjectId: null, editingSubject: null };
+const getEditingSubject = (hash, _id) => {
+    let subject = hash[_id];
+    let parentId = '';
+    if (subject.path){
+        let hierarchy = subject.path.split(',');
+        parentId = hierarchy[hierarchy.length - 2];
+    }
 
+    return { ...subject, parentId };
+}
+
+export function subjectsReducer(state = initialSubjectsState, action){
     switch(action.type){
         case LOAD_SUBJECTS:
             return Object.assign({}, state, { initialQueryFired: true });
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
-        case NEW_SUBJECT:
-        case EDIT_SUBJECT:
-            return Object.assign({}, state, { subjectSearch: '' });
+        case EDIT_SUBJECTS:
+            return Object.assign({}, state, { editModalOpen: true });
         case SET_SUBJECT_SEARCH_VALUE:
             return Object.assign({}, state, { subjectSearch: action.value });
+        case NEW_SUBJECT:
+            return Object.assign({}, state, { ...newSubjectEditing, editingSubjectId: '', editingSubject: { ...emptySubject } });
+        case EDIT_SUBJECT:
+            return Object.assign({}, state, { ...newSubjectEditing, editingSubjectId: action._id, editingSubject: getEditingSubject(state.subjectHash, action._id) });
+        case SET_NEW_SUBJECT_VALUE:
+            return Object.assign({}, state, { editingSubject: { ...state.editingSubject, [action.field]: action.value } });
+        case UPDATE_SUBJECT:
+            return Object.assign({}, state, { saving: true })
         case UPDATE_SUBJECT_RESULTS:
-            let changedSubjects = subjectsToHash(action.affectedSubjects);
-            return Object.assign({}, state, { subjectHash: Object.assign({}, state.subjectHash, changedSubjects) });
+            return Object.assign({}, state, { ...doneEditingSubject, subjectHash: { ...state.subjectHash, ...subjectsToHash(action.affectedSubjects) } });
+        case BEGIN_SUBJECT_DELETE:
+            return Object.assign({}, state, { deletingSubjectId: action._id });
+        case CANCEL_SUBJECT_DELETE:
+            return Object.assign({}, state, { deletingSubjectId: null });
+        case SUBJECT_DELETING:
+            return Object.assign({}, state, { deleting: true });
         case SUBJECT_DELETED:
             let subjectHash = { ...state.subjectHash };
             action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
-            return Object.assign({}, state, { subjectHash });
+            let newState = Object.assign({}, state, { deletingSubjectId: null, subjectHash });
+            if (newState.editingSubjectId && !newState.subjectHash[newState.editingSubjectId]){
+                newState.editingSubjectId = newState.editingSubject = null;
+            }
+            return newState;
+        case CANCEL_SUBJECT_EDIT:
+            return Object.assign({}, state, { ...doneEditingSubject });
+        case STOP_EDITING_SUBJECTS:
+            return Object.assign({}, state, { editModalOpen: false });
         case LOAD_COLORS:
             return Object.assign({}, state, { colors: action.colors });
     }
     return state;
-}
-
-const subjectEditingReducer = (masterState, action) => {
-    let state = masterState.editSubjectPacket;
-
-    switch(action.type){
-        case EDIT_SUBJECTS:
-            return { saving: false };
-        case SET_NEW_SUBJECT_VALUE:
-            return Object.assign({}, state, { [action.field]: action.value });
-        case STOP_EDITING_SUBJECTS:
-            return null;
-        case NEW_SUBJECT:
-            var eligibleParents = flattenedSubjects(masterState.subjectHash);
-            return Object.assign({}, state, { editing: true, editingSubject: null, eligibleParents, parentId: '', name: '' });
-        case EDIT_SUBJECT:
-            var editingSubject = masterState.subjectHash[action._id],
-                parentId,
-                eligibleParents = flattenedSubjects(masterState.subjectHash).filter(s => s._id !== action._id && (!new RegExp(`,${action._id},`).test(s.path)));
-
-            if (editingSubject.path == null){
-                parentId = null;
-            } else {
-                let hierarchy = editingSubject.path.split(',');
-                parentId = hierarchy[hierarchy.length - 2];
-            }
-
-            return Object.assign({}, state, { editing: true, ...editingSubject, parentId: parentId || '', editingSubject, eligibleParents });
-        case CANCEL_SUBJECT_EDIT:
-            return Object.assign({}, state, { editing: false });
-        case UPDATE_SUBJECT:
-            return Object.assign({}, state, { saving: true })
-        case UPDATE_SUBJECT_RESULTS:
-            return Object.assign({}, state, { editing: false, saving: false, editingSubject: null });
-        case BEGIN_SUBJECT_DELETE:
-            let childSubjectRegex = new RegExp(`.*,${action._id},.*`),
-                affectedChildren = Object.keys(state.subjectHash).filter(k => childSubjectRegex.test(state.subjectHash[k].path)).length,
-                subjectName = state.subjectHash[action._id].name;
-
-            return Object.assign({}, state, { deleteInfo: { affectedChildren, subjectName, _id: action._id } });
-        case CANCEL_SUBJECT_DELETE:
-            return Object.assign({}, state, { deleteInfo: null });
-        case SUBJECT_DELETING:
-            return Object.assign({}, state, { deleteInfo: { ...state.deleteInfo, deleting: true } });
-        case SUBJECT_DELETED:
-            return Object.assign({}, state, { editing: false });
-    }
 }
 
 const subjectsToHash = subjects => subjects.reduce((hash, s) => (hash[s._id] = s, hash), {});
@@ -128,8 +118,46 @@ const searchSubjectsSelector = createSelector([
     }
 );
 
+const elidibleSubjectsSelector = createSelector([
+        state => state.subjectHash,
+        state => state.editingSubjectId
+    ],
+    (subjectHash, editSubjectId) => {
+        let eligibleParents = null;
+        if (!editSubjectId && editSubjectId != null){
+            eligibleParents = flattenedSubjects(subjectHash)
+        } else if (editSubjectId) {
+            eligibleParents = flattenedSubjects(subjectHash).filter(s => s._id !== editSubjectId && (!new RegExp(`,${editSubjectId},`).test(s.path)));
+        }
+
+        return { eligibleParents };
+    }
+);
+
+const deletingSubjectInfoSelector = createSelector([
+        state => state.subjectHash,
+        state => state.deletingSubjectId
+    ],
+    (subjectHash, deletingSubjectId) => {
+        if (!deletingSubjectId) return null;
+
+        let childSubjectRegex = new RegExp(`.*,${deletingSubjectId},.*`),
+            affectedChildren = Object.keys(subjectHash).filter(k => childSubjectRegex.test(subjectHash[k].path)).length,
+            subjectName = subjectHash[deletingSubjectId].name;
+
+        return { deleteInfo: { affectedChildren, subjectName, _id: deletingSubjectId } };
+    }
+);
+
 export const subjectsSelector = ({ booksModule }) => {
-    return Object.assign({}, booksModule.subjects, { ...searchSubjectsSelector(booksModule.subjects) });
+    return Object.assign({},
+        booksModule.subjects,
+        {
+            ...searchSubjectsSelector(booksModule.subjects),
+            ...elidibleSubjectsSelector(booksModule.subjects),
+            ...deletingSubjectInfoSelector(booksModule.subjects)
+        }
+    );
 }
 
 function stackAndGetTopLevelSubjects(subjectsHash){
