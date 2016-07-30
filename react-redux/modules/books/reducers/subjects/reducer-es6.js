@@ -88,15 +88,8 @@ const subjectEditingReducer = (masterState, action) => {
     }
 }
 
-function subjectsToHash(subjects){
-    let hash = {};
-    subjects.forEach(s => hash[s._id] = s);
-    return hash;
-}
-
-function flattenedSubjects(subjects){
-    return Object.keys(subjects).map(k => subjects[k]);
-}
+const subjectsToHash = subjects => subjects.reduce((hash, s) => (hash[s._id] = s, hash), {});
+const flattenedSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
 
 const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
     let name1After = name1.toLowerCase() > name2.toLowerCase(),
