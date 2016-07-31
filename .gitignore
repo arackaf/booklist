@@ -273,3 +273,4 @@ react-mobx/modules/books/model/bookStore.js
 react-mobx/modules/books/model/bookSearch.js
 react-mobx/modules/books/components/bookSearchModal.js
 react-mobx/modules/books/model/subjectLoader.js
+react-mobx/modules/books/model/bookModuleStore.js

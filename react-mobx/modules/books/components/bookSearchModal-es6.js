@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
-import BookStore from '../model/bookStore';
+import BookStore from '../model/bookModuleStore';
 const bookSearch = BookStore.bookSearch;
 
 import { observer } from "mobx-react";

@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from "mobx-react";
-import BookStore from '../model/bookStore';
+import BookStore from '../model/bookModuleStore';
 
 function sortIconIf(arg){
     return '';
