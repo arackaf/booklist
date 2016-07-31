@@ -24,4 +24,4 @@ class tagController{
     }
 }
 
-module.exports = tagController;
+export default tagController;
