@@ -42,6 +42,11 @@ class BookViewingList extends React.Component {
                 <div className="row">
                     <div className="col-xs-3">
                         <SubjectsDisplay subjects={BookStore.stackedSubjects} />
+                        <br />
+                        {BookStore.unwoundSubjects.map(s =>
+                            <div>
+                                <span className="label label-default" style={{ backgroundColor: s.backgroundColor, color: s.textColor || 'white' }}>{s.name + ' ' + s.childLevel}</span>
+                            </div>)}
                     </div>
                     <div className="col-xs-9">
                         <BookViewListDesktop store={BookStore} />
