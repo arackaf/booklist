@@ -20,7 +20,7 @@ gulp.task('test', function () {
 });
 
 let babelOptions = {
-    presets: ['stage-2', 'react', 'es2015'],
+    presets: ['react', 'es2015', 'stage-1'],
     plugins: ['transform-decorators-legacy']
 };
 
