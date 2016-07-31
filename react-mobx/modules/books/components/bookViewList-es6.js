@@ -1,5 +1,5 @@
 import React from 'react';
-import BookStore from '../model/bookStore';
+import BookStore from '../model/bookModuleStore';
 const bookSearch = BookStore.bookSearch;
 
 import BookViewListDesktop from './bookViewList-desktop';
@@ -41,7 +41,7 @@ class BookViewingList extends React.Component {
 
                 <div className="row">
                     <div className="col-xs-3">
-                        <SubjectsDisplay subjects={BookStore.subjectLoader.stackedSubjects} />
+                        <SubjectsDisplay subjects={BookStore.stackedSubjects} />
                     </div>
                     <div className="col-xs-9">
                         <BookViewListDesktop store={BookStore} />
