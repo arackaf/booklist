@@ -1,5 +1,7 @@
 import { BEGIN_FILTER_CHANGE, SET_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID, SET_SEARCH_SUBJECTS_VALUE, SET_SEARCH_TAGS_VALUE, SET_PENDING_TAG } from './actionNames';
 
+import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
+
 import { subjectsSelector, filterSubjects } from '../subjects/reducer';
 import { booksSelector } from '../books/reducer';
 import { tagsSelector } from '../tags/reducer';
@@ -12,13 +14,16 @@ const searchFields = {
     author: '',
     publisher: '',
     pages: '',
-    pagesOperator: '>'
+    pagesOperator: '>',
+    page: 1,
+    pageSize: 10
 }
 
 const initialState = {
     sort: '',
     sortDirection: '',
     editingFilters: false,
+    hasMore: false,
     ...searchFields,
     pending: {
         ...searchFields
@@ -47,6 +52,8 @@ export function bookSearchReducer(state = initialState, action){
             return Object.assign({}, state, { pending: { ...state.pending, tags: { ...state.pending.tags, [action._id]: action.value } } });
         case END_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: false });
+        case LOAD_BOOKS_RESULTS:
+            return Object.assign({}, state, { hasMore: action.hasMore });
     }
     return state;
 }

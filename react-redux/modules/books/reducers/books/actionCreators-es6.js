@@ -12,12 +12,20 @@ export function loadBooks(){
             bookSearch = state.booksModule.bookSearch,
             root = state.root;
 
-        Promise.resolve(booksSearch(bookSearch, root.publicUserId)).then(booksResp => dispatch(booksResults(booksResp)));
+        Promise.resolve(booksSearch(bookSearch, root.publicUserId)).then(booksResp => {
+            let hasMore = booksResp.results.length > bookSearch.pageSize;
+            if (hasMore){
+                booksResp.results = booksResp.results.slice(0, -1);
+            }
+            dispatch(booksResults(booksResp, hasMore));
+        });
     }
 }
 
 function booksSearch(bookSearchState, publicUserId){
     return ajaxUtil.get('/book/searchBooks', {
+        page: bookSearchState.page,
+        pageSize: bookSearchState.pageSize,
         search: bookSearchState.search,
         subjects: Object.keys(bookSearchState.subjects),
         tags: Object.keys(bookSearchState.tags),
@@ -32,6 +40,6 @@ function booksSearch(bookSearchState, publicUserId){
     });
 }
 
-export function booksResults(resp){
-    return { type: LOAD_BOOKS_RESULTS, books: resp.results };
+export function booksResults(resp, hasMore){
+    return { type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore };
 }

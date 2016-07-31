@@ -34,6 +34,8 @@ export const selector = state => {
         tags: tagsSelected.allTagsSorted,
         tagsLoaded: tagsSelected.loaded,
         books: booksSelected.list,
+        hasMoreBooks: bookSearch.hasMore,
+        currentPage: bookSearch.page,
         reloadBooksOnActivate: booksSelected.reloadOnActivate,
         initialBookQueryFired: booksSelected.initialQueryFired,
         viewingPublic: root.isPublic,
