@@ -41,7 +41,8 @@ const addAndRecurse = subjects => {
 }
 
 class Store {
-    @observable books = []
+    @observable _rawBooks = []
+    @observable subjectsLoaded = false
     @observable subjects = {}
     @computed get stackedSubjects(){
         let result = Object.keys(this.subjects).map(_id => Object.assign(toJS(this.subjects[_id]), { childLevel: this.subjects[_id].childLevel }));
@@ -51,12 +52,17 @@ class Store {
     @computed get unwoundSubjects(){
         return addAndRecurse(this.stackedSubjects);
     }
+    @computed get books(){
+        if (!this.subjectsLoaded) return [];
+        return this._rawBooks.map(b => Object.assign(toJS(b), {
+            subjectObjects: b.subjects.map(_id => this.subjects[_id])
+        }))
+    }
 
     loadSubjects(){
         Promise.resolve(ajaxUtil.get('/subject/all', { })).then(resp => {
             this.subjects = resp.results.map(s => new Subject(s)).reduce((hash, s) => (hash[s._id] = s, hash), {});
-
-            let s = this.subjects['565bb7e37365ef7636df64fa'];
+            this.subjectsLoaded = true;
         });
     }
     loadBooks(bookSearch = {}, publicUserId = ''){
@@ -75,7 +81,7 @@ class Store {
             userId: publicUserId
             */
         })).then(resp => {
-            this.books = resp.results.map(book => adjustBookForDisplay(book));
+            this._rawBooks = resp.results.map(book => adjustBookForDisplay(book));
         });
     }
 
@@ -88,9 +94,9 @@ class Store {
 
 function adjustBookForDisplay(rawBook){
     let book = new Book(rawBook);
-    book.subjectObjects = (book.subjects || []).map(_id => ({ _id, name: 'soon' })); //.map(s => subjectsHash[s]).filter(s => s);
-    book.tagObjects = (book.tags || []).map(_id => ({ _id, name: 'soon' })); //.map(s => tagHash[s]).filter(s => s);
     book.authors = book.authors || [];
+    book.subjects = book.subjects || [];
+    book.tags = book.tags || [];
 
     let d = new Date(+book.dateAdded);
     book.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;

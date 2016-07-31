@@ -43,13 +43,13 @@ class BookViewListDesktop extends React.Component{
                                         </ul>
                                     </td>
                                     <td>
-                                        { book.subjectObjects.map(s => <div>{null && <LabelDisplay item={s} />}</div>) }
+                                        { book.subjectObjects.map(s => <div>{s.name}</div>) }
                                         <div style={{ marginTop: 5, minHeight: 40 }}>
                                             <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                         </div>
                                     </td>
                                     <td>
-                                        { book.tagObjects.map(s => <div>{null && <LabelDisplay item={s} />}</div>) }
+                                        { null && book.tagObjects.map(s => <div>{s.name}</div>) }
                                         <div style={{ marginTop: 5, minHeight: 40 }}>
                                             <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                         </div>
