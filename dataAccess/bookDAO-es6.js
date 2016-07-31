@@ -13,9 +13,12 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks({ search, subjects = [], searchChildSubjects, tags = [], sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
+    async searchBooks({ search, subjects = [], page, pageSize, searchChildSubjects, tags = [], sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
         let db = await super.open(),
             userIdToUse = userId || this.userId;
+
+        let skip = (page - 1) * pageSize,
+            limit = +pageSize + 1;
 
         try {
             let query = { userId: userIdToUse },
@@ -64,7 +67,7 @@ class BookDAO extends DAO {
             //    delete query.subjects;
             //    delete query.title;
             //}
-            return (await db.collection('books').find(query).sort(sortObj).toArray()).map(adjustForClient);
+            return (await db.collection('books').find(query).sort(sortObj).skip(skip).limit(limit).toArray()).map(adjustForClient);
         } finally {
             super.dispose(db);
         }

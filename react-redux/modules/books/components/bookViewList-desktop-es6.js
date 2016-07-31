@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
@@ -33,6 +35,11 @@ class BookViewListDesktop extends React.Component{
             <div style={{ minHeight: 500 }}>
                 { this.props.books.length ?
                 <div>
+                    { this.props.currentPage > 1 || this.props.hasMoreBooks ?
+                        <div style={{ marginLeft: '10px', marginBottom: '10px' }}>
+                            {this.props.currentPage > 1 ? <BootstrapButton style={{ marginRight: '10px' }} preset="primary-xs" onClick={this.props.pageDown}><i className="fa fa-fw fa-chevron-left"></i> Previous</BootstrapButton> : null}
+                            {this.props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={this.props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
+                        </div> : null }
                     <table className="table table-striped no-padding-top">
                         <thead>
                             <tr>
@@ -81,6 +88,13 @@ class BookViewListDesktop extends React.Component{
                         )}
                         </tbody>
                     </table>
+
+                    { this.props.currentPage > 1 || this.props.hasMoreBooks ?
+                        <div style={{ marginLeft: '10px', marginTop: '10px' }}>
+                            {this.props.currentPage > 1 ? <BootstrapButton style={{ marginRight: '10px' }} preset="primary-xs" onClick={this.props.pageDown}><i className="fa fa-fw fa-chevron-left"></i> Previous</BootstrapButton> : null}
+                            {this.props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={this.props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
+                        </div> : null }
+
                 </div> : null }
             </div>
         );

@@ -57,6 +57,7 @@ export function applyFilters(){
             pending = state.pending;
 
         globalHashManager.setValues(
+            'page', pending.page > 1 ? +pending.page : null,
             'search', pending.search,
             'subjects', filterSubjectsVal,
             'tags', filterTagsVal,
@@ -175,6 +176,20 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
             }
         };
     }
+}
+
+export function pageUp(){
+    return function(dispatch, getState){
+        let state = getState().booksModule.bookSearch;
+        globalHashManager.setValues('page', +state.page + 1);
+    };
+}
+
+export function pageDown(){
+    return function(dispatch, getState){
+        let state = getState().booksModule.bookSearch;
+        globalHashManager.setValues('page', +state.page == 2 ? null : state.page - 1);
+    };
 }
 
 export const setPendingSearch = createPendingActionCreator('search');

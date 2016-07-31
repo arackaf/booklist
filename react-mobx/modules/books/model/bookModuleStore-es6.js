@@ -34,7 +34,7 @@ const addAndRecurse = subjects => {
     subjects.forEach(s => {
         result.push(s);
         if (s.children.length){
-            result.push(...addAndRecurse(addAndRecurse(s.children)));
+            result.push(...addAndRecurse(s.children));
         }
     })
     return result;
