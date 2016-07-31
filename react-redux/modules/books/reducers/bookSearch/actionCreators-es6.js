@@ -57,7 +57,7 @@ export function applyFilters(){
             pending = state.pending;
 
         globalHashManager.setValues(
-            'page', pending.page > 1 ? +pending.page : null,
+            'page', null,
             'search', pending.search,
             'subjects', filterSubjectsVal,
             'tags', filterTagsVal,
