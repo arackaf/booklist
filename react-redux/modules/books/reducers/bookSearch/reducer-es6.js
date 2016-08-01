@@ -16,7 +16,7 @@ const searchFields = {
     pages: '',
     pagesOperator: '>',
     page: 1,
-    pageSize: 10
+    pageSize: 50
 }
 
 const initialState = {
