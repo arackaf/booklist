@@ -201,6 +201,18 @@ class BookDAO extends DAO {
             super.dispose(db);
         }
     }
+    async setRead(_id, isRead){
+        isRead = isRead.toLowerCase() == 'true'
+        let db = await super.open();
+        try{
+            await db.collection('books').update(
+                { _id: ObjectId(_id), userId: this.userId },
+                { $set: { isRead } }
+            );
+        } finally {
+            super.dispose(db);
+        }
+    }
 }
 
 function adjustForClient(book){

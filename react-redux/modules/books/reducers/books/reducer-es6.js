@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS } from './actionNames';
+import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, BOOK_READ_CHANGING, BOOK_READ_CHANGED } from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
 import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
@@ -69,6 +69,10 @@ export function booksReducer(state = initialBooksState, action){
         case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
             return Object.assign({}, state, { reloadOnActivate: true });
+        case BOOK_READ_CHANGING:
+            return Object.assign({}, state, { booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], readChanging: true } } });
+        case BOOK_READ_CHANGED:
+            return Object.assign({}, state, { booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], readChanging: false, isRead: action.value } } });
     }
     return state;
 }
