@@ -45,9 +45,9 @@ class bookController{
         this.send({ results: bookResults });
     }
     @httpPost
-    async setRead({ _id, isRead }){
+    async setRead({ _ids, isRead }){
         let bookDao = new BookDAO(this.request.user.id);
-        await bookDao.setRead(_id, isRead);
+        await bookDao.setRead(_ids, isRead);
 
         this.send({ success: true })
     }

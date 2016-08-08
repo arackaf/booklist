@@ -69,10 +69,13 @@ export function booksReducer(state = initialBooksState, action){
         case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
             return Object.assign({}, state, { reloadOnActivate: true });
-        case BOOK_READ_CHANGING:
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], readChanging: true } } });
-        case BOOK_READ_CHANGED:
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], readChanging: false, isRead: action.value } } });
+        case BOOK_READ_CHANGING:{
+            let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: true }, hash), {});
+            return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
+        } case BOOK_READ_CHANGED:{
+            let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: false, isRead: action.value }, hash), {});
+            return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
+        }
     }
     return state;
 }
