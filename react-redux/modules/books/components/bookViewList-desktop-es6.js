@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import BootstrapButton from 'applicationRoot/components/bootstrapButton';
-import AjaxButton from 'applicationRoot/components/ajaxButton';
+import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';

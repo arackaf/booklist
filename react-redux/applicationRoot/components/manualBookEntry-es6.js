@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import AjaxButton from 'applicationRoot/components/ajaxButton';
-import BootstrapButton, { BootstrapAnchorButton } from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import Dropzone from 'react-dropzone';
 
 import { Modal } from 'react-bootstrap';

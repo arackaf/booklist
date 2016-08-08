@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
-import AjaxButton from 'applicationRoot/components/ajaxButton';
-import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { tagsSelector } from '../reducers/tags/reducer';
