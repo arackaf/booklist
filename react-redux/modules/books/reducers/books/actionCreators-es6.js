@@ -42,20 +42,32 @@ function booksSearch(bookSearchState, publicUserId){
 
 export function setUnRead(_id){
     return function(dispatch, getState) {
-        dispatch({ type: BOOK_READ_CHANGING, _id });
-        ajaxUtil.post('/book/setRead', { _id, isRead: false }, () => {
-            dispatch({ type: BOOK_READ_CHANGED, _id, value: false });
+        dispatch({ type: BOOK_READ_CHANGING, _ids: [_id] });
+        ajaxUtil.post('/book/setRead', { _ids: [_id], isRead: false }, () => {
+            dispatch({ type: BOOK_READ_CHANGED, _ids: [_id], value: false });
         });
     };
 }
 
 export function setRead(_id){
     return function(dispatch, getState) {
-        dispatch({ type: BOOK_READ_CHANGING, _id });
-        ajaxUtil.post('/book/setRead', { _id, isRead: true }, () => {
-            dispatch({ type: BOOK_READ_CHANGED, _id, value: true });
+        dispatch({ type: BOOK_READ_CHANGING, _ids: [_id] });
+        ajaxUtil.post('/book/setRead', { _ids: [_id], isRead: true }, () => {
+            dispatch({ type: BOOK_READ_CHANGED, _ids: [_id], value: true });
         });
     };
+}
+
+export function setSelectedRead(){
+    return function(dispatch, getState){
+        let selectedBooks = getState().booksModule.selectedBooks,
+            ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
+
+        dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
+        ajaxUtil.post('/book/setRead', { _ids: ids, isRead: true }, () => {
+            dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: true });
+        });
+    }
 }
 
 export function booksResults(resp, hasMore){

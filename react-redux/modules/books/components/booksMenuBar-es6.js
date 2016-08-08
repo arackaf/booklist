@@ -102,8 +102,10 @@ class BooksMenuBar extends React.Component {
                             <NavItem onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavItem>
 
                             <NavDropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} title={'Edit selected books'} style={{ marginRight: '5px' }}>
-                                <NavItem onClick={this.props.enableSubjectModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set subjects</NavItem>
-                                <NavItem onClick={this.props.enableTagModificationToggledBooks} disabled={!this.props.selectedBooksCount || this.props.viewingPublic}>Set tags</NavItem>
+                                <NavItem onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavItem>
+                                <NavItem onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavItem>
+                                <NavItem onClick={this.props.setSelectedRead}>Set all read</NavItem>
+                                <NavItem onClick={this.props.setSelectedUnRead}>Set all un-read</NavItem>
                             </NavDropdown>
 
                         </Nav>
