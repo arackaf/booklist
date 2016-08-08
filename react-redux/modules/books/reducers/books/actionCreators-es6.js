@@ -40,34 +40,41 @@ function booksSearch(bookSearchState, publicUserId){
     });
 }
 
-export function setUnRead(_id){
+export function setRead(_id){
     return function(dispatch, getState) {
-        dispatch({ type: BOOK_READ_CHANGING, _ids: [_id] });
-        ajaxUtil.post('/book/setRead', { _ids: [_id], isRead: false }, () => {
-            dispatch({ type: BOOK_READ_CHANGED, _ids: [_id], value: false });
-        });
+        executeSetRead(dispatch, [_id], true);
     };
 }
 
-export function setRead(_id){
+export function setUnRead(_id){
     return function(dispatch, getState) {
-        dispatch({ type: BOOK_READ_CHANGING, _ids: [_id] });
-        ajaxUtil.post('/book/setRead', { _ids: [_id], isRead: true }, () => {
-            dispatch({ type: BOOK_READ_CHANGED, _ids: [_id], value: true });
-        });
+        executeSetRead(dispatch, [_id], false);
     };
 }
 
 export function setSelectedRead(){
     return function(dispatch, getState){
-        let selectedBooks = getState().booksModule.selectedBooks,
+        let selectedBooks = getState().booksModule.books.selectedBooks,
             ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
 
-        dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
-        ajaxUtil.post('/book/setRead', { _ids: ids, isRead: true }, () => {
-            dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: true });
-        });
+        executeSetRead(dispatch, ids, true);
     }
+}
+
+export function setSelectedUnRead(){
+    return function(dispatch, getState){
+        let selectedBooks = getState().booksModule.books.selectedBooks,
+            ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
+
+        executeSetRead(dispatch, ids, false);
+    }
+}
+
+function executeSetRead(dispatch, ids, value){
+    dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
+    ajaxUtil.post('/book/setRead', { _ids: ids, isRead: value }, () => {
+        dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
+    });
 }
 
 export function booksResults(resp, hasMore){

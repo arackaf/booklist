@@ -207,7 +207,7 @@ class BookDAO extends DAO {
         try{
             await db.collection('books').update(
                 { _id: { $in: _ids.map(_id => ObjectId(_id)) }, userId: this.userId },
-                { $set: { isRead } }
+                { $set: { isRead } }, { multi: true }
             );
         } finally {
             super.dispose(db);
