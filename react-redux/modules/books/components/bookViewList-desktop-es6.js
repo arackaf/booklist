@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import AjaxButton from 'applicationRoot/components/ajaxButton';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
@@ -49,6 +50,7 @@ class BookViewListDesktop extends React.Component{
                                 <th>Author</th>
                                 <th>Subjects</th>
                                 <th>Tags</th>
+                                <th>Read?</th>
                                 <th>Published</th>
                                 <th>ISBN</th>
                                 <th><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
@@ -79,6 +81,12 @@ class BookViewListDesktop extends React.Component{
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
+                                </td>
+                                <td>
+                                    { !!book.isRead
+                                        ? <AjaxButton running={!!book.readChanging} onClick={() => this.props.setUnRead(book._id)} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
+                                        : <AjaxButton running={!!book.readChanging} onClick={() => this.props.setRead(book._id)} preset="default-xs">Set read</AjaxButton>
+                                    }
                                 </td>
                                 <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
                                 <td>{book.isbn}</td>

@@ -1,4 +1,4 @@
-import { TOGGLE_SELECT_BOOK, LOAD_BOOKS, LOAD_BOOKS_RESULTS } from './actionNames';
+import { TOGGLE_SELECT_BOOK, LOAD_BOOKS, LOAD_BOOKS_RESULTS, BOOK_READ_CHANGING, BOOK_READ_CHANGED } from './actionNames';
 
 export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
@@ -38,6 +38,24 @@ function booksSearch(bookSearchState, publicUserId){
         pagesOperator: bookSearchState.pagesOperator,
         userId: publicUserId
     });
+}
+
+export function setUnRead(_id){
+    return function(dispatch, getState) {
+        dispatch({ type: BOOK_READ_CHANGING, _id });
+        ajaxUtil.post('/book/setRead', { _id, isRead: false }, () => {
+            dispatch({ type: BOOK_READ_CHANGED, _id, value: false });
+        });
+    };
+}
+
+export function setRead(_id){
+    return function(dispatch, getState) {
+        dispatch({ type: BOOK_READ_CHANGING, _id });
+        ajaxUtil.post('/book/setRead', { _id, isRead: true }, () => {
+            dispatch({ type: BOOK_READ_CHANGED, _id, value: true });
+        });
+    };
 }
 
 export function booksResults(resp, hasMore){
