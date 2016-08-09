@@ -82,10 +82,11 @@ class BookViewListDesktop extends React.Component{
                                     </div>
                                 </td>
                                 <td>
-                                    { !!book.isRead
-                                        ? <AjaxButton running={!!book.readChanging} onClick={() => this.props.setUnRead(book._id)} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
-                                        : <AjaxButton running={!!book.readChanging} onClick={() => this.props.setRead(book._id)} preset="default-xs">Set read</AjaxButton>
+                                    <div style={{ marginTop: 5 }}> { !!book.isRead
+                                        ? <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
+                                        : <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} preset="default-xs">Set read</AjaxButton>
                                     }
+                                    </div>
                                 </td>
                                 <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
                                 <td>{book.isbn}</td>
