@@ -63,7 +63,7 @@ export function subjectsReducer(state = initialSubjectsState, action){
         case SUBJECT_DELETED:
             let subjectHash = { ...state.subjectHash };
             action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
-            let newState = Object.assign({}, state, { deletingSubjectId: null, subjectHash });
+            let newState = Object.assign({}, state, { deleting: false, deletingSubjectId: null, subjectHash });
             if (newState.editingSubjectId && !newState.subjectHash[newState.editingSubjectId]){
                 newState.editingSubjectId = newState.editingSubject = null;
             }
