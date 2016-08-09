@@ -1,4 +1,4 @@
-import { TOGGLE_SELECT_BOOK, LOAD_BOOKS, LOAD_BOOKS_RESULTS } from './actionNames';
+import { TOGGLE_SELECT_BOOK, LOAD_BOOKS, LOAD_BOOKS_RESULTS, BOOK_READ_CHANGING, BOOK_READ_CHANGED, TOGGLE_CHECK_ALL } from './actionNames';
 
 export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
@@ -40,6 +40,47 @@ function booksSearch(bookSearchState, publicUserId){
     });
 }
 
+export function setRead(_id){
+    return function(dispatch, getState) {
+        executeSetRead(dispatch, [_id], true);
+    };
+}
+
+export function setUnRead(_id){
+    return function(dispatch, getState) {
+        executeSetRead(dispatch, [_id], false);
+    };
+}
+
+export function setSelectedRead(){
+    return function(dispatch, getState){
+        let selectedBooks = getState().booksModule.books.selectedBooks,
+            ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
+
+        executeSetRead(dispatch, ids, true);
+    }
+}
+
+export function setSelectedUnRead(){
+    return function(dispatch, getState){
+        let selectedBooks = getState().booksModule.books.selectedBooks,
+            ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
+
+        executeSetRead(dispatch, ids, false);
+    }
+}
+
+function executeSetRead(dispatch, ids, value){
+    dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
+    ajaxUtil.post('/book/setRead', { _ids: ids, isRead: value }, () => {
+        dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
+    });
+}
+
 export function booksResults(resp, hasMore){
     return { type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore };
+}
+
+export function toggleCheckAll(){
+    return { type: TOGGLE_CHECK_ALL };
 }
