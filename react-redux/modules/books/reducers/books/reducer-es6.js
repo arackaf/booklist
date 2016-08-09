@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, BOOK_READ_CHANGING, BOOK_READ_CHANGED } from './actionNames';
+import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, BOOK_READ_CHANGING, BOOK_READ_CHANGED, TOGGLE_CHECK_ALL } from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
 import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
@@ -20,7 +20,7 @@ export function booksReducer(state = initialBooksState, action){
         case LOAD_BOOKS:
             return Object.assign({}, state, { loading: true, initialQueryFired: true, reloadOnActivate: false });
         case LOAD_BOOKS_RESULTS:
-            return Object.assign({}, state, { loading: false, booksHash: createBooksHash(action.books) });
+            return Object.assign({}, state, { loading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
         case EDITING_BOOK_SAVED:
             let newBookVersion = Object.assign({}, state.booksHash[action.book._id], action.book); //only update fields sent
             return Object.assign({}, state, { booksHash: { ...state.booksHash, [action.book._id]: newBookVersion } });
@@ -76,6 +76,15 @@ export function booksReducer(state = initialBooksState, action){
             let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: false, isRead: action.value }, hash), {});
             return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
         }
+        case TOGGLE_CHECK_ALL:
+            let selectedCount = Object.keys(state.selectedBooks).length,
+                allBooksCount = Object.keys(state.booksHash).length,
+                newSelectedHash = {};
+
+            if (!selectedCount || (selectedCount && allBooksCount != selectedCount)){
+                newSelectedHash = Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {});
+            }
+            return Object.assign({}, state, { selectedBooks: newSelectedHash });
     }
     return state;
 }
@@ -100,7 +109,32 @@ const booksWithSubjectsSelector = createSelector(
         ({ booksModule }) => booksModule.subjects.subjectHash,
         ({ booksModule }) => booksModule.tags.tagHash
     ],
-    adjustBooksForDisplay
+    (booksHash, subjectsHash, tagHash) => {
+        let books = Object.keys(booksHash).map(_id => booksHash[_id]);
+        books.forEach(b => {
+            b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
+            b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
+            b.authors = b.authors || [];
+
+            let d = new Date(+b.dateAdded);
+            b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
+        });
+        return { list: books };
+    }
+);
+
+const bookSelectionSelector = createSelector(
+    [
+        ({ booksModule }) => booksModule.books.booksHash,
+        ({ booksModule }) => booksModule.books.selectedBooks
+    ],
+    (booksHash, selectedBooks) => {
+        let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
+        return {
+            allAreChecked: Object.keys(booksHash).length == selectedIds,
+            selectedBooksCount: selectedIds
+        }
+    }
 );
 
 export const booksSelector = state => {
@@ -109,20 +143,8 @@ export const booksSelector = state => {
     return Object.assign({},
         booksModule.books,
         {
-            list: booksWithSubjectsSelector(state),
-            selectedBooksCount: Object.keys(booksModule.books.selectedBooks).filter(k => booksModule.books.selectedBooks[k]).length
-        });
-}
-
-function adjustBooksForDisplay(booksHash, subjectsHash, tagHash){
-    let books = Object.keys(booksHash).map(_id => booksHash[_id]);
-    books.forEach(b => {
-        b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
-        b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
-        b.authors = b.authors || [];
-
-        let d = new Date(+b.dateAdded);
-        b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
-    });
-    return books;
+            ...booksWithSubjectsSelector(state),
+            ...bookSelectionSelector(state)
+        }
+    );
 }
