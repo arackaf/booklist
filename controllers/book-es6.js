@@ -42,7 +42,14 @@ class bookController{
         let bookDao = new BookDAO(this.request.user ? this.request.user.id : null),
             bookResults = await bookDao.searchBooks({ ...params });
 
-        this.send({ results: bookResults })
+        this.send({ results: bookResults });
+    }
+    @httpPost
+    async setRead({ _ids, isRead }){
+        let bookDao = new BookDAO(this.request.user.id);
+        await bookDao.setRead(_ids, isRead);
+
+        this.send({ success: true })
     }
 }
 

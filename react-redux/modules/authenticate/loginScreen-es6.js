@@ -1,6 +1,6 @@
 import React from 'react';
 import { loadCurrentModule, goHome } from 'reactStartup';
-import AjaxButton from 'applicationRoot/components/ajaxButton';
+import { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 
 import {
     Nav,

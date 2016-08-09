@@ -11,28 +11,21 @@ buttonTypes.forEach(t => {
     });
 });
 
-class BootstrapButton extends Component{
-    constructor(props){
-        super();
-        this.state = { btnCss: (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '') };
-    }
-    render(){
-        return (
-            <button className={this.state.btnCss} style={{ ...this.props.style }} onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</button>
-        )
-    }
-}
+const cssFromPreset = props => (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '');
 
-export class BootstrapAnchorButton extends Component{
-    constructor(props){
-        super();
-        this.state = { btnCss: (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '') };
-    }
-    render(){
-        return (
-            <a className={this.state.btnCss} style={{ ...this.props.style }} onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</a>
-        )
-    }
-}
-
+const BootstrapButton = props => (
+    <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>{props.children}</button>)
 export default BootstrapButton;
+
+export const BootstrapAnchorButton = props => (
+    <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>{props.children}</a>);
+
+export const AjaxButton = props => (
+    props.running
+        ? <button className={cssFromPreset(props)} disabled={true}><i className="fa fa-fw fa-spin fa-spinner"></i>{ (props.runningText || props.text) ? ' ' + props.runningText || props.text : props.children}</button>
+        : <button className={cssFromPreset(props)} disabled={props.disabled || false} onClick={props.onClick}>{props.children}</button>)
+
+export const AjaxButtonAnchor = props => (
+    props.running
+        ? <a className={cssFromPreset(props)} disabled={true}><i className="fa fa-fw fa-spin fa-spinner"></i>{ (props.runningText || props.text) ? ' ' + props.runningText || props.text : props.children}</a>
+        : <a className={cssFromPreset(props)} disabled={props.disabled || false} onClick={props.onClick}>{ props.children }</a>)
