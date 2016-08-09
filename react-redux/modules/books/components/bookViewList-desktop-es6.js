@@ -43,8 +43,8 @@ class BookViewListDesktop extends React.Component{
                     <table className="table table-striped no-padding-top">
                         <thead>
                             <tr>
-                                <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                 <th><input type="checkbox" checked={this.props.allAreChecked} onClick={this.props.toggleCheckAll} /></th>
+                                <th></th>
                                 <th><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
                                 <th>Author</th>
                                 <th>Subjects</th>
