@@ -71,10 +71,11 @@ const subjectEditModal = props => {
                         <div className="panel-body">
                             <div>
                                 { props.deletingSubjectId ?
-                                    <SubjectEditDeleteInfo
-                                        { ...props.deleteInfo }
-                                        cancelDeleteSubject={props.cancelDeleteSubject}
-                                        deleteSubject={props.deleteSubject} /> : null }
+                                <SubjectEditDeleteInfo
+                                    { ...props.deleteInfo }
+                                    deleting={props.deleting}
+                                    cancelDeleteSubject={props.cancelDeleteSubject}
+                                    deleteSubject={props.deleteSubject} /> : null }
                                 <div className="row">
                                     <div className="col-xs-6">
                                         <div className="form-group">
