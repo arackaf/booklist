@@ -17,6 +17,7 @@ export function loadBooks(){
             if (hasMore){
                 booksResp.results = booksResp.results.slice(0, -1);
             }
+            window.scrollTo(0, 0);
             dispatch(booksResults(booksResp, hasMore));
         });
     }
