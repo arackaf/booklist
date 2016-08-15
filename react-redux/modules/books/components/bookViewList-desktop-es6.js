@@ -98,7 +98,7 @@ class BookViewListDesktop extends React.Component{
                     </table>
 
                     { this.props.currentPage > 1 || this.props.hasMoreBooks ?
-                        <div style={{ marginLeft: '10px', marginTop: '10px' }}>
+                        <div style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
                             {this.props.currentPage > 1 ? <BootstrapButton style={{ marginRight: '10px' }} preset="primary-xs" onClick={this.props.pageDown}><i className="fa fa-fw fa-chevron-left"></i> Previous</BootstrapButton> : null}
                             {this.props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={this.props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
                         </div> : null }
