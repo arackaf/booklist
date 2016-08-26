@@ -80,6 +80,12 @@ class BooksMenuBar extends React.Component {
     tagMenuItemClickedThatShouldntCloseDropdown(){
         this._tagsForceOpen = true;
     }
+    sortChanged(evt){
+        let value = evt.target.value,
+            [sort, direction] = value.split('|');
+
+        this.props.setSortOrder(sort, direction == 'asc' ? 1 : 0);
+    }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
             selectedTagsCount = this.props.selectedTags.length,
@@ -124,13 +130,21 @@ class BooksMenuBar extends React.Component {
                                         <span className="input-group-btn">
                                             <InputForPending name="search" style={{ borderRightWidth: 0 }} parentProps={this.props} placeholder="Quick title search" />
                                         </span>
-                                        <select className="form-control">
-                                            <option>a</option>
-                                            <option>b</option>
-                                            <option>c</option>
+                                        <select onClick={evt => this.sortChanged(evt)} className="form-control">
+                                            <option value="title|asc">Title A-Z</option>
+                                            <option value="title|desc">Title Z-A</option>
+                                            <option value="pages|asc">Pages, Low</option>
+                                            <option value="pages|desc">Pages, High</option>
+                                            <option value="_id|asc">Created, Earliest</option>
+                                            <option value="_id|desc">Created, Latest</option>
                                         </select>
                                     </div>
-                                : null }
+                                    : <div className="input-group">
+                                        <span className="input-group-btn">
+                                            <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
+                                        </span>
+                                        <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
+                                    </div> }
                             </div>
 
                             <div className="btn-group" role="group">
