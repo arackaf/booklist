@@ -116,12 +116,21 @@ class BooksMenuBar extends React.Component {
                         </Navbar.Header>
                         <Navbar.Form pullLeft>
                             <div className="form-group" style={{ marginRight: '5px' }}>
-                                <div className="input-group">
-                                    <span className="input-group-btn">
-                                        <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
-                                    </span>
-                                    <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
-                                </div>
+                                {this.props.isMobile ?
+                                    <div className="input-group">
+                                        <span className="input-group-btn">
+                                            <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
+                                        </span>
+                                        <span className="input-group-btn">
+                                            <InputForPending name="search" style={{ borderRightWidth: 0 }} parentProps={this.props} placeholder="Quick title search" />
+                                        </span>
+                                        <select className="form-control">
+                                            <option>a</option>
+                                            <option>b</option>
+                                            <option>c</option>
+                                        </select>
+                                    </div>
+                                : null }
                             </div>
 
                             <div className="btn-group" role="group">
