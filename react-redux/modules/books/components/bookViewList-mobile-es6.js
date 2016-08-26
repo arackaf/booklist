@@ -42,11 +42,25 @@ const BookViewListMobileItem = props => {
 }
 const BookViewListMobile = props => (
     <div>
+
+        { props.currentPage > 1 || props.hasMoreBooks ?
+            <div style={{ marginLeft: '10px', marginBottom: '10px' }}>
+                {props.currentPage > 1 ? <BootstrapButton style={{ marginRight: '10px' }} preset="primary-xs" onClick={props.pageDown}><i className="fa fa-fw fa-chevron-left"></i> Previous</BootstrapButton> : null}
+                {props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
+            </div> : null }
+
         <div style={{ paddingBottom: 15 }}>
             <div style={{ border: 0 }} className="list-group docked-to-panel">
                 { props.books.map((book, i) => <BookViewListMobileItem key={book._id} {...book} /> )}
             </div>
         </div>
+
+        { props.currentPage > 1 || props.hasMoreBooks ?
+            <div style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
+                {props.currentPage > 1 ? <BootstrapButton style={{ marginRight: '10px' }} preset="primary-xs" onClick={props.pageDown}><i className="fa fa-fw fa-chevron-left"></i> Previous</BootstrapButton> : null}
+                {props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
+            </div> : null }
+
     </div>
 );
 
