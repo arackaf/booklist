@@ -52,7 +52,7 @@ class BookViewListDesktop extends React.Component{
                                 <th>Read?</th>
                                 <th>Published</th>
                                 <th>ISBN</th>
-                                <th><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
+                                <th style={{ minWidth: '85px' }}><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
                                 <th><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
                             </tr>
                         </thead>
