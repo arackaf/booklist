@@ -70,6 +70,7 @@ export const bookSearchSelector = state => {
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
     let tagsState = tagsSelector(state);
+    let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == 1 ? 'asc' : 'desc'}`;
 
     return Object.assign({},
         booksModule.bookSearch,
@@ -84,6 +85,7 @@ export const bookSearchSelector = state => {
             selectedBooksCount: booksState.selectedBooksCount,
             viewingPublic: root.isPublic,
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
-            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue)
+            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
+            bindableSortValue
         });
 }
