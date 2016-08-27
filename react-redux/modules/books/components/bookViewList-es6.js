@@ -24,7 +24,7 @@ import { globalHashManager } from 'reactStartup';
 class BookViewingList extends React.Component {
     componentDidMount(){
         try {
-            if (window.screen.width < 700) {
+            if (1 || window.screen.width < 700) {
                 this.props.setMobile();
             } else {
                 this.props.setDesktop();

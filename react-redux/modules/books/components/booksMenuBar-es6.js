@@ -130,7 +130,7 @@ class BooksMenuBar extends React.Component {
                                         <span className="input-group-btn">
                                             <InputForPending name="search" style={{ borderRightWidth: 0 }} parentProps={this.props} placeholder="Quick title search" />
                                         </span>
-                                        <select onClick={evt => this.sortChanged(evt)} className="form-control">
+                                        <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control">
                                             <option value="title|asc">Title A-Z</option>
                                             <option value="title|desc">Title Z-A</option>
                                             <option value="pages|asc">Pages, Low</option>
