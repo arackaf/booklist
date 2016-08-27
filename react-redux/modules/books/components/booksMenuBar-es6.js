@@ -30,7 +30,7 @@ const InputForPending = props => {
     let name = props.name,
         actionName = `setPending${name[0].toUpperCase()}${name.slice(1)}`,
         parentProps = props.parentProps;
-    return <input { ...props } className="form-control" onKeyDown={parentProps[actionName]} onChange={parentProps[actionName]} value={parentProps.pending[name]} />;
+    return <input { ...props } className={`form-control ${props.className || ''}`} onKeyDown={parentProps[actionName]} onChange={parentProps[actionName]} value={parentProps.pending[name]} />;
 }
 
 class BooksMenuBar extends React.Component {
@@ -123,14 +123,13 @@ class BooksMenuBar extends React.Component {
                         <Navbar.Form pullLeft>
                             <div className="form-group" style={{ marginRight: '5px' }}>
                                 {this.props.isMobile ?
-                                    <div className="input-group">
-                                        <span className="input-group-btn">
-                                            <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
-                                        </span>
-                                        <span className="input-group-btn">
-                                            <InputForPending name="search" style={{ borderRightWidth: 0 }} parentProps={this.props} placeholder="Quick title search" />
-                                        </span>
-                                        <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control">
+                                    <div>
+
+                                        <BootstrapButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapButton>
+
+                                        <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
+
+                                        <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
                                             <option value="title|asc">Title A-Z</option>
                                             <option value="title|desc">Title Z-A</option>
                                             <option value="pages|asc">Pages, Low</option>
@@ -141,7 +140,7 @@ class BooksMenuBar extends React.Component {
                                     </div>
                                     : <div className="input-group">
                                         <span className="input-group-btn">
-                                            <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Search</BootstrapButton>
+                                            <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapButton>
                                         </span>
                                         <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
                                     </div> }
