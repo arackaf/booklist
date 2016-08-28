@@ -1,7 +1,8 @@
 import {
     SET_DESKTOP,
     SET_MOBILE,
-    SET_COVERS
+    REQUEST_DESKTOP,
+    REQUEST_MOBILE
 } from './actionNames';
 
 export function setDesktop(){
@@ -10,4 +11,12 @@ export function setDesktop(){
 
 export function setMobile(){
     return { type: SET_MOBILE };
+}
+
+export function requestMobile(){
+    return { type: REQUEST_MOBILE };
+}
+
+export function requestDesktop(){
+    return { type: REQUEST_DESKTOP };
 }

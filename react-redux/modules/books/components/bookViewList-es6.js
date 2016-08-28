@@ -44,9 +44,11 @@ class BookViewingList extends React.Component {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
 
+        console.log(this.props.isDesktop, this.props.desktopRequested, this.props.isMobile, this.props.mobileRequested, '|', this.props.showingDesktop, this.props.showingMobile);
+
         return (
             <div>
-                <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+                { this.props.metaTagNeeded ? <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" /> : null }
 
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
@@ -64,8 +66,8 @@ class BookViewingList extends React.Component {
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.isDesktop ? <DesktopView />
-                                : this.props.isMobile ? <MobileView />
+                            (this.props.showingDesktop ? <DesktopView />
+                                : this.props.showingMobile ? <MobileView />
                                 : null) : null }
                     </div>
                 </div>

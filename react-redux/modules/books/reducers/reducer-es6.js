@@ -49,6 +49,11 @@ export const selector = state => {
         editingBookSaving: bookEdit.editingBookSaving,
         editingBookSaved: bookEdit.editingBookSaved,
         isDesktop: ui.isDesktop,
-        isMobile: ui.isMobile
+        isMobile: ui.isMobile,
+        desktopRequested: ui.desktopRequested,
+        mobileRequested: ui.mobileRequested,
+        showingDesktop: ui.isDesktop && !ui.mobileRequested,
+        showingMobile: !(ui.isDesktop && !ui.mobileRequested),
+        metaTagNeeded: ui.isMobile && !ui.desktopRequested
     };
 };

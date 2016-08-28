@@ -103,7 +103,6 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
-
                             <NavItem onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavItem>
                             <NavItem onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavItem>
 
@@ -124,7 +123,6 @@ class BooksMenuBar extends React.Component {
                             <div className="form-group" style={{ marginRight: '5px' }}>
                                 {this.props.isMobile ?
                                     <div>
-
                                         <BootstrapButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapButton>
 
                                         <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
@@ -147,8 +145,8 @@ class BooksMenuBar extends React.Component {
                             </div>
 
                             <div className="btn-group" role="group">
-                                <button type="button" onClick={this.props.setDesktop} className={'btn btn-default ' + (this.props.isDesktop ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
-                                <button type="button" onClick={this.props.setMobile} className={'btn btn-default ' + (this.props.isMobile ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
+                                <button type="button" onClick={this.props.requestDesktop} className={'btn btn-default ' + (this.props.showingDesktop ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
+                                <button type="button" onClick={this.props.requestMobile} className={'btn btn-default ' + (this.props.showingMobile ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
                                 { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
                             </div>
 
