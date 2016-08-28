@@ -46,6 +46,8 @@ class BookViewingList extends React.Component {
 
         return (
             <div>
+                <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+
                 <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar />
