@@ -88,8 +88,8 @@ export const bookSearchSelector = state => {
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
             eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
             bindableSortValue,
-            showingDesktop: ui.isDesktop && !ui.mobileRequested,
-            showingMobile: !(ui.isDesktop && !ui.mobileRequested),
+            showingDesktop: ui.desktopRequested || (ui.isDesktop && !ui.mobileRequested),
+            showingMobile: !(ui.desktopRequested || (ui.isDesktop && !ui.mobileRequested)),
             metaTagNeeded: ui.isMobile && !ui.desktopRequested
         });
 }
