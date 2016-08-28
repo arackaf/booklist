@@ -18,5 +18,10 @@ export function requestMobile(){
 }
 
 export function requestDesktop(){
+
+    //TODO: pending proper thunk refactor
+    let viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute('content', '');
+
     return { type: REQUEST_DESKTOP };
 }
