@@ -121,7 +121,7 @@ class BooksMenuBar extends React.Component {
                         </Navbar.Header>
                         <Navbar.Form pullLeft>
                             <div className="form-group" style={{ marginRight: '5px' }}>
-                                {this.props.showingMobile ?
+                                {this.props.isMobile ?
                                     <div>
                                         <BootstrapButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapButton>
 
