@@ -1,13 +1,11 @@
 import {
     SET_DESKTOP,
-    SET_MOBILE,
-    SET_COVERS
+    SET_MOBILE
 } from './actionNames';
 
 const initialState = {
     isDesktop: false,
-    isMobile: false,
-    isCovers: false
+    isMobile: false
 }
 
 export default function reducer(state = initialState, action){
@@ -16,8 +14,6 @@ export default function reducer(state = initialState, action){
             return { ...initialState, isDesktop: true };
         case SET_MOBILE:
             return { ...initialState, isMobile: true };
-        case SET_COVERS:
-            return { ...initialState, isCovers: true };
     }
     return state;
 }

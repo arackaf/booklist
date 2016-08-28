@@ -11,7 +11,3 @@ export function setDesktop(){
 export function setMobile(){
     return { type: SET_MOBILE };
 }
-
-export function setCovers(){
-    return { type: SET_COVERS };
-}
