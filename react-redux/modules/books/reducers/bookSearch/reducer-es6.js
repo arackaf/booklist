@@ -65,7 +65,7 @@ function projectSelectedItems(ids, hash){
 export const bookSearchSelector = state => {
     let booksModule = state.booksModule,
         bookSearch = state.booksModule.bookSearch,
-        root = state.root;
+        app = state.app;
 
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
@@ -84,7 +84,7 @@ export const bookSearchSelector = state => {
             subjects: subjectsState.subjects,
             allSubjectsSorted: subjectsState.allSubjectsSorted,
             selectedBooksCount: booksState.selectedBooksCount,
-            viewingPublic: root.isPublic,
+            viewingPublic: app.isPublic,
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
             eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
             bindableSortValue,

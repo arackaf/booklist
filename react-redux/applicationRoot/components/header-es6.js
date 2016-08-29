@@ -9,7 +9,7 @@ function projectState(state){
 class Header extends Component {
     render() {
         return (
-            <div>{ this.props.root.module }</div>
+            <div>{ this.props.app.module }</div>
         );
     }
 }

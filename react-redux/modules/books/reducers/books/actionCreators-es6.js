@@ -10,9 +10,9 @@ export function loadBooks(){
 
         let state = getState(),
             bookSearch = state.booksModule.bookSearch,
-            root = state.root;
+            app = state.app;
 
-        Promise.resolve(booksSearch(bookSearch, root.publicUserId)).then(booksResp => {
+        Promise.resolve(booksSearch(bookSearch, app.publicUserId)).then(booksResp => {
             let hasMore = booksResp.results.length > bookSearch.pageSize;
             if (hasMore){
                 booksResp.results = booksResp.results.slice(0, -1);

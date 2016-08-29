@@ -26,7 +26,7 @@ export const selector = state => {
         bookEdit = state.booksModule.bookEdit,
         bookSearch = bookSearchSelector(state),
         ui = state.booksModule.ui,
-        root = state.root;
+        app = state.app;
 
     return {
         subjects: subjectsSelected.list,
@@ -38,7 +38,7 @@ export const selector = state => {
         currentPage: bookSearch.page,
         reloadBooksOnActivate: booksSelected.reloadOnActivate,
         initialBookQueryFired: booksSelected.initialQueryFired,
-        viewingPublic: root.isPublic,
+        viewingPublic: app.isPublic,
         allAreChecked: booksSelected.allAreChecked,
         selectedBooks: booksSelected.selectedBooks,
         booksLoading: booksSelected.loading,

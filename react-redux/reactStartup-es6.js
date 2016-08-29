@@ -43,7 +43,7 @@ export function loadCurrentModule() {
         var userId = globalHashManager.currentParameters.userId;
 
         //switching to a new public viewing - reload page
-        if (!initial && store.getState().root.publicUserId != userId){
+        if (!initial && store.getState().app.publicUserId != userId){
             location.reload();
             return;
         }
@@ -53,7 +53,7 @@ export function loadCurrentModule() {
         if (module === 'view') {
             module = 'books';
         }
-    } else if (store.getState().root.publicUserId){
+    } else if (store.getState().app.publicUserId){
         //leaving public viewing - reload page
         location.reload();
         return;

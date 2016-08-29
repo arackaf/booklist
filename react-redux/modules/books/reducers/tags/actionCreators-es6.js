@@ -6,7 +6,7 @@ import {
 
 export function loadTags(){
     return function(dispatch, getState){
-        let publicUserId = getState().root.publicUserId;
+        let publicUserId = getState().app.publicUserId;
 
         dispatch({ type: LOAD_TAGS });
 
