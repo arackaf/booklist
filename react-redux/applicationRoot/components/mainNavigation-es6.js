@@ -54,7 +54,7 @@ const PublicViewingMainNavBar = props => {
         </Navbar>
     );
 };
-const ConnectedPublicViewingNav = connect(state => state.root)(PublicViewingMainNavBar);
+const ConnectedPublicViewingNav = connect(state => state.app)(PublicViewingMainNavBar);
 
 
 class MainNavigationBar extends React.Component {
@@ -64,5 +64,5 @@ class MainNavigationBar extends React.Component {
         )
     }
 }
-const MainNavigationBarConnected = connect(state => state.root)(MainNavigationBar);
+const MainNavigationBarConnected = connect(state => state.app)(MainNavigationBar);
 export default MainNavigationBarConnected;
