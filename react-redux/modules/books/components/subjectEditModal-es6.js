@@ -49,13 +49,13 @@ const subjectEditModal = props => {
                 <div className="row">
                     <div className="col-xs-11">
                         <GenericLabelSelect
-                            inputProps={{ placeholder: 'Edit tag', value: props.subjectSearch, onChange: props.setSubjectSearchValue }}
+                            inputProps={{ placeholder: 'Edit subject', value: props.subjectSearch, onChange: props.setSubjectSearchValue }}
                             //inputProps={{ placeholder: 'Adding', value: this.props.addingTagSearch, onChange: this.props.addingSearchValueChange }}
                             suggestions={props.subjectsSearched}
                             onSuggestionSelected={item => props.editSubject(item._id)} />
 
                     </div>
-                    <div className="col-xs-1">
+                    <div className="col-xs-1" style={{ padding: 0 }}>
                         <BootstrapButton onClick={props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
                     </div>
                 </div>
@@ -65,7 +65,7 @@ const subjectEditModal = props => {
                 { editingSubject ?
                     <div className="panel panel-info">
                         <div className="panel-heading">
-                            { editingSubject ? `Edit ${editingSubject.name}` : 'New Subject' }
+                            { editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }
                             { editingSubject && editingSubject._id ? <BootstrapButton onClick={e => props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                         </div>
                         <div className="panel-body">
