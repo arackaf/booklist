@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap';
 
 
-import { observable, computed } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import { observer } from "mobx-react";
 
 class BookList {
@@ -66,7 +66,54 @@ class MobXTest extends React.Component {
 
 const bookList = new BookList();
 
-//render(<MobXTest bookList={bookList} />, document.getElementById('mobx-temp-home'));
+//this would be shared somewhere central
+class mappedViewModel{
+    constructor(_config){
+        _config.basicObservables.forEach(prop => {
+
+            Object.defineProperty(this, prop, observable(this, prop, { enumerable: true, writable: true, value: '' }));
+
+
+        });
+    }
+}
+
+class implicit_ES5_Store extends mappedViewModel {
+    constructor(){
+        super({
+            basicObservables: ['value']
+        })
+    }
+    @action incremenet = () => this.value++;
+    @action decrement = () => this.value--;
+}
+
+
+class ES5_Store {
+    @observable value = 0
+    @action incremenet = () => this.value++;
+    @action decrement = () => this.value--;
+    @action mapFromResponsePoc = map => Object.assign(this, map);
+}
+
+let store = new ES5_Store();
+
+const MobXES5Test = observer(props => {
+    let textbox;
+    return (
+        <div>
+            <span>Value <span>{store.value}</span></span>
+            <br />
+            <button onClick={store.incremenet}>+</button>
+            <button onClick={store.decrement}>-</button>
+            <br />
+            <input ref={el => textbox = el}/>
+            <button onClick={() => store.mapFromResponsePoc({ value: textbox.value })}>Set!</button>
+        </div>
+    );
+})
+
+render(<MobXES5Test />, document.getElementById('mobx-temp-home'));
 
 
 
