@@ -35,7 +35,7 @@ gulp.task('transpile-all', function () {
 });
 
 gulp.task('transpile-watch', function() {
-    return gulp.watch(['./**/**-es6.js', '!./node_modules/**/*', '!./react-redux/node_modules', '!./react-mobx/node_modules'], function(obj){
+    return gulp.watch(['./**/**-es6.js', '!./node_modules/**/*', '!./react-redux/node_modules/**/*', '!./react-mobx/node_modules/**/*'], function(obj){
         if (obj.type === 'changed') {
             gulp.src(obj.path, { base: './' })
                 .pipe(plumber({
