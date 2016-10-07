@@ -43,9 +43,7 @@ class BookViewingList extends React.Component {
     render() {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
-
-        console.log(this.props.isDesktop, this.props.desktopRequested, this.props.isMobile, this.props.mobileRequested, '|', this.props.showingDesktop, this.props.showingMobile);
-
+        
         return (
             <div>
                 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" />
