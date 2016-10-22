@@ -32,7 +32,7 @@ class BookViewListDesktop extends React.Component{
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
         return (
-            <div style={{ minHeight: 500 }}>
+            <div style={{ minHeight: 400 }}>
                 { this.props.books.length ?
                 <div>
                     { this.props.currentPage > 1 || this.props.hasMoreBooks ?
