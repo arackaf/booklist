@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     gprint = require('gulp-print'),
     babel = require('gulp-babel'),
     fs = require('fs'),
+    path = require('path'),
     notify = require('gulp-notify'),
     plumber = require('gulp-plumber'),
     gulpIf = require('gulp-if');
@@ -24,8 +25,24 @@ let babelOptions = {
     plugins: ['transform-decorators-legacy']
 };
 
+const gulpTargets = [
+    'amazonDataAccess',
+    'app-helpers',
+    'controllers',
+    'dataAccess',
+    'private'
+].map(f => `./` + f + '/**/*-es6.js')
+
+gulpTargets.push(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*.js'));
+gulpTargets.push(getDirectories('./react-redux').map(f => './react-mobx/' + f + '/**/*.js'));
+gulpTargets.push('./*-es6.js');
+
+function getDirectories(srcpath) {
+    return fs.readdirSync(srcpath).filter(cand => cand != 'node_modules' && cand != 'dist-es5' && fs.statSync(path.join(srcpath, cand)).isDirectory());
+}
+
 gulp.task('transpile-all', function () {
-    gulp.src(['./**/**-es6.js', '!./node_modules/**/*'])
+    gulp.src(gulpTargets)
         .pipe(babel(babelOptions))
         .pipe(rename(function (path) {
             path.basename = path.basename.replace(/-es6$/, '');
@@ -35,7 +52,7 @@ gulp.task('transpile-all', function () {
 });
 
 gulp.task('transpile-watch', function() {
-    return gulp.watch(['./**/**-es6.js', '!./node_modules/**/*', '!./react-redux/node_modules/**/*', '!./react-mobx/node_modules/**/*'], function(obj){
+    return gulp.watch(gulpTargets, function(obj){
         if (obj.type === 'changed') {
             gulp.src(obj.path, { base: './' })
                 .pipe(plumber({
