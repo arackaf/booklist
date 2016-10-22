@@ -52,7 +52,7 @@ class BookViewingList extends React.Component {
                 <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar />
 
-                    <div className="panel-body" style={{ padding: 0, minHeight: 550, position: 'relative' }}>
+                    <div className="panel-body" style={{ padding: 0, minHeight: 450, position: 'relative' }}>
                         { this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?
                             <div className="wait-for-loading">
                                 <i className="fa fa-5x fa-spin fa-spinner"></i>
