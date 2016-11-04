@@ -21,9 +21,9 @@ class bookController{
         }
     }
     @httpPost
-    async deleteBook({ id }){
-        let bookDao = new BookDAO();
-        await bookDao.deleteBook(id);
+    async deleteBook({ _id }){
+        let bookDao = new BookDAO(this.request.user.id);
+        await bookDao.deleteBook(_id);
         this.send({ success: true });
     }
     @httpPost
