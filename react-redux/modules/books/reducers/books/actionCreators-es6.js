@@ -21,12 +21,10 @@ export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELE
 export const deleteBook = ({ _id }) => {
     return (dispatch, getState) => {
         dispatch({ type: BOOK_DELETING, _id });
-
-        setTimeout(() => {
-            ajaxUtil.post('/book/deleteBook', {_id}, () => {
-                dispatch({type: BOOK_DELETED, _id});
-            });
-        }, 2000);
+        
+        ajaxUtil.post('/book/deleteBook', {_id}, () => {
+            dispatch({type: BOOK_DELETED, _id});
+        });
     }
 }
 
