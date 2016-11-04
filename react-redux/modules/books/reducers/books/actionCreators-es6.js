@@ -1,7 +1,33 @@
-import { TOGGLE_SELECT_BOOK, LOAD_BOOKS, LOAD_BOOKS_RESULTS, BOOK_READ_CHANGING, BOOK_READ_CHANGED, TOGGLE_CHECK_ALL } from './actionNames';
+import {
+    TOGGLE_SELECT_BOOK,
+    LOAD_BOOKS,
+    LOAD_BOOKS_RESULTS,
+    BOOK_READ_CHANGING,
+    BOOK_READ_CHANGED,
+    TOGGLE_CHECK_ALL,
+    SET_PENDING_DELETE_BOOK,
+    CANCEL_PENDING_DELETE_BOOK,
+    DELETE_BOOK,
+    BOOK_DELETING,
+    BOOK_DELETED
+} from './actionNames';
 
 export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
+}
+
+export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
+export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
+export const deleteBook = ({ _id }) => {
+    return (dispatch, getState) => {
+        dispatch({ type: BOOK_DELETING, _id });
+
+        setTimeout(() => {
+            ajaxUtil.post('/book/deleteBook', {_id}, () => {
+                dispatch({type: BOOK_DELETED, _id});
+            });
+        }, 2000);
+    }
 }
 
 export function loadBooks(){

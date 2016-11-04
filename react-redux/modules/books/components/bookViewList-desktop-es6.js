@@ -63,7 +63,14 @@ class BookViewListDesktop extends React.Component{
                                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
                                 </td>
                                 <td><img src={book.smallImage} /></td>
-                                <td>{book.title}<br />{ !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }</td>
+                                <td>
+                                    {book.title}
+                                    <br />
+                                    { !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }
+                                    { !this.props.viewingPublic ? <a onClick={() => this.props.setPendingDeleteBook(book)}><i className="margin-left fa fa-fw fa-trash show-on-hover-parent-td"></i></a> : null }
+                                    { book.pendingDelete ? <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => this.props.deleteBook(book)} className="margin-left btn btn-xs btn-danger">Confirm delete</AjaxButton> : null }
+                                    { book.pendingDelete ? <button onClick={() => this.props.cancelPendingDeleteBook(book)} className="margin-left btn btn-xs btn-primary">Cancel</button> : null }
+                                </td>
                                 <td>
                                     <ul className="list-unstyled">
                                         {book.authors.map(author => <li>{author}</li>)}
