@@ -1,5 +1,19 @@
 import { createSelector } from 'reselect';
-import { LOAD_BOOKS, LOAD_BOOKS_RESULTS, TOGGLE_SELECT_BOOK, SELECT_ALL_BOOKS, DE_SELECT_ALL_BOOKS, BOOK_READ_CHANGING, BOOK_READ_CHANGED, TOGGLE_CHECK_ALL } from './actionNames';
+import {
+    LOAD_BOOKS,
+    LOAD_BOOKS_RESULTS,
+    TOGGLE_SELECT_BOOK,
+    SELECT_ALL_BOOKS,
+    DE_SELECT_ALL_BOOKS,
+    BOOK_READ_CHANGING,
+    BOOK_READ_CHANGED,
+    TOGGLE_CHECK_ALL,
+    SET_PENDING_DELETE_BOOK,
+    CANCEL_PENDING_DELETE_BOOK,
+    DELETE_BOOK,
+    BOOK_DELETING,
+    BOOK_DELETED
+} from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
 import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
@@ -85,6 +99,16 @@ export function booksReducer(state = initialBooksState, action){
                 newSelectedHash = Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {});
             }
             return Object.assign({}, state, { selectedBooks: newSelectedHash });
+        case SET_PENDING_DELETE_BOOK:
+            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], pendingDelete: true } } };
+        case CANCEL_PENDING_DELETE_BOOK:
+            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], pendingDelete: false } } };
+        case BOOK_DELETING:
+            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], deleting: true } } };
+        case BOOK_DELETED:
+            let newBooksHash = { ...state.booksHash };
+            delete newBooksHash[action._id];
+            return { ...state, booksHash: newBooksHash };
     }
     return state;
 }
