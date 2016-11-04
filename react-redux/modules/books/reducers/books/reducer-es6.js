@@ -4,7 +4,6 @@ import {
     LOAD_BOOKS_RESULTS,
     TOGGLE_SELECT_BOOK,
     SELECT_ALL_BOOKS,
-    DE_SELECT_ALL_BOOKS,
     BOOK_READ_CHANGING,
     BOOK_READ_CHANGED,
     TOGGLE_CHECK_ALL,
@@ -43,9 +42,6 @@ export function booksReducer(state = initialBooksState, action){
         case SELECT_ALL_BOOKS:
             var newBookList = state.list.map(b => Object.assign({}, b, { selected: true }));
             return Object.assign({}, state, { list: newBookList, selectedCount: newBookList.length });
-        case DE_SELECT_ALL_BOOKS:
-            var newBookList = state.list.map(b => Object.assign({}, b, { selected: false }));
-            return Object.assign({}, state, { list: newBookList, selectedCount: 0 });
         case SET_BOOKS_SUBJECTS:
             var newBookHash = { ...state.booksHash };
 
