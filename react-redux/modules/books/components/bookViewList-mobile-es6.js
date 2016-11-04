@@ -23,23 +23,25 @@ const BookViewListMobileItem = props => {
         ].filter(o => o).join('; ');
     }
 
+    let book = props.book;
+
     return (
         <span className="list-group-item" style={{ cursor: 'pointer' }}>
             <div className="row">
                 <div className="col-xs-3 col-sm-1">
-                    <img src={props.smallImage} />
+                    <img src={book.smallImage} />
                 </div>
                 <div className="col-xs-9 col-sm-11">
-                    <h4 className="list-group-item-heading">{props.title}</h4>
-                    <p className="list-group-item-text">{props.authors.length ? <b>{props.authors.join(', ')}</b> : 'No author'}</p>
+                    <h4 className="list-group-item-heading">{book.title}</h4>
+                    <p className="list-group-item-text">{book.authors.length ? <b>{book.authors.join(', ')}</b> : 'No author'}</p>
                     <div>
                         {publisherDisplay ? <p className="list-group-item-text">{publisherDisplay}</p> : null}
                         {isbnPages ? <p className="list-group-item-text">{isbnPages}</p> : null}
 
-                        { null && !props.viewingPublic ? <a onClick={() => props.editBook(props)}><i style={{ display: props.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-pencil"></i></a> : null }
-                        { !props.viewingPublic ? <button className="btn btn-primary btn-xs" onClick={() => props.setPendingDeleteBook(props)}><i className="fa fa-fw fa-trash"></i></button> : null }
-                        { props.pendingDelete ? <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteBook(props)} className="margin-left btn btn-xs btn-danger">Confirm delete</AjaxButton> : null }
-                        { props.pendingDelete ? <button onClick={() => props.cancelPendingDeleteBook(props)} className="margin-left btn btn-xs btn-primary">Cancel</button> : null }
+                        { !props.viewingPublic ? <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}><i className="fa fa-fw fa-pencil"></i></button> : null }
+                        { !props.viewingPublic ? <button className="margin-left btn btn-danger btn-xs" onClick={() => props.setPendingDeleteBook(book)}><i className="fa fa-fw fa-trash"></i></button> : null }
+                        { book.pendingDelete ? <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => props.deleteBook(book)} className="margin-left btn btn-xs btn-danger">Confirm delete</AjaxButton> : null }
+                        { book.pendingDelete ? <button onClick={() => props.cancelPendingDeleteBook(book)} className="margin-left btn btn-xs btn-primary">Cancel</button> : null }
                     </div>
                 </div>
             </div>
@@ -47,7 +49,7 @@ const BookViewListMobileItem = props => {
     )
 }
 
-const BookViewListMobileItemConnected = connect(selector, { ...actionCreatorsBooks })(BookViewListMobileItem);
+const BookViewListMobileItemConnected = connect(selector, { ...actionCreatorsBooks, ...actionCreatorsEditBook })(BookViewListMobileItem);
 
 const BookViewListMobile = props => (
     <div>
@@ -60,7 +62,7 @@ const BookViewListMobile = props => (
 
         <div style={{ paddingBottom: 15 }}>
             <div style={{ border: 0 }} className="list-group docked-to-panel">
-                { props.books.map((book, i) => <BookViewListMobileItemConnected key={book._id} {...book} viewingPublic={props.viewingPublic} /> )}
+                { props.books.map((book, i) => <BookViewListMobileItemConnected key={book._id} book={book} viewingPublic={props.viewingPublic} /> )}
             </div>
         </div>
 
