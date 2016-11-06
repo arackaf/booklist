@@ -29,19 +29,10 @@ export function tagsReducer(state = initialTagsState, action = {}){
         case STOP_EDITING_TAGS:
             return Object.assign({}, state, { editTagPacket: null });
         case NEW_TAG:
-            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, editingTag: null, parentId: '', name: '' } });
+            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, editingTag: null, name: '' } });
         case EDIT_TAG:
-            var editingTag = state.tagHash[action._id],
-                parentId;
-
-            if (editingTag.path == null){
-                parentId = null;
-            } else {
-                let hierarchy = editingTag.path.split(',');
-                parentId = hierarchy[hierarchy.length - 2];
-            }
-
-            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, ...editingTag, parentId: parentId || '', editingTag } });
+            var editingTag = state.tagHash[action._id];
+            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, ...editingTag, editingTag } });
         case CANCEL_TAG_EDIT:
             return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, editing: false } });
         case UPDATE_TAG_RESULTS:
