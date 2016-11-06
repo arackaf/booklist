@@ -6,6 +6,7 @@ import { createElement } from 'react';
 import 'util/ajaxUtil';
 
 let currentModule;
+let currentModuleObject;
 let publicUserCache = {};
 
 window.onhashchange = function () {
@@ -61,13 +62,19 @@ export function loadCurrentModule() {
 
     initial = false;
 
-    //if (module === currentModule) return;
+    if (module === currentModule) {
+        if (currentModuleObject && currentModuleObject.hashSync) {
+            store.dispatch(currentModuleObject.hashSync(globalHashManager.currentParameters));
+        }
+        return;
+    }
     currentModule = module;
 
     Promise.all([
         System.import(`./modules/${module}/${module}`),
         publicUserPromise
     ]).then(([{ default: module }, publicUserInfo]) => {
+        currentModuleObject = module;
         if (publicUserInfo){
             store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
         }
@@ -76,7 +83,10 @@ export function loadCurrentModule() {
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});
         }
-        renderUI(createElement(module.component, { hashParameters: globalHashManager.currentParameters }));
+        renderUI(createElement(module.component));
+        if (module.initialize) {
+            store.dispatch(module.initialize({parameters: globalHashManager.currentParameters }));
+        }
     });
 }
 
