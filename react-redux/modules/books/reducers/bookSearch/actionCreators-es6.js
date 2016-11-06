@@ -135,11 +135,11 @@ export function setFilters(packet){
 function isDirty(oldState, newState){
     if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
     if (itemsDifferent(oldState.tags, newState.tags)) return true;
-    if (oldState.pagesOperator != newState.pagesOperator){
+    if (oldState.pagesOperator != (newState.pagesOperator || '>')){
         if (newState.pages !== '') return true;
     }
 
-    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != newState[prop]).length;
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
 }
 
 const itemsDifferent = (oldItems, newItems) =>
