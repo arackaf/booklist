@@ -33,9 +33,10 @@ const gulpTargets = [
     'private'
 ].map(f => `./` + f + '/**/*-es6.js')
 
-gulpTargets.push(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*.js'));
+gulpTargets.push(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*-es6.js'));
 gulpTargets.push(getDirectories('./react-redux').map(f => './react-mobx/' + f + '/**/*.js'));
 gulpTargets.push('./*-es6.js');
+gulpTargets.push('./react-redux/*-es6.js');
 
 function getDirectories(srcpath) {
     return fs.readdirSync(srcpath).filter(cand => cand != 'node_modules' && cand != 'dist-es5' && fs.statSync(path.join(srcpath, cand)).isDirectory());

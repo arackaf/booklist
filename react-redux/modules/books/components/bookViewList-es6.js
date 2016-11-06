@@ -32,13 +32,6 @@ class BookViewingList extends React.Component {
         }catch(err){
             this.props.setDesktop();
         }
-
-        this.props.booksActivated(this.props.hashParameters);
-    }
-    componentDidUpdate(prevProps){
-        if (this.props.hashParameters !== prevProps.hashParameters){
-            this.props.syncFiltersToHash(this.props.hashParameters);
-        }
     }
     render() {
         let editingBook = this.props.editingBook,
