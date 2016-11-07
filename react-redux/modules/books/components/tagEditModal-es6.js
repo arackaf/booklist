@@ -8,19 +8,10 @@ import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { tagsSelector } from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
-const TagEditDeleteInfo = props => {
-    let deleteWarning = `${props.tagName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant tags' : 'child tag'} which will also be deleted.`;
-
-    return (
+const TagEditDeleteInfo = props =>
         <div className="row">
             <div className="col-xs-12">
                 <h4>Delete tag { props.tagName }</h4>
-
-                { props.affectedChildren ?
-                    <div className="alter alter-warning">
-                        {deleteWarning}
-                    </div> : null
-                }
 
                 <div style={{ marginTop: '5px'}}>
                     <BootstrapButton onClick={props.cancelDeleteTag} preset="default-sm">Cancel</BootstrapButton>
@@ -28,9 +19,7 @@ const TagEditDeleteInfo = props => {
                 </div>
                 <hr />
             </div>
-        </div>
-    );
-}
+        </div>;
 
 const tagEditModal = props => {
     let deleteInfo = props.deleteInfo,
@@ -68,7 +57,7 @@ const tagEditModal = props => {
                             <div>
                                 { deleteInfo ?
                                     <TagEditDeleteInfo
-                                        deleteInfo={deleteInfo}
+                                        {...deleteInfo}
                                         cancelDeleteTag={props.cancelDeleteTag}
                                         deleteTag={props.deleteTag} /> : null }
                                 <div className="row">
