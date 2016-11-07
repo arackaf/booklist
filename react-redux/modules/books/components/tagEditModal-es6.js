@@ -33,17 +33,12 @@ const TagEditDeleteInfo = props => {
 }
 
 const tagEditModal = props => {
-    let editTagPacket = props.editTagPacket;
-    let editingTag;
-
-    if (editTagPacket && editTagPacket.editingTag){
-        editingTag = editTagPacket.editingTag;
-    }
-
-    let textColors = ['#ffffff', '#000000'];
+    let deleteInfo = props.deleteInfo,
+        editingTag = props.editingTag,
+        textColors = ['#ffffff', '#000000'];
 
     return (
-        <Modal show={!!editTagPacket} onHide={props.stopEditingTags}>
+        <Modal show={!!props.editTagOpen} onHide={props.stopEditingTags}>
             <Modal.Header closeButton>
                 <Modal.Title>
                     Edit tags
@@ -63,7 +58,7 @@ const tagEditModal = props => {
                 </div>
                 <br />
 
-                { editTagPacket && editTagPacket.editing ?
+                { editingTag ?
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             { editingTag ? `Edit ${editingTag.name}` : 'New Tag' }
@@ -71,16 +66,16 @@ const tagEditModal = props => {
                         </div>
                         <div className="panel-body">
                             <div>
-                                { editTagPacket.deleteInfo ?
+                                { deleteInfo ?
                                     <TagEditDeleteInfo
-                                        { ...props.editTagPacket.deleteInfo }
+                                        deleteInfo={deleteInfo}
                                         cancelDeleteTag={props.cancelDeleteTag}
                                         deleteTag={props.deleteTag} /> : null }
                                 <div className="row">
                                     <div className="col-xs-6">
                                         <div className="form-group">
                                             <label>Tag name</label>
-                                            <input className="form-control" value={editTagPacket.name} onChange={(e) => props.setNewTagName(e.target.value)} />
+                                            <input className="form-control" value={editingTag.name} onChange={(e) => props.setNewTagName(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="col-xs-9">
@@ -89,7 +84,7 @@ const tagEditModal = props => {
                                             <div>
                                                 { props.colors.map(cp => <div className="color-choice" onClick={() => props.setNewTagBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
 
-                                                <CustomColorPicker onColorChosen={props.setNewTagBackgroundColor} currentColor={editTagPacket.backgroundColor} />
+                                                <CustomColorPicker onColorChosen={props.setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
                                             </div>
                                         </div>
                                     </div>
@@ -104,7 +99,7 @@ const tagEditModal = props => {
                                     <div className="col-xs-12">
                                         <div style={{ marginTop: '10px' }} className="form-group">
                                             <label>Preview &nbsp;&nbsp;</label>
-                                            <div className="label label-default" style={{ backgroundColor: editTagPacket.backgroundColor, color: editTagPacket.textColor }}>{ editTagPacket.name }</div>
+                                            <div className="label label-default" style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor }}>{ editingTag.name }</div>
                                         </div>
                                     </div>
                                 </div>

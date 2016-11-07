@@ -55,8 +55,8 @@ export function cancelTagEdit(){
 
 export function createOrUpdateTag(){
     return function(dispatch, getState) {
-        let { editingTag, name, parentId, backgroundColor, textColor } = getState().booksModule.tags.editTagPacket,
-            request = { _id: editingTag ? editingTag._id : null, name, parentId, backgroundColor, textColor };
+        let { _id, name, backgroundColor, textColor } = getState().booksModule.tags.editingTag,
+            request = { _id: _id || null, name, backgroundColor, textColor };
 
         ajaxUtil.post('/tag/setInfo', request, resp => dispatch({ type: UPDATE_TAG_RESULTS, tag: resp.tag }));
     }
