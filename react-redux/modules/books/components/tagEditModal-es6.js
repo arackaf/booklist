@@ -58,6 +58,7 @@ const tagEditModal = props => {
                                 { deleteInfo ?
                                     <TagEditDeleteInfo
                                         {...deleteInfo}
+                                        deleting={props.deleting}
                                         cancelDeleteTag={props.cancelDeleteTag}
                                         deleteTag={props.deleteTag} /> : null }
                                 <div className="row">
