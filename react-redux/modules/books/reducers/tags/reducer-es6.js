@@ -6,66 +6,68 @@ import {
 
 import { createSelector } from 'reselect';
 
+const emptyTag = { _id: '', name: '', backgroundColor: '', textColor: '' };
+const newTagEditing = { tagSearch: '', deletingTagId: null };
+const doneEditingTag = { saving: false, editingTagId: null, editingTag: null };
+
 const initialTagsState = {
     tagHash: {},
     colors: [],
     loaded: false,
     tagSearch: '',
-    initialQueryFired: false
+    initialQueryFired: false,
+    editTagOpen: false,
+    editingTag: null,
+    editingTagId: null,
+    deleting: false,
+    deletingTagId: null
 };
 
 export function tagsReducer(state = initialTagsState, action = {}){
     switch(action.type){
         case LOAD_TAGS:
-            return Object.assign({}, state, { initialQueryFired: true });
+            return { ...state, initialQueryFired: true };
         case LOAD_TAGS_RESULTS:
-            return Object.assign({}, state, { tagHash: tagsToHash(action.tags), loaded: true });
+            return { ...state, tagHash: tagsToHash(action.tags), loaded: true };
         case SET_TAG_SEARCH_VALUE:
-            return Object.assign({}, state, { tagSearch: action.value });
+            return { ...state, tagSearch: action.value };
         case EDIT_TAGS:
-            return Object.assign({}, state, { editTagPacket: {  } });
+            return { ...state, editTagOpen: true };
         case SET_NEW_TAG_VALUE:
-            return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, [action.field]: action.value } });
+            return { ...state, editingTag: {...state.editingTag, [action.field]: action.value } };
         case STOP_EDITING_TAGS:
-            return Object.assign({}, state, { editTagPacket: null });
+            return { ...state, editTagOpen: false };
         case NEW_TAG:
-            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, editingTag: null, name: '' } });
+            return {...state, ...newTagEditing, editingTag: { ...emptyTag } };
         case EDIT_TAG:
-            var editingTag = state.tagHash[action._id];
-            return Object.assign({}, state, { tagSearch: '', editTagPacket: { editing: true, ...editingTag, editingTag } });
+            return { ...state, ...newTagEditing, editingTag: state.tagHash[action._id], editingTagId: action._id };
         case CANCEL_TAG_EDIT:
-            return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, editing: false } });
+            return { ...state, ...doneEditingTag };
         case UPDATE_TAG_RESULTS:
-            let changedTags = tagsToHash([action.tag]);
-            return Object.assign({}, state, { editTagPacket: Object.assign({}, state.editTagPacket, { editing: false, editingTag: null }), tagHash: Object.assign({}, state.tagHash, changedTags) });
+            return { ...state, ...doneEditingTag, tagHash: { ...state.tagHash, ...tagsToHash([action.tag]) } };
         case BEGIN_TAG_DELETE:
-            let childTagRegex = new RegExp(`.*,${action._id},.*`),
-                affectedChildren = Object.keys(state.tagHash).filter(k => childTagRegex.test(state.tagHash[k].path)).length,
-                tagName = state.tagHash[action._id].name;
-
-            return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, deleteInfo: { affectedChildren, tagName, _id: action._id } } });
+            return { ...state, deletingTagId: action._id };
         case CANCEL_TAG_DELETE:
-            return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, deleteInfo: null } });
+            return { ...state, deletingTagId: null };
         case TAG_DELETING:
-            return Object.assign({}, state, { editTagPacket: { ...state.editTagPacket, deleteInfo: { ...state.editTagPacket.deleteInfo, deleting: true } } });
+            return { ...state, deleting: true };
         case TAG_DELETED:
-            let editTagPacket = Object.assign({}, state.editTagPacket, { editing: false });
             let tagHash = { ...state.tagHash };
-
             delete tagHash[action._id];
+            let newState = { ... state, deleting: false, deletingSubjectId: null, tagHash };
 
-            return Object.assign({}, state, { editTagPacket, tagHash });
+            if (newState.editingTagId && !newState.subjectHash[newState.editingTagId]){
+                newState.editingTagId = newState.editingTag = null;
+            }
+
+            return newState;
         case LOAD_COLORS:
-            return Object.assign({}, state, { colors: action.colors });        
+            return { ...state, colors: action.colors };
     }
     return state;
 }
 
-function tagsToHash(tags){
-    let hash = {};
-    tags.forEach(s => hash[s._id] = s);
-    return hash;
-}
+const tagsToHash = tags => tags.reduce((hash, tag) => (hash[tag._id] = tag, hash), {});
 
 export const filterTags = (tags, search) => {
     if (!search){
