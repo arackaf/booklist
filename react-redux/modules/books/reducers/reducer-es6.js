@@ -6,7 +6,6 @@ import { bookSearchReducer as bookSearch, bookSearchSelector } from './bookSearc
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
 import { bookTagManagerReducer as booksTagsModifier, booksTagsModifierSelector } from './booksTagModification/reducer';
 import bookEdit from './editBook/reducer';
-import ui from './ui/reducer';
 
 export const reducer = combineReducers({
     books,
@@ -15,7 +14,6 @@ export const reducer = combineReducers({
     booksSubjectsModifier,
     booksTagsModifier,
     bookEdit,
-    ui,
     tags
 });
 
@@ -25,7 +23,6 @@ export const selector = state => {
         tagsSelected = tagsSelector(state),
         bookEdit = state.booksModule.bookEdit,
         bookSearch = bookSearchSelector(state),
-        ui = state.booksModule.ui,
         app = state.app;
 
     return {
@@ -47,13 +44,6 @@ export const selector = state => {
         isEditingBook: bookEdit.isEditing,
         editingBook: bookEdit.editingBook,
         editingBookSaving: bookEdit.editingBookSaving,
-        editingBookSaved: bookEdit.editingBookSaved,
-        isDesktop: ui.isDesktop,
-        isMobile: ui.isMobile,
-        desktopRequested: ui.desktopRequested,
-        mobileRequested: ui.mobileRequested,
-        showingDesktop: ui.desktopRequested || (ui.isDesktop && !ui.mobileRequested),
-        showingMobile: !(ui.desktopRequested || (ui.isDesktop && !ui.mobileRequested)),
-        metaTagNeeded: ui.isMobile && !ui.desktopRequested
+        editingBookSaved: bookEdit.editingBookSaved
     };
 };

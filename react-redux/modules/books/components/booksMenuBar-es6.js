@@ -20,7 +20,6 @@ import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
 import * as tagsActionCreators from '../reducers/tags/actionCreators';
 import * as booksSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
-import * as uiActionCreators from '../reducers/ui/actionCreators';
 import { globalHashManager } from 'reactStartup';
 
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
@@ -278,6 +277,6 @@ class BooksMenuBar extends React.Component {
     }
 }
 
-const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...uiActionCreators, ...tagsActionCreators })(BooksMenuBar);
+const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })(BooksMenuBar);
 
 export default BooksMenuBarConnected;
