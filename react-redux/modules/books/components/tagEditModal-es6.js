@@ -9,17 +9,17 @@ import { tagsSelector } from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 const TagEditDeleteInfo = props =>
-        <div className="row">
-            <div className="col-xs-12">
-                <h4>Delete tag { props.tagName }</h4>
+    <div className="row">
+        <div className="col-xs-12">
+            <h4>Delete tag { props.tagName }</h4>
 
-                <div style={{ marginTop: '5px'}}>
-                    <BootstrapButton onClick={props.cancelDeleteTag} preset="default-sm">Cancel</BootstrapButton>
-                    <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteTag(props._id)} preset="danger-sm" className="pull-right">Delete</AjaxButton>
-                </div>
-                <hr />
+            <div style={{ marginTop: '5px'}}>
+                <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteTag(props._id)} preset="danger-sm">Delete</AjaxButton>
+                <BootstrapButton onClick={props.cancelDeleteTag} preset="default-sm" className="pull-right">Cancel</BootstrapButton>
             </div>
-        </div>;
+            <hr />
+        </div>
+    </div>;
 
 const tagEditModal = props => {
     let deleteInfo = props.deleteInfo,
@@ -95,8 +95,8 @@ const tagEditModal = props => {
                                 </div>
                                 <br style={{ clear: 'both' }} />
 
-                                <a className="btn btn-default" onClick={props.cancelTagEdit}>Cancel</a>
-                                <a className="btn btn-primary pull-right" onClick={e => { props.createOrUpdateTag(); e.preventDefault();} }>Save</a>
+                                <a className="btn btn-primary" onClick={e => { props.createOrUpdateTag(); e.preventDefault();} }>Save</a>
+                                <a className="btn btn-default pull-right" onClick={props.cancelTagEdit}>Cancel</a>
                             </div>
                         </div>
                     </div>
