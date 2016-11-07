@@ -54,9 +54,9 @@ export function tagsReducer(state = initialTagsState, action = {}){
         case TAG_DELETED:
             let tagHash = { ...state.tagHash };
             delete tagHash[action._id];
-            let newState = { ... state, deleting: false, deletingSubjectId: null, tagHash };
+            let newState = { ... state, deleting: false, deletingTagId: null, tagHash };
 
-            if (newState.editingTagId && !newState.subjectHash[newState.editingTagId]){
+            if (newState.editingTagId && !newState.tagHash[newState.editingTagId]){
                 newState.editingTagId = newState.editingTag = null;
             }
 
@@ -98,8 +98,25 @@ const tagsSearched = createSelector(
     }
 );
 
+const deletingTagInfoSelector = createSelector([
+        state => state.tagHash,
+        state => state.deletingTagId
+    ],
+    (tagHash, deletingTagId) => {
+        if (!deletingTagId) return null;
+
+        let tagName = tagHash[deletingTagId].name;
+
+        return { deleteInfo: { tagName, _id: deletingTagId } };
+    }
+);
+
 export const tagsSelector = ({ booksModule }) => {
-    return Object.assign({}, booksModule.tags, tagsSearched(booksModule.tags));
+    return Object.assign({},
+        booksModule.tags,
+        tagsSearched(booksModule.tags),
+        deletingTagInfoSelector(booksModule.tags)
+    );
 };
 
 function allTagssSorted(tagHash){
