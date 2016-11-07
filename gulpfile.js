@@ -25,7 +25,7 @@ let babelOptions = {
     plugins: ['transform-decorators-legacy']
 };
 
-const gulpTargets = [
+var gulpTargets = [
     'amazonDataAccess',
     'app-helpers',
     'controllers',
@@ -33,8 +33,8 @@ const gulpTargets = [
     'private'
 ].map(f => `./` + f + '/**/*-es6.js')
 
-gulpTargets.push(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*-es6.js'));
-gulpTargets.push(getDirectories('./react-redux').map(f => './react-mobx/' + f + '/**/*.js'));
+gulpTargets = gulpTargets.concat(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*-es6.js'));
+gulpTargets = gulpTargets.concat(getDirectories('./react-redux').map(f => './react-mobx/' + f + '/**/*.js'));
 gulpTargets.push('./*-es6.js');
 gulpTargets.push('./react-redux/*-es6.js');
 
