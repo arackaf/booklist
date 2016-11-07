@@ -1,5 +1,0 @@
-export const SET_DESKTOP = 'SET_DESKTOP';
-export const SET_MOBILE = 'SET_MOBILE';
-
-export const REQUEST_DESKTOP = 'REQUEST_DESKTOP';
-export const REQUEST_MOBILE = 'REQUEST_MOBILE';

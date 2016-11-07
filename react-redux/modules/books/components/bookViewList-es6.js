@@ -15,14 +15,13 @@ import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
-import * as actionCreatorsUi from '../reducers/ui/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 
 import { selector } from '../reducers/reducer';
 import { globalHashManager } from 'reactStartup';
 
 class BookViewingList extends React.Component {
-    componentDidMount(){
+    __componentDidMount(){
         try {
             if (window.screen.width < 700) {
                 this.props.setMobile();
@@ -57,7 +56,7 @@ class BookViewingList extends React.Component {
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.showingDesktop ? <DesktopView />
+                            (true || this.props.showingDesktop ? <DesktopView />
                                 : this.props.showingMobile ? <MobileView />
                                 : null) : null }
                     </div>
@@ -86,6 +85,6 @@ class BookViewingList extends React.Component {
         );
     }
 }
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsUi, ...actionCreatorsSearch })(BookViewingList);
+const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })(BookViewingList);
 
 export default BookViewingListConnected;

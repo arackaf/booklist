@@ -71,7 +71,6 @@ export const bookSearchSelector = state => {
     let booksState = booksSelector(state);
     let tagsState = tagsSelector(state);
     let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == 1 ? 'asc' : 'desc'}`;
-    let ui = booksModule.ui;
 
     return Object.assign({},
         booksModule.bookSearch,
@@ -87,9 +86,6 @@ export const bookSearchSelector = state => {
             viewingPublic: app.isPublic,
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
             eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
-            bindableSortValue,
-            showingDesktop: ui.desktopRequested || (ui.isDesktop && !ui.mobileRequested),
-            showingMobile: !(ui.desktopRequested || (ui.isDesktop && !ui.mobileRequested)),
-            metaTagNeeded: ui.isMobile && !ui.desktopRequested
+            bindableSortValue
         });
 }
