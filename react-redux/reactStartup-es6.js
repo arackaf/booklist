@@ -4,6 +4,13 @@ import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
 import 'util/ajaxUtil';
+import {setDesktop, setMobile} from './applicationRoot/rootReducerActionCreators';
+
+if (true || window.screen.width < 700) {
+    store.dispatch(setMobile());
+} else {
+    store.dispatch(setDesktop());
+}
 
 let currentModule;
 let currentModuleObject;

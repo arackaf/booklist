@@ -21,17 +21,6 @@ import { selector } from '../reducers/reducer';
 import { globalHashManager } from 'reactStartup';
 
 class BookViewingList extends React.Component {
-    __componentDidMount(){
-        try {
-            if (window.screen.width < 700) {
-                this.props.setMobile();
-            } else {
-                this.props.setDesktop();
-            }
-        }catch(err){
-            this.props.setDesktop();
-        }
-    }
     render() {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
@@ -56,7 +45,7 @@ class BookViewingList extends React.Component {
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (true || this.props.showingDesktop ? <DesktopView />
+                            (this.props.showingDesktop ? <DesktopView />
                                 : this.props.showingMobile ? <MobileView />
                                 : null) : null }
                     </div>

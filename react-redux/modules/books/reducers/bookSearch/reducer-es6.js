@@ -86,6 +86,10 @@ export const bookSearchSelector = state => {
             viewingPublic: app.isPublic,
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
             eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
-            bindableSortValue
+            bindableSortValue,
+            isDesktop: app.isDesktop,
+            isMobile: app.isMobile,
+            showingDesktop: app.isDesktop,
+            showingMobile: app.isMobile
         });
 }
