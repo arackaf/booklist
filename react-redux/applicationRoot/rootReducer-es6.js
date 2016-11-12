@@ -1,7 +1,4 @@
-import {
-    SET_DESKTOP,
-    SET_MOBILE
-} from './rootReducerActionNames';
+import {SET_DESKTOP,SET_MOBILE} from './rootReducerActionNames';
 
 const initialState = {
     publicUserId: '',

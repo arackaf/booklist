@@ -44,6 +44,10 @@ export const selector = state => {
         isEditingBook: bookEdit.isEditing,
         editingBook: bookEdit.editingBook,
         editingBookSaving: bookEdit.editingBookSaving,
-        editingBookSaved: bookEdit.editingBookSaved
+        editingBookSaved: bookEdit.editingBookSaved,
+        isDesktop: app.isDesktop,
+        isMobile: app.isMobile,
+        showingDesktop: app.isDesktop,
+        showingMobile: app.isMobile
     };
 };
