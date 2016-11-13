@@ -79,7 +79,6 @@ export const bookSearchSelector = state => {
             selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
             pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
             pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
-            ...booksModule.ui,
             subjects: subjectsState.subjects,
             allSubjectsSorted: subjectsState.allSubjectsSorted,
             selectedBooksCount: booksState.selectedBooksCount,
@@ -87,9 +86,6 @@ export const bookSearchSelector = state => {
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
             eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
             bindableSortValue,
-            isDesktop: app.isDesktop,
-            isMobile: app.isMobile,
-            showingDesktop: app.isDesktop,
-            showingMobile: app.isMobile
+            ...app
         });
 }

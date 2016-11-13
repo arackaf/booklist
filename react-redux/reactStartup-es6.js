@@ -6,7 +6,7 @@ import { createElement } from 'react';
 import 'util/ajaxUtil';
 import {setDesktop, setMobile} from './applicationRoot/rootReducerActionCreators';
 
-if (true || window.screen.width < 700) {
+if (window.screen.width < 700) {
     store.dispatch(setMobile());
 } else {
     store.dispatch(setDesktop());
