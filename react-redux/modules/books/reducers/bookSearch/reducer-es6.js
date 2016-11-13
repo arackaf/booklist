@@ -1,4 +1,17 @@
-import { BEGIN_FILTER_CHANGE, SET_PENDING_SUBJECT, END_FILTER_CHANGE, SET_FILTERS, SET_PENDING, SET_VIEWING_USERID, SET_SEARCH_SUBJECTS_VALUE, SET_SEARCH_TAGS_VALUE, SET_PENDING_TAG } from './actionNames';
+import {
+    BEGIN_FILTER_CHANGE,
+    SET_PENDING_SUBJECT,
+    END_FILTER_CHANGE,
+    SET_FILTERS,
+    SET_PENDING,
+    SET_VIEWING_USERID,
+    SET_SEARCH_SUBJECTS_VALUE,
+    SET_SEARCH_TAGS_VALUE,
+    SET_PENDING_TAG,
+    SET_VIEW,
+    GRID_VIEW,
+    BASIC_LIST_VIEW
+} from './actionNames';
 
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 
@@ -29,7 +42,8 @@ const initialState = {
         ...searchFields
     },
     searchSubjectsValue: '',
-    searchTagsValue: ''
+    searchTagsValue: '',
+    view: ''
 };
 
 export function bookSearchReducer(state = initialState, action){
@@ -65,12 +79,16 @@ function projectSelectedItems(ids, hash){
 export const bookSearchSelector = state => {
     let booksModule = state.booksModule,
         bookSearch = state.booksModule.bookSearch,
+        view = bookSearch.view,
         app = state.app;
 
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
     let tagsState = tagsSelector(state);
     let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == 1 ? 'asc' : 'desc'}`;
+
+    let showingGrid = view == GRID_VIEW || (!view && app.showingDesktop),
+        showingBasicList = view == BASIC_LIST_VIEW || (!view && app.showingMobile);
 
     return Object.assign({},
         booksModule.bookSearch,
@@ -86,6 +104,8 @@ export const bookSearchSelector = state => {
             eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
             eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
             bindableSortValue,
+            showingGrid,
+            showingBasicList,
             ...app
         });
 }
