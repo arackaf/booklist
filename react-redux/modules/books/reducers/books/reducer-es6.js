@@ -11,7 +11,8 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED
+    BOOK_DELETED,
+    SET_VIEW
 } from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
@@ -20,12 +21,16 @@ import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';
 
+const TABLE_VIEW = 'books table view';
+const MOBILE_VIEW = 'books mobile view';
+
 const initialBooksState = {
     booksHash: {},
     loading: false,
     selectedBooks: {},
     reloadOnActivate: false,
-    initialQueryFired: false
+    initialQueryFired: false,
+    view: ''
 };
 
 export function booksReducer(state = initialBooksState, action){
@@ -105,6 +110,8 @@ export function booksReducer(state = initialBooksState, action){
             let newBooksHash = { ...state.booksHash };
             delete newBooksHash[action._id];
             return { ...state, booksHash: newBooksHash };
+        case SET_VIEW:
+            return {...state, view: action.view};
     }
     return state;
 }
@@ -158,11 +165,19 @@ const bookSelectionSelector = createSelector(
 );
 
 export const booksSelector = state => {
-    let booksModule = state.booksModule;
+    let booksModule = state.booksModule,
+        books = booksModule.books,
+        app = state.app,
+        view = books.view;
+
+    let showingGrid = view == 'grid' || (!view && app.showingDesktop),
+        showingBasicList = view == 'basic-list' || (!view && app.showingMobile);
 
     return Object.assign({},
-        booksModule.books,
+        books,
         {
+            showingGrid,
+            showingBasicList,
             ...booksWithSubjectsSelector(state),
             ...bookSelectionSelector(state)
         }

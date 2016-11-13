@@ -11,3 +11,5 @@ export const CANCEL_PENDING_DELETE_BOOK = 'CANCEL_PENDING_DELETE_BOOK';
 export const DELETE_BOOK = 'DELETE_BOOK';
 export const BOOK_DELETING = 'BOOK_DELETING';
 export const BOOK_DELETED = 'BOOK_DELETED';
+
+export const SET_VIEW = 'books.SET_VIEW';
