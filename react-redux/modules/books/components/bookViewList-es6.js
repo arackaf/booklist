@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect} from 'react-redux';
 
-import DesktopView from './bookViewList-desktop';
-import MobileView from './bookViewList-mobile';
+import GridView from './bookViewList-grid';
+import BasicListView from './bookViewList-basicList';
 
 import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 import BooksMenuBar from './booksMenuBar';
@@ -45,8 +45,8 @@ class BookViewingList extends React.Component {
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.showingGrid ? <DesktopView />
-                                : this.props.showingBasicList ? <MobileView />
+                            (this.props.showingGrid ? <GridView />
+                                : this.props.showingBasicList ? <BasicListView />
                                 : null) : null }
                     </div>
                 </div>
