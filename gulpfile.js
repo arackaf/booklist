@@ -43,7 +43,7 @@ function getDirectories(srcpath) {
 }
 
 gulp.task('transpile-all', function () {
-    gulp.src(gulpTargets)
+    gulp.src(gulpTargets, { base: './' })
         .pipe(babel(babelOptions))
         .pipe(rename(function (path) {
             path.basename = path.basename.replace(/-es6$/, '');
