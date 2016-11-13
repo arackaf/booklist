@@ -12,4 +12,7 @@ export const DELETE_BOOK = 'DELETE_BOOK';
 export const BOOK_DELETING = 'BOOK_DELETING';
 export const BOOK_DELETED = 'BOOK_DELETED';
 
+export const GRID_VIEW = 'books table view';
+export const BASIC_LIST_VIEW = 'books mobile view';
+
 export const SET_VIEW = 'books.SET_VIEW';

@@ -12,7 +12,9 @@ import {
     DELETE_BOOK,
     BOOK_DELETING,
     BOOK_DELETED,
-    SET_VIEW
+    SET_VIEW,
+    GRID_VIEW,
+    BASIC_LIST_VIEW
 } from './actionNames';
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
@@ -20,9 +22,6 @@ import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
 import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';
-
-const TABLE_VIEW = 'books table view';
-const MOBILE_VIEW = 'books mobile view';
 
 const initialBooksState = {
     booksHash: {},
@@ -170,8 +169,8 @@ export const booksSelector = state => {
         app = state.app,
         view = books.view;
 
-    let showingGrid = view == 'grid' || (!view && app.showingDesktop),
-        showingBasicList = view == 'basic-list' || (!view && app.showingMobile);
+    let showingGrid = view == GRID_VIEW || (!view && app.showingDesktop),
+        showingBasicList = view == BASIC_LIST_VIEW || (!view && app.showingMobile);
 
     return Object.assign({},
         books,
