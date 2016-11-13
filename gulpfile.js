@@ -38,8 +38,6 @@ gulpTargets = gulpTargets.concat(getDirectories('./react-mobx').map(f => './reac
 gulpTargets.push('./*-es6.js');
 gulpTargets.push('./react-redux/*-es6.js');
 
-console.log(gulpTargets)
-
 function getDirectories(srcpath) {
     return fs.readdirSync(srcpath).filter(cand => cand != 'node_modules' && cand != 'dist-es5' && fs.statSync(path.join(srcpath, cand)).isDirectory());
 }
