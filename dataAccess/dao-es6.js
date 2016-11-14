@@ -25,6 +25,7 @@ class DAO{
     }
     dispose(db){ }
     static shutdown(){
+        try { db.close(); } catch(err){}
         db = null;
     }
 }

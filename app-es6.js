@@ -313,9 +313,8 @@ process.on('exit', shutdown);
 process.on('SIGINT', shutdown);
 
 function shutdown(){
-    console.log('on shutdown');
     dao.shutdown();
-    console.log('shutdown-ed');
+    process.exit();
 }
 
 function error(err){
