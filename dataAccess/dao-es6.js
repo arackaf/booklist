@@ -1,14 +1,18 @@
 import { MongoClient } from 'mongodb';
 
-class DAO{
-    open(){
-        let result = MongoClient.connect(process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/mongotest');
+let db;
+let dbPromise = MongoClient
+        .connect(process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/mongotest')
+        .then(database => db = database)
+        .catch(err => console.log('Error connecting ' + err));
 
-        //handling error like this will keep the resulting promise in error state
-        result.catch(err => {
-            this.logError('Error connecting ' + err);
-        });
-        return result;
+
+class DAO{
+    static init(){
+        return dbPromise;
+    }
+    open(){
+        return db;
     }
     confirmSingleResult(res){
         let numInserted = +res.result.n;
@@ -19,13 +23,9 @@ class DAO{
             throw 'Expected 1 object to be inserted.  Actual ' + numInserted;
         }
     }
-    logError(err){
-        console.log(err)
-    }
-    dispose(db){
-        try {
-            db.close();
-        } catch(err){ } //maybe closed by error or something
+    dispose(db){ }
+    static shutdown(){
+        db = null;
     }
 }
 
