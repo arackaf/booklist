@@ -33,8 +33,8 @@ const searchFields = {
 }
 
 const initialState = {
-    sort: '',
-    sortDirection: '',
+    sort: '_id',
+    sortDirection: '-1',
     editingFilters: false,
     hasMore: false,
     ...searchFields,
