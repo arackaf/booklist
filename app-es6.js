@@ -2,6 +2,7 @@ import 'regenerator/runtime';
 
 import './app-helpers/promiseUtils';
 import './private/awsS3Credentials';
+import dao from './dataAccess/dao';
 
 const express = require('express');
 const app = express();
@@ -89,8 +90,6 @@ app.use(passport.session());
 app.use(passport.authenticate('remember-me'));
 
 var expressWs = require('express-ws')(app);
-
-app.listen(process.env.PORT || 3000);
 
 app.use('/static/', express.static(__dirname + '/static/'));
 app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
@@ -308,18 +307,26 @@ app.get('/react-redux/activate/:code', function(req, response){
     }, err => console.log(':(', err));
 });
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', error);
+process.on('unhandledRejection', error);
+process.on('exit', shutdown);
+process.on('SIGINT', shutdown);
+
+function shutdown(){
+    dao.shutdown();
+    process.exit();
+}
+
+function error(err){
     try{
         let logger = new ErrorLoggerDao();
         logger.log('exception', err);
     } catch(e) { }
-});
+}
 
-process.on('unhandledRejection', function (err, p) {
-    try{
-        let logger = new ErrorLoggerDao();
-        logger.log('promise rejection', err);
-    } catch(e) { }
+Promise.resolve(dao.init()).then(() => {
+    app.listen(process.env.PORT || 3000);
+    bookEntryQueueManager.initialize();
 });
 
 //var AWS = require('aws-sdk');
@@ -371,5 +378,3 @@ lwip.open('./uploads/li_large.jpg', function (err, image) {
     });
 });
 */
-
-bookEntryQueueManager.initialize();
