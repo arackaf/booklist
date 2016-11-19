@@ -9,7 +9,8 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED
+    BOOK_DELETED,
+    SET_VIEW
 } from './actionNames';
 
 export function toggleSelectBook(_id, selected){
@@ -102,10 +103,6 @@ function executeSetRead(dispatch, ids, value){
     });
 }
 
-export function booksResults(resp, hasMore){
-    return { type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore };
-}
+export const booksResults = (resp, hasMore) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore });
 
-export function toggleCheckAll(){
-    return { type: TOGGLE_CHECK_ALL };
-}
+export const toggleCheckAll = () => ({ type: TOGGLE_CHECK_ALL });

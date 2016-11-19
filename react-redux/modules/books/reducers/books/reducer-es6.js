@@ -26,8 +26,7 @@ const initialBooksState = {
     loading: false,
     selectedBooks: {},
     reloadOnActivate: false,
-    initialQueryFired: false,
-    view: ''
+    initialQueryFired: false
 };
 
 export function booksReducer(state = initialBooksState, action){
