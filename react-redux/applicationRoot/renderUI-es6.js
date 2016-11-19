@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import {requestDesktop, requestMobile} from './rootReducerActionCreators';
 
 const MobileMeta = connect(state => state.app, {})(app =>
-    app.showingMobile ? <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" /> : null
+    <meta name="viewport" content={app.showingMobile ? "width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" : ''} />
 );
 
 const WellUiSwitcher = connect(state => state.app, {requestDesktop, requestMobile})(props => {
