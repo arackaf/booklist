@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <title>Book tracker</title>
 
-    <script type="text/javascript" src="system.js"></script>
+    <script type="text/javascript" src="/react-redux/system.js"></script>
     <script type="text/javascript" src="/static/scripts/jquery.js"></script>
-    <script type="text/javascript" src="systemJsConfiguration.js"></script>
+    <script type="text/javascript" src="/react-redux/systemJsConfiguration.js"></script>
 
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
@@ -186,6 +186,7 @@
                 config.map['dist-bundles'] = isEs6 ? 'dist-es6' : 'dist-es5';
                 config.bundles = gBundlePathsTranspiled;
             }
+            config.baseURL = '/react-redux'
             System.config(config);
             System.import('reactStartup');
         }
