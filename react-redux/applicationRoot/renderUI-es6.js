@@ -12,9 +12,11 @@ export function clearUI(){
 }
 
 export function renderUI(component){
+    let state = store.getState();
     render(
         <Provider store={store}>
             <div>
+                { state.app.showingMobile ? <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" /> : null }
                 { component }
             </div>
         </Provider>,
