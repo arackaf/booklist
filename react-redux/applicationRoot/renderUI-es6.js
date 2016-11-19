@@ -12,12 +12,22 @@ export function clearUI(){
 }
 
 export function renderUI(component){
-    let state = store.getState();
+    let state = store.getState(),
+        showChooseDesktop = state.app.isMobile && state.app.showingMobile,
+        showSwitchBackMobile = state.app.isMobile && state.app.showingDesktop;
+
     render(
         <Provider store={store}>
             <div>
                 { state.app.showingMobile ? <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" /> : null }
                 { component }
+
+                <div className="well well-sm">
+                    <img width="16" height="16" src="/static/main-icon.png" />
+                    <span style={{marginLeft: '5px', marginRight: '5px'}}>Track my books</span>
+                    { showChooseDesktop ? <a>Use desktop version</a> : null }
+                    { showSwitchBackMobile ? <a>Use mobile version</a> : null }
+                </div>
             </div>
         </Provider>,
         document.getElementById('home')
