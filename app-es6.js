@@ -106,8 +106,7 @@ app.ws('/bookEntryWS', function(ws, req) {
 var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) });
 
-app.get('/', (req, res) => res.redirect('/react-redux'));
-
+app.get('/', browseToReactRedux);
 app.get('/react-redux', browseToReactRedux);
 app.get('/react-mobx', browseToReactMobX);
 

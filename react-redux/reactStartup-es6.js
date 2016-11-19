@@ -78,7 +78,7 @@ export function loadCurrentModule() {
     currentModule = module;
 
     Promise.all([
-        System.import(`./modules/${module}/${module}`),
+        System.import(`/react-redux/modules/${module}/${module}`),
         publicUserPromise
     ]).then(([{ default: module }, publicUserInfo]) => {
         currentModuleObject = module;
