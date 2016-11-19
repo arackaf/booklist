@@ -6,7 +6,9 @@ const initialState = {
     publicBooksHeader: '',
     isPublic: false,
     isDesktop: false,
-    isMobile: false
+    showingDesktop: false,
+    isMobile: false,
+    showingMobile: false
 };
 
 export default function rootReducer(state = initialState, action){

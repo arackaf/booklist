@@ -86,7 +86,6 @@ export function loadCurrentModule() {
             store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
         }
 
-        //clearUI();
         if (module.reducer) {
             getNewReducer({name: module.name, reducer: module.reducer});
         }
