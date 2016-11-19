@@ -45,8 +45,8 @@ class BookViewingList extends React.Component {
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.showingGrid ? <GridView />
-                                : this.props.showingBasicList ? <BasicListView />
+                            (this.props.isGridView ? <GridView />
+                                : this.props.isBasicList ? <BasicListView />
                                 : null) : null }
                     </div>
                 </div>

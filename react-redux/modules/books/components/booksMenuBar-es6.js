@@ -144,8 +144,8 @@ class BooksMenuBar extends React.Component {
                             </div>
 
                             <div className="btn-group" role="group">
-                                <button type="button" onClick={this.props.requestDesktop} className={'btn btn-default ' + (this.props.showingDesktop ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
-                                <button type="button" onClick={this.props.requestMobile} className={'btn btn-default ' + (this.props.showingMobile ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
+                                <button type="button" onClick={this.props.setViewDesktop} className={'btn btn-default ' + (this.props.isGridView ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
+                                <button type="button" onClick={this.props.setViewBasicList} className={'btn btn-default ' + (this.props.isBasicList ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
                                 { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
                             </div>
 
