@@ -48,10 +48,6 @@ class BookViewingList extends React.Component {
                                 : null) : null }
                     </div>
                 </div>
-                <div className="well well-sm">
-                    <img width="16" height="16" src="/static/main-icon.png" />
-                    <span>Track my books</span>
-                </div>
 
                 <BookSubjectSetter />
                 <BookTagSetter />
