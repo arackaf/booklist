@@ -31,6 +31,8 @@
     "react-addons-css-transition-group": "15.1.0",
     "react-autosuggest": "^3.7.4",
     "react-bootstrap": "0.29.5",
+    "react-dnd": "2.1.4",
+    "react-dnd-html5-backend": "2.1.2",
     "react-dom": "0.14.0",
     "react-dropzone": "3.4.0",
     "react-redux": "4.4.5",
