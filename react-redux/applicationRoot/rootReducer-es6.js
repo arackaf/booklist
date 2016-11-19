@@ -1,4 +1,4 @@
-import {SET_DESKTOP,SET_MOBILE} from './rootReducerActionNames';
+import {SET_DESKTOP,SET_MOBILE,REQUEST_DESKTOP,REQUEST_MOBILE} from './rootReducerActionNames';
 
 const initialState = {
     publicUserId: '',
@@ -21,6 +21,10 @@ export default function rootReducer(state = initialState, action){
             return { ...state, isDesktop: true, showingDesktop: true, isMobile: false, showingMobile: false };
         case SET_MOBILE:
             return { ...state, isDesktop: false, showingDesktop: false, isMobile: true, showingMobile: true };
+        case REQUEST_DESKTOP:
+            return { ...state, showingDesktop: true, showingMobile: false };
+        case REQUEST_MOBILE:
+            return { ...state, showingDesktop: false, showingMobile: true };
     }
 
     return state;
