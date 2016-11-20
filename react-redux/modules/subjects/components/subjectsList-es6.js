@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {selector} from 'modules/subjects/reducers/reducer';
+import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 
 export default class SubjectsList extends Component{
     render(){
@@ -9,3 +12,7 @@ export default class SubjectsList extends Component{
         )
     }
 }
+
+const SubjectsListConnected = connect(selector, { ...actionCreators })(SubjectsList);
+
+export default SubjectsListConnected;

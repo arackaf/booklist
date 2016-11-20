@@ -62,7 +62,7 @@ function stackAndGetTopLevelSubjects(subjectsHash){
     return subjects.filter(s => s.path == null);
 }
 
-export const selector = createSelector([state => state.subjectHash],
+const subjectsSelector = createSelector([state => state.subjectHash],
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
 
@@ -70,4 +70,8 @@ export const selector = createSelector([state => state.subjectHash],
             subjects: mainSubjectsCollection
         };
     }
+);
+
+export const selector = createSelector([state => state.subjectsModule],
+    subjects => subjectsSelector(subjects)
 );
