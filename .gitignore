@@ -278,3 +278,8 @@ react-redux/applicationRoot/rootReducerActionCreators.js
 react-redux/applicationRoot/rootReducerActionNames.js
 react-redux/modules/books/components/bookViewList-basicList.js
 react-redux/modules/books/components/bookViewList-grid.js
+react-redux/modules/subjects/components/subjectsList.js
+react-redux/modules/subjects/reducers/actionCreators.js
+react-redux/modules/subjects/reducers/actionNames.js
+react-redux/modules/subjects/reducers/reducer.js
+react-redux/modules/subjects/subjects.js

@@ -118,7 +118,7 @@ const searchSubjectsSelector = createSelector([
     }
 );
 
-const elidibleSubjectsSelector = createSelector([
+const eligibleSubjectsSelector = createSelector([
         state => state.subjectHash,
         state => state.editingSubjectId
     ],
@@ -154,7 +154,7 @@ export const subjectsSelector = ({ booksModule }) => {
         booksModule.subjects,
         {
             ...searchSubjectsSelector(booksModule.subjects),
-            ...elidibleSubjectsSelector(booksModule.subjects),
+            ...eligibleSubjectsSelector(booksModule.subjects),
             ...deletingSubjectInfoSelector(booksModule.subjects)
         }
     );
