@@ -72,6 +72,4 @@ const subjectsSelector = createSelector([state => state.subjectHash],
     }
 );
 
-export const selector = createSelector([state => state.subjectsModule],
-    subjects => subjectsSelector(subjects)
-);
+export const selector = createSelector([state => state.subjectsModule], subjectsSelector);

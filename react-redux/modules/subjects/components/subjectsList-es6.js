@@ -7,7 +7,9 @@ export default class SubjectsList extends Component{
     render(){
         return (
             <div style={{ margin: '50px' }}>
-                <div>Hello World</div>
+                <ul>{this.props.subjects.map(s =>
+                    <li key={s._id}>{s.name}</li>
+                )}</ul>
             </div>
         )
     }
