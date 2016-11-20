@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {selector} from 'modules/subjects/reducers/reducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
-import {DragSource, DragDropContext, DropTarget} from 'react-dnd';
+import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 @DragSource('subject', {
@@ -10,18 +10,16 @@ import HTML5Backend from 'react-dnd-html5-backend';
         return props;
     }
 }, (connect, monitor) => ({
-    // Call this function inside render()
-    // to let React DnD handle the drag events:
     connectDragSource: connect.dragSource(),
-    // You can ask the monitor about the current drag state:
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
+    connectDragPreview: connect.dragPreview()
 }))
 class SubjectDisplay extends Component {
     render(){
-        let {_id, name, connectDragSource} = this.props;
+        let {_id, name, connectDragSource, connectDragPreview} = this.props;
 
         return (
-            connectDragSource(<li key={_id}>{name}</li>)
+            connectDragPreview(<li key={_id}>{connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}</li>)
         )
     }
 }
