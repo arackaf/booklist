@@ -1,56 +1,21 @@
 import {
-    UPDATE_ISBN,
-    GET_BOOK,
-    SAVE_ALL_PENDING,
-    RESET_LIST,
-    SET_PENDING,
-    BOOK_SAVED,
-    INCREMENT_PENDING,
-    BOOK_QUEUED,
-    BOOK_LOOKUP_FAILED
+    LOAD_SUBJECTS, LOAD_SUBJECTS_RESULTS, EDIT_SUBJECT, NEW_SUBJECT, EDIT_SUBJECTS, SET_NEW_SUBJECT_VALUE,
+    STOP_EDITING_SUBJECTS, UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS, LOAD_COLORS, CANCEL_SUBJECT_EDIT,
+    BEGIN_SUBJECT_DELETE, CANCEL_SUBJECT_DELETE, SUBJECT_DELETING, SUBJECT_DELETED, SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-const initialArray = () => Array.from({ length: 10 }).map(() => ({ isbn: '', queued: false, queueing: false }));
-const initialState = {
-    entryList: initialArray(),
-    pendingNumber: null,
-    booksJustSaved: []
+import { createSelector } from 'reselect';
+
+const initialSubjectsState = {
+    subjectHash: {},
+    editingSubjectId: null,
+    deletingSubjectId: null,
+    editingSubject: null,
+    editModalOpen: false,
+    saving: false,
+    deleting: false,
+    colors: [],
+    loaded: false,
+    subjectSearch: '',
+    initialQueryFired: false
 };
-
-const MAX_BOOKS_DISPLAYED = 20;
-
-function reducer(state = initialState, action){
-    switch(action.type) {
-        case UPDATE_ISBN:
-            var newEntryList = state.entryList.concat();
-            Object.assign(newEntryList[action.index], { isbn: action.isbn, queueing: false, queued: false });
-
-            return Object.assign({}, state, { entryList: newEntryList });
-        case GET_BOOK:
-            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: true }),
-                newEntryList = state.entryList.concat();
-
-            newEntryList[action.index] = updatedObject;
-            return Object.assign({}, state, { entryList: newEntryList });
-        case BOOK_QUEUED:
-            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: false, queued: true, isbn: '' }),
-                newEntryList = state.entryList.concat();
-
-            newEntryList[action.index] = updatedObject;
-            return Object.assign({}, state, { entryList: newEntryList });
-        case RESET_LIST:
-            return Object.assign({}, state, { entryList: initialArray() });
-        case SET_PENDING:
-            return Object.assign({}, state, { pendingNumber: action.number });
-        case INCREMENT_PENDING:
-            return Object.assign({}, state, { pendingNumber: (state.pendingNumber || 0) + 1 });
-        case BOOK_SAVED:
-            return Object.assign({}, state, { booksJustSaved: [{ ...action.book, success: true }].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
-        case BOOK_LOOKUP_FAILED:
-            let entry = { _id: '' +new Date(), title: `Failed lookup for ${action.isbn}`, success: false };
-            return Object.assign({}, state, { booksJustSaved: [entry].concat(state.booksJustSaved.slice(0, MAX_BOOKS_DISPLAYED)), pendingNumber: (state.pendingNumber - 1) || 0 });
-    }
-    return state;
-}
-
-export default reducer;

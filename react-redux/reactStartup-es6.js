@@ -21,7 +21,7 @@ window.onhashchange = function () {
 };
 
 let initial = true;
-const validModules = new Set(['books', 'scan', 'home', 'activate', 'view']);
+const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects']);
 
 export const globalHashManager = new HashUtility();
 
