@@ -14,37 +14,49 @@ import HTML5Backend from 'react-dnd-html5-backend';
     isDragging: monitor.isDragging(),
     connectDragPreview: connect.dragPreview()
 }))
-class SubjectDisplay extends Component {
-    render(){
-        let {subject, connectDragSource, connectDragPreview} = this.props,
-            {_id, name, children: childSubjects} = subject;
+@DropTarget('subject', {
+    canDrop(props, monitor){
+        let { subject: sourceSubject } = monitor.getItem(),
+            { subject: targetSubject } = props;
+        console.log(sourceSubject.name, targetSubject.name);
 
-        return (
-            connectDragPreview(
-                <li className="list-group-item" key={_id}>
-                    {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
-                    {childSubjects.length ? <SubjectList subjects={childSubjects} /> : null}
-                </li>
-            )
-        );
+        return true;
+
+        return subjects.indexOf(subject) < 0;
+        //debugger;
+        return false;
     }
-}
-
-
-@DropTarget('subject', {}, (connect, monitor) => ({
+}, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
     itemType: monitor.getItemType()
 }))
+class SubjectDisplay extends Component {
+    render(){
+        let {subject, connectDragSource, connectDragPreview, connectDropTarget} = this.props,
+            {_id, name, children: childSubjects} = subject;
+
+        return (
+            connectDropTarget(
+                connectDragPreview(
+                    <li className="list-group-item" key={_id}>
+                        {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
+                        {childSubjects.length ? <SubjectList subjects={childSubjects} /> : null}
+                    </li>
+                )
+            )
+        );
+    }
+}
+
+
 class SubjectList extends Component {
     render(){
-        let { isOver, canDrop, connectDropTarget } = this.props;
+        let { isOver, canDrop } = this.props;
 
-        return connectDropTarget(
-            <ul className="list-group">{this.props.subjects.map(subject => <SubjectDisplay subject={subject} />)}</ul>
-        );
+        return <ul className="list-group" style={{ marginBottom: '5px' }}>{this.props.subjects.map(subject => <SubjectDisplay subject={subject} />)}</ul>;
     }
 }
 
