@@ -16,55 +16,48 @@ import HTML5Backend from 'react-dnd-html5-backend';
 }))
 class SubjectDisplay extends Component {
     render(){
-        let {_id, name, connectDragSource, connectDragPreview} = this.props;
+        let {subject, connectDragSource, connectDragPreview} = this.props,
+            {_id, name, children: childSubjects} = subject;
 
         return (
-            connectDragPreview(<li key={_id}>{connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}</li>)
-        )
+            connectDragPreview(
+                <li className="list-group-item" key={_id}>
+                    {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
+                    {childSubjects.length ? <SubjectList subjects={childSubjects} /> : null}
+                </li>
+            )
+        );
     }
 }
 
+
 @DropTarget('subject', {}, (connect, monitor) => ({
-    // Call this function inside render()
-    // to let React DnD handle the drag events:
     connectDropTarget: connect.dropTarget(),
-    // You can ask the monitor about the current drag state:
     isOver: monitor.isOver(),
     isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
     itemType: monitor.getItemType()
 }))
-class TempDrop extends Component {
+class SubjectList extends Component {
     render(){
         let { isOver, canDrop, connectDropTarget } = this.props;
 
         return connectDropTarget(
-            <div style={{ border: '1px solid red', height: '300px;' }}>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-            </div>
+            <ul className="list-group">{this.props.subjects.map(subject => <SubjectDisplay subject={subject} />)}</ul>
         );
     }
 }
 
-export default class SubjectsList extends Component{
+export default class SubjectsComponent extends Component{
     render(){
         return (
             <div style={{ margin: '50px' }}>
-                <ul>{this.props.subjects.map(subject => <SubjectDisplay {...subject} />)}</ul>
-
-                <br />
-                <br />
-                <br />
-                <TempDrop />
+                <SubjectList subjects={this.props.subjects} />
             </div>
         )
     }
 }
 
-const SubjectsListConnected = connect(selector, { ...actionCreators })(SubjectsList);
+const SubjectsComponentConnected = connect(selector, { ...actionCreators })(SubjectsComponent);
 
-export default DragDropContext(HTML5Backend)(SubjectsListConnected);
+export default DragDropContext(HTML5Backend)(SubjectsComponentConnected);
