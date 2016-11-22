@@ -68,9 +68,8 @@ class SubjectDisplayContent extends Component {
         return (
             connectDragPreview(
                 <div>
-                    {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name} {this.props.draggingSubject && this.props.draggingSubject.name}
+                    {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
                     {effectiveChildren.length ? <SubjectList style={{ marginTop: '5px' }} subjects={effectiveChildren} /> : null}
-                    {this.props.draggingSubject ? <div>{this.props.draggingSubject.name}</div> : null}
                 </div>
             )
         )
