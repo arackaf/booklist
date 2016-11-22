@@ -42,16 +42,20 @@ const subjectsModuleSelector = createSelector([
     state => state.subjectsModule.draggingId,
     state => state.subjectsModule.currentDropCandidateId
 ], (subjectHash, draggingId, currentDropCandidateId) => {
+    let subjects;
     if (currentDropCandidateId){
         subjectHash = {...subjectHash};
         let dropTarget = subjectHash[currentDropCandidateId],
             draggingSubject = subjectHash[`${draggingId}_dragging`] = {...subjectHash[draggingId], candidateMove: true};
 
         draggingSubject.path = !dropTarget.path ? `,${dropTarget._id},` : dropTarget.path + `${dropTarget._id},`;
+        subjects = stackAndGetTopLevelSubjects(subjectHash);
+    } else {
+        subjects = subjectsSelector(subjectHash).subjects;
     }
 
     return {
-        subjects: stackAndGetTopLevelSubjects(subjectHash),
+        subjects,
         draggingId,
         currentDropCandidateId
     };
