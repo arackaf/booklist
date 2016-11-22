@@ -16,7 +16,7 @@ import {
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-import {stackAndGetTopLevelSubjects} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, subjectSortCompare} from 'applicationRoot/rootReducer';
 
 const initialSubjectsState = {
     editingSubjectId: null,
@@ -83,12 +83,6 @@ export function subjectsReducer(state = initialSubjectsState, action){
 
 const flattenedSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
 
-const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
-    let name1After = name1.toLowerCase() > name2.toLowerCase(),
-        bothEqual = name1.toLowerCase() === name2.toLowerCase();
-    return bothEqual ? 0 : (name1After ? 1 : -1);
-};
-
 const unwindSubjects = subjects => {
     let result = [];
     subjects.concat().sort(subjectSortCompare).forEach(s => {
@@ -114,11 +108,7 @@ const stackedSubjectsSelector = createSelector([state => state.app.subjectHash],
 const searchSubjectsSelector = createSelector([
     stackedSubjectsSelector,
     state => state.booksModule.subjects.subjectSearch
-],
-    (stackedSubjects, subjectSearch) => {
-        return { ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) };
-    }
-);
+], (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) }));
 
 const eligibleSubjectsSelector = createSelector([
         state => state.subjectHash,

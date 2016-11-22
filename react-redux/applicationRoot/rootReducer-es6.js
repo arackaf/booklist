@@ -52,7 +52,7 @@ export default function rootReducer(state = initialState, action){
     return state;
 }
 
-const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
+export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
     let name1After = name1.toLowerCase() > name2.toLowerCase(),
         bothEqual = name1.toLowerCase() === name2.toLowerCase();
     return bothEqual ? 0 : (name1After ? 1 : -1);
