@@ -74,7 +74,9 @@ const subjectsSelector = createSelector([
     }
 
     return {
-        subjects: stackAndGetTopLevelSubjects(subjectHash)
+        subjects: stackAndGetTopLevelSubjects(subjectHash),
+        draggingId,
+        currentDropCandidateId
     };
 });
 
