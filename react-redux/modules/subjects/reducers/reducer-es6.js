@@ -1,9 +1,14 @@
 import {createSelector} from 'reselect';
+
+import {stackAndGetTopLevelSubjects, subjectsSelector} from 'applicationRoot/rootReducer';
+
 import {
     LOAD_SUBJECTS,
     LOAD_SUBJECTS_RESULTS,
     LOAD_COLORS,
+} from 'applicationRoot/rootReducerActionNames';
 
+import {
     EDIT_SUBJECT,
     NEW_SUBJECT,
     EDIT_SUBJECTS,
@@ -20,50 +25,22 @@ import {
 } from './actionNames';
 
 const initialSubjectsState = {
-    subjectHash: {},
-    colors: [],
-    loaded: false,
-    initialQueryFired: false,
     draggingId: null,
     currentDropCandidateId: null
 };
 
 export function reducer(state = initialSubjectsState, action){
     switch(action.type){
-        case LOAD_SUBJECTS:
-            return Object.assign({}, state, { initialQueryFired: true });
-        case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
-        case LOAD_COLORS:
-            return Object.assign({}, state, { colors: action.colors });
         case SUBJECT_DRAGGING_OVER:
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId }
     }
     return state;
 }
 
-const subjectsToHash = subjects => subjects.reduce((hash, s) => (hash[s._id] = s, hash), {});
-
-const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
-    let name1After = name1.toLowerCase() > name2.toLowerCase(),
-        bothEqual = name1.toLowerCase() === name2.toLowerCase();
-    return bothEqual ? 0 : (name1After ? 1 : -1);
-};
-
-function stackAndGetTopLevelSubjects(subjectsHash){
-    let subjects = Object.keys(subjectsHash).map(_id => ({...subjectsHash[_id]}));
-    subjects.sort(subjectSortCompare).forEach(s => {
-        s.children = [];
-        s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)).sort(subjectSortCompare));
-        s.childLevel = !s.path ? 0 : (s.path.match(/\,/g) || []).length - 1;
-    });
-    return subjects.filter(s => s.path == null);
-}
-
-const subjectsSelector = createSelector([
-    state => state.subjectHash,
-    state => state.draggingId,
-    state => state.currentDropCandidateId
+const subjectsModuleSelector = createSelector([
+    state => state.app.subjectHash,
+    state => state.subjectsModule.draggingId,
+    state => state.subjectsModule.currentDropCandidateId
 ], (subjectHash, draggingId, currentDropCandidateId) => {
     if (currentDropCandidateId){
         subjectHash = {...subjectHash};
@@ -80,4 +57,4 @@ const subjectsSelector = createSelector([
     };
 });
 
-export const selector = createSelector([state => state.subjectsModule], subjectsSelector);
+export const selector = subjectsModuleSelector;

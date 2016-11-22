@@ -18,17 +18,4 @@ import {
     SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
-export function loadSubjects(){
-    return function(dispatch, getState){
-        let publicUserId = getState().app.publicUserId;
-
-        dispatch({ type: LOAD_SUBJECTS });
-
-        Promise.resolve(ajaxUtil.get('/subject/all', { userId: publicUserId })).then(subjectsResp => {
-            dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
-            dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
-        });
-    }
-}
-
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId })
