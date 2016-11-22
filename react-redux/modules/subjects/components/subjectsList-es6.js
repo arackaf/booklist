@@ -7,7 +7,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 @DragSource('subject', {
     beginDrag(props, monitor, component){
-        return props;
+        return props.subject;
     }
 }, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
@@ -16,12 +16,17 @@ import HTML5Backend from 'react-dnd-html5-backend';
 }))
 @DropTarget('subject', {
     canDrop(props, monitor){
-        let { subject: sourceSubject } = monitor.getItem(),
+        let sourceSubject = monitor.getItem(),
             { subject: targetSubject } = props;
 
         return sourceSubject._id != targetSubject._id
                 && (monitor.isOver() && monitor.isOver({ shallow: true }))
                 && (targetSubject.path || '').indexOf(sourceSubject._id) < 0;
+    },
+    drop(props, monitor){
+        let {subject: targetSubject} = props,
+            sourceSubject = monitor.getItem();
+        debugger;
     }
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
