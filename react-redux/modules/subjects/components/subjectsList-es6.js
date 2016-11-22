@@ -19,12 +19,9 @@ import HTML5Backend from 'react-dnd-html5-backend';
         let { subject: sourceSubject } = monitor.getItem(),
             { subject: targetSubject } = props;
 
-        if (sourceSubject._id == targetSubject._id || !(monitor.isOver() && monitor.isOver({ shallow: true }))){
-            return false;
-        }
-        //subjectTree
-
-        //return sourceSubject._id != targetSubject._id && ;
+        return sourceSubject._id != targetSubject._id
+                && (monitor.isOver() && monitor.isOver({ shallow: true }))
+                && (targetSubject.path || '').indexOf(sourceSubject._id) < 0;
     }
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
