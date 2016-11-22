@@ -126,9 +126,9 @@ function createBooksHash(booksArr){
 
 const booksWithSubjectsSelector = createSelector(
     [
-        ({ booksModule }) => booksModule.books.booksHash,
-        ({ booksModule }) => booksModule.subjects.subjectHash,
-        ({ booksModule }) => booksModule.tags.tagHash
+        state => state.booksModule.books.booksHash,
+        state => state.app.subjectHash,
+        state => state.booksModule.tags.tagHash
     ],
     (booksHash, subjectsHash, tagHash) => {
         let books = Object.keys(booksHash).map(_id => booksHash[_id]);
@@ -146,8 +146,8 @@ const booksWithSubjectsSelector = createSelector(
 
 const bookSelectionSelector = createSelector(
     [
-        ({ booksModule }) => booksModule.books.booksHash,
-        ({ booksModule }) => booksModule.books.selectedBooks
+        state => state.booksModule.books.booksHash,
+        state => state.booksModule.books.selectedBooks
     ],
     (booksHash, selectedBooks) => {
         let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
@@ -158,15 +158,8 @@ const bookSelectionSelector = createSelector(
     }
 );
 
-export const booksSelector = state => {
-    let booksModule = state.booksModule,
-        books = booksModule.books;
-
-    return Object.assign({},
-        books,
-        {
-            ...booksWithSubjectsSelector(state),
-            ...bookSelectionSelector(state)
-        }
-    );
-}
+export const booksSelector = state =>
+    Object.assign({}, state.booksModule.books, {
+        ...booksWithSubjectsSelector(state),
+        ...bookSelectionSelector(state)
+    });

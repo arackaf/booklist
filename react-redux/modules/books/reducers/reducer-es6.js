@@ -27,7 +27,7 @@ export const selector = state => {
 
     return {
         subjects: subjectsSelected.list,
-        subjectsLoaded: subjectsSelected.loaded,
+        subjectsLoaded: app.subjectsLoaded,
         tags: tagsSelected.allTagsSorted,
         tagsLoaded: tagsSelected.loaded,
         books: booksSelected.list,
