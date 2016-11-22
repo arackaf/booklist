@@ -16,6 +16,9 @@ import HTML5Backend from 'react-dnd-html5-backend';
 }))
 @DropTarget('subject', {
     canDrop(props, monitor){
+        let deep = monitor.isOver(),
+            shallow = monitor.isOver({ shallow: true });
+
         let { subject: sourceSubject } = monitor.getItem(),
             { subject: targetSubject } = props;
         console.log(sourceSubject.name, targetSubject.name);
@@ -29,6 +32,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
+    isOnlyOver: monitor.isOver() && monitor.isOver({ shallow: true }),
     isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
     itemType: monitor.getItemType()
@@ -36,12 +40,13 @@ import HTML5Backend from 'react-dnd-html5-backend';
 class SubjectDisplay extends Component {
     render(){
         let {subject, connectDragSource, connectDragPreview, connectDropTarget} = this.props,
-            {_id, name, children: childSubjects} = subject;
+            {_id, name, children: childSubjects} = subject,
+            style = this.props.isOnlyOver ? { border: '3px solid green' } : {};
 
         return (
             connectDropTarget(
                 connectDragPreview(
-                    <li className="list-group-item" key={_id}>
+                    <li className="list-group-item" key={_id} style={style}>
                         {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
                         {childSubjects.length ? <SubjectList subjects={childSubjects} /> : null}
                     </li>
