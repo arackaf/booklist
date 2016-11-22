@@ -44,6 +44,12 @@ export function reducer(state = initialSubjectsState, action){
     return state;
 }
 
+export const subjectTree = subjects => {
+    let result = Array.isArray(subjects) ? subjects : [subjects];
+    subjects.forEach(s => result.push(...subjectTree(s.children)));
+    return result;
+};
+
 const subjectsToHash = subjects => subjects.reduce((hash, s) => (hash[s._id] = s, hash), {});
 
 const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
