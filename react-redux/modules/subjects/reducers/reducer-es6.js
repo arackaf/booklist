@@ -51,7 +51,7 @@ const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
 };
 
 function stackAndGetTopLevelSubjects(subjectsHash){
-    let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
+    let subjects = Object.keys(subjectsHash).map(_id => ({...subjectsHash[_id]}));
     subjects.sort(subjectSortCompare).forEach(s => {
         s.children = [];
         s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)).sort(subjectSortCompare));
@@ -68,7 +68,7 @@ const subjectsSelector = createSelector([
     if (currentDropCandidateId){
         subjectHash = {...subjectHash};
         let dropTarget = subjectHash[currentDropCandidateId],
-            draggingSubject = subjectHash[`${draggingId}_dragging`] = {...subjectHash[draggingId]};
+            draggingSubject = subjectHash[`${draggingId}_dragging`] = {...subjectHash[draggingId], candidateMove: true};
 
         draggingSubject.path = !dropTarget.path ? `,${dropTarget._id},` : dropTarget.path + `${dropTarget._id},`;
     }

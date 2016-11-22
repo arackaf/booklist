@@ -17,7 +17,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
     drop(props, monitor){
         let {subject: targetSubject} = props,
             sourceSubject = monitor.getItem();
-        //debugger;
+        //TODO:
     }
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
@@ -36,19 +36,27 @@ class _SubjectDisplay extends Component {
 
         if (!wasOver && isOver){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, _id);
+        } else if (wasOver && !isOver && this.props.currentDropCandidateId == _id){
+            this.props.subjectDraggingOver(this.props.draggingSubject._id, null);
         }
     }
     render(){
         let {subject, connectDropTarget} = this.props,
-            {_id, children: childSubjects} = subject,
-            style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {};
+            {_id, candidateMove, children: childSubjects} = subject,
+            style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {},
+            noDrag = candidateMove || this.props.noDrag;
 
         return (
-            connectDropTarget(
+              noDrag ?
                 <li className="list-group-item" key={_id} style={style}>
-                    <SubjectDisplayContent subject={subject} />
+                    <SubjectDisplayContent noDrag={noDrag} subject={subject} />
                 </li>
-            )
+                :
+                connectDropTarget(
+                    <li className="list-group-item" key={_id} style={style}>
+                        <SubjectDisplayContent subject={subject} />
+                    </li>
+                )
         );
     }
 }
@@ -64,14 +72,14 @@ const SubjectDisplay = connect(selector, { ...actionCreators })(_SubjectDisplay)
 }))
 class SubjectDisplayContent extends Component {
     render(){
-        let {subject, connectDragSource, connectDragPreview} = this.props,
+        let {subject, connectDragSource, connectDragPreview, noDrag} = this.props,
             {name, children: childSubjects} = subject;
 
         return (
             connectDragPreview(
                 <div>
                     {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
-                    {childSubjects.length ? <SubjectList style={{ marginTop: '5px' }} subjects={childSubjects} /> : null}
+                    {childSubjects.length ? <SubjectList noDrag={noDrag} style={{ marginTop: '5px' }} subjects={childSubjects} /> : null}
                 </div>
             )
         )
@@ -81,9 +89,9 @@ class SubjectDisplayContent extends Component {
 
 class SubjectList extends Component {
     render(){
-        let {style = {}} = this.props;
+        let {style = {}, noDrag} = this.props;
 
-        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay subject={subject} />)}</ul>;
+        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay noDrag={noDrag} subject={subject} />)}</ul>;
     }
 }
 
