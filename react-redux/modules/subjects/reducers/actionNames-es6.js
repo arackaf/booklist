@@ -1,7 +1,3 @@
-export const LOAD_SUBJECTS = 'subjectsModule.LOAD_SUBJECTS';
-export const LOAD_SUBJECTS_RESULTS = 'subjectsModule.LOAD_SUBJECTS_RESULTS';
-export const LOAD_COLORS = 'subjectsModule.LOAD_COLORS_SUBJECTS';
-
 export const EDIT_SUBJECT = 'subjectsModule.EDIT_SUBJECT';
 export const NEW_SUBJECT = 'subjectsModule.NEW_SUBJECT';
 export const EDIT_SUBJECTS = 'subjectsModule.EDIT_SUBJECTS';

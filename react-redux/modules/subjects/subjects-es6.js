@@ -1,6 +1,6 @@
 import SubjectsList from './components/subjectsList';
 import { reducer, selector } from './reducers/reducer';
-import { loadSubjects } from './reducers/actionCreators'
+import { loadSubjects } from 'applicationRoot/rootReducerActionCreators'
 
 export default {
     name: 'subjects',
