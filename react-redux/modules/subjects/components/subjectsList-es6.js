@@ -5,6 +5,7 @@ import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+@connect(selector, { ...actionCreators })
 @DropTarget('subject', {
     canDrop(props, monitor){
         let sourceSubject = monitor.getItem(),
@@ -27,7 +28,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
     canDrop: monitor.canDrop(),
     draggingSubject: monitor.getItem()
 }))
-class _SubjectDisplay extends Component {
+class SubjectDisplay extends Component {
     componentDidUpdate(prevProps){
         let wasOver = prevProps.isOnlyOver && prevProps.canDrop,
             isOver = this.props.isOnlyOver && this.props.canDrop,
@@ -62,8 +63,6 @@ class _SubjectDisplay extends Component {
     }
 }
 
-const SubjectDisplay = connect(selector, { ...actionCreators })(_SubjectDisplay);
-
 @DragSource('subject', {
     beginDrag: props => props.subject
 }, (connect, monitor) => ({
@@ -96,6 +95,8 @@ class SubjectList extends Component {
     }
 }
 
+@DragDropContext(HTML5Backend)
+@connect(selector, { ...actionCreators })
 export default class SubjectsComponent extends Component{
     render(){
         return (
@@ -105,7 +106,3 @@ export default class SubjectsComponent extends Component{
         )
     }
 }
-
-const SubjectsComponentConnected = connect(selector, { ...actionCreators })(SubjectsComponent);
-
-export default DragDropContext(HTML5Backend)(SubjectsComponentConnected);
