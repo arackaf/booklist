@@ -31,12 +31,13 @@ class _SubjectDisplay extends Component {
     componentDidUpdate(prevProps){
         let wasOver = prevProps.isOnlyOver && prevProps.canDrop,
             isOver = this.props.isOnlyOver && this.props.canDrop,
+            notOverAtAll = !this.props.isOver,
             {subject} = this.props,
             {_id} = subject;
 
         if (!wasOver && isOver){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, _id);
-        } else if (wasOver && !isOver && this.props.currentDropCandidateId == _id){
+        } else if (notOverAtAll && this.props.currentDropCandidateId == _id){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, null);
         }
     }
