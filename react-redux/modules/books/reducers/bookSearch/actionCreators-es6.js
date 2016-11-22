@@ -16,7 +16,7 @@ import {
 } from './actionNames';
 
 import { loadBooks } from '../books/actionCreators';
-import { loadSubjects } from '../subjects/actionCreators';
+import { loadSubjects } from 'applicationRoot/rootReducerActionCreators';
 import { loadTags } from '../tags/actionCreators';
 
 import { globalHashManager } from 'reactStartup';

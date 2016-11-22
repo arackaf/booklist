@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 import {
     EDIT_SUBJECT,
     NEW_SUBJECT,
@@ -14,18 +16,15 @@ import {
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-import { createSelector } from 'reselect';
+import {stackAndGetTopLevelSubjects} from 'applicationRoot/rootReducer';
 
 const initialSubjectsState = {
-    subjectHash: {},
     editingSubjectId: null,
     deletingSubjectId: null,
     editingSubject: null,
     editModalOpen: false,
     saving: false,
     deleting: false,
-    colors: [],
-    loaded: false,
     subjectSearch: '',
     initialQueryFired: false
 };
@@ -99,7 +98,7 @@ const unwindSubjects = subjects => {
     return result;
 };
 
-const stackedSubjectsSelector = createSelector([state => state.subjectHash],
+const stackedSubjectsSelector = createSelector([state => state.app.subjectHash],
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
             subjectsUnwound = unwindSubjects(mainSubjectsCollection);
@@ -114,7 +113,7 @@ const stackedSubjectsSelector = createSelector([state => state.subjectHash],
 
 const searchSubjectsSelector = createSelector([
     stackedSubjectsSelector,
-    state => state.subjectSearch
+    state => state.booksModule.subjects.subjectSearch
 ],
     (stackedSubjects, subjectSearch) => {
         return { ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) };
@@ -152,25 +151,15 @@ const deletingSubjectInfoSelector = createSelector([
     }
 );
 
-export const subjectsSelector = ({ booksModule }) => {
+export const subjectsSelector = state => {
     return Object.assign({},
-        booksModule.subjects,
+        state.booksModule.subjects,
         {
-            ...searchSubjectsSelector(booksModule.subjects),
-            ...eligibleSubjectsSelector(booksModule.subjects),
-            ...deletingSubjectInfoSelector(booksModule.subjects)
+            ...searchSubjectsSelector(state),
+            ...eligibleSubjectsSelector(state.booksModule.subjects),
+            ...deletingSubjectInfoSelector(state.booksModule.subjects)
         }
     );
-}
-
-function stackAndGetTopLevelSubjects(subjectsHash){
-    let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
-    subjects.forEach(s => {
-        s.children = [];
-        s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)));
-        s.childLevel = !s.path ? 0 : (s.path.match(/\,/g) || []).length - 1;
-    });
-    return subjects.filter(s => s.path == null);
 }
 
 function allSubjectsSorted(subjectsHash){
