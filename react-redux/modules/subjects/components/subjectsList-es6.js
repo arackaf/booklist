@@ -27,26 +27,33 @@ import HTML5Backend from 'react-dnd-html5-backend';
     canDrop: monitor.canDrop(),
     draggingSubject: monitor.getItem()
 }))
-class SubjectDisplay extends Component {
+class _SubjectDisplay extends Component {
+    componentDidUpdate(prevProps){
+        let wasOver = prevProps.isOnlyOver && prevProps.canDrop,
+            isOver = this.props.isOnlyOver && this.props.canDrop,
+            {subject} = this.props,
+            {_id} = subject;
+
+        if (!wasOver && isOver){
+            this.props.subjectDraggingOver(this.props.draggingSubject._id, _id);
+        }
+    }
     render(){
         let {subject, connectDropTarget} = this.props,
             {_id, children: childSubjects} = subject,
-            style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {},
-            draggingSubject = null;
-
-        if (this.props.canDrop && this.props.isOnlyOver && this.props.draggingSubject){
-            draggingSubject = this.props.draggingSubject;
-        }
+            style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {};
 
         return (
             connectDropTarget(
                 <li className="list-group-item" key={_id} style={style}>
-                    <SubjectDisplayContent draggingSubject={draggingSubject} subject={subject} />
+                    <SubjectDisplayContent subject={subject} />
                 </li>
             )
         );
     }
 }
+
+const SubjectDisplay = connect(selector, { ...actionCreators })(_SubjectDisplay);
 
 @DragSource('subject', {
     beginDrag: props => props.subject
@@ -58,18 +65,13 @@ class SubjectDisplay extends Component {
 class SubjectDisplayContent extends Component {
     render(){
         let {subject, connectDragSource, connectDragPreview} = this.props,
-            {name, children: childSubjects} = subject,
-            effectiveChildren = childSubjects.concat();
-
-        if (this.props.draggingSubject){
-            effectiveChildren.push(this.props.draggingSubject);
-        }
+            {name, children: childSubjects} = subject;
 
         return (
             connectDragPreview(
                 <div>
                     {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
-                    {effectiveChildren.length ? <SubjectList style={{ marginTop: '5px' }} subjects={effectiveChildren} /> : null}
+                    {childSubjects.length ? <SubjectList style={{ marginTop: '5px' }} subjects={childSubjects} /> : null}
                 </div>
             )
         )

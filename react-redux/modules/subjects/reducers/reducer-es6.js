@@ -16,20 +16,16 @@ import {
 
     SUBJECT_DELETING,
     SUBJECT_DELETED,
+    SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
 const initialSubjectsState = {
     subjectHash: {},
-    editingSubjectId: null,
-    deletingSubjectId: null,
-    editingSubject: null,
-    editModalOpen: false,
-    saving: false,
-    deleting: false,
     colors: [],
     loaded: false,
-    subjectSearch: '',
-    initialQueryFired: false
+    initialQueryFired: false,
+    draggingId: null,
+    currentDropCandidateId: null
 };
 
 export function reducer(state = initialSubjectsState, action){
@@ -40,6 +36,8 @@ export function reducer(state = initialSubjectsState, action){
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), loaded: true });
         case LOAD_COLORS:
             return Object.assign({}, state, { colors: action.colors });
+        case SUBJECT_DRAGGING_OVER:
+            return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId }
     }
     return state;
 }
@@ -62,14 +60,22 @@ function stackAndGetTopLevelSubjects(subjectsHash){
     return subjects.filter(s => s.path == null);
 }
 
-const subjectsSelector = createSelector([state => state.subjectHash],
-    subjectHash => {
-        let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
+const subjectsSelector = createSelector([
+    state => state.subjectHash,
+    state => state.draggingId,
+    state => state.currentDropCandidateId
+], (subjectHash, draggingId, currentDropCandidateId) => {
+    if (currentDropCandidateId){
+        subjectHash = {...subjectHash};
+        let dropTarget = subjectHash[currentDropCandidateId],
+            draggingSubject = subjectHash[`${draggingId}_dragging`] = {...subjectHash[draggingId]};
 
-        return {
-            subjects: mainSubjectsCollection
-        };
+        draggingSubject.path = !dropTarget.path ? `,${dropTarget._id},` : dropTarget.path + `${dropTarget._id},`;
     }
-);
+
+    return {
+        subjects: stackAndGetTopLevelSubjects(subjectHash)
+    };
+});
 
 export const selector = createSelector([state => state.subjectsModule], subjectsSelector);
