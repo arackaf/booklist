@@ -14,3 +14,5 @@ export const CANCEL_SUBJECT_DELETE = 'subjectsModule.CANCEL_SUBJECT_DELETE';
 
 export const SUBJECT_DELETING = 'subjectsModule.SUBJECT_DELETING';
 export const SUBJECT_DELETED = 'subjectsModule.SUBJECT_DELETED';
+
+export const SUBJECT_DRAGGING_OVER = 'subjectsModule.SUBJECT_DRAGGING_OVER';

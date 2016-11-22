@@ -15,6 +15,7 @@ import {
 
     SUBJECT_DELETING,
     SUBJECT_DELETED,
+    SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
 export function loadSubjects(){
@@ -29,3 +30,5 @@ export function loadSubjects(){
         });
     }
 }
+
+export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId })
