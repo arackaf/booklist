@@ -16,18 +16,10 @@ import HTML5Backend from 'react-dnd-html5-backend';
 }))
 @DropTarget('subject', {
     canDrop(props, monitor){
-        let deep = monitor.isOver(),
-            shallow = monitor.isOver({ shallow: true });
-
         let { subject: sourceSubject } = monitor.getItem(),
             { subject: targetSubject } = props;
-        console.log(sourceSubject.name, targetSubject.name);
 
-        return true;
-
-        return subjects.indexOf(subject) < 0;
-        //debugger;
-        return false;
+        return sourceSubject._id != targetSubject._id;
     }
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
@@ -41,7 +33,7 @@ class SubjectDisplay extends Component {
     render(){
         let {subject, connectDragSource, connectDragPreview, connectDropTarget} = this.props,
             {_id, name, children: childSubjects} = subject,
-            style = this.props.isOnlyOver ? { border: '3px solid green' } : {};
+            style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {};
 
         return (
             connectDropTarget(
