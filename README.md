@@ -10,7 +10,7 @@ It looks something like this
 
 and there's a somewhat decent mobile view
 
-![mobile friendly view 1](static/readmePics/bookBasicListView.jpg)
+<img src="static/readmePics/bookBasicListView.jpg" alt="mobile friendly view 1" style="width: 320px; height: 568px"/>
 
 ---
 
