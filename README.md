@@ -4,6 +4,16 @@ A fully functioning book collection website hosted at http://mylibrary.io/
 
 I made this as a way to learn and try out modern development tools I'm interested in, and also to track my own library. Progress is limited to whatever time I can find, which means parts of this may be incomplete at any given time.  Currently you can create an account; scan in books, which are looked up via AWS; and view, edit, filter, and tag your books with (hierarchical) subjects as desired.
 
+It looks something like this 
+
+![desktop grid view](static/readmePics/bookGridView.png)
+
+and there's a somewhat decent mobile view
+
+![mobile friendly view 1](static/readmePics/bookBasicListView.jpg)
+
+---
+
 I initially made this with the goal of creating iterations of the site with React, Angular, Aurelia, etc. So far I've felt no desire to leave React or stop iterating on the (single) React iteration. Nonetheless, it's designed so that all iterations will share the same data, data access, controllers, and AWS access code.  Controllers are sniffed out and wired with my [easy-express-controllers 
 ](https://www.npmjs.com/package/easy-express-controllers) project; data access is through Mongo; and all book info is looked up with my own AWS credentials, subject to an unfortunate one-request-per-second limit imposed by Amazon.
 
