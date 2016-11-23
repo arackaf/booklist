@@ -6,11 +6,11 @@ I made this as a way to learn and try out modern development tools I'm intereste
 
 It looks something like this 
 
-![desktop grid view](static/readmePics/bookGridView.png)
+<img src="static/readmePics/bookGridView.png" alt="main desktop table view" style="width: 812px; height: 481px" />
 
 and there's a somewhat decent mobile view
 
-<img src="static/readmePics/bookBasicListView.jpg" alt="mobile friendly view 1" style="width: 320px; height: 568px"/>
+<img src="static/readmePics/bookBasicListView.jpg" alt="mobile friendly view 1" style="width: 320px; height: 568px" />
 
 ---
 
