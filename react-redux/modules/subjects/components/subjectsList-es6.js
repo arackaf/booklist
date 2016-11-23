@@ -44,9 +44,13 @@ class SubjectDisplay extends Component {
     }
     render(){
         let {subject, connectDropTarget} = this.props,
-            {_id, candidateMove, children: childSubjects} = subject,
+            {_id, candidateMove} = subject,
             style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {},
             noDrag = candidateMove || this.props.noDrag;
+
+        if (candidateMove) {
+            style.backgroundColor = 'lavender';
+        }
 
         return (
               noDrag ?
