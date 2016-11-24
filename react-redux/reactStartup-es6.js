@@ -89,20 +89,22 @@ export function loadCurrentModule() {
     Promise.all([
         System.import(`/react-redux/modules/${module}/${module}`),
         publicUserPromise
-    ]).then(([{ default: module }, publicUserInfo]) => {
-        currentModuleObject = module;
+    ]).then(([{ default: moduleObject }, publicUserInfo]) => {
+        if (currentModule != module) return;
+        
+        currentModuleObject = moduleObject;
         store.dispatch(setModule(currentModule));
 
         if (publicUserInfo){
             store.dispatch({ type: SET_PUBLIC_INFO, name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
         }
 
-        if (module.reducer) {
-            getNewReducer({name: module.name, reducer: module.reducer});
+        if (moduleObject.reducer) {
+            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer});
         }
-        renderUI(createElement(module.component));
-        if (module.initialize) {
-            store.dispatch(module.initialize({parameters: globalHashManager.currentParameters }));
+        renderUI(createElement(moduleObject.component));
+        if (moduleObject.initialize) {
+            store.dispatch(moduleObject.initialize({parameters: globalHashManager.currentParameters }));
         }
     });
 }
