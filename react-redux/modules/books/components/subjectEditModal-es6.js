@@ -23,8 +23,8 @@ const SubjectEditDeleteInfo = props => {
                 }
 
                 <div style={{ marginTop: '5px'}}>
-                    <BootstrapButton onClick={props.cancelDeleteSubject} preset="default-sm">Cancel</BootstrapButton>
-                    <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteSubject(props._id)} preset="danger-sm" className="pull-right">Delete</AjaxButton>
+                    <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteSubject(props._id)} preset="danger-sm">Delete</AjaxButton>
+                    <BootstrapButton onClick={props.cancelDeleteSubject} className="pull-right" preset="default-sm">Cancel</BootstrapButton>
                 </div>
                 <hr />
             </div>
@@ -119,8 +119,8 @@ const subjectEditModal = props => {
                                 </div>
                                 <br style={{ clear: 'both' }} />
 
-                                <a className="btn btn-default" onClick={props.cancelSubjectEdit}>Cancel</a>
-                                <AjaxButtonAnchor className="btn btn-primary pull-right" running={props.saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
+                                <AjaxButtonAnchor className="btn btn-primary" running={props.saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
+                                <a className="btn btn-default pull-right" onClick={props.cancelSubjectEdit}>Cancel</a>
                             </div>
                         </div>
                     </div>
