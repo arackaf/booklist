@@ -1,10 +1,14 @@
 import {createSelector} from 'reselect';
 
 import {
+    SET_PUBLIC_INFO,
+    RESET_PUBLIC_INFO,
+    SET_LOGGED_IN,
     SET_DESKTOP,
     SET_MOBILE,
     REQUEST_DESKTOP,
     REQUEST_MOBILE,
+    SET_MODULE,
     LOAD_SUBJECTS,
     LOAD_SUBJECTS_RESULTS,
     LOAD_COLORS,
