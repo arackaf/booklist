@@ -9,9 +9,11 @@ import HTML5Backend from 'react-dnd-html5-backend';
 @DropTarget('subject', {
     canDrop(props, monitor){
         let sourceSubject = monitor.getItem(),
-            { subject: targetSubject } = props;
+            { subject: targetSubject } = props,
+            isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
         return sourceSubject._id != targetSubject._id
+                && !isCurrentParent
                 && (monitor.isOver() && monitor.isOver({ shallow: true }))
                 && (targetSubject.path || '').indexOf(sourceSubject._id) < 0;
     },
@@ -32,13 +34,14 @@ class SubjectDisplay extends Component {
     componentDidUpdate(prevProps){
         let wasOver = prevProps.isOnlyOver && prevProps.canDrop,
             isOver = this.props.isOnlyOver && this.props.canDrop,
+            canDrop = this.props.canDrop,
             notOverAtAll = !this.props.isOver,
             {subject} = this.props,
             {_id} = subject;
 
         if (!wasOver && isOver){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, _id);
-        } else if (notOverAtAll && this.props.currentDropCandidateId == _id){
+        } else if ((notOverAtAll || !canDrop) && this.props.currentDropCandidateId == _id){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, null);
         }
     }
