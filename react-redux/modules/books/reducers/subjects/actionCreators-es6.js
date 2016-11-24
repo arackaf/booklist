@@ -14,6 +14,9 @@ import {
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
+import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
+const {saveSubject} = subjectEditingActions;
+
 export function loadSubjects(){
     return function(dispatch, getState){
         let publicUserId = getState().app.publicUserId;
@@ -61,8 +64,7 @@ export function createOrUpdateSubject(){
         let { _id, name, parentId, backgroundColor, textColor } = getState().booksModule.subjects.editingSubject,
             request = { _id: _id || null, name, parentId, backgroundColor, textColor };
 
-        dispatch({ type: UPDATE_SUBJECT });
-        ajaxUtil.post('/subject/setInfo', request, resp => dispatch({ type: UPDATE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
+        dispatch(saveSubject(request));
     }
 }
 

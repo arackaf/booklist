@@ -7,7 +7,6 @@ import {
     SET_NEW_SUBJECT_VALUE,
     STOP_EDITING_SUBJECTS,
     UPDATE_SUBJECT,
-    UPDATE_SUBJECT_RESULTS,
     CANCEL_SUBJECT_EDIT,
     BEGIN_SUBJECT_DELETE,
     CANCEL_SUBJECT_DELETE,
@@ -17,6 +16,7 @@ import {
 } from './actionNames';
 
 import {stackAndGetTopLevelSubjects, subjectSortCompare} from 'applicationRoot/rootReducer';
+import {SAVE_SUBJECT_RESULTS} from 'applicationRoot/rootReducerActionNames';
 
 const initialSubjectsState = {
     editingSubjectId: null,
@@ -47,8 +47,8 @@ export function subjectsReducer(state = initialSubjectsState, action){
             return Object.assign({}, state, { editingSubject: { ...state.editingSubject, [action.field]: action.value } });
         case UPDATE_SUBJECT:
             return Object.assign({}, state, { saving: true })
-        case UPDATE_SUBJECT_RESULTS:
-            return Object.assign({}, state, { ...doneEditingSubject, subjectHash: { ...state.subjectHash, ...subjectsToHash(action.affectedSubjects) } });
+        case SAVE_SUBJECT_RESULTS:
+            return Object.assign({}, state, { ...doneEditingSubject });
         case BEGIN_SUBJECT_DELETE:
             return Object.assign({}, state, { deletingSubjectId: action._id });
         case CANCEL_SUBJECT_DELETE:
