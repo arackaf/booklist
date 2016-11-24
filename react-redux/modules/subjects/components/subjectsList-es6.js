@@ -49,16 +49,16 @@ class SubjectDisplay extends Component {
         let {subject, connectDropTarget} = this.props,
             {_id, candidateMove} = subject,
             style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {},
-            noDrag = candidateMove || this.props.noDrag;
+            noDrop = candidateMove || this.props.noDrop;
 
         if (candidateMove) {
             style.backgroundColor = 'lavender';
         }
 
         return (
-              noDrag ?
+              noDrop ?
                 <li className="list-group-item" key={_id} style={style}>
-                    <SubjectDisplayContent noDrag={noDrag} subject={subject} />
+                    <SubjectDisplayContent noDrop={noDrop} subject={subject} />
                 </li>
                 :
                 connectDropTarget(
@@ -79,14 +79,14 @@ class SubjectDisplay extends Component {
 }))
 class SubjectDisplayContent extends Component {
     render(){
-        let {subject, connectDragSource, connectDragPreview, noDrag} = this.props,
+        let {subject, connectDragSource, connectDragPreview, noDrop} = this.props,
             {name, children: childSubjects} = subject;
 
         return (
             connectDragPreview(
                 <div>
                     {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
-                    {childSubjects.length ? <SubjectList noDrag={noDrag} style={{ marginTop: '5px' }} subjects={childSubjects} /> : null}
+                    {childSubjects.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={childSubjects} /> : null}
                 </div>
             )
         )
@@ -96,9 +96,9 @@ class SubjectDisplayContent extends Component {
 
 class SubjectList extends Component {
     render(){
-        let {style = {}, noDrag} = this.props;
+        let {style = {}, noDrop} = this.props;
 
-        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay noDrag={noDrag} subject={subject} />)}</ul>;
+        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay noDrop={noDrop} subject={subject} />)}</ul>;
     }
 }
 
