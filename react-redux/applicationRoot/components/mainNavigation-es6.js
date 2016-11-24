@@ -9,60 +9,33 @@ import {
 
 import { goHome, globalHashManager } from 'reactStartup';
 
-const NonPublicMainNavigationBar = props => {
-    let logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
-
-    let isBookEntry = props.isBookEntry,
-        isBookList = props.isBookList;
-
-    return (
-        <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
-                </Navbar.Brand>
-                <Navbar.Toggle />
-            </Navbar.Header>
-            <Navbar.Collapse>
-                <Nav>
-                    <NavItem active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem>
-                    <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>Your books</NavItem>
-                    <NavItem onClick={logout}>Logout</NavItem>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-    );
-}
-
-const PublicViewingMainNavBar = props => {
-    let isBookList = props.isBookList;
-
-    return (
-        <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
-                </Navbar.Brand>
-                <Navbar.Toggle />
-            </Navbar.Header>
-            <Navbar.Collapse>
-                <Nav>
-                    <NavItem disabled={true}>Book entry</NavItem>
-                    <NavItem active={true} href={isBookList ? undefined : '#books'}>{props.publicBooksHeader}</NavItem>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-    );
-};
-const ConnectedPublicViewingNav = connect(state => state.app)(PublicViewingMainNavBar);
-
-
-class MainNavigationBar extends React.Component {
+@connect(state => state.app)
+export default class MainNavigationBar extends React.Component {
+    logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     render(){
+        let { isPublic, publicBooksHeader, module, isLoggedIn }  = this.props,
+            isBookEntry = module == 'scan',
+            isBookList = module == 'books',
+            isLoginModule = module == 'authenticate';
+
         return (
-            this.props.isPublic ? <ConnectedPublicViewingNav { ...this.props } /> : <NonPublicMainNavigationBar { ...this.props } />
-        )
+            <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
+                <Navbar.Header>
+                    <Navbar.Brand>
+                        <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                </Navbar.Header>
+                <Navbar.Collapse>
+                    <Nav>
+                        {isLoggedIn || isPublic ? <NavItem disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem> : null}
+                        {isLoggedIn || isPublic ? <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Your books'}</NavItem> : null}
+                        {isLoggedIn && isPublic ? <NavItem href="#books">View your collection</NavItem> : null}
+                        {isLoggedIn ? <NavItem onClick={this.logout}>Logout</NavItem> : null}
+                        {!isLoggedIn && !isLoginModule ? <NavItem href='#login'>Login</NavItem> : null}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        );
     }
 }
-const MainNavigationBarConnected = connect(state => state.app)(MainNavigationBar);
-export default MainNavigationBarConnected;

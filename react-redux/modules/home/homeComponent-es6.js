@@ -30,7 +30,6 @@ class HomeIfLoggedIn extends React.Component{
     render(){
         return (
             <div>
-                <MainNavigationBar></MainNavigationBar>
                 <MainHomePane>
                     Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
                     to either view your library, or scan some books in.
@@ -47,19 +46,6 @@ class HomeIfNotLoggedIn extends React.Component{
     render(){
         return (
             <div>
-                <Navbar fluid={true}>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <a style={{ cursor: 'default' }}>My Library</a>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav>
-                            <NavItem href='#login'>Login</NavItem>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
                 <MainHomePane>
                     Welcome to <i>My Library</i>.
                     <br /><br />
