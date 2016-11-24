@@ -14,9 +14,9 @@ const WellUiSwitcher = connect(state => state.app, {requestDesktop, requestMobil
         showSwitchBackMobile = props.isMobile && props.showingDesktop;
 
     return (
-        <div className="well well-sm">
+        <div className="well well-sm" style={{ marginTop: '30px', marginBottom: 0 }}>
             <img width="16" height="16" src="/static/main-icon.png"/>
-            <span style={{marginLeft: '5px', marginRight: '5px'}}>Track my books</span>
+            <span style={{marginLeft: '5px', marginRight: '5px'}}>My Library</span>
             { showChooseDesktop ? <a onClick={props.requestDesktop}>Use desktop version</a> : null }
             { showSwitchBackMobile ? <a onClick={props.requestMobile}>Use mobile version</a> : null }
         </div>
