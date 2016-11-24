@@ -36,16 +36,10 @@ export function loadSubjects(){
 }
 
 export const subjectEditingActions = {
-    saveSubject(subjectProps){
-        return function(dispatch, getState) {
-            ajaxUtil.post('/subject/setInfo', subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
-        }
+    saveSubject(subjectProps, dispatch){
+        return ajaxUtil.post('/subject/setInfo', subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
     },
-    deleteSubject(_id){
-        return function(dispatch, getState){
-            ajaxUtil.post('/subject/delete', {_id: _id + ''}, resp => {
-                dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id });
-            });
-        }
+    deleteSubject(_id, dispatch){
+        return ajaxUtil.post('/subject/delete', {_id: _id + ''}, resp => dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id }));
     }
 };

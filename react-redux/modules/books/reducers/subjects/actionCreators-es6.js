@@ -63,7 +63,7 @@ export function createOrUpdateSubject(){
         let { _id, name, parentId, backgroundColor, textColor } = getState().booksModule.subjects.editingSubject,
             request = { _id: _id || null, name, parentId, backgroundColor, textColor };
 
-        dispatch(saveSubject(request));
+        saveSubject(request, dispatch);
     }
 }
 
@@ -73,6 +73,6 @@ export const cancelDeleteSubject = () => ({ type: CANCEL_SUBJECT_DELETE });
 export function deleteSubject(_id){
     return function(dispatch, getState) {
         dispatch({type: SUBJECT_DELETING});
-        dispatch(deleteSubjectRoot(_id));
+        deleteSubjectRoot(_id, dispatch);
     }
 }
