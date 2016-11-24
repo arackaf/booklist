@@ -3,7 +3,7 @@ import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
-import {setDesktop, setMobile, setModule, setLoggedIn} from './applicationRoot/rootReducerActionCreators';
+import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo} from './applicationRoot/rootReducerActionCreators';
 import {
     SET_PUBLIC_INFO,
     RESET_PUBLIC_INFO
@@ -96,7 +96,7 @@ export function loadCurrentModule() {
         store.dispatch(setModule(currentModule));
 
         if (publicUserInfo){
-            store.dispatch({ type: SET_PUBLIC_INFO, name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
+            store.dispatch(setPublicInfo(name, publicUserInfo.booksHeader, userId));
         }
 
         if (moduleObject.reducer) {
