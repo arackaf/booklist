@@ -32,16 +32,6 @@ const initialSubjectsState = {
 const emptySubject = { _id: '', name: '', path: null, backgroundColor: '', textColor: '' };
 const newSubjectEditing = { subjectSearch: '', deletingSubjectId: null };
 const doneEditingSubject = { saving: false, editingSubjectId: null, editingSubject: null };
-const getEditingSubject = (hash, _id) => {
-    let subject = hash[_id];
-    let parentId = '';
-    if (subject.path){
-        let hierarchy = subject.path.split(',');
-        parentId = hierarchy[hierarchy.length - 2];
-    }
-
-    return { ...subject, parentId };
-}
 
 export function subjectsReducer(state = initialSubjectsState, action){
     switch(action.type){
@@ -52,7 +42,7 @@ export function subjectsReducer(state = initialSubjectsState, action){
         case NEW_SUBJECT:
             return Object.assign({}, state, { ...newSubjectEditing, editingSubjectId: '', editingSubject: { ...emptySubject } });
         case EDIT_SUBJECT:
-            return Object.assign({}, state, { ...newSubjectEditing, editingSubjectId: action._id, editingSubject: getEditingSubject(state.subjectHash, action._id) });
+            return Object.assign({}, state, { ...newSubjectEditing, editingSubjectId: action._id, editingSubject: action.editingSubject });
         case SET_NEW_SUBJECT_VALUE:
             return Object.assign({}, state, { editingSubject: { ...state.editingSubject, [action.field]: action.value } });
         case UPDATE_SUBJECT:
@@ -111,8 +101,8 @@ const searchSubjectsSelector = createSelector([
 ], (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) }));
 
 const eligibleSubjectsSelector = createSelector([
-        state => state.subjectHash,
-        state => state.editingSubjectId
+        state => state.app.subjectHash,
+        state => state.booksModule.subjects.editingSubjectId
     ],
     (subjectHash, editSubjectId) => {
         let eligibleParents = null;
@@ -127,8 +117,8 @@ const eligibleSubjectsSelector = createSelector([
 );
 
 const deletingSubjectInfoSelector = createSelector([
-        state => state.subjectHash,
-        state => state.deletingSubjectId
+        state => state.app.subjectHash,
+        state => state.booksModule.subjects.deletingSubjectId
     ],
     (subjectHash, deletingSubjectId) => {
         if (!deletingSubjectId) return null;
@@ -145,9 +135,10 @@ export const subjectsSelector = state => {
     return Object.assign({},
         state.booksModule.subjects,
         {
+            colors: state.app.colors,
             ...searchSubjectsSelector(state),
-            ...eligibleSubjectsSelector(state.booksModule.subjects),
-            ...deletingSubjectInfoSelector(state.booksModule.subjects)
+            ...eligibleSubjectsSelector(state),
+            ...deletingSubjectInfoSelector(state)
         }
     );
 }

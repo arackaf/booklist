@@ -27,45 +27,34 @@ export function loadSubjects(){
     }
 }
 
-export function setSubjectSearchValue(value){
-    return { type: SET_SUBJECT_SEARCH_VALUE, value: value.target.value };
+export const setSubjectSearchValue = value => ({ type: SET_SUBJECT_SEARCH_VALUE, value: value.target.value });
+export const editSubjects = () => ({ type: EDIT_SUBJECTS })
+export const setNewSubjectName = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'name', value });
+export const setNewSubjectParent = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'parentId', value });
+export const setNewSubjectBackgroundColor = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'backgroundColor', value });
+export const setNewSubjectTextColor = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'textColor', value })
+export const stopEditingSubjects = () => ({ type: STOP_EDITING_SUBJECTS });
+
+const getEditingSubject = (hash, _id) => {
+    let subject = hash[_id];
+    let parentId = '';
+    if (subject.path){
+        let hierarchy = subject.path.split(',');
+        parentId = hierarchy[hierarchy.length - 2];
+    }
+
+    return { ...subject, parentId };
 }
 
-export function editSubjects(){
-    return { type: EDIT_SUBJECTS };
+export function editSubject(_id) {
+    return function (dispatch, getState){
+        let editingSubject = getEditingSubject(getState().app.subjectHash, _id);
+        dispatch({ type: EDIT_SUBJECT, _id, editingSubject });
+    }
 }
 
-export function setNewSubjectName(value){
-    return { type: SET_NEW_SUBJECT_VALUE, field: 'name', value };
-}
-
-export function setNewSubjectParent(value){
-    return { type: SET_NEW_SUBJECT_VALUE, field: 'parentId', value };
-}
-
-export function setNewSubjectBackgroundColor(value){
-    return { type: SET_NEW_SUBJECT_VALUE, field: 'backgroundColor', value };
-}
-
-export function setNewSubjectTextColor(value){
-    return { type: SET_NEW_SUBJECT_VALUE, field: 'textColor', value };
-}
-
-export function stopEditingSubjects(){
-    return { type: STOP_EDITING_SUBJECTS };
-}
-
-export function editSubject(_id){
-    return { type: EDIT_SUBJECT, _id };
-}
-
-export function newSubject(){
-    return { type: NEW_SUBJECT };
-}
-
-export function cancelSubjectEdit(){
-    return { type: CANCEL_SUBJECT_EDIT };
-}
+export const newSubject = () => ({ type: NEW_SUBJECT });
+export const cancelSubjectEdit = () => ({ type: CANCEL_SUBJECT_EDIT });
 
 export function createOrUpdateSubject(){
     return function(dispatch, getState) {
@@ -77,13 +66,8 @@ export function createOrUpdateSubject(){
     }
 }
 
-export function beginDeleteSubject(_id){
-    return { type: BEGIN_SUBJECT_DELETE, _id };
-}
-
-export function cancelDeleteSubject(){
-    return { type: CANCEL_SUBJECT_DELETE };
-}
+export const beginDeleteSubject = _id => ({ type: BEGIN_SUBJECT_DELETE, _id });
+export const cancelDeleteSubject = () => ({ type: CANCEL_SUBJECT_DELETE });
 
 export function deleteSubject(_id){
     return function(dispatch, getState) {
