@@ -10,12 +10,11 @@ import {
     BEGIN_SUBJECT_DELETE,
     CANCEL_SUBJECT_DELETE,
     SUBJECT_DELETING,
-    SUBJECT_DELETED,
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
-const {saveSubject} = subjectEditingActions;
+const {saveSubject, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
 
 export function loadSubjects(){
     return function(dispatch, getState){
@@ -73,10 +72,7 @@ export const cancelDeleteSubject = () => ({ type: CANCEL_SUBJECT_DELETE });
 
 export function deleteSubject(_id){
     return function(dispatch, getState) {
-        let request = { _id: _id + '' };
-        dispatch({ type: SUBJECT_DELETING });
-        ajaxUtil.post('/subject/delete', request, resp => {
-            dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id });
-        });
+        dispatch({type: SUBJECT_DELETING});
+        dispatch(deleteSubjectRoot(_id));
     }
 }

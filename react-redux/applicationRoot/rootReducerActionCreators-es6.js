@@ -6,7 +6,8 @@ import {
     LOAD_SUBJECTS,
     LOAD_SUBJECTS_RESULTS,
     LOAD_COLORS,
-    SAVE_SUBJECT_RESULTS
+    SAVE_SUBJECT_RESULTS,
+    SUBJECT_DELETED
 } from './rootReducerActionNames';
 
 export const setDesktop = () => ({ type: SET_DESKTOP });
@@ -32,6 +33,13 @@ export const subjectEditingActions = {
     saveSubject(subjectProps){
         return function(dispatch, getState) {
             ajaxUtil.post('/subject/setInfo', subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
+        }
+    },
+    deleteSubject(_id){
+        return function(dispatch, getState){
+            ajaxUtil.post('/subject/delete', {_id: _id + ''}, resp => {
+                dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id });
+            });
         }
     }
 };
