@@ -5,7 +5,8 @@ import {
     REQUEST_MOBILE,
     LOAD_SUBJECTS,
     LOAD_SUBJECTS_RESULTS,
-    LOAD_COLORS
+    LOAD_COLORS,
+    SAVE_SUBJECT_RESULTS
 } from './rootReducerActionNames';
 
 export const setDesktop = () => ({ type: SET_DESKTOP });
@@ -26,3 +27,11 @@ export function loadSubjects(){
         });
     }
 }
+
+export const subjectEditingActions = {
+    saveSubject(subjectProps){
+        return function(dispatch, getState) {
+            ajaxUtil.post('/subject/setInfo', subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
+        }
+    }
+};

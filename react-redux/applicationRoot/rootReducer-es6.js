@@ -7,7 +7,8 @@ import {
     REQUEST_MOBILE,
     LOAD_SUBJECTS,
     LOAD_SUBJECTS_RESULTS,
-    LOAD_COLORS
+    LOAD_COLORS,
+    SAVE_SUBJECT_RESULTS
 } from './rootReducerActionNames';
 
 const initialState = {
@@ -47,6 +48,8 @@ export default function rootReducer(state = initialState, action){
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), subjectsLoaded: true });
         case LOAD_COLORS:
             return Object.assign({}, state, { colors: action.colors });
+        case SAVE_SUBJECT_RESULTS:
+            return Object.assign({}, state, { subjectHash: { ...state.subjectHash, ...subjectsToHash(action.affectedSubjects) } });
     }
 
     return state;
