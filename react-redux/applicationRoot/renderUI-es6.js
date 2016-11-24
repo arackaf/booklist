@@ -4,6 +4,7 @@ import Header from './components/header';
 import { store } from './store';
 import { render } from 'react-dom';
 import {requestDesktop, requestMobile} from './rootReducerActionCreators';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 const MobileMeta = connect(state => state.app, {})(app =>
     <meta name="viewport" content={app.showingMobile ? "width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" : ''} />
@@ -36,6 +37,7 @@ export function renderUI(component){
         <Provider store={store}>
             <div>
                 <MobileMeta />
+                <MainNavigationBar />
                 { component }
                 <WellUiSwitcher />
             </div>
