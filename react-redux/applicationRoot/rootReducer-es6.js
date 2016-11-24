@@ -1,4 +1,13 @@
-import {SET_DESKTOP,SET_MOBILE,REQUEST_DESKTOP,REQUEST_MOBILE} from './rootReducerActionNames';
+import {
+    SET_DESKTOP,
+    SET_MOBILE,
+    REQUEST_DESKTOP,
+    REQUEST_MOBILE,
+    SET_PUBLIC_INFO,
+    RESET_PUBLIC_INFO,
+    SET_MODULE,
+    SET_LOGGED_IN
+} from './rootReducerActionNames';
 
 const initialState = {
     publicUserId: '',
@@ -8,14 +17,16 @@ const initialState = {
     isDesktop: false,
     showingDesktop: false,
     isMobile: false,
-    showingMobile: false
+    showingMobile: false,
+    module: '',
+    isLoggedIn: false
 };
 
 export default function rootReducer(state = initialState, action){
     switch(action.type){
-        case 'SET_PUBLIC_INFO':
+        case SET_PUBLIC_INFO:
             return { ...state, isPublic: true, publicName: action.name, publicBooksHeader: action.booksHeader, publicUserId: action._id };
-        case 'RESET_PUBLIC_INFO':
+        case RESET_PUBLIC_INFO:
             return { ...state, isPublic: false, publicName: '', publicBooksHeader: '', publicUserId: '' };
         case SET_DESKTOP:
             return { ...state, isDesktop: true, showingDesktop: true, isMobile: false, showingMobile: false };
@@ -25,6 +36,10 @@ export default function rootReducer(state = initialState, action){
             return { ...state, showingDesktop: true, showingMobile: false };
         case REQUEST_MOBILE:
             return { ...state, showingDesktop: false, showingMobile: true };
+        case SET_MODULE:
+            return {...state, module: action.module};
+        case SET_LOGGED_IN:
+            return {...state, isLoggedIn: true};
     }
 
     return state;
