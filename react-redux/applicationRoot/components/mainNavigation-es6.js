@@ -28,8 +28,9 @@ export default class MainNavigationBar extends React.Component {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                        {isLoggedIn ? <NavItem disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem> : null}
-                        {isLoggedIn ? <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Your books'}</NavItem> : null}
+                        {isLoggedIn || isPublic ? <NavItem disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem> : null}
+                        {isLoggedIn || isPublic ? <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Your books'}</NavItem> : null}
+                        {isLoggedIn && isPublic ? <NavItem href="#books">View your collection</NavItem> : null}
                         {isLoggedIn ? <NavItem onClick={this.logout}>Logout</NavItem> : null}
                         {!isLoggedIn && !isLoginModule ? <NavItem href='#login'>Login</NavItem> : null}
                     </Nav>
