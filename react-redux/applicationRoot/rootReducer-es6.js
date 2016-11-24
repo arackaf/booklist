@@ -8,7 +8,8 @@ import {
     LOAD_SUBJECTS,
     LOAD_SUBJECTS_RESULTS,
     LOAD_COLORS,
-    SAVE_SUBJECT_RESULTS
+    SAVE_SUBJECT_RESULTS,
+    SUBJECT_DELETED
 } from './rootReducerActionNames';
 
 const initialState = {
@@ -50,6 +51,10 @@ export default function rootReducer(state = initialState, action){
             return Object.assign({}, state, { colors: action.colors });
         case SAVE_SUBJECT_RESULTS:
             return Object.assign({}, state, { subjectHash: { ...state.subjectHash, ...subjectsToHash(action.affectedSubjects) } });
+        case SUBJECT_DELETED:
+            let subjectHash = { ...state.subjectHash };
+            action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
+            return {...state, subjectHash};
     }
 
     return state;

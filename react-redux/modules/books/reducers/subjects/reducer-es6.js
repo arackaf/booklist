@@ -11,12 +11,11 @@ import {
     BEGIN_SUBJECT_DELETE,
     CANCEL_SUBJECT_DELETE,
     SUBJECT_DELETING,
-    SUBJECT_DELETED,
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
 import {stackAndGetTopLevelSubjects, subjectSortCompare} from 'applicationRoot/rootReducer';
-import {SAVE_SUBJECT_RESULTS} from 'applicationRoot/rootReducerActionNames';
+import {SAVE_SUBJECT_RESULTS, SUBJECT_DELETED} from 'applicationRoot/rootReducerActionNames';
 
 const initialSubjectsState = {
     editingSubjectId: null,
@@ -56,10 +55,8 @@ export function subjectsReducer(state = initialSubjectsState, action){
         case SUBJECT_DELETING:
             return Object.assign({}, state, { deleting: true });
         case SUBJECT_DELETED:
-            let subjectHash = { ...state.subjectHash };
-            action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
-            let newState = Object.assign({}, state, { deleting: false, deletingSubjectId: null, subjectHash });
-            if (newState.editingSubjectId && !newState.subjectHash[newState.editingSubjectId]){
+            let newState = {...state, deleting: false, deletingSubjectId: null };
+            if (newState.editingSubjectId && action.subjectsDeleted.find(_id => _id == newState.editingSubjectId)){
                 newState.editingSubjectId = newState.editingSubject = null;
             }
             return newState;
