@@ -27,7 +27,6 @@ class BookViewingList extends React.Component {
 
         return (
             <div>
-                <MainNavigationBar isBookList={true}></MainNavigationBar>
                 <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar />
 

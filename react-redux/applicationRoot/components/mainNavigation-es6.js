@@ -12,8 +12,8 @@ import { goHome, globalHashManager } from 'reactStartup';
 const NonPublicMainNavigationBar = props => {
     let logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
 
-    let isBookEntry = props.isBookEntry,
-        isBookList = props.isBookList;
+    let isBookEntry = props.module == 'scan',
+        isBookList = props.module == 'books';
 
     return (
         <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
@@ -56,13 +56,11 @@ const PublicViewingMainNavBar = props => {
 };
 const ConnectedPublicViewingNav = connect(state => state.app)(PublicViewingMainNavBar);
 
-
-class MainNavigationBar extends React.Component {
+@connect(state => state.app)
+export default class MainNavigationBar extends React.Component {
     render(){
         return (
             this.props.isPublic ? <ConnectedPublicViewingNav { ...this.props } /> : <NonPublicMainNavigationBar { ...this.props } />
         )
     }
 }
-const MainNavigationBarConnected = connect(state => state.app)(MainNavigationBar);
-export default MainNavigationBarConnected;

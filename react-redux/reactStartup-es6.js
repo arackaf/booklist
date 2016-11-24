@@ -3,8 +3,13 @@ import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
+import {setDesktop, setMobile, setModule, setLoggedIn} from './applicationRoot/rootReducerActionCreators';
+import {
+    SET_PUBLIC_INFO,
+    RESET_PUBLIC_INFO
+} from 'applicationRoot/rootReducerActionNames';
+
 import 'util/ajaxUtil';
-import {setDesktop, setMobile} from './applicationRoot/rootReducerActionCreators';
 
 if (window.screen.width < 700) {
     store.dispatch(setMobile());
@@ -47,6 +52,10 @@ export function loadCurrentModule() {
         }
     }
 
+    if (loggedIn){
+        store.dispatch(setLoggedIn());
+    }
+
     if (publicModule){
         var userId = globalHashManager.currentParameters.userId;
 
@@ -82,8 +91,10 @@ export function loadCurrentModule() {
         publicUserPromise
     ]).then(([{ default: module }, publicUserInfo]) => {
         currentModuleObject = module;
+        store.dispatch(setModule(currentModule));
+
         if (publicUserInfo){
-            store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
+            store.dispatch({ type: SET_PUBLIC_INFO, name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
         }
 
         if (module.reducer) {
