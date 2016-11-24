@@ -65,7 +65,6 @@ class BookEntryList extends Component {
 
         return (
             <div>
-                <MainNavigationBar isBookEntry={true}></MainNavigationBar>
                 <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
                     <div className="row">
                         <div style={{ marginBottom: 30 }} className="col-md-6 col-md-push-6">
