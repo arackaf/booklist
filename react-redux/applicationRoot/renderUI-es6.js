@@ -4,6 +4,7 @@ import Header from './components/header';
 import { store } from './store';
 import { render } from 'react-dom';
 import {requestDesktop, requestMobile} from './rootReducerActionCreators';
+import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 const MobileMeta = connect(state => state.app, {})(app =>
     <meta name="viewport" content={app.showingMobile ? "width=device-width, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" : ''} />
@@ -14,9 +15,9 @@ const WellUiSwitcher = connect(state => state.app, {requestDesktop, requestMobil
         showSwitchBackMobile = props.isMobile && props.showingDesktop;
 
     return (
-        <div className="well well-sm">
+        <div className="well well-sm" style={{ marginTop: '30px', marginBottom: 0 }}>
             <img width="16" height="16" src="/static/main-icon.png"/>
-            <span style={{marginLeft: '5px', marginRight: '5px'}}>Track my books</span>
+            <span style={{marginLeft: '5px', marginRight: '5px'}}>My Library</span>
             { showChooseDesktop ? <a onClick={props.requestDesktop}>Use desktop version</a> : null }
             { showSwitchBackMobile ? <a onClick={props.requestMobile}>Use mobile version</a> : null }
         </div>
@@ -36,6 +37,7 @@ export function renderUI(component){
         <Provider store={store}>
             <div>
                 <MobileMeta />
+                <MainNavigationBar />
                 { component }
                 <WellUiSwitcher />
             </div>

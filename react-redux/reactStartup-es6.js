@@ -3,8 +3,13 @@ import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
+import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo} from './applicationRoot/rootReducerActionCreators';
+import {
+    SET_PUBLIC_INFO,
+    RESET_PUBLIC_INFO
+} from 'applicationRoot/rootReducerActionNames';
+
 import 'util/ajaxUtil';
-import {setDesktop, setMobile} from './applicationRoot/rootReducerActionCreators';
 
 if (window.screen.width < 700) {
     store.dispatch(setMobile());
@@ -47,6 +52,10 @@ export function loadCurrentModule() {
         }
     }
 
+    if (loggedIn){
+        store.dispatch(setLoggedIn());
+    }
+
     if (publicModule){
         var userId = globalHashManager.currentParameters.userId;
 
@@ -80,18 +89,22 @@ export function loadCurrentModule() {
     Promise.all([
         System.import(`/react-redux/modules/${module}/${module}`),
         publicUserPromise
-    ]).then(([{ default: module }, publicUserInfo]) => {
-        currentModuleObject = module;
+    ]).then(([{ default: moduleObject }, publicUserInfo]) => {
+        if (currentModule != module) return;
+        
+        currentModuleObject = moduleObject;
+        store.dispatch(setModule(currentModule));
+
         if (publicUserInfo){
-            store.dispatch({ type: 'SET_PUBLIC_INFO', name: publicUserInfo.name, booksHeader: publicUserInfo.booksHeader, _id: userId });
+            store.dispatch(setPublicInfo(name, publicUserInfo.booksHeader, userId));
         }
 
-        if (module.reducer) {
-            getNewReducer({name: module.name, reducer: module.reducer});
+        if (moduleObject.reducer) {
+            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer});
         }
-        renderUI(createElement(module.component));
-        if (module.initialize) {
-            store.dispatch(module.initialize({parameters: globalHashManager.currentParameters }));
+        renderUI(createElement(moduleObject.component));
+        if (moduleObject.initialize) {
+            store.dispatch(moduleObject.initialize({parameters: globalHashManager.currentParameters }));
         }
     });
 }

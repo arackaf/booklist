@@ -71,14 +71,6 @@ class Login extends React.Component{
     render(){
         return (
             <div>
-                <Navbar fluid={true}>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <a onClick={goHome} style={{ cursor: 'default' }}>My Library</a>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                </Navbar>
                 <div style={{ padding: 50, maxWidth: 700, marginRight: 'auto', marginLeft: 'auto'}}>
                     <div className="panel panel-default">
                         <div className="panel-body">
