@@ -60,9 +60,9 @@ const modifyingBooksSelector = createSelector(
 
 const addingSubjectsSelector = createSelector(
     [
-        ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjects,
-        ({ booksModule }) => booksModule.booksSubjectsModifier.addingSubjectSearch,
-        ({ booksModule }) => booksModule.subjects.subjectHash,
+        state => state.booksModule.booksSubjectsModifier.addingSubjects,
+        state => state.booksModule.booksSubjectsModifier.addingSubjectSearch,
+        state => state.app.subjectHash,
         subjectsSelector
     ],
     (adding, addingSubjectSearch, subjects, subjectsSelected) => ({
@@ -73,9 +73,9 @@ const addingSubjectsSelector = createSelector(
 
 const removingSubjectsSelector = createSelector(
     [
-        ({ booksModule }) => booksModule.booksSubjectsModifier.removingSubjects,
-        ({ booksModule }) => booksModule.booksSubjectsModifier.removingSubjectSearch,
-        ({ booksModule }) => booksModule.subjects.subjectHash,
+        state => state.booksModule.booksSubjectsModifier.removingSubjects,
+        state => state.booksModule.booksSubjectsModifier.removingSubjectSearch,
+        state => state.app.subjectHash,
         subjectsSelector
     ],
     (removing, removingSubjectSearch, subjects, subjectsSelected) => ({
