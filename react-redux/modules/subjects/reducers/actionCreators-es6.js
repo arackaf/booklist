@@ -1,12 +1,5 @@
 import {
-    LOAD_SUBJECTS,
-    LOAD_SUBJECTS_RESULTS,
-    LOAD_COLORS,
-
-    EDIT_SUBJECT,
-    NEW_SUBJECT,
-    EDIT_SUBJECTS,
-
+    BEGIN_SUBJECT_EDIT,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
@@ -18,4 +11,9 @@ import {
     SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
-export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId })
+export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
+
+export const beginSubjectEdit = _id => (dispatch, getState) =>{
+    let subject = getState().app.subjectHash[_id];
+    dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
+};

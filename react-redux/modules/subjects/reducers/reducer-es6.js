@@ -3,16 +3,7 @@ import {createSelector} from 'reselect';
 import {stackAndGetTopLevelSubjects, subjectsSelector} from 'applicationRoot/rootReducer';
 
 import {
-    LOAD_SUBJECTS,
-    LOAD_SUBJECTS_RESULTS,
-    LOAD_COLORS,
-} from 'applicationRoot/rootReducerActionNames';
-
-import {
-    EDIT_SUBJECT,
-    NEW_SUBJECT,
-    EDIT_SUBJECTS,
-
+    BEGIN_SUBJECT_EDIT,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
@@ -26,11 +17,15 @@ import {
 
 const initialSubjectsState = {
     draggingId: null,
-    currentDropCandidateId: null
+    currentDropCandidateId: null,
+    editingSubjectsHash: {}
 };
 
 export function reducer(state = initialSubjectsState, action){
     switch(action.type){
+        case BEGIN_SUBJECT_EDIT:
+            return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
+        case CANCEL_SUBJECT_EDIT:
         case SUBJECT_DRAGGING_OVER:
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId }
     }
@@ -39,9 +34,10 @@ export function reducer(state = initialSubjectsState, action){
 
 const subjectsModuleSelector = createSelector([
     state => state.app.subjectHash,
+    state => state.subjectsModule.editingSubjectsHash,
     state => state.subjectsModule.draggingId,
     state => state.subjectsModule.currentDropCandidateId
-], (subjectHash, draggingId, currentDropCandidateId) => {
+], (subjectHash, editingSubjectsHash, draggingId, currentDropCandidateId) => {
     let subjects;
     if (currentDropCandidateId){
         subjectHash = {...subjectHash};
@@ -55,6 +51,7 @@ const subjectsModuleSelector = createSelector([
     }
 
     return {
+        editingSubjectsHash,
         subjects,
         draggingId,
         currentDropCandidateId

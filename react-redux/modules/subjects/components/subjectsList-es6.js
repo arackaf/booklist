@@ -4,6 +4,7 @@ import {selector} from 'modules/subjects/reducers/reducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
 @connect(selector, { ...actionCreators })
 @DropTarget('subject', {
@@ -70,6 +71,7 @@ class SubjectDisplay extends Component {
     }
 }
 
+@connect(selector, {...actionCreators})
 @DragSource('subject', {
     beginDrag: props => props.subject
 }, (connect, monitor) => ({
@@ -79,13 +81,16 @@ class SubjectDisplay extends Component {
 }))
 class SubjectDisplayContent extends Component {
     render(){
-        let {subject, connectDragSource, connectDragPreview, noDrop} = this.props,
-            {name, children: childSubjects} = subject;
+        let {subject, connectDragSource, connectDragPreview, noDrop, editingSubjectsHash} = this.props,
+            {_id, name, children: childSubjects} = subject,
+            editingSubject = editingSubjectsHash[_id];
 
         return (
             connectDragPreview(
                 <div>
-                    {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)} {name}
+                    {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)}&nbsp;
+                    {editingSubject ? <input style={{width:'150px', display: 'inline'}} className="form-control" /> : name}&nbsp;
+                    <BootstrapButton preset="default-xs" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></BootstrapButton>
                     {childSubjects.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={childSubjects} /> : null}
                 </div>
             )
