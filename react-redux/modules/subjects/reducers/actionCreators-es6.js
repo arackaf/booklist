@@ -13,6 +13,8 @@ import {
 
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 
+export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
+
 export const beginSubjectEdit = _id => (dispatch, getState) =>{
     let subject = {...getState().app.subjectHash[_id]};
     if (subject.path){

@@ -87,14 +87,15 @@ class SubjectDisplayContent extends Component {
 
         let contents = editingSubject ? [
             <input value={editingSubject.name} style={{width:'200px', display: 'inline', marginRight: '20px'}} className="form-control" />,
-            <select value={editingSubject.parentId} className="form-control" style={{width:'200px', display: 'inline'}}>
+            <select value={editingSubject.parentId} className="form-control" style={{width:'200px', display: 'inline', marginRight: '20px'}}>
                 <option value={null}>No Parent</option>
                 {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
-            </select>
+            </select>,
+            <BootstrapButton preset="default-xs" onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</BootstrapButton>
         ] : [
             name,
             ' ',
-            <BootstrapButton preset="default-xs" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></BootstrapButton>
+            <BootstrapButton preset="primary-xs" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></BootstrapButton>
         ]
 
         return (
