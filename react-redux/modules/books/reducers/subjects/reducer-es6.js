@@ -14,7 +14,7 @@ import {
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-import {stackAndGetTopLevelSubjects, subjectSortCompare} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents} from 'applicationRoot/rootReducer';
 import {SAVE_SUBJECT_RESULTS, SUBJECT_DELETED} from 'applicationRoot/rootReducerActionNames';
 
 const initialSubjectsState = {
@@ -68,8 +68,6 @@ export function subjectsReducer(state = initialSubjectsState, action){
     return state;
 }
 
-const flattenedSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
-
 const unwindSubjects = subjects => {
     let result = [];
     subjects.concat().sort(subjectSortCompare).forEach(s => {
@@ -101,19 +99,9 @@ const eligibleSubjectsSelector = createSelector([
         state => state.app.subjectHash,
         state => state.booksModule.subjects.editingSubjectId
     ],
-    (subjectHash, editSubjectId) => {
-        let eligibleParents = null;
-        if (!editSubjectId && editSubjectId != null){
-            eligibleParents = flattenedSubjects(subjectHash)
-        } else if (editSubjectId) {
-            eligibleParents = flattenedSubjects(subjectHash).filter(s => s._id !== editSubjectId && (!new RegExp(`,${editSubjectId},`).test(s.path)));
-        }
-        if (eligibleParents){
-            eligibleParents.sort(subjectSortCompare);
-        }
-
-        return { eligibleParents };
-    }
+    (subjectHash, editSubjectId) => ({
+        eligibleParents: getEligibleParents(subjectHash, editSubjectId)
+    })
 );
 
 const deletingSubjectInfoSelector = createSelector([
