@@ -11,6 +11,10 @@ import {
     SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
+import {
+    SAVE_SUBJECT_RESULTS
+} from 'applicationRoot/rootReducerActionNames'
+
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
@@ -25,3 +29,16 @@ export const beginSubjectEdit = _id => (dispatch, getState) =>{
     }
     dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
 };
+
+export const setNewParent = (subject, newParent) => (dispatch, getState) => {
+    let _id = subject._id,
+        adjustedSubject = {...subject};
+
+    if (!newParent.path){
+        adjustedSubject.path = `,${newParent._id},`;
+    } else {
+        adjustedSubject.path = `${newParent.path},${newParent._id},`;
+    }
+
+    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] })
+}
