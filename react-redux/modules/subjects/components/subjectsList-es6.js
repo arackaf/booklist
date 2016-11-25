@@ -83,7 +83,7 @@ class SubjectDisplay extends Component {
 }))
 class SubjectDisplayContent extends Component {
     render(){
-        let {subject, connectDragSource, connectDragPreview, noDrop, editingSubjectsHash} = this.props,
+        let {subject, connectDragSource, connectDragPreview, noDrop, editingSubjectsHash, subjectsMoving, subjectsMoved} = this.props,
             {_id, name, children: childSubjects} = subject,
             editingSubject = editingSubjectsHash[_id];
 
@@ -99,14 +99,20 @@ class SubjectDisplayContent extends Component {
             name,
             ' ',
             <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
-        ]
+        ];
+
+        let mainIcon =
+            subjectsMoving[subject._id]
+                ? <i className="fa fa-fw fa-spinner fa-spin"></i>
+                : (subjectsMoved[subject._id] ?
+                    <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
 
         return (
             connectDragPreview(
                 <div>
                     <div className="row">
                         <div className="col-xs-12 show-on-hover-parent">
-                            {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)}&nbsp;
+                            {mainIcon}&nbsp;
                             {contents}&nbsp;
                         </div>
                     </div>

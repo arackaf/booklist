@@ -6,6 +6,9 @@ import {
     BEGIN_SUBJECT_DELETE,
     CANCEL_SUBJECT_DELETE,
 
+    SUBJECTS_MOVING,
+    SUBJECTS_DONE_MOVING,
+    CLEAR_MOVING_STATE,
     SUBJECT_DELETING,
     SUBJECT_DELETED,
     SUBJECT_DRAGGING_OVER
@@ -14,6 +17,8 @@ import {
 import {
     SAVE_SUBJECT_RESULTS
 } from 'applicationRoot/rootReducerActionNames'
+
+import {unwindSubjects, subjectsToHash} from 'applicationRoot/rootReducer';
 
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 
@@ -40,5 +45,15 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
         adjustedSubject.path = `${newParent.path},${newParent._id},`;
     }
 
-    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] })
+    let adjustedSubjectsHash = subjectsToHash(unwindSubjects([adjustedSubject]));
+
+    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
+    dispatch({ type: SUBJECTS_MOVING, subjects: adjustedSubjectsHash });
+
+    setTimeout(() => {
+        dispatch({ type: SUBJECTS_DONE_MOVING, subjects: adjustedSubjectsHash })
+
+        setTimeout(() => dispatch({ type: CLEAR_MOVING_STATE, subjects: adjustedSubjectsHash }), 1000);
+    }, 2000);
+
 }
