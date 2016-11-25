@@ -21,6 +21,8 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
     drop(props, monitor){
         let {subject: targetSubject} = props,
             sourceSubject = monitor.getItem();
+
+        props.setNewParent(sourceSubject, targetSubject);
         //TODO:
     }
 }, (connect, monitor) => ({
