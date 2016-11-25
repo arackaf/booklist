@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect';
 
 import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents} from 'applicationRoot/rootReducer';
+import {removeKeysFromObject} from 'util/immutableHelpers';
 
 import {
     BEGIN_SUBJECT_EDIT,
@@ -26,9 +27,7 @@ export function reducer(state = initialSubjectsState, action){
         case BEGIN_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
         case CANCEL_SUBJECT_EDIT:
-            let newEditingHash = {...state.editingSubjectsHash};
-            delete newEditingHash[action._id];
-            return {...state, editingSubjectsHash: newEditingHash};
+            return {...state, editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, action._id)};
         case SUBJECT_DRAGGING_OVER:
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId }
     }
