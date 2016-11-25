@@ -32,12 +32,13 @@ export function reducer(state = initialSubjectsState, action){
     return state;
 }
 
-const subjectsModuleSelector = createSelector([
+const editingSubjectHashSelector = createSelector([state => state.subjectsModule.editingSubjectsHash], editingSubjectsHash => ({ editingSubjectsHash }));
+
+const subjectsHashAndDndSelector = createSelector([
     state => state.app.subjectHash,
-    state => state.subjectsModule.editingSubjectsHash,
     state => state.subjectsModule.draggingId,
     state => state.subjectsModule.currentDropCandidateId
-], (subjectHash, editingSubjectsHash, draggingId, currentDropCandidateId) => {
+], (subjectHash, draggingId, currentDropCandidateId) => {
     let subjects;
     if (currentDropCandidateId){
         subjectHash = {...subjectHash};
@@ -51,11 +52,18 @@ const subjectsModuleSelector = createSelector([
     }
 
     return {
-        editingSubjectsHash,
         subjects,
         draggingId,
         currentDropCandidateId
     };
 });
+
+const subjectsModuleSelector = createSelector([
+    editingSubjectHashSelector,
+    subjectsHashAndDndSelector
+], (editingHashPacket, DndPacket) => ({
+    ...editingHashPacket,
+    ...DndPacket
+}));
 
 export const selector = subjectsModuleSelector;
