@@ -108,6 +108,9 @@ const eligibleSubjectsSelector = createSelector([
         } else if (editSubjectId) {
             eligibleParents = flattenedSubjects(subjectHash).filter(s => s._id !== editSubjectId && (!new RegExp(`,${editSubjectId},`).test(s.path)));
         }
+        if (eligibleParents){
+            eligibleParents.sort(subjectSortCompare);
+        }
 
         return { eligibleParents };
     }
