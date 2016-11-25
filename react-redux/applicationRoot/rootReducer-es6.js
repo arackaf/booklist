@@ -70,6 +70,12 @@ export default function rootReducer(state = initialState, action){
     return state;
 }
 
+export const unwindSubjects = subjects => {
+    let result = [];
+    subjects.forEach(s => result.push(s, ...unwindSubjects(s.children)));
+    return result;
+};
+
 export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
     let name1After = name1.toLowerCase() > name2.toLowerCase(),
         bothEqual = name1.toLowerCase() === name2.toLowerCase();

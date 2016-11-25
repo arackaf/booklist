@@ -14,7 +14,7 @@ import {
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
 
-import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects} from 'applicationRoot/rootReducer';
 import {SAVE_SUBJECT_RESULTS, SUBJECT_DELETED} from 'applicationRoot/rootReducerActionNames';
 
 const initialSubjectsState = {
@@ -67,15 +67,6 @@ export function subjectsReducer(state = initialSubjectsState, action){
     }
     return state;
 }
-
-const unwindSubjects = subjects => {
-    let result = [];
-    subjects.concat().sort(subjectSortCompare).forEach(s => {
-        result.push(s);
-        result.push(...unwindSubjects(s.children));
-    });
-    return result;
-};
 
 const stackedSubjectsSelector = createSelector([state => state.app.subjectHash],
     subjectHash => {
