@@ -86,6 +86,22 @@ export const stackAndGetTopLevelSubjects = subjectsHash => {
     return subjects.filter(s => s.path == null);
 }
 
+const flattenedSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
+
+export const getEligibleParents = (subjectHash, _id) => {
+    let eligibleParents = null;
+    if (!_id && _id != null){
+        eligibleParents = flattenedSubjects(subjectHash)
+    } else if (_id) {
+        eligibleParents = flattenedSubjects(subjectHash).filter(s => s._id !== _id && (!new RegExp(`,${_id},`).test(s.path)));
+    }
+    if (eligibleParents){
+        eligibleParents.sort(subjectSortCompare);
+    }
+
+    return eligibleParents;
+}
+
 export const subjectsSelector = createSelector([subjectHash => subjectHash], subjectHash => ({
     subjects: stackAndGetTopLevelSubjects(subjectHash)
 }));
