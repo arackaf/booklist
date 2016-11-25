@@ -5,6 +5,9 @@ import {removeKeysFromObject} from 'util/immutableHelpers';
 
 import {
     BEGIN_SUBJECT_EDIT,
+    SUBJECTS_MOVING,
+    SUBJECTS_DONE_MOVING,
+    CLEAR_MOVING_STATE,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
@@ -19,7 +22,9 @@ import {
 const initialSubjectsState = {
     draggingId: null,
     currentDropCandidateId: null,
-    editingSubjectsHash: {}
+    editingSubjectsHash: {},
+    subjectsMoving: {},
+    subjectsMoved: {}
 };
 
 export function reducer(state = initialSubjectsState, action){
@@ -27,9 +32,23 @@ export function reducer(state = initialSubjectsState, action){
         case BEGIN_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
         case CANCEL_SUBJECT_EDIT:
-            return {...state, editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, action._id)};
+            return {...state, editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, [action._id])};
         case SUBJECT_DRAGGING_OVER:
-            return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId }
+            return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId };
+        case SUBJECTS_MOVING:
+            return {...state, subjectsMoving: {...state.subjectsMoving, ...action.subjects}};
+        case SUBJECTS_DONE_MOVING:
+            return {
+                ...state,
+                subjectsMoving: removeKeysFromObject(state.subjectsMoving, Object.keys(action.subjects)),
+                subjectsMoved: {...state.subjectsMoved, ...action.subjects}
+            };
+        case CLEAR_MOVING_STATE:
+            return {
+                ...state,
+                subjectsMoved: removeKeysFromObject(state.subjectsMoved, Object.keys(action.subjects)),
+                subjectsMoving: removeKeysFromObject(state.subjectsMoving, Object.keys(action.subjects))
+            };
     }
     return state;
 }
@@ -71,10 +90,14 @@ const subjectsHashAndDndSelector = createSelector([
 
 const subjectsModuleSelector = createSelector([
     editingSubjectHashSelector,
-    subjectsHashAndDndSelector
-], (editingHashPacket, DndPacket) => ({
+    subjectsHashAndDndSelector,
+    state => state.subjectsModule.subjectsMoving,
+    state => state.subjectsModule.subjectsMoved
+], (editingHashPacket, DndPacket, subjectsMoving, subjectsMoved) => ({
     ...editingHashPacket,
-    ...DndPacket
+    ...DndPacket,
+    subjectsMoving,
+    subjectsMoved
 }));
 
 export const selector = subjectsModuleSelector;
