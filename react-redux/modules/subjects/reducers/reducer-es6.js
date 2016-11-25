@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import {stackAndGetTopLevelSubjects, subjectsSelector} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents} from 'applicationRoot/rootReducer';
 
 import {
     BEGIN_SUBJECT_EDIT,
@@ -32,7 +32,16 @@ export function reducer(state = initialSubjectsState, action){
     return state;
 }
 
-const editingSubjectHashSelector = createSelector([state => state.subjectsModule.editingSubjectsHash], editingSubjectsHash => ({ editingSubjectsHash }));
+const editingSubjectHashSelector = createSelector([
+    state => state.app.subjectHash,
+    state => state.subjectsModule.editingSubjectsHash
+], (subjectHash, editingSubjectsHash) => {
+    return {
+        editingSubjectsHash: Object.keys(editingSubjectsHash)
+                                   .map(_id => editingSubjectsHash[_id])
+                                   .reduce((hash, s) => (hash[s._id] = {...s, eligibleParents: getEligibleParents(subjectHash, s._id)}, hash), {})
+    };
+});
 
 const subjectsHashAndDndSelector = createSelector([
     state => state.app.subjectHash,

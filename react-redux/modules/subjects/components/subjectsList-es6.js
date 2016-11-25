@@ -85,12 +85,24 @@ class SubjectDisplayContent extends Component {
             {_id, name, children: childSubjects} = subject,
             editingSubject = editingSubjectsHash[_id];
 
+        let contents = editingSubject ? [
+            <input value={editingSubject.name} style={{width:'200px', display: 'inline', marginRight: '20px'}} className="form-control" />,
+            <select value={editingSubject.parentId} className="form-control" style={{width:'200px', display: 'inline'}}>
+                <option value={null}>No Parent</option>
+                {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
+            </select>
+        ] : [
+            name,
+            ' ',
+            <BootstrapButton preset="default-xs" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></BootstrapButton>
+        ]
+
         return (
             connectDragPreview(
                 <div>
                     {connectDragSource(<i className="fa fa-fw fa-arrows"></i>)}&nbsp;
-                    {editingSubject ? <input style={{width:'150px', display: 'inline'}} className="form-control" /> : name}&nbsp;
-                    <BootstrapButton preset="default-xs" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></BootstrapButton>
+                    {contents}&nbsp;
+
                     {childSubjects.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={childSubjects} /> : null}
                 </div>
             )
