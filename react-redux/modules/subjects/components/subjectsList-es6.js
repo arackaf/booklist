@@ -91,11 +91,12 @@ class SubjectDisplayContent extends Component {
                 <option value={null}>No Parent</option>
                 {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
             </select>,
-            <BootstrapButton preset="default-xs" onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</BootstrapButton>
+            <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => this.props.cancelSubjectEdit(_id)}><i className="fa fa-fw fa-save"></i></BootstrapButton>,
+            <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
         ] : [
             name,
             ' ',
-            <BootstrapButton preset="primary-xs" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></BootstrapButton>
+            <a onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
         ]
 
         return (
