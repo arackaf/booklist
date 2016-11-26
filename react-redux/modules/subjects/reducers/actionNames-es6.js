@@ -4,8 +4,8 @@ export const EDIT_SUBJECTS = 'subjectsModule.EDIT_SUBJECTS';
 
 export const BEGIN_SUBJECT_EDIT = 'subjectsModule.BEGIN_SUBJECT_EDIT';
 export const SET_EDITING_SUBJECT_FIELD = 'subjectsModule.SET_EDITING_SUBJECT_FIELD';
-export const SUBJECTS_MOVING = 'subjectsModule.SUBJECTS_MOVING';
-export const SUBJECTS_DONE_MOVING = 'subjectsModule.SUBJECTS_DONE_MOVING';
+export const SUBJECTS_SAVING = 'subjectsModule.SUBJECTS_SAVING';
+export const SUBJECTS_DONE_SAVING = 'subjectsModule.SUBJECTS_DONE_SAVING';
 export const CLEAR_MOVING_STATE = 'subjectsModule.CLEAR_MOVING_STATE';
 export const CANCEL_SUBJECT_EDIT = 'subjectsModule.CANCEL_SUBJECT_EDIT';
 export const UPDATE_SUBJECT = 'subjectsModule.UPDATE_SUBJECT';

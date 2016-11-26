@@ -90,20 +90,20 @@ class SubjectDisplayContent extends Component {
                 connectDragPreview,
                 noDrop,
                 editingSubjectsHash,
-                subjectsMoving,
-                subjectsMoved,
+                subjectsSaving,
+                subjectsSaved,
                 colors,
                 setEditingSubjectField,
                 saveChanges
             } = this.props,
             {_id, name, children: childSubjects} = subject,
             editingSubject = editingSubjectsHash[_id],
-            isSubjectMoving = !!subjectsMoving[subject._id];
+            isSubjectMoving = !!subjectsSaving[subject._id];
 
         let mainIcon =
             isSubjectMoving
                 ? <i className="fa fa-fw fa-spinner fa-spin"></i>
-                : (subjectsMoved[subject._id] ?
+                : (subjectsSaved[subject._id] ?
                     <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
 
         let contents = editingSubject ? [
@@ -120,7 +120,7 @@ class SubjectDisplayContent extends Component {
                 <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
             </div>,
             <div className="col-xs-12 col-lg-1">
-                <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
+                <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
         ] : [

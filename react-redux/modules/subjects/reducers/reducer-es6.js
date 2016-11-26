@@ -6,8 +6,8 @@ import {removeKeysFromObject} from 'util/immutableHelpers';
 import {
     BEGIN_SUBJECT_EDIT,
     SET_EDITING_SUBJECT_FIELD,
-    SUBJECTS_MOVING,
-    SUBJECTS_DONE_MOVING,
+    SUBJECTS_SAVING,
+    SUBJECTS_DONE_SAVING,
     CLEAR_MOVING_STATE,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
@@ -24,8 +24,8 @@ const initialSubjectsState = {
     draggingId: null,
     currentDropCandidateId: null,
     editingSubjectsHash: {},
-    subjectsMoving: {},
-    subjectsMoved: {}
+    subjectsSaving: {},
+    subjectsSaved: {}
 };
 
 export function reducer(state = initialSubjectsState, action){
@@ -36,19 +36,19 @@ export function reducer(state = initialSubjectsState, action){
             return {...state, editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, [action._id])};
         case SUBJECT_DRAGGING_OVER:
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId };
-        case SUBJECTS_MOVING:
-            return {...state, subjectsMoving: {...state.subjectsMoving, ...action.subjects}};
-        case SUBJECTS_DONE_MOVING:
+        case SUBJECTS_SAVING:
+            return {...state, subjectsSaving: {...state.subjectsSaving, ...action.subjects}};
+        case SUBJECTS_DONE_SAVING:
             return {
                 ...state,
-                subjectsMoving: removeKeysFromObject(state.subjectsMoving, Object.keys(action.subjects)),
-                subjectsMoved: {...state.subjectsMoved, ...action.subjects}
+                subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects)),
+                subjectsSaved: {...state.subjectsSaved, ...action.subjects}
             };
         case CLEAR_MOVING_STATE:
             return {
                 ...state,
-                subjectsMoved: removeKeysFromObject(state.subjectsMoved, Object.keys(action.subjects)),
-                subjectsMoving: removeKeysFromObject(state.subjectsMoving, Object.keys(action.subjects))
+                subjectsSaved: removeKeysFromObject(state.subjectsSaved, Object.keys(action.subjects)),
+                subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects))
             };
         case SET_EDITING_SUBJECT_FIELD:
             return {
@@ -98,14 +98,14 @@ const subjectsHashAndDndSelector = createSelector([
 const subjectsModuleSelector = createSelector([
     editingSubjectHashSelector,
     subjectsHashAndDndSelector,
-    state => state.subjectsModule.subjectsMoving,
-    state => state.subjectsModule.subjectsMoved,
+    state => state.subjectsModule.subjectsSaving,
+    state => state.subjectsModule.subjectsSaved,
     state => state.app.colors
-], (editingHashPacket, DndPacket, subjectsMoving, subjectsMoved, colors) => ({
+], (editingHashPacket, DndPacket, subjectsSaving, subjectsSaved, colors) => ({
     ...editingHashPacket,
     ...DndPacket,
-    subjectsMoving,
-    subjectsMoved,
+    subjectsSaving,
+    subjectsSaved,
     colors
 }));
 
