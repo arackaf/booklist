@@ -96,17 +96,17 @@ class SubjectDisplayContent extends Component {
 
         let contents = editingSubject ? [
             <div className="col-xs-12 col-lg-3">
-                <div className="row">
-                    <div className="col-xs-3 col-lg-1">
+                <div style={{ display: 'flex'}}>
+                    <div style={{ width: '30px' }}>
                         {mainIcon}
                     </div>
-                    <div className="col-xs-9 col-lg-11">
-                        <input value={editingSubject.name} style={{display: 'inline'}} className="form-control" />
+                    <div style={{ flex: 1 }}>
+                        <input value={editingSubject.name} className="form-control" />
                     </div>
                 </div>
             </div>,
             <div className="col-xs-12 col-lg-3">
-                <select value={editingSubject.parentId} className="form-control" style={{display: 'inline'}}>
+                <select value={editingSubject.parentId} className="form-control">
                     <option value={null}>No Parent</option>
                     {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
                 </select>
