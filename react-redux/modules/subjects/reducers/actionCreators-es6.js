@@ -29,7 +29,7 @@ const toIdHash = objs => objs.reduce((hash, obj) => (hash[obj._id] = true, hash)
 
 let tempId = -1;
 
-export const addNewSubject = subject => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: subject ? subject._id : null } });
+export const addNewSubject = subject => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: subject ? subject._id : null, pending: true } });
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 export const beginSubjectEdit = _id => (dispatch, getState) =>{

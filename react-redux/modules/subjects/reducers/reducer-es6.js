@@ -33,7 +33,11 @@ const initialSubjectsState = {
 export function reducer(state = initialSubjectsState, action){
     switch(action.type){
         case ADD_NEW_SUBJECT:
-            return {...state, pendingSubjectsHash: {...state.pendingSubjectsHash, [action.subject._id]: action.subject}};
+            return {
+                ...state,
+                pendingSubjectsHash: {...state.pendingSubjectsHash, [action.subject._id]: action.subject},
+                editingSubjectsHash: {...state.editingSubjectsHash, [action.subject._id]: action.subject}
+            };
         case BEGIN_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
         case CANCEL_SUBJECT_EDIT:
