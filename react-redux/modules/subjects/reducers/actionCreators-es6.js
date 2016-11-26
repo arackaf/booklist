@@ -9,7 +9,7 @@ import {
 
     SUBJECTS_SAVING,
     SUBJECTS_DONE_SAVING,
-    CLEAR_MOVING_STATE,
+    CLEAR_SAVING_STATE,
     SUBJECT_DELETING,
     SUBJECT_DELETED,
     SUBJECT_DRAGGING_OVER
@@ -19,10 +19,12 @@ import {
     SAVE_SUBJECT_RESULTS
 } from 'applicationRoot/rootReducerActionNames'
 
-import {unwindSubjects, subjectsToHash, computeParentId} from 'applicationRoot/rootReducer';
+import {unwindSubjects, computeParentId} from 'applicationRoot/rootReducer';
 
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject: saveSubjectRoot, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
+
+const toIdHash = objs => objs.reduce((hash, obj) => (hash[obj._id] = true, hash), {});
 
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 
@@ -38,12 +40,11 @@ export const setEditingSubjectField = (_id, field, value) => ({ type: SET_EDITIN
 
 export function saveChanges(subject, original){
     return function(dispatch, getState) {
-        debugger;
         let { _id, name, parentId, backgroundColor, textColor } = subject,
             request = { _id, name, parentId, backgroundColor, textColor };
 
         let oldParentId = computeParentId(getState().app.subjectHash[_id].path);
-        let subjectsSaving = oldParentId != subject.parentId ? subjectsToHash(unwindSubjects([original])) : subjectsToHash([subject]);
+        let subjectsSaving = oldParentId != subject.parentId ? toIdHash(unwindSubjects([original])) : toIdHash([subject]);
 
         dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSaving });
         setTimeout(() => saveSubjectRoot(request, dispatch), 1500);
@@ -60,14 +61,17 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
         adjustedSubject.path = `${newParent.path},${newParent._id},`;
     }
 
-    let adjustedSubjectsHash = subjectsToHash(unwindSubjects([adjustedSubject]));
+    let adjustedSubjectsHash = toIdHash(unwindSubjects([adjustedSubject]));
+    adjustedSubject.path.split(',').filter(s => s).forEach(_id => adjustedSubjectsHash[_id] = true);
 
+    //provide immediate feedback, so the DnD "sticks"
     dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
+    //disable dragging and editing on the entire hierarchy until the save is done
     dispatch({ type: SUBJECTS_SAVING, subjects: adjustedSubjectsHash });
 
     setTimeout(() => {
         dispatch({ type: SUBJECTS_DONE_SAVING, subjects: adjustedSubjectsHash })
 
-        setTimeout(() => dispatch({ type: CLEAR_MOVING_STATE, subjects: adjustedSubjectsHash }), 1000);
+        setTimeout(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: adjustedSubjectsHash }), 1000);
     }, 1500);
 }

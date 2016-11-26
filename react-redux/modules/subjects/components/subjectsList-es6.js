@@ -4,7 +4,7 @@ import {selector} from 'modules/subjects/reducers/reducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 @connect(selector, { ...actionCreators })
@@ -98,10 +98,10 @@ class SubjectDisplayContent extends Component {
             } = this.props,
             {_id, name, children: childSubjects} = subject,
             editingSubject = editingSubjectsHash[_id],
-            isSubjectMoving = !!subjectsSaving[subject._id];
+            isSubjectSaving = !!subjectsSaving[subject._id];
 
         let mainIcon =
-            isSubjectMoving
+            isSubjectSaving
                 ? <i className="fa fa-fw fa-spinner fa-spin"></i>
                 : (subjectsSaved[subject._id] ?
                     <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
@@ -120,7 +120,7 @@ class SubjectDisplayContent extends Component {
                 <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
             </div>,
             <div className="col-xs-12 col-lg-1">
-                <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
+                <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
         ] : [
@@ -129,7 +129,7 @@ class SubjectDisplayContent extends Component {
                 {' '}
                 {name}
                 {' '}
-                {!isSubjectMoving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
             </div>
         ];
 

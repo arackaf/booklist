@@ -8,7 +8,7 @@ import {
     SET_EDITING_SUBJECT_FIELD,
     SUBJECTS_SAVING,
     SUBJECTS_DONE_SAVING,
-    CLEAR_MOVING_STATE,
+    CLEAR_SAVING_STATE,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
@@ -44,7 +44,7 @@ export function reducer(state = initialSubjectsState, action){
                 subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects)),
                 subjectsSaved: {...state.subjectsSaved, ...action.subjects}
             };
-        case CLEAR_MOVING_STATE:
+        case CLEAR_SAVING_STATE:
             return {
                 ...state,
                 subjectsSaved: removeKeysFromObject(state.subjectsSaved, Object.keys(action.subjects)),
