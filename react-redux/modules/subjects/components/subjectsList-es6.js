@@ -160,7 +160,7 @@ class SubjectList extends Component {
 export default class SubjectsComponent extends Component{
     render(){
         return (
-            <div style={{ margin: '50px' }}>
+            <div style={{ marginLeft: '10px', marginRight: '10px' }}>
                 <SubjectList subjects={this.props.subjects} />
             </div>
         )
