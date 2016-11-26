@@ -16,6 +16,7 @@ export default class MainNavigationBar extends React.Component {
         let { isPublic, publicBooksHeader, module, isLoggedIn }  = this.props,
             isBookEntry = module == 'scan',
             isBookList = module == 'books',
+            isSubjects = module == 'subjects',
             isLoginModule = module == 'authenticate';
 
         return (
@@ -29,7 +30,8 @@ export default class MainNavigationBar extends React.Component {
                 <Navbar.Collapse>
                     <Nav>
                         {isLoggedIn || isPublic ? <NavItem disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem> : null}
-                        {isLoggedIn || isPublic ? <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Your books'}</NavItem> : null}
+                        {isLoggedIn || isPublic ? <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Books'}</NavItem> : null}
+                        {isLoggedIn || isPublic ? <NavItem disabled={isPublic} active={isSubjects} href={isSubjects ? undefined : '#subjects'}>{'Subjects'}</NavItem> : null}
                         {isLoggedIn && isPublic ? <NavItem href="#books">View your collection</NavItem> : null}
                         {isLoggedIn ? <NavItem onClick={this.logout}>Logout</NavItem> : null}
                         {!isLoggedIn && !isLoginModule ? <NavItem href='#login'>Login</NavItem> : null}

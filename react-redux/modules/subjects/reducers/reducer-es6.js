@@ -5,6 +5,7 @@ import {removeKeysFromObject} from 'util/immutableHelpers';
 
 import {
     BEGIN_SUBJECT_EDIT,
+    SET_EDITING_SUBJECT_FIELD,
     SUBJECTS_MOVING,
     SUBJECTS_DONE_MOVING,
     CLEAR_MOVING_STATE,
@@ -49,6 +50,12 @@ export function reducer(state = initialSubjectsState, action){
                 subjectsMoved: removeKeysFromObject(state.subjectsMoved, Object.keys(action.subjects)),
                 subjectsMoving: removeKeysFromObject(state.subjectsMoving, Object.keys(action.subjects))
             };
+        case SET_EDITING_SUBJECT_FIELD:
+            return {
+                ...state,
+                editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: {...state.editingSubjectsHash[action._id], [action.field]: action.value}}
+            };
+
     }
     return state;
 }
