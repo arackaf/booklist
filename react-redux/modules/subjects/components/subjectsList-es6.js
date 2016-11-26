@@ -109,6 +109,7 @@ class SubjectDisplayContent extends Component {
         let contents = editingSubject ? [
             <div className="col-xs-12 col-lg-3">
                 <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
+                {subject.pending ? <span className="label label-warning">This subject is not saved</span> : null}
             </div>,
             <div className="col-xs-12 col-lg-3">
                 <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId} className="form-control">
