@@ -4,6 +4,7 @@ import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents} from 
 import {removeKeysFromObject} from 'util/immutableHelpers';
 
 import {
+    ADD_NEW_SUBJECT,
     BEGIN_SUBJECT_EDIT,
     SET_EDITING_SUBJECT_FIELD,
     SUBJECTS_SAVING,
@@ -23,6 +24,7 @@ import {
 const initialSubjectsState = {
     draggingId: null,
     currentDropCandidateId: null,
+    pendingSubjectsHash: {},
     editingSubjectsHash: {},
     subjectsSaving: {},
     subjectsSaved: {}
@@ -30,6 +32,8 @@ const initialSubjectsState = {
 
 export function reducer(state = initialSubjectsState, action){
     switch(action.type){
+        case ADD_NEW_SUBJECT:
+            return {...state, pendingSubjectsHash: {...state.pendingSubjectsHash, [action.subject._id]: action.subject}};
         case BEGIN_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
         case CANCEL_SUBJECT_EDIT:
@@ -71,6 +75,25 @@ const editingSubjectHashSelector = createSelector([
     };
 });
 
+const tempSubjectCompare = ({_id: id1}, {_id: id2}) => id1 - id2;
+
+const pendingSubjectsSelector = createSelector([
+    state => state.subjectsModule.pendingSubjectsHash
+], pendingSubjectsHash => {
+    let result = {};
+    Object.keys(pendingSubjectsHash).forEach(_id => {
+        let subject = pendingSubjectsHash[_id],
+            resultKey = subject.parentId || -1;
+
+        if (!result[resultKey]){
+            result[resultKey] = [];
+        }
+        result[resultKey].push(subject);
+    });
+    Object.keys(result).forEach(parentId => result[parentId].sort(tempSubjectCompare));
+    return result;
+});
+
 const subjectsHashAndDndSelector = createSelector([
     state => state.app.subjectHash,
     state => state.subjectsModule.draggingId,
@@ -98,14 +121,16 @@ const subjectsHashAndDndSelector = createSelector([
 const subjectsModuleSelector = createSelector([
     editingSubjectHashSelector,
     subjectsHashAndDndSelector,
+    pendingSubjectsSelector,
     state => state.subjectsModule.subjectsSaving,
     state => state.subjectsModule.subjectsSaved,
     state => state.app.colors
-], (editingHashPacket, DndPacket, subjectsSaving, subjectsSaved, colors) => ({
+], (editingHashPacket, DndPacket, pendingSubjectsLookup, subjectsSaving, subjectsSaved, colors) => ({
     ...editingHashPacket,
     ...DndPacket,
     subjectsSaving,
     subjectsSaved,
+    pendingSubjectsLookup,
     colors
 }));
 

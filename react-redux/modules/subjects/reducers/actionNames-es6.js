@@ -2,6 +2,7 @@ export const EDIT_SUBJECT = 'subjectsModule.EDIT_SUBJECT';
 export const NEW_SUBJECT = 'subjectsModule.NEW_SUBJECT';
 export const EDIT_SUBJECTS = 'subjectsModule.EDIT_SUBJECTS';
 
+export const ADD_NEW_SUBJECT = 'subjectsModule.ADD_NEW_SUBJECT';
 export const BEGIN_SUBJECT_EDIT = 'subjectsModule.BEGIN_SUBJECT_EDIT';
 export const SET_EDITING_SUBJECT_FIELD = 'subjectsModule.SET_EDITING_SUBJECT_FIELD';
 export const SUBJECTS_SAVING = 'subjectsModule.SUBJECTS_SAVING';
