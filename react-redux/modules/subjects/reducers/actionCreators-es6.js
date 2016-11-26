@@ -7,8 +7,8 @@ import {
     BEGIN_SUBJECT_DELETE,
     CANCEL_SUBJECT_DELETE,
 
-    SUBJECTS_MOVING,
-    SUBJECTS_DONE_MOVING,
+    SUBJECTS_SAVING,
+    SUBJECTS_DONE_SAVING,
     CLEAR_MOVING_STATE,
     SUBJECT_DELETING,
     SUBJECT_DELETED,
@@ -19,7 +19,7 @@ import {
     SAVE_SUBJECT_RESULTS
 } from 'applicationRoot/rootReducerActionNames'
 
-import {unwindSubjects, subjectsToHash} from 'applicationRoot/rootReducer';
+import {unwindSubjects, subjectsToHash, computeParentId} from 'applicationRoot/rootReducer';
 
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject: saveSubjectRoot, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
@@ -30,24 +30,23 @@ export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 
 export const beginSubjectEdit = _id => (dispatch, getState) =>{
     let subject = {...getState().app.subjectHash[_id]};
-    if (subject.path){
-        let pathParts = subject.path.split(',');
-        subject.parentId = pathParts[pathParts.length - 2];
-    } else {
-        subject.parentId = '';
-    }
+    subject.parentId = computeParentId(subject.path);
     dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
 };
 
 export const setEditingSubjectField = (_id, field, value) => ({ type: SET_EDITING_SUBJECT_FIELD, _id, field, value });
 
-export function saveChanges(subject){
+export function saveChanges(subject, original){
     return function(dispatch, getState) {
+        debugger;
         let { _id, name, parentId, backgroundColor, textColor } = subject,
             request = { _id, name, parentId, backgroundColor, textColor };
 
-        //dispatch()
-        saveSubjectRoot(request, dispatch);
+        let oldParentId = computeParentId(getState().app.subjectHash[_id].path);
+        let subjectsSaving = oldParentId != subject.parentId ? subjectsToHash(unwindSubjects([original])) : subjectsToHash([subject]);
+
+        dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSaving });
+        setTimeout(() => saveSubjectRoot(request, dispatch), 1500);
     }
 }
 
@@ -64,11 +63,11 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
     let adjustedSubjectsHash = subjectsToHash(unwindSubjects([adjustedSubject]));
 
     dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
-    dispatch({ type: SUBJECTS_MOVING, subjects: adjustedSubjectsHash });
+    dispatch({ type: SUBJECTS_SAVING, subjects: adjustedSubjectsHash });
 
     setTimeout(() => {
-        dispatch({ type: SUBJECTS_DONE_MOVING, subjects: adjustedSubjectsHash })
+        dispatch({ type: SUBJECTS_DONE_SAVING, subjects: adjustedSubjectsHash })
 
         setTimeout(() => dispatch({ type: CLEAR_MOVING_STATE, subjects: adjustedSubjectsHash }), 1000);
-    }, 2000);
+    }, 1500);
 }

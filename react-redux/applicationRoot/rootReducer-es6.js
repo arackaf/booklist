@@ -90,6 +90,15 @@ export const stackAndGetTopLevelSubjects = subjectsHash => {
         s.childLevel = !s.path ? 0 : (s.path.match(/\,/g) || []).length - 1;
     });
     return subjects.filter(s => s.path == null);
+};
+
+export const computeParentId = path => {
+    if (path){
+        let pathParts = path.split(',');
+        return pathParts[pathParts.length - 2];
+    } else {
+        return '';
+    }
 }
 
 export const flattenSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
