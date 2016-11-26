@@ -30,7 +30,7 @@ export const beginSubjectEdit = _id => (dispatch, getState) =>{
         let pathParts = subject.path.split(',');
         subject.parentId = pathParts[pathParts.length - 2];
     } else {
-        subject.parentId = null;
+        subject.parentId = '';
     }
     dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
 };
