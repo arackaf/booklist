@@ -1,5 +1,6 @@
 import {
     BEGIN_SUBJECT_EDIT,
+    SET_EDITING_SUBJECT_FIELD,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
@@ -20,6 +21,9 @@ import {
 
 import {unwindSubjects, subjectsToHash} from 'applicationRoot/rootReducer';
 
+import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
+const {saveSubject: saveSubjectRoot, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
+
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
@@ -34,6 +38,18 @@ export const beginSubjectEdit = _id => (dispatch, getState) =>{
     }
     dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
 };
+
+export const setEditingSubjectField = (_id, field, value) => ({ type: SET_EDITING_SUBJECT_FIELD, _id, field, value });
+
+export function saveChanges(subject){
+    return function(dispatch, getState) {
+        let { _id, name, parentId, backgroundColor, textColor } = subject,
+            request = { _id, name, parentId, backgroundColor, textColor };
+
+        //dispatch()
+        saveSubjectRoot(request, dispatch);
+    }
+}
 
 export const setNewParent = (subject, newParent) => (dispatch, getState) => {
     let _id = subject._id,
@@ -55,5 +71,4 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
 
         setTimeout(() => dispatch({ type: CLEAR_MOVING_STATE, subjects: adjustedSubjectsHash }), 1000);
     }, 2000);
-
 }

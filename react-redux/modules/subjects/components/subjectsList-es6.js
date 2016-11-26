@@ -84,7 +84,18 @@ class SubjectDisplay extends Component {
 }))
 class SubjectDisplayContent extends Component {
     render(){
-        let {subject, connectDragSource, connectDragPreview, noDrop, editingSubjectsHash, subjectsMoving, subjectsMoved, colors} = this.props,
+        let {
+                subject,
+                connectDragSource,
+                connectDragPreview,
+                noDrop,
+                editingSubjectsHash,
+                subjectsMoving,
+                subjectsMoved,
+                colors,
+                setEditingSubjectField,
+                saveChanges
+            } = this.props,
             {_id, name, children: childSubjects} = subject,
             editingSubject = editingSubjectsHash[_id],
             isSubjectMoving = !!subjectsMoving[subject._id];
@@ -97,19 +108,19 @@ class SubjectDisplayContent extends Component {
 
         let contents = editingSubject ? [
             <div className="col-xs-12 col-lg-3">
-                <input value={editingSubject.name} className="form-control" />
+                <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
             </div>,
             <div className="col-xs-12 col-lg-3">
-                <select value={editingSubject.parentId} className="form-control">
+                <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId} className="form-control">
                     <option value={''}>No Parent</option>
                     {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
                 </select>
             </div>,
             <div className="col-xs-12 col-lg-5">
-                <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={() => {}} />
+                <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
             </div>,
             <div className="col-xs-12 col-lg-1">
-                <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => this.props.cancelSubjectEdit(_id)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
+                <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
         ] : [

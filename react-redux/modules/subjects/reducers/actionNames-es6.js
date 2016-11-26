@@ -3,6 +3,7 @@ export const NEW_SUBJECT = 'subjectsModule.NEW_SUBJECT';
 export const EDIT_SUBJECTS = 'subjectsModule.EDIT_SUBJECTS';
 
 export const BEGIN_SUBJECT_EDIT = 'subjectsModule.BEGIN_SUBJECT_EDIT';
+export const SET_EDITING_SUBJECT_FIELD = 'subjectsModule.SET_EDITING_SUBJECT_FIELD';
 export const SUBJECTS_MOVING = 'subjectsModule.SUBJECTS_MOVING';
 export const SUBJECTS_DONE_MOVING = 'subjectsModule.SUBJECTS_DONE_MOVING';
 export const CLEAR_MOVING_STATE = 'subjectsModule.CLEAR_MOVING_STATE';
