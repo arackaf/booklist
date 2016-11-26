@@ -96,7 +96,7 @@ class SubjectDisplayContent extends Component {
                 setEditingSubjectField,
                 saveChanges
             } = this.props,
-            {_id, name, children: childSubjects} = subject,
+            {_id, name, children: childSubjects = []} = subject,
             editingSubject = editingSubjectsHash[_id],
             isSubjectSaving = !!subjectsSaving[subject._id];
 
@@ -159,9 +159,16 @@ class SubjectList extends Component {
 @connect(selector, { ...actionCreators })
 export default class SubjectsComponent extends Component{
     render(){
+        let {addNewSubject, pendingSubjectsLookup, subjects} = this.props,
+            rootPendingSubjects = pendingSubjectsLookup[-1] || [],
+            allSubjects = [...rootPendingSubjects, ...subjects];
+
         return (
             <div style={{ marginLeft: '10px', marginRight: '10px' }}>
-                <SubjectList subjects={this.props.subjects} />
+                <BootstrapButton onClick={addNewSubject} preset="primary">New subject</BootstrapButton>
+                <br />
+                <br />
+                <SubjectList subjects={allSubjects} />
             </div>
         )
     }
