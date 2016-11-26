@@ -5,6 +5,7 @@ import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 @connect(selector, { ...actionCreators })
 @DropTarget('subject', {
@@ -83,23 +84,9 @@ class SubjectDisplay extends Component {
 }))
 class SubjectDisplayContent extends Component {
     render(){
-        let {subject, connectDragSource, connectDragPreview, noDrop, editingSubjectsHash, subjectsMoving, subjectsMoved} = this.props,
+        let {subject, connectDragSource, connectDragPreview, noDrop, editingSubjectsHash, subjectsMoving, subjectsMoved, colors} = this.props,
             {_id, name, children: childSubjects} = subject,
             editingSubject = editingSubjectsHash[_id];
-
-        let contents = editingSubject ? [
-            <input value={editingSubject.name} style={{width:'200px', display: 'inline', marginRight: '20px'}} className="form-control" />,
-            <select value={editingSubject.parentId} className="form-control" style={{width:'200px', display: 'inline', marginRight: '20px'}}>
-                <option value={null}>No Parent</option>
-                {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
-            </select>,
-            <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => this.props.cancelSubjectEdit(_id)}><i className="fa fa-fw fa-save"></i></BootstrapButton>,
-            <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
-        ] : [
-            name,
-            ' ',
-            <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
-        ];
 
         let mainIcon =
             subjectsMoving[subject._id]
@@ -107,14 +94,38 @@ class SubjectDisplayContent extends Component {
                 : (subjectsMoved[subject._id] ?
                     <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
 
+        let contents = editingSubject ? [
+            <div className="col-lg-3">
+                {mainIcon}
+                <input value={editingSubject.name} style={{display: 'inline'}} className="form-control" />
+            </div>,
+            <div className="col-lg-2">
+                <select value={editingSubject.parentId} className="form-control" style={{display: 'inline'}}>
+                    <option value={null}>No Parent</option>
+                    {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
+                </select>
+            </div>,
+            <div className="col-lg-5">
+                <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={() => {}} />
+            </div>,
+            <div className="col-lg-1">
+                <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => this.props.cancelSubjectEdit(_id)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
+                <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
+            </div>
+        ] : [
+            <div className="col-lg-12">
+                {mainIcon}
+                {name}
+                {' '}
+                <a className="show-on-hover-inlineX" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
+            </div>
+        ];
+
         return (
             connectDragPreview(
                 <div>
-                    <div className="row">
-                        <div className="col-xs-12 show-on-hover-parent">
-                            {mainIcon}&nbsp;
-                            {contents}&nbsp;
-                        </div>
+                    <div className="row show-on-hover-parent">
+                        {contents}
                     </div>
                     {childSubjects.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={childSubjects} /> : null}
                 </div>
