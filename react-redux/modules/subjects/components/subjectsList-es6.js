@@ -95,26 +95,33 @@ class SubjectDisplayContent extends Component {
                     <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
 
         let contents = editingSubject ? [
-            <div className="col-lg-3">
-                {mainIcon}
-                <input value={editingSubject.name} style={{display: 'inline'}} className="form-control" />
+            <div className="col-xs-12 col-lg-3">
+                <div className="row">
+                    <div className="col-xs-3 col-lg-1">
+                        {mainIcon}
+                    </div>
+                    <div className="col-xs-9 col-lg-11">
+                        <input value={editingSubject.name} style={{display: 'inline'}} className="form-control" />
+                    </div>
+                </div>
             </div>,
-            <div className="col-lg-2">
+            <div className="col-xs-12 col-lg-3">
                 <select value={editingSubject.parentId} className="form-control" style={{display: 'inline'}}>
                     <option value={null}>No Parent</option>
                     {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
                 </select>
             </div>,
-            <div className="col-lg-5">
+            <div className="col-xs-12 col-lg-5">
                 <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={() => {}} />
             </div>,
-            <div className="col-lg-1">
+            <div className="col-xs-12 col-lg-1">
                 <BootstrapButton style={{marginRight: '5px'}} preset="primary-xs" onClick={() => this.props.cancelSubjectEdit(_id)}><i className="fa fa-fw fa-save"></i></BootstrapButton>
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
         ] : [
             <div className="col-lg-12">
                 {mainIcon}
+                {' '}
                 {name}
                 {' '}
                 <a className="show-on-hover-inlineX" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
