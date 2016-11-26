@@ -112,19 +112,19 @@ class SubjectDisplayContent extends Component {
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
         ] : [
-            <div className="col-lg-12">
+            <div className="col-lg-12 show-on-hover-parent">
                 {mainIcon}
                 {' '}
                 {name}
                 {' '}
-                <a className="show-on-hover-inlineX" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
+                <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a>
             </div>
         ];
 
         return (
             connectDragPreview(
                 <div>
-                    <div className="row show-on-hover-parent">
+                    <div className="row">
                         {contents}
                     </div>
                     {childSubjects.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={childSubjects} /> : null}
