@@ -92,12 +92,14 @@ const subjectsModuleSelector = createSelector([
     editingSubjectHashSelector,
     subjectsHashAndDndSelector,
     state => state.subjectsModule.subjectsMoving,
-    state => state.subjectsModule.subjectsMoved
-], (editingHashPacket, DndPacket, subjectsMoving, subjectsMoved) => ({
+    state => state.subjectsModule.subjectsMoved,
+    state => state.app.colors
+], (editingHashPacket, DndPacket, subjectsMoving, subjectsMoved, colors) => ({
     ...editingHashPacket,
     ...DndPacket,
     subjectsMoving,
-    subjectsMoved
+    subjectsMoved,
+    colors
 }));
 
 export const selector = subjectsModuleSelector;
