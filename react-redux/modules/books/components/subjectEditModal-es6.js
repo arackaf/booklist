@@ -7,6 +7,7 @@ import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { subjectsSelector } from '../reducers/subjects/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
+import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 const SubjectEditDeleteInfo = props => {
     let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;
@@ -95,19 +96,16 @@ const subjectEditModal = props => {
                                     <div className="col-xs-9">
                                         <div className="form-group">
                                             <label>Label color</label>
-                                            <div>
-                                                { props.colors.map(cp => <div className="color-choice" onClick={() => props.setNewSubjectBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
 
-                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editingSubject.backgroundColor} />
-                                            </div>
+                                            <ColorsPalette currentColor={editingSubject.backgroundColor} colors={props.colors} onColorChosen={props.setNewSubjectBackgroundColor} />
+                                            <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editingSubject.backgroundColor} />
                                         </div>
                                     </div>
                                     <div className="col-xs-3">
                                         <div className="form-group">
                                             <label>Text color</label>
-                                            <div>
-                                                { textColors.map(tc => <div className="color-choice" onClick={() => props.setNewSubjectTextColor(tc) } style={{ backgroundColor: tc }}></div>) }
-                                            </div>
+
+                                            <ColorsPalette colors={textColors} onColorChosen={props.setNewSubjectTextColor} />
                                         </div>
                                     </div>
                                     <div className="col-xs-12">

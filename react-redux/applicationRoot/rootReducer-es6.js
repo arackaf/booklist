@@ -58,7 +58,7 @@ export default function rootReducer(state = initialState, action){
         case LOAD_SUBJECTS_RESULTS:
             return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), subjectsLoaded: true });
         case LOAD_COLORS:
-            return Object.assign({}, state, { colors: action.colors });
+            return Object.assign({}, state, { colors: action.colors.map(c => c.backgroundColor) });
         case SAVE_SUBJECT_RESULTS:
             return Object.assign({}, state, { subjectHash: { ...state.subjectHash, ...subjectsToHash(action.affectedSubjects) } });
         case SUBJECT_DELETED:
