@@ -96,14 +96,7 @@ class SubjectDisplayContent extends Component {
 
         let contents = editingSubject ? [
             <div className="col-xs-12 col-lg-3">
-                <div style={{ display: 'flex'}}>
-                    <div style={{ width: '30px' }}>
-                        {mainIcon}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                        <input value={editingSubject.name} className="form-control" />
-                    </div>
-                </div>
+                <input value={editingSubject.name} className="form-control" />
             </div>,
             <div className="col-xs-12 col-lg-3">
                 <select value={editingSubject.parentId} className="form-control">
