@@ -107,7 +107,7 @@ class SubjectDisplayContent extends Component {
             </div>,
             <div className="col-xs-12 col-lg-3">
                 <select value={editingSubject.parentId} className="form-control">
-                    <option value={null}>No Parent</option>
+                    <option value={''}>No Parent</option>
                     {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
                 </select>
             </div>,
