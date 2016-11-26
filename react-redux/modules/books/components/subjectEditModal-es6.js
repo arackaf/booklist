@@ -6,7 +6,7 @@ import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from 'applicationRoot/c
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { subjectsSelector } from '../reducers/subjects/reducer';
-import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 const SubjectEditDeleteInfo = props => {

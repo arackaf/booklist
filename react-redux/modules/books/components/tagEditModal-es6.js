@@ -6,7 +6,8 @@ import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstra
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { tagsSelector } from '../reducers/tags/reducer';
-import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
+import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 const TagEditDeleteInfo = props =>
     <div className="row">
@@ -72,8 +73,7 @@ const tagEditModal = props => {
                                         <div className="form-group">
                                             <label>Label color</label>
                                             <div>
-                                                { props.colors.map(cp => <div className="color-choice" onClick={() => props.setNewTagBackgroundColor(cp.backgroundColor) } style={{ backgroundColor: cp.backgroundColor }}></div>) }
-
+                                                <ColorsPalette currentColor={editingTag.backgroundColor} colors={props.colors} onColorChosen={props.setNewTagBackgroundColor} />
                                                 <CustomColorPicker onColorChosen={props.setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
                                             </div>
                                         </div>
@@ -82,7 +82,7 @@ const tagEditModal = props => {
                                         <div className="form-group">
                                             <label>Text color</label>
                                             <div>
-                                                { textColors.map(tc => <div className="color-choice" onClick={() => props.setNewTagTextColor(tc) } style={{ backgroundColor: tc }}></div>) }
+                                                <ColorsPalette colors={textColors} onColorChosen={props.setNewTagTextColor} />
                                             </div>
                                         </div>
                                     </div>
