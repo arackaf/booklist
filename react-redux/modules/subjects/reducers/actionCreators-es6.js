@@ -44,10 +44,21 @@ export function saveChanges(subject, original){
             request = { _id, name, parentId, backgroundColor, textColor };
 
         let oldParentId = computeParentId(getState().app.subjectHash[_id].path);
-        let subjectsSaving = oldParentId != subject.parentId ? toIdHash(unwindSubjects([original])) : toIdHash([subject]);
+        let subjectsSavingHash;
+        if (oldParentId != subject.parentId){
+            subjectsSavingHash = toIdHash(unwindSubjects([original]))
+            subjectsSavingHash[subject.parentId] = true;
+            let newParentPath = getState().app.subjectHash[subject.parentId].path;
+            if (newParentPath){
+                newParentPath.split(',').filter(s => s).forEach(_id => subjectsSavingHash[_id] = true);
+            }
+        } else {
+            subjectsSavingHash = toIdHash([subject]);
+        }
 
-        dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSaving });
-        setTimeout(() => saveSubjectRoot(request, dispatch), 1500);
+        dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
+        //setTimeout(() => saveSubjectRoot(request, dispatch), 1500);
+        setTimeout(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }), 1500);
     }
 }
 
