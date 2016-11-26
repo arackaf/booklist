@@ -1,6 +1,6 @@
 import {
     LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
-    STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, LOAD_COLORS, CANCEL_TAG_EDIT,
+    STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, CANCEL_TAG_EDIT,
     BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
@@ -12,7 +12,6 @@ const doneEditingTag = { saving: false, editingTagId: null, editingTag: null };
 
 const initialTagsState = {
     tagHash: {},
-    colors: [],
     loaded: false,
     tagSearch: '',
     initialQueryFired: false,
@@ -61,8 +60,6 @@ export function tagsReducer(state = initialTagsState, action = {}){
             }
 
             return newState;
-        case LOAD_COLORS:
-            return { ...state, colors: action.colors };
     }
     return state;
 }
@@ -86,6 +83,15 @@ const tagsSorted = createSelector(
         return { allTagsSorted };
     }
 );
+
+function allTagssSorted(tagHash){
+    let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
+    return tags.sort(({ name: name1 }, { name: name2 }) => {
+        let name1After = name1.toLowerCase() > name2.toLowerCase(),
+            bothEqual = name1.toLowerCase() === name2.toLowerCase();
+        return bothEqual ? 0 : (name1After ? 1 : -1);
+    });
+}
 
 const tagsSearched = createSelector(
     [
@@ -111,19 +117,13 @@ const deletingTagInfoSelector = createSelector([
     }
 );
 
-export const tagsSelector = ({ booksModule }) => {
-    return Object.assign({},
-        booksModule.tags,
-        tagsSearched(booksModule.tags),
-        deletingTagInfoSelector(booksModule.tags)
-    );
-};
-
-function allTagssSorted(tagHash){
-    let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
-    return tags.sort(({ name: name1 }, { name: name2 }) => {
-        let name1After = name1.toLowerCase() > name2.toLowerCase(),
-            bothEqual = name1.toLowerCase() === name2.toLowerCase();
-        return bothEqual ? 0 : (name1After ? 1 : -1);
-    });
-}
+export const tagsSelector = createSelector([
+    state => state.booksModule.tags,
+    state => state.app.colors
+], (tags, colors) =>
+    Object.assign({},
+        tags,
+        tagsSearched(tags),
+        deletingTagInfoSelector(tags),
+        { colors: colors })
+);

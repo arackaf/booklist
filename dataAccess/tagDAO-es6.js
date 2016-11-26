@@ -22,12 +22,8 @@ class TagDAO extends DAO {
         let userIdToUse = userId || this.userId;
 
         try {
-            let [tags, labelColors] = await Promise.all([
-                db.collection('tags').find({ userId: userIdToUse }).sort({ name: 1 }).toArray(),
-                db.collection('labelColors').find({ }).sort({ order: 1 }).toArray()
-            ]);
-
-            return { tags, labelColors };
+            let tags = await Promise.resolve(db.collection('tags').find({ userId: userIdToUse }).sort({ name: 1 }).toArray());
+            return { tags };
         } finally {
             super.dispose(db);
         }
