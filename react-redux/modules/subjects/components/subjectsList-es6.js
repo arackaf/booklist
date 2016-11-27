@@ -94,11 +94,14 @@ class SubjectDisplayContent extends Component {
                 subjectsSaved,
                 colors,
                 setEditingSubjectField,
-                saveChanges
+                saveChanges,
+                pendingSubjectsLookup
             } = this.props,
             {_id, name, children: childSubjects = []} = subject,
             editingSubject = editingSubjectsHash[_id],
-            isSubjectSaving = !!subjectsSaving[subject._id];
+            isSubjectSaving = !!subjectsSaving[_id],
+            pendingChildren = pendingSubjectsLookup[_id] || [],
+            effectiveChildren = pendingChildren.concat(childSubjects);
 
         let mainIcon =
             isSubjectSaving
@@ -112,7 +115,7 @@ class SubjectDisplayContent extends Component {
                 {subject.pending ? <span className="label label-warning">This subject is not saved</span> : null}
             </div>,
             <div className="col-xs-12 col-lg-3">
-                <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId} className="form-control">
+                <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
                     <option value={''}>No Parent</option>
                     {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
                 </select>
@@ -131,6 +134,7 @@ class SubjectDisplayContent extends Component {
                 {name}
                 {' '}
                 {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
             </div>
         ];
 
@@ -140,7 +144,7 @@ class SubjectDisplayContent extends Component {
                     <div className="row">
                         {contents}
                     </div>
-                    {childSubjects.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={childSubjects} /> : null}
+                    {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={effectiveChildren} /> : null}
                 </div>
             )
         )
@@ -161,12 +165,12 @@ class SubjectList extends Component {
 export default class SubjectsComponent extends Component{
     render(){
         let {addNewSubject, pendingSubjectsLookup, subjects} = this.props,
-            rootPendingSubjects = pendingSubjectsLookup[-1] || [],
+            rootPendingSubjects = pendingSubjectsLookup['root'] || [],
             allSubjects = [...rootPendingSubjects, ...subjects];
 
         return (
             <div style={{ marginLeft: '10px', marginRight: '10px' }}>
-                <BootstrapButton onClick={addNewSubject} preset="primary">New subject</BootstrapButton>
+                <BootstrapButton onClick={() => addNewSubject()} preset="primary">New subject</BootstrapButton>
                 <br />
                 <br />
                 <SubjectList subjects={allSubjects} />

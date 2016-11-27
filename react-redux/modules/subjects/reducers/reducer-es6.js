@@ -82,7 +82,7 @@ const pendingSubjectsSelector = createSelector([
     let result = {};
     Object.keys(pendingSubjectsHash).forEach(_id => {
         let subject = pendingSubjectsHash[_id],
-            resultKey = subject.parentId || -1;
+            resultKey = subject.parentId || 'root';
 
         if (!result[resultKey]){
             result[resultKey] = [];
