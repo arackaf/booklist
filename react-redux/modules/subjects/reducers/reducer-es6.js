@@ -8,7 +8,6 @@ import {
     BEGIN_SUBJECT_EDIT,
     SET_EDITING_SUBJECT_FIELD,
     SUBJECTS_SAVING,
-    SUBJECTS_DONE_SAVING,
     CLEAR_SAVING_STATE,
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
@@ -46,17 +45,13 @@ export function reducer(state = initialSubjectsState, action){
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId };
         case SUBJECTS_SAVING:
             return {...state, subjectsSaving: {...state.subjectsSaving, ...action.subjects}};
-        case SUBJECTS_DONE_SAVING:
-            return {
-                ...state,
-                subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects)),
-                subjectsSaved: {...state.subjectsSaved, ...action.subjects}
-            };
         case CLEAR_SAVING_STATE:
             return {
                 ...state,
                 subjectsSaved: removeKeysFromObject(state.subjectsSaved, Object.keys(action.subjects)),
-                subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects))
+                subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects)),
+                editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, Object.keys(action.subjects)),
+                pendingSubjectsHash: removeKeysFromObject(state.pendingSubjectsHash, Object.keys(action.subjects))
             };
         case SET_EDITING_SUBJECT_FIELD:
             return {
