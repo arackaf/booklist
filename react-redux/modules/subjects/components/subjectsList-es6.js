@@ -100,14 +100,17 @@ class SubjectDisplayContent extends Component {
                 pendingDeleteHash,
                 deletingHash,
                 beginSubjectDelete,
-                cancelSubjectDelete
+                cancelSubjectDelete,
+                deleteSubject
             } = this.props,
             {_id, name, children: childSubjects = []} = subject,
             editingSubject = editingSubjectsHash[_id],
             isSubjectSaving = !!subjectsSaving[_id],
             pendingChildren = pendingSubjectsLookup[_id] || [],
             effectiveChildren = pendingChildren.concat(childSubjects),
-            isPendingDelete = pendingDeleteHash[_id];
+            isPendingDelete = pendingDeleteHash[_id],
+            deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete',
+            isDeleting = deletingHash[_id];
 
         let mainIcon =
             isSubjectSaving
@@ -133,11 +136,17 @@ class SubjectDisplayContent extends Component {
                 <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
-        ] : (isPendingDelete ?
+        ] : isDeleting ? [
+                <div className="col-lg-12">
+                    {name}
+                    <BootstrapButton preset="danger-xs" disabled={true} style={{marginLeft: '20px'}}>Deleting <i className="fa fa-fw fa-spinner fa-spin"></i></BootstrapButton>
+                </div>
+            ] :
+            (isPendingDelete ?
             [
                 <div className="col-lg-12">
                     {name}
-                    <BootstrapButton style={{marginLeft: '20px'}} preset="danger-sm">Confirm Delete</BootstrapButton>
+                    <BootstrapButton onClick={() => deleteSubject(subject)} style={{marginLeft: '20px'}} preset="danger-sm">{deleteMessage}</BootstrapButton>
                     <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{marginLeft: '20px'}} preset="primary-sm">Cancel</BootstrapButton>
                 </div>
             ] :
