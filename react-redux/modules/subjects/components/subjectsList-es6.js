@@ -61,16 +61,9 @@ class SubjectDisplay extends Component {
         }
 
         return (
-              noDrop ?
-                <li className="list-group-item" key={_id} style={style}>
-                    <SubjectDisplayContent noDrop={noDrop} subject={subject} />
-                </li>
-                :
-                connectDropTarget(
-                    <li className="list-group-item" key={_id} style={style}>
-                        <SubjectDisplayContent subject={subject} />
-                    </li>
-                )
+            <li className="list-group-item" key={_id} style={style}>
+                <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
+            </li>
         );
     }
 }
@@ -101,7 +94,8 @@ class SubjectDisplayContent extends Component {
                 deletingHash,
                 beginSubjectDelete,
                 cancelSubjectDelete,
-                deleteSubject
+                deleteSubject,
+                connectDropTarget
             } = this.props,
             {_id, name, children: childSubjects = []} = subject,
             editingSubject = editingSubjectsHash[_id],
@@ -151,15 +145,27 @@ class SubjectDisplayContent extends Component {
                 </div>
             ] :
             [
-                <div className="col-lg-12 show-on-hover-parent">
-                    {mainIcon}
-                    {' '}
-                    {name}
-                    {' '}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
-                </div>
+                noDrop ?
+                    <div className="col-lg-12 show-on-hover-parent">
+                        {mainIcon}
+                        {' '}
+                        {name}
+                        {' '}
+                        {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                        {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
+                        {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
+                    </div>
+                    : connectDropTarget(
+                        <div className="col-lg-12 show-on-hover-parent">
+                            {mainIcon}
+                            {' '}
+                            {name}
+                            {' '}
+                            {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                            {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
+                            {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
+                        </div>
+                    )
             ]);
 
         return (
