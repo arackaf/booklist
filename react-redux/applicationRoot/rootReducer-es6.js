@@ -72,7 +72,7 @@ export default function rootReducer(state = initialState, action){
 
 export const unwindSubjects = subjects => {
     let result = [];
-    subjects.forEach(s => result.push(s, ...unwindSubjects(s.children)));
+    subjects.forEach(s => result.push(s, ...unwindSubjects(s.children || [])));
     return result;
 };
 
