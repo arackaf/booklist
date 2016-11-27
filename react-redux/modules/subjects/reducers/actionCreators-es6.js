@@ -9,7 +9,6 @@ import {
     CANCEL_SUBJECT_DELETE,
 
     SUBJECTS_SAVING,
-    SUBJECTS_DONE_SAVING,
     CLEAR_SAVING_STATE,
     SUBJECT_DELETING,
     SUBJECT_DELETED,
@@ -29,7 +28,7 @@ const toIdHash = objs => objs.reduce((hash, obj) => (hash[obj._id] = true, hash)
 
 let tempId = -1;
 
-export const addNewSubject = subject => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: subject ? subject._id : null, pending: true } });
+export const addNewSubject = subject => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: subject ? subject._id : null, pending: true, children: [] } });
 export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 export const beginSubjectEdit = _id => (dispatch, getState) =>{
@@ -44,7 +43,11 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
     let { _id, name, parentId, backgroundColor, textColor } = subject,
         request = { _id, name, parentId, backgroundColor, textColor };
 
-    let oldParentId = computeParentId(getState().app.subjectHash[_id].path);
+    if (original.pending){
+        request._id = null;
+    }
+
+    let oldParentId = original.pending ? '' : computeParentId(getState().app.subjectHash[_id].path);
     let subjectsSavingHash;
     if (oldParentId != subject.parentId){
         subjectsSavingHash = toIdHash(unwindSubjects([original]))
@@ -64,7 +67,6 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
     Promise.resolve(saveSubjectRoot(request, dispatch))
            .then(() => {
                dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash });
-               dispatch({ type: CANCEL_SUBJECT_EDIT, _id });
            });
 }
 
