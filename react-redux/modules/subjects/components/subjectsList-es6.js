@@ -61,7 +61,7 @@ class SubjectDisplay extends Component {
         }
 
         return (
-            <li className="list-group-item" key={_id} style={style}>
+            <li className="list-group-item" key={_id} style={{...style, paddingTop: 0, paddingBottom: 0}}>
                 <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
             </li>
         );
@@ -146,7 +146,7 @@ class SubjectDisplayContent extends Component {
             ] :
             [
                 noDrop ?
-                    <div className="col-lg-12 show-on-hover-parent">
+                    <div className="col-lg-12 show-on-hover-parent" style={{paddingTop: '10px', paddingBottom: '10px'}}>
                         {mainIcon}
                         {' '}
                         {name}
@@ -156,7 +156,7 @@ class SubjectDisplayContent extends Component {
                         {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
                     </div>
                     : connectDropTarget(
-                        <div className="col-lg-12 show-on-hover-parent">
+                        <div className="col-lg-12 show-on-hover-parent" style={{paddingTop: '10px', paddingBottom: '10px'}}>
                             {mainIcon}
                             {' '}
                             {name}
@@ -174,7 +174,7 @@ class SubjectDisplayContent extends Component {
                     <div className="row">
                         {contents}
                     </div>
-                    {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: '10px' }} subjects={effectiveChildren} /> : null}
+                    {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
                 </div>
             )
         )
