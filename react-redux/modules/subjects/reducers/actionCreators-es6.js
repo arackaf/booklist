@@ -95,6 +95,12 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
     //disable dragging and editing on the entire hierarchy until the save is done
     dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
+    setTimeout(() => {
     Promise.resolve(saveSubjectRoot(request, dispatch))
-           .then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+           .then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));}, 7000);
+};
+
+export const deleteSubject = subject => (dispatch, getState) => {
+    dispatch({type: DELETING_SUBJECTS, subjects: toIdHash(unwindSubjects([subject])) });
+
 };
