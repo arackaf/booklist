@@ -15,6 +15,7 @@ import ColorsPalette from 'applicationRoot/components/colorsPalette';
             isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
         return sourceSubject._id != targetSubject._id
+                && !targetSubject.pending
                 && !isCurrentParent
                 && (monitor.isOver() && monitor.isOver({ shallow: true }))
                 && (targetSubject.path || '').indexOf(sourceSubject._id) < 0;
