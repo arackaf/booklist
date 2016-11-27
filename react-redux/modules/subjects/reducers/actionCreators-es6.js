@@ -5,8 +5,11 @@ import {
     CANCEL_SUBJECT_EDIT,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
-    BEGIN_SUBJECT_DELETE,
-    CANCEL_SUBJECT_DELETE,
+
+    BEGIN_PENDNIG_DELETE,
+    CANCEL_PENDNIG_DELETE,
+    DELETING_SUBJECTS,
+    DONE_DELETING_SUBJECTS,
 
     SUBJECTS_SAVING,
     CLEAR_SAVING_STATE,
@@ -36,6 +39,9 @@ export const beginSubjectEdit = _id => (dispatch, getState) =>{
     subject.parentId = computeParentId(subject.path);
     dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
 };
+
+export const beginSubjectDelete = _id => ({ type: BEGIN_PENDNIG_DELETE, _id });
+export const cancelSubjectDelete = _id => ({ type: CANCEL_PENDNIG_DELETE, _id });
 
 export const setEditingSubjectField = (_id, field, value) => ({ type: SET_EDITING_SUBJECT_FIELD, _id, field, value });
 

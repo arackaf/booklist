@@ -96,13 +96,18 @@ class SubjectDisplayContent extends Component {
                 colors,
                 setEditingSubjectField,
                 saveChanges,
-                pendingSubjectsLookup
+                pendingSubjectsLookup,
+                pendingDeleteHash,
+                deletingHash,
+                beginSubjectDelete,
+                cancelSubjectDelete
             } = this.props,
             {_id, name, children: childSubjects = []} = subject,
             editingSubject = editingSubjectsHash[_id],
             isSubjectSaving = !!subjectsSaving[_id],
             pendingChildren = pendingSubjectsLookup[_id] || [],
-            effectiveChildren = pendingChildren.concat(childSubjects);
+            effectiveChildren = pendingChildren.concat(childSubjects),
+            isPendingDelete = pendingDeleteHash[_id];
 
         let mainIcon =
             isSubjectSaving
@@ -128,16 +133,25 @@ class SubjectDisplayContent extends Component {
                 <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
                 <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
             </div>
-        ] : [
-            <div className="col-lg-12 show-on-hover-parent">
-                {mainIcon}
-                {' '}
-                {name}
-                {' '}
-                {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
-                {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
-            </div>
-        ];
+        ] : (isPendingDelete ?
+            [
+                <div className="col-lg-12">
+                    {name}
+                    <BootstrapButton style={{marginLeft: '20px'}} preset="danger-sm">Confirm Delete</BootstrapButton>
+                    <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{marginLeft: '20px'}} preset="primary-sm">Cancel</BootstrapButton>
+                </div>
+            ] :
+            [
+                <div className="col-lg-12 show-on-hover-parent">
+                    {mainIcon}
+                    {' '}
+                    {name}
+                    {' '}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
+                </div>
+            ]);
 
         return (
             connectDragPreview(
