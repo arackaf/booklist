@@ -15,6 +15,11 @@ import {
     BEGIN_SUBJECT_DELETE,
     CANCEL_SUBJECT_DELETE,
 
+    BEGIN_PENDNIG_DELETE,
+    CANCEL_PENDNIG_DELETE,
+    DELETING_SUBJECTS,
+    DONE_DELETING_SUBJECTS,
+
     SUBJECT_DELETING,
     SUBJECT_DELETED,
     SUBJECT_DRAGGING_OVER
@@ -24,6 +29,8 @@ const initialSubjectsState = {
     draggingId: null,
     currentDropCandidateId: null,
     pendingSubjectsHash: {},
+    pendingDeleteHash: {},
+    deletingHash: {},
     editingSubjectsHash: {},
     subjectsSaving: {},
     subjectsSaved: {}
@@ -37,10 +44,24 @@ export function reducer(state = initialSubjectsState, action){
                 pendingSubjectsHash: {...state.pendingSubjectsHash, [action.subject._id]: action.subject},
                 editingSubjectsHash: {...state.editingSubjectsHash, [action.subject._id]: action.subject}
             };
+
         case BEGIN_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
         case CANCEL_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, [action._id])};
+
+        case BEGIN_PENDNIG_DELETE:
+            return {...state, pendingDeleteHash: {...state.pendingDeleteHash, [action._id]: true}};
+        case CANCEL_PENDNIG_DELETE:
+            return {...state, pendingDeleteHash: removeKeysFromObject(state.pendingDeleteHash, [action._id]) };
+        case DELETING_SUBJECTS:
+            return {...state, deletingHash: {...state.deletingHash, ...action.subjects }};
+        case DONE_DELETING_SUBJECTS:
+            return {
+                ...state,
+                pendingDeleteHash: removeKeysFromObject(state.pendingDeleteHash, Object.keys(action.subjects)),
+                deletingHash: removeKeysFromObject(state.deletingHash, Object.keys(action.subjects))
+            };
         case SUBJECT_DRAGGING_OVER:
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId };
         case SUBJECTS_SAVING:
@@ -121,13 +142,17 @@ const subjectsModuleSelector = createSelector([
     editingSubjectHashSelector,
     subjectsHashAndDndSelector,
     pendingSubjectsSelector,
+    state => state.subjectsModule.pendingDeleteHash,
+    state => state.subjectsModule.deletingHash,
     state => state.subjectsModule.subjectsSaving,
     state => state.subjectsModule.subjectsSaved,
     state => state.app.colors
-], (editingHashPacket, DndPacket, pendingSubjectsLookup, subjectsSaving, subjectsSaved, colors) => ({
+], (editingHashPacket, DndPacket, pendingSubjectsLookup, pendingDeleteHash, deletingHash, subjectsSaving, subjectsSaved, colors) => ({
     ...editingHashPacket,
     ...DndPacket,
     subjectsSaving,
+    pendingDeleteHash,
+    deletingHash,
     subjectsSaved,
     pendingSubjectsLookup,
     colors
