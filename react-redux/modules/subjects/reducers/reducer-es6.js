@@ -1,7 +1,10 @@
 import {createSelector} from 'reselect';
 
-import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSorted, getChildSubjectsSorted} from 'applicationRoot/rootReducer';
 import {removeKeysFromObject} from 'util/immutableHelpers';
+
+export {topLevelSubjectsSorted};
+export {getChildSubjectsSorted};
 
 import {
     ADD_NEW_SUBJECT,
@@ -136,6 +139,7 @@ const subjectsHashAndDndSelector = createSelector([
     }
 
     return {
+        subjectHash,
         subjects,
         draggingId,
         currentDropCandidateId
@@ -143,6 +147,7 @@ const subjectsHashAndDndSelector = createSelector([
 });
 
 const subjectsModuleSelector = createSelector([
+    topLevelSubjectsSorted,
     editingSubjectHashSelector,
     subjectsHashAndDndSelector,
     pendingSubjectsSelector,
@@ -151,9 +156,10 @@ const subjectsModuleSelector = createSelector([
     state => state.subjectsModule.subjectsSaving,
     state => state.subjectsModule.subjectsSaved,
     state => state.app.colors
-], (editingHashPacket, DndPacket, pendingSubjectsLookup, pendingDeleteHash, deletingHash, subjectsSaving, subjectsSaved, colors) => ({
+], (topLevelSubjects, editingHashPacket, DndPacket, pendingSubjectsLookup, pendingDeleteHash, deletingHash, subjectsSaving, subjectsSaved, colors) => ({
     ...editingHashPacket,
     ...DndPacket,
+    topLevelSubjects,
     subjectsSaving,
     pendingDeleteHash,
     deletingHash,

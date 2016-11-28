@@ -82,6 +82,19 @@ export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
     return bothEqual ? 0 : (name1After ? 1 : -1);
 };
 
+export const topLevelSubjectsSorted = createSelector(
+    [state => state.app.subjectHash],
+    subjectHash => Object.keys(subjectHash).map(_id => subjectHash[_id]).filter(s => !s.path).sort(subjectSortCompare)
+);
+
+export const getChildSubjectsSorted = (_id, subjectHash) => {
+    let regex = new RegExp(`,${_id},$`);
+    return Object.keys(subjectHash)
+                 .map(_id => subjectHash[_id])
+                 .filter(sc => regex.test(sc.path))
+                 .sort(subjectSortCompare);
+};
+
 export const stackAndGetTopLevelSubjects = subjectsHash => {
     let subjects = Object.keys(subjectsHash).map(_id => ({...subjectsHash[_id]}));
     subjects.sort(subjectSortCompare).forEach(s => {
