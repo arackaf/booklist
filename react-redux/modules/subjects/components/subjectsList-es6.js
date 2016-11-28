@@ -14,10 +14,12 @@ import ColorsPalette from 'applicationRoot/components/colorsPalette';
             { subject: targetSubject } = props,
             isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
+        console.log(monitor.isOver());
+
         return sourceSubject._id != targetSubject._id
                 && !targetSubject.pending
                 && !isCurrentParent
-                && (monitor.isOver() && monitor.isOver({ shallow: true }))
+                && monitor.isOver()
                 && (targetSubject.path || '').indexOf(sourceSubject._id) < 0;
     },
     drop(props, monitor){
@@ -25,20 +27,17 @@ import ColorsPalette from 'applicationRoot/components/colorsPalette';
             sourceSubject = monitor.getItem();
 
         props.setNewParent(sourceSubject, targetSubject);
-        //TODO:
     }
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
-    isOnlyOver: monitor.isOver() && monitor.isOver({ shallow: true }),
-    isOverCurrent: monitor.isOver({ shallow: true }),
     canDrop: monitor.canDrop(),
     draggingSubject: monitor.getItem()
 }))
 class SubjectDisplay extends Component {
     componentDidUpdate(prevProps){
-        let wasOver = prevProps.isOnlyOver && prevProps.canDrop,
-            isOver = this.props.isOnlyOver && this.props.canDrop,
+        let wasOver = prevProps.isOver && prevProps.canDrop,
+            isOver = this.props.isOver && this.props.canDrop,
             canDrop = this.props.canDrop,
             notOverAtAll = !this.props.isOver,
             {subject} = this.props,
@@ -53,7 +52,7 @@ class SubjectDisplay extends Component {
     render(){
         let {subject, connectDropTarget} = this.props,
             {_id, candidateMove} = subject,
-            style = this.props.isOnlyOver && this.props.canDrop ? { border: '3px solid green' } : {},
+            style = this.props.isOver && this.props.canDrop ? { border: '1px solid green' } : {},
             noDrop = candidateMove || this.props.noDrop;
 
         if (candidateMove) {
@@ -73,7 +72,6 @@ class SubjectDisplay extends Component {
     beginDrag: props => props.subject
 }, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging(),
     connectDragPreview: connect.dragPreview()
 }))
 class SubjectDisplayContent extends Component {
