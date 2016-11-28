@@ -87,6 +87,11 @@ export const topLevelSubjectsSorted = createSelector(
     subjectHash => Object.keys(subjectHash).map(_id => subjectHash[_id]).filter(s => !s.path).sort(subjectSortCompare)
 );
 
+export const getAllDescendantsOfSubject = (_id, subjectHash) => {
+    let regex = new RegExp(`,${_id},`);
+    return Object.keys(subjectHash).map(_id => subjectHash[_id]).filter(s => regex.test(s.path));
+}
+
 export const getChildSubjectsSorted = (_id, subjectHash) => {
     let regex = new RegExp(`,${_id},$`);
     return Object.keys(subjectHash)
