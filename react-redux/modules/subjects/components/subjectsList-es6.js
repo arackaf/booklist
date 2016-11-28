@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {selector} from 'modules/subjects/reducers/reducer';
+import {selector, getChildSubjectsSorted} from 'modules/subjects/reducers/reducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -75,7 +75,15 @@ class SubjectDisplay extends Component {
     }
 }
 
-@connect(selector, {...actionCreators})
+const mapSubjectDisplayState = (state, ownProps) => {
+    let selectedState = selector(state);
+    return {
+        ...selectedState,
+        childSubjects: getChildSubjectsSorted(ownProps.subject._id, selectedState.subjectHash)
+    }
+};
+
+@connect(mapSubjectDisplayState, {...actionCreators})
 @DragSource('subject', {
     beginDrag: props => props.subject
 }, (connect, monitor) => ({
@@ -101,9 +109,10 @@ class SubjectDisplayContent extends Component {
                 beginSubjectDelete,
                 cancelSubjectDelete,
                 deleteSubject,
-                connectDropTarget
+                connectDropTarget,
+                childSubjects
             } = this.props,
-            {_id, name, children: childSubjects = []} = subject,
+            {_id, name} = subject,
             editingSubject = editingSubjectsHash[_id],
             isSubjectSaving = !!subjectsSaving[_id],
             pendingChildren = pendingSubjectsLookup[_id] || [],
@@ -130,7 +139,7 @@ class SubjectDisplayContent extends Component {
             <div className="col-xs-12 col-lg-3">
                 <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
                     <option value={''}>No Parent</option>
-                    {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
+                    {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
                 </select>
             </div>,
             <div className="col-xs-12 col-lg-4">
@@ -194,12 +203,11 @@ class SubjectDisplayContent extends Component {
     }
 }
 
-
 class SubjectList extends Component {
     render(){
         let {style = {}, noDrop} = this.props;
 
-        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay noDrop={noDrop} subject={subject} />)}</ul>;
+        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay key={subject._id} noDrop={noDrop} subject={subject} />)}</ul>;
     }
 }
 
@@ -207,9 +215,9 @@ class SubjectList extends Component {
 @connect(selector, { ...actionCreators })
 export default class SubjectsComponent extends Component{
     render(){
-        let {addNewSubject, pendingSubjectsLookup, subjects} = this.props,
+        let {addNewSubject, pendingSubjectsLookup, topLevelSubjects} = this.props,
             rootPendingSubjects = pendingSubjectsLookup['root'] || [],
-            allSubjects = [...rootPendingSubjects, ...subjects];
+            allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
 
         return (
             <div style={{ marginLeft: '10px', marginRight: '10px' }}>
