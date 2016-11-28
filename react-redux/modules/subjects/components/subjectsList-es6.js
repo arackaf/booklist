@@ -59,7 +59,8 @@ class SubjectDisplay extends Component {
         console.log('RENDER', i++);
         let {subject, connectDropTarget} = this.props,
             {_id, candidateMove} = subject,
-            style = this.props.isOver && this.props.canDrop ? { border: '1px solid green' } : {},
+            pendingSubjectDrop = this.props.isOver && this.props.canDrop,
+            style = {},
             noDrop = candidateMove || this.props.noDrop;
 
         if (candidateMove) {
@@ -67,7 +68,7 @@ class SubjectDisplay extends Component {
         }
 
         return (
-            <li className="list-group-item" key={_id} style={{...style, paddingTop: 0, paddingBottom: 0}}>
+            <li className={`list-group-item ${pendingSubjectDrop ? 'pending-subject-drop' : ''}`} key={_id} style={{...style, paddingTop: 0, paddingBottom: 0}}>
                 <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
             </li>
         );
