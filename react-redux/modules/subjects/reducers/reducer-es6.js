@@ -48,7 +48,11 @@ export function reducer(state = initialSubjectsState, action){
         case BEGIN_SUBJECT_EDIT:
             return {...state, editingSubjectsHash: {...state.editingSubjectsHash, [action._id]: action.subject}}
         case CANCEL_SUBJECT_EDIT:
-            return {...state, editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, [action._id])};
+            return {
+                ...state,
+                editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, [action._id]),
+                pendingSubjectsHash: removeKeysFromObject(state.pendingSubjectsHash, [action._id])
+            };
 
         case BEGIN_PENDNIG_DELETE:
             return {...state, pendingDeleteHash: {...state.pendingDeleteHash, [action._id]: true}};
