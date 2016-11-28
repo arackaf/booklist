@@ -104,6 +104,8 @@ class SubjectDisplayContent extends Component {
             deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete',
             isDeleting = deletingHash[_id];
 
+        let textColors = ['#ffffff', '#000000'];
+
         let mainIcon =
             isSubjectSaving
                 ? <i className="fa fa-fw fa-spinner fa-spin"></i>
@@ -111,8 +113,10 @@ class SubjectDisplayContent extends Component {
                     <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
 
         let contents = editingSubject ? [
-            <div className="col-xs-12 col-lg-3">
+            <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
                 <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
+                <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor }}>{editingSubject.name}</div>
+                {subject.pending ? <br /> : null}
                 {subject.pending ? <span className="label label-warning">This subject is not saved</span> : null}
             </div>,
             <div className="col-xs-12 col-lg-3">
@@ -121,8 +125,11 @@ class SubjectDisplayContent extends Component {
                     {editingSubject.eligibleParents.map(s => <option value={s._id}>{s.name}</option>)}
                 </select>
             </div>,
-            <div className="col-xs-12 col-lg-5">
+            <div className="col-xs-12 col-lg-4">
                 <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
+            </div>,
+            <div className="col-xs-12 col-lg-1">
+                <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
             </div>,
             <div className="col-xs-12 col-lg-1">
                 <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
@@ -144,7 +151,7 @@ class SubjectDisplayContent extends Component {
             ] :
             [
                 noDrop ?
-                    <div className="col-lg-12 show-on-hover-parent" style={{paddingTop: '10px', paddingBottom: '10px'}}>
+                    <div className="col-lg-12 show-on-hover-parent">
                         {mainIcon}
                         {' '}
                         {name}
@@ -154,7 +161,7 @@ class SubjectDisplayContent extends Component {
                         {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
                     </div>
                     : connectDropTarget(
-                        <div className="col-lg-12 show-on-hover-parent" style={{paddingTop: '10px', paddingBottom: '10px'}}>
+                        <div className="col-lg-12 show-on-hover-parent">
                             {mainIcon}
                             {' '}
                             {name}
@@ -169,7 +176,7 @@ class SubjectDisplayContent extends Component {
         return (
             connectDragPreview(
                 <div>
-                    <div className="row">
+                    <div className="row subjects-module-display-row">
                         {contents}
                     </div>
                     {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
