@@ -136,7 +136,7 @@ class SubjectDisplayContent extends Component {
                 {subject.pending ? <br /> : null}
                 {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
             </div>,
-            <div className="col-xs-12 col-lg-3">
+            <div className="col-xs-12 col-lg-3 padding-bottom-small">
                 <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
                     <option value={''}>No Parent</option>
                     {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
@@ -145,7 +145,7 @@ class SubjectDisplayContent extends Component {
             <div className="col-xs-12 col-lg-4">
                 <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
             </div>,
-            <div className="col-xs-12 col-lg-1">
+            <div className="col-xs-12 col-lg-1 padding-bottom-small">
                 <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
             </div>,
             <div className="col-xs-12 col-lg-1">
@@ -167,35 +167,27 @@ class SubjectDisplayContent extends Component {
                 </div>
             ] :
             [
-                noDrop ?
-                    <div className="col-lg-12 show-on-hover-parent">
-                        {mainIcon}
-                        {' '}
-                        {name}
-                        {' '}
-                        {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
-                        {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
-                        {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
-                    </div>
-                    : connectDropTarget(
-                        <div className="col-lg-12 show-on-hover-parent">
-                            {mainIcon}
-                            {' '}
-                            {name}
-                            {' '}
-                            {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
-                            {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
-                            {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
-                        </div>
-                    )
+                <div className="col-lg-12 show-on-hover-parent">
+                    {mainIcon}
+                    {' '}
+                    {name}
+                    {' '}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
+                </div>
             ]);
 
+            let dropEnabled = !isDeleting && !isPendingDelete && !noDrop;
+            let wrapper = dropEnabled ? connectDropTarget : c => c;
         return (
             connectDragPreview(
                 <div>
-                    <div className="row subjects-module-display-row">
-                        {contents}
-                    </div>
+                    {wrapper(
+                        <div className="row padding-top padding-bottom">
+                            {contents}
+                        </div>
+                    )}
                     {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
                 </div>
             )
