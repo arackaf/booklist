@@ -39,7 +39,7 @@ export const subjectDraggingOver = (sourceId, targetId) => (dispatch, getState) 
     if (!targetId){
         dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
     } else {
-        dragTimeout = setTimeout(() => dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId }), 100);
+        dragTimeout = setTimeout(() => dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId }), 200);
     }
 }
 
