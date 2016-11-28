@@ -14,8 +14,6 @@ import ColorsPalette from 'applicationRoot/components/colorsPalette';
             { subject: targetSubject } = props,
             isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
-        console.log(monitor.isOver());
-
         return sourceSubject._id != targetSubject._id
                 && !targetSubject.pending
                 && !isCurrentParent
