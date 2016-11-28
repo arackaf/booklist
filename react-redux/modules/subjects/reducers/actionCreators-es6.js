@@ -22,7 +22,7 @@ import {
     SAVE_SUBJECT_RESULTS
 } from 'applicationRoot/rootReducerActionNames'
 
-import {unwindSubjects, computeParentId} from 'applicationRoot/rootReducer';
+import {unwindSubjects, computeParentId, getAllDescendantsOfSubject} from 'applicationRoot/rootReducer';
 
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject: saveSubjectRoot, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
@@ -102,6 +102,10 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
 };
 
 export const deleteSubject = subject => (dispatch, getState) => {
-    dispatch({type: DELETING_SUBJECTS, subjects: toIdHash(unwindSubjects([subject])) });
+    let subjectHash = getState().app.subjectHash,
+        subjectsDeleting = [subject, ...getAllDescendantsOfSubject(subject._id, subjectHash)];
 
+    dispatch({ type: DELETING_SUBJECTS, subjects: toIdHash(subjectsDeleting) });
+    Promise.resolve(deleteSubjectRoot(subject._id, dispatch))
+           .then(resp => dispatch({type: DONE_DELETING_SUBJECTS, subjects: toIdHash(resp.subjectsDeleted) }));
 };
