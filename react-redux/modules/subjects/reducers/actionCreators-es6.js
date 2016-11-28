@@ -102,6 +102,7 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
 
     //provide immediate feedback, so the DnD "sticks"
     dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
+    dispatch(subjectDraggingOver(null, null));
     //disable dragging and editing on the entire hierarchy until the save is done
     dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
