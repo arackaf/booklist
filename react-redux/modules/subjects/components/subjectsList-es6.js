@@ -115,9 +115,9 @@ class SubjectDisplayContent extends Component {
         let contents = editingSubject ? [
             <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
                 <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
-                <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor }}>{editingSubject.name}</div>
+                <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name}</div>
                 {subject.pending ? <br /> : null}
-                {subject.pending ? <span className="label label-warning">This subject is not saved</span> : null}
+                {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
             </div>,
             <div className="col-xs-12 col-lg-3">
                 <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
