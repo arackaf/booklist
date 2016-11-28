@@ -7,7 +7,15 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
-@connect(selector, { ...actionCreators })
+let i = 1;
+const mapState = (state, ownProps) => {
+    let selectedState = selector(state);
+    return {
+        isCurrentDropTarget: selectedState.currentDropCandidateId == ownProps.subject._id
+    }
+};
+
+@connect(mapState, { ...actionCreators })
 @DropTarget('subject', {
     canDrop(props, monitor){
         let sourceSubject = monitor.getItem(),
@@ -43,11 +51,12 @@ class SubjectDisplay extends Component {
 
         if (!wasOver && isOver){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, _id);
-        } else if ((notOverAtAll || !canDrop) && this.props.currentDropCandidateId == _id){
+        } else if ((notOverAtAll || !canDrop) && this.props.isCurrentDropTarget){
             this.props.subjectDraggingOver(this.props.draggingSubject._id, null);
         }
     }
     render(){
+        console.log('RENDER', i++);
         let {subject, connectDropTarget} = this.props,
             {_id, candidateMove} = subject,
             style = this.props.isOver && this.props.canDrop ? { border: '1px solid green' } : {},

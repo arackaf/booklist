@@ -32,7 +32,17 @@ const toIdHash = objs => objs.reduce((hash, obj) => (hash[obj._id] = true, hash)
 let tempId = -1;
 
 export const addNewSubject = parentId => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: parentId || null, pending: true } });
-export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
+
+let dragTimeout = null;
+export const subjectDraggingOver = (sourceId, targetId) => (dispatch, getState) => {
+    clearTimeout(dragTimeout);
+    if (!targetId){
+        dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
+    } else {
+        dragTimeout = setTimeout(() => dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId }), 100);
+    }
+}
+
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 export const beginSubjectEdit = _id => (dispatch, getState) =>{
     let subject = {...getState().app.subjectHash[_id]};
@@ -95,9 +105,8 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
     //disable dragging and editing on the entire hierarchy until the save is done
     dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
-    setTimeout(() => {
     Promise.resolve(saveSubjectRoot(request, dispatch))
-           .then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));}, 7000);
+           .then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 };
 
 export const deleteSubject = subject => (dispatch, getState) => {
