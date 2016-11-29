@@ -73,9 +73,7 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
     dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
     Promise.resolve(saveSubjectRoot(request, dispatch))
-           .then(() => {
-               dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash });
-           });
+           .then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 }
 
 export const setNewParent = (subject, newParent) => (dispatch, getState) => {
