@@ -33,7 +33,7 @@ const initialState = {
     subjectsInitialQueryFired: false
 };
 
-export const subjectsToHash = subjects => subjects.reduce((hash, s) => (hash[s._id] = s, hash), {});
+export const objectsToHash = objs => objs.reduce((hash, o) => (hash[o._id] = o, hash), {});
 
 export default function rootReducer(state = initialState, action){
     switch(action.type){
@@ -56,11 +56,11 @@ export default function rootReducer(state = initialState, action){
         case LOAD_SUBJECTS:
             return Object.assign({}, state, { subjectsInitialQueryFired: true });
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { subjectHash: subjectsToHash(action.subjects), subjectsLoaded: true });
+            return Object.assign({}, state, { subjectHash: objectsToHash(action.subjects), subjectsLoaded: true });
         case LOAD_COLORS:
             return Object.assign({}, state, { colors: action.colors.map(c => c.backgroundColor) });
         case SAVE_SUBJECT_RESULTS:
-            return Object.assign({}, state, { subjectHash: { ...state.subjectHash, ...subjectsToHash(action.affectedSubjects) } });
+            return Object.assign({}, state, { subjectHash: { ...state.subjectHash, ...objectsToHash(action.affectedSubjects) } });
         case SUBJECT_DELETED:
             let subjectHash = { ...state.subjectHash };
             action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
@@ -82,7 +82,7 @@ export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
     return bothEqual ? 0 : (name1After ? 1 : -1);
 };
 
-export const topLevelSubjectsSorted = createSelector(
+export const topLevelSubjectsSortedSelector = createSelector(
     [state => state.app.subjectHash],
     subjectHash => Object.keys(subjectHash).map(_id => subjectHash[_id]).filter(s => !s.path).sort(subjectSortCompare)
 );
@@ -99,6 +99,14 @@ export const getChildSubjectsSorted = (_id, subjectHash) => {
                  .filter(sc => regex.test(sc.path))
                  .sort(subjectSortCompare);
 };
+
+export const subjectChildMapSelector = createSelector(
+    [state => state.app.subjectHash],
+    subjectHash =>
+        Object.keys(subjectHash)
+              .map(_id => ({_id, children: getChildSubjectsSorted(_id, subjectHash)}))
+              .reduce((hash, o) => (hash[o._id] = o.children, hash), {})
+);
 
 export const stackAndGetTopLevelSubjects = subjectsHash => {
     let subjects = Object.keys(subjectsHash).map(_id => ({...subjectsHash[_id]}));

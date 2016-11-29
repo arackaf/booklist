@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {selector, getChildSubjectsSorted, editingSubjectHashSelector, pendingSubjectsSelector} from 'modules/subjects/reducers/reducer';
+import {editingSubjectHashSelector, pendingSubjectsSelector} from 'modules/subjects/reducers/reducer';
+import {subjectChildMapSelector, topLevelSubjectsSortedSelector, getChildSubjectsSorted} from 'applicationRoot/rootReducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -9,9 +10,8 @@ import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 let i = 1;
 const mapState = (state, ownProps) => {
-    let selectedState = selector(state);
     return {
-        isCurrentDropTarget: selectedState.currentDropCandidateId == ownProps.subject._id
+        isCurrentDropTarget: state.subjectsModule.currentDropCandidateId == ownProps.subject._id
     }
 };
 
@@ -76,12 +76,12 @@ class SubjectDisplay extends Component {
 }
 
 @connect((state, ownProps) => {
-    let selectedState = selector(state),
-        subjectsModule = state.subjectsModule,
+    let subjectsModule = state.subjectsModule,
         editingSubjectsHash = subjectsModule.editingSubjectsHash,
         pendingDeleteHash = subjectsModule.pendingDeleteHash,
         deletingHash = subjectsModule.deletingHash,
         pendingSubjectsLookup = pendingSubjectsSelector(state),
+        childSubjectsMap = subjectChildMapSelector(state),
         subject = ownProps.subject,
         {_id} = subject;
 
@@ -90,7 +90,7 @@ class SubjectDisplay extends Component {
         pendingChildren: pendingSubjectsLookup[_id],
         isPendingDelete: pendingDeleteHash[_id],
         isDeleting: deletingHash[_id],
-        childSubjects: getChildSubjectsSorted(_id, selectedState.subjectHash)
+        childSubjects: childSubjectsMap[_id]
     }
 }, {...actionCreators})
 @DragSource('subject', {
@@ -109,7 +109,7 @@ class SubjectDisplayContent extends Component {
                 isPendingDelete,
                 isDeleting,
                 connectDropTarget,
-                childSubjects,
+                childSubjects = [],
                 pendingChildren = [],
                 isEditingSubject
             } = this.props,
@@ -255,7 +255,12 @@ class SubjectList extends Component {
 }
 
 @DragDropContext(HTML5Backend)
-@connect(selector, { ...actionCreators })
+@connect(state => {
+    return {
+        topLevelSubjects: topLevelSubjectsSortedSelector(state),
+        pendingSubjectsLookup: pendingSubjectsSelector(state)
+    };
+}, { ...actionCreators })
 export default class SubjectsComponent extends Component{
     render(){
         let {addNewSubject, pendingSubjectsLookup, topLevelSubjects} = this.props,

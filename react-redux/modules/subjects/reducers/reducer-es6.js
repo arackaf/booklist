@@ -1,10 +1,7 @@
 import {createSelector} from 'reselect';
 
-import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSorted, getChildSubjectsSorted} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSortedSelector} from 'applicationRoot/rootReducer';
 import {removeKeysFromObject} from 'util/immutableHelpers';
-
-export {topLevelSubjectsSorted};
-export {getChildSubjectsSorted};
 
 import {
     ADD_NEW_SUBJECT,
@@ -13,18 +10,11 @@ import {
     SUBJECTS_SAVING,
     CLEAR_SAVING_STATE,
     CANCEL_SUBJECT_EDIT,
-    UPDATE_SUBJECT,
-    UPDATE_SUBJECT_RESULTS,
-    BEGIN_SUBJECT_DELETE,
-    CANCEL_SUBJECT_DELETE,
 
     BEGIN_PENDNIG_DELETE,
     CANCEL_PENDNIG_DELETE,
     DELETING_SUBJECTS,
     DONE_DELETING_SUBJECTS,
-
-    SUBJECT_DELETING,
-    SUBJECT_DELETED,
     SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
@@ -147,7 +137,7 @@ const subjectsHashAndDndSelector = createSelector([
 });
 
 const subjectsModuleSelector = createSelector([
-    topLevelSubjectsSorted,
+    topLevelSubjectsSortedSelector,
     editingSubjectHashSelector,
     subjectsHashAndDndSelector,
     pendingSubjectsSelector,
