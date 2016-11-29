@@ -71,6 +71,7 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
     }
 
     dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
+
     Promise.resolve(saveSubjectRoot(request, dispatch))
            .then(() => {
                dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash });
@@ -103,9 +104,10 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
 
 export const deleteSubject = _id => (dispatch, getState) => {
     let subjectHash = getState().app.subjectHash,
-        subjectsDeleting = [{_id: true}, ...getAllDescendantsOfSubject(_id, subjectHash)];
+        subjectsDeleting = [{_id}, ...getAllDescendantsOfSubject(_id, subjectHash)];
 
     dispatch({ type: DELETING_SUBJECTS, subjects: toIdHash(subjectsDeleting) });
+
     Promise.resolve(deleteSubjectRoot(_id, dispatch))
            .then(resp => dispatch({type: DONE_DELETING_SUBJECTS, subjects: toIdHash(resp.subjectsDeleted) }));
 };

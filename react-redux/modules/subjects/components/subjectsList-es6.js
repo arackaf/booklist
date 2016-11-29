@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {editingSubjectHashSelector, pendingSubjectsSelector} from 'modules/subjects/reducers/reducer';
+import {editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector} from 'modules/subjects/reducers/reducer';
 import {subjectChildMapSelector, topLevelSubjectsSortedSelector, getChildSubjectsSorted} from 'applicationRoot/rootReducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
@@ -82,15 +82,19 @@ class SubjectDisplay extends Component {
         deletingHash = subjectsModule.deletingHash,
         pendingSubjectsLookup = pendingSubjectsSelector(state),
         childSubjectsMap = subjectChildMapSelector(state),
+        draggingSubject = draggingSubjectSelector(state),
+        currentDropCandidateId = subjectsModule.currentDropCandidateId,
         subject = ownProps.subject,
-        {_id} = subject;
+        {_id} = subject,
+        dropCandidateSubject = currentDropCandidateId == _id ? draggingSubject : null;
 
     return {
         isEditingSubject: !!editingSubjectsHash[_id],
         pendingChildren: pendingSubjectsLookup[_id],
         isPendingDelete: pendingDeleteHash[_id],
         isDeleting: deletingHash[_id],
-        childSubjects: childSubjectsMap[_id]
+        childSubjects: childSubjectsMap[_id],
+        dropCandidateSubject
     }
 }, {...actionCreators})
 @DragSource('subject', {
@@ -111,10 +115,15 @@ class SubjectDisplayContent extends Component {
                 connectDropTarget,
                 childSubjects = [],
                 pendingChildren = [],
-                isEditingSubject
+                isEditingSubject,
+                dropCandidateSubject
             } = this.props,
             effectiveChildren = pendingChildren.concat(childSubjects),
             deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete';
+
+        if (dropCandidateSubject){
+            effectiveChildren.unshift(dropCandidateSubject);
+        }
 
         let classToPass = 'row padding-top padding-bottom';
         return (
