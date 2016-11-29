@@ -101,11 +101,11 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
            .then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 };
 
-export const deleteSubject = subject => (dispatch, getState) => {
+export const deleteSubject = _id => (dispatch, getState) => {
     let subjectHash = getState().app.subjectHash,
-        subjectsDeleting = [subject, ...getAllDescendantsOfSubject(subject._id, subjectHash)];
+        subjectsDeleting = [{_id: true}, ...getAllDescendantsOfSubject(_id, subjectHash)];
 
     dispatch({ type: DELETING_SUBJECTS, subjects: toIdHash(subjectsDeleting) });
-    Promise.resolve(deleteSubjectRoot(subject._id, dispatch))
+    Promise.resolve(deleteSubjectRoot(_id, dispatch))
            .then(resp => dispatch({type: DONE_DELETING_SUBJECTS, subjects: toIdHash(resp.subjectsDeleted) }));
 };

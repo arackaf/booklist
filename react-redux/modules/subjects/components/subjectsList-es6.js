@@ -75,15 +75,24 @@ class SubjectDisplay extends Component {
     }
 }
 
-const mapSubjectDisplayState = (state, ownProps) => {
-    let selectedState = selector(state);
-    return {
-        ...selectedState,
-        childSubjects: getChildSubjectsSorted(ownProps.subject._id, selectedState.subjectHash)
-    }
-};
+@connect((state, ownProps) => {
+    let selectedState = selector(state),
+        subjectsModule = state.subjectsModule,
+        editingSubjectsHash = subjectsModule.editingSubjectsHash,
+        pendingDeleteHash = subjectsModule.pendingDeleteHash,
+        deletingHash = subjectsModule.deletingHash,
+        pendingSubjectsLookup = subjectsModule.pendingSubjectsHash,
+        subject = ownProps.subject,
+        {_id} = subject;
 
-@connect(mapSubjectDisplayState, {...actionCreators})
+    return {
+        editingSubject: editingSubjectsHash[_id],
+        pendingChildren: pendingSubjectsLookup[_id],
+        isPendingDelete: pendingDeleteHash[_id],
+        isDeleting: deletingHash[_id],
+        childSubjects: getChildSubjectsSorted(_id, selectedState.subjectHash)
+    }
+}, {...actionCreators})
 @DragSource('subject', {
     beginDrag: props => props.subject
 }, (connect, monitor) => ({
@@ -97,101 +106,141 @@ class SubjectDisplayContent extends Component {
                 connectDragSource,
                 connectDragPreview,
                 noDrop,
-                editingSubjectsHash,
-                subjectsSaving,
-                subjectsSaved,
-                colors,
-                setEditingSubjectField,
-                saveChanges,
-                pendingSubjectsLookup,
-                pendingDeleteHash,
-                deletingHash,
-                beginSubjectDelete,
-                cancelSubjectDelete,
-                deleteSubject,
+                isPendingDelete,
+                isDeleting,
                 connectDropTarget,
-                childSubjects
+                childSubjects,
+                pendingChildren = [],
+                editingSubject
             } = this.props,
-            {_id, name} = subject,
-            editingSubject = editingSubjectsHash[_id],
-            isSubjectSaving = !!subjectsSaving[_id],
-            pendingChildren = pendingSubjectsLookup[_id] || [],
             effectiveChildren = pendingChildren.concat(childSubjects),
-            isPendingDelete = pendingDeleteHash[_id],
-            deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete',
-            isDeleting = deletingHash[_id];
+            deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete';
 
-        let textColors = ['#ffffff', '#000000'];
-
-        let mainIcon =
-            isSubjectSaving
-                ? <i className="fa fa-fw fa-spinner fa-spin"></i>
-                : (subjectsSaved[subject._id] ?
-                    <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> : connectDragSource(<i className="fa fa-fw fa-arrows"></i>));
-
-        let contents = editingSubject ? [
-            <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
-                <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
-                <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name}</div>
-                {subject.pending ? <br /> : null}
-                {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
-            </div>,
-            <div className="col-xs-12 col-lg-3 padding-bottom-small">
-                <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
-                    <option value={''}>No Parent</option>
-                    {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
-                </select>
-            </div>,
-            <div className="col-xs-12 col-lg-4">
-                <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
-            </div>,
-            <div className="col-xs-12 col-lg-1 padding-bottom-small">
-                <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
-            </div>,
-            <div className="col-xs-12 col-lg-1">
-                <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
-                <a onClick={() => this.props.cancelSubjectEdit(_id)}>Cancel</a>
-            </div>
-        ] : isDeleting ? [
-                <div className="col-lg-12">
-                    {name}
-                    <BootstrapButton preset="danger-xs" disabled={true} style={{marginLeft: '20px'}}>Deleting <i className="fa fa-fw fa-spinner fa-spin"></i></BootstrapButton>
-                </div>
-            ] :
-            (isPendingDelete ?
-            [
-                <div className="col-lg-12">
-                    {name}
-                    <BootstrapButton onClick={() => deleteSubject(subject)} style={{marginLeft: '20px'}} preset="danger-sm">{deleteMessage}</BootstrapButton>
-                    <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{marginLeft: '20px'}} preset="primary-sm">Cancel</BootstrapButton>
-                </div>
-            ] :
-            [
-                <div className="col-lg-12 show-on-hover-parent">
-                    {mainIcon}
-                    {' '}
-                    {name}
-                    {' '}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => this.props.addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
-                </div>
-            ]);
-
-            let dropEnabled = !isDeleting && !isPendingDelete && !noDrop;
-            let wrapper = dropEnabled ? connectDropTarget : c => c;
+        let classToPass = 'row padding-top padding-bottom';
         return (
             connectDragPreview(
                 <div>
-                    {wrapper(
-                        <div className="row padding-top padding-bottom">
-                            {contents}
-                        </div>
-                    )}
+                    {editingSubject ? null :
+                        isDeleting ? <DeletingSubjectDisplay className={classToPass} name={subject.name} /> :
+                            isPendingDelete ? <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} /> :
+                                <DefaultSubjectDisplay className={classToPass} subject={subject} connectDragSource={connectDragSource} connectDropTarget={connectDropTarget} noDrop={noDrop} />
+                    }
+
                     {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
                 </div>
             )
         )
+    }
+}
+
+@connect((state, ownProps) => {
+   let subjectsSaving = state.subjectsModule.subjectsSaving,
+       subjectsSaved = state.subjectsModule.subjectsSaved;
+
+   return {
+       isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
+       isSubjectSaved: !!subjectsSaved[ownProps.subject._id]
+   }
+}, {...actionCreators})
+class DefaultSubjectDisplay extends Component {
+    render(){
+        let {connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, beginSubjectEdit, addNewSubject, beginSubjectDelete, noDrop} = this.props,
+            {_id, name} = subject,
+            mainIcon =
+                isSubjectSaving ? <i className="fa fa-fw fa-spinner fa-spin"></i> :
+                    isSubjectSaved ? <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> :
+                        connectDragSource(<i className="fa fa-fw fa-arrows"></i>);
+
+        return (noDrop ? c=>c : connectDropTarget)(
+            <div className={className}>
+                <div className="col-lg-12 show-on-hover-parent">
+                    {mainIcon}&nbsp;
+                    {name}
+                    {' '}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
+                </div>
+            </div>
+        );
+    }
+}
+
+@connect((state, ownProps) => {
+    let subjectsSaving = state.subjectsModule.subjectsSaving,
+        editingSubjectsHash = state.subjectsModule.editingSubjectsHash,
+        colors = state.app.colors;
+
+    return {
+        isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
+        editingSubject: editingSubjectsHash[ownProps.subject._id],
+        colors
+    }
+}, {...actionCreators})
+class EditingSubjectDisplay extends Component {
+    render(){
+        let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges} = this.props,
+            {_id, name} = subject,
+            textColors = ['#ffffff', '#000000'];
+
+        return (
+            <div className={className}>
+                <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
+                    <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
+                    <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name}</div>
+                    {subject.pending ? <br /> : null}
+                    {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
+                </div>,
+                <div className="col-xs-12 col-lg-3 padding-bottom-small">
+                    <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
+                        <option value={''}>No Parent</option>
+                        {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                    </select>
+                </div>,
+                <div className="col-xs-12 col-lg-4">
+                    <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
+                </div>,
+                <div className="col-xs-12 col-lg-1 padding-bottom-small">
+                    <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
+                </div>,
+                <div className="col-xs-12 col-lg-1">
+                    <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
+                    <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
+                </div>
+            </div>
+        );
+    }
+}
+
+@connect(null, {...actionCreators})
+class PendingDeleteSubjectDisplay extends Component {
+    render(){
+        let {className, deleteMessage, deleteSubject, cancelSubjectDelete, subject} = this.props,
+            {name, _id} = subject;
+        return (
+            <div className={className}>
+                <div className="col-lg-12">
+                    {name}
+                    <BootstrapButton onClick={() => deleteSubject(_id)} style={{marginLeft: '20px'}} preset="danger-sm">{deleteMessage}</BootstrapButton>
+                    <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{marginLeft: '20px'}} preset="primary-sm">Cancel</BootstrapButton>
+                </div>
+            </div>
+        );
+    }
+}
+
+@connect(null, {...actionCreators})
+class DeletingSubjectDisplay extends Component {
+    render(){
+        let {name, className} = this.props;
+        return (
+            <div className={className}>
+                <div className="col-lg-12">
+                    {name}
+                    <BootstrapButton preset="danger-xs" disabled={true} style={{marginLeft: '20px'}}>Deleting <i className="fa fa-fw fa-spinner fa-spin"></i></BootstrapButton>
+                </div>
+            </div>
+        );
     }
 }
 
