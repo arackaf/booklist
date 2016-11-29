@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {selector, getChildSubjectsSorted} from 'modules/subjects/reducers/reducer';
+import {selector, getChildSubjectsSorted, editingSubjectHashSelector} from 'modules/subjects/reducers/reducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -168,12 +168,14 @@ class DefaultSubjectDisplay extends Component {
 
 @connect((state, ownProps) => {
     let subjectsSaving = state.subjectsModule.subjectsSaving,
+        subjectHash = state.app.subjectHash,
         editingSubjectsHash = state.subjectsModule.editingSubjectsHash,
+        {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(subjectHash, editingSubjectsHash),
         colors = state.app.colors;
 
     return {
         isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
-        editingSubject: editingSubjectsHash[ownProps.subject._id],
+        editingSubject: shapedEditingSubjectHash[ownProps.subject._id],
         colors
     }
 }, {...actionCreators})
