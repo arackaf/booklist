@@ -92,6 +92,11 @@ export const editingSubjectHashSelector = createSelector([
     };
 });
 
+export const draggingSubjectSelector = createSelector([
+    state => state.app.subjectHash,
+    state => state.subjectsModule.draggingId
+], (subjectHash, draggingId) => draggingId ? {...subjectHash[draggingId], _id: draggingId + '_dragging', candidateMove: true} : null);
+
 const tempSubjectCompare = ({_id: id1}, {_id: id2}) => id1 - id2;
 
 export const pendingSubjectsSelector = createSelector([
