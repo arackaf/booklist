@@ -86,7 +86,7 @@ class SubjectDisplay extends Component {
         {_id} = subject;
 
     return {
-        editingSubject: editingSubjectsHash[_id],
+        isEditingSubject: !!editingSubjectsHash[_id],
         pendingChildren: pendingSubjectsLookup[_id],
         isPendingDelete: pendingDeleteHash[_id],
         isDeleting: deletingHash[_id],
@@ -111,7 +111,7 @@ class SubjectDisplayContent extends Component {
                 connectDropTarget,
                 childSubjects,
                 pendingChildren = [],
-                editingSubject
+                isEditingSubject
             } = this.props,
             effectiveChildren = pendingChildren.concat(childSubjects),
             deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete';
@@ -120,7 +120,7 @@ class SubjectDisplayContent extends Component {
         return (
             connectDragPreview(
                 <div>
-                    {editingSubject ? null :
+                    {isEditingSubject ? <EditingSubjectDisplay className={classToPass} subject={subject} /> :
                         isDeleting ? <DeletingSubjectDisplay className={classToPass} name={subject.name} /> :
                             isPendingDelete ? <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} /> :
                                 <DefaultSubjectDisplay className={classToPass} subject={subject} connectDragSource={connectDragSource} connectDropTarget={connectDropTarget} noDrop={noDrop} />
