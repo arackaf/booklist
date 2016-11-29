@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {selector, getChildSubjectsSorted, editingSubjectHashSelector} from 'modules/subjects/reducers/reducer';
+import {selector, getChildSubjectsSorted, editingSubjectHashSelector, pendingSubjectsSelector} from 'modules/subjects/reducers/reducer';
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -81,7 +81,7 @@ class SubjectDisplay extends Component {
         editingSubjectsHash = subjectsModule.editingSubjectsHash,
         pendingDeleteHash = subjectsModule.pendingDeleteHash,
         deletingHash = subjectsModule.deletingHash,
-        pendingSubjectsLookup = subjectsModule.pendingSubjectsHash,
+        pendingSubjectsLookup = pendingSubjectsSelector(state),
         subject = ownProps.subject,
         {_id} = subject;
 
@@ -170,7 +170,7 @@ class DefaultSubjectDisplay extends Component {
     let subjectsSaving = state.subjectsModule.subjectsSaving,
         subjectHash = state.app.subjectHash,
         editingSubjectsHash = state.subjectsModule.editingSubjectsHash,
-        {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(subjectHash, editingSubjectsHash),
+        {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(state),
         colors = state.app.colors;
 
     return {
@@ -181,7 +181,7 @@ class DefaultSubjectDisplay extends Component {
 }, {...actionCreators})
 class EditingSubjectDisplay extends Component {
     render(){
-        let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges} = this.props,
+        let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges, colors} = this.props,
             {_id, name} = subject,
             textColors = ['#ffffff', '#000000'];
 
@@ -192,19 +192,19 @@ class EditingSubjectDisplay extends Component {
                     <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name}</div>
                     {subject.pending ? <br /> : null}
                     {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
-                </div>,
+                </div>
                 <div className="col-xs-12 col-lg-3 padding-bottom-small">
                     <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
                         <option value={''}>No Parent</option>
                         {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
                     </select>
-                </div>,
+                </div>
                 <div className="col-xs-12 col-lg-4">
                     <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
-                </div>,
+                </div>
                 <div className="col-xs-12 col-lg-1 padding-bottom-small">
                     <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
-                </div>,
+                </div>
                 <div className="col-xs-12 col-lg-1">
                     <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
                     <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
