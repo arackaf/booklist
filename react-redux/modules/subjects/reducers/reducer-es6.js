@@ -91,7 +91,7 @@ export function reducer(state = initialSubjectsState, action){
     return state;
 }
 
-const editingSubjectHashSelector = createSelector([
+export const editingSubjectHashSelector = createSelector([
     state => state.app.subjectHash,
     state => state.subjectsModule.editingSubjectsHash
 ], (subjectHash, editingSubjectsHash) => {
@@ -104,7 +104,7 @@ const editingSubjectHashSelector = createSelector([
 
 const tempSubjectCompare = ({_id: id1}, {_id: id2}) => id1 - id2;
 
-const pendingSubjectsSelector = createSelector([
+export const pendingSubjectsSelector = createSelector([
     state => state.subjectsModule.pendingSubjectsHash
 ], pendingSubjectsHash => {
     let result = {};
