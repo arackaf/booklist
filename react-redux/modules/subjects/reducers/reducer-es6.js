@@ -15,6 +15,7 @@ import {
     CANCEL_PENDNIG_DELETE,
     DELETING_SUBJECTS,
     DONE_DELETING_SUBJECTS,
+    SET_SUBJECT_DRAGGING,
     SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
@@ -59,6 +60,8 @@ export function reducer(state = initialSubjectsState, action){
                 pendingDeleteHash: removeKeysFromObject(state.pendingDeleteHash, Object.keys(action.subjects)),
                 deletingHash: removeKeysFromObject(state.deletingHash, Object.keys(action.subjects))
             };
+        case SET_SUBJECT_DRAGGING:
+            return {...state, draggingId: action.sourceId};
         case SUBJECT_DRAGGING_OVER:
             return { ...state, draggingId: action.sourceId, currentDropCandidateId: action.targetId };
         case SUBJECTS_SAVING:

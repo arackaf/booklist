@@ -15,6 +15,7 @@ import {
     CLEAR_SAVING_STATE,
     SUBJECT_DELETING,
     SUBJECT_DELETED,
+    SET_SUBJECT_DRAGGING,
     SUBJECT_DRAGGING_OVER
 } from './actionNames';
 
@@ -32,7 +33,13 @@ const toIdHash = objs => objs.reduce((hash, obj) => (hash[obj._id] = true, hash)
 let tempId = -1;
 
 export const addNewSubject = parentId => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: parentId || null, pending: true } });
-export const subjectDraggingOver = (sourceId, targetId) => ({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
+
+export const beginDrag = sourceId => ({ type: SET_SUBJECT_DRAGGING, sourceId });
+export const clearSubjectDragging = () => ({ type: SUBJECT_DRAGGING_OVER, sourceId: null, targetId: null });
+export const subjectDraggingOver = targetId => (dispatch, getState) => {
+    let sourceId = getState().subjectsModule.draggingId;
+    dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
+};
 
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 export const beginSubjectEdit = _id => (dispatch, getState) =>{
@@ -92,7 +99,7 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
 
     //provide immediate feedback, so the DnD "sticks"
     dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
-    dispatch(subjectDraggingOver(null, null));
+    dispatch(clearSubjectDragging());
     //disable dragging and editing on the entire hierarchy until the save is done
     dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 

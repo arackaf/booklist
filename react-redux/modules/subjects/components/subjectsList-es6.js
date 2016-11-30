@@ -37,8 +37,7 @@ const mapState = (state, ownProps) => {
 }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
-    canDrop: monitor.canDrop(),
-    draggingSubject: monitor.getItem()
+    canDrop: monitor.canDrop()
 }))
 class SubjectDisplay extends Component {
     componentDidUpdate(prevProps){
@@ -50,9 +49,9 @@ class SubjectDisplay extends Component {
             {_id} = subject;
 
         if (!wasOver && isOver){
-            this.props.subjectDraggingOver(this.props.draggingSubject._id, _id);
+            this.props.subjectDraggingOver(_id);
         } else if ((notOverAtAll || !canDrop) && this.props.isCurrentDropTarget){
-            this.props.subjectDraggingOver(this.props.draggingSubject._id, null);
+            this.props.subjectDraggingOver(null);
         }
     }
     render(){
@@ -98,7 +97,13 @@ class SubjectDisplay extends Component {
     }
 }, {...actionCreators})
 @DragSource('subject', {
-    beginDrag: props => props.subject
+    beginDrag: props => {
+        props.beginDrag(props.subject._id);
+        return props.subject;
+    },
+    endDrag: props => {
+        props.clearSubjectDragging();
+    }
 }, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview()
