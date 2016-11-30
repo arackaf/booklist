@@ -19,10 +19,10 @@ var systemJsDevConfig = {
         'react-dom': 'node_modules/react-dom/dist/react-dom.js',
         'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
         'react-redux': 'node_modules/react-redux/dist/react-redux.js',
-        redux: 'node_modules/redux/dist/redux.js',
+        'redux': 'node_modules/redux/dist/redux.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
-        reselect: 'node_modules/reselect/lib/index.js',
-        jscolor: 'util/jscolor.js'
+        'reselect': 'node_modules/reselect/lib/index.js',
+        'jscolor': 'util/jscolor.js'
     },
     meta: {
         jscolor: {
@@ -47,7 +47,7 @@ var systemJsLiveConfig = {
         'redux': 'node_modules/redux/dist/redux.min.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         'reselect': 'node_modules/reselect/lib/index.js',
-        jscolor: 'util/jscolor.min.js'
+        'jscolor': 'util/jscolor.min.js'
     },
     meta: {
         jscolor: {
