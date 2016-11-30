@@ -6,7 +6,7 @@ export default class ColorsPalette extends Component{
 
         return (
             <div>
-                { colors.map(color => <div className={`color-choice ${color == currentColor ? 'color-choice-current' : ''}`} onClick={() => onColorChosen(color) } style={{ backgroundColor: color }}></div>) }
+                { colors.map(color => <div key={color} className={`color-choice ${color == currentColor ? 'color-choice-current' : ''}`} onClick={() => onColorChosen(color) } style={{ backgroundColor: color }}></div>) }
             </div>
         );
     }
