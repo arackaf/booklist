@@ -57,6 +57,11 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
     let { _id, name, parentId, backgroundColor, textColor } = subject,
         request = { _id, name, parentId, backgroundColor, textColor };
 
+    if (!name){
+        dispatch(setEditingSubjectField(_id, 'validationError', 'Name is required'));
+        return;
+    }
+
     if (original.pending){
         request._id = null;
     }

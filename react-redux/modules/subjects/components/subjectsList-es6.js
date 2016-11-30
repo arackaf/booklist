@@ -190,18 +190,24 @@ class DefaultSubjectDisplay extends Component {
     }
 }, {...actionCreators})
 class EditingSubjectDisplay extends Component {
+    componentDidMount(){
+        this.inputEl.focus();
+    }
     render(){
         let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges, colors} = this.props,
             {_id, name} = subject,
-            textColors = ['#ffffff', '#000000'];
+            textColors = ['#ffffff', '#000000'],
+            {validationError} = editingSubject;
 
         return (
             <div className={className}>
                 <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
-                    <input onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
-                    <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name}</div>
+                    <input ref={el => this.inputEl = el} onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
+                    <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name || '<label preview>'}</div>
                     {subject.pending ? <br /> : null}
                     {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
+                    {validationError ? <br /> : null}
+                    {validationError ? <span className="label label-danger">{validationError}</span> : null}
                 </div>
                 <div className="col-xs-12 col-lg-3 padding-bottom-small">
                     <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
