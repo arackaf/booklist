@@ -39,7 +39,7 @@ var systemJsLiveConfig = {
         'react-autosuggest': 'node_modules/react-autosuggest/dist/standalone/autosuggest.min.js',
         'react-bootstrap': 'node_modules/react-bootstrap/dist/react-bootstrap.min.js',
         'react-dnd': 'node_modules/react-dnd/dist/ReactDnD.min.js',
-        'react-dnd-html5-backend': 'node_modules/react-dnd-html5-backend/dist/ReactDnDHTML5Backend.js',
+        'react-dnd-html5-backend': 'node_modules/react-dnd-html5-backend/dist/ReactDnDHTML5Backend.min.js',
         'react-dnd-touch-backend': 'node_modules/react-dnd-touch-backend/dist/Touch.browserified.js',
         'react-dom': 'node_modules/react-dom/dist/react-dom.min.js',
         'react-dropzone': 'node_modules/react-dropzone/dist/index.js',
