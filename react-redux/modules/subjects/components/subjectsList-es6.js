@@ -8,14 +8,11 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
-let i = 1;
-const mapState = (state, ownProps) => {
+@connect((state, ownProps) => {
     return {
         isCurrentDropTarget: state.subjectsModule.currentDropCandidateId == ownProps.subject._id
     }
-};
-
-@connect(mapState, { ...actionCreators })
+}, { ...actionCreators })
 @DropTarget('subject', {
     canDrop(props, monitor){
         let sourceSubject = monitor.getItem(),
@@ -55,7 +52,6 @@ class SubjectDisplay extends Component {
         }
     }
     render(){
-        console.log('RENDER', i++);
         let {subject, connectDropTarget} = this.props,
             {_id, candidateMove} = subject,
             pendingSubjectDrop = this.props.isOver && this.props.canDrop,
