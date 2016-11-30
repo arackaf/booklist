@@ -32,7 +32,7 @@ const toIdHash = objs => objs.reduce((hash, obj) => (hash[obj._id] = true, hash)
 
 let tempId = -1;
 
-export const addNewSubject = parentId => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: 'Pending new subject', parentId: parentId || null, pending: true } });
+export const addNewSubject = parentId => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: '', parentId: parentId || null, pending: true } });
 
 export const beginDrag = sourceId => ({ type: SET_SUBJECT_DRAGGING, sourceId });
 export const clearSubjectDragging = () => ({ type: SUBJECT_DRAGGING_OVER, sourceId: null, targetId: null });
