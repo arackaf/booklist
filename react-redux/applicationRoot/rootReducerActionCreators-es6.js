@@ -16,8 +16,26 @@ import {
 export const setDesktop = () => ({ type: SET_DESKTOP });
 export const setMobile = () => ({ type: SET_MOBILE });
 
-export const requestDesktop = () => ({ type: REQUEST_DESKTOP });
-export const requestMobile = () => ({ type: REQUEST_MOBILE });
+export const setDeviceOverride = view => {
+    try {
+        if (view == 'mobile') {
+            localStorage.removeItem('useDesktop');
+        } else {
+            localStorage.setItem('useDesktop', '1');
+        }
+    }catch(e){ }
+}
+
+export const requestDesktop = () => dispatch => {
+    setDeviceOverride('desktop');
+    dispatch({ type: REQUEST_DESKTOP });
+};
+export const requestMobile = () => dispatch => {
+    setDeviceOverride('mobile');
+    dispatch({ type: REQUEST_MOBILE });
+};
+export const setRequestDesktop = () => ({ type: REQUEST_DESKTOP });
+
 export const setModule = module => ({ type: SET_MODULE, module });
 export const setLoggedIn = () => ({ type: SET_LOGGED_IN });
 export const setPublicInfo = (name, booksHeader, _id) => ({ type: SET_PUBLIC_INFO, name, booksHeader, _id });
