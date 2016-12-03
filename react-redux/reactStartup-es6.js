@@ -3,13 +3,21 @@ import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
-import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo} from './applicationRoot/rootReducerActionCreators';
+import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
+
+try {
+    var desktopRequested = !!localStorage.getItem('useDesktop');
+} catch(x){ }
 
 if (window.screen.width < 700) {
     store.dispatch(setMobile());
 } else {
     store.dispatch(setDesktop());
+}
+
+if (desktopRequested){
+    store.dispatch(setRequestDesktop());
 }
 
 let currentModule;
