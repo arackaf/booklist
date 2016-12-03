@@ -4,11 +4,6 @@ import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo} from './applicationRoot/rootReducerActionCreators';
-import {
-    SET_PUBLIC_INFO,
-    RESET_PUBLIC_INFO
-} from 'applicationRoot/rootReducerActionNames';
-
 import 'util/ajaxUtil';
 
 if (window.screen.width < 700) {
