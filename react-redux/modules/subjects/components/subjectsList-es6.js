@@ -5,6 +5,7 @@ import {subjectChildMapSelector, topLevelSubjectsSortedSelector, getChildSubject
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
@@ -270,7 +271,8 @@ class SubjectList extends Component {
     }
 }
 
-@DragDropContext(HTML5Backend)
+//@DragDropContext(HTML5Backend)
+@DragDropContext(TouchBackend({ enableMouseEvents: true }))
 @connect(state => {
     return {
         topLevelSubjects: topLevelSubjectsSortedSelector(state),

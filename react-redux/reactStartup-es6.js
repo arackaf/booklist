@@ -6,6 +6,17 @@ import { createElement } from 'react';
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
 
+import 'a';
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('swRoot.js').then(() => {
+        console.log('registered');
+    }, err => console.log(err));
+}
+
+setTimeout(() => fetch('/react-redux/foo.css').then(r => console.log(r)), 1000);
+setInterval(() => fetch('/react-redux/foo.css').then(r => console.log(r)), 5000);
+
 try {
     var desktopRequested = !!localStorage.getItem('useDesktop');
 } catch(x){ }

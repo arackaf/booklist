@@ -91,6 +91,7 @@ app.use(passport.authenticate('remember-me'));
 
 var expressWs = require('express-ws')(app);
 
+app.use('/', express.static(__dirname + ''));
 app.use('/static/', express.static(__dirname + '/static/'));
 app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
 app.use('/react-redux/', express.static(__dirname + '/react-redux/'));
