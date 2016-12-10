@@ -1,10 +1,10 @@
 self.addEventListener('install', function(event) {
-    console.log('hello');
+    console.log('INSTALLED');
 });
 
 console.log('ADDING FETCH at root level');
 self.addEventListener('fetch', function(event) {
-    console.log('fetching ->', event.request);
+    //console.log('fetching ->', event.request);
     event.respondWith(
         caches.match(event.request)
             .then(function(response) {
@@ -15,6 +15,11 @@ self.addEventListener('fetch', function(event) {
                 return fetch(event.request);
             })
     );
+});
+
+
+self.addEventListener('activate', function(event) {
+    console.log('ACTIVATE');
 });
 
 // this.addEventListener('activate', function(event) {
