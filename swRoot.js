@@ -6,7 +6,8 @@ self.addEventListener('install', function(event) {
         caches.open('v1').then(function(cache) {
             return cache.addAll([
                 '/react-redux/node_modules/react/dist/react-with-addons.js',
-                '/react-redux/node_modules/react-dom/dist/react-dom.js'
+                '/react-redux/node_modules/react-dom/dist/react-dom.js',
+                '/react-redux/a.js'
             ]).then(function(){ console.log('cache filling success'); }).catch(function(){ console.log('cache filling failure') });
         })
     );
