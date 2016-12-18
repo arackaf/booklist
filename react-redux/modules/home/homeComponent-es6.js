@@ -10,7 +10,7 @@ import {
 import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 const MainHomePane = props =>
-    <div className="row">
+    <div className="row" style={{margin: 0}}>
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
         <div style={{ marginLeft: 10, marginRight: 10 }} className="col-md-10 col-lg-6">
             <div className="panel panel-default">
@@ -35,7 +35,6 @@ class HomeIfLoggedIn extends React.Component{
                     to either view your library, or scan some books in.
                     <br />
                     <br />
-
                 </MainHomePane>
             </div>
         )
