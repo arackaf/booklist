@@ -1,50 +1,52 @@
-import HashUtility, { SerializedHash } from 'util/hashManager';
-import { renderUI, clearUI } from 'applicationRoot/renderUI';
-import { store, getNewReducer } from 'applicationRoot/store';
-import { createElement } from 'react';
+//import HashUtility, { SerializedHash } from 'util/hashManager';
+//import { renderUI, clearUI } from 'applicationRoot/renderUI';
+//import { store, getNewReducer } from 'applicationRoot/store';
+//import { createElement } from 'react';
+//import 'react-dom';
 
-import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop} from './applicationRoot/rootReducerActionCreators';
-import 'util/ajaxUtil';
-
-import 'a';
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('swRoot.js').then(() => {
         console.log('registered');
+
+        System.import('react');
+        System.import('react-dom');
+        System.import('a').then(({ a }) => console.log('value from a', a));
+        System.import('b').then(({ b }) => console.log('value from b', b));
     }, err => console.log(err));
 }
 
-setTimeout(() => fetch('/react-redux/foo.css').then(r => console.log(r)), 1000);
-setInterval(() => fetch('/react-redux/foo.css').then(r => console.log(r)), 5000);
+//setTimeout(() => fetch('/react-redux/foo.css').then(r => console.log(r)), 1000);
+//setInterval(() => fetch('/react-redux/foo.css').then(r => console.log(r)), 5000);
 
-try {
-    var desktopRequested = !!localStorage.getItem('useDesktop');
-} catch(x){ }
+// try {
+//     var desktopRequested = !!localStorage.getItem('useDesktop');
+// } catch(x){ }
+//
+// if (window.screen.width < 700) {
+//     store.dispatch(setMobile());
+// } else {
+//     store.dispatch(setDesktop());
+// }
+//
+// if (desktopRequested){
+//     store.dispatch(setRequestDesktop());
+// }
 
-if (window.screen.width < 700) {
-    store.dispatch(setMobile());
-} else {
-    store.dispatch(setDesktop());
-}
+// let currentModule;
+// let currentModuleObject;
+// let publicUserCache = {};
 
-if (desktopRequested){
-    store.dispatch(setRequestDesktop());
-}
+// window.onhashchange = function () {
+//     loadCurrentModule();
+// };
 
-let currentModule;
-let currentModuleObject;
-let publicUserCache = {};
+// let initial = true;
+// const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects']);
+//
+// export const globalHashManager = new HashUtility();
 
-window.onhashchange = function () {
-    loadCurrentModule();
-};
-
-let initial = true;
-const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects']);
-
-export const globalHashManager = new HashUtility();
-
-loadCurrentModule();
+//loadCurrentModule();
 export function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
         originalModule = hash.split('/')[0] || '',
