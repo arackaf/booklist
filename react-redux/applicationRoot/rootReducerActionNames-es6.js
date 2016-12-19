@@ -15,3 +15,4 @@ export const LOAD_COLORS = 'root.LOAD_COLORS_SUBJECTS';
 
 export const SAVE_SUBJECT_RESULTS = 'root.SAVE_SUBJECT_RESULTS';
 export const SUBJECT_DELETED = 'root.SUBJECT_DELETED';
+export const SET_IS_TOUCH = 'root.SET_IS_TOUCH';

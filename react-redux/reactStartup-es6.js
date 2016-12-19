@@ -3,8 +3,12 @@ import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
-import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop} from './applicationRoot/rootReducerActionCreators';
+import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
+
+if ('ontouchstart' in window || 'onmsgesturechange' in window){
+    store.dispatch(setIsTouch(true));
+}
 
 try {
     var desktopRequested = !!localStorage.getItem('useDesktop');

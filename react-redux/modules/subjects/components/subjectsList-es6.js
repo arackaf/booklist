@@ -8,6 +8,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import TouchBackend from 'react-dnd-touch-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
+import { store } from 'applicationRoot/store';
 
 //@DragLayer(() => ({}))
 @connect((state, ownProps) => {
@@ -315,9 +316,9 @@ class SubjectList extends Component {
         return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay key={subject._id} noDrop={noDrop} subject={subject} />)}</ul>;
     }
 }
+let isTouch = store.getState().app.isTouch
 
-//@DragDropContext(HTML5Backend)
-@DragDropContext(TouchBackend({ enableMouseEvents: true }))
+@DragDropContext(isTouch ? TouchBackend : HTML5Backend)
 @connect(state => {
     return {
         topLevelSubjects: topLevelSubjectsSortedSelector(state),
@@ -336,7 +337,7 @@ export default class SubjectsComponent extends Component{
                 <br />
                 <br />
                 <SubjectList subjects={allSubjects} />
-                <SubjectDragLayer />
+                {isTouch ? <SubjectDragLayer /> : null}
             </div>
         )
     }
