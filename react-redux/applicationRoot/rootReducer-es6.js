@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect';
 
 import {
+    SET_IS_TOUCH,
     SET_PUBLIC_INFO,
     RESET_PUBLIC_INFO,
     SET_LOGGED_IN,
@@ -17,6 +18,7 @@ import {
 } from './rootReducerActionNames';
 
 const initialState = {
+    isTouch: false,
     publicUserId: '',
     publicName: '',
     publicBooksHeader: '',
@@ -37,6 +39,8 @@ export const objectsToHash = objs => objs.reduce((hash, o) => (hash[o._id] = o, 
 
 export default function rootReducer(state = initialState, action){
     switch(action.type){
+        case SET_IS_TOUCH:
+            return {...state, isTouch: action.value}
         case SET_PUBLIC_INFO:
             return { ...state, isPublic: true, publicName: action.name, publicBooksHeader: action.booksHeader, publicUserId: action._id };
         case RESET_PUBLIC_INFO:

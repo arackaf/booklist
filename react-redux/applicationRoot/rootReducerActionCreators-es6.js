@@ -1,4 +1,5 @@
 import {
+    SET_IS_TOUCH,
     SET_DESKTOP,
     SET_MOBILE,
     REQUEST_DESKTOP,
@@ -61,3 +62,5 @@ export const subjectEditingActions = {
         return ajaxUtil.post('/subject/delete', {_id: _id + ''}, resp => dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id }));
     }
 };
+
+export const setIsTouch = value => ({ type: SET_IS_TOUCH, value })
