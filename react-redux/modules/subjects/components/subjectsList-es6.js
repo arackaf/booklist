@@ -5,8 +5,54 @@ import {subjectChildMapSelector, topLevelSubjectsSortedSelector, getChildSubject
 import * as actionCreators from 'modules/subjects/reducers/actionCreators';
 import {DragSource, DragDropContext, DropTarget, DragLayer} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
+
+//@DragLayer(() => ({}))
+@connect((state, ownProps) => {
+    return {
+        currentlyDragging: state.subjectsModule.draggingId
+    }
+})
+@DragLayer((monitor, x) => {
+    return {
+        item: monitor.getItem(),
+        itemType: monitor.getItemType(),
+        initialOffset: monitor.getInitialClientOffset(),
+        initialSourceOffset: monitor.getInitialSourceClientOffset(),
+        currentOffset: monitor.getSourceClientOffset(),
+        isDragging: monitor.isDragging(),
+        sourceId: monitor.getSourceId(),
+        isDraggingSource: monitor.getSourceId() ? monitor.isDraggingSource(monitor.getSourceId()) : null
+    }
+})
+class SubjectDragLayer extends Component {
+    render(){
+
+        let {isDragging, currentOffset, item, currentlyDragging} = this.props;
+        if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
+        let {x, y} = currentOffset;
+
+        const parentStyles = {
+            position: 'fixed',
+            pointerEvents: 'none',
+            zIndex: 100,
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%'
+        };
+        const itemTransform = `translate(${x}px, ${y}px)`;
+
+        return isDragging ?
+            <div style={parentStyles}>
+                <div style={{transform: itemTransform}}>
+                    <h3>{item.name}</h3>
+                </div>
+            </div>: null;
+    }
+}
 
 @connect((state, ownProps) => {
     return {
@@ -270,7 +316,8 @@ class SubjectList extends Component {
     }
 }
 
-@DragDropContext(HTML5Backend)
+//@DragDropContext(HTML5Backend)
+@DragDropContext(TouchBackend({ enableMouseEvents: true }))
 @connect(state => {
     return {
         topLevelSubjects: topLevelSubjectsSortedSelector(state),
@@ -289,6 +336,7 @@ export default class SubjectsComponent extends Component{
                 <br />
                 <br />
                 <SubjectList subjects={allSubjects} />
+                <SubjectDragLayer />
             </div>
         )
     }
