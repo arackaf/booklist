@@ -89,7 +89,7 @@ export function setSortOrder(sort, direction){
 
 export function booksActivated(searchProps){
     return function(dispatch, getState){
-        let nextSearchFilters = getNextFilters(searchProps),
+        let nextSearchFilters = getNextFilters(searchProps.parameters),
             state = getState(),
             booksState = state.booksModule.books,
             subjectsState = state.booksModule.subjects,
