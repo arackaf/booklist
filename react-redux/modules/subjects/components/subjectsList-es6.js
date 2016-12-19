@@ -10,7 +10,7 @@ import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapB
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 import { store } from 'applicationRoot/store';
 
-//@DragLayer(() => ({}))
+
 @connect((state, ownProps) => {
     return {
         currentlyDragging: state.subjectsModule.draggingId
@@ -19,18 +19,12 @@ import { store } from 'applicationRoot/store';
 @DragLayer((monitor, x) => {
     return {
         item: monitor.getItem(),
-        itemType: monitor.getItemType(),
-        initialOffset: monitor.getInitialClientOffset(),
-        initialSourceOffset: monitor.getInitialSourceClientOffset(),
         currentOffset: monitor.getSourceClientOffset(),
-        isDragging: monitor.isDragging(),
-        sourceId: monitor.getSourceId(),
-        isDraggingSource: monitor.getSourceId() ? monitor.isDraggingSource(monitor.getSourceId()) : null
+        isDragging: monitor.isDragging()
     }
 })
 class SubjectDragLayer extends Component {
     render(){
-
         let {isDragging, currentOffset, item, currentlyDragging} = this.props;
         if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
         let {x, y} = currentOffset;
