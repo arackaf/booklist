@@ -234,6 +234,13 @@ class EditingSubjectDisplay extends Component {
     componentDidMount(){
         this.inputEl.focus();
     }
+    subjectEditingKeyDown = evt => {
+        let key = evt.keyCode || evt.which;
+        if (key == 13){
+            let {subject, editingSubject, saveChanges} = this.props;
+            saveChanges(editingSubject, subject)
+        }
+    }
     render(){
         let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges, colors} = this.props,
             {_id, name} = subject,
@@ -243,7 +250,7 @@ class EditingSubjectDisplay extends Component {
         return (
             <div className={className}>
                 <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
-                    <input ref={el => this.inputEl = el} onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
+                    <input ref={el => this.inputEl = el} onKeyDown={this.subjectEditingKeyDown} onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
                     <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name || '<label preview>'}</div>
                     {subject.pending ? <br /> : null}
                     {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
