@@ -66,8 +66,8 @@ class BookViewListDesktop extends React.Component{
                                 <td>
                                     {book.title}
                                     <br />
-                                    { !this.props.viewingPublic ? <a onClick={() => this.props.editBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }
-                                    { !this.props.viewingPublic ? <a onClick={() => this.props.setPendingDeleteBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="margin-left fa fa-fw fa-trash show-on-hover-parent-td"></i></a> : null }
+                                    { !this.props.viewingPublic ? <a className="grid-hover-filter" onClick={() => this.props.editBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }
+                                    { !this.props.viewingPublic ? <a className="grid-hover-filter" onClick={() => this.props.setPendingDeleteBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="margin-left fa fa-fw fa-trash show-on-hover-parent-td"></i></a> : null }
                                     { book.pendingDelete ? <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => this.props.deleteBook(book)} className="margin-left btn btn-xs btn-danger">Confirm delete</AjaxButton> : null }
                                     { book.pendingDelete ? <button onClick={() => this.props.cancelPendingDeleteBook(book)} className="margin-left btn btn-xs btn-primary">Cancel</button> : null }
                                 </td>
