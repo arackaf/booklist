@@ -11,7 +11,12 @@ class ManualBookEntry extends Component {
         this.state = { bookEditing: null };
 
         this.syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
-        this.SyncedInput = props => <input onChange={this.syncStateFromInput(props.syncName)} value={this.state.bookEditing[props.syncName]} { ...props } />
+        this.SyncedInput = props =>
+            <input
+                onKeyDown={evt => (evt.keyCode || evt.which) == 13 && props.onEnter()}
+                onChange={this.syncStateFromInput(props.syncName)}
+                value={this.state.bookEditing[props.syncName]}
+                { ...props } />
 
         this.syncAuthor = index => evt => {
             let newAuthors = this.state.bookEditing.authors.concat();
@@ -92,20 +97,20 @@ class ManualBookEntry extends Component {
                         <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
                             <label>Title</label>
 
-                            <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" />
+                            <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => this.save(this.state.bookEditing)} />
                         </div>
                         <div className="row">
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>ISBN</label>
-                                    <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" />
+                                    <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => this.save(this.state.bookEditing)} />
                                 </div>
                             </div>
 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Pages</label>
-                                    <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" />
+                                    <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" onEnter={() => this.save(this.state.bookEditing)} />
                                 </div>
                             </div>
                         </div>
@@ -113,14 +118,14 @@ class ManualBookEntry extends Component {
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Publisher</label>
-                                    <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" />
+                                    <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => this.save(this.state.bookEditing)} />
                                 </div>
                             </div>
 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Published</label>
-                                    <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" />
+                                    <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => this.save(this.state.bookEditing)} />
                                 </div>
                             </div>
                         </div>
@@ -129,7 +134,12 @@ class ManualBookEntry extends Component {
                                 <div className="col-xs-4">
                                     <div className="form-group">
                                         <label>Author</label>
-                                        <input onChange={this.syncAuthor($index)} value={author} className="form-control" placeholder={`Author ${$index + 1}`} />
+                                        <input
+                                            onKeyDown={evt => (evt.keyCode || evt.which) == 13 && this.save(this.state.bookEditing)}
+                                            onChange={this.syncAuthor($index)}
+                                            value={author}
+                                            className="form-control"
+                                            placeholder={`Author ${$index + 1}`} />
                                     </div>
                                 </div>
                             )}
