@@ -208,9 +208,9 @@ class DefaultSubjectDisplay extends Component {
                     {mainIcon}&nbsp;
                     {name}
                     {' '}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
-                    {!isSubjectSaving ? <a className="show-on-hover-inline" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline inline-filter" onClick={() => addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
+                    {!isSubjectSaving ? <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectDelete(_id)} style={{color: 'red', marginLeft: '20px'}}><i className="fa fa-fw fa-trash"></i></a> : null}
                 </div>
             </div>
         );
