@@ -117,6 +117,12 @@ export function syncFiltersToHash(searchProps){
             state = getState(),
             searchState = state.booksModule.bookSearch,
             newIsDirty = isDirty(searchState, nextSearchFilters);
+        if (!nextSearchFilters.sort){
+            nextSearchFilters.sort = '_id';
+        }
+        if (!nextSearchFilters.sortDirection){
+            nextSearchFilters.sortDirection = '-1';
+        }
 
         if (newIsDirty){
             dispatch(setFilters(nextSearchFilters));
