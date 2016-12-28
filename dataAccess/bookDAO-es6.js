@@ -4,7 +4,6 @@ import DAO from './dao';
 import moment from 'moment';
 import path from 'path';
 import fs from 'fs';
-import AmazonSearch from '../amazonDataAccess/AmazonSearch';
 import AWS from 'aws-sdk';
 AWS.config.region = 'us-east-1';
 
@@ -28,6 +27,9 @@ class BookDAO extends DAO {
                 query.title = new RegExp(search, 'gi');
             }
             if (sort){
+                if (sort == 'title'){
+                    sort = 'titleLower';
+                }
                 sortObj = { [sort]: +sortDirection };
             }
             if (author){
@@ -66,8 +68,11 @@ class BookDAO extends DAO {
             //    ];
             //    delete query.subjects;
             //    delete query.title;
-            //}
-            return (await db.collection('books').find(query).sort(sortObj).skip(skip).limit(limit).toArray()).map(adjustForClient);
+            //}//
+            let allFields = ['_id', 'title', 'isbn', 'ean', 'pages', 'smallImage', 'mediumImage', 'publicationDate', 'editorialReviews', 'userId', 'subjects', 'authors', 'publisher', 'tags', 'isRead', 'author'],
+                project = Object.assign({}, allFields.reduce((hash, key) => (hash[key] = 1, hash), {}), { titleLower: { $toLower: '$title' } });
+
+            return (await db.collection('books').aggregate([{$match: query}, {$project: project}, {$sort: sortObj}, {$skip: skip}, {$limit: limit}]).toArray()).map(adjustForClient);
         } finally {
             super.dispose(db);
         }
