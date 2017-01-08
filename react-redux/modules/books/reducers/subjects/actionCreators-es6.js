@@ -16,19 +16,6 @@ import {
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
 
-export function loadSubjects(){
-    return function(dispatch, getState){
-        let publicUserId = getState().app.publicUserId;
-
-        dispatch({ type: LOAD_SUBJECTS });
-
-        Promise.resolve(ajaxUtil.get('/subject/all', { userId: publicUserId })).then(subjectsResp => {
-            dispatch({type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results});
-            dispatch({type: LOAD_COLORS, colors: subjectsResp.colors });
-        });
-    }
-}
-
 export const setSubjectSearchValue = value => ({ type: SET_SUBJECT_SEARCH_VALUE, value: value.target.value });
 export const editSubjects = () => ({ type: EDIT_SUBJECTS })
 export const setNewSubjectName = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'name', value });
