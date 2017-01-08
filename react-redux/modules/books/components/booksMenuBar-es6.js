@@ -25,45 +25,16 @@ const InputForPending = props => {
 }
 
 class BooksMenuBar extends React.Component {
-    constructor(props) {
-        super();
-
-        this.state = { subjectsMenuOpen: false, tagsMenuOpen: false };
-    }
     removeFilterSubject(_id){
         let isLastSubject = this.props.selectedSubjects.length === 1;
         this.props.removeFilterSubject(_id);
-
-        if (isLastSubject){
-            setTimeout(() => this.setState({ subjectsMenuOpen: false }), 1);
-        }
     }
     removeFilterTag(_id) {
         let isLastTag = this.props.selectedTags.length === 1;
         this.props.removeFilterTag(_id);
-
-        if (isLastTag) {
-            setTimeout(() => this.setState({ tagsMenuOpen: false }), 1);
-        }
     }
     closeFullFilterModal(){
         this.setState({ fullFiltersOpen: false });
-    }
-    subjectsDropdownToggle(newValue){
-        if (this._subjectsForceOpen){
-            this.setState({ subjectsMenuOpen: true });
-            this._subjectsForceOpen = false;
-        } else {
-            this.setState({ subjectsMenuOpen: newValue });
-        }
-    }
-    tagsDropdownToggle(newValue){
-        if (this._tagsForceOpen){
-            this.setState({ tagsMenuOpen: true });
-            this._tagsForceOpen = false;
-        } else {
-            this.setState({ tagsMenuOpen: newValue });
-        }
     }
     subjectMenuItemClickedThatShouldntCloseDropdown(){
         this._subjectsForceOpen = true;
@@ -144,7 +115,7 @@ class BooksMenuBar extends React.Component {
                     </NavBar.Form>
                     { selectedSubjectsCount ?
                         <NavBar.Nav>
-                            <NavBar.Dropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                            <NavBar.Dropdown ignoreContentClick={true} text={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                 { this.props.selectedSubjects.map(s =>
                                     <NavBar.Item onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
                                         <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
@@ -163,7 +134,7 @@ class BooksMenuBar extends React.Component {
 
                     { selectedTagsCount ?
                         <NavBar.Nav>
-                            <NavBar.Dropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
+                            <NavBar.Dropdown ignoreContentClick={true} text={selectedTagsHeader} id="sel-tags-dropdown">
                                 { this.props.selectedTags.map(t =>
                                     <NavBar.Item onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
                                         <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
