@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
-import {
-    Navbar,
-    Nav,
-    NavItem
-} from 'react-bootstrap';
+import {NavBar} from 'simple-react-bootstrap';
 
-import { goHome, globalHashManager } from 'reactStartup';
+import {goHome, globalHashManager} from 'reactStartup';
 
 @connect(state => state.app)
 export default class MainNavigationBar extends React.Component {
@@ -20,24 +16,22 @@ export default class MainNavigationBar extends React.Component {
             isLoginModule = module == 'authenticate';
 
         return (
-            <Navbar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }} fluid={true}>
-                <Navbar.Header>
-                    <Navbar.Brand>
+            <NavBar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0 }}>
+                <NavBar.Header>
+                    <NavBar.Brand>
                         <a onClick={goHome} style={{ cursor: 'pointer' }}>My Library</a>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    <Nav>
-                        {isLoggedIn || isPublic ? <NavItem disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavItem> : null}
-                        {isLoggedIn || isPublic ? <NavItem active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Books'}</NavItem> : null}
-                        {isLoggedIn || isPublic ? <NavItem disabled={isPublic} active={isSubjects} href={isSubjects ? undefined : '#subjects'}>{'Subjects'}</NavItem> : null}
-                        {isLoggedIn && isPublic ? <NavItem href="#books">View your collection</NavItem> : null}
-                        {isLoggedIn ? <NavItem onClick={this.logout}>Logout</NavItem> : null}
-                        {!isLoggedIn && !isLoginModule ? <NavItem href='#login'>Login</NavItem> : null}
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
+                    </NavBar.Brand>
+                    <NavBar.Toggle />
+                </NavBar.Header>
+                <NavBar.Nav>
+                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavBar.Item> : null}
+                    {isLoggedIn || isPublic ? <NavBar.Item active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Books'}</NavBar.Item> : null}
+                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isSubjects} href={isSubjects ? undefined : '#subjects'}>{'Subjects'}</NavBar.Item> : null}
+                    {isLoggedIn && isPublic ? <NavBar.Item href="#books">View your collection</NavBar.Item> : null}
+                    {isLoggedIn ? <NavBar.Item onClick={this.logout}>Logout</NavBar.Item> : null}
+                    {!isLoggedIn && !isLoginModule ? <NavBar.Item href='#login'>Login</NavBar.Item> : null}
+                </NavBar.Nav>
+            </NavBar>
         );
     }
 }
