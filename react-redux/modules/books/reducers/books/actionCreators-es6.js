@@ -49,7 +49,7 @@ export function loadBooks(){
 }
 
 function booksSearch(bookSearchState, publicUserId){
-    return ajaxUtil.get('/book/searchBooks', {
+    return ajaxUtil.post('/book/searchBooks', {
         page: bookSearchState.page,
         pageSize: bookSearchState.pageSize,
         search: bookSearchState.search,

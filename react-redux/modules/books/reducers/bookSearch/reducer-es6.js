@@ -98,9 +98,9 @@ export const bookSearchSelector = state => {
     return Object.assign({},
         booksModule.bookSearch,
         {
-            selectedSubjects: projectSelectedItems(bookSearch.subjects, booksModule.subjects.subjectHash),
+            selectedSubjects: projectSelectedItems(bookSearch.subjects, app.subjectHash),
             selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
-            pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, booksModule.subjects.subjectHash),
+            pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, app.subjectHash),
             pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
             subjects: subjectsState.subjects,
             allSubjectsSorted: subjectsState.allSubjectsSorted,

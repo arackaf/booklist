@@ -11,7 +11,10 @@ window.ajaxUtil = {
                 body: JSON.stringify(data)
             })
             .then(resp => resp.json())
-            .then(callback)
+            .then(obj => {
+                callback(obj);
+                return obj;
+            })
             .catch(errorCallback);
     },
     postWithFiles(url, data, callback = () => null, errorCallback = () => null){
