@@ -72,15 +72,17 @@ class UserDAO extends DAO {
             if (!user){
                 return { invalid: true }
             }
-            if (!user.activated) {
-                await db.collection('users').update(
-                    {_id: user._id},
-                    {
-                        $set: {activated: true},
-                        $unset: {rememberMe: ''}
-                    }
-                )
+            if (user.activated){
+                return { alreadyActivated: true };
             }
+
+            await db.collection('users').update(
+                { _id: user._id },
+                {
+                    $set: { activated: true },
+                    $unset: { rememberMe: '' }
+                }
+            )
             return { success: true, rememberMe: user.rememberMe, username: user.email, _id: user._id, id: user._id, token: user.token };
         } catch(err){
             console.log('oops', err)

@@ -42,8 +42,6 @@ export class SerializedHash {
 
 
 export default class HashUtility {
-    constructor() {
-    }
     parseHashTag(hash) {
         if (hash.indexOf('#') > -1) {
             hash = hash.split("#")[1];

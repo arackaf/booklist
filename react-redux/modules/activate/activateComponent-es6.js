@@ -35,15 +35,24 @@ class ActivateIfLoggedIn extends React.Component{
     }
 }
 
-const ActivateIfNotLoggedIn = props => (
-    <div>
-        <MainActivatePane>
-            <div className="alert alert-danger">
-                Sorry - it looks like something went wrong. The activation link you clicked appears to be invalid.
-            </div>
-        </MainActivatePane>
-    </div>
-);
+const ActivateIfNotLoggedIn = props => {
+    let alreadyActivated = !!globalHashManager.getCurrentHashValueOf('alreadyActivated');
+    return (
+        <div>
+            <MainActivatePane>
+                {alreadyActivated ?
+                    <div className="alert alert-warning">
+                        This activation link has already been used.  Use the login link above to log back in.
+                    </div>
+                    :
+                    <div className="alert alert-danger">
+                        Sorry - it looks like something went wrong. The activation link you clicked appears to be invalid.
+                    </div>
+                }
+            </MainActivatePane>
+        </div>
+    );
+}
 
 export default props => (
     <div>
