@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-    Modal,
     Nav,
     Navbar,
     NavItem,
@@ -10,9 +9,11 @@ import {
     MenuItem
 } from 'react-bootstrap';
 
+import {Modal} from 'simple-react-bootstrap';
+
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
-import { bookSearchSelector } from 'modules/books/reducers/bookSearch/reducer';
+import {bookSearchSelector} from 'modules/books/reducers/bookSearch/reducer';
 
 import * as booksActionCreators from '../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
@@ -20,7 +21,7 @@ import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
 import * as tagsActionCreators from '../reducers/tags/actionCreators';
 import * as booksSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
-import { globalHashManager } from 'reactStartup';
+import {globalHashManager} from 'reactStartup';
 
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 import { RemovableLabelDisplay } from 'applicationRoot/components/labelDisplay';
@@ -185,11 +186,9 @@ class BooksMenuBar extends React.Component {
                     </Navbar.Collapse>
                 </Navbar>
 
-                <Modal show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
+                <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
                     <Modal.Header closeButton>
-                        <Modal.Title>
-                            Full search
-                        </Modal.Title>
+                        <h4 className="modal-title">Full search</h4>
                     </Modal.Header>
                     <Modal.Body>
                         <form>

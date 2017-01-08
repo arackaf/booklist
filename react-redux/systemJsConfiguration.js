@@ -22,6 +22,7 @@ var systemJsDevConfig = {
         'redux': 'node_modules/redux/dist/redux.js',
         'redux-thunk': 'node_modules/redux-thunk/lib/index.js',
         'reselect': 'node_modules/reselect/lib/index.js',
+        'simple-react-bootstrap': 'node_modules/simple-react-bootstrap/dist/simple-react-bootstrap.js',
         'jscolor': 'util/jscolor.js'
     },
     meta: {
