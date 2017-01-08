@@ -207,7 +207,6 @@ class BookDAO extends DAO {
         }
     }
     async setRead(_ids, isRead){
-        isRead = isRead.toLowerCase() == 'true'
         let db = await super.open();
         try{
             await db.collection('books').update(
