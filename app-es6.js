@@ -290,6 +290,9 @@ app.get('/react-redux/activate/:code', function(req, response){
     let userDao = new UserDao(),
         code = req.params.code;
 
+    response.clearCookie('remember_me');
+    req.logout();
+
     userDao.activateUser(code).then(result => {
         //console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
         if (result.success){
