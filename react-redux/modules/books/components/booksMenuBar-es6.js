@@ -1,15 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-    Nav,
-    Navbar,
-    NavItem,
-    NavDropdown,
     DropDownButton,
     MenuItem
 } from 'react-bootstrap';
 
-import {Modal} from 'simple-react-bootstrap';
+import {Modal, NavBar} from 'simple-react-bootstrap';
 
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
@@ -94,97 +90,94 @@ class BooksMenuBar extends React.Component {
 
         return (
             <div>
-                <Navbar style={{ border: 0, borderRadius: 0 }} fluid={true}>
-                    <Navbar.Header>
-                        <Navbar.Brand>
+                <NavBar style={{ border: 0, borderRadius: 0 }}>
+                    <NavBar.Header>
+                        <NavBar.Brand>
                             <a style={{ cursor: 'default' }}>Your books</a>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav>
-                            <NavItem onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavItem>
-                            <NavItem onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavItem>
+                        </NavBar.Brand>
+                        <NavBar.Toggle />
+                    </NavBar.Header>
+                    <NavBar.Nav>
+                        <NavBar.Item onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavBar.Item>
+                        <NavBar.Item onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavBar.Item>
 
-                            <NavDropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} title={'Edit selected books'} style={{ marginRight: '5px' }}>
-                                <NavItem onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavItem>
-                                <NavItem onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavItem>
-                                <NavItem onClick={this.props.setSelectedRead}>Set all read</NavItem>
-                                <NavItem onClick={this.props.setSelectedUnRead}>Set all un-read</NavItem>
-                            </NavDropdown>
+                        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Edit selected books' style={{ marginRight: '5px' }}>
+                            <NavBar.Item onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavBar.Item>
+                            <NavBar.Item onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavBar.Item>
+                            <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
+                            <NavBar.Item onClick={this.props.setSelectedUnRead}>Set all un-read</NavBar.Item>
+                        </NavBar.Dropdown>
+                    </NavBar.Nav>
+                    <NavBar.Header>
+                        <NavBar.Brand>
+                            <a style={{ cursor: 'default' }}>Filters</a>
+                        </NavBar.Brand>
+                    </NavBar.Header>
+                    <NavBar.Form className="navbar-left">
+                        <div className="form-group" style={{ marginRight: '5px' }}>
+                            {this.props.showingMobile ?
+                                <div>
+                                    <BootstrapButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapButton>
 
-                        </Nav>
-                        <Navbar.Header>
-                            <Navbar.Brand>
-                                <a style={{ cursor: 'default' }}>Filters</a>
-                            </Navbar.Brand>
-                        </Navbar.Header>
-                        <Navbar.Form pullLeft>
-                            <div className="form-group" style={{ marginRight: '5px' }}>
-                                {this.props.showingMobile ?
-                                    <div>
-                                        <BootstrapButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapButton>
+                                    <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
 
-                                        <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
+                                    <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
+                                        <option value="title|asc">Title A-Z</option>
+                                        <option value="title|desc">Title Z-A</option>
+                                        <option value="pages|asc">Pages, Low</option>
+                                        <option value="pages|desc">Pages, High</option>
+                                        <option value="_id|asc">Created, Earliest</option>
+                                        <option value="_id|desc">Created, Latest</option>
+                                    </select>
+                                </div>
+                                : <div className="input-group">
+                                    <span className="input-group-btn">
+                                        <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapButton>
+                                    </span>
+                                    <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
+                                </div> }
+                        </div>
 
-                                        <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
-                                            <option value="title|asc">Title A-Z</option>
-                                            <option value="title|desc">Title Z-A</option>
-                                            <option value="pages|asc">Pages, Low</option>
-                                            <option value="pages|desc">Pages, High</option>
-                                            <option value="_id|asc">Created, Earliest</option>
-                                            <option value="_id|desc">Created, Latest</option>
-                                        </select>
-                                    </div>
-                                    : <div className="input-group">
-                                        <span className="input-group-btn">
-                                            <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapButton>
-                                        </span>
-                                        <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
-                                    </div> }
-                            </div>
-
-                            {this.props.showingDesktop ?
-                                <div className="btn-group" role="group">
-                                    <button type="button" onClick={this.props.setViewDesktop} className={'btn btn-default ' + (this.props.isGridView ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
-                                    <button type="button" onClick={this.props.setViewBasicList} className={'btn btn-default ' + (this.props.isBasicList ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
-                                    { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
-                                </div> : null
-                            }
-
-                        </Navbar.Form>
-                        { selectedSubjectsCount ?
-                            <Nav>
-                                <NavDropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
-                                    { this.props.selectedSubjects.map(s =>
-                                        <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
-                                            <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
-                                        </MenuItem>)
-                                    }
-
-                                    { !!this.props.searchChildSubjects ? <MenuItem divider /> : null }
-                                    { !!this.props.searchChildSubjects ?
-                                        <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
-                                            <span className="label label-primary">Searching child subjects</span>
-                                        </MenuItem> : null
-                                    }
-                                </NavDropdown>
-                            </Nav> : null
+                        {this.props.showingDesktop ?
+                            <div className="btn-group" role="group">
+                                <button type="button" onClick={this.props.setViewDesktop} className={'btn btn-default ' + (this.props.isGridView ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
+                                <button type="button" onClick={this.props.setViewBasicList} className={'btn btn-default ' + (this.props.isBasicList ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
+                                { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
+                            </div> : null
                         }
 
-                        { selectedTagsCount ?
-                            <Nav>
-                                <NavDropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
-                                    { this.props.selectedTags.map(t =>
-                                        <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
-                                            <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
-                                        </MenuItem>)
-                                    }
-                                </NavDropdown>
-                            </Nav> : null
-                        }
-                    </Navbar.Collapse>
-                </Navbar>
+                    </NavBar.Form>
+                    { selectedSubjectsCount ?
+                        <NavBar.Nav>
+                            <NavBar.Dropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                                { this.props.selectedSubjects.map(s =>
+                                    <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
+                                        <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
+                                    </MenuItem>)
+                                }
+
+                                { !!this.props.searchChildSubjects ? <MenuItem divider /> : null }
+                                { !!this.props.searchChildSubjects ?
+                                    <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
+                                        <span className="label label-primary">Searching child subjects</span>
+                                    </MenuItem> : null
+                                }
+                            </NavBar.Dropdown>
+                        </NavBar.Nav> : null
+                    }
+
+                    { selectedTagsCount ?
+                        <NarBar.Nav>
+                            <NavBar.Dropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
+                                { this.props.selectedTags.map(t =>
+                                    <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
+                                        <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
+                                    </MenuItem>)
+                                }
+                            </NavBar.Dropdown>
+                        </NarBar.Nav> : null
+                    }
+                </NavBar>
 
                 <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
                     <Modal.Header closeButton>
