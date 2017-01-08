@@ -1,12 +1,5 @@
 import { isLoggedIn, globalHashManager } from 'reactStartup';
-
-import {
-    Nav,
-    Navbar,
-    NavItem
-} from 'react-bootstrap';
-
-import MainNavigationBar from 'applicationRoot/components/mainNavigation';
+import React, {Component} from 'react';
 
 const MainActivatePane = props =>
     <div className="row">
@@ -24,7 +17,6 @@ const MainActivatePane = props =>
 class ActivateIfLoggedIn extends React.Component{
     constructor(){
         super();
-        this.state = {};
         this._timeoutToken = setTimeout(() => globalHashManager.overwriteToNewHash('#home'), 5000);
     }
     componentWillUnmount(){
@@ -33,7 +25,6 @@ class ActivateIfLoggedIn extends React.Component{
     render(){
         return (
             <div>
-                <MainNavigationBar></MainNavigationBar>
                 <MainActivatePane>
                     <div className="alert alert-success">
                         Your account is activated!  Redirecting you automatically, or use the menu above if you don't care to wait :-)
@@ -44,45 +35,18 @@ class ActivateIfLoggedIn extends React.Component{
     }
 }
 
-class ActivateIfNotLoggedIn extends React.Component{
-    render(){
-        return (
-            <div>
-                <Navbar fluid={true}>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <a style={{ cursor: 'default' }}>My Library</a>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav>
-                            <NavItem href='#login'>Login</NavItem>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
-                <MainActivatePane>
-                    <div className="alert alert-danger">
-                        Sorry - it looks like something went wrong. The activation link you clicked appears to be invalid.
-                    </div>
-                </MainActivatePane>
+const ActivateIfNotLoggedIn = props => (
+    <div>
+        <MainActivatePane>
+            <div className="alert alert-danger">
+                Sorry - it looks like something went wrong. The activation link you clicked appears to be invalid.
             </div>
-        )
-    }
-}
+        </MainActivatePane>
+    </div>
+);
 
-class Activate extends React.Component{
-    constructor(){
-        super();
-        this.state = { isLoggedIn: isLoggedIn() };
-    }
-    render(){
-        return (
-            <div>
-                { this.state.isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn /> }
-            </div>
-        );
-    }
-}
-
-export default Activate;
+export default props => (
+    <div>
+        { isLoggedIn() ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn /> }
+    </div>
+);
