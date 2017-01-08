@@ -7,7 +7,7 @@ import {
 
 import {Modal, NavBar} from 'simple-react-bootstrap';
 
-import BootstrapButton from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, {BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
 
 import {bookSearchSelector} from 'modules/books/reducers/bookSearch/reducer';
 
@@ -117,7 +117,7 @@ class BooksMenuBar extends React.Component {
                         <div className="form-group" style={{ marginRight: '5px' }}>
                             {this.props.showingMobile ?
                                 <div>
-                                    <BootstrapButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapButton>
+                                    <BootstrapAnchorButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapAnchorButton>
 
                                     <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
 
@@ -132,7 +132,7 @@ class BooksMenuBar extends React.Component {
                                 </div>
                                 : <div className="input-group">
                                     <span className="input-group-btn">
-                                        <BootstrapButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapButton>
+                                        <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapAnchorButton>
                                     </span>
                                     <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
                                 </div> }

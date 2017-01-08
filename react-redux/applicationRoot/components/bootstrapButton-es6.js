@@ -13,9 +13,10 @@ buttonTypes.forEach(t => {
 
 const cssFromPreset = props => (props.className || '') + ' btn ' + (cssPresets[props.preset] || props.css || '');
 
-const BootstrapButton = props => (
-    <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>{props.children}</button>)
-export default BootstrapButton;
+export default props => (
+    <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>{props.children}</button>
+)
+
 
 export const BootstrapAnchorButton = props => (
     <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>{props.children}</a>);
