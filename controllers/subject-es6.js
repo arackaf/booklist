@@ -2,7 +2,6 @@ import { httpPost, route, nonRoutable } from 'easy-express-controllers';
 import SubjectDAO from '../dataAccess/subjectDAO';
 
 class subjectController{
-    constructor(){}
     async all({ userId }){
 
         let subjectDao = new SubjectDAO(this.request.user ? this.request.user.id : null),
