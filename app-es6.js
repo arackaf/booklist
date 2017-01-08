@@ -303,7 +303,7 @@ app.get('/react-redux/activate/:code', function(req, response){
                 response.redirect('/react-redux/#activate');
             })
         } else {
-            response.redirect('/react-redux/#activate');
+            response.redirect(result.alreadyActivated ? '/react-redux/#activate/?alreadyActivated=true' : '/react-redux/#activate');
         }
 
     }, err => console.log(':(', err));
