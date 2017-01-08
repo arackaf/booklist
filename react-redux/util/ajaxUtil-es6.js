@@ -1,11 +1,16 @@
 window.ajaxUtil = {
     post(url, data, callback = () => null, errorCallback = () => null){
-        return $.ajax(url, {
+        return fetch(url, {
             method: 'post',
-            data: data,
-            success: callback,
-            error: errorCallback
-        });
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(resp => resp.json())
+          .then(obj => callback(obj))
+          .catch(err => errorCallback(err));
     },
     postWithFiles(url, data, callback = () => null, errorCallback = () => null){
         return $.ajax(url, {
