@@ -7,8 +7,6 @@ import {
     NavItem
 } from 'react-bootstrap';
 
-import MainNavigationBar from 'applicationRoot/components/mainNavigation';
-
 const MainHomePane = props =>
     <div className="row" style={{margin: 0}}>
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>

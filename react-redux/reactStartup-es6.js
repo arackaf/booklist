@@ -42,7 +42,7 @@ export function loadCurrentModule() {
     let hash = window.location.hash.replace('#', ''),
         originalModule = hash.split('/')[0] || '',
         module = (hash.split('/')[0] || 'home').toLowerCase(),
-        publicModule = module === 'view';
+        publicModule = module === 'view' || module == 'activate';
 
     let loggedIn = isLoggedIn();
 

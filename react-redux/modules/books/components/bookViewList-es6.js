@@ -4,7 +4,6 @@ import { connect} from 'react-redux';
 import GridView from './bookViewList-grid';
 import BasicListView from './bookViewList-basicList';
 
-import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 import BooksMenuBar from './booksMenuBar';
 import BookSubjectSetter from './bookSubjectSetter';
 import BookTagSetter from './bookTagSetter';
