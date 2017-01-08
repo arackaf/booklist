@@ -244,8 +244,13 @@ class EditingSubjectDisplay extends Component {
     render(){
         let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges, colors} = this.props,
             {_id, name} = subject,
-            textColors = ['#ffffff', '#000000'],
-            {validationError} = editingSubject;
+            textColors = ['#ffffff', '#000000'];
+
+        if (!editingSubject){
+            return null; //when saving, and moving parents, this connect causes an update from state change first, and this comes back null, since components
+                         //higher in the tree having updated yet for some reason.  Fix would be to have this component be "dumb" to avoid needing this fix
+        }
+        let {validationError} = editingSubject;
 
         return (
             <div className={className}>
