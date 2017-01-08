@@ -38,6 +38,7 @@ class bookController{
         await bookDao.update(book);
         this.send({ success: true });
     }
+    @httpPost
     async searchBooks(params){
         let bookDao = new BookDAO(this.request.user ? this.request.user.id : null),
             bookResults = await bookDao.searchBooks({ ...params });

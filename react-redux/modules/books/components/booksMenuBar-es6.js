@@ -1,10 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    DropDownButton,
-    MenuItem
-} from 'react-bootstrap';
-
 import {Modal, NavBar} from 'simple-react-bootstrap';
 
 import BootstrapButton, {BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
@@ -151,31 +146,31 @@ class BooksMenuBar extends React.Component {
                         <NavBar.Nav>
                             <NavBar.Dropdown open={this.state.subjectsMenuOpen} onToggle={val => this.subjectsDropdownToggle(val)} title={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                 { this.props.selectedSubjects.map(s =>
-                                    <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
+                                    <NavBar.Item onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
                                         <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
-                                    </MenuItem>)
+                                    </NavBar.Item>)
                                 }
 
-                                { !!this.props.searchChildSubjects ? <MenuItem divider /> : null }
+                                { !!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
                                 { !!this.props.searchChildSubjects ?
-                                    <MenuItem onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
+                                    <NavBar.Item onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
                                         <span className="label label-primary">Searching child subjects</span>
-                                    </MenuItem> : null
+                                    </NavBar.Item> : null
                                 }
                             </NavBar.Dropdown>
                         </NavBar.Nav> : null
                     }
 
                     { selectedTagsCount ?
-                        <NarBar.Nav>
+                        <NavBar.Nav>
                             <NavBar.Dropdown open={this.state.tagsMenuOpen} onToggle={val => this.tagsDropdownToggle(val)} title={selectedTagsHeader} id="sel-tags-dropdown">
                                 { this.props.selectedTags.map(t =>
-                                    <MenuItem onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
+                                    <NavBar.Item onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
                                         <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
-                                    </MenuItem>)
+                                    </NavBar.Item>)
                                 }
                             </NavBar.Dropdown>
-                        </NarBar.Nav> : null
+                        </NavBar.Nav> : null
                     }
                 </NavBar>
 
@@ -226,7 +221,7 @@ class BooksMenuBar extends React.Component {
                         <div className="row" style={{ position: 'relative' }}>
                             <div className="col-xs-3">
                                 <GenericLabelSelect
-                                    inputProps={{ placeholder: 'Tags', value: this.props.searchTagsValue, onChange: this.props.setSearchSubjectsValue }}
+                                    inputProps={{ placeholder: 'Tags', value: this.props.searchTagsValue, onChange: this.props.setSearchTagsValue }}
                                     suggestions={this.props.eligibleFilterTags}
                                     onSuggestionSelected={this.props.addPendingTag} />
                             </div>
