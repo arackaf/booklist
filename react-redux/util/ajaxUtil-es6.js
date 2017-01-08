@@ -17,12 +17,8 @@ window.ajaxUtil = {
             error: errorCallback
         });
     },
-    ['get'](url, data, callback = () => null, errorCallback = () => null){
-        return $.ajax(url, {
-            method: 'get',
-            data: data,
-            success: callback,
-            error: errorCallback
-        });
+    ['get'](url, data){
+        let queryString = Object.keys(data).map(p => `${p}=${data[p]}`).join('&');
+        return fetch(`${url}?${queryString}`, { method: 'get', credentials: 'include' }).then(resp => resp.json())
     }
 };
