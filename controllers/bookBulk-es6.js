@@ -1,11 +1,10 @@
-import { httpPost, route, nonRoutable } from 'easy-express-controllers';
-import AmazonSearch from '../amazonDataAccess/AmazonSearch.js';
+import { httpPost, route, nonRoutable, controller } from 'easy-express-controllers';
 import { amazonOperationQueue } from '../amazonDataAccess/amazonOperationQueue';
 import BookDAO from '../dataAccess/bookDAO';
 
+@controller({ defaultVerb: 'post' })
 class bookController{
     constructor(){}
-    @httpPost
     async setSubjects({ books, add, remove }){
         try {
             let bookDao = new BookDAO();
@@ -13,7 +12,6 @@ class bookController{
             this.send({success: true});
         } catch(errr){ console.log(errr); }
     }
-    @httpPost
     async setTags({ books, add, remove }){
         try {
             let bookDao = new BookDAO();

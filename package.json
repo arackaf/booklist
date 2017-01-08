@@ -19,7 +19,7 @@
     "blueimp-md5": "2.3.0",
     "body-parser": "1.13.2",
     "cookie-parser": "1.4.0",
-    "easy-express-controllers": "0.2.0",
+    "easy-express-controllers": "0.2.1",
     "es6-symbol": "2.0.1",
     "exif-parser": "0.1.9",
     "express": "4.x",
