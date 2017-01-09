@@ -124,6 +124,7 @@ class SubjectDisplay extends Component {
         {_id} = subject,
         dropCandidateSubject = currentDropCandidateId == _id ? draggingSubject : null,
         subjectsSaving = state.subjectsModule.subjectsSaving,
+        subjectsSaved = state.subjectsModule.subjectsSaved,
         {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(state);
 
     return {
@@ -131,6 +132,7 @@ class SubjectDisplay extends Component {
         isPendingDelete: pendingDeleteHash[_id],
         isDeleting: deletingHash[_id],
         isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
+        isSubjectSaved: !!subjectsSaved[ownProps.subject._id],
         pendingChildren: pendingSubjectsLookup[_id],
         childSubjects: childSubjectsMap[_id],
         dropCandidateSubject,
@@ -138,7 +140,6 @@ class SubjectDisplay extends Component {
         colors: state.app.colors
     }
 }, {...actionCreators})
-
 @DragSource('subject', {
     beginDrag: props => {
         props.beginDrag(props.subject._id);
@@ -166,6 +167,7 @@ class SubjectDisplayContent extends Component {
                 isEditingSubject,
                 dropCandidateSubject,
                 isSubjectSaving,
+                isSubjectSaved,
                 editingSubject,
                 colors
             } = this.props,
@@ -183,7 +185,7 @@ class SubjectDisplayContent extends Component {
                     {isEditingSubject ? <EditingSubjectDisplay className={classToPass} subject={subject} isSubjectSaving={isSubjectSaving} editingSubject={editingSubject} colors={colors} /> :
                         isDeleting ? <DeletingSubjectDisplay className={classToPass} name={subject.name} /> :
                             isPendingDelete ? <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} /> :
-                                <DefaultSubjectDisplay className={classToPass} subject={subject} connectDragSource={connectDragSource} connectDropTarget={connectDropTarget} noDrop={noDrop} />
+                                <DefaultSubjectDisplay className={classToPass} subject={subject} connectDragSource={connectDragSource} connectDropTarget={connectDropTarget} noDrop={noDrop} isSubjectSaving={isSubjectSaving} isSubjectSaved={isSubjectSaved} />
                     }
 
                     {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
@@ -193,15 +195,7 @@ class SubjectDisplayContent extends Component {
     }
 }
 
-@connect((state, ownProps) => {
-   let subjectsSaving = state.subjectsModule.subjectsSaving,
-       subjectsSaved = state.subjectsModule.subjectsSaved;
-
-   return {
-       isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
-       isSubjectSaved: !!subjectsSaved[ownProps.subject._id]
-   }
-}, {...actionCreators})
+@connect(null, {...actionCreators})
 class DefaultSubjectDisplay extends Component {
     render(){
         let {connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, beginSubjectEdit, addNewSubject, beginSubjectDelete, noDrop} = this.props,
