@@ -122,17 +122,23 @@ class SubjectDisplay extends Component {
         currentDropCandidateId = subjectsModule.currentDropCandidateId,
         subject = ownProps.subject,
         {_id} = subject,
-        dropCandidateSubject = currentDropCandidateId == _id ? draggingSubject : null;
+        dropCandidateSubject = currentDropCandidateId == _id ? draggingSubject : null,
+        subjectsSaving = state.subjectsModule.subjectsSaving,
+        {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(state);
 
     return {
         isEditingSubject: !!editingSubjectsHash[_id],
-        pendingChildren: pendingSubjectsLookup[_id],
         isPendingDelete: pendingDeleteHash[_id],
         isDeleting: deletingHash[_id],
+        isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
+        pendingChildren: pendingSubjectsLookup[_id],
         childSubjects: childSubjectsMap[_id],
-        dropCandidateSubject
+        dropCandidateSubject,
+        editingSubject: shapedEditingSubjectHash[ownProps.subject._id],
+        colors: state.app.colors
     }
 }, {...actionCreators})
+
 @DragSource('subject', {
     beginDrag: props => {
         props.beginDrag(props.subject._id);
@@ -158,7 +164,10 @@ class SubjectDisplayContent extends Component {
                 childSubjects = [],
                 pendingChildren = [],
                 isEditingSubject,
-                dropCandidateSubject
+                dropCandidateSubject,
+                isSubjectSaving,
+                editingSubject,
+                colors
             } = this.props,
             effectiveChildren = pendingChildren.concat(childSubjects),
             deleteMessage = childSubjects.length ? 'Confirm - child subjects will also be deleted' : 'Confirm Delete';
@@ -171,7 +180,7 @@ class SubjectDisplayContent extends Component {
         return (
             connectDragPreview(
                 <div>
-                    {isEditingSubject ? <EditingSubjectDisplay className={classToPass} subject={subject} /> :
+                    {isEditingSubject ? <EditingSubjectDisplay className={classToPass} subject={subject} isSubjectSaving={isSubjectSaving} editingSubject={editingSubject} colors={colors} /> :
                         isDeleting ? <DeletingSubjectDisplay className={classToPass} name={subject.name} /> :
                             isPendingDelete ? <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} /> :
                                 <DefaultSubjectDisplay className={classToPass} subject={subject} connectDragSource={connectDragSource} connectDropTarget={connectDropTarget} noDrop={noDrop} />
@@ -217,17 +226,7 @@ class DefaultSubjectDisplay extends Component {
     }
 }
 
-@connect((state, ownProps) => {
-    let subjectsSaving = state.subjectsModule.subjectsSaving,
-        {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(state),
-        colors = state.app.colors;
-
-    return {
-        isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
-        editingSubject: shapedEditingSubjectHash[ownProps.subject._id],
-        colors
-    }
-}, {...actionCreators})
+@connect(null, {...actionCreators})
 class EditingSubjectDisplay extends Component {
     componentDidMount(){
         this.inputEl.focus();
@@ -243,11 +242,6 @@ class EditingSubjectDisplay extends Component {
         let {setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges, colors} = this.props,
             {_id, name} = subject,
             textColors = ['#ffffff', '#000000'];
-
-        if (!editingSubject){
-            return null; //when saving, and moving parents, this connect causes an update from state change first, and this comes back null, since components
-                         //higher in the tree having updated yet for some reason.  Fix would be to have this component be "dumb" to avoid needing this fix
-        }
         let {validationError} = editingSubject;
 
         return (
