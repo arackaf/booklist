@@ -219,8 +219,6 @@ class DefaultSubjectDisplay extends Component {
 
 @connect((state, ownProps) => {
     let subjectsSaving = state.subjectsModule.subjectsSaving,
-        subjectHash = state.app.subjectHash,
-        editingSubjectsHash = state.subjectsModule.editingSubjectsHash,
         {editingSubjectsHash: shapedEditingSubjectHash} = editingSubjectHashSelector(state),
         colors = state.app.colors;
 
