@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Modal } from 'react-bootstrap';
+import { Modal } from 'simple-react-bootstrap';
 
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
@@ -40,11 +40,10 @@ const subjectEditModal = props => {
     let textColors = ['#ffffff', '#000000'];
 
     return (
-        <Modal show={props.editModalOpen} onHide={props.stopEditingSubjects}>
+        <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditingSubjects}>
             <Modal.Header closeButton>
-                <Modal.Title>
-                    Edit subjects
-                </Modal.Title>
+                <button type="button" className="close" onClick={props.stopEditingSubjects} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title">Full search</h4>
             </Modal.Header>
             <Modal.Body style={{ paddingBottom: 0 }}>
                 <div className="visible-xs">
