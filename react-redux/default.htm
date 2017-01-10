@@ -174,13 +174,18 @@
         function loadSystemJs() {
             var config = isDev ? systemJsDevConfig : systemJsLiveConfig;
             if (!isDev){
-                config.map['dist-bundles'] = isEs6 ? 'dist-es6' : 'dist-es5';
+                config.map['dist-bundles'] = 'dist-es5';
                 config.bundles = gBundlePathsTranspiled;
             }
             config.baseURL = '/react-redux'
 
             System.config(config);
-            System.import('reactStartup');
+            if (typeof fetch == 'undefined'){
+                System.import('fetch').then(() => System.import('reactStartup'));
+            } else {
+                System.import('reactStartup');
+            }
+
         }
     </script>
 
