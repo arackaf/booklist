@@ -1,12 +1,6 @@
 import React from 'react';
 import { isLoggedIn, goHome } from 'reactStartup';
 
-import {
-    Nav,
-    Navbar,
-    NavItem
-} from 'react-bootstrap';
-
 const MainHomePane = props =>
     <div className="row" style={{margin: 0}}>
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>

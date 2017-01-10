@@ -2,12 +2,6 @@ import React from 'react';
 import { loadCurrentModule, goHome } from 'reactStartup';
 import { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 
-import {
-    Nav,
-    Navbar,
-    NavItem
-} from 'react-bootstrap';
-
 const errorCodes = {
     s1: 'This user already exists',
     c1: 'Passwords do not match',
