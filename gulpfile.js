@@ -34,7 +34,6 @@ var gulpTargets = [
 ].map(f => `./` + f + '/**/*-es6.js')
 
 gulpTargets = gulpTargets.concat(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*-es6.js'));
-gulpTargets = gulpTargets.concat(getDirectories('./react-mobx').map(f => './react-mobx/' + f + '/**/*-es6.js'));
 gulpTargets.push('./*-es6.js');
 gulpTargets.push('./react-redux/*-es6.js');
 
