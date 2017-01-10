@@ -47,6 +47,11 @@ const subjectEditModal = props => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ paddingBottom: 0 }}>
+                <div className="visible-xs">
+                    <BootstrapButton onClick={props.newSubject} preset="info-xs">Add new subject <i className="fa fa-fw fa-plus"></i></BootstrapButton>
+                    <br />
+                    <br />
+                </div>
                 <div className="row">
                     <div className="col-xs-11">
                         <GenericLabelSelect
@@ -57,7 +62,7 @@ const subjectEditModal = props => {
 
                     </div>
                     <div className="col-xs-1" style={{ padding: 0 }}>
-                        <BootstrapButton onClick={props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
+                        <BootstrapButton className="hidden-xs" onClick={props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
                     </div>
                 </div>
 
@@ -77,6 +82,7 @@ const subjectEditModal = props => {
                                     deleting={props.deleting}
                                     cancelDeleteSubject={props.cancelDeleteSubject}
                                     deleteSubject={props.deleteSubject} /> : null }
+
                                 <div className="row">
                                     <div className="col-xs-6">
                                         <div className="form-group">
