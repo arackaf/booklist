@@ -147,6 +147,7 @@ class BooksMenuBar extends React.Component {
 
                 <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
                     <Modal.Header closeButton>
+                        <button type="button" className="close" onClick={this.props.endFilterChanging} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 className="modal-title">Full search</h4>
                     </Modal.Header>
                     <Modal.Body>
