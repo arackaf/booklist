@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import Dropzone from 'react-dropzone';
 
-import { Modal } from 'react-bootstrap';
+import { Modal } from 'simple-react-bootstrap';
 
 class ManualBookEntry extends Component {
     constructor(){
@@ -85,11 +85,10 @@ class ManualBookEntry extends Component {
         //Modal eventually calls save method passed from above.
         //Parent component passes in a new book as needed to restart editing
         return (
-            <Modal show={!!this.props.isOpen} onHide={() => this.closeModal()}>
+            <Modal className="fade" show={!!this.props.isOpen} onHide={() => this.closeModal()}>
                 <Modal.Header closeButton>
-                    <Modal.Title>
-                        {this.props.title}
-                    </Modal.Title>
+                    <button type="button" className="close" onClick={() => this.closeModal()} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 className="modal-title">{this.props.title}</h4>
                 </Modal.Header>
                 <Modal.Body>
                     {this.state.bookEditing ?
