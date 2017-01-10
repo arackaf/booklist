@@ -35,6 +35,11 @@ const tagEditModal = props => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ paddingBottom: 0 }}>
+                <div className="visible-xs">
+                    <BootstrapButton onClick={props.newTag} preset="info-xs">Add new tag <i className="fa fa-fw fa-plus"></i></BootstrapButton>
+                    <br />
+                    <br />
+                </div>
                 <div className="row">
                     <div className="col-xs-11">
                         <GenericLabelSelect
@@ -43,7 +48,7 @@ const tagEditModal = props => {
                             onSuggestionSelected={item => props.editTag(item._id)} />
                     </div>
                     <div className="col-xs-1" style={{ padding: 0 }}>
-                        <BootstrapButton onClick={props.newTag} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
+                        <BootstrapButton className="hidden-xs" onClick={props.newTag} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
                     </div>
                 </div>
                 <br />
