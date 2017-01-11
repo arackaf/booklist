@@ -39,7 +39,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                         </li>
                     </ul>
                     <div className="tab-content">
-                        <div className={'tab-pane ' + (this.state.currentTab == 'subjects' ? 'active in' : '')}>
+                        <div style={{ minHeight: '150px' }} className={'tab-pane ' + (this.state.currentTab == 'subjects' ? 'active in' : '')}>
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
@@ -81,7 +81,7 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
                             <br style={{ clear: 'both' }} />
                         </div>
-                        <div className={'tab-pane ' + (this.state.currentTab == 'books' ? 'active in' : '')}>
+                        <div style={{ minHeight: '150px' }} className={'tab-pane ' + (this.state.currentTab == 'books' ? 'active in' : '')}>
                             <br />
                             <ul className="list-unstyled" style={{ marginLeft: '10px' }}>
                                 { this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>) }
