@@ -53,9 +53,11 @@ function createSingleBuild(distFolder, entry){
         baseURL: '../',
         ...liveConfig
     };
-    if (entry.exclude){
-        entry.exclude.forEach(item => config.meta[item] = { build: false });
+    if (!entry.exclude){
+        entry.exclude = ['react-collapse', 'react-motion', 'react-height', 'react-bootstrap'] // default excludes
     }
+    entry.exclude.forEach(item => config.meta[item] = { build: false });
+
     let builder = new Builder(config);
 
     let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
@@ -65,6 +67,7 @@ function createSingleBuild(distFolder, entry){
 }
 
 function checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs){
+    console.log('check for dupes');
     let bundleMap = new Map();
     let moduleEntries = Object.keys(buildOutputs).map(name => {
         let keyName = name.replace('../dist-es5', 'dist-bundles');

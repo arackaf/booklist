@@ -7,6 +7,9 @@ const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 
 import { Collapse } from 'react-bootstrap';
 
+import ReactCollapse from 'react-collapse';
+
+
 import * as bookEntryActionCreators from '../reducers/actionCreators';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
