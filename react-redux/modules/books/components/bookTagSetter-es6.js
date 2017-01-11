@@ -5,7 +5,6 @@ import { booksTagsModifierSelector } from '../reducers/booksTagModification/redu
 import * as bookTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
-import { Tabs, Tab } from 'react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 class BookTagSetterDesktopUnConnected extends React.Component {
