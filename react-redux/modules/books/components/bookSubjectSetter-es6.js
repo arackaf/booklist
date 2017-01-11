@@ -5,10 +5,10 @@ import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModificat
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
-import { Tabs, Tab } from 'react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
+    state = { currentTab: 'subjects' };
     setBooksSubjects(){
         this.props.setBooksSubjects(
             this.props.modifyingBooks.map(b => b._id),
@@ -30,8 +30,16 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
-                    <Tabs animation={false} defaultActiveKey={1}>
-                        <Tab eventKey={1} title="Choose subjects" style={{ minHeight: '150px' }}>
+                    <ul className="nav nav-tabs">
+                        <li className={this.state.currentTab == 'subjects' ? 'active' : ''}>
+                            <a onClick={() => this.setState({currentTab: 'subjects'})}>Choose subjects</a>
+                        </li>
+                        <li className={this.state.currentTab == 'books' ? 'active' : ''}>
+                            <a onClick={() => this.setState({currentTab: 'books'})}>For books</a>
+                        </li>
+                    </ul>
+                    <div className="tab-content">
+                        <div className={'tab-pane ' + (this.state.currentTab == 'subjects' ? 'active in' : '')}>
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
@@ -72,16 +80,15 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
                             <br />
                             <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
                             <br style={{ clear: 'both' }} />
-
-                        </Tab>
-                        <Tab eventKey={2} title="For books" style={{ minHeight: '150px' }}>
+                        </div>
+                        <div className={'tab-pane ' + (this.state.currentTab == 'books' ? 'active in' : '')}>
                             <br />
                             <ul className="list-unstyled" style={{ marginLeft: '10px' }}>
                                 { this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>) }
                             </ul>
                             <br />
-                        </Tab>
-                    </Tabs>
+                        </div>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton preset="primary" running={this.props.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
