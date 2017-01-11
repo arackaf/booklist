@@ -9,6 +9,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 class BookTagSetterDesktopUnConnected extends React.Component {
+    state = { currentTab: 'tags' };
     setBooksTags(){
         this.props.setBooksTags(
             this.props.modifyingBooks.map(b => b._id),
@@ -30,8 +31,16 @@ class BookTagSetterDesktopUnConnected extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
-                    <Tabs animation={false} defaultActiveKey={1}>
-                        <Tab eventKey={1} title="Choose tags" style={{ minHeight: '150px' }}>
+                    <ul className="nav nav-tabs">
+                        <li className={this.state.currentTab == 'tags' ? 'active' : ''}>
+                            <a onClick={() => this.setState({currentTab: 'tags'})}>Choose subjects</a>
+                        </li>
+                        <li className={this.state.currentTab == 'books' ? 'active' : ''}>
+                            <a onClick={() => this.setState({currentTab: 'books'})}>For books</a>
+                        </li>
+                    </ul>
+                    <div className="tab-content">
+                        <div style={{ minHeight: '150px' }} className={'tab-pane ' + (this.state.currentTab == 'tags' ? 'active in' : '')}>
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
@@ -72,16 +81,15 @@ class BookTagSetterDesktopUnConnected extends React.Component {
                             <br />
                             <BootstrapButton onClick={this.props.resetTags} className="pull-right" preset="default-xs">Reset tags</BootstrapButton>
                             <br />
-
-                        </Tab>
-                        <Tab eventKey={2} title="For books" style={{ minHeight: '150px' }}>
+                        </div>
+                        <div style={{ minHeight: '150px' }} className={'tab-pane ' + (this.state.currentTab == 'books' ? 'active in' : '')}>
                             <br />
                             <ul className="list-unstyled">
                                 { this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>) }
                             </ul>
                             <br />
-                        </Tab>
-                    </Tabs>
+                        </div>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <AjaxButton preset="primary" running={this.props.settingBooksTags} runningText='Setting' onClick={() => this.setBooksTags()}>Set</AjaxButton>
