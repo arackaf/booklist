@@ -5,10 +5,7 @@ import { connect } from 'react-redux';
 import { addons } from 'react';
 const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 
-import { Collapse } from 'react-bootstrap';
-
-import ReactCollapse from 'react-collapse';
-
+import Collapse from 'react-collapse';
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
@@ -69,7 +66,7 @@ class BookEntryList extends Component {
             <div>
                 <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
                     <div className="row">
-                        <div style={{ marginBottom: 30 }} className="col-md-6 col-md-push-6">
+                        <div className="col-md-6 col-md-push-6">
                             <div>
                                 { pending == null ? null :
                                     (pending
@@ -78,7 +75,7 @@ class BookEntryList extends Component {
                                 }
                             </div>
 
-                            <Collapse in={this.state.showIncomingQueue}>
+                            <Collapse isOpened={this.state.showIncomingQueue} springConfig={{stiffness: 280, damping: 26}}>
                                 <div>
                                     <div className="alert alert-info margin-top alert-slim">
                                         Your entered and failed books will show up here, fleetingly, though everything is being logged.
@@ -91,12 +88,13 @@ class BookEntryList extends Component {
                                             {this.props.booksJustSaved.map(book => <li style={{ color: book.success ? 'green' : 'red' }} key={book._id}>{book.title}</li>)}
                                         </ReactCSSTransitionGroup>
                                     </ul>
+                                    <br />
                                 </div>
                             </Collapse>
                         </div>
                         <div className="col-md-6 col-md-pull-6">
                             <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} <a className="btn btn-xs btn-primary" onClick={() => this.manuallyEnterBook()}>Manual entry</a></h4>
-                            <Collapse in={this.state.showScanInstructions}>
+                            <Collapse isOpened={this.state.showScanInstructions} springConfig={{stiffness: 280, damping: 26}} keepCollapsedContent={true}>
                                 <div>
                                     <div style={{ height: 10 }}></div>
                                     <div style={{ margin: 0 }} className="alert alert-info alert-slim">
