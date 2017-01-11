@@ -20,7 +20,9 @@ const sharedFilesToBuild = [
 let allSharedUtilities = sharedFilesToBuild.join(' + '),
     builds = [
         'scan', 'books', 'home', 'authenticate',
-        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react'] }
+        { module: 'react-autosuggest', path: 'react-autosuggest - react', saveTo: '../dist/react-autosuggest' },
+        { module: 'react-collapse', path: 'react-collapse - react', saveTo: '../dist/react-collapse' },
+        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' ) - react - react-autosuggest', saveTo: '../dist/reactStartup' }
     ];
 
 runBuild('dist-es5').then(buildOutputs => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs)).catch(err => console.log(err));
@@ -53,15 +55,11 @@ function createSingleBuild(distFolder, entry){
         baseURL: '../',
         ...liveConfig
     };
-    if (!entry.exclude){
-        entry.exclude = ['react-collapse', 'react-motion', 'react-height', 'simple-react-bootstrap'] // default excludes
-    }
-    entry.exclude.forEach(item => config.meta[item] = { build: false });
 
     let builder = new Builder(config);
 
     let adjustedEntry = Object.assign({}, entry, { saveTo: (entry.saveTo ? entry.saveTo.replace('/dist/', `/${distFolder}/`) :  `../${distFolder}/` + entry.module) + '-unminified.js' }),
-        whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - node_modules/* `;
+        whatToBuild = adjustedEntry.path || adjustedEntry.module + ` - ( ${allSharedUtilities} ) - react-collapse - react-autosuggest - node_modules/* `;
     return builder.bundle(whatToBuild, adjustedEntry.saveTo)
                   .then(results => Object.assign(adjustedEntry, { results }));
 }
