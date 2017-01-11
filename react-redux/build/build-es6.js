@@ -20,7 +20,7 @@ const sharedFilesToBuild = [
 let allSharedUtilities = sharedFilesToBuild.join(' + '),
     builds = [
         'scan', 'books', 'home', 'authenticate',
-        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react', 'react-bootstrap'] }
+        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react'] }
     ];
 
 runBuild('dist-es5').then(buildOutputs => checkBundlesForDupsAndCreateConfigForBrowser(buildOutputs)).catch(err => console.log(err));
@@ -54,7 +54,7 @@ function createSingleBuild(distFolder, entry){
         ...liveConfig
     };
     if (!entry.exclude){
-        entry.exclude = ['react-collapse', 'react-motion', 'react-height', 'react-bootstrap'] // default excludes
+        entry.exclude = ['react-collapse', 'react-motion', 'react-height', 'simple-react-bootstrap'] // default excludes
     }
     entry.exclude.forEach(item => config.meta[item] = { build: false });
 
