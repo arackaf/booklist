@@ -20,7 +20,7 @@ const sharedFilesToBuild = [
 let allSharedUtilities = sharedFilesToBuild.join(' + '),
     builds = [
         'scan', 'books', 'home', 'authenticate',
-        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react', 'react-bootstrap'] }
+        { module: 'reactStartup', path: '( reactStartup + ' + allSharedUtilities + ' )', saveTo: '../dist/reactStartup', exclude: ['react'] }
     ];
 
 Promise.all([
