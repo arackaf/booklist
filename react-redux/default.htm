@@ -168,6 +168,10 @@
     </div>
 
     <script>
+        function webSocketAddress(path){
+            return 'ws://' + window.location.host + (path || '');
+        }
+
         var isDev = /localhost:3000/.test(window.location.href);
         loadSystemJs();
 
