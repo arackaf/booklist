@@ -14,6 +14,7 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const lwip = require('lwip');
 const exif = require('exif-parser');
+const compression = require('compression');
 
 import bookEntryQueueManager from './app-helpers/bookEntryQueueManager';
 import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
@@ -79,6 +80,7 @@ passport.deserializeUser(function(id, done) {
     return done(undefined, { id: '' + id, _id: '' + id });
 });
 
+app.use(compression());
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
