@@ -4,7 +4,8 @@ import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstra
 import { booksTagsModifierSelector } from '../reducers/booksTagModification/reducer';
 import * as bookTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
-import { Modal, Tabs, Tab } from 'react-bootstrap';
+import { Modal } from 'simple-react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 class BookTagSetterDesktopUnConnected extends React.Component {
@@ -22,11 +23,10 @@ class BookTagSetterDesktopUnConnected extends React.Component {
             dontRemoveTag = this.props.removingTagSet.bind(null, false);
 
         return (
-            <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookTagModification}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        Edit tags:
-                    </Modal.Title>
+            <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookTagModification}>
+                <Modal.Header>
+                    <button type="button" className="close" onClick={this.props.cancelBookSubjectModification} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 className="modal-title">Edit tags:</h4>
                 </Modal.Header>
                 <Modal.Body>
 
