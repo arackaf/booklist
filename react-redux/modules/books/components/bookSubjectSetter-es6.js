@@ -4,7 +4,8 @@ import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstra
 import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModification/reducer';
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
-import { Modal, Tabs, Tab } from 'react-bootstrap';
+import { Modal } from 'simple-react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 class BookSubjectSetterDesktopUnConnected extends React.Component {
@@ -22,11 +23,10 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
             dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
 
         return (
-            <Modal show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
+            <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
                 <Modal.Header closeButton>
-                    <Modal.Title>
-                        Edit subjects:
-                    </Modal.Title>
+                    <button type="button" className="close" onClick={this.props.cancelBookSubjectModification} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 className="modal-title">Edit subjects:</h4>
                 </Modal.Header>
                 <Modal.Body>
 
