@@ -24,6 +24,13 @@ const InputForPending = props => {
     return <input { ...props } className={`form-control ${props.className || ''}`} onKeyDown={parentProps[actionName]} onChange={parentProps[actionName]} value={parentProps.pending[name]} />;
 }
 
+const RadioForPending = props => {
+    let {name, value, parentProps, ...rest} = props,
+        actionName = `setPending${name[0].toUpperCase()}${name.slice(1)}`;
+
+    return <input { ...rest } type="radio" className={`${props.className || ''}`} onClick={parentProps[actionName]} checked={parentProps.pending[name] === value} value={value} />;
+}
+
 class BooksMenuBar extends React.Component {
     removeFilterSubject(_id){
         let isLastSubject = this.props.selectedSubjects.length === 1;
@@ -185,6 +192,30 @@ class BooksMenuBar extends React.Component {
                                     <div className="form-group">
                                         <label>Author</label>
                                         <InputForPending name="author" parentProps={this.props} placeholder="Author" />
+                                    </div>
+                                </div>
+                                <div className="col-xs-6">
+                                    <div className="form-group">
+                                        <label>Is read?</label>
+                                        <br />
+                                        <div style={{display: 'inline'}} className="radio">
+                                            <label>
+                                                <RadioForPending name="isRead" parentProps={this.props} value={''} />
+                                                Either
+                                            </label>
+                                        </div>
+                                        <div style={{display: 'inline', marginLeft: '20px'}} className="radio">
+                                            <label>
+                                                <RadioForPending name="isRead" parentProps={this.props} value='1' />
+                                                Yes
+                                            </label>
+                                        </div>
+                                        <div style={{display: 'inline', marginLeft: '20px'}} className="radio">
+                                            <label>
+                                                <RadioForPending name="isRead" parentProps={this.props} value='0' />
+                                                No
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -72,7 +72,8 @@ export function applyFilters(){
             'author', pending.author,
             'publisher', pending.publisher,
             'pagesOperator', pending.pages != '' ? pending.pagesOperator : null,
-            'pages', pending.pages
+            'pages', pending.pages,
+            'isRead', pending.isRead
         );
         dispatch(endFilterChanging());
     }
@@ -212,6 +213,7 @@ export const setPendingAuthor = createPendingActionCreator('author');
 export const setPendingPublisher = createPendingActionCreator('publisher');
 export const setPendingPages = createPendingActionCreator('pages');
 export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
+export const setPendingIsRead = createPendingActionCreator('isRead');
 
 export function setViewingUserId(_id){
     return { type: SET_VIEWING_USERID, _id }

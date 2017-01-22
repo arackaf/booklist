@@ -12,7 +12,7 @@ class BookDAO extends DAO {
         super();
         this.userId = userId;
     }
-    async searchBooks({ search, subjects = [], page, pageSize, searchChildSubjects, tags = [], sort, sortDirection, author, publisher, pages, pagesOperator, userId }){
+    async searchBooks({ search, subjects = [], page, pageSize, searchChildSubjects, tags = [], sort, sortDirection, author, publisher, pages, pagesOperator, isRead, userId }){
         let db = await super.open(),
             userIdToUse = userId || this.userId;
 
@@ -22,6 +22,12 @@ class BookDAO extends DAO {
         try {
             let query = { userId: userIdToUse },
                 sortObj = { _id: -1 };
+
+            if (isRead === 1 || isRead === '1'){
+                query.isRead = true;
+            } else if (isRead === 0 || isRead === '0'){
+                query.isRead = { $ne: true };
+            }
 
             if (search){
                 query.title = new RegExp(search, 'gi');
