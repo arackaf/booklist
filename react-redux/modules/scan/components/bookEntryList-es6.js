@@ -94,7 +94,7 @@ class BookEntryList extends Component {
                         </div>
                         <div className="col-md-6 col-md-pull-6">
                             <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} <a className="btn btn-xs btn-primary" onClick={() => this.manuallyEnterBook()}>Manual entry</a></h4>
-                            <Collapse style={{ width: '80%' }} isOpened={this.state.showScanInstructions} springConfig={!this.state.showScanInstructions ? {stiffness: 280, damping: 26} : {stiffness: 120, damping: 14}} keepCollapsedContent={true}>
+                            <Collapse style={{ width: '80%' }} isOpened={this.state.showScanInstructions} springConfig={{stiffness: 280, damping: 26}} keepCollapsedContent={true}>
                                 <div>
                                     <div style={{ height: 10 }}></div>
                                     <div style={{ margin: 0 }} className="alert alert-info alert-slim">
@@ -105,7 +105,6 @@ class BookEntryList extends Component {
                                         of books with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else
                                         they may get overridden.
                                     </div>
-                                    <br />
                                 </div>
                             </Collapse>
                             <br />
