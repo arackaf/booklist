@@ -62,7 +62,8 @@ function booksSearch(bookSearchState, publicUserId){
         publisher: bookSearchState.publisher,
         pages: bookSearchState.pages,
         pagesOperator: bookSearchState.pagesOperator,
-        userId: publicUserId
+        userId: publicUserId,
+        isRead: bookSearchState.isRead
     });
 }
 

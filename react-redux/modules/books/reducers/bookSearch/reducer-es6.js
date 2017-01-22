@@ -30,7 +30,8 @@ const searchFields = {
     pages: '',
     pagesOperator: '>',
     page: 1,
-    pageSize: 50
+    pageSize: 50,
+    isRead: ''
 }
 
 const initialState = {
