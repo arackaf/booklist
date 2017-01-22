@@ -21,6 +21,7 @@ var systemJsDevConfig = {
     },
     meta: {
         jscolor: { format: 'global' },
+        'react-autosuggest': { format: 'cjs' },
         'react-collapse': { format: 'cjs' },
         'react-height': { format: 'cjs' },
         'react-motion': { format: 'cjs' },
@@ -50,6 +51,7 @@ var systemJsLiveConfig = {
     },
     meta: {
         jscolor: { format: 'global' },
+        'react-autosuggest': { format: 'cjs' },
         'react-collapse': { format: 'cjs' },
         'react-height': { format: 'cjs' },
         'react-motion': { format: 'cjs' },
