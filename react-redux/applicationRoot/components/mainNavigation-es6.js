@@ -20,8 +20,8 @@ export default class MainNavigationBar extends React.Component {
                 <NavBar.Header>
                     <NavBar.Brand>
                         <a className="navbar-brand" onClick={goHome} style={{ cursor: 'pointer' }}>
-                            <img height="32" width="32" style={{display: 'inline-block', 'vertical-align': 'top', 'margin-top': '-5px'}} src="static/main-icon2.png" />
-                            <span style={{display: 'inline-block', 'vertical-align': 'top', 'margin-left': '5px'}}>My Library</span>
+                            <img height="32" width="32" style={{display: 'inline-block',  marginTop: '-5px'}} src="static/main-icon2.png" />
+                            <span style={{display: 'inline-block', verticalAlign: 'top', marginLeft: '5px'}}>My Library</span>
                         </a>
                     </NavBar.Brand>
                     <NavBar.Toggle />
