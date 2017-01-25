@@ -116,8 +116,7 @@ export function syncFiltersToHash(searchProps){
     return function(dispatch, getState){
         let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
-            searchState = state.booksModule.bookSearch,
-            newIsDirty = isDirty(searchState, nextSearchFilters);
+            searchState = state.booksModule.bookSearch;
         if (!nextSearchFilters.sort){
             nextSearchFilters.sort = '_id';
         }
@@ -125,7 +124,7 @@ export function syncFiltersToHash(searchProps){
             nextSearchFilters.sortDirection = '-1';
         }
 
-        if (newIsDirty){
+        if (isDirty(searchState, nextSearchFilters)){
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
