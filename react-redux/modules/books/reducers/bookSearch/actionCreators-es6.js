@@ -153,7 +153,7 @@ function isDirty(oldState, newState){
         if (newState.pages !== '') return true;
     }
 
-    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
+    return !!['search', 'author', 'publisher', 'page', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
 }
 
 const itemsDifferent = (oldItems, newItems) =>
