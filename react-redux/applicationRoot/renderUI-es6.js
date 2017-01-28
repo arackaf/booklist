@@ -38,7 +38,9 @@ export function renderUI(component){
             <div>
                 <MobileMeta />
                 <MainNavigationBar />
-                { component }
+                <div style={{marginTop: 60}}>
+                    { component }
+                </div>
                 <WellUiSwitcher />
             </div>
         </Provider>,
