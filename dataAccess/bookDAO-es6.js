@@ -161,7 +161,12 @@ class BookDAO extends DAO {
             const validProperties = ['title', 'isbn', 'pages', 'publisher', 'publicationDate'];
 
             let $set = {};
-            validProperties.forEach(prop => $set[prop] = (book[prop] || '').substr(0, 500));
+            validProperties.forEach(prop => {
+                let val = book[prop] || '';
+                if (typeof val === 'string') {
+                    $set[prop] = val.substr(0, 500)
+                }
+            });
             $set.authors = (book.authors || []).filter(a => a).map(a => ('' + a).substr(0, 500));
 
             if (book.smallImage){
