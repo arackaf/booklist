@@ -41,7 +41,7 @@ class BookViewListDesktop extends React.Component{
                             {this.props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={this.props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
                         </div> : null }
                     <table className="table table-striped no-padding-top">
-                        <thead style={{position: 'sticky', top: 0, backgroundColor: 'white'}}>
+                        <thead>
                             <tr>
                                 <th><input type="checkbox" checked={this.props.allAreChecked} onClick={this.props.toggleCheckAll} /></th>
                                 <th></th>
