@@ -17,7 +17,7 @@ export default class MainNavigationBar extends React.Component {
 
         return (
             <NavBar data-root-menu style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0, position: 'fixed', top: 0, left: 0, right: 0 }}>
-            <NavBar.Header>
+                <NavBar.Header>
                     <NavBar.Brand>
                         <a className="navbar-brand" onClick={goHome} style={{ cursor: 'pointer' }}>
                             <img height="32" width="32" style={{display: 'inline-block',  marginTop: '-5px'}} src="static/main-icon2.png" />
