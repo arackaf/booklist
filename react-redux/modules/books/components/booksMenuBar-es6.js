@@ -33,11 +33,9 @@ const RadioForPending = props => {
 
 class BooksMenuBar extends React.Component {
     removeFilterSubject(_id){
-        let isLastSubject = this.props.selectedSubjects.length === 1;
         this.props.removeFilterSubject(_id);
     }
     removeFilterTag(_id) {
-        let isLastTag = this.props.selectedTags.length === 1;
         this.props.removeFilterTag(_id);
     }
     sortChanged(evt){
