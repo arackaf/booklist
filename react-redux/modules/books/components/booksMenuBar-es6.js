@@ -37,7 +37,7 @@ class BooksMenuBar extends React.Component {
             selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
         return (
-            <div style={{position: 'sticky', top: 50, zIndex: 9999}}>
+            <div style={{position: 'sticky', top: 50, zIndex: 499}}>
                 <NavBar style={{ border: 0, borderRadius: 0 }}>
                     <NavBar.Header>
                         <NavBar.Brand>
