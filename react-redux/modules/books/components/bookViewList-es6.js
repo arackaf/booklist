@@ -1,10 +1,11 @@
 import React from 'react';
-import { connect} from 'react-redux';
+import {connect} from 'react-redux';
 
 import GridView from './bookViewList-grid';
 import BasicListView from './bookViewList-basicList';
 
 import BooksMenuBar from './booksMenuBar';
+import BookSearchModal from './bookSearchModal';
 import BookSubjectSetter from './bookSubjectSetter';
 import BookTagSetter from './bookTagSetter';
 import SubjectEditModal from './subjectEditModal';
@@ -51,6 +52,7 @@ class BookViewingList extends React.Component {
                 <BookTagSetter />
                 <SubjectEditModal />
                 <TagEditModal />
+                <BookSearchModal />
 
                 <ManualBookEntry
                     title={editingBook ? `Edit ${editingBook.title}` : ''}
