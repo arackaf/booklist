@@ -285,3 +285,5 @@ react-redux/modules/subjects/reducers/reducer.js
 react-redux/modules/subjects/subjects.js
 react-redux/util/immutableHelpers.js
 react-redux/applicationRoot/components/colorsPalette.js
+react-redux/modules/books/components/bookSearchModal.js
+react-redux/modules/books/components/pendingInputs.js
