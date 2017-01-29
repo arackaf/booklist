@@ -40,15 +40,6 @@ class BooksMenuBar extends React.Component {
         let isLastTag = this.props.selectedTags.length === 1;
         this.props.removeFilterTag(_id);
     }
-    closeFullFilterModal(){
-        this.setState({ fullFiltersOpen: false });
-    }
-    subjectMenuItemClickedThatShouldntCloseDropdown(){
-        this._subjectsForceOpen = true;
-    }
-    tagMenuItemClickedThatShouldntCloseDropdown(){
-        this._tagsForceOpen = true;
-    }
     sortChanged(evt){
         let value = evt.target.value,
             [sort, direction] = value.split('|');
@@ -124,14 +115,14 @@ class BooksMenuBar extends React.Component {
                         <NavBar.Nav>
                             <NavBar.Dropdown ignoreContentClick={true} text={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                 { this.props.selectedSubjects.map(s =>
-                                    <NavBar.Item onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={s._id}>
+                                    <NavBar.Item className="default-cursor no-hover" key={s._id}>
                                         <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
                                     </NavBar.Item>)
                                 }
 
                                 { !!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
                                 { !!this.props.searchChildSubjects ?
-                                    <NavBar.Item onClick={() => this.subjectMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover">
+                                    <NavBar.Item className="default-cursor no-hover">
                                         <span className="label label-primary">Searching child subjects</span>
                                     </NavBar.Item> : null
                                 }
@@ -143,7 +134,7 @@ class BooksMenuBar extends React.Component {
                         <NavBar.Nav>
                             <NavBar.Dropdown ignoreContentClick={true} text={selectedTagsHeader} id="sel-tags-dropdown">
                                 { this.props.selectedTags.map(t =>
-                                    <NavBar.Item onClick={() => this.tagMenuItemClickedThatShouldntCloseDropdown()} className="default-cursor no-hover" key={t._id}>
+                                    <NavBar.Item className="default-cursor no-hover" key={t._id}>
                                         <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
                                     </NavBar.Item>)
                                 }
