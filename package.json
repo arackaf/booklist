@@ -37,8 +37,6 @@
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
     "regenerator": "0.8.36",
-    "simple-react-bootstrap": "^0.1.8",
-    "simple-react-bootstrap-navbar": "0.0.8-beta.5",
     "ws": "1.0.1"
   },
   "devDependencies": {
