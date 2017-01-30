@@ -10,17 +10,16 @@ import BookSubjectSetter from './bookSubjectSetter';
 import BookTagSetter from './bookTagSetter';
 import SubjectEditModal from './subjectEditModal';
 import TagEditModal from './tagEditModal';
-import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
-import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 
 import { selector } from '../reducers/reducer';
 import { globalHashManager } from 'reactStartup';
 
-class BookViewingList extends React.Component {
+@connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
+export default class BookViewingList extends React.Component {
     render() {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
@@ -68,6 +67,3 @@ class BookViewingList extends React.Component {
         );
     }
 }
-const BookViewingListConnected = connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })(BookViewingList);
-
-export default BookViewingListConnected;
