@@ -30,6 +30,11 @@ class BooksMenuBar extends React.Component {
 
         this.props.setSortOrder(sort, direction == 'asc' ? 1 : 0);
     }
+    componentDidUpdate(prevProps){
+        if (!prevProps.editingFilters && this.props.editingFilters){
+            this.navBar.close();
+        }
+    }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
             selectedTagsCount = this.props.selectedTags.length,
@@ -38,7 +43,7 @@ class BooksMenuBar extends React.Component {
 
         return (
             <div style={{position: 'sticky', top: 50, zIndex: 499}}>
-                <NavBar style={{ border: 0, borderRadius: 0 }}>
+                <NavBar ref={el => this.navBar = el} style={{ border: 0, borderRadius: 0 }}>
                     <NavBar.Header>
                         <NavBar.Brand>
                             <a style={{ cursor: 'default' }}>Your books</a>
