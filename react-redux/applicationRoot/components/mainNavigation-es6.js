@@ -8,6 +8,11 @@ import {goHome, globalHashManager} from 'reactStartup';
 @connect(state => state.app)
 export default class MainNavigationBar extends React.Component {
     logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
+    componentDidUpdate(prevProps){
+        if (prevProps.module != this.props.module){
+            this.el.close();
+        }
+    }
     render(){
         let { isPublic, publicBooksHeader, module, isLoggedIn }  = this.props,
             isBookEntry = module == 'scan',
@@ -16,7 +21,7 @@ export default class MainNavigationBar extends React.Component {
             isLoginModule = module == 'authenticate';
 
         return (
-            <NavBar style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0, position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500 }}>
+            <NavBar ref={el => this.el = el} style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0, position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500 }}>
                 <NavBar.Header>
                     <NavBar.Brand>
                         <a className="navbar-brand" onClick={goHome} style={{ cursor: 'pointer' }}>
