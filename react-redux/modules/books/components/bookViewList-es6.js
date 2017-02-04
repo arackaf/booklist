@@ -46,6 +46,8 @@ export default class BookViewingList extends React.Component {
                                 : null) : null }
                     </div>
                 </div>
+                <br />
+                <br />
 
                 <BookSubjectSetter />
                 <BookTagSetter />
