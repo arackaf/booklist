@@ -17,7 +17,7 @@ const initialState = {
     booksJustSaved: []
 };
 
-const MAX_BOOKS_DISPLAYED = 20;
+const MAX_BOOKS_DISPLAYED = 15;
 
 export default function reducer(state = initialState, action){
     switch(action.type) {

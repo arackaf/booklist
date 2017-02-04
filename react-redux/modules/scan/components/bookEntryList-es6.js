@@ -78,9 +78,8 @@ class BookEntryList extends Component {
                             <Collapse isOpened={this.state.showIncomingQueue} springConfig={{stiffness: 280, damping: 26}}>
                                 <div>
                                     <div className="alert alert-info margin-top alert-slim">
-                                        Your entered and failed books will show up here, fleetingly, though everything is being logged.
-                                        <br /><br />
-                                        Eventually there'll be a dedicated module to let you see what's been saved and what failed to be found, and of course saved books will show up in your books list.
+                                        Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a
+                                        dedicated place to see what's been saved, and what failed to be found.
                                     </div>
                                     
                                     <ul>
@@ -123,10 +122,7 @@ class BookEntryList extends Component {
                             <div className='row'>
                                 <div className='col-sm-8 form-horizontal'>
                                     <BootstrapButton className="pull-right" preset="primary" onClick={() => this.saveAll()}>Retrieve and save all</BootstrapButton>
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <BootstrapButton preset="default" className="pull-right" onClick={this.props.resetList}>Reset list</BootstrapButton>
+                                    <BootstrapButton preset="default" className="pull-left" onClick={this.props.resetList}>Reset list</BootstrapButton>
                                 </div>
                                 <div className='col-sm-4 pull-left'>
                                 </div>
