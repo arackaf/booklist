@@ -12,12 +12,9 @@ import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 
 import { selector } from '../reducers/reducer';
 
-class BookViewListDesktop extends React.Component{
-    constructor(props){
-        super();
-
-        this.state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
-    }
+@connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch, ...actionCreatorsBookTagModification })
+export default class BookViewListGrid extends React.Component{
+    state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     setSort(column){
         let currentSort = this.props.currentSort;
         let newDirection = 1;
@@ -115,6 +112,3 @@ class BookViewListDesktop extends React.Component{
         );
     }
 }
-
-const BookEntryListConnected = connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch, ...actionCreatorsBookTagModification })(BookViewListDesktop);
-export default BookEntryListConnected;

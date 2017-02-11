@@ -19,24 +19,19 @@ export const reducer = combineReducers({
 
 export const selector = state => {
     let booksSelected = booksSelector(state),
-        subjectsSelected = subjectsSelector(state),
         tagsSelected = tagsSelector(state),
         bookEdit = state.booksModule.bookEdit,
         bookSearch = bookSearchSelector(state),
         app = state.app;
 
     return {
-        subjects: subjectsSelected.list,
         subjectsLoaded: app.subjectsLoaded,
-        tags: tagsSelected.allTagsSorted,
         tagsLoaded: tagsSelected.loaded,
         books: booksSelected.list,
         isGridView: bookSearch.isGridView,
         isBasicList: bookSearch.isBasicList,
         hasMoreBooks: bookSearch.hasMore,
         currentPage: bookSearch.page,
-        reloadBooksOnActivate: booksSelected.reloadOnActivate,
-        initialBookQueryFired: booksSelected.initialQueryFired,
         viewingPublic: app.isPublic,
         allAreChecked: booksSelected.allAreChecked,
         selectedBooks: booksSelected.selectedBooks,
@@ -46,10 +41,6 @@ export const selector = state => {
         isEditingBook: bookEdit.isEditing,
         editingBook: bookEdit.editingBook,
         editingBookSaving: bookEdit.editingBookSaving,
-        editingBookSaved: bookEdit.editingBookSaved,
-        isDesktop: app.isDesktop,
-        isMobile: app.isMobile,
-        showingDesktop: app.isDesktop,
-        showingMobile: app.isMobile
+        editingBookSaved: bookEdit.editingBookSaved
     };
 };

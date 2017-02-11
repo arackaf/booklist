@@ -11,5 +11,5 @@ export const RadioForPending = props => {
     let {name, value, parentProps, ...rest} = props,
         actionName = `setPending${name[0].toUpperCase()}${name.slice(1)}`;
 
-    return <input { ...rest } type="radio" className={`${props.className || ''}`} onClick={parentProps[actionName]} checked={parentProps.pending[name] === value} value={value} />;
+    return <input { ...rest } type="radio" className={`${props.className || ''}`} onChange={parentProps[actionName]} checked={parentProps.pending[name] === value} value={value} />;
 }
