@@ -33,7 +33,7 @@ export default class BooksMenuBar extends React.Component {
     }
     componentDidUpdate(prevProps){
         if (!prevProps.booksLoading && this.props.booksLoading){
-            this.navBar.close();
+            this.navBar.closeIfOpen();
         }
     }
     render(){
