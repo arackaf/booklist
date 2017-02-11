@@ -7,7 +7,7 @@ import {requestDesktop, requestMobile} from './rootReducerActionCreators';
 import MainNavigationBar from 'applicationRoot/components/mainNavigation';
 
 const MobileMeta = connect(state => state.app, {})(app =>
-    <meta name="viewport" content={app.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=3.0; user-scalable=1;" : ''} />
+    <meta name="viewport" content={app.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ''} />
 );
 
 const WellUiSwitcher = connect(state => state.app, {requestDesktop, requestMobile})(props => {
