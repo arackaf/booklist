@@ -17,7 +17,8 @@ import {globalHashManager} from 'reactStartup';
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-class BooksMenuBar extends React.Component {
+@connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
+export default class BooksMenuBar extends React.Component {
     removeFilterSubject(_id){
         this.props.removeFilterSubject(_id);
     }
@@ -31,7 +32,7 @@ class BooksMenuBar extends React.Component {
         this.props.setSortOrder(sort, direction == 'asc' ? 1 : 0);
     }
     componentDidUpdate(prevProps){
-        if (!prevProps.editingFilters && this.props.editingFilters){
+        if (!prevProps.booksLoading && this.props.booksLoading){
             this.navBar.close();
         }
     }
@@ -135,7 +136,3 @@ class BooksMenuBar extends React.Component {
         )
     }
 }
-
-const BooksMenuBarConnected = connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })(BooksMenuBar);
-
-export default BooksMenuBarConnected;

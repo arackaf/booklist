@@ -112,6 +112,7 @@ export const bookSearchSelector = state => {
             bindableSortValue,
             isGridView,
             isBasicList,
-            ...app
+            ...app,
+            booksLoading: booksState.loading
         });
 }
