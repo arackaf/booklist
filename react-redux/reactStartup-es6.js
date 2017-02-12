@@ -6,6 +6,11 @@ import { createElement } from 'react';
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
 
+let x;
+//System.import(`./modules/books/${x}.js`);
+require.context("./modules/books", false, /.js$/)();
+
+
 if ('ontouchstart' in window || 'onmsgesturechange' in window){
     store.dispatch(setIsTouch(true));
 }
@@ -94,7 +99,7 @@ export function loadCurrentModule() {
     currentModule = module;
 
     Promise.all([
-        System.import(`/react-redux/modules/${module}/${module}`),
+        //System.import(`./modules/${module}/${module}`),
         publicUserPromise
     ]).then(([{ default: moduleObject }, publicUserInfo]) => {
         if (currentModule != module) return;

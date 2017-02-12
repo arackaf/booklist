@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <title>Book tracker</title>
 
-    <script type="text/javascript" src="/react-redux/system.js"></script>
-    <script type="text/javascript" src="/react-redux/systemJsConfiguration.js"></script>
-
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
 
@@ -171,25 +168,6 @@
             return 'ws://' + window.location.host + (path || '');
         }
 
-        var isDev = /localhost:3000/.test(window.location.href);
-        loadSystemJs();
-
-        function loadSystemJs() {
-            var config = isDev ? systemJsDevConfig : systemJsLiveConfig;
-            if (!isDev){
-                config.map['dist-bundles'] = 'dist-es5';
-                config.bundles = gBundlePathsTranspiled;
-            }
-            config.baseURL = '/react-redux'
-
-            System.config(config);
-            if (typeof fetch == 'undefined'){
-                System.import('fetch').then(() => System.import('reactStartup'));
-            } else {
-                System.import('reactStartup');
-            }
-
-        }
     </script>
 
 </body>
