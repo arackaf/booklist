@@ -6,11 +6,6 @@ import { createElement } from 'react';
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
 
-let x;
-//System.import(`./modules/books/${x}.js`);
-require.context("./modules/books", false, /.js$/)();
-
-
 if ('ontouchstart' in window || 'onmsgesturechange' in window){
     store.dispatch(setIsTouch(true));
 }
@@ -98,8 +93,19 @@ export function loadCurrentModule() {
     }
     currentModule = module;
 
+    let modulePromise = (() => {
+        switch(module.toLowerCase()){
+            case 'activate': return (System.import('./modules/activate/activate'));
+            case 'authenticate': return (System.import('./modules/authenticate/authenticate'));
+            case 'books': return (System.import('./modules/books/books'));
+            case 'home': return (System.import('./modules/home/home'));
+            case 'scan': return (System.import('./modules/scan/scan'));
+            case 'subjects': return (System.import('./modules/subjects/subjects'));
+        }
+    })();
+
     Promise.all([
-        //System.import(`./modules/${module}/${module}`),
+        modulePromise,
         publicUserPromise
     ]).then(([{ default: moduleObject }, publicUserInfo]) => {
         if (currentModule != module) return;
