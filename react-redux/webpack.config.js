@@ -47,6 +47,10 @@ module.exports = {
             },
         }),
 
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest'
+        }),        
+
         //*********************************** async chunks*************************
 
         //catch all - anything used in more than one place
