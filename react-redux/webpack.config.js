@@ -8,6 +8,7 @@ module.exports = {
     },
     output: {
         filename: '[name]-bundle.js',
+        chunkFilename: '[name]-chunk.js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: 'react-redux/dist/'
     },
@@ -50,7 +51,6 @@ module.exports = {
 
         //catch all - anything used in more than one place
         new webpack.optimize.CommonsChunkPlugin({
-            filename: 'used-twice.js',
             async: 'used-twice',
             minChunks(module, count) {
                 return count >= 2;
@@ -59,7 +59,6 @@ module.exports = {
 
         //specifically bundle these large things
         new webpack.optimize.CommonsChunkPlugin({
-            filename: 'react-dnd.js',
             async: 'react-dnd',
             minChunks(module, count) {
                 var context = module.context;
