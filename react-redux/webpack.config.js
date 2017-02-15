@@ -6,7 +6,8 @@ module.exports = {
     entry: './reactStartup.js',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: 'react-redux/dist/'
     },
     resolve: {
         alias: {
@@ -35,14 +36,14 @@ module.exports = {
             analyzerMode: 'static'
         }),
 
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'node-static',
-            filename: 'node-static.js',
-            minChunks(module, count) {
-                var context = module.context;
-                return context && context.indexOf('node_modules') >= 0;
-            },
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'node-static',
+        //     filename: 'node-static.js',
+        //     minChunks(module, count) {
+        //         var context = module.context;
+        //         return context && context.indexOf('node_modules') >= 0;
+        //     },
+        // }),
 
         //*********************************** async chunks*************************
 
