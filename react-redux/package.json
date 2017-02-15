@@ -50,6 +50,7 @@
     "babel-preset-react": "6.5.0",
     "babel-preset-stage-2": "6.5.0",
     "webpack": "2.2.1",
-    "webpack-bundle-analyzer": "2.2.3"
+    "webpack-bundle-analyzer": "2.2.3",
+    "webpack-dev-server": "2.3.0"
   }
 }
