@@ -66,7 +66,15 @@ module.exports = {
                 return context && context.indexOf('node_modules') >= 0 && targets.find(t => new RegExp('\\\\' + t + '\\\\', 'i').test(context));
             },
         }),
-    ]
+    ],
+    devServer: {
+        proxy: {
+            "/subject": "http://localhost:3000",
+            "/tag": "http://localhost:3000",
+            "/book": "http://localhost:3000",
+            "/static": "http://localhost:3000"
+        }
+    }
 };
 
 
