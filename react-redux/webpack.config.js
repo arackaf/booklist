@@ -2,6 +2,8 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 var path = require('path');
 var webpack = require('webpack');
 
+var isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
     entry: {
         main: './reactStartup.js'
@@ -35,9 +37,10 @@ module.exports = {
         ]
     },
     plugins: [
-        new BundleAnalyzerPlugin({
-            analyzerMode: 'static'
-        }),
+        (isProduction ? 
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'static'
+            }) : null),
 
         new webpack.optimize.CommonsChunkPlugin({
             name: 'node-static',
@@ -70,7 +73,7 @@ module.exports = {
                 return context && context.indexOf('node_modules') >= 0 && targets.find(t => new RegExp('\\\\' + t + '\\\\', 'i').test(context));
             },
         }),
-    ],
+    ].filter(p => p),
     devServer: {
         proxy: {
             "/subject": "http://localhost:3000",
