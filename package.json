@@ -10,7 +10,7 @@
   "scripts": {
     "postinstall": "cd react-redux && npm install && cd .. && npm run build",
     "build": "npm run react-redux-build",
-    "react-redux-build": "cd react-redux/build && node build",
+    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
     "start": "node ./app.js"
   },
   "dependencies": {
