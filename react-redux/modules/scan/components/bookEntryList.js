@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import BookEntryItem from './bookEntryItem';
 import { connect } from 'react-redux';
 
-import { addons } from 'react';
-const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Collapse from 'react-collapse';
 
