@@ -51,10 +51,10 @@ module.exports = {
             }) : null),
 
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'node-static',
+            name: 'react-build',
             minChunks(module, count) {
                 var context = module.context;
-                return context && context.indexOf('node_modules') >= 0;
+                return context && (context.indexOf('node_modules\\react\\') >= 0 || context.indexOf('node_modules\\react-dom\\') >= 0);
             },
         }),
 
