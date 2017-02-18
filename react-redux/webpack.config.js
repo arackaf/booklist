@@ -1,8 +1,7 @@
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var path = require('path');
 var webpack = require('webpack');
-
-var isProduction = process.env.NODE_ENV === 'production';
+var isProduction = process.env.NODE_ENV === 'production' || process.argv.slice(-1)[0] == '-p';
 
 module.exports = {
     entry: {
@@ -31,13 +30,14 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react', 'es2015']
+                    presets: ['react', 'es2015-rollup', 'stage-1', 'stage-2'],
+                    plugins: ['transform-decorators-legacy', 'external-helpers']
                 }
             }
         ]
     },
     plugins: [
-        (isProduction ? 
+        (!isProduction ? 
             new BundleAnalyzerPlugin({
                 analyzerMode: 'static'
             }) : null),
