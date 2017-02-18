@@ -15,7 +15,6 @@ module.exports = {
     },
     resolve: {
         alias: {
-            'simple-react-bootstrap': 'node_modules/simple-react-bootstrap/dist/simple-react-bootstrap.js',
             'jscolor': 'util/jscolor.js'
         },
         modules: [
@@ -28,6 +27,15 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['react', 'es2015-rollup', 'stage-1', 'stage-2'],
+                    plugins: ['transform-decorators-legacy', 'external-helpers']
+                }
+            },
+            {
+                test: /\.es6$/,
+                include: /simple-react-bootstrap/,
                 loader: 'babel-loader',
                 query: {
                     presets: ['react', 'es2015-rollup', 'stage-1', 'stage-2'],
