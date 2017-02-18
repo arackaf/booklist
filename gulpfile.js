@@ -16,7 +16,7 @@ require('regenerator/runtime');
 gulp.task('test', function () {
     global.Redux = require('Redux');
 
-    gulp.src('react-redux/tests/**/!(*-es6.js)') //we don't want es6 files - just the transpiled results
+    gulp.src('react-redux/tests/**/!(*.es6)') //we don't want es6 files - just the transpiled results
         .pipe(mocha());
 });
 
@@ -31,11 +31,11 @@ var gulpTargets = [
     'controllers',
     'dataAccess',
     'private'
-].map(f => `./` + f + '/**/*-es6.js')
+].map(f => `./` + f + '/**/*.es6')
 
-gulpTargets = gulpTargets.concat(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*-es6.js'));
-gulpTargets.push('./*-es6.js');
-gulpTargets.push('./react-redux/*-es6.js');
+gulpTargets = gulpTargets.concat(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*.es6'));
+gulpTargets.push('./*.es6');
+gulpTargets.push('./react-redux/*.es6');
 
 function getDirectories(srcpath) {
     return fs.readdirSync(srcpath).filter(cand => cand != 'node_modules' && cand != 'dist-es5' && fs.statSync(path.join(srcpath, cand)).isDirectory());
@@ -44,9 +44,7 @@ function getDirectories(srcpath) {
 gulp.task('transpile-all', function () {
     gulp.src(gulpTargets, { base: './' })
         .pipe(babel(babelOptions))
-        .pipe(rename(function (path) {
-            path.basename = path.basename.replace(/-es6$/, '');
-        }))
+        .pipe(rename({ extname: ".js" }))
         .pipe(gulp.dest(''))
         .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
 });
@@ -73,9 +71,7 @@ gulp.task('transpile-watch', function() {
                     }
                 }))
                 .pipe(babel(babelOptions))
-                .pipe(rename(function (path) {
-                    path.basename = path.basename.replace(/-es6$/, '');
-                }))
+                .pipe(rename({ extname: ".js" }))
                 .pipe(gulp.dest(''))
                 .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
         }
