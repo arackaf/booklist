@@ -8,7 +8,7 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
   "scripts": {
-    "deploy": "npm run build && modulus deploy",
+    "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
     "start": "node ./app.js"
