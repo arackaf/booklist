@@ -32,14 +32,7 @@ var gulpTargets = [
     'dataAccess',
     'private'
 ].map(f => `./` + f + '/**/*.es6')
-
-gulpTargets = gulpTargets.concat(getDirectories('./react-redux').map(f => './react-redux/' + f + '/**/*.es6'));
 gulpTargets.push('./*.es6');
-gulpTargets.push('./react-redux/*.es6');
-
-function getDirectories(srcpath) {
-    return fs.readdirSync(srcpath).filter(cand => cand != 'node_modules' && cand != 'dist-es5' && fs.statSync(path.join(srcpath, cand)).isDirectory());
-}
 
 gulp.task('transpile-all', function () {
     gulp.src(gulpTargets, { base: './' })
