@@ -1,7 +1,9 @@
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var path = require('path');
 var webpack = require('webpack');
-var isProduction = process.env.NODE_ENV === 'production' || process.argv.slice(-1)[0] == '-p';
+var noVisualization = process.env.NODE_ENV === 'production' 
+        || process.argv.slice(-1)[0] == '-p'
+        || process.argv.some(arg => arg.indexOf('webpack-dev-server') >= 0);
 
 module.exports = {
     entry: {
@@ -45,7 +47,7 @@ module.exports = {
         ]
     },
     plugins: [
-        (!isProduction ? 
+        (!noVisualization ? 
             new BundleAnalyzerPlugin({
                 analyzerMode: 'static'
             }) : null),
