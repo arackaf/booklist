@@ -36,7 +36,7 @@ export default class BookViewingList extends React.Component {
                             </div> : null }
 
                         {(!this.props.books.length && !this.props.booksLoading) ?
-                            <div className="alert alert-warning">
+                            <div className="alert alert-warning" style={{borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0}}>
                                 No books found
                             </div> : null }
 
