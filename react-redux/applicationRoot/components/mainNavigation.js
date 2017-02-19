@@ -10,7 +10,7 @@ export default class MainNavigationBar extends React.Component {
     logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     componentDidUpdate(prevProps){
         if (prevProps.module != this.props.module){
-            this.el.close();
+            this.el.closeIfOpen();
         }
     }
     render(){
