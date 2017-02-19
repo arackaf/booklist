@@ -22,7 +22,7 @@ class Login extends React.Component{
             rememberme = this.refs.rememberme.checked ? 1 : 0;
 
         this.setState({ running: true });
-        ajaxUtil.post('/react-redux/login', { username, password, rememberme }, loadCurrentModule, () => this.setState({ running: false, errorCode: 'c2' }));
+        ajaxUtil.post('/login', { username, password, rememberme }, loadCurrentModule, () => this.setState({ running: false, errorCode: 'c2' }));
     }
     createUser(evt){
         evt.preventDefault();
@@ -48,7 +48,7 @@ class Login extends React.Component{
         }
 
         this.setState({ running: true });
-        ajaxUtil.post('/react-redux/createUser', { username, password, rememberme }, resp => {
+        ajaxUtil.post('/createUser', { username, password, rememberme }, resp => {
             if (resp.errorCode){
                 this.setState({ errorCode: resp.errorCode, running: false });
             } else {
