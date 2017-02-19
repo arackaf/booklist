@@ -7,7 +7,9 @@
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
-  "scripts": {},
+  "scripts": {
+    "deploy": "cd .. && npm run deploy"
+  },
   "dependencies": {
     "react": "15.1.0",
     "react-addons-css-transition-group": "15.1.0",
