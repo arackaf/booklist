@@ -69,69 +69,73 @@ class Login extends React.Component{
                     <div className="panel panel-default">
                         <div className="panel-body">
                             { this.state.pendingActivation ?
-                            <div className="alert alert-success">
-                                Success!  Now check your email, please.  You should be receiving a link to activate your account.
-                                (Check your spam folder if it's not there)
-                            </div> :
-                            <form>
-                                <div className="form-group">
-                                    <label htmlFor="username">Email address</label>
-                                    <input className="form-control" ref="username" id="username"/>
-                                    { this.state.invalidEmail ?
-                                        <div className="alert alert-danger margin-top">
-                                        Invalid email
+                                <div className="alert alert-success">
+                                    Success!  Now check your email, please.  You should be receiving a link to activate your account.
+                                    (Check your spam folder if it's not there)
+                                </div> 
+                                :
+                                <form>
+                                    <div className="form-group">
+                                        <label htmlFor="username">Email address</label>
+                                        <input className="form-control" ref="username" id="username"/>
+
+                                        { this.state.newUser ? 
+                                            <div className="alert alert-info margin-top">
+                                                Your email address will never ever be sold, given away, etc. I will not send you
+                                                anything, ever.  I'm collecting it only so I have a place to send a password reset to.
+                                            </div> : null 
+                                        }
+
+                                        { this.state.invalidEmail ?
+                                            <div className="alert alert-danger margin-top">
+                                            Invalid email
+                                            </div> : null
+                                        }
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Password</label>
+                                        <input className="form-control" ref="password" id="password" type="password"/>
+                                    </div>
+
+                                    { this.state.newUser ?
+                                        <div className="form-group">
+                                            <label htmlFor="password">Confirm password</label>
+                                            <input className="form-control" ref="confirmPassword" type="password"/>
                                         </div> : null
                                     }
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="password">Password</label>
-                                    <input className="form-control" ref="password" id="password" type="password"/>
-                                </div>
 
-                                { this.state.newUser ?
-                                    <div className="form-group">
-                                        <label htmlFor="password">Confirm password</label>
-                                        <input className="form-control" ref="confirmPassword" type="password"/>
-                                    </div> : null
-                                }
-
-                                <div className="checkbox">
-                                    <label>
-                                        <input type="checkbox" ref="rememberme"/> Remember me
-                                    </label>
-                                </div>
-                                { this.state.newUser ?
-                                    <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running} preset="primary">Create user</AjaxButton>
-                                    : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running} preset="primary">Login</AjaxButton>
-                                }
-
-                                { this.state.newUser ? <div className="alert alert-info margin-top">
-                                    Your email address will never ever be sold, given away, etc. I will not send you
-                                    anything, ever.  I'm collecting it only so I have a place to send a password reset to.
-                                </div> : null }
-
-                                { this.state.errorCode ?
-                                    <div className="alert alert-danger margin-top">
-                                        {errorCodes[this.state.errorCode]}
-                                    </div> : null }
-                                <hr />
-
-                                { this.state.newUser ?
-
-                                    <div className="form-group">
-                                        <h4>Existing user?</h4>
-                                        <a onClick={() => this.switchToLogin()} className="btn btn-info">Click to
-                                            login</a>
+                                    <div className="checkbox">
+                                        <label>
+                                            <input type="checkbox" ref="rememberme"/> Remember me
+                                        </label>
                                     </div>
-                                    :
-                                    <div className="form-group">
-                                        <h4>New user?</h4>
-                                        <a onClick={() => this.switchToCreate()} className="btn btn-info">Click to
-                                            create account</a>
-                                    </div>
+                                    { this.state.newUser ?
+                                        <AjaxButton onClick={evt => this.createUser(evt)} running={this.state.running} preset="primary">Create user</AjaxButton>
+                                        : <AjaxButton onClick={evt => this.login(evt)} running={this.state.running} preset="primary">Login</AjaxButton>
+                                    }
 
-                                }
-                            </form>
+                                    { this.state.errorCode ?
+                                        <div className="alert alert-danger margin-top">
+                                            {errorCodes[this.state.errorCode]}
+                                        </div> : null }
+                                    <hr />
+
+                                    { this.state.newUser ?
+
+                                        <div className="form-group">
+                                            <h4>Existing user?</h4>
+                                            <a onClick={() => this.switchToLogin()} className="btn btn-info">Click to
+                                                login</a>
+                                        </div>
+                                        :
+                                        <div className="form-group">
+                                            <h4>New user?</h4>
+                                            <a onClick={() => this.switchToCreate()} className="btn btn-info">Click to
+                                                create account</a>
+                                        </div>
+
+                                    }
+                                </form>
                             }
                         </div>
                     </div>

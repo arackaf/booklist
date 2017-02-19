@@ -87,6 +87,7 @@ module.exports = {
     devServer: {
         proxy: {
             "/react-redux/login": "http://localhost:3000",
+            "/react-redux/logout": "http://localhost:3000",
             "/react-redux/createUser": "http://localhost:3000",
             "/subject": "http://localhost:3000",
             "/tag": "http://localhost:3000",
