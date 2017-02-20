@@ -10,7 +10,7 @@
   "scripts": {
     "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-redux-build",
-    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
+    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p && node build-css",
     "start": "node ./app.js"
   },
   "dependencies": {
