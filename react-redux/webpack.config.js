@@ -31,7 +31,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react', 'es2015-rollup', 'stage-1', 'stage-2'],
+                    presets: ['react', 'es2015-webpack', 'stage-1', 'stage-2'],
                     plugins: ['transform-decorators-legacy', 'external-helpers']
                 }
             },
@@ -40,7 +40,7 @@ module.exports = {
                 include: /simple-react-bootstrap/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react', 'es2015-rollup', 'stage-1', 'stage-2'],
+                    presets: ['react', 'es2015-webpack', 'stage-1', 'stage-2'],
                     plugins: ['transform-decorators-legacy', 'external-helpers']
                 }
             }
