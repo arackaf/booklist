@@ -2,6 +2,17 @@
 <html lang="en">
 
 <head>
+    <script>
+        if (typeof fetch === 'undefined'){
+            var fetchPolyfill = document.createElement('script');
+            fetchPolyfill.setAttribute('src','/react-redux/util/unfetch.js');
+            document.head.appendChild(fetchPolyfill);
+            fetchPolyfill.onload = function(){
+                window.fetch = unfetch;
+            }
+        }
+    </script>
+
     <meta charset="UTF-8">
     <title>Book tracker</title>
 
@@ -168,13 +179,6 @@
         function webSocketAddress(path){
             return 'ws://' + window.location.host + (path || '');
         }
-
-        if (typeof fetch === 'undefined'){
-            var fetchPolyfill = document.createElement('script');
-            fetchPolyfill.setAttribute('src','/react-redux/util/fetch.js');
-            document.head.appendChild(fetchPolyfill);
-        }
-
     </script>
 
     <script type="text/javascript" src="/react-redux/util/babelHelpers.min.js"></script>
