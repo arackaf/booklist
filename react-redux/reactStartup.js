@@ -33,7 +33,7 @@ window.onhashchange = function () {
 };
 
 let initial = true;
-const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects']);
+const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
 
 export const globalHashManager = new HashUtility();
 
@@ -101,6 +101,7 @@ export function loadCurrentModule() {
             case 'home': return (System.import('./modules/home/home'));
             case 'scan': return (System.import('./modules/scan/scan'));
             case 'subjects': return (System.import('./modules/subjects/subjects'));
+            case 'settings': return (System.import('./modules/settings/settings'));
         }
     })();
 
