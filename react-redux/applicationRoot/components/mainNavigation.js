@@ -36,9 +36,13 @@ export default class MainNavigationBar extends React.Component {
                     {isLoggedIn || isPublic ? <NavBar.Item active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? publicBooksHeader : 'Books'}</NavBar.Item> : null}
                     {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isSubjects} href={isSubjects ? undefined : '#subjects'}>{'Subjects'}</NavBar.Item> : null}
                     {isLoggedIn && isPublic ? <NavBar.Item href="#books">View your collection</NavBar.Item> : null}
-                    {isLoggedIn ? <NavBar.Item onClick={this.logout}>Logout</NavBar.Item> : null}
                     {!isLoggedIn && !isLoginModule ? <NavBar.Item href='#login'>Login</NavBar.Item> : null}
                 </NavBar.Nav>
+                {isLoggedIn ? 
+                    <NavBar.Nav className='pull-right'>
+                        <NavBar.Item className="pull-right" onClick={this.logout}>Logout</NavBar.Item>
+                    </NavBar.Nav> : null
+                }
             </NavBar>
         );
     }
