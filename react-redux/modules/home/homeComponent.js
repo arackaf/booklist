@@ -49,7 +49,7 @@ class HomeIfNotLoggedIn extends React.Component{
                     It's free to sign up, and store up to 500 books.  In the remote chance someone actually wants to store more than that, there'll be some sort
                     of nominal fee to help defray storage costs.
                     <br /><br />
-                    For those interested in seeing the code for this site, The GitHub repository is <a target='_blank' href='https://github.com/arackaf/booklist'>here</a>
+                    For those interested in seeing the code for this site, the GitHub repository is <a target='_blank' href='https://github.com/arackaf/booklist'>here</a>
                     <br /><br />
                     <a className="btn btn-primary" href="#login">Login or create an account</a>
                 </MainHomePane>
