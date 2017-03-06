@@ -1,12 +1,10 @@
-import {LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO} from './actionNames';
+import {LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED} from './actionNames';
 
-export function loadUserSettings(){
-    return (dispatch, getState) => {
-        dispatch({type: USER_INFO_LOADING});
-        ajaxUtil.post('/user/getBasicUserInfo', {}, resp => {
-            dispatch({type: USER_INFO_LOADED, info: resp.info});
-        });
-    }
+export const loadUserSettings = () => dispatch => {
+    dispatch({type: USER_INFO_LOADING});
+    ajaxUtil.post('/user/getBasicUserInfo', {}, resp => {
+        dispatch({type: USER_INFO_LOADED, info: resp.info});
+    });
 }
 
 const createEditingChange = (name, evtName = 'value') => evt => dispatch => dispatch({type: SET_EDITING_INFO, name, value: evt.target[evtName]});
@@ -14,3 +12,8 @@ const createEditingChange = (name, evtName = 'value') => evt => dispatch => disp
 export const editIsPublic = createEditingChange('isPublic', 'checked');
 export const editPublicName = createEditingChange('publicName');
 export const editPublicBooksHeader = createEditingChange('publicBooksHeader');
+
+export const savePublicInfo = () => dispatch => {
+    dispatch({type: USER_INFO_SAVING});
+    setTimeout(() => dispatch({type: USER_INFO_SAVED}), 2000);
+}
