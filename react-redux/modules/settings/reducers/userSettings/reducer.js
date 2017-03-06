@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO} from './actionNames';
+import {USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED} from './actionNames';
 const defaultState = {
     loading: true,
     isPublic: false,
@@ -8,7 +8,8 @@ const defaultState = {
     editing: {
         publicBooksHeader: '',
         publicName: ''
-    }
+    },
+    saving: false
 }
 
 export default (state = defaultState, action) => {
@@ -19,6 +20,10 @@ export default (state = defaultState, action) => {
             return {...state, loading: false, ...action.info, editing: {...action.info}};
         case SET_EDITING_INFO:
             return {...state, editing: {...state.editing, [action.name]: action.value}};
+        case USER_INFO_SAVING: 
+            return {...state, saving: true};
+        case USER_INFO_SAVED: 
+            return {...state, saving: false, ...state.editing};
     }
     return state;
 };
