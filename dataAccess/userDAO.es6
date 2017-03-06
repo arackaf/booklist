@@ -90,6 +90,15 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
+    async getBasicUserInfo(_id){
+        let db = await super.open();
+        try {
+            let user = await db.collection('users').findOne({ _id: ObjectID(_id) });
+            return {isPublic: user.isPublic, publicBooksHeader: user.publicBooksHeader || '', publicName: user.publicName || ''};
+        } catch(Err){ console.log(Err);} finally{
+            super.dispose(db);
+        }
+    }
     async findById(_id){
         let db = await super.open();
         try {

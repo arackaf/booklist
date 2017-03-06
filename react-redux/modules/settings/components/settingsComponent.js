@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 
-//import selector from '../reducers/'
-//import * as actionCreators
+import UserSettings from './userSettings/main';
 
 
-export default class UserSettings extends Component {
+export default class UserSettingsMain extends Component {
     state = {currentTab: 'userSettings'};
     setTab = tab => this.setState({currentTab: tab});
     render() {
@@ -22,7 +21,7 @@ export default class UserSettings extends Component {
                 </ul>
                 <div className="tab-content">
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'userSettings'})}>
-                        <h1>User Settings</h1>
+                        <UserSettings />
                     </div>
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'scanHistory'})}>
                         <h1>Scan History</h1>
