@@ -5,7 +5,7 @@ class userController {
     @httpPost
     async getPubliclyAvailableUsersName({ _id }){
         let user = await (new UserDAO().getPublicName(_id));
-        this.send({ name: user && user.publicName, booksHeader: user && user.publicBooksHeader });
+        this.send({ publicName: user && user.publicName, publicBooksHeader: user && user.publicBooksHeader });
     }
     @httpPost
     async getPublicUserInfo(){

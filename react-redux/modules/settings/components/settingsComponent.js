@@ -12,7 +12,7 @@ export default class PublicUserSettingsMain extends Component {
             <div style={{ margin: '10px', padding: '10px' }}>
                 <ul className="nav nav-tabs">
                     <li className={classNames({active: this.state.currentTab == 'publicSettings'})}>
-                        <a onClick={() => this.setTab('publicSettings')}>Make public</a>
+                        <a onClick={() => this.setTab('publicSettings')}>Public settings</a>
                     </li>
                     <li className={classNames({active: this.state.currentTab == 'scanHistory'})}>
                         <a onClick={() => this.setTab('scanHistory')}>Scan history</a>
