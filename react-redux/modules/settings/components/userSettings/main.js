@@ -35,7 +35,7 @@ export default class UserSettings extends Component {
                                     <img src='/react-redux/static/publicBookHeaderInfo.png' />
                                 </div> : null
                             }
-                            {this.props.isDirty ? <AjaxButton onClick={this.props.savePublicInfo} running={this.props.saving} runningText='Saving' preset='primary'>Save</AjaxButton> : null}
+                            <AjaxButton disabled={!this.props.isDirty || !this.props.editing.publicName} onClick={this.props.savePublicInfo} running={this.props.saving} runningText='Saving' preset='primary'>Save</AjaxButton>
                         </div>
                     }
                 </div>
