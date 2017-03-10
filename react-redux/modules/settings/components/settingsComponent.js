@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 import UserSettings from './userSettings/main';
 
-
 export default class UserSettingsMain extends Component {
     state = {currentTab: 'userSettings'};
     setTab = tab => this.setState({currentTab: tab});
