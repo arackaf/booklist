@@ -30,8 +30,8 @@ export default (state = defaultState, action) => {
 
 const dirtyProps = ['isPublic', 'publicName', 'publicBooksHeader'];
 export const selector = createSelector([
-    state => state.settingsModule.userSettings
-], (userSettings) => ({
-    ...userSettings,
-    isDirty: dirtyProps.some(p => userSettings[p] != userSettings.editing[p])
+    state => state.settingsModule.publicUserSettings
+], (publicUserSettings) => ({
+    ...publicUserSettings,
+    isDirty: dirtyProps.some(p => publicUserSettings[p] != publicUserSettings.editing[p])
 }));

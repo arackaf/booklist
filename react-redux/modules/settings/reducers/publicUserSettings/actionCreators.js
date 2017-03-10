@@ -1,6 +1,6 @@
 import {LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED} from './actionNames';
 
-export const loadUserSettings = () => dispatch => {
+export const loadPublicUserSettings = () => dispatch => {
     dispatch({type: USER_INFO_LOADING});
     ajaxUtil.post('/user/getPublicUserInfo', {}, resp => {
         dispatch({type: USER_INFO_LOADED, info: resp.info});
@@ -14,7 +14,7 @@ export const editPublicName = createEditingChange('publicName');
 export const editPublicBooksHeader = createEditingChange('publicBooksHeader');
 
 export const savePublicInfo = () => (dispatch, getState) => {
-    let editingState = getState().settingsModule.userSettings.editing;
+    let editingState = getState().settingsModule.publicUserSettings.editing;
     dispatch({type: USER_INFO_SAVING});
     ajaxUtil.post('/user/setPublicUserInfo', {...editingState}, resp => {
         dispatch({type: USER_INFO_SAVED, ...editingState});
