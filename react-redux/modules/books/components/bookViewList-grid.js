@@ -87,8 +87,8 @@ export default class BookViewListGrid extends React.Component{
                                 </td>
                                 <td>
                                     <div style={{ marginTop: 5 }}> { !!book.isRead
-                                        ? <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
-                                        : <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} preset="default-xs">Set read</AjaxButton>
+                                        ? <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} disabled={this.props.viewingPublic} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
+                                        : <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} disabled={this.props.viewingPublic} preset="default-xs">Set read</AjaxButton>
                                     }
                                     </div>
                                 </td>
