@@ -39,7 +39,7 @@ export const setRequestDesktop = () => ({ type: REQUEST_DESKTOP });
 
 export const setModule = module => ({ type: SET_MODULE, module });
 export const setLoggedIn = () => ({ type: SET_LOGGED_IN });
-export const setPublicInfo = (name, booksHeader, _id) => ({ type: SET_PUBLIC_INFO, name, booksHeader, _id });
+export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 
 export function loadSubjects(){
     return function(dispatch, getState){

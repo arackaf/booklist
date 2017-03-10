@@ -11,6 +11,7 @@
     "deploy": "cd .. && npm run deploy"
   },
   "dependencies": {
+    "classnames": "2.2.5",
     "react": "15.1.0",
     "react-addons-css-transition-group": "15.1.0",
     "react-autosuggest": "3.7.4",
