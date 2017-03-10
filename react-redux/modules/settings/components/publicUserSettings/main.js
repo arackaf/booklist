@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {selector} from '../../reducers/userSettings/reducer';
-import * as actionCreators from '../../reducers/userSettings/actionCreators';
+import {selector} from '../../reducers/publicUserSettings/reducer';
+import * as actionCreators from '../../reducers/publicUserSettings/actionCreators';
 import Loading from 'applicationRoot/components/loading';
 import {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 
 @connect(selector, {...actionCreators})
-export default class UserSettings extends Component {
+export default class PublicUserSettings extends Component {
     render() {
         return (
             <div className='row' style={{position: 'relative'}}>

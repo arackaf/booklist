@@ -1,15 +1,15 @@
-import {loadUserSettings} from './userSettings/actionCreators';
+import {loadPublicUserSettings} from './publicUserSettings/actionCreators';
 import { combineReducers } from 'redux';
-import userSettings, {selector as userSettingsSelector} from './userSettings/reducer';
+import publicUserSettings, {selector as publicUserSettingsSelector} from './publicUserSettings/reducer';
 
 export default combineReducers({
-    userSettings
+    publicUserSettings
 });
 
 export const selector = state => state;
 
 export function initialize(){
     return (dispatch, getState) => {
-        dispatch(loadUserSettings());
+        dispatch(loadPublicUserSettings());
     }
 }
