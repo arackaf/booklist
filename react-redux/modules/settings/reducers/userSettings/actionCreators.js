@@ -2,7 +2,7 @@ import {LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, U
 
 export const loadUserSettings = () => dispatch => {
     dispatch({type: USER_INFO_LOADING});
-    ajaxUtil.post('/user/getBasicUserInfo', {}, resp => {
+    ajaxUtil.post('/user/getPublicUserInfo', {}, resp => {
         dispatch({type: USER_INFO_LOADED, info: resp.info});
     });
 }
@@ -13,7 +13,10 @@ export const editIsPublic = createEditingChange('isPublic', 'checked');
 export const editPublicName = createEditingChange('publicName');
 export const editPublicBooksHeader = createEditingChange('publicBooksHeader');
 
-export const savePublicInfo = () => dispatch => {
+export const savePublicInfo = () => (dispatch, getState) => {
+    let editingState = getState().settingsModule.userSettings.editing;
     dispatch({type: USER_INFO_SAVING});
-    setTimeout(() => dispatch({type: USER_INFO_SAVED}), 2000);
+    ajaxUtil.post('/user/setPublicUserInfo', {...editingState}, resp => {
+        dispatch({type: USER_INFO_SAVED, ...editingState});
+    });
 }
