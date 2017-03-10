@@ -42,7 +42,7 @@ export default function rootReducer(state = initialState, action){
         case SET_IS_TOUCH:
             return {...state, isTouch: action.value}
         case SET_PUBLIC_INFO:
-            return { ...state, isPublic: true, publicName: action.name, publicBooksHeader: action.booksHeader, publicUserId: action._id };
+            return { ...state, isPublic: true, publicName: action.publicName, publicBooksHeader: action.publicBooksHeader, publicUserId: action.userId };
         case RESET_PUBLIC_INFO:
             return { ...state, isPublic: false, publicName: '', publicBooksHeader: '', publicUserId: '' };
         case SET_DESKTOP:

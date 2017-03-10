@@ -115,7 +115,7 @@ export function loadCurrentModule() {
         store.dispatch(setModule(currentModule));
 
         if (publicUserInfo){
-            store.dispatch(setPublicInfo(name, publicUserInfo.booksHeader, userId));
+            store.dispatch(setPublicInfo({...publicUserInfo, userId}));
         }
 
         if (moduleObject.reducer) {
@@ -141,7 +141,7 @@ export function goHome(){
 function fetchPublicUserInfo(userId){
     return new Promise((res, rej) => {
         ajaxUtil.post('/user/getPubliclyAvailableUsersName', { _id: userId }, resp => {
-            res({ name: resp.name, booksHeader: resp.booksHeader  })
+            res({...resp})
         })
     });
 }
