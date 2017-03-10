@@ -8,11 +8,17 @@ class userController {
         this.send({ name: user && user.publicName, booksHeader: user && user.publicBooksHeader });
     }
     @httpPost
-    async getBasicUserInfo(){
+    async getPublicUserInfo(){
         let userId = this.request.user.id,
-            result = await (new UserDAO().getBasicUserInfo(userId));
+            result = await (new UserDAO().getPublicUserInfo(userId));
         this.send({ info: result });
     }
+    @httpPost
+    async setPublicUserInfo({isPublic, publicName, publicBooksHeader}){
+        let userId = this.request.user.id,
+            result = await (new UserDAO().setPublicUserInfo(userId, isPublic, publicName, publicBooksHeader));
+        this.send({ });
+    }    
 }
 
 export default userController;
