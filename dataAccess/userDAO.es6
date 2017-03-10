@@ -40,7 +40,7 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
-    async getPublicName(_id){
+    async getPublicDisplayInfo(_id){
         let db = await super.open();
         try {
             return await db.collection('users').findOne({ _id: ObjectID(_id), isPublic: true });
@@ -90,7 +90,7 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
-    async getPublicUserInfo(_id){
+    async getPublicSettings(_id){
         let db = await super.open();
         try {
             let user = await db.collection('users').findOne({ _id: ObjectID(_id) });
@@ -99,7 +99,7 @@ class UserDAO extends DAO {
             super.dispose(db);
         }
     }
-    async setPublicUserInfo(_id, isPublic, publicName, publicBooksHeader){
+    async setPublicSettings(_id, isPublic, publicName, publicBooksHeader){
         if (!isPublic){
             publicName = '';
             publicBooksHeader = '';

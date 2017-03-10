@@ -4,19 +4,19 @@ import UserDAO from '../dataAccess/userDAO';
 class userController {
     @httpPost
     async getPubliclyAvailableUsersName({ _id }){
-        let user = await (new UserDAO().getPublicName(_id));
+        let user = await (new UserDAO().getPublicDisplayInfo(_id));
         this.send({ publicName: user && user.publicName, publicBooksHeader: user && user.publicBooksHeader });
     }
     @httpPost
-    async getPublicUserInfo(){
+    async getPublicSettings(){
         let userId = this.request.user.id,
-            result = await (new UserDAO().getPublicUserInfo(userId));
+            result = await (new UserDAO().getPublicSettings(userId));
         this.send({ info: result });
     }
     @httpPost
-    async setPublicUserInfo({isPublic, publicName, publicBooksHeader}){
+    async setPublicSettings({isPublic, publicName, publicBooksHeader}){
         let userId = this.request.user.id,
-            result = await (new UserDAO().setPublicUserInfo(userId, isPublic, publicName, publicBooksHeader));
+            result = await (new UserDAO().setPublicSettings(userId, isPublic, publicName, publicBooksHeader));
         this.send({ });
     }    
 }
