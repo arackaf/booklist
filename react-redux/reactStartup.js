@@ -33,7 +33,7 @@ window.onhashchange = function () {
 };
 
 let initial = true;
-const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects']);
+const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
 
 export const globalHashManager = new HashUtility();
 
@@ -101,6 +101,7 @@ export function loadCurrentModule() {
             case 'home': return (System.import('./modules/home/home'));
             case 'scan': return (System.import('./modules/scan/scan'));
             case 'subjects': return (System.import('./modules/subjects/subjects'));
+            case 'settings': return (System.import('./modules/settings/settings'));
         }
     })();
 
@@ -114,7 +115,7 @@ export function loadCurrentModule() {
         store.dispatch(setModule(currentModule));
 
         if (publicUserInfo){
-            store.dispatch(setPublicInfo(name, publicUserInfo.booksHeader, userId));
+            store.dispatch(setPublicInfo({...publicUserInfo, userId}));
         }
 
         if (moduleObject.reducer) {
@@ -140,7 +141,7 @@ export function goHome(){
 function fetchPublicUserInfo(userId){
     return new Promise((res, rej) => {
         ajaxUtil.post('/user/getPubliclyAvailableUsersName', { _id: userId }, resp => {
-            res({ name: resp.name, booksHeader: resp.booksHeader  })
+            res({...resp})
         })
     });
 }
