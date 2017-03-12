@@ -152,6 +152,7 @@ app.post('/react-mobx/logout', function(req, response){
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
     response.cookie('logged_in', 'true', { maxAge: 900000 });
+    response.cookie('userId', req.user.id, { maxAge: 900000 });
     if (req.body.rememberme == 1) {
         response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: rememberMeExpiration });
     }
