@@ -1,7 +1,7 @@
 import { httpPost } from 'easy-express-controllers';
 import UserDAO from '../dataAccess/userDAO';
 
-class userController {
+export default class userController {
     @httpPost
     async getPubliclyAvailableUsersName({ _id }){
         let user = await (new UserDAO().getPublicDisplayInfo(_id));
@@ -18,7 +18,11 @@ class userController {
         let userId = this.request.user.id,
             result = await (new UserDAO().setPublicSettings(userId, isPublic, publicName, publicBooksHeader));
         this.send({ });
-    }    
+    }
+    @httpPost
+    async resetPassword({oldPassword, newPassword}){
+        let userId = this.request.user.id,
+            result = await (new UserDAO().resetPassword(userId, oldPassword, newPassword));
+        this.send({...result});
+    }
 }
-
-export default userController;

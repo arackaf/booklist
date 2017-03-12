@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import classNames from 'classnames';
 
 import PublicUserSettings from './publicUserSettings/main';
+import PasswordReset from './passwordReset/main';
 
 export default class PublicUserSettingsMain extends Component {
     state = {currentTab: 'publicSettings'};
@@ -14,6 +15,9 @@ export default class PublicUserSettingsMain extends Component {
                     <li className={classNames({active: this.state.currentTab == 'publicSettings'})}>
                         <a onClick={() => this.setTab('publicSettings')}>Public settings</a>
                     </li>
+                    <li className={classNames({active: this.state.currentTab == 'passwordReset'})}>
+                        <a onClick={() => this.setTab('passwordReset')}>Reset password</a>
+                    </li>
                     <li className={classNames({active: this.state.currentTab == 'scanHistory'})}>
                         <a onClick={() => this.setTab('scanHistory')}>Scan history</a>
                     </li>
@@ -22,8 +26,11 @@ export default class PublicUserSettingsMain extends Component {
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'publicSettings'})}>
                         <PublicUserSettings />
                     </div>
+                    <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'passwordReset'})}>
+                        <PasswordReset />
+                    </div>
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'scanHistory'})}>
-                        <h1>Coming...</h1>
+                        <h1>Coming soon...</h1>
                     </div>                    
                 </div>
             </div>
