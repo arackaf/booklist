@@ -46,7 +46,7 @@ export default class PublicUserSettings extends Component {
                                 <input ref={el => this.confirmPasswordEl = el} type="password" className="form-control" id="confirmNewPasswordInput" />
                             </div>
                         </div>
-                        <AjaxButton onClick={this.resetPassword} running={this.state.saving} runningText='Saving' preset='primary'>Save</AjaxButton>
+                        <AjaxButton onClick={this.resetPassword} disabled={this.state.saved} running={this.state.saving} runningText='Saving' preset='primary'>Save</AjaxButton>
                         {this.state.mismatch ? 
                             <div>
                                 <br/>
