@@ -109,7 +109,20 @@ class UserDAO extends DAO {
         try {
             let user = await db.collection('users').findOne({ _id: ObjectID(_id) });
             await db.collection('users').update({ _id: ObjectID(_id) }, { $set: { isPublic, publicName, publicBooksHeader } });
-        } catch(Err){ console.log(Err);} finally{
+        } finally{
+            super.dispose(db);
+        }
+    }
+    async resetPassword(_id, oldPassword, newPassword){
+        let db = await super.open();
+        try {
+            let user = await db.collection('users').findOne({ _id: ObjectID(_id), password: this.saltAndHashPassword(oldPassword) });
+            if (!user){
+                return {error: 1};
+            }
+            await db.collection('users').update({ _id: ObjectID(_id) }, { $set: { password: this.saltAndHashPassword(newPassword) } });
+            return {success: true};
+        } finally{
             super.dispose(db);
         }
     }    

@@ -86,7 +86,8 @@ module.exports = {
             "/book": "http://localhost:3000",
             "/user": "http://localhost:3000",
             "/static": "http://localhost:3000",
-            "/react-redux/util": "http://localhost:3000"
+            "/react-redux/util": "http://localhost:3000",
+            "/react-redux/logout": "http://localhost:3000"
         }
     }
 };
