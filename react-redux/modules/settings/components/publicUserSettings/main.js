@@ -16,7 +16,7 @@ export default class PublicUserSettings extends Component {
                         : 
                         <div style={{padding: '10px'}}>
                             {this.props.publicLink ? 
-                                <div style={{padding: '10px'}}>
+                                <div className='panel panel-default' style={{padding: '10px'}}>
                                     Your collection is currently public, viewable at <br /><br /><a href={this.props.publicLink}>{this.props.publicLink}</a>
                                 </div> : null
                             }
