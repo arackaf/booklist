@@ -8,6 +8,7 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
   "scripts": {
+    "start": "webpack-dev-server",
     "deploy": "cd .. && npm run deploy"
   },
   "dependencies": {
