@@ -6,7 +6,7 @@ import Loading from 'applicationRoot/components/loading';
 import {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 
 @connect(selector, {...actionCreators})
-export default class PublicUserSettings extends Component {    
+export default class PublicUserSettings extends Component {
     render() {
         return (
             <div className='row' style={{position: 'relative'}}>
@@ -15,6 +15,11 @@ export default class PublicUserSettings extends Component {
                         <Loading /> 
                         : 
                         <div style={{padding: '10px'}}>
+                            {this.props.publicLink ? 
+                                <div style={{padding: '10px'}}>
+                                    Your collection is currently public, viewable at <br /><br /><a href={this.props.publicLink}>{this.props.publicLink}</a>
+                                </div> : null
+                            }
                             <div className="form-group">
                                 <label className='checkbox'>Allow your book collection to be viewed publicly? <input checked={this.props.editing.isPublic} disabled={this.props.saving} onChange={this.props.editIsPublic} style={{marginLeft: '5px'}} type='checkbox' /></label>
                             </div>
