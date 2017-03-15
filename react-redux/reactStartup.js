@@ -44,7 +44,8 @@ export function loadCurrentModule() {
         module = (hash.split('/')[0] || 'home').toLowerCase(),
         publicModule = module === 'view' || module == 'activate';
 
-    let loggedIn = isLoggedIn();
+    let {logged_in, userId: currentUserId} = isLoggedIn(),
+        loggedIn = logged_in && currentUserId;
 
     if (!loggedIn && !publicModule){
         if (originalModule && module != 'home'){
@@ -60,7 +61,7 @@ export function loadCurrentModule() {
     }
 
     if (loggedIn){
-        store.dispatch(setLoggedIn());
+        store.dispatch(setLoggedIn(currentUserId));
     }
 
     if (publicModule){
@@ -129,7 +130,16 @@ export function loadCurrentModule() {
 }
 
 export function isLoggedIn(){
-    return /logged_in/ig.test(document.cookie);
+    let logged_in = getCookie('logged_in'),
+        userId = getCookie('userId');
+    return {logged_in, userId};
+}
+
+function getCookie(name) {
+  return document.cookie.split('; ').reduce((r, v) => {
+    const parts = v.split('=')
+    return parts[0] === name ? decodeURIComponent(parts[1]) : r
+  }, '')
 }
 
 export function goHome(){
