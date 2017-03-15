@@ -38,7 +38,7 @@ export const requestMobile = () => dispatch => {
 export const setRequestDesktop = () => ({ type: REQUEST_DESKTOP });
 
 export const setModule = module => ({ type: SET_MODULE, module });
-export const setLoggedIn = () => ({ type: SET_LOGGED_IN });
+export const setLoggedIn = userId => ({ type: SET_LOGGED_IN, userId });
 export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 
 export function loadSubjects(){

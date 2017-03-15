@@ -19,6 +19,7 @@ import {
 
 const initialState = {
     isTouch: false,
+    userId: '',
     publicUserId: '',
     publicName: '',
     publicBooksHeader: '',
@@ -56,7 +57,7 @@ export default function rootReducer(state = initialState, action){
         case SET_MODULE:
             return {...state, module: action.module};
         case SET_LOGGED_IN:
-            return {...state, isLoggedIn: true};
+            return {...state, isLoggedIn: true, userId: action.userId};
         case LOAD_SUBJECTS:
             return Object.assign({}, state, { subjectsInitialQueryFired: true });
         case LOAD_SUBJECTS_RESULTS:
