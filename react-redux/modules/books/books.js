@@ -7,6 +7,5 @@ export default {
     name: 'books',
     reducer: reducer,
     component: BookViewList,
-    hashSync: syncFiltersToHash,
     initialize: booksActivated
 };
