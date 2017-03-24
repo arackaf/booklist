@@ -1,10 +1,11 @@
-import HashUtility, { SerializedHash } from 'util/hashManager';
 import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
+
+import createHistory from 'history/createBrowserHistory'
 
 if ('ontouchstart' in window || 'onmsgesturechange' in window){
     store.dispatch(setIsTouch(true));
@@ -28,20 +29,30 @@ let currentModule;
 let currentModuleObject;
 let publicUserCache = {};
 
-window.onhashchange = function () {
-    loadCurrentModule();
-};
+const history = createHistory()
+export {history};
+const location = history.location;
 
-let initial = true;
+export function currentSearchValues(){
+    return history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
+        let pieces = s.split('=');
+        return (hash[pieces[0]] = pieces[1], hash);
+    }, {});
+}
+
 const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
 
-export const globalHashManager = new HashUtility();
+const unlisten = history.listen((location, action) => {
+  // location is an object like window.location 
+  loadCurrentModule(location);
+});
+loadCurrentModule(history.location);
 
-loadCurrentModule();
-export function loadCurrentModule() {
-    let hash = window.location.hash.replace('#', ''),
-        originalModule = hash.split('/')[0] || '',
-        module = (hash.split('/')[0] || 'home').toLowerCase(),
+let initial = true;
+
+export function loadCurrentModule(location) {
+    let originalModule = location.pathname.replace(/\//g, '').toLowerCase(),
+        module = originalModule || 'home',
         publicModule = module === 'view' || module == 'activate';
 
     let {logged_in, userId: currentUserId} = isLoggedIn(),
@@ -55,7 +66,7 @@ export function loadCurrentModule() {
         }
     } else {
         if (!validModules.has(module)){
-            window.location.hash = 'books';
+            history.push('/books');
             return;
         }
     }
@@ -65,7 +76,7 @@ export function loadCurrentModule() {
     }
 
     if (publicModule){
-        var userId = globalHashManager.currentParameters.userId;
+        var userId = currentSearchValues().userId;
 
         //switching to a new public viewing - reload page
         if (!initial && store.getState().app.publicUserId != userId){
@@ -87,9 +98,6 @@ export function loadCurrentModule() {
     initial = false;
 
     if (module === currentModule) {
-        if (currentModuleObject && currentModuleObject.hashSync) {
-            store.dispatch(currentModuleObject.hashSync(globalHashManager.currentParameters));
-        }
         return;
     }
     currentModule = module;
@@ -124,7 +132,7 @@ export function loadCurrentModule() {
         }
         renderUI(createElement(moduleObject.component));
         if (moduleObject.initialize) {
-            store.dispatch(moduleObject.initialize({parameters: globalHashManager.currentParameters }));
+            store.dispatch(moduleObject.initialize({}));
         }
     });
 }
@@ -142,10 +150,10 @@ function getCookie(name) {
   }, '')
 }
 
-export function goHome(){
-    let currentModule = globalHashManager.getCurrentHashInfo().module || 'home';
-    if (currentModule === 'home') return;
-    globalHashManager.setHash(new SerializedHash('home'));
+export function goto(module){
+    if (currentModule !== module) {
+        history.push(`/${module}`)
+    }
 }
 
 function fetchPublicUserInfo(userId){

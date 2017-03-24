@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import {NavBar} from 'simple-react-bootstrap';
-
-import {goHome, globalHashManager} from 'reactStartup';
+import {goHome, goto} from 'reactStartup';
 
 @connect(state => state.app)
 export default class MainNavigationBar extends React.Component {
@@ -35,10 +34,10 @@ export default class MainNavigationBar extends React.Component {
                 <NavBar.Nav>
                     {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavBar.Item> : null}
                     {isLoggedIn || isPublic ? <NavBar.Item active={isBookList} href={isBookList ? undefined : '#books'}>{isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Books'}</NavBar.Item> : null}
-                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isSubjects} href={isSubjects ? undefined : '#subjects'}>Subjects</NavBar.Item> : null}
+                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={() => goto('subjects')} active={isSubjects}>Subjects</NavBar.Item> : null}
                     {isLoggedIn && isPublic ? <NavBar.Item href="#books">View your collection</NavBar.Item> : null}
-                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isSettings} href={isSettings ? undefined : '#settings'}>Settings</NavBar.Item> : null}
-                    {!isLoggedIn && !isLoginModule ? <NavBar.Item href='#login'>Login</NavBar.Item> : null}
+                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={() => goto('settings')} active={isSettings}>Settings</NavBar.Item> : null}
+                    {!isLoggedIn && !isLoginModule ? <NavBar.Item onClick={() => goto('login')}>Login</NavBar.Item> : null}
                 </NavBar.Nav>
                 {isLoggedIn ? 
                     <NavBar.Nav className='pull-right'>
