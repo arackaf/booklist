@@ -19,7 +19,9 @@ import { loadBooks } from '../books/actionCreators';
 import { loadSubjects } from 'applicationRoot/rootReducerActionCreators';
 import { loadTags } from '../tags/actionCreators';
 
-import { globalHashManager } from 'reactStartup';
+import { getCurrentSearchValues } from 'reactStartup';
+
+let globalHashManager = {};
 
 export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
@@ -90,7 +92,8 @@ export function setSortOrder(sort, direction){
 
 export function booksActivated(searchProps){
     return function(dispatch, getState){
-        let nextSearchFilters = getNextFilters(searchProps.parameters),
+        let searchState = getCurrentSearchValues().searchState,
+            nextSearchFilters = getNextFilters(searchState),
             state = getState(),
             booksState = state.booksModule.books,
             subjectsState = state.booksModule.subjects,

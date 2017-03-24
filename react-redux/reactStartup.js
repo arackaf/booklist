@@ -33,11 +33,14 @@ const history = createHistory()
 export {history};
 const location = history.location;
 
-export function currentSearchValues(){
-    return history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
-        let pieces = s.split('=');
-        return (hash[pieces[0]] = pieces[1], hash);
-    }, {});
+export function getCurrentSearchValues(){
+    return {
+        pathname: location.pathname,
+        searchState: history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
+            let pieces = s.split('=');
+            return (hash[pieces[0]] = pieces[1], hash);
+        }, {})
+    };
 }
 
 const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
@@ -76,7 +79,7 @@ export function loadCurrentModule(location) {
     }
 
     if (publicModule){
-        var userId = currentSearchValues().userId;
+        var userId = getCurrentSearchValues().searchState.userId;
 
         //switching to a new public viewing - reload page
         if (!initial && store.getState().app.publicUserId != userId){
@@ -150,9 +153,9 @@ function getCookie(name) {
   }, '')
 }
 
-export function goto(module){
+export function goto(module, search){
     if (currentModule !== module) {
-        history.push(`/${module}`)
+        history.push({pathname: `/${module}`, search: search || undefined});
     }
 }
 
