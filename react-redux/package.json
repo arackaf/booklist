@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "classnames": "2.2.5",
+    "history": "^4.6.1",
     "react": "15.1.0",
     "react-addons-css-transition-group": "15.1.0",
     "react-autosuggest": "3.7.4",
