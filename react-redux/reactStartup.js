@@ -32,22 +32,6 @@ let publicUserCache = {};
 const history = createHistory()
 export {history};
 
-export function getCurrentHistoryState(){
-    let keyOrder = [],
-        location = history.location,
-        searchState = history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
-            let pieces = s.split('=');
-            keyOrder.push(pieces[0]);
-            return (hash[pieces[0]] = pieces[1], hash);
-        }, {});
-
-    return {
-        pathname: location.pathname,
-        __keyOrder: keyOrder,
-        searchState
-    };
-}
-
 const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
 
 const unlisten = history.listen((location, action) => {
@@ -159,6 +143,22 @@ export function goto(module, search){
     if (currentModule !== module) {
         history.push({pathname: `/${module}`, search: search || undefined});
     }
+}
+
+export function getCurrentHistoryState(){
+    let keyOrder = [],
+        location = history.location,
+        searchState = history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
+            let pieces = s.split('=');
+            keyOrder.push(pieces[0]);
+            return (hash[pieces[0]] = pieces[1], hash);
+        }, {});
+
+    return {
+        pathname: location.pathname,
+        __keyOrder: keyOrder,
+        searchState
+    };
 }
 
 export function setSearchValues(...args){
