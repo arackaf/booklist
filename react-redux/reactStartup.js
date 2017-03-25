@@ -33,14 +33,12 @@ const history = createHistory()
 export {history};
 
 const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
-
+let initial = true;
 const unlisten = history.listen((location, action) => {
   // location is an object like window.location 
   loadModule(location);
 });
 loadCurrentModule();
-
-let initial = true;
 
 export function loadCurrentModule(){
     loadModule(history.location);
