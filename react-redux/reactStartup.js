@@ -33,13 +33,18 @@ const history = createHistory()
 export {history};
 const location = history.location;
 
-export function getCurrentSearchValues(){
+export function getCurrentHistoryState(){
+    let keyOrder = [];
+    let searchState = history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
+        let pieces = s.split('=');
+        keyOrder.push(pieces[0]);
+        return (hash[pieces[0]] = pieces[1], hash);
+    }, {});
+
     return {
         pathname: location.pathname,
-        searchState: history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
-            let pieces = s.split('=');
-            return (hash[pieces[0]] = pieces[1], hash);
-        }, {})
+        __keyOrder: keyOrder,
+        searchState
     };
 }
 
@@ -79,7 +84,7 @@ export function loadCurrentModule(location) {
     }
 
     if (publicModule){
-        var userId = getCurrentSearchValues().searchState.userId;
+        var userId = getCurrentHistoryState().searchState.userId;
 
         //switching to a new public viewing - reload page
         if (!initial && store.getState().app.publicUserId != userId){
@@ -157,6 +162,22 @@ export function goto(module, search){
     if (currentModule !== module) {
         history.push({pathname: `/${module}`, search: search || undefined});
     }
+}
+
+export function setSearchValues(...args){
+    let {pathname, __keyOrder, searchState} = getCurrentHistoryState();
+
+    let orderedKeys = args.filter((_, i) => !(i % 2));
+    for (let i = 0; i < args.length - 1; i+= 2){
+        if (!searchState.hasOwnProperty(args[i])){
+            __keyOrder.push(args[i]);
+        }
+        searchState[args[i]] = args[i+1];
+    }
+    history.push({
+        pathname: history.location.pathname, 
+        search: orderedKeys.filter(k => searchState[k]).map(k => `${k}=${searchState[k]}`).join('&')
+    });
 }
 
 function fetchPublicUserInfo(userId){

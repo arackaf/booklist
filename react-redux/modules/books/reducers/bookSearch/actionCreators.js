@@ -19,7 +19,7 @@ import { loadBooks } from '../books/actionCreators';
 import { loadSubjects } from 'applicationRoot/rootReducerActionCreators';
 import { loadTags } from '../tags/actionCreators';
 
-import { getCurrentSearchValues } from 'reactStartup';
+import { setSearchValues, getCurrentHistoryState } from 'reactStartup';
 
 let globalHashManager = {};
 
@@ -65,7 +65,7 @@ export function applyFilters(){
             filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
             pending = state.pending;
 
-        globalHashManager.setValues(
+        setSearchValues(
             'page', null,
             'search', pending.search,
             'subjects', filterSubjectsVal,
@@ -92,7 +92,7 @@ export function setSortOrder(sort, direction){
 
 export function booksActivated(searchProps){
     return function(dispatch, getState){
-        let searchState = getCurrentSearchValues().searchState,
+        let searchState = getCurrentHistoryState().searchState,
             nextSearchFilters = getNextFilters(searchState),
             state = getState(),
             booksState = state.booksModule.books,
