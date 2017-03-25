@@ -14,6 +14,10 @@ export function getNewReducer(reducerObj){
         app: rootReducer,
         ...asyncReducers
     }));
+
+    if (reducerObj.initialize){
+        store.dispatch(reducerObj.initialize({}));
+    }
 }
 
 const createStoreWithMiddleware = applyMiddleware(
