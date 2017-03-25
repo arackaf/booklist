@@ -107,11 +107,13 @@ var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) });
 
 app.get('/', browseToReactRedux);
-app.get('/books', browseToReactRedux);
+app.get('/books/', browseToReactRedux);
+app.get('/login', browseToReactRedux);
 app.get('/subjects', browseToReactRedux);
 app.get('/settings', browseToReactRedux);
 app.get('/scan', browseToReactRedux);
 app.get('/home', browseToReactRedux);
+app.get('/view', browseToReactRedux);
 app.get('/react-redux', browseToReactRedux);
 
 function browseToReactRedux(request, response){
@@ -267,7 +269,8 @@ app.post('/react-redux/createUser', function(req, response){
     });
 });
 
-app.get('/react-redux/activate/:code', function(req, response){
+app.get('/activate', browseToReactRedux);
+app.get('/activate/:code', function(req, response){
     let userDao = new UserDao(),
         code = req.params.code;
 
@@ -281,10 +284,10 @@ app.get('/react-redux/activate/:code', function(req, response){
                 if (result.rememberMe) {
                     response.cookie('remember_me', result.token, { path: '/', httpOnly: true, maxAge: rememberMeExpiration });
                 }
-                response.redirect('/react-redux/#activate');
+                response.redirect('/activate');
             })
         } else {
-            response.redirect(result.alreadyActivated ? '/react-redux/#activate/?alreadyActivated=true' : '/react-redux/#activate');
+            response.redirect(result.alreadyActivated ? '/activate?alreadyActivated=true' : '/activate');
         }
 
     }, err => console.log(':(', err));
