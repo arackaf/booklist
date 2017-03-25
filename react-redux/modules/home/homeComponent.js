@@ -1,5 +1,5 @@
 import React from 'react';
-import { isLoggedIn, goHome } from 'reactStartup';
+import { isLoggedIn } from 'reactStartup';
 
 const MainHomePane = props =>
     <div className="row" style={{margin: 0}}>
