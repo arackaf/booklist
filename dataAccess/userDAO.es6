@@ -17,6 +17,7 @@ const siteRoot = process.env.NODE_ENV == 'production' ? 'http://mylibrary.io' : 
 
 class UserDAO extends DAO {
     async createUser(email, password, rememberMe){
+        email = email.toLowerCase();
         let db = await super.open();
         try {
             let activationToken = this.getActivationToken(email),
@@ -33,9 +34,10 @@ class UserDAO extends DAO {
         }
     }
     async lookupUser(email, password){
+        email = email.toLowerCase();
         let db = await super.open();
         try {
-            return await db.collection('users').findOne({ activated: true, email: new RegExp(email, 'i'), password: this.saltAndHashPassword(password) });
+            return await db.collection('users').findOne({ activated: true, email, password: this.saltAndHashPassword(password) });
         } finally{
             super.dispose(db);
         }
@@ -49,9 +51,10 @@ class UserDAO extends DAO {
         }
     }
     async checkUserExists(email, password){
+        email = email.toLowerCase();
         let db = await super.open();
         try {
-            return !!(await db.collection('users').findOne({ email: new RegExp(email, 'i') }));
+            return !!(await db.collection('users').findOne({ email }));
         } finally{
             super.dispose(db);
         }
@@ -135,6 +138,7 @@ class UserDAO extends DAO {
         }
     }
     async sendActivationCode(email){
+        email = email.toLowerCase();
         let code = this.getActivationToken(email),
             url = `${siteRoot}/activate/${code}`;
 
@@ -148,9 +152,11 @@ class UserDAO extends DAO {
         return md5(`${salt}${password}${salt}`);
     }
     saltAndHashToken(email){
+        email = email.toLowerCase();
         return md5(`${salt}${email}${salt}`);
     }
     getActivationToken(email){
+        email = email.toLowerCase();
         return md5(`${salt}${salt}${email}${salt}${salt}`);
     }
 }
