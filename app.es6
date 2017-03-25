@@ -107,6 +107,11 @@ var easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) });
 
 app.get('/', browseToReactRedux);
+app.get('/books', browseToReactRedux);
+app.get('/subjects', browseToReactRedux);
+app.get('/settings', browseToReactRedux);
+app.get('/scan', browseToReactRedux);
+app.get('/home', browseToReactRedux);
 app.get('/react-redux', browseToReactRedux);
 
 function browseToReactRedux(request, response){
