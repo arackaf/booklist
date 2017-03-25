@@ -22,8 +22,6 @@ import { loadTags } from '../tags/actionCreators';
 
 import { setSearchValues, getCurrentHistoryState, history } from 'reactStartup';
 
-let globalHashManager = {};
-
 export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
 
@@ -84,7 +82,7 @@ export function applyFilters(){
 
 export function setSortOrder(sort, direction){
     return function(dispatch, getState){
-        globalHashManager.setValues(
+        setSearchValues(
             'sort', sort,
             'sortDirection', direction == 1 ? 'asc' : 'desc'
         );
@@ -176,7 +174,7 @@ export function removeFilterSubject(_id) {
         let state = getState().booksModule.bookSearch,
             newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
 
-        globalHashManager.setValues(
+        setSearchValues(
             'subjects', newSubjects,
             'searchChildSubjects', state.searchChildSubjects && newSubjects ? 'true' : null
         );
@@ -188,7 +186,7 @@ export function removeFilterTag(_id){
         let state = getState().booksModule.bookSearch,
             newTags = Object.keys(state.tags).filter(sId => sId != _id).join('-');
 
-        globalHashManager.setValues('tags', newTags);
+        setSearchValues('tags', newTags);
     };
 }
 
@@ -207,14 +205,14 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
 export function pageUp(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;
-        globalHashManager.setValues('page', +state.page + 1);
+        setSearchValues('page', +state.page + 1);
     };
 }
 
 export function pageDown(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;
-        globalHashManager.setValues('page', +state.page == 2 ? null : state.page - 1);
+        setSearchValues('page', +state.page == 2 ? null : state.page - 1);
     };
 }
 
