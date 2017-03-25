@@ -31,15 +31,15 @@ let publicUserCache = {};
 
 const history = createHistory()
 export {history};
-const location = history.location;
 
 export function getCurrentHistoryState(){
-    let keyOrder = [];
-    let searchState = history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
-        let pieces = s.split('=');
-        keyOrder.push(pieces[0]);
-        return (hash[pieces[0]] = pieces[1], hash);
-    }, {});
+    let keyOrder = [],
+        location = history.location,
+        searchState = history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
+            let pieces = s.split('=');
+            keyOrder.push(pieces[0]);
+            return (hash[pieces[0]] = pieces[1], hash);
+        }, {});
 
     return {
         pathname: location.pathname,
@@ -88,7 +88,7 @@ export function loadCurrentModule(location) {
 
         //switching to a new public viewing - reload page
         if (!initial && store.getState().app.publicUserId != userId){
-            location.reload();
+            window.location.reload();
             return;
         }
 
@@ -99,7 +99,7 @@ export function loadCurrentModule(location) {
         }
     } else if (store.getState().app.publicUserId){
         //leaving public viewing - reload page
-        location.reload();
+        window.location.reload();
         return;
     }
 
@@ -136,12 +136,9 @@ export function loadCurrentModule(location) {
         }
 
         if (moduleObject.reducer) {
-            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer});
+            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer, initialize: moduleObject.initialize});
         }
         renderUI(createElement(moduleObject.component));
-        if (moduleObject.initialize) {
-            store.dispatch(moduleObject.initialize({}));
-        }
     });
 }
 

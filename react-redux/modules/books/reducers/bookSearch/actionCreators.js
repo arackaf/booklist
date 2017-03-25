@@ -1,3 +1,4 @@
+import {store} from 'applicationRoot/store';
 import {
     BEGIN_FILTER_CHANGE,
     SET_PENDING_SUBJECT,
@@ -19,7 +20,7 @@ import { loadBooks } from '../books/actionCreators';
 import { loadSubjects } from 'applicationRoot/rootReducerActionCreators';
 import { loadTags } from '../tags/actionCreators';
 
-import { setSearchValues, getCurrentHistoryState } from 'reactStartup';
+import { setSearchValues, getCurrentHistoryState, history } from 'reactStartup';
 
 let globalHashManager = {};
 
@@ -91,6 +92,15 @@ export function setSortOrder(sort, direction){
 }
 
 export function booksActivated(searchProps){
+    let isActive = true;
+    history.listen((location, action) => {
+        let {pathname, __keyOrder, searchState} = getCurrentHistoryState();
+
+        if (pathname === '/books'){
+            store.dispatch(syncFiltersToHash(searchState));
+        }
+    })
+
     return function(dispatch, getState){
         let searchState = getCurrentHistoryState().searchState,
             nextSearchFilters = getNextFilters(searchState),
