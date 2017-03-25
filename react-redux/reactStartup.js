@@ -36,13 +36,17 @@ const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subj
 
 const unlisten = history.listen((location, action) => {
   // location is an object like window.location 
-  loadCurrentModule(location);
+  loadModule(location);
 });
-loadCurrentModule(history.location);
+loadCurrentModule();
 
 let initial = true;
 
-export function loadCurrentModule(location) {
+export function loadCurrentModule(){
+    loadModule(history.location);
+}
+
+function loadModule(location) {
     let originalModule = location.pathname.replace(/\//g, '').toLowerCase(),
         module = originalModule || 'home',
         publicModule = module === 'view' || module == 'activate';
