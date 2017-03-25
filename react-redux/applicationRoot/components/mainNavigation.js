@@ -32,8 +32,8 @@ export default class MainNavigationBar extends React.Component {
                     <NavBar.Toggle />
                 </NavBar.Header>
                 <NavBar.Nav>
-                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} active={isBookEntry} href={isBookEntry ? undefined : '#scan'}>Book entry</NavBar.Item> : null}
-                    {isLoggedIn || isPublic ? <NavBar.Item active={isBookList} onClick={isBookEntry ? null : () => goto('books', 'search=fr')}>{isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Books'}</NavBar.Item> : null}
+                    {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={isBookEntry || isPublic ? null : () => goto('scan')} active={isBookEntry} >Book entry</NavBar.Item> : null}
+                    {isLoggedIn || isPublic ? <NavBar.Item active={isBookList} onClick={isBookList ? null : () => goto('books')}>{isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Books'}</NavBar.Item> : null}
                     {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={() => goto('subjects')} active={isSubjects}>Subjects</NavBar.Item> : null}
                     {isLoggedIn && isPublic ? <NavBar.Item onClick={() => goto('books')}>View your collection</NavBar.Item> : null}
                     {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={isPublic ? null : () => goto('settings')} active={isSettings}>Settings</NavBar.Item> : null}

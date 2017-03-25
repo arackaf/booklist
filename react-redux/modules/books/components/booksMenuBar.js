@@ -12,7 +12,6 @@ import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
 import * as tagsActionCreators from '../reducers/tags/actionCreators';
 import * as booksSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
-import {globalHashManager} from 'reactStartup';
 
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
