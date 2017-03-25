@@ -281,6 +281,7 @@ app.get('/activate/:code', function(req, response){
         //console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
         if (result.success){
             req.login(result, function(){
+                response.cookie('userId', result._id, { maxAge: 900000 });
                 if (result.rememberMe) {
                     response.cookie('remember_me', result.token, { path: '/', httpOnly: true, maxAge: rememberMeExpiration });
                 }
