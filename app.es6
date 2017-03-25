@@ -141,6 +141,7 @@ app.post('/react-redux/login', passport.authenticate('local'), function(req, res
 
 app.post('/react-redux/logout', function(req, response){
     response.clearCookie('remember_me');
+    response.clearCookie('userId');
     req.logout();
     response.send({});
 });
