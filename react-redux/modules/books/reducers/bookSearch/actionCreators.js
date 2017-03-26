@@ -134,7 +134,7 @@ export function syncFiltersToHash(searchProps){
         if (!nextSearchFilters.sortDirection){
             nextSearchFilters.sortDirection = '-1';
         }
-
+        
         if (isDirty(searchState, nextSearchFilters)){
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
@@ -162,8 +162,11 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != (newState.pagesOperator || '>')){
         if (newState.pages !== '') return true;
     }
+    if ((oldState.page || 1) != (newState.page || 1)){
+        if (newState.pages !== '') return true;
+    }
 
-    return !!['search', 'author', 'publisher', 'page', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
 }
 
 const itemsDifferent = (oldItems, newItems) =>
