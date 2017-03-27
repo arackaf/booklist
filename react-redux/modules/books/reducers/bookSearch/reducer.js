@@ -28,7 +28,7 @@ const searchFields = {
     author: '',
     publisher: '',
     pages: '',
-    pagesOperator: '>',
+    pagesOperator: 'lt',
     page: 1,
     pageSize: 50,
     isRead: ''

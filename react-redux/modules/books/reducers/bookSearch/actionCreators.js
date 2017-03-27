@@ -1,3 +1,4 @@
+import {store} from 'applicationRoot/store';
 import {
     BEGIN_FILTER_CHANGE,
     SET_PENDING_SUBJECT,
@@ -19,7 +20,7 @@ import { loadBooks } from '../books/actionCreators';
 import { loadSubjects } from 'applicationRoot/rootReducerActionCreators';
 import { loadTags } from '../tags/actionCreators';
 
-import { globalHashManager } from 'reactStartup';
+import { setSearchValues, getCurrentHistoryState, history } from 'reactStartup';
 
 export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
@@ -63,34 +64,44 @@ export function applyFilters(){
             filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
             pending = state.pending;
 
-        globalHashManager.setValues(
-            'page', null,
-            'search', pending.search,
-            'subjects', filterSubjectsVal,
-            'tags', filterTagsVal,
-            'searchChildSubjects', pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
-            'author', pending.author,
-            'publisher', pending.publisher,
-            'pagesOperator', pending.pages != '' ? pending.pagesOperator : null,
-            'pages', pending.pages,
-            'isRead', pending.isRead
-        );
+        setSearchValues({
+            'page': null,
+            'search': pending.search,
+            'subjects': filterSubjectsVal,
+            'tags': filterTagsVal,
+            'searchChildSubjects': pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
+            'author': pending.author,
+            'publisher': pending.publisher,
+            'pagesOperator': pending.pages != '' ? pending.pagesOperator : null,
+            'pages': pending.pages,
+            'isRead': pending.isRead
+        });
         dispatch(endFilterChanging());
     }
 }
 
 export function setSortOrder(sort, direction){
     return function(dispatch, getState){
-        globalHashManager.setValues(
-            'sort', sort,
-            'sortDirection', direction == 1 ? 'asc' : 'desc'
-        );
+        setSearchValues({
+            'sort': sort,
+            'sortDirection': direction == 1 ? 'asc' : 'desc'
+        });
     };
 }
 
 export function booksActivated(searchProps){
+    let isActive = true;
+    history.listen((location, action) => {
+        let {pathname, __keyOrder, searchState} = getCurrentHistoryState();
+
+        if (pathname === '/books' || pathname === '/view'){
+            store.dispatch(syncFiltersToHash(searchState));
+        }
+    })
+
     return function(dispatch, getState){
-        let nextSearchFilters = getNextFilters(searchProps.parameters),
+        let searchState = getCurrentHistoryState().searchState,
+            nextSearchFilters = getNextFilters(searchState),
             state = getState(),
             booksState = state.booksModule.books,
             subjectsState = state.booksModule.subjects,
@@ -123,7 +134,7 @@ export function syncFiltersToHash(searchProps){
         if (!nextSearchFilters.sortDirection){
             nextSearchFilters.sortDirection = '-1';
         }
-
+        
         if (isDirty(searchState, nextSearchFilters)){
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
@@ -151,8 +162,11 @@ function isDirty(oldState, newState){
     if (oldState.pagesOperator != (newState.pagesOperator || '>')){
         if (newState.pages !== '') return true;
     }
+    if ((oldState.page || 1) != (newState.page || 1)){
+        if (newState.pages !== '') return true;
+    }
 
-    return !!['search', 'author', 'publisher', 'page', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
 }
 
 const itemsDifferent = (oldItems, newItems) =>
@@ -163,10 +177,10 @@ export function removeFilterSubject(_id) {
         let state = getState().booksModule.bookSearch,
             newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
 
-        globalHashManager.setValues(
-            'subjects', newSubjects,
-            'searchChildSubjects', state.searchChildSubjects && newSubjects ? 'true' : null
-        );
+        setSearchValues({
+            'subjects': newSubjects,
+            'searchChildSubjects': state.searchChildSubjects && newSubjects ? 'true' : null
+        });
     };
 }
 
@@ -175,7 +189,7 @@ export function removeFilterTag(_id){
         let state = getState().booksModule.bookSearch,
             newTags = Object.keys(state.tags).filter(sId => sId != _id).join('-');
 
-        globalHashManager.setValues('tags', newTags);
+        setSearchValues({'tags': newTags});
     };
 }
 
@@ -194,14 +208,14 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
 export function pageUp(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;
-        globalHashManager.setValues('page', +state.page + 1);
+        setSearchValues({'page': +state.page + 1});
     };
 }
 
 export function pageDown(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;
-        globalHashManager.setValues('page', +state.page == 2 ? null : state.page - 1);
+        setSearchValues({'page': +state.page == 2 ? null : state.page - 1});
     };
 }
 

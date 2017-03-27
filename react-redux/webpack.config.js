@@ -77,6 +77,7 @@ module.exports = {
     ].filter(p => p),
     devServer: {
         proxy: {
+            "/": "http://localhost:3000",
             "/react-redux/login": "http://localhost:3000",
             "/react-redux/logout": "http://localhost:3000",
             "/react-redux/createUser": "http://localhost:3000",

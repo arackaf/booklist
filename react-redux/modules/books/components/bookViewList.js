@@ -16,7 +16,6 @@ import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 
 import { selector } from '../reducers/reducer';
-import { globalHashManager } from 'reactStartup';
 
 @connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
 export default class BookViewingList extends React.Component {
