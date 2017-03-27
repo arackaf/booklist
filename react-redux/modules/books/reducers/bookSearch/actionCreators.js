@@ -64,28 +64,28 @@ export function applyFilters(){
             filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
             pending = state.pending;
 
-        setSearchValues(
-            'page', null,
-            'search', pending.search,
-            'subjects', filterSubjectsVal,
-            'tags', filterTagsVal,
-            'searchChildSubjects', pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
-            'author', pending.author,
-            'publisher', pending.publisher,
-            'pagesOperator', pending.pages != '' ? pending.pagesOperator : null,
-            'pages', pending.pages,
-            'isRead', pending.isRead
-        );
+        setSearchValues({
+            'page': null,
+            'search': pending.search,
+            'subjects': filterSubjectsVal,
+            'tags': filterTagsVal,
+            'searchChildSubjects': pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
+            'author': pending.author,
+            'publisher': pending.publisher,
+            'pagesOperator': pending.pages != '' ? pending.pagesOperator : null,
+            'pages': pending.pages,
+            'isRead': pending.isRead
+        });
         dispatch(endFilterChanging());
     }
 }
 
 export function setSortOrder(sort, direction){
     return function(dispatch, getState){
-        setSearchValues(
-            'sort', sort,
-            'sortDirection', direction == 1 ? 'asc' : 'desc'
-        );
+        setSearchValues({
+            'sort': sort,
+            'sortDirection': direction == 1 ? 'asc' : 'desc'
+        });
     };
 }
 
@@ -94,7 +94,7 @@ export function booksActivated(searchProps){
     history.listen((location, action) => {
         let {pathname, __keyOrder, searchState} = getCurrentHistoryState();
 
-        if (pathname === '/books'){
+        if (pathname === '/books' || pathname === '/view'){
             store.dispatch(syncFiltersToHash(searchState));
         }
     })
@@ -177,10 +177,10 @@ export function removeFilterSubject(_id) {
         let state = getState().booksModule.bookSearch,
             newSubjects = Object.keys(state.subjects).filter(sId => sId != _id).join('-');
 
-        setSearchValues(
-            'subjects', newSubjects,
-            'searchChildSubjects', state.searchChildSubjects && newSubjects ? 'true' : null
-        );
+        setSearchValues({
+            'subjects': newSubjects,
+            'searchChildSubjects': state.searchChildSubjects && newSubjects ? 'true' : null
+        });
     };
 }
 
@@ -189,7 +189,7 @@ export function removeFilterTag(_id){
         let state = getState().booksModule.bookSearch,
             newTags = Object.keys(state.tags).filter(sId => sId != _id).join('-');
 
-        setSearchValues('tags', newTags);
+        setSearchValues({'tags': newTags});
     };
 }
 
@@ -208,14 +208,14 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
 export function pageUp(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;
-        setSearchValues('page', +state.page + 1);
+        setSearchValues({'page': +state.page + 1});
     };
 }
 
 export function pageDown(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;
-        setSearchValues('page', +state.page == 2 ? null : state.page - 1);
+        setSearchValues({'page': +state.page == 2 ? null : state.page - 1});
     };
 }
 
