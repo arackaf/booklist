@@ -1,6 +1,7 @@
 import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
+import queryString from 'query-string';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
@@ -148,34 +149,21 @@ export function goto(module, search){
 }
 
 export function getCurrentHistoryState(){
-    let keyOrder = [],
-        location = history.location,
-        searchState = history.location.search.replace(/^\?/, '').split('&').filter(s => s).reduce((hash, s) => {
-            let pieces = s.split('=');
-            keyOrder.push(pieces[0]);
-            return (hash[pieces[0]] = pieces[1], hash);
-        }, {});
-
+    let location = history.location;
     return {
         pathname: location.pathname,
-        __keyOrder: keyOrder,
-        searchState
+        searchState: queryString.parse(location.search)
     };
 }
 
-export function setSearchValues(...args){
-    let {pathname, __keyOrder, searchState} = getCurrentHistoryState();
+export function setSearchValues(state){
+    let {pathname, searchState: existingSearchState} = getCurrentHistoryState();
+    let newState = {...existingSearchState, ...state};
+    newState = Object.keys(newState).filter(k => newState[k]).reduce((hash, prop) => (hash[prop] = newState[prop], hash), {});
 
-    let orderedKeys = args.filter((_, i) => !(i % 2));
-    for (let i = 0; i < args.length - 1; i+= 2){
-        if (!searchState.hasOwnProperty(args[i])){
-            __keyOrder.push(args[i]);
-        }
-        searchState[args[i]] = args[i+1];
-    }
     history.push({
         pathname: history.location.pathname, 
-        search: orderedKeys.filter(k => searchState[k]).map(k => `${k}=${searchState[k]}`).join('&')
+        search: queryString.stringify(newState)
     });
 }
 
