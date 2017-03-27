@@ -1,4 +1,4 @@
-import { isLoggedIn, globalHashManager } from 'reactStartup';
+import { isLoggedIn, history, getCurrentHistoryState } from 'reactStartup';
 import React, {Component} from 'react';
 
 const MainActivatePane = props =>
@@ -17,7 +17,7 @@ const MainActivatePane = props =>
 class ActivateIfLoggedIn extends React.Component{
     constructor(){
         super();
-        this._timeoutToken = setTimeout(() => globalHashManager.overwriteToNewHash('#home'), 5000);
+        this._timeoutToken = setTimeout(() => history.replace('/home'), 5000);
     }
     componentWillUnmount(){
         clearTimeout(this._timeoutToken);
@@ -36,7 +36,7 @@ class ActivateIfLoggedIn extends React.Component{
 }
 
 const ActivateIfNotLoggedIn = props => {
-    let alreadyActivated = !!globalHashManager.getCurrentHashValueOf('alreadyActivated');
+    let alreadyActivated = !!getCurrentHistoryState().searchState.alreadyActivated;
     return (
         <div>
             <MainActivatePane>

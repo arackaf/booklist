@@ -35,7 +35,7 @@ export const selector = createSelector([
 ], (app, publicUserSettings) => {
     let publicLink = '';
     if (publicUserSettings.isPublic){
-        publicLink = `http://${window.location.host}/#view/?userId=${app.userId}`;
+        publicLink = `http://${window.location.host}/view?userId=${app.userId}`;
     }
     return {
         ...publicUserSettings,

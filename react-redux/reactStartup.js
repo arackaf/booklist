@@ -1,10 +1,12 @@
-import HashUtility, { SerializedHash } from 'util/hashManager';
 import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
+import queryString from 'query-string';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
+
+import createHistory from 'history/createBrowserHistory'
 
 if ('ontouchstart' in window || 'onmsgesturechange' in window){
     store.dispatch(setIsTouch(true));
@@ -28,20 +30,24 @@ let currentModule;
 let currentModuleObject;
 let publicUserCache = {};
 
-window.onhashchange = function () {
-    loadCurrentModule();
-};
+const history = createHistory()
+export {history};
 
-let initial = true;
 const validModules = new Set(['books', 'scan', 'home', 'activate', 'view', 'subjects', 'settings']);
-
-export const globalHashManager = new HashUtility();
-
+let initial = true;
+const unlisten = history.listen((location, action) => {
+  // location is an object like window.location 
+  loadModule(location);
+});
 loadCurrentModule();
-export function loadCurrentModule() {
-    let hash = window.location.hash.replace('#', ''),
-        originalModule = hash.split('/')[0] || '',
-        module = (hash.split('/')[0] || 'home').toLowerCase(),
+
+export function loadCurrentModule(){
+    loadModule(history.location);
+}
+
+function loadModule(location) {
+    let originalModule = location.pathname.replace(/\//g, '').toLowerCase(),
+        module = originalModule || 'home',
         publicModule = module === 'view' || module == 'activate';
 
     let {logged_in, userId: currentUserId} = isLoggedIn(),
@@ -55,7 +61,7 @@ export function loadCurrentModule() {
         }
     } else {
         if (!validModules.has(module)){
-            window.location.hash = 'books';
+            history.push('/books');
             return;
         }
     }
@@ -65,11 +71,11 @@ export function loadCurrentModule() {
     }
 
     if (publicModule){
-        var userId = globalHashManager.currentParameters.userId;
+        var userId = getCurrentHistoryState().searchState.userId;
 
         //switching to a new public viewing - reload page
         if (!initial && store.getState().app.publicUserId != userId){
-            location.reload();
+            window.location.reload();
             return;
         }
 
@@ -80,16 +86,13 @@ export function loadCurrentModule() {
         }
     } else if (store.getState().app.publicUserId){
         //leaving public viewing - reload page
-        location.reload();
+        window.location.reload();
         return;
     }
 
     initial = false;
 
     if (module === currentModule) {
-        if (currentModuleObject && currentModuleObject.hashSync) {
-            store.dispatch(currentModuleObject.hashSync(globalHashManager.currentParameters));
-        }
         return;
     }
     currentModule = module;
@@ -120,12 +123,9 @@ export function loadCurrentModule() {
         }
 
         if (moduleObject.reducer) {
-            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer});
+            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer, initialize: moduleObject.initialize});
         }
         renderUI(createElement(moduleObject.component));
-        if (moduleObject.initialize) {
-            store.dispatch(moduleObject.initialize({parameters: globalHashManager.currentParameters }));
-        }
     });
 }
 
@@ -142,10 +142,29 @@ function getCookie(name) {
   }, '')
 }
 
-export function goHome(){
-    let currentModule = globalHashManager.getCurrentHashInfo().module || 'home';
-    if (currentModule === 'home') return;
-    globalHashManager.setHash(new SerializedHash('home'));
+export function goto(module, search){
+    if (currentModule !== module) {
+        history.push({pathname: `/${module}`, search: search || undefined});
+    }
+}
+
+export function getCurrentHistoryState(){
+    let location = history.location;
+    return {
+        pathname: location.pathname,
+        searchState: queryString.parse(location.search)
+    };
+}
+
+export function setSearchValues(state){
+    let {pathname, searchState: existingSearchState} = getCurrentHistoryState();
+    let newState = {...existingSearchState, ...state};
+    newState = Object.keys(newState).filter(k => newState[k]).reduce((hash, prop) => (hash[prop] = newState[prop], hash), {});
+
+    history.push({
+        pathname: history.location.pathname, 
+        search: queryString.stringify(newState)
+    });
 }
 
 function fetchPublicUserInfo(userId){
