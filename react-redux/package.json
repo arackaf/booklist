@@ -30,7 +30,7 @@
     "redux": "3.0.4",
     "redux-thunk": "1.0.0",
     "reselect": "2.0.1",
-    "simple-react-bootstrap": "0.1.18"
+    "simple-react-bootstrap": "0.1.19"
   },
   "devDependencies": {
     "babel-cli": "6.22.2",
