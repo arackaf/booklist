@@ -46,7 +46,7 @@ export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState
     return state;
 }
 
-const modifyingBooksSelector = createSelector(
+export const modifyingBooksSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksSubjectsModifier.singleBookModify,
         ({ booksModule }) => booksModule.booksSubjectsModifier.selectedBooksModify,

@@ -46,7 +46,7 @@ export function bookTagManagerReducer(state = bookTagManagerInitialState, action
     return state;
 }
 
-const modifyingBooksSelector = createSelector(
+export const modifyingBooksSelector = createSelector(
     [
         ({ booksModule }) => booksModule.booksTagsModifier.singleBookModify,
         ({ booksModule }) => booksModule.booksTagsModifier.selectedBooksModify,
