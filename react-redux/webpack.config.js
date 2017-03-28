@@ -74,6 +74,21 @@ module.exports = {
                 return context && context.indexOf('node_modules') >= 0 && targets.find(t => new RegExp('\\\\' + t + '\\\\', 'i').test(context));
             },
         }),
+
+        new webpack.optimize.CommonsChunkPlugin({
+            async: 'book-modal-helpers',
+            minChunks(module, count) {
+                var context = module.context;
+                var targets = ['jscolor', 'react-autosuggest', 'react-autowhatever']
+                return context && 
+                    (
+                        (context.indexOf('node_modules') >= 0 && targets.find(t => new RegExp('\\\\' + t + '\\\\', 'i').test(context)))
+                        ||
+                        (module.resource && module.resource.indexOf('jscolor') >= 0)
+                    );
+            },
+        }),
+
     ].filter(p => p),
     devServer: {
         proxy: {
