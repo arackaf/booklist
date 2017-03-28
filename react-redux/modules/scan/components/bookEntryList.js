@@ -12,7 +12,7 @@ import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
 const ManualBookEntry = Loadable({
-    loader: () => System.import('applicationRoot/components/manualBookEntry'),
+    loader: () => import('applicationRoot/components/manualBookEntry'),
     LoadingComponent: Loading
 });
 
