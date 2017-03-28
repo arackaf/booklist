@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {selector} from '../../reducers/publicUserSettings/reducer';
 import * as actionCreators from '../../reducers/passwordReset/actionCreators';
-import Loading from 'applicationRoot/components/loading';
 import {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 
 @connect(() => ({}), {...actionCreators})

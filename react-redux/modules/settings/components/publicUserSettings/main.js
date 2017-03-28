@@ -12,7 +12,7 @@ export default class PublicUserSettings extends Component {
             <div className='row' style={{position: 'relative'}}>
                 <div className='col-md-6 col-sm-12'>
                     {this.props.loading ? 
-                        <Loading /> 
+                        <Loading style={{height: 0}} /> 
                         : 
                         <div style={{padding: '10px'}}>
                             {this.props.publicLink ? 

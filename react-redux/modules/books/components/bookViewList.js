@@ -14,6 +14,7 @@ import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
+import Loading from 'applicationRoot/components/loading';
 
 import { selector } from '../reducers/reducer';
 
@@ -30,9 +31,7 @@ export default class BookViewingList extends React.Component {
 
                     <div className="panel-body" style={{ padding: 0, minHeight: 450, position: 'relative' }}>
                         {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?
-                            <div className="wait-for-loading">
-                                <i className="fa fa-5x fa-spin fa-spinner"></i>
-                            </div> : null }
+                            <Loading /> : null }
 
                         {(!this.props.books.length && !this.props.booksLoading) ?
                             <div className="alert alert-warning" style={{borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0}}>
