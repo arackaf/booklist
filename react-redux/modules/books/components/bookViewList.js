@@ -14,37 +14,37 @@ import Loadable from 'react-loadable';
 import { selector } from '../reducers/reducer';
 
 const ManualBookEntry = Loadable({
-    loader: () => System.import('applicationRoot/components/manualBookEntry'),
+    loader: () => import('applicationRoot/components/manualBookEntry'),
     LoadingComponent: Loading,
     delay: 1
 });
 
 const BookSubjectSetter = Loadable({
-    loader: () => System.import('./bookSubjectSetter'),
+    loader: () => import('./bookSubjectSetter'),
     LoadingComponent: Loading,
     delay: 1
 });
 
 const BookTagSetter = Loadable({
-    loader: () => System.import('./bookTagSetter'),
+    loader: () => import('./bookTagSetter'),
     LoadingComponent: Loading,
     delay: 1
 });
 
 const SubjectEditModal = Loadable({
-    loader: () => System.import('./subjectEditModal'),
+    loader: () => import('./subjectEditModal'),
     LoadingComponent: Loading,
     delay: 1
 });
 
 const TagEditModal = Loadable({
-    loader: () => System.import('./tagEditModal'),
+    loader: () => import('./tagEditModal'),
     LoadingComponent: Loading,
     delay: 1
 });
 
 const BookSearchModal = Loadable({
-    loader: () => System.import('./bookSearchModal'),
+    loader: () => import('./bookSearchModal'),
     LoadingComponent: Loading,
     delay: 1
 });
