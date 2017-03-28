@@ -7,6 +7,9 @@ import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectsModifi
 import { bookTagManagerReducer as booksTagsModifier, booksTagsModifierSelector } from './booksTagModification/reducer';
 import bookEdit from './editBook/reducer';
 
+import {modifyingBooksSelector as subjectsBooksModifyingSelector} from './booksSubjectModification/reducer';
+import {modifyingBooksSelector as tagsBooksModifyingSelector} from './booksTagModification/reducer';
+
 export const reducer = combineReducers({
     books,
     subjects,
@@ -22,6 +25,8 @@ export const selector = state => {
         tagsSelected = tagsSelector(state),
         bookEdit = state.booksModule.bookEdit,
         bookSearch = bookSearchSelector(state),
+        subjectsBooksModifying = subjectsBooksModifyingSelector(state),
+        tagsBooksModifying = tagsBooksModifyingSelector(state),
         app = state.app;
 
     return {
@@ -41,6 +46,11 @@ export const selector = state => {
         isEditingBook: bookEdit.isEditing,
         editingBook: bookEdit.editingBook,
         editingBookSaving: bookEdit.editingBookSaving,
-        editingBookSaved: bookEdit.editingBookSaved
+        editingBookSaved: bookEdit.editingBookSaved,
+        subjectsBooksModifyingCount: subjectsBooksModifying.length,
+        tagsBooksModifyingCount: tagsBooksModifying.length,
+        subjectEditModalOpen: state.booksModule.subjects.editModalOpen,
+        tagEditModalOpen: state.booksModule.tags.editTagOpen,
+        editingBookSearchFilters: state.booksModule.bookSearch.editingFilters
     };
 };

@@ -5,18 +5,50 @@ import GridView from './bookViewList-grid';
 import BasicListView from './bookViewList-basicList';
 
 import BooksMenuBar from './booksMenuBar';
-import BookSearchModal from './bookSearchModal';
-import BookSubjectSetter from './bookSubjectSetter';
-import BookTagSetter from './bookTagSetter';
-import SubjectEditModal from './subjectEditModal';
-import TagEditModal from './tagEditModal';
-import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
 
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 import Loading from 'applicationRoot/components/loading';
+import Loadable from 'react-loadable';
 
 import { selector } from '../reducers/reducer';
+
+const ManualBookEntry = Loadable({
+    loader: () => System.import('applicationRoot/components/manualBookEntry'),
+    LoadingComponent: Loading,
+    delay: 1
+});
+
+const BookSubjectSetter = Loadable({
+    loader: () => System.import('./bookSubjectSetter'),
+    LoadingComponent: Loading,
+    delay: 1
+});
+
+const BookTagSetter = Loadable({
+    loader: () => System.import('./bookTagSetter'),
+    LoadingComponent: Loading,
+    delay: 1
+});
+
+const SubjectEditModal = Loadable({
+    loader: () => System.import('./subjectEditModal'),
+    LoadingComponent: Loading,
+    delay: 1
+});
+
+const TagEditModal = Loadable({
+    loader: () => System.import('./tagEditModal'),
+    LoadingComponent: Loading,
+    delay: 1
+});
+
+const BookSearchModal = Loadable({
+    loader: () => System.import('./bookSearchModal'),
+    LoadingComponent: Loading,
+    delay: 1
+});
+
 
 @connect(selector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
 export default class BookViewingList extends React.Component {
@@ -42,27 +74,31 @@ export default class BookViewingList extends React.Component {
                             (this.props.isGridView ? <GridView />
                                 : this.props.isBasicList ? <BasicListView />
                                 : null) : null }
+
+                        {this.props.isEditingBook ? 
+                            <ManualBookEntry
+                                title={editingBook ? `Edit ${editingBook.title}` : ''}
+                                dragTitle={dragTitle}
+                                bookToEdit={editingBook}
+                                isOpen={this.props.isEditingBook}
+                                isSaving={this.props.editingBookSaving}
+                                isSaved={this.props.editingBookSaved}
+                                saveBook={book => this.props.saveEditingBook(book)}
+                                saveMessage={'Saved'}
+                                onClosing={this.props.stopEditingBook} /> : null
+                        }
+                        
                     </div>
                 </div>
                 <br />
                 <br />
 
-                <BookSubjectSetter />
-                <BookTagSetter />
-                <SubjectEditModal />
-                <TagEditModal />
-                <BookSearchModal />
+                {this.props.subjectsBooksModifyingCount ? <BookSubjectSetter /> : null}
+                {this.props.tagsBooksModifyingCount ? <BookTagSetter /> : null}
 
-                <ManualBookEntry
-                    title={editingBook ? `Edit ${editingBook.title}` : ''}
-                    dragTitle={dragTitle}
-                    bookToEdit={editingBook}
-                    isOpen={this.props.isEditingBook}
-                    isSaving={this.props.editingBookSaving}
-                    isSaved={this.props.editingBookSaved}
-                    saveBook={book => this.props.saveEditingBook(book)}
-                    saveMessage={'Saved'}
-                    onClosing={this.props.stopEditingBook} />
+                {this.props.subjectEditModalOpen ? <SubjectEditModal /> : null}
+                {this.props.tagEditModalOpen ? <TagEditModal /> : null}
+                {this.props.editingBookSearchFilters ? <BookSearchModal /> : null}
             </div>
         );
     }
