@@ -12,41 +12,42 @@ import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
 import { selector } from '../reducers/reducer';
+import ComponentLoading from 'applicationRoot/components/componentLoading';
 
 const ManualBookEntry = Loadable({
     loader: () => import('applicationRoot/components/manualBookEntry'),
-    LoadingComponent: Loading,
+    LoadingComponent: ComponentLoading,
     delay: 1
 });
 
 const BookSubjectSetter = Loadable({
     loader: () => import('./bookSubjectSetter'),
-    LoadingComponent: Loading,
+    LoadingComponent: ComponentLoading,
     delay: 1
 });
 
 const BookTagSetter = Loadable({
     loader: () => import('./bookTagSetter'),
-    LoadingComponent: Loading,
+    LoadingComponent: ComponentLoading,
     delay: 1
 });
 
 const SubjectEditModal = Loadable({
     loader: () => import('./subjectEditModal'),
-    LoadingComponent: Loading,
+    LoadingComponent: ComponentLoading,
     delay: 1
 });
 
 const TagEditModal = Loadable({
     loader: () => import('./tagEditModal'),
-    LoadingComponent: Loading,
+    LoadingComponent: ComponentLoading,
     delay: 1
 });
 
 const BookSearchModal = Loadable({
     loader: () => import('./bookSearchModal'),
-    LoadingComponent: Loading,
-    delay: 1
+    LoadingComponent: ComponentLoading,
+    delay: 200
 });
 
 

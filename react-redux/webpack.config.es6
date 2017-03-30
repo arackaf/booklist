@@ -57,7 +57,10 @@ module.exports = {
             name: 'react-build',
             minChunks(module, count) {
                 var context = module.context;
-                return context && (context.indexOf('node_modules\\react\\') >= 0 || context.indexOf('node_modules\\react-dom\\') >= 0);
+                return context && (
+                    context.indexOf('node_modules\\react\\') >= 0 || 
+                    context.indexOf('node_modules\\react-dom\\') >= 0
+                );
             },
         }),
 
@@ -68,10 +71,10 @@ module.exports = {
         //*********************************** async chunks*************************
 
         //catch all - anything used in more than one place
-        new webpack.optimize.CommonsChunkPlugin({
-            async: 'used-twice',
-            minChunks: (module, count) => count >= 2,
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     async: 'used-twice',
+        //     minChunks: (module, count) => count >= 2,
+        // }),
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
         asyncBundle('book-modal-helpers', { 
@@ -80,7 +83,7 @@ module.exports = {
                 'applicationRoot/components/customColorPicker', 
                 'util/jscolor'
             ], 
-            nodePaths: ['react-autosuggest', 'react-autowhatever'] 
+            nodePaths: ['react-autosuggest', 'react-autowhatever', 'react-themeable', 'section-iterator'] 
         })
 
     ].filter(p => p),
