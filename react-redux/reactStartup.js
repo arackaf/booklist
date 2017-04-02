@@ -99,13 +99,13 @@ function loadModule(location) {
 
     let modulePromise = (() => {
         switch(module.toLowerCase()){
-            case 'activate': return (System.import('./modules/activate/activate'));
-            case 'authenticate': return (System.import('./modules/authenticate/authenticate'));
-            case 'books': return (System.import('./modules/books/books'));
-            case 'home': return (System.import('./modules/home/home'));
-            case 'scan': return (System.import('./modules/scan/scan'));
-            case 'subjects': return (System.import('./modules/subjects/subjects'));
-            case 'settings': return (System.import('./modules/settings/settings'));
+            case 'activate': return import('./modules/activate/activate');
+            case 'authenticate': return import('./modules/authenticate/authenticate');
+            case 'books': return import('./modules/books/books');
+            case 'home': return import('./modules/home/home');
+            case 'scan': return import('./modules/scan/scan');
+            case 'subjects': return import('./modules/subjects/subjects');
+            case 'settings': return import('./modules/settings/settings');
         }
     })();
 

@@ -33,6 +33,7 @@ var gulpTargets = [
     'private'
 ].map(f => `./` + f + '/**/*.es6')
 gulpTargets.push('./*.es6');
+gulpTargets.push('./react-redux/*.es6');
 
 gulp.task('transpile-all', function () {
     gulp.src(gulpTargets, { base: './' })
