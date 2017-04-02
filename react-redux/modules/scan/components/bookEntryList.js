@@ -8,7 +8,13 @@ import Collapse from 'react-collapse';
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
-import ManualBookEntry from 'applicationRoot/components/manualBookEntry';
+import Loading from 'applicationRoot/components/loading';
+import Loadable from 'react-loadable';
+
+const ManualBookEntry = Loadable({
+    loader: () => import('applicationRoot/components/manualBookEntry'),
+    LoadingComponent: Loading
+});
 
 const defaultEmptyBook = () => ({
     title: '',
@@ -130,16 +136,18 @@ class BookEntryList extends Component {
                     </div>
                 </div>
 
-                <ManualBookEntry
-                    title={'Manually enter a book'}
-                    dragTitle={'Click or drag to upload a cover image. The uploaded image will be scaled down as needed'}
-                    bookToEdit={this.state.manualBook}
-                    isOpen={this.state.inManualEntry}
-                    isSaving={this.state.isSavingManual}
-                    isSaved={this.state.manualSaved}
-                    saveBook={book => this.saveNewBook(book)}
-                    startOver={() => this.manuallyEnterBook()}
-                    onClosing={() => this.manualEntryEnding()} />
+                {this.state.inManualEntry ? 
+                    <ManualBookEntry
+                        title={'Manually enter a book'}
+                        dragTitle={'Click or drag to upload a cover image. The uploaded image will be scaled down as needed'}
+                        bookToEdit={this.state.manualBook}
+                        isOpen={this.state.inManualEntry}
+                        isSaving={this.state.isSavingManual}
+                        isSaved={this.state.manualSaved}
+                        saveBook={book => this.saveNewBook(book)}
+                        startOver={() => this.manuallyEnterBook()}
+                        onClosing={() => this.manualEntryEnding()} /> : null
+                }
 
             </div>
         );

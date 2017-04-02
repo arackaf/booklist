@@ -46,12 +46,21 @@ class ManualBookEntry extends Component {
     closeModal(){
         this.props.onClosing()
     }
+    componentDidMount() {
+        //TODO: refactor with what's below
+        if (this.props.bookToEdit){
+            this.editBook(this.props.bookToEdit);
+        }
+    }
     componentWillReceiveProps(nextProps){
         if (this.props.bookToEdit !== nextProps.bookToEdit){
-            let bookToStart = { ...nextProps.bookToEdit };
-            this.revertTo = bookToStart;
-            this.revert();
+            this.editBook(nextProps.bookToEdit);
         }
+    }
+    editBook(book){
+        let bookToStart = { ...book };
+        this.revertTo = bookToStart;
+        this.revert();
     }
     revert(){
         this.setState({
