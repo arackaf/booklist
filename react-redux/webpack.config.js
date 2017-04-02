@@ -62,7 +62,7 @@ module.exports = {
         name: 'react-build',
         minChunks: function minChunks(module, count) {
             var context = module.context;
-            return context && (context.indexOf('node_modules\\react\\') >= 0 || context.indexOf('node_modules\\react-dom\\') >= 0);
+            return context && (context.indexOf('node_modules\\react\\') >= 0 || context.indexOf('node_modules\\react-dom\\') >= 0 || context.indexOf('node_modules\\react-loadable\\') >= 0);
         }
     }), new webpack.optimize.CommonsChunkPlugin({
         name: 'manifest'
@@ -71,12 +71,12 @@ module.exports = {
     //*********************************** async chunks*************************
 
     //catch all - anything used in more than one place
-    // new webpack.optimize.CommonsChunkPlugin({
-    //     async: 'used-twice',
-    //     minChunks: (module, count) => count >= 2,
-    // }),
-
-    asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core'] }), asyncBundle('book-modal-helpers', {
+    new webpack.optimize.CommonsChunkPlugin({
+        async: 'used-twice',
+        minChunks: function minChunks(module, count) {
+            return count >= 2;
+        }
+    }), asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core'] }), asyncBundle('book-modal-helpers', {
         resources: ['applicationRoot/components/genericLabelSelect', 'applicationRoot/components/customColorPicker', 'util/jscolor'],
         nodePaths: ['react-autosuggest', 'react-autowhatever', 'react-themeable', 'section-iterator']
     })].filter(function (p) {
