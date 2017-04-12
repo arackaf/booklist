@@ -11,8 +11,8 @@
     "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p && node build-css",
-    "start": "gulp transpile-all && cd react-redux && npm i && cd .. && node app.js",
-    "heroku-postbuild": "cd react-redux && webpack -p"
+    "start": "node app.js",
+    "heroku-postbuild": "gulp transpile-all && cd react-redux && npm i && webpack -p && node build-css"
   },
   "dependencies": {
     "apac": "1.0.0",
