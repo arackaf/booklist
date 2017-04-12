@@ -64,6 +64,7 @@
     "gulp-util": "3.0.3",
     "gulp-watch": "4.1.1",
     "lazypipe": "1.0.1",
-    "webpack": "2.2.1"
+    "webpack": "2.2.1",
+    "webpack-bundle-analyzer": "2.2.3"
   }
 }
