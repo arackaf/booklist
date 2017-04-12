@@ -1,10 +1,29 @@
 import nodemailer from 'nodemailer';
-import { authInfo, myAddresses } from '../private/mailAuthenticationInfo';
+
+const host = process.env.EMAIL_HOST,
+      port = process.env.EMAIL_PORT,
+      fromAddress = process.env.EMAIL_FROM,
+      authPass = process.env.EMAIL_PASSWORD,
+      authUser = process.env.EMAIL_USER;
+
+let authInfo = {
+    host,
+    secureConnection: false, // TLS requires secureConnection to be false
+    port, // port for secure SMTP
+    auth: {
+        user: authUser, // Your email id
+        pass: authPass // Your password
+    }
+    //tls: {
+    //    ciphers:'SSLv3'
+    //}
+};
+
 
 export default function sendEmail({ to, subject, html }) {
     // Not the movie transporter!
     let mailTransport = nodemailer.createTransport(authInfo);
-    let emailInfo = Object.assign({}, myAddresses, {
+    let emailInfo = Object.assign({}, {from: fromAddress}, {
         to,
         subject,
         html

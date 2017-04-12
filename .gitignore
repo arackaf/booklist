@@ -6,3 +6,4 @@ uploads/*
 app.js
 react-redux/static/bootstrap/css/bootstrap-booklist-build.css
 react-redux/static/fontawesome/css/font-awesome-booklist-build.css
+.env

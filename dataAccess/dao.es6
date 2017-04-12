@@ -2,10 +2,9 @@ import { MongoClient } from 'mongodb';
 
 let db;
 let dbPromise = MongoClient
-        .connect(process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/mongotest')
+        .connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL)
         .then(database => db = database)
         .catch(err => console.log('Error connecting ' + err));
-
 
 class DAO{
     static init(){
