@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-
 require('regenerator/runtime');
 
 require('./app-helpers/promiseUtils');
