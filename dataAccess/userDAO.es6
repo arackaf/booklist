@@ -1,8 +1,9 @@
 import DAO from './dao';
 import md5 from 'blueimp-md5';
-import salt from '../private/salt';
 import { ObjectID } from 'mongodb';
 import sendEmail from '../app-helpers/sendEmail';
+
+var salt = process.env.SALT;
 
 const newUsersSubjects = [
     { name: 'History', path: null },

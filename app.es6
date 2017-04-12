@@ -1,8 +1,10 @@
-import 'regenerator/runtime';
+require('dotenv').config();
 
-import './app-helpers/promiseUtils';
-import './private/awsS3Credentials';
-import dao from './dataAccess/dao';
+
+require('regenerator/runtime');
+
+require('./app-helpers/promiseUtils');
+const dao = require('./dataAccess/dao').default;
 
 const express = require('express');
 const app = express();
@@ -16,10 +18,10 @@ const lwip = require('lwip');
 const exif = require('exif-parser');
 const compression = require('compression');
 
-import bookEntryQueueManager from './app-helpers/bookEntryQueueManager';
-import PendingBookEntryDao from './dataAccess/pendingBookEntryDAO';
-import ErrorLoggerDao from './dataAccess/errorLoggerDAO';
-import UserDao from './dataAccess/userDAO';
+const bookEntryQueueManager = require('./app-helpers/bookEntryQueueManager').default;
+const PendingBookEntryDao = require('./dataAccess/pendingBookEntryDAO').default;
+const ErrorLoggerDao = require('./dataAccess/errorLoggerDAO').default;
+const UserDao = require('./dataAccess/userDAO').default;
 
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
