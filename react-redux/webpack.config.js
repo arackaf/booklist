@@ -21,7 +21,7 @@ var asyncBundle = function asyncBundle(name, _ref) {
                 resource = _ref2.resource;
 
             return context && context.indexOf('node_modules') >= 0 && nodePaths.find(function (t) {
-                return new RegExp('\\\\' + t + '\\\\', 'i').test(context);
+                return new RegExp('/' + t + '/', 'i').test(context);
             }) || resource && resources.find(function (r) {
                 return !path.relative(r + '.js', resource);
             });

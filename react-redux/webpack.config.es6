@@ -9,7 +9,7 @@ const asyncBundle = (name, {nodePaths = [], resources = []}) =>
     new webpack.optimize.CommonsChunkPlugin({
         async: name,
         minChunks({context, resource}, count) {
-            return (context && context.indexOf('node_modules') >= 0 && nodePaths.find(t => new RegExp('\\\\' + t + '\\\\', 'i').test(context)))
+            return (context && context.indexOf('node_modules') >= 0 && nodePaths.find(t => new RegExp('/' + t + '/', 'i').test(context)))
                     ||
                    (resource && resources.find(r => !path.relative(r + '.js', resource)))
         }
