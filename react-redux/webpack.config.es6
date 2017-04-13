@@ -72,10 +72,10 @@ module.exports = {
         //*********************************** async chunks*************************
 
         //catch all - anything used in more than one place
-        new webpack.optimize.CommonsChunkPlugin({
-            async: 'used-twice',
-            minChunks: (module, count) => count >= 2,
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     async: 'used-twice',
+        //     minChunks: (module, count) => count >= 2,
+        // }),
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
         asyncBundle('book-modal-helpers', { 
