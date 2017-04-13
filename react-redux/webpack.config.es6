@@ -58,9 +58,9 @@ module.exports = {
             minChunks(module, count) {
                 var context = module.context;
                 return context && (
-                    context.indexOf('node_modules\\react\\') >= 0 || 
-                    context.indexOf('node_modules\\react-dom\\') >= 0 ||
-                    context.indexOf('node_modules\\react-loadable\\') >= 0 
+                    context.indexOf('node_modules/react/') >= 0 || 
+                    context.indexOf('node_modules/react-dom/') >= 0 ||
+                    context.indexOf('node_modules/react-loadable/') >= 0 
                 );
             },
         }),
