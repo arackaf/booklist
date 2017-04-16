@@ -20,8 +20,11 @@ var asyncBundle = function asyncBundle(name, _ref) {
             var context = _ref2.context,
                 resource = _ref2.resource;
 
-            return context && context.indexOf('node_modules') >= 0 && nodePaths.find(function (t) {
-                return new RegExp('/' + t + '/', 'i').test(context);
+            if (!context) return false;
+            var resourcePath = context.replace(/\\/g, '/');
+
+            return resourcePath.indexOf('node_modules') >= 0 && nodePaths.find(function (t) {
+                return new RegExp('/' + t + '/', 'i').test(resourcePath);
             }) || resource && resources.find(function (r) {
                 return !path.relative(r + '.js', resource);
             });
