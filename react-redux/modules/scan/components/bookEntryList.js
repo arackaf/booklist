@@ -13,7 +13,8 @@ import Loadable from 'react-loadable';
 
 const ManualBookEntry = Loadable({
     loader: () => import('applicationRoot/components/manualBookEntry'),
-    LoadingComponent: Loading
+    LoadingComponent: Loading,
+    delay: 500
 });
 
 const defaultEmptyBook = () => ({

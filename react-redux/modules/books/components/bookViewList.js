@@ -17,37 +17,37 @@ import ComponentLoading from 'applicationRoot/components/componentLoading';
 const ManualBookEntry = Loadable({
     loader: () => import('applicationRoot/components/manualBookEntry'),
     LoadingComponent: ComponentLoading,
-    delay: 1
+    delay: 500
 });
 
 const BookSubjectSetter = Loadable({
     loader: () => import('./bookSubjectSetter'),
     LoadingComponent: ComponentLoading,
-    delay: 1
+    delay: 500
 });
 
 const BookTagSetter = Loadable({
     loader: () => import('./bookTagSetter'),
     LoadingComponent: ComponentLoading,
-    delay: 1
+    delay: 500
 });
 
 const SubjectEditModal = Loadable({
     loader: () => import('./subjectEditModal'),
     LoadingComponent: ComponentLoading,
-    delay: 1
+    delay: 500
 });
 
 const TagEditModal = Loadable({
     loader: () => import('./tagEditModal'),
     LoadingComponent: ComponentLoading,
-    delay: 1
+    delay: 500
 });
 
 const BookSearchModal = Loadable({
     loader: () => import('./bookSearchModal'),
     LoadingComponent: ComponentLoading,
-    delay: 200
+    delay: 500
 });
 
 
