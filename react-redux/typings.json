@@ -1,0 +1,6 @@
+{
+  "name": "Booklist",
+  "dependencies": {
+    "react": "registry:npm/react#15.0.1+20170104200836"
+  }
+}

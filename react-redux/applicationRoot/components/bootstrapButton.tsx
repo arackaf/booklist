@@ -1,19 +1,5 @@
 import React, { Component } from 'react';
 
-interface B {
-    a: string,
-    b: string,
-    c: number,
-    d: number
-}
-
-export const XXXXXXXXXXXXXXXXXXXXXXXXXXXXX : B = {
-    a: '',
-    b: '',
-    c: 1,
-    d: 1
-}
-
 const cssPresets = { };
 const buttonTypes = ['default', 'primary', 'success', 'info', 'warning', 'danger'];
 const buttonSizes = ['lg', 'sm', 'xs'];
