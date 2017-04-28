@@ -9,9 +9,10 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED,
-    SET_VIEW
+    BOOK_DELETED
 } from './actionNames';
+
+import ajaxUtil from 'util/ajaxUtil';
 
 export function toggleSelectBook(_id, selected){
     return { type: TOGGLE_SELECT_BOOK, _id, selected }
