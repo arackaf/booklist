@@ -1,4 +1,4 @@
-window.ajaxUtil = {
+const ajaxUtil = {
     post(url, data, callback = () => null, errorCallback = () => null){
         return fetch(url,
             {
@@ -33,3 +33,7 @@ window.ajaxUtil = {
         return fetch(`${url}?${queryString}`, { method: 'get', credentials: 'include' }).then(resp => resp.json())
     }
 };
+
+export default window.ajaxUtil = ajaxUtil;
+
+window.ajaxUtil = ajaxUtil;
