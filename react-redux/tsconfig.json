@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "baseUrl": "./",
-        "jsx": "react"
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true
     },
     "include": [
         "./**/*.ts",
