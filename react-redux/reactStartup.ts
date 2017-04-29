@@ -2,12 +2,20 @@ import { renderUI, clearUI } from 'applicationRoot/renderUI';
 import { store, getNewReducer } from 'applicationRoot/store';
 import { createElement } from 'react';
 import queryString from 'query-string';
+import ajaxUtil from 'util/ajaxUtil';
 import 'react-loadable';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
 
 import createHistory from 'history/createBrowserHistory'
+
+declare global {
+  interface System {
+    import (request: string): Promise<any>
+  }
+  var System: System
+}
 
 if ('ontouchstart' in window || 'onmsgesturechange' in window){
     store.dispatch(setIsTouch(true));
@@ -100,13 +108,13 @@ function loadModule(location) {
 
     let modulePromise = (() => {
         switch(module.toLowerCase()){
-            case 'activate': return import('./modules/activate/activate');
-            case 'authenticate': return import('./modules/authenticate/authenticate');
-            case 'books': return import('./modules/books/books');
-            case 'home': return import('./modules/home/home');
-            case 'scan': return import('./modules/scan/scan');
-            case 'subjects': return import('./modules/subjects/subjects');
-            case 'settings': return import('./modules/settings/settings');
+            case 'activate': return System.import('./modules/activate/activate');
+            case 'authenticate': return System.import('./modules/authenticate/authenticate');
+            case 'books': return System.import('./modules/books/books');
+            case 'home': return System.import('./modules/home/home');
+            case 'scan': return System.import('./modules/scan/scan');
+            case 'subjects': return System.import('./modules/subjects/subjects');
+            case 'settings': return System.import('./modules/settings/settings');
         }
     })();
 

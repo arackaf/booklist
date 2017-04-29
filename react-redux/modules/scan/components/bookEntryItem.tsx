@@ -2,7 +2,7 @@ import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstra
 import { findDOMNode } from 'react-dom';
 import React, { Component } from 'react';
 
-class BookEntryItem extends Component{
+class BookEntryItem extends Component<any, any>{
     render(){
         return (
             <div>
@@ -24,10 +24,10 @@ class BookEntryItem extends Component{
         );
     }
     focusInput(){
-        findDOMNode(this.refs.input).focus();
+        (findDOMNode(this.refs.input) as any).focus();
     }
     selectInput(){
-        findDOMNode(this.refs.input).select();
+        (findDOMNode(this.refs.input) as any).select();
     }
     keyDown(evt){
         if (evt.keyCode == 13){
