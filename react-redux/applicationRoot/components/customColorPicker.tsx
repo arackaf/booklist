@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {Component} from 'react';
 import 'jscolor';
+
+declare var jscolor: any;
 
 let uniqueIdCounter = 0;
 
-class CustomColorPicker extends React.Component {
+class CustomColorPicker extends Component<any, any> {
+    uniqueId: string
+    _colorChosen: () => any
+    jscolorInstance: any
+    rootElement: any
+    valueElement: any
     constructor(){
         super();
         this.uniqueId = `customColorPickerId${++uniqueIdCounter}`

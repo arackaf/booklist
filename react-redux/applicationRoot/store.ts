@@ -3,7 +3,7 @@ import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 
 let asyncReducers = { };
-export function getNewReducer(reducerObj){
+export function getNewReducer(reducerObj?) : any {
     if (!reducerObj) return combineReducers({ app: rootReducer });
 
     if (asyncReducers[reducerObj.name]) return; //registering an async reducer we already have - do nothing and get out

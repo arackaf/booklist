@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class ColorsPalette extends Component{
+export default class ColorsPalette extends Component<any, any>{
     render(){
         let {currentColor, colors, onColorChosen} = this.props;
 
