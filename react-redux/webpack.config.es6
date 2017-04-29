@@ -20,7 +20,7 @@ const asyncBundle = (name, {nodePaths = [], resources = []}) =>
 
 module.exports = {
     entry: {
-        main: './reactStartup.js'
+        main: './reactStartup.ts'
     },
     output: {
         filename: '[name]-bundle.js',

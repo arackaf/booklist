@@ -34,7 +34,7 @@ var asyncBundle = function asyncBundle(name, _ref) {
 
 module.exports = {
     entry: {
-        main: './reactStartup.js'
+        main: './reactStartup.ts'
     },
     output: {
         filename: '[name]-bundle.js',
