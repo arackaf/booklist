@@ -2,6 +2,7 @@ import {createSelector} from 'reselect';
 
 import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSortedSelector} from 'applicationRoot/rootReducer';
 import {removeKeysFromObject} from 'util/immutableHelpers';
+import {appType} from 'applicationRoot/rootReducer';
 
 import {
     ADD_NEW_SUBJECT,
@@ -29,6 +30,14 @@ const initialSubjectsState = {
     subjectsSaving: {},
     subjectsSaved: {}
 };
+
+export type subjectType = {
+    _id: string;
+    name: string;
+    parentId: string;
+}
+
+export type subjectsType = typeof initialSubjectsState;
 
 export function reducer(state = initialSubjectsState, action){
     switch(action.type){
@@ -84,37 +93,47 @@ export function reducer(state = initialSubjectsState, action){
     return state;
 }
 
-export const editingSubjectHashSelector = createSelector([
+type storeSlice = {app: appType, subjectsModule: subjectsType};
+export type editingSubjectHashType = {editingSubjectsHash: object};
+export const editingSubjectHashSelector = createSelector<storeSlice, editingSubjectHashType, object, object>(
     state => state.app.subjectHash,
-    state => state.subjectsModule.editingSubjectsHash
-], (subjectHash, editingSubjectsHash) => {
-    return {
-        editingSubjectsHash: Object.keys(editingSubjectsHash)
-                                   .map(_id => editingSubjectsHash[_id])
-                                   .reduce((hash, s) => (hash[s._id] = {...s, eligibleParents: getEligibleParents(subjectHash, s._id)}, hash), {})
-    };
-});
+    state => state.subjectsModule.editingSubjectsHash, 
+    (subjectHash, editingSubjectsHash) => {
+        return {
+            editingSubjectsHash: Object.keys(editingSubjectsHash)
+                                    .map(_id => editingSubjectsHash[_id])
+                                    .reduce((hash, s) => (hash[s._id] = {...s, eligibleParents: getEligibleParents(subjectHash, s._id)}, hash), {})
+        };
+    }
+);
 
-export const draggingSubjectSelector = createSelector([
+export type draggingSubjectType = subjectType & {
+    candidateMove: boolean
+};
+export const draggingSubjectSelector = createSelector<storeSlice, draggingSubjectType, object, string>(
     state => state.app.subjectHash,
-    state => state.subjectsModule.draggingId
-], (subjectHash, draggingId) => draggingId ? {...subjectHash[draggingId], _id: draggingId + '_dragging', candidateMove: true} : null);
+    state => state.subjectsModule.draggingId,
+    (subjectHash, draggingId) => draggingId ? {...subjectHash[draggingId], _id: draggingId + '_dragging', candidateMove: true} : null);
 
 const tempSubjectCompare = ({_id: id1}, {_id: id2}) => id1 - id2;
 
-export const pendingSubjectsSelector = createSelector([
-    state => state.subjectsModule.pendingSubjectsHash
-], pendingSubjectsHash => {
-    let result = {};
-    Object.keys(pendingSubjectsHash).forEach(_id => {
-        let subject = pendingSubjectsHash[_id],
-            resultKey = subject.parentId || 'root';
+export type pendingSubjectsType = {
+    [s: string]: subjectType[]
+}
+export const pendingSubjectsSelector = createSelector<storeSlice, pendingSubjectsType, any>(
+    state => state.subjectsModule.pendingSubjectsHash,
+    pendingSubjectsHash => {
+        let result = {};
+        Object.keys(pendingSubjectsHash).forEach(_id => {
+            let subject = pendingSubjectsHash[_id],
+                resultKey = subject.parentId || 'root';
 
-        if (!result[resultKey]){
-            result[resultKey] = [];
-        }
-        result[resultKey].push(subject);
-    });
-    Object.keys(result).forEach(parentId => result[parentId].sort(tempSubjectCompare));
-    return result;
-});
+            if (!result[resultKey]){
+                result[resultKey] = [];
+            }
+            result[resultKey].push(subject);
+        });
+        Object.keys(result).forEach(parentId => result[parentId].sort(tempSubjectCompare));
+        return result;
+    }
+);
