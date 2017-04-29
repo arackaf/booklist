@@ -3,8 +3,13 @@ import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from 'applicationR
 import Dropzone from 'react-dropzone';
 
 import { Modal } from 'simple-react-bootstrap';
+import ajaxUtil from 'util/ajaxUtil';
 
-class ManualBookEntry extends Component {
+class ManualBookEntry extends Component<any, any> {
+    syncStateFromInput: any
+    SyncedInput: any
+    syncAuthor: any
+    revertTo: any
     constructor(){
         super();
 
@@ -105,20 +110,20 @@ class ManualBookEntry extends Component {
                         <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
                             <label>Title</label>
 
-                            <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => this.save(this.state.bookEditing)} />
+                            <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => this.save()} />
                         </div>
                         <div className="row">
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>ISBN</label>
-                                    <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => this.save(this.state.bookEditing)} />
+                                    <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => this.save()} />
                                 </div>
                             </div>
 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Pages</label>
-                                    <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" onEnter={() => this.save(this.state.bookEditing)} />
+                                    <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" onEnter={() => this.save()} />
                                 </div>
                             </div>
                         </div>
@@ -126,14 +131,14 @@ class ManualBookEntry extends Component {
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Publisher</label>
-                                    <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => this.save(this.state.bookEditing)} />
+                                    <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => this.save()} />
                                 </div>
                             </div>
 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Published</label>
-                                    <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => this.save(this.state.bookEditing)} />
+                                    <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => this.save()} />
                                 </div>
                             </div>
                         </div>
@@ -143,7 +148,7 @@ class ManualBookEntry extends Component {
                                     <div className="form-group">
                                         <label>Author</label>
                                         <input
-                                            onKeyDown={evt => (evt.keyCode || evt.which) == 13 && this.save(this.state.bookEditing)}
+                                            onKeyDown={evt => (evt.keyCode || evt.which) == 13 && this.save()}
                                             onChange={this.syncAuthor($index)}
                                             value={author}
                                             className="form-control"
@@ -185,7 +190,7 @@ class ManualBookEntry extends Component {
                     <BootstrapButton preset="danger-xs" onClick={() => this.props.isSaved ? this.props.startOver() : this.revert()}>Clear all</BootstrapButton>
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save(this.state.bookEditing)}>{!this.props.isSaved ? 'Save' : <span>Saved <i className="fa fa-fw fa-check"></i></span>}</AjaxButton>
+                    <AjaxButton className="pull-right" preset="primary" running={this.props.isSaving} disabled={this.props.isSaved} runningText='Saving' onClick={() => this.save()}>{!this.props.isSaved ? 'Save' : <span>Saved <i className="fa fa-fw fa-check"></i></span>}</AjaxButton>
                 </Modal.Footer>
             </Modal>
         );
