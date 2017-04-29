@@ -1,5 +1,5 @@
 const ajaxUtil = {
-    post(url, data, callback = () => null, errorCallback = () => null){
+    post(url, data, callback = (resp : any) => null, errorCallback = (resp : any) => null){
         return fetch(url,
             {
                 method: 'post',
@@ -17,7 +17,7 @@ const ajaxUtil = {
             })
             .catch(errorCallback);
     },
-    postWithFiles(url, data, callback = () => null, errorCallback = () => null){
+    postWithFiles(url, data, callback = (resp : any) => null, errorCallback = (resp : any) => null){
         return fetch(url,
             {
                 method: 'post',
@@ -28,7 +28,7 @@ const ajaxUtil = {
             .then(callback)
             .catch(errorCallback);
     },
-    ['get'](url, data){
+    ['get'](url, data) : any {
         let queryString = Object.keys(data).map(p => `${p}=${data[p]}`).join('&');
         return fetch(`${url}?${queryString}`, { method: 'get', credentials: 'include' }).then(resp => resp.json())
     }

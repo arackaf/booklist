@@ -3,9 +3,11 @@ import {connect} from 'react-redux';
 
 import {NavBar} from 'simple-react-bootstrap';
 import {goto} from 'reactStartup';
+import ajaxUtil from 'util/ajaxUtil';
 
 @connect(state => state.app)
-export default class MainNavigationBar extends React.Component {
+export default class MainNavigationBar extends Component<any, any> {
+    el: any
     logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
     componentDidUpdate(prevProps){
         if (prevProps.module != this.props.module){

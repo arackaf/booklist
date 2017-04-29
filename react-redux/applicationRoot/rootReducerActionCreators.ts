@@ -14,6 +14,8 @@ import {
     SUBJECT_DELETED
 } from './rootReducerActionNames';
 
+import ajaxUtil from 'util/ajaxUtil';
+
 export const setDesktop = () => ({ type: SET_DESKTOP });
 export const setMobile = () => ({ type: SET_MOBILE });
 
