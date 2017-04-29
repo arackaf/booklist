@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import PublicUserSettings from './publicUserSettings/main';
 import PasswordReset from './passwordReset/main';
 
-export default class PublicUserSettingsMain extends Component {
+export default class PublicUserSettingsMain extends Component<any, any> {
     state = {currentTab: 'publicSettings'};
     setTab = tab => this.setState({currentTab: tab});
     render() {

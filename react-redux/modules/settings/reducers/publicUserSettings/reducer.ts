@@ -8,7 +8,8 @@ const defaultState = {
     publicName: '',
     editing: {
         publicBooksHeader: '',
-        publicName: ''
+        publicName: '',
+        isPublic: false
     },
     saving: false
 }

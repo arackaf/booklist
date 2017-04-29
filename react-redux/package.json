@@ -48,7 +48,7 @@
     "reselect": "2.0.1",
     "simple-react-bootstrap": "0.1.21",
     "ts-loader": "^2.0.3",
-    "typescript": "^2.2.2",
+    "typescript": "^2.3.2",
     "webpack": "2.4.1"
   },
   "devDependencies": {

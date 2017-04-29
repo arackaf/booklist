@@ -151,7 +151,7 @@ function getCookie(name) {
   }, '')
 }
 
-export function goto(module, search){
+export function goto(module, search?){
     if (currentModule !== module) {
         history.push({pathname: `/${module}`, search: search || undefined});
     }
