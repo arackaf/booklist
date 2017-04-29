@@ -1,3 +1,4 @@
+import {appType} from 'applicationRoot/rootReducer';
 import {createSelector} from 'reselect';
 import {USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED} from './actionNames';
 const defaultState = {
@@ -11,6 +12,8 @@ const defaultState = {
     },
     saving: false
 }
+
+export type publicUserSettingsType = typeof defaultState;
 
 export default (state = defaultState, action) => {
     switch (action.type){
@@ -29,10 +32,15 @@ export default (state = defaultState, action) => {
 };
 
 const dirtyProps = ['isPublic', 'publicName', 'publicBooksHeader'];
-export const selector = createSelector([
+export type publicUserSettingsSelectorType = publicUserSettingsType & {
+    isDirty: boolean,
+    publicLink: string
+}
+type storeSlice = {app: appType, settingsModule: {publicUserSettings: publicUserSettingsType}};
+export const selector = createSelector<storeSlice, publicUserSettingsSelectorType, appType, publicUserSettingsType>(
     state => state.app,
-    state => state.settingsModule.publicUserSettings
-], (app, publicUserSettings) => {
+    state => state.settingsModule.publicUserSettings, 
+    (app, publicUserSettings) => {
     let publicLink = '';
     if (publicUserSettings.isPublic){
         publicLink = `http://${window.location.host}/view?userId=${app.userId}`;

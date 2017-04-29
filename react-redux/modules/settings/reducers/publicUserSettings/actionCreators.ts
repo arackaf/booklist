@@ -1,4 +1,5 @@
 import {LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED} from './actionNames';
+import ajaxUtil from 'util/ajaxUtil';
 
 export const loadPublicUserSettings = () => dispatch => {
     dispatch({type: USER_INFO_LOADING});
