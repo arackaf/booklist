@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BookEntryItem from './bookEntryItem';
 import { connect } from 'react-redux';
+import ajaxUtil from 'util/ajaxUtil';
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -11,8 +12,12 @@ import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
+import {scanReducerType} from 'modules/scan/reducers/reducer';
+
+declare var webSocketAddress : any;
+
 const ManualBookEntry = Loadable({
-    loader: () => import('applicationRoot/components/manualBookEntry'),
+    loader: () => System.import('applicationRoot/components/manualBookEntry'),
     LoadingComponent: Loading,
     delay: 500
 });
@@ -26,11 +31,12 @@ const defaultEmptyBook = () => ({
     authors: ['']
 });
 
-class BookEntryList extends Component {
-    constructor(){
-        super();
-        this.state = { showIncomingQueue: false, showScanInstructions: false };
-    }
+@connect(state => state.scanModule, { ...bookEntryActionCreators })
+export default class BookEntryList extends Component<scanReducerType & typeof bookEntryActionCreators, any> {
+
+    refs: any
+    ws: any
+    state: any = { showIncomingQueue: false, showScanInstructions: false }
     toggleScanInstructions(){
         this.setState({ showScanInstructions: !this.state.showScanInstructions });
     }
@@ -121,7 +127,6 @@ class BookEntryList extends Component {
                                         isbnChange={e => this.isbnChanged(entry, e)}
                                         entryFinished={() => this.entryFinished(entry)}
                                         index={i}
-                                        deleteBook={() => this.deleteBook(entry)}
                                     />
                                 </div>
                             )}
@@ -197,7 +202,3 @@ class BookEntryList extends Component {
         }
     }
 }
-
-const BookEntryListConnected = connect(state => state.scanModule, { ...bookEntryActionCreators })(BookEntryList);
-
-export default BookEntryListConnected;

@@ -16,6 +16,7 @@ const initialState = {
     pendingNumber: null,
     booksJustSaved: []
 };
+export type scanReducerType = typeof initialState;
 
 const MAX_BOOKS_DISPLAYED = 15;
 
@@ -33,10 +34,10 @@ export default function reducer(state = initialState, action){
             newEntryList[action.index] = updatedObject;
             return Object.assign({}, state, { entryList: newEntryList });
         case BOOK_QUEUED:
-            var updatedObject = Object.assign({}, state.entryList[action.index], { queueing: false, queued: true, isbn: '' }),
+            var updatedObject2 = Object.assign({}, state.entryList[action.index], { isbn: '', queued: true, queueing: false, }),
                 newEntryList = state.entryList.concat();
 
-            newEntryList[action.index] = updatedObject;
+            newEntryList[action.index] = updatedObject2;
             return Object.assign({}, state, { entryList: newEntryList });
         case RESET_LIST:
             return Object.assign({}, state, { entryList: initialArray() });
