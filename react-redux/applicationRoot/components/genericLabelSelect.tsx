@@ -1,6 +1,6 @@
 import Autosuggest from 'react-autosuggest';
 import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
-import React from 'react';
+import React, {Component} from 'react';
 
 function getSuggestionValue(suggestion) { // when suggestion selected, this function tells what should be the value of the input
     return suggestion.name;
@@ -12,7 +12,9 @@ function renderSuggestion(s) {
     );
 }
 
-class GenericLabelSelect extends React.Component {
+class GenericLabelSelect extends Component<any, any> {
+    input: any
+    onSuggestionSelected: (evt: any, arg: any) => any
     constructor() {
         super();
 
