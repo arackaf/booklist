@@ -78,17 +78,15 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-type tagsSorted = {
-    allTagsSorted: object
-};
-
-const tagsSorted = createSelector<tagsReducerType, tagsSorted, any>(
+type tagsSortedType = {allTagsSorted: object};
+const tagsSorted = createSelector<tagsReducerType, tagsSortedType, any>(
     state => state.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
         return { allTagsSorted };
     }
 );
+
 
 function allTagssSorted(tagHash){
     let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
@@ -99,21 +97,27 @@ function allTagssSorted(tagHash){
     });
 }
 
-const tagsSearched = createSelector(
-    [
-        tagsSorted,
-        state => state.tagSearch
-    ],
+type tagsSearchedType = tagsSortedType & {
+    tagsSearched: Object[]
+}
+const tagsSearched = createSelector<tagsReducerType, tagsSearchedType, tagsSortedType, string>(
+    tagsSorted,
+    state => state.tagSearch,
     (tags, tagSearch) => {
         let tagsSearched = filterTags(tags.allTagsSorted, tagSearch);
         return { ...tags, tagsSearched };
     }
 );
 
-const deletingTagInfoSelector = createSelector([
-        state => state.tagHash,
-        state => state.deletingTagId
-    ],
+type deletingTagInfoType = {
+    deleteInfo: {
+        tagName: string,
+        _id: string
+    }
+}
+const deletingTagInfoSelector = createSelector<tagsReducerType, deletingTagInfoType, object, string>(
+    state => state.tagHash,
+    state => state.deletingTagId,
     (tagHash, deletingTagId) => {
         if (!deletingTagId) return null;
 
@@ -123,13 +127,18 @@ const deletingTagInfoSelector = createSelector([
     }
 );
 
-export const tagsSelector = createSelector([
+export type tagsSelectorType = tagsReducerType & tagsSearchedType & deletingTagInfoType & {
+    colors: object[]
+}
+//TODO:
+
+export const tagsSelector = createSelector<any, tagsSelectorType, tagsReducerType, any>(
     state => state.booksModule.tags,
-    state => state.app.colors
-], (tags, colors) =>
-    Object.assign({},
-        tags,
-        tagsSearched(tags),
-        deletingTagInfoSelector(tags),
-        { colors: colors })
+    state => state.app.colors, 
+    (tags, colors) => ({
+        ...tags,
+        ...tagsSearched(tags),
+        ...deletingTagInfoSelector(tags),
+        colors
+    })
 );
