@@ -14,7 +14,8 @@ const MainActivatePane = props =>
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
     </div>
 
-class ActivateIfLoggedIn extends React.Component{
+class ActivateIfLoggedIn extends Component<any, any>{
+    _timeoutToken: any
     constructor(){
         super();
         this._timeoutToken = setTimeout(() => history.replace('/home'), 5000);

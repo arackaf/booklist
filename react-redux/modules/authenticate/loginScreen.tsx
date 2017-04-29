@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { loadCurrentModule } from 'reactStartup';
 import { AjaxButton } from 'applicationRoot/components/bootstrapButton';
+import ajaxUtil from 'util/ajaxUtil';
 
 const errorCodes = {
     s1: 'This user already exists',
@@ -9,7 +10,8 @@ const errorCodes = {
     c3: 'Password is required'
 }
 
-class Login extends React.Component{
+class Login extends Component<any, any>{
+    refs: any
     constructor(){
         super();
         this.state = { newUser: false, errorCode: null };
