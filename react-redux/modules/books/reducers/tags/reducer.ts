@@ -4,7 +4,7 @@ import {
     BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
-import { createSelector } from 'reselect';
+import { createSelector, Selector } from 'reselect';
 
 const emptyTag = { _id: '', name: '', backgroundColor: '', textColor: '' };
 const newTagEditing = { tagSearch: '', deletingTagId: null };
@@ -22,7 +22,9 @@ const initialTagsState = {
     deletingTagId: null
 };
 
-export function tagsReducer(state = initialTagsState, action = {}){
+export type tagsReducerType = typeof initialTagsState;
+
+export function tagsReducer(state = initialTagsState, action) : tagsReducerType {
     switch(action.type){
         case LOAD_TAGS:
             return { ...state, initialQueryFired: true };
@@ -76,8 +78,12 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-const tagsSorted = createSelector(
-    [state => state.tagHash],
+type tagsSorted = {
+    allTagsSorted: object
+};
+
+const tagsSorted = createSelector<tagsReducerType, tagsSorted, any>(
+    state => state.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
         return { allTagsSorted };
