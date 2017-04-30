@@ -90,21 +90,17 @@ type booksModuleType = {
     bookSearch: bookSearchType
 }
 
-export type bookSearchSelectorType = bookSearchType & appType & {
+export type bookSearchSelectorType = bookSearchType & {
     isGridView : boolean;
     isBasicList : boolean;
     selectedSubjects: any[];
     selectedTags: any[];
     pendingSelectedSubjects: any;
     pendingSelectedTags: any;
-    subjects: any[];
-    allSubjectsSorted: any;
     selectedBooksCount: any;
-    viewingPublic: any;
     eligibleFilterSubjects: any;
     eligibleFilterTags: any;
     bindableSortValue: any;
-    booksLoading: boolean;
 };
 export const bookSearchSelector = (state) : bookSearchSelectorType => {
     let booksModule : booksModuleType = state.booksModule,
@@ -128,14 +124,9 @@ export const bookSearchSelector = (state) : bookSearchSelectorType => {
         pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
         eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
         eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
-        subjects: subjectsState.subjects,
-        allSubjectsSorted: subjectsState.allSubjectsSorted,
         selectedBooksCount: booksState.selectedBooksCount,
-        viewingPublic: app.isPublic,
         bindableSortValue,
         isGridView,
-        isBasicList,
-        ...app,
-        booksLoading: booksState.loading
+        isBasicList
     }
 }
