@@ -9,7 +9,13 @@ import TouchBackend from 'react-dnd-touch-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 import { store } from 'applicationRoot/store';
+import {subjectType} from 'modules/subjects/reducers/reducer';
 
+type dragLayerType = {
+    item: any;
+    currentOffset: {x: number, y: number};
+    isDragging: boolean
+};
 
 @connect((state, ownProps) => {
     return {
@@ -23,7 +29,7 @@ import { store } from 'applicationRoot/store';
         isDragging: monitor.isDragging()
     }
 })
-class SubjectDragLayer extends Component {
+class SubjectDragLayer extends Component<{currentlyDragging: string} & dragLayerType, any> {
     render(){
         let {isDragging, currentOffset, item, currentlyDragging} = this.props;
         if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
@@ -48,6 +54,18 @@ class SubjectDragLayer extends Component {
             </div>: null;
     }
 }
+
+type dropTargetType = {
+    connectDropTarget: any;
+    isOver: boolean;
+    canDrop: boolean;
+}
+
+type subjectDisplayProps = {
+    subject: subjectType & {candidateMove: boolean};
+    subjectDraggingOver: any;
+    noDrop: boolean;
+};
 
 @connect((state, ownProps) => {
     return {
@@ -77,7 +95,7 @@ class SubjectDragLayer extends Component {
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop()
 }))
-class SubjectDisplay extends Component {
+class SubjectDisplay extends Component<subjectDisplayProps & {isCurrentDropTarget: boolean} & dropTargetType, any> {
     componentDidUpdate(prevProps){
         let wasOver = prevProps.isOver && prevProps.canDrop,
             isOver = this.props.isOver && this.props.canDrop,
@@ -96,7 +114,7 @@ class SubjectDisplay extends Component {
         let {subject, connectDropTarget} = this.props,
             {_id, candidateMove} = subject,
             pendingSubjectDrop = this.props.isOver && this.props.canDrop,
-            style = {},
+            style: any = {},
             noDrop = candidateMove || this.props.noDrop;
 
         if (candidateMove) {
@@ -152,7 +170,7 @@ class SubjectDisplay extends Component {
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview()
 }))
-class SubjectDisplayContent extends Component {
+class SubjectDisplayContent extends Component<any, any> {
     render(){
         let {
                 subject,
@@ -196,7 +214,7 @@ class SubjectDisplayContent extends Component {
 }
 
 @connect(null, {...actionCreators})
-class DefaultSubjectDisplay extends Component {
+class DefaultSubjectDisplay extends Component<any, any> {
     render(){
         let {connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, beginSubjectEdit, addNewSubject, beginSubjectDelete, noDrop} = this.props,
             {_id, name} = subject,
@@ -221,7 +239,8 @@ class DefaultSubjectDisplay extends Component {
 }
 
 @connect(null, {...actionCreators})
-class EditingSubjectDisplay extends Component {
+class EditingSubjectDisplay extends Component<any, any> {
+    inputEl: any;
     componentDidMount(){
         this.inputEl.focus();
     }
@@ -241,7 +260,7 @@ class EditingSubjectDisplay extends Component {
         return (
             <div className={className}>
                 <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
-                    <input ref={el => this.inputEl = el} onKeyDown={this.subjectEditingKeyDown} onChange={evt => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
+                    <input ref={el => this.inputEl = el} onKeyDown={this.subjectEditingKeyDown} onChange={(evt: any) => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
                     <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name || '<label preview>'}</div>
                     {subject.pending ? <br /> : null}
                     {subject.pending ? <span className="label label-warning" style={{marginTop: '5px', display: 'inline-block'}}>This subject is not saved</span> : null}
@@ -249,7 +268,7 @@ class EditingSubjectDisplay extends Component {
                     {validationError ? <span className="label label-danger">{validationError}</span> : null}
                 </div>
                 <div className="col-xs-12 col-lg-3 padding-bottom-small">
-                    <select onChange={evt => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
+                    <select onChange={(evt: any) => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
                         <option value={''}>No Parent</option>
                         {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
                     </select>
@@ -270,10 +289,11 @@ class EditingSubjectDisplay extends Component {
 }
 
 @connect(null, {...actionCreators})
-class PendingDeleteSubjectDisplay extends Component {
-    render(){
+class PendingDeleteSubjectDisplay extends Component<typeof actionCreators & any, any> {
+    render(){ 
         let {className, deleteMessage, deleteSubject, cancelSubjectDelete, subject} = this.props,
             {name, _id} = subject;
+            
         return (
             <div className={className}>
                 <div className="col-lg-12">
@@ -287,7 +307,7 @@ class PendingDeleteSubjectDisplay extends Component {
 }
 
 @connect(null, {...actionCreators})
-class DeletingSubjectDisplay extends Component {
+class DeletingSubjectDisplay extends Component<any, any> {
     render(){
         let {name, className} = this.props;
         return (
@@ -301,14 +321,20 @@ class DeletingSubjectDisplay extends Component {
     }
 }
 
-class SubjectList extends Component {
+class SubjectList extends Component<any, any> {
     render(){
         let {style = {}, noDrop} = this.props;
 
-        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SubjectDisplay key={subject._id} noDrop={noDrop} subject={subject} />)}</ul>;
+        let SD : any = SubjectDisplay;
+
+        return <ul className="list-group" style={{ marginBottom: '5px', ...style }}>{this.props.subjects.map(subject => <SD key={subject._id} noDrop={noDrop} subject={subject} />)}</ul>;
     }
 }
 let isTouch = store.getState().app.isTouch
+
+type subjectsComponentPropsType = {
+    topLevelSubjects: any, pendingSubjectsLookup: any, addNewSubject: any
+}
 
 @DragDropContext(isTouch ? TouchBackend : HTML5Backend)
 @connect(state => {
@@ -317,11 +343,13 @@ let isTouch = store.getState().app.isTouch
         pendingSubjectsLookup: pendingSubjectsSelector(state)
     };
 }, { ...actionCreators })
-export default class SubjectsComponent extends Component{
+export default class SubjectsComponent extends Component<subjectsComponentPropsType & typeof actionCreators, any>{
     render(){
         let {addNewSubject, pendingSubjectsLookup, topLevelSubjects} = this.props,
             rootPendingSubjects = pendingSubjectsLookup['root'] || [],
             allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
+
+        let SDL : any = SubjectDragLayer;
 
         return (
             <div style={{ marginLeft: '10px', marginRight: '10px' }}>
@@ -329,7 +357,7 @@ export default class SubjectsComponent extends Component{
                 <br />
                 <br />
                 <SubjectList subjects={allSubjects} />
-                {isTouch ? <SubjectDragLayer /> : null}
+                {isTouch ? <SDL /> : null}
             </div>
         )
     }
