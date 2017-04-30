@@ -18,7 +18,6 @@ import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 
 import {appType} from 'applicationRoot/rootReducer';
 import { subjectsSelector, subjectsType, filterSubjects } from '../subjects/reducer';
-import { booksSelector, booksType } from '../books/reducer';
 import { tagsSelector, tagsType } from '../tags/reducer';
 
 const searchFields = {
@@ -97,7 +96,6 @@ export type bookSearchSelectorType = bookSearchType & {
     selectedTags: any[];
     pendingSelectedSubjects: any;
     pendingSelectedTags: any;
-    selectedBooksCount: any;
     eligibleFilterSubjects: any;
     eligibleFilterTags: any;
     bindableSortValue: any;
@@ -109,7 +107,6 @@ export const bookSearchSelector = (state) : bookSearchSelectorType => {
         app : appType = state.app;
 
     let subjectsState = subjectsSelector(state);
-    let booksState = booksSelector(state);
     let tagsState = tagsSelector(state);
     let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
 
@@ -120,11 +117,10 @@ export const bookSearchSelector = (state) : bookSearchSelectorType => {
         ...booksModule.bookSearch,
         selectedSubjects: projectSelectedItems(bookSearch.subjects, app.subjectHash),
         selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
-        pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, app.subjectHash),
-        pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
+        pendingSelectedSubjects: projectSelectedItems(bookSearch.pending.subjects, app.subjectHash),
+        pendingSelectedTags: projectSelectedItems(bookSearch.pending.tags, booksModule.tags.tagHash),
         eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
         eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
-        selectedBooksCount: booksState.selectedBooksCount,
         bindableSortValue,
         isGridView,
         isBasicList
