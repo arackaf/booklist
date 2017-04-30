@@ -14,8 +14,8 @@ import {
 
 import ajaxUtil from 'util/ajaxUtil';
 
-export function toggleSelectBook(_id, selected){
-    return { type: TOGGLE_SELECT_BOOK, _id, selected }
+export function toggleSelectBook(_id){
+    return { type: TOGGLE_SELECT_BOOK, _id }
 }
 
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });

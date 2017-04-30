@@ -1,31 +1,25 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
-
-import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
-import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
-import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
-import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
 import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 
-import { selector } from '../reducers/reducer';
+import {selectBookList, selectBookListType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
 
-@connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch, ...actionCreatorsBookTagModification })
-export default class BookViewListGrid extends React.Component{
+@connect(selectBookList, actions)
+export default class BookViewListGrid extends Component<selectBookListType & actionsType, any>{
     state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     setSort(column){
         let currentSort = this.props.currentSort;
         let newDirection = 1;
         if (currentSort === column){
-            newDirection = this.props.sortDirection == 1 ? -1 : 1;
+            newDirection = this.props.sortDirection == '1' ? -1 : 1;
         }
 
         this.props.setSortOrder(column, newDirection);
     }
     render(){
-        let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.sortDirection == 1 ? 'up' : 'down')}></i>,
+        let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.sortDirection == '1' ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
         return (
