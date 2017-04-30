@@ -144,7 +144,7 @@ export const booksListSelector = createSelector<any, booksListType, any, any, an
     }
 );
 
-type bookSelectionType = {
+export type bookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
 }
@@ -159,10 +159,3 @@ export const bookSelectionSelector = createSelector<any, bookSelectionType, any,
         }
     }
 );
-
-type booksSelectorType = booksListType & bookSelectionType & booksType;
-export const booksSelector = (state) : booksSelectorType =>
-    Object.assign({}, state.booksModule.books, {
-        ...booksListSelector(state),
-        ...bookSelectionSelector(state)
-    });
