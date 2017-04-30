@@ -92,7 +92,7 @@ export function setSortOrder(sort, direction){
 export function booksActivated(searchProps){
     let isActive = true;
     history.listen((location, action) => {
-        let {pathname, __keyOrder, searchState} = getCurrentHistoryState();
+        let {pathname, searchState} = getCurrentHistoryState();
 
         if (pathname === '/books' || pathname === '/view'){
             store.dispatch(syncFiltersToHash(searchState));
