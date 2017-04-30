@@ -3,7 +3,6 @@ import {
     LOAD_BOOKS,
     LOAD_BOOKS_RESULTS,
     TOGGLE_SELECT_BOOK,
-    SELECT_ALL_BOOKS,
     BOOK_READ_CHANGING,
     BOOK_READ_CHANGED,
     TOGGLE_CHECK_ALL,
@@ -28,8 +27,9 @@ const initialBooksState = {
     reloadOnActivate: false,
     initialQueryFired: false
 };
+export type booksType = typeof initialBooksState;
 
-export function booksReducer(state = initialBooksState, action){
+export function booksReducer(state = initialBooksState, action) : booksType{
     switch(action.type) {
         case LOAD_BOOKS:
             return Object.assign({}, state, { loading: true, initialQueryFired: true, reloadOnActivate: false });
@@ -40,9 +40,6 @@ export function booksReducer(state = initialBooksState, action){
             return Object.assign({}, state, { booksHash: { ...state.booksHash, [action.book._id]: newBookVersion } });
         case TOGGLE_SELECT_BOOK:
             return Object.assign({}, state, { selectedBooks: { ...state.selectedBooks, [action._id]: !state.selectedBooks[action._id] } });
-        case SELECT_ALL_BOOKS:
-            var newBookList = state.list.map(b => Object.assign({}, b, { selected: true }));
-            return Object.assign({}, state, { list: newBookList, selectedCount: newBookList.length });
         case SET_BOOKS_SUBJECTS:
             var newBookHash = { ...state.booksHash };
 
@@ -124,12 +121,13 @@ function createBooksHash(booksArr){
     return result;
 }
 
-const booksWithSubjectsSelector = createSelector(
-    [
-        state => state.booksModule.books.booksHash,
-        state => state.app.subjectHash,
-        state => state.booksModule.tags.tagHash
-    ],
+type booksWithSubjectsType = {
+    list: any[]
+}
+const booksWithSubjectsSelector = createSelector<any, booksWithSubjectsType, any, any, any>(
+    state => state.booksModule.books.booksHash,
+    state => state.app.subjectHash,
+    state => state.booksModule.tags.tagHash,
     (booksHash, subjectsHash, tagHash) => {
         let books = Object.keys(booksHash).map(_id => booksHash[_id]);
         books.forEach(b => {
@@ -144,11 +142,13 @@ const booksWithSubjectsSelector = createSelector(
     }
 );
 
-const bookSelectionSelector = createSelector(
-    [
-        state => state.booksModule.books.booksHash,
-        state => state.booksModule.books.selectedBooks
-    ],
+type bookSelectionType = {
+    allAreChecked: boolean;
+    selectedBooksCount: number;
+}
+const bookSelectionSelector = createSelector<any, bookSelectionType, any, any>(
+    state => state.booksModule.books.booksHash,
+    state => state.booksModule.books.selectedBooks,
     (booksHash, selectedBooks) => {
         let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
         return {
@@ -158,7 +158,8 @@ const bookSelectionSelector = createSelector(
     }
 );
 
-export const booksSelector = state =>
+type booksSelectorType = booksWithSubjectsType & bookSelectionType & booksType;
+export const booksSelector = (state) : booksSelectorType =>
     Object.assign({}, state.booksModule.books, {
         ...booksWithSubjectsSelector(state),
         ...bookSelectionSelector(state)

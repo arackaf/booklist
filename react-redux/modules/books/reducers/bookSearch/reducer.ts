@@ -16,9 +16,9 @@ import {
 
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 
-import { subjectsSelector, filterSubjects } from '../subjects/reducer';
-import { booksSelector } from '../books/reducer';
-import { tagsSelector } from '../tags/reducer';
+import { subjectsSelector, subjectsType, filterSubjects } from '../subjects/reducer';
+import { booksSelector, booksType } from '../books/reducer';
+import { tagsSelector, tagsType } from '../tags/reducer';
 
 const searchFields = {
     search: '',
@@ -33,6 +33,7 @@ const searchFields = {
     pageSize: 50,
     isRead: ''
 }
+export type searchFieldsType = typeof searchFields;
 
 const initialState = {
     sort: '_id',
@@ -47,8 +48,9 @@ const initialState = {
     searchTagsValue: '',
     view: ''
 };
+export type bookSearchType = typeof initialState;
 
-export function bookSearchReducer(state = initialState, action){
+export function bookSearchReducer(state = initialState, action) : bookSearchType {
     switch(action.type){
         case SET_SEARCH_SUBJECTS_VALUE:
             return { ...state, searchSubjectsValue: action.value };
@@ -81,6 +83,7 @@ export function bookSearchReducer(state = initialState, action){
 function projectSelectedItems(ids, hash){
     return Object.keys(ids).filter(k => ids[k]).map(_id => hash[_id]).filter(s => s);
 }
+
 
 export const bookSearchSelector = state => {
     let booksModule = state.booksModule,
