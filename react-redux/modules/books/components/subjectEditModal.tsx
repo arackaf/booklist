@@ -86,13 +86,13 @@ const subjectEditModal = props => {
                                     <div className="col-xs-6">
                                         <div className="form-group">
                                             <label>Subject name</label>
-                                            <input className="form-control" value={editingSubject.name} onChange={(e) => props.setNewSubjectName(e.target.value)} />
+                                            <input className="form-control" value={editingSubject.name} onChange={(e: any) => props.setNewSubjectName(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="col-xs-6">
                                         <div className="form-group">
                                             <label>Parent</label>
-                                            <select className="form-control" value={editingSubject.parentId} onChange={(e) => props.setNewSubjectParent(e.target.value)}>
+                                            <select className="form-control" value={editingSubject.parentId} onChange={(e: any) => props.setNewSubjectParent(e.target.value)}>
                                                 <option value="">None</option>
                                                 { eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                             </select>
