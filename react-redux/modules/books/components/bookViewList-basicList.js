@@ -62,7 +62,7 @@ const BookViewListMobile = props => (
 
         <div style={{ paddingBottom: 15 }}>
             <div style={{ border: 0 }} className="list-group docked-to-panel">
-                { props.books.map((book, i) => <BookViewListMobileItemConnected key={book._id} book={book} viewingPublic={props.viewingPublic} /> )}
+                { props.booksList.map((book, i) => <BookViewListMobileItemConnected key={book._id} book={book} viewingPublic={props.viewingPublic} /> )}
             </div>
         </div>
 

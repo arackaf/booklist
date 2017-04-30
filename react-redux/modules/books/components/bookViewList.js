@@ -71,13 +71,9 @@ const mainSelector = createSelector(
         return {
             subjectsLoaded: app.subjectsLoaded,
             tagsLoaded: tags.loaded,
-            books: books.list,
-            booksLoading: books.loading,
+            ...books,
             ...bookSearchUi,
-            isEditingBook: bookEdit.isEditing,
-            editingBook: bookEdit.editingBook,
-            editingBookSaving: bookEdit.editingBookSaving,
-            editingBookSaved: bookEdit.editingBookSaved,
+            ...bookEdit,
             subjectsBooksModifyingCount: subjectsBooksModifying.length,
             tagsBooksModifyingCount: tagsBooksModifying.length,
             subjectEditModalOpen: subjects.editModalOpen,
@@ -102,7 +98,7 @@ export default class BookViewingList extends React.Component {
                         {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?
                             <Loading /> : null }
 
-                        {(!this.props.books.length && !this.props.booksLoading) ?
+                        {(!this.props.booksList.length && !this.props.booksLoading) ?
                             <div className="alert alert-warning" style={{borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0}}>
                                 No books found
                             </div> : null }
