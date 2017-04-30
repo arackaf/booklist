@@ -4,18 +4,14 @@ import {bookSearchSelector} from 'modules/books/reducers/bookSearch/reducer';
 import {Modal} from 'simple-react-bootstrap';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
-import * as booksActionCreators from '../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
-import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
-import * as tagsActionCreators from '../reducers/tags/actionCreators';
-import * as booksSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
-import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-class BookSearchModal extends Component {
+@connect(bookSearchSelector, { ...bookSearchActionCreators })
+export default class BookSearchModal extends Component {
     render(){
         return (
             <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
@@ -133,5 +129,3 @@ class BookSearchModal extends Component {
         )
     }
 }
-
-export default connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })(BookSearchModal);
