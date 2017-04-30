@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {NavBar} from 'simple-react-bootstrap';
 
@@ -16,8 +16,18 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-@connect(bookSearchSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
-export default class BooksMenuBar extends React.Component {
+const menuBarSelector = state => {
+    return {
+        ...bookSearchSelector(state),
+        showingMobile: state.app.showingMobile,
+        showingDesktop: state.app.showingDesktop,
+        viewingPublic: app.isPublic,
+        booksLoading: state.booksModule.books.loading
+    }
+}
+
+@connect(menuBarSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
+export default class BooksMenuBar extends Component {
     removeFilterSubject(_id){
         this.props.removeFilterSubject(_id);
     }
