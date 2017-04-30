@@ -15,7 +15,7 @@ const initialState = {
 }
 export type editBookType = typeof initialState;
 
-export default function reducer(state = initialState, action){
+export default function reducer(state = initialState, action) : editBookType {
     switch(action.type){
         case EDIT_BOOK:
             return { ...state, editingBook: action.book, isEditing: true };
