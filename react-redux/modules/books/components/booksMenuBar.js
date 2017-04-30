@@ -4,6 +4,7 @@ import {NavBar} from 'simple-react-bootstrap';
 
 import {BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
 
+import {bookSelectionSelector} from 'modules/books/reducers/books/reducer';
 import {bookSearchSelector} from 'modules/books/reducers/bookSearch/reducer';
 
 import * as booksActionCreators from '../reducers/books/actionCreators';
@@ -16,12 +17,14 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
+
 const menuBarSelector = state => {
     return {
         ...bookSearchSelector(state),
+        ...bookSelectionSelector(state),
         showingMobile: state.app.showingMobile,
         showingDesktop: state.app.showingDesktop,
-        viewingPublic: app.isPublic,
+        viewingPublic: state.app.isPublic,
         booksLoading: state.booksModule.books.loading
     }
 }
