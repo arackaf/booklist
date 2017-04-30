@@ -4,8 +4,8 @@ import {NavBar} from 'simple-react-bootstrap';
 
 import {BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
 
-import {bookSelectionSelector} from 'modules/books/reducers/books/reducer';
-import {bookSearchSelector} from 'modules/books/reducers/bookSearch/reducer';
+import {bookSelectionSelector, bookSelectionType} from 'modules/books/reducers/books/reducer';
+import {bookSearchSelector, bookSearchSelectorType} from 'modules/books/reducers/bookSearch/reducer';
 
 import * as booksActionCreators from '../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
@@ -16,6 +16,19 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
+
+type bookMenuBarType = bookSearchSelectorType & bookSelectionType & {
+    showingMobile: boolean;
+    showingDesktop: boolean;
+    viewingPublic: boolean;
+    booksLoading: boolean;
+}
+type actions = typeof bookSearchActionCreators & 
+               typeof booksActionCreators & 
+               typeof subjectsActionCreators & 
+               typeof booksSubjectModificationActionCreators & 
+               typeof booksTagModificationActionCreators &
+               typeof tagsActionCreators;
 
 const menuBarSelector = state => {
     return {
@@ -29,7 +42,8 @@ const menuBarSelector = state => {
 }
 
 @connect(menuBarSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
-export default class BooksMenuBar extends Component {
+export default class BooksMenuBar extends Component<bookMenuBarType & actions, any> {
+    navBar: any
     removeFilterSubject(_id){
         this.props.removeFilterSubject(_id);
     }
