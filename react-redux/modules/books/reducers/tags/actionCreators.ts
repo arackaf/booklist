@@ -4,6 +4,8 @@ import {
     BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
+import ajaxUtil from 'util/ajaxUtil';
+
 export function loadTags(){
     return function(dispatch, getState){
         let publicUserId = getState().app.publicUserId;

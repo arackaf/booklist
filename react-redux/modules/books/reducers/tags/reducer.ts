@@ -5,6 +5,7 @@ import {
 } from './actionNames';
 
 import { createSelector, Selector } from 'reselect';
+import {appType} from 'applicationRoot/rootReducer';
 
 const emptyTag = { _id: '', name: '', backgroundColor: '', textColor: '' };
 const newTagEditing = { tagSearch: '', deletingTagId: null };
@@ -22,9 +23,9 @@ const initialTagsState = {
     deletingTagId: null
 };
 
-export type tagsReducerType = typeof initialTagsState;
+export type tagsType = typeof initialTagsState;
 
-export function tagsReducer(state = initialTagsState, action) : tagsReducerType {
+export function tagsReducer(state = initialTagsState, action) : tagsType {
     switch(action.type){
         case LOAD_TAGS:
             return { ...state, initialQueryFired: true };
@@ -79,7 +80,7 @@ export const filterTags = (tags, search) => {
 };
 
 type tagsSortedType = {allTagsSorted: object};
-const tagsSorted = createSelector<tagsReducerType, tagsSortedType, any>(
+const tagsSorted = createSelector<tagsType, tagsSortedType, any>(
     state => state.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
@@ -100,7 +101,7 @@ function allTagssSorted(tagHash){
 type tagsSearchedType = tagsSortedType & {
     tagsSearched: Object[]
 }
-const tagsSearched = createSelector<tagsReducerType, tagsSearchedType, tagsSortedType, string>(
+const tagsSearched = createSelector<tagsType, tagsSearchedType, tagsSortedType, string>(
     tagsSorted,
     state => state.tagSearch,
     (tags, tagSearch) => {
@@ -115,7 +116,7 @@ type deletingTagInfoType = {
         _id: string
     }
 }
-const deletingTagInfoSelector = createSelector<tagsReducerType, deletingTagInfoType, object, string>(
+const deletingTagInfoSelector = createSelector<tagsType, deletingTagInfoType, object, string>(
     state => state.tagHash,
     state => state.deletingTagId,
     (tagHash, deletingTagId) => {
@@ -127,12 +128,12 @@ const deletingTagInfoSelector = createSelector<tagsReducerType, deletingTagInfoT
     }
 );
 
-export type tagsSelectorType = tagsReducerType & tagsSearchedType & deletingTagInfoType & {
+export type tagsSelectorType = tagsType & tagsSearchedType & deletingTagInfoType & {
     colors: object[]
 }
 //TODO:
 
-export const tagsSelector = createSelector<any, tagsSelectorType, tagsReducerType, any>(
+export const tagsSelector = createSelector<{app: appType, booksModule: {tags: tagsType}}, tagsSelectorType, tagsType, any>(
     state => state.booksModule.tags,
     state => state.app.colors, 
     (tags, colors) => ({
