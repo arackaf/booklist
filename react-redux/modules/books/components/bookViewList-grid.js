@@ -30,7 +30,7 @@ export default class BookViewListGrid extends React.Component{
 
         return (
             <div style={{ minHeight: 400 }}>
-                { this.props.books.length ?
+                { this.props.booksList.length ?
                 <div>
                     { this.props.currentPage > 1 || this.props.hasMoreBooks ?
                         <div style={{ marginLeft: '10px', marginBottom: '10px' }}>
@@ -54,7 +54,7 @@ export default class BookViewListGrid extends React.Component{
                             </tr>
                         </thead>
                         <tbody>
-                        { this.props.books.map(book =>
+                        { this.props.booksList.map(book =>
                             <tr key={book._id}>
                                 <td>
                                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />

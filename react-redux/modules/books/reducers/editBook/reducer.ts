@@ -8,7 +8,7 @@ import {
 } from './actionNames';
 
 const initialState = {
-    isEditing: false,
+    isEditingBook: false,
     editingBook: {},
     editingBookSaving: false,
     editingBookSaved: false
@@ -18,13 +18,13 @@ export type editBookType = typeof initialState;
 export default function reducer(state = initialState, action) : editBookType {
     switch(action.type){
         case EDIT_BOOK:
-            return { ...state, editingBook: action.book, isEditing: true };
+            return { ...state, editingBook: action.book, isEditingBook: true };
         case STOP_EDITING_BOOK:
-            return { ...state, editingBookSaved: false, editingBookSaving: false, isEditing: false } //leave the book object so the modal fade is a bit nicer
+            return { ...state, editingBookSaved: false, editingBookSaving: false, isEditingBook: false } //leave the book object so the modal fade is a bit nicer
         case EDITING_BOOK_SAVING:
             return { ...state, editingBookSaving: true };
         case EDITING_BOOK_SAVED:
-            return { ...state, editingBookSaving: false, editingBookSaved: true, isEditing: false }; //close the modal immediately
+            return { ...state, editingBookSaving: false, editingBookSaved: true, isEditingBook: false }; //close the modal immediately
         case EDIT_BOOK_RESET:
             return { ...initialState };
     }

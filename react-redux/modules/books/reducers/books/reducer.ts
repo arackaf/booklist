@@ -22,7 +22,7 @@ import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames
 
 const initialBooksState = {
     booksHash: {},
-    loading: false,
+    booksLoading: false,
     selectedBooks: {},
     reloadOnActivate: false,
     initialQueryFired: false
@@ -32,9 +32,9 @@ export type booksType = typeof initialBooksState;
 export function booksReducer(state = initialBooksState, action) : booksType{
     switch(action.type) {
         case LOAD_BOOKS:
-            return Object.assign({}, state, { loading: true, initialQueryFired: true, reloadOnActivate: false });
+            return Object.assign({}, state, { booksLoading: true, initialQueryFired: true, reloadOnActivate: false });
         case LOAD_BOOKS_RESULTS:
-            return Object.assign({}, state, { loading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
+            return Object.assign({}, state, { booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
         case EDITING_BOOK_SAVED:
             let newBookVersion = Object.assign({}, state.booksHash[action.book._id], action.book); //only update fields sent
             return Object.assign({}, state, { booksHash: { ...state.booksHash, [action.book._id]: newBookVersion } });
@@ -122,15 +122,15 @@ function createBooksHash(booksArr){
 }
 
 export type booksListType = {
-    loading: boolean,
-    list: any[]
+    booksLoading: boolean,
+    booksList: any[]
 }
 export const booksListSelector = createSelector<any, booksListType, any, any, any, any>(
-    state => state.booksModule.books.loading,
+    state => state.booksModule.books.booksLoading,
     state => state.booksModule.books.booksHash,
     state => state.app.subjectHash,
     state => state.booksModule.tags.tagHash,
-    (loading, booksHash, subjectsHash, tagHash) => {
+    (booksLoading, booksHash, subjectsHash, tagHash) => {
         let books = Object.keys(booksHash).map(_id => booksHash[_id]);
         books.forEach(b => {
             b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
@@ -140,7 +140,7 @@ export const booksListSelector = createSelector<any, booksListType, any, any, an
             let d = new Date(+b.dateAdded);
             b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
         });
-        return { list: books, loading };
+        return { booksList: books, booksLoading };
     }
 );
 
