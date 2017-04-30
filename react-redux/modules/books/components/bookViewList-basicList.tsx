@@ -2,32 +2,33 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 
-import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
-import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
-import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
-import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
+// import * as actionCreatorsBooks from '../reducers/books/actionCreators';
+// import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
+// import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
+// import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
+// import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
 
-import { selector } from '../reducers/reducer';
+// import { selector } from '../reducers/reducer';
 
-@connect(selector, { ...actionCreatorsBooks, ...actionCreatorsEditBook })
-class BookViewListMobileItem extends Component {
+import {selectBookList, selectBookListType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
+
+@connect(null, actions)
+class BookViewListMobileItem extends Component<any, any> {
     render(){
-        let props = this.props;
+        let props = this.props,
+            book = props.book;
 
         let publisherDisplay = null,
             isbnPages = null;
-        if (props.publisher || props.publicationDate) {
-            publisherDisplay = [props.publisher, props.publicationDate].filter(s => s).join(' ');
+        if (book.publisher || book.publicationDate) {
+            publisherDisplay = [book.publisher, book.publicationDate].filter(s => s).join(' ');
         }
-        if (props.isbn || props.pages){
+        if (book.isbn || book.pages){
             isbnPages = [
-                props.pages ? `${props.pages} pages` : null,
-                props.isbn ? `ISBN ${props.isbn}` : null
+                book.pages ? `${book.pages} pages` : null,
+                book.isbn ? `ISBN ${book.isbn}` : null
             ].filter(o => o).join('; ');
         }
-
-        let book = props.book;
 
         return (
             <span className="list-group-item" style={{ cursor: 'pointer' }}>
@@ -54,8 +55,8 @@ class BookViewListMobileItem extends Component {
     }
 }
 
-@connect(selector, { ...actionCreatorsBooks, ...actionCreatorsBookSubjectModification, ...actionCreatorsEditBook, ...actionCreatorsBookSearch, ...actionCreatorsBookTagModification })
-export default class BookViewListMobile extends Component {
+@connect(selectBookList, actions)
+export default class BookViewListMobile extends Component<selectBookListType & actionsType, any> {
     render(){ 
         let props = this.props;
         return (

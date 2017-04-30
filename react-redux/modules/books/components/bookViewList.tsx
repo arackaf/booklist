@@ -1,18 +1,21 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 
-import GridView from './bookViewList-grid';
-import BasicListView from './bookViewList-basicList';
+import GV from './bookViewList-grid';
+const GridView : any = GV;
 
-import BooksMenuBar from './booksMenuBar';
+import BLV from './bookViewList-basicList';
+const BasicListView : any = BLV;
+
+import BMB from './booksMenuBar';
+const BooksMenuBar : any = BMB;
 
 import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
-import { selector } from '../reducers/reducer';
 import {editBookType} from '../reducers/editBook/reducer';
 import {booksListType, booksListSelector} from '../reducers/books/reducer';
 import {modifyingBooksSelector as subjectsBooksModifyingSelector} from '../reducers/booksSubjectModification/reducer';
@@ -22,40 +25,51 @@ import {bookSearchUiViewSelector, bookSearchUiViewType} from '../reducers/bookSe
 import ComponentLoading from 'applicationRoot/components/componentLoading';
 
 const ManualBookEntry = Loadable({
-    loader: () => import('applicationRoot/components/manualBookEntry'),
+    loader: () => System.import('applicationRoot/components/manualBookEntry'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const BookSubjectSetter = Loadable({
-    loader: () => import('./bookSubjectSetter'),
+    loader: () => System.import('./bookSubjectSetter'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const BookTagSetter = Loadable({
-    loader: () => import('./bookTagSetter'),
+    loader: () => System.import('./bookTagSetter'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const SubjectEditModal = Loadable({
-    loader: () => import('./subjectEditModal'),
+    loader: () => System.import('./subjectEditModal'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const TagEditModal = Loadable({
-    loader: () => import('./tagEditModal'),
+    loader: () => System.import('./tagEditModal'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const BookSearchModal = Loadable({
-    loader: () => import('./bookSearchModal'),
+    loader: () => System.import('./bookSearchModal'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
+
+type actionsType = typeof actionCreatorsEditBook & typeof actionCreatorsSearch;
+type mainSelectorType = actionsType & editBookType & bookSearchUiViewType & booksListType & {
+    subjectsLoaded: boolean;
+    subjectEditModalOpen: boolean;
+    tagsLoaded: boolean;
+    tagEditModalOpen: boolean;
+    editingBookSearchFilters: boolean;
+    subjectsBooksModifyingCount: number;
+    tagsBooksModifyingCount: number;
+}
 
 const mainSelector = createSelector(
     state => state.app,
@@ -84,7 +98,7 @@ const mainSelector = createSelector(
 );
 
 @connect(mainSelector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
-export default class BookViewingList extends React.Component {
+export default class BookViewingList extends Component<mainSelectorType, any> {
     render() {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
