@@ -97,7 +97,7 @@ const removingSubjectsSelector = createSelector<storeSlice, removingSubjectsType
     })
 );
 
-export type booksTagsModifier = addingSubjectsType & removingSubjectsType & {
+export type booksSubjectsModifierType = addingSubjectsType & removingSubjectsType & {
     addingSubjectIds: string[];
     removingSubjectIds: string[];
     settingBooksSubjects: any;
@@ -107,7 +107,7 @@ export type booksTagsModifier = addingSubjectsType & removingSubjectsType & {
     addingSubjectSearch: string;
     removingSubjectSearch: string;
 }
-export const booksSubjectsModifierSelector = createSelector<any, booksTagsModifier, any, any, any, any, any>(
+export const booksSubjectsModifierSelector = createSelector<any, booksSubjectsModifierType, any, any, any, any, any>(
     ({ booksModule }) => booksModule.booksSubjectsModifier,
     modifyingBooksSelector,
     addingSubjectsSelector,

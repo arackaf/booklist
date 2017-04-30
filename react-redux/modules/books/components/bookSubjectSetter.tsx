@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
-import { booksSubjectsModifierSelector } from '../reducers/booksSubjectModification/reducer';
+import { booksSubjectsModifierSelector, booksSubjectsModifierType } from '../reducers/booksSubjectModification/reducer';
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
-class BookSubjectSetterDesktopUnConnected extends React.Component {
+type componentType = booksSubjectsModifierType & typeof bookSubjectModificationActionCreators;
+
+@connect(booksSubjectsModifierSelector, { ...bookSubjectModificationActionCreators })
+export default class BookSubjectSetterDesktop extends Component<componentType, any> {
     state = { currentTab: 'subjects' };
     setBooksSubjects(){
         this.props.setBooksSubjects(
@@ -21,6 +24,8 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
 
         let dontAddSubject = this.props.addingSubjectSet.bind(null, false),
             dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
+
+        
 
         return (
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
@@ -99,6 +104,3 @@ class BookSubjectSetterDesktopUnConnected extends React.Component {
     }
 }
 
-const BookSubjectSetterDesktop = connect(booksSubjectsModifierSelector, { ...bookSubjectModificationActionCreators })(BookSubjectSetterDesktopUnConnected);
-
-export default BookSubjectSetterDesktop;
