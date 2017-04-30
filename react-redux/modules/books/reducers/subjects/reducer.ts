@@ -13,6 +13,7 @@ import {
     SUBJECT_DELETING,
     SET_SUBJECT_SEARCH_VALUE
 } from './actionNames';
+import {appType, subjectType} from 'applicationRoot/rootReducer';
 
 import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects} from 'applicationRoot/rootReducer';
 import {SAVE_SUBJECT_RESULTS, SUBJECT_DELETED} from 'applicationRoot/rootReducerActionNames';
@@ -27,6 +28,8 @@ const initialSubjectsState = {
     subjectSearch: '',
     initialQueryFired: false
 };
+
+export type subjectsType = typeof initialSubjectsState;
 
 const emptySubject = { _id: '', name: '', path: null, backgroundColor: '', textColor: '' };
 const newSubjectEditing = { subjectSearch: '', deletingSubjectId: null };
@@ -68,7 +71,14 @@ export function subjectsReducer(state = initialSubjectsState, action){
     return state;
 }
 
-const stackedSubjectsSelector = createSelector([state => state.app.subjectHash],
+type stackedSubjectsType = {
+    subjects: subjectType[];
+    allSubjectsSorted: subjectType[];
+    subjectsUnwound: subjectType[];
+
+}
+const stackedSubjectsSelector = createSelector<{app: appType}, stackedSubjectsType, any>(
+    state => state.app.subjectHash,
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
             subjectsUnwound = unwindSubjects(mainSubjectsCollection);
@@ -81,24 +91,36 @@ const stackedSubjectsSelector = createSelector([state => state.app.subjectHash],
     }
 );
 
-const searchSubjectsSelector = createSelector([
+type searchSubjectsType = stackedSubjectsType & {
+    subjectsSearched: subjectType[]
+}
+const searchSubjectsSelector = createSelector<any, searchSubjectsType, stackedSubjectsType, stackedSubjectsType & {subjectsSearched: subjectType[]}>(
     stackedSubjectsSelector,
-    state => state.booksModule.subjects.subjectSearch
-], (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) }));
+    state => state.booksModule.subjects.subjectSearch,
+    (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) })
+);
 
-const eligibleSubjectsSelector = createSelector([
-        state => state.app.subjectHash,
-        state => state.booksModule.subjects.editingSubjectId
-    ],
+type eligibleSubjectsType = {
+    eligibleParents: subjectType[]
+}
+const eligibleSubjectsSelector = createSelector<any, eligibleSubjectsType, any, any>(
+    state => state.app.subjectHash,
+    state => state.booksModule.subjects.editingSubjectId,
     (subjectHash, editSubjectId) => ({
         eligibleParents: getEligibleParents(subjectHash, editSubjectId)
     })
 );
 
-const deletingSubjectInfoSelector = createSelector([
-        state => state.app.subjectHash,
-        state => state.booksModule.subjects.deletingSubjectId
-    ],
+type deletingSubjectInfoType = {
+    deleteInfo: { 
+        affectedChildren: number;
+        subjectName: string;
+        _id: string;
+    }
+}
+const deletingSubjectInfoSelector = createSelector<any, deletingSubjectInfoType, any, any>(
+    state => state.app.subjectHash,
+    state => state.booksModule.subjects.deletingSubjectId,
     (subjectHash, deletingSubjectId) => {
         if (!deletingSubjectId) return null;
 
@@ -110,7 +132,10 @@ const deletingSubjectInfoSelector = createSelector([
     }
 );
 
-export const subjectsSelector = state => {
+export type subjectsSelectorType = searchSubjectsType & eligibleSubjectsType & deletingSubjectInfoType & {
+    colors: any[];
+}
+export const subjectsSelector = (state) : subjectsSelectorType => {
     return Object.assign({},
         state.booksModule.subjects,
         {

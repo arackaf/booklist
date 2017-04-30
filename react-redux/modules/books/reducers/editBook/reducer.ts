@@ -13,6 +13,7 @@ const initialState = {
     editingBookSaving: false,
     editingBookSaved: false
 }
+export type editBookType = typeof initialState;
 
 export default function reducer(state = initialState, action){
     switch(action.type){
