@@ -70,15 +70,15 @@ const mainSelector = createSelector(
     (app, bookEdit, subjects, tags, bookSearch, books, bookSearchUi, subjectsBooksModifying, tagsBooksModifying) => {
         return {
             subjectsLoaded: app.subjectsLoaded,
+            ...bookEdit,
+            subjectEditModalOpen: subjects.editModalOpen,
             tagsLoaded: tags.loaded,
+            tagEditModalOpen: tags.editTagOpen,
+            editingBookSearchFilters: bookSearch.editingFilters,
             ...books,
             ...bookSearchUi,
-            ...bookEdit,
             subjectsBooksModifyingCount: subjectsBooksModifying.length,
-            tagsBooksModifyingCount: tagsBooksModifying.length,
-            subjectEditModalOpen: subjects.editModalOpen,
-            tagEditModalOpen: tags.editTagOpen,
-            editingBookSearchFilters: bookSearch.editingFilters            
+            tagsBooksModifyingCount: tagsBooksModifying.length          
         };
     }
 );
