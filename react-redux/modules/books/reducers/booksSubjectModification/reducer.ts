@@ -7,6 +7,7 @@ import {
 } from './actionNames';
 
 import { subjectsSelector, filterSubjects } from '../subjects/reducer';
+import {appType} from 'applicationRoot/rootReducer';
 
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
@@ -17,8 +18,9 @@ const bookSubjectManagerInitialState = {
     addingSubjectSearch: '',
     removingSubjectSearch: ''
 };
+export type bookSubjectManagerType = typeof bookSubjectManagerInitialState;
 
-export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, action){
+export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState, action) : bookSubjectManagerType {
     switch (action.type){
         case SETTING_BOOKS_SUBJECTS:
             return Object.assign({}, state, { settingBooksSubjects: true });
@@ -46,52 +48,71 @@ export function bookSubjectManagerReducer(state = bookSubjectManagerInitialState
     return state;
 }
 
-export const modifyingBooksSelector = createSelector(
-    [
-        ({ booksModule }) => booksModule.booksSubjectsModifier.singleBookModify,
-        ({ booksModule }) => booksModule.booksSubjectsModifier.selectedBooksModify,
-        ({ booksModule }) => booksModule.books
-    ],
+type storeSlice = {
+    app: appType;
+    booksModule: {
+        booksSubjectsModifier: bookSubjectManagerType;
+        books: any;
+    }
+};
+
+type modifyingBooksType = any[];
+export const modifyingBooksSelector = createSelector<storeSlice, modifyingBooksType, any, any, any>(
+    ({ booksModule }) => booksModule.booksSubjectsModifier.singleBookModify,
+    ({ booksModule }) => booksModule.booksSubjectsModifier.selectedBooksModify,
+    ({ booksModule }) => booksModule.books,
     (singleBookModify, selectedBooksModify, books) => {
         let modifyingBookIds = singleBookModify ? [singleBookModify] : (selectedBooksModify ? Object.keys(books.selectedBooks).filter(k => books.selectedBooks[k]) : []);
         return modifyingBookIds.filter(_id => _id).map(_id => books.booksHash[_id]);
     }
 );
 
-const addingSubjectsSelector = createSelector(
-    [
-        state => state.booksModule.booksSubjectsModifier.addingSubjects,
-        state => state.booksModule.booksSubjectsModifier.addingSubjectSearch,
-        state => state.app.subjectHash,
-        subjectsSelector
-    ],
+type addingSubjectsType = {
+    addingSubjects: any[];
+    eligibleToAdd: any[];
+}
+const addingSubjectsSelector = createSelector<storeSlice, addingSubjectsType, any, any, any, any>(
+    state => state.booksModule.booksSubjectsModifier.addingSubjects,
+    state => state.booksModule.booksSubjectsModifier.addingSubjectSearch,
+    state => state.app.subjectHash,
+    subjectsSelector,
     (adding, addingSubjectSearch, subjects, subjectsSelected) => ({
         addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
         eligibleToAdd: filterSubjects(subjectsSelected.subjectsUnwound, addingSubjectSearch)
     })
 );
 
-const removingSubjectsSelector = createSelector(
-    [
-        state => state.booksModule.booksSubjectsModifier.removingSubjects,
-        state => state.booksModule.booksSubjectsModifier.removingSubjectSearch,
-        state => state.app.subjectHash,
-        subjectsSelector
-    ],
+type removingSubjectsType = {
+    removingSubjects: any[];
+    eligibleToRemove: any[];
+}
+const removingSubjectsSelector = createSelector<storeSlice, removingSubjectsType, any, any, any, any>(
+    state => state.booksModule.booksSubjectsModifier.removingSubjects,
+    state => state.booksModule.booksSubjectsModifier.removingSubjectSearch,
+    state => state.app.subjectHash,
+    subjectsSelector,
     (removing, removingSubjectSearch, subjects, subjectsSelected) => ({
         removingSubjects: Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id]),
         eligibleToRemove: filterSubjects(subjectsSelected.subjectsUnwound, removingSubjectSearch)
     })
 );
 
-export const booksSubjectsModifierSelector = createSelector(
-    [
-        ({ booksModule }) => booksModule.booksSubjectsModifier,
-        modifyingBooksSelector,
-        addingSubjectsSelector,
-        removingSubjectsSelector,
-        subjectsSelector
-    ],
+export type booksTagsModifier = addingSubjectsType & removingSubjectsType & {
+    addingSubjectIds: string[];
+    removingSubjectIds: string[];
+    settingBooksSubjects: any;
+    modifyingBooks: any;
+    subjects: any[];
+    allSubjectsSorted: any[];
+    addingSubjectSearch: string;
+    removingSubjectSearch: string;
+}
+export const booksSubjectsModifierSelector = createSelector<any, booksTagsModifier, any, any, any, any, any>(
+    ({ booksModule }) => booksModule.booksSubjectsModifier,
+    modifyingBooksSelector,
+    addingSubjectsSelector,
+    removingSubjectsSelector,
+    subjectsSelector,
     (booksSubjectsModifier, modifyingBooks, { addingSubjects, eligibleToAdd }, { removingSubjects, eligibleToRemove }, subjectsState) => ({
         addingSubjectIds: booksSubjectsModifier.addingSubjects,
         removingSubjectIds: booksSubjectsModifier.removingSubjects,
