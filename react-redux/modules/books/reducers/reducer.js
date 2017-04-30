@@ -24,7 +24,7 @@ export const selector = state => {
     let booksSelected = booksSelector(state),
         tagsSelected = tagsSelector(state),
         bookEdit = state.booksModule.bookEdit,
-        bookSearch = bookSearchSelector(state),
+        bookSearch = state.booksModule.bookSearch,
         subjectsBooksModifying = subjectsBooksModifyingSelector(state),
         tagsBooksModifying = tagsBooksModifyingSelector(state),
         app = state.app;
@@ -33,8 +33,6 @@ export const selector = state => {
         subjectsLoaded: app.subjectsLoaded,
         tagsLoaded: tagsSelected.loaded,
         books: booksSelected.list,
-        isGridView: bookSearch.isGridView,
-        isBasicList: bookSearch.isBasicList,
         hasMoreBooks: bookSearch.hasMore,
         currentPage: bookSearch.page,
         viewingPublic: app.isPublic,
