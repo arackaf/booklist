@@ -37,6 +37,10 @@ const initialState = {
 };
 
 export type appType = typeof initialState;
+export type subjectType = {
+    _id: string;
+    name: string;
+};
 
 export const objectsToHash = objs => objs.reduce((hash, o) => (hash[o._id] = o, hash), {});
 
