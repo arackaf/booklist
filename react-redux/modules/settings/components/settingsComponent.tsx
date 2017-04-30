@@ -9,6 +9,8 @@ export default class PublicUserSettingsMain extends Component<any, any> {
     state = {currentTab: 'publicSettings'};
     setTab = tab => this.setState({currentTab: tab});
     render() {
+        let PUS : any = PublicUserSettings;
+        let PR : any = PasswordReset;
         return (
             <div style={{ margin: '10px', padding: '10px' }}>
                 <ul className="nav nav-tabs">
@@ -24,10 +26,10 @@ export default class PublicUserSettingsMain extends Component<any, any> {
                 </ul>
                 <div className="tab-content">
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'publicSettings'})}>
-                        <PublicUserSettings />
+                        <PUS />
                     </div>
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'passwordReset'})}>
-                        <PasswordReset />
+                        <PR />
                     </div>
                     <div style={{ minHeight: '150px' }} className={classNames('tab-pane', {'active in': this.state.currentTab == 'scanHistory'})}>
                         <h1>Coming soon...</h1>
