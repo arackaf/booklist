@@ -17,7 +17,6 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-
 const menuBarSelector = state => {
     return {
         ...bookSearchSelector(state),

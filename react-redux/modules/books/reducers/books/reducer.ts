@@ -121,14 +121,16 @@ function createBooksHash(booksArr){
     return result;
 }
 
-type booksWithSubjectsType = {
+export type booksListType = {
+    loading: boolean,
     list: any[]
 }
-const booksWithSubjectsSelector = createSelector<any, booksWithSubjectsType, any, any, any>(
+export const booksListSelector = createSelector<any, booksListType, any, any, any, any>(
+    state => state.booksModule.books.loading,
     state => state.booksModule.books.booksHash,
     state => state.app.subjectHash,
     state => state.booksModule.tags.tagHash,
-    (booksHash, subjectsHash, tagHash) => {
+    (loading, booksHash, subjectsHash, tagHash) => {
         let books = Object.keys(booksHash).map(_id => booksHash[_id]);
         books.forEach(b => {
             b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
@@ -138,7 +140,7 @@ const booksWithSubjectsSelector = createSelector<any, booksWithSubjectsType, any
             let d = new Date(+b.dateAdded);
             b.dateAddedDisplay = `${(d.getMonth()+1)}/${d.getDate()}/${d.getFullYear()}`;
         });
-        return { list: books };
+        return { list: books, loading };
     }
 );
 
@@ -158,9 +160,9 @@ export const bookSelectionSelector = createSelector<any, bookSelectionType, any,
     }
 );
 
-type booksSelectorType = booksWithSubjectsType & bookSelectionType & booksType;
+type booksSelectorType = booksListType & bookSelectionType & booksType;
 export const booksSelector = (state) : booksSelectorType =>
     Object.assign({}, state.booksModule.books, {
-        ...booksWithSubjectsSelector(state),
+        ...booksListSelector(state),
         ...bookSelectionSelector(state)
     });

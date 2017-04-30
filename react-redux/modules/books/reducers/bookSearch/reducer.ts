@@ -15,6 +15,7 @@ import {
 } from './actionNames';
 
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
+import {createSelector} from 'reselect';
 
 import {appType} from 'applicationRoot/rootReducer';
 import { subjectsSelector, subjectsType, filterSubjects } from '../subjects/reducer';
@@ -89,9 +90,26 @@ type booksModuleType = {
     bookSearch: bookSearchType
 }
 
-export type bookSearchSelectorType = bookSearchType & {
-    isGridView : boolean;
-    isBasicList : boolean;
+export type bookSearchUiViewType = {
+    isGridView: boolean;
+    isBasicList: boolean;
+}
+export const bookSearchUiViewSelector = createSelector<any, bookSearchUiViewType, appType, bookSearchType>(
+    state => state.app,
+    state => state.booksModule.bookSearch,
+    (app, bookSearch) => {
+        let view = bookSearch.view,
+            isGridView = view == GRID_VIEW || (!view && app.showingDesktop),
+            isBasicList = view == BASIC_LIST_VIEW || (!view && app.showingMobile);
+
+        return {
+            isGridView,
+            isBasicList
+        };
+    }
+);
+
+export type bookSearchSelectorType = bookSearchType & bookSearchUiViewType & {
     selectedSubjects: any[];
     selectedTags: any[];
     pendingSelectedSubjects: any;
@@ -103,15 +121,11 @@ export type bookSearchSelectorType = bookSearchType & {
 export const bookSearchSelector = (state) : bookSearchSelectorType => {
     let booksModule : booksModuleType = state.booksModule,
         bookSearch : bookSearchType = state.booksModule.bookSearch,
-        view = bookSearch.view,
         app : appType = state.app;
 
     let subjectsState = subjectsSelector(state);
     let tagsState = tagsSelector(state);
     let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
-
-    let isGridView = view == GRID_VIEW || (!view && app.showingDesktop),
-        isBasicList = view == BASIC_LIST_VIEW || (!view && app.showingMobile);
 
     return {
         ...booksModule.bookSearch,
@@ -122,7 +136,6 @@ export const bookSearchSelector = (state) : bookSearchSelectorType => {
         eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
         eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
         bindableSortValue,
-        isGridView,
-        isBasicList
+        ...bookSearchUiViewSelector(state)
     }
 }
