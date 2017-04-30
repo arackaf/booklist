@@ -18,8 +18,8 @@ import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
 import {appType} from 'applicationRoot/rootReducer';
-import { subjectsSelector, subjectsType, filterSubjects } from '../subjects/reducer';
-import { tagsSelector, tagsType } from '../tags/reducer';
+import { subjectsSelector, subjectsSelectorType, subjectsType, filterSubjects } from '../subjects/reducer';
+import { tagsSelector, tagsSelectorType, tagsType } from '../tags/reducer';
 
 const searchFields = {
     search: '',
@@ -118,24 +118,26 @@ export type bookSearchSelectorType = bookSearchType & bookSearchUiViewType & {
     eligibleFilterTags: any;
     bindableSortValue: any;
 };
-export const bookSearchSelector = (state) : bookSearchSelectorType => {
-    let booksModule : booksModuleType = state.booksModule,
-        bookSearch : bookSearchType = state.booksModule.bookSearch,
-        app : appType = state.app;
+export const bookSearchSelector = createSelector<any, bookSearchSelectorType, appType, bookSearchType, tagsType, subjectsSelectorType, tagsSelectorType, bookSearchUiViewType>(
+    state => state.app,
+    state => state.booksModule.bookSearch,
+    state => state.booksModule.tags,
+    subjectsSelector,
+    tagsSelector,
+    bookSearchUiViewSelector,
+    (app, bookSearch, tags, subjectsState, tagsState, searchUi) => {
 
-    let subjectsState = subjectsSelector(state);
-    let tagsState = tagsSelector(state);
-    let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
+        let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
 
-    return {
-        ...booksModule.bookSearch,
-        selectedSubjects: projectSelectedItems(bookSearch.subjects, app.subjectHash),
-        selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
-        pendingSelectedSubjects: projectSelectedItems(bookSearch.pending.subjects, app.subjectHash),
-        pendingSelectedTags: projectSelectedItems(bookSearch.pending.tags, booksModule.tags.tagHash),
-        eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
-        eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
-        bindableSortValue,
-        ...bookSearchUiViewSelector(state)
-    }
-}
+        return {
+            ...bookSearch,
+            selectedSubjects: projectSelectedItems(bookSearch.subjects, app.subjectHash),
+            selectedTags: projectSelectedItems(bookSearch.tags, tags.tagHash),
+            pendingSelectedSubjects: projectSelectedItems(bookSearch.pending.subjects, app.subjectHash),
+            pendingSelectedTags: projectSelectedItems(bookSearch.pending.tags, tags.tagHash),
+            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
+            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
+            bindableSortValue,
+            ...searchUi
+        };
+});
