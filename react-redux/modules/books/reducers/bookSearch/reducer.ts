@@ -16,6 +16,7 @@ import {
 
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 
+import {appType} from 'applicationRoot/rootReducer';
 import { subjectsSelector, subjectsType, filterSubjects } from '../subjects/reducer';
 import { booksSelector, booksType } from '../books/reducer';
 import { tagsSelector, tagsType } from '../tags/reducer';
@@ -84,38 +85,57 @@ function projectSelectedItems(ids, hash){
     return Object.keys(ids).filter(k => ids[k]).map(_id => hash[_id]).filter(s => s);
 }
 
+type booksModuleType = {
+    tags: tagsType,
+    bookSearch: bookSearchType
+}
 
-export const bookSearchSelector = state => {
-    let booksModule = state.booksModule,
-        bookSearch = state.booksModule.bookSearch,
+export type bookSearchSelectorType = bookSearchType & appType & {
+    isGridView : boolean;
+    isBasicList : boolean;
+    selectedSubjects: any[];
+    selectedTags: any[];
+    pendingSelectedSubjects: any;
+    pendingSelectedTags: any;
+    subjects: any[];
+    allSubjectsSorted: any;
+    selectedBooksCount: any;
+    viewingPublic: any;
+    eligibleFilterSubjects: any;
+    eligibleFilterTags: any;
+    bindableSortValue: any;
+    booksLoading: boolean;
+};
+export const bookSearchSelector = (state) : bookSearchSelectorType => {
+    let booksModule : booksModuleType = state.booksModule,
+        bookSearch : bookSearchType = state.booksModule.bookSearch,
         view = bookSearch.view,
-        app = state.app;
+        app : appType = state.app;
 
     let subjectsState = subjectsSelector(state);
     let booksState = booksSelector(state);
     let tagsState = tagsSelector(state);
-    let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == 1 ? 'asc' : 'desc'}`;
+    let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
 
     let isGridView = view == GRID_VIEW || (!view && app.showingDesktop),
         isBasicList = view == BASIC_LIST_VIEW || (!view && app.showingMobile);
 
-    return Object.assign({},
-        booksModule.bookSearch,
-        {
-            selectedSubjects: projectSelectedItems(bookSearch.subjects, app.subjectHash),
-            selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
-            pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, app.subjectHash),
-            pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
-            subjects: subjectsState.subjects,
-            allSubjectsSorted: subjectsState.allSubjectsSorted,
-            selectedBooksCount: booksState.selectedBooksCount,
-            viewingPublic: app.isPublic,
-            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
-            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
-            bindableSortValue,
-            isGridView,
-            isBasicList,
-            ...app,
-            booksLoading: booksState.loading
-        });
+    return {
+        ...booksModule.bookSearch,
+        selectedSubjects: projectSelectedItems(bookSearch.subjects, app.subjectHash),
+        selectedTags: projectSelectedItems(bookSearch.tags, booksModule.tags.tagHash),
+        pendingSelectedSubjects: projectSelectedItems(booksModule.bookSearch.pending.subjects, app.subjectHash),
+        pendingSelectedTags: projectSelectedItems(booksModule.bookSearch.pending.tags, booksModule.tags.tagHash),
+        subjects: subjectsState.subjects,
+        allSubjectsSorted: subjectsState.allSubjectsSorted,
+        selectedBooksCount: booksState.selectedBooksCount,
+        viewingPublic: app.isPublic,
+        eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
+        eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
+        bindableSortValue,
+        isGridView,
+        isBasicList,
+        ...app,
+        booksLoading: booksState.loading
+    }
 }
