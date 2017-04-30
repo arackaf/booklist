@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
-import { booksTagsModifierSelector } from '../reducers/booksTagModification/reducer';
+import { booksTagsModifierSelector, booksTagsModifierType } from '../reducers/booksTagModification/reducer';
 import * as bookTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
-class BookTagSetterDesktopUnConnected extends React.Component {
+@connect(booksTagsModifierSelector, { ...bookTagModificationActionCreators })
+export default class BookTagSetterDesktopUnConnected extends Component<booksTagsModifierType & typeof bookTagModificationActionCreators, any> {
     state = { currentTab: 'tags' };
     setBooksTags(){
         this.props.setBooksTags(
@@ -25,11 +26,10 @@ class BookTagSetterDesktopUnConnected extends React.Component {
         return (
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookTagModification}>
                 <Modal.Header>
-                    <button type="button" className="close" onClick={this.props.cancelBookSubjectModification} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" className="close" onClick={this.props.cancelBookTagModification} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Edit tags:</h4>
                 </Modal.Header>
                 <Modal.Body>
-
                     <ul className="nav nav-tabs">
                         <li className={this.state.currentTab == 'tags' ? 'active' : ''}>
                             <a onClick={() => this.setState({currentTab: 'tags'})}>Choose subjects</a>
@@ -98,7 +98,3 @@ class BookTagSetterDesktopUnConnected extends React.Component {
         );
     }
 }
-
-const BookTagSetterDesktop = connect(booksTagsModifierSelector, { ...bookTagModificationActionCreators })(BookTagSetterDesktopUnConnected);
-
-export default BookTagSetterDesktop;

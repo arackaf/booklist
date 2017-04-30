@@ -41,8 +41,10 @@ const menuBarSelector = state => {
     }
 }
 
+type componentType = bookMenuBarType & actions;
+
 @connect(menuBarSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
-export default class BooksMenuBar extends Component<bookMenuBarType & actions, any> {
+export default class BooksMenuBar extends Component<componentType, any> {
     navBar: any
     removeFilterSubject(_id){
         this.props.removeFilterSubject(_id);
