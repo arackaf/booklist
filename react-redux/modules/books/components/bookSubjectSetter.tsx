@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
-import { booksSubjectsModifierSelector, booksSubjectsModifierType } from '../reducers/booksSubjectModification/reducer';
+import { selectEntireBooksSubjectsModificationState, entireBooksSubjectsModificationStateType } from '../reducers/booksSubjectModification/reducer';
 import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
-type componentType = booksSubjectsModifierType & typeof bookSubjectModificationActionCreators;
+type componentType = entireBooksSubjectsModificationStateType & typeof bookSubjectModificationActionCreators;
 
-@connect(booksSubjectsModifierSelector, { ...bookSubjectModificationActionCreators })
+@connect(selectEntireBooksSubjectsModificationState, { ...bookSubjectModificationActionCreators })
 export default class BookSubjectSetterDesktop extends Component<componentType, any> {
     state = { currentTab: 'subjects' };
     setBooksSubjects(){
