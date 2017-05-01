@@ -80,8 +80,8 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-type tagsSortedType = {allTagsSorted: any[]};
-const selectTagsSorted = createSelector<tagsType, tagsSortedType, any>(
+export type tagsSortedType = {allTagsSorted: any[]};
+export const selectTagsSorted = createSelector<tagsType, tagsSortedType, any>(
     state => state.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
