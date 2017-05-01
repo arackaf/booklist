@@ -133,19 +133,36 @@ const deletingSubjectInfoSelector = createSelector<any, deletingSubjectInfoType,
 );
 
 export type subjectsSelectorType = searchSubjectsType & eligibleSubjectsType & deletingSubjectInfoType & {
+    subjectSearch: string;
+    editingSubject: any;
+    deletingSubjectId: string;
+    saving: boolean;
+    deleting: boolean;    
+    editModalOpen: any;
     colors: any[];
 }
-export const subjectsSelector = (state) : subjectsSelectorType => {
-    return Object.assign({},
-        state.booksModule.subjects,
-        {
-            colors: state.app.colors,
-            ...searchSubjectsSelector(state),
-            ...eligibleSubjectsSelector(state),
-            ...deletingSubjectInfoSelector(state)
-        }
-    );
-}
+export const subjectsSelector = createSelector<any, subjectsSelectorType, appType, subjectsType, searchSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
+    state => state.app,
+    state => state.booksModule.subjects,
+    searchSubjectsSelector,
+    eligibleSubjectsSelector,
+    deletingSubjectInfoSelector,
+
+    (app, subjects, search, eligible, deleting) => {
+        return {
+            colors: app.colors,
+            subjectSearch: subjects.subjectSearch,
+            editingSubject: subjects.editingSubject,
+            deletingSubjectId: subjects.deletingSubjectId,
+            saving: subjects.saving,
+            deleting: subjects.deleting,
+            editModalOpen: subjects.editModalOpen,
+            ...search,
+            ...eligible,
+            ...deleting
+        };
+    }
+)
 
 function allSubjectsSorted(subjectsHash){
     let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
