@@ -64,17 +64,17 @@ export default class BookViewListGrid extends Component<bookListComponentStateTy
                                 </td>
                                 <td>
                                     <ul className="list-unstyled">
-                                        {book.authors.map(author => <li>{author}</li>)}
+                                        {book.authors.map((author, i) => <li key={i}>{author}</li>)}
                                     </ul>
                                 </td>
                                 <td>
-                                    { book.subjectObjects.map(s => <div><LabelDisplay item={s} /></div>) }
+                                    { book.subjectObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
                                 </td>
                                 <td>
-                                    { book.tagObjects.map(s => <div><LabelDisplay item={s} /></div>) }
+                                    { book.tagObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                                     <div style={{ marginTop: 5, minHeight: 40 }}>
                                         <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                                     </div>
