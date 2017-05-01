@@ -71,9 +71,9 @@ type mainSelectorType = actionsType & editBookType & bookSearchUiViewType & book
     tagsBooksModifyingCount: number;
 }
 
-const mainSelector = createSelector(
+const mainSelector = createSelector<any, any, any, any, any, any, any, any, any, any, any>(
     state => state.app,
-    state => state.booksModule.bookEdit,
+    state => state.booksModule.editBook,
     state => state.booksModule.subjects,
     state => state.booksModule.tags,
     state => state.booksModule.bookSearch,
@@ -81,10 +81,10 @@ const mainSelector = createSelector(
     bookSearchUiViewSelector,
     subjectsBooksModifyingSelector,
     tagsBooksModifyingSelector,
-    (app, bookEdit, subjects, tags, bookSearch, books, bookSearchUi, subjectsBooksModifying, tagsBooksModifying) => {
+    (app, editBook, subjects, tags, bookSearch, books, bookSearchUi, subjectsBooksModifying, tagsBooksModifying) => {
         return {
             subjectsLoaded: app.subjectsLoaded,
-            ...bookEdit,
+            ...editBook,
             subjectEditModalOpen: subjects.editModalOpen,
             tagsLoaded: tags.loaded,
             tagEditModalOpen: tags.editTagOpen,

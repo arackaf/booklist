@@ -1,3 +1,4 @@
+import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import { createSelector } from 'reselect';
 
 import {
@@ -7,7 +8,7 @@ import {
 } from './actionNames';
 
 import {appType} from 'applicationRoot/rootReducer';
-import { tagsSelector, filterTags, tagsType } from '../tags/reducer';
+import {tagsSelector, tagsSelectorType, filterTags} from '../tags/reducer';
 
 const bookTagManagerInitialState = {
     singleBookModify: null,
@@ -58,7 +59,7 @@ type storeSlice = {
     }
 };
 type modifyingBooksType = any[];
-export const modifyingBooksSelector = createSelector<storeSlice, modifyingBooksType, any, any, any>(
+export const modifyingBooksSelector = createSelector<storeSlice, modifyingBooksType, any, any, booksType>(
     ({ booksModule }) => booksModule.booksTagsModifier.singleBookModify,
     ({ booksModule }) => booksModule.booksTagsModifier.selectedBooksModify,
     ({ booksModule }) => booksModule.books,
@@ -99,33 +100,29 @@ const removingTagsSelector = createSelector<any, removingTagsType, any, any, any
 );
 
 export type booksTagsModifierType = addingTagsType & removingTagsType & {
-    addingTagIds: string[];
-    removingTagIds: string[];
     settingBooksTags: any;
     modifyingBooks: any;
-    tags: any[];
     allTagsSorted: any[];
     addingTagSearch: string;
     removingTagSearch: string;
 }
-export const booksTagsModifierSelector = createSelector<storeSlice, booksTagsModifierType, any, any, any, any, any>(
-    ({ booksModule }) => booksModule.booksTagsModifier,
+export const booksTagsModifierSelector = createSelector<booksModuleType, booksTagsModifierType, booksTagModificationType, modifyingBooksType, addingTagsType, removingTagsType, tagsSelectorType>(
+    state => state.booksModule.booksTagsModifier,
     modifyingBooksSelector,
     addingTagsSelector,
     removingTagsSelector,
     tagsSelector,
-    (booksTagsModifier, modifyingBooks, { addingTags, eligibleToAdd }, { removingTags, eligibleToRemove }, tagsState) => ({
-        addingTagIds: booksTagsModifier.addingTags,
-        removingTagIds: booksTagsModifier.removingTags,
-        settingBooksTags: booksTagsModifier.settingBooksTags,
-        modifyingBooks,
-        addingTags,
-        eligibleToAdd,
-        removingTags,
-        eligibleToRemove,
-        tags: tagsState.tags,
-        allTagsSorted: tagsState.allTagsSorted,
-        addingTagSearch: booksTagsModifier.addingTagSearch,
-        removingTagSearch: booksTagsModifier.removingTagSearch
-    })
+    (booksTagsModifier, modifyingBooks, { addingTags, eligibleToAdd }, { removingTags, eligibleToRemove }, tagsState) => {
+        return {
+            settingBooksTags: booksTagsModifier.settingBooksTags,
+            modifyingBooks,
+            addingTags,
+            eligibleToAdd,
+            removingTags,
+            eligibleToRemove,
+            allTagsSorted: tagsState.allTagsSorted,
+            addingTagSearch: booksTagsModifier.addingTagSearch,
+            removingTagSearch: booksTagsModifier.removingTagSearch
+        }
+    }
 );

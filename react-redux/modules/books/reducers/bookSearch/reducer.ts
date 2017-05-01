@@ -1,3 +1,5 @@
+import {booksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+
 import {
     BEGIN_FILTER_CHANGE,
     SET_PENDING_SUBJECT,
@@ -17,9 +19,8 @@ import {
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
-import {appType} from 'applicationRoot/rootReducer';
-import { subjectsSelector, subjectsSelectorType, subjectsType, filterSubjects } from '../subjects/reducer';
-import { tagsSelector, tagsSelectorType, tagsType } from '../tags/reducer';
+import { subjectsSelector, subjectsSelectorType, filterSubjects } from '../subjects/reducer';
+import { tagsSelector, tagsSelectorType } from '../tags/reducer';
 
 const searchFields = {
     search: '',
@@ -85,16 +86,11 @@ function projectSelectedItems(ids, hash){
     return Object.keys(ids).filter(k => ids[k]).map(_id => hash[_id]).filter(s => s);
 }
 
-type booksModuleType = {
-    tags: tagsType,
-    bookSearch: bookSearchType
-}
-
 export type bookSearchUiViewType = {
     isGridView: boolean;
     isBasicList: boolean;
 }
-export const bookSearchUiViewSelector = createSelector<any, bookSearchUiViewType, appType, bookSearchType>(
+export const bookSearchUiViewSelector = createSelector<booksModuleType, bookSearchUiViewType, appType, bookSearchType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     (app, bookSearch) => {
@@ -118,7 +114,7 @@ export type bookSearchSelectorType = bookSearchType & bookSearchUiViewType & {
     eligibleFilterTags: any;
     bindableSortValue: any;
 };
-export const bookSearchSelector = createSelector<any, bookSearchSelectorType, appType, bookSearchType, tagsType, subjectsSelectorType, tagsSelectorType, bookSearchUiViewType>(
+export const bookSearchSelector = createSelector<booksModuleType, bookSearchSelectorType, appType, bookSearchType, tagsType, subjectsSelectorType, tagsSelectorType, bookSearchUiViewType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     state => state.booksModule.tags,
