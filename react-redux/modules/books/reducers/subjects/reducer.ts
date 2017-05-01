@@ -78,7 +78,7 @@ type stackedSubjectsType = {
     subjectsUnwound: subjectType[];
 
 }
-const stackedSubjectsSelector = createSelector<{app: appType}, stackedSubjectsType, any>(
+const selectStackedSubjects = createSelector<booksModuleType, stackedSubjectsType, any>(
     state => state.app.subjectHash,
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
@@ -92,11 +92,11 @@ const stackedSubjectsSelector = createSelector<{app: appType}, stackedSubjectsTy
     }
 );
 
-type searchSubjectsType = stackedSubjectsType & {
+type searchedSubjectsType = stackedSubjectsType & {
     subjectsSearched: subjectType[]
 }
-const searchSubjectsSelector = createSelector<any, searchSubjectsType, stackedSubjectsType, stackedSubjectsType & {subjectsSearched: subjectType[]}>(
-    stackedSubjectsSelector,
+const selectSearchedSubjects = createSelector<any, searchedSubjectsType, stackedSubjectsType, stackedSubjectsType & {subjectsSearched: subjectType[]}>(
+    selectStackedSubjects,
     state => state.booksModule.subjects.subjectSearch,
     (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) })
 );
@@ -104,7 +104,7 @@ const searchSubjectsSelector = createSelector<any, searchSubjectsType, stackedSu
 type eligibleSubjectsType = {
     eligibleParents: subjectType[]
 }
-const eligibleSubjectsSelector = createSelector<any, eligibleSubjectsType, any, any>(
+const selectEligibleSubjects = createSelector<any, eligibleSubjectsType, any, any>(
     state => state.app.subjectHash,
     state => state.booksModule.subjects.editingSubjectId,
     (subjectHash, editSubjectId) => ({
@@ -119,7 +119,7 @@ type deletingSubjectInfoType = {
         _id: string;
     }
 }
-const deletingSubjectInfoSelector = createSelector<any, deletingSubjectInfoType, any, any>(
+const selectDeletingSubjectInfo = createSelector<any, deletingSubjectInfoType, any, any>(
     state => state.app.subjectHash,
     state => state.booksModule.subjects.deletingSubjectId,
     (subjectHash, deletingSubjectId) => {
@@ -133,7 +133,7 @@ const deletingSubjectInfoSelector = createSelector<any, deletingSubjectInfoType,
     }
 );
 
-export type subjectsSelectorType = searchSubjectsType & eligibleSubjectsType & deletingSubjectInfoType & {
+export type entireSubjectsStateType = searchedSubjectsType & eligibleSubjectsType & deletingSubjectInfoType & {
     subjectSearch: string;
     editingSubject: any;
     deletingSubjectId: string;
@@ -142,12 +142,12 @@ export type subjectsSelectorType = searchSubjectsType & eligibleSubjectsType & d
     editModalOpen: any;
     colors: any[];
 }
-export const subjectsSelector = createSelector<booksModuleType, subjectsSelectorType, appType, subjectsType, searchSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
+export const selectEntireSubjectsState = createSelector<booksModuleType, entireSubjectsStateType, appType, subjectsType, searchedSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
     state => state.app,
     state => state.booksModule.subjects,
-    searchSubjectsSelector,
-    eligibleSubjectsSelector,
-    deletingSubjectInfoSelector,
+    selectSearchedSubjects,
+    selectEligibleSubjects,
+    selectDeletingSubjectInfo,
 
     (app, subjects, search, eligible, deleting) => {
         return {
