@@ -34,6 +34,6 @@ const ajaxUtil = {
     }
 };
 
-export default window.ajaxUtil = ajaxUtil;
+export default ajaxUtil;
 
-window.ajaxUtil = ajaxUtil;
+(<any>window).ajaxUtil = ajaxUtil;
