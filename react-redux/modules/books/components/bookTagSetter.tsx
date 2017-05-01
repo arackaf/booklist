@@ -50,8 +50,8 @@ export default class BookTagSetterDesktopUnConnected extends Component<entireBoo
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.addingTags.map(s =>
-                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
+                                        { this.props.addingTags.map((s, i) =>
+                                            <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
                                     </div>
@@ -69,8 +69,8 @@ export default class BookTagSetterDesktopUnConnected extends Component<entireBoo
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.removingTags.map(s =>
-                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
+                                        { this.props.removingTags.map((s, i) =>
+                                            <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
                                     </div>

@@ -10,7 +10,7 @@ import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 type componentType = entireBooksSubjectsModificationStateType & typeof bookSubjectModificationActionCreators;
 
 @connect(selectEntireBooksSubjectsModificationState, { ...bookSubjectModificationActionCreators })
-export default class BookSubjectSetterDesktop extends Component<componentType, any> {
+export default class BookSubjectSetter extends Component<componentType, any> {
     state = { currentTab: 'subjects' };
     setBooksSubjects(){
         this.props.setBooksSubjects(
@@ -29,7 +29,7 @@ export default class BookSubjectSetterDesktop extends Component<componentType, a
 
         return (
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <button type="button" className="close" onClick={this.props.cancelBookSubjectModification} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Edit subjects:</h4>
                 </Modal.Header>
@@ -55,8 +55,8 @@ export default class BookSubjectSetterDesktop extends Component<componentType, a
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.addingSubjects.map(s =>
-                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
+                                        { this.props.addingSubjects.map((s, i) =>
+                                            <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
                                     </div>
@@ -74,8 +74,8 @@ export default class BookSubjectSetterDesktop extends Component<componentType, a
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.removingSubjects.map(s =>
-                                            <span style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
+                                        { this.props.removingSubjects.map((s, i) =>
+                                            <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
                                     </div>
