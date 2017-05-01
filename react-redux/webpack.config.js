@@ -25,9 +25,13 @@ var asyncBundle = function asyncBundle(name, _ref) {
 
             return resourcePath.indexOf('node_modules') >= 0 && nodePaths.find(function (t) {
                 return new RegExp('/' + t + '/', 'i').test(resourcePath);
-            }) || resource && resources.find(function (r) {
+            }) || resource && (resources.find(function (r) {
                 return !path.relative(r + '.js', resource);
-            });
+            }) || resources.find(function (r) {
+                return !path.relative(r + '.ts', resource);
+            }) || resources.find(function (r) {
+                return !path.relative(r + '.tsx', resource);
+            }));
         }
     });
 };

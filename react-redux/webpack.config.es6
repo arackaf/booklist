@@ -14,7 +14,7 @@ const asyncBundle = (name, {nodePaths = [], resources = []}) =>
 
             return (resourcePath.indexOf('node_modules') >= 0 && nodePaths.find(t => new RegExp('/' + t + '/', 'i').test(resourcePath)))
                     ||
-                   (resource && resources.find(r => !path.relative(r + '.js', resource)))
+                   (resource && (resources.find(r => !path.relative(r + '.js', resource)) || resources.find(r => !path.relative(r + '.ts', resource)) || resources.find(r => !path.relative(r + '.tsx', resource))))
         }
     })
 
