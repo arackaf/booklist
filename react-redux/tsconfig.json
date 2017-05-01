@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "baseUrl": "./",
         "jsx": "react",
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
         "moduleResolution": "node",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "lib": ["es2015", "dom"]
     },
     "include": [
         "./**/*.ts",
