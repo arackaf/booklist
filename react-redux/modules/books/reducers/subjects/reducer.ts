@@ -95,7 +95,7 @@ export const selectStackedSubjects = createSelector<booksModuleType, stackedSubj
 type searchedSubjectsType = stackedSubjectsType & {
     subjectsSearched: subjectType[]
 }
-const selectSearchedSubjects = createSelector<any, searchedSubjectsType, stackedSubjectsType, stackedSubjectsType & {subjectsSearched: subjectType[]}>(
+const selectSearchedSubjects = createSelector<booksModuleType, searchedSubjectsType, stackedSubjectsType, string>(
     selectStackedSubjects,
     state => state.booksModule.subjects.subjectSearch,
     (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) })
@@ -104,7 +104,7 @@ const selectSearchedSubjects = createSelector<any, searchedSubjectsType, stacked
 type eligibleSubjectsType = {
     eligibleParents: subjectType[]
 }
-const selectEligibleSubjects = createSelector<any, eligibleSubjectsType, any, any>(
+const selectEligibleSubjects = createSelector<booksModuleType, eligibleSubjectsType, any, any>(
     state => state.app.subjectHash,
     state => state.booksModule.subjects.editingSubjectId,
     (subjectHash, editSubjectId) => ({
