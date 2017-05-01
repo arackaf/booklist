@@ -58,7 +58,7 @@ type storeSlice = {
         tags: tagsType;
     }
 };
-type modifyingBooksType = any[];
+export type modifyingBooksType = any[];
 export const modifyingBooksSelector = createSelector<storeSlice, modifyingBooksType, any, any, booksType>(
     ({ booksModule }) => booksModule.booksTagsModifier.singleBookModify,
     ({ booksModule }) => booksModule.booksTagsModifier.selectedBooksModify,

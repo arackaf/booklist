@@ -1,3 +1,5 @@
+import {booksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
@@ -16,10 +18,9 @@ import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
-import {editBookType} from '../reducers/editBook/reducer';
 import {booksListType, booksListSelector} from '../reducers/books/reducer';
-import {modifyingBooksSelector as subjectsBooksModifyingSelector} from '../reducers/booksSubjectModification/reducer';
-import {modifyingBooksSelector as tagsBooksModifyingSelector} from '../reducers/booksTagModification/reducer';
+import {modifyingBooksSelector as subjectsBooksModifyingSelector, modifyingBooksType as subjectsBooksModifyingType} from '../reducers/booksSubjectModification/reducer';
+import {modifyingBooksSelector as tagsBooksModifyingSelector, modifyingBooksType as tagsBooksModifyingType} from '../reducers/booksTagModification/reducer';
 import {bookSearchUiViewSelector, bookSearchUiViewType} from '../reducers/bookSearch/reducer';
 
 import ComponentLoading from 'applicationRoot/components/componentLoading';
@@ -61,7 +62,7 @@ const BookSearchModal = Loadable({
 });
 
 type actionsType = typeof actionCreatorsEditBook & typeof actionCreatorsSearch;
-type mainSelectorType = actionsType & editBookType & bookSearchUiViewType & booksListType & {
+type mainSelectorType = editBookType & bookSearchUiViewType & booksListType & {
     subjectsLoaded: boolean;
     subjectEditModalOpen: boolean;
     tagsLoaded: boolean;
@@ -71,7 +72,7 @@ type mainSelectorType = actionsType & editBookType & bookSearchUiViewType & book
     tagsBooksModifyingCount: number;
 }
 
-const mainSelector = createSelector<any, any, any, any, any, any, any, any, any, any, any>(
+const mainSelector = createSelector<booksModuleType, mainSelectorType, appType, editBookType, subjectsType, tagsType, bookSearchType, booksListType, bookSearchUiViewType, subjectsBooksModifyingType, tagsBooksModifyingType>(
     state => state.app,
     state => state.booksModule.editBook,
     state => state.booksModule.subjects,
@@ -98,7 +99,7 @@ const mainSelector = createSelector<any, any, any, any, any, any, any, any, any,
 );
 
 @connect(mainSelector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
-export default class BookViewingList extends Component<mainSelectorType, any> {
+export default class BookViewingList extends Component<mainSelectorType & actionsType, any> {
     render() {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
