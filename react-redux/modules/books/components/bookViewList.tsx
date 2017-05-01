@@ -18,10 +18,10 @@ import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
-import {booksListType, booksListSelector} from '../reducers/books/reducer';
+import {booksListType, selectBookList} from '../reducers/books/reducer';
 import {modifyingBooksSelector as subjectsBooksModifyingSelector, modifyingBooksType as subjectsBooksModifyingType} from '../reducers/booksSubjectModification/reducer';
 import {modifyingBooksSelector as tagsBooksModifyingSelector, modifyingBooksType as tagsBooksModifyingType} from '../reducers/booksTagModification/reducer';
-import {bookSearchUiViewSelector, bookSearchUiViewType} from '../reducers/bookSearch/reducer';
+import {selectBookSearchUiView, bookSearchUiViewType} from '../reducers/bookSearch/reducer';
 
 import ComponentLoading from 'applicationRoot/components/componentLoading';
 
@@ -78,8 +78,8 @@ const mainSelector = createSelector<booksModuleType, mainSelectorType, appType, 
     state => state.booksModule.subjects,
     state => state.booksModule.tags,
     state => state.booksModule.bookSearch,
-    booksListSelector,
-    bookSearchUiViewSelector,
+    selectBookList,
+    selectBookSearchUiView,
     subjectsBooksModifyingSelector,
     tagsBooksModifyingSelector,
     (app, editBook, subjects, tags, bookSearch, books, bookSearchUi, subjectsBooksModifying, tagsBooksModifying) => {

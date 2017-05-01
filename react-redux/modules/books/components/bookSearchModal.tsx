@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {bookSearchSelector, bookSearchSelectorType} from 'modules/books/reducers/bookSearch/reducer';
+import {selectEntireBookSearchState, entireBookSearchStateType} from 'modules/books/reducers/bookSearch/reducer';
 import {Modal} from 'simple-react-bootstrap';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
 
@@ -10,8 +10,8 @@ import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-@connect(bookSearchSelector, { ...bookSearchActionCreators })
-export default class BookSearchModal extends Component<bookSearchSelectorType & typeof bookSearchActionCreators, any> {
+@connect(selectEntireBookSearchState, { ...bookSearchActionCreators })
+export default class BookSearchModal extends Component<entireBookSearchStateType & typeof bookSearchActionCreators, any> {
     render(){
         return (
             <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>

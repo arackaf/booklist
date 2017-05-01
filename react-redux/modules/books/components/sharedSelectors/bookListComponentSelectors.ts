@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {bookSelectionSelector, bookSelectionType, booksListSelector, booksListType} from 'modules/books/reducers/books/reducer';
+import {selectBookSelection, bookSelectionType, selectBookList, booksListType} from 'modules/books/reducers/books/reducer';
 
 import * as actionCreatorsBooks from 'modules/books/reducers/books/actionCreators';
 import * as actionCreatorsEditBook from 'modules/books/reducers/editBook/actionCreators';
@@ -33,8 +33,8 @@ export const selectBookListComponentState = createSelector<any, bookListComponen
     state => state.app,
     state => state.booksModule.books,
     state => state.booksModule.bookSearch,
-    booksListSelector,
-    bookSelectionSelector,
+    selectBookList,
+    selectBookSelection,
     (app, books, bookSearch, bookListSelected, bookSelectionSelected) => {
 
         return {
