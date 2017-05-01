@@ -4,8 +4,8 @@ import {NavBar} from 'simple-react-bootstrap';
 
 import {BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
 
-import {bookSelectionSelector, bookSelectionType} from 'modules/books/reducers/books/reducer';
-import {bookSearchSelector, bookSearchSelectorType} from 'modules/books/reducers/bookSearch/reducer';
+import {selectBookSelection, bookSelectionType} from 'modules/books/reducers/books/reducer';
+import {selectEntireBookSearchState, entireBookSearchStateType} from 'modules/books/reducers/bookSearch/reducer';
 
 import * as booksActionCreators from '../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
@@ -17,7 +17,7 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-type bookMenuBarType = bookSearchSelectorType & bookSelectionType & {
+type bookMenuBarType = entireBookSearchStateType & bookSelectionType & {
     showingMobile: boolean;
     showingDesktop: boolean;
     viewingPublic: boolean;
@@ -32,8 +32,8 @@ type actions = typeof bookSearchActionCreators &
 
 const menuBarSelector = state => {
     return {
-        ...bookSearchSelector(state),
-        ...bookSelectionSelector(state),
+        ...selectEntireBookSearchState(state),
+        ...selectBookSelection(state),
         showingMobile: state.app.showingMobile,
         showingDesktop: state.app.showingDesktop,
         viewingPublic: state.app.isPublic,

@@ -90,7 +90,7 @@ export type bookSearchUiViewType = {
     isGridView: boolean;
     isBasicList: boolean;
 }
-export const bookSearchUiViewSelector = createSelector<booksModuleType, bookSearchUiViewType, appType, bookSearchType>(
+export const selectBookSearchUiView = createSelector<booksModuleType, bookSearchUiViewType, appType, bookSearchType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     (app, bookSearch) => {
@@ -105,7 +105,7 @@ export const bookSearchUiViewSelector = createSelector<booksModuleType, bookSear
     }
 );
 
-export type bookSearchSelectorType = bookSearchType & bookSearchUiViewType & {
+export type entireBookSearchStateType = bookSearchType & bookSearchUiViewType & {
     selectedSubjects: any[];
     selectedTags: any[];
     pendingSelectedSubjects: any;
@@ -114,13 +114,13 @@ export type bookSearchSelectorType = bookSearchType & bookSearchUiViewType & {
     eligibleFilterTags: any;
     bindableSortValue: any;
 };
-export const bookSearchSelector = createSelector<booksModuleType, bookSearchSelectorType, appType, bookSearchType, tagsType, subjectsSelectorType, tagsSelectorType, bookSearchUiViewType>(
+export const selectEntireBookSearchState = createSelector<booksModuleType, entireBookSearchStateType, appType, bookSearchType, tagsType, subjectsSelectorType, tagsSelectorType, bookSearchUiViewType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     state => state.booksModule.tags,
     subjectsSelector,
     tagsSelector,
-    bookSearchUiViewSelector,
+    selectBookSearchUiView,
     (app, bookSearch, tags, subjectsState, tagsState, searchUi) => {
 
         let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;

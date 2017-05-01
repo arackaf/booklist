@@ -127,7 +127,7 @@ export type booksListType = {
     booksLoading: boolean,
     booksList: any[]
 }
-export const booksListSelector = createSelector<booksModuleType, booksListType, boolean, any, any, any>(
+export const selectBookList = createSelector<booksModuleType, booksListType, boolean, any, any, any>(
     state => state.booksModule.books.booksLoading,
     state => state.booksModule.books.booksHash,
     state => state.app.subjectHash,
@@ -150,7 +150,7 @@ export type bookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
 }
-export const bookSelectionSelector = createSelector<booksModuleType, bookSelectionType, any, any>(
+export const selectBookSelection = createSelector<booksModuleType, bookSelectionType, any, any>(
     state => state.booksModule.books.booksHash,
     state => state.booksModule.books.selectedBooks,
     (booksHash, selectedBooks) => {

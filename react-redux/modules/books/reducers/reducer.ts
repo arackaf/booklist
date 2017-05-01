@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { booksReducer as books, booksType} from './books/reducer';
 import { subjectsReducer as subjects, subjectsType, subjectsSelector } from './subjects/reducer';
 import { tagsReducer as tags, tagsType, tagsSelector } from './tags/reducer';
-import { bookSearchReducer as bookSearch, bookSearchType, bookSearchSelector } from './bookSearch/reducer';
+import { bookSearchReducer as bookSearch, bookSearchType, selectEntireBookSearchState } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectMofificationType, booksSubjectsModifierSelector } from './booksSubjectModification/reducer';
 import { bookTagManagerReducer as booksTagsModifier, booksTagModificationType, booksTagsModifierSelector } from './booksTagModification/reducer';
 import editBook, {editBookType} from './editBook/reducer';
