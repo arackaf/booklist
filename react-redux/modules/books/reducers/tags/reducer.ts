@@ -80,9 +80,9 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-export type tagsSortedType = {allTagsSorted: any[]};
-export const selectTagsSorted = createSelector<tagsType, tagsSortedType, any>(
-    state => state.tagHash,
+export type allTagsSortedType = {allTagsSorted: any[]};
+export const selectAllTagsSorted = createSelector<booksModuleType, allTagsSortedType, any>(
+    state => state.booksModule.tags.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
         return { allTagsSorted };
@@ -99,12 +99,12 @@ function allTagssSorted(tagHash){
     });
 }
 
-type tagsSearchedType = tagsSortedType & {
+type tagsSearchedType = allTagsSortedType & {
     tagsSearched: Object[]
 }
-const selectTagsSearched = createSelector<tagsType, tagsSearchedType, tagsSortedType, string>(
-    selectTagsSorted,
-    state => state.tagSearch,
+const selectTagsSearched = createSelector<booksModuleType, tagsSearchedType, allTagsSortedType, string>(
+    selectAllTagsSorted,
+    state => state.booksModule.tags.tagSearch,
     (tags, tagSearch) => {
         let tagsSearched = filterTags(tags.allTagsSorted, tagSearch);
         return { ...tags, tagsSearched };
@@ -117,9 +117,9 @@ type deletingTagInfoType = {
         _id: string
     }
 }
-const selectDeletingTagInfo = createSelector<tagsType, deletingTagInfoType, object, string>(
-    state => state.tagHash,
-    state => state.deletingTagId,
+const selectDeletingTagInfo = createSelector<booksModuleType, deletingTagInfoType, object, string>(
+    state => state.booksModule.tags.tagHash,
+    state => state.booksModule.tags.deletingTagId,
     (tagHash, deletingTagId) => {
         if (!deletingTagId) return null;
 
@@ -134,13 +134,15 @@ export type entireTagsStateType = tagsType & tagsSearchedType & deletingTagInfoT
 }
 //TODO:
 
-export const selectEntireTagsState = createSelector<booksModuleType, entireTagsStateType, tagsType, any>(
+export const selectEntireTagsState = createSelector<booksModuleType, entireTagsStateType, tagsType, any, tagsSearchedType, deletingTagInfoType>(
     state => state.booksModule.tags,
     state => state.app.colors, 
-    (tags, colors) => ({
+    selectTagsSearched,
+    selectDeletingTagInfo,
+    (tags, colors, searchedTags, deletingInfo) => ({
         ...tags,
-        ...selectTagsSearched(tags),
-        ...selectDeletingTagInfo(tags),
+        ...searchedTags, 
+        ...deletingInfo,
         colors
     })
 );

@@ -72,13 +72,13 @@ export function subjectsReducer(state = initialSubjectsState, action){
     return state;
 }
 
-type stackedSubjectsType = {
+export type stackedSubjectsType = {
     subjects: subjectType[];
     allSubjectsSorted: subjectType[];
     subjectsUnwound: subjectType[];
 
 }
-const selectStackedSubjects = createSelector<booksModuleType, stackedSubjectsType, any>(
+export const selectStackedSubjects = createSelector<booksModuleType, stackedSubjectsType, any>(
     state => state.app.subjectHash,
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
