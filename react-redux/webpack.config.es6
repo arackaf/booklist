@@ -20,7 +20,7 @@ const asyncBundle = (name, {nodePaths = [], resources = []}) =>
 
 module.exports = {
     entry: {
-        main: './reactStartup.js'
+        main: './reactStartup.ts'
     },
     output: {
         filename: '[name]-bundle.js',
@@ -29,6 +29,7 @@ module.exports = {
         publicPath: 'react-redux/dist/'
     },
     resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
         alias: {
             'jscolor': 'util/jscolor.js'
         },
@@ -39,6 +40,7 @@ module.exports = {
     },
     module: {
         loaders: [
+            { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -60,6 +62,7 @@ module.exports = {
             name: 'react-build',
             minChunks(module, count) {
                 var context = module.context;
+                context = context.replace(/\\/g, '/');
                 return context && (
                     context.indexOf('node_modules/react/') >= 0 || 
                     context.indexOf('node_modules/react-dom/') >= 0 ||

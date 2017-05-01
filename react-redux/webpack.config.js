@@ -34,7 +34,7 @@ var asyncBundle = function asyncBundle(name, _ref) {
 
 module.exports = {
     entry: {
-        main: './reactStartup.js'
+        main: './reactStartup.ts'
     },
     output: {
         filename: '[name]-bundle.js',
@@ -43,13 +43,14 @@ module.exports = {
         publicPath: 'react-redux/dist/'
     },
     resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
         alias: {
             'jscolor': 'util/jscolor.js'
         },
         modules: [path.resolve('./'), path.resolve('./node_modules')]
     },
     module: {
-        loaders: [{
+        loaders: [{ test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ }, {
             test: /\.js$/,
             exclude: /node_modules/,
             loader: 'babel-loader',
@@ -65,6 +66,7 @@ module.exports = {
         name: 'react-build',
         minChunks: function minChunks(module, count) {
             var context = module.context;
+            context = context.replace(/\\/g, '/');
             return context && (context.indexOf('node_modules/react/') >= 0 || context.indexOf('node_modules/react-dom/') >= 0 || context.indexOf('node_modules/react-loadable/') >= 0);
         }
     }), new webpack.optimize.CommonsChunkPlugin({
