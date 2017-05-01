@@ -5,7 +5,7 @@ import { subjectsReducer as subjects, subjectsType, subjectsSelector } from './s
 import { tagsReducer as tags, tagsType, tagsSelector } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchType, selectEntireBookSearchState } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectMofificationType, selectEntireBooksSubjectsModificationState } from './booksSubjectModification/reducer';
-import { bookTagManagerReducer as booksTagsModifier, booksTagModificationType, booksTagsModifierSelector } from './booksTagModification/reducer';
+import { bookTagManagerReducer as booksTagsModifier, booksTagModificationType, selectEntireBooksTagModificationState } from './booksTagModification/reducer';
 import editBook, {editBookType} from './editBook/reducer';
 
 export {appType};
@@ -19,7 +19,7 @@ export {tagsType};
 
 
 import {selectModifyingBooks as subjectsBooksModifyingSelector} from './booksSubjectModification/reducer';
-import {modifyingBooksSelector as tagsBooksModifyingSelector} from './booksTagModification/reducer';
+import {selectModifyingBooks as tagsBooksModifyingSelector} from './booksTagModification/reducer';
 
 export type booksModuleType = {
     app: appType;
