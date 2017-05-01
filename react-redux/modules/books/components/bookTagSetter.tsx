@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
-import { booksTagsModifierSelector, booksTagsModifierType } from '../reducers/booksTagModification/reducer';
+import { selectEntireBooksTagModificationState, entireBooksTagModificationStateType } from '../reducers/booksTagModification/reducer';
 import * as bookTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
-@connect(booksTagsModifierSelector, { ...bookTagModificationActionCreators })
-export default class BookTagSetterDesktopUnConnected extends Component<booksTagsModifierType & typeof bookTagModificationActionCreators, any> {
+@connect(selectEntireBooksTagModificationState, { ...bookTagModificationActionCreators })
+export default class BookTagSetterDesktopUnConnected extends Component<entireBooksTagModificationStateType & typeof bookTagModificationActionCreators, any> {
     state = { currentTab: 'tags' };
     setBooksTags(){
         this.props.setBooksTags(

@@ -20,7 +20,7 @@ import Loadable from 'react-loadable';
 
 import {booksListType, selectBookList} from '../reducers/books/reducer';
 import {selectModifyingBooks as subjectsBooksModifyingSelector, modifyingBooksType as subjectsBooksModifyingType} from '../reducers/booksSubjectModification/reducer';
-import {modifyingBooksSelector as tagsBooksModifyingSelector, modifyingBooksType as tagsBooksModifyingType} from '../reducers/booksTagModification/reducer';
+import {selectModifyingBooks as tagsBooksModifyingSelector, modifyingBooksType as tagsBooksModifyingType} from '../reducers/booksTagModification/reducer';
 import {selectBookSearchUiView, bookSearchUiViewType} from '../reducers/bookSearch/reducer';
 
 import ComponentLoading from 'applicationRoot/components/componentLoading';
