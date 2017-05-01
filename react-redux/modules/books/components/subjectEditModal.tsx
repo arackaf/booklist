@@ -5,7 +5,7 @@ import { Modal } from 'simple-react-bootstrap';
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import { subjectsSelector, subjectsSelectorType } from '../reducers/subjects/reducer';
+import { selectEntireSubjectsState, entireSubjectsStateType } from '../reducers/subjects/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
@@ -33,8 +33,8 @@ const SubjectEditDeleteInfo = props => {
     );
 }
 
-@connect(subjectsSelector, { ...actionCreators })
-export default class SubjectEditModal extends Component<subjectsSelectorType & typeof actionCreators, any>{
+@connect(selectEntireSubjectsState, { ...actionCreators })
+export default class SubjectEditModal extends Component<entireSubjectsStateType & typeof actionCreators, any>{
     render(){ 
         let props = this.props,
             editingSubject = props.editingSubject,

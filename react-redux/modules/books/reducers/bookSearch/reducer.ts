@@ -19,7 +19,7 @@ import {
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
-import { subjectsSelector, subjectsSelectorType, filterSubjects } from '../subjects/reducer';
+import { selectEntireSubjectsState, entireSubjectsStateType, filterSubjects } from '../subjects/reducer';
 import { tagsSelector, tagsSelectorType } from '../tags/reducer';
 
 const searchFields = {
@@ -114,11 +114,11 @@ export type entireBookSearchStateType = bookSearchType & bookSearchUiViewType & 
     eligibleFilterTags: any;
     bindableSortValue: any;
 };
-export const selectEntireBookSearchState = createSelector<booksModuleType, entireBookSearchStateType, appType, bookSearchType, tagsType, subjectsSelectorType, tagsSelectorType, bookSearchUiViewType>(
+export const selectEntireBookSearchState = createSelector<booksModuleType, entireBookSearchStateType, appType, bookSearchType, tagsType, entireSubjectsStateType, tagsSelectorType, bookSearchUiViewType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     state => state.booksModule.tags,
-    subjectsSelector,
+    selectEntireSubjectsState,
     tagsSelector,
     selectBookSearchUiView,
     (app, bookSearch, tags, subjectsState, tagsState, searchUi) => {
