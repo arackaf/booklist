@@ -7,7 +7,7 @@ import {
     ADDING_SUBJECT_SET, REMOVING_SUBJECT_SET, RESET_SUBJECTS
 } from './actionNames';
 
-import { selectEntireSubjectsState, entireSubjectsStateType, filterSubjects } from '../subjects/reducer';
+import { filterSubjects, selectStackedSubjects, stackedSubjectsType } from '../subjects/reducer';
 
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
@@ -63,11 +63,11 @@ type addingSubjectsType = {
     addingSubjects: any[];
     eligibleToAdd: any[];
 }
-const selectAddingSubjects = createSelector<booksModuleType, addingSubjectsType, any, any, any, any>(
+const selectAddingSubjects = createSelector<booksModuleType, addingSubjectsType, any, any, any, stackedSubjectsType>(
     state => state.booksModule.booksSubjectsModifier.addingSubjects,
     state => state.booksModule.booksSubjectsModifier.addingSubjectSearch,
     state => state.app.subjectHash,
-    selectEntireSubjectsState,
+    selectStackedSubjects,
     (adding, addingSubjectSearch, subjects, subjectsSelected) => ({
         addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
         eligibleToAdd: filterSubjects(subjectsSelected.subjectsUnwound, addingSubjectSearch)
@@ -78,11 +78,11 @@ type removingSubjectsType = {
     removingSubjects: any[];
     eligibleToRemove: any[];
 }
-const selectRemovingSubjects = createSelector<booksModuleType, removingSubjectsType, any, any, any, any>(
+const selectRemovingSubjects = createSelector<booksModuleType, removingSubjectsType, any, any, any, stackedSubjectsType>(
     state => state.booksModule.booksSubjectsModifier.removingSubjects,
     state => state.booksModule.booksSubjectsModifier.removingSubjectSearch,
     state => state.app.subjectHash,
-    selectEntireSubjectsState,
+    selectStackedSubjects,
     (removing, removingSubjectSearch, subjects, subjectsSelected) => ({
         removingSubjects: Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id]),
         eligibleToRemove: filterSubjects(subjectsSelected.subjectsUnwound, removingSubjectSearch)
@@ -97,12 +97,12 @@ export type entireBooksSubjectsModificationStateType = addingSubjectsType & remo
     addingSubjectSearch: string;
     removingSubjectSearch: string;
 }
-export const selectEntireBooksSubjectsModificationState = createSelector<booksModuleType, entireBooksSubjectsModificationStateType, booksSubjectMofificationType, modifyingBooksType, addingSubjectsType, removingSubjectsType, entireSubjectsStateType>(
+export const selectEntireBooksSubjectsModificationState = createSelector<booksModuleType, entireBooksSubjectsModificationStateType, booksSubjectMofificationType, modifyingBooksType, addingSubjectsType, removingSubjectsType, stackedSubjectsType>(
     state => state.booksModule.booksSubjectsModifier,
     selectModifyingBooks,
     selectAddingSubjects,
     selectRemovingSubjects,
-    selectEntireSubjectsState,
+    selectStackedSubjects,
     (booksSubjectsModifier, modifyingBooks, { addingSubjects, eligibleToAdd }, { removingSubjects, eligibleToRemove }, subjectsState) => {
         return {
             settingBooksSubjects: booksSubjectsModifier.settingBooksSubjects,
