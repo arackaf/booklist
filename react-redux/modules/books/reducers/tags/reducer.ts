@@ -1,3 +1,4 @@
+import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import {
     LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
     STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, CANCEL_TAG_EDIT,
@@ -79,7 +80,7 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-type tagsSortedType = {allTagsSorted: object};
+type tagsSortedType = {allTagsSorted: any[]};
 const tagsSorted = createSelector<tagsType, tagsSortedType, any>(
     state => state.tagHash,
     tagHash => {
@@ -133,7 +134,7 @@ export type tagsSelectorType = tagsType & tagsSearchedType & deletingTagInfoType
 }
 //TODO:
 
-export const tagsSelector = createSelector<{app: appType, booksModule: {tags: tagsType}}, tagsSelectorType, tagsType, any>(
+export const tagsSelector = createSelector<booksModuleType, tagsSelectorType, tagsType, any>(
     state => state.booksModule.tags,
     state => state.app.colors, 
     (tags, colors) => ({

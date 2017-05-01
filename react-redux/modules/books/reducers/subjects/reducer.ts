@@ -1,3 +1,4 @@
+import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import { createSelector } from 'reselect';
 
 import {
@@ -141,7 +142,7 @@ export type subjectsSelectorType = searchSubjectsType & eligibleSubjectsType & d
     editModalOpen: any;
     colors: any[];
 }
-export const subjectsSelector = createSelector<any, subjectsSelectorType, appType, subjectsType, searchSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
+export const subjectsSelector = createSelector<booksModuleType, subjectsSelectorType, appType, subjectsType, searchSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
     state => state.app,
     state => state.booksModule.subjects,
     searchSubjectsSelector,
