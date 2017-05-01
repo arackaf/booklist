@@ -2,7 +2,7 @@ import {appType} from 'applicationRoot/rootReducer';
 import { combineReducers } from 'redux';
 import { booksReducer as books, booksType} from './books/reducer';
 import { subjectsReducer as subjects, subjectsType, selectEntireSubjectsState } from './subjects/reducer';
-import { tagsReducer as tags, tagsType, selectEntireTagsState } from './tags/reducer';
+import { tagsReducer as tags, tagsType } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchType, selectEntireBookSearchState } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectMofificationType, selectEntireBooksSubjectsModificationState } from './booksSubjectModification/reducer';
 import { bookTagManagerReducer as booksTagsModifier, booksTagModificationType, selectEntireBooksTagModificationState } from './booksTagModification/reducer';
