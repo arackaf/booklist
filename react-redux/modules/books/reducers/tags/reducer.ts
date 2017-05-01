@@ -81,7 +81,7 @@ export const filterTags = (tags, search) => {
 };
 
 type tagsSortedType = {allTagsSorted: any[]};
-const tagsSorted = createSelector<tagsType, tagsSortedType, any>(
+const selectTagsSorted = createSelector<tagsType, tagsSortedType, any>(
     state => state.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
@@ -102,8 +102,8 @@ function allTagssSorted(tagHash){
 type tagsSearchedType = tagsSortedType & {
     tagsSearched: Object[]
 }
-const tagsSearched = createSelector<tagsType, tagsSearchedType, tagsSortedType, string>(
-    tagsSorted,
+const selectTagsSearched = createSelector<tagsType, tagsSearchedType, tagsSortedType, string>(
+    selectTagsSorted,
     state => state.tagSearch,
     (tags, tagSearch) => {
         let tagsSearched = filterTags(tags.allTagsSorted, tagSearch);
@@ -117,7 +117,7 @@ type deletingTagInfoType = {
         _id: string
     }
 }
-const deletingTagInfoSelector = createSelector<tagsType, deletingTagInfoType, object, string>(
+const selectDeletingTagInfo = createSelector<tagsType, deletingTagInfoType, object, string>(
     state => state.tagHash,
     state => state.deletingTagId,
     (tagHash, deletingTagId) => {
@@ -129,18 +129,18 @@ const deletingTagInfoSelector = createSelector<tagsType, deletingTagInfoType, ob
     }
 );
 
-export type tagsSelectorType = tagsType & tagsSearchedType & deletingTagInfoType & {
+export type entireTagsStateType = tagsType & tagsSearchedType & deletingTagInfoType & {
     colors: object[]
 }
 //TODO:
 
-export const tagsSelector = createSelector<booksModuleType, tagsSelectorType, tagsType, any>(
+export const selectEntireTagsState = createSelector<booksModuleType, entireTagsStateType, tagsType, any>(
     state => state.booksModule.tags,
     state => state.app.colors, 
     (tags, colors) => ({
         ...tags,
-        ...tagsSearched(tags),
-        ...deletingTagInfoSelector(tags),
+        ...selectTagsSearched(tags),
+        ...selectDeletingTagInfo(tags),
         colors
     })
 );

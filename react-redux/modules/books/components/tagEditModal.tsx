@@ -5,7 +5,7 @@ import { Modal } from 'simple-react-bootstrap';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import {tagsSelector, tagsSelectorType} from '../reducers/tags/reducer';
+import {selectEntireTagsState, entireTagsStateType} from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
@@ -22,8 +22,8 @@ const TagEditDeleteInfo = props =>
         </div>
     </div>;
 
-@connect(tagsSelector, { ...actionCreators })
-export default class TagEditModal extends Component<tagsSelectorType & typeof actionCreators, any> {
+@connect(selectEntireTagsState, { ...actionCreators })
+export default class TagEditModal extends Component<entireTagsStateType & typeof actionCreators, any> {
     render(){
         let props = this.props,
             deleteInfo = props.deleteInfo,
