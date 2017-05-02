@@ -1,3 +1,4 @@
+import {hashOf} from 'applicationRoot/rootReducer';
 import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import {
     LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
@@ -12,8 +13,13 @@ const emptyTag = { _id: '', name: '', backgroundColor: '', textColor: '' };
 const newTagEditing = { tagSearch: '', deletingTagId: null };
 const doneEditingTag = { saving: false, editingTagId: null, editingTag: null };
 
+interface ITag {
+    _id: string;
+    name: string;
+}
+
 const initialTagsState = {
-    tagHash: {},
+    tagHash: hashOf<ITag>(),
     loaded: false,
     tagSearch: '',
     initialQueryFired: false,
@@ -80,7 +86,7 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-export type allTagsSortedType = {allTagsSorted: any[]};
+export type allTagsSortedType = {allTagsSorted: ITag[]};
 export const selectAllTagsSorted = createSelector<booksModuleType, allTagsSortedType, any>(
     state => state.booksModule.tags.tagHash,
     tagHash => {
@@ -100,7 +106,7 @@ function allTagssSorted(tagHash){
 }
 
 type tagsSearchedType = allTagsSortedType & {
-    tagsSearched: Object[]
+    tagsSearched: ITag[]
 }
 const selectTagsSearched = createSelector<booksModuleType, tagsSearchedType, allTagsSortedType, string>(
     selectAllTagsSorted,
