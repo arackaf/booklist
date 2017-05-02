@@ -32,7 +32,7 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
 
         return (
             <Modal className="fade" show={!!props.editTagOpen} onHide={props.stopEditingTags}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <button type="button" className="close" onClick={props.stopEditingTags} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Edit tags</h4>
                 </Modal.Header>

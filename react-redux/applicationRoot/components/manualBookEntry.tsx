@@ -16,11 +16,11 @@ class ManualBookEntry extends Component<any, any> {
         this.state = { bookEditing: null };
 
         this.syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
-        this.SyncedInput = props =>
+        this.SyncedInput = ({syncName, ...props}) =>
             <input
                 onKeyDown={evt => (evt.keyCode || evt.which) == 13 && props.onEnter()}
-                onChange={this.syncStateFromInput(props.syncName)}
-                value={this.state.bookEditing[props.syncName]}
+                onChange={this.syncStateFromInput(syncName)}
+                value={this.state.bookEditing[syncName]}
                 { ...props } />
 
         this.syncAuthor = index => evt => {
@@ -100,7 +100,7 @@ class ManualBookEntry extends Component<any, any> {
         //Parent component passes in a new book as needed to restart editing
         return (
             <Modal className="fade" show={!!this.props.isOpen} onHide={() => this.closeModal()}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <button type="button" className="close" onClick={() => this.closeModal()} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">{this.props.title}</h4>
                 </Modal.Header>
@@ -144,7 +144,7 @@ class ManualBookEntry extends Component<any, any> {
                         </div>
                         <div className="row">
                             {(this.state.bookEditing.authors || []).map((author, $index) =>
-                                <div className="col-xs-4">
+                                <div key={$index} className="col-xs-4">
                                     <div className="form-group">
                                         <label>Author</label>
                                         <input

@@ -75,7 +75,7 @@ class BookDAO extends DAO {
             //    delete query.subjects;
             //    delete query.title;
             //}//
-            let allFields = ['_id', 'title', 'isbn', 'ean', 'pages', 'smallImage', 'mediumImage', 'publicationDate', 'editorialReviews', 'userId', 'subjects', 'authors', 'publisher', 'tags', 'isRead', 'author'],
+            let allFields = ['_id', 'title', 'isbn', 'ean', 'pages', 'smallImage', 'mediumImage', 'publicationDate', 'editorialReviews', 'userId', 'subjects', 'authors', 'publisher', 'tags', 'isRead'],
                 project = Object.assign({}, allFields.reduce((hash, key) => (hash[key] = 1, hash), {}), { titleLower: { $toLower: '$title' } });
 
             return (await db.collection('books').aggregate([{$match: query}, {$project: project}, {$sort: sortObj}, {$skip: skip}, {$limit: limit}]).toArray()).map(adjustForClient);

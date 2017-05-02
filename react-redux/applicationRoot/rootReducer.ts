@@ -36,6 +36,8 @@ const initialState = {
     subjectsInitialQueryFired: false
 };
 
+export const hashOf = <T>() => <{ [s: string]: T }>{};
+
 export type appType = typeof initialState;
 export type subjectType = {
     _id: string;
