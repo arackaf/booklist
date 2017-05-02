@@ -28,12 +28,37 @@ interface IEditorialReview {
     source: string;
 }
 
-export interface IBook {
-    _id: 'string'
+export interface IBookRaw {
+    _id: string;
+    dateAdded: number;
+    ean: string;
+    editorialReviews: IEditorialReview[];
+    isRead: boolean;
+    readChanging?: boolean;
+    isbn: string;
+    smallImage: string;
+    mediumImage: string;
+    pages: any;
+    publicationDate: any;
+    publisher: string;
+    authors: string[];
+    subjects: string[];
+    tags: string[];
+    title: string;
+    titleLower: string;
+    userId: string;
+    deleting?: boolean;
+    pendingDelete?: boolean;
+}
+
+export interface IBookDisplay extends IBookRaw {
+    subjectObjects: any[];
+    tagObjects: any[];
+    dateAddedDisplay: string;
 }
 
 const initialBooksState = {
-    booksHash: {},
+    booksHash: hashOf<IBookRaw>(),
     booksLoading: false,
     selectedBooks: {},
     reloadOnActivate: false,
@@ -46,8 +71,6 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case LOAD_BOOKS:
             return Object.assign({}, state, { booksLoading: true, initialQueryFired: true, reloadOnActivate: false });
         case LOAD_BOOKS_RESULTS:
-            let XXX = createBooksHash(action.books);
-            debugger;
             return Object.assign({}, state, { booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
         case EDITING_BOOK_SAVED:
             let newBookVersion = Object.assign({}, state.booksHash[action.book._id], action.book); //only update fields sent
@@ -137,7 +160,7 @@ function createBooksHash(booksArr){
 
 export type booksListType = {
     booksLoading: boolean,
-    booksList: any[]
+    booksList: IBookDisplay[]
 }
 export const selectBookList = createSelector<booksModuleType, booksListType, boolean, any, any, any>(
     state => state.booksModule.books.booksLoading,
