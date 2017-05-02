@@ -43,7 +43,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
 
         return (
             <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditingSubjects}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <button type="button" className="close" onClick={props.stopEditingSubjects} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Full search</h4>
                 </Modal.Header>

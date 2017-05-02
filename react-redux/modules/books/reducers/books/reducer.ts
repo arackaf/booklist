@@ -1,3 +1,4 @@
+import {hashOf} from 'applicationRoot/rootReducer';
 import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import { createSelector } from 'reselect';
@@ -22,6 +23,15 @@ import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';
 
+interface IEditorialReview {
+    content: string;
+    source: string;
+}
+
+export interface IBook {
+    _id: 'string'
+}
+
 const initialBooksState = {
     booksHash: {},
     booksLoading: false,
@@ -36,6 +46,8 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case LOAD_BOOKS:
             return Object.assign({}, state, { booksLoading: true, initialQueryFired: true, reloadOnActivate: false });
         case LOAD_BOOKS_RESULTS:
+            let XXX = createBooksHash(action.books);
+            debugger;
             return Object.assign({}, state, { booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
         case EDITING_BOOK_SAVED:
             let newBookVersion = Object.assign({}, state.booksHash[action.book._id], action.book); //only update fields sent

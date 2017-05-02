@@ -15,7 +15,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
     render(){
         return (
             <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <button type="button" className="close" onClick={this.props.endFilterChanging} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Full search</h4>
                 </Modal.Header>
