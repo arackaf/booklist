@@ -12,7 +12,18 @@ function renderSuggestion(s) {
     );
 }
 
-class GenericLabelSelect extends Component<any, any> {
+interface ILabelShape {
+    _id: string;
+    name: string;
+}
+
+interface IPropsShape {
+    inputProps: any;
+    suggestions: ILabelShape[]
+    onSuggestionSelected: (x: ILabelShape) => any;
+}
+
+class GenericLabelSelect extends Component<IPropsShape, any> {
     input: any
     onSuggestionSelected: (evt: any, arg: any) => any
     constructor() {
