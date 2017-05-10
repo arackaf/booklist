@@ -62,7 +62,8 @@ gulp.task('transpile-watch', function() {
                 .pipe(babel(babelOptions))
                 .pipe(rename(fileObj => {
                     let dir = fileObj.dirname.replace(/\\/g, '/');
-                    fileObj.dirname = dir.replace(/^node-src\//, 'node-dest/');
+                    console.log(dir);
+                    fileObj.dirname = dir.replace(/^node-src/, 'node-dest/');
                 }))
                 .pipe(gulp.dest(''))
                 .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
