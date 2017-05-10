@@ -40,7 +40,7 @@
     "react-dom": "0.14.0",
     "react-dropzone": "3.4.0",
     "react-height": "2.1.1",
-    "react-loadable": "^3.0.1",
+    "react-loadable": "3.3.1",
     "react-motion": "0.4.7",
     "react-redux": "4.4.5",
     "redux": "3.0.4",
