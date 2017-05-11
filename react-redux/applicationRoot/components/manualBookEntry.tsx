@@ -16,11 +16,11 @@ class ManualBookEntry extends Component<any, any> {
         this.state = { bookEditing: null };
 
         this.syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
-        this.SyncedInput = ({syncName, ...props}) =>
+        this.SyncedInput = ({syncName, onEnter, ...props}) =>
             <input
                 onKeyDown={evt => (evt.keyCode || evt.which) == 13 && props.onEnter()}
                 onChange={this.syncStateFromInput(syncName)}
-                value={this.state.bookEditing[syncName]}
+                value={this.state.bookEditing[syncName] || ''}
                 { ...props } />
 
         this.syncAuthor = index => evt => {
