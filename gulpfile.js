@@ -25,20 +25,15 @@ let babelOptions = {
     plugins: ['transform-decorators-legacy']
 };
 
-var gulpTargets = [
-    'amazonDataAccess',
-    'app-helpers',
-    'controllers',
-    'dataAccess',
-    'private'
-].map(f => `./` + f + '/**/*.es6')
-gulpTargets.push('./*.es6');
-gulpTargets.push('./react-redux/*.es6');
+var gulpTargets = ['./node-src/**/*.js', './node-src/*.js']
 
 gulp.task('transpile-all', function () {
     gulp.src(gulpTargets, { base: './' })
         .pipe(babel(babelOptions))
-        .pipe(rename({ extname: ".js" }))
+        .pipe(rename(fileObj => {
+            let dir = fileObj.dirname.replace(/\\/g, '/');
+            fileObj.dirname = dir.replace(/^node-src\//, 'node-dest/');
+        }))
         .pipe(gulp.dest(''))
         .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
 });
@@ -65,7 +60,11 @@ gulp.task('transpile-watch', function() {
                     }
                 }))
                 .pipe(babel(babelOptions))
-                .pipe(rename({ extname: ".js" }))
+                .pipe(rename(fileObj => {
+                    let dir = fileObj.dirname.replace(/\\/g, '/');
+                    console.log(dir);
+                    fileObj.dirname = dir.replace(/^node-src/, 'node-dest/');
+                }))
                 .pipe(gulp.dest(''))
                 .pipe(gprint(function(filePath){ return "File processed: " + filePath; }));
         }

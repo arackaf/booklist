@@ -2,8 +2,8 @@ require('dotenv').config();
 
 require('regenerator/runtime');
 
-require('./app-helpers/promiseUtils');
-const dao = require('./dataAccess/dao').default;
+require('./node-dest/app-helpers/promiseUtils');
+const dao = require('./node-dest/dataAccess/dao').default;
 
 const express = require('express');
 const app = express();
@@ -17,10 +17,10 @@ const lwip = require('lwip');
 const exif = require('exif-parser');
 const compression = require('compression');
 
-const bookEntryQueueManager = require('./app-helpers/bookEntryQueueManager').default;
-const PendingBookEntryDao = require('./dataAccess/pendingBookEntryDAO').default;
-const ErrorLoggerDao = require('./dataAccess/errorLoggerDAO').default;
-const UserDao = require('./dataAccess/userDAO').default;
+const bookEntryQueueManager = require('./node-dest/app-helpers/bookEntryQueueManager').default;
+const PendingBookEntryDao = require('./node-dest/dataAccess/pendingBookEntryDAO').default;
+const ErrorLoggerDao = require('./node-dest/dataAccess/errorLoggerDAO').default;
+const UserDao = require('./node-dest/dataAccess/userDAO').default;
 
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
@@ -33,7 +33,7 @@ var passport = require('passport'),
 
 passport.use(new LocalStrategy(
     function(email, password, done) {
-        let userDao = new UserDao();
+        var userDao = new UserDao();
 
         userDao.lookupUser(email, password).then(userResult => {
             if (userResult) {
@@ -47,7 +47,7 @@ passport.use(new LocalStrategy(
 ));
 
 function consumeRememberMeToken(token, done) {
-    let userDao = new UserDao();
+    var userDao = new UserDao();
 
     userDao.lookupUserByToken(token).then(userResult => {
         if (userResult) {
@@ -105,7 +105,7 @@ app.ws('/bookEntryWS', function(ws, req) {
 });
 
 var easyControllers = require('easy-express-controllers').easyControllers;
-easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) });
+easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, {__dirname: './node-dest'});
 
 app.get('/', browseToReactRedux);
 app.get('/books', browseToReactRedux);
@@ -152,7 +152,7 @@ const multerBookCoverUploadStorage = multer.diskStorage({
         if (!req.user.id){
             cb('Not logged in');
         } else {
-            let path = `./uploads/${req.user.id}/coverUpload`;
+            var path = `./uploads/${req.user.id}/coverUpload`;
 
             fs.stat(path, function(err){
                 if (err){
@@ -176,7 +176,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
         return response.send({ success: false, error: 'Max size is 500K' });
     }
 
-    let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/'),
+    var pathResult = path.normalize(req.file.destination).replace(/\\/g, '/'),
         pathToFileUploaded = `${pathResult}/${req.file.originalname}`,
         ext = (path.extname(pathToFileUploaded) || '').toLowerCase();
 
@@ -191,7 +191,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                     if (err) {
                         console.log('ERROR', pathToFileUploaded, err);
                     }
-                    let exifData = exif.create(data).parse(),
+                    var exifData = exif.create(data).parse(),
                         batchImage = null;
 
                     if (exifData && exifData.tags) {
@@ -236,12 +236,12 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
 
     function processImageAsNeeded(image) {
         if (image.width() > 55) {
-            let width = image.width(),
+            var width = image.width(),
                 height = image.height(),
                 newWidth = (height * 50) / width;
 
             image.resize(50, newWidth, function (err, image) {
-                let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+                var resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
 
                 image.writeFile(resizedDestination, err => {
                     response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
@@ -254,7 +254,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
 });
 
 app.post('/react-redux/createUser', function(req, response){
-    let userDao = new UserDao(),
+    var userDao = new UserDao(),
         username = req.body.username,
         password = req.body.password,
         rememberMe = req.body.rememberme == 1;
@@ -273,7 +273,7 @@ app.post('/react-redux/createUser', function(req, response){
 
 app.get('/activate', browseToReactRedux);
 app.get('/activate/:code', function(req, response){
-    let userDao = new UserDao(),
+    var userDao = new UserDao(),
         code = req.params.code;
 
     response.clearCookie('remember_me');
@@ -308,7 +308,7 @@ function shutdown(){
 
 function error(err){
     try{
-        let logger = new ErrorLoggerDao();
+        var logger = new ErrorLoggerDao();
         logger.log('exception', err);
     } catch(e) { }
 }

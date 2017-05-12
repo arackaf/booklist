@@ -132,7 +132,7 @@ function loadModule(location) {
         }
 
         if (moduleObject.reducer) {
-            getNewReducer({name: moduleObject.name, reducer: moduleObject.reducer, initialize: moduleObject.initialize});
+            getNewReducer({name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize});
         }
         renderUI(createElement(moduleObject.component));
     });
