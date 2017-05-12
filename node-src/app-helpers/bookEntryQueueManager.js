@@ -1,6 +1,6 @@
 import PendingBookEntryDao from '../dataAccess/pendingBookEntryDAO';
 import CompletedEntriesDao from '../dataAccess/completedEntriesDAO';
-import AmazonSearch from '../amazonDataAccess/AmazonSearch.js';
+import AmazonSearch from '../amazonDataAccess/amazonSearch.js';
 import amazonOperationQueue from '../amazonDataAccess/amazonOperationQueue';
 import BookDAO from '../dataAccess/bookDAO';
 
