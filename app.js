@@ -118,6 +118,7 @@ app.get('/view', browseToReactRedux);
 app.get('/react-redux', browseToReactRedux);
 
 function browseToReactRedux(request, response){
+    console.log("BROWSING TO REACT REDUX")
     if (!!request.user) {
         response.cookie('logged_in', 'true', { maxAge: 900000 });
     } else {
