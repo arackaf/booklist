@@ -81,16 +81,11 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             var newBookHash = { ...state.booksHash };
 
             action.books.forEach(_id => {
-                let book = { ...newBookHash[_id] },
-                    booksSubjectsHash = {};
+                let book = newBookHash[_id],
+                    booksSubjects = new Set<string>([...book.subjects, ...action.add]);
 
-                book.subjects.forEach(_id => booksSubjectsHash[_id] = true);
-
-                action.add.forEach(sAdd => booksSubjectsHash[sAdd] = true);
-                action.remove.forEach(sAdd => booksSubjectsHash[sAdd] = false);
-
-                book.subjects = Object.keys(booksSubjectsHash).filter(_id => booksSubjectsHash[_id]);
-                newBookHash[_id] = book;
+                action.remove.forEach(s => booksSubjects.delete(s));
+                newBookHash[_id] = {...book, subjects: Array.from(booksSubjects.keys())};
             });
 
             return Object.assign({}, state, { booksHash: newBookHash });
@@ -98,16 +93,11 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             var newBookHash = { ...state.booksHash };
 
             action.books.forEach(_id => {
-                var book = { ...newBookHash[_id] },
-                    booksTagsHash = {};
+                var book = newBookHash[_id],
+                    booksTags = new Set<string>([...book.tags, ...action.add]);
 
-                book.tags.forEach(_id => booksTagsHash[_id] = true);
-
-                action.add.forEach(sAdd => booksTagsHash[sAdd] = true);
-                action.remove.forEach(sAdd => booksTagsHash[sAdd] = false);
-
-                book.tags = Object.keys(booksTagsHash).filter(_id => booksTagsHash[_id]);
-                newBookHash[_id] = book;
+                action.remove.forEach(t => booksTags.delete(t));
+                newBookHash[_id] = {...book, tags: Array.from(booksTags.keys())};
             });
 
             return Object.assign({}, state, { booksHash: newBookHash });
