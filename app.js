@@ -27,7 +27,6 @@ const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
 
 const multer  = require('multer');
 
-try{
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
@@ -119,7 +118,6 @@ app.get('/view', browseToReactRedux);
 app.get('/react-redux', browseToReactRedux);
 
 function browseToReactRedux(request, response){
-    console.log("BROWSING TO REACT REDUX")
     if (!!request.user) {
         response.cookie('logged_in', 'true', { maxAge: 900000 });
     } else {
@@ -319,4 +317,3 @@ Promise.resolve(dao.init()).then(() => {
     app.listen(process.env.PORT || 3000);
     bookEntryQueueManager.initialize();
 });
-}catch(err){ console.log(err); }
