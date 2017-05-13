@@ -186,45 +186,41 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                 return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
             }
 
-            if (false && ext == '.jpg' || ext == '.jpeg') {
+            if (ext == '.jpg' || ext == '.jpeg') {
                 fs.readFile(pathToFileUploaded, (err, data) => {
                     if (err) {
                         console.log('ERROR', pathToFileUploaded, err);
                     }
-                    let exifData = exif.create(data).parse(),
-                        batchImage = null;
+                    let exifData = exif.create(data).parse();
 
                     if (exifData && exifData.tags) {
                         switch (exifData.tags.Orientation) {
                             case 2:
-                                batchImage = image.batch().flip('x'); // top-right - flip horizontal
+                                image.flip(true, false); // top-right - flip horizontal
                                 break;
                             case 3:
-                                batchImage = image.batch().rotate(180); // bottom-right - rotate 180
+                                image.rotate(180); // bottom-right - rotate 180
                                 break;
                             case 4:
-                                batchImage = image.batch().flip('y'); // bottom-left - flip vertically
+                                image.flip(false, true); // bottom-left - flip vertically
                                 break;
                             case 5:
-                                batchImage = image.batch().rotate(90).flip('x'); // left-top - rotate 90 and flip horizontal
+                                image.rotate(90);
+                                image.flip(true, false); // left-top - rotate 90 and flip horizontal
                                 break;
                             case 6:
-                                batchImage = image.batch().rotate(90); // right-top - rotate 90
+                                image.rotate(90); // right-top - rotate 90
                                 break;
                             case 7:
-                                batchImage = image.batch().rotate(270).flip('x'); // right-bottom - rotate 270 and flip horizontal
+                                image.rotate(270);
+                                image.flip(true, false); // right-bottom - rotate 270 and flip horizontal
                                 break;
                             case 8:
-                                batchImage = image.batch().rotate(270); // left-bottom - rotate 270
+                                image.rotate(270); // left-bottom - rotate 270
                                 break;
                         }
                     }
-
-                    if (batchImage) {
-                        batchImage.exec((err, image) => processImageAsNeeded(image))
-                    } else {
-                        processImageAsNeeded(image);
-                    }
+                    processImageAsNeeded(image);
                 });
             } else {
                 processImageAsNeeded(image);
@@ -242,12 +238,8 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
 
             image.resize(50, newWidth);
             let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
-            console.log(resizedDestination)
 
             image.write(resizedDestination, err => {
-                if (err){
-                    console.log('', err);
-                }
                 response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
             });
         } else {
