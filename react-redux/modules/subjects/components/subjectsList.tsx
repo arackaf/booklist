@@ -221,7 +221,7 @@ class DefaultSubjectDisplay extends Component<any, any> {
             mainIcon =
                 isSubjectSaving ? <i className="fa fa-fw fa-spinner fa-spin"></i> :
                     isSubjectSaved ? <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> :
-                        connectDragSource(<i className="fa fa-fw fa-arrows"></i>);
+                        connectDragSource(<i className="fa fa-fw fa-arrows drag-handle"></i>);
 
         return (noDrop ? c=>c : connectDropTarget)(
             <div className={className}>
