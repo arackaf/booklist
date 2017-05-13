@@ -352,12 +352,14 @@ export default class SubjectsComponent extends Component<subjectsComponentPropsT
         let SDL : any = SubjectDragLayer;
 
         return (
-            <div style={{ marginLeft: '10px', marginRight: '10px' }}>
-                <BootstrapButton onClick={() => addNewSubject()} preset="primary">New subject</BootstrapButton>
-                <br />
-                <br />
-                <SubjectList subjects={allSubjects} />
-                {isTouch ? <SDL /> : null}
+            <div className="row" style={{ marginLeft: '0px', marginRight: '0px' }}>
+                <div className="col-lg-6 col-xs-12">
+                    <BootstrapButton onClick={() => addNewSubject()} preset="primary">New subject</BootstrapButton>
+                    <br />
+                    <br />
+                    <SubjectList subjects={allSubjects} />
+                    {isTouch ? <SDL /> : null}
+                </div>
             </div>
         )
     }
