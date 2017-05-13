@@ -259,7 +259,7 @@ class EditingSubjectDisplay extends Component<any, any> {
 
         return (
             <div className={className}>
-                <div className="col-xs-12 col-lg-3" style={{overflow: 'hidden'}}>
+                <div className="col-xs-12 col-lg-6" style={{overflow: 'hidden'}}>
                     <input ref={el => this.inputEl = el} onKeyDown={this.subjectEditingKeyDown} onChange={(evt: any) => setEditingSubjectField(_id, 'name', evt.target.value)} value={editingSubject.name} className="form-control" />
                     <div className="label label-default" style={{ backgroundColor: editingSubject.backgroundColor, color: editingSubject.textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', marginTop: '5px' }}>{editingSubject.name || '<label preview>'}</div>
                     {subject.pending ? <br /> : null}
@@ -267,19 +267,19 @@ class EditingSubjectDisplay extends Component<any, any> {
                     {validationError ? <br /> : null}
                     {validationError ? <span className="label label-danger">{validationError}</span> : null}
                 </div>
-                <div className="col-xs-12 col-lg-3 padding-bottom-small">
+                <div className="col-xs-12 col-lg-6 padding-bottom-small">
                     <select onChange={(evt: any) => setEditingSubjectField(_id, 'parentId', evt.target.value)} value={editingSubject.parentId || ''} className="form-control">
                         <option value={''}>No Parent</option>
                         {editingSubject.eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
                     </select>
                 </div>
-                <div className="col-xs-12 col-lg-4">
+                <div className="col-xs-12 col-lg-9">
                     <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
                 </div>
                 <div className="col-xs-12 col-lg-1 padding-bottom-small">
                     <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
                 </div>
-                <div className="col-xs-12 col-lg-1">
+                <div className="col-xs-12 col-lg-2">
                     <BootstrapButton disabled={isSubjectSaving} style={{marginRight: '5px'}} preset="primary-xs" onClick={() => saveChanges(editingSubject, subject)}><i className={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i></BootstrapButton>
                     <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
                 </div>
