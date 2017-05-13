@@ -1,40 +1,22 @@
-'use strict';
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var path = require('path');
 var webpack = require('webpack');
-var noVisualization = process.env.NODE_ENV === 'production' || process.argv.slice(-1)[0] == '-p' || process.argv.some(function (arg) {
-    return arg.indexOf('webpack-dev-server') >= 0;
-});
+var noVisualization = process.env.NODE_ENV === 'production' 
+        || process.argv.slice(-1)[0] == '-p'
+        || process.argv.some(arg => arg.indexOf('webpack-dev-server') >= 0);
 
-var asyncBundle = function asyncBundle(name, _ref) {
-    var _ref$nodePaths = _ref.nodePaths,
-        nodePaths = _ref$nodePaths === undefined ? [] : _ref$nodePaths,
-        _ref$resources = _ref.resources,
-        resources = _ref$resources === undefined ? [] : _ref$resources;
-    return new webpack.optimize.CommonsChunkPlugin({
+const asyncBundle = (name, {nodePaths = [], resources = []}) => 
+    new webpack.optimize.CommonsChunkPlugin({
         async: name,
-        minChunks: function minChunks(_ref2, count) {
-            var context = _ref2.context,
-                resource = _ref2.resource;
-
+        minChunks({context, resource}, count) {
             if (!context) return false;
-            var resourcePath = context.replace(/\\/g, '/');
+            let resourcePath = context.replace(/\\/g, '/');
 
-            return resourcePath.indexOf('node_modules') >= 0 && nodePaths.find(function (t) {
-                return new RegExp('/' + t + '/', 'i').test(resourcePath);
-            }) || resource && (resources.find(function (r) {
-                return !path.relative(r + '.js', resource);
-            }) || resources.find(function (r) {
-                return !path.relative(r + '.ts', resource);
-            }) || resources.find(function (r) {
-                return !path.relative(r + '.tsx', resource);
-            }));
+            return (resourcePath.indexOf('node_modules') >= 0 && nodePaths.find(t => new RegExp('/' + t + '/', 'i').test(resourcePath)))
+                    ||
+                   (resource && (resources.find(r => !path.relative(r + '.js', resource)) || resources.find(r => !path.relative(r + '.ts', resource)) || resources.find(r => !path.relative(r + '.tsx', resource))))
         }
-    });
-};
+    })
 
 module.exports = {
     entry: {
@@ -51,48 +33,69 @@ module.exports = {
         alias: {
             'jscolor': 'util/jscolor.js'
         },
-        modules: [path.resolve('./'), path.resolve('./node_modules')]
+        modules: [
+            path.resolve('./'),
+            path.resolve('./node_modules'),
+        ]
     },
     module: {
-        loaders: [{ test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ }, {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-            query: {
-                presets: ['react', 'es2015-webpack', 'stage-1', 'stage-2'],
-                plugins: ['transform-decorators-legacy', 'external-helpers']
+        loaders: [
+            { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['react', 'es2015-webpack', 'stage-1', 'stage-2'],
+                    plugins: ['transform-decorators-legacy', 'external-helpers']
+                }
             }
-        }]
+        ]
     },
-    plugins: [!noVisualization ? new BundleAnalyzerPlugin({
-        analyzerMode: 'static'
-    }) : null, new webpack.optimize.CommonsChunkPlugin({
-        name: 'react-build',
-        minChunks: function minChunks(module, count) {
-            var context = module.context;
-            context = context.replace(/\\/g, '/');
-            return context && (context.indexOf('node_modules/react/') >= 0 || context.indexOf('node_modules/react-dom/') >= 0 || context.indexOf('node_modules/react-loadable/') >= 0);
-        }
-    }), new webpack.optimize.CommonsChunkPlugin({
-        name: 'manifest'
-    }),
+    plugins: [
+        (!noVisualization ? 
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'static'
+            }) : null),
 
-    //*********************************** async chunks*************************
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'react-build',
+            minChunks(module, count) {
+                var context = module.context;
+                context = context.replace(/\\/g, '/');
+                return context && (
+                    context.indexOf('node_modules/react/') >= 0 || 
+                    context.indexOf('node_modules/react-dom/') >= 0 ||
+                    context.indexOf('node_modules/react-loadable/') >= 0 
+                );
+            },
+        }),
 
-    //catch all - anything used in more than one place
-    // new webpack.optimize.CommonsChunkPlugin({
-    //     async: 'used-twice',
-    //     minChunks: (module, count) => count >= 2,
-    // }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest'
+        }),        
 
-    asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core'] }), asyncBundle('book-modal-helpers', {
-        resources: ['applicationRoot/components/genericLabelSelect', 'applicationRoot/components/customColorPicker', 'util/jscolor'],
-        nodePaths: ['react-autosuggest', 'react-autowhatever', 'react-themeable', 'section-iterator']
-    })].filter(function (p) {
-        return p;
-    }),
+        //*********************************** async chunks*************************
+
+        //catch all - anything used in more than one place
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     async: 'used-twice',
+        //     minChunks: (module, count) => count >= 2,
+        // }),
+
+        asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
+        asyncBundle('book-modal-helpers', { 
+            resources: [
+                'applicationRoot/components/genericLabelSelect', 
+                'applicationRoot/components/customColorPicker', 
+                'util/jscolor'
+            ], 
+            nodePaths: ['react-autosuggest', 'react-autowhatever', 'react-themeable', 'section-iterator'] 
+        })
+
+    ].filter(p => p),
     devServer: {
-        proxy: _defineProperty({
+        proxy: {
             "/": "http://localhost:3000",
             "/react-redux/login": "http://localhost:3000",
             "/react-redux/logout": "http://localhost:3000",
@@ -103,7 +106,8 @@ module.exports = {
             "/book": "http://localhost:3000",
             "/user": "http://localhost:3000",
             "/static": "http://localhost:3000",
-            "/react-redux/util": "http://localhost:3000"
-        }, '/react-redux/logout', "http://localhost:3000")
+            "/react-redux/util": "http://localhost:3000",
+            "/react-redux/logout": "http://localhost:3000"
+        }
     }
 };

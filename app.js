@@ -27,13 +27,13 @@ const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
 
 const multer  = require('multer');
 
-var passport = require('passport'),
+const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
 
 passport.use(new LocalStrategy(
     function(email, password, done) {
-        var userDao = new UserDao();
+        let userDao = new UserDao();
 
         userDao.lookupUser(email, password).then(userResult => {
             if (userResult) {
@@ -47,7 +47,7 @@ passport.use(new LocalStrategy(
 ));
 
 function consumeRememberMeToken(token, done) {
-    var userDao = new UserDao();
+    let userDao = new UserDao();
 
     userDao.lookupUserByToken(token).then(userResult => {
         if (userResult) {
@@ -92,7 +92,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate('remember-me'));
 
-var expressWs = require('express-ws')(app);
+const expressWs = require('express-ws')(app);
 
 app.use('/static/', express.static(__dirname + '/static/'));
 app.use('/node_modules/', express.static(__dirname + '/node_modules/'));
@@ -104,7 +104,7 @@ app.ws('/bookEntryWS', function(ws, req) {
     bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 });
 
-var easyControllers = require('easy-express-controllers').easyControllers;
+const easyControllers = require('easy-express-controllers').easyControllers;
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, {__dirname: './node-dest'});
 
 app.get('/', browseToReactRedux);
@@ -152,7 +152,7 @@ const multerBookCoverUploadStorage = multer.diskStorage({
         if (!req.user.id){
             cb('Not logged in');
         } else {
-            var path = `./uploads/${req.user.id}/coverUpload`;
+            let path = `./uploads/${req.user.id}/coverUpload`;
 
             fs.stat(path, function(err){
                 if (err){
@@ -176,7 +176,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
         return response.send({ success: false, error: 'Max size is 500K' });
     }
 
-    var pathResult = path.normalize(req.file.destination).replace(/\\/g, '/'),
+    let pathResult = path.normalize(req.file.destination).replace(/\\/g, '/'),
         pathToFileUploaded = `${pathResult}/${req.file.originalname}`,
         ext = (path.extname(pathToFileUploaded) || '').toLowerCase();
 
@@ -191,7 +191,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                     if (err) {
                         console.log('ERROR', pathToFileUploaded, err);
                     }
-                    var exifData = exif.create(data).parse(),
+                    let exifData = exif.create(data).parse(),
                         batchImage = null;
 
                     if (exifData && exifData.tags) {
@@ -236,12 +236,12 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
 
     function processImageAsNeeded(image) {
         if (image.width() > 55) {
-            var width = image.width(),
+            let width = image.width(),
                 height = image.height(),
                 newWidth = (height * 50) / width;
 
             image.resize(50, newWidth, function (err, image) {
-                var resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+                let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
 
                 image.writeFile(resizedDestination, err => {
                     response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
@@ -254,7 +254,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
 });
 
 app.post('/react-redux/createUser', function(req, response){
-    var userDao = new UserDao(),
+    let userDao = new UserDao(),
         username = req.body.username,
         password = req.body.password,
         rememberMe = req.body.rememberme == 1;
@@ -273,7 +273,7 @@ app.post('/react-redux/createUser', function(req, response){
 
 app.get('/activate', browseToReactRedux);
 app.get('/activate/:code', function(req, response){
-    var userDao = new UserDao(),
+    let userDao = new UserDao(),
         code = req.params.code;
 
     response.clearCookie('remember_me');
@@ -308,7 +308,7 @@ function shutdown(){
 
 function error(err){
     try{
-        var logger = new ErrorLoggerDao();
+        let logger = new ErrorLoggerDao();
         logger.log('exception', err);
     } catch(e) { }
 }
