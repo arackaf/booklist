@@ -14,7 +14,6 @@ const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const Jimp = require('jimp');
-const exif = require('exif-parser');
 const compression = require('compression');
 
 const bookEntryQueueManager = require('./node-dest/app-helpers/bookEntryQueueManager').default;
@@ -186,45 +185,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                 return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
             }
 
-            if (ext == '.jpg' || ext == '.jpeg') {
-                fs.readFile(pathToFileUploaded, (err, data) => {
-                    if (err) {
-                        console.log('ERROR', pathToFileUploaded, err);
-                    }
-                    let exifData = exif.create(data).parse();
-
-                    if (exifData && exifData.tags) {
-                        switch (exifData.tags.Orientation) {
-                            case 2:
-                                image.flip(true, false); // top-right - flip horizontal
-                                break;
-                            case 3:
-                                image.rotate(180); // bottom-right - rotate 180
-                                break;
-                            case 4:
-                                image.flip(false, true); // bottom-left - flip vertically
-                                break;
-                            case 5:
-                                image.rotate(90);
-                                image.flip(true, false); // left-top - rotate 90 and flip horizontal
-                                break;
-                            case 6:
-                                image.rotate(90); // right-top - rotate 90
-                                break;
-                            case 7:
-                                image.rotate(270);
-                                image.flip(true, false); // right-bottom - rotate 270 and flip horizontal
-                                break;
-                            case 8:
-                                image.rotate(270); // left-bottom - rotate 270
-                                break;
-                        }
-                    }
-                    processImageAsNeeded(image);
-                });
-            } else {
-                processImageAsNeeded(image);
-            }
+            processImageAsNeeded(image);
         });
     } catch (err){
         return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
