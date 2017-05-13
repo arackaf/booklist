@@ -13,7 +13,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const lwip = require('lwip');
+const Jimp = require('jimp');
 const exif = require('exif-parser');
 const compression = require('compression');
 
@@ -181,12 +181,12 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
         ext = (path.extname(pathToFileUploaded) || '').toLowerCase();
 
     try {
-        lwip.open(pathToFileUploaded, function (err, image) {
+        Jimp.read(pathToFileUploaded, function (err, image) {
             if (err) {
                 return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
             }
 
-            if (ext == '.jpg' || ext == '.jpeg') {
+            if (false && ext == '.jpg' || ext == '.jpeg') {
                 fs.readFile(pathToFileUploaded, (err, data) => {
                     if (err) {
                         console.log('ERROR', pathToFileUploaded, err);
@@ -235,17 +235,20 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
     }
 
     function processImageAsNeeded(image) {
-        if (image.width() > 55) {
-            let width = image.width(),
-                height = image.height(),
+        if (image.bitmap.width > 55) {
+            let width = image.bitmap.width,
+                height = image.bitmap.height,
                 newWidth = (height * 50) / width;
 
-            image.resize(50, newWidth, function (err, image) {
-                let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+            image.resize(50, newWidth);
+            let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+            console.log(resizedDestination)
 
-                image.writeFile(resizedDestination, err => {
-                    response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-                });
+            image.write(resizedDestination, err => {
+                if (err){
+                    console.log('', err);
+                }
+                response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
             });
         } else {
             response.send({success: true, smallImagePath: `/${pathResult}/${req.file.originalname}`}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
