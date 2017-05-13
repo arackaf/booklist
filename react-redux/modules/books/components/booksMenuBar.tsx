@@ -17,34 +17,34 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-type bookMenuBarType = entireBookSearchStateType & bookSelectionType & {
+type bookMenuBarType = entireBookSearchStateType & {
     showingMobile: boolean;
     showingDesktop: boolean;
-    viewingPublic: boolean;
     booksLoading: boolean;
 }
-type actions = typeof bookSearchActionCreators & 
-               typeof booksActionCreators & 
-               typeof subjectsActionCreators & 
-               typeof booksSubjectModificationActionCreators & 
-               typeof booksTagModificationActionCreators &
-               typeof tagsActionCreators;
 
-const menuBarSelector = state => {
+type bookUtilMenuOptionsType = bookSelectionType & {
+    viewingPublic: boolean;
+}
+
+const menuBarSelector = (state) : bookMenuBarType => {
     return {
         ...selectEntireBookSearchState(state),
-        ...selectBookSelection(state),
         showingMobile: state.app.showingMobile,
         showingDesktop: state.app.showingDesktop,
-        viewingPublic: state.app.isPublic,
         booksLoading: state.booksModule.books.loading
     }
 }
 
-type componentType = bookMenuBarType & actions;
+const utilMenuOptionsSelector = (state) : bookUtilMenuOptionsType => {
+    return {
+        ...selectBookSelection(state),
+        viewingPublic: state.app.isPublic        
+    };
+}
 
-@connect(menuBarSelector, { ...bookSearchActionCreators, ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
-export default class BooksMenuBar extends Component<componentType, any> {
+@connect(menuBarSelector, { ...bookSearchActionCreators })
+export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators, any> {
     navBar: any
     removeFilterSubject(_id){
         this.props.removeFilterSubject(_id);
@@ -69,6 +69,8 @@ export default class BooksMenuBar extends Component<componentType, any> {
             selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
             selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
+        let UtilMenu : any = UtilMenuOptions;
+
         return (
             <div style={{position: 'sticky', top: 50, zIndex: 499}}>
                 <NavBar ref={el => this.navBar = el} style={{ border: 0, borderRadius: 0 }}>
@@ -78,17 +80,7 @@ export default class BooksMenuBar extends Component<componentType, any> {
                         </NavBar.Brand>
                         <NavBar.Toggle />
                     </NavBar.Header>
-                    <NavBar.Nav>
-                        <NavBar.Item onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavBar.Item>
-                        <NavBar.Item onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavBar.Item>
-
-                        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Edit selected books' style={{ marginRight: '5px' }}>
-                            <NavBar.Item onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavBar.Item>
-                            <NavBar.Item onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavBar.Item>
-                            <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
-                            <NavBar.Item onClick={this.props.setSelectedUnRead}>Set all un-read</NavBar.Item>
-                        </NavBar.Dropdown>
-                    </NavBar.Nav>
+                    <UtilMenu />
                     <NavBar.Header>
                         <NavBar.Brand>
                             <a style={{ cursor: 'default' }}>Filters</a>
@@ -161,5 +153,30 @@ export default class BooksMenuBar extends Component<componentType, any> {
                 </NavBar>
             </div>
         )
+    }
+}
+
+type utilMenuOptionsComponentType = bookUtilMenuOptionsType &
+                                    typeof booksActionCreators &
+                                    typeof subjectsActionCreators & 
+                                    typeof booksSubjectModificationActionCreators & 
+                                    typeof booksTagModificationActionCreators &
+                                    typeof tagsActionCreators;
+@connect(utilMenuOptionsSelector, { ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
+class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
+    render() {
+        return (
+            <NavBar.Nav>
+                <NavBar.Item onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavBar.Item>
+                <NavBar.Item onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavBar.Item>
+
+                <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Edit selected books' style={{ marginRight: '5px' }}>
+                    <NavBar.Item onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavBar.Item>
+                    <NavBar.Item onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavBar.Item>
+                    <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
+                    <NavBar.Item onClick={this.props.setSelectedUnRead}>Set all un-read</NavBar.Item>
+                </NavBar.Dropdown>
+            </NavBar.Nav>
+        );
     }
 }
