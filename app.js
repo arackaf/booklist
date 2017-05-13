@@ -13,7 +13,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const lwip = require('lwip');
+const Jimp = require('jimp');
 const exif = require('exif-parser');
 const compression = require('compression');
 
@@ -181,7 +181,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
         ext = (path.extname(pathToFileUploaded) || '').toLowerCase();
 
     try {
-        lwip.open(pathToFileUploaded, function (err, image) {
+        Jimp.read(pathToFileUploaded, function (err, image) {
             if (err) {
                 return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
             }
@@ -191,40 +191,36 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
                     if (err) {
                         console.log('ERROR', pathToFileUploaded, err);
                     }
-                    let exifData = exif.create(data).parse(),
-                        batchImage = null;
+                    let exifData = exif.create(data).parse();
 
                     if (exifData && exifData.tags) {
                         switch (exifData.tags.Orientation) {
                             case 2:
-                                batchImage = image.batch().flip('x'); // top-right - flip horizontal
+                                image.flip(true, false); // top-right - flip horizontal
                                 break;
                             case 3:
-                                batchImage = image.batch().rotate(180); // bottom-right - rotate 180
+                                image.rotate(180); // bottom-right - rotate 180
                                 break;
                             case 4:
-                                batchImage = image.batch().flip('y'); // bottom-left - flip vertically
+                                image.flip(false, true); // bottom-left - flip vertically
                                 break;
                             case 5:
-                                batchImage = image.batch().rotate(90).flip('x'); // left-top - rotate 90 and flip horizontal
+                                image.rotate(90);
+                                image.flip(true, false); // left-top - rotate 90 and flip horizontal
                                 break;
                             case 6:
-                                batchImage = image.batch().rotate(90); // right-top - rotate 90
+                                image.rotate(90); // right-top - rotate 90
                                 break;
                             case 7:
-                                batchImage = image.batch().rotate(270).flip('x'); // right-bottom - rotate 270 and flip horizontal
+                                image.rotate(270);
+                                image.flip(true, false); // right-bottom - rotate 270 and flip horizontal
                                 break;
                             case 8:
-                                batchImage = image.batch().rotate(270); // left-bottom - rotate 270
+                                image.rotate(270); // left-bottom - rotate 270
                                 break;
                         }
                     }
-
-                    if (batchImage) {
-                        batchImage.exec((err, image) => processImageAsNeeded(image))
-                    } else {
-                        processImageAsNeeded(image);
-                    }
+                    processImageAsNeeded(image);
                 });
             } else {
                 processImageAsNeeded(image);
@@ -235,17 +231,16 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
     }
 
     function processImageAsNeeded(image) {
-        if (image.width() > 55) {
-            let width = image.width(),
-                height = image.height(),
+        if (image.bitmap.width > 55) {
+            let width = image.bitmap.width,
+                height = image.bitmap.height,
                 newWidth = (height * 50) / width;
 
-            image.resize(50, newWidth, function (err, image) {
-                let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+            image.resize(50, newWidth);
+            let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
 
-                image.writeFile(resizedDestination, err => {
-                    response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-                });
+            image.write(resizedDestination, err => {
+                response.send({success: true, smallImagePath: '/' + resizedDestination}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
             });
         } else {
             response.send({success: true, smallImagePath: `/${pathResult}/${req.file.originalname}`}); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
