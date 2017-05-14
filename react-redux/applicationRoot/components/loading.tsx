@@ -6,6 +6,6 @@ export default ({...rest}) => (
     </div>
 );
 
-export const SectionLoading = ({...rest}) => (
-    <i style={{ position: 'absolute', top: '50%', left: '50%', opacity: 0.2, transform: 'translate(-50%,-50%)' }} className="fa fa-5x fa-spin fa-spinner"></i>
+export const SectionLoading = ({style = {}, ...rest}) => (
+    <i style={{ position: 'absolute', top: '50%', left: '50%', opacity: 0.2, transform: 'translate(-50%,-50%)', ...style }} className="fa fa-5x fa-spin fa-spinner"></i>
 )
