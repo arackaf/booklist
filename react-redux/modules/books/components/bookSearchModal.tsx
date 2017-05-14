@@ -93,7 +93,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                         <div className="col-xs-9">
                             <div>
                                 {this.props.pendingSelectedTags.map(t =>
-                                    <RemovableLabelDisplay className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)} />)}
+                                    <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)} />)}
                             </div>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                         <div className="col-xs-9">
                             <div>
                                 {this.props.pendingSelectedSubjects.map(s =>
-                                    <RemovableLabelDisplay className="margin-left" item={s} doRemove={() => this.props.removePendingSubject(s._id)} />)}
+                                    <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.props.removePendingSubject(s._id)} />)}
                             </div>
                         </div>
                     </div>
