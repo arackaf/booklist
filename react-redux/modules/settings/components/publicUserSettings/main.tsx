@@ -12,7 +12,7 @@ export default class PublicUserSettings extends Component<publicUserSettingsSele
             <div>
                 <div className='row'>
                     <div className='col-md-6 col-sm-12' style={{position: 'relative', minHeight: '200px'}}>
-                        {this.props.loading ? <SectionLoading /> :
+                        {this.props.loading ? <SectionLoading style={{left: '20%'}} /> :
                             <div style={{padding: '10px'}}>
                                 {this.props.publicLink ? 
                                     <div className='panel panel-default' style={{padding: '10px'}}>
