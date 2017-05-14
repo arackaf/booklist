@@ -117,7 +117,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
 
                     <div className="checkbox">
                         <label>
-                            <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects} /> Also search child subjects
+                            <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects || false} /> Also search child subjects
                         </label>
                     </div>
                 </Modal.Body>
