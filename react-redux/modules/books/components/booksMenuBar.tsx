@@ -124,16 +124,16 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                         <NavBar.Nav>
                             <NavBar.Dropdown ignoreContentClick={true} text={selectedSubjectsHeader} id="sel-subjects-dropdown">
                                 { this.props.selectedSubjects.map(s =>
-                                    <NavBar.Item className="default-cursor no-hover" key={s._id}>
+                                    <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={s._id}>
                                         <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
-                                    </NavBar.Item>)
+                                    </li>)
                                 }
 
                                 { !!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
                                 { !!this.props.searchChildSubjects ?
-                                    <NavBar.Item className="default-cursor no-hover">
+                                    <li style={{paddingLeft: '20px', paddingRight: '20px', marginTop: '-5px'}} className="default-cursor no-hover">
                                         <span className="label label-primary">Searching child subjects</span>
-                                    </NavBar.Item> : null
+                                    </li> : null
                                 }
                             </NavBar.Dropdown>
                         </NavBar.Nav> : null
@@ -143,9 +143,9 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                         <NavBar.Nav>
                             <NavBar.Dropdown ignoreContentClick={true} text={selectedTagsHeader} id="sel-tags-dropdown">
                                 { this.props.selectedTags.map(t =>
-                                    <NavBar.Item className="default-cursor no-hover" key={t._id}>
+                                    <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={t._id}>
                                         <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
-                                    </NavBar.Item>)
+                                    </li>)
                                 }
                             </NavBar.Dropdown>
                         </NavBar.Nav> : null
