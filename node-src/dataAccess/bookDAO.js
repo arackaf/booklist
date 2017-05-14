@@ -35,7 +35,7 @@ class BookDAO extends DAO {
             if (sort){
                 if (sort == 'title'){
                     sort = 'titleLower';
-                }
+                } 
                 sortObj = { [sort]: +sortDirection };
             }
             if (author){
@@ -163,7 +163,10 @@ class BookDAO extends DAO {
             let $set = {};
             validProperties.forEach(prop => {
                 let val = book[prop] || '';
-                if (typeof val === 'string') {
+                if (prop === 'pages'){
+                    let pagesVal = val || val === '0' ? +val : '';
+                    $set[prop] = pagesVal;
+                } else if (typeof val === 'string') {
                     $set[prop] = val.substr(0, 500)
                 }
             });
