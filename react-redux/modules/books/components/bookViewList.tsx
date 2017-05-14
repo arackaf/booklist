@@ -105,13 +105,11 @@ export default class BookViewingList extends Component<mainSelectorType & action
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
 
         return (
-            <div>
+            <div style={{position: 'relative'}}>
+                {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null }
                 <div className="panel panel-default" style={{ margin: '10px' }}>
                     <BooksMenuBar />
-
                     <div className="panel-body" style={{ padding: 0, minHeight: 450, position: 'relative' }}>
-                        {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ?
-                            <Loading /> : null }
 
                         {(!this.props.booksList.length && !this.props.booksLoading) ?
                             <div className="alert alert-warning" style={{borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0}}>

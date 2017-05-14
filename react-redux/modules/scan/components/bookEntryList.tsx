@@ -9,8 +9,9 @@ import Collapse from 'react-collapse';
 
 import * as bookEntryActionCreators from '../reducers/actionCreators';
 import BootstrapButton from 'applicationRoot/components/bootstrapButton';
-import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
+
+import ComponentLoading from 'applicationRoot/components/componentLoading';
 
 import {scanReducerType} from 'modules/scan/reducers/reducer';
 
@@ -18,7 +19,7 @@ declare var webSocketAddress : any;
 
 const ManualBookEntry = Loadable({
     loader: () => System.import('applicationRoot/components/manualBookEntry'),
-    LoadingComponent: Loading,
+    LoadingComponent: ComponentLoading,
     delay: 500
 });
 
