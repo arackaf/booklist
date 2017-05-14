@@ -22,6 +22,8 @@ export default class BookViewListGrid extends Component<bookListComponentStateTy
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.sortDirection == '1' ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
+        let stickyHeaderStyle = {position: 'sticky', top: 100, backgroundColor: 'white' };
+
         return (
             <div style={{ minHeight: 400 }}>
                 { this.props.booksList.length ?
@@ -32,19 +34,19 @@ export default class BookViewListGrid extends Component<bookListComponentStateTy
                             {this.props.hasMoreBooks ? <BootstrapButton preset="primary-xs" onClick={this.props.pageUp}>Next <i className="fa fa-fw fa-chevron-right"></i></BootstrapButton> :  null}
                         </div> : null }
                     <table className="table table-striped no-padding-top">
-                        <thead style={{position: 'sticky', top: 100, backgroundColor: 'white', zIndex: 498}}>
+                        <thead style={{zIndex: 498}}>
                             <tr>
-                                <th><input type="checkbox" checked={this.props.allAreChecked} onClick={this.props.toggleCheckAll} disabled={this.props.viewingPublic} /></th>
-                                <th></th>
-                                <th><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
-                                <th>Author</th>
-                                <th>Subjects</th>
-                                <th>Tags</th>
-                                <th style={{ minWidth: '90px' }}>Read?</th>
-                                <th>Published</th>
-                                <th>ISBN</th>
-                                <th style={{ minWidth: '85px' }}><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
-                                <th><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
+                                <th style={{...stickyHeaderStyle}}><input type="checkbox" checked={this.props.allAreChecked} onClick={this.props.toggleCheckAll} disabled={this.props.viewingPublic} /></th>
+                                <th style={{...stickyHeaderStyle}}></th>
+                                <th style={{...stickyHeaderStyle}}><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
+                                <th style={{...stickyHeaderStyle}}>Author</th>
+                                <th style={{...stickyHeaderStyle}}>Subjects</th>
+                                <th style={{...stickyHeaderStyle}}>Tags</th>
+                                <th style={{ minWidth: '90px', ...stickyHeaderStyle }}>Read?</th>
+                                <th style={{...stickyHeaderStyle}}>Published</th>
+                                <th style={{...stickyHeaderStyle}}>ISBN</th>
+                                <th style={{ minWidth: '85px', ...stickyHeaderStyle }}><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
+                                <th style={{...stickyHeaderStyle}}><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
                             </tr>
                         </thead>
                         <tbody>
