@@ -205,6 +205,13 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
     }
 }
 
+export function clearSearchChildSubjects(){
+    return function(dispatch, getState){
+        dispatch({type: SET_PENDING, field: 'searchChildSubjects', value: null});
+        dispatch(applyFilters());
+    }
+}
+
 export function pageUp(){
     return function(dispatch, getState){
         let state = getState().booksModule.bookSearch;

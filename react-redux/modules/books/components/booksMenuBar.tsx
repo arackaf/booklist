@@ -132,7 +132,10 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 { !!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
                                 { !!this.props.searchChildSubjects ?
                                     <li style={{paddingLeft: '20px', paddingRight: '20px', marginTop: '-5px'}} className="default-cursor no-hover">
-                                        <span className="label label-primary">Searching child subjects</span>
+                                        <span style={{ color: 'white' }}  className={'label label-primary'}>
+                                            <a onClick={this.props.clearSearchChildSubjects} style={{ color: 'white', cursor: 'pointer' }}>X</a>
+                                            <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>Searching child subjects</span>
+                                        </span>
                                     </li> : null
                                 }
                             </NavBar.Dropdown>
