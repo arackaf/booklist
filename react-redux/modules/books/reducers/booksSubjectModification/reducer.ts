@@ -70,7 +70,7 @@ const selectAddingSubjects = createSelector<booksModuleType, addingSubjectsType,
     selectStackedSubjects,
     (adding, addingSubjectSearch, subjects, subjectsSelected) => ({
         addingSubjects: Object.keys(adding).filter(_id => adding[_id]).map(_id => subjects[_id]),
-        eligibleToAdd: filterSubjects(subjectsSelected.subjectsUnwound, addingSubjectSearch)
+        eligibleToAdd: filterSubjects(subjectsSelected.subjectsUnwound.filter(s => !adding[s._id]), addingSubjectSearch)
     })
 );
 
@@ -85,7 +85,7 @@ const selectRemovingSubjects = createSelector<booksModuleType, removingSubjectsT
     selectStackedSubjects,
     (removing, removingSubjectSearch, subjects, subjectsSelected) => ({
         removingSubjects: Object.keys(removing).filter(_id => removing[_id]).map(_id => subjects[_id]),
-        eligibleToRemove: filterSubjects(subjectsSelected.subjectsUnwound, removingSubjectSearch)
+        eligibleToRemove: filterSubjects(subjectsSelected.subjectsUnwound.filter(s => !removing[s._id]), removingSubjectSearch)
     })
 );
 

@@ -25,8 +25,6 @@ export default class BookSubjectSetter extends Component<componentType, any> {
         let dontAddSubject = this.props.addingSubjectSet.bind(null, false),
             dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
 
-        
-
         return (
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
                 <Modal.Header>
