@@ -72,7 +72,7 @@ const selectAddingTags = createSelector<booksModuleType, addingTagsType, any, an
     selectAllTagsSorted,
     (adding, addingTagSearch, tags, tagsSelected) => ({
         addingTags: Object.keys(adding).filter(_id => adding[_id]).map(_id => tags[_id]),
-        eligibleToAdd: filterTags(tagsSelected.allTagsSorted, addingTagSearch)
+        eligibleToAdd: filterTags(tagsSelected.allTagsSorted.filter(s => !adding[s._id]), addingTagSearch)
     })
 );
 
@@ -87,7 +87,7 @@ const selectRemovingTags = createSelector<any, removingTagsType, any, any, any, 
     selectAllTagsSorted,
     (removing, removingTagSearch, tags, tagsSelected) => ({
         removingTags: Object.keys(removing).filter(_id => removing[_id]).map(_id => tags[_id]),
-        eligibleToRemove: filterTags(tagsSelected.allTagsSorted, removingTagSearch)
+        eligibleToRemove: filterTags(tagsSelected.allTagsSorted.filter(s => !removing[s._id]), removingTagSearch)
     })
 );
 
