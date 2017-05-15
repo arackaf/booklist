@@ -19,7 +19,7 @@ import {
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
-import { selectStackedSubjects, stackedSubjectsType, filterSubjects } from '../subjects/reducer';
+import { selectStackedSubjects, stackedSubjectsType, filterSubjects as filterSubjectsOrTags } from '../subjects/reducer';
 import { selectAllTagsSorted, allTagsSortedType } from '../tags/reducer';
 
 const searchFields = {
@@ -121,26 +121,49 @@ export const selectBookSearchUiView = createSelector<booksModuleType, bookSearch
     }
 );
 
+const selectSearchedEligibleTags = createSelector<booksModuleType, tagOrSubject[], allTagsSortedType, string, lookupHashType>(
+    selectAllTagsSorted,
+    state => state.booksModule.bookSearch.searchTagsValue,
+    state => state.booksModule.bookSearch.pending.tags,
+    (tagsState, searchValue, currentlySearchedTags) => {
+        return filterSubjectsOrTags(
+            tagsState.allTagsSorted.filter(t => !currentlySearchedTags[t._id]),
+            searchValue
+        );
+    }
+);
+
+const selectSearchedEligibleSubjects = createSelector<booksModuleType, tagOrSubject[], stackedSubjectsType, string, lookupHashType>(
+    selectStackedSubjects,
+    state => state.booksModule.bookSearch.searchSubjectsValue,
+    state => state.booksModule.bookSearch.pending.subjects,
+    (subjectsState, searchValue, currentlySearchedSubjects) => {
+        return filterSubjectsOrTags(
+            subjectsState.subjectsUnwound.filter(s => !currentlySearchedSubjects[s._id]),
+            searchValue
+        );
+    }
+);
+
 export type entireBookSearchStateType = bookSearchType & bookSearchUiViewType & {
     selectedSubjects: tagOrSubject[];
     selectedTags: tagOrSubject[];
     pendingSelectedSubjects: tagOrSubject[];
     pendingSelectedTags: tagOrSubject[];
-    eligibleFilterSubjects: any;
-    eligibleFilterTags: any;
+    eligibleFilterSubjects: tagOrSubject[];
+    eligibleFilterTags: tagOrSubject[];
     bindableSortValue: any;
 };
-export const selectEntireBookSearchState = createSelector<booksModuleType, entireBookSearchStateType, tagOrSubject[], tagOrSubject[], tagOrSubject[], tagOrSubject[], bookSearchType, tagsType, stackedSubjectsType, allTagsSortedType, bookSearchUiViewType>(
+export const selectEntireBookSearchState = createSelector<booksModuleType, entireBookSearchStateType, tagOrSubject[], tagOrSubject[], tagOrSubject[], tagOrSubject[], bookSearchType, bookSearchUiViewType, tagOrSubject[], tagOrSubject[]>(
     selectSelectedSubjects, 
     selectSelectedTags, 
     selectPendingSelectedSubjects, 
     selectPendingSelectedTags,
     state => state.booksModule.bookSearch,
-    state => state.booksModule.tags,
-    selectStackedSubjects,
-    selectAllTagsSorted,
     selectBookSearchUiView,
-    (selectedSubjects, selectedTags, pendingSelectedSubjects, pendingSelectedTags, bookSearch, tags, subjectsState, tagsState, searchUi) => {
+    selectSearchedEligibleTags,    
+    selectSearchedEligibleSubjects,
+    (selectedSubjects, selectedTags, pendingSelectedSubjects, pendingSelectedTags, bookSearch, searchUi, eligibleSearchedTags, eligibleSearchedSubjects) => {
 
         let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
 
@@ -150,8 +173,8 @@ export const selectEntireBookSearchState = createSelector<booksModuleType, entir
             selectedTags,
             pendingSelectedSubjects,
             pendingSelectedTags,
-            eligibleFilterSubjects: filterSubjects(subjectsState.subjectsUnwound, bookSearch.searchSubjectsValue),
-            eligibleFilterTags: filterSubjects(tagsState.allTagsSorted, bookSearch.searchTagsValue),
+            eligibleFilterSubjects: eligibleSearchedSubjects,
+            eligibleFilterTags: eligibleSearchedTags,
             bindableSortValue,
             ...searchUi
         };
