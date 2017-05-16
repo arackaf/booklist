@@ -15,7 +15,7 @@
     "heroku-postbuild": "gulp transpile-all && cd react-redux && npm i && webpack -p && node build-css"
   },
   "dependencies": {
-    "apac": "1.0.0",
+    "apac": "3.0.2",
     "aws-sdk": "2.3.14",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-plugin-transform-es2015-modules-commonjs": "6.8.0",
