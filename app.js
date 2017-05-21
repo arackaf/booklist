@@ -184,6 +184,7 @@ app.post('/react-redux/upload', upload.single('fileUploaded'), function(req, res
             if (err) {
                 return response.send({ success: false, error: 'Error opening file. Is it a valid image?' });
             }
+            image.exifRotate();
 
             processImageAsNeeded(image);
         });

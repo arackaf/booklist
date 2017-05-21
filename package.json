@@ -49,7 +49,7 @@
     "gulp-uglify": "1.5.3",
     "gulp-util": "3.0.3",
     "gulp-watch": "4.1.1",
-    "jimp": "^0.2.27",
+    "jimp": "0.2.28",
     "lazypipe": "1.0.1",
     "mkdirp": "0.5.1",
     "moment": "^2.13.0",
