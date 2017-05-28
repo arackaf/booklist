@@ -17,22 +17,30 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
+import {booksModuleType} from 'modules/books/reducers/reducer';
+
 type bookMenuBarType = entireBookSearchStateType & {
     showingMobile: boolean;
     showingDesktop: boolean;
-    booksLoading: boolean;
+    booksLoading: boolean;        
+    isPublic: boolean;
+    publicBooksHeader: string;
+    publicName: string;
 }
 
 type bookUtilMenuOptionsType = bookSelectionType & {
     viewingPublic: boolean;
 }
 
-const menuBarSelector = (state) : bookMenuBarType => {
+const menuBarSelector = (state : booksModuleType) : bookMenuBarType => {
     return {
         ...selectEntireBookSearchState(state),
         showingMobile: state.app.showingMobile,
         showingDesktop: state.app.showingDesktop,
-        booksLoading: state.booksModule.books.loading
+        booksLoading: state.booksModule.books.booksLoading,
+        isPublic: state.app.isPublic,
+        publicBooksHeader: state.app.publicBooksHeader,
+        publicName: state.app.publicName
     }
 }
 
@@ -69,14 +77,19 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
             selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
             selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
+        let {isPublic, publicBooksHeader, publicName} = this.props;
+        let booksHeader = isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Your Books';
+
         let UtilMenu : any = UtilMenuOptions;
+
+        //isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Books'
 
         return (
             <div style={{position: 'sticky', top: 50, zIndex: 499}}>
                 <NavBar ref={el => this.navBar = el} style={{ border: 0, borderRadius: 0 }}>
                     <NavBar.Header>
                         <NavBar.Brand>
-                            <a style={{ cursor: 'default' }}>Your books</a>
+                            <a style={{ cursor: 'default' }}>{booksHeader}</a>
                         </NavBar.Brand>
                         <NavBar.Toggle />
                     </NavBar.Header>
