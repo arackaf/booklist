@@ -15,7 +15,7 @@ and there's a somewhat decent mobile view
 ---
 
 I initially made this with the goal of creating iterations of the site with React, Angular, Aurelia, etc. So far I've felt no desire to leave React or stop iterating on the (single) React version. Nonetheless, it's designed so that all iterations will share the same data, data access, controllers, and AWS access code.  Controllers are sniffed out and wired with my [easy-express-controllers 
-](https://www.npmjs.com/package/easy-express-controllers) project; data access is through Mongo; and all book info is looked up with my own AWS credentials, subject to an unfortunate one-request-per-second limit imposed by Amazon.
+](https://www.npmjs.com/package/easy-express-controllers); data access is through Mongo; and all book info is looked up with my own AWS credentials, subject to an unfortunate one-request-per-second limit imposed by Amazon.
 
 The current React iteration uses Redux, and is in the react-redux directory, with TypeScript recently added to help keep my reducers and selectors straight.  My own, small [simple-react-bootstrap](https://www.npmjs.com/package/simple-react-bootstrap) provides React bindings for the Bootstrap components Modal, NavBar, Collapse and Tab. I've also added react-dropzone to support uploading book cover images (for when AWS doesn't have it for some reason), and the drag and drop for the subjects screen is currently made with react-dnd. 
 
