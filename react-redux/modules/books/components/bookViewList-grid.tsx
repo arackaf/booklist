@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 
-import {selectBookListComponentState, bookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
+import {selectBookListComponentState, BookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
 
 @connect(selectBookListComponentState, actions)
-export default class BookViewListGrid extends Component<bookListComponentStateType & actionsType, any>{
+export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType, any>{
     state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     setSort(column){
         let currentSort = this.props.currentSort;
