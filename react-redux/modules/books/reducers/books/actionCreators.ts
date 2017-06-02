@@ -9,7 +9,9 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED
+    BOOK_DELETED,
+    LOADING_EDITORIAL_REVIEWS,
+    EDITORIAL_REVIEWS_LOADED
 } from './actionNames';
 
 import ajaxUtil from 'util/ajaxUtil';
@@ -66,6 +68,12 @@ function booksSearch(bookSearchState, publicUserId){
         userId: publicUserId,
         isRead: bookSearchState.isRead
     });
+}
+
+export function loadEditorialReviews(_id){
+    return (dispatch, getState) => {
+
+    }
 }
 
 export function setRead(_id){
