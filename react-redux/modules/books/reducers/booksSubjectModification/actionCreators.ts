@@ -35,7 +35,7 @@ export function enableSubjectModificationToggledBooks(){
     return { type: ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS }
 }
 
-export function addingSearchValueChange(value){
+export function addingSubjectSearchValueChange(value){
     return { type: ADDING_SUBJECT_SEARCH_CHANGE, value: value.target.value };
 }
 

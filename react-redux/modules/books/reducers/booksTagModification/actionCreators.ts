@@ -36,7 +36,7 @@ export function enableTagModificationToggledBooks(){
     return { type: ENABLE_TAG_MODIFICATION_FOR_TOGGLED_BOOKS }
 }
 
-export function addingSearchValueChange(value){
+export function addingTagSearchValueChange(value){
     return { type: ADDING_TAG_SEARCH_CHANGE, value: value.target.value };
 }
 
