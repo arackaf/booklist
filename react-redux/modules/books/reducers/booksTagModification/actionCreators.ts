@@ -44,7 +44,7 @@ export function addingTagSet(value, tag){
     return { type: ADDING_TAG_SET, _id: tag._id, value };
 }
 
-export function removingSearchValueChange(value){
+export function removingTagSearchValueChange(value){
     return { type: REMOVING_TAG_SEARCH_CHANGE, value: value.target.value || '' };
 }
 

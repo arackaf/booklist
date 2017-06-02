@@ -43,7 +43,7 @@ export function addingSubjectSet(value, subject){
     return { type: ADDING_SUBJECT_SET, _id: subject._id, value };
 }
 
-export function removingSearchValueChange(value){
+export function removingSubjectSearchValueChange(value){
     return { type: REMOVING_SUBJECT_SEARCH_CHANGE, value: value.target.value || '' };
 }
 
