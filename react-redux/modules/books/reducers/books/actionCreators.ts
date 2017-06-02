@@ -10,10 +10,11 @@ import {
     DELETE_BOOK,
     BOOK_DELETING,
     BOOK_DELETED,
-    LOADING_EDITORIAL_REVIEWS,
+    EDITORIAL_REVIEWS_LOADING,
     EDITORIAL_REVIEWS_LOADED
 } from './actionNames';
 
+import {BooksModuleType} from 'modules/books/reducers/reducer';
 import ajaxUtil from 'util/ajaxUtil';
 
 export function toggleSelectBook(_id){
@@ -70,9 +71,14 @@ function booksSearch(bookSearchState, publicUserId){
     });
 }
 
-export function loadEditorialReviews(_id){
-    return (dispatch, getState) => {
+export function loadEditorialReviews(_id : string){
+    return (dispatch, getState : () => BooksModuleType) => {
+        let booksHash = getState().booksModule.books.booksHash;
+        let book = booksHash[_id];
 
+        if (!book.editorialReviewsLoaded){
+            dispatch({type: EDITORIAL_REVIEWS_LOADING, _id});
+        }
     }
 }
 

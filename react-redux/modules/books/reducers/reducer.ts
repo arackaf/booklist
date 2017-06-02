@@ -21,7 +21,7 @@ export {tagsType};
 import {selectModifyingBooks as subjectsBooksModifyingSelector} from './booksSubjectModification/reducer';
 import {selectModifyingBooks as tagsBooksModifyingSelector} from './booksTagModification/reducer';
 
-export type booksModuleType = {
+export type BooksModuleType = {
     app: appType;
     booksModule: {
         books: booksType;

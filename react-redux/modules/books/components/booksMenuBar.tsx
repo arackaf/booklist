@@ -17,7 +17,7 @@ import * as booksTagModificationActionCreators from '../reducers/booksTagModific
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
-import {booksModuleType} from 'modules/books/reducers/reducer';
+import {BooksModuleType} from 'modules/books/reducers/reducer';
 
 type bookMenuBarType = entireBookSearchStateType & {
     showingMobile: boolean;
@@ -32,7 +32,7 @@ type bookUtilMenuOptionsType = bookSelectionType & {
     viewingPublic: boolean;
 }
 
-const menuBarSelector = (state : booksModuleType) : bookMenuBarType => {
+const menuBarSelector = (state : BooksModuleType) : bookMenuBarType => {
     return {
         ...selectEntireBookSearchState(state),
         showingMobile: state.app.showingMobile,

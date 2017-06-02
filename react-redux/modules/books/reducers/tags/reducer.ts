@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import {
     LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
     STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, CANCEL_TAG_EDIT,
@@ -87,7 +87,7 @@ export const filterTags = (tags, search) => {
 };
 
 export type allTagsSortedType = {allTagsSorted: ITag[]};
-export const selectAllTagsSorted = createSelector<booksModuleType, allTagsSortedType, any>(
+export const selectAllTagsSorted = createSelector<BooksModuleType, allTagsSortedType, any>(
     state => state.booksModule.tags.tagHash,
     tagHash => {
         let allTagsSorted = allTagssSorted(tagHash);
@@ -108,7 +108,7 @@ function allTagssSorted(tagHash){
 type tagsSearchedType = allTagsSortedType & {
     tagsSearched: ITag[]
 }
-const selectTagsSearched = createSelector<booksModuleType, tagsSearchedType, allTagsSortedType, string>(
+const selectTagsSearched = createSelector<BooksModuleType, tagsSearchedType, allTagsSortedType, string>(
     selectAllTagsSorted,
     state => state.booksModule.tags.tagSearch,
     (tags, tagSearch) => {
@@ -123,7 +123,7 @@ type deletingTagInfoType = {
         _id: string
     }
 }
-const selectDeletingTagInfo = createSelector<booksModuleType, deletingTagInfoType, object, string>(
+const selectDeletingTagInfo = createSelector<BooksModuleType, deletingTagInfoType, object, string>(
     state => state.booksModule.tags.tagHash,
     state => state.booksModule.tags.deletingTagId,
     (tagHash, deletingTagId) => {
@@ -140,7 +140,7 @@ export type entireTagsStateType = tagsType & tagsSearchedType & deletingTagInfoT
 }
 //TODO:
 
-export const selectEntireTagsState = createSelector<booksModuleType, entireTagsStateType, tagsType, any, tagsSearchedType, deletingTagInfoType>(
+export const selectEntireTagsState = createSelector<BooksModuleType, entireTagsStateType, tagsType, any, tagsSearchedType, deletingTagInfoType>(
     state => state.booksModule.tags,
     state => state.app.colors, 
     selectTagsSearched,

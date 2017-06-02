@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import { createSelector } from 'reselect';
 import {
@@ -14,7 +14,7 @@ import {
     DELETE_BOOK,
     BOOK_DELETING,
     BOOK_DELETED,
-    LOADING_EDITORIAL_REVIEWS,
+    EDITORIAL_REVIEWS_LOADING,
     EDITORIAL_REVIEWS_LOADED    
 } from './actionNames';
 
@@ -136,7 +136,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             delete newBooksHash[action._id];
             return { ...state, booksHash: newBooksHash };
 
-        case LOADING_EDITORIAL_REVIEWS:
+        case EDITORIAL_REVIEWS_LOADING:
             return {...state, booksHash: {...state.booksHash, [action._id]: { ...state.booksHash[action._id], editorialReviewsLoading: true }}};
         case EDITORIAL_REVIEWS_LOADED:
             return state;             
@@ -162,7 +162,7 @@ export type booksListType = {
     booksLoading: boolean,
     booksList: IBookDisplay[]
 }
-export const selectBookList = createSelector<booksModuleType, booksListType, boolean, any, any, any>(
+export const selectBookList = createSelector<BooksModuleType, booksListType, boolean, any, any, any>(
     state => state.booksModule.books.booksLoading,
     state => state.booksModule.books.booksHash,
     state => state.app.subjectHash,
@@ -185,7 +185,7 @@ export type bookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
 }
-export const selectBookSelection = createSelector<booksModuleType, bookSelectionType, any, any>(
+export const selectBookSelection = createSelector<BooksModuleType, bookSelectionType, any, any>(
     state => state.booksModule.books.booksHash,
     state => state.booksModule.books.selectedBooks,
     (booksHash, selectedBooks) => {
