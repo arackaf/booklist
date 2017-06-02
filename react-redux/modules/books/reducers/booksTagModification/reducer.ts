@@ -1,4 +1,4 @@
-import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import { createSelector } from 'reselect';
 
 import {
@@ -51,7 +51,7 @@ export function bookTagManagerReducer(state = bookTagManagerInitialState, action
 }
 
 export type modifyingBooksType = any[];
-export const selectModifyingBooks = createSelector<booksModuleType, modifyingBooksType, any, any, booksType>(
+export const selectModifyingBooks = createSelector<BooksModuleType, modifyingBooksType, any, any, booksType>(
     ({ booksModule }) => booksModule.booksTagsModifier.singleBookModify,
     ({ booksModule }) => booksModule.booksTagsModifier.selectedBooksModify,
     ({ booksModule }) => booksModule.books,
@@ -65,7 +65,7 @@ type addingTagsType = {
     addingTags: any[];
     eligibleToAdd: any[];
 }
-const selectAddingTags = createSelector<booksModuleType, addingTagsType, any, any, any, allTagsSortedType>(
+const selectAddingTags = createSelector<BooksModuleType, addingTagsType, any, any, any, allTagsSortedType>(
     ({ booksModule }) => booksModule.booksTagsModifier.addingTags,
     ({ booksModule }) => booksModule.booksTagsModifier.addingTagSearch,
     ({ booksModule }) => booksModule.tags.tagHash,
@@ -98,7 +98,7 @@ export type entireBooksTagModificationStateType = addingTagsType & removingTagsT
     addingTagSearch: string;
     removingTagSearch: string;
 }
-export const selectEntireBooksTagModificationState = createSelector<booksModuleType, entireBooksTagModificationStateType, booksTagModificationType, modifyingBooksType, addingTagsType, removingTagsType, allTagsSortedType>(
+export const selectEntireBooksTagModificationState = createSelector<BooksModuleType, entireBooksTagModificationStateType, booksTagModificationType, modifyingBooksType, addingTagsType, removingTagsType, allTagsSortedType>(
     state => state.booksModule.booksTagsModifier,
     selectModifyingBooks,
     selectAddingTags,

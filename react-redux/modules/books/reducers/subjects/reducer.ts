@@ -1,4 +1,4 @@
-import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import { createSelector } from 'reselect';
 
 import {
@@ -78,7 +78,7 @@ export type stackedSubjectsType = {
     subjectsUnwound: subjectType[];
 
 }
-export const selectStackedSubjects = createSelector<booksModuleType, stackedSubjectsType, any>(
+export const selectStackedSubjects = createSelector<BooksModuleType, stackedSubjectsType, any>(
     state => state.app.subjectHash,
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
@@ -95,7 +95,7 @@ export const selectStackedSubjects = createSelector<booksModuleType, stackedSubj
 type searchedSubjectsType = stackedSubjectsType & {
     subjectsSearched: subjectType[]
 }
-const selectSearchedSubjects = createSelector<booksModuleType, searchedSubjectsType, stackedSubjectsType, string>(
+const selectSearchedSubjects = createSelector<BooksModuleType, searchedSubjectsType, stackedSubjectsType, string>(
     selectStackedSubjects,
     state => state.booksModule.subjects.subjectSearch,
     (stackedSubjects, subjectSearch) => ({ ...stackedSubjects, subjectsSearched: filterSubjects(stackedSubjects.subjectsUnwound, subjectSearch) })
@@ -104,7 +104,7 @@ const selectSearchedSubjects = createSelector<booksModuleType, searchedSubjectsT
 type eligibleSubjectsType = {
     eligibleParents: subjectType[]
 }
-const selectEligibleSubjects = createSelector<booksModuleType, eligibleSubjectsType, any, any>(
+const selectEligibleSubjects = createSelector<BooksModuleType, eligibleSubjectsType, any, any>(
     state => state.app.subjectHash,
     state => state.booksModule.subjects.editingSubjectId,
     (subjectHash, editSubjectId) => ({
@@ -142,7 +142,7 @@ export type entireSubjectsStateType = searchedSubjectsType & eligibleSubjectsTyp
     editModalOpen: any;
     colors: any[];
 }
-export const selectEntireSubjectsState = createSelector<booksModuleType, entireSubjectsStateType, appType, subjectsType, searchedSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
+export const selectEntireSubjectsState = createSelector<BooksModuleType, entireSubjectsStateType, appType, subjectsType, searchedSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
     state => state.app,
     state => state.booksModule.subjects,
     selectSearchedSubjects,
