@@ -59,10 +59,11 @@ export default class BookViewListGrid extends Component<bookListComponentStateTy
                                 <td>
                                     {book.title}
                                     <br />
-                                    { !this.props.viewingPublic ? <a className="grid-hover-filter inline-filter" onClick={() => this.props.editBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }
-                                    { !this.props.viewingPublic ? <a className="grid-hover-filter inline-filter" onClick={() => this.props.setPendingDeleteBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="margin-left fa fa-fw fa-trash show-on-hover-parent-td"></i></a> : null }
-                                    { book.pendingDelete ? <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => this.props.deleteBook(book)} className="margin-left btn btn-xs btn-danger">Confirm delete</AjaxButton> : null }
-                                    { book.pendingDelete ? <button onClick={() => this.props.cancelPendingDeleteBook(book)} className="margin-left btn btn-xs btn-primary">Cancel</button> : null }
+                                    { book.isbn ? <a target="_new" className="margin-right grid-hover-filter inline-filter" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-amazon show-on-hover-parent-td"></i></a> : null }
+                                    { !this.props.viewingPublic ? <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a> : null }
+                                    { !this.props.viewingPublic ? <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.setPendingDeleteBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-trash show-on-hover-parent-td"></i></a> : null }
+                                    { book.pendingDelete ? <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => this.props.deleteBook(book)} className="btn btn-xs btn-danger margin-right">Confirm delete</AjaxButton> : null }
+                                    { book.pendingDelete ? <button onClick={() => this.props.cancelPendingDeleteBook(book)} className="btn btn-xs btn-primary">Cancel</button> : null }
                                 </td>
                                 <td>
                                     <ul className="list-unstyled">
