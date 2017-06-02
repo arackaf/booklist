@@ -63,7 +63,7 @@ export default class BookTagSetterDesktopUnConnected extends Component<entireBoo
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Removing', value: this.props.removingTagSearch, onChange: this.props.removingSearchValueChange }}
+                                        inputProps={{ placeholder: 'Removing', value: this.props.removingTagSearch, onChange: this.props.removingTagSearchValueChange }}
                                         suggestions={this.props.eligibleToRemove}
                                         onSuggestionSelected={tagSelectedToRemove} />
                                 </div>

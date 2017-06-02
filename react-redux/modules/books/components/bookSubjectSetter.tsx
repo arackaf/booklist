@@ -66,7 +66,7 @@ export default class BookSubjectSetter extends Component<componentType, any> {
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSearchValueChange }}
+                                        inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSubjectSearchValueChange }}
                                         suggestions={this.props.eligibleToRemove}
                                         onSuggestionSelected={subjectSelectedToRemove} />
                                 </div>
