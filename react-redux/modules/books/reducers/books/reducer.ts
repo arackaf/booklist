@@ -13,7 +13,9 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED
+    BOOK_DELETED,
+    LOADING_EDITORIAL_REVIEWS,
+    EDITORIAL_REVIEWS_LOADED    
 } from './actionNames';
 
 import { SUBJECT_DELETED } from '../subjects/actionNames';
@@ -49,6 +51,9 @@ export interface IBookRaw {
     userId: string;
     deleting?: boolean;
     pendingDelete?: boolean;
+    expanded: boolean;
+    editorialReviewsLoaded: boolean;
+    editorialReviewsLoading: boolean;
 }
 
 export interface IBookDisplay extends IBookRaw {
@@ -130,6 +135,11 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             let newBooksHash = { ...state.booksHash };
             delete newBooksHash[action._id];
             return { ...state, booksHash: newBooksHash };
+
+        case LOADING_EDITORIAL_REVIEWS:
+            return {...state, booksHash: {...state.booksHash, [action._id]: { ...state.booksHash[action._id], editorialReviewsLoading: true }}};
+        case EDITORIAL_REVIEWS_LOADED:
+            return state;             
     }
     return state;
 }
