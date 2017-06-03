@@ -22,7 +22,6 @@ const initialTagsState = {
     tagHash: hashOf<ITag>(),
     loaded: false,
     tagSearch: '',
-    initialQueryFired: false,
     editTagOpen: false,
     editingTag: null,
     editingTagId: null,
@@ -34,8 +33,6 @@ export type tagsType = typeof initialTagsState;
 
 export function tagsReducer(state = initialTagsState, action) : tagsType {
     switch(action.type){
-        case LOAD_TAGS:
-            return { ...state, initialQueryFired: true };
         case LOAD_TAGS_RESULTS:
             return { ...state, tagHash: tagsToHash(action.tags), loaded: true };
         case SET_TAG_SEARCH_VALUE:

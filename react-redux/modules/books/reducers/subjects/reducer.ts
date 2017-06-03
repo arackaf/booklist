@@ -26,8 +26,7 @@ const initialSubjectsState = {
     editModalOpen: false,
     saving: false,
     deleting: false,
-    subjectSearch: '',
-    initialQueryFired: false
+    subjectSearch: ''
 };
 
 export type subjectsType = typeof initialSubjectsState;
