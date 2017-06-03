@@ -77,9 +77,9 @@ export type booksType = typeof initialBooksState;
 export function booksReducer(state = initialBooksState, action) : booksType{
     switch(action.type) {
         case LOAD_BOOKS:
-            return Object.assign({}, state, { booksLoading: true, initialQueryFired: true, reloadOnActivate: false });
+            return {...state, booksLoading: true, initialQueryFired: true, reloadOnActivate: false };
         case LOAD_BOOKS_RESULTS:
-            return Object.assign({}, state, { booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
+            return {...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) };
         case EDITING_BOOK_SAVED:
             return update(state, { booksHash: { [action.book._id]: { $merge: action.book } } });
         case TOGGLE_SELECT_BOOK:
