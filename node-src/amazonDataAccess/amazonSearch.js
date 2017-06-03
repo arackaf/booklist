@@ -17,13 +17,53 @@ class AmazonSearch{
                 'IdType': 'ISBN',
                 'ResponseGroup': 'ItemAttributes,EditorialReview,Images',
                 'ItemId': isbn
-            }).then(({result}) => {
-                if (!result.ItemLookupResponse || !result.ItemLookupResponse.Items || !result.ItemLookupResponse.Items.Item || !result.ItemLookupResponse.Items.Item.ItemAttributes){
-                    resolve({ failure: true });
-                } else {
-                    resolve(projectResponse(result.ItemLookupResponse.Items.Item));
-                }
+            }).then(({result}) => {                
+                    if (!result.ItemLookupResponse || !result.ItemLookupResponse.Items || !result.ItemLookupResponse.Items.Item || !result.ItemLookupResponse.Items.Item.ItemAttributes) {
+                        let itemsArray = result.ItemLookupResponse.Items.Item;
+
+                        if (Array.isArray(itemsArray)){
+                            //multiple sent back - pick the best
+                            let paperbacks = itemsArray.filter(i => i.ItemAttributes && (('' + i.ItemAttributes.Binding).toLowerCase() == 'paperback'));
+                            if (paperbacks.length === 1) {
+                                resolve(projectResponse(paperbacks[0]));
+                            } else if (paperbacks.length === 0) {
+                                resolve({ failure: true });
+                            } else {
+                                //merge them I guess
+                                let item = {
+                                    ItemAttributes: paperbacks.reduce((attrs, item) => Object.assign(attrs, item.ItemAttributes || {}), {}),
+                                    EditorialReviews: paperbacks[0].EditorialReviews
+                                }
+
+                                item.SmallImage = paperbacks.map(item => item.SmallImage).find(s => s);
+                                item.MediumImage = paperbacks.map(item => item.MediumImage).find(m => m);                                
+
+                                for (let i = 1; i < paperbacks.length; i++){
+                                    if (editorialReviewsCount(paperbacks[i]) > editorialReviewsCount(item.EditorialReviews)){
+                                        item.EditorialReviews = paperbacks[i].EditorialReviews;
+                                    }
+                                }
+
+                                resolve(projectResponse(item));
+
+                                function editorialReviewsCount(EditorialReviews){
+                                    if (!EditorialReviews || !EditorialReviews.EditorialReview) return 0;
+                                    if (typeof EditorialReviews.EditorialReview === 'object'){
+                                        return 1;
+                                    } else if (Array.isArray(EditorialReviews.EditorialReview)) {
+                                        return EditorialReviews.EditorialReview.length;
+                                    }
+                                    return 0;
+                                }
+                            }
+                        } else {
+                            resolve({ failure: true });
+                        }
+                    } else {
+                        resolve(projectResponse(result.ItemLookupResponse.Items.Item));
+                    }
             }).catch(err => {
+                debugger;
                 resolve({ failure: true });
             })
         })
