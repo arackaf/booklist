@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect';
 
 import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSortedSelector} from 'applicationRoot/rootReducer';
-import {removeKeysFromObject} from 'util/immutableHelpers';
+import {removeFromHash} from 'util/immutableHelpers';
 import {appType} from 'applicationRoot/rootReducer';
 
 import {
@@ -53,21 +53,21 @@ export function reducer(state = initialSubjectsState, action){
         case CANCEL_SUBJECT_EDIT:
             return {
                 ...state,
-                editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, [action._id]),
-                pendingSubjectsHash: removeKeysFromObject(state.pendingSubjectsHash, [action._id])
+                editingSubjectsHash: removeFromHash(state.editingSubjectsHash, [action._id]),
+                pendingSubjectsHash: removeFromHash(state.pendingSubjectsHash, [action._id])
             };
 
         case BEGIN_PENDNIG_DELETE:
             return {...state, pendingDeleteHash: {...state.pendingDeleteHash, [action._id]: true}};
         case CANCEL_PENDNIG_DELETE:
-            return {...state, pendingDeleteHash: removeKeysFromObject(state.pendingDeleteHash, [action._id]) };
+            return {...state, pendingDeleteHash: removeFromHash(state.pendingDeleteHash, [action._id]) };
         case DELETING_SUBJECTS:
             return {...state, deletingHash: {...state.deletingHash, ...action.subjects }};
         case DONE_DELETING_SUBJECTS:
             return {
                 ...state,
-                pendingDeleteHash: removeKeysFromObject(state.pendingDeleteHash, Object.keys(action.subjects)),
-                deletingHash: removeKeysFromObject(state.deletingHash, Object.keys(action.subjects))
+                pendingDeleteHash: removeFromHash(state.pendingDeleteHash, Object.keys(action.subjects)),
+                deletingHash: removeFromHash(state.deletingHash, Object.keys(action.subjects))
             };
         case SET_SUBJECT_DRAGGING:
             return {...state, draggingId: action.sourceId};
@@ -78,10 +78,10 @@ export function reducer(state = initialSubjectsState, action){
         case CLEAR_SAVING_STATE:
             return {
                 ...state,
-                subjectsSaved: removeKeysFromObject(state.subjectsSaved, Object.keys(action.subjects)),
-                subjectsSaving: removeKeysFromObject(state.subjectsSaving, Object.keys(action.subjects)),
-                editingSubjectsHash: removeKeysFromObject(state.editingSubjectsHash, Object.keys(action.subjects)),
-                pendingSubjectsHash: removeKeysFromObject(state.pendingSubjectsHash, Object.keys(action.subjects))
+                subjectsSaved: removeFromHash(state.subjectsSaved, Object.keys(action.subjects)),
+                subjectsSaving: removeFromHash(state.subjectsSaving, Object.keys(action.subjects)),
+                editingSubjectsHash: removeFromHash(state.editingSubjectsHash, Object.keys(action.subjects)),
+                pendingSubjectsHash: removeFromHash(state.pendingSubjectsHash, Object.keys(action.subjects))
             };
         case SET_EDITING_SUBJECT_FIELD:
             return {

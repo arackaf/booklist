@@ -1,4 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
+import {removeFromHash} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import { createSelector } from 'reselect';
@@ -132,10 +133,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case BOOK_DELETING:
             return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], deleting: true } } };
         case BOOK_DELETED:
-            let newBooksHash = { ...state.booksHash };
-            delete newBooksHash[action._id];
-            return { ...state, booksHash: newBooksHash };
-
+            return { ...state, booksHash: removeFromHash(state.booksHash, [action._id])};
         case EDITORIAL_REVIEWS_LOADING:
             return {...state, booksHash: {...state.booksHash, [action._id]: { ...state.booksHash[action._id], editorialReviewsLoading: true }}};
         case EDITORIAL_REVIEWS_LOADED:
