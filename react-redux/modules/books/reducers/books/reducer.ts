@@ -83,7 +83,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case EDITING_BOOK_SAVED:
             return update(state, { booksHash: { [action.book._id]: { $merge: action.book } } });
         case TOGGLE_SELECT_BOOK:
-            return Object.assign({}, state, { selectedBooks: { ...state.selectedBooks, [action._id]: !state.selectedBooks[action._id] } });
+            return update(state, { selectedBooks: { [action._id]: {$set: !state.selectedBooks[action._id]} } });
         case SET_BOOKS_SUBJECTS: {
             let remove = new Set<string>(action.remove);
             return update(state, { 
