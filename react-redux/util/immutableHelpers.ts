@@ -4,9 +4,9 @@ export const removeFromHash = (hash, keys: string[]) =>{
     return result;
 }
 
-export const mergeHashEntry = (hash, key, obj) => {
+export const updateHash = (hash, key: string, values: object) => {
     return {
         ...hash,
-        [key]: {...hash[key], ...obj}
+        [key]: {...hash[key], ...values}
     };
 }

@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {removeFromHash} from 'util/immutableHelpers';
+import {removeFromHash, updateHash} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import { createSelector } from 'reselect';
@@ -127,11 +127,11 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             }
             return Object.assign({}, state, { selectedBooks: newSelectedHash });
         case SET_PENDING_DELETE_BOOK:
-            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], pendingDelete: true } } };
+            return { ...state, booksHash: updateHash(state.booksHash, action._id, { pendingDelete: true }) };
         case CANCEL_PENDING_DELETE_BOOK:
-            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], pendingDelete: false } } };
+            return { ...state, booksHash: updateHash(state.booksHash, action._id, { pendingDelete: false }) };
         case BOOK_DELETING:
-            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], deleting: true } } };
+            return { ...state, booksHash: updateHash(state.booksHash, action._id, { deleting: true }) };
         case BOOK_DELETED:
             return { ...state, booksHash: removeFromHash(state.booksHash, [action._id])};
         case EDITORIAL_REVIEWS_LOADING:
