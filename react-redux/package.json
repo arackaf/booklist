@@ -24,6 +24,7 @@
     "babel-preset-stage-2": "6.5.0",
     "classnames": "2.2.5",
     "history": "4.6.1",
+    "immutability-helper": "^2.2.2",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
     "react": "15.1.0",
