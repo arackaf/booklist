@@ -109,14 +109,8 @@ export function booksInitialized(searchProps){
             subjectsState = state.booksModule.subjects,
             tagsState = state.booksModule.tags;
 
-        //not the most beautiful thing, but I'll use this activation to make sure initial subject and tag load calls are made
-        if (!subjectsState.initialQueryFired){
-            dispatch(loadSubjects());
-        }
-
-        if (!tagsState.initialQueryFired){
-            dispatch(loadTags());
-        }
+        dispatch(loadSubjects());
+        dispatch(loadTags());
 
         dispatch(setFilters(nextSearchFilters));
         dispatch(loadBooks());
