@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {removeFromHash, updateHash} from 'util/immutableHelpers';
+import {removeFromHash, updateHash, bulkUpdateHash} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import { createSelector } from 'reselect';
@@ -110,13 +110,10 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
             return Object.assign({}, state, { reloadOnActivate: true });
-        case BOOK_READ_CHANGING:{
-            let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: true }, hash), {});
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
-        } case BOOK_READ_CHANGED:{
-            let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: false, isRead: action.value }, hash), {});
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
-        }
+        case BOOK_READ_CHANGING:
+            return {...state, booksHash: bulkUpdateHash(state.booksHash, action._ids, {readChanging: true} )};
+        case BOOK_READ_CHANGED:
+            return {...state, booksHash: bulkUpdateHash(state.booksHash, action._ids, {readChanging: false, isRead: action.value} )};
         case TOGGLE_CHECK_ALL:
             let selectedCount = Object.keys(state.selectedBooks).length,
                 allBooksCount = Object.keys(state.booksHash).length,
