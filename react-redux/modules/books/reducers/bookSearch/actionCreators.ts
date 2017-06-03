@@ -95,21 +95,17 @@ export function booksActivated(searchProps){
         let {pathname, searchState} = getCurrentHistoryState();
 
         if (pathname === '/books' || pathname === '/view'){
-            store.dispatch(syncFiltersToHash(searchState));
+            store.dispatch(syncFiltersToHash(searchState, { reactivating: !isActive }));
+            isActive = true;
+        } else {
+            isActive = false;
         }
-
-        //TODO: know when re-activated
-        // if (booksState.reloadOnActivate){
-        //     dispatch(setFilters(nextSearchFilters));
-        //     dispatch(loadBooks());
-        // }
     })
 
     return function(dispatch, getState){
         let searchState = getCurrentHistoryState().searchState,
             nextSearchFilters = getNextFilters(searchState),
             state = getState(),
-            booksState = state.booksModule.books,
             subjectsState = state.booksModule.subjects,
             tagsState = state.booksModule.tags;
 
@@ -127,19 +123,22 @@ export function booksActivated(searchProps){
     }
 }
 
-export function syncFiltersToHash(searchProps){
+export function syncFiltersToHash(searchProps, { reactivating = false } = {}){
     return function(dispatch, getState){
         let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
-            searchState = state.booksModule.bookSearch;
+            searchState = state.booksModule.bookSearch,
+            booksState = state.booksModule.books;
+
         if (!nextSearchFilters.sort){
             nextSearchFilters.sort = '_id';
         }
         if (!nextSearchFilters.sortDirection){
             nextSearchFilters.sortDirection = '-1';
         }
-        
-        if (isDirty(searchState, nextSearchFilters)){
+        let force = reactivating && booksState.reloadOnActivate;
+
+        if (force || isDirty(searchState, nextSearchFilters)){
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
