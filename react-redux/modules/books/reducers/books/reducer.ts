@@ -2,6 +2,8 @@ import {hashOf} from 'applicationRoot/rootReducer';
 import {removeFromHash, updateHash, bulkUpdateHash} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
+import update from 'immutability-helper';
+
 import { createSelector } from 'reselect';
 import {
     LOAD_BOOKS,
@@ -96,17 +98,14 @@ export function booksReducer(state = initialBooksState, action) : booksType{
 
             return Object.assign({}, state, { booksHash: newBookHash });
         case SET_BOOKS_TAGS:
-            var newBookHash = { ...state.booksHash };
-
-            action.books.forEach(_id => {
-                var book = newBookHash[_id],
-                    booksTags = new Set<string>([...book.tags, ...action.add]);
-
-                action.remove.forEach(t => booksTags.delete(t));
-                newBookHash[_id] = {...book, tags: Array.from(booksTags.keys())};
+            let remove = new Set<string>(action.remove);
+            return update(state, { 
+                booksHash: { 
+                    ...action.books.reduce((hash, _id) => (hash[_id] = {
+                        tags: { $apply: currentTags => currentTags.filter(t => !remove.has(t)).concat(action.add) }
+                    }, hash), {})
+                }
             });
-
-            return Object.assign({}, state, { booksHash: newBookHash });
         case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
             return Object.assign({}, state, { reloadOnActivate: true });
@@ -132,12 +131,13 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case BOOK_DELETED:
             return { ...state, booksHash: removeFromHash(state.booksHash, [action._id])};
         case EDITORIAL_REVIEWS_LOADING:
-            return {...state, booksHash: {...state.booksHash, [action._id]: { ...state.booksHash[action._id], editorialReviewsLoading: true }}};
+            return update(state, { booksHash: { [action._id]: { $merge: { editorialReviewsLoading: true }}}});
         case EDITORIAL_REVIEWS_LOADED:
             return state;             
     }
     return state;
 }
+
 
 function createBooksHash(booksArr){
     let result = {};
