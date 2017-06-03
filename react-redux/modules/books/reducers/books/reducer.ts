@@ -69,15 +69,14 @@ const initialBooksState = {
     booksHash: hashOf<IBookRaw>(),
     booksLoading: false,
     selectedBooks: {},
-    reloadOnActivate: false,
-    initialQueryFired: false
+    reloadOnActivate: false
 };
 export type booksType = typeof initialBooksState;
 
 export function booksReducer(state = initialBooksState, action) : booksType{
     switch(action.type) {
         case LOAD_BOOKS:
-            return {...state, booksLoading: true, initialQueryFired: true, reloadOnActivate: false };
+            return {...state, booksLoading: true, reloadOnActivate: false };
         case LOAD_BOOKS_RESULTS:
             return {...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) };
         case EDITING_BOOK_SAVED:
