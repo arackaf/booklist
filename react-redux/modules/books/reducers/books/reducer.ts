@@ -111,14 +111,13 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case BOOK_READ_CHANGED:
             return {...state, booksHash: bulkUpdateHash(state.booksHash, action._ids, {readChanging: false, isRead: action.value} )};
         case TOGGLE_CHECK_ALL:
-            let selectedCount = Object.keys(state.selectedBooks).length,
+            let selectedCount = Object.keys(state.selectedBooks).filter(k => state.selectedBooks[k]).length,
                 allBooksCount = Object.keys(state.booksHash).length,
-                newSelectedHash = {};
+                willSelectAll = (!selectedCount || (selectedCount && allBooksCount != selectedCount));
 
-            if (!selectedCount || (selectedCount && allBooksCount != selectedCount)){
-                newSelectedHash = Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {});
-            }
-            return Object.assign({}, state, { selectedBooks: newSelectedHash });
+            return update(state, { 
+                selectedBooks: { $set: willSelectAll ? Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {}) : {} }
+            });
         case SET_PENDING_DELETE_BOOK:
             return { ...state, booksHash: updateHash(state.booksHash, action._id, { pendingDelete: true }) };
         case CANCEL_PENDING_DELETE_BOOK:
