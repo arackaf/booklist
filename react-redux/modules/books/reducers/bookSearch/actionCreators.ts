@@ -89,7 +89,7 @@ export function setSortOrder(sort, direction){
     };
 }
 
-export function booksActivated(searchProps){
+export function booksInitialized(searchProps){
     let isActive = true;
     history.listen((location, action) => {
         let {pathname, searchState} = getCurrentHistoryState();
