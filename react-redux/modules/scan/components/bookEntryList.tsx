@@ -77,9 +77,9 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
 
         return (
             <div>
-                <div className='panel panel-default' style={ { 'margin': '15px', padding: '15px' } }>
+                <div className='panel panel-default' style={ { marginLeft: '15px', marginRight: '15px', marginTop: '15px', padding: '15px' } }>
                     <div className="row">
-                        <div className="col-md-6 col-md-push-6">
+                        <div className="col-md-6 col-md-push-6" style={{paddingBottom: '10px'}}>
                             <div>
                                 { pending == null ? null :
                                     (pending
@@ -90,12 +90,13 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
 
                             <Collapse isOpened={this.state.showIncomingQueue} springConfig={{stiffness: 280, damping: 26}}>
                                 <div>
-                                    <div className="alert alert-info margin-top alert-slim">
+                                    <br />
+                                    <div className="alert alert-info alert-slim">
                                         Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a
                                         dedicated place to see what's been saved, and what failed to be found.
                                     </div>
                                     
-                                    <ul>
+                                    <ul style={{marginBottom: 0}}>
                                         <ReactCSSTransitionGroup transitionEnterTimeout={0} transitionName="book-scan-results" transitionLeaveTimeout={300}>
                                             {this.props.booksJustSaved.map(book => <li style={{ color: book.success ? 'green' : 'red' }} key={book._id}>{book.title}</li>)}
                                         </ReactCSSTransitionGroup>
