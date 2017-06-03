@@ -85,19 +85,16 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             return Object.assign({}, state, { booksHash: { ...state.booksHash, [action.book._id]: newBookVersion } });
         case TOGGLE_SELECT_BOOK:
             return Object.assign({}, state, { selectedBooks: { ...state.selectedBooks, [action._id]: !state.selectedBooks[action._id] } });
-        case SET_BOOKS_SUBJECTS:
-            var newBookHash = { ...state.booksHash };
-
-            action.books.forEach(_id => {
-                let book = newBookHash[_id],
-                    booksSubjects = new Set<string>([...book.subjects, ...action.add]);
-
-                action.remove.forEach(s => booksSubjects.delete(s));
-                newBookHash[_id] = {...book, subjects: Array.from(booksSubjects.keys())};
+        case SET_BOOKS_SUBJECTS: {
+            let remove = new Set<string>(action.remove);
+            return update(state, { 
+                booksHash: { 
+                    ...action.books.reduce((hash, _id) => (hash[_id] = {
+                        subjects: { $apply: currentSubjects => currentSubjects.filter(t => !remove.has(t)).concat(action.add) }
+                    }, hash), {})
+                }
             });
-
-            return Object.assign({}, state, { booksHash: newBookHash });
-        case SET_BOOKS_TAGS:
+        } case SET_BOOKS_TAGS: {
             let remove = new Set<string>(action.remove);
             return update(state, { 
                 booksHash: { 
@@ -106,7 +103,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
                     }, hash), {})
                 }
             });
-        case BOOK_SAVED:
+        } case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
             return Object.assign({}, state, { reloadOnActivate: true });
         case BOOK_READ_CHANGING:
