@@ -97,6 +97,12 @@ export function booksActivated(searchProps){
         if (pathname === '/books' || pathname === '/view'){
             store.dispatch(syncFiltersToHash(searchState));
         }
+
+        //TODO: know when re-activated
+        // if (booksState.reloadOnActivate){
+        //     dispatch(setFilters(nextSearchFilters));
+        //     dispatch(loadBooks());
+        // }
     })
 
     return function(dispatch, getState){
@@ -116,10 +122,8 @@ export function booksActivated(searchProps){
             dispatch(loadTags());
         }
 
-        if (booksState.reloadOnActivate || !booksState.initialQueryFired){
-            dispatch(setFilters(nextSearchFilters));
-            dispatch(loadBooks());
-        }
+        dispatch(setFilters(nextSearchFilters));
+        dispatch(loadBooks());
     }
 }
 
@@ -159,7 +163,7 @@ export function setFilters(packet){
 function isDirty(oldState, newState){
     if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
     if (itemsDifferent(oldState.tags, newState.tags)) return true;
-    if (oldState.pagesOperator != (newState.pagesOperator || '>')){
+    if (oldState.pagesOperator != (newState.pagesOperator || 'lt')){
         if (newState.pages !== '') return true;
     }
     if ((oldState.page || 1) != (newState.page || 1)){
