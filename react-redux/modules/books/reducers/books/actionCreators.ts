@@ -81,6 +81,14 @@ export function expandBook(_id : string){
         if (!book.detailsLoaded){
             dispatch({type: EDITORIAL_REVIEWS_LOADING, _id});
             ajaxUtil.get('/book/loadDetails', { _id }).then(resp => {
+                (resp.editorialReviews || []).forEach(ev => {
+                    if (ev.Source){
+                        ev.source = ev.Source;
+                    }
+                    if (ev.Content){
+                        ev.content = ev.Content;
+                    }
+                })
                 dispatch({ type: DETAILS_LOADED, _id, editorialReviews: resp.editorialReviews });
             });
         } else {
