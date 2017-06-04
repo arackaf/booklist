@@ -75,7 +75,7 @@ class BookDAO extends DAO {
             //    delete query.subjects;
             //    delete query.title;
             //}//
-            let allFields = ['_id', 'title', 'isbn', 'ean', 'pages', 'smallImage', 'mediumImage', 'publicationDate', 'editorialReviews', 'userId', 'subjects', 'authors', 'publisher', 'tags', 'isRead'],
+            let allFields = ['_id', 'title', 'isbn', 'ean', 'pages', 'smallImage', 'mediumImage', 'publicationDate', 'userId', 'subjects', 'authors', 'publisher', 'tags', 'isRead'],
                 project = Object.assign({}, allFields.reduce((hash, key) => (hash[key] = 1, hash), {}), { titleLower: { $toLower: '$title' } });
 
             return (await db.collection('books').aggregate([{$match: query}, {$project: project}, {$sort: sortObj}, {$skip: skip}, {$limit: limit}]).toArray()).map(adjustForClient);
@@ -222,14 +222,16 @@ class BookDAO extends DAO {
     }
     async setRead(_ids, isRead){
         let db = await super.open();
-        try{
-            await db.collection('books').update(
-                { _id: { $in: _ids.map(_id => ObjectId(_id)) }, userId: this.userId },
-                { $set: { isRead } }, { multi: true }
-            );
-        } finally {
-            super.dispose(db);
-        }
+        await db.collection('books').update(
+            { _id: { $in: _ids.map(_id => ObjectId(_id)) }, userId: this.userId },
+            { $set: { isRead } }, { multi: true }
+        );
+    }
+
+    async loadBookDetails(_id){
+        let db = await super.open();
+        let book = await db.collection('books').findOne({ userId: this.userId, _id: ObjectId(_id) });
+        return book;
     }
 }
 

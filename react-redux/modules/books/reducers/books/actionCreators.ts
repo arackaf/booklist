@@ -9,9 +9,14 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED
+    BOOK_DELETED,
+    EDITORIAL_REVIEWS_LOADING,
+    DETAILS_LOADED,
+    EXPAND_BOOK,
+    COLLAPSE_BOOK
 } from './actionNames';
 
+import {BooksModuleType} from 'modules/books/reducers/reducer';
 import ajaxUtil from 'util/ajaxUtil';
 
 export function toggleSelectBook(_id){
@@ -66,6 +71,34 @@ function booksSearch(bookSearchState, publicUserId){
         userId: publicUserId,
         isRead: bookSearchState.isRead
     });
+}
+
+export function expandBook(_id : string){
+    return (dispatch, getState : () => BooksModuleType) => {
+        let booksHash = getState().booksModule.books.booksHash;
+        let book = booksHash[_id];
+
+        if (!book.detailsLoaded){
+            dispatch({type: EDITORIAL_REVIEWS_LOADING, _id});
+            ajaxUtil.get('/book/loadDetails', { _id }).then(resp => {
+                (resp.editorialReviews || []).forEach(ev => {
+                    if (ev.Source){
+                        ev.source = ev.Source;
+                    }
+                    if (ev.Content){
+                        ev.content = ev.Content;
+                    }
+                })
+                dispatch({ type: DETAILS_LOADED, _id, editorialReviews: resp.editorialReviews });
+            });
+        } else {
+            dispatch({type: EXPAND_BOOK, _id})
+        }
+    }
+}
+
+export function collapseBook(_id : string){
+    return {type: COLLAPSE_BOOK, _id}
 }
 
 export function setRead(_id){

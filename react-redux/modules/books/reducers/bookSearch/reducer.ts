@@ -1,4 +1,4 @@
-import {booksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import {
     BEGIN_FILTER_CHANGE,
@@ -94,8 +94,8 @@ type tagOrSubject = {
     name: string
 }
 
-const createMemoizedPSI = (getActiveIds : ((state: booksModuleType) => lookupHashType), getLookupHash : ((state: booksModuleType) => lookupHashType)) => 
-        createSelector<booksModuleType, tagOrSubject[], lookupHashType, lookupHashType>(getActiveIds, getLookupHash, (ids, hash) => projectSelectedItems(ids, hash));
+const createMemoizedPSI = (getActiveIds : ((state: BooksModuleType) => lookupHashType), getLookupHash : ((state: BooksModuleType) => lookupHashType)) => 
+        createSelector<BooksModuleType, tagOrSubject[], lookupHashType, lookupHashType>(getActiveIds, getLookupHash, (ids, hash) => projectSelectedItems(ids, hash));
 
 const selectSelectedSubjects = createMemoizedPSI(state => state.booksModule.bookSearch.subjects, state => state.app.subjectHash);
 const selectSelectedTags = createMemoizedPSI(state => state.booksModule.bookSearch.tags, state => state.booksModule.tags.tagHash);
@@ -106,7 +106,7 @@ export type bookSearchUiViewType = {
     isGridView: boolean;
     isBasicList: boolean;
 }
-export const selectBookSearchUiView = createSelector<booksModuleType, bookSearchUiViewType, appType, bookSearchType>(
+export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearchUiViewType, appType, bookSearchType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     (app, bookSearch) => {
@@ -121,7 +121,7 @@ export const selectBookSearchUiView = createSelector<booksModuleType, bookSearch
     }
 );
 
-const selectSearchedEligibleTags = createSelector<booksModuleType, tagOrSubject[], allTagsSortedType, string, lookupHashType>(
+const selectSearchedEligibleTags = createSelector<BooksModuleType, tagOrSubject[], allTagsSortedType, string, lookupHashType>(
     selectAllTagsSorted,
     state => state.booksModule.bookSearch.searchTagsValue,
     state => state.booksModule.bookSearch.pending.tags,
@@ -133,7 +133,7 @@ const selectSearchedEligibleTags = createSelector<booksModuleType, tagOrSubject[
     }
 );
 
-const selectSearchedEligibleSubjects = createSelector<booksModuleType, tagOrSubject[], stackedSubjectsType, string, lookupHashType>(
+const selectSearchedEligibleSubjects = createSelector<BooksModuleType, tagOrSubject[], stackedSubjectsType, string, lookupHashType>(
     selectStackedSubjects,
     state => state.booksModule.bookSearch.searchSubjectsValue,
     state => state.booksModule.bookSearch.pending.subjects,
@@ -154,7 +154,7 @@ export type entireBookSearchStateType = bookSearchType & bookSearchUiViewType & 
     eligibleFilterTags: tagOrSubject[];
     bindableSortValue: any;
 };
-export const selectEntireBookSearchState = createSelector<booksModuleType, entireBookSearchStateType, tagOrSubject[], tagOrSubject[], tagOrSubject[], tagOrSubject[], bookSearchType, bookSearchUiViewType, tagOrSubject[], tagOrSubject[]>(
+export const selectEntireBookSearchState = createSelector<BooksModuleType, entireBookSearchStateType, tagOrSubject[], tagOrSubject[], tagOrSubject[], tagOrSubject[], bookSearchType, bookSearchUiViewType, tagOrSubject[], tagOrSubject[]>(
     selectSelectedSubjects, 
     selectSelectedTags, 
     selectPendingSelectedSubjects, 

@@ -6,7 +6,7 @@ let asyncReducers = { };
 export function getNewReducer(reducerObj?) : any {
     if (!reducerObj) return combineReducers({ app: rootReducer });
 
-    if (asyncReducers[reducerObj.name]) return; //registering an async reducer we already have - do nothing and get out
+    if (asyncReducers[`${reducerObj.name}Module`]) return; //registering an async reducer we already have - do nothing and get out
 
     asyncReducers[`${reducerObj.name}Module`] = reducerObj.reducer;
 

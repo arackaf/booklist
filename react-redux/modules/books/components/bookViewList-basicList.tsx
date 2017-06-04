@@ -10,7 +10,7 @@ import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapB
 
 // import { selector } from '../reducers/reducer';
 
-import {selectBookListComponentState, bookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
+import {selectBookListComponentState, BookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
 
 @connect(null, actions)
 class BookViewListMobileItem extends Component<any, any> {
@@ -56,7 +56,7 @@ class BookViewListMobileItem extends Component<any, any> {
 }
 
 @connect(selectBookListComponentState, actions)
-export default class BookViewListMobile extends Component<bookListComponentStateType & actionsType, any> {
+export default class BookViewListMobile extends Component<BookListComponentStateType & actionsType, any> {
     render(){ 
         let props = this.props;
         return (
