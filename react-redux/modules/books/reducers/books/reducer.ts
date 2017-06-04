@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {updateHash, bulkUpdateHash} from 'util/immutableHelpers';
+import {bulkUpdateHash} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
@@ -117,11 +117,11 @@ export function booksReducer(state = initialBooksState, action) : booksType{
                 selectedBooks: { $set: willSelectAll ? Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {}) : {} }
             });
         case SET_PENDING_DELETE_BOOK:
-            return { ...state, booksHash: updateHash(state.booksHash, action._id, { pendingDelete: true }) };
+            return update(state, { booksHash: { [action._id]: {$merge: { pendingDelete: true }} }});
         case CANCEL_PENDING_DELETE_BOOK:
-            return { ...state, booksHash: updateHash(state.booksHash, action._id, { pendingDelete: false }) };
+            return update(state, { booksHash: { [action._id]: {$merge: { pendingDelete: false }} }});
         case BOOK_DELETING:
-            return { ...state, booksHash: updateHash(state.booksHash, action._id, { deleting: true }) };
+            return update(state, { booksHash: { [action._id]: {$merge: { deleting: true }} }});
         case BOOK_DELETED:
             return update(state, { booksHash: {$unset: [action._id]} });
         case EDITORIAL_REVIEWS_LOADING:
