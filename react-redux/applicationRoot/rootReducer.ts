@@ -67,13 +67,13 @@ export default function rootReducer(state = initialState, action){
         case SET_LOGGED_IN:
             return {...state, isLoggedIn: true, userId: action.userId};
         case LOAD_SUBJECTS:
-            return Object.assign({}, state, { subjectsInitialQueryFired: true });
+            return {...state, subjectsInitialQueryFired: true };
         case LOAD_SUBJECTS_RESULTS:
-            return Object.assign({}, state, { subjectHash: objectsToHash(action.subjects), subjectsLoaded: true });
+            return {...state, subjectHash: objectsToHash(action.subjects), subjectsLoaded: true };
         case LOAD_COLORS:
-            return Object.assign({}, state, { colors: action.colors.map(c => c.backgroundColor) });
+            return {...state, colors: action.colors.map(c => c.backgroundColor) };
         case SAVE_SUBJECT_RESULTS:
-            return Object.assign({}, state, { subjectHash: { ...state.subjectHash, ...objectsToHash(action.affectedSubjects) } });
+            return {...state, subjectHash: { ...state.subjectHash, ...objectsToHash(action.affectedSubjects) } };
         case SUBJECT_DELETED:
             let subjectHash = { ...state.subjectHash };
             action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
