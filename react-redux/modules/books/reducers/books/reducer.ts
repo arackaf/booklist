@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {bulkUpdateHash} from 'util/immutableHelpers';
+import {bulkMerge} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
@@ -105,9 +105,9 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case MANUAL_BOOK_SAVED:
             return {...state, reloadOnActivate: true };
         case BOOK_READ_CHANGING:
-            return {...state, booksHash: bulkUpdateHash(state.booksHash, action._ids, {readChanging: true} )};
+            return update(state, { booksHash: bulkMerge(action._ids, {readChanging: true}) });
         case BOOK_READ_CHANGED:
-            return {...state, booksHash: bulkUpdateHash(state.booksHash, action._ids, {readChanging: false, isRead: action.value} )};
+            return update(state, { booksHash: bulkMerge(action._ids, {readChanging: false, isRead: action.value}) });
         case TOGGLE_CHECK_ALL:
             let selectedCount = Object.keys(state.selectedBooks).filter(k => state.selectedBooks[k]).length,
                 allBooksCount = Object.keys(state.booksHash).length,
