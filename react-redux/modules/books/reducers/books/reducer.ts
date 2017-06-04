@@ -18,7 +18,9 @@ import {
     BOOK_DELETING,
     BOOK_DELETED,
     EDITORIAL_REVIEWS_LOADING,
-    EDITORIAL_REVIEWS_LOADED    
+    DETAILS_LOADED,
+    EXPAND_BOOK,
+    COLLAPSE_BOOK
 } from './actionNames';
 
 import { SUBJECT_DELETED } from '../subjects/actionNames';
@@ -55,8 +57,8 @@ export interface IBookRaw {
     deleting?: boolean;
     pendingDelete?: boolean;
     expanded: boolean;
-    editorialReviewsLoaded: boolean;
-    editorialReviewsLoading: boolean;
+    detailsLoaded: boolean;
+    detailsLoading: boolean;
 }
 
 export interface IBookDisplay extends IBookRaw {
@@ -125,9 +127,13 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case BOOK_DELETED:
             return update(state, { booksHash: {$unset: [action._id]} });
         case EDITORIAL_REVIEWS_LOADING:
-            return update(state, { booksHash: { [action._id]: { $merge: { editorialReviewsLoading: true }}}});
-        case EDITORIAL_REVIEWS_LOADED:
-            return state;             
+            return update(state, { booksHash: { [action._id]: { $merge: { detailsLoading: true }}}});
+        case EXPAND_BOOK:
+            return update(state, { booksHash: { [action._id]: { $merge: { expanded: true }}}});
+        case COLLAPSE_BOOK:
+            return update(state, { booksHash: { [action._id]: { $merge: { expanded: false }}}});            
+        case DETAILS_LOADED:
+            return update(state, { booksHash: { [action._id]: { $merge: { detailsLoading: false, detailsLoaded: true, editorialReviews: action.editorialReviews, expanded: true }}}});
     }
     return state;
 }

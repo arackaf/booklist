@@ -11,7 +11,9 @@ import {
     BOOK_DELETING,
     BOOK_DELETED,
     EDITORIAL_REVIEWS_LOADING,
-    EDITORIAL_REVIEWS_LOADED
+    DETAILS_LOADED,
+    EXPAND_BOOK,
+    COLLAPSE_BOOK
 } from './actionNames';
 
 import {BooksModuleType} from 'modules/books/reducers/reducer';
@@ -71,15 +73,24 @@ function booksSearch(bookSearchState, publicUserId){
     });
 }
 
-export function loadEditorialReviews(_id : string){
+export function expandBook(_id : string){
     return (dispatch, getState : () => BooksModuleType) => {
         let booksHash = getState().booksModule.books.booksHash;
         let book = booksHash[_id];
 
-        if (!book.editorialReviewsLoaded){
+        if (!book.detailsLoaded){
             dispatch({type: EDITORIAL_REVIEWS_LOADING, _id});
+            ajaxUtil.get('/book/loadDetails', { _id }).then(resp => {
+                dispatch({ type: DETAILS_LOADED, _id, editorialReviews: resp.editorialReviews });
+            });
+        } else {
+            dispatch({type: EXPAND_BOOK, _id})
         }
     }
+}
+
+export function collapseBook(_id : string){
+    return {type: COLLAPSE_BOOK, _id}
 }
 
 export function setRead(_id){

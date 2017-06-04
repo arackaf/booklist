@@ -222,14 +222,16 @@ class BookDAO extends DAO {
     }
     async setRead(_ids, isRead){
         let db = await super.open();
-        try{
-            await db.collection('books').update(
-                { _id: { $in: _ids.map(_id => ObjectId(_id)) }, userId: this.userId },
-                { $set: { isRead } }, { multi: true }
-            );
-        } finally {
-            super.dispose(db);
-        }
+        await db.collection('books').update(
+            { _id: { $in: _ids.map(_id => ObjectId(_id)) }, userId: this.userId },
+            { $set: { isRead } }, { multi: true }
+        );
+    }
+
+    async loadBookDetails(_id){
+        let db = await super.open();
+        let book = await db.collection('books').findOne({ userId: this.userId, _id: ObjectId(_id) });
+        return book;
     }
 }
 
