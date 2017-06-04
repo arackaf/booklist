@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {removeFromHash, updateHash, bulkUpdateHash} from 'util/immutableHelpers';
+import {updateHash, bulkUpdateHash} from 'util/immutableHelpers';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
@@ -123,7 +123,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case BOOK_DELETING:
             return { ...state, booksHash: updateHash(state.booksHash, action._id, { deleting: true }) };
         case BOOK_DELETED:
-            return { ...state, booksHash: removeFromHash(state.booksHash, [action._id])};
+            return update(state, { booksHash: {$unset: [action._id]} });
         case EDITORIAL_REVIEWS_LOADING:
             return update(state, { booksHash: { [action._id]: { $merge: { editorialReviewsLoading: true }}}});
         case EDITORIAL_REVIEWS_LOADED:
