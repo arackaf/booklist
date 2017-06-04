@@ -89,13 +89,16 @@ export function setSortOrder(sort, direction){
     };
 }
 
-export function booksActivated(searchProps){
+export function booksInitialized(searchProps){
     let isActive = true;
     history.listen((location, action) => {
         let {pathname, searchState} = getCurrentHistoryState();
 
         if (pathname === '/books' || pathname === '/view'){
-            store.dispatch(syncFiltersToHash(searchState));
+            store.dispatch(syncFiltersToHash(searchState, { reactivating: !isActive }));
+            isActive = true;
+        } else {
+            isActive = false;
         }
     })
 
@@ -103,39 +106,33 @@ export function booksActivated(searchProps){
         let searchState = getCurrentHistoryState().searchState,
             nextSearchFilters = getNextFilters(searchState),
             state = getState(),
-            booksState = state.booksModule.books,
             subjectsState = state.booksModule.subjects,
             tagsState = state.booksModule.tags;
 
-        //not the most beautiful thing, but I'll use this activation to make sure initial subject and tag load calls are made
-        if (!subjectsState.initialQueryFired){
-            dispatch(loadSubjects());
-        }
+        dispatch(loadSubjects());
+        dispatch(loadTags());
 
-        if (!tagsState.initialQueryFired){
-            dispatch(loadTags());
-        }
-
-        if (booksState.reloadOnActivate || !booksState.initialQueryFired){
-            dispatch(setFilters(nextSearchFilters));
-            dispatch(loadBooks());
-        }
+        dispatch(setFilters(nextSearchFilters));
+        dispatch(loadBooks());
     }
 }
 
-export function syncFiltersToHash(searchProps){
+export function syncFiltersToHash(searchProps, { reactivating = false } = {}){
     return function(dispatch, getState){
         let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
-            searchState = state.booksModule.bookSearch;
+            searchState = state.booksModule.bookSearch,
+            booksState = state.booksModule.books;
+
         if (!nextSearchFilters.sort){
             nextSearchFilters.sort = '_id';
         }
         if (!nextSearchFilters.sortDirection){
             nextSearchFilters.sortDirection = '-1';
         }
-        
-        if (isDirty(searchState, nextSearchFilters)){
+        let force = reactivating && booksState.reloadOnActivate;
+
+        if (force || isDirty(searchState, nextSearchFilters)){
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
@@ -159,7 +156,7 @@ export function setFilters(packet){
 function isDirty(oldState, newState){
     if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
     if (itemsDifferent(oldState.tags, newState.tags)) return true;
-    if (oldState.pagesOperator != (newState.pagesOperator || '>')){
+    if (oldState.pagesOperator != (newState.pagesOperator || 'lt')){
         if (newState.pages !== '') return true;
     }
     if ((oldState.page || 1) != (newState.page || 1)){

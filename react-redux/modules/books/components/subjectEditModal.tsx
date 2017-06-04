@@ -57,7 +57,6 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                         <div className="col-xs-11">
                             <GenericLabelSelect
                                 inputProps={{ placeholder: 'Edit subject', value: props.subjectSearch, onChange: props.setSubjectSearchValue }}
-                                //inputProps={{ placeholder: 'Adding', value: this.props.addingTagSearch, onChange: this.props.addingSearchValueChange }}
                                 suggestions={props.subjectsSearched}
                                 onSuggestionSelected={item => props.editSubject(item._id)} />
 

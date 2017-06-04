@@ -1,4 +1,4 @@
-import { httpPost, route, nonRoutable, controller } from 'easy-express-controllers';
+import { httpPost, httpGet, route, nonRoutable, controller } from 'easy-express-controllers';
 import BookDAO from '../dataAccess/bookDAO';
 import bookEntryQueueManager from '../app-helpers/bookEntryQueueManager';
 
@@ -42,6 +42,16 @@ class bookController{
         await bookDao.setRead(_ids, isRead);
 
         this.send({ success: true })
+    }
+    @httpGet
+    async loadDetails({_id}){
+        let bookDao = new BookDAO(this.request.user.id);
+        let book = await bookDao.loadBookDetails(_id);
+        if (book){
+            this.send({success: true, editorialReviews: book.editorialReviews || []});
+        } else {
+            this.send({success: false});
+        }
     }
 }
 

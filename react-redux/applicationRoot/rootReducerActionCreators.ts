@@ -43,8 +43,15 @@ export const setModule = module => ({ type: SET_MODULE, module });
 export const setLoggedIn = userId => ({ type: SET_LOGGED_IN, userId });
 export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 
+let subjectsLoaded = false;
+
 export function loadSubjects(){
     return function(dispatch, getState){
+        if (subjectsLoaded){
+            return;
+        }
+        subjectsLoaded = true;
+        
         let publicUserId = getState().app.publicUserId;
 
         dispatch({ type: LOAD_SUBJECTS });

@@ -21,7 +21,7 @@ export type actionsType = typeof actionCreatorsBooks &
                              typeof actionCreatorsBookSearch & 
                              typeof actionCreatorsBookTagModification;
 
-export type bookListComponentStateType = bookSelectionType & booksListType & {
+export type BookListComponentStateType = bookSelectionType & booksListType & {
     viewingPublic: boolean,
     selectedBooks: {[s: string] : any};
     hasMoreBooks: boolean;
@@ -29,7 +29,7 @@ export type bookListComponentStateType = bookSelectionType & booksListType & {
     currentSort: string;
     sortDirection : string;
 };
-export const selectBookListComponentState = createSelector<any, bookListComponentStateType, any, any, any, booksListType, bookSelectionType>(
+export const selectBookListComponentState = createSelector<any, BookListComponentStateType, any, any, any, booksListType, bookSelectionType>(
     state => state.app,
     state => state.booksModule.books,
     state => state.booksModule.bookSearch,

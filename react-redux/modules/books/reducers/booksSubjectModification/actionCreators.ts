@@ -35,7 +35,7 @@ export function enableSubjectModificationToggledBooks(){
     return { type: ENABLE_SUBJECT_MODIFICATION_FOR_TOGGLED_BOOKS }
 }
 
-export function addingSearchValueChange(value){
+export function addingSubjectSearchValueChange(value){
     return { type: ADDING_SUBJECT_SEARCH_CHANGE, value: value.target.value };
 }
 
@@ -43,7 +43,7 @@ export function addingSubjectSet(value, subject){
     return { type: ADDING_SUBJECT_SET, _id: subject._id, value };
 }
 
-export function removingSearchValueChange(value){
+export function removingSubjectSearchValueChange(value){
     return { type: REMOVING_SUBJECT_SEARCH_CHANGE, value: value.target.value || '' };
 }
 

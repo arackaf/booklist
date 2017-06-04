@@ -1,4 +1,4 @@
-import {booksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
@@ -72,7 +72,7 @@ type mainSelectorType = editBookType & bookSearchUiViewType & booksListType & {
     tagsBooksModifyingCount: number;
 }
 
-const mainSelector = createSelector<booksModuleType, mainSelectorType, appType, editBookType, subjectsType, tagsType, bookSearchType, booksListType, bookSearchUiViewType, subjectsBooksModifyingType, tagsBooksModifyingType>(
+const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, editBookType, subjectsType, tagsType, bookSearchType, booksListType, bookSearchUiViewType, subjectsBooksModifyingType, tagsBooksModifyingType>(
     state => state.app,
     state => state.booksModule.editBook,
     state => state.booksModule.subjects,

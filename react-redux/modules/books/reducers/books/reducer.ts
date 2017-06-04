@@ -1,5 +1,8 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {booksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {bulkMerge} from 'util/immutableHelpers';
+import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+
+import update from 'immutability-helper';
 
 import { createSelector } from 'reselect';
 import {
@@ -13,7 +16,11 @@ import {
     CANCEL_PENDING_DELETE_BOOK,
     DELETE_BOOK,
     BOOK_DELETING,
-    BOOK_DELETED
+    BOOK_DELETED,
+    EDITORIAL_REVIEWS_LOADING,
+    DETAILS_LOADED,
+    EXPAND_BOOK,
+    COLLAPSE_BOOK
 } from './actionNames';
 
 import { SUBJECT_DELETED } from '../subjects/actionNames';
@@ -49,6 +56,9 @@ export interface IBookRaw {
     userId: string;
     deleting?: boolean;
     pendingDelete?: boolean;
+    expanded: boolean;
+    detailsLoaded: boolean;
+    detailsLoading: boolean;
 }
 
 export interface IBookDisplay extends IBookRaw {
@@ -61,78 +71,73 @@ const initialBooksState = {
     booksHash: hashOf<IBookRaw>(),
     booksLoading: false,
     selectedBooks: {},
-    reloadOnActivate: false,
-    initialQueryFired: false
+    reloadOnActivate: false
 };
 export type booksType = typeof initialBooksState;
 
 export function booksReducer(state = initialBooksState, action) : booksType{
     switch(action.type) {
         case LOAD_BOOKS:
-            return Object.assign({}, state, { booksLoading: true, initialQueryFired: true, reloadOnActivate: false });
+            return {...state, booksLoading: true, reloadOnActivate: false };
         case LOAD_BOOKS_RESULTS:
-            return Object.assign({}, state, { booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) });
+            return {...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) };
         case EDITING_BOOK_SAVED:
-            let newBookVersion = Object.assign({}, state.booksHash[action.book._id], action.book); //only update fields sent
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, [action.book._id]: newBookVersion } });
+            return update(state, { booksHash: { [action.book._id]: { $merge: action.book } } });
         case TOGGLE_SELECT_BOOK:
-            return Object.assign({}, state, { selectedBooks: { ...state.selectedBooks, [action._id]: !state.selectedBooks[action._id] } });
-        case SET_BOOKS_SUBJECTS:
-            var newBookHash = { ...state.booksHash };
-
-            action.books.forEach(_id => {
-                let book = newBookHash[_id],
-                    booksSubjects = new Set<string>([...book.subjects, ...action.add]);
-
-                action.remove.forEach(s => booksSubjects.delete(s));
-                newBookHash[_id] = {...book, subjects: Array.from(booksSubjects.keys())};
+            return update(state, { selectedBooks: { [action._id]: {$set: !state.selectedBooks[action._id]} } });
+        case SET_BOOKS_SUBJECTS: {
+            let remove = new Set<string>(action.remove);
+            return update(state, { 
+                booksHash: { 
+                    ...action.books.reduce((hash, _id) => (hash[_id] = {
+                        subjects: { $apply: currentSubjects => currentSubjects.filter(t => !remove.has(t)).concat(action.add) }
+                    }, hash), {})
+                }
             });
-
-            return Object.assign({}, state, { booksHash: newBookHash });
-        case SET_BOOKS_TAGS:
-            var newBookHash = { ...state.booksHash };
-
-            action.books.forEach(_id => {
-                var book = newBookHash[_id],
-                    booksTags = new Set<string>([...book.tags, ...action.add]);
-
-                action.remove.forEach(t => booksTags.delete(t));
-                newBookHash[_id] = {...book, tags: Array.from(booksTags.keys())};
+        } case SET_BOOKS_TAGS: {
+            let remove = new Set<string>(action.remove);
+            return update(state, { 
+                booksHash: { 
+                    ...action.books.reduce((hash, _id) => (hash[_id] = {
+                        tags: { $apply: currentTags => currentTags.filter(t => !remove.has(t)).concat(action.add) }
+                    }, hash), {})
+                }
             });
-
-            return Object.assign({}, state, { booksHash: newBookHash });
-        case BOOK_SAVED:
+        } case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
-            return Object.assign({}, state, { reloadOnActivate: true });
-        case BOOK_READ_CHANGING:{
-            let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: true }, hash), {});
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
-        } case BOOK_READ_CHANGED:{
-            let changingBooks = action._ids.reduce((hash, _id) => (hash[_id] = { ...state.booksHash[_id], readChanging: false, isRead: action.value }, hash), {});
-            return Object.assign({}, state, { booksHash: { ...state.booksHash, ...changingBooks } });
-        }
+            return {...state, reloadOnActivate: true };
+        case BOOK_READ_CHANGING:
+            return update(state, { booksHash: bulkMerge(action._ids, {readChanging: true}) });
+        case BOOK_READ_CHANGED:
+            return update(state, { booksHash: bulkMerge(action._ids, {readChanging: false, isRead: action.value}) });
         case TOGGLE_CHECK_ALL:
-            let selectedCount = Object.keys(state.selectedBooks).length,
+            let selectedCount = Object.keys(state.selectedBooks).filter(k => state.selectedBooks[k]).length,
                 allBooksCount = Object.keys(state.booksHash).length,
-                newSelectedHash = {};
+                willSelectAll = (!selectedCount || (selectedCount && allBooksCount != selectedCount));
 
-            if (!selectedCount || (selectedCount && allBooksCount != selectedCount)){
-                newSelectedHash = Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {});
-            }
-            return Object.assign({}, state, { selectedBooks: newSelectedHash });
+            return update(state, { 
+                selectedBooks: { $set: willSelectAll ? Object.keys(state.booksHash).reduce((hash, _id) => (hash[_id] = true, hash), {}) : {} }
+            });
         case SET_PENDING_DELETE_BOOK:
-            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], pendingDelete: true } } };
+            return update(state, { booksHash: { [action._id]: {$merge: { pendingDelete: true }} }});
         case CANCEL_PENDING_DELETE_BOOK:
-            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], pendingDelete: false } } };
+            return update(state, { booksHash: { [action._id]: {$merge: { pendingDelete: false }} }});
         case BOOK_DELETING:
-            return { ...state, booksHash: { ...state.booksHash, [action._id]: { ...state.booksHash[action._id], deleting: true } } };
+            return update(state, { booksHash: { [action._id]: {$merge: { deleting: true }} }});
         case BOOK_DELETED:
-            let newBooksHash = { ...state.booksHash };
-            delete newBooksHash[action._id];
-            return { ...state, booksHash: newBooksHash };
+            return update(state, { booksHash: {$unset: [action._id]} });
+        case EDITORIAL_REVIEWS_LOADING:
+            return update(state, { booksHash: { [action._id]: { $merge: { detailsLoading: true }}}});
+        case EXPAND_BOOK:
+            return update(state, { booksHash: { [action._id]: { $merge: { expanded: true }}}});
+        case COLLAPSE_BOOK:
+            return update(state, { booksHash: { [action._id]: { $merge: { expanded: false }}}});            
+        case DETAILS_LOADED:
+            return update(state, { booksHash: { [action._id]: { $merge: { detailsLoading: false, detailsLoaded: true, editorialReviews: action.editorialReviews, expanded: true }}}});
     }
     return state;
 }
+
 
 function createBooksHash(booksArr){
     let result = {};
@@ -152,7 +157,7 @@ export type booksListType = {
     booksLoading: boolean,
     booksList: IBookDisplay[]
 }
-export const selectBookList = createSelector<booksModuleType, booksListType, boolean, any, any, any>(
+export const selectBookList = createSelector<BooksModuleType, booksListType, boolean, any, any, any>(
     state => state.booksModule.books.booksLoading,
     state => state.booksModule.books.booksHash,
     state => state.app.subjectHash,
@@ -175,7 +180,7 @@ export type bookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
 }
-export const selectBookSelection = createSelector<booksModuleType, bookSelectionType, any, any>(
+export const selectBookSelection = createSelector<BooksModuleType, bookSelectionType, any, any>(
     state => state.booksModule.books.booksHash,
     state => state.booksModule.books.selectedBooks,
     (booksHash, selectedBooks) => {
