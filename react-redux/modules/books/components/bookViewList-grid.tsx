@@ -77,7 +77,7 @@ class BookRowDetails extends Component<{book: IBookDisplay; index: number}, any>
         let backgroundColor = index % 2 ? 'white' : '#f9f9f9';
         return (
             <tr key={'details' + book._id} style={{backgroundColor}}>
-                <td colSpan={11} style={{borderTop: 0, paddingLeft: '50px'}}>
+                <td colSpan={11} style={{borderTop: 0, paddingLeft: '50px', paddingTop: 0, paddingBottom: '15px'}}>
                     {!book.editorialReviews.length 
                         ? <h4 style={{marginTop: 0, marginBottom: 0}}>No editorial reviews for this book</h4>
                         : (
