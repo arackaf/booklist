@@ -131,8 +131,10 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
                             </div> : null
                         }
+                        <h4 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>Hello World</h4>
 
                     </NavBar.Form>
+                    
                     { selectedSubjectsCount ?
                         <NavBar.Nav>
                             <NavBar.Dropdown ignoreContentClick={true} text={selectedSubjectsHeader} id="sel-subjects-dropdown">
