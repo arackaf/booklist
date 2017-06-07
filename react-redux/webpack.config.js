@@ -78,20 +78,21 @@ module.exports = {
         //*********************************** async chunks*************************
 
         //catch all - anything used in more than one place
-        // new webpack.optimize.CommonsChunkPlugin({
-        //     async: 'used-twice',
-        //     minChunks: (module, count) => count >= 2,
-        // }),
+        new webpack.optimize.CommonsChunkPlugin({
+            async: 'used-twice',
+            minChunks: (module, count) => count >= 2,
+        }),
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
-        asyncBundle('book-modal-helpers', { 
-            resources: [
-                'applicationRoot/components/genericLabelSelect', 
-                'applicationRoot/components/customColorPicker', 
-                'util/jscolor'
-            ], 
+        asyncBundle('book-list-modals', {
             nodePaths: ['react-autosuggest', 'react-autowhatever', 'react-themeable', 'section-iterator'] 
-        })
+        }),
+
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     async: 'book-list-modals',
+        //     children: true,
+        //     chunks: ['book-subject-setter', 'book-tag-setter', 'subject-edit-modal', 'tag-edit-modal']
+        // }),
 
     ].filter(p => p),
     devServer: {

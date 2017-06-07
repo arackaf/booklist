@@ -32,31 +32,31 @@ const ManualBookEntry = Loadable({
 });
 
 const BookSubjectSetter = Loadable({
-    loader: () => System.import('./bookSubjectSetter'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookSubjectSetter'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const BookTagSetter = Loadable({
-    loader: () => System.import('./bookTagSetter'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookTagSetter'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const SubjectEditModal = Loadable({
-    loader: () => System.import('./subjectEditModal'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './subjectEditModal'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const TagEditModal = Loadable({
-    loader: () => System.import('./tagEditModal'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './tagEditModal'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const BookSearchModal = Loadable({
-    loader: () => System.import('./bookSearchModal'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookSearchModal'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
