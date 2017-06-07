@@ -4,6 +4,7 @@ import { createElement } from 'react';
 import queryString from 'query-string';
 import ajaxUtil from 'util/ajaxUtil';
 import 'react-loadable';
+import 'immutability-helper';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
