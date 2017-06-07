@@ -49,7 +49,7 @@ export function loadBooks(){
                 booksResp.results = booksResp.results.slice(0, -1);
             }
             window.scrollTo(0, 0);
-            dispatch(booksResults(booksResp, hasMore));
+            dispatch(booksResults(booksResp, hasMore, booksResp.count));
         });
     }
 }
@@ -138,6 +138,6 @@ function executeSetRead(dispatch, ids, value){
     });
 }
 
-export const booksResults = (resp, hasMore) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore });
+export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });
 
 export const toggleCheckAll = () => ({ type: TOGGLE_CHECK_ALL });

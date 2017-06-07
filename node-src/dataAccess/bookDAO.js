@@ -78,7 +78,10 @@ class BookDAO extends DAO {
             let allFields = ['_id', 'title', 'isbn', 'ean', 'pages', 'smallImage', 'mediumImage', 'publicationDate', 'userId', 'subjects', 'authors', 'publisher', 'tags', 'isRead'],
                 project = Object.assign({}, allFields.reduce((hash, key) => (hash[key] = 1, hash), {}), { titleLower: { $toLower: '$title' } });
 
-            return (await db.collection('books').aggregate([{$match: query}, {$project: project}, {$sort: sortObj}, {$skip: skip}, {$limit: limit}]).toArray()).map(adjustForClient);
+            let count = await db.collection('books').find(query).count(),
+                books = (await db.collection('books').aggregate([{$match: query}, {$project: project}, {$sort: sortObj}, {$skip: skip}, {$limit: limit}]).toArray()).map(adjustForClient);
+
+            return {books, count};
         } finally {
             super.dispose(db);
         }

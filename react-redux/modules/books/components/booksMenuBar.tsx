@@ -26,6 +26,7 @@ type bookMenuBarType = entireBookSearchStateType & {
     isPublic: boolean;
     publicBooksHeader: string;
     publicName: string;
+    resultsCount: number;
 }
 
 type bookUtilMenuOptionsType = bookSelectionType & {
@@ -35,6 +36,7 @@ type bookUtilMenuOptionsType = bookSelectionType & {
 const menuBarSelector = (state : BooksModuleType) : bookMenuBarType => {
     return {
         ...selectEntireBookSearchState(state),
+        resultsCount: state.booksModule.books.resultsCount,
         showingMobile: state.app.showingMobile,
         showingDesktop: state.app.showingDesktop,
         booksLoading: state.booksModule.books.booksLoading,
@@ -80,7 +82,9 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
         let {isPublic, publicBooksHeader, publicName} = this.props;
         let booksHeader = isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Your Books';
 
-        let UtilMenu : any = UtilMenuOptions;
+        let UtilMenu : any = UtilMenuOptions,
+            resultsCount = this.props.resultsCount,
+            resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? '' : 's'} found` : '';
 
         //isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Books'
 
@@ -121,7 +125,8 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                         <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapAnchorButton>
                                     </span>
                                     <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
-                                </div> }
+                                </div>
+                            }
                         </div>
 
                         {this.props.showingDesktop ?
@@ -131,7 +136,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
                             </div> : null
                         }
-                        <h4 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>Hello World</h4>
+                        {resultsCount ? <h4 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>{resultsDisplay}</h4> : null}
 
                     </NavBar.Form>
                     
