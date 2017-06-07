@@ -71,6 +71,7 @@ const initialBooksState = {
     booksHash: hashOf<IBookRaw>(),
     booksLoading: false,
     selectedBooks: {},
+    resultsCount: 0,
     reloadOnActivate: false
 };
 export type booksType = typeof initialBooksState;
@@ -80,7 +81,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
         case LOAD_BOOKS:
             return {...state, booksLoading: true, reloadOnActivate: false };
         case LOAD_BOOKS_RESULTS:
-            return {...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books) };
+            return {...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books), resultsCount: action.resultsCount };
         case EDITING_BOOK_SAVED:
             return update(state, { booksHash: { [action.book._id]: { $merge: action.book } } });
         case TOGGLE_SELECT_BOOK:
