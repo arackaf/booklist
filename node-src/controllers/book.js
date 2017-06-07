@@ -33,9 +33,9 @@ class bookController{
     }
     async searchBooks(params){
         let bookDao = new BookDAO(this.request.user ? this.request.user.id : null),
-            bookResults = await bookDao.searchBooks({ ...params });
+            {books, count} = await bookDao.searchBooks({ ...params });
 
-        this.send({ results: bookResults });
+        this.send({ results: books, count });
     }
     async setRead({ _ids, isRead }){
         let bookDao = new BookDAO(this.request.user.id);
