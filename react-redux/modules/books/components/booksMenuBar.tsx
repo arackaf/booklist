@@ -98,11 +98,6 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                         <NavBar.Toggle />
                     </NavBar.Header>
                     <UtilMenu />
-                    <NavBar.Header>
-                        <NavBar.Brand>
-                            <a style={{ cursor: 'default' }}>Filters</a>
-                        </NavBar.Brand>
-                    </NavBar.Header>
                     <NavBar.Form className="navbar-left">
                         <div className="form-group" style={{ marginRight: '5px' }}>
                             {this.props.showingMobile ?
