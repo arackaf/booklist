@@ -4,6 +4,7 @@ import { createElement } from 'react';
 import queryString from 'query-string';
 import ajaxUtil from 'util/ajaxUtil';
 import 'react-loadable';
+import 'immutability-helper';
 
 import {setDesktop, setMobile, setModule, setLoggedIn, setPublicInfo, setRequestDesktop, setIsTouch} from './applicationRoot/rootReducerActionCreators';
 import 'util/ajaxUtil';
@@ -108,13 +109,13 @@ function loadModule(location) {
 
     let modulePromise = (() => {
         switch(module.toLowerCase()){
-            case 'activate': return System.import('./modules/activate/activate');
-            case 'authenticate': return System.import('./modules/authenticate/authenticate');
-            case 'books': return System.import('./modules/books/books');
-            case 'home': return System.import('./modules/home/home');
-            case 'scan': return System.import('./modules/scan/scan');
-            case 'subjects': return System.import('./modules/subjects/subjects');
-            case 'settings': return System.import('./modules/settings/settings');
+            case 'activate': return System.import(/* webpackChunkName: "small-modules" */ './modules/activate/activate');
+            case 'authenticate': return System.import(/* webpackChunkName: "small-modules" */ './modules/authenticate/authenticate');
+            case 'books': return System.import(/* webpackChunkName: "books-module" */ './modules/books/books');
+            case 'home': return System.import(/* webpackChunkName: "home-module" */ './modules/home/home');
+            case 'scan': return System.import(/* webpackChunkName: "scan-module" */ './modules/scan/scan');
+            case 'subjects': return System.import(/* webpackChunkName: "subject-module" */ './modules/subjects/subjects');
+            case 'settings': return System.import(/* webpackChunkName: "small-modules" */ './modules/settings/settings');
         }
     })();
 
