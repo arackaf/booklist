@@ -26,7 +26,7 @@ import {selectBookSearchUiView, bookSearchUiViewType} from '../reducers/bookSear
 import ComponentLoading from 'applicationRoot/components/componentLoading';
 
 const ManualBookEntry = Loadable({
-    loader: () => System.import('applicationRoot/components/manualBookEntry'),
+    loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ 'applicationRoot/components/manualBookEntry'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });

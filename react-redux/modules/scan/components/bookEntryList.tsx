@@ -18,7 +18,7 @@ import {scanReducerType} from 'modules/scan/reducers/reducer';
 declare var webSocketAddress : any;
 
 const ManualBookEntry = Loadable({
-    loader: () => System.import('applicationRoot/components/manualBookEntry'),
+    loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ 'applicationRoot/components/manualBookEntry'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
