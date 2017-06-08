@@ -84,12 +84,7 @@ module.exports = {
         // }),
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
-        asyncBundle('book-modal-helpers', { 
-            resources: [
-                'applicationRoot/components/genericLabelSelect', 
-                'applicationRoot/components/customColorPicker', 
-                'util/jscolor'
-            ], 
+        asyncBundle('book-list-modals', {
             nodePaths: ['react-autosuggest', 'react-autowhatever', 'react-themeable', 'section-iterator'] 
         })
 
