@@ -86,8 +86,6 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
             resultsCount = this.props.resultsCount,
             resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? '' : 's'} found` : '';
 
-        //isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Books'
-
         return (
             <div style={{position: 'sticky', top: 50, zIndex: 499}}>
                 <NavBar ref={el => this.navBar = el} style={{ border: 0, borderRadius: 0 }}>
@@ -185,8 +183,10 @@ class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
     render() {
         return (
             <NavBar.Nav>
-                <NavBar.Item onClick={this.props.editSubjects} disabled={this.props.viewingPublic}>Edit subjects</NavBar.Item>
-                <NavBar.Item onClick={this.props.editTags} disabled={this.props.viewingPublic}>Edit tags</NavBar.Item>
+                <NavBar.Dropdown disabled={this.props.viewingPublic} text='Admin'>
+                    <NavBar.Item onClick={this.props.editSubjects}>Edit subjects</NavBar.Item>
+                    <NavBar.Item onClick={this.props.editTags}>Edit tags</NavBar.Item>
+                </NavBar.Dropdown>
 
                 <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Edit selected books' style={{ marginRight: '5px' }}>
                     <NavBar.Item onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavBar.Item>
