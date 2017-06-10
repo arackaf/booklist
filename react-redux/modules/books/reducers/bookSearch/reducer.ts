@@ -153,6 +153,8 @@ export type entireBookSearchStateType = bookSearchType & bookSearchUiViewType & 
     eligibleFilterSubjects: tagOrSubject[];
     eligibleFilterTags: tagOrSubject[];
     bindableSortValue: any;
+    anyActiveFilters: boolean;
+
 };
 export const selectEntireBookSearchState = createSelector<BooksModuleType, entireBookSearchStateType, tagOrSubject[], tagOrSubject[], tagOrSubject[], tagOrSubject[], bookSearchType, bookSearchUiViewType, tagOrSubject[], tagOrSubject[]>(
     selectSelectedSubjects, 
@@ -167,8 +169,15 @@ export const selectEntireBookSearchState = createSelector<BooksModuleType, entir
 
         let bindableSortValue = !bookSearch.sort ? '_id|desc' : `${bookSearch.sort}|${bookSearch.sortDirection == '1' ? 'asc' : 'desc'}`;
 
+        let filtersToCheckAgainstDefault = ['search', 'author', 'publisher', 'pages', 'isRead'];
+        let anyActiveFilters = filtersToCheckAgainstDefault.find(k => bookSearch[k] != initialState[k]) 
+                || (!!bookSearch.searchChildSubjects != !!initialState.searchChildSubjects)
+                || (Object.keys(bookSearch.tags).length)
+                || (Object.keys(bookSearch.subjects).length);
+
         return {
             ...bookSearch,
+            anyActiveFilters: !!anyActiveFilters,
             selectedSubjects,
             selectedTags,
             pendingSelectedSubjects,

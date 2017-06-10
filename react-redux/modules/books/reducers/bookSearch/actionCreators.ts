@@ -80,6 +80,23 @@ export function applyFilters(){
     }
 }
 
+export function clearAllFilters(){
+    return function(dispatch, getState) {
+        setSearchValues({
+            'page': null,
+            'search': '',
+            'subjects': '',
+            'tags': '',
+            'searchChildSubjects': null,
+            'author': '',
+            'publisher': '',
+            'pagesOperator': null,
+            'pages': '',
+            'isRead': ''
+        });
+    }
+}
+
 export function setSortOrder(sort, direction){
     return function(dispatch, getState){
         setSearchValues({
@@ -166,7 +183,7 @@ function isDirty(oldState, newState){
         return true;
     }
 
-    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
+    return !!['search', 'author', 'publisher', 'pages', 'sort', 'sortDirection', 'isRead'].filter(prop => oldState[prop] != (newState[prop] || '')).length;
 }
 
 const itemsDifferent = (oldItems, newItems) =>
