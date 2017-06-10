@@ -168,7 +168,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                     </li>)
                                 }
 
-                                <NavBar.ItemDivider />
+                                {selectedSubjectsCount || selectedTagsCount ? <NavBar.ItemDivider /> : null}
                                 <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={-1}>
                                     <RemovableLabelDisplay item={removeAllFiltersLabel} doRemove={this.props.clearAllFilters} />
                                 </li>
