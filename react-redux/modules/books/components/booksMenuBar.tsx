@@ -128,7 +128,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
                             </div> : null
                         }
-                        {resultsCount ? <h4 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>{resultsDisplay}</h4> : null}
+                        {resultsCount ? <h5 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>{resultsDisplay}</h5> : null}
 
                     </NavBar.Form>
                     
@@ -200,7 +200,7 @@ class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
                     <NavBar.Item onClick={this.props.editTags}>Edit tags</NavBar.Item>
                 </NavBar.Dropdown>
 
-                <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Edit selected books' style={{ marginRight: '5px' }}>
+                <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Selected books' style={{ marginRight: '5px' }}>
                     <NavBar.Item onClick={this.props.enableSubjectModificationToggledBooks}>Set subjects</NavBar.Item>
                     <NavBar.Item onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavBar.Item>
                     <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
