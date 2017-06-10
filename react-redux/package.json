@@ -43,7 +43,7 @@
     "redux": "3.6.0",
     "redux-thunk": "2.2.0",
     "reselect": "2.0.1",
-    "simple-react-bootstrap": "0.1.21",
+    "simple-react-bootstrap": "0.2.7",
     "ts-loader": "2.0.3",
     "typescript": "2.3.4",
     "webpack": "2.6.1"
