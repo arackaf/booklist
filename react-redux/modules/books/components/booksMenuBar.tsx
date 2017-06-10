@@ -73,12 +73,17 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
             selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
             selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
-        let {isPublic, publicBooksHeader, publicName} = this.props;
+        let {isPublic, publicBooksHeader, publicName, anyActiveFilters} = this.props;
         let booksHeader = isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Your Books';
 
         let UtilMenu : any = UtilMenuOptions,
             resultsCount = this.props.resultsCount,
-            resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? '' : 's'} found` : '';
+            resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? '' : 's'} found` : '',
+            removeAllFiltersLabel = {
+                backgroundColor: 'red',
+                textColor: 'white',
+                name: 'Remove all filters'
+            };
 
         return (
             <div style={{position: 'sticky', top: 50, zIndex: 499}}>
@@ -127,9 +132,9 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
 
                     </NavBar.Form>
                     
-                    {selectedSubjectsCount || selectedTagsCount ? 
+                    {anyActiveFilters ? 
                         <NavBar.Nav>
-                            <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={'Quick filters'} id="sel-subjects-dropdown">
+                            <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={'Quick filters'}>
                                 {selectedSubjectsCount ? (
                                     <li style={{padding: '3px 20px'}}>
                                         <span>Subjects</span>
@@ -151,7 +156,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                         </span>
                                     </li> : null
                                 }
-                                {selectedTagsCount ? <NavBar.ItemDivider /> : null}
+                                {selectedSubjectsCount && selectedTagsCount ? <NavBar.ItemDivider /> : null}
                                 {selectedTagsCount ? (
                                     <li style={{padding: '3px 20px'}}>
                                         <span>Tags</span>
@@ -162,6 +167,13 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                         <RemovableLabelDisplay item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
                                     </li>)
                                 }
+
+                                <NavBar.ItemDivider />
+                                <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={-1}>
+                                    <RemovableLabelDisplay item={removeAllFiltersLabel} doRemove={this.props.clearAllFilters} />
+                                </li>
+
+                                <li style={{height: '5px'}}></li>
                                 
                             </NavBar.Dropdown>
                         </NavBar.Nav> : null
