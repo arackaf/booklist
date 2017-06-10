@@ -56,12 +56,6 @@ const utilMenuOptionsSelector = (state) : bookUtilMenuOptionsType => {
 @connect(menuBarSelector, { ...bookSearchActionCreators })
 export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators, any> {
     navBar: any
-    removeFilterSubject(_id){
-        this.props.removeFilterSubject(_id);
-    }
-    removeFilterTag(_id) {
-        this.props.removeFilterTag(_id);
-    }
     sortChanged(evt){
         let value = evt.target.value,
             [sort, direction] = value.split('|');
@@ -133,17 +127,23 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
 
                     </NavBar.Form>
                     
-                    { selectedSubjectsCount ?
+                    {selectedSubjectsCount || selectedTagsCount ? 
                         <NavBar.Nav>
-                            <NavBar.Dropdown ignoreContentClick={true} text={selectedSubjectsHeader} id="sel-subjects-dropdown">
+                            <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={'Quick filters'} id="sel-subjects-dropdown">
+                                {selectedSubjectsCount ? (
+                                    <li style={{padding: '3px 20px'}}>
+                                        <span>Subjects</span>
+                                    </li>
+                                ) : null}
+
                                 { this.props.selectedSubjects.map(s =>
                                     <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={s._id}>
-                                        <RemovableLabelDisplay item={s} doRemove={() => this.removeFilterSubject(s._id)} />
-                                    </li>)
-                                }
+                                        <RemovableLabelDisplay item={s} doRemove={() => this.props.removeFilterSubject(s._id)} />
+                                    </li>
+                                )}
 
-                                { !!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
-                                { !!this.props.searchChildSubjects ?
+                                {!!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
+                                {!!this.props.searchChildSubjects ?
                                     <li style={{paddingLeft: '20px', paddingRight: '20px', marginTop: '-5px'}} className="default-cursor no-hover">
                                         <span style={{ color: 'white' }}  className={'label label-primary'}>
                                             <a onClick={this.props.clearSearchChildSubjects} style={{ color: 'white', cursor: 'pointer' }}>X</a>
@@ -151,18 +151,18 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                         </span>
                                     </li> : null
                                 }
-                            </NavBar.Dropdown>
-                        </NavBar.Nav> : null
-                    }
-
-                    { selectedTagsCount ?
-                        <NavBar.Nav>
-                            <NavBar.Dropdown ignoreContentClick={true} text={selectedTagsHeader} id="sel-tags-dropdown">
+                                {selectedTagsCount ? <NavBar.ItemDivider /> : null}
+                                {selectedTagsCount ? (
+                                    <li style={{padding: '3px 20px'}}>
+                                        <span>Tags</span>
+                                    </li>
+                                ) : null}
                                 { this.props.selectedTags.map(t =>
                                     <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={t._id}>
-                                        <RemovableLabelDisplay item={t} doRemove={() => this.removeFilterTag(t._id)} />
+                                        <RemovableLabelDisplay item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
                                     </li>)
                                 }
+                                
                             </NavBar.Dropdown>
                         </NavBar.Nav> : null
                     }
