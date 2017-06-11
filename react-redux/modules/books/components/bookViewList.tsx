@@ -100,6 +100,10 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, 
 
 @connect(mainSelector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
 export default class BookViewingList extends Component<mainSelectorType & actionsType, any> {
+    state = { navBarHeight: null }
+    navBarSized = (contentRect) => {
+        this.setState({navBarHeight: contentRect.client.height});
+    }
     render() {
         let editingBook = this.props.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
@@ -108,7 +112,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
             <div style={{position: 'relative'}}>
                 {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null }
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar />
+                    <BooksMenuBar navBarSized={this.navBarSized} />
                     <div className="panel-body" style={{ padding: 0, minHeight: 450, position: 'relative' }}>
 
                         {(!this.props.booksList.length && !this.props.booksLoading) ?
@@ -117,7 +121,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.isGridView ? <GridView />
+                            (this.props.isGridView ? <GridView navBarHeight={this.state.navBarHeight} />
                                 : this.props.isBasicList ? <BasicListView />
                                 : null) : null }
 

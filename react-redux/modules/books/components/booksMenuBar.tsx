@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {findDOMNode} from 'react-dom'
 import { connect } from 'react-redux';
 import {NavBar} from 'simple-react-bootstrap';
 
@@ -18,6 +19,7 @@ import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
 import {BooksModuleType} from 'modules/books/reducers/reducer';
+import Measure from 'react-measure'
 
 type bookMenuBarType = entireBookSearchStateType & {
     showingMobile: boolean;
@@ -49,12 +51,12 @@ const menuBarSelector = (state : BooksModuleType) : bookMenuBarType => {
 const utilMenuOptionsSelector = (state) : bookUtilMenuOptionsType => {
     return {
         ...selectBookSelection(state),
-        viewingPublic: state.app.isPublic        
+        viewingPublic: state.app.isPublic
     };
 }
 
 @connect(menuBarSelector, { ...bookSearchActionCreators })
-export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators, any> {
+export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators  & {navBarSized: Function}, any> {
     navBar: any
     sortChanged(evt){
         let value = evt.target.value,
@@ -86,100 +88,104 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
             };
 
         return (
-            <div style={{position: 'sticky', top: 50, zIndex: 499}}>
-                <NavBar ref={el => this.navBar = el} style={{ border: 0, borderRadius: 0 }}>
-                    <NavBar.Header>
-                        <NavBar.Brand>
-                            <a style={{ cursor: 'default' }}>{booksHeader}</a>
-                        </NavBar.Brand>
-                        <NavBar.Toggle />
-                    </NavBar.Header>
-                    <UtilMenu />
-                    <NavBar.Form className="navbar-left">
-                        <div className="form-group" style={{ marginRight: '5px' }}>
-                            {this.props.showingMobile ?
-                                <div>
-                                    <BootstrapAnchorButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapAnchorButton>
+            <Measure client={true} onResize={this.props.navBarSized}>
+                {({measureRef}) => (
+                    <div ref={measureRef} style={{position: 'sticky', top: 50, zIndex: 499}}>
+                        <NavBar ref={el => this.navBar = el} style={{ border: 0, borderRadius: 0 }}>
+                            <NavBar.Header>
+                                <NavBar.Brand>
+                                    <a style={{ cursor: 'default' }}>{booksHeader}</a>
+                                </NavBar.Brand>
+                                <NavBar.Toggle />
+                            </NavBar.Header>
+                            <UtilMenu />
+                            <NavBar.Form className="navbar-left">
+                                <div className="form-group" style={{ marginRight: '5px' }}>
+                                    {this.props.showingMobile ?
+                                        <div>
+                                            <BootstrapAnchorButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapAnchorButton>
 
-                                    <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
+                                            <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
 
-                                    <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
-                                        <option value="title|asc">Title A-Z</option>
-                                        <option value="title|desc">Title Z-A</option>
-                                        <option value="pages|asc">Pages, Low</option>
-                                        <option value="pages|desc">Pages, High</option>
-                                        <option value="_id|asc">Created, Earliest</option>
-                                        <option value="_id|desc">Created, Latest</option>
-                                    </select>
+                                            <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
+                                                <option value="title|asc">Title A-Z</option>
+                                                <option value="title|desc">Title Z-A</option>
+                                                <option value="pages|asc">Pages, Low</option>
+                                                <option value="pages|desc">Pages, High</option>
+                                                <option value="_id|asc">Created, Earliest</option>
+                                                <option value="_id|desc">Created, Latest</option>
+                                            </select>
+                                        </div>
+                                        : <div className="input-group">
+                                            <span className="input-group-btn">
+                                                <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Filter</BootstrapAnchorButton>
+                                            </span>
+                                            <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" style={{width: '150px'}} />
+                                        </div>
+                                    }
                                 </div>
-                                : <div className="input-group">
-                                    <span className="input-group-btn">
-                                        <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Full search</BootstrapAnchorButton>
-                                    </span>
-                                    <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" />
-                                </div>
+
+                                {this.props.showingDesktop ?
+                                    <div className="btn-group" role="group">
+                                        <button type="button" onClick={this.props.setViewDesktop} className={'btn btn-default ' + (this.props.isGridView ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
+                                        <button type="button" onClick={this.props.setViewBasicList} className={'btn btn-default ' + (this.props.isBasicList ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
+                                        { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
+                                    </div> : null
+                                }
+                                {resultsCount ? <h5 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>{resultsDisplay}</h5> : null}
+
+                            </NavBar.Form>
+                            
+                            {anyActiveFilters ? 
+                                <NavBar.Nav>
+                                    <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={'Quick filters'}>
+                                        {selectedSubjectsCount ? (
+                                            <li style={{padding: '3px 20px'}}>
+                                                <span>Subjects</span>
+                                            </li>
+                                        ) : null}
+
+                                        { this.props.selectedSubjects.map(s =>
+                                            <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={s._id}>
+                                                <RemovableLabelDisplay item={s} doRemove={() => this.props.removeFilterSubject(s._id)} />
+                                            </li>
+                                        )}
+
+                                        {!!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
+                                        {!!this.props.searchChildSubjects ?
+                                            <li style={{paddingLeft: '20px', paddingRight: '20px', marginTop: '-5px'}} className="default-cursor no-hover">
+                                                <span style={{ color: 'white' }}  className={'label label-primary'}>
+                                                    <a onClick={this.props.clearSearchChildSubjects} style={{ color: 'white', cursor: 'pointer' }}>X</a>
+                                                    <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>Searching child subjects</span>
+                                                </span>
+                                            </li> : null
+                                        }
+                                        {selectedSubjectsCount && selectedTagsCount ? <NavBar.ItemDivider /> : null}
+                                        {selectedTagsCount ? (
+                                            <li style={{padding: '3px 20px'}}>
+                                                <span>Tags</span>
+                                            </li>
+                                        ) : null}
+                                        { this.props.selectedTags.map(t =>
+                                            <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={t._id}>
+                                                <RemovableLabelDisplay item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
+                                            </li>)
+                                        }
+
+                                        {selectedSubjectsCount || selectedTagsCount ? <NavBar.ItemDivider /> : null}
+                                        <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={-1}>
+                                            <RemovableLabelDisplay item={removeAllFiltersLabel} doRemove={this.props.clearAllFilters} />
+                                        </li>
+
+                                        <li style={{height: '5px'}}></li>
+                                        
+                                    </NavBar.Dropdown>
+                                </NavBar.Nav> : null
                             }
-                        </div>
-
-                        {this.props.showingDesktop ?
-                            <div className="btn-group" role="group">
-                                <button type="button" onClick={this.props.setViewDesktop} className={'btn btn-default ' + (this.props.isGridView ? 'active' : '')}><i className="fa fa-fw fa-table"></i></button>
-                                <button type="button" onClick={this.props.setViewBasicList} className={'btn btn-default ' + (this.props.isBasicList ? 'active' : '')}><i className="fa fa-fw fa-list"></i></button>
-                                { 0 ? <button type="button" className="btn btn-default"><i className="fa fa-fw fa-th"></i></button> : null }
-                            </div> : null
-                        }
-                        {resultsCount ? <h5 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>{resultsDisplay}</h5> : null}
-
-                    </NavBar.Form>
-                    
-                    {anyActiveFilters ? 
-                        <NavBar.Nav>
-                            <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={'Quick filters'}>
-                                {selectedSubjectsCount ? (
-                                    <li style={{padding: '3px 20px'}}>
-                                        <span>Subjects</span>
-                                    </li>
-                                ) : null}
-
-                                { this.props.selectedSubjects.map(s =>
-                                    <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={s._id}>
-                                        <RemovableLabelDisplay item={s} doRemove={() => this.props.removeFilterSubject(s._id)} />
-                                    </li>
-                                )}
-
-                                {!!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null }
-                                {!!this.props.searchChildSubjects ?
-                                    <li style={{paddingLeft: '20px', paddingRight: '20px', marginTop: '-5px'}} className="default-cursor no-hover">
-                                        <span style={{ color: 'white' }}  className={'label label-primary'}>
-                                            <a onClick={this.props.clearSearchChildSubjects} style={{ color: 'white', cursor: 'pointer' }}>X</a>
-                                            <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: '1px solid white' }}>Searching child subjects</span>
-                                        </span>
-                                    </li> : null
-                                }
-                                {selectedSubjectsCount && selectedTagsCount ? <NavBar.ItemDivider /> : null}
-                                {selectedTagsCount ? (
-                                    <li style={{padding: '3px 20px'}}>
-                                        <span>Tags</span>
-                                    </li>
-                                ) : null}
-                                { this.props.selectedTags.map(t =>
-                                    <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={t._id}>
-                                        <RemovableLabelDisplay item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
-                                    </li>)
-                                }
-
-                                {selectedSubjectsCount || selectedTagsCount ? <NavBar.ItemDivider /> : null}
-                                <li style={{padding: '3px 20px'}} className="default-cursor no-hover" key={-1}>
-                                    <RemovableLabelDisplay item={removeAllFiltersLabel} doRemove={this.props.clearAllFilters} />
-                                </li>
-
-                                <li style={{height: '5px'}}></li>
-                                
-                            </NavBar.Dropdown>
-                        </NavBar.Nav> : null
-                    }
-                </NavBar>
-            </div>
+                        </NavBar>
+                    </div>
+                )}
+            </Measure>
         )
     }
 }
