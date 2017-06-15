@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, CSSProperties} from 'react';
 import { connect } from 'react-redux';
 
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
@@ -116,7 +116,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
         let {navBarHeight} = this.props;
-        let stickyHeaderStyle : any = {position: 'sticky', top: 50 + navBarHeight, backgroundColor: 'white' };
+        let stickyHeaderStyle : CSSProperties = {position: 'sticky', top: 50 + navBarHeight, backgroundColor: 'white' };
 
         return (
             <div style={{ minHeight: 400 }}>

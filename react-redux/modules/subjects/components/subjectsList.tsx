@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, CSSProperties} from 'react';
 import {connect} from 'react-redux';
 import {editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector} from 'modules/subjects/reducers/reducer';
 import {subjectChildMapSelector, topLevelSubjectsSortedSelector, getChildSubjectsSorted} from 'applicationRoot/rootReducer';
@@ -35,7 +35,7 @@ class SubjectDragLayer extends Component<{currentlyDragging: string} & dragLayer
         if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
         let {x, y} = currentOffset;
 
-        const parentStyles : any = {
+        const parentStyles : CSSProperties = {
             position: 'fixed',
             pointerEvents: 'none',
             zIndex: 100,
