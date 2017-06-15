@@ -116,7 +116,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
         let {navBarHeight} = this.props;
-        let stickyHeaderStyle = {position: 'sticky', top: 50 + navBarHeight, backgroundColor: 'white' };
+        let stickyHeaderStyle : any = {position: 'sticky', top: 50 + navBarHeight, backgroundColor: 'white' };
 
         return (
             <div style={{ minHeight: 400 }}>

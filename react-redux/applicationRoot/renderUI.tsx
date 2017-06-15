@@ -33,8 +33,9 @@ export function clearUI(){
 }
 
 export function renderUI(component){
+    let s : any = store;
     render(
-        <Provider store={store}>
+        <Provider store={s}>
             <div>
                 <MobileMeta />
                 <MainNavigationBar />
