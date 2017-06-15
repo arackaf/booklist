@@ -35,7 +35,7 @@ class SubjectDragLayer extends Component<{currentlyDragging: string} & dragLayer
         if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
         let {x, y} = currentOffset;
 
-        const parentStyles = {
+        const parentStyles : any = {
             position: 'fixed',
             pointerEvents: 'none',
             zIndex: 100,

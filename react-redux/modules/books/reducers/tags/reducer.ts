@@ -26,7 +26,8 @@ const initialTagsState = {
     editingTag: null,
     editingTagId: null,
     deleting: false,
-    deletingTagId: null
+    deletingTagId: null,
+    saving: false
 };
 
 export type tagsType = typeof initialTagsState;
