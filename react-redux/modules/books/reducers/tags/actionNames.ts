@@ -3,5 +3,4 @@ export const LOAD_TAGS = 'LOAD_TAGS';
 export const LOAD_TAGS_RESULTS = 'LOAD_TAGS_RESULTS';
 
 export const UPDATE_TAG_RESULTS = 'UPDATE_TAG_RESULTS';
-export const TAG_DELETING = 'TAG_DELETING';
 export const TAG_DELETED = 'TAG_DELETED';
