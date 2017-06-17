@@ -4,9 +4,7 @@ import {
     LOAD_TAGS, 
     LOAD_TAGS_RESULTS, 
     UPDATE_TAG, 
-    UPDATE_TAG_RESULTS, 
-    BEGIN_TAG_DELETE, 
-    CANCEL_TAG_DELETE, 
+    UPDATE_TAG_RESULTS,
     TAG_DELETING, 
     TAG_DELETED
 } from './actionNames';
@@ -35,10 +33,6 @@ export function tagsReducer(state = initialTagsState, action) : tagsType {
             return { ...state, tagHash: tagsToHash(action.tags), loaded: true };
         case UPDATE_TAG_RESULTS:
             return { ...state, tagHash: { ...state.tagHash, ...tagsToHash([action.tag]) } };
-        case BEGIN_TAG_DELETE:
-            return { ...state, deletingTagId: action._id };
-        case CANCEL_TAG_DELETE:
-            return { ...state, deletingTagId: null };
         case TAG_DELETING:
             return { ...state, deleting: true };
         case TAG_DELETED:
@@ -80,37 +74,17 @@ function allTagssSorted(tagHash){
     });
 }
 
-type deletingTagInfoType = {
-    deleteInfo: {
-        tagName: string,
-        _id: string
-    }
-}
-const selectDeletingTagInfo = createSelector<BooksModuleType, deletingTagInfoType, object, string>(
-    state => state.booksModule.tags.tagHash,
-    state => state.booksModule.tags.deletingTagId,
-    (tagHash, deletingTagId) => {
-        if (!deletingTagId) return null;
-
-        let tagName = tagHash[deletingTagId].name;
-
-        return { deleteInfo: { tagName, _id: deletingTagId } };
-    }
-);
-
-export type EntireTagsStateType = tagsType & deletingTagInfoType & allTagsSortedType & {
+export type EntireTagsStateType = tagsType & allTagsSortedType & {
     colors: object[]
 }
 
-export const selectEntireTagsState = createSelector<BooksModuleType, EntireTagsStateType, allTagsSortedType, tagsType, object[], deletingTagInfoType>(
+export const selectEntireTagsState = createSelector<BooksModuleType, EntireTagsStateType, allTagsSortedType, tagsType, object[]>(
     selectAllTagsSorted,
     state => state.booksModule.tags,
     state => state.app.colors, 
-    selectDeletingTagInfo,
-    (allTagsSorted, tags, colors, deletingInfo) => ({
+    (allTagsSorted, tags, colors) => ({
         ...allTagsSorted,
         ...tags,
-        ...deletingInfo,
         colors
     })
 );

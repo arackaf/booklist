@@ -33,7 +33,8 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
         editingTag: null,
         editingTagName: '',
         tagSearch: '',
-        searchedTags: this.props.allTagsSorted
+        searchedTags: this.props.allTagsSorted,
+        deletingId: ''
     }
 
     setTagSearch = value => this.setState({
@@ -57,9 +58,12 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
     tagName: any
     render(){
         let props = this.props,
-            {deleteInfo, onDone, editTagOpen} = props,
-            {editingTag, editingTagName, tagSearch} = this.state,
+            {tagHash, onDone, editTagOpen} = props,
+            {editingTag, editingTagName, tagSearch, deletingId} = this.state,
             textColors = ['#ffffff', '#000000'];
+
+        let deletingTag = deletingId ? tagHash[deletingId] : null,
+            deleteInfo = deletingTag ? {_id: deletingTag._id, name: deletingTag.name} : null;
 
         return (
             <Modal className="fade" show={!!editTagOpen} onHide={onDone}>
@@ -90,7 +94,7 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                         <div className="panel panel-info">
                             <div className="panel-heading">
                                 { editingTag._id ? `Edit ${editingTagName}` : 'New Tag' }
-                                { editingTag && editingTag._id ? <BootstrapButton onClick={e => props.beginDeleteTag(editingTag._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
+                                { editingTag && editingTag._id ? <BootstrapButton onClick={e => this.setState({deletingId: editingTag._id})} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                             </div>
                             <div className="panel-body">
                                 <div>
@@ -98,7 +102,7 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                                         <TagEditDeleteInfo
                                             {...deleteInfo}
                                             deleting={props.deleting}
-                                            cancelDeleteTag={props.cancelDeleteTag}
+                                            cancelDeleteTag={() => this.setState({deletingId: ''})}
                                             deleteTag={props.deleteTag} /> : null }
                                     <div className="row">
                                         <div className="col-xs-6">
