@@ -9,19 +9,6 @@ import {selectEntireTagsState, TagsStateType, filterTags} from '../reducers/tags
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
-const TagEditDeleteInfo = props =>
-    <div className="row">
-        <div className="col-xs-12">
-            <h4>Delete tag { props.tagName }</h4>
-
-            <div style={{ marginTop: '5px'}}>
-                <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteTag(props._id)} preset="danger-sm">Delete</AjaxButton>
-                <BootstrapAnchorButton onClick={props.cancelDeleteTag} deleting={props.deleting} runningText="Deleting..." preset="default-sm" className="pull-right">Cancel</BootstrapAnchorButton>
-            </div>
-            <hr />
-        </div>
-    </div>;
-
 interface ILocalProps {
     onDone: any,
     editTagOpen: boolean
@@ -117,13 +104,18 @@ export default class TagEditModal extends Component<TagsStateType & ILocalProps 
                             </div>
                             <div className="panel-body">
                                 <div>
-                                    { deleteInfo ?
-                                        <TagEditDeleteInfo
-                                            _id={deleteInfo._id}
-                                            tagName={this.state.editingTagName}
-                                            deleting={deleting}
-                                            cancelDeleteTag={() => this.setState({deletingId: ''})}
-                                            deleteTag={this.deleteTag} /> : null }
+                                    {deleteInfo ?
+                                        <div className="row">
+                                            <div className="col-xs-12">
+                                                <h4>Delete tag {editingTagName}</h4>
+
+                                                <div style={{ marginTop: '5px'}}>
+                                                    <AjaxButton running={deleting} runningText="Deleting" onClick={this.deleteTag} preset="danger-sm">Delete</AjaxButton>
+                                                    <BootstrapAnchorButton onClick={() => this.setState({deletingId: ''})} deleting={deleting} runningText="Deleting..." preset="default-sm" className="pull-right">Cancel</BootstrapAnchorButton>
+                                                </div>
+                                                <hr />
+                                            </div>
+                                        </div> : null}
                                     <div className="row">
                                         <div className="col-xs-6">
                                             <div className="form-group">
