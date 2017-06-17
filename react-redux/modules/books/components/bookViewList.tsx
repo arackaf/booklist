@@ -66,7 +66,6 @@ type mainSelectorType = editBookType & bookSearchUiViewType & booksListType & {
     subjectsLoaded: boolean;
     subjectEditModalOpen: boolean;
     tagsLoaded: boolean;
-    tagEditModalOpen: boolean;
     editingBookSearchFilters: boolean;
     subjectsBooksModifyingCount: number;
     tagsBooksModifyingCount: number;
@@ -88,7 +87,6 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, 
             ...editBook,
             subjectEditModalOpen: subjects.editModalOpen,
             tagsLoaded: tags.loaded,
-            tagEditModalOpen: tags.editTagOpen,
             editingBookSearchFilters: bookSearch.editingFilters,
             ...books,
             ...bookSearchUi,
@@ -100,7 +98,10 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, 
 
 @connect(mainSelector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
 export default class BookViewingList extends Component<mainSelectorType & actionsType, any> {
-    state = { navBarHeight: null }
+    state = { navBarHeight: null, tagEditModalOpen: false }
+    editTags = () => this.setState({tagEditModalOpen: true});
+    stopEditingTags = () => this.setState({tagEditModalOpen: false});
+    
     navBarSized = (contentRect) => {
         this.setState({navBarHeight: contentRect.client.height});
     }
@@ -112,7 +113,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
             <div style={{position: 'relative'}}>
                 {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null }
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar navBarSized={this.navBarSized} />
+                    <BooksMenuBar editTags={this.editTags} navBarSized={this.navBarSized} />
                     <div className="panel-body" style={{ padding: 0, minHeight: 450, position: 'relative' }}>
 
                         {(!this.props.booksList.length && !this.props.booksLoading) ?
@@ -147,7 +148,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                 {this.props.tagsBooksModifyingCount ? <BookTagSetter /> : null}
 
                 {this.props.subjectEditModalOpen ? <SubjectEditModal /> : null}
-                {this.props.tagEditModalOpen ? <TagEditModal /> : null}
+                {this.state.tagEditModalOpen ? <TagEditModal editTagOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
                 {this.props.editingBookSearchFilters ? <BookSearchModal /> : null}
             </div>
         );

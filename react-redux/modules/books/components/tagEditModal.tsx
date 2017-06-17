@@ -5,7 +5,7 @@ import { Modal } from 'simple-react-bootstrap';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import {selectEntireTagsState, entireTagsStateType} from '../reducers/tags/reducer';
+import {selectEntireTagsState, EntireTagsStateType} from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
@@ -22,23 +22,43 @@ const TagEditDeleteInfo = props =>
         </div>
     </div>;
 
+interface ILocalProps {
+    onDone: any,
+    editTagOpen: boolean
+}
+
 @connect(selectEntireTagsState, { ...actionCreators })
-export default class TagEditModal extends Component<entireTagsStateType & typeof actionCreators, any> {
+export default class TagEditModal extends Component<EntireTagsStateType & ILocalProps & typeof actionCreators, any> {
+    state = {
+        editingTag: null,
+        editingTagName: ''
+    }
+    newTag = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' });
+    editTag = tag => this.startEditing(tag);
+    startEditing = tag => this.setState({editingTag: tag, editingTagName: tag.name});
+    cancelTagEdit = () => this.setState({editingTag: null});
+
+    setNewTagName = value => this.setEditingValue('name', value);
+    setNewTagBackgroundColor = value => this.setEditingValue('backgroundColor', value);
+    setNewTagTextColor = value => this.setEditingValue('textColor', value);
+    setEditingValue = (name, value) => this.setState(({editingTag}) => ({ editingTag: {...editingTag, [name]: value} }));
+    
+    tagName: any
     render(){
         let props = this.props,
-            deleteInfo = props.deleteInfo,
-            editingTag = props.editingTag,
+            {deleteInfo, onDone, editTagOpen} = props,
+            {editingTag, editingTagName} = this.state,
             textColors = ['#ffffff', '#000000'];
 
         return (
-            <Modal className="fade" show={!!props.editTagOpen} onHide={props.stopEditingTags}>
+            <Modal className="fade" show={!!editTagOpen} onHide={onDone}>
                 <Modal.Header>
-                    <button type="button" className="close" onClick={props.stopEditingTags} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" className="close" onClick={onDone} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Edit tags</h4>
                 </Modal.Header>
                 <Modal.Body style={{ paddingBottom: 0 }}>
                     <div className="visible-xs">
-                        <BootstrapButton onClick={props.newTag} preset="info-xs">Add new tag <i className="fa fa-fw fa-plus"></i></BootstrapButton>
+                        <BootstrapButton onClick={this.newTag} preset="info-xs">Add new tag <i className="fa fa-fw fa-plus"></i></BootstrapButton>
                         <br />
                         <br />
                     </div>
@@ -47,10 +67,10 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
                             <GenericLabelSelect
                                 inputProps={{ placeholder: 'Edit tag', value: props.tagSearch, onChange: props.setTagSearchValue }}
                                 suggestions={props.tagsSearched}
-                                onSuggestionSelected={item => props.editTag(item._id)} />
+                                onSuggestionSelected={item => this.editTag(item)} />
                         </div>
                         <div className="col-xs-1" style={{ padding: 0 }}>
-                            <BootstrapButton className="hidden-xs" onClick={props.newTag} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
+                            <BootstrapButton className="hidden-xs" onClick={this.newTag} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
                         </div>
                     </div>
                     <br />
@@ -58,7 +78,7 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
                     { editingTag ?
                         <div className="panel panel-info">
                             <div className="panel-heading">
-                                { editingTag ? `Edit ${editingTag.name}` : 'New Tag' }
+                                { editingTag._id ? `Edit ${editingTagName}` : 'New Tag' }
                                 { editingTag && editingTag._id ? <BootstrapButton onClick={e => props.beginDeleteTag(editingTag._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                             </div>
                             <div className="panel-body">
@@ -73,15 +93,15 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
                                         <div className="col-xs-6">
                                             <div className="form-group">
                                                 <label>Tag name</label>
-                                                <input className="form-control" value={editingTag.name} onChange={(e: any) => props.setNewTagName(e.target.value)} />
+                                                <input className="form-control" value={editingTag.name} onChange={evt => this.setNewTagName(evt.target.value)} />
                                             </div>
                                         </div>
                                         <div className="col-xs-9">
                                             <div className="form-group">
                                                 <label>Label color</label>
                                                 <div>
-                                                    <ColorsPalette currentColor={editingTag.backgroundColor} colors={props.colors} onColorChosen={props.setNewTagBackgroundColor} />
-                                                    <CustomColorPicker onColorChosen={props.setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
+                                                    <ColorsPalette currentColor={editingTag.backgroundColor} colors={props.colors} onColorChosen={this.setNewTagBackgroundColor} />
+                                                    <CustomColorPicker onColorChosen={this.setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
                                                 </div>
                                             </div>
                                         </div>
@@ -89,7 +109,7 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
                                             <div className="form-group">
                                                 <label>Text color</label>
                                                 <div>
-                                                    <ColorsPalette colors={textColors} onColorChosen={props.setNewTagTextColor} />
+                                                    <ColorsPalette colors={textColors} onColorChosen={this.setNewTagTextColor} />
                                                 </div>
                                             </div>
                                         </div>
@@ -103,7 +123,7 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
                                     <br style={{ clear: 'both' }} />
 
                                     <a className="btn btn-primary" onClick={e => { props.createOrUpdateTag(); e.preventDefault();} }>Save</a>
-                                    <a className="btn btn-default pull-right" onClick={props.cancelTagEdit}>Cancel</a>
+                                    <a className="btn btn-default pull-right" onClick={this.cancelTagEdit}>Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +131,7 @@ export default class TagEditModal extends Component<entireTagsStateType & typeof
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <BootstrapButton onClick={props.stopEditingTags}>Close</BootstrapButton>
+                    <BootstrapButton onClick={onDone}>Close</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         )

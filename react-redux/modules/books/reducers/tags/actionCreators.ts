@@ -1,7 +1,14 @@
 import {
-    LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
-    STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, LOAD_COLORS, CANCEL_TAG_EDIT,
-    BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
+    LOAD_TAGS, 
+    LOAD_TAGS_RESULTS, 
+    UPDATE_TAG, 
+    UPDATE_TAG_RESULTS, 
+    LOAD_COLORS,
+    BEGIN_TAG_DELETE, 
+    CANCEL_TAG_DELETE, 
+    TAG_DELETING, 
+    TAG_DELETED, 
+    SET_TAG_SEARCH_VALUE
 } from './actionNames';
 
 import ajaxUtil from 'util/ajaxUtil';
@@ -20,38 +27,6 @@ export function loadTags(){
 
 export function setTagSearchValue(value){
     return { type: SET_TAG_SEARCH_VALUE, value: value.target.value };
-}
-
-export function editTags(){
-    return { type: EDIT_TAGS };
-}
-
-export function setNewTagName(value){
-    return { type: SET_NEW_TAG_VALUE, field: 'name', value };
-}
-
-export function setNewTagBackgroundColor(value){
-    return { type: SET_NEW_TAG_VALUE, field: 'backgroundColor', value };
-}
-
-export function setNewTagTextColor(value){
-    return { type: SET_NEW_TAG_VALUE, field: 'textColor', value };
-}
-
-export function stopEditingTags(){
-    return { type: STOP_EDITING_TAGS };
-}
-
-export function editTag(_id){
-    return { type: EDIT_TAG, _id };
-}
-
-export function newTag(){
-    return { type: NEW_TAG };
-}
-
-export function cancelTagEdit(){
-    return { type: CANCEL_TAG_EDIT };
 }
 
 export function createOrUpdateTag(){
