@@ -8,7 +8,7 @@ import {
 } from './actionNames';
 
 import {appType} from 'applicationRoot/rootReducer';
-import {selectAllTagsSorted, allTagsSortedType, filterTags} from '../tags/reducer';
+import {selectEntireTagsState, TagsStateType, filterTags} from '../tags/reducer';
 
 const bookTagManagerInitialState = {
     singleBookModify: null,
@@ -65,11 +65,11 @@ type addingTagsType = {
     addingTags: any[];
     eligibleToAdd: any[];
 }
-const selectAddingTags = createSelector<BooksModuleType, addingTagsType, any, any, any, allTagsSortedType>(
+const selectAddingTags = createSelector<BooksModuleType, addingTagsType, any, any, any, TagsStateType>(
     ({ booksModule }) => booksModule.booksTagsModifier.addingTags,
     ({ booksModule }) => booksModule.booksTagsModifier.addingTagSearch,
     ({ booksModule }) => booksModule.tags.tagHash,
-    selectAllTagsSorted,
+    selectEntireTagsState,
     (adding, addingTagSearch, tags, tagsSelected) => ({
         addingTags: Object.keys(adding).filter(_id => adding[_id]).map(_id => tags[_id]),
         eligibleToAdd: filterTags(tagsSelected.allTagsSorted.filter(s => !adding[s._id]), addingTagSearch)
@@ -80,11 +80,11 @@ type removingTagsType = {
     removingTags: any[];
     eligibleToRemove: any[];
 }
-const selectRemovingTags = createSelector<any, removingTagsType, any, any, any, allTagsSortedType>(
+const selectRemovingTags = createSelector<any, removingTagsType, any, any, any, TagsStateType>(
     ({ booksModule }) => booksModule.booksTagsModifier.removingTags,
     ({ booksModule }) => booksModule.booksTagsModifier.removingTagSearch,
     ({ booksModule }) => booksModule.tags.tagHash,
-    selectAllTagsSorted,
+    selectEntireTagsState,
     (removing, removingTagSearch, tags, tagsSelected) => ({
         removingTags: Object.keys(removing).filter(_id => removing[_id]).map(_id => tags[_id]),
         eligibleToRemove: filterTags(tagsSelected.allTagsSorted.filter(s => !removing[s._id]), removingTagSearch)
@@ -98,12 +98,12 @@ export type entireBooksTagModificationStateType = addingTagsType & removingTagsT
     addingTagSearch: string;
     removingTagSearch: string;
 }
-export const selectEntireBooksTagModificationState = createSelector<BooksModuleType, entireBooksTagModificationStateType, booksTagModificationType, modifyingBooksType, addingTagsType, removingTagsType, allTagsSortedType>(
+export const selectEntireBooksTagModificationState = createSelector<BooksModuleType, entireBooksTagModificationStateType, booksTagModificationType, modifyingBooksType, addingTagsType, removingTagsType, TagsStateType>(
     state => state.booksModule.booksTagsModifier,
     selectModifyingBooks,
     selectAddingTags,
     selectRemovingTags,
-    selectAllTagsSorted,
+    selectEntireTagsState,
     (booksTagsModifier, modifyingBooks, { addingTags, eligibleToAdd }, { removingTags, eligibleToRemove }, tagsState) => {
         return {
             settingBooksTags: booksTagsModifier.settingBooksTags,

@@ -3,7 +3,6 @@ import {
     LOAD_TAGS_RESULTS, 
     UPDATE_TAG_RESULTS, 
     LOAD_COLORS,
-    TAG_DELETING, 
     TAG_DELETED
 } from './actionNames';
 
@@ -32,9 +31,7 @@ export function createOrUpdateTag(editingTag){
 
 export function deleteTag(_id){
     return function(dispatch, getState) {
-        let request = { _id: _id + '' };
-        dispatch({ type: TAG_DELETING });
-        ajaxUtil.post('/tag/delete', request, resp => {
+        return ajaxUtil.post('/tag/delete', { _id: _id + '' }, resp => {
             dispatch({ type: TAG_DELETED, _id });
         });
     }

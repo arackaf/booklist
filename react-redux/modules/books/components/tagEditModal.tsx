@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'simple-react-bootstrap';
 
-import BootstrapButton, {AjaxButton, AjaxButtonAnchor} from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, {AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import {selectEntireTagsState, EntireTagsStateType, filterTags} from '../reducers/tags/reducer';
+import {selectEntireTagsState, TagsStateType, filterTags} from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
@@ -16,7 +16,7 @@ const TagEditDeleteInfo = props =>
 
             <div style={{ marginTop: '5px'}}>
                 <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteTag(props._id)} preset="danger-sm">Delete</AjaxButton>
-                <BootstrapButton onClick={props.cancelDeleteTag} preset="default-sm" className="pull-right">Cancel</BootstrapButton>
+                <BootstrapAnchorButton onClick={props.cancelDeleteTag} deleting={props.deleting} runningText="Deleting..." preset="default-sm" className="pull-right">Cancel</BootstrapAnchorButton>
             </div>
             <hr />
         </div>
@@ -28,13 +28,14 @@ interface ILocalProps {
 }
 
 @connect(selectEntireTagsState, { ...actionCreators })
-export default class TagEditModal extends Component<EntireTagsStateType & ILocalProps & typeof actionCreators, any> {
+export default class TagEditModal extends Component<TagsStateType & ILocalProps & typeof actionCreators, any> {
     state = {
         editingTag: null,
         editingTagName: '',
         tagSearch: '',
         deletingId: '',
-        saving: false
+        saving: false,
+        deleting: false
     }
 
     setTagSearch = value => this.setState({tagSearch: value});
@@ -62,12 +63,21 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                 this.setState({saving: false});
             })
     }
+    deleteTag = () => {
+        this.setState({deleting: true});
+        Promise
+            .resolve(this.props.deleteTag(this.state.editingTag._id))
+            .then(() => {
+                this.setState({deleting: false})
+                this.cancelTagEdit();
+            });
+    }
     
     tagName: any
     render(){
         let props = this.props,
             {tagHash, onDone, editTagOpen} = props,
-            {editingTag, editingTagName, tagSearch, deletingId} = this.state,
+            {editingTag, editingTagName, tagSearch, deletingId, deleting} = this.state,
             textColors = ['#ffffff', '#000000'];
 
         let deletingTag = deletingId ? tagHash[deletingId] : null,
@@ -109,10 +119,11 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                                 <div>
                                     { deleteInfo ?
                                         <TagEditDeleteInfo
-                                            {...deleteInfo}
-                                            deleting={props.deleting}
+                                            _id={deleteInfo._id}
+                                            tagName={this.state.editingTagName}
+                                            deleting={deleting}
                                             cancelDeleteTag={() => this.setState({deletingId: ''})}
-                                            deleteTag={props.deleteTag} /> : null }
+                                            deleteTag={this.deleteTag} /> : null }
                                     <div className="row">
                                         <div className="col-xs-6">
                                             <div className="form-group">
