@@ -9,6 +9,7 @@ import {
 
 import { createSelector, Selector } from 'reselect';
 import {appType} from 'applicationRoot/rootReducer';
+import update from 'immutability-helper';
 
 interface ITag {
     _id: string;
@@ -29,9 +30,7 @@ export function tagsReducer(state = initialTagsState, action) : tagsType {
         case UPDATE_TAG_RESULTS:
             return { ...state, tagHash: { ...state.tagHash, ...tagsToHash([action.tag]) } };
         case TAG_DELETED:
-            let tagHash = { ...state.tagHash };
-            delete tagHash[action._id];
-            return { ... state, tagHash };
+            return update(state, {tagHash: {$unset: [action._id]}})
     }
     return state;
 }
