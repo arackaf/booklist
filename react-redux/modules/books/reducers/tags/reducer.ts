@@ -2,8 +2,7 @@ import {hashOf} from 'applicationRoot/rootReducer';
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
 import {
     LOAD_TAGS, 
-    LOAD_TAGS_RESULTS, 
-    UPDATE_TAG, 
+    LOAD_TAGS_RESULTS,
     UPDATE_TAG_RESULTS,
     TAG_DELETING, 
     TAG_DELETED
@@ -63,7 +62,6 @@ export const selectAllTagsSorted = createSelector<BooksModuleType, allTagsSorted
         return { allTagsSorted };
     }
 );
-
 
 function allTagssSorted(tagHash){
     let tags = Object.keys(tagHash).map(_id => tagHash[_id]);

@@ -1,7 +1,6 @@
 import {
     LOAD_TAGS, 
     LOAD_TAGS_RESULTS, 
-    UPDATE_TAG, 
     UPDATE_TAG_RESULTS, 
     LOAD_COLORS,
     TAG_DELETING, 
@@ -22,12 +21,12 @@ export function loadTags(){
     }
 }
 
-export function createOrUpdateTag(){
+export function createOrUpdateTag(editingTag){
     return function(dispatch, getState) {
-        let { _id, name, backgroundColor, textColor } = getState().booksModule.tags.editingTag,
+        let { _id, name, backgroundColor, textColor } = editingTag,
             request = { _id: _id || null, name, backgroundColor, textColor };
 
-        ajaxUtil.post('/tag/setInfo', request, resp => dispatch({ type: UPDATE_TAG_RESULTS, tag: resp.tag }));
+        return ajaxUtil.post('/tag/setInfo', request, resp => dispatch({ type: UPDATE_TAG_RESULTS, tag: resp.tag }));
     }
 }
 
