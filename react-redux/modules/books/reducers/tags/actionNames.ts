@@ -2,12 +2,6 @@ export const LOAD_COLORS = 'LOAD_COLORS_TAGS';
 export const LOAD_TAGS = 'LOAD_TAGS';
 export const LOAD_TAGS_RESULTS = 'LOAD_TAGS_RESULTS';
 
-export const EDIT_TAG = 'EDIT_TAG';
-export const NEW_TAG = 'NEW_TAG';
-export const EDIT_TAGS = 'EDIT_TAGS';
-export const SET_NEW_TAG_VALUE = 'SET_NEW_TAG_VALUE';
-export const STOP_EDITING_TAGS = 'STOP_EDITING_TAGS';
-export const CANCEL_TAG_EDIT = 'CANCEL_TAG_EDIT';
 export const UPDATE_TAG = 'UPDATE_TAG';
 export const UPDATE_TAG_RESULTS = 'UPDATE_TAG_RESULTS';
 export const CLEAR_TAG_MODIFICATION_TAGS = 'CLEAR_TAG_MODIFICATION_TAGS';
