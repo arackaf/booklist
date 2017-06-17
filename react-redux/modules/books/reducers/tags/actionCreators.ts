@@ -7,8 +7,7 @@ import {
     BEGIN_TAG_DELETE, 
     CANCEL_TAG_DELETE, 
     TAG_DELETING, 
-    TAG_DELETED, 
-    SET_TAG_SEARCH_VALUE
+    TAG_DELETED
 } from './actionNames';
 
 import ajaxUtil from 'util/ajaxUtil';
@@ -23,10 +22,6 @@ export function loadTags(){
             dispatch({type: LOAD_TAGS_RESULTS, tags: tagsResp.results});
         });
     }
-}
-
-export function setTagSearchValue(value){
-    return { type: SET_TAG_SEARCH_VALUE, value: value.target.value };
 }
 
 export function createOrUpdateTag(){
