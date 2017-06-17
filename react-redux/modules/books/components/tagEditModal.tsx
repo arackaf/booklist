@@ -5,7 +5,7 @@ import { Modal } from 'simple-react-bootstrap';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import {selectEntireTagsState, EntireTagsStateType} from '../reducers/tags/reducer';
+import {selectEntireTagsState, EntireTagsStateType, filterTags} from '../reducers/tags/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
@@ -31,10 +31,21 @@ interface ILocalProps {
 export default class TagEditModal extends Component<EntireTagsStateType & ILocalProps & typeof actionCreators, any> {
     state = {
         editingTag: null,
-        editingTagName: ''
+        editingTagName: '',
+        tagSearch: '',
+        searchedTags: this.props.allTagsSorted
     }
+
+    setTagSearch = value => this.setState({
+        tagSearch: value,
+        searchedTags: filterTags(this.props.allTagsSorted, value)
+    });
+
     newTag = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' });
-    editTag = tag => this.startEditing(tag);
+    editTag = tag => {
+        this.startEditing(tag);
+        this.setTagSearch('');
+    }
     startEditing = tag => this.setState({editingTag: tag, editingTagName: tag.name});
     cancelTagEdit = () => this.setState({editingTag: null});
 
@@ -47,7 +58,7 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
     render(){
         let props = this.props,
             {deleteInfo, onDone, editTagOpen} = props,
-            {editingTag, editingTagName} = this.state,
+            {editingTag, editingTagName, tagSearch} = this.state,
             textColors = ['#ffffff', '#000000'];
 
         return (
@@ -65,8 +76,8 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                     <div className="row">
                         <div className="col-xs-11">
                             <GenericLabelSelect
-                                inputProps={{ placeholder: 'Edit tag', value: props.tagSearch, onChange: props.setTagSearchValue }}
-                                suggestions={props.tagsSearched}
+                                inputProps={{ placeholder: 'Edit tag', value: tagSearch, onChange: evt => this.setTagSearch(evt.target.value) }}
+                                suggestions={this.state.searchedTags}
                                 onSuggestionSelected={item => this.editTag(item)} />
                         </div>
                         <div className="col-xs-1" style={{ padding: 0 }}>
