@@ -4,8 +4,6 @@ import {
     UPDATE_TAG, 
     UPDATE_TAG_RESULTS, 
     LOAD_COLORS,
-    BEGIN_TAG_DELETE, 
-    CANCEL_TAG_DELETE, 
     TAG_DELETING, 
     TAG_DELETED
 } from './actionNames';
@@ -31,14 +29,6 @@ export function createOrUpdateTag(){
 
         ajaxUtil.post('/tag/setInfo', request, resp => dispatch({ type: UPDATE_TAG_RESULTS, tag: resp.tag }));
     }
-}
-
-export function beginDeleteTag(_id){
-    return { type: BEGIN_TAG_DELETE, _id };
-}
-
-export function cancelDeleteTag(){
-    return { type: CANCEL_TAG_DELETE };
 }
 
 export function deleteTag(_id){
