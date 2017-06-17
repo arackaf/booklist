@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'simple-react-bootstrap';
 
-import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, {AjaxButton, AjaxButtonAnchor} from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/tags/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import {selectEntireTagsState, EntireTagsStateType, filterTags} from '../reducers/tags/reducer';
@@ -33,17 +33,14 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
         editingTag: null,
         editingTagName: '',
         tagSearch: '',
-        searchedTags: this.props.allTagsSorted,
-        deletingId: ''
+        deletingId: '',
+        saving: false
     }
 
-    setTagSearch = value => this.setState({
-        tagSearch: value,
-        searchedTags: filterTags(this.props.allTagsSorted, value)
-    });
+    setTagSearch = value => this.setState({tagSearch: value});
 
     newTag = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' });
-    editTag = tag => {
+    editTag = tag => {        
         this.startEditing(tag);
         this.setTagSearch('');
     }
@@ -54,6 +51,17 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
     setNewTagBackgroundColor = value => this.setEditingValue('backgroundColor', value);
     setNewTagTextColor = value => this.setEditingValue('textColor', value);
     setEditingValue = (name, value) => this.setState(({editingTag}) => ({ editingTag: {...editingTag, [name]: value} }));
+
+    createOrUpdateTag = () => {
+        this.setState({saving: true});
+        Promise
+            .resolve(this.props.createOrUpdateTag(this.state.editingTag))
+            .then(() => {
+                this.cancelTagEdit();
+                this.setTagSearch('');
+                this.setState({saving: false});
+            })
+    }
     
     tagName: any
     render(){
@@ -63,7 +71,8 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
             textColors = ['#ffffff', '#000000'];
 
         let deletingTag = deletingId ? tagHash[deletingId] : null,
-            deleteInfo = deletingTag ? {_id: deletingTag._id, name: deletingTag.name} : null;
+            deleteInfo = deletingTag ? {_id: deletingTag._id, name: deletingTag.name} : null,
+            searchedTags = filterTags(this.props.allTagsSorted, this.state.tagSearch);
 
         return (
             <Modal className="fade" show={!!editTagOpen} onHide={onDone}>
@@ -81,7 +90,7 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                         <div className="col-xs-11">
                             <GenericLabelSelect
                                 inputProps={{ placeholder: 'Edit tag', value: tagSearch, onChange: evt => this.setTagSearch(evt.target.value) }}
-                                suggestions={this.state.searchedTags}
+                                suggestions={searchedTags}
                                 onSuggestionSelected={item => this.editTag(item)} />
                         </div>
                         <div className="col-xs-1" style={{ padding: 0 }}>
@@ -137,7 +146,7 @@ export default class TagEditModal extends Component<EntireTagsStateType & ILocal
                                     </div>
                                     <br style={{ clear: 'both' }} />
 
-                                    <a className="btn btn-primary" onClick={e => { props.createOrUpdateTag(); e.preventDefault();} }>Save</a>
+                                    <AjaxButtonAnchor className="btn btn-primary" running={this.state.saving} runningText={'Saving...'} onClick={this.createOrUpdateTag}>Save</AjaxButtonAnchor>
                                     <a className="btn btn-default pull-right" onClick={this.cancelTagEdit}>Cancel</a>
                                 </div>
                             </div>
