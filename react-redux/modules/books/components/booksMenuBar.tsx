@@ -57,7 +57,8 @@ const utilMenuOptionsSelector = (state) : bookUtilMenuOptionsType => {
 
 interface IAddedMenuProps {
     navBarSized: Function,
-    editTags: any
+    editTags: any,
+    editSubjects: any,
 }
 
 @connect(menuBarSelector, { ...bookSearchActionCreators })
@@ -80,7 +81,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
             selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
             selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
-        let {isPublic, publicBooksHeader, publicName, anyActiveFilters, editTags} = this.props;
+        let {isPublic, publicBooksHeader, publicName, anyActiveFilters, editTags, editSubjects} = this.props;
         let booksHeader = isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Your Books';
 
         let UtilMenu : any = UtilMenuOptions,
@@ -103,7 +104,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 </NavBar.Brand>
                                 <NavBar.Toggle />
                             </NavBar.Header>
-                            <UtilMenu editTags={editTags} />
+                            <UtilMenu editSubjects={editSubjects} editTags={editTags} />
                             <NavBar.Form className="navbar-left">
                                 <div className="form-group" style={{ marginRight: '5px' }}>
                                     {this.props.showingMobile ?
@@ -201,7 +202,7 @@ type utilMenuOptionsComponentType = bookUtilMenuOptionsType &
                                     typeof booksSubjectModificationActionCreators & 
                                     typeof booksTagModificationActionCreators &
                                     typeof tagsActionCreators & 
-                                    {editTags : any}
+                                    {editTags : any, editSubjects: any}
 @connect(utilMenuOptionsSelector, { ...booksActionCreators, ...subjectsActionCreators, ...booksSubjectModificationActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
 class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
     render() {

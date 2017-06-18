@@ -4,9 +4,7 @@ import { createSelector } from 'reselect';
 import {
     EDIT_SUBJECT,
     NEW_SUBJECT,
-    EDIT_SUBJECTS,
     SET_NEW_SUBJECT_VALUE,
-    STOP_EDITING_SUBJECTS,
     UPDATE_SUBJECT,
     CANCEL_SUBJECT_EDIT,
     BEGIN_SUBJECT_DELETE,
@@ -23,7 +21,6 @@ const initialSubjectsState = {
     editingSubjectId: null,
     deletingSubjectId: null,
     editingSubject: null,
-    editModalOpen: false,
     saving: false,
     deleting: false,
     subjectSearch: ''
@@ -37,8 +34,6 @@ const doneEditingSubject = { saving: false, editingSubjectId: null, editingSubje
 
 export function subjectsReducer(state = initialSubjectsState, action){
     switch(action.type){
-        case EDIT_SUBJECTS:
-            return Object.assign({}, state, { editModalOpen: true });
         case SET_SUBJECT_SEARCH_VALUE:
             return Object.assign({}, state, { subjectSearch: action.value });
         case NEW_SUBJECT:
@@ -65,8 +60,6 @@ export function subjectsReducer(state = initialSubjectsState, action){
             return newState;
         case CANCEL_SUBJECT_EDIT:
             return Object.assign({}, state, { ...doneEditingSubject });
-        case STOP_EDITING_SUBJECTS:
-            return Object.assign({}, state, { editModalOpen: false });
     }
     return state;
 }
@@ -137,8 +130,7 @@ export type entireSubjectsStateType = searchedSubjectsType & eligibleSubjectsTyp
     editingSubject: any;
     deletingSubjectId: string;
     saving: boolean;
-    deleting: boolean;    
-    editModalOpen: any;
+    deleting: boolean;
     colors: any[];
 }
 export const selectEntireSubjectsState = createSelector<BooksModuleType, entireSubjectsStateType, appType, subjectsType, searchedSubjectsType, eligibleSubjectsType, deletingSubjectInfoType>(
@@ -156,7 +148,6 @@ export const selectEntireSubjectsState = createSelector<BooksModuleType, entireS
             deletingSubjectId: subjects.deletingSubjectId,
             saving: subjects.saving,
             deleting: subjects.deleting,
-            editModalOpen: subjects.editModalOpen,
             ...search,
             ...eligible,
             ...deleting
