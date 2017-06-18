@@ -131,7 +131,7 @@ export const stackAndGetTopLevelSubjects = subjectsHash => {
     return subjects.filter(s => s.path == null);
 };
 
-export const computeParentId = path => {
+export const computeSubjectParentId = path => {
     if (path){
         let pathParts = path.split(',');
         return pathParts[pathParts.length - 2];

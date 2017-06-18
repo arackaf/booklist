@@ -1,10 +1,10 @@
 import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
-import { createSelector } from 'reselect';
+import {createSelector} from 'reselect';
 
 import {
     UPDATE_SUBJECT,
 } from './actionNames';
-import {appType, subjectType} from 'applicationRoot/rootReducer';
+import {appType, subjectType, hashOf} from 'applicationRoot/rootReducer';
 
 import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects} from 'applicationRoot/rootReducer';
 
@@ -12,7 +12,7 @@ export type stackedSubjectsType = {
     subjects: subjectType[];
     allSubjectsSorted: subjectType[];
     subjectsUnwound: subjectType[];
-
+    subjectHash: {[s: string]: subjectType}
 }
 export const selectStackedSubjects = createSelector<BooksModuleType, stackedSubjectsType, any>(
     state => state.app.subjectHash,
@@ -23,7 +23,8 @@ export const selectStackedSubjects = createSelector<BooksModuleType, stackedSubj
         return {
             subjects: mainSubjectsCollection,
             allSubjectsSorted: allSubjectsSorted(subjectHash),
-            subjectsUnwound: subjectsUnwound
+            subjectsUnwound: subjectsUnwound,
+            subjectHash
         };
     }
 );

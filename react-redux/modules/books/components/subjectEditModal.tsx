@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { Modal } from 'simple-react-bootstrap';
-
+import {connect} from 'react-redux';
+import {Modal} from 'simple-react-bootstrap';
+const {createSelector} = require('reselect');
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { selectEntireSubjectsState, entireSubjectsStateType, filterSubjects } from '../reducers/subjects/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
+import {computeSubjectParentId, getEligibleParents} from 'applicationRoot/rootReducer';
 
 const SubjectEditDeleteInfo = props => {
     let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;
@@ -40,6 +41,19 @@ interface ILocalProps {
 
 @connect(selectEntireSubjectsState, { ...actionCreators })
 export default class SubjectEditModal extends Component<entireSubjectsStateType & ILocalProps & typeof actionCreators, any>{
+    currentEligibleParents: any;
+    constructor(props) {
+        super(props);
+
+        this.currentEligibleParents = createSelector(
+            state => state.subjectHash,
+            state => state.editingSubject,
+            (hash, subject) => {
+                return subject && subject._id ? getEligibleParents(hash, subject._id) : []
+            }
+        )
+    }
+
     state = {
         editingSubject: null,
         editingSubjectName: '',
@@ -52,7 +66,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
     setSubjectSearch = value => this.setState({subjectSearch: value});
 
     newSubject = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' });
-    editSubject = subject => {        
+    editSubject = subject => {
         this.startEditing(subject);
         this.setSubjectSearch('');
     }
@@ -88,7 +102,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
     render(){
         let props = this.props,
             {editingSubject, subjectSearch, deletingId, deleting, saving} = this.state,
-            eligibleParents = [],
+            eligibleParents = this.currentEligibleParents({subjectHash: props.subjectHash, editingSubject}),
             textColors = ['#ffffff', '#000000'],
             searchedSubjects = filterSubjects(props.allSubjectsSorted, this.state.subjectSearch);
 
@@ -109,7 +123,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                             <GenericLabelSelect
                                 inputProps={{ placeholder: 'Edit subject', value: subjectSearch, onChange: evt => this.setSubjectSearch(evt.target.value) }}
                                 suggestions={searchedSubjects}
-                                onSuggestionSelected={item => this.editSubject(item._id)} />
+                                onSuggestionSelected={item => this.editSubject(item)} />
 
                         </div>
                         <div className="col-xs-1" style={{ padding: 0 }}>
@@ -119,7 +133,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
 
                     <br />
 
-                    { editingSubject ?
+                    {editingSubject ?
                         <div className="panel panel-info">
                             <div className="panel-heading">
                                 { editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }

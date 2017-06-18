@@ -23,7 +23,7 @@ import {
     SAVE_SUBJECT_RESULTS
 } from 'applicationRoot/rootReducerActionNames'
 
-import {unwindSubjects, computeParentId, getAllDescendantsOfSubject} from 'applicationRoot/rootReducer';
+import {unwindSubjects, computeSubjectParentId, getAllDescendantsOfSubject} from 'applicationRoot/rootReducer';
 
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject: saveSubjectRoot, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
@@ -44,7 +44,7 @@ export const subjectDraggingOver = targetId => (dispatch, getState) => {
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 export const beginSubjectEdit = _id => (dispatch, getState) =>{
     let subject = {...getState().app.subjectHash[_id]};
-    subject.parentId = computeParentId(subject.path);
+    subject.parentId = computeSubjectParentId(subject.path);
     dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
 };
 
@@ -66,7 +66,7 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
         request._id = null;
     }
 
-    let oldParentId = original.pending ? '' : computeParentId(getState().app.subjectHash[_id].path);
+    let oldParentId = original.pending ? '' : computeSubjectParentId(getState().app.subjectHash[_id].path);
     let subjectsSavingHash;
     if (oldParentId != subject.parentId){
         subjectsSavingHash = toIdHash(unwindSubjects([original]))
