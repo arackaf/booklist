@@ -152,7 +152,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                 {this.props.tagsBooksModifyingCount ? <BookTagSetter /> : null}
 
                 {this.state.subjectEditModalOpen ? <SubjectEditModal editModalOpen={this.state.subjectEditModalOpen} stopEditing={this.stopEditingSubjects} /> : null}
-                {this.state.tagEditModalOpen ? <TagEditModal editTagOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
+                {this.state.tagEditModalOpen ? <TagEditModal editModalOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
                 {this.props.editingBookSearchFilters ? <BookSearchModal /> : null}
             </div>
         );

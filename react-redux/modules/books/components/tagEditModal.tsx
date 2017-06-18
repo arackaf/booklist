@@ -11,7 +11,7 @@ import ColorsPalette from 'applicationRoot/components/colorsPalette';
 
 interface ILocalProps {
     onDone: any,
-    editTagOpen: boolean
+    editModalOpen: boolean
 }
 
 @connect(selectEntireTagsState, { ...actionCreators })
@@ -63,7 +63,7 @@ export default class TagEditModal extends Component<TagsStateType & ILocalProps 
     tagName: any
     render(){
         let props = this.props,
-            {tagHash, onDone, editTagOpen} = props,
+            {tagHash, onDone, editModalOpen} = props,
             {editingTag, editingTagName, tagSearch, deletingId, deleting} = this.state,
             textColors = ['#ffffff', '#000000'];
 
@@ -72,7 +72,7 @@ export default class TagEditModal extends Component<TagsStateType & ILocalProps 
             searchedTags = filterTags(this.props.allTagsSorted, this.state.tagSearch);
 
         return (
-            <Modal className="fade" show={!!editTagOpen} onHide={onDone}>
+            <Modal className="fade" show={!!editModalOpen} onHide={onDone}>
                 <Modal.Header>
                     <button type="button" className="close" onClick={onDone} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Edit tags</h4>

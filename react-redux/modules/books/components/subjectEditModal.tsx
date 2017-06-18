@@ -50,7 +50,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
             <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditing}>
                 <Modal.Header>
                     <button type="button" className="close" onClick={props.stopEditing} aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 className="modal-title">Full search</h4>
+                    <h4 className="modal-title">Edit Subjects</h4>
                 </Modal.Header>
                 <Modal.Body style={{ paddingBottom: 0 }}>
                     <div className="visible-xs">
