@@ -7,7 +7,7 @@ import {
     ADDING_SUBJECT_SET, REMOVING_SUBJECT_SET, RESET_SUBJECTS
 } from './actionNames';
 
-import { filterSubjects, selectStackedSubjects, stackedSubjectsType } from '../subjects/reducer';
+import { filterSubjects, selectStackedSubjects, StackedSubjectsType } from '../subjects/reducer';
 
 const bookSubjectManagerInitialState = {
     singleBookModify: null,
@@ -63,7 +63,7 @@ type addingSubjectsType = {
     addingSubjects: any[];
     eligibleToAdd: any[];
 }
-const selectAddingSubjects = createSelector<BooksModuleType, addingSubjectsType, any, any, any, stackedSubjectsType>(
+const selectAddingSubjects = createSelector<BooksModuleType, addingSubjectsType, any, any, any, StackedSubjectsType>(
     state => state.booksModule.booksSubjectsModifier.addingSubjects,
     state => state.booksModule.booksSubjectsModifier.addingSubjectSearch,
     state => state.app.subjectHash,
@@ -78,7 +78,7 @@ type removingSubjectsType = {
     removingSubjects: any[];
     eligibleToRemove: any[];
 }
-const selectRemovingSubjects = createSelector<BooksModuleType, removingSubjectsType, any, any, any, stackedSubjectsType>(
+const selectRemovingSubjects = createSelector<BooksModuleType, removingSubjectsType, any, any, any, StackedSubjectsType>(
     state => state.booksModule.booksSubjectsModifier.removingSubjects,
     state => state.booksModule.booksSubjectsModifier.removingSubjectSearch,
     state => state.app.subjectHash,
@@ -97,7 +97,7 @@ export type entireBooksSubjectsModificationStateType = addingSubjectsType & remo
     addingSubjectSearch: string;
     removingSubjectSearch: string;
 }
-export const selectEntireBooksSubjectsModificationState = createSelector<BooksModuleType, entireBooksSubjectsModificationStateType, booksSubjectMofificationType, modifyingBooksType, addingSubjectsType, removingSubjectsType, stackedSubjectsType>(
+export const selectEntireBooksSubjectsModificationState = createSelector<BooksModuleType, entireBooksSubjectsModificationStateType, booksSubjectMofificationType, modifyingBooksType, addingSubjectsType, removingSubjectsType, StackedSubjectsType>(
     state => state.booksModule.booksSubjectsModifier,
     selectModifyingBooks,
     selectAddingSubjects,
