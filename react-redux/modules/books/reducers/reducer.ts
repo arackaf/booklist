@@ -1,7 +1,6 @@
 import {appType} from 'applicationRoot/rootReducer';
 import { combineReducers } from 'redux';
 import { booksReducer as books, booksType} from './books/reducer';
-import { subjectsReducer as subjects, subjectsType } from './subjects/reducer';
 import { tagsReducer as tags, tagsType } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchType, selectEntireBookSearchState } from './bookSearch/reducer';
 import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectMofificationType, selectEntireBooksSubjectsModificationState } from './booksSubjectModification/reducer';
@@ -14,7 +13,6 @@ export {bookSearchType};
 export {booksSubjectMofificationType};
 export {booksTagModificationType};
 export {editBookType};
-export {subjectsType};
 export {tagsType};
 
 
@@ -25,7 +23,6 @@ export type BooksModuleType = {
     app: appType;
     booksModule: {
         books: booksType;
-        subjects: subjectsType;
         bookSearch: bookSearchType;
         booksSubjectsModifier: booksSubjectMofificationType;
         booksTagsModifier: booksTagModificationType;
@@ -36,7 +33,6 @@ export type BooksModuleType = {
 
 export const reducer = combineReducers({
     books,
-    subjects,
     bookSearch,
     booksSubjectsModifier,
     booksTagsModifier,
