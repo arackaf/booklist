@@ -1,34 +1,87 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
-import { selectEntireBooksSubjectsModificationState, entireBooksSubjectsModificationStateType } from '../reducers/booksSubjectModification/reducer';
-import * as bookSubjectModificationActionCreators from '../reducers/booksSubjectModification/actionCreators';
 
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
-type componentType = entireBooksSubjectsModificationStateType & typeof bookSubjectModificationActionCreators;
+import {setBooksSubjects} from 'modules/books/reducers/books/actionCreators'; 
+import {selectStackedSubjects, StackedSubjectsType} from 'modules/books/reducers/subjects/reducer'; 
+import {createSelector} from 'reselect';
 
-@connect(selectEntireBooksSubjectsModificationState, { ...bookSubjectModificationActionCreators })
-export default class BookSubjectSetter extends Component<componentType, any> {
-    state = { currentTab: 'subjects' };
+interface ILocalProps {
+    modifyingBooks: any[];
+    onDone: any;
+}
+
+@connect(selectStackedSubjects, {setBooksSubjects})
+export default class BookSubjectSetter extends Component<StackedSubjectsType & {setBooksSubjects} & ILocalProps, any> {
+    eligibleToAdd : any;
+    eligibleToRemove: any;
+    constructor(props) {
+        super(props);
+        
+        this.eligibleToAdd = (createSelector as any)(
+            state => state.subjectsUnwound,
+            state => state.addingSubjects,
+            (subjects, adding) => {
+                let addingHash = adding.reduce((hash, _id) => (hash[_id] = true, hash), {});
+                return subjects.filter(s => !addingHash[s._id]);
+            }
+        );
+
+        this.eligibleToRemove = (createSelector as any)(
+            state => state.subjectsUnwound,
+            state => state.removingSubjects,
+            (subjects, removing) => {
+                let addingHash = removing.reduce((hash, _id) => (hash[_id] = true, hash), {});
+                return subjects.filter(s => !addingHash[s._id]);
+            }
+        )        
+    }
+    state = { 
+        currentTab: 'subjects',
+        addingSubjects: [],
+        removingSubjects: [],
+        addingSubjectSearch: '',
+        removingSubjectSearch: '',
+        saving: false
+    };
     setBooksSubjects(){
-        this.props.setBooksSubjects(
-            this.props.modifyingBooks.map(b => b._id),
-            this.props.addingSubjects.map(s => s._id),
-            this.props.removingSubjects.map(s => s._id));
+        this.setState({saving: true});
+        Promise.resolve(
+            this.props.setBooksSubjects(
+                this.props.modifyingBooks.map(b => b._id),
+                this.state.addingSubjects,
+                this.state.removingSubjects
+            )
+        ).then(() => this.setState({saving: false}));
+    }
+    addingSubjectSet = (adding, {_id}) => {
+        this.setState({addingSubjects: adding ? this.state.addingSubjects.concat(_id) : this.state.addingSubjects.filter(x => x != _id)});
+    }
+    removingSubjectSet = (adding, {_id}) => {
+        this.setState({removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id)});
+    }
+    resetSubjects(){
+
     }
     render(){
-        let subjectSelectedToAdd = this.props.addingSubjectSet.bind(null, true),
-            subjectSelectedToRemove = this.props.removingSubjectSet.bind(null, true);
+        let subjectSelectedToAdd = this.addingSubjectSet.bind(null, true),
+            subjectSelectedToRemove = this.removingSubjectSet.bind(null, true);
 
-        let dontAddSubject = this.props.addingSubjectSet.bind(null, false),
-            dontRemoveSubject = this.props.removingSubjectSet.bind(null, false);
+        let dontAddSubject = this.addingSubjectSet.bind(null, false),
+            dontRemoveSubject = this.removingSubjectSet.bind(null, false);
+
+        let eligibleToAdd = this.eligibleToAdd({subjectsUnwound: this.props.subjectsUnwound, addingSubjects: this.state.addingSubjects}),
+            eligibleToRemove = this.eligibleToRemove({subjectsUnwound: this.props.subjectsUnwound, removingSubjects: this.state.removingSubjects});
+
+        let props = this.props;
 
         return (
-            <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.cancelBookSubjectModification}>
+            <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.onDone}>
                 <Modal.Header>
-                    <button type="button" className="close" onClick={this.props.cancelBookSubjectModification} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" className="close" onClick={this.props.onDone} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Edit subjects:</h4>
                 </Modal.Header>
                 <Modal.Body>
@@ -47,13 +100,13 @@ export default class BookSubjectSetter extends Component<componentType, any> {
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Adding', value: this.props.addingSubjectSearch, onChange: this.props.addingSubjectSearchValueChange }}
-                                        suggestions={this.props.eligibleToAdd}
+                                        inputProps={{ placeholder: 'Adding', value: this.state.addingSubjectSearch, onChange: evt => this.setState({addingSubjectSearch: evt.target.value}) }}
+                                        suggestions={eligibleToAdd}
                                         onSuggestionSelected={subjectSelectedToAdd} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.addingSubjects.map((s, i) =>
+                                        { this.state.addingSubjects.map(_id => props.subjectHash[_id]).map((s : any, i) =>
                                             <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
@@ -66,13 +119,13 @@ export default class BookSubjectSetter extends Component<componentType, any> {
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Removing', value: this.props.removingSubjectSearch, onChange: this.props.removingSubjectSearchValueChange }}
-                                        suggestions={this.props.eligibleToRemove}
+                                        inputProps={{ placeholder: 'Removing', value: this.state.removingSubjectSearch, onChange: evt => this.setState({removingSubjectSearch: evt.target.value}) }}
+                                        suggestions={eligibleToRemove}
                                         onSuggestionSelected={subjectSelectedToRemove} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.props.removingSubjects.map((s, i) =>
+                                        { this.state.removingSubjects.map((s, i) =>
                                             <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
                                             </span>) }
@@ -81,7 +134,7 @@ export default class BookSubjectSetter extends Component<componentType, any> {
                             </div>
 
                             <br />
-                            <BootstrapButton onClick={this.props.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
+                            <BootstrapButton onClick={this.resetSubjects} className="pull-right" preset="default-xs">Reset subjects</BootstrapButton>
                             <br style={{ clear: 'both' }} />
                         </div>
                         <div style={{ minHeight: '150px' }} className={'tab-pane ' + (this.state.currentTab == 'books' ? 'active in' : '')}>
@@ -94,8 +147,8 @@ export default class BookSubjectSetter extends Component<componentType, any> {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton preset="primary" running={this.props.settingBooksSubjects} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
-                    <BootstrapButton preset="" onClick={this.props.cancelBookSubjectModification}>Cancel</BootstrapButton>
+                    <AjaxButton preset="primary" running={this.state.saving} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
+                    <BootstrapButton preset="" onClick={this.props.onDone}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );
