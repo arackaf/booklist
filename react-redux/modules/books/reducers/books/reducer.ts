@@ -1,6 +1,6 @@
 import {hashOf} from 'applicationRoot/rootReducer';
 import {bulkMerge} from 'util/immutableHelpers';
-import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
 
@@ -20,11 +20,12 @@ import {
     EDITORIAL_REVIEWS_LOADING,
     DETAILS_LOADED,
     EXPAND_BOOK,
-    COLLAPSE_BOOK
+    COLLAPSE_BOOK,
+    SET_BOOKS_SUBJECTS
 } from './actionNames';
 
 import { SUBJECT_DELETED } from '../subjects/actionNames';
-import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
+import {  } from '../booksSubjectModification/actionNames';
 import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
 import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
@@ -180,6 +181,7 @@ export const selectBookList = createSelector<BooksModuleType, booksListType, boo
 export type bookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
+    selectedBookHash: any;
 }
 export const selectBookSelection = createSelector<BooksModuleType, bookSelectionType, any, any>(
     state => state.booksModule.books.booksHash,
@@ -188,7 +190,8 @@ export const selectBookSelection = createSelector<BooksModuleType, bookSelection
         let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
         return {
             allAreChecked: Object.keys(booksHash).length == selectedIds,
-            selectedBooksCount: selectedIds
+            selectedBooksCount: selectedIds,
+            selectedBookHash: selectedBooks
         }
     }
 );

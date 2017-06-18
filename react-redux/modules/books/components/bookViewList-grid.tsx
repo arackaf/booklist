@@ -8,7 +8,7 @@ import {IBookDisplay} from 'modules/books/reducers/books/reducer';
 import {selectBookListComponentState, BookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
 
 @connect(null, actions)
-class BookRowRaw extends Component<{book: IBookDisplay; index: number; viewingPublic: boolean; selectedBooks: any} & actionsType, any> {
+class BookRowRaw extends Component<{book: IBookDisplay; editBooksSubjects: any; index: number; viewingPublic: boolean; selectedBooks: any} & actionsType, any> {
     render() {
         let {book, index} = this.props,
             style : any = {backgroundColor: index % 2 ? 'white' : '#f9f9f9'};
@@ -44,7 +44,7 @@ class BookRowRaw extends Component<{book: IBookDisplay; index: number; viewingPu
                 <td>
                     { book.subjectObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableSubjectModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
+                        <button className="btn btn-default btn-xs" onClick={() => this.props.editBooksSubjects(book._id)} disabled={this.props.viewingPublic}>Modify</button>
                     </div>
                 </td>
                 <td>
