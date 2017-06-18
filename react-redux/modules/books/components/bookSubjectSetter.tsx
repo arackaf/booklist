@@ -7,7 +7,7 @@ import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 import {setBooksSubjects} from 'modules/books/reducers/books/actionCreators'; 
 import {selectStackedSubjects, StackedSubjectsType} from 'modules/books/reducers/subjects/reducer'; 
-import {createSelector} from 'reselect';
+const {createSelector} = require('reselect');
 
 interface ILocalProps {
     modifyingBooks: any[];
@@ -21,18 +21,14 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
     constructor(props) {
         super(props);
         
-        this.eligibleToAdd = (createSelector as any)(
-            state => state.subjectsUnwound,
-            state => state.addingSubjects,
+        this.eligibleToAdd = createSelector(o => o.subjectsUnwound, o => o.addingSubjects,
             (subjects, adding) => {
                 let addingHash = adding.reduce((hash, _id) => (hash[_id] = true, hash), {});
                 return subjects.filter(s => !addingHash[s._id]);
             }
         );
 
-        this.eligibleToRemove = (createSelector as any)(
-            state => state.subjectsUnwound,
-            state => state.removingSubjects,
+        this.eligibleToRemove = createSelector(o => o.subjectsUnwound, o => o.removingSubjects,
             (subjects, removing) => {
                 let addingHash = removing.reduce((hash, _id) => (hash[_id] = true, hash), {});
                 return subjects.filter(s => !addingHash[s._id]);
@@ -58,7 +54,10 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
         ).then(() => this.setState({saving: false}));
     }
     addingSubjectSet = (adding, {_id}) => {
-        this.setState({addingSubjects: adding ? this.state.addingSubjects.concat(_id) : this.state.addingSubjects.filter(x => x != _id)});
+        this.setState({
+            addingSubjects: adding ? this.state.addingSubjects.concat(_id) : this.state.addingSubjects.filter(x => x != _id),
+            addingSubjectSearch: adding ? '' : this.state.addingSubjectSearch
+        });
     }
     removingSubjectSet = (adding, {_id}) => {
         this.setState({removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id)});

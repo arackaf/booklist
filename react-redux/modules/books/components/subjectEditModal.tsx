@@ -45,9 +45,7 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
     constructor(props) {
         super(props);
 
-        this.currentEligibleParents = createSelector(
-            state => state.subjectHash,
-            state => state.editingSubject,
+        this.currentEligibleParents = createSelector(o => o.subjectHash, o => o.editingSubject,
             (hash, subject) => {
                 return subject && subject._id ? getEligibleParents(hash, subject._id) : []
             }
