@@ -33,8 +33,13 @@ const SubjectEditDeleteInfo = props => {
     );
 }
 
+interface ILocalProps {
+    editModalOpen: boolean;
+    stopEditing: any
+}
+
 @connect(selectEntireSubjectsState, { ...actionCreators })
-export default class SubjectEditModal extends Component<entireSubjectsStateType & typeof actionCreators, any>{
+export default class SubjectEditModal extends Component<entireSubjectsStateType & ILocalProps & typeof actionCreators, any>{
     render(){ 
         let props = this.props,
             editingSubject = props.editingSubject,
@@ -42,9 +47,9 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
             textColors = ['#ffffff', '#000000'];
 
         return (
-            <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditingSubjects}>
+            <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditing}>
                 <Modal.Header>
-                    <button type="button" className="close" onClick={props.stopEditingSubjects} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" className="close" onClick={props.stopEditing} aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 className="modal-title">Full search</h4>
                 </Modal.Header>
                 <Modal.Body style={{ paddingBottom: 0 }}>
@@ -132,7 +137,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <BootstrapButton onClick={props.stopEditingSubjects}>Close</BootstrapButton>
+                    <BootstrapButton onClick={props.stopEditing}>Close</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );

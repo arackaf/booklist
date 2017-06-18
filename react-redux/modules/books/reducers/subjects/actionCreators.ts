@@ -1,9 +1,7 @@
 import {
     NEW_SUBJECT,
     EDIT_SUBJECT,
-    EDIT_SUBJECTS,
     SET_NEW_SUBJECT_VALUE,
-    STOP_EDITING_SUBJECTS,
     UPDATE_SUBJECT,
     UPDATE_SUBJECT_RESULTS,
     CANCEL_SUBJECT_EDIT,
@@ -17,12 +15,10 @@ import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
 
 export const setSubjectSearchValue = value => ({ type: SET_SUBJECT_SEARCH_VALUE, value: value.target.value });
-export const editSubjects = () => ({ type: EDIT_SUBJECTS })
 export const setNewSubjectName = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'name', value });
 export const setNewSubjectParent = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'parentId', value });
 export const setNewSubjectBackgroundColor = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'backgroundColor', value });
 export const setNewSubjectTextColor = value => ({ type: SET_NEW_SUBJECT_VALUE, field: 'textColor', value })
-export const stopEditingSubjects = () => ({ type: STOP_EDITING_SUBJECTS });
 
 const getEditingSubject = (hash, _id) => {
     let subject = hash[_id];
