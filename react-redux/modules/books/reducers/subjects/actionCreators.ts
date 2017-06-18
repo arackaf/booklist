@@ -6,17 +6,6 @@ import {
 import {subjectEditingActions} from 'applicationRoot/rootReducerActionCreators';
 const {saveSubject, deleteSubject: deleteSubjectRoot} = subjectEditingActions;
 
-const getEditingSubject = (hash, _id) => {
-    let subject = hash[_id];
-    let parentId = '';
-    if (subject.path){
-        let hierarchy = subject.path.split(',');
-        parentId = hierarchy[hierarchy.length - 2];
-    }
-
-    return { ...subject, parentId };
-}
-
 export function createOrUpdateSubject(subject){
     return function(dispatch, getState) {
         let { _id, name, parentId, backgroundColor, textColor } = subject,

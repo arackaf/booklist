@@ -12,6 +12,10 @@ import 'util/ajaxUtil';
 import createHistory from 'history/createBrowserHistory'
 
 declare global {
+    var require : any;
+}
+
+declare global {
   interface System {
     import (request: string): Promise<any>
   }
