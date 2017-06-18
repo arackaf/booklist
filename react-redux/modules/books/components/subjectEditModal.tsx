@@ -5,7 +5,7 @@ const {createSelector} = require('reselect');
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import { selectEntireSubjectsState, entireSubjectsStateType, filterSubjects } from '../reducers/subjects/reducer';
+import { selectEntireSubjectsState, EntireSubjectsStateType, filterSubjects } from '../reducers/subjects/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
 import {computeSubjectParentId, getEligibleParents} from 'applicationRoot/rootReducer';
@@ -40,7 +40,7 @@ interface ILocalProps {
 }
 
 @connect(selectEntireSubjectsState, { ...actionCreators })
-export default class SubjectEditModal extends Component<entireSubjectsStateType & ILocalProps & typeof actionCreators, any>{
+export default class SubjectEditModal extends Component<EntireSubjectsStateType & ILocalProps & typeof actionCreators, any>{
     currentEligibleParents: any;
     constructor(props) {
         super(props);

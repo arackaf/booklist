@@ -8,13 +8,13 @@ import {appType, subjectType, hashOf} from 'applicationRoot/rootReducer';
 
 import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects} from 'applicationRoot/rootReducer';
 
-export type stackedSubjectsType = {
+export type StackedSubjectsType = {
     subjects: subjectType[];
     allSubjectsSorted: subjectType[];
     subjectsUnwound: subjectType[];
     subjectHash: {[s: string]: subjectType}
 }
-export const selectStackedSubjects = createSelector<BooksModuleType, stackedSubjectsType, any>(
+export const selectStackedSubjects = createSelector<BooksModuleType, StackedSubjectsType, any>(
     state => state.app.subjectHash,
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
@@ -29,10 +29,10 @@ export const selectStackedSubjects = createSelector<BooksModuleType, stackedSubj
     }
 );
 
-export type entireSubjectsStateType = stackedSubjectsType & {
+export type EntireSubjectsStateType = StackedSubjectsType & {
     colors: any[];
 }
-export const selectEntireSubjectsState = createSelector<BooksModuleType, entireSubjectsStateType, appType, stackedSubjectsType>(
+export const selectEntireSubjectsState = createSelector<BooksModuleType, EntireSubjectsStateType, appType, StackedSubjectsType>(
     state => state.app,
     selectStackedSubjects,
 

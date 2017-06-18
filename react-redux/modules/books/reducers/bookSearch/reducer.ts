@@ -19,7 +19,7 @@ import {
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
-import { selectStackedSubjects, stackedSubjectsType, filterSubjects as filterSubjectsOrTags } from '../subjects/reducer';
+import { selectStackedSubjects, StackedSubjectsType, filterSubjects as filterSubjectsOrTags } from '../subjects/reducer';
 import { selectEntireTagsState, TagsStateType } from '../tags/reducer';
 
 const searchFields = {
@@ -133,7 +133,7 @@ const selectSearchedEligibleTags = createSelector<BooksModuleType, tagOrSubject[
     }
 );
 
-const selectSearchedEligibleSubjects = createSelector<BooksModuleType, tagOrSubject[], stackedSubjectsType, string, lookupHashType>(
+const selectSearchedEligibleSubjects = createSelector<BooksModuleType, tagOrSubject[], StackedSubjectsType, string, lookupHashType>(
     selectStackedSubjects,
     state => state.booksModule.bookSearch.searchSubjectsValue,
     state => state.booksModule.bookSearch.pending.subjects,
