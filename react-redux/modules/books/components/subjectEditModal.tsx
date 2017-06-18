@@ -80,17 +80,17 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
     setNewSubjectTextColor = value => this.setEditingValue('textColor', value);
     setEditingValue = (name, value) => this.setState(({editingSubject}) => ({ editingSubject: {...editingSubject, [name]: value} }));
 
-    createOrUpdateTag = () => {
+    createOrUpdateSubject = () => {
         this.setState({saving: true});
         Promise
-            .resolve(this.props.createOrUpdateSubject(this.state.editingSubject))
+            .resolve(this.props.createOrUpdateSubject({...this.state.editingSubject, parentId: this.state.parentId}))
             .then(() => {
                 this.cancelSubjectEdit();
                 this.setSubjectSearch('');
                 this.setState({saving: false});
             })
     }
-    deleteTag = () => {
+    deleteSubject = () => {
         this.setState({deleting: true});
         Promise
             .resolve(this.props.deleteSubject(this.state.editingSubject._id))
@@ -188,7 +188,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                                     </div>
                                     <br style={{ clear: 'both' }} />
 
-                                    <AjaxButtonAnchor className="btn btn-primary" running={saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
+                                    <AjaxButtonAnchor className="btn btn-primary" running={saving} onClick={this.createOrUpdateSubject}>Save</AjaxButtonAnchor>
                                     <a className="btn btn-default pull-right" onClick={this.cancelSubjectEdit}>Cancel</a>
                                 </div>
                             </div>

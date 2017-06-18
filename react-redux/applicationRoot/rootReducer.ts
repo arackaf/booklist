@@ -90,6 +90,9 @@ export const unwindSubjects = subjects => {
 };
 
 export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
+    name1 = name1 || '';
+    name2 = name2 || '';
+    
     let name1After = name1.toLowerCase() > name2.toLowerCase(),
         bothEqual = name1.toLowerCase() === name2.toLowerCase();
     return bothEqual ? 0 : (name1After ? 1 : -1);
