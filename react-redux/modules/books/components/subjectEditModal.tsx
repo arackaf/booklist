@@ -61,7 +61,8 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
         deletingId: '',
         saving: false,
         deleting: false,
-        parentId: ''
+        parentId: '',
+        affectedChildren: null
     }
 
     setSubjectSearch = value => this.setState({subjectSearch: value});
@@ -71,8 +72,16 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
         this.startEditing(subject, computeSubjectParentId(subject.path));
         this.setSubjectSearch('');
     }
-    startEditing = (subject, parentId) => this.setState({editingSubject: subject, editingSubjectName: subject.name, parentId});
-    cancelSubjectEdit = () => this.setState({editingSubject: null});
+    startEditing = (subject, parentId) => this.setState({editingSubject: subject, editingSubjectName: subject.name, parentId, deletingId: ''});
+    cancelSubjectEdit = () => this.setState({editingSubject: null, deletingId: '', affectedChildren: null});
+    startDeletingSubject = () =>{
+        let subjectHash = this.props.subjectHash,
+            editingSubject = this.state.editingSubject,
+            childSubjectRegex = new RegExp(`.*,${editingSubject._id},.*`),
+            affectedChildren = Object.keys(subjectHash).filter(k => childSubjectRegex.test(subjectHash[k].path)).length;
+
+        this.setState({deletingId: editingSubject._id, affectedChildren});
+    }
 
     setNewSubjectName = value => this.setEditingValue('name', value);
     setNewSubjectParent = value => this.setState({parentId: value});
@@ -93,7 +102,7 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
     deleteSubject = () => {
         this.setState({deleting: true});
         Promise
-            .resolve(this.props.deleteSubject(this.state.editingSubject._id))
+            .resolve(this.props.deleteSubject(this.state.deletingId))
             .then(() => {
                 this.setState({deleting: false})
                 this.cancelSubjectEdit();
@@ -138,7 +147,7 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
                         <div className="panel panel-info">
                             <div className="panel-heading">
                                 {editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }
-                                {editingSubject && editingSubject._id ? <BootstrapButton onClick={e => this.setState({deletingId: editingSubject._id})} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
+                                {editingSubject && editingSubject._id ? <BootstrapButton onClick={this.startDeletingSubject} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                             </div>
                             <div className="panel-body">
                                 <div>
@@ -146,7 +155,9 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
                                         <SubjectEditDeleteInfo
                                             deleting={deleting}
                                             cancelDeleteSubject={() => this.setState({deletingId: ''})}
-                                            deleteSubject={props.deleteSubject} /> : null }
+                                            affectedChildren={this.state.affectedChildren}
+                                            subjectName={this.state.editingSubjectName}
+                                            deleteSubject={this.deleteSubject} /> : null }
 
                                     <div className="row">
                                         <div className="col-xs-6">

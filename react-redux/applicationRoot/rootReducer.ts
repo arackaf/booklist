@@ -39,9 +39,10 @@ const initialState = {
 export const hashOf = <T>() => <{ [s: string]: T }>{};
 
 export type appType = typeof initialState;
-export type subjectType = {
+export type SubjectType = {
     _id: string;
     name: string;
+    path: string;
 };
 
 export const objectsToHash = objs => objs.reduce((hash, o) => (hash[o._id] = o, hash), {});
