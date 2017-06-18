@@ -1,6 +1,6 @@
 import {hashOf} from 'applicationRoot/rootReducer';
 import {bulkMerge} from 'util/immutableHelpers';
-import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
 
