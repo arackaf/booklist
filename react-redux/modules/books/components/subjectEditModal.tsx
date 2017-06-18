@@ -60,21 +60,22 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
         subjectSearch: '',
         deletingId: '',
         saving: false,
-        deleting: false
+        deleting: false,
+        parentId: ''
     }
 
     setSubjectSearch = value => this.setState({subjectSearch: value});
 
-    newSubject = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' });
+    newSubject = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' }, '');
     editSubject = subject => {
-        this.startEditing(subject);
+        this.startEditing(subject, computeSubjectParentId(subject.path));
         this.setSubjectSearch('');
     }
-    startEditing = subject => this.setState({editingSubject: subject, editingSubjectName: subject.name});
+    startEditing = (subject, parentId) => this.setState({editingSubject: subject, editingSubjectName: subject.name, parentId});
     cancelSubjectEdit = () => this.setState({editingSubject: null});
 
     setNewSubjectName = value => this.setEditingValue('name', value);
-    setNewSubjectParent = value => this.setEditingValue('parentId', value);
+    setNewSubjectParent = value => this.setState({parentId: value});
     setNewSubjectBackgroundColor = value => this.setEditingValue('backgroundColor', value);
     setNewSubjectTextColor = value => this.setEditingValue('textColor', value);
     setEditingValue = (name, value) => this.setState(({editingSubject}) => ({ editingSubject: {...editingSubject, [name]: value} }));
@@ -101,10 +102,10 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
 
     render(){
         let props = this.props,
-            {editingSubject, subjectSearch, deletingId, deleting, saving} = this.state,
+            {editingSubject, subjectSearch, deletingId, deleting, saving, parentId} = this.state,
             eligibleParents = this.currentEligibleParents({subjectHash: props.subjectHash, editingSubject}),
             textColors = ['#ffffff', '#000000'],
-            searchedSubjects = filterSubjects(props.allSubjectsSorted, this.state.subjectSearch);
+            searchedSubjects = filterSubjects(props.subjectsUnwound, this.state.subjectSearch);
 
         return (
             <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditing}>
@@ -136,8 +137,8 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                     {editingSubject ?
                         <div className="panel panel-info">
                             <div className="panel-heading">
-                                { editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }
-                                { editingSubject && editingSubject._id ? <BootstrapButton onClick={e => this.setState({deletingId: editingSubject._id})} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
+                                {editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }
+                                {editingSubject && editingSubject._id ? <BootstrapButton onClick={e => this.setState({deletingId: editingSubject._id})} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                             </div>
                             <div className="panel-body">
                                 <div>
@@ -157,9 +158,9 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                                         <div className="col-xs-6">
                                             <div className="form-group">
                                                 <label>Parent</label>
-                                                <select className="form-control" value={editingSubject.parentId} onChange={(e: any) => this.setNewSubjectParent(e.target.value)}>
+                                                <select className="form-control" value={parentId} onChange={(e: any) => this.setNewSubjectParent(e.target.value)}>
                                                     <option value="">None</option>
-                                                    { eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
+                                                    {eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                                 </select>
                                             </div>
                                         </div>
