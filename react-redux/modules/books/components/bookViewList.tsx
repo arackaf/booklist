@@ -1,4 +1,4 @@
-import {BooksModuleType, appType, booksType, bookSearchType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, appType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
@@ -19,7 +19,6 @@ import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
 
 import {booksListType, selectBookList, selectBookSelection, bookSelectionType} from '../reducers/books/reducer';
-import {selectModifyingBooks as tagsBooksModifyingSelector, modifyingBooksType as tagsBooksModifyingType} from '../reducers/booksTagModification/reducer';
 import {selectBookSearchUiView, bookSearchUiViewType} from '../reducers/bookSearch/reducer';
 
 import ComponentLoading from 'applicationRoot/components/componentLoading';
@@ -65,10 +64,9 @@ type mainSelectorType = editBookType & bookSearchUiViewType & booksListType & bo
     subjectsLoaded: boolean;
     tagsLoaded: boolean;
     editingBookSearchFilters: boolean;
-    tagsBooksModifyingCount: number;
 }
 
-const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, editBookType, tagsType, bookSearchType, booksListType, bookSelectionType, bookSearchUiViewType, tagsBooksModifyingType>(
+const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, editBookType, TagsType, bookSearchType, booksListType, bookSelectionType, bookSearchUiViewType>(
     state => state.app,
     state => state.booksModule.editBook,
     state => state.booksModule.tags,
@@ -76,8 +74,7 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, 
     selectBookList,
     selectBookSelection,
     selectBookSearchUiView,
-    tagsBooksModifyingSelector,
-    (app, editBook, tags, bookSearch, books, bookSelection, bookSearchUi, tagsBooksModifying) => {
+    (app, editBook, tags, bookSearch, books, bookSelection, bookSearchUi) => {
         return {
             subjectsLoaded: app.subjectsLoaded,
             ...editBook,
@@ -85,7 +82,6 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, 
             editingBookSearchFilters: bookSearch.editingFilters,
             ...books,
             ...bookSearchUi,
-            tagsBooksModifyingCount: tagsBooksModifying.length,
             ...bookSelection
         };
     }
@@ -97,22 +93,21 @@ export default class BookViewingList extends Component<mainSelectorType & action
         navBarHeight: null, 
         tagEditModalOpen: false,
         subjectEditModalOpen: false,
-        booksSubjectModifying: null
+        booksSubjectModifying: null,
+        booksTagModifying: null,
     }
     editTags = () => this.setState({tagEditModalOpen: true});
     stopEditingTags = () => this.setState({tagEditModalOpen: false});
     editSubjects = () => this.setState({subjectEditModalOpen: true});
     stopEditingSubjects = () => this.setState({subjectEditModalOpen: false});
 
-    editSubjectsForBook = book => {
-        this.setState({booksSubjectModifying: [book]});
-    }
-    editSubjectsForSelectedBooks = () => {
-        this.setState({booksSubjectModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id])});
-    }
-    doneEditingBooksSubjects = () => {
-        this.setState({booksSubjectModifying: null});
-    }
+    editSubjectsForBook = book => this.setState({booksSubjectModifying: [book]});
+    editSubjectsForSelectedBooks = () => this.setState({booksSubjectModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id])});
+    doneEditingBooksSubjects = () => this.setState({booksSubjectModifying: null});
+
+    editTagsForBook = book => this.setState({booksTagModifying: [book]});
+    editTagsForSelectedBooks = () => this.setState({booksTagModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id])});
+    doneEditingBooksTags = () => this.setState({booksTagModifying: null});
     
     navBarSized = (contentRect) => {
         this.setState({navBarHeight: contentRect.client.height});
@@ -125,7 +120,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
             <div style={{position: 'relative'}}>
                 {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null }
                 <div className="panel panel-default" style={{ margin: '10px' }}>
-                    <BooksMenuBar startSubjectModification={this.editSubjectsForSelectedBooks} editTags={this.editTags} editSubjects={this.editSubjects} navBarSized={this.navBarSized} />
+                    <BooksMenuBar startTagModification={this.editTagsForSelectedBooks} startSubjectModification={this.editSubjectsForSelectedBooks} editTags={this.editTags} editSubjects={this.editSubjects} navBarSized={this.navBarSized} />
                     <div className="panel-body" style={{ padding: 0, minHeight: 450, position: 'relative' }}>
 
                         {(!this.props.booksList.length && !this.props.booksLoading) ?
@@ -134,7 +129,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.isGridView ? <GridView editBooksSubjects={this.editSubjectsForBook} navBarHeight={this.state.navBarHeight} />
+                            (this.props.isGridView ? <GridView editBooksTags={this.editTagsForBook} editBooksSubjects={this.editSubjectsForBook} navBarHeight={this.state.navBarHeight} />
                                 : this.props.isBasicList ? <BasicListView />
                                 : null) : null }
 
@@ -157,7 +152,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                 <br />
 
                 {this.state.booksSubjectModifying ? <BookSubjectSetter modifyingBooks={this.state.booksSubjectModifying} onDone={this.doneEditingBooksSubjects} /> : null}
-                {this.props.tagsBooksModifyingCount ? <BookTagSetter /> : null}
+                {this.state.booksTagModifying ? <BookTagSetter modifyingBooks={this.state.booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
 
                 {this.state.subjectEditModalOpen ? <SubjectEditModal editModalOpen={this.state.subjectEditModalOpen} stopEditing={this.stopEditingSubjects} /> : null}
                 {this.state.tagEditModalOpen ? <TagEditModal editModalOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}

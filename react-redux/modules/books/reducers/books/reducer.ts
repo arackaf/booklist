@@ -1,6 +1,6 @@
 import {hashOf} from 'applicationRoot/rootReducer';
 import {bulkMerge} from 'util/immutableHelpers';
-import {BooksModuleType, booksType, bookSearchType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
 
@@ -21,12 +21,12 @@ import {
     DETAILS_LOADED,
     EXPAND_BOOK,
     COLLAPSE_BOOK,
-    SET_BOOKS_SUBJECTS
+    SET_BOOKS_SUBJECTS,
+    SET_BOOKS_TAGS
 } from './actionNames';
 
 import { SUBJECT_DELETED } from '../subjects/actionNames';
 import {  } from '../booksSubjectModification/actionNames';
-import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
 import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';

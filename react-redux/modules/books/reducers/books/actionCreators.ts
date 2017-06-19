@@ -14,7 +14,8 @@ import {
     DETAILS_LOADED,
     EXPAND_BOOK,
     COLLAPSE_BOOK,
-    SET_BOOKS_SUBJECTS
+    SET_BOOKS_SUBJECTS,
+    SET_BOOKS_TAGS
 } from './actionNames';
 
 import {BooksModuleType} from 'modules/books/reducers/reducer';
@@ -147,6 +148,14 @@ export function setBooksSubjects(books, add, remove){
     return function(dispatch, getState){
         return ajaxUtil.post('/bookBulk/setSubjects', { books, add, remove }, resp => {
             dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove });
+        });
+    }
+}
+
+export function setBooksTags(books, add, remove){
+    return function(dispatch, getState){
+        return ajaxUtil.post('/bookBulk/setTags', { books, add, remove }, resp => {
+            dispatch({ type: SET_BOOKS_TAGS, books, add, remove });
         });
     }
 }

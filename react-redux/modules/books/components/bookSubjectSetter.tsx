@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 
+import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
@@ -74,8 +74,8 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
         });
     }
     render(){
-        let subjectSelectedToAdd = this.addingSubjectSet.bind(null, true),
-            subjectSelectedToRemove = this.removingSubjectSet.bind(null, true);
+        let tagSelectedToAdd = this.addingSubjectSet.bind(null, true),
+            tagSelectedToRemove = this.removingSubjectSet.bind(null, true);
 
         let dontAddSubject = this.addingSubjectSet.bind(null, false),
             dontRemoveSubject = this.removingSubjectSet.bind(null, false);
@@ -84,7 +84,7 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.onDone}>
                 <Modal.Header>
                     <button type="button" className="close" onClick={this.props.onDone} aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 className="modal-title">Edit subjects:</h4>
+                    <h4 className="modal-title">Add / Remove Subjects:</h4>
                 </Modal.Header>
                 <Modal.Body>
 
@@ -104,7 +104,7 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Adding', value: this.state.addingSubjectSearch, onChange: evt => this.setState({addingSubjectSearch: evt.target.value}) }}
                                         suggestions={this.eligibleToAdd()}
-                                        onSuggestionSelected={subjectSelectedToAdd} />
+                                        onSuggestionSelected={tagSelectedToAdd} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
@@ -124,7 +124,7 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Removing', value: this.state.removingSubjectSearch, onChange: evt => this.setState({removingSubjectSearch: evt.target.value}) }}
                                         suggestions={this.eligibleToRemove()}
-                                        onSuggestionSelected={subjectSelectedToRemove} />
+                                        onSuggestionSelected={tagSelectedToRemove} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
