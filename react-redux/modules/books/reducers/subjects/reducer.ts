@@ -4,7 +4,7 @@ import {createSelector} from 'reselect';
 import {
     UPDATE_SUBJECT,
 } from './actionNames';
-import {appType, SubjectType, hashOf} from 'applicationRoot/rootReducer';
+import {AppType, SubjectType, hashOf} from 'applicationRoot/rootReducer';
 
 import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects} from 'applicationRoot/rootReducer';
 
@@ -32,7 +32,7 @@ export const selectStackedSubjects = createSelector<BooksModuleType, StackedSubj
 export type EntireSubjectsStateType = StackedSubjectsType & {
     colors: any[];
 }
-export const selectEntireSubjectsState = createSelector<BooksModuleType, EntireSubjectsStateType, appType, StackedSubjectsType>(
+export const selectEntireSubjectsState = createSelector<BooksModuleType, EntireSubjectsStateType, AppType, StackedSubjectsType>(
     state => state.app,
     selectStackedSubjects,
 

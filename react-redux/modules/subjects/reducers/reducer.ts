@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect';
 
 import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSortedSelector} from 'applicationRoot/rootReducer';
-import {appType} from 'applicationRoot/rootReducer';
+import {AppType} from 'applicationRoot/rootReducer';
 import update from 'immutability-helper'
 
 import {
@@ -90,7 +90,7 @@ export function reducer(state = initialSubjectsState, action){
     return state;
 }
 
-type storeSlice = {app: appType, subjectsModule: subjectsType};
+type storeSlice = {app: AppType, subjectsModule: subjectsType};
 export type editingSubjectHashType = {editingSubjectsHash: object};
 export const editingSubjectHashSelector = createSelector<storeSlice, editingSubjectHashType, object, object>(
     state => state.app.subjectHash,

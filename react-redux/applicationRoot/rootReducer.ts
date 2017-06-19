@@ -38,7 +38,7 @@ const initialState = {
 
 export const hashOf = <T>() => <{ [s: string]: T }>{};
 
-export type appType = typeof initialState;
+export type AppType = typeof initialState;
 export type SubjectType = {
     _id: string;
     name: string;
@@ -99,7 +99,7 @@ export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
     return bothEqual ? 0 : (name1After ? 1 : -1);
 };
 
-export const topLevelSubjectsSortedSelector = createSelector<{app: appType}, string[], object>(
+export const topLevelSubjectsSortedSelector = createSelector<{app: AppType}, string[], object>(
     state => state.app.subjectHash,
     subjectHash => Object.keys(subjectHash).map(_id => subjectHash[_id]).filter(s => !s.path).sort(subjectSortCompare)
 );
@@ -117,7 +117,7 @@ export const getChildSubjectsSorted = (_id, subjectHash) => {
                  .sort(subjectSortCompare);
 };
 
-export const subjectChildMapSelector = createSelector<{app: appType}, object, any>(
+export const subjectChildMapSelector = createSelector<{app: AppType}, object, any>(
     state => state.app.subjectHash,
     subjectHash =>
         Object.keys(subjectHash)

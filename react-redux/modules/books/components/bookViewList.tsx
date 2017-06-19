@@ -1,4 +1,4 @@
-import {BooksModuleType, appType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, AppType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
@@ -66,7 +66,7 @@ type mainSelectorType = editBookType & bookSearchUiViewType & BookListType & Boo
     editingBookSearchFilters: boolean;
 }
 
-const mainSelector = createSelector<BooksModuleType, mainSelectorType, appType, editBookType, TagsType, bookSearchType, BookListType, BookSelectionType, bookSearchUiViewType>(
+const mainSelector = createSelector<BooksModuleType, mainSelectorType, AppType, editBookType, TagsType, bookSearchType, BookListType, BookSelectionType, bookSearchUiViewType>(
     state => state.app,
     state => state.booksModule.editBook,
     state => state.booksModule.tags,

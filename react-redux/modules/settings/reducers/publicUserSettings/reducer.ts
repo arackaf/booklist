@@ -1,4 +1,4 @@
-import {appType} from 'applicationRoot/rootReducer';
+import {AppType} from 'applicationRoot/rootReducer';
 import {createSelector} from 'reselect';
 import {USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED} from './actionNames';
 const defaultState = {
@@ -37,8 +37,8 @@ export type publicUserSettingsSelectorType = publicUserSettingsType & {
     isDirty: boolean,
     publicLink: string
 }
-type storeSlice = {app: appType, settingsModule: {publicUserSettings: publicUserSettingsType}};
-export const selector = createSelector<storeSlice, publicUserSettingsSelectorType, appType, publicUserSettingsType>(
+type storeSlice = {app: AppType, settingsModule: {publicUserSettings: publicUserSettingsType}};
+export const selector = createSelector<storeSlice, publicUserSettingsSelectorType, AppType, publicUserSettingsType>(
     state => state.app,
     state => state.settingsModule.publicUserSettings, 
     (app, publicUserSettings) => {
