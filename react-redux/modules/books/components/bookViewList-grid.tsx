@@ -44,7 +44,7 @@ class BookRowRaw extends Component<{book: IBookDisplay; editBooksSubjects: any; 
                 <td>
                     { book.subjectObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                        <button className="btn btn-default btn-xs" onClick={() => this.props.editBooksSubjects(book._id)} disabled={this.props.viewingPublic}>Modify</button>
+                        <button className="btn btn-default btn-xs" onClick={() => this.props.editBooksSubjects(book)} disabled={this.props.viewingPublic}>Modify</button>
                     </div>
                 </td>
                 <td>
@@ -100,7 +100,7 @@ class BookRowDetails extends Component<{book: IBookDisplay; index: number}, any>
 }
 
 @connect(selectBookListComponentState, actions)
-export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType & {navBarHeight: number}, any>{
+export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType & {navBarHeight: number, editBooksSubjects: any}, any>{
     state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     setSort(column){
         let currentSort = this.props.currentSort;
@@ -115,7 +115,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.sortDirection == '1' ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
-        let {navBarHeight} = this.props;
+        let {navBarHeight, editBooksSubjects} = this.props;
         let stickyHeaderStyle : CSSProperties = {position: 'sticky', top: 50 + navBarHeight, backgroundColor: 'white' };
 
         return (
@@ -146,7 +146,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
                         <tbody>
                         { this.props.booksList.map((book, index) =>
                             [
-                                <BookRow book={book} index={index} viewingPublic={this.props.viewingPublic} selectedBooks={this.props.selectedBooks} />,
+                                <BookRow editBooksSubjects={editBooksSubjects} book={book} index={index} viewingPublic={this.props.viewingPublic} selectedBooks={this.props.selectedBooks} />,
                                 book.expanded ? <BookRowDetails book={book} index={index} /> : null
                             ]
                         )}
