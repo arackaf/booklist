@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
+import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 
 import {setBooksSubjects} from 'modules/books/reducers/books/actionCreators'; 
+import {filterSubjects} from 'modules/books/reducers/subjects/reducer'; 
 import {selectStackedSubjects, StackedSubjectsType} from 'modules/books/reducers/subjects/reducer'; 
 const {createSelector} = require('reselect');
 
@@ -16,25 +17,6 @@ interface ILocalProps {
 
 @connect(selectStackedSubjects, {setBooksSubjects})
 export default class BookSubjectSetter extends Component<StackedSubjectsType & {setBooksSubjects} & ILocalProps, any> {
-    eligibleToAdd : any;
-    eligibleToRemove: any;
-    constructor(props) {
-        super(props);
-        
-        this.eligibleToAdd = createSelector(o => o.subjectsUnwound, o => o.addingSubjects,
-            (subjects, adding) => {
-                let addingHash = adding.reduce((hash, _id) => (hash[_id] = true, hash), {});
-                return subjects.filter(s => !addingHash[s._id]);
-            }
-        );
-
-        this.eligibleToRemove = createSelector(o => o.subjectsUnwound, o => o.removingSubjects,
-            (subjects, removing) => {
-                let addingHash = removing.reduce((hash, _id) => (hash[_id] = true, hash), {});
-                return subjects.filter(s => !addingHash[s._id]);
-            }
-        )        
-    }
     state = { 
         currentTab: 'subjects',
         addingSubjects: [],
@@ -42,8 +24,25 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
         addingSubjectSearch: '',
         removingSubjectSearch: '',
         saving: false
-    };
-    setBooksSubjects(){
+    };    
+    
+    _eligibleToAdd = createSelector(o => o.subjects, o => o.adding, o => o.filter,
+        (subjects, adding, filter) => {
+            let addingHash = adding.reduce((hash, _id) => (hash[_id] = true, hash), {});
+            return filterSubjects(subjects.filter(s => !addingHash[s._id]), filter);
+        }
+    )
+    eligibleToAdd = () => this._eligibleToAdd({subjects: this.props.subjectsUnwound, adding: this.state.addingSubjects, filter: this.state.addingSubjectSearch});
+
+    _eligibleToRemove = createSelector(o => o.subjects, o => o.removing, o => o.filter,
+        (subjects, removing, filter) => {
+            let addingHash = removing.reduce((hash, _id) => (hash[_id] = true, hash), {});
+            return filterSubjects(subjects.filter(s => !addingHash[s._id]), filter);
+        }
+    )
+    eligibleToRemove = () => this._eligibleToRemove({subjects: this.props.subjectsUnwound, removing: this.state.removingSubjects, filter: this.state.removingSubjectSearch});
+
+    setBooksSubjects = () => {
         this.setState({saving: true});
         Promise.resolve(
             this.props.setBooksSubjects(
@@ -51,7 +50,10 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                 this.state.addingSubjects,
                 this.state.removingSubjects
             )
-        ).then(() => this.setState({saving: false}));
+        ).then(() => {
+            this.setState({saving: false});
+            this.props.onDone();
+        });
     }
     addingSubjectSet = (adding, {_id}) => {
         this.setState({
@@ -60,10 +62,16 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
         });
     }
     removingSubjectSet = (adding, {_id}) => {
-        this.setState({removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id)});
+        this.setState({
+            removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id),
+            removingSubjectSearch: adding ? '' : this.state.removingSubjectSearch
+        });
     }
-    resetSubjects(){
-
+    resetSubjects = () => {
+        this.setState({
+            addingSubjects: [],
+            removingSubjects: []
+        });
     }
     render(){
         let subjectSelectedToAdd = this.addingSubjectSet.bind(null, true),
@@ -71,11 +79,6 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
 
         let dontAddSubject = this.addingSubjectSet.bind(null, false),
             dontRemoveSubject = this.removingSubjectSet.bind(null, false);
-
-        let eligibleToAdd = this.eligibleToAdd({subjectsUnwound: this.props.subjectsUnwound, addingSubjects: this.state.addingSubjects}),
-            eligibleToRemove = this.eligibleToRemove({subjectsUnwound: this.props.subjectsUnwound, removingSubjects: this.state.removingSubjects});
-
-        let props = this.props;
 
         return (
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.onDone}>
@@ -100,15 +103,16 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Adding', value: this.state.addingSubjectSearch, onChange: evt => this.setState({addingSubjectSearch: evt.target.value}) }}
-                                        suggestions={eligibleToAdd}
+                                        suggestions={this.eligibleToAdd()}
                                         onSuggestionSelected={subjectSelectedToAdd} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.state.addingSubjects.map(_id => props.subjectHash[_id]).map((s : any, i) =>
+                                        {this.state.addingSubjects.map(_id => this.props.subjectHash[_id]).map((s : any, i) =>
                                             <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
-                                            </span>) }
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -119,15 +123,16 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                                 <div className="col-xs-3">
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Removing', value: this.state.removingSubjectSearch, onChange: evt => this.setState({removingSubjectSearch: evt.target.value}) }}
-                                        suggestions={eligibleToRemove}
+                                        suggestions={this.eligibleToRemove()}
                                         onSuggestionSelected={subjectSelectedToRemove} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
-                                        { this.state.removingSubjects.map((s, i) =>
+                                        {this.state.removingSubjects.map(_id => this.props.subjectHash[_id]).map((s : any, i) =>
                                             <span key={i} style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }} className="label label-default margin-left">
                                                 <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>X</a>{s.name}
-                                            </span>) }
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -146,11 +151,10 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <AjaxButton preset="primary" running={this.state.saving} runningText='Setting' onClick={() => this.setBooksSubjects()}>Set</AjaxButton>
+                    <AjaxButton preset="primary" running={this.state.saving} runningText='Setting' onClick={this.setBooksSubjects}>Set</AjaxButton>
                     <BootstrapButton preset="" onClick={this.props.onDone}>Cancel</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );
     }
 }
-
