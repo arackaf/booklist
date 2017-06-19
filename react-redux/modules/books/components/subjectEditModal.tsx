@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { Modal } from 'simple-react-bootstrap';
-
+import {connect} from 'react-redux';
+import {Modal} from 'simple-react-bootstrap';
+const {createSelector} = require('reselect');
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from 'applicationRoot/components/bootstrapButton';
 import * as actionCreators from '../reducers/subjects/actionCreators';
 import CustomColorPicker from 'applicationRoot/components/customColorPicker';
-import { selectEntireSubjectsState, entireSubjectsStateType } from '../reducers/subjects/reducer';
+import { selectEntireSubjectsState, EntireSubjectsStateType, filterSubjects } from '../reducers/subjects/reducer';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
+import {computeSubjectParentId, getEligibleParents} from 'applicationRoot/rootReducer';
 
 const SubjectEditDeleteInfo = props => {
     let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1 ? 'descendant subjects' : 'child subject'} which will also be deleted.`;
@@ -33,69 +34,142 @@ const SubjectEditDeleteInfo = props => {
     );
 }
 
+interface ILocalProps {
+    editModalOpen: boolean;
+    stopEditing: any
+}
+
 @connect(selectEntireSubjectsState, { ...actionCreators })
-export default class SubjectEditModal extends Component<entireSubjectsStateType & typeof actionCreators, any>{
-    render(){ 
+export default class SubjectEditModal extends Component<EntireSubjectsStateType & ILocalProps & typeof actionCreators, any>{
+    currentEligibleParents: any;
+    constructor(props) {
+        super(props);
+
+        this.currentEligibleParents = createSelector(o => o.subjectHash, o => o.editingSubject,
+            (hash, subject) => {
+                return subject && subject._id ? getEligibleParents(hash, subject._id) : []
+            }
+        )
+    }
+
+    state = {
+        editingSubject: null,
+        editingSubjectName: '',
+        subjectSearch: '',
+        deletingId: '',
+        saving: false,
+        deleting: false,
+        parentId: '',
+        affectedChildren: null
+    }
+
+    setSubjectSearch = value => this.setState({subjectSearch: value});
+
+    newSubject = () => this.startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' }, '');
+    editSubject = subject => {
+        this.startEditing(subject, computeSubjectParentId(subject.path));
+        this.setSubjectSearch('');
+    }
+    startEditing = (subject, parentId) => this.setState({editingSubject: subject, editingSubjectName: subject.name, parentId, deletingId: ''});
+    cancelSubjectEdit = () => this.setState({editingSubject: null, deletingId: '', affectedChildren: null});
+    startDeletingSubject = () =>{
+        let subjectHash = this.props.subjectHash,
+            editingSubject = this.state.editingSubject,
+            childSubjectRegex = new RegExp(`.*,${editingSubject._id},.*`),
+            affectedChildren = Object.keys(subjectHash).filter(k => childSubjectRegex.test(subjectHash[k].path)).length;
+
+        this.setState({deletingId: editingSubject._id, affectedChildren});
+    }
+
+    setNewSubjectName = value => this.setEditingValue('name', value);
+    setNewSubjectParent = value => this.setState({parentId: value});
+    setNewSubjectBackgroundColor = value => this.setEditingValue('backgroundColor', value);
+    setNewSubjectTextColor = value => this.setEditingValue('textColor', value);
+    setEditingValue = (name, value) => this.setState(({editingSubject}) => ({ editingSubject: {...editingSubject, [name]: value} }));
+
+    createOrUpdateSubject = () => {
+        this.setState({saving: true});
+        Promise
+            .resolve(this.props.createOrUpdateSubject({...this.state.editingSubject, parentId: this.state.parentId}))
+            .then(() => {
+                this.cancelSubjectEdit();
+                this.setSubjectSearch('');
+                this.setState({saving: false});
+            })
+    }
+    deleteSubject = () => {
+        this.setState({deleting: true});
+        Promise
+            .resolve(this.props.deleteSubject(this.state.deletingId))
+            .then(() => {
+                this.setState({deleting: false})
+                this.cancelSubjectEdit();
+            });
+    }
+
+    render(){
         let props = this.props,
-            editingSubject = props.editingSubject,
-            eligibleParents = props.eligibleParents,
-            textColors = ['#ffffff', '#000000'];
+            {editingSubject, subjectSearch, deletingId, deleting, saving, parentId} = this.state,
+            eligibleParents = this.currentEligibleParents({subjectHash: props.subjectHash, editingSubject}),
+            textColors = ['#ffffff', '#000000'],
+            searchedSubjects = filterSubjects(props.subjectsUnwound, this.state.subjectSearch);
 
         return (
-            <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditingSubjects}>
+            <Modal className="fade" show={props.editModalOpen} onHide={props.stopEditing}>
                 <Modal.Header>
-                    <button type="button" className="close" onClick={props.stopEditingSubjects} aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 className="modal-title">Full search</h4>
+                    <button type="button" className="close" onClick={props.stopEditing} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 className="modal-title">Edit Subjects</h4>
                 </Modal.Header>
                 <Modal.Body style={{ paddingBottom: 0 }}>
                     <div className="visible-xs">
-                        <BootstrapButton onClick={props.newSubject} preset="info-xs">Add new subject <i className="fa fa-fw fa-plus"></i></BootstrapButton>
+                        <BootstrapButton onClick={this.newSubject} preset="info-xs">Add new subject <i className="fa fa-fw fa-plus"></i></BootstrapButton>
                         <br />
                         <br />
                     </div>
                     <div className="row">
                         <div className="col-xs-11">
                             <GenericLabelSelect
-                                inputProps={{ placeholder: 'Edit subject', value: props.subjectSearch, onChange: props.setSubjectSearchValue }}
-                                suggestions={props.subjectsSearched}
-                                onSuggestionSelected={item => props.editSubject(item._id)} />
+                                inputProps={{ placeholder: 'Edit subject', value: subjectSearch, onChange: evt => this.setSubjectSearch(evt.target.value) }}
+                                suggestions={searchedSubjects}
+                                onSuggestionSelected={item => this.editSubject(item)} />
 
                         </div>
                         <div className="col-xs-1" style={{ padding: 0 }}>
-                            <BootstrapButton className="hidden-xs" onClick={props.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
+                            <BootstrapButton className="hidden-xs" onClick={this.newSubject} preset="info-xs"><i className="fa fa-fw fa-plus-square"></i></BootstrapButton>
                         </div>
                     </div>
 
                     <br />
 
-                    { editingSubject ?
+                    {editingSubject ?
                         <div className="panel panel-info">
                             <div className="panel-heading">
-                                { editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }
-                                { editingSubject && editingSubject._id ? <BootstrapButton onClick={e => props.beginDeleteSubject(editingSubject._id)} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
+                                {editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : 'New Subject' }
+                                {editingSubject && editingSubject._id ? <BootstrapButton onClick={this.startDeletingSubject} preset="danger-xs" className="pull-right"><i className="fa fa-fw fa-trash"></i></BootstrapButton> : null }
                             </div>
                             <div className="panel-body">
                                 <div>
-                                    { props.deletingSubjectId ?
-                                    <SubjectEditDeleteInfo
-                                        { ...props.deleteInfo }
-                                        deleting={props.deleting}
-                                        cancelDeleteSubject={props.cancelDeleteSubject}
-                                        deleteSubject={props.deleteSubject} /> : null }
+                                    {deletingId ?
+                                        <SubjectEditDeleteInfo
+                                            deleting={deleting}
+                                            cancelDeleteSubject={() => this.setState({deletingId: ''})}
+                                            affectedChildren={this.state.affectedChildren}
+                                            subjectName={this.state.editingSubjectName}
+                                            deleteSubject={this.deleteSubject} /> : null }
 
                                     <div className="row">
                                         <div className="col-xs-6">
                                             <div className="form-group">
                                                 <label>Subject name</label>
-                                                <input className="form-control" value={editingSubject.name} onChange={(e: any) => props.setNewSubjectName(e.target.value)} />
+                                                <input className="form-control" value={editingSubject.name} onChange={(e: any) => this.setNewSubjectName(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="col-xs-6">
                                             <div className="form-group">
                                                 <label>Parent</label>
-                                                <select className="form-control" value={editingSubject.parentId} onChange={(e: any) => props.setNewSubjectParent(e.target.value)}>
+                                                <select className="form-control" value={parentId} onChange={(e: any) => this.setNewSubjectParent(e.target.value)}>
                                                     <option value="">None</option>
-                                                    { eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
+                                                    {eligibleParents.map(s => <option key={s._id} value={s._id}>{s.name}</option>) }
                                                 </select>
                                             </div>
                                         </div>
@@ -103,15 +177,15 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                                             <div className="form-group">
                                                 <label>Label color</label>
 
-                                                <ColorsPalette currentColor={editingSubject.backgroundColor} colors={props.colors} onColorChosen={props.setNewSubjectBackgroundColor} />
-                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={props.setNewSubjectBackgroundColor} currentColor={editingSubject.backgroundColor} />
+                                                <ColorsPalette currentColor={editingSubject.backgroundColor} colors={props.colors} onColorChosen={this.setNewSubjectBackgroundColor} />
+                                                <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={this.setNewSubjectBackgroundColor} currentColor={editingSubject.backgroundColor} />
                                             </div>
                                         </div>
                                         <div className="col-xs-3">
                                             <div className="form-group">
                                                 <label>Text color</label>
 
-                                                <ColorsPalette colors={textColors} onColorChosen={props.setNewSubjectTextColor} />
+                                                <ColorsPalette colors={textColors} onColorChosen={this.setNewSubjectTextColor} />
                                             </div>
                                         </div>
                                         <div className="col-xs-12">
@@ -123,8 +197,8 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                                     </div>
                                     <br style={{ clear: 'both' }} />
 
-                                    <AjaxButtonAnchor className="btn btn-primary" running={props.saving} onClick={props.createOrUpdateSubject}>Save</AjaxButtonAnchor>
-                                    <a className="btn btn-default pull-right" onClick={props.cancelSubjectEdit}>Cancel</a>
+                                    <AjaxButtonAnchor className="btn btn-primary" running={saving} onClick={this.createOrUpdateSubject}>Save</AjaxButtonAnchor>
+                                    <a className="btn btn-default pull-right" onClick={this.cancelSubjectEdit}>Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +206,7 @@ export default class SubjectEditModal extends Component<entireSubjectsStateType 
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <BootstrapButton onClick={props.stopEditingSubjects}>Close</BootstrapButton>
+                    <BootstrapButton onClick={props.stopEditing}>Close</BootstrapButton>
                 </Modal.Footer>
             </Modal>
         );

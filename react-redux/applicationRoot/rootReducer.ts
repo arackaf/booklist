@@ -39,9 +39,10 @@ const initialState = {
 export const hashOf = <T>() => <{ [s: string]: T }>{};
 
 export type appType = typeof initialState;
-export type subjectType = {
+export type SubjectType = {
     _id: string;
     name: string;
+    path: string;
 };
 
 export const objectsToHash = objs => objs.reduce((hash, o) => (hash[o._id] = o, hash), {});
@@ -90,6 +91,9 @@ export const unwindSubjects = subjects => {
 };
 
 export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
+    name1 = name1 || '';
+    name2 = name2 || '';
+    
     let name1After = name1.toLowerCase() > name2.toLowerCase(),
         bothEqual = name1.toLowerCase() === name2.toLowerCase();
     return bothEqual ? 0 : (name1After ? 1 : -1);
@@ -131,7 +135,7 @@ export const stackAndGetTopLevelSubjects = subjectsHash => {
     return subjects.filter(s => s.path == null);
 };
 
-export const computeParentId = path => {
+export const computeSubjectParentId = path => {
     if (path){
         let pathParts = path.split(',');
         return pathParts[pathParts.length - 2];

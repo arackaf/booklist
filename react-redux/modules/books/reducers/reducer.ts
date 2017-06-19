@@ -1,45 +1,29 @@
 import {appType} from 'applicationRoot/rootReducer';
 import { combineReducers } from 'redux';
 import { booksReducer as books, booksType} from './books/reducer';
-import { subjectsReducer as subjects, subjectsType } from './subjects/reducer';
-import { tagsReducer as tags, tagsType } from './tags/reducer';
+import { tagsReducer as tags, TagsType } from './tags/reducer';
 import { bookSearchReducer as bookSearch, bookSearchType, selectEntireBookSearchState } from './bookSearch/reducer';
-import { bookSubjectManagerReducer as booksSubjectsModifier, booksSubjectMofificationType, selectEntireBooksSubjectsModificationState } from './booksSubjectModification/reducer';
-import { bookTagManagerReducer as booksTagsModifier, booksTagModificationType, selectEntireBooksTagModificationState } from './booksTagModification/reducer';
 import editBook, {editBookType} from './editBook/reducer';
 
 export {appType};
 export {booksType};
 export {bookSearchType};
-export {booksSubjectMofificationType};
-export {booksTagModificationType};
 export {editBookType};
-export {subjectsType};
-export {tagsType};
-
-
-import {selectModifyingBooks as subjectsBooksModifyingSelector} from './booksSubjectModification/reducer';
-import {selectModifyingBooks as tagsBooksModifyingSelector} from './booksTagModification/reducer';
+export {TagsType};
 
 export type BooksModuleType = {
     app: appType;
     booksModule: {
         books: booksType;
-        subjects: subjectsType;
         bookSearch: bookSearchType;
-        booksSubjectsModifier: booksSubjectMofificationType;
-        booksTagsModifier: booksTagModificationType;
         editBook: editBookType;
-        tags: tagsType;
+        tags: TagsType;
     }
 }
 
 export const reducer = combineReducers({
     books,
-    subjects,
     bookSearch,
-    booksSubjectsModifier,
-    booksTagsModifier,
     editBook,
     tags
 });
