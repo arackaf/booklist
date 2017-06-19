@@ -92,7 +92,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             return update(state, { 
                 booksHash: { 
                     ...action.books.reduce((hash, _id) => (hash[_id] = {
-                        subjects: { $apply: currentSubjects => currentSubjects.filter(t => !remove.has(t)).concat(action.add) }
+                        subjects: { $apply: currentSubjects => Array.from(new Set(currentSubjects.filter(t => !remove.has(t)).concat(action.add))) }
                     }, hash), {})
                 }
             });
@@ -101,7 +101,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             return update(state, { 
                 booksHash: { 
                     ...action.books.reduce((hash, _id) => (hash[_id] = {
-                        tags: { $apply: currentTags => currentTags.filter(t => !remove.has(t)).concat(action.add) }
+                        tags: { $apply: currentTags => Array.from(new Set(currentTags.filter(t => !remove.has(t)).concat(action.add))) }
                     }, hash), {})
                 }
             });
