@@ -104,6 +104,9 @@ export default class BookViewingList extends Component<mainSelectorType & action
     editSubjects = () => this.setState({subjectEditModalOpen: true});
     stopEditingSubjects = () => this.setState({subjectEditModalOpen: false});
 
+    editSubjectsForBook = book => {
+        this.setState({booksSubjectModifying: [book]});
+    }
     editSubjectsForSelectedBooks = () => {
         this.setState({booksSubjectModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id])});
     }
@@ -131,7 +134,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.isGridView ? <GridView navBarHeight={this.state.navBarHeight} />
+                            (this.props.isGridView ? <GridView editBooksSubjects={this.editSubjectsForBook} navBarHeight={this.state.navBarHeight} />
                                 : this.props.isBasicList ? <BasicListView />
                                 : null) : null }
 
