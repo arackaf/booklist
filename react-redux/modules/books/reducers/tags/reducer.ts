@@ -8,7 +8,6 @@ import {
 } from './actionNames';
 
 import { createSelector, Selector } from 'reselect';
-import {appType} from 'applicationRoot/rootReducer';
 import update from 'immutability-helper';
 
 interface ITag {

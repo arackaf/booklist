@@ -1,4 +1,4 @@
-import {BooksModuleType, appType, bookSearchType, TagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, AppType, bookSearchType, TagsType} from 'modules/books/reducers/reducer';
 
 import {
     BEGIN_FILTER_CHANGE,
@@ -106,7 +106,7 @@ export type bookSearchUiViewType = {
     isGridView: boolean;
     isBasicList: boolean;
 }
-export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearchUiViewType, appType, bookSearchType>(
+export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearchUiViewType, AppType, bookSearchType>(
     state => state.app,
     state => state.booksModule.bookSearch,
     (app, bookSearch) => {
