@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, BooksReducerType, bookSearchType, TagsType} from 'modules/books/reducers/reducer';
 import {
     LOAD_TAGS, 
     LOAD_TAGS_RESULTS,

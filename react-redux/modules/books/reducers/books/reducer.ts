@@ -1,6 +1,6 @@
 import {hashOf} from 'applicationRoot/rootReducer';
 import {bulkMerge} from 'util/immutableHelpers';
-import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, BooksReducerType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
 
@@ -75,9 +75,9 @@ const initialBooksState = {
     resultsCount: 0,
     reloadOnActivate: false
 };
-export type booksType = typeof initialBooksState;
+export type BooksReducerType = typeof initialBooksState;
 
-export function booksReducer(state = initialBooksState, action) : booksType{
+export function booksReducer(state = initialBooksState, action) : BooksReducerType{
     switch(action.type) {
         case LOAD_BOOKS:
             return {...state, booksLoading: true, reloadOnActivate: false };
@@ -155,11 +155,11 @@ function createBooksHash(booksArr){
     return result;
 }
 
-export type booksListType = {
+export type BookListType = {
     booksLoading: boolean,
     booksList: IBookDisplay[]
 }
-export const selectBookList = createSelector<BooksModuleType, booksListType, boolean, any, any, any>(
+export const selectBookList = createSelector<BooksModuleType, BookListType, boolean, any, any, any>(
     state => state.booksModule.books.booksLoading,
     state => state.booksModule.books.booksHash,
     state => state.app.subjectHash,
@@ -178,12 +178,12 @@ export const selectBookList = createSelector<BooksModuleType, booksListType, boo
     }
 );
 
-export type bookSelectionType = {
+export type BookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
     selectedBookHash: any;
 }
-export const selectBookSelection = createSelector<BooksModuleType, bookSelectionType, any, any>(
+export const selectBookSelection = createSelector<BooksModuleType, BookSelectionType, any, any>(
     state => state.booksModule.books.booksHash,
     state => state.booksModule.books.selectedBooks,
     (booksHash, selectedBooks) => {

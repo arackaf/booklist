@@ -5,7 +5,7 @@ import {NavBar} from 'simple-react-bootstrap';
 
 import {BootstrapAnchorButton} from 'applicationRoot/components/bootstrapButton';
 
-import {selectBookSelection, bookSelectionType} from 'modules/books/reducers/books/reducer';
+import {selectBookSelection, BookSelectionType} from 'modules/books/reducers/books/reducer';
 import {selectEntireBookSearchState, entireBookSearchStateType} from 'modules/books/reducers/bookSearch/reducer';
 
 import * as booksActionCreators from '../reducers/books/actionCreators';
@@ -29,9 +29,9 @@ type bookMenuBarType = entireBookSearchStateType & {
     resultsCount: number;
 }
 
-type bookUtilMenuOptionsType = bookSelectionType & {
+type bookUtilMenuOptionsType = BookSelectionType & {
     viewingPublic: boolean;
-}
+};
 
 const menuBarSelector = (state : BooksModuleType) : bookMenuBarType => {
     return {
