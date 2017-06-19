@@ -1,17 +1,15 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 import {
-    LOAD_TAGS, LOAD_TAGS_RESULTS, EDIT_TAG, NEW_TAG, EDIT_TAGS, SET_NEW_TAG_VALUE,
-    STOP_EDITING_TAGS, UPDATE_TAG, UPDATE_TAG_RESULTS, CANCEL_TAG_EDIT,
-    BEGIN_TAG_DELETE, CANCEL_TAG_DELETE, TAG_DELETING, TAG_DELETED, SET_TAG_SEARCH_VALUE
+    LOAD_TAGS, 
+    LOAD_TAGS_RESULTS,
+    UPDATE_TAG_RESULTS,
+    TAG_DELETED
 } from './actionNames';
 
 import { createSelector, Selector } from 'reselect';
 import {appType} from 'applicationRoot/rootReducer';
-
-const emptyTag = { _id: '', name: '', backgroundColor: '', textColor: '' };
-const newTagEditing = { tagSearch: '', deletingTagId: null };
-const doneEditingTag = { saving: false, editingTagId: null, editingTag: null };
+import update from 'immutability-helper';
 
 interface ITag {
     _id: string;
@@ -21,53 +19,18 @@ interface ITag {
 const initialTagsState = {
     tagHash: hashOf<ITag>(),
     loaded: false,
-    tagSearch: '',
-    editTagOpen: false,
-    editingTag: null,
-    editingTagId: null,
-    deleting: false,
-    deletingTagId: null,
-    saving: false
 };
 
-export type tagsType = typeof initialTagsState;
+export type TagsType = typeof initialTagsState;
 
-export function tagsReducer(state = initialTagsState, action) : tagsType {
+export function tagsReducer(state = initialTagsState, action) : TagsType {
     switch(action.type){
         case LOAD_TAGS_RESULTS:
             return { ...state, tagHash: tagsToHash(action.tags), loaded: true };
-        case SET_TAG_SEARCH_VALUE:
-            return { ...state, tagSearch: action.value };
-        case EDIT_TAGS:
-            return { ...state, editTagOpen: true };
-        case SET_NEW_TAG_VALUE:
-            return { ...state, editingTag: {...state.editingTag, [action.field]: action.value } };
-        case STOP_EDITING_TAGS:
-            return { ...state, editTagOpen: false };
-        case NEW_TAG:
-            return {...state, ...newTagEditing, editingTag: { ...emptyTag } };
-        case EDIT_TAG:
-            return { ...state, ...newTagEditing, editingTag: state.tagHash[action._id], editingTagId: action._id };
-        case CANCEL_TAG_EDIT:
-            return { ...state, ...doneEditingTag };
         case UPDATE_TAG_RESULTS:
-            return { ...state, ...doneEditingTag, tagHash: { ...state.tagHash, ...tagsToHash([action.tag]) } };
-        case BEGIN_TAG_DELETE:
-            return { ...state, deletingTagId: action._id };
-        case CANCEL_TAG_DELETE:
-            return { ...state, deletingTagId: null };
-        case TAG_DELETING:
-            return { ...state, deleting: true };
+            return { ...state, tagHash: { ...state.tagHash, ...tagsToHash([action.tag]) } };
         case TAG_DELETED:
-            let tagHash = { ...state.tagHash };
-            delete tagHash[action._id];
-            let newState = { ... state, deleting: false, deletingTagId: null, tagHash };
-
-            if (newState.editingTagId && !newState.tagHash[newState.editingTagId]){
-                newState.editingTagId = newState.editingTag = null;
-            }
-
-            return newState;
+            return update(state, {tagHash: {$unset: [action._id]}})
     }
     return state;
 }
@@ -84,16 +47,6 @@ export const filterTags = (tags, search) => {
     return tags.filter(s => search(s.name));
 };
 
-export type allTagsSortedType = {allTagsSorted: ITag[]};
-export const selectAllTagsSorted = createSelector<BooksModuleType, allTagsSortedType, any>(
-    state => state.booksModule.tags.tagHash,
-    tagHash => {
-        let allTagsSorted = allTagssSorted(tagHash);
-        return { allTagsSorted };
-    }
-);
-
-
 function allTagssSorted(tagHash){
     let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
     return tags.sort(({ name: name1 }, { name: name2 }) => {
@@ -103,50 +56,17 @@ function allTagssSorted(tagHash){
     });
 }
 
-type tagsSearchedType = allTagsSortedType & {
-    tagsSearched: ITag[]
+export type TagsStateType = TagsType & {
+    colors: object[],
+    allTagsSorted: ITag[]
 }
-const selectTagsSearched = createSelector<BooksModuleType, tagsSearchedType, allTagsSortedType, string>(
-    selectAllTagsSorted,
-    state => state.booksModule.tags.tagSearch,
-    (tags, tagSearch) => {
-        let tagsSearched = filterTags(tags.allTagsSorted, tagSearch);
-        return { ...tags, tagsSearched };
-    }
-);
 
-type deletingTagInfoType = {
-    deleteInfo: {
-        tagName: string,
-        _id: string
-    }
-}
-const selectDeletingTagInfo = createSelector<BooksModuleType, deletingTagInfoType, object, string>(
-    state => state.booksModule.tags.tagHash,
-    state => state.booksModule.tags.deletingTagId,
-    (tagHash, deletingTagId) => {
-        if (!deletingTagId) return null;
-
-        let tagName = tagHash[deletingTagId].name;
-
-        return { deleteInfo: { tagName, _id: deletingTagId } };
-    }
-);
-
-export type entireTagsStateType = tagsType & tagsSearchedType & deletingTagInfoType & {
-    colors: object[]
-}
-//TODO:
-
-export const selectEntireTagsState = createSelector<BooksModuleType, entireTagsStateType, tagsType, any, tagsSearchedType, deletingTagInfoType>(
+export const selectEntireTagsState = createSelector<BooksModuleType, TagsStateType, TagsType, object[]>(
     state => state.booksModule.tags,
     state => state.app.colors, 
-    selectTagsSearched,
-    selectDeletingTagInfo,
-    (tags, colors, searchedTags, deletingInfo) => ({
+    (tags, colors) => ({
         ...tags,
-        ...searchedTags, 
-        ...deletingInfo,
-        colors
+        colors,
+        allTagsSorted: allTagssSorted(tags.tagHash)
     })
 );

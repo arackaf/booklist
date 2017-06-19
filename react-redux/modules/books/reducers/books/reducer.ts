@@ -1,6 +1,6 @@
 import {hashOf} from 'applicationRoot/rootReducer';
 import {bulkMerge} from 'util/immutableHelpers';
-import {BooksModuleType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 
 import update from 'immutability-helper';
 
@@ -20,12 +20,13 @@ import {
     EDITORIAL_REVIEWS_LOADING,
     DETAILS_LOADED,
     EXPAND_BOOK,
-    COLLAPSE_BOOK
+    COLLAPSE_BOOK,
+    SET_BOOKS_SUBJECTS,
+    SET_BOOKS_TAGS
 } from './actionNames';
 
 import { SUBJECT_DELETED } from '../subjects/actionNames';
-import { SET_BOOKS_SUBJECTS } from '../booksSubjectModification/actionNames';
-import { SET_BOOKS_TAGS } from '../booksTagModification/actionNames';
+import {  } from '../booksSubjectModification/actionNames';
 import { EDITING_BOOK_SAVED } from '../editBook/actionNames';
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';
@@ -91,7 +92,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             return update(state, { 
                 booksHash: { 
                     ...action.books.reduce((hash, _id) => (hash[_id] = {
-                        subjects: { $apply: currentSubjects => currentSubjects.filter(t => !remove.has(t)).concat(action.add) }
+                        subjects: { $apply: currentSubjects => Array.from(new Set(currentSubjects.filter(t => !remove.has(t)).concat(action.add))) }
                     }, hash), {})
                 }
             });
@@ -100,7 +101,7 @@ export function booksReducer(state = initialBooksState, action) : booksType{
             return update(state, { 
                 booksHash: { 
                     ...action.books.reduce((hash, _id) => (hash[_id] = {
-                        tags: { $apply: currentTags => currentTags.filter(t => !remove.has(t)).concat(action.add) }
+                        tags: { $apply: currentTags => Array.from(new Set(currentTags.filter(t => !remove.has(t)).concat(action.add))) }
                     }, hash), {})
                 }
             });
@@ -180,6 +181,7 @@ export const selectBookList = createSelector<BooksModuleType, booksListType, boo
 export type bookSelectionType = {
     allAreChecked: boolean;
     selectedBooksCount: number;
+    selectedBookHash: any;
 }
 export const selectBookSelection = createSelector<BooksModuleType, bookSelectionType, any, any>(
     state => state.booksModule.books.booksHash,
@@ -188,7 +190,8 @@ export const selectBookSelection = createSelector<BooksModuleType, bookSelection
         let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
         return {
             allAreChecked: Object.keys(booksHash).length == selectedIds,
-            selectedBooksCount: selectedIds
+            selectedBooksCount: selectedIds,
+            selectedBookHash: selectedBooks
         }
     }
 );

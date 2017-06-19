@@ -13,7 +13,9 @@ import {
     EDITORIAL_REVIEWS_LOADING,
     DETAILS_LOADED,
     EXPAND_BOOK,
-    COLLAPSE_BOOK
+    COLLAPSE_BOOK,
+    SET_BOOKS_SUBJECTS,
+    SET_BOOKS_TAGS
 } from './actionNames';
 
 import {BooksModuleType} from 'modules/books/reducers/reducer';
@@ -141,3 +143,19 @@ function executeSetRead(dispatch, ids, value){
 export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });
 
 export const toggleCheckAll = () => ({ type: TOGGLE_CHECK_ALL });
+
+export function setBooksSubjects(books, add, remove){
+    return function(dispatch, getState){
+        return ajaxUtil.post('/bookBulk/setSubjects', { books, add, remove }, resp => {
+            dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove });
+        });
+    }
+}
+
+export function setBooksTags(books, add, remove){
+    return function(dispatch, getState){
+        return ajaxUtil.post('/bookBulk/setTags', { books, add, remove }, resp => {
+            dispatch({ type: SET_BOOKS_TAGS, books, add, remove });
+        });
+    }
+}

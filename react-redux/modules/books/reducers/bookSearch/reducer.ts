@@ -1,4 +1,4 @@
-import {BooksModuleType, appType, booksType, bookSearchType, booksSubjectMofificationType, booksTagModificationType, editBookType, subjectsType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, appType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 
 import {
     BEGIN_FILTER_CHANGE,
@@ -19,8 +19,8 @@ import {
 import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
-import { selectStackedSubjects, stackedSubjectsType, filterSubjects as filterSubjectsOrTags } from '../subjects/reducer';
-import { selectAllTagsSorted, allTagsSortedType } from '../tags/reducer';
+import { selectStackedSubjects, StackedSubjectsType, filterSubjects as filterSubjectsOrTags } from '../subjects/reducer';
+import { selectEntireTagsState, TagsStateType } from '../tags/reducer';
 
 const searchFields = {
     search: '',
@@ -121,8 +121,8 @@ export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearch
     }
 );
 
-const selectSearchedEligibleTags = createSelector<BooksModuleType, tagOrSubject[], allTagsSortedType, string, lookupHashType>(
-    selectAllTagsSorted,
+const selectSearchedEligibleTags = createSelector<BooksModuleType, tagOrSubject[], TagsStateType, string, lookupHashType>(
+    selectEntireTagsState,
     state => state.booksModule.bookSearch.searchTagsValue,
     state => state.booksModule.bookSearch.pending.tags,
     (tagsState, searchValue, currentlySearchedTags) => {
@@ -133,7 +133,7 @@ const selectSearchedEligibleTags = createSelector<BooksModuleType, tagOrSubject[
     }
 );
 
-const selectSearchedEligibleSubjects = createSelector<BooksModuleType, tagOrSubject[], stackedSubjectsType, string, lookupHashType>(
+const selectSearchedEligibleSubjects = createSelector<BooksModuleType, tagOrSubject[], StackedSubjectsType, string, lookupHashType>(
     selectStackedSubjects,
     state => state.booksModule.bookSearch.searchSubjectsValue,
     state => state.booksModule.bookSearch.pending.subjects,
