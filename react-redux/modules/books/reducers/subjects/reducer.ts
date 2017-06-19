@@ -1,4 +1,4 @@
-import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, TagsType} from 'modules/books/reducers/reducer';
 import {createSelector} from 'reselect';
 
 import {
