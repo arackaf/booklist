@@ -165,7 +165,7 @@ export const selectBookList = createSelector<BooksModuleType, booksListType, boo
     state => state.app.subjectHash,
     state => state.booksModule.tags.tagHash,
     (booksLoading, booksHash, subjectsHash, tagHash) => {
-        let books = Object.keys(booksHash).map(_id => booksHash[_id]);
+        let books = Object.keys(booksHash).map(_id => ({...booksHash[_id]}));
         books.forEach(b => {
             b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
             b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
