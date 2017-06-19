@@ -49,7 +49,8 @@
     "simple-react-bootstrap": "0.2.7",
     "ts-loader": "2.1.0",
     "typescript": "^2.4.0",
-    "webpack": "2.6.1"
+    "uglify-js": "2.8.29",
+    "webpack": "^3.0.0"
   },
   "devDependencies": {
     "webpack-bundle-analyzer": "2.2.3",
