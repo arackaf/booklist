@@ -8,7 +8,7 @@ import {IBookDisplay} from 'modules/books/reducers/books/reducer';
 import {selectBookListComponentState, BookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
 
 @connect(null, actions)
-class BookRowRaw extends Component<{book: IBookDisplay; editBooksSubjects: any; index: number; viewingPublic: boolean; selectedBooks: any} & actionsType, any> {
+class BookRowRaw extends Component<{book: IBookDisplay; editBooksSubjects: any; editBooksTags: any; index: number; viewingPublic: boolean; selectedBooks: any} & actionsType, any> {
     render() {
         let {book, index} = this.props,
             style : any = {backgroundColor: index % 2 ? 'white' : '#f9f9f9'};
@@ -50,7 +50,7 @@ class BookRowRaw extends Component<{book: IBookDisplay; editBooksSubjects: any; 
                 <td>
                     { book.tagObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                        <button className="btn btn-default btn-xs" onClick={() => this.props.enableTagModificationSingleBook(book._id)} disabled={this.props.viewingPublic}>Modify</button>
+                        <button className="btn btn-default btn-xs" onClick={() => this.props.editBooksTags(book)} disabled={this.props.viewingPublic}>Modify</button>
                     </div>
                 </td>
                 <td>
@@ -100,7 +100,7 @@ class BookRowDetails extends Component<{book: IBookDisplay; index: number}, any>
 }
 
 @connect(selectBookListComponentState, actions)
-export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType & {navBarHeight: number, editBooksSubjects: any}, any>{
+export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType & {navBarHeight: number; editBooksSubjects: any; editBooksTags: any;}, any>{
     state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     setSort(column){
         let currentSort = this.props.currentSort;
@@ -115,7 +115,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
         let potentialSortIcon = <i className={'fa fa-angle-' + (this.props.sortDirection == '1' ? 'up' : 'down')}></i>,
             sortIconIf = column => column == this.props.currentSort ? potentialSortIcon : null;
 
-        let {navBarHeight, editBooksSubjects} = this.props;
+        let {navBarHeight, editBooksSubjects, editBooksTags} = this.props;
         let stickyHeaderStyle : CSSProperties = {position: 'sticky', top: 50 + navBarHeight, backgroundColor: 'white' };
 
         return (
@@ -146,7 +146,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
                         <tbody>
                         { this.props.booksList.map((book, index) =>
                             [
-                                <BookRow editBooksSubjects={editBooksSubjects} book={book} index={index} viewingPublic={this.props.viewingPublic} selectedBooks={this.props.selectedBooks} />,
+                                <BookRow editBooksSubjects={editBooksSubjects} editBooksTags={editBooksTags} book={book} index={index} viewingPublic={this.props.viewingPublic} selectedBooks={this.props.selectedBooks} />,
                                 book.expanded ? <BookRowDetails book={book} index={index} /> : null
                             ]
                         )}

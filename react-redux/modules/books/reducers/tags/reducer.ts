@@ -1,5 +1,5 @@
 import {hashOf} from 'applicationRoot/rootReducer';
-import {BooksModuleType, booksType, bookSearchType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 import {
     LOAD_TAGS, 
     LOAD_TAGS_RESULTS,
@@ -21,9 +21,9 @@ const initialTagsState = {
     loaded: false,
 };
 
-export type tagsType = typeof initialTagsState;
+export type TagsType = typeof initialTagsState;
 
-export function tagsReducer(state = initialTagsState, action) : tagsType {
+export function tagsReducer(state = initialTagsState, action) : TagsType {
     switch(action.type){
         case LOAD_TAGS_RESULTS:
             return { ...state, tagHash: tagsToHash(action.tags), loaded: true };
@@ -56,12 +56,12 @@ function allTagssSorted(tagHash){
     });
 }
 
-export type TagsStateType = tagsType & {
+export type TagsStateType = TagsType & {
     colors: object[],
     allTagsSorted: ITag[]
 }
 
-export const selectEntireTagsState = createSelector<BooksModuleType, TagsStateType, tagsType, object[]>(
+export const selectEntireTagsState = createSelector<BooksModuleType, TagsStateType, TagsType, object[]>(
     state => state.booksModule.tags,
     state => state.app.colors, 
     (tags, colors) => ({

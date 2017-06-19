@@ -4,19 +4,16 @@ import {selectBookSelection, bookSelectionType, selectBookList, booksListType} f
 import * as actionCreatorsBooks from 'modules/books/reducers/books/actionCreators';
 import * as actionCreatorsEditBook from 'modules/books/reducers/editBook/actionCreators';
 import * as actionCreatorsBookSearch from 'modules/books/reducers/bookSearch/actionCreators';
-import * as actionCreatorsBookTagModification from 'modules/books/reducers/booksTagModification/actionCreators';
 
 export const actions = { 
     ...actionCreatorsBooks, 
     ...actionCreatorsEditBook, 
     ...actionCreatorsBookSearch, 
-    ...actionCreatorsBookTagModification 
 };
 
 export type actionsType = typeof actionCreatorsBooks & 
                           typeof actionCreatorsEditBook & 
-                          typeof actionCreatorsBookSearch & 
-                          typeof actionCreatorsBookTagModification;
+                          typeof actionCreatorsBookSearch;
 
 export type BookListComponentStateType = bookSelectionType & booksListType & {
     viewingPublic: boolean,

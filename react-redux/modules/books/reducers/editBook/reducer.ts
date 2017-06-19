@@ -1,4 +1,4 @@
-import {BooksModuleType, booksType, bookSearchType, booksTagModificationType, editBookType, tagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, booksType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
 import {
     EDIT_BOOK,
     STOP_EDITING_BOOK,

@@ -12,7 +12,6 @@ import * as booksActionCreators from '../reducers/books/actionCreators';
 import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators';
 import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
 import * as tagsActionCreators from '../reducers/tags/actionCreators';
-import * as booksTagModificationActionCreators from '../reducers/booksTagModification/actionCreators';
 
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
@@ -59,6 +58,7 @@ interface IAddedMenuProps {
     editTags: any;
     editSubjects: any;
     startSubjectModification: any;
+    startTagModification: any;
 }
 
 @connect(menuBarSelector, { ...bookSearchActionCreators })
@@ -81,7 +81,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
             selectedSubjectsHeader = 'Searching ' + selectedSubjectsCount + ' Subject' + (selectedSubjectsCount === 1 ? '' : 's'),
             selectedTagsHeader = 'Searching ' + selectedTagsCount + ' Tag' + (selectedTagsCount === 1 ? '' : 's');
 
-        let {isPublic, publicBooksHeader, publicName, anyActiveFilters, editTags, editSubjects, startSubjectModification} = this.props;
+        let {isPublic, publicBooksHeader, publicName, anyActiveFilters, editTags, editSubjects, startSubjectModification, startTagModification} = this.props;
         let booksHeader = isPublic ? (publicBooksHeader || (`${publicName}'s Books`)) : 'Your Books';
 
         let UtilMenu : any = UtilMenuOptions,
@@ -104,7 +104,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 </NavBar.Brand>
                                 <NavBar.Toggle />
                             </NavBar.Header>
-                            <UtilMenu startSubjectModification={startSubjectModification} editSubjects={editSubjects} editTags={editTags} />
+                            <UtilMenu startSubjectModification={startSubjectModification} startTagModification={startTagModification} editSubjects={editSubjects} editTags={editTags} />
                             <NavBar.Form className="navbar-left">
                                 <div className="form-group" style={{ marginRight: '5px' }}>
                                     {this.props.showingMobile ?
@@ -199,10 +199,9 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
 type utilMenuOptionsComponentType = bookUtilMenuOptionsType &
                                     typeof booksActionCreators &
                                     typeof subjectsActionCreators & 
-                                    typeof booksTagModificationActionCreators &
                                     typeof tagsActionCreators & 
-                                    {editTags : any, editSubjects: any, startSubjectModification: any}
-@connect(utilMenuOptionsSelector, { ...booksActionCreators, ...subjectsActionCreators, ...booksTagModificationActionCreators, ...tagsActionCreators })
+                                    {editTags : any; editSubjects: any; startSubjectModification: any; startTagModification: any}
+@connect(utilMenuOptionsSelector, { ...booksActionCreators, ...subjectsActionCreators, ...tagsActionCreators })
 class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
     render() {
         return (
@@ -214,7 +213,7 @@ class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
 
                 <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text='Selected books' style={{ marginRight: '5px' }}>
                     <NavBar.Item onClick={this.props.startSubjectModification}>Set subjects</NavBar.Item>
-                    <NavBar.Item onClick={this.props.enableTagModificationToggledBooks}>Set tags</NavBar.Item>
+                    <NavBar.Item onClick={this.props.startTagModification}>Set tags</NavBar.Item>
                     <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
                     <NavBar.Item onClick={this.props.setSelectedUnRead}>Set all un-read</NavBar.Item>
                 </NavBar.Dropdown>
