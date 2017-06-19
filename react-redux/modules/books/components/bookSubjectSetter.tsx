@@ -74,8 +74,8 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
         });
     }
     render(){
-        let tagSelectedToAdd = this.addingSubjectSet.bind(null, true),
-            tagSelectedToRemove = this.removingSubjectSet.bind(null, true);
+        let subjectSelectedToAdd = this.addingSubjectSet.bind(null, true),
+            subjectSelectedToRemove = this.removingSubjectSet.bind(null, true);
 
         let dontAddSubject = this.addingSubjectSet.bind(null, false),
             dontRemoveSubject = this.removingSubjectSet.bind(null, false);
@@ -104,7 +104,7 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Adding', value: this.state.addingSubjectSearch, onChange: evt => this.setState({addingSubjectSearch: evt.target.value}) }}
                                         suggestions={this.eligibleToAdd()}
-                                        onSuggestionSelected={tagSelectedToAdd} />
+                                        onSuggestionSelected={subjectSelectedToAdd} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
@@ -124,7 +124,7 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                                     <GenericLabelSelect
                                         inputProps={{ placeholder: 'Removing', value: this.state.removingSubjectSearch, onChange: evt => this.setState({removingSubjectSearch: evt.target.value}) }}
                                         suggestions={this.eligibleToRemove()}
-                                        onSuggestionSelected={tagSelectedToRemove} />
+                                        onSuggestionSelected={subjectSelectedToRemove} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
