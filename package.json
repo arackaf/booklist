@@ -62,8 +62,6 @@
     "passport-remember-me": "0.0.1",
     "regenerator": "0.8.36",
     "typescript": "^2.4.0",
-    "webpack": "2.2.1",
-    "webpack-bundle-analyzer": "2.2.3",
     "ws": "1.0.1"
   }
 }

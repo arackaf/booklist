@@ -53,6 +53,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
         (!noVisualization ? 
             new BundleAnalyzerPlugin({
                 analyzerMode: 'static'
