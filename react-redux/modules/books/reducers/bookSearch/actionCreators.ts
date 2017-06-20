@@ -8,8 +8,6 @@ import {
     SET_PENDING,
     APPLY_PENDING_SEARCH,
     SET_VIEWING_USERID,
-    SET_SEARCH_SUBJECTS_VALUE,
-    SET_SEARCH_TAGS_VALUE,
     SET_GRID_VIEW,
     SET_BASIC_LIST_VIEW,
     GRID_VIEW,
@@ -27,14 +25,6 @@ export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
 
 export function beginFilterChange(){
     return { type: BEGIN_FILTER_CHANGE };
-}
-
-export function setSearchSubjectsValue(obj){
-    return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value || '' };
-}
-
-export function setSearchTagsValue(obj){
-    return { type: SET_SEARCH_TAGS_VALUE, value: obj.target.value || '' };
 }
 
 export function addPendingSubject({ _id }){

@@ -10,8 +10,29 @@ import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
 import {InputForPending, RadioForPending} from './pendingInputs';
 
+import SelectAvailable from './availableTagsOrSubjects';
+
+import {filterSubjects} from 'modules/books/reducers/subjects/reducer'; 
+import {filterTags} from 'modules/books/reducers/tags/reducer'; 
+
 @connect(selectEntireBookSearchState, { ...bookSearchActionCreators })
 export default class BookSearchModal extends Component<entireBookSearchStateType & typeof bookSearchActionCreators, any> {
+    state = {
+        searchTagsValue: '',
+        searchSubjectsValue: ''
+    }
+    setTagSearchVal = val => this.setState({searchTagsValue: val});
+    setSubjectSearchVal = val => this.setState({searchSubjectsValue: val});
+
+    addPendingSubject = subject => {
+        this.props.addPendingSubject(subject);
+        this.setState({searchSubjectsValue: ''});
+    }
+    addPendingTag = tag => {
+        this.props.addPendingTag(tag);
+        this.setState({searchTagsValue: ''});
+    }
+
     render(){
         return (
             <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
@@ -85,10 +106,16 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
 
                     <div className="row" style={{ position: 'relative' }}>
                         <div className="col-xs-3">
-                            <GenericLabelSelect
-                                inputProps={{ placeholder: 'Tags', value: this.props.searchTagsValue, onChange: this.props.setSearchTagsValue }}
-                                suggestions={this.props.eligibleFilterTags}
-                                onSuggestionSelected={this.props.addPendingTag} />
+
+                            <SelectAvailable 
+                                placeholder="Tags"
+                                search={this.state.searchTagsValue}
+                                onSearchChange={this.setTagSearchVal}
+                                items={this.props.allTagsSorted}
+                                currentlySelected={this.props.pendingSelectedTags}
+                                onSelect={this.addPendingTag}
+                                filter={filterTags} />
+
                         </div>
                         <div className="col-xs-9">
                             <div>
@@ -102,10 +129,14 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
 
                     <div className="row" style={{ position: 'relative' }}>
                         <div className="col-xs-3">
-                            <GenericLabelSelect
-                                inputProps={{ placeholder: 'Subjects', value: this.props.searchSubjectsValue, onChange: this.props.setSearchSubjectsValue }}
-                                suggestions={this.props.eligibleFilterSubjects}
-                                onSuggestionSelected={this.props.addPendingSubject} />
+                            <SelectAvailable 
+                                placeholder="Subjects"
+                                search={this.state.searchSubjectsValue}
+                                onSearchChange={this.setSubjectSearchVal}
+                                items={this.props.subjectsUnwound}
+                                currentlySelected={this.props.pendingSelectedSubjects}
+                                onSelect={this.addPendingSubject}
+                                filter={filterSubjects} />
                         </div>
                         <div className="col-xs-9">
                             <div>
