@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
+import SelectAvailable from './selectAvailable';
 
 import {setBooksTags} from 'modules/books/reducers/books/actionCreators'; 
 import {filterTags} from 'modules/books/reducers/tags/reducer'; 
@@ -24,23 +25,7 @@ export default class BookTagSetterDesktopUnConnected extends Component<TagsState
         addingTagSearch: '',
         removingTagSearch: '',
         saving: false
-    };    
-    
-    _eligibleToAdd = createSelector(o => o.tags, o => o.adding, o => o.filter,
-        (tags, adding, filter) => {
-            let addingHash = adding.reduce((hash, _id) => (hash[_id] = true, hash), {});
-            return filterTags(tags.filter(s => !addingHash[s._id]), filter);
-        }
-    )
-    eligibleToAdd = () => this._eligibleToAdd({tags: this.props.allTagsSorted, adding: this.state.addingTags, filter: this.state.addingTagSearch});
-
-    _eligibleToRemove = createSelector(o => o.tags, o => o.removing, o => o.filter,
-        (tags, removing, filter) => {
-            let addingHash = removing.reduce((hash, _id) => (hash[_id] = true, hash), {});
-            return filterTags(tags.filter(s => !addingHash[s._id]), filter);
-        }
-    )
-    eligibleToRemove = () => this._eligibleToRemove({tags: this.props.allTagsSorted, removing: this.state.removingTags, filter: this.state.removingTagSearch});
+    };
 
     setBooksTags = () => {
         this.setState({saving: true});
@@ -61,22 +46,24 @@ export default class BookTagSetterDesktopUnConnected extends Component<TagsState
             addingTagSearch: adding ? '' : this.state.addingTagSearch
         });
     }
+    tagSelectedToAdd = this.addingTagSet.bind(null, true);
     removingTagSet = (adding, {_id}) => {
         this.setState({
             removingTags: adding ? this.state.removingTags.concat(_id) : this.state.removingTags.filter(x => x != _id),
             removingTagSearch: adding ? '' : this.state.removingTagSearch
         });
     }
+    tagSelectedToRemove = this.removingTagSet.bind(null, true);
     resetTags = () => {
         this.setState({
             addingTags: [],
             removingTags: []
         });
     }
-    render(){
-        let tagSelectedToAdd = this.addingTagSet.bind(null, true),
-            tagSelectedToRemove = this.removingTagSet.bind(null, true);
+    setAddingSearchVal = val => this.setState({addingTagSearch: val});
+    setRemovingSearchVal = val => this.setState({removingTagSearch: val + ''});
 
+    render(){
         let dontAddTag = this.addingTagSet.bind(null, false),
             dontRemoveTag = this.removingTagSet.bind(null, false);
 
@@ -84,7 +71,7 @@ export default class BookTagSetterDesktopUnConnected extends Component<TagsState
             <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.onDone}>
                 <Modal.Header>
                     <button type="button" className="close" onClick={this.props.onDone} aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 className="modal-title">Edit tags:</h4>
+                    <h4 className="modal-title">Add / Remove Tags:</h4>
                 </Modal.Header>
                 <Modal.Body>
                     <ul className="nav nav-tabs">
@@ -100,10 +87,14 @@ export default class BookTagSetterDesktopUnConnected extends Component<TagsState
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
-                                    <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Adding', value: this.state.addingTagSearch, onChange: evt => this.setState({addingTagSearch: evt.target.value}) }}
-                                        suggestions={this.eligibleToAdd()}
-                                        onSuggestionSelected={tagSelectedToAdd} />
+                                    <SelectAvailable 
+                                        placeholder="Adding"
+                                        search={this.state.addingTagSearch}
+                                        onSearchChange={this.setAddingSearchVal}
+                                        items={this.props.allTagsSorted}
+                                        currentlySelected={this.state.addingTags}
+                                        onSelect={this.tagSelectedToAdd}
+                                        filter={filterTags} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
@@ -120,10 +111,14 @@ export default class BookTagSetterDesktopUnConnected extends Component<TagsState
 
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
-                                    <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Removing', value: this.state.removingTagSearch, onChange: evt => this.setState({removingTagSearch: evt.target.value}) }}
-                                        suggestions={this.eligibleToRemove()}
-                                        onSuggestionSelected={tagSelectedToRemove} />
+                                    <SelectAvailable 
+                                        placeholder="Removing"
+                                        search={this.state.removingTagSearch}
+                                        onSearchChange={this.setRemovingSearchVal}
+                                        items={this.props.allTagsSorted}
+                                        currentlySelected={this.state.removingTags}
+                                        onSelect={this.tagSelectedToRemove}
+                                        filter={filterTags} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>

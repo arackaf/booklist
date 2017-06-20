@@ -17,8 +17,6 @@ export default class SelectAvailableItems extends PureComponent<Props, any> {
             itemHash = currentlySelected.reduce((hash, _id) => (hash[_id] = true, hash), {}),
             eligible = filter(items.filter(s => !itemHash[s._id]), search);
 
-        console.log('RENDER', placeholder);
-
         return (
             <GenericLabelSelect
                 inputProps={{ placeholder, value: search, onChange: evt => onSearchChange(evt.target.value) }}
