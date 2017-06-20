@@ -30,13 +30,13 @@ const ManualBookEntry = Loadable({
 });
 
 const BookSubjectSetter = Loadable({
-    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookSubjectSetter'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './tagSubjectSetter/bookSubjectSetter'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });
 
 const BookTagSetter = Loadable({
-    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookTagSetter'),
+    loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './tagSubjectSetter/bookTagSetter'),
     LoadingComponent: ComponentLoading,
     delay: 500
 });

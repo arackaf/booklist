@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import { Modal } from 'simple-react-bootstrap';
-import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
+import SelectAvailable from './selectAvailable';
 
 import {setBooksSubjects} from 'modules/books/reducers/books/actionCreators'; 
 import {filterSubjects} from 'modules/books/reducers/subjects/reducer'; 
@@ -26,22 +27,6 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
         saving: false
     };    
     
-    _eligibleToAdd = createSelector(o => o.subjects, o => o.adding, o => o.filter,
-        (subjects, adding, filter) => {
-            let addingHash = adding.reduce((hash, _id) => (hash[_id] = true, hash), {});
-            return filterSubjects(subjects.filter(s => !addingHash[s._id]), filter);
-        }
-    )
-    eligibleToAdd = () => this._eligibleToAdd({subjects: this.props.subjectsUnwound, adding: this.state.addingSubjects, filter: this.state.addingSubjectSearch});
-
-    _eligibleToRemove = createSelector(o => o.subjects, o => o.removing, o => o.filter,
-        (subjects, removing, filter) => {
-            let addingHash = removing.reduce((hash, _id) => (hash[_id] = true, hash), {});
-            return filterSubjects(subjects.filter(s => !addingHash[s._id]), filter);
-        }
-    )
-    eligibleToRemove = () => this._eligibleToRemove({subjects: this.props.subjectsUnwound, removing: this.state.removingSubjects, filter: this.state.removingSubjectSearch});
-
     setBooksSubjects = () => {
         this.setState({saving: true});
         Promise.resolve(
@@ -61,22 +46,25 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
             addingSubjectSearch: adding ? '' : this.state.addingSubjectSearch
         });
     }
+    subjectSelectedToAdd = this.addingSubjectSet.bind(null, true);
+    
     removingSubjectSet = (adding, {_id}) => {
         this.setState({
             removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id),
             removingSubjectSearch: adding ? '' : this.state.removingSubjectSearch
         });
     }
+    subjectSelectedToRemove = this.removingSubjectSet.bind(null, true);
     resetSubjects = () => {
         this.setState({
             addingSubjects: [],
             removingSubjects: []
         });
     }
-    render(){
-        let subjectSelectedToAdd = this.addingSubjectSet.bind(null, true),
-            subjectSelectedToRemove = this.removingSubjectSet.bind(null, true);
+    setAddingSearchVal = val => this.setState({addingSubjectSearch: val});
+    setRemovingSearchVal = val => this.setState({removingSubjectSearch: val + ''});
 
+    render(){
         let dontAddSubject = this.addingSubjectSet.bind(null, false),
             dontRemoveSubject = this.removingSubjectSet.bind(null, false);
 
@@ -101,10 +89,14 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
                             <br />
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
-                                    <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Adding', value: this.state.addingSubjectSearch, onChange: evt => this.setState({addingSubjectSearch: evt.target.value}) }}
-                                        suggestions={this.eligibleToAdd()}
-                                        onSuggestionSelected={subjectSelectedToAdd} />
+                                    <SelectAvailable 
+                                        placeholder="Adding"
+                                        search={this.state.addingSubjectSearch}
+                                        onSearchChange={this.setAddingSearchVal}
+                                        items={this.props.subjectsUnwound}
+                                        currentlySelected={this.state.addingSubjects}
+                                        onSelect={this.subjectSelectedToAdd}
+                                        filter={filterSubjects} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>
@@ -121,10 +113,14 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
 
                             <div style={{ position: 'relative' }} className="row">
                                 <div className="col-xs-3">
-                                    <GenericLabelSelect
-                                        inputProps={{ placeholder: 'Removing', value: this.state.removingSubjectSearch, onChange: evt => this.setState({removingSubjectSearch: evt.target.value}) }}
-                                        suggestions={this.eligibleToRemove()}
-                                        onSuggestionSelected={subjectSelectedToRemove} />
+                                    <SelectAvailable 
+                                        placeholder="Removing"
+                                        search={this.state.removingSubjectSearch}
+                                        onSearchChange={this.setRemovingSearchVal}
+                                        items={this.props.subjectsUnwound}
+                                        currentlySelected={this.state.removingSubjects}
+                                        onSelect={this.subjectSelectedToRemove}
+                                        filter={filterSubjects} />
                                 </div>
                                 <div className="col-xs-9">
                                     <div>

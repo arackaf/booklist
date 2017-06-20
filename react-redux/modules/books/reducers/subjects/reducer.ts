@@ -19,7 +19,6 @@ export const selectStackedSubjects = createSelector<BooksModuleType, StackedSubj
     subjectHash => {
         let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
             subjectsUnwound = unwindSubjects(mainSubjectsCollection);
-
         return {
             subjects: mainSubjectsCollection,
             allSubjectsSorted: allSubjectsSorted(subjectHash),
