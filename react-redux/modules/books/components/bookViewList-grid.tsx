@@ -7,8 +7,18 @@ import { LabelDisplay } from 'applicationRoot/components/labelDisplay';
 import {IBookDisplay} from 'modules/books/reducers/books/reducer';
 import {selectBookListComponentState, BookListComponentStateType, actions, actionsType} from './sharedSelectors/bookListComponentSelectors';
 
+interface ILocalProps {
+    book: IBookDisplay; 
+    editBooksSubjects: any; 
+    editBooksTags: any; 
+    index: number; 
+    viewingPublic: boolean; 
+    selectedBooks: any;
+    editBook: any;
+}
+
 @connect(null, actions)
-class BookRowRaw extends Component<{book: IBookDisplay; editBooksSubjects: any; editBooksTags: any; index: number; viewingPublic: boolean; selectedBooks: any} & actionsType, any> {
+class BookRowRaw extends Component<ILocalProps & actionsType, any> {
     render() {
         let {book, index} = this.props,
             style : any = {backgroundColor: index % 2 ? 'white' : '#f9f9f9'};
@@ -100,7 +110,7 @@ class BookRowDetails extends Component<{book: IBookDisplay; index: number}, any>
 }
 
 @connect(selectBookListComponentState, actions)
-export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType & {navBarHeight: number; editBooksSubjects: any; editBooksTags: any;}, any>{
+export default class BookViewListGrid extends Component<BookListComponentStateType & actionsType & {navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any}, any>{
     state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
     setSort(column){
         let currentSort = this.props.currentSort;
@@ -146,7 +156,7 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
                         <tbody>
                         { this.props.booksList.map((book, index) =>
                             [
-                                <BookRow editBooksSubjects={editBooksSubjects} editBooksTags={editBooksTags} book={book} index={index} viewingPublic={this.props.viewingPublic} selectedBooks={this.props.selectedBooks} />,
+                                <BookRow editBooksSubjects={editBooksSubjects} editBooksTags={editBooksTags} book={book} editBook={this.props.editBook} index={index} viewingPublic={this.props.viewingPublic} selectedBooks={this.props.selectedBooks} />,
                                 book.expanded ? <BookRowDetails book={book} index={index} /> : null
                             ]
                         )}

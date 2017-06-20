@@ -1,4 +1,4 @@
-import {BooksModuleType, AppType, bookSearchType, editBookType, TagsType} from 'modules/books/reducers/reducer';
+import {BooksModuleType, AppType, bookSearchType, TagsType} from 'modules/books/reducers/reducer';
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
@@ -13,7 +13,7 @@ const BasicListView : any = BLV;
 import BMB from './booksMenuBar';
 const BooksMenuBar : any = BMB;
 
-import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
+import * as actionCreatorsBooks from '../reducers/books/actionCreators';
 import * as actionCreatorsSearch from '../reducers/bookSearch/actionCreators';
 import Loading from 'applicationRoot/components/loading';
 import Loadable from 'react-loadable';
@@ -59,25 +59,23 @@ const BookSearchModal = Loadable({
     delay: 500
 });
 
-type actionsType = typeof actionCreatorsEditBook & typeof actionCreatorsSearch;
-type mainSelectorType = editBookType & bookSearchUiViewType & BookListType & BookSelectionType & {
+type actionsType = typeof actionCreatorsBooks & typeof actionCreatorsSearch;
+type mainSelectorType = bookSearchUiViewType & BookListType & BookSelectionType & {
     subjectsLoaded: boolean;
     tagsLoaded: boolean;
     editingBookSearchFilters: boolean;
 }
 
-const mainSelector = createSelector<BooksModuleType, mainSelectorType, AppType, editBookType, TagsType, bookSearchType, BookListType, BookSelectionType, bookSearchUiViewType>(
+const mainSelector = createSelector<BooksModuleType, mainSelectorType, AppType, TagsType, bookSearchType, BookListType, BookSelectionType, bookSearchUiViewType>(
     state => state.app,
-    state => state.booksModule.editBook,
     state => state.booksModule.tags,
     state => state.booksModule.bookSearch,
     selectBookList,
     selectBookSelection,
     selectBookSearchUiView,
-    (app, editBook, tags, bookSearch, books, bookSelection, bookSearchUi) => {
+    (app, tags, bookSearch, books, bookSelection, bookSearchUi) => {
         return {
             subjectsLoaded: app.subjectsLoaded,
-            ...editBook,
             tagsLoaded: tags.loaded,
             editingBookSearchFilters: bookSearch.editingFilters,
             ...books,
@@ -87,7 +85,7 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, AppType, 
     }
 );
 
-@connect(mainSelector, { ...actionCreatorsEditBook, ...actionCreatorsSearch })
+@connect(mainSelector, { ...actionCreatorsBooks, ...actionCreatorsSearch })
 export default class BookViewingList extends Component<mainSelectorType & actionsType, any> {
     state = { 
         navBarHeight: null, 
@@ -95,6 +93,9 @@ export default class BookViewingList extends Component<mainSelectorType & action
         subjectEditModalOpen: false,
         booksSubjectModifying: null,
         booksTagModifying: null,
+        isEditingBook: false,
+        editingBookSaving: false,
+        editingBook: null
     }
     editTags = () => this.setState({tagEditModalOpen: true});
     stopEditingTags = () => this.setState({tagEditModalOpen: false});
@@ -109,11 +110,29 @@ export default class BookViewingList extends Component<mainSelectorType & action
     editTagsForSelectedBooks = () => this.setState({booksTagModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id])});
     doneEditingBooksTags = () => this.setState({booksTagModifying: null});
     
+    editBook = book => this.setState({
+        isEditingBook: true,
+        editingBook: book
+    });
+    stopEditingBook = () => this.setState({isEditingBook: false});
+    saveEditingBook = book => {
+        this.setState({editingBookSaving: true});
+        Promise
+            .resolve(this.props.saveEditingBook(book))
+            .then(() => {
+                this.setState({
+                    editingBookSaving: false,
+                    isEditingBook: false,
+                    editingBook: null
+                });
+            })
+    }
+
     navBarSized = (contentRect) => {
         this.setState({navBarHeight: contentRect.client.height});
     }
     render() {
-        let editingBook = this.props.editingBook,
+        let editingBook = this.state.editingBook,
             dragTitle = editingBook ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed` : '';
 
         return (
@@ -129,21 +148,21 @@ export default class BookViewingList extends Component<mainSelectorType & action
                             </div> : null }
 
                         {this.props.subjectsLoaded && this.props.tagsLoaded ?
-                            (this.props.isGridView ? <GridView editBooksTags={this.editTagsForBook} editBooksSubjects={this.editSubjectsForBook} navBarHeight={this.state.navBarHeight} />
-                                : this.props.isBasicList ? <BasicListView />
+                            (this.props.isGridView ? <GridView editBook={this.editBook} editBooksTags={this.editTagsForBook} editBooksSubjects={this.editSubjectsForBook} navBarHeight={this.state.navBarHeight} />
+                                : this.props.isBasicList ? <BasicListView editBook={this.editBook} />
                                 : null) : null }
 
-                        {this.props.isEditingBook ? 
+                        {this.state.isEditingBook ? 
                             <ManualBookEntry
                                 title={editingBook ? `Edit ${editingBook.title}` : ''}
                                 dragTitle={dragTitle}
                                 bookToEdit={editingBook}
-                                isOpen={this.props.isEditingBook}
-                                isSaving={this.props.editingBookSaving}
-                                isSaved={this.props.editingBookSaved}
-                                saveBook={book => this.props.saveEditingBook(book)}
+                                isOpen={this.state.isEditingBook}
+                                isSaving={this.state.editingBookSaving}
+                                isSaved={false}
+                                saveBook={this.saveEditingBook}
                                 saveMessage={'Saved'}
-                                onClosing={this.props.stopEditingBook} /> : null
+                                onClosing={this.stopEditingBook} /> : null
                         }
                         
                     </div>
