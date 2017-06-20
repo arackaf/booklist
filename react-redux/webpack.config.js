@@ -1,7 +1,7 @@
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var path = require('path');
 var webpack = require('webpack');
-var noVisualization = process.env.NODE_ENV === 'production' 
+var isProduction = process.env.NODE_ENV === 'production' 
         || process.argv.slice(-1)[0] == '-p'
         || process.argv.some(arg => arg.indexOf('webpack-dev-server') >= 0);
 
@@ -53,8 +53,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        (!noVisualization ? 
+        (!isProduction ? 
             new BundleAnalyzerPlugin({
                 analyzerMode: 'static'
             }) : null),
@@ -86,6 +85,7 @@ module.exports = {
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
 
+        isProduction ? new webpack.optimize.ModuleConcatenationPlugin() : null
 
     ].filter(p => p),
     devServer: {

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
 import { Modal } from 'simple-react-bootstrap';
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
-import SelectAvailable from './selectAvailable';
+import SelectAvailable from './availableTagsOrSubjects';
 
 import {setBooksTags} from 'modules/books/reducers/books/actionCreators'; 
 import {filterTags} from 'modules/books/reducers/tags/reducer'; 
