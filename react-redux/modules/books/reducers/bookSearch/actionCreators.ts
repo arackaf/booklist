@@ -44,8 +44,8 @@ export function applyFilters(obj : any){
             'searchChildSubjects': pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
             'author': pending.author,
             'publisher': pending.publisher,
-            'pagesOperator': pending.pages != '' ? pending.pagesOperator : null,
-            'pages': pending.pages,
+            'pagesOperator': obj.pages != '' ? obj.pagesOperator : null,
+            'pages': obj.pages,
             'isRead': pending.isRead
         });
         dispatch(endFilterChanging());

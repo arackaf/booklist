@@ -36,11 +36,15 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
         this.props.applyFilters({
             subjects: this.state.subjects,
             tags: this.state.tags,
-            search: this.searchEl.value
+            search: this.searchEl.value,
+            pages: this.pagesEl.value,
+            pagesOperator: this.pagesDirEl.value,
         })
     }
 
     searchEl: any;
+    pagesEl: any;
+    pagesDirEl: any;
 
     render(){
         return (
@@ -63,13 +67,13 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                                     <label>Pages</label>
                                     <div className="form-inline">
                                         <div style={{ marginRight: 10 }} className="form-group">
-                                            <select onChange={this.props.setPendingPagesOperator} value={this.props.pending.pagesOperator} className="form-control">
+                                            <select ref={el => this.pagesDirEl = el} defaultValue={this.props.pending.pagesOperator} className="form-control">
                                                 <option value="lt">{'<'}</option>
                                                 <option value="gt">{'>'}</option>
                                             </select>
                                         </div>
                                         <div className="form-group">
-                                            <InputForPending name="pages" parentProps={this.props} type="number" placeholder="Number of pages" />
+                                            <input defaultValue={this.props.pages} ref={el => this.pagesEl = el} type="number" placeholder="Number of pages" className="form-control" />
                                         </div>
                                     </div>
                                 </div>
