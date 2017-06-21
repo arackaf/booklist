@@ -2,12 +2,10 @@ import {BooksModuleType, AppType, bookSearchType, TagsType} from 'modules/books/
 
 import {
     BEGIN_FILTER_CHANGE,
-    SET_PENDING_SUBJECT,
     END_FILTER_CHANGE,
     SET_FILTERS,
     SET_PENDING,
     SET_VIEWING_USERID,
-    SET_PENDING_TAG,
     SET_GRID_VIEW,
     SET_BASIC_LIST_VIEW,
     GRID_VIEW,
@@ -58,10 +56,6 @@ export function bookSearchReducer(state = initialState, action) : bookSearchType
             let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: '', searchTagsValue: '' });
             Object.keys(searchFields).forEach(k => state.pending[k] = state[k]);
             return result;
-        case SET_PENDING_SUBJECT:
-            return Object.assign({}, state, { pending: { ...state.pending, subjects: { ...state.pending.subjects, [action._id]: action.value } } });
-        case SET_PENDING_TAG:
-            return Object.assign({}, state, { pending: { ...state.pending, tags: { ...state.pending.tags, [action._id]: action.value } } });
         case END_FILTER_CHANGE:
             return Object.assign({}, state, { editingFilters: false });
         case LOAD_BOOKS_RESULTS:
@@ -123,6 +117,8 @@ export type entireBookSearchStateType = bookSearchType & bookSearchUiViewType & 
     selectedTags: tagOrSubject[];
     bindableSortValue: any;
     anyActiveFilters: boolean;
+    subjectHash: any;
+    tagHash: any;
 
 };
 export const selectEntireBookSearchState = createSelector<BooksModuleType, entireBookSearchStateType, TagsStateType, StackedSubjectsType, tagOrSubject[], tagOrSubject[], tagOrSubject[], tagOrSubject[], bookSearchType, bookSearchUiViewType>(
@@ -146,6 +142,8 @@ export const selectEntireBookSearchState = createSelector<BooksModuleType, entir
 
         return {
             ...bookSearch,
+            tagHash: tagsState.tagHash,
+            subjectHash: subjectsState.subjectHash,
             subjectsUnwound: subjectsState.subjectsUnwound,
             allTagsSorted: tagsState.allTagsSorted,
             anyActiveFilters: !!anyActiveFilters,

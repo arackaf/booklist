@@ -1,8 +1,6 @@
 import {store} from 'applicationRoot/store';
 import {
     BEGIN_FILTER_CHANGE,
-    SET_PENDING_SUBJECT,
-    SET_PENDING_TAG,
     END_FILTER_CHANGE,
     SET_FILTERS,
     SET_PENDING,
@@ -27,36 +25,20 @@ export function beginFilterChange(){
     return { type: BEGIN_FILTER_CHANGE };
 }
 
-export function addPendingSubject({ _id }){
-    return { type: SET_PENDING_SUBJECT, _id, value: true };
-}
-
-export function removePendingSubject(_id){
-    return { type: SET_PENDING_SUBJECT, _id, value: false };
-}
-
-export function addPendingTag({ _id }){
-    return { type: SET_PENDING_TAG, _id, value: true };
-}
-
-export function removePendingTag(_id){
-    return { type: SET_PENDING_TAG, _id, value: false };
-}
-
 export function endFilterChanging(){
     return { type: END_FILTER_CHANGE };
 }
 
-export function applyFilters(){
+export function applyFilters(obj : any){
     return function(dispatch, getState) {
         let state = getState().booksModule.bookSearch,
-            filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-'),
-            filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
+            filterSubjectsVal = obj.subjects.join('-'),
+            filterTagsVal = obj.tags.join('-'),
             pending = state.pending;
 
         setSearchValues({
             'page': null,
-            'search': pending.search,
+            'search': obj.search,
             'subjects': filterSubjectsVal,
             'tags': filterTagsVal,
             'searchChildSubjects': pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
@@ -204,7 +186,7 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
     return function (evt) {
         return function (dispatch, getState) {
             if (evt.which === 13){
-                dispatch(applyFilters());
+                dispatch(applyFilters({}));
             } else {
                 dispatch({type: SET_PENDING, field: name, value: getEvtValue(evt)})
             }
@@ -215,7 +197,7 @@ function createPendingActionCreator(name, getEvtValue = evt => evt.target.value)
 export function clearSearchChildSubjects(){
     return function(dispatch, getState){
         dispatch({type: SET_PENDING, field: 'searchChildSubjects', value: null});
-        dispatch(applyFilters());
+        dispatch(applyFilters({}));
     }
 }
 

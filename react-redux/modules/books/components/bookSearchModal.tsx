@@ -19,19 +19,28 @@ import {filterTags} from 'modules/books/reducers/tags/reducer';
 export default class BookSearchModal extends Component<entireBookSearchStateType & typeof bookSearchActionCreators, any> {
     state = {
         searchTagsValue: '',
-        searchSubjectsValue: ''
+        searchSubjectsValue: '',
+        subjects: [],
+        tags: []
     }
     setTagSearchVal = val => this.setState({searchTagsValue: val});
     setSubjectSearchVal = val => this.setState({searchSubjectsValue: val});
 
-    addPendingSubject = subject => {
-        this.props.addPendingSubject(subject);
-        this.setState({searchSubjectsValue: ''});
+    selectSubject = subject => this.setState(state => ({ searchSubjectsValue: '', subjects: state.subjects.concat(subject._id) }));
+    selectTag = tag => this.setState(state => ({ searchTagsValue: '', tags: state.tags.concat(tag._id)}));
+    removeSubject = subject => this.setState(state => ({ subjects: state.subjects.filter(_id => _id != subject._id) }));
+    removeTag = tag => this.setState(state => ({ tags: state.tags.filter(_id => _id != tag._id) }));
+
+    applyFilters = evt =>{
+        evt.preventDefault();
+        this.props.applyFilters({
+            subjects: this.state.subjects,
+            tags: this.state.tags,
+            search: this.searchEl.value
+        })
     }
-    addPendingTag = tag => {
-        this.props.addPendingTag(tag);
-        this.setState({searchTagsValue: ''});
-    }
+
+    searchEl: any;
 
     render(){
         return (
@@ -41,12 +50,12 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                     <h4 className="modal-title">Full search</h4>
                 </Modal.Header>
                 <Modal.Body>
-                    <form>
+                    <form onSubmit={this.applyFilters}>
                         <div className="row">
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Title</label>
-                                    <InputForPending name="search" parentProps={this.props} placeholder="Search title" />
+                                    <input defaultValue={this.props.search} ref={el => this.searchEl = el} placeholder="Search title" className="form-control" />
                                 </div>
                             </div>
                             <div className="col-xs-6">
@@ -102,6 +111,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                                 </div>
                             </div>
                         </div>
+                        <button style={{display: 'none'}}></button>
                     </form>
 
                     <div className="row" style={{ position: 'relative' }}>
@@ -112,15 +122,15 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                                 search={this.state.searchTagsValue}
                                 onSearchChange={this.setTagSearchVal}
                                 items={this.props.allTagsSorted}
-                                currentlySelected={this.props.pendingSelectedTags}
-                                onSelect={this.addPendingTag}
+                                currentlySelected={this.state.tags}
+                                onSelect={this.selectTag}
                                 filter={filterTags} />
 
                         </div>
                         <div className="col-xs-9">
                             <div>
-                                {this.props.pendingSelectedTags.map(t =>
-                                    <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => this.props.removePendingTag(t._id)} />)}
+                                {this.state.tags.map(_id => this.props.tagHash[_id]).map(t =>
+                                    <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => this.removeTag(t)} />)}
                             </div>
                         </div>
                     </div>
@@ -134,14 +144,14 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                                 search={this.state.searchSubjectsValue}
                                 onSearchChange={this.setSubjectSearchVal}
                                 items={this.props.subjectsUnwound}
-                                currentlySelected={this.props.pendingSelectedSubjects}
-                                onSelect={this.addPendingSubject}
+                                currentlySelected={this.state.subjects}
+                                onSelect={this.selectSubject}
                                 filter={filterSubjects} />
                         </div>
                         <div className="col-xs-9">
                             <div>
-                                {this.props.pendingSelectedSubjects.map(s =>
-                                    <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.props.removePendingSubject(s._id)} />)}
+                                {this.state.subjects.map(_id => this.props.subjectHash[_id]).map(s =>
+                                    <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />)}
                             </div>
                         </div>
                     </div>
@@ -153,7 +163,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <BootstrapButton preset="primary" className="pull-left" onClick={this.props.applyFilters}>Filter</BootstrapButton>
+                    <BootstrapButton preset="primary" className="pull-left" onClick={this.applyFilters}>Filter</BootstrapButton>
                     <BootstrapButton preset="default" onClick={this.props.endFilterChanging}>Close</BootstrapButton>
                 </Modal.Footer>
             </Modal>
