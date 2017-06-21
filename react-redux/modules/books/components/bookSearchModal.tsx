@@ -8,7 +8,6 @@ import * as bookSearchActionCreators from '../reducers/bookSearch/actionCreators
 
 import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect'
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
-import {InputForPending, RadioForPending} from './pendingInputs';
 
 import SelectAvailable from './availableTagsOrSubjects';
 
@@ -39,12 +38,20 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
             search: this.searchEl.value,
             pages: this.pagesEl.value,
             pagesOperator: this.pagesDirEl.value,
+            isRead: this.isReadE.checked ? '' : this.isRead0.checked ? '0' : '1',
+            searchChildSubjects: this.childSubEl.checked
         })
     }
 
     searchEl: any;
     pagesEl: any;
     pagesDirEl: any;
+    isReadE: any;
+    isRead0: any;
+    isRead1: any;
+    childSubEl: any;
+    authorEl: any;
+    publisherEl: any;
 
     render(){
         return (
@@ -81,34 +88,34 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Publisher</label>
-                                    <InputForPending name="publisher" parentProps={this.props} placeholder="Publisher" />
+                                    <input ref={el => this.authorEl = el} defaultValue={this.props.publisher} placeholder="Publisher" className="form-control" />
                                 </div>
                             </div>
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Author</label>
-                                    <InputForPending name="author" parentProps={this.props} placeholder="Author" />
+                                    <input ref={el => this.publisherEl = el} defaultValue={this.props.publisher} placeholder="Author" className="form-control" />
                                 </div>
-                            </div>
+                            </div> 
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Is read?</label>
                                     <br />
                                     <div style={{display: 'inline'}} className="radio">
                                         <label>
-                                            <RadioForPending name="isRead" parentProps={this.props} value={''} />
+                                            <input type="radio" defaultChecked={this.props.isRead == ''} ref={el => this.isReadE = el} name="isRead" />
                                             Either
                                         </label>
                                     </div>
                                     <div style={{display: 'inline', marginLeft: '20px'}} className="radio">
                                         <label>
-                                            <RadioForPending name="isRead" parentProps={this.props} value='1' />
+                                            <input type="radio" defaultChecked={this.props.isRead == '1'} ref={el => this.isRead1 = el} name="isRead" />
                                             Yes
                                         </label>
                                     </div>
                                     <div style={{display: 'inline', marginLeft: '20px'}} className="radio">
                                         <label>
-                                            <RadioForPending name="isRead" parentProps={this.props} value='0' />
+                                            <input type="radio" defaultChecked={this.props.isRead == '0'} ref={el => this.isRead0 = el} name="isRead" />
                                             No
                                         </label>
                                     </div>
@@ -162,7 +169,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
 
                     <div className="checkbox">
                         <label>
-                            <input type="checkbox" onChange={this.props.setPendingSearchChildSubjects} checked={this.props.pending.searchChildSubjects || false} /> Also search child subjects
+                            <input type="checkbox" ref={el => this.childSubEl = el} defaultChecked={!!this.props.pending.searchChildSubjects} /> Also search child subjects
                         </label>
                     </div>
                 </Modal.Body>

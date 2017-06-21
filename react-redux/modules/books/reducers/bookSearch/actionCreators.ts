@@ -3,7 +3,6 @@ import {
     BEGIN_FILTER_CHANGE,
     END_FILTER_CHANGE,
     SET_FILTERS,
-    SET_PENDING,
     APPLY_PENDING_SEARCH,
     SET_VIEWING_USERID,
     SET_GRID_VIEW,
@@ -29,24 +28,21 @@ export function endFilterChanging(){
     return { type: END_FILTER_CHANGE };
 }
 
-export function applyFilters(obj : any){
+export function applyFilters(nextState : any){
     return function(dispatch, getState) {
-        let state = getState().booksModule.bookSearch,
-            filterSubjectsVal = obj.subjects.join('-'),
-            filterTagsVal = obj.tags.join('-'),
-            pending = state.pending;
+        let filterSubjectsVal = nextState.subjects.join('-');
 
         setSearchValues({
             'page': null,
-            'search': obj.search,
+            'search': nextState.search,
             'subjects': filterSubjectsVal,
-            'tags': filterTagsVal,
-            'searchChildSubjects': pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
-            'author': pending.author,
-            'publisher': pending.publisher,
-            'pagesOperator': obj.pages != '' ? obj.pagesOperator : null,
-            'pages': obj.pages,
-            'isRead': pending.isRead
+            'tags': nextState.tags.join('-'),
+            'searchChildSubjects': nextState.searchChildSubjects && filterSubjectsVal ? 'true' : null,
+            'author': nextState.author,
+            'publisher': nextState.publisher,
+            'pagesOperator': nextState.pages != '' ? nextState.pagesOperator : null,
+            'pages': nextState.pages,
+            'isRead': nextState.isRead
         });
         dispatch(endFilterChanging());
     }
@@ -73,7 +69,8 @@ export function setSortOrder(sort, direction){
     return function(dispatch, getState){
         setSearchValues({
             'sort': sort,
-            'sortDirection': direction == 1 ? 'asc' : 'desc'
+            'sortDirection': direction == 1 ? 'asc' : 'desc',
+            'page': null
         });
     };
 }
@@ -182,23 +179,20 @@ export function removeFilterTag(_id){
     };
 }
 
-function createPendingActionCreator(name, getEvtValue = evt => evt.target.value){
-    return function (evt) {
-        return function (dispatch, getState) {
-            if (evt.which === 13){
-                dispatch(applyFilters({}));
-            } else {
-                dispatch({type: SET_PENDING, field: name, value: getEvtValue(evt)})
-            }
-        };
+export function clearSearchChildSubjects(){
+    return function(dispatch, getState){
+        setSearchValues({'searchChildSubjects': null});
     }
 }
 
-export function clearSearchChildSubjects(){
+export function quickSearch(val){
     return function(dispatch, getState){
-        dispatch({type: SET_PENDING, field: 'searchChildSubjects', value: null});
-        dispatch(applyFilters({}));
-    }
+        let state = getState().booksModule.bookSearch;
+        setSearchValues({
+            'page': null,
+            'search': val
+        });
+    };
 }
 
 export function pageUp(){
@@ -214,15 +208,6 @@ export function pageDown(){
         setSearchValues({'page': +state.page == 2 ? null : state.page - 1});
     };
 }
-
-export const setPendingSearch = createPendingActionCreator('search');
-export const setPendingSubjects = createPendingActionCreator('subjects');
-export const setPendingSearchChildSubjects = createPendingActionCreator('searchChildSubjects', evt => evt.target.checked);
-export const setPendingAuthor = createPendingActionCreator('author');
-export const setPendingPublisher = createPendingActionCreator('publisher');
-export const setPendingPages = createPendingActionCreator('pages');
-export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
-export const setPendingIsRead = createPendingActionCreator('isRead');
 
 export function setViewingUserId(_id){
     return { type: SET_VIEWING_USERID, _id }

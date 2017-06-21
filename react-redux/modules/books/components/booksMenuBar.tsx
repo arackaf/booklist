@@ -14,7 +14,6 @@ import * as subjectsActionCreators from '../reducers/subjects/actionCreators';
 import * as tagsActionCreators from '../reducers/tags/actionCreators';
 
 import {RemovableLabelDisplay} from 'applicationRoot/components/labelDisplay';
-import {InputForPending, RadioForPending} from './pendingInputs';
 
 import {BooksModuleType} from 'modules/books/reducers/reducer';
 import Measure from 'react-measure'
@@ -64,6 +63,7 @@ interface IAddedMenuProps {
 @connect(menuBarSelector, { ...bookSearchActionCreators })
 export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators  & IAddedMenuProps, any> {
     navBar: any
+    quickSearchEl: any
     sortChanged(evt){
         let value = evt.target.value,
             [sort, direction] = value.split('|');
@@ -74,6 +74,16 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
         if (!prevProps.booksLoading && this.props.booksLoading){
             this.navBar.closeIfOpen();
         }
+        if (prevProps.search != this.props.search){
+            this.quickSearchEl && (this.quickSearchEl.value = this.props.search);
+        }
+    }
+    quickSearch = evt => {
+        evt.preventDefault();
+        this.props.quickSearch(evt.currentTarget.search.value);
+    }
+    resetSearch = () => {
+        this.quickSearchEl.value = this.props.search;
     }
     render(){
         let selectedSubjectsCount = this.props.selectedSubjects.length,
@@ -111,7 +121,9 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                         <div>
                                             <BootstrapAnchorButton style={{ width: '100%' }} className="margin-bottom" preset="default" onClick={this.props.beginFilterChange}>Open full search modal</BootstrapAnchorButton>
 
-                                            <InputForPending className="margin-bottom" name="search" parentProps={this.props} placeholder="Quick title search" />
+                                            <form onSubmit={this.quickSearch}>
+                                                <input ref={el => this.quickSearchEl = el} defaultValue={this.props.search} onBlur={this.resetSearch} name="search" className="margin-bottom form-control" placeholder="Quick title search" />
+                                            </form>
 
                                             <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
                                                 <option value="title|asc">Title A-Z</option>
@@ -122,12 +134,16 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                                 <option value="_id|desc">Created, Latest</option>
                                             </select>
                                         </div>
-                                        : <div className="input-group">
-                                            <span className="input-group-btn">
-                                                <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Filter</BootstrapAnchorButton>
-                                            </span>
-                                            <InputForPending name="search" parentProps={this.props} placeholder="Quick title search" style={{width: '150px'}} />
-                                        </div>
+                                        : 
+                                        <form onSubmit={this.quickSearch}>
+                                            <div className="input-group">
+                                                <span className="input-group-btn">
+                                                    <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Filter</BootstrapAnchorButton>
+                                                </span>
+                                                <input ref={el => this.quickSearchEl = el} defaultValue={this.props.search} onBlur={this.resetSearch} name="search" className="form-control" placeholder="Quick title searchs" style={{width: '150px'}} />
+                                            </div>    
+                                        </form>
+                                        
                                     }
                                 </div>
 
