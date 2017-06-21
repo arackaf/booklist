@@ -115,7 +115,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 <NavBar.Toggle />
                             </NavBar.Header>
                             <UtilMenu startSubjectModification={startSubjectModification} startTagModification={startTagModification} editSubjects={editSubjects} editTags={editTags} />
-                            <NavBar.Form className="navbar-left">
+                            <div className="navbar-left navbar-form">
                                 <div className="form-group" style={{ marginRight: '5px' }}>
                                     {this.props.showingMobile ?
                                         <div>
@@ -156,7 +156,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                 }
                                 {resultsCount ? <h5 style={{display: 'inline', marginLeft: '10px', verticalAlign: 'middle'}}>{resultsDisplay}</h5> : null}
 
-                            </NavBar.Form>
+                            </div>
                             
                             {anyActiveFilters ? 
                                 <NavBar.Nav>
