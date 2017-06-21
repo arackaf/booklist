@@ -140,7 +140,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                                                 <span className="input-group-btn">
                                                     <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>Filter</BootstrapAnchorButton>
                                                 </span>
-                                                <input ref={el => this.quickSearchEl = el} defaultValue={this.props.search} onBlur={this.resetSearch} name="search" className="form-control" placeholder="Quick title searchs" style={{width: '150px'}} />
+                                                <input ref={el => this.quickSearchEl = el} defaultValue={this.props.search} onBlur={this.resetSearch} name="search" className="form-control" placeholder="Quick title search" style={{width: '150px'}} />
                                             </div>    
                                         </form>
                                         
