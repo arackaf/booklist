@@ -4,7 +4,6 @@ import {
     BEGIN_FILTER_CHANGE,
     END_FILTER_CHANGE,
     SET_FILTERS,
-    SET_PENDING,
     SET_VIEWING_USERID,
     SET_GRID_VIEW,
     SET_BASIC_LIST_VIEW,
@@ -50,8 +49,6 @@ export function bookSearchReducer(state = initialState, action) : bookSearchType
     switch(action.type){
         case SET_FILTERS:
             return { ...state, ...searchFields, ...action.packet, pending: { ...state.pending, ...searchFields, ...action.packet } };
-        case SET_PENDING:
-            return { ...state, pending: { ...state.pending, [action.field]: action.value } };
         case BEGIN_FILTER_CHANGE:
             let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: '', searchTagsValue: '' });
             Object.keys(searchFields).forEach(k => state.pending[k] = state[k]);
