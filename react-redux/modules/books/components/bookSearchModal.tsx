@@ -19,9 +19,10 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
     state = {
         searchTagsValue: '',
         searchSubjectsValue: '',
-        subjects: [],
-        tags: []
+        subjects: this.props.selectedSubjects.map(s => s._id),
+        tags: this.props.selectedTags.map(t => t._id)
     }
+
     setTagSearchVal = val => this.setState({searchTagsValue: val});
     setSubjectSearchVal = val => this.setState({searchSubjectsValue: val});
 
@@ -38,6 +39,8 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
             search: this.searchEl.value,
             pages: this.pagesEl.value,
             pagesOperator: this.pagesDirEl.value,
+            author: this.authorEl.value,
+            publisher: this.publisherEl.value,
             isRead: this.isReadE.checked ? '' : this.isRead0.checked ? '0' : '1',
             searchChildSubjects: this.childSubEl.checked
         })
@@ -88,13 +91,13 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Publisher</label>
-                                    <input ref={el => this.authorEl = el} defaultValue={this.props.publisher} placeholder="Publisher" className="form-control" />
+                                    <input ref={el => this.publisherEl = el} defaultValue={this.props.publisher} placeholder="Publisher" className="form-control" />
                                 </div>
                             </div>
                             <div className="col-xs-6">
                                 <div className="form-group">
                                     <label>Author</label>
-                                    <input ref={el => this.publisherEl = el} defaultValue={this.props.publisher} placeholder="Author" className="form-control" />
+                                    <input ref={el => this.authorEl = el} defaultValue={this.props.author} placeholder="Author" className="form-control" />
                                 </div>
                             </div> 
                             <div className="col-xs-6">
