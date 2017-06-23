@@ -30,6 +30,18 @@ const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
 
+if (!process.env.IS_DEV){
+    app.use(function ensureSec(request, response, next){
+        let proto = request.header('x-forwarded-proto') || request.header('X-Forwarded-Proto') || request.get('X-Forwarded-Proto'),
+            secure = proto == 'https';
+        if (secure){
+            return next();
+        } else {
+            response.redirect("https://" + request.headers.host + request.url);
+        }
+    });
+}
+
 passport.use(new LocalStrategy(
     function(email, password, done) {
         let userDao = new UserDao();
