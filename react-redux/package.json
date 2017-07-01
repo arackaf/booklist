@@ -54,6 +54,6 @@
   },
   "devDependencies": {
     "webpack-bundle-analyzer": "2.2.3",
-    "webpack-dev-server": "2.4.5"
+    "webpack-dev-server": "2.5.0"
   }
 }

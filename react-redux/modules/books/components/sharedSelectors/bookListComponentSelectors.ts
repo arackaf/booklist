@@ -2,17 +2,14 @@ import {createSelector} from 'reselect';
 import {selectBookSelection, BookSelectionType, selectBookList, BookListType} from 'modules/books/reducers/books/reducer';
 
 import * as actionCreatorsBooks from 'modules/books/reducers/books/actionCreators';
-import * as actionCreatorsEditBook from 'modules/books/reducers/editBook/actionCreators';
 import * as actionCreatorsBookSearch from 'modules/books/reducers/bookSearch/actionCreators';
 
 export const actions = { 
     ...actionCreatorsBooks, 
-    ...actionCreatorsEditBook, 
     ...actionCreatorsBookSearch, 
 };
 
 export type actionsType = typeof actionCreatorsBooks & 
-                          typeof actionCreatorsEditBook & 
                           typeof actionCreatorsBookSearch;
 
 export type BookListComponentStateType = BookSelectionType & BookListType & {
