@@ -1,4 +1,6 @@
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+
 var path = require('path');
 var webpack = require('webpack');
 var isProduction = process.env.NODE_ENV === 'production' 
@@ -57,6 +59,10 @@ module.exports = {
             new BundleAnalyzerPlugin({
                 analyzerMode: 'static'
             }) : null),
+
+        new SWPrecacheWebpackPlugin({
+
+        }),
 
         new webpack.optimize.CommonsChunkPlugin({
             name: 'react-build',
