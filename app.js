@@ -127,6 +127,9 @@ app.get('/scan', browseToReactRedux);
 app.get('/home', browseToReactRedux);
 app.get('/view', browseToReactRedux);
 app.get('/react-redux', browseToReactRedux);
+app.get('/service-worker.js', (request, response) => {
+    response.sendFile(path.join(__dirname + '/react-redux/dist/service-worker.js'));
+})
 
 function browseToReactRedux(request, response){
     if (!!request.user) {

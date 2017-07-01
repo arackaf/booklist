@@ -11,6 +11,12 @@ import 'util/ajaxUtil';
 
 import createHistory from 'history/createBrowserHistory'
 
+(function() {
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
+    }
+})();
+
 declare global {
     var require : any;
 }
