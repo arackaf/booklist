@@ -56,7 +56,7 @@ class BookViewListMobileItem extends Component<any, any> {
 }
 
 @connect(selectBookListComponentState, actions)
-export default class BookViewListMobile extends Component<BookListComponentStateType & actionsType, any> {
+export default class BookViewListMobile extends Component<BookListComponentStateType & {editBook: any} & actionsType, any> {
     render(){ 
         let props = this.props;
         return (
@@ -69,7 +69,7 @@ export default class BookViewListMobile extends Component<BookListComponentState
 
                 <div style={{ paddingBottom: 15 }}>
                     <div style={{ border: 0 }} className="list-group docked-to-panel">
-                        { props.booksList.map((book, i) => <BookViewListMobileItem key={book._id} book={book} viewingPublic={props.viewingPublic} /> )}
+                        { props.booksList.map((book, i) => <BookViewListMobileItem key={book._id} book={book} editBook={this.props.editBook} viewingPublic={props.viewingPublic} /> )}
                     </div>
                 </div>
 

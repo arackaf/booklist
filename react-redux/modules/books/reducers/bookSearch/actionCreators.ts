@@ -1,15 +1,10 @@
 import {store} from 'applicationRoot/store';
 import {
     BEGIN_FILTER_CHANGE,
-    SET_PENDING_SUBJECT,
-    SET_PENDING_TAG,
     END_FILTER_CHANGE,
     SET_FILTERS,
-    SET_PENDING,
     APPLY_PENDING_SEARCH,
     SET_VIEWING_USERID,
-    SET_SEARCH_SUBJECTS_VALUE,
-    SET_SEARCH_TAGS_VALUE,
     SET_GRID_VIEW,
     SET_BASIC_LIST_VIEW,
     GRID_VIEW,
@@ -29,52 +24,25 @@ export function beginFilterChange(){
     return { type: BEGIN_FILTER_CHANGE };
 }
 
-export function setSearchSubjectsValue(obj){
-    return { type: SET_SEARCH_SUBJECTS_VALUE, value: obj.target.value || '' };
-}
-
-export function setSearchTagsValue(obj){
-    return { type: SET_SEARCH_TAGS_VALUE, value: obj.target.value || '' };
-}
-
-export function addPendingSubject({ _id }){
-    return { type: SET_PENDING_SUBJECT, _id, value: true };
-}
-
-export function removePendingSubject(_id){
-    return { type: SET_PENDING_SUBJECT, _id, value: false };
-}
-
-export function addPendingTag({ _id }){
-    return { type: SET_PENDING_TAG, _id, value: true };
-}
-
-export function removePendingTag(_id){
-    return { type: SET_PENDING_TAG, _id, value: false };
-}
-
 export function endFilterChanging(){
     return { type: END_FILTER_CHANGE };
 }
 
-export function applyFilters(){
+export function applyFilters(nextState : any){
     return function(dispatch, getState) {
-        let state = getState().booksModule.bookSearch,
-            filterSubjectsVal = Object.keys(state.pending.subjects).filter(k => state.pending.subjects[k]).join('-'),
-            filterTagsVal = Object.keys(state.pending.tags).filter(k => state.pending.tags[k]).join('-'),
-            pending = state.pending;
+        let filterSubjectsVal = nextState.subjects.join('-');
 
         setSearchValues({
             'page': null,
-            'search': pending.search,
+            'search': nextState.search,
             'subjects': filterSubjectsVal,
-            'tags': filterTagsVal,
-            'searchChildSubjects': pending.searchChildSubjects && filterSubjectsVal ? 'true' : null,
-            'author': pending.author,
-            'publisher': pending.publisher,
-            'pagesOperator': pending.pages != '' ? pending.pagesOperator : null,
-            'pages': pending.pages,
-            'isRead': pending.isRead
+            'tags': nextState.tags.join('-'),
+            'searchChildSubjects': nextState.searchChildSubjects && filterSubjectsVal ? 'true' : null,
+            'author': nextState.author,
+            'publisher': nextState.publisher,
+            'pagesOperator': nextState.pages != '' ? nextState.pagesOperator : null,
+            'pages': nextState.pages,
+            'isRead': nextState.isRead
         });
         dispatch(endFilterChanging());
     }
@@ -101,7 +69,8 @@ export function setSortOrder(sort, direction){
     return function(dispatch, getState){
         setSearchValues({
             'sort': sort,
-            'sortDirection': direction == 1 ? 'asc' : 'desc'
+            'sortDirection': direction == 1 ? 'asc' : 'desc',
+            'page': null
         });
     };
 }
@@ -210,23 +179,20 @@ export function removeFilterTag(_id){
     };
 }
 
-function createPendingActionCreator(name, getEvtValue = evt => evt.target.value){
-    return function (evt) {
-        return function (dispatch, getState) {
-            if (evt.which === 13){
-                dispatch(applyFilters());
-            } else {
-                dispatch({type: SET_PENDING, field: name, value: getEvtValue(evt)})
-            }
-        };
+export function clearSearchChildSubjects(){
+    return function(dispatch, getState){
+        setSearchValues({'searchChildSubjects': null});
     }
 }
 
-export function clearSearchChildSubjects(){
+export function quickSearch(val){
     return function(dispatch, getState){
-        dispatch({type: SET_PENDING, field: 'searchChildSubjects', value: null});
-        dispatch(applyFilters());
-    }
+        let state = getState().booksModule.bookSearch;
+        setSearchValues({
+            'page': null,
+            'search': val
+        });
+    };
 }
 
 export function pageUp(){
@@ -242,15 +208,6 @@ export function pageDown(){
         setSearchValues({'page': +state.page == 2 ? null : state.page - 1});
     };
 }
-
-export const setPendingSearch = createPendingActionCreator('search');
-export const setPendingSubjects = createPendingActionCreator('subjects');
-export const setPendingSearchChildSubjects = createPendingActionCreator('searchChildSubjects', evt => evt.target.checked);
-export const setPendingAuthor = createPendingActionCreator('author');
-export const setPendingPublisher = createPendingActionCreator('publisher');
-export const setPendingPages = createPendingActionCreator('pages');
-export const setPendingPagesOperator = createPendingActionCreator('pagesOperator');
-export const setPendingIsRead = createPendingActionCreator('isRead');
 
 export function setViewingUserId(_id){
     return { type: SET_VIEWING_USERID, _id }

@@ -14,7 +14,7 @@ interface Props {
 export default class SelectAvailableItems extends PureComponent<Props, any> {
     render() {
         let {placeholder, search, onSearchChange, items, currentlySelected, onSelect, filter} = this.props,
-            itemHash = currentlySelected.reduce((hash, _id) => (hash[_id] = true, hash), {}),
+            itemHash = currentlySelected.reduce((hash, _idOrObj) => (hash[_idOrObj._id || _idOrObj] = true, hash), {}),
             eligible = filter(items.filter(s => !itemHash[s._id]), search);
 
         return (
