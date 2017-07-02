@@ -30,8 +30,11 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                 </td>
                 <td><img src={book.smallImage} /></td>
                 <td>
-                    {book.title}
-                    <br />
+                    <div style={{fontWeight: 'bold'}}>{book.title}</div>
+                    {book.authors ? (
+                        <div style={{fontStyle: 'italic'}}>{book.authors.join(', ')}</div>
+                    ) : null}
+
                     { book.detailsLoading 
                         ? <a target="_new" className="margin-right grid-hover-filter inline-filter"><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-spin fa-spinner"></i></a>
                         : (
@@ -45,11 +48,6 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                     { !this.props.viewingPublic ? <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.setPendingDeleteBook(book)}><i style={{ display: book.pendingDelete ? 'inline' : '' }} className="fa fa-fw fa-trash show-on-hover-parent-td"></i></a> : null }
                     { book.pendingDelete ? <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => this.props.deleteBook(book)} className="btn btn-xs btn-danger margin-right">Confirm delete</AjaxButton> : null }
                     { book.pendingDelete ? <button onClick={() => this.props.cancelPendingDeleteBook(book)} className="btn btn-xs btn-primary">Cancel</button> : null }
-                </td>
-                <td>
-                    <ul className="list-unstyled">
-                        {book.authors.map((author, i) => <li key={i}>{author}</li>)}
-                    </ul>
                 </td>
                 <td>
                     { book.subjectObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
@@ -70,8 +68,11 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                     }
                     </div>
                 </td>
-                <td>{book.publisher}{book.publisher ? <br /> : null}{book.publicationDate}</td>
-                <td>{book.isbn}</td>
+                <td>
+                    {book.publisher ? <div>{book.publisher}</div> : null}
+                    {book.publicationDate ? <div>{book.publicationDate}</div> : null}
+                    {book.isbn ? <div>{book.isbn}</div> : null}
+                </td>
                 <td>{book.pages}</td>
                 <td>{book.dateAddedDisplay}</td>
             </tr>
@@ -143,12 +144,10 @@ export default class BookViewListGrid extends Component<BookListComponentStateTy
                                 <th style={{...stickyHeaderStyle}}><input type="checkbox" checked={this.props.allAreChecked} onClick={this.props.toggleCheckAll} disabled={this.props.viewingPublic} /></th>
                                 <th style={{...stickyHeaderStyle}}></th>
                                 <th style={{...stickyHeaderStyle}}><a className="no-underline" onClick={() => this.setSort('title')}>Title {sortIconIf('title')}</a></th>
-                                <th style={{...stickyHeaderStyle}}>Author</th>
                                 <th style={{...stickyHeaderStyle}}>Subjects</th>
                                 <th style={{...stickyHeaderStyle}}>Tags</th>
                                 <th style={{ minWidth: '90px', ...stickyHeaderStyle }}>Read?</th>
-                                <th style={{...stickyHeaderStyle}}>Published</th>
-                                <th style={{...stickyHeaderStyle}}>ISBN</th>
+                                <th style={{...stickyHeaderStyle}}>Published / ISBN</th>
                                 <th style={{ minWidth: '85px', ...stickyHeaderStyle }}><a className="no-underline" onClick={() => this.setSort('pages')}>Pages {sortIconIf('pages')}</a></th>
                                 <th style={{...stickyHeaderStyle}}><a className="no-underline" onClick={() => this.setSort('_id')}>Added {sortIconIf('_id')}</a></th>
                             </tr>
