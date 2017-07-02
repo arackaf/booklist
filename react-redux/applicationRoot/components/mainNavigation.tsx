@@ -27,7 +27,7 @@ export default class MainNavigationBar extends Component<any, any> {
                 <NavBar.Header>
                     <NavBar.Brand>
                         <a className="navbar-brand" onClick={() => goto('home')} style={{ cursor: 'pointer' }}>
-                            <img height="32" width="32" style={{display: 'inline-block',  marginTop: '-5px'}} src="static/main-icon2.png" />
+                            <img height="32" width="32" style={{display: 'inline-block',  marginTop: '-5px'}} src="react-redux/static/main-icon2.png" />
                             <span style={{display: 'inline-block', verticalAlign: 'top', marginLeft: '5px'}}>My Library</span>
                         </a>
                     </NavBar.Brand>

@@ -65,8 +65,11 @@ module.exports = {
             filename: 'service-worker.js',
             staticFileGlobs: [
                 'static/bootstrap/css/bootstrap-booklist-build.css',
-                'static/fontawesome/css/font-awesome-booklist-build.css'
+                'static/fontawesome/css/font-awesome-booklist-build.css',
+                'static/fontawesome/fonts/fontawesome-webfont.woff2',
+                'static/main-icon2.png',
             ],
+            ignoreUrlParametersMatching: /./,
             stripPrefixMulti: {
                 'static/': 'react-redux/static/'
             }
