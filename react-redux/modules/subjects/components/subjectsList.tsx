@@ -217,7 +217,7 @@ class SubjectDisplayContent extends Component<any, any> {
 class DefaultSubjectDisplay extends Component<any, any> {
     render(){
         let {connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, beginSubjectEdit, addNewSubject, beginSubjectDelete, noDrop} = this.props,
-            {_id, name} = subject,
+            {_id, name, backgroundColor, textColor} = subject,
             mainIcon =
                 isSubjectSaving ? <i className="fa fa-fw fa-spinner fa-spin"></i> :
                     isSubjectSaved ? <i style={{color: 'green'}} className="fa fa-fw fa-check"></i> :
@@ -227,7 +227,7 @@ class DefaultSubjectDisplay extends Component<any, any> {
             <div className={className}>
                 <div className="col-lg-12 show-on-hover-parent">
                     {mainIcon}&nbsp;
-                    {name}
+                    <div className="label label-default" style={{ backgroundColor: backgroundColor, color: textColor, maxWidth: '100%', display: 'inline-block', overflow: 'hidden', verticalAlign: 'text-top' }}>{name || '<label preview>'}</div>
                     {' '}
                     {!isSubjectSaving ? <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id)}><i className="fa fa-fw fa-pencil"></i></a> : null}
                     {!isSubjectSaving ? <a className="show-on-hover-inline inline-filter" onClick={() => addNewSubject(_id)}><i className="fa fa-fw fa-plus"></i></a> : null}
@@ -352,7 +352,7 @@ export default class SubjectsComponent extends Component<subjectsComponentPropsT
         let SDL : any = SubjectDragLayer;
 
         return (
-            <div className="row" style={{ marginLeft: '0px', marginRight: '0px' }}>
+            <div className="row" style={{ marginLeft: '0px', marginRight: '0px', marginBottom: '50px' }}>
                 <div className="col-lg-6 col-xs-12">
                     <BootstrapButton onClick={() => addNewSubject()} preset="primary">New subject</BootstrapButton>
                     <br />
