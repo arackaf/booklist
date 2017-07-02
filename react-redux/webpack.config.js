@@ -61,7 +61,15 @@ module.exports = {
             }) : null),
 
         new SWPrecacheWebpackPlugin({
-
+            mergeStaticsConfig: true,
+            filename: 'service-worker.js',
+            staticFileGlobs: [
+                'static/bootstrap/css/bootstrap-booklist-build.css',
+                'static/fontawesome/css/font-awesome-booklist-build.css'
+            ],
+            stripPrefixMulti: {
+                'static/': 'react-redux/static/'
+            }
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
