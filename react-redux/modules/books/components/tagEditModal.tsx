@@ -128,7 +128,7 @@ export default class TagEditModal extends Component<TagsStateType & ILocalProps 
                                                 <label>Label color</label>
                                                 <div>
                                                     <ColorsPalette currentColor={editingTag.backgroundColor} colors={props.colors} onColorChosen={this.setNewTagBackgroundColor} />
-                                                    <CustomColorPicker onColorChosen={this.setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
+                                                    <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={this.setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
                                                 </div>
                                             </div>
                                         </div>

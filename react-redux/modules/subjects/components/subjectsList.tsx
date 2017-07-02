@@ -8,6 +8,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import TouchBackend from 'react-dnd-touch-backend';
 import BootstrapButton, {AjaxButton} from 'applicationRoot/components/bootstrapButton';
 import ColorsPalette from 'applicationRoot/components/colorsPalette';
+import CustomColorPicker from 'applicationRoot/components/customColorPicker';
 import { store } from 'applicationRoot/store';
 import {subjectType} from 'modules/subjects/reducers/reducer';
 
@@ -275,6 +276,7 @@ class EditingSubjectDisplay extends Component<any, any> {
                 </div>
                 <div className="col-xs-12 col-lg-9">
                     <ColorsPalette currentColor={editingSubject.backgroundColor} colors={colors} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} />
+                    <CustomColorPicker labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }} onColorChosen={color => setEditingSubjectField(_id, 'backgroundColor', color)} currentColor={editingSubject.backgroundColor} />
                 </div>
                 <div className="col-xs-12 col-lg-1 padding-bottom-small">
                     <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, 'textColor', color)} />
