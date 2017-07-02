@@ -16,7 +16,7 @@ const WellUiSwitcher = connect(state => state.app, {requestDesktop, requestMobil
 
     return (
         <div className="well well-sm" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, marginBottom: 0 }}>
-            <img width="16" height="16" src="/static/main-icon2.png"/>
+            <img width="16" height="16" src="/react-redux/static/main-icon2.png"/>
             <span style={{marginLeft: '5px', marginRight: '5px'}}>My Library</span>
             { showChooseDesktop ? <a onClick={props.requestDesktop}>Use desktop version</a> : null }
             { showSwitchBackMobile ? <a onClick={props.requestMobile}>Use mobile version</a> : null }
