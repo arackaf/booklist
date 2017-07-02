@@ -1,6 +1,54 @@
 import React, {Component} from 'react';
 import { isLoggedIn } from 'reactStartup';
 
+import {scaleLinear} from 'd3-scale';
+import {max} from 'd3-array';
+import {select} from 'd3-selection';
+import blah from './blah';
+
+class BarChart extends Component<any, any> {
+    node: any;
+    componentDidUpdate(prevProps, prevState) {
+        this.createBarChart();
+    }
+    componentDidMount() {
+        this.createBarChart();
+    }
+    createBarChart = () => {
+        let node = this.node,
+            {data, size} = this.props,
+            dataMax = max(data),
+            yScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]);
+
+        select(node)
+            .selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect');
+
+        select(node)
+            .selectAll('rect')
+            .data(data)
+            .exit()
+            .remove();            
+
+        select(node)
+            .selectAll('rect')
+            .data(data)
+            .attr('x', (d, i) => (i * 25) + (i > 0 ? 5 : 0))
+            .attr('y', (d, i) => size[1] - yScale(d))
+            .attr('height', (d, i) => yScale(d))
+            .attr('width', 25);
+    }
+    render() {
+        return (
+            <svg ref={node => this.node = node} width={500} height={500}>
+                
+            </svg>
+        );
+    }
+}
+
 const MainHomePane = props =>
     <div className="row" style={{margin: 0}}>
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
@@ -21,6 +69,8 @@ const HomeIfLoggedIn = () => (
             to either view your library, or scan some books in.
             <br />
             <br />
+
+            <BarChart data={[5, 10, 4, 5, 7]} size={[500, 500]} />
         </MainHomePane>
     </div>
 )
