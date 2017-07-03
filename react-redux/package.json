@@ -26,6 +26,7 @@
     "babel-preset-stage-2": "6.5.0",
     "classnames": "2.2.5",
     "d3-array": "^1.2.0",
+    "d3-axis": "^1.0.8",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
     "history": "4.6.1",
