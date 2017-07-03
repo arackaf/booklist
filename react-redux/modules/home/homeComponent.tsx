@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import { isLoggedIn } from 'reactStartup';
 
-import {scaleLinear} from 'd3-scale';
+import {scaleLinear, scaleOrdinal, schemeCategory10} from 'd3-scale';
 import {max} from 'd3-array';
 import {select} from 'd3-selection';
-import blah from './blah';
+import {axisBottom} from 'd3-axis';
 
 class BarChart extends Component<any, any> {
     node: any;
@@ -18,7 +18,14 @@ class BarChart extends Component<any, any> {
         let node = this.node,
             {data, size} = this.props,
             dataMax = max(data),
-            yScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]);
+            yScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]),
+            colorScale = scaleOrdinal()
+                            .domain(data.map((d, i) => i))
+                            .range(schemeCategory10);
+
+        let scaleX = scaleLinear().domain([0, data.length]);
+
+        let xAxis = axisBottom().scale(scaleX);
 
         select(node)
             .selectAll('rect')
@@ -35,10 +42,22 @@ class BarChart extends Component<any, any> {
         select(node)
             .selectAll('rect')
             .data(data)
-            .attr('x', (d, i) => (i * 25) + (i > 0 ? 5 : 0))
+            .attr('x', (d, i) => (i * 25) + (i * 5))
             .attr('y', (d, i) => size[1] - yScale(d))
+            .style('fill', (d, i) => colorScale(i))
             .attr('height', (d, i) => yScale(d))
             .attr('width', 25);
+
+        select(node)
+            .selectAll('g.brushAxis')
+            .data(data)
+            .enter()
+            .append('g.brushAxis');
+
+        select(node)
+            .selectAll('g.brushAxis')
+            .call(xAxis);
+
     }
     render() {
         return (
@@ -70,7 +89,7 @@ const HomeIfLoggedIn = () => (
             <br />
             <br />
 
-            <BarChart data={[5, 10, 4, 5, 7]} size={[500, 500]} />
+            <BarChart data={[5, 10, 4, 5, 7, 11, 6, 31, 3, 7, 9, 18, 5, 22, 5]} size={[500, 500]} />
         </MainHomePane>
     </div>
 )
