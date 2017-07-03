@@ -18,14 +18,13 @@ class BarChart extends Component<any, any> {
         let node = this.node,
             {data, size} = this.props,
             dataMax = max(data),
-            yScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]),
+            dataScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]),
             colorScale = scaleOrdinal()
                             .domain(data.map((d, i) => i))
                             .range(schemeCategory10);
 
-        let scaleX = scaleLinear().domain([0, data.length]);
-
-        let xAxis = axisBottom().scale(scaleX);
+        let axisScale = scaleLinear().domain([1, data.length]).range([0, size[1]]);
+        let xAxis = axisBottom().scale(axisScale);
 
         select(node)
             .selectAll('rect')
@@ -43,25 +42,20 @@ class BarChart extends Component<any, any> {
             .selectAll('rect')
             .data(data)
             .attr('x', (d, i) => (i * 25) + (i * 5))
-            .attr('y', (d, i) => size[1] - yScale(d))
+            .attr('y', (d, i) => size[1] - dataScale(d))
             .style('fill', (d, i) => colorScale(i))
-            .attr('height', (d, i) => yScale(d))
+            .attr('height', (d, i) => dataScale(d))
             .attr('width', 25);
 
-        select(node)
-            .selectAll('g.brushAxis')
-            .data(data)
-            .enter()
-            .append('g.brushAxis');
-
-        select(node)
-            .selectAll('g.brushAxis')
+        select('svg')
+            .append('g')
+            .attr('transform', 'translate(0, 450)') //I guess - just stick it somewhere  
             .call(xAxis);
 
     }
     render() {
         return (
-            <svg ref={node => this.node = node} width={500} height={500}>
+            <svg ref={node => this.node = node} width={500} height={500} style={{backgroundColor: 'lightblue'}}>
                 
             </svg>
         );
@@ -90,6 +84,12 @@ const HomeIfLoggedIn = () => (
             <br />
 
             <BarChart data={[5, 10, 4, 5, 7, 11, 6, 31, 3, 7, 9, 18, 5, 22, 5]} size={[500, 500]} />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
         </MainHomePane>
     </div>
 )
