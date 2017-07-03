@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { isLoggedIn } from 'reactStartup';
 
-import {scaleLinear, scaleOrdinal, schemeCategory10} from 'd3-scale';
+import {scaleLinear, scaleOrdinal, scaleBand, schemeCategory10} from 'd3-scale';
 import {max} from 'd3-array';
 import {select} from 'd3-selection';
 import {axisBottom} from 'd3-axis';
@@ -19,12 +19,18 @@ class BarChart extends Component<any, any> {
             {data, size} = this.props,
             dataMax = max(data),
             dataScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]),
+            scaleX = scaleBand()
+                        .domain(data.map((d, i) => i))
+                        .range([0, 500])
+                        .paddingInner([0.1])
+                        .paddingOuter([0.3])
+                        .align([0.5]),
             colorScale = scaleOrdinal()
                             .domain(data.map((d, i) => i))
                             .range(schemeCategory10);
 
         let axisScale = scaleLinear().domain([1, data.length]).range([0, size[1]]);
-        let xAxis = axisBottom().scale(axisScale);
+        let xAxis = axisBottom().scale(scaleX);
 
         select(node)
             .selectAll('rect')
@@ -41,11 +47,11 @@ class BarChart extends Component<any, any> {
         select(node)
             .selectAll('rect')
             .data(data)
-            .attr('x', (d, i) => (i * 25) + (i * 5))
+            .attr('x', (d, i) => scaleX(i))
             .attr('y', (d, i) => size[1] - dataScale(d))
             .style('fill', (d, i) => colorScale(i))
             .attr('height', (d, i) => dataScale(d))
-            .attr('width', 25);
+            .attr('width', scaleX.bandwidth());
 
         select('svg')
             .append('g')
