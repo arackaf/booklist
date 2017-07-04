@@ -6,6 +6,10 @@ import {max} from 'd3-array';
 import {select} from 'd3-selection';
 import {axisBottom} from 'd3-axis';
 
+function getDisplay(i){
+    return 'Number ' + i;
+}
+
 class BarChart extends Component<any, any> {
     node: any;
     componentDidUpdate(prevProps, prevState) {
@@ -22,7 +26,7 @@ class BarChart extends Component<any, any> {
             dataMax = max(data),
             dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]),
             scaleX = scaleBand()
-                        .domain(data.map((d, i) => i))
+                        .domain(data.map((d, i) => getDisplay(i)))
                         .range([0, 500])
                         .paddingInner([0.1])
                         .paddingOuter([0.3])
@@ -53,7 +57,7 @@ class BarChart extends Component<any, any> {
         panel
             .selectAll('rect')
             .data(data)
-            .attr('x', (d, i) => scaleX(i))
+            .attr('x', (d, i) => scaleX(getDisplay(i)))
             .attr('y', (d, i) => size[1] - dataScale(d))
             .style('fill', (d, i) => colorScale(i))
             .attr('height', (d, i) => dataScale(d))
