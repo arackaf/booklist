@@ -16,9 +16,11 @@ class BarChart extends Component<any, any> {
     }
     createBarChart = () => {
         let node = this.node,
+            margin = {top: 20, right: 10, bottom: 50, left: 0},
             {data, size} = this.props,
+            chartHeight = size[1] - margin.top - margin.bottom,
             dataMax = max(data),
-            dataScale = scaleLinear().domain([0, dataMax]).range([0, size[1]]),
+            dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]),
             scaleX = scaleBand()
                         .domain(data.map((d, i) => i))
                         .range([0, 500])
@@ -32,19 +34,23 @@ class BarChart extends Component<any, any> {
         let axisScale = scaleLinear().domain([1, data.length]).range([0, size[1]]);
         let xAxis = axisBottom().scale(scaleX);
 
-        select(node)
+        let panel = select("svg")
+                        .append("g")
+                        .attr("transform", `translate(${margin.left}, ${-1 * margin.bottom})`);
+
+        panel
             .selectAll('rect')
             .data(data)
             .enter()
             .append('rect');
 
-        select(node)
+        panel
             .selectAll('rect')
             .data(data)
             .exit()
             .remove();            
 
-        select(node)
+        panel
             .selectAll('rect')
             .data(data)
             .attr('x', (d, i) => scaleX(i))
@@ -53,9 +59,9 @@ class BarChart extends Component<any, any> {
             .attr('height', (d, i) => dataScale(d))
             .attr('width', scaleX.bandwidth());
 
-        select('svg')
+        panel
             .append('g')
-            .attr('transform', 'translate(0, 450)') //I guess - just stick it somewhere  
+            .attr('transform', 'translate(0, 500)') //I guess - just stick it somewhere  
             .call(xAxis);
 
     }
