@@ -20,7 +20,7 @@ class BarChart extends Component<any, any> {
     }
     createBarChart = () => {
         let node = this.node,
-            margin = {top: 20, right: 10, bottom: 50, left: 0},
+            margin = {top: 20, right: 10, bottom: 80, left: 0},
             {data, size} = this.props,
             chartHeight = size[1] - margin.top - margin.bottom,
             dataMax = max(data),
@@ -66,7 +66,18 @@ class BarChart extends Component<any, any> {
         panel
             .append('g')
             .attr('transform', 'translate(0, 500)') //I guess - just stick it somewhere  
-            .call(xAxis);
+            .call(xAxis)
+            .selectAll("text")
+            .attr("y", 5)
+            .attr("dy", 0)
+            .attr("x", -30)
+            .attr("transform", "rotate(290)");
+
+
+            //.style("text-anchor", "start");
+
+
+            //            .attr("dy", ".35em")
 
     }
     render() {
