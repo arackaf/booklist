@@ -68,13 +68,11 @@ class BarChart extends Component<any, any> {
             .attr('transform', 'translate(0, 500)') //I guess - just stick it somewhere  
             .call(xAxis)
             .selectAll("text")
-            .attr("y", 5)
-            .attr("dy", 0)
-            .attr("x", -30)
-            .attr("transform", "rotate(290)");
+            .attr("transform", "rotate(290) translate(-10, -10)")
+            .style("text-anchor", "end");
 
 
-            //.style("text-anchor", "start");
+            //;
 
 
             //            .attr("dy", ".35em")
@@ -110,7 +108,7 @@ const HomeIfLoggedIn = () => (
             <br />
             <br />
 
-            <BarChart data={[5, 10, 4, 5, 7, 11, 6, 31, 3, 7, 9, 18, 5, 22, 5]} size={[500, 500]} />
+            <BarChart data={[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]} size={[500, 500]} />
             <br />
             <br />
             <br />
