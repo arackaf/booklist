@@ -75,6 +75,8 @@ class BarChart extends Component<any, any> {
 
                         </rect>
                     ))}
+                </g>
+                <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
                     <Axis scale={scaleX} transform="translate(0, 500)"></Axis>
                 </g>
             </svg>
