@@ -121,24 +121,34 @@ const MainHomePane = props =>
         <div className="hidden-xs hidden-sm col-md-1 col-lg-3"></div>
     </div>
 
-const HomeIfLoggedIn = () => (
-    <div>
-        <MainHomePane>
-            Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
-            to either view your library, or scan some books in.
-            <br />
-            <br />
+class HomeIfLoggedIn extends Component<any, any> {
+    state = {data: [5, 10, 4, 5, 7, 11]}
+    componentDidMount() {
+        setTimeout(() => this.setState({data: [11, 2, 10, 1]}), 3000)
+        setTimeout(() => this.setState({data: [5, 10, 4, 5, 7, 11]}), 6000)
+    }
+    render() {
+        //[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]
+        return (
+            <div>
+                <MainHomePane>
+                    Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
+                    to either view your library, or scan some books in.
+                    <br />
+                    <br />
 
-            <BarChart data={[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]} size={[500, 500]} />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-        </MainHomePane>
-    </div>
-)
+                    <BarChart data={this.state.data} size={[500, 500]} />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </MainHomePane>
+            </div>
+        );
+    }
+}
 
 const HomeIfNotLoggedIn = () => (
     <div>
