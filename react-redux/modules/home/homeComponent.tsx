@@ -35,54 +35,75 @@ class BarChart extends Component<any, any> {
                             .domain(data.map((d, i) => i))
                             .range(schemeCategory10);
 
-        let axisScale = scaleLinear().domain([1, data.length]).range([0, size[1]]);
-        let xAxis = axisBottom().scale(scaleX);
+        // let axisScale = scaleLinear().domain([1, data.length]).range([0, size[1]]);
+        // let xAxis = axisBottom().scale(scaleX);
 
-        let panel = select("svg")
-                        .append("g")
-                        .attr("transform", `translate(${margin.left}, ${-1 * margin.bottom})`);
+        // let panel = select("svg")
+        //                 .append("g")
+        //                 .attr("transform", `translate(${margin.left}, ${-1 * margin.bottom})`);
 
-        panel
-            .selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect');
 
-        panel
-            .selectAll('rect')
-            .data(data)
-            .exit()
-            .remove();            
 
-        panel
-            .selectAll('rect')
-            .data(data)
-            .attr('x', (d, i) => scaleX(getDisplay(i)))
-            .attr('y', (d, i) => size[1] - dataScale(d))
-            .style('fill', (d, i) => colorScale(i))
-            .attr('height', (d, i) => dataScale(d))
-            .attr('width', scaleX.bandwidth());
+        // panel
+        //     .append('g')
+        //     .attr('transform', 'translate(0, 500)') //I guess - just stick it somewhere  
+        //     .call(xAxis)
+        //     ;
+    }
+    render() {
+        let node = this.node,
+            margin = {top: 20, right: 10, bottom: 80, left: 0},
+            {data, size} = this.props,
+            chartHeight = size[1] - margin.top - margin.bottom,
+            dataMax = max(data),
+            dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]),
+            scaleX = scaleBand()
+                        .domain(data.map((d, i) => getDisplay(i)))
+                        .range([0, 500])
+                        .paddingInner([0.1])
+                        .paddingOuter([0.3])
+                        .align([0.5]),
+            colorScale = scaleOrdinal()
+                        .domain(data.map((d, i) => i))
+                        .range(schemeCategory10);                        
 
-        panel
-            .append('g')
-            .attr('transform', 'translate(0, 500)') //I guess - just stick it somewhere  
+        return (
+            <svg ref={node => this.node = node} width={500} height={500} style={{backgroundColor: 'lightblue'}}>
+                <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+                    {data.map((d, i) => (
+                        <rect x={scaleX(getDisplay(i))} y={size[1] - dataScale(d)} fill={colorScale(i)} height={dataScale(d)} width={scaleX.bandwidth()}>
+
+                        </rect>
+                    ))}
+                    <Axis scale={scaleX} transform="translate(0, 500)"></Axis>
+                </g>
+            </svg>
+        );
+    }
+}
+
+class Axis extends Component<any, any> {
+    el: any;
+    componentDidMount() {
+        this.updateAxis();
+    }
+    componentDidUpdate(prevProps, prevState) {
+        this.updateAxis();
+    }
+    updateAxis(){
+        let {scale} = this.props;
+        let xAxis = axisBottom().scale(scale);
+
+        select(this.el)
             .call(xAxis)
             .selectAll("text")
             .attr("transform", "rotate(290) translate(-10, -10)")
             .style("text-anchor", "end");
-
-
-            //;
-
-
-            //            .attr("dy", ".35em")
-
     }
     render() {
+        let {children, scale, ...rest} = this.props;
         return (
-            <svg ref={node => this.node = node} width={500} height={500} style={{backgroundColor: 'lightblue'}}>
-                
-            </svg>
+            <g ref={el => this.el = el} {...rest}></g>
         );
     }
 }
