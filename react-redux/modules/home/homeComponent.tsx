@@ -105,6 +105,8 @@ class Axis extends Component<any, any> {
         let xAxis = axisBottom().scale(scale);
 
         select(this.el)
+            .transition()
+            .duration(300)
             .call(xAxis)
             .selectAll("text")
             .attr("transform", "rotate(290) translate(-10, -10)")
