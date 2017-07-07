@@ -29,6 +29,7 @@
     "d3-axis": "^1.0.8",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
+    "d3-transition": "^1.1.0",
     "history": "4.6.1",
     "immutability-helper": "2.2.2",
     "purify-css": "1.2.2",
