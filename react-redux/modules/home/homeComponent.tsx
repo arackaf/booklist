@@ -5,6 +5,7 @@ import {scaleLinear, scaleOrdinal, scaleBand, schemeCategory10} from 'd3-scale';
 import {max} from 'd3-array';
 import {select} from 'd3-selection';
 import {axisBottom} from 'd3-axis';
+import 'd3-transition';
 
 function getDisplay(i){
     return 'Number ' + i;
@@ -34,21 +35,6 @@ class BarChart extends Component<any, any> {
             colorScale = scaleOrdinal()
                             .domain(data.map((d, i) => i))
                             .range(schemeCategory10);
-
-        // let axisScale = scaleLinear().domain([1, data.length]).range([0, size[1]]);
-        // let xAxis = axisBottom().scale(scaleX);
-
-        // let panel = select("svg")
-        //                 .append("g")
-        //                 .attr("transform", `translate(${margin.left}, ${-1 * margin.bottom})`);
-
-
-
-        // panel
-        //     .append('g')
-        //     .attr('transform', 'translate(0, 500)') //I guess - just stick it somewhere  
-        //     .call(xAxis)
-        //     ;
     }
     render() {
         let node = this.node,
@@ -69,17 +55,39 @@ class BarChart extends Component<any, any> {
 
         return (
             <svg ref={node => this.node = node} width={500} height={500} style={{backgroundColor: 'lightblue'}}>
-                <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+                <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - 500})`}>
                     {data.map((d, i) => (
-                        <rect x={scaleX(getDisplay(i))} y={size[1] - dataScale(d)} fill={colorScale(i)} height={dataScale(d)} width={scaleX.bandwidth()}>
-
-                        </rect>
+                        <Bar key={i} x={scaleX(getDisplay(i))} y={0} color={colorScale(i)} width={scaleX.bandwidth()} height={dataScale(d)} />
                     ))}
                 </g>
                 <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
                     <Axis scale={scaleX} transform="translate(0, 500)"></Axis>
                 </g>
             </svg>
+        );
+    }
+}
+
+class Bar extends Component<any, any> {
+    el: any;
+    componentDidMount() {
+        this.drawBar();
+    }
+    componentDidUpdate(prevProps, prevState) {
+        this.drawBar();
+    }
+    drawBar(){
+        select(this.el)
+            .transition()
+            .duration(300)
+            .attr("height", this.props.height)
+            .attr("width", this.props.width)
+            .attr("x", this.props.x)
+    }
+    render() {
+        let {x, height, width, color} = this.props;
+        return (
+            <rect ref={el => this.el = el} x={500} y={0} height={0} fill={color} width={0} />
         );
     }
 }
@@ -126,8 +134,12 @@ const MainHomePane = props =>
 class HomeIfLoggedIn extends Component<any, any> {
     state = {data: [5, 10, 4, 5, 7, 11]}
     componentDidMount() {
-        setTimeout(() => this.setState({data: [11, 2, 10, 1]}), 3000)
-        setTimeout(() => this.setState({data: [5, 10, 4, 5, 7, 11]}), 6000)
+        setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 2000)
+        setTimeout(() => this.setState({data: [17, 15, 11, 9]}), 3000)
+        setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17, 5]}), 4000)
+        setTimeout(() => this.setState({data: [17, 15, 11]}), 5000)
+        setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 6000)
+        setTimeout(() => this.setState({data: [17, 15, 11, 9, 3, 1, 5, 7]}), 7000)
     }
     render() {
         //[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]
