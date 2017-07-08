@@ -133,9 +133,10 @@ app.get('/service-worker.js', (request, response) => {
 
 function browseToReactRedux(request, response){
     if (!!request.user) {
-        response.cookie('logged_in', 'true', { maxAge: 900000 });
     } else {
         response.clearCookie('logged_in');
+        response.clearCookie('remember_me');
+        response.clearCookie('userId');
     }
     response.sendFile(path.join(__dirname + '/react-redux/default.htm'));
 }
@@ -146,15 +147,18 @@ app.get('/favicon.ico', function (request, response) {
 
 app.post('/react-redux/login', passport.authenticate('local'), function(req, response) {
     // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
-    response.cookie('logged_in', 'true', { maxAge: 900000 });
-    response.cookie('userId', req.user.id, { maxAge: 900000 });
-    if (req.body.rememberme == 1) {
+    let rememberMe = req.body.rememberme == 1;
+    
+    response.cookie('logged_in', 'true', { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+    response.cookie('userId', req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+    if (rememberMe) {
         response.cookie('remember_me', req.user.token, {path: '/', httpOnly: true, maxAge: rememberMeExpiration });
     }
     response.send(req.user);
 });
 
 app.post('/react-redux/logout', function(req, response){
+    response.clearCookie('logged_in');
     response.clearCookie('remember_me');
     response.clearCookie('userId');
     req.logout();
