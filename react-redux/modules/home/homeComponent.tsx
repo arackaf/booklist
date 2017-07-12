@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import { isLoggedIn } from 'reactStartup';
+import ajaxUtil from 'util/ajaxUtil';
+
 import {scaleLinear, scaleOrdinal, scaleBand, schemeCategory10} from 'd3-scale';
 import {max} from 'd3-array';
 import {select} from 'd3-selection';
 import {axisBottom} from 'd3-axis';
 import 'd3-transition';
+
+import {loadSubjects} from 'applicationRoot/rootReducerActionCreators';
+import {topLevelSubjectsSortedSelector, RootApplicationType} from 'applicationRoot/rootReducer';
 
 function getDisplay(i){
     return 'Number ' + i;
@@ -131,9 +137,15 @@ const MainHomePane = props =>
         </div>
     </div>
 
+@connect((state: RootApplicationType) => ({
+    subjects: topLevelSubjectsSortedSelector(state),
+    subjectHash: state.app.subjectHash
+}), {loadSubjects})
 class HomeIfLoggedIn extends Component<any, any> {
-    state = {data: [5, 10, 4, 5, 7, 11]}
+    state = {data: null}
     componentDidMount() {
+        this.props.loadSubjects();
+
         setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 2000)
         setTimeout(() => this.setState({data: [17, 15, 11, 9]}), 3000)
         setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17, 5]}), 4000)
@@ -141,12 +153,23 @@ class HomeIfLoggedIn extends Component<any, any> {
         setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 6000)
         setTimeout(() => this.setState({data: [17, 15, 11, 9, 3, 1, 5, 7]}), 7000)
     }
-    sized = sizeInfo => {
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.subjects !== this.props.subjects){
+            this.getChart();
+        }
+    }
+    getChart = () => {
+        let subjectIds = this.props.subjects.map(s => s._id),
+            subjectHash = this.props.subjectHash;
+
         debugger;
-        this.setState({width: sizeInfo.client.width});
+        ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds}).then(resp => {
+            debugger;
+        })
     }
     render() {
         //[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]
+        let {data} = this.state;
         return (
             <div>
                 <MainHomePane>
@@ -155,7 +178,7 @@ class HomeIfLoggedIn extends Component<any, any> {
                     <br />
                     <br />
 
-                    <BarChart data={this.state.data} width={1100} height={500} />
+                    {data ? <BarChart data={this.state.data} width={1100} height={500} /> : null}
                     <br />
                     <br />
                     <br />

@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import {stackAndGetTopLevelSubjects, subjectsSelector, getEligibleParents, topLevelSubjectsSortedSelector} from 'applicationRoot/rootReducer';
+import {stackAndGetTopLevelSubjects, getEligibleParents, topLevelSubjectsSortedSelector} from 'applicationRoot/rootReducer';
 import {AppType} from 'applicationRoot/rootReducer';
 import update from 'immutability-helper'
 

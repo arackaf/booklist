@@ -45,6 +45,10 @@ export type SubjectType = {
     path: string;
 };
 
+export type RootApplicationType = {
+    app: AppType
+};
+
 export const objectsToHash = objs => objs.reduce((hash, o) => (hash[o._id] = o, hash), {});
 
 export default function rootReducer(state = initialState, action){
@@ -159,7 +163,3 @@ export const getEligibleParents = (subjectHash, _id) => {
 
     return eligibleParents;
 }
-
-export const subjectsSelector = createSelector(subjectHash => subjectHash, subjectHash => ({
-    subjects: stackAndGetTopLevelSubjects(subjectHash)
-}));
