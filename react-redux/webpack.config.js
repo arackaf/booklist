@@ -9,6 +9,7 @@ var isProduction = process.env.NODE_ENV === 'production'
 
 const asyncBundle = (name, {nodePaths = [], resources = []}) => 
     new webpack.optimize.CommonsChunkPlugin({
+        name: 'main',
         async: name,
         minChunks({context, resource}, count) {
             if (!context) return false;
