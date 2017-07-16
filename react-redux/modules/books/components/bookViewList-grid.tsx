@@ -52,13 +52,13 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                 <td>
                     { book.subjectObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                        <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksSubjects(book)} disabled={this.props.viewingPublic}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a>
+                        <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksSubjects(book)} data-disabled={this.props.viewingPublic}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a>
                     </div>
                 </td>
                 <td>
                     { book.tagObjects.map((s, i) => <div key={i}><LabelDisplay item={s} /></div>) }
                     <div style={{ marginTop: 5, minHeight: 40 }}>
-                        <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksTags(book)} disabled={this.props.viewingPublic}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a>
+                        <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksTags(book)} data-disabled={this.props.viewingPublic}><i className="fa fa-fw fa-pencil show-on-hover-parent-td"></i></a>
                     </div>
                 </td>
                 <td>

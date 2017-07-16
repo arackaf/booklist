@@ -193,12 +193,12 @@ class BookDAO extends DAO {
         let db = await super.open();
         try{
             await db.collection('books').update(
-                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { _id: { $in: books.map(_id => ObjectId(_id)) }, userId: this.userId },
                 { $addToSet: { subjects: { $each: (add || []) } } }, { upsert: false, multi: true }
             );
 
             await db.collection('books').update(
-                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { _id: { $in: books.map(_id => ObjectId(_id)) }, userId: this.userId },
                 { $pullAll: { subjects: (remove || []) } }, { upsert: false, multi: true }
             );
 
@@ -210,12 +210,12 @@ class BookDAO extends DAO {
         let db = await super.open();
         try{
             await db.collection('books').update(
-                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { _id: { $in: books.map(_id => ObjectId(_id)) }, userId: this.userId },
                 { $addToSet: { tags: { $each: (add || []) } } }, { upsert: false, multi: true }
             );
 
             await db.collection('books').update(
-                { _id: { $in: books.map(_id => ObjectId(_id)) } },
+                { _id: { $in: books.map(_id => ObjectId(_id)) }, userId: this.userId },
                 { $pullAll: { tags: (remove || []) } }, { upsert: false, multi: true }
             );
 

@@ -19,7 +19,7 @@ export default props => (
 
 
 export const BootstrapAnchorButton = props => (
-    <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>{props.children}</a>);
+    <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick}>{props.children}</a>);
 
 export const AjaxButton = props => (
     props.running
@@ -28,5 +28,5 @@ export const AjaxButton = props => (
 
 export const AjaxButtonAnchor = props => (
     props.running
-        ? <a className={cssFromPreset(props)} disabled={true}><i className="fa fa-fw fa-spin fa-spinner"></i>{ (props.runningText || props.text) ? ' ' + props.runningText || props.text : props.children}</a>
-        : <a className={cssFromPreset(props)} disabled={props.disabled || false} onClick={props.onClick}>{ props.children }</a>)
+        ? <a className={cssFromPreset(props)}><i className="fa fa-fw fa-spin fa-spinner"></i>{ (props.runningText || props.text) ? ' ' + props.runningText || props.text : props.children}</a>
+        : <a className={cssFromPreset(props)} onClick={props.onClick}>{ props.children }</a>)
