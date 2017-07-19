@@ -10,7 +10,7 @@ import {axisBottom} from 'd3-axis';
 import 'd3-transition';
 
 import {loadSubjects} from 'applicationRoot/rootReducerActionCreators';
-import {topLevelSubjectsSortedSelector, RootApplicationType} from 'applicationRoot/rootReducer';
+import {topLevelSubjectsSortedSelector, RootApplicationType, getRootSubject} from 'applicationRoot/rootReducer';
 
 function getDisplay(i){
     return 'Number ' + i;
@@ -28,11 +28,12 @@ class BarChart extends Component<any, any> {
         let node = this.node,
             margin = {top: 20, right: 10, bottom: 80, left: 0},
             {data, width, height} = this.props,
+            dataValues = data.map(({count}) => count),
             chartHeight = height - margin.top - margin.bottom,
-            dataMax = max(data),
+            dataMax = max(dataValues),
             dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]),
             scaleX = scaleBand()
-                        .domain(data.map((d, i) => getDisplay(i)))
+                        .domain(data.map(({display}) => display))
                         .range([0, width])
                         .paddingInner([0.1])
                         .paddingOuter([0.3])
@@ -44,12 +45,19 @@ class BarChart extends Component<any, any> {
     render() {
         let node = this.node,
             margin = {top: 20, right: 10, bottom: 80, left: 0},
-            {data, width, height} = this.props,
+            {data, width, height} = this.props;
+
+        if (!data || !data.length){
+            return null;
+        }
+
+        let dataValues = data.map(({count}) => count),
+            displayValues = data.map(({display}) => display),
             chartHeight = height - margin.top - margin.bottom,
-            dataMax = max(data),
+            dataMax = max(dataValues),
             dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]),
             scaleX = scaleBand()
-                        .domain(data.map((d, i) => getDisplay(i)))
+                        .domain(displayValues)
                         .range([0, width])
                         .paddingInner([0.1])
                         .paddingOuter([0.3])
@@ -63,7 +71,7 @@ class BarChart extends Component<any, any> {
             <svg style={style} ref={node => this.node = node} width={width} height={height}>
                 <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                     {data.map((d, i) => (
-                        <Bar key={i} x={scaleX(getDisplay(i))} y={0} color={colorScale(i)} width={scaleX.bandwidth()} height={dataScale(d)} graphWidth={width} />
+                        <Bar key={i} x={scaleX(d.display)} y={0} color={colorScale(i)} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} />
                     ))}
                 </g>
                 <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -99,6 +107,7 @@ class Bar extends Component<any, any> {
 }
 
 class Axis extends Component<any, any> {
+    //df
     el: any;
     componentDidMount() {
         this.updateAxis();
@@ -145,8 +154,6 @@ class HomeIfLoggedIn extends Component<any, any> {
     state = {data: null}
     componentDidMount() {
         this.props.loadSubjects();
-
-        setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 2000)
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.subjects !== this.props.subjects){
@@ -155,10 +162,26 @@ class HomeIfLoggedIn extends Component<any, any> {
     }
     getChart = () => {
         let subjectIds = this.props.subjects.map(s => s._id),
+            targetSubjectsLookup = new Set(subjectIds),
             subjectHash = this.props.subjectHash;
 
+        let subjectResultsMap = new Map<string, number>([]);
+
         ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds, gatherToParents: 1}).then(resp => {
-            debugger;
+            resp.results.forEach(item => {
+                let subjectsHeld = item.subjects
+                                       .map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path))
+                                       .map(_id => subjectHash[_id].name)
+                                       .sort()
+                                       .join(', ');
+
+                if (!subjectResultsMap.has(subjectsHeld)){
+                    subjectResultsMap.set(subjectsHeld, 0);
+                }
+                subjectResultsMap.set(subjectsHeld, subjectResultsMap.get(subjectsHeld) + 1);
+            });
+
+            this.setState({data: Array.from(subjectResultsMap).map(([name, count]) => ({display: name, count})) })
         })
     }
     render() {
@@ -167,8 +190,8 @@ class HomeIfLoggedIn extends Component<any, any> {
         return (
             <div>
                 <MainHomePane>
-                    Welcome to <i>My Library</i>.  Eventually there'll be some sort of interesting dashboard here.  Until then, just use the menu above
-                    to either view your library, or scan some books in.
+                    Welcome to <i>My Library</i>.  Below is the beginnings of a data visualization of your library. More to come!
+                    <hr />
                     <br />
                     <br />
 
