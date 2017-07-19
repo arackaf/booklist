@@ -13,7 +13,7 @@ import createHistory from 'history/createBrowserHistory'
 
 (function() {
     if('serviceWorker' in navigator) {
-        //navigator.serviceWorker.register('/service-worker.js');
+        navigator.serviceWorker.register('/service-worker.js');
     }
 })();
 
