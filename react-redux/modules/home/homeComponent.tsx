@@ -137,7 +137,7 @@ class HomeIfLoggedIn extends Component<any, any> {
         }
     }
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.subjectsLoaded){
+        if (!prevProps.subjectsLoaded && this.props.subjectsLoaded){
             this.getChart();
         }
     }
