@@ -147,11 +147,6 @@ class HomeIfLoggedIn extends Component<any, any> {
         this.props.loadSubjects();
 
         setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 2000)
-        setTimeout(() => this.setState({data: [17, 15, 11, 9]}), 3000)
-        setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17, 5]}), 4000)
-        setTimeout(() => this.setState({data: [17, 15, 11]}), 5000)
-        setTimeout(() => this.setState({data: [1, 3, 9, 11, 15, 17]}), 6000)
-        setTimeout(() => this.setState({data: [17, 15, 11, 9, 3, 1, 5, 7]}), 7000)
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.subjects !== this.props.subjects){
@@ -162,8 +157,7 @@ class HomeIfLoggedIn extends Component<any, any> {
         let subjectIds = this.props.subjects.map(s => s._id),
             subjectHash = this.props.subjectHash;
 
-        debugger;
-        ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds}).then(resp => {
+        ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds, gatherToParents: 1}).then(resp => {
             debugger;
         })
     }
