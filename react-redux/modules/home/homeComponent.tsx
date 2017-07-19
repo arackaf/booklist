@@ -18,33 +18,9 @@ function getDisplay(i){
 
 class BarChart extends Component<any, any> {
     node: any;
-    componentDidUpdate(prevProps, prevState) {
-        this.createBarChart();
-    }
-    componentDidMount() {
-        this.createBarChart();
-    }
-    createBarChart = () => {
-        let node = this.node,
-            margin = {top: 20, right: 10, bottom: 80, left: 0},
-            {data, width, height} = this.props,
-            dataValues = data.map(({count}) => count),
-            chartHeight = height - margin.top - margin.bottom,
-            dataMax = max(dataValues),
-            dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]),
-            scaleX = scaleBand()
-                        .domain(data.map(({display}) => display))
-                        .range([0, width])
-                        .paddingInner([0.1])
-                        .paddingOuter([0.3])
-                        .align([0.5]),
-            colorScale = scaleOrdinal()
-                            .domain(data.map((d, i) => i))
-                            .range(schemeCategory10);
-    }
     render() {
         let node = this.node,
-            margin = {top: 20, right: 10, bottom: 80, left: 0},
+            margin = {top: 20, right: 10, bottom: 180, left: 0},
             {data, width, height} = this.props;
 
         if (!data || !data.length){
@@ -171,14 +147,14 @@ class HomeIfLoggedIn extends Component<any, any> {
             resp.results.forEach(item => {
                 let subjectsHeld = item.subjects
                                        .map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path))
-                                       .map(_id => subjectHash[_id].name)
-                                       .sort()
-                                       .join(', ');
+                                       .map(_id => subjectHash[_id].name);
 
-                if (!subjectResultsMap.has(subjectsHeld)){
-                    subjectResultsMap.set(subjectsHeld, 0);
+                let uniqueSubjects = Array.from(new Set(subjectsHeld)).sort().join(', ');
+
+                if (!subjectResultsMap.has(uniqueSubjects)){
+                    subjectResultsMap.set(uniqueSubjects, 0);
                 }
-                subjectResultsMap.set(subjectsHeld, subjectResultsMap.get(subjectsHeld) + 1);
+                subjectResultsMap.set(uniqueSubjects, subjectResultsMap.get(uniqueSubjects) + 1);
             });
 
             this.setState({data: Array.from(subjectResultsMap).map(([name, count]) => ({display: name, count})) })
@@ -195,7 +171,7 @@ class HomeIfLoggedIn extends Component<any, any> {
                     <br />
                     <br />
 
-                    {data ? <BarChart data={this.state.data} width={1100} height={500} /> : null}
+                    {data ? <BarChart data={this.state.data} width={1100} height={600} /> : null}
                     <br />
                     <br />
                     <br />
