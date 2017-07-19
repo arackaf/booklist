@@ -124,15 +124,20 @@ const MainHomePane = props =>
 
 @connect((state: RootApplicationType) => ({
     subjects: topLevelSubjectsSortedSelector(state),
-    subjectHash: state.app.subjectHash
+    subjectHash: state.app.subjectHash,
+    subjectsLoaded: state.app.subjectsLoaded
 }), {loadSubjects})
 class HomeIfLoggedIn extends Component<any, any> {
     state = {data: null}
     componentDidMount() {
-        this.props.loadSubjects();
+        if (this.props.subjectsLoaded){
+            this.getChart();
+        } else {
+            this.props.loadSubjects();
+        }
     }
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.subjects !== this.props.subjects){
+        if (this.props.subjectsLoaded){
             this.getChart();
         }
     }
