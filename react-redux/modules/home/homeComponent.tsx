@@ -205,13 +205,13 @@ const HomeIfNotLoggedIn = () => (
             <br /><br />
             For those interested in seeing the code for this site, the GitHub repository is <a target='_blank' href='https://github.com/arackaf/booklist'>here</a>
             <br /><br />
-            <a className="btn btn-primary" href="#login">Login or create an account</a>
+            <a className="btn btn-primary" href="/login">Login or create an account</a>
         </MainHomePane>
     </div>
 )
 
 export default class Home extends Component<any, any>{
-    state = { isLoggedIn: isLoggedIn() };
+    state = { isLoggedIn: isLoggedIn().logged_in };
     render(){
         return (
             <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
