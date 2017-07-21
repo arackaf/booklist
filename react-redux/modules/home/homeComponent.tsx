@@ -17,6 +17,13 @@ function getDisplay(i){
 }
 
 class BarChart extends Component<any, any> {
+    state = {left: 0};
+    componentDidMount() {
+        let box = this.node.getBoundingClientRect();
+
+        this.setState({left: box.left});
+        console.log(box.left)
+    }
     node: any;
     render() {
         let node = this.node,
@@ -41,13 +48,13 @@ class BarChart extends Component<any, any> {
             colorScale = scaleOrdinal()
                         .domain(data.map((d, i) => i))
                         .range(schemeCategory10),
-            style = {display: 'block', marginLeft: 'auto', marginRight: 'auto'};
+            style = {display: 'block'};//, marginLeft: 'auto', marginRight: 'auto'};
 
         return (
             <svg style={style} ref={node => this.node = node} width={width} height={height}>
                 <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                     {data.map((d, i) => (
-                        <Bar key={i} x={scaleX(d.display)} y={0} color={colorScale(i)} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} />
+                        <Bar key={i} x={scaleX(d.display)} y={0} color={colorScale(i)} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                     ))}
                 </g>
                 <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -60,11 +67,27 @@ class BarChart extends Component<any, any> {
 
 class Bar extends Component<any, any> {
     el: any;
+    tooltip: any;
     componentDidMount() {
+        let tooltip = document.createElement('div');
+        tooltip.innerHTML = 'HELLO WORLD';
+        tooltip.setAttribute('class', 'tooltip');
+        this.tooltip = tooltip;
+        //console.log({left: box.left, top: box.top, x: this.props.x, width: this.props.width, height: this.props.height})
+        
+        document.body.appendChild(tooltip);
+
         this.drawBar();
+        this.updateTooltip();
     }
     componentDidUpdate(prevProps, prevState) {
         this.drawBar();
+        this.updateTooltip();
+    }
+    updateTooltip(){
+        let box = this.el.getBoundingClientRect();
+        this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
+        this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
     }
     drawBar(){
         select(this.el)
@@ -115,7 +138,7 @@ const MainHomePane = props =>
     <div style={{margin: 0}}>
         <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '1200px' }}>
             <div className="panel panel-default">
-                <div className="panel-body">
+                <div className="panel-body" style={{position: 'relative'}}>
                     {props.children}
                 </div>
             </div>
