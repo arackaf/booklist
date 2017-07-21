@@ -88,6 +88,8 @@ class Bar extends Component<any, any> {
         let box = this.el.getBoundingClientRect();
         this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
         this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
+
+        //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
     drawBar(){
         select(this.el)
