@@ -1,4 +1,5 @@
 import React, {Component, PureComponent} from 'react';
+import {findDOMNode} from 'react-dom';
 import {connect} from 'react-redux';
 import { isLoggedIn } from 'reactStartup';
 import ajaxUtil from 'util/ajaxUtil';
@@ -54,7 +55,7 @@ class BarChart extends Component<any, any> {
             <svg style={style} ref={node => this.node = node} width={width} height={height}>
                 <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                     {data.map((d, i) => (
-                        <Bar key={i} x={scaleX(d.display)} y={0} color={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                        <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                     ))}
                 </g>
                 <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -65,7 +66,8 @@ class BarChart extends Component<any, any> {
     }
 }
 
-class Bar extends Component<any, any> {
+class Bar extends PureComponent<any, any> {
+    el: any
     tooltip: any;
     componentDidMount() {
         let tooltip = document.createElement('div');
@@ -74,25 +76,27 @@ class Bar extends Component<any, any> {
         this.tooltip = tooltip;
         //console.log({left: box.left, top: box.top, x: this.props.x, width: this.props.width, height: this.props.height})
         
-        //document.body.appendChild(tooltip);
+        document.body.appendChild(tooltip);
 
-        //this.updateTooltip();
+        this.updateTooltip();
     }
     componentDidUpdate(prevProps, prevState) {
-        //this.updateTooltip();
+        this.updateTooltip();
     }
     updateTooltip(){
-        // let box = this.el.getBoundingClientRect();
-        // this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
-        // this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
+        let element = findDOMNode(this.el),
+            box = element.getBoundingClientRect();
+            
+        this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
+        this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
 
         //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
     render() {
-        let {x, height, width, color, graphWidth} = this.props;
-        return color.length == 1 
-            ? <SingleBar color={color} {...{height, width, x, graphWidth}} />
-            : <MultiBar colors={color} {...{height, width, x, graphWidth}} />
+        let {x, height, width, colors, graphWidth} = this.props;
+        return colors.length == 1 
+            ? <SingleBar ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
+            : <MultiBar ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
     }
 }
 
@@ -207,7 +211,7 @@ function getColors(i){
     } else if (i == 1){
         return ['orange']
     } else {
-        return ['red', 'white', 'blue'];
+        return ['red', 'green', 'blue'];
     }
 }
 
