@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import { isLoggedIn } from 'reactStartup';
 import ajaxUtil from 'util/ajaxUtil';
 
+import Measure from 'react-measure';
+
 import {scaleLinear, scaleOrdinal, scaleBand, schemeCategory10} from 'd3-scale';
 import {max} from 'd3-array';
 import {select} from 'd3-selection';
@@ -19,16 +21,14 @@ function getDisplay(i){
 
 class BarChart extends Component<any, any> {
     state = {left: 0};
-    componentDidMount() {
-        let box = this.node.getBoundingClientRect();
-
-        this.setState({left: box.left});
-        console.log(box.left)
+    sized = ({bounds}) => {
+        if (bounds.left != this.state.left){
+            this.setState({left: bounds.left});
+            //console.log(bounds.left);
+        }
     }
-    node: any;
     render() {
-        let node = this.node,
-            margin = {top: 20, right: 10, bottom: 180, left: 0},
+        let margin = {top: 20, right: 10, bottom: 180, left: 0},
             {data, width, height} = this.props;
 
         if (!data || !data.length){
@@ -52,26 +52,30 @@ class BarChart extends Component<any, any> {
             style = {display: 'block'};//, marginLeft: 'auto', marginRight: 'auto'};
 
         return (
-            <svg style={style} ref={node => this.node = node} width={width} height={height}>
-                <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-                    {data.map((d, i) => (
-                        <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
-                    ))}
-                </g>
-                <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
-                    <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
-                </g>
-            </svg>
+            <Measure bounds={true} onResize={this.sized}>
+                {({measureRef}) => (
+                    <svg style={style} ref={measureRef} width={width} height={height}>
+                        <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
+                            {data.map((d, i) => (
+                                <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left || 0} />
+                            ))}
+                        </g>
+                        <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+                            <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
+                        </g>
+                    </svg>
+                )}
+            </Measure>
         );
     }
 }
-
+let counter = 1;
 class Bar extends PureComponent<any, any> {
     el: any
     tooltip: any;
     componentDidMount() {
         let tooltip = document.createElement('div');
-        tooltip.innerHTML = 'HELLO WORLD';
+        tooltip.innerHTML = 'HELLO WORLD' + (counter++);
         tooltip.setAttribute('class', 'tooltip');
         this.tooltip = tooltip;
         //console.log({left: box.left, top: box.top, x: this.props.x, width: this.props.width, height: this.props.height})
@@ -86,9 +90,10 @@ class Bar extends PureComponent<any, any> {
     updateTooltip(){
         let element = findDOMNode(this.el),
             box = element.getBoundingClientRect();
-            
+            //debugger;
+
         this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
-        this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
+        this.tooltip.style.top = ~~(box.bottom - this.props.height + 3) + 'px';
 
         //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
