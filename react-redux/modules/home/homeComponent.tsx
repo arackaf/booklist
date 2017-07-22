@@ -82,10 +82,15 @@ class Bar extends PureComponent<any, any> {
         
         document.body.appendChild(tooltip);
 
-        this.updateTooltip();
+        //this.updateTooltip();
     }
     componentDidUpdate(prevProps, prevState) {
-        this.updateTooltip();
+        //this.updateTooltip();
+    }
+    showTooltip = (evt) => {
+        debugger;
+        this.tooltip.style.left = evt.pageX + 'px';
+        this.tooltip.style.top = evt.pageY + 'px';
     }
     updateTooltip(){
         let element = findDOMNode(this.el),
@@ -100,7 +105,7 @@ class Bar extends PureComponent<any, any> {
     render() {
         let {x, height, width, colors, graphWidth} = this.props;
         return colors.length == 1 
-            ? <SingleBar ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
+            ? <SingleBar showTooltip={this.showTooltip} ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
             : <MultiBar ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
     }
 }
@@ -122,10 +127,10 @@ class SingleBar extends PureComponent<any, any> {
             .attr("x", this.props.x)
     }
     render() {
-        let {x, height, width, color, graphWidth} = this.props;
+        let {x, height, width, color, graphWidth, showTooltip} = this.props;
 
         return (
-            <rect ref={el => this.el = el} x={graphWidth} y={0} height={0} fill={color} width={0} />
+            <rect onMouseOver={showTooltip} ref={el => this.el = el} x={graphWidth} y={0} height={0} fill={color} width={0} />
         );
     }
 }
