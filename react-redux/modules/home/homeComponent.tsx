@@ -92,7 +92,7 @@ class Bar extends Component<any, any> {
         let {x, height, width, color, graphWidth} = this.props;
         return color.length == 1 
             ? <SingleBar color={color} {...{height, width, x, graphWidth}} />
-            : <SingleBar color={color[0]} {...{height, width, x, graphWidth}} />
+            : <MultiBar colors={color} {...{height, width, x, graphWidth}} />
     }
 }
 
@@ -117,6 +117,46 @@ class SingleBar extends PureComponent<any, any> {
 
         return (
             <rect ref={el => this.el = el} x={graphWidth} y={0} height={0} fill={color} width={0} />
+        );
+    }
+}
+
+class MultiBar extends PureComponent<any, any> {
+    el: any;
+    componentDidMount() {
+        this.drawBar();
+    }
+    componentDidUpdate(prevProps, prevState) {
+        this.drawBar();
+    }
+    drawBar(){
+        let {height, width, x, colors} = this.props,
+            count = colors.length,
+            sectionHeight = ~~(height / count),
+            heightUsed = 0;
+
+        colors.forEach((color, i) => {
+            let isLast = i + 1 == count,
+                barHeight = isLast ? height - heightUsed : sectionHeight;
+    
+            select(this[`el${i}`])
+                .transition()
+                .duration(300)
+                .attr("height", barHeight)
+                .attr("width", width)
+                .attr("x", x)
+                .attr("y", heightUsed);
+
+            heightUsed += barHeight;
+        })
+    }
+    render() {
+        let {x, height, width, colors, graphWidth} = this.props;
+
+        return (
+            <g>
+                {colors.map((color, i) => <rect ref={el => this[`el${i}`] = el} x={graphWidth} y={0} height={0} fill={color} width={0} />)}
+            </g>
         );
     }
 }
@@ -163,11 +203,11 @@ const MainHomePane = props =>
 
 function getColors(i){
     if (i === 0){
-        return ['red']
+        return ['purple']
     } else if (i == 1){
-        return ['blue', 'green']
+        return ['orange']
     } else {
-        return ['orange'];
+        return ['red', 'white', 'blue'];
     }
 }
 
