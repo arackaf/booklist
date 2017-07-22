@@ -19,12 +19,12 @@ function getDisplay(i){
     return 'Number ' + i;
 }
 
-class BarChart extends Component<any, any> {
+class BarChart extends PureComponent<any, any> {
     state = {left: 0};
     sized = ({bounds}) => {
         if (bounds.left != this.state.left){
             this.setState({left: bounds.left});
-            //console.log(bounds.left);
+            console.log(bounds.left);
         }
     }
     render() {
@@ -57,7 +57,7 @@ class BarChart extends Component<any, any> {
                     <svg style={style} ref={measureRef} width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                             {data.map((d, i) => (
-                                <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left || 0} />
+                                <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                             ))}
                         </g>
                         <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
