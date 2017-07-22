@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 import {connect} from 'react-redux';
 import { isLoggedIn } from 'reactStartup';
 import ajaxUtil from 'util/ajaxUtil';
@@ -54,7 +54,7 @@ class BarChart extends Component<any, any> {
             <svg style={style} ref={node => this.node = node} width={width} height={height}>
                 <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                     {data.map((d, i) => (
-                        <Bar key={i} x={scaleX(d.display)} y={0} color={colorScale(i)} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                        <Bar key={i} x={scaleX(d.display)} y={0} color={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                     ))}
                 </g>
                 <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -66,7 +66,6 @@ class BarChart extends Component<any, any> {
 }
 
 class Bar extends Component<any, any> {
-    el: any;
     tooltip: any;
     componentDidMount() {
         let tooltip = document.createElement('div');
@@ -75,21 +74,35 @@ class Bar extends Component<any, any> {
         this.tooltip = tooltip;
         //console.log({left: box.left, top: box.top, x: this.props.x, width: this.props.width, height: this.props.height})
         
-        document.body.appendChild(tooltip);
+        //document.body.appendChild(tooltip);
 
+        //this.updateTooltip();
+    }
+    componentDidUpdate(prevProps, prevState) {
+        //this.updateTooltip();
+    }
+    updateTooltip(){
+        // let box = this.el.getBoundingClientRect();
+        // this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
+        // this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
+
+        //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
+    }
+    render() {
+        let {x, height, width, color, graphWidth} = this.props;
+        return color.length == 1 
+            ? <SingleBar color={color} {...{height, width, x, graphWidth}} />
+            : <SingleBar color={color[0]} {...{height, width, x, graphWidth}} />
+    }
+}
+
+class SingleBar extends PureComponent<any, any> {
+    el: any;
+    componentDidMount() {
         this.drawBar();
-        this.updateTooltip();
     }
     componentDidUpdate(prevProps, prevState) {
         this.drawBar();
-        this.updateTooltip();
-    }
-    updateTooltip(){
-        let box = this.el.getBoundingClientRect();
-        this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
-        this.tooltip.style.top = ~~(box.top - this.props.height + 3) + 'px';
-
-        //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
     drawBar(){
         select(this.el)
@@ -101,6 +114,7 @@ class Bar extends Component<any, any> {
     }
     render() {
         let {x, height, width, color, graphWidth} = this.props;
+
         return (
             <rect ref={el => this.el = el} x={graphWidth} y={0} height={0} fill={color} width={0} />
         );
@@ -147,6 +161,16 @@ const MainHomePane = props =>
         </div>
     </div>
 
+function getColors(i){
+    if (i === 0){
+        return ['red']
+    } else if (i == 1){
+        return ['blue', 'green']
+    } else {
+        return ['orange'];
+    }
+}
+
 @connect((state: RootApplicationType) => ({
     subjects: topLevelSubjectsSortedSelector(state),
     subjectHash: state.app.subjectHash,
@@ -187,7 +211,7 @@ class HomeIfLoggedIn extends Component<any, any> {
                 subjectResultsMap.set(uniqueSubjects, subjectResultsMap.get(uniqueSubjects) + 1);
             });
 
-            this.setState({data: Array.from(subjectResultsMap).map(([name, count]) => ({display: name, count})) })
+            this.setState({data: Array.from(subjectResultsMap).map(([name, count], i) => ({display: name, count, colors: getColors(i)})) })
         })
     }
     render() {
