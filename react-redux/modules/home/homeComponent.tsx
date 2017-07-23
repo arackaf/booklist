@@ -115,10 +115,13 @@ class Bar extends PureComponent<any, any> {
             console.log('tooltip mouse OUT');
 
             let el = document.elementFromPoint(e.clientX, e.clientY);
-            if (tooltip === el || (el.parentNode == tooltip)) {
-                console.log('false positive');
-                return;
-            }
+
+            do {
+                if (tooltip === el){
+                    console.log('false positive');
+                    return;
+                }
+            } while (el = el.parentNode as any);
             
             this.manageTooltip(false);
         }
