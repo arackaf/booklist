@@ -12,6 +12,8 @@ import {select} from 'd3-selection';
 import {axisBottom} from 'd3-axis';
 import 'd3-transition';
 
+import debounce from 'lodash.debounce';
+
 import {loadSubjects} from 'applicationRoot/rootReducerActionCreators';
 import {topLevelSubjectsSortedSelector, RootApplicationType, getRootSubject} from 'applicationRoot/rootReducer';
 
@@ -50,11 +52,13 @@ class BarChart extends PureComponent<any, any> {
                         .domain(data.map((d, i) => i))
                         .range(schemeCategory10),
             style = {display: 'block'};//, marginLeft: 'auto', marginRight: 'auto'};
+            {/*<Measure bounds={true} onResize={this.sized}>
+                {({measureRef}) => (*/
+            /*    )}
+            </Measure> ref={measureRef} */}
 
         return (
-            <Measure bounds={true} onResize={this.sized}>
-                {({measureRef}) => (
-                    <svg style={style} ref={measureRef} width={width} height={height}>
+                    <svg onMouseEnter={() => console.log('SVG IN')} style={style}  width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                             {data.map((d, i) => (
                                 <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
@@ -64,8 +68,6 @@ class BarChart extends PureComponent<any, any> {
                             <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
                         </g>
                     </svg>
-                )}
-            </Measure>
         );
     }
 }
@@ -76,26 +78,49 @@ class Bar extends PureComponent<any, any> {
     tooltipShown: boolean;
     overTooltip: boolean;
     overBar: boolean;
-    tooltipTimeout: any;
+
+    manageTooltip: any
+
+    _manageTooltip(show, evt?){
+        if (show && this.tooltipShown){
+            return;
+        }
+        if (show){
+            this.tooltipShown = true;
+
+            this.tooltip.style.left = evt.pageX + 'px';
+            this.tooltip.style.top = evt.pageY + 'px';
+            this.tooltip.style.display = 'block';            
+        } else {
+            this.tooltipShown = false;
+            this.tooltip.style.display = 'none';
+        }
+    }
+
     componentDidMount() {
+        this.manageTooltip = debounce(this._manageTooltip, 50);
+
         let tooltip = document.createElement('div');
-        tooltip.innerHTML = 'HELLO WORLD' + (counter++);
+        tooltip.innerHTML = 'HELLO WORLD' + (counter++) + '<button>Hi</button>';
         tooltip.setAttribute('class', 'tooltip');
         tooltip.style.display = 'none';
 
-        tooltip.onmouseover = () => {
-            clearTimeout(this.tooltipTimeout);
-            this.overTooltip = true;
+
+        tooltip.onmouseenter = () => {
+            console.log('tooltip mouse OVER')
+            this.manageTooltip(true);
         }
-        tooltip.onmouseout = () => {
-            clearTimeout(this.tooltipTimeout);
-            this.overTooltip = false;
-            this.tooltipTimeout = setTimeout(() => {
-                if (!this.overBar && !this.overTooltip){
-                    this.tooltipShown = false;
-                    this.tooltip.style.display = 'none';
-                }
-            }, 5);
+
+        tooltip.onmouseleave = e => {
+            console.log('tooltip mouse OUT');
+
+            let el = document.elementFromPoint(e.clientX, e.clientY);
+            if (tooltip === el || (el.parentNode == tooltip)) {
+                console.log('false positive');
+                return;
+            }
+            
+            this.manageTooltip(false);
         }
 
         this.tooltip = tooltip;
@@ -103,27 +128,14 @@ class Bar extends PureComponent<any, any> {
         
         document.body.appendChild(tooltip);
     }
-    showTooltip = (evt) => {
+    _showTooltip = (evt) => {
+        console.log('BAR IN')
         evt.persist();
-        this.overBar = true;
-        if (this.tooltipShown || this.overTooltip) return;
-        clearTimeout(this.tooltipTimeout);
-        this.tooltipTimeout = setTimeout(() => {
-            this.tooltipShown = true;
-            this.tooltip.style.left = evt.pageX + 'px';
-            this.tooltip.style.top = evt.pageY + 'px';
-            this.tooltip.style.display = 'block';
-        }, 5);
+        this.manageTooltip(true, evt);
     }
-    hideTooltip = evt => {
+    _hideTooltip = evt => {
         evt.persist();
-        this.overBar = false;
-        clearTimeout(this.tooltipTimeout);
-        this.tooltipTimeout = setTimeout(() => {
-            if (this.overTooltip || this.overBar) return;
-            this.tooltipShown = false;
-            this.tooltip.style.display = 'none';
-        }, 5);
+        this.manageTooltip(false);
     }
     updateTooltip(){
         let element = findDOMNode(this.el),
@@ -138,8 +150,8 @@ class Bar extends PureComponent<any, any> {
     render() {
         let {x, height, width, colors, graphWidth} = this.props;
         return colors.length == 1 
-            ? <SingleBar showTooltip={this.showTooltip} hideTooltip={this.hideTooltip} ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
-            : <MultiBar showTooltip={this.showTooltip} hideTooltip={this.hideTooltip} ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
+            ? <SingleBar showTooltip={this._showTooltip} hideTooltip={this._hideTooltip} ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
+            : <MultiBar showTooltip={this._showTooltip} hideTooltip={this._hideTooltip} ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
     }
 }
 
