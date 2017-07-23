@@ -71,26 +71,59 @@ class BarChart extends PureComponent<any, any> {
 }
 let counter = 1;
 class Bar extends PureComponent<any, any> {
-    el: any
+    el: any;
     tooltip: any;
+    tooltipShown: boolean;
+    overTooltip: boolean;
+    overBar: boolean;
+    tooltipTimeout: any;
     componentDidMount() {
         let tooltip = document.createElement('div');
         tooltip.innerHTML = 'HELLO WORLD' + (counter++);
         tooltip.setAttribute('class', 'tooltip');
+        tooltip.style.display = 'none';
+
+        tooltip.onmouseover = () => {
+            clearTimeout(this.tooltipTimeout);
+            this.overTooltip = true;
+        }
+        tooltip.onmouseout = () => {
+            clearTimeout(this.tooltipTimeout);
+            this.overTooltip = false;
+            this.tooltipTimeout = setTimeout(() => {
+                if (!this.overBar && !this.overTooltip){
+                    this.tooltipShown = false;
+                    this.tooltip.style.display = 'none';
+                }
+            }, 5);
+        }
+
         this.tooltip = tooltip;
         //console.log({left: box.left, top: box.top, x: this.props.x, width: this.props.width, height: this.props.height})
         
         document.body.appendChild(tooltip);
-
-        //this.updateTooltip();
-    }
-    componentDidUpdate(prevProps, prevState) {
-        //this.updateTooltip();
     }
     showTooltip = (evt) => {
-        debugger;
-        this.tooltip.style.left = evt.pageX + 'px';
-        this.tooltip.style.top = evt.pageY + 'px';
+        evt.persist();
+        this.overBar = true;
+        if (this.tooltipShown || this.overTooltip) return;
+        clearTimeout(this.tooltipTimeout);
+        this.tooltipTimeout = setTimeout(() => {
+            this.tooltipShown = true;
+            this.tooltip.style.left = evt.pageX + 'px';
+            this.tooltip.style.top = evt.pageY + 'px';
+            this.tooltip.style.display = 'block';
+        }, 5);
+    }
+    hideTooltip = evt => {
+        evt.persist();
+        this.overBar = false;
+        clearTimeout(this.tooltipTimeout);
+        this.tooltipTimeout = setTimeout(() => {
+            if (this.overTooltip || this.overBar) return;
+            this.tooltipShown = false;
+            this.tooltip.style.display = 'none';
+        }, 5);
     }
     updateTooltip(){
         let element = findDOMNode(this.el),
@@ -105,8 +138,8 @@ class Bar extends PureComponent<any, any> {
     render() {
         let {x, height, width, colors, graphWidth} = this.props;
         return colors.length == 1 
-            ? <SingleBar showTooltip={this.showTooltip} ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
-            : <MultiBar ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
+            ? <SingleBar showTooltip={this.showTooltip} hideTooltip={this.hideTooltip} ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
+            : <MultiBar showTooltip={this.showTooltip} hideTooltip={this.hideTooltip} ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
     }
 }
 
@@ -127,10 +160,10 @@ class SingleBar extends PureComponent<any, any> {
             .attr("x", this.props.x)
     }
     render() {
-        let {x, height, width, color, graphWidth, showTooltip} = this.props;
+        let {x, height, width, color, graphWidth, showTooltip, hideTooltip} = this.props;
 
         return (
-            <rect onMouseOver={showTooltip} ref={el => this.el = el} x={graphWidth} y={0} height={0} fill={color} width={0} />
+            <rect onMouseOver={showTooltip} onMouseOut={hideTooltip} ref={el => this.el = el} x={graphWidth} y={0} height={0} fill={color} width={0} />
         );
     }
 }
@@ -165,10 +198,10 @@ class MultiBar extends PureComponent<any, any> {
         })
     }
     render() {
-        let {x, height, width, colors, graphWidth} = this.props;
+        let {x, height, width, colors, graphWidth, showTooltip, hideTooltip} = this.props;
 
         return (
-            <g>
+            <g onMouseOver={showTooltip} onMouseOut={hideTooltip}>
                 {colors.map((color, i) => <rect ref={el => this[`el${i}`] = el} x={graphWidth} y={0} height={0} fill={color} width={0} />)}
             </g>
         );
