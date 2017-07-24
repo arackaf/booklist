@@ -61,7 +61,7 @@ class BarChart extends PureComponent<any, any> {
                     <svg onMouseEnter={() => console.log('SVG IN')} style={style}  width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                             {data.map((d, i) => (
-                                <Bar key={i} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                                <Bar key={i} index={i} count={data.length} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                             ))}
                         </g>
                         <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -88,9 +88,28 @@ class Bar extends PureComponent<any, any> {
         if (show){
             this.tooltipShown = true;
 
-            this.tooltip.style.left = evt.pageX + 'px';
-            this.tooltip.style.top = evt.pageY + 'px';
+            this.tooltip.style.display = 'block';
+            this.tooltip.style.visibility = 'hidden';
+
+            let {count, index} = this.props,
+                tBox = this.tooltip.getBoundingClientRect(),
+                element = findDOMNode(this.el),
+                box = element.getBoundingClientRect(),
+                left = box.left + 2,
+                top = box.top + 2;
+
+            if (tBox.width > box.width && ((index / count) > 0.5)) {
+                left -= (tBox.width - box.width + 4);
+            }
+
+            this.tooltip.style.left = left + 'px';
+            this.tooltip.style.top = top + 'px';
+            
+
+            this.tooltip.style.visibility = '';            
             this.tooltip.style.display = 'block';            
+
+
         } else {
             this.tooltipShown = false;
             this.tooltip.style.display = 'none';
@@ -101,7 +120,7 @@ class Bar extends PureComponent<any, any> {
         this.manageTooltip = debounce(this._manageTooltip, 50);
 
         let tooltip = document.createElement('div');
-        tooltip.innerHTML = 'HELLO WORLD' + (counter++) + '<button>Hi</button>';
+        tooltip.innerHTML = 'HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' + (counter++) + '<button>Hi</button>';
         tooltip.setAttribute('class', 'tooltip');
         tooltip.style.display = 'none';
 
