@@ -61,7 +61,7 @@ class BarChart extends PureComponent<any, any> {
                     <svg onMouseEnter={() => console.log('SVG IN')} style={style}  width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                             {data.map((d, i) => (
-                                <Bar key={i} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                                <Bar key={i} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                             ))}
                         </g>
                         <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -74,10 +74,12 @@ class BarChart extends PureComponent<any, any> {
 
 class Tooltip extends Component<any, any> {
     render() {
-        let {data, count} = this.props;
+        let {data, count} = this.props,
+            display = data.entries.map(e => e.name).sort().join(',');
+
         return (
             <div>
-                <h4 style={{margin: 0}}>{data.display}: <span>{data.count}</span></h4>
+                <h4 style={{margin: 0}}>{display}: <span>{data.count}</span></h4>
             </div>
         );
     }
@@ -176,7 +178,6 @@ class Bar extends PureComponent<any, any> {
     updateTooltip(){
         let element = findDOMNode(this.el),
             box = element.getBoundingClientRect();
-            //debugger;
 
         this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
         this.tooltip.style.top = ~~(box.bottom - this.props.height + 3) + 'px';
@@ -184,10 +185,11 @@ class Bar extends PureComponent<any, any> {
         //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
     render() {
-        let {x, height, width, colors, graphWidth} = this.props;
-        return colors.length == 1 
-            ? <SingleBar showTooltip={this._showTooltip} hideTooltip={this._hideTooltip} ref={el => this.el = el} color={colors} {...{height, width, x, graphWidth}} />
-            : <MultiBar showTooltip={this._showTooltip} hideTooltip={this._hideTooltip} ref={el => this.el = el} colors={colors} {...{height, width, x, graphWidth}} />
+        let {x, data, height, width, graphWidth} = this.props;
+
+        return data.entries.length == 1 
+            ? <SingleBar showTooltip={this._showTooltip} hideTooltip={this._hideTooltip} ref={el => this.el = el} color={data.entries[0].color} {...{height, width, x, graphWidth}} />
+            : <MultiBar showTooltip={this._showTooltip} hideTooltip={this._hideTooltip} ref={el => this.el = el} {...{height, width, x, graphWidth, data}} />
     }
 }
 
@@ -225,8 +227,9 @@ class MultiBar extends PureComponent<any, any> {
         this.drawBar();
     }
     drawBar(){
-        let {height, width, x, colors} = this.props,
-            count = colors.length,
+        let {height, width, x, data} = this.props,
+            count = data.entries.length,
+            colors = data.entries.map(e => e.color),
             sectionHeight = ~~(height / count),
             heightUsed = 0;
 
@@ -246,7 +249,8 @@ class MultiBar extends PureComponent<any, any> {
         })
     }
     render() {
-        let {x, height, width, colors, graphWidth, showTooltip, hideTooltip} = this.props;
+        let {x, height, width, data, graphWidth, showTooltip, hideTooltip} = this.props,
+            colors = data.entries.map(e => e.color);
 
         return (
             <g onMouseOver={showTooltip} onMouseOut={hideTooltip}>
@@ -335,18 +339,35 @@ class HomeIfLoggedIn extends Component<any, any> {
         ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds, gatherToParents: 1}).then(resp => {
             resp.results.forEach(item => {
                 let subjectsHeld = item.subjects
-                                       .map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path))
-                                       .map(_id => subjectHash[_id].name);
+                                       .map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path));
 
-                let uniqueSubjects = Array.from(new Set(subjectsHeld)).sort().join(', ');
+                let uniqueSubjects = Array.from(new Set(subjectsHeld)),
+                    uniqueSubjectString = uniqueSubjects.sort().join(',');
 
-                if (!subjectResultsMap.has(uniqueSubjects)){
-                    subjectResultsMap.set(uniqueSubjects, 0);
+                if (!subjectResultsMap.has(uniqueSubjectString)){
+                    subjectResultsMap.set(uniqueSubjectString, 0);
                 }
-                subjectResultsMap.set(uniqueSubjects, subjectResultsMap.get(uniqueSubjects) + 1);
+                subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
             });
 
-            this.setState({data: Array.from(subjectResultsMap).map(([name, count], i) => ({display: name, count, colors: getColors(i)})) })
+            let finalData = Array.from(subjectResultsMap).map(([name, count], i) => {
+                let _ids = name.split(',').filter(s => s);
+
+                let names = _ids.map(_id => subjectHash[_id].name).sort().join(',');
+                return {
+                    count,
+                    display: names,
+                    entries: _ids.map(_id => {
+                        let subject = subjectHash[_id];
+                        return {
+                            name: subject.name,
+                            color: subject.backgroundColor
+                        };
+                    })
+                };
+            });
+
+            this.setState({data: finalData});
         })
     }
     render() {
