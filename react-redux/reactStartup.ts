@@ -12,8 +12,8 @@ import 'util/ajaxUtil';
 import createHistory from 'history/createBrowserHistory'
 
 (function() {
-    if('serviceWorker' in navigator) {
-        //navigator.serviceWorker.register('/service-worker.js');
+    if('serviceWorker' in navigator && !/localhost/.test(window.location as any)) {
+        navigator.serviceWorker.register('/service-worker.js');
     }
 })();
 
