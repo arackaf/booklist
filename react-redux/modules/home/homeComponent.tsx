@@ -22,6 +22,11 @@ function getDisplay(i){
 }
 
 class BarChart extends PureComponent<any, any> {
+    componentDidMount() {
+        setInterval(() => {
+            console.log(document.body.scrollTop);
+        }, 500);
+    }
     state = {left: 0};
     sized = ({bounds}) => {
         if (bounds.left != this.state.left){
@@ -299,16 +304,6 @@ const MainHomePane = props =>
             </div>
         </div>
     </div>
-
-function getColors(i){
-    if (i === 0){
-        return ['purple']
-    } else if (i == 1){
-        return ['orange']
-    } else {
-        return ['red', 'green', 'blue'];
-    }
-}
 
 @connect((state: RootApplicationType) => ({
     subjects: topLevelSubjectsSortedSelector(state),
