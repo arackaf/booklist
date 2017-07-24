@@ -1,5 +1,5 @@
 import React, {Component, PureComponent} from 'react';
-import {findDOMNode} from 'react-dom';
+import {findDOMNode, render} from 'react-dom';
 import {connect} from 'react-redux';
 import { isLoggedIn } from 'reactStartup';
 import ajaxUtil from 'util/ajaxUtil';
@@ -61,7 +61,7 @@ class BarChart extends PureComponent<any, any> {
                     <svg onMouseEnter={() => console.log('SVG IN')} style={style}  width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                             {data.map((d, i) => (
-                                <Bar key={i} index={i} count={data.length} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                                <Bar key={i} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} colors={d.colors} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                             ))}
                         </g>
                         <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -71,7 +71,18 @@ class BarChart extends PureComponent<any, any> {
         );
     }
 }
-let counter = 1;
+
+class Tooltip extends Component<any, any> {
+    render() {
+        let {data, count} = this.props;
+        return (
+            <div>
+                <h4 style={{margin: 0}}>{data.display}: <span>{data.count}</span></h4>
+            </div>
+        );
+    }
+}
+
 class Bar extends PureComponent<any, any> {
     el: any;
     tooltip: any;
@@ -102,14 +113,15 @@ class Bar extends PureComponent<any, any> {
                 left -= (tBox.width - box.width + 4);
             }
 
+            if (tBox.height > box.height){
+                top -= (tBox.height - box.height + 4);
+            }
+
             this.tooltip.style.left = left + 'px';
             this.tooltip.style.top = top + 'px';
             
-
             this.tooltip.style.visibility = '';            
-            this.tooltip.style.display = 'block';            
-
-
+            this.tooltip.style.display = 'block';
         } else {
             this.tooltipShown = false;
             this.tooltip.style.display = 'none';
@@ -117,10 +129,12 @@ class Bar extends PureComponent<any, any> {
     }
 
     componentDidMount() {
+        let {data, count} = this.props;
         this.manageTooltip = debounce(this._manageTooltip, 50);
 
         let tooltip = document.createElement('div');
-        tooltip.innerHTML = 'HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' + (counter++) + '<button>Hi</button>';
+        render(<Tooltip data={data} count={count} />, tooltip);
+        //tooltip.innerHTML = 'HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' + '<button>Hi</button><br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD<br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD<br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD';
         tooltip.setAttribute('class', 'tooltip');
         tooltip.style.display = 'none';
 
