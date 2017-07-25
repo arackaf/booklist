@@ -22,16 +22,10 @@ function getDisplay(i){
 }
 
 class BarChart extends PureComponent<any, any> {
-    componentDidMount() {
-        setInterval(() => {
-            console.log(document.body.scrollTop);
-        }, 500);
-    }
     state = {left: 0};
     sized = ({bounds}) => {
         if (bounds.left != this.state.left){
             this.setState({left: bounds.left});
-            console.log(bounds.left);
         }
     }
     render() {
@@ -113,8 +107,8 @@ class Bar extends PureComponent<any, any> {
                 tBox = this.tooltip.getBoundingClientRect(),
                 element = findDOMNode(this.el),
                 box = element.getBoundingClientRect(),
-                left = box.left + 2,
-                top = box.top + 2;
+                left = box.left + document.body.scrollLeft + 2,
+                top = box.top + document.body.scrollTop + 2;
 
             if (tBox.width > box.width && ((index / count) > 0.5)) {
                 left -= (tBox.width - box.width + 4);
@@ -179,15 +173,6 @@ class Bar extends PureComponent<any, any> {
     _hideTooltip = evt => {
         evt.persist();
         this.manageTooltip(false);
-    }
-    updateTooltip(){
-        let element = findDOMNode(this.el),
-            box = element.getBoundingClientRect();
-
-        this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
-        this.tooltip.style.top = ~~(box.bottom - this.props.height + 3) + 'px';
-
-        //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
     render() {
         let {x, data, height, width, graphWidth} = this.props;
