@@ -22,12 +22,15 @@ function getDisplay(i){
 }
 
 class BarChart extends PureComponent<any, any> {
-    state = {left: 0};
+    state = {left: 0, excluding: {}};
     sized = ({bounds}) => {
         if (bounds.left != this.state.left){
             this.setState({left: bounds.left});
         }
     }
+    removeBar = id => this.setState((state, props) => ({excluding: {...state.excluding, [id]: true}}));
+    restoreBar = id => this.setState((state, props) => ({excluding: {...state.excluding, [id]: false}}));
+    
     render() {
         let margin = {top: 20, right: 10, bottom: 180, left: 0},
             {data, width, height} = this.props;
@@ -35,6 +38,8 @@ class BarChart extends PureComponent<any, any> {
         if (!data || !data.length){
             return null;
         }
+
+        data = data.filter(d => !this.state.excluding[d.groupId])
 
         let dataValues = data.map(({count}) => count),
             displayValues = data.map(({display}) => display),
@@ -57,10 +62,10 @@ class BarChart extends PureComponent<any, any> {
             </Measure> ref={measureRef} */}
 
         return (
-                    <svg onMouseEnter={() => console.log('SVG IN')} style={style}  width={width} height={height}>
+                    <svg style={style}  width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-                            {data.map((d, i) => (
-                                <Bar key={i} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                            {data.filter(d => !this.state.excluding[d.groupId]).map((d, i) => (
+                                <Bar removeBar={this.removeBar} key={d.groupId} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
                             ))}
                         </g>
                         <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
@@ -71,14 +76,16 @@ class BarChart extends PureComponent<any, any> {
     }
 }
 
-class Tooltip extends Component<any, any> {
+class Tooltip extends PureComponent<any, any> {
     render() {
-        let {data, count} = this.props,
+        let {data, count, removeBar} = this.props,
             display = data.entries.map(e => e.name).sort().join(',');
 
         return (
             <div>
                 <h4 style={{margin: 0}}>{display}: <span>{data.count}</span></h4>
+                <br />
+                <a onClick={this.props.removeBar}>Remove</a>
             </div>
         );
     }
@@ -129,13 +136,16 @@ class Bar extends PureComponent<any, any> {
         }
     }
 
+    removeBar = () => {
+        this.props.removeBar(this.props.data.groupId);
+        this._manageTooltip(false);
+    }
     componentDidMount() {
         let {data, count} = this.props;
         this.manageTooltip = debounce(this._manageTooltip, 50);
 
         let tooltip = document.createElement('div');
-        render(<Tooltip data={data} count={count} />, tooltip);
-        //tooltip.innerHTML = 'HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' + '<button>Hi</button><br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD<br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD<br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD';
+        render(<Tooltip data={data} count={count} removeBar={this.removeBar} />, tooltip);
         tooltip.setAttribute('class', 'tooltip');
         tooltip.style.display = 'none';
 
@@ -318,8 +328,7 @@ class HomeIfLoggedIn extends Component<any, any> {
 
         ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds, gatherToParents: 1}).then(resp => {
             resp.results.forEach(item => {
-                let subjectsHeld = item.subjects
-                                       .map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path));
+                let subjectsHeld = item.subjects.map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path));
 
                 let uniqueSubjects = Array.from(new Set(subjectsHeld)),
                     uniqueSubjectString = uniqueSubjects.sort().join(',');
@@ -335,6 +344,7 @@ class HomeIfLoggedIn extends Component<any, any> {
 
                 let names = _ids.map(_id => subjectHash[_id].name).sort().join(',');
                 return {
+                    groupId: name,
                     count,
                     display: names,
                     entries: _ids.map(_id => {
