@@ -160,7 +160,7 @@ class Bar extends PureComponent<any, any> {
 
         let tooltip = document.createElement('div');
         render(<Tooltip data={data} count={count} removeBar={this.removeBar} />, tooltip);
-        tooltip.setAttribute('class', 'tooltip');
+        tooltip.setAttribute('class', 'd3-tooltip');
         tooltip.style.display = 'none';
 
 
