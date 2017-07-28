@@ -63,7 +63,7 @@ class BarChart extends PureComponent<any, any> {
             /*    )}
             </Measure> ref={measureRef} */}
 
-        let excludedCount = Object.keys(excluding).length;
+        let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
         return (
             <div>
                 <span>
@@ -71,7 +71,7 @@ class BarChart extends PureComponent<any, any> {
                     {excludedCount ? 
                         <span style={{marginLeft: '10px'}}>
                             Excluding: {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => (
-                                <span style={{marginLeft: '10px'}}>{d.display} <a><i className="fa fa-fw fa-undo"></i></a></span>
+                                <span style={{marginLeft: '10px'}}>{d.display} <a onClick={() => this.restoreBar(d.groupId)}><i className="fa fa-fw fa-undo"></i></a></span>
                             ))}
                         </span> : null}
                 </span>
@@ -165,13 +165,10 @@ class Bar extends PureComponent<any, any> {
 
 
         tooltip.onmouseenter = () => {
-            console.log('tooltip mouse OVER')
             this.manageTooltip(true);
         }
 
         tooltip.onmouseleave = e => {
-            console.log('tooltip mouse OUT');
-
             let el = document.elementFromPoint(e.clientX, e.clientY);
 
             do {
