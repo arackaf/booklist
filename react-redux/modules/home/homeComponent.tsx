@@ -66,17 +66,25 @@ class BarChart extends PureComponent<any, any> {
         let excludedCount = Object.keys(excluding).length;
         return (
             <div>
-                    <span>All Books. {excludedCount ? <span>Excluding: {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => <span>{d.display} <a><i className="fa fa-fw fa-undo"></i></a>{i < arr.length - 1 ? <span>, </span> : null}</span>)}</span> : null}</span>
-                    <svg style={style}  width={width} height={height}>
-                        <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-                            {data.filter(d => !this.state.excluding[d.groupId]).map((d, i) => (
-                                <Bar removeBar={this.removeBar} key={d.groupId} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                <span>
+                    <h4 style={{display: 'inline'}}>All Books.</h4> 
+                    {excludedCount ? 
+                        <span style={{marginLeft: '10px'}}>
+                            Excluding: {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => (
+                                <span style={{marginLeft: '10px'}}>{d.display} <a><i className="fa fa-fw fa-undo"></i></a></span>
                             ))}
-                        </g>
-                        <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
-                            <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
-                        </g>
-                    </svg>
+                        </span> : null}
+                </span>
+                <svg style={style}  width={width} height={height}>
+                    <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
+                        {data.filter(d => !this.state.excluding[d.groupId]).map((d, i) => (
+                            <Bar removeBar={this.removeBar} key={d.groupId} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                        ))}
+                    </g>
+                    <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+                        <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
+                    </g>
+                </svg>
             </div>
         );
     }
