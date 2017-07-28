@@ -99,6 +99,8 @@ module.exports = {
         // }),
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
+        
+        asyncBundle('d3', { nodePaths: ['d3-scale', 'd3-array', 'd3-selection', 'd3-axis', 'd3-transition']  }),
 
         isProduction ? new webpack.optimize.ModuleConcatenationPlugin() : null
 
