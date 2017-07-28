@@ -33,13 +33,15 @@ class BarChart extends PureComponent<any, any> {
     
     render() {
         let margin = {top: 20, right: 10, bottom: 180, left: 0},
-            {data, width, height} = this.props;
+            {data, width, height} = this.props,
+            {excluding} = this.state;
 
         if (!data || !data.length){
             return null;
         }
+        let fullData = data;
 
-        data = data.filter(d => !this.state.excluding[d.groupId])
+        data = data.filter(d => !excluding[d.groupId])
 
         let dataValues = data.map(({count}) => count),
             displayValues = data.map(({display}) => display),
@@ -61,7 +63,10 @@ class BarChart extends PureComponent<any, any> {
             /*    )}
             </Measure> ref={measureRef} */}
 
+        let excludedCount = Object.keys(excluding).length;
         return (
+            <div>
+                    <span>All Books. {excludedCount ? <span>Excluding: {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => <span>{d.display} <a><i className="fa fa-fw fa-undo"></i></a>{i < arr.length - 1 ? <span>, </span> : null}</span>)}</span> : null}</span>
                     <svg style={style}  width={width} height={height}>
                         <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
                             {data.filter(d => !this.state.excluding[d.groupId]).map((d, i) => (
@@ -72,6 +77,7 @@ class BarChart extends PureComponent<any, any> {
                             <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
                         </g>
                     </svg>
+            </div>
         );
     }
 }
@@ -368,8 +374,6 @@ class HomeIfLoggedIn extends Component<any, any> {
                 <MainHomePane>
                     Welcome to <i>My Library</i>.  Below is the beginnings of a data visualization of your library. More to come!
                     <hr />
-                    <br />
-                    <br />
 
                     {data ? <BarChart data={this.state.data} width={1100} height={600} /> : null}
                     <br />
