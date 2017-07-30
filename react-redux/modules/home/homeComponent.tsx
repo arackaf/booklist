@@ -6,9 +6,11 @@ import ajaxUtil from 'util/ajaxUtil';
 
 import Measure from 'react-measure';
 
-import {scaleLinear, scaleOrdinal, scaleBand, schemeCategory10} from 'd3-scale';
-import {max} from 'd3-array';
-import {select} from 'd3-selection';
+import scaleLinear from 'd3-scale/src/linear';
+import scaleBand from 'd3-scale/src/band';
+import max from 'd3-array/src/max';
+import select from 'd3-selection/src/select';
+
 import {axisBottom} from 'd3-axis';
 import 'd3-transition';
 
@@ -54,9 +56,6 @@ class BarChart extends PureComponent<any, any> {
                         .paddingInner([0.1])
                         .paddingOuter([0.3])
                         .align([0.5]),
-            colorScale = scaleOrdinal()
-                        .domain(data.map((d, i) => i))
-                        .range(schemeCategory10),
             style = {display: 'block'};//, marginLeft: 'auto', marginRight: 'auto'};
             {/*<Measure bounds={true} onResize={this.sized}>
                 {({measureRef}) => (*/
