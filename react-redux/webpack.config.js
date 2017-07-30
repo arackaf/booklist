@@ -43,7 +43,20 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
+            { 
+                test: /\.tsx?$/, 
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['react', 'es2015-webpack', 'stage-1', 'stage-2'],
+                            plugins: ['transform-decorators-legacy', 'external-helpers']
+                        }
+                    },
+                    'ts-loader'
+                ]
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
