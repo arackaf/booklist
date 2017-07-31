@@ -15,7 +15,7 @@ const asyncBundle = (name, {nodePaths = [], resources = []}) =>
             if (!context) return false;
             let resourcePath = context.replace(/\\/g, '/');
 
-            return (resourcePath.indexOf('node_modules') >= 0 && nodePaths.find(t => new RegExp('/' + t + '/', 'i').test(resourcePath)))
+            return (resourcePath.indexOf('node_modules') >= 0 && (nodePaths.find(t => new RegExp('/' + t + '/', 'i').test(resourcePath)) || nodePaths.find(t => new RegExp('/' + t + '$', 'i').test(resourcePath))))
                     ||
                    (resource && (resources.find(r => !path.relative(r + '.js', resource)) || resources.find(r => !path.relative(r + '.ts', resource)) || resources.find(r => !path.relative(r + '.tsx', resource))))
         }
@@ -43,7 +43,20 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
+            { 
+                test: /\.tsx?$/, 
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['react', 'es2015-webpack', 'stage-1', 'stage-2'],
+                            plugins: ['transform-decorators-legacy', 'external-helpers']
+                        }
+                    },
+                    'ts-loader'
+                ]
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -99,6 +112,8 @@ module.exports = {
         // }),
 
         asyncBundle('react-dnd', { nodePaths: ['react-dnd', 'react-dnd-html5-backend', 'react-dnd-touch-backend', 'dnd-core']  }),
+        
+        asyncBundle('d3', { nodePaths: ['d3-.+']  }),
 
         isProduction ? new webpack.optimize.ModuleConcatenationPlugin() : null
 
