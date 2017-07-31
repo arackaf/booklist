@@ -6,9 +6,11 @@ import ajaxUtil from 'util/ajaxUtil';
 
 import Measure from 'react-measure';
 
-import {scaleLinear, scaleOrdinal, scaleBand, schemeCategory10} from 'd3-scale';
-import {max} from 'd3-array';
-import {select} from 'd3-selection';
+import scaleLinear from 'd3-scale/src/linear';
+import scaleBand from 'd3-scale/src/band';
+import max from 'd3-array/src/max';
+import select from 'd3-selection/src/select';
+
 import {axisBottom} from 'd3-axis';
 import 'd3-transition';
 
@@ -22,20 +24,26 @@ function getDisplay(i){
 }
 
 class BarChart extends PureComponent<any, any> {
-    state = {left: 0};
+    state = {left: 0, excluding: {}};
     sized = ({bounds}) => {
         if (bounds.left != this.state.left){
             this.setState({left: bounds.left});
-            console.log(bounds.left);
         }
     }
+    removeBar = id => this.setState((state, props) => ({excluding: {...state.excluding, [id]: true}}));
+    restoreBar = id => this.setState((state, props) => ({excluding: {...state.excluding, [id]: false}}));
+    
     render() {
         let margin = {top: 20, right: 10, bottom: 180, left: 0},
-            {data, width, height} = this.props;
+            {data, width, height} = this.props,
+            {excluding} = this.state;
 
         if (!data || !data.length){
             return null;
         }
+        let fullData = data;
+
+        data = data.filter(d => !excluding[d.groupId])
 
         let dataValues = data.map(({count}) => count),
             displayValues = data.map(({display}) => display),
@@ -48,38 +56,49 @@ class BarChart extends PureComponent<any, any> {
                         .paddingInner([0.1])
                         .paddingOuter([0.3])
                         .align([0.5]),
-            colorScale = scaleOrdinal()
-                        .domain(data.map((d, i) => i))
-                        .range(schemeCategory10),
             style = {display: 'block'};//, marginLeft: 'auto', marginRight: 'auto'};
             {/*<Measure bounds={true} onResize={this.sized}>
                 {({measureRef}) => (*/
             /*    )}
             </Measure> ref={measureRef} */}
 
+        let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
         return (
-                    <svg onMouseEnter={() => console.log('SVG IN')} style={style}  width={width} height={height}>
-                        <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-                            {data.map((d, i) => (
-                                <Bar key={i} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+            <div>
+                <span>
+                    <h4 style={{display: 'inline'}}>All Books.</h4> 
+                    {excludedCount ? 
+                        <span style={{marginLeft: '10px'}}>
+                            Excluding: {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => (
+                                <span style={{marginLeft: '10px'}}>{d.display} <a onClick={() => this.restoreBar(d.groupId)}><i className="fa fa-fw fa-undo"></i></a></span>
                             ))}
-                        </g>
-                        <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
-                            <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
-                        </g>
-                    </svg>
+                        </span> : null}
+                </span>
+                <svg style={style}  width={width} height={height}>
+                    <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
+                        {data.filter(d => !this.state.excluding[d.groupId]).map((d, i) => (
+                            <Bar removeBar={this.removeBar} key={d.groupId} index={i} data={d} count={data.length} x={scaleX(d.display)} y={0} width={scaleX.bandwidth()} height={dataScale(d.count)} graphWidth={width} adjustTooltip={this.state.left} />
+                        ))}
+                    </g>
+                    <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+                        <Axis scale={scaleX} transform={`translate(0, ${height})`}></Axis>
+                    </g>
+                </svg>
+            </div>
         );
     }
 }
 
-class Tooltip extends Component<any, any> {
+class Tooltip extends PureComponent<any, any> {
     render() {
-        let {data, count} = this.props,
+        let {data, count, removeBar} = this.props,
             display = data.entries.map(e => e.name).sort().join(',');
 
         return (
             <div>
                 <h4 style={{margin: 0}}>{display}: <span>{data.count}</span></h4>
+                <br />
+                <a onClick={this.props.removeBar}>Remove</a>
             </div>
         );
     }
@@ -108,8 +127,8 @@ class Bar extends PureComponent<any, any> {
                 tBox = this.tooltip.getBoundingClientRect(),
                 element = findDOMNode(this.el),
                 box = element.getBoundingClientRect(),
-                left = box.left + 2,
-                top = box.top + 2;
+                left = box.left + document.body.scrollLeft + 2,
+                top = box.top + document.body.scrollTop + 2;
 
             if (tBox.width > box.width && ((index / count) > 0.5)) {
                 left -= (tBox.width - box.width + 4);
@@ -130,25 +149,25 @@ class Bar extends PureComponent<any, any> {
         }
     }
 
+    removeBar = () => {
+        this.props.removeBar(this.props.data.groupId);
+        this._manageTooltip(false);
+    }
     componentDidMount() {
         let {data, count} = this.props;
         this.manageTooltip = debounce(this._manageTooltip, 50);
 
         let tooltip = document.createElement('div');
-        render(<Tooltip data={data} count={count} />, tooltip);
-        //tooltip.innerHTML = 'HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD' + '<button>Hi</button><br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD<br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD<br>HELLO WORLDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD';
-        tooltip.setAttribute('class', 'tooltip');
+        render(<Tooltip data={data} count={count} removeBar={this.removeBar} />, tooltip);
+        tooltip.setAttribute('class', 'd3-tooltip');
         tooltip.style.display = 'none';
 
 
         tooltip.onmouseenter = () => {
-            console.log('tooltip mouse OVER')
             this.manageTooltip(true);
         }
 
         tooltip.onmouseleave = e => {
-            console.log('tooltip mouse OUT');
-
             let el = document.elementFromPoint(e.clientX, e.clientY);
 
             do {
@@ -174,15 +193,6 @@ class Bar extends PureComponent<any, any> {
     _hideTooltip = evt => {
         evt.persist();
         this.manageTooltip(false);
-    }
-    updateTooltip(){
-        let element = findDOMNode(this.el),
-            box = element.getBoundingClientRect();
-
-        this.tooltip.style.left = ~~(this.props.x + this.props.adjustTooltip + 3) + 'px';
-        this.tooltip.style.top = ~~(box.bottom - this.props.height + 3) + 'px';
-
-        //this.tooltip.style.top = ~~(box.top - this.tooltip.clientHeight - 1) + 'px';
     }
     render() {
         let {x, data, height, width, graphWidth} = this.props;
@@ -300,16 +310,6 @@ const MainHomePane = props =>
         </div>
     </div>
 
-function getColors(i){
-    if (i === 0){
-        return ['purple']
-    } else if (i == 1){
-        return ['orange']
-    } else {
-        return ['red', 'green', 'blue'];
-    }
-}
-
 @connect((state: RootApplicationType) => ({
     subjects: topLevelSubjectsSortedSelector(state),
     subjectHash: state.app.subjectHash,
@@ -338,8 +338,7 @@ class HomeIfLoggedIn extends Component<any, any> {
 
         ajaxUtil.post('/book/booksBySubjects', {subjects: subjectIds, gatherToParents: 1}).then(resp => {
             resp.results.forEach(item => {
-                let subjectsHeld = item.subjects
-                                       .map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path));
+                let subjectsHeld = item.subjects.map(_id => targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path));
 
                 let uniqueSubjects = Array.from(new Set(subjectsHeld)),
                     uniqueSubjectString = uniqueSubjects.sort().join(',');
@@ -355,6 +354,7 @@ class HomeIfLoggedIn extends Component<any, any> {
 
                 let names = _ids.map(_id => subjectHash[_id].name).sort().join(',');
                 return {
+                    groupId: name,
                     count,
                     display: names,
                     entries: _ids.map(_id => {
@@ -378,8 +378,6 @@ class HomeIfLoggedIn extends Component<any, any> {
                 <MainHomePane>
                     Welcome to <i>My Library</i>.  Below is the beginnings of a data visualization of your library. More to come!
                     <hr />
-                    <br />
-                    <br />
 
                     {data ? <BarChart data={this.state.data} width={1100} height={600} /> : null}
                     <br />
