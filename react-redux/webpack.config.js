@@ -69,7 +69,7 @@ module.exports = {
         ]
     },
     plugins: [
-        (!isProduction ? new BundleAnalyzerPlugin({ analyzerMode: 'static' }) : null),
+        new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
 
         new SWPrecacheWebpackPlugin({
             mergeStaticsConfig: true,
