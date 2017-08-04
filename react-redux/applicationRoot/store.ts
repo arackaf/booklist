@@ -24,4 +24,39 @@ const createStoreWithMiddleware = applyMiddleware(
     thunkMiddleware
 )(createStore);
 
+const aInit = {
+    a: 0,
+    b: 1
+}
+
+let codeSplitReducer = (state = aInit, action) => {
+    switch(action.type){
+        case 'INC_A': return {...state, a: state.a + 1}
+        case 'INC_B': return {...state, b: state.b + 1}
+    }
+    return state;
+}
+
+let myStore = createStoreWithMiddleware(combineReducers({
+    app: rootReducer,
+    codeSplitSlice: state => state || null
+}), {
+    codeSplitSlice: {
+        a: 12,
+        b: 13
+    }
+})
+
+//later
+
+myStore.replaceReducer(combineReducers({
+    app: rootReducer,
+    codeSplitSlice: codeSplitReducer
+}));
+
+myStore.dispatch({type: 'INC_A'});
+myStore.dispatch({type: 'INC_B'});
+
+
+
 export const store = createStoreWithMiddleware(getNewReducer());
