@@ -19,7 +19,7 @@ declare var webSocketAddress : any;
 
 const ManualBookEntry = Loadable({
     loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ 'applicationRoot/components/manualBookEntry'),
-    LoadingComponent: ComponentLoading,
+    loading: ComponentLoading,
     delay: 500
 });
 
