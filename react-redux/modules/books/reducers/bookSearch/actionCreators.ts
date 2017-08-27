@@ -95,11 +95,11 @@ export function booksInitialized(searchProps){
             subjectsState = state.booksModule.subjects,
             tagsState = state.booksModule.tags;
 
-        dispatch(loadSubjects());
-        dispatch(loadTags());
+        // dispatch(loadSubjects());
+        // dispatch(loadTags());
 
-        dispatch(setFilters(nextSearchFilters));
-        dispatch(loadBooks());
+        // dispatch(setFilters(nextSearchFilters));
+        // dispatch(loadBooks());
     }
 }
 

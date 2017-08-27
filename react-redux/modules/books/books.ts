@@ -7,5 +7,5 @@ import {store} from 'applicationRoot/store';
 export default {
     reducer: reducer,
     component: BookViewList,
-    //initialize: booksInitialized
+    initialize: booksInitialized
 };
