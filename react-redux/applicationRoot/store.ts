@@ -58,7 +58,7 @@ export const store = createStoreWithMiddleware(getNewReducer(null, initialState)
 if (localStorage){
     function saveState(){
         try {
-            //localStorage.setItem('reduxState', JSON.stringify(store.getState()));
+            localStorage.setItem('reduxState', JSON.stringify(store.getState()));
         } catch(err){
             console.log('Error parsing and saving state', err);
         }
