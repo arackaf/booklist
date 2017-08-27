@@ -47,12 +47,14 @@ export function loadBooks(){
             app = state.app;
 
         Promise.resolve(booksSearch(bookSearch, app.publicUserId)).then(booksResp => {
+            setTimeout(() => {
             let hasMore = booksResp.results.length > bookSearch.pageSize;
             if (hasMore){
                 booksResp.results = booksResp.results.slice(0, -1);
             }
             window.scrollTo(0, 0);
             dispatch(booksResults(booksResp, hasMore, booksResp.count));
+            }, 3000)
         });
     }
 }
