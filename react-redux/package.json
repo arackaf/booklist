@@ -33,6 +33,7 @@
     "history": "4.6.1",
     "immutability-helper": "2.2.2",
     "lodash.debounce": "4.0.8",
+    "lodash.throttle": "^4.1.1",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
     "react": "15.5.4",
