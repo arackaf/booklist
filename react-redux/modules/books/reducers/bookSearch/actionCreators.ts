@@ -75,7 +75,7 @@ export function setSortOrder(sort, direction){
     };
 }
 
-export function booksInitialized(searchProps){
+export function booksInitialized({priorState}){
     let isActive = true;
     history.listen((location, action) => {
         let {pathname, searchState} = getCurrentHistoryState();
@@ -89,7 +89,7 @@ export function booksInitialized(searchProps){
     })
     
     return function(dispatch, getState){
-        if (!getState().booksModule) {
+        if (!priorState.booksModule) {
             let searchState = getCurrentHistoryState().searchState,
             nextSearchFilters = getNextFilters(searchState),
             state = getState(),
@@ -103,14 +103,12 @@ export function booksInitialized(searchProps){
             dispatch(loadBooks());
         } else {
             let {pathname, searchState} = getCurrentHistoryState();
-
-            store.dispatch({type: 'LOAD_BOOKS_RESULTS', books: [], resultsCount: 0});
-            store.dispatch(syncFiltersToHash(searchState));
+            store.dispatch(syncFiltersToHash(searchState, { initializingFromPriorState: !!priorState }));
         }
     }
 }
 
-export function syncFiltersToHash(searchProps, { reactivating = false } = {}){
+export function syncFiltersToHash(searchProps, { reactivating = false, initializingFromPriorState = false } = {}){
     return function(dispatch, getState){
         let nextSearchFilters = getNextFilters(searchProps),
             state = getState(),
@@ -126,6 +124,9 @@ export function syncFiltersToHash(searchProps, { reactivating = false } = {}){
         let force = reactivating && booksState.reloadOnActivate;
 
         if (force || isDirty(searchState, nextSearchFilters)){
+            if (initializingFromPriorState){
+                store.dispatch({type: 'LOAD_BOOKS_RESULTS', books: [], resultsCount: 0});            
+            }
             dispatch(setFilters(nextSearchFilters));
             dispatch(loadBooks());
         }
