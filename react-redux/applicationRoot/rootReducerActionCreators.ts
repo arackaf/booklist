@@ -47,7 +47,7 @@ let subjectsLoaded = false;
 
 export function loadSubjects(){
     return function(dispatch, getState){
-        if (subjectsLoaded){
+        if (subjectsLoaded || getState().app.subjectsLoaded){
             return;
         }
         subjectsLoaded = true;
