@@ -79,7 +79,7 @@ export function booksInitialized(searchProps){
     let isActive = true;
     history.listen((location, action) => {
         let {pathname, searchState} = getCurrentHistoryState();
-
+        
         if (pathname === '/books' || pathname === '/view'){
             store.dispatch(syncFiltersToHash(searchState, { reactivating: !isActive }));
             isActive = true;
@@ -87,19 +87,26 @@ export function booksInitialized(searchProps){
             isActive = false;
         }
     })
-
+    
     return function(dispatch, getState){
-        let searchState = getCurrentHistoryState().searchState,
+        if (!getState().booksModule) {
+            let searchState = getCurrentHistoryState().searchState,
             nextSearchFilters = getNextFilters(searchState),
             state = getState(),
             subjectsState = state.booksModule.subjects,
             tagsState = state.booksModule.tags;
+            
+            dispatch(loadSubjects());
+            dispatch(loadTags());
+            
+            dispatch(setFilters(nextSearchFilters));
+            dispatch(loadBooks());
+        } else {
+            let {pathname, searchState} = getCurrentHistoryState();
 
-        // dispatch(loadSubjects());
-        // dispatch(loadTags());
-
-        // dispatch(setFilters(nextSearchFilters));
-        // dispatch(loadBooks());
+            store.dispatch({type: 'LOAD_BOOKS_RESULTS', books: [], resultsCount: 0});
+            store.dispatch(syncFiltersToHash(searchState));
+        }
     }
 }
 
