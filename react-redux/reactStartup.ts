@@ -135,6 +135,7 @@ function loadModule(location) {
     ]).then(([{ default: moduleObject }, publicUserInfo]) => {
         if (currentModule != module) return;
         
+        let priorState = store.getState();
         currentModuleObject = moduleObject;
         store.dispatch(setModule(currentModule));
 
@@ -143,7 +144,7 @@ function loadModule(location) {
         }
 
         if (moduleObject.reducer) {
-            getNewReducer({name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize});
+            getNewReducer({name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize, priorState});
         }
         renderUI(createElement(moduleObject.component));
     });
