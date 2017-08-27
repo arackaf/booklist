@@ -19,8 +19,8 @@ declare var webSocketAddress : any;
 
 const ManualBookEntry = Loadable({
     loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ 'applicationRoot/components/manualBookEntry'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 const defaultEmptyBook = () => ({

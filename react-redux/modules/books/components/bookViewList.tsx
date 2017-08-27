@@ -25,38 +25,38 @@ import ComponentLoading from 'applicationRoot/components/componentLoading';
 
 const ManualBookEntry = Loadable({
     loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ 'applicationRoot/components/manualBookEntry'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 const BookSubjectSetter = Loadable({
     loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookSubjectSetter'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 const BookTagSetter = Loadable({
     loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookTagSetter'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 const SubjectEditModal = Loadable({
     loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './subjectEditModal'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 const TagEditModal = Loadable({
     loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './tagEditModal'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 const BookSearchModal = Loadable({
     loader: () => System.import(/* webpackChunkName: "book-list-modals" */ './bookSearchModal'),
-    LoadingComponent: ComponentLoading,
-    delay: 500
+    loading: ComponentLoading,
+    delay: 200
 });
 
 type actionsType = typeof actionCreatorsBooks & typeof actionCreatorsSearch;
