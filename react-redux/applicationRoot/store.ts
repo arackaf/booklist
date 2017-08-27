@@ -4,17 +4,17 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import throttle from 'lodash.throttle';
 
 let asyncReducers = { };
-export function getNewReducer(reducerObj?) : any {
-    if (!reducerObj) return combineReducers({ app: rootReducer });
+export function getNewReducer(reducerObj?, initialState = {}) : any {
+    if (!reducerObj) return combineLazyReducers({ app: rootReducer }, initialState);
 
     if (asyncReducers[`${reducerObj.name}Module`]) return; //registering an async reducer we already have - do nothing and get out
 
     asyncReducers[`${reducerObj.name}Module`] = reducerObj.reducer;
 
-    store.replaceReducer(combineReducers({
+    store.replaceReducer(combineLazyReducers({
         app: rootReducer,
         ...asyncReducers
-    }));
+    }, store.getState()));
 
     if (reducerObj.initialize){
         store.dispatch(reducerObj.initialize({}));
@@ -25,6 +25,23 @@ const createStoreWithMiddleware = applyMiddleware(
     thunkMiddleware
 )(createStore);
 
+
+function combineLazyReducers(reducers, existingState){
+    let handler = {
+        ownKeys(target){
+            return Array.from(new Set([...Reflect.ownKeys(target), ...Reflect.ownKeys(existingState)]));
+        },
+        get(target, key){
+            return target[key] || (state => state === void 0 ? null : state); // <--- stub for Redux if not present
+        },
+        getOwnPropertyDescriptor(target, key){
+            return Reflect.getOwnPropertyDescriptor(target, key) || Reflect.getOwnPropertyDescriptor(existingState, key);
+        }
+    };    
+    return combineReducers(new Proxy(reducers, handler));
+}
+
+/*
 const aInit = {
     a: 0,
     b: 1
@@ -61,30 +78,6 @@ let initialState = { // <----- from local storage
     }
 };
 
-function combineLazyReducers(reducers, existingState){
-    let handler = {
-        ownKeys(target){
-            return Array.from(new Set([...Reflect.ownKeys(target), ...Reflect.ownKeys(existingState)]));
-        },
-        get(target, key){
-            return target[key] || (state => state === void 0 ? null : state); // <--- stub for Redux if not present
-        },
-        getOwnPropertyDescriptor(target, key){
-            return Reflect.getOwnPropertyDescriptor(target, key) || Reflect.getOwnPropertyDescriptor(existingState, key);
-        }
-    };    
-    return combineReducers(new Proxy(reducers, handler));
-}
-
-function myReducer(a: any, b: any){ return null; }
-
-
-
-function root(state, action){
-    //middleWare would be applied to myReducer, and so wouldn't be able to see
-    //the initialState that I'm dragging along below
-    return {...initialState, ...myReducer(state, action) };
-}
 
 let myStore = createStoreWithMiddleware(combineLazyReducers(initialReducer, initialState), initialState);
 let state = myStore.getState();  // state.codeSplitSplice === {a: 12, b: 13} hooray!
@@ -118,13 +111,24 @@ myStore.dispatch({type: 'B_INC_B'});
 state = myStore.getState(); 
 
 debugger;
+*/
 
-export const store = createStoreWithMiddleware(getNewReducer());
+let initialState = void 0;
+if (localStorage){
+    try {
+        initialState = JSON.parse(localStorage.getItem('reduxState'));
+        console.log('initial state', initialState)
+    }catch (err){
+        console.log('Error parsing state', err);
+    }
+}
+
+export const store = createStoreWithMiddleware(getNewReducer(null, initialState), initialState);
 
 if (localStorage){
     function saveState(){
         try {
-            localStorage.setItem('reduxState', JSON.stringify(store.getState()));
+            //localStorage.setItem('reduxState', JSON.stringify(store.getState()));
         } catch(err){
             console.log('Error parsing and saving state', err);
         }
