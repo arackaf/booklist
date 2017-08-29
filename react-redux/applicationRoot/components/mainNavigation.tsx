@@ -39,6 +39,7 @@ export default class MainNavigationBar extends Component<any, any> {
                     {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={() => goto('subjects')} active={isSubjects}>Subjects</NavBar.Item> : null}
                     {isLoggedIn && isPublic ? <NavBar.Item onClick={() => goto('books')}>View your collection</NavBar.Item> : null}
                     {isLoggedIn || isPublic ? <NavBar.Item disabled={isPublic} onClick={isPublic ? null : () => goto('settings')} active={isSettings}>Settings</NavBar.Item> : null}
+                    {null && isLoggedIn ? <NavBar.Item onClick={() => {}} active={false} disabled={false}><i className="fa fa-fw fa-refresh"></i></NavBar.Item> : null}
                     {!isLoggedIn && !isLoginModule ? <NavBar.Item onClick={() => goto('login')}>Login</NavBar.Item> : null}
                 </NavBar.Nav>
                 {isLoggedIn ? 
