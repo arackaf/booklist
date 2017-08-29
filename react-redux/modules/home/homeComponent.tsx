@@ -172,7 +172,7 @@ class Bar extends PureComponent<any, any> {
 
             do {
                 if (tooltip === el){
-                    console.log('false positive');
+                    //false positive
                     return;
                 }
             } while (el = el.parentNode as any);
@@ -180,13 +180,10 @@ class Bar extends PureComponent<any, any> {
             this.manageTooltip(false);
         }
 
-        this.tooltip = tooltip;
-        //console.log({left: box.left, top: box.top, x: this.props.x, width: this.props.width, height: this.props.height})
-        
+        this.tooltip = tooltip;        
         document.body.appendChild(tooltip);
     }
     _showTooltip = (evt) => {
-        console.log('BAR IN')
         evt.persist();
         this.manageTooltip(true, evt);
     }
