@@ -51,6 +51,11 @@ if (localStorage){
         if (!initialState || typeof initialState !== 'object'){
             initialState = void 0;
         }
+        if (initialState){
+            if (initialState.app){
+                delete initialState.app.publicUserId;
+            }
+        }
         console.log('initial state', initialState);
     }catch (err){
         console.log('Error parsing state', err);
