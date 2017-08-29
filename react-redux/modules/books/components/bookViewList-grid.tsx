@@ -62,7 +62,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                     </div>
                 </td>
                 <td>
-                    <div style={{ marginTop: 5 }}> 
+                    <div style={{ marginTop: !this.props.viewingPublic ? 5 : 0 }}> 
                         {
                             !this.props.viewingPublic ? (
                                 !!book.isRead
