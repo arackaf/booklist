@@ -53,7 +53,12 @@ if (localStorage){
         }
         if (initialState){
             if (initialState.app){
+                delete initialState.app.isLoggedIn;
+                delete initialState.app.userId;
+                delete initialState.app.isPublic;
                 delete initialState.app.publicUserId;
+                delete initialState.app.publicName;
+                delete initialState.app.publicBooksHeader;
             }
         }
         console.log('initial state', initialState);
