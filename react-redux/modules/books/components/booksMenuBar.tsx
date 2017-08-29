@@ -158,7 +158,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
 
                             </div>
                             
-                            {anyActiveFilters ? 
+                            {anyActiveFilters && this.props.showingDesktop ? 
                                 <NavBar.Nav>
                                     <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={'Quick filters'}>
                                         {selectedSubjectsCount ? (

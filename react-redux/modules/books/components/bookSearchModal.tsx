@@ -126,6 +126,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                             </div>
                         </div>
                         <button style={{display: 'none'}}></button>
+                        <input type="submit" style={{display: 'inline', visibility: 'hidden'}} />                        
                     </form>
 
                     <div className="row" style={{ position: 'relative' }}>
