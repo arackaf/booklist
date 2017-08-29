@@ -62,10 +62,18 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                     </div>
                 </td>
                 <td>
-                    <div style={{ marginTop: 5 }}> { !!book.isRead
-                        ? <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} disabled={this.props.viewingPublic} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
-                        : <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} disabled={this.props.viewingPublic} preset="default-xs">Set read</AjaxButton>
-                    }
+                    <div style={{ marginTop: 5 }}> 
+                        {
+                            !this.props.viewingPublic ? (
+                                !!book.isRead
+                                    ? <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} preset="success-xs">Read <i className="fa fa-fw fa-check"></i></AjaxButton>
+                                    : <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} preset="default-xs">Set read</AjaxButton>
+                            ) : (
+                                !!book.isRead
+                                    ? <span className="label label-success">Read <i className="fa fa-fw fa-check"></i></span>
+                                    : null
+                            )
+                        }
                     </div>
                 </td>
                 <td>
