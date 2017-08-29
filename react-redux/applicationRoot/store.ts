@@ -27,6 +27,7 @@ const createStoreWithMiddleware = applyMiddleware(
 
 
 function combineLazyReducers(reducers, existingState){
+    existingState = existingState || {};
     let handler = {
         ownKeys(target){
             return Array.from(new Set([...Reflect.ownKeys(target), ...Reflect.ownKeys(existingState)]));
@@ -47,7 +48,10 @@ let initialState = void 0;
 if (localStorage){
     try {
         initialState = JSON.parse(localStorage.getItem('reduxState'));
-        console.log('initial state', initialState)
+        if (!initialState || typeof initialState !== 'object'){
+            initialState = void 0;
+        }
+        console.log('initial state', initialState);
     }catch (err){
         console.log('Error parsing state', err);
     }
