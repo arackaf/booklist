@@ -69,7 +69,7 @@ module.exports = {
         ]
     },
     plugins: [
-        new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+        //new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
 
         new SWPrecacheWebpackPlugin({
             mergeStaticsConfig: true,
@@ -83,7 +83,31 @@ module.exports = {
             ignoreUrlParametersMatching: /./,
             stripPrefixMulti: {
                 'static/': 'react-redux/static/'
-            }
+            },
+            runtimeCaching: [
+                {
+                    urlPattern: /images-na.ssl-images-amazon.com/,
+                    handler: 'cacheFirst',
+                    options: {
+                        cache: {
+                            maxEntries: 500,
+                            name: 'amazon-images1',
+                            maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
+                        },
+                        successResponses: /200/
+                    },
+                }, {
+                    urlPattern: /ecx.images-amazon.com/,
+                    handler: 'cacheFirst',
+                    options: {
+                        cache: {
+                            maxEntries: 500,
+                            name: 'amazon-images2',
+                            maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
+                        },
+                        successResponses: /200/
+                    },
+                }],            
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
