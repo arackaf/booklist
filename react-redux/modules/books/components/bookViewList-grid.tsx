@@ -28,7 +28,11 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
                 <td>
                     <input type="checkbox" onClick={() => this.props.toggleSelectBook(book._id)} checked={!!this.props.selectedBooks[book._id]} disabled={this.props.viewingPublic} />
                 </td>
-                <td><img src={book.smallImage} /></td>
+                <td>
+                    <div style={{minWidth: '75px', minHeight: '75px'}}>
+                        <img src={book.smallImage} />
+                    </div>
+                </td>
                 <td>
                     <div style={{fontWeight: 'bold'}}>{book.title}</div>
                     {book.authors ? (
