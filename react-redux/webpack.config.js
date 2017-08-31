@@ -86,7 +86,7 @@ module.exports = {
             },
             runtimeCaching: [
                 {
-                    urlPattern: /images-na.ssl-images-amazon.com/,
+                    urlPattern: /https:\/\/images-na.ssl-images-amazon.com/,
                     handler: 'cacheFirst',
                     options: {
                         cache: {
@@ -97,7 +97,7 @@ module.exports = {
                         successResponses: /200/
                     },
                 }, {
-                    urlPattern: /ecx.images-amazon.com/,
+                    urlPattern: /https:\/\/ecx.images-amazon.com/,
                     handler: 'cacheFirst',
                     options: {
                         cache: {
