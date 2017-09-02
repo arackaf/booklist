@@ -1,13 +1,16 @@
-import DAO from './dataAccess/dao';
-import AmazonSearch from './amazonDataAccess/amazonSearch';
+import DAO from '../dataAccess/dao';
+import AmazonSearch from '../amazonDataAccess/amazonSearch';
 
 module.exports = async function fixBookCovers(){
     try {
         let db = await DAO.init();
         let books = (await db.collection('books').find({ smallImage: /http:\/\/./ }).toArray());
 
-        if (!books.length) return;
-
+        if (!books.length) {
+            console.log('done')
+            return;
+        }
+        
         for(let book of books){
             let amazonResult = await getFreshInfo(book);
 
@@ -19,11 +22,12 @@ module.exports = async function fixBookCovers(){
                 dbUpdate.mediumImage = amazonResult.mediumImage;
             }
             if (dbUpdate.smallImage || dbUpdate.mediumImage){
-                db.update({_id: book._id}, dbUpdate);
+                await db.collection('books').update({_id: book._id}, {$set: dbUpdate}, {upsert: false});
+                console.log(book.title, 'updated')
             }
         }
 
-        //fixBookCovers();
+        fixBookCovers();
     } catch(err){
         console.log(err)
     }
@@ -34,5 +38,5 @@ async function getFreshInfo(book){
     return Promise.all([
         amazon.lookupBook(book.isbn),
         new Promise(res => setTimeout(res, 1000))
-    ]).then(([amazonResult]) => amazonResult);
+    ]).then(([amazonResult]) => amazonResult).catch(err => console.log(err));
 }

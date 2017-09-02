@@ -30,7 +30,7 @@ const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
 
-const fixBookCovers = require('./node-dest/bookCovers');
+const fixBookCovers = require('./node-dest/dataFixes/bookCovers');
 
 if (!process.env.IS_DEV){
     app.use(function ensureSec(request, response, next){
