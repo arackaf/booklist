@@ -4,7 +4,7 @@ import AmazonSearch from '../amazonDataAccess/amazonSearch';
 module.exports = async function fixBookCovers(){
     try {
         let db = await DAO.init();
-        let books = (await db.collection('books').find({ smallImage: /http:\/\/./ }).toArray());
+        let books = (await db.collection('books').find({ smallImage: /http:\/\/ecx/ }).toArray());
 
         if (!books.length) {
             console.log('done')
@@ -37,6 +37,6 @@ async function getFreshInfo(book){
     let amazon = new AmazonSearch();
     return Promise.all([
         amazon.lookupBook(book.isbn),
-        new Promise(res => setTimeout(res, 1000))
+        new Promise(res => setTimeout(res, 1300))
     ]).then(([amazonResult]) => amazonResult).catch(err => console.log(err));
 }
