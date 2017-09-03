@@ -4,7 +4,7 @@ import AmazonSearch from '../amazonDataAccess/amazonSearch';
 module.exports = async function fixBookCovers(){
     try {
         let db = await DAO.init();
-        let books = (await db.collection('books').find({ smallImage: /http:\/\/ecx/ }).toArray());
+        let books = (await db.collection('books').find({ smallImage: /http:\/\/ecx/, isbn: /.+/ }).toArray());
 
         if (!books.length) {
             console.log('done')
@@ -12,6 +12,7 @@ module.exports = async function fixBookCovers(){
         }
         
         for(let book of books){
+            console.log('Fetching', book.title, book.isbn)
             let amazonResult = await getFreshInfo(book);
 
             let dbUpdate = {};
@@ -26,8 +27,7 @@ module.exports = async function fixBookCovers(){
                 console.log(book.title, 'updated')
             }
         }
-
-        fixBookCovers();
+        console.log('DONE')
     } catch(err){
         console.log(err)
     }
