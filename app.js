@@ -30,8 +30,6 @@ const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     RememberMeStrategy = require('passport-remember-me').Strategy;
 
-const fixBookCovers = require('./node-dest/dataFixes/bookCovers');
-
 if (!process.env.IS_DEV){
     app.use(function ensureSec(request, response, next){
         let proto = request.header('x-forwarded-proto') || request.header('X-Forwarded-Proto') || request.get('X-Forwarded-Proto'),
@@ -295,5 +293,3 @@ Promise.resolve(dao.init()).then(() => {
     app.listen(process.env.PORT || 3000);
     bookEntryQueueManager.initialize();
 });
-
-fixBookCovers();
