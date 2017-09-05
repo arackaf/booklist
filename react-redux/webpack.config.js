@@ -105,18 +105,7 @@ module.exports = {
                         maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
                     },
                     successResponses: /200/
-                },
-            }, {
-                urlPattern: /http:\/\/my-library-cover-uploads/,
-                handler: 'cacheFirst',
-                options: {
-                    cache: {
-                        maxEntries: 500,
-                        name: 'local-images',
-                        maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
-                    },
-                    successResponses: /200/
-                },
+                }
             }],
         }),
 
