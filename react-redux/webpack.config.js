@@ -84,30 +84,40 @@ module.exports = {
             stripPrefixMulti: {
                 'static/': 'react-redux/static/'
             },
-            runtimeCaching: [
-                {
-                    urlPattern: /https:\/\/images-na.ssl-images-amazon.com/,
-                    handler: 'cacheFirst',
-                    options: {
-                        cache: {
-                            maxEntries: 500,
-                            name: 'amazon-images1',
-                            maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
-                        },
-                        successResponses: /200/
+            runtimeCaching: [{
+                urlPattern: /https:\/\/images-na.ssl-images-amazon.com/,
+                handler: 'cacheFirst',
+                options: {
+                    cache: {
+                        maxEntries: 500,
+                        name: 'amazon-images1',
+                        maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
                     },
-                }, {
-                    urlPattern: /https:\/\/ecx.images-amazon.com/,
-                    handler: 'cacheFirst',
-                    options: {
-                        cache: {
-                            maxEntries: 500,
-                            name: 'amazon-images2',
-                            maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
-                        },
-                        successResponses: /200/
+                    successResponses: /200/
+                },
+            }, {
+                urlPattern: /https:\/\/ecx.images-amazon.com/,
+                handler: 'cacheFirst',
+                options: {
+                    cache: {
+                        maxEntries: 500,
+                        name: 'amazon-images2',
+                        maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
                     },
-                }],            
+                    successResponses: /200/
+                },
+            }, {
+                urlPattern: /http:\/\/my-library-cover-uploads/,
+                handler: 'cacheFirst',
+                options: {
+                    cache: {
+                        maxEntries: 500,
+                        name: 'local-images',
+                        maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
+                    },
+                    successResponses: /200/
+                },
+            }],
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
