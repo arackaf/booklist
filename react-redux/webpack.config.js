@@ -106,6 +106,17 @@ module.exports = {
                     },
                     successResponses: /200/
                 }
+            }, {
+                urlPattern: /book\/searchBooks/,
+                handler: 'cacheFirst',
+                options: {
+                    cache: {
+                        maxEntries: 500,
+                        name: 'amazon-images2',
+                        maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
+                    },
+                    successResponses: /200/
+                }
             }],
         }),
 

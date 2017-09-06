@@ -58,7 +58,8 @@ export function loadBooks(){
 }
 
 function booksSearch(bookSearchState, publicUserId){
-    return ajaxUtil.post('/book/searchBooks', {
+    let version = bookSearchState.searchVersion;
+    return ajaxUtil.post(`/book/searchBooks/?version=${version}`, {
         page: bookSearchState.page,
         pageSize: bookSearchState.pageSize,
         search: bookSearchState.search,
