@@ -95,7 +95,8 @@ export function booksReducer(state = initialBooksState, action) : BooksReducerTy
                     }, hash), {})
                 }
             });
-        } case SET_BOOKS_TAGS: {
+        } 
+        case SET_BOOKS_TAGS: {
             let remove = new Set<string>(action.remove);
             return update(state, { 
                 booksHash: { 
@@ -104,7 +105,8 @@ export function booksReducer(state = initialBooksState, action) : BooksReducerTy
                     }, hash), {})
                 }
             });
-        } case BOOK_SAVED:
+        } 
+        case BOOK_SAVED:
         case MANUAL_BOOK_SAVED:
             return {...state, reloadOnActivate: true };
         case BOOK_READ_CHANGING:

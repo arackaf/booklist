@@ -11,7 +11,9 @@ import {
     BASIC_LIST_VIEW
 } from './actionNames';
 
-import { LOAD_BOOKS_RESULTS } from '../books/actionNames';
+import { BOOK_SAVED, MANUAL_BOOK_SAVED } from 'modules/scan/reducers/actionNames';
+
+import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED } from '../books/actionNames';
 import {createSelector} from 'reselect';
 
 import { selectStackedSubjects, StackedSubjectsType, filterSubjects as filterSubjectsOrTags } from '../subjects/reducer';
@@ -27,7 +29,7 @@ const searchFields = {
     pages: '',
     pagesOperator: 'lt',
     page: 1,
-    pageSize: 50,
+    pageSize: 3,
     isRead: ''
 }
 export type searchFieldsType = typeof searchFields;
@@ -41,7 +43,8 @@ const initialState = {
     pending: {
         ...searchFields
     },
-    view: ''
+    view: '',
+    searchVersion: +new Date()
 };
 export type bookSearchType = typeof initialState;
 
@@ -61,6 +64,10 @@ export function bookSearchReducer(state = initialState, action) : bookSearchType
             return { ...state, view: BASIC_LIST_VIEW };
         case SET_GRID_VIEW:
             return { ...state, view: GRID_VIEW };
+        case BOOK_SAVED:
+        case MANUAL_BOOK_SAVED:
+        case EDITING_BOOK_SAVED:
+            return {...state, searchVersion: +new Date() };            
     }
     return state;
 }
