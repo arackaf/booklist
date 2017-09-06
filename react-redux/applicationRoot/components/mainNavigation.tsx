@@ -8,7 +8,10 @@ import ajaxUtil from 'util/ajaxUtil';
 @connect(state => state.app)
 export default class MainNavigationBar extends Component<any, any> {
     el: any
-    logout = () => ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
+    logout = () => {
+        localStorage.setItem('reduxState', "");
+        ajaxUtil.post('/react-redux/logout', { }, () => window.location.reload());
+    }
     componentDidUpdate(prevProps){
         if (prevProps.module != this.props.module){
             this.el.closeIfOpen();
