@@ -48,7 +48,7 @@ let initialState = void 0;
 if (localStorage) {
   try {
     initialState = JSON.parse(localStorage.getItem("reduxState"));
-    if (!initialState || typeof initialState !== "object") {
+    if (!initialState || typeof initialState !== "object" || (initialState.booksModule && !initialState.booksModule.bookSearch.searchVersion)) {
       initialState = void 0;
     }
     if (initialState) {
