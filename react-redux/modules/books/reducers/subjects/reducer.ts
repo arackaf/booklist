@@ -1,59 +1,56 @@
-import {BooksModuleType, TagsType} from 'modules/books/reducers/reducer';
-import {createSelector} from 'reselect';
+import { BooksModuleType, TagsType } from "modules/books/reducers/reducer";
+import { createSelector } from "reselect";
 
-import {
-    UPDATE_SUBJECT,
-} from './actionNames';
-import {AppType, SubjectType, hashOf} from 'applicationRoot/rootReducer';
+import { UPDATE_SUBJECT } from "./actionNames";
+import { AppType, SubjectType, hashOf } from "applicationRoot/rootReducer";
 
-import {stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects} from 'applicationRoot/rootReducer';
+import { stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects } from "applicationRoot/rootReducer";
 
 export type StackedSubjectsType = {
-    subjects: SubjectType[];
-    allSubjectsSorted: SubjectType[];
-    subjectsUnwound: SubjectType[];
-    subjectHash: {[s: string]: SubjectType}
-}
+  subjects: SubjectType[];
+  allSubjectsSorted: SubjectType[];
+  subjectsUnwound: SubjectType[];
+  subjectHash: { [s: string]: SubjectType };
+};
 export const selectStackedSubjects = createSelector<BooksModuleType, StackedSubjectsType, any>(
-    state => state.app.subjectHash,
-    subjectHash => {
-        let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
-            subjectsUnwound = unwindSubjects(mainSubjectsCollection);
-        return {
-            subjects: mainSubjectsCollection,
-            allSubjectsSorted: allSubjectsSorted(subjectHash),
-            subjectsUnwound: subjectsUnwound,
-            subjectHash
-        };
-    }
+  state => state.app.subjectHash,
+  subjectHash => {
+    let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
+      subjectsUnwound = unwindSubjects(mainSubjectsCollection);
+    return {
+      subjects: mainSubjectsCollection,
+      allSubjectsSorted: allSubjectsSorted(subjectHash),
+      subjectsUnwound: subjectsUnwound,
+      subjectHash
+    };
+  }
 );
 
 export type EntireSubjectsStateType = StackedSubjectsType & {
-    colors: any[];
-}
+  colors: any[];
+};
 export const selectEntireSubjectsState = createSelector<BooksModuleType, EntireSubjectsStateType, AppType, StackedSubjectsType>(
-    state => state.app,
-    selectStackedSubjects,
+  state => state.app,
+  selectStackedSubjects,
+  (app, stackedSubjects) => {
+    return {
+      colors: app.colors,
+      ...stackedSubjects
+    };
+  }
+);
 
-    (app, stackedSubjects) => {
-        return {
-            colors: app.colors,
-            ...stackedSubjects
-        };
-    }
-)
-
-function allSubjectsSorted(subjectsHash){
-    let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
-    return subjects.sort(subjectSortCompare);
+function allSubjectsSorted(subjectsHash) {
+  let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
+  return subjects.sort(subjectSortCompare);
 }
 
 export const filterSubjects = (subjects, search) => {
-    if (!search){
-        search = () => true;
-    } else {
-        let regex = new RegExp(search, 'i');
-        search = txt => regex.test(txt);
-    }
-    return subjects.filter(s => search(s.name))
+  if (!search) {
+    search = () => true;
+  } else {
+    let regex = new RegExp(search, "i");
+    search = txt => regex.test(txt);
+  }
+  return subjects.filter(s => search(s.name));
 };
