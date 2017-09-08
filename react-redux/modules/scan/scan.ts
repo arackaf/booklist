@@ -1,7 +1,7 @@
-import BookEntryList from './components/bookEntryList';
-import reducer from './reducers/reducer';
+import BookEntryList from "./components/bookEntryList";
+import reducer from "./reducers/reducer";
 
 export default {
-    reducer: reducer,
-    component: BookEntryList
+  reducer: reducer,
+  component: BookEntryList
 };

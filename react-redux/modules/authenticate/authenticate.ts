@@ -1,3 +1,3 @@
-import loginScreen from './loginScreen';
+import loginScreen from "./loginScreen";
 
 export default { component: loginScreen };

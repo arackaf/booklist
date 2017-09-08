@@ -1,3 +1,3 @@
-import activateComponent from './activateComponent';
+import activateComponent from "./activateComponent";
 
 export default { component: activateComponent };

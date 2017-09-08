@@ -1,33 +1,34 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient } from "mongodb";
 
 let db;
-let dbPromise = MongoClient
-        .connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL)
-        .then(database => db = database)
-        .then(() => db)
-        .catch(err => console.log('Error connecting ' + err));
+let dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL)
+  .then(database => (db = database))
+  .then(() => db)
+  .catch(err => console.log("Error connecting " + err));
 
-class DAO{
-    static init(){
-        return dbPromise;
+class DAO {
+  static init() {
+    return dbPromise;
+  }
+  open() {
+    return db;
+  }
+  confirmSingleResult(res) {
+    let numInserted = +res.result.n;
+    if (!numInserted) {
+      throw "Object not inserted";
     }
-    open(){
-        return db;
+    if (numInserted > 1) {
+      throw "Expected 1 object to be inserted.  Actual " + numInserted;
     }
-    confirmSingleResult(res){
-        let numInserted = +res.result.n;
-        if (!numInserted) {
-            throw 'Object not inserted';
-        }
-        if (numInserted > 1){
-            throw 'Expected 1 object to be inserted.  Actual ' + numInserted;
-        }
-    }
-    dispose(db){ }
-    static shutdown(){
-        try { db.close(); } catch(err){}
-        db = null;
-    }
+  }
+  dispose(db) {}
+  static shutdown() {
+    try {
+      db.close();
+    } catch (err) {}
+    db = null;
+  }
 }
 
 export default DAO;
