@@ -1,3 +1,3 @@
-import homeComponent from './homeComponent';
+import homeComponent from "./homeComponent";
 
 export default { component: homeComponent };
