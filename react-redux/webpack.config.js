@@ -114,7 +114,6 @@ module.exports = {
         {
           urlPattern: /book\/searchBooks/,
           handler: "cacheFirst",
-          method: "post",
           options: {
             cache: {
               maxEntries: 500,
