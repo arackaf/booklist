@@ -57,24 +57,36 @@ export function loadBooks() {
   };
 }
 
+const nonEmptyProps = obj =>
+  Object.keys(obj).reduce((hash, k) => {
+    if ((Array.isArray(obj[k]) && obj[k].length) || (obj[k] !== "" && obj[k] != null)) {
+      hash[k] = obj[k];
+    }
+    return hash;
+  }, {});
+
 function booksSearch(bookSearchState, publicUserId) {
   let version = bookSearchState.searchVersion;
-  return ajaxUtil.post(`/book/searchBooks/?version=${version}`, {
-    page: bookSearchState.page,
-    pageSize: bookSearchState.pageSize,
-    search: bookSearchState.search,
-    subjects: Object.keys(bookSearchState.subjects),
-    tags: Object.keys(bookSearchState.tags),
-    searchChildSubjects: bookSearchState.searchChildSubjects,
-    sort: bookSearchState.sort,
-    sortDirection: bookSearchState.sortDirection,
-    author: bookSearchState.author,
-    publisher: bookSearchState.publisher,
-    pages: bookSearchState.pages,
-    pagesOperator: bookSearchState.pagesOperator,
-    userId: publicUserId,
-    isRead: bookSearchState.isRead
-  });
+  return ajaxUtil.get(
+    "/book/searchBooks/",
+    nonEmptyProps({
+      version,
+      page: bookSearchState.page,
+      pageSize: bookSearchState.pageSize,
+      search: bookSearchState.search,
+      subjects: Object.keys(bookSearchState.subjects),
+      tags: Object.keys(bookSearchState.tags),
+      searchChildSubjects: bookSearchState.searchChildSubjects,
+      sort: bookSearchState.sort,
+      sortDirection: bookSearchState.sortDirection,
+      author: bookSearchState.author,
+      publisher: bookSearchState.publisher,
+      pages: bookSearchState.pages,
+      pagesOperator: bookSearchState.pagesOperator,
+      userId: publicUserId,
+      isRead: bookSearchState.isRead
+    })
+  );
 }
 
 export function expandBook(_id: string) {
