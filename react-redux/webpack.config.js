@@ -102,7 +102,8 @@ module.exports = {
       runtimeCaching: [
         getCache({ pattern: /https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-        getCache({ pattern: /book\/searchBooks/, name: "book-search" })
+        getCache({ pattern: /book\/searchBooks/, name: "book-search" }),
+        getCache({ pattern: /book\/loadDetails/, name: "book-details" })
       ]
     }),
 
