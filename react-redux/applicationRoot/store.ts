@@ -48,7 +48,12 @@ let initialState = void 0;
 if (localStorage) {
   try {
     initialState = JSON.parse(localStorage.getItem("reduxState"));
-    if (!initialState || typeof initialState !== "object" || (initialState.booksModule && !initialState.booksModule.bookSearch.searchVersion)) {
+    if (
+      !initialState ||
+      typeof initialState !== "object" ||
+      (initialState.booksModule && !initialState.booksModule.bookSearch.searchVersion) ||
+      (initialState.booksModule && initialState.booksModule.books.booksLoading)
+    ) {
       initialState = void 0;
     }
     if (initialState) {
@@ -61,7 +66,6 @@ if (localStorage) {
         delete initialState.app.publicBooksHeader;
       }
     }
-    console.log("initial state", initialState);
   } catch (err) {
     console.log("Error parsing state", err);
   }
