@@ -13,7 +13,7 @@ import {
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 
-import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED } from "../books/actionNames";
+import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED } from "../books/actionNames";
 import { createSelector } from "reselect";
 
 import { selectStackedSubjects, StackedSubjectsType, filterSubjects as filterSubjectsOrTags } from "../subjects/reducer";
@@ -65,6 +65,8 @@ export function bookSearchReducer(state = initialState, action): bookSearchType 
     case SET_GRID_VIEW:
       return { ...state, view: GRID_VIEW };
     case BOOK_SAVED:
+    case BOOK_READ_CHANGED:
+    case BOOK_DELETED:
     case MANUAL_BOOK_SAVED:
     case EDITING_BOOK_SAVED:
       return { ...state, searchVersion: +new Date() };
