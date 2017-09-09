@@ -29,7 +29,9 @@ const ajaxUtil = {
   ["get"](url, data): any {
     let queryString = Object.keys(data)
       .map(p => (Array.isArray(data[p]) ? data[p].map(val => `${p}[]=${val}`).join("&") : `${p}=${data[p]}`))
-      .join("&");
+      .join("&")
+      .replace(/&+/g, "&");
+
     return fetch(`${url}?${queryString}`, { method: "get", credentials: "include" }).then(resp => resp.json());
   }
 };

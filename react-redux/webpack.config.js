@@ -26,6 +26,19 @@ const asyncBundle = (name, { nodePaths = [], resources = [] }) =>
     }
   });
 
+const getCache = ({ name, pattern, expires, maxEntries }) => ({
+  urlPattern: pattern,
+  handler: "cacheFirst",
+  options: {
+    cache: {
+      maxEntries: maxEntries || 500,
+      name: name,
+      maxAgeSeconds: expires || 60 * 60 * 24 * 365 * 2 //2 years
+    },
+    successResponses: /200/
+  }
+});
+
 module.exports = {
   entry: {
     main: "./reactStartup.ts"
@@ -87,42 +100,9 @@ module.exports = {
         "static/": "react-redux/static/"
       },
       runtimeCaching: [
-        {
-          urlPattern: /https:\/\/images-na.ssl-images-amazon.com/,
-          handler: "cacheFirst",
-          options: {
-            cache: {
-              maxEntries: 500,
-              name: "amazon-images1",
-              maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
-            },
-            successResponses: /200/
-          }
-        },
-        {
-          urlPattern: /https:\/\/ecx.images-amazon.com/,
-          handler: "cacheFirst",
-          options: {
-            cache: {
-              maxEntries: 500,
-              name: "amazon-images2",
-              maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
-            },
-            successResponses: /200/
-          }
-        },
-        {
-          urlPattern: /book\/searchBooks/,
-          handler: "cacheFirst",
-          options: {
-            cache: {
-              maxEntries: 500,
-              name: "book-search",
-              maxAgeSeconds: 60 * 60 * 24 * 365 * 2 //2 years
-            },
-            successResponses: /200/
-          }
-        }
+        getCache({ pattern: /https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
+        getCache({ pattern: /https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
+        getCache({ pattern: /book\/searchBooks/, name: "book-search" })
       ]
     }),
 
