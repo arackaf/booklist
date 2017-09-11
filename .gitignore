@@ -5,3 +5,4 @@ npm-debug.log
 uploads/*
 .env
 node-dest/
+.esm-cache/
