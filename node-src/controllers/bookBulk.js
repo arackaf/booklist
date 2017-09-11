@@ -1,5 +1,4 @@
 import { httpPost, route, nonRoutable, controller } from "easy-express-controllers";
-import { amazonOperationQueue } from "../amazonDataAccess/amazonOperationQueue";
 import BookDAO from "../dataAccess/bookDAO";
 
 @controller({ defaultVerb: "post" })
