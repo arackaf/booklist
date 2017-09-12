@@ -33,7 +33,7 @@
     "compression": "1.6.2",
     "cookie-parser": "1.4.0",
     "dotenv": "^4.0.0",
-    "easy-express-controllers": "1.0.1",
+    "easy-express-controllers": "1.0.2",
     "es6-symbol": "2.0.1",
     "express": "4.x",
     "express-session": "1.12.1",
