@@ -58,6 +58,7 @@ if (localStorage) {
     }
     if (initialState) {
       if (initialState.app) {
+        delete initialState.scanModule;
         delete initialState.app.isLoggedIn;
         delete initialState.app.userId;
         delete initialState.app.isPublic;
