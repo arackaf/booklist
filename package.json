@@ -12,7 +12,7 @@
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
     "start": "node app.js",
-    "heroku-postbuild": "gulp transpile-all && cd react-redux && npm i && webpack -p"
+    "heroku-postbuild": "gulp transpile-all && cd react-redux && rm -rf node_modules && npm i && webpack -p"
   },
   "dependencies": {
     "@std/esm": "^0.8.3",
