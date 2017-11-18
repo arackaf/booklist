@@ -162,6 +162,13 @@ class UserDAO extends DAO {
     email = email.toLowerCase();
     return md5(`${salt}${salt}${email}${salt}${salt}`);
   }
+  async getSubscription(userId) {
+    let db = await super.open();
+    try {
+      let user = await this.findById(userId);
+      return user.subscription;
+    } catch (er) {}
+  }
   async updateSubscription(userId, subscription) {
     let db = await super.open();
     try {
