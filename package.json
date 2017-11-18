@@ -12,8 +12,7 @@
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
     "start": "node app.js",
-    "heroku-postbuild":
-      "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack -p"
+    "heroku-postbuild": "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack -p"
   },
   "dependencies": {
     "@std/esm": "^0.8.3",
@@ -66,6 +65,7 @@
     "passport-remember-me": "0.0.1",
     "regenerator": "0.8.36",
     "typescript": "^2.4.0",
+    "web-push": "^3.2.4",
     "webpack": "3.3.0",
     "webpack-bundle-analyzer": "2.2.3",
     "ws": "1.0.1"
