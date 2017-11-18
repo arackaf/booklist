@@ -24,6 +24,8 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
+import webpush from "web-push";
+
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
     let proto = request.header("x-forwarded-proto") || request.header("X-Forwarded-Proto") || request.get("X-Forwarded-Proto"),
@@ -35,6 +37,24 @@ if (!process.env.IS_DEV) {
     }
   });
 }
+
+setTimeout(() => {
+  new UserDao().getSubscription("56f34a2748243210269ecd66").then(sub => {
+    try {
+      webpush.setVapidDetails(process.env.PUSH_SUBJECT, process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
+      webpush
+        .sendNotification(sub, "hello")
+        .then(() => {
+          console.log("SENT for real");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (er) {
+      console.log(er);
+    }
+  });
+}, 5000);
 
 passport.use(
   new LocalStrategy(function(email, password, done) {
