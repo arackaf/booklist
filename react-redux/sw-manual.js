@@ -4,7 +4,11 @@ toolbox.router.get(/localhost:3000\/$/, handleMain);
 toolbox.router.get(/mylibrary.io$/, handleMain);
 
 function handleMain(request) {
-  return fetch(request);
+  return fetch(request).catch(() => {
+    return caches.match("react-redux/offline.htm", { ignoreSearch: true });
+    return new Response("Hello World");
+    return fetch("react-redux/offline.htm", { headers: { "content-type": "text/html" } });
+  });
 }
 
 self.addEventListener("push", () => {

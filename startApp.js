@@ -38,23 +38,23 @@ if (!process.env.IS_DEV) {
   });
 }
 
-setTimeout(() => {
-  new UserDao().getSubscription("56f34a2748243210269ecd66").then(sub => {
-    try {
-      webpush.setVapidDetails(process.env.PUSH_SUBJECT, process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
-      webpush
-        .sendNotification(sub, "hello")
-        .then(() => {
-          console.log("SENT for real");
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } catch (er) {
-      console.log(er);
-    }
-  });
-}, 5000);
+// setTimeout(() => {
+//   new UserDao().getSubscription("56f34a2748243210269ecd66").then(sub => {
+//     try {
+//       webpush.setVapidDetails(process.env.PUSH_SUBJECT, process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
+//       webpush
+//         .sendNotification(sub, "hello")
+//         .then(() => {
+//           console.log("SENT for real");
+//         })
+//         .catch(err => {
+//           console.log(err);
+//         });
+//     } catch (er) {
+//       console.log(er);
+//     }
+//   });
+// }, 5000);
 
 passport.use(
   new LocalStrategy(function(email, password, done) {
@@ -142,6 +142,7 @@ app.ws("/bookEntryWS", function(ws, req) {
 import { easyControllers } from "easy-express-controllers";
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-dest" });
 
+app.get("react-redux/offline.htm", (req, response) => response.sendfile("/react-redux/offline.htm"));
 app.get("/", browseToReactRedux);
 app.get("/books", browseToReactRedux);
 app.get("/login", browseToReactRedux);
