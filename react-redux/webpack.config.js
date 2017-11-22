@@ -89,16 +89,20 @@ module.exports = {
     new SWPrecacheWebpackPlugin({
       mergeStaticsConfig: true,
       filename: "service-worker.js",
-      importScripts: ["../sw-manual.js?v=1"],
+      importScripts: ["../sw-manual.js?v=4"],
       staticFileGlobs: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
         "static/fontawesome/css/font-awesome-booklist-build.css",
         "static/fontawesome/fonts/fontawesome-webfont.woff2",
-        "static/main-icon2.png"
+        "static/main-icon2.png",
+        "util/babelHelpers.min.js",
+        "offline.htm"
       ],
       ignoreUrlParametersMatching: /./,
       stripPrefixMulti: {
-        "static/": "react-redux/static/"
+        "static/": "react-redux/static/",
+        "util/": "react-redux/util/",
+        "offline.htm": "react-redux/offline.htm"
       },
       runtimeCaching: [
         getCache({ pattern: /https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),

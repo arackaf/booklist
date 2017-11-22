@@ -54,7 +54,7 @@
     "redux-thunk": "2.2.0",
     "reselect": "2.0.1",
     "simple-react-bootstrap": "0.2.7",
-    "sw-precache-webpack-plugin": "0.11.3",
+    "sw-precache-webpack-plugin": "0.11.4",
     "ts-loader": "2.3.0",
     "typescript": "2.4.0",
     "uglify-js": "2.8.29",

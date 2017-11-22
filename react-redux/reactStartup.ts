@@ -29,16 +29,15 @@ import createHistory from "history/createBrowserHistory";
     }
 
     if (isLoggedIn()) {
-      let subscriptionOptions = {
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array("BCC0wqyL-OGz5duRO9-kOSUEv72BMGf0x0oaMGryF1eLa3FF-sW2YmunhNqQegrXHykP-Wa6xC1rEnDuBGtjgUo")
-      };
-
-      navigator.serviceWorker.ready.then(registration => {
-        registration.pushManager.subscribe(subscriptionOptions).then(subscription => {
-          ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
-        });
-      });
+      // let subscriptionOptions = {
+      //   userVisibleOnly: true,
+      //   applicationServerKey: urlBase64ToUint8Array("BCC0wqyL-OGz5duRO9-kOSUEv72BMGf0x0oaMGryF1eLa3FF-sW2YmunhNqQegrXHykP-Wa6xC1rEnDuBGtjgUo")
+      // };
+      // navigator.serviceWorker.ready.then(registration => {
+      //   registration.pushManager.subscribe(subscriptionOptions).then(subscription => {
+      //     ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
+      //   });
+      // });
     }
   }
 })();
