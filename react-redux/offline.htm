@@ -88,8 +88,59 @@
     </div>
 
     <div style="padding: 15px">
-        <h1>Hello Offline</h1>
+        <h1>Offline</h1>
+        <table class="table table-condescend table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody id="booksTarget">
+
+            </tbody>
+        </table>>
     </div>
+
+    <script>
+        let toShow = new Set([
+        "591b74d036f369d06bb7781d",
+        "591b74f436f369d06bb77823",
+        "59334467a71fc3de245e2d6b",
+        "59334468a71fc3de245e2d6d",
+        "59334450a71fc3de245e2d5b",
+        "59334456a71fc3de245e2d5e",
+        "5933445ba71fc3de245e2d61",
+        "59334460a71fc3de245e2d65",
+        "59334461a71fc3de245e2d67"
+        ]);
+
+        let open = indexedDB.open("books");
+        open.onsuccess = evt => {
+          let db = open.result;
+          let transaction = db.transaction("books", "readonly");
+          let booksStore = transaction.objectStore("books");
+
+          var request = booksStore.openCursor();
+          let rows = ``;
+          request.onsuccess = function(event) {
+            var cursor = event.target.result;
+            if(cursor) {
+              let book = cursor.value;
+              if (toShow.has(book._id)){
+                rows += `
+                  <tr>
+                    <td>${book.title}</td>
+                    <td>${Array.isArray(book.authors) ? book.authors.join("<br/>") : book.authors}</td>
+                  </tr>`;
+              }
+              cursor.continue();
+            } else {
+              document.getElementById("booksTarget").innerHTML = rows;
+            }
+          };
+        }
+    </script>
 
 </body>
 </html>
