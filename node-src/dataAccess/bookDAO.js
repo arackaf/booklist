@@ -125,6 +125,32 @@ class BookDAO extends DAO {
       super.dispose(db);
     }
   }
+
+  async offlineSync({ page, pageSize }) {
+    let db = await super.open();
+    let userIdToUse = this.userId;
+
+    let skip = (page - 1) * pageSize;
+    let limit = +pageSize + 1;
+
+    try {
+      let query = { userId: userIdToUse };
+      let sortObj = { _id: -1 };
+
+      let allFields = ["_id", "title", "isbn", "pages", "smallImage", "subjects", "authors", "tags", "isRead"];
+      let project = allFields.reduce((hash, key) => ((hash[key] = 1), hash), {});
+
+      let books = (await db
+        .collection("books")
+        .aggregate([{ $match: query }, { $project: project }, { $sort: sortObj }, { $skip: skip }, { $limit: limit }])
+        .toArray()).map(adjustForClient);
+
+      return { books };
+    } finally {
+      super.dispose(db);
+    }
+  }
+
   async getBooksBySubjectList({ subjects, userId, gatherToParents }) {
     let db = super.open(),
       userIdToUse = userId || this.userId,

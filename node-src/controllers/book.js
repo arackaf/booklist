@@ -38,6 +38,16 @@ class bookController {
 
     this.send({ results: books, count });
   }
+  @httpPost
+  async offlineSync(params) {
+    if (!this.request.user.id) {
+      this.send({});
+    }
+    let bookDao = new BookDAO(this.request.user.id);
+    let { books } = await bookDao.offlineSync({ ...params });
+
+    this.send({ books, userId: this.request.user.id });
+  }
   async booksBySubjects(params) {
     let bookDao = new BookDAO(this.request.user ? this.request.user.id : null),
       books = await bookDao.getBooksBySubjectList({ ...params });
