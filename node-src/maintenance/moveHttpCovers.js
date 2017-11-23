@@ -23,7 +23,7 @@ async function convertAll() {
   for (let book of toConvert) {
     let newURL = await convertFile(book.smallImage, book.userId, book._id);
     await db.collection("books").update({ _id: ObjectId(book._id) }, { $set: { smallImage: newURL } });
-    console.log(book.title, "Converted", newURL);
+    console.log(book.title, "Converted", "\n");
   }
 
   DAO.shutdown();
@@ -35,33 +35,36 @@ convertFile("http://ecx.images-amazon.com/images/I/513GMmespwL._SL75_.jpg", "112
   .catch(err => console.log("ERR", err));
 */
 
+let i = 1;
 function convertFile(url, userId, _id) {
-  let fileName;
   return new Promise((res, rej) => {
     http.get(url, response => {
       try {
         let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
         let ext = path.extname(url);
-        fileName = "junk" + ext;
+        let fileName = "junk-" + i++ + ext;
 
         let file = fs.createWriteStream(fileName);
         response.pipe(file);
+        file.close();
 
-        fs.readFile("./" + fileName, (err, data) => {
-          if (err) {
-            return rej(err);
-          }
-          let params = {
-            Key: `bookCovers/${userId}/converted-cover-${_id}${ext}`,
-            Body: data
-          };
+        setTimeout(() => {
+          fs.readFile("./" + fileName, (err, data) => {
+            if (err) {
+              return rej(err);
+            }
+            let params = {
+              Key: `bookCovers/${userId}/converted-cover-${_id}${ext}`,
+              Body: data
+            };
 
-          s3bucket.upload(params, function(err) {
-            del.sync(fileName);
-            if (err) rej(err);
-            else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
+            s3bucket.upload(params, function(err) {
+              del.sync("./" + fileName);
+              if (err) rej(err);
+              else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
+            });
           });
-        });
+        }, 500);
       } catch (err) {
         rej(err);
       }
