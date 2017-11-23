@@ -1,20 +1,16 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "baseUrl": "./",
-        "jsx": "react",
-        "allowSyntheticDefaultImports": true,
-        "allowJs": true,
-        "moduleResolution": "node",
-        "module": "es2015",
-        "experimentalDecorators": true,
-        "lib": ["es2015", "dom"]
-    },
-    "include": [
-        "./**/*.ts",
-        "./**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "allowUnreachableCode": true,
+    "target": "esnext",
+    "baseUrl": "./",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "module": "es2015",
+    "experimentalDecorators": true,
+    "lib": ["es2015", "dom"]
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "exclude": ["node_modules"]
 }

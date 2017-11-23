@@ -45,7 +45,7 @@ function combineLazyReducers(reducers, existingState) {
 }
 
 let initialState = void 0;
-if (localStorage) {
+if (false && localStorage) {
   try {
     initialState = JSON.parse(localStorage.getItem("reduxState"));
     if (
@@ -74,7 +74,7 @@ if (localStorage) {
 
 export const store = createStoreWithMiddleware(getNewReducer(null, initialState), initialState);
 
-if (localStorage) {
+if (false && localStorage) {
   function saveState() {
     try {
       localStorage.setItem("reduxState", JSON.stringify(store.getState()));
