@@ -6,20 +6,28 @@ import fs from "fs";
 import path from "path";
 import http from "http";
 import DAO from "../dataAccess/dao";
+import del from "del";
+import { ObjectId } from "mongodb";
 
 let dao = new DAO();
 
+convertAll().then(() => {});
+
 async function convertAll() {
-  let db = await dao.open();
+  let db = await DAO.init();
   let toConvert = await db
     .collection("books")
     .find({ smallImage: { $regex: /http:\/\/ecx/ } })
     .toArray();
 
-  toConvert.forEach(book => console.log(book.smallImage));
-}
+  for (let book of toConvert) {
+    let newURL = await convertFile(book.smallImage, book.userId, book._id);
+    await db.collection("books").update({ _id: ObjectId(book._id) }, { $set: { smallImage: newURL } });
+    console.log(book.title, "Converted", newURL);
+  }
 
-//convertAll();
+  DAO.shutdown();
+}
 
 /*
 convertFile("http://ecx.images-amazon.com/images/I/513GMmespwL._SL75_.jpg", "1123", "556")
@@ -28,12 +36,13 @@ convertFile("http://ecx.images-amazon.com/images/I/513GMmespwL._SL75_.jpg", "112
 */
 
 function convertFile(url, userId, _id) {
+  let fileName;
   return new Promise((res, rej) => {
     http.get(url, response => {
       try {
         let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
         let ext = path.extname(url);
-        let fileName = "junk" + ext;
+        fileName = "junk" + ext;
 
         let file = fs.createWriteStream(fileName);
         response.pipe(file);
@@ -48,6 +57,7 @@ function convertFile(url, userId, _id) {
           };
 
           s3bucket.upload(params, function(err) {
+            del.sync(fileName);
             if (err) rej(err);
             else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
           });
