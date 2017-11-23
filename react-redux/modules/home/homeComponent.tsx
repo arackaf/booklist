@@ -379,7 +379,9 @@ class HomeIfLoggedIn extends Component<any, any> {
 
     ajaxUtil.post("/book/booksBySubjects", { subjects: subjectIds, gatherToParents: 1 }).then(resp => {
       resp.results.forEach(item => {
-        let subjectsHeld = item.subjects.map(_id => (targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path)));
+        let subjectsHeld = item.subjects
+          .filter(_id => subjectHash[_id])
+          .map(_id => (targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path)));
 
         let uniqueSubjects = Array.from(new Set(subjectsHeld)),
           uniqueSubjectString = uniqueSubjects.sort().join(",");
