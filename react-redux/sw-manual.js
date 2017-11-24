@@ -55,12 +55,15 @@ async function syncBooks(db, page = 1) {
       putNext();
 
       function putNext() {
-        if (i < books.length) {
+        if (i < pageSize) {
           let book = books[i++];
+          if (!book) {
+            return;
+          }
           booksStore.put(book).onsuccess = putNext;
         } else {
-          if (books.count == pageSize) {
-            syncBooks(page + 1);
+          if (books.length > pageSize) {
+            syncBooks(db, page + 1);
           }
         }
       }
