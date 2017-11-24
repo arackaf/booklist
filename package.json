@@ -65,6 +65,7 @@
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
     "regenerator": "0.8.36",
+    "request": "^2.83.0",
     "typescript": "^2.4.0",
     "webpack": "3.3.0",
     "webpack-bundle-analyzer": "2.2.3",
