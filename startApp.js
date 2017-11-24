@@ -216,19 +216,26 @@ app.post("/react-redux/upload", upload.single("fileUploaded"), function(req, res
   }
 
   function processImageAsNeeded(image) {
+    let ext = path.extname(req.file.originalname);
+    let originalname =
+      req.file.originalname
+        .replace(new RegExp(ext + "$"), "")
+        .replace(/\./g, "")
+        .replace(/\+/g, "")
+        .replace(/\,/g, "") + ext;
     if (image.bitmap.width > 55) {
-      let width = image.bitmap.width,
-        height = image.bitmap.height,
-        newWidth = height * 50 / width;
+      let width = image.bitmap.width;
+      let height = image.bitmap.height;
+      let newWidth = height * 50 / width;
 
       image.resize(50, newWidth);
-      let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+      let resizedDestination = `${pathResult}/resized_${originalname}`;
 
       image.write(resizedDestination, err => {
         response.send({ success: true, smallImagePath: "/" + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
       });
     } else {
-      response.send({ success: true, smallImagePath: `/${pathResult}/${req.file.originalname}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+      response.send({ success: true, smallImagePath: `/${pathResult}/${originalname}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
     }
   }
 });
