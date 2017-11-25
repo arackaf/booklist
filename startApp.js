@@ -27,6 +27,25 @@ import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
 import webpush from "web-push";
 
+import { MongoClient } from "mongodb";
+import expressGraphql from "express-graphql";
+import resolvers from "./node-src/graphQL/resolver";
+import schema from "./node-src/graphQL/schema";
+import { makeExecutableSchema } from "graphql-tools";
+
+const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+const root = { db: dbPromise };
+const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
+
+app.use(
+  "/graphql",
+  expressGraphql({
+    schema: executableSchema,
+    graphiql: true,
+    rootValue: root
+  })
+);
+
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
     let proto = request.header("x-forwarded-proto") || request.header("X-Forwarded-Proto") || request.get("X-Forwarded-Proto"),
