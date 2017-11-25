@@ -3,7 +3,7 @@
   "main": "app.js",
   "engines": {
     "node": "8.4.0",
-    "npm": "5.4.1"
+    "npm": "4.6.1"
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
@@ -32,6 +32,7 @@
     "colors": "1.1.2",
     "compression": "1.6.2",
     "cookie-parser": "1.4.0",
+    "del": "^3.0.0",
     "dotenv": "^4.0.0",
     "easy-express-controllers": "1.0.2",
     "es6-symbol": "2.0.1",
@@ -64,6 +65,7 @@
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
     "regenerator": "0.8.36",
+    "request": "^2.83.0",
     "typescript": "^2.4.0",
     "web-push": "^3.2.4",
     "webpack": "3.3.0",
