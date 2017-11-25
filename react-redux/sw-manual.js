@@ -6,8 +6,6 @@ toolbox.router.get(/mylibrary.io$/, handleMain);
 function handleMain(request) {
   return fetch(request).catch(() => {
     return caches.match("react-redux/offline.htm", { ignoreSearch: true });
-    return new Response("Hello World");
-    return fetch("react-redux/offline.htm", { headers: { "content-type": "text/html" } });
   });
 }
 
@@ -60,8 +58,15 @@ function syncBooks(db, page = 1) {
           if (!book) {
             return;
           }
+
+          if (/http:\/\/my-library-cover-uploads/.test(book.smallImage)) {
+            book.smallImage =
+              "https://s3.amazonaws.com/my-library-cover-uploads/" +
+              book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+          }
+
           booksStore.put(book).onsuccess = putNext;
-          preCacheBook(book);
+          preCacheBookImage(book);
         } else {
           if (books.length > pageSize) {
             syncBooks(db, page + 1);
@@ -71,18 +76,12 @@ function syncBooks(db, page = 1) {
     });
 }
 
-async function preCacheBook(book) {
+async function preCacheBookImage(book) {
   let smallImage = book.smallImage;
   if (!smallImage) return;
-  if (/http:\/\/my-library-cover-uploads/.test(smallImage)) {
-    smallImage =
-      "https://s3.amazonaws.com/my-library-cover-uploads/" +
-      smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
-
+  if (/https:\/\/s3.amazonaws.com\/my-library-cover-uploads/.test(smallImage)) {
     let cache = await caches.open("local-images1");
-    let img = await fetch(`/s3proxy/?src=${smallImage}`);
+    let img = await fetch(smallImage, { mode: "no-cors" });
     await cache.put(smallImage, img);
-
-    console.log("Cached ", smallImage);
   }
 }

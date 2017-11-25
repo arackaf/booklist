@@ -423,7 +423,6 @@ class HomeIfLoggedIn extends Component<any, any> {
       <div>
         <MainHomePane>
           Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
-          <img src="/s3proxy/?src=https://s3.amazonaws.com/my-library-cover-uploads/bookCovers/573d1b97120426ef0078aa92/converted-cover-573d266203fd6ef00019e4e3.jpg" />
           <hr />
           {data ? <BarChart data={this.state.data} width={1100} height={600} /> : null}
           <br />

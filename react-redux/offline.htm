@@ -92,6 +92,7 @@
         <table class="table table-condescend table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Title</th>
                     <th>Author</th>
                 </tr>
@@ -99,21 +100,10 @@
             <tbody id="booksTarget">
 
             </tbody>
-        </table>>
+        </table>
     </div>
 
     <script>
-        let toShow = new Set([
-        "591b74d036f369d06bb7781d",
-        "591b74f436f369d06bb77823",
-        "59334467a71fc3de245e2d6b",
-        "59334468a71fc3de245e2d6d",
-        "59334450a71fc3de245e2d5b",
-        "59334456a71fc3de245e2d5e",
-        "5933445ba71fc3de245e2d61",
-        "59334460a71fc3de245e2d65",
-        "59334461a71fc3de245e2d67"
-        ]);
 
         let open = indexedDB.open("books");
         open.onsuccess = evt => {
@@ -127,13 +117,14 @@
             var cursor = event.target.result;
             if(cursor) {
               let book = cursor.value;
-              if (toShow.has(book._id)){
-                rows += `
-                  <tr>
-                    <td>${book.title}</td>
-                    <td>${Array.isArray(book.authors) ? book.authors.join("<br/>") : book.authors}</td>
-                  </tr>`;
-              }
+
+              if (/s3.amazonaws.com/.test(book.smallImage))
+              rows += `
+                <tr>
+                  <td><img src="${book.smallImage}" /></td>
+                  <td>${book.title}</td>
+                  <td>${Array.isArray(book.authors) ? book.authors.join("<br/>") : book.authors}</td>
+                </tr>`;
               cursor.continue();
             } else {
               document.getElementById("booksTarget").innerHTML = rows;
