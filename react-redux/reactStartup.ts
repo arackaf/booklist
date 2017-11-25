@@ -22,11 +22,13 @@ import createHistory from "history/createBrowserHistory";
 (function() {
   //if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js");
+    navigator.serviceWorker.register("/service-worker.js").then(() => {
+      navigator.serviceWorker.controller.postMessage({ command: "sync" });
+    });
 
-    if (Notification) {
-      Notification.requestPermission().then(permission => {});
-    }
+    // if (Notification) {
+    //   Notification.requestPermission().then(permission => {});
+    // }
 
     if (isLoggedIn()) {
       // let subscriptionOptions = {
