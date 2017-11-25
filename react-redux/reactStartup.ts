@@ -5,6 +5,40 @@ import queryString from "query-string";
 import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
+import { HttpLink } from "apollo-link-http";
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+
+import gql from "graphql-tag";
+
+const link = new HttpLink({ uri: "/graphql" });
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache()
+});
+
+client
+  .query({
+    query: gql`
+      query allBooks {
+        allBooks(pages_lt: 200) {
+          Books {
+            _id
+            title
+          }
+        }
+      }
+    `
+  })
+  .then(data => {
+    debugger;
+    console.log(data);
+  })
+  .catch(error => {
+    debugger;
+    console.error(error);
+  });
 
 import {
   setDesktop,
