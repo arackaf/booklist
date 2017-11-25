@@ -40,7 +40,7 @@ const doFetch = (url, data) =>
     body: JSON.stringify(data)
   });
 
-async function syncBooks(db, page = 1) {
+function syncBooks(db, page = 1) {
   let pageSize = 50;
   doFetch("/book/offlineSync", { page, pageSize })
     .then(resp => resp.json())
@@ -61,6 +61,7 @@ async function syncBooks(db, page = 1) {
             return;
           }
           booksStore.put(book).onsuccess = putNext;
+          preCacheBook(book);
         } else {
           if (books.length > pageSize) {
             syncBooks(db, page + 1);
@@ -68,4 +69,20 @@ async function syncBooks(db, page = 1) {
         }
       }
     });
+}
+
+async function preCacheBook(book) {
+  let smallImage = book.smallImage;
+  if (!smallImage) return;
+  if (/http:\/\/my-library-cover-uploads/.test(smallImage)) {
+    smallImage =
+      "https://s3.amazonaws.com/my-library-cover-uploads/" +
+      smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+
+    let cache = await caches.open("local-images1");
+    let img = await fetch(`/s3proxy/?src=${smallImage}`);
+    await cache.put(smallImage, img);
+
+    console.log("Cached ", smallImage);
+  }
 }
