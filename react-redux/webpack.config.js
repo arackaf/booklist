@@ -35,7 +35,7 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
       name: name,
       maxAgeSeconds: expires || 60 * 60 * 24 * 365 * 2 //2 years
     },
-    successResponses: /200/
+    successResponses: /0|[123].*/
   }
 });
 
@@ -105,9 +105,9 @@ module.exports = {
         "offline.htm": "react-redux/offline.htm"
       },
       runtimeCaching: [
-        getCache({ pattern: /https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
-        getCache({ pattern: /https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-        getCache({ pattern: /https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
+        getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
+        getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
+        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /book\/searchBooks/, name: "book-search", expires: 60 * 7 }), //7 minutes
         getCache({ pattern: /book\/loadDetails/, name: "book-details" })
       ]
