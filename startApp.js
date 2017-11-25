@@ -14,6 +14,7 @@ import fs from "fs";
 import mkdirp from "mkdirp";
 import Jimp from "jimp";
 import compression from "compression";
+import http from "http";
 
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
@@ -165,6 +166,14 @@ function browseToReactRedux(request, response) {
   }
   response.sendFile(path.join(__dirname + "/react-redux/default.htm"));
 }
+
+app.get("/s3proxy", function(request, response) {
+  console.log("s3Proxy", request.query.src);
+  let src = request.query.src.replace(/^https/, "http");
+  return http.get(src, res => {
+    res.pipe(response);
+  });
+});
 
 app.get("/favicon.ico", function(request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
