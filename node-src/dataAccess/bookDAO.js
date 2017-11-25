@@ -139,13 +139,22 @@ class BookDAO extends DAO {
 
       let allFields = ["_id", "title", "isbn", "smallImage", "subjects", "authors", "tags", "isRead"];
       let project = allFields.reduce((hash, key) => ((hash[key] = 1), hash), {});
+      try {
+        let books = (await db
+          .collection("books")
+          .aggregate([{ $match: query }, { $project: project }, { $sort: sortObj }, { $skip: skip }, { $limit: limit }])
+          .toArray())
+          .map(adjustForClient)
+          .map(b => {
+            delete b.dateAdded;
+            delete b.publicationDate;
+            return b;
+          });
 
-      let books = await db
-        .collection("books")
-        .aggregate([{ $match: query }, { $project: project }, { $sort: sortObj }, { $skip: skip }, { $limit: limit }])
-        .toArray();
-
-      return { books };
+        return { books };
+      } catch (err) {
+        console.log(err);
+      }
     } finally {
       super.dispose(db);
     }
@@ -335,6 +344,11 @@ function adjustForClient(book) {
   book.dateAdded = +book._id.getTimestamp();
   if (/\d{4}-\d{2}-\d{2}/.test(book.publicationDate)) {
     book.publicationDate = moment(book.publicationDate).format("MMMM Do YYYY");
+  }
+  if (/http:\/\/my-library-cover-uploads/.test(book.smallImage)) {
+    book.smallImage =
+      "https://s3.amazonaws.com/my-library-cover-uploads/" +
+      book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
   }
   return book;
 }

@@ -17,14 +17,25 @@ self.addEventListener("push", () => {
 
 self.addEventListener("activate", () => {
   let open = indexedDB.open("books", 1);
+
   // Set up the database schema
   open.onupgradeneeded = evt => {
     let db = open.result;
-    if (!db.objectStoreNames.contains("books")) {
-      db.createObjectStore("books", { keyPath: "_id" });
-      evt.target.transaction.oncomplete = () => syncBooks(db);
+    if (!db.objectStoreNames.contains("books") || !db.objectStoreNames.contains("syncInfo")) {
+      if (!db.objectStoreNames.contains("books")) {
+        db.createObjectStore("books", { keyPath: "_id" });
+      }
+      if (!db.objectStoreNames.contains("syncInfo")) {
+        db.createObjectStore("syncInfo", { keyPath: "id" });
+        evt.target.transaction.objectStore("syncInfo").add({ id: 1, lastSync: null });
+      }
+      evt.target.transaction.oncomplete = fullSync;
     }
   };
+});
+
+self.addEventListener("message", evt => {
+  console.log("MESSAGE", evt.data);
 });
 
 const doFetch = (url, data) =>
@@ -38,7 +49,17 @@ const doFetch = (url, data) =>
     body: JSON.stringify(data)
   });
 
-function syncBooks(db, page = 1) {
+function fullSync(page = 1) {
+  let open = indexedDB.open("books", 1);
+
+  // Set up the database schema
+  open.onsuccess = evt => {
+    let db = open.result;
+    fullSyncPage(db, 1);
+  };
+}
+
+function fullSyncPage(db, page) {
   let pageSize = 50;
   doFetch("/book/offlineSync", { page, pageSize })
     .then(resp => resp.json())
@@ -59,17 +80,11 @@ function syncBooks(db, page = 1) {
             return;
           }
 
-          if (/http:\/\/my-library-cover-uploads/.test(book.smallImage)) {
-            book.smallImage =
-              "https://s3.amazonaws.com/my-library-cover-uploads/" +
-              book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
-          }
-
-          booksStore.put(book).onsuccess = putNext;
+          booksStore.add(book).onsuccess = putNext;
           preCacheBookImage(book);
         } else {
           if (books.length > pageSize) {
-            syncBooks(db, page + 1);
+            fullSyncPage(db, page + 1);
           }
         }
       }
