@@ -219,9 +219,18 @@ app.post("/react-redux/upload", upload.single("fileUploaded"), function(req, res
     return response.send({ success: false, error: "Max size is 500K" });
   }
 
-  let pathResult = path.normalize(req.file.destination).replace(/\\/g, "/"),
-    pathToFileUploaded = `${pathResult}/${req.file.originalname}`,
-    ext = (path.extname(pathToFileUploaded) || "").toLowerCase();
+  let ext = path.extname(req.file.originalname);
+  let newName =
+    req.file.originalname
+      .replace(new RegExp(ext + "$"), "")
+      .replace(/\./g, "")
+      .replace(/\+/g, "")
+      .replace(/\,/g, "") +
+    ("_" + +new Date()) +
+    ext;
+
+  let pathResult = path.normalize(req.file.destination).replace(/\\/g, "/");
+  let pathToFileUploaded = `${pathResult}/${req.file.originalname}`;
 
   try {
     Jimp.read(pathToFileUploaded, function(err, image) {
@@ -238,18 +247,20 @@ app.post("/react-redux/upload", upload.single("fileUploaded"), function(req, res
 
   function processImageAsNeeded(image) {
     if (image.bitmap.width > 55) {
-      let width = image.bitmap.width,
-        height = image.bitmap.height,
-        newWidth = height * 50 / width;
+      let width = image.bitmap.width;
+      let height = image.bitmap.height;
+      let newWidth = height * 50 / width;
 
       image.resize(50, newWidth);
-      let resizedDestination = `${pathResult}/resized_${req.file.originalname}`;
+      let resizedDestination = `${pathResult}/resized_${newName}`;
 
       image.write(resizedDestination, err => {
         response.send({ success: true, smallImagePath: "/" + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
       });
     } else {
-      response.send({ success: true, smallImagePath: `/${pathResult}/${req.file.originalname}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+      image.write(`${pathResult}/${newName}`, err => {
+        response.send({ success: true, smallImagePath: `/${pathResult}/${newName}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
+      });
     }
   }
 });
@@ -282,7 +293,6 @@ app.get("/activate/:code", function(req, response) {
 
   userDao.activateUser(code).then(
     result => {
-      //console.log('activation results', 'success', success, 'already activated', alreadyActivated, 'invalid', invalid);
       if (result.success) {
         req.login(result, function() {
           response.cookie("userId", result._id, { maxAge: 900000 });
