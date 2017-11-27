@@ -61,8 +61,7 @@ function syncImages(db) {
     if (!cursor) return runIt();
 
     let book = cursor.value;
-    booksToUpdate.push(book);
-    if (booksToUpdate.length === 10) return runIt();
+    booksToUpdate.push({ _id: book._id, smallImage: book.smallImage });
     cursor.continue();
   };
 
@@ -75,16 +74,21 @@ function syncImages(db) {
         if (imgCached) {
           let tran = db.transaction("books", "readwrite");
           let booksStore = tran.objectStore("books");
-          booksStore.get(_book._id).onsuccess = ({ target: { result: bookToUpdate } }) => {
-            bookToUpdate.imgSync = 1;
-            booksStore.put(bookToUpdate);
-          };
+          await new Promise(res => {
+            let req = booksStore.get(_book._id);
+            req.onsuccess = ({ target: { result: bookToUpdate } }) => {
+              bookToUpdate.imgSync = 1;
+              booksStore.put(bookToUpdate);
+              res();
+            };
+            req.onerror = () => res();
+          });
         }
       } catch (er) {
+        console.log("ERROR", er);
       } finally {
       }
     }
-    syncImages(db);
   }
 }
 
