@@ -233,10 +233,8 @@ export function saveEditingBook(book) {
           authors: book.authors || []
         }
       })
-      .then(data => {
-        //dispatch({ type: EDITING_BOOK_SAVED, book });
-        debugger;
-        console.log(data);
+      .then(({ data: { updateBook } }) => {
+        dispatch({ type: EDITING_BOOK_SAVED, book: updateBook.Book });
       })
       .catch(error => {
         debugger;
