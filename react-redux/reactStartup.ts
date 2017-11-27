@@ -106,7 +106,9 @@ import createHistory from "history/createBrowserHistory";
   //if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js").then(() => {
-      navigator.serviceWorker.controller.postMessage({ command: "sync" });
+      try {
+        navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
+      } catch (er) {}
     });
 
     // if (Notification) {

@@ -22,7 +22,8 @@ self.addEventListener("activate", () => {
     let db = open.result;
     if (!db.objectStoreNames.contains("books") || !db.objectStoreNames.contains("syncInfo")) {
       if (!db.objectStoreNames.contains("books")) {
-        db.createObjectStore("books", { keyPath: "_id" });
+        let bookStore = db.createObjectStore("books", { keyPath: "_id" });
+        bookStore.createIndex("imgSync", "imgSync", { unique: false });
       }
       if (!db.objectStoreNames.contains("syncInfo")) {
         db.createObjectStore("syncInfo", { keyPath: "id" });
@@ -36,8 +37,56 @@ self.addEventListener("activate", () => {
 });
 
 self.addEventListener("message", evt => {
-  console.log("MESSAGE", evt.data);
+  if (evt.data && evt.data.command == "sync-images") {
+    let open = indexedDB.open("books", 1);
+
+    open.onsuccess = evt => {
+      let db = open.result;
+      if (db.objectStoreNames.contains("books")) {
+        syncImages(db);
+      }
+    };
+  }
 });
+
+function syncImages(db) {
+  let tran = db.transaction("books");
+  let booksStore = tran.objectStore("books");
+  let idx = booksStore.index("imgSync");
+  let booksCursor = idx.openCursor(0);
+  let booksToUpdate = [];
+
+  booksCursor.onsuccess = evt => {
+    let cursor = evt.target.result;
+    if (!cursor) return runIt();
+
+    let book = cursor.value;
+    booksToUpdate.push(book);
+    if (booksToUpdate.length === 10) return runIt();
+    cursor.continue();
+  };
+
+  async function runIt() {
+    if (!booksToUpdate.length) return;
+
+    for (let _book of booksToUpdate) {
+      try {
+        let imgCached = await preCacheBookImage(_book);
+        if (imgCached) {
+          let tran = db.transaction("books", "readwrite");
+          let booksStore = tran.objectStore("books");
+          booksStore.get(_book._id).onsuccess = ({ target: { result: bookToUpdate } }) => {
+            bookToUpdate.imgSync = 1;
+            booksStore.put(bookToUpdate);
+          };
+        }
+      } catch (er) {
+      } finally {
+      }
+    }
+    syncImages(db);
+  }
+}
 
 const doFetch = (url, data) =>
   fetch(url, {
@@ -81,7 +130,7 @@ function fullSyncPage(db, page) {
 
           let transaction = db.transaction("books", "readwrite");
           let booksStore = transaction.objectStore("books");
-          booksStore.add(book).onsuccess = putNext;
+          booksStore.add(Object.assign(book, { imgSync: 0 })).onsuccess = putNext;
         } else {
           if (books.length > pageSize) {
             fullSyncPage(db, page + 1);
@@ -114,5 +163,6 @@ async function preCacheBookImage(book) {
     let cache = await caches.open("local-images1");
     let img = await fetch(smallImage, { mode: "no-cors" });
     await cache.put(smallImage, img);
+    return true;
   }
 }
