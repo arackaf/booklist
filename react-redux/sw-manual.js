@@ -28,7 +28,7 @@ self.addEventListener("activate", () => {
         db.createObjectStore("syncInfo", { keyPath: "id" });
         evt.target.transaction
           .objectStore("syncInfo")
-          .add({ id: 1, lastSync: null, syncing: true, loading: true, lastLoad: +new Date(), syncStarted: +new Date() });
+          .add({ id: 1, lastImgSync: null, lastImgSyncStarted: null, lastLoadStarted: +new Date(), lastLoad: null });
       }
       evt.target.transaction.oncomplete = fullSync;
     }
@@ -68,9 +68,6 @@ function fullSyncPage(db, page) {
       if (!resp.books) return;
       let books = resp.books;
       let count = books.count;
-
-      let transaction = db.transaction("books", "readwrite");
-      let booksStore = transaction.objectStore("books");
       let i = 0;
       putNext();
 
@@ -78,17 +75,32 @@ function fullSyncPage(db, page) {
         if (i < pageSize) {
           let book = books[i++];
           if (!book) {
+            loadDone(db);
             return;
           }
 
+          let transaction = db.transaction("books", "readwrite");
+          let booksStore = transaction.objectStore("books");
           booksStore.add(book).onsuccess = putNext;
         } else {
           if (books.length > pageSize) {
             fullSyncPage(db, page + 1);
+          } else {
+            loadDone(db);
           }
         }
       }
     });
+}
+
+function loadDone(db) {
+  let transaction = db.transaction("syncInfo", "readwrite");
+  let syncInfoStore = transaction.objectStore("syncInfo");
+  let req = syncInfoStore.get(1);
+  req.onsuccess = ({ target: { result } }) => {
+    Object.assign(result, { lastLoad: +new Date(), lastLoadStarted: null });
+    syncInfoStore.put(result);
+  };
 }
 
 async function preCacheBookImage(book) {
