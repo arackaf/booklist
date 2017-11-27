@@ -5,40 +5,89 @@ import queryString from "query-string";
 import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
-import { HttpLink } from "apollo-link-http";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
 
-import gql from "graphql-tag";
+// import { HttpLink } from "apollo-link-http";
+// import { ApolloClient } from "apollo-client";
+// import { InMemoryCache } from "apollo-cache-inmemory";
 
-const link = new HttpLink({ uri: "/graphql" });
+//import gql from "graphql-tag";
 
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache()
-});
+//import { request, GraphQLClient } from "graphql-request";
 
-client
-  .query({
-    query: gql`
-      query allBooks {
-        allBooks(pages_lt: 200) {
-          Books {
-            _id
-            title
-          }
-        }
-      }
-    `
-  })
-  .then(data => {
-    debugger;
-    console.log(data);
-  })
-  .catch(error => {
-    debugger;
-    console.error(error);
-  });
+// const query = `{
+//   allBooks(pages_lt: 200) {
+//     Books {
+//       _id
+//       title
+//     }
+//   }
+// }`;
+
+// const client = new GraphQLClient("/graphql", {
+//   method: "GET"
+// });
+
+// client
+//   .request(query)
+//   .then(data => {
+//     debugger;
+//     console.log(data);
+//   })
+//   .catch(err => {
+//     debugger;
+//   });
+
+// request("/graphql", query)
+//   .then(data => {
+//     debugger;
+//     console.log(data);
+//   })
+//   .catch(err => {
+//     debugger;
+//   });
+
+// const link = new HttpLink({ uri: "/graphql", fetchOptions: { method: "get" } });
+
+// const client = new ApolloClient({
+//   link,
+//   cache: new InMemoryCache()
+// });
+
+// let X = gql`
+// query allBooks {
+//   allBooks(pages_lt: 200) {
+//     Books {
+//       _id
+//       title
+//     }
+//   }
+// }
+// `;
+
+// client
+//   .query({
+//     query: gql`
+//       query allBooks {
+//         allBooks(pages_lt: 200) {
+//           Books {
+//             _id
+//             title
+//           }
+//         }
+//       }
+//     `,
+//     context: {
+//       http: { includeQuery: false }
+//     }
+//   })
+//   .then(data => {
+//     debugger;
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     debugger;
+//     console.error(error);
+//   });
 
 import {
   setDesktop,
