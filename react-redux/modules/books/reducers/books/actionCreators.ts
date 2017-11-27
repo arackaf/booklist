@@ -186,9 +186,9 @@ const client = new ApolloClient({
 
 export function saveEditingBook(book) {
   return function(dispatch, getState) {
-    return ajaxUtil.post("/book/update", { book }, () => {
-      dispatch({ type: EDITING_BOOK_SAVED, book });
-    });
+    // return ajaxUtil.post("/book/update", { book }, () => {
+    //   dispatch({ type: EDITING_BOOK_SAVED, book });
+    // });
 
     return client
       .mutate({

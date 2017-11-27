@@ -3,6 +3,36 @@ toolbox.router.get(/subjects$/, handleMain);
 toolbox.router.get(/localhost:3000\/$/, handleMain);
 toolbox.router.get(/mylibrary.io$/, handleMain);
 
+toolbox.router.post(/graphql/, request => {
+  return fetch(request).then(response => {
+    let respClone = response.clone();
+    setTimeout(() => {
+      respClone.json().then(resp => {
+        if (resp && resp.data && resp.data.updateBook && resp.data.updateBook.Book) {
+          syncBook(resp.data.updateBook.Book);
+        }
+      }, 5);
+    });
+    return response;
+  });
+});
+
+function syncBook(book) {
+  let open = indexedDB.open("books", 1);
+
+  open.onsuccess = evt => {
+    let db = open.result;
+    if (db.objectStoreNames.contains("books")) {
+      let tran = db.transaction("books", "readwrite");
+      let booksStore = tran.objectStore("books");
+      booksStore.get(book._id).onsuccess = ({ target: { result: bookToUpdate } }) => {
+        ["title", "authors", "isbn"].forEach(prop => (bookToUpdate[prop] = book[prop]));
+        booksStore.put(bookToUpdate);
+      };
+    }
+  };
+}
+
 function handleMain(request) {
   return fetch(request).catch(() => {
     return caches.match("react-redux/offline.htm", { ignoreSearch: true });
