@@ -18,7 +18,6 @@ self.addEventListener("push", () => {
 self.addEventListener("activate", () => {
   let open = indexedDB.open("books", 1);
 
-  // Set up the database schema
   open.onupgradeneeded = evt => {
     let db = open.result;
     if (!db.objectStoreNames.contains("books") || !db.objectStoreNames.contains("syncInfo")) {
@@ -27,7 +26,9 @@ self.addEventListener("activate", () => {
       }
       if (!db.objectStoreNames.contains("syncInfo")) {
         db.createObjectStore("syncInfo", { keyPath: "id" });
-        evt.target.transaction.objectStore("syncInfo").add({ id: 1, lastSync: null });
+        evt.target.transaction
+          .objectStore("syncInfo")
+          .add({ id: 1, lastSync: null, syncing: true, loading: true, lastLoad: +new Date(), syncStarted: +new Date() });
       }
       evt.target.transaction.oncomplete = fullSync;
     }
@@ -81,7 +82,6 @@ function fullSyncPage(db, page) {
           }
 
           booksStore.add(book).onsuccess = putNext;
-          preCacheBookImage(book);
         } else {
           if (books.length > pageSize) {
             fullSyncPage(db, page + 1);
@@ -94,6 +94,10 @@ function fullSyncPage(db, page) {
 async function preCacheBookImage(book) {
   let smallImage = book.smallImage;
   if (!smallImage) return;
+
+  let cachedImage = await caches.match(smallImage);
+  if (cachedImage) return;
+
   if (/https:\/\/s3.amazonaws.com\/my-library-cover-uploads/.test(smallImage)) {
     let cache = await caches.open("local-images1");
     let img = await fetch(smallImage, { mode: "no-cors" });
