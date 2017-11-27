@@ -10,7 +10,7 @@ export const type = `
     userId: String
     publisher: String
     publicationDate: String
-    pages: Int
+    pages: String
     authors: [String]
     subjects: [String]
     tags: [String]
@@ -41,7 +41,7 @@ export const type = `
     userId: String
     publisher: String
     publicationDate: String
-    pages: Int
+    pages: String
     authors: [String]
     subjects: [String]
     tags: [String]
@@ -57,9 +57,7 @@ export const type = `
     userId: String
     publisher: String
     publicationDate: String
-    pages: Int
-    pages_INC: Int
-    pages_DEC: Int
+    pages: String
     authors: [String]
     authors_PUSH: String
     authors_CONCAT: [String]
@@ -146,12 +144,11 @@ export const type = `
     publicationDate_endsWith: String
     publicationDate: String
     publicationDate_in: [String]
-    pages_lt: Int
-    pages_lte: Int
-    pages_gt: Int
-    pages_gte: Int
-    pages: Int
-    pages_in: [Int]
+    pages_contains: String
+    pages_startsWith: String
+    pages_endsWith: String
+    pages: String
+    pages_in: [String]
     authors: [String]
     authors_in: [[String]]
     authors_contains: String
@@ -233,12 +230,11 @@ export const type = `
       publicationDate_endsWith: String,
       publicationDate: String,
       publicationDate_in: [String],
-      pages_lt: Int,
-      pages_lte: Int,
-      pages_gt: Int,
-      pages_gte: Int,
-      pages: Int,
-      pages_in: [Int],
+      pages_contains: String,
+      pages_startsWith: String,
+      pages_endsWith: String,
+      pages: String,
+      pages_in: [String],
       authors: [String],
       authors_in: [[String]],
       authors_contains: String,
