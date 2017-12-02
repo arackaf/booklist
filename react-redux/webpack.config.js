@@ -89,7 +89,7 @@ module.exports = {
     new SWPrecacheWebpackPlugin({
       mergeStaticsConfig: true,
       filename: "service-worker.js",
-      importScripts: ["../sw-manual.js?v=5"],
+      importScripts: ["../sw-manual.js?v=6"],
       staticFileGlobs: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
         "static/fontawesome/css/font-awesome-booklist-build.css",

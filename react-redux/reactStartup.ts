@@ -105,11 +105,12 @@ import createHistory from "history/createBrowserHistory";
 (function() {
   //if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js").then(() => {
-      try {
-        navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
-      } catch (er) {}
-    });
+    navigator.serviceWorker.register("/service-worker.js");
+    try {
+      navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
+    } catch (er) {
+      console.log(er);
+    }
 
     // if (Notification) {
     //   Notification.requestPermission().then(permission => {});

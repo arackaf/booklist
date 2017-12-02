@@ -271,6 +271,7 @@ class BookDAO extends DAO {
           let smallImageSavedToAws = await this.saveToAws(book.smallImage);
           $set.smallImage = smallImageSavedToAws;
         } catch (err) {
+          console.log(err);
           //for now just proceed and save the rest of the book
         }
       }
