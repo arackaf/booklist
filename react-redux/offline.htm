@@ -118,7 +118,6 @@
             if(cursor) {
               let book = cursor.value;
 
-              if (/s3.amazonaws.com/.test(book.smallImage))
               rows += `
                 <tr>
                   <td><img src="${book.smallImage}" /></td>
