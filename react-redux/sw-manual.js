@@ -2,8 +2,18 @@ toolbox.router.get(/books$/, handleMain);
 toolbox.router.get(/subjects$/, handleMain);
 toolbox.router.get(/localhost:3000\/$/, handleMain);
 toolbox.router.get(/mylibrary.io$/, handleMain);
+function handleMain(request) {
+  //turning this off for now, until I can wrap some other things up
+  return fetch(request);
+  return fetch(request).catch(() => {
+    return caches.match("react-redux/offline.htm", { ignoreSearch: true });
+  });
+}
 
 toolbox.router.post(/graphql/, request => {
+  //turning this off for now, until I can wrap some other things up
+  return fetch(request);
+
   return fetch(request).then(response => {
     let respClone = response.clone();
     setTimeout(() => {
@@ -33,12 +43,6 @@ function syncBook(book) {
   };
 }
 
-function handleMain(request) {
-  return fetch(request).catch(() => {
-    return caches.match("react-redux/offline.htm", { ignoreSearch: true });
-  });
-}
-
 self.addEventListener("push", () => {
   console.log("typeof", typeof toolbox);
   console.log("Push notification received!!!");
@@ -46,6 +50,8 @@ self.addEventListener("push", () => {
 });
 
 self.addEventListener("activate", () => {
+  //turning this off until I have time to finish some other things.
+  return;
   let open = indexedDB.open("books", 1);
 
   open.onupgradeneeded = evt => {
@@ -67,7 +73,8 @@ self.addEventListener("activate", () => {
 });
 
 self.addEventListener("message", evt => {
-  if (evt.data && evt.data.command == "sync-images") {
+  //turning this off until I can finish some other things
+  if (false && evt.data && evt.data.command == "sync-images") {
     let open = indexedDB.open("books", 1);
 
     open.onsuccess = evt => {
