@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Offline Book tracker</title>
+
+    <link rel="stylesheet" href="react-redux/static/bootstrap/css/bootstrap-booklist-build.css">
+    <link rel="stylesheet" href="react-redux/static/fontawesome/css/font-awesome-booklist-build.css">    
+    
+
+    <style type="text/css">
+        a { cursor: pointer; }
+        a.no-underline { text-decoration: none; }
+        ul.nav > li.active a { cursor: default }
+        .margin-left { margin-left: 10px; }
+        .margin-right { margin-right: 10px; }
+        .margin-top { margin-top: 10px; }
+        .margin-bottom { margin-bottom: 10px; }
+
+        li.default-cursor a { cursor: default }
+        ul.nav li > a { outline: none }
+        .modal-header a { outline: none }
+        .modal-header button { outline: none }
+
+        ul.nav-tabs > li > a { color: #555 }
+
+        li.list-group-item > ul.list-group { margin-top: 10px; }
+
+        span.list-group-item:hover{
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-menu > li.no-hover > a:focus, .dropdown-menu > li.no-hover > a:hover {
+            background-color: inherit
+        }
+
+        .alert.alert-slim { padding: 10px; }
+
+        a.grid-hover-filter:hover { text-decoration: none; }
+        a.inline-filter { color: #31708f; }
+        td:hover .show-on-hover-parent-td { display: inherit; color: #555; }
+        .inline-filter i { color: #555; }
+        .show-on-hover-parent-td { display: none; }
+        a.inline-filter { outline: none !important; text-decoration: none; }
+
+        .show-on-hover-parent:hover > .show-on-hover-inline { display: inline; }
+        .show-on-hover-inline { display: none; }
+
+        .docked-to-panel .list-group-item:first-child { border-top-left-radius: 0; border-top-right-radius: 0; }
+        .docked-to-panel .list-group-item { border-left: 0; border-right: 0; }
+
+        .wait-for-loading { background:rgba(0,0,0,0.1); position: fixed; left: 0; right: 0; top: 50px; bottom: 0; z-index:1000; }
+        .wait-for-loading > i { position: fixed; top: 50%; left: 50%; opacity:0.2; }
+
+        .table.no-padding-top > thead > tr > th { padding-top: 0; }
+
+        .modal {
+            z-index: 990; /* tweak to make the color picker happy :-\  */
+        }
+
+        .modal-backdrop {
+            z-index: 980; /* tweak to make the color picker happy :-\  */
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none;   /* Chrome/Safari/Opera */
+            -khtml-user-select: none;    /* Konqueror */
+            -moz-user-select: none;      /* Firefox */
+            -ms-user-select: none;       /* Internet Explorer/Edge */
+            user-select: none;           /* Non-prefixed version, currently not supported by any browser */
+            cursor: default;
+        }
+
+        .padding-top { padding-top: 10px;  }
+        .padding-bottom { padding-bottom: 10px; }
+        .padding-bottom-small { padding-bottom: 5px; }
+
+    </style>
+
+</head>
+<body>
+    <div id="home"></div>
+
+    <div style="visibility: hidden">
+        <button><i class="fa fa-fw fa-spin fa-spinner"></i></button>
+    </div>
+
+    <div style="padding: 15px">
+        <h1>Offline</h1>
+        <table class="table table-condescend table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody id="booksTarget">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        let open = indexedDB.open("books");
+        open.onsuccess = evt => {
+          let db = open.result;
+          let transaction = db.transaction("books", "readonly");
+          let booksStore = transaction.objectStore("books");
+
+          var request = booksStore.openCursor();
+          let rows = ``;
+          request.onsuccess = function(event) {
+            var cursor = event.target.result;
+            if(cursor) {
+              let book = cursor.value;
+
+              rows += `
+                <tr>
+                  <td><img src="${book.smallImage}" /></td>
+                  <td>${book.title}</td>
+                  <td>${Array.isArray(book.authors) ? book.authors.join("<br/>") : book.authors}</td>
+                </tr>`;
+              cursor.continue();
+            } else {
+              document.getElementById("booksTarget").innerHTML = rows;
+            }
+          };
+        }
+    </script>
+
+</body>
+</html>

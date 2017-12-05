@@ -14,6 +14,7 @@ import fs from "fs";
 import mkdirp from "mkdirp";
 import Jimp from "jimp";
 import compression from "compression";
+import http from "http";
 
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
@@ -23,6 +24,27 @@ import multer from "multer";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
+
+import webpush from "web-push";
+
+import { MongoClient } from "mongodb";
+import expressGraphql from "express-graphql";
+import resolvers from "./node-src/graphQL/resolver";
+import schema from "./node-src/graphQL/schema";
+import { makeExecutableSchema } from "graphql-tools";
+
+const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+const root = { db: dbPromise };
+const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
+
+app.use(
+  "/graphql",
+  expressGraphql({
+    schema: executableSchema,
+    graphiql: true,
+    rootValue: root
+  })
+);
 
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
@@ -35,6 +57,24 @@ if (!process.env.IS_DEV) {
     }
   });
 }
+
+// setTimeout(() => {
+//   new UserDao().getSubscription("56f34a2748243210269ecd66").then(sub => {
+//     try {
+//       webpush.setVapidDetails(process.env.PUSH_SUBJECT, process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
+//       webpush
+//         .sendNotification(sub, "hello")
+//         .then(() => {
+//           console.log("SENT for real");
+//         })
+//         .catch(err => {
+//           console.log(err);
+//         });
+//     } catch (er) {
+//       console.log(er);
+//     }
+//   });
+// }, 5000);
 
 passport.use(
   new LocalStrategy(function(email, password, done) {
@@ -122,6 +162,7 @@ app.ws("/bookEntryWS", function(ws, req) {
 import { easyControllers } from "easy-express-controllers";
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-dest" });
 
+app.get("react-redux/offline.htm", (req, response) => response.sendfile("/react-redux/offline.htm"));
 app.get("/", browseToReactRedux);
 app.get("/books", browseToReactRedux);
 app.get("/login", browseToReactRedux);

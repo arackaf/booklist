@@ -142,8 +142,8 @@ class UserDAO extends DAO {
   }
   async sendActivationCode(email) {
     email = email.toLowerCase();
-    let code = this.getActivationToken(email),
-      url = `${siteRoot}/activate/${code}`;
+    let code = this.getActivationToken(email);
+    let url = `${siteRoot}/activate/${code}`;
 
     await sendEmail({
       to: email,
@@ -161,6 +161,24 @@ class UserDAO extends DAO {
   getActivationToken(email) {
     email = email.toLowerCase();
     return md5(`${salt}${salt}${email}${salt}${salt}`);
+  }
+  async getSubscription(userId) {
+    let db = await super.open();
+    try {
+      let user = await this.findById(userId);
+      return user.subscription;
+    } catch (er) {}
+  }
+  async updateSubscription(userId, subscription) {
+    let db = await super.open();
+    try {
+      await db.collection("users").update(
+        { _id: ObjectID(userId) },
+        {
+          $set: { subscription }
+        }
+      );
+    } catch (er) {}
   }
 }
 
