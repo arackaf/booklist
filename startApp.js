@@ -186,14 +186,6 @@ function browseToReactRedux(request, response) {
   response.sendFile(path.join(__dirname + "/react-redux/default.htm"));
 }
 
-app.get("/s3proxy", function(request, response) {
-  console.log("s3Proxy", request.query.src);
-  let src = request.query.src.replace(/^https/, "http");
-  return http.get(src, res => {
-    res.pipe(response);
-  });
-});
-
 app.get("/favicon.ico", function(request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
