@@ -22,10 +22,10 @@ import {
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
-import { HttpLink } from "apollo-link-http";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import gql from "graphql-tag";
+// import { HttpLink } from "apollo-link-http";
+// import { ApolloClient } from "apollo-client";
+// import { InMemoryCache } from "apollo-cache-inmemory";
+// import gql from "graphql-tag";
 
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
@@ -179,10 +179,10 @@ export function setBooksTags(books, add, remove) {
   };
 }
 
-const client = new ApolloClient({
-  link: new HttpLink({ uri: "/graphql" }),
-  cache: new InMemoryCache()
-});
+// const client = new ApolloClient({
+//   link: new HttpLink({ uri: "/graphql" }),
+//   cache: new InMemoryCache()
+// });
 
 export function saveEditingBook(book) {
   return function(dispatch, getState) {
@@ -190,59 +190,59 @@ export function saveEditingBook(book) {
       dispatch({ type: EDITING_BOOK_SAVED, book });
     });
 
-    return client
-      .mutate({
-        mutation: gql`
-          mutation updateBook(
-            $title: String, 
-            $isbn: String, 
-            $smallImage: String, 
-            $pages: String, 
-            $publisher: String, 
-            $publicationDate: String,
-            $authors: [String]
-          ) {
-            updateBook(
-              _id: "${book._id}", 
-              Book: { 
-                title: $title,
-                isbn: $isbn,
-                smallImage: $smallImage,
-                pages: $pages,
-                publisher: $publisher,
-                publicationDate: $publicationDate,
-                authors: $authors
-              }
-            ) {
-              Book {
-                _id,
-                title,
-                isbn,
-                smallImage,
-                pages,
-                publisher,
-                publicationDate,
-                authors
-              }
-            }
-          }
-      `,
-        variables: {
-          title: book.title,
-          isbn: book.isbn,
-          smallImage: book.smallImage,
-          pages: book.pages,
-          publisher: book.publisher,
-          publicationDate: book.publicationDate,
-          authors: book.authors || []
-        }
-      })
-      .then(({ data: { updateBook } }) => {
-        dispatch({ type: EDITING_BOOK_SAVED, book: updateBook.Book });
-      })
-      .catch(error => {
-        debugger;
-        console.error(error);
-      });
+    // return client
+    //   .mutate({
+    //     mutation: gql`
+    //       mutation updateBook(
+    //         $title: String,
+    //         $isbn: String,
+    //         $smallImage: String,
+    //         $pages: String,
+    //         $publisher: String,
+    //         $publicationDate: String,
+    //         $authors: [String]
+    //       ) {
+    //         updateBook(
+    //           _id: "${book._id}",
+    //           Book: {
+    //             title: $title,
+    //             isbn: $isbn,
+    //             smallImage: $smallImage,
+    //             pages: $pages,
+    //             publisher: $publisher,
+    //             publicationDate: $publicationDate,
+    //             authors: $authors
+    //           }
+    //         ) {
+    //           Book {
+    //             _id,
+    //             title,
+    //             isbn,
+    //             smallImage,
+    //             pages,
+    //             publisher,
+    //             publicationDate,
+    //             authors
+    //           }
+    //         }
+    //       }
+    //   `,
+    //     variables: {
+    //       title: book.title,
+    //       isbn: book.isbn,
+    //       smallImage: book.smallImage,
+    //       pages: book.pages,
+    //       publisher: book.publisher,
+    //       publicationDate: book.publicationDate,
+    //       authors: book.authors || []
+    //     }
+    //   })
+    //   .then(({ data: { updateBook } }) => {
+    //     dispatch({ type: EDITING_BOOK_SAVED, book: updateBook.Book });
+    //   })
+    //   .catch(error => {
+    //     debugger;
+    //     console.error(error);
+    //   });
   };
 }

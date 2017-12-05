@@ -108,9 +108,7 @@ import createHistory from "history/createBrowserHistory";
     navigator.serviceWorker.register("/service-worker.js");
     try {
       navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
-    } catch (er) {
-      console.log(er);
-    }
+    } catch (er) {}
 
     // if (Notification) {
     //   Notification.requestPermission().then(permission => {});
