@@ -6,6 +6,89 @@ import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
+// import { HttpLink } from "apollo-link-http";
+// import { ApolloClient } from "apollo-client";
+// import { InMemoryCache } from "apollo-cache-inmemory";
+
+//import gql from "graphql-tag";
+
+//import { request, GraphQLClient } from "graphql-request";
+
+// const query = `{
+//   allBooks(pages_lt: 200) {
+//     Books {
+//       _id
+//       title
+//     }
+//   }
+// }`;
+
+// const client = new GraphQLClient("/graphql", {
+//   method: "GET"
+// });
+
+// client
+//   .request(query)
+//   .then(data => {
+//     debugger;
+//     console.log(data);
+//   })
+//   .catch(err => {
+//     debugger;
+//   });
+
+// request("/graphql", query)
+//   .then(data => {
+//     debugger;
+//     console.log(data);
+//   })
+//   .catch(err => {
+//     debugger;
+//   });
+
+// const link = new HttpLink({ uri: "/graphql", fetchOptions: { method: "get" } });
+
+// const client = new ApolloClient({
+//   link,
+//   cache: new InMemoryCache()
+// });
+
+// let X = gql`
+// query allBooks {
+//   allBooks(pages_lt: 200) {
+//     Books {
+//       _id
+//       title
+//     }
+//   }
+// }
+// `;
+
+// client
+//   .query({
+//     query: gql`
+//       query allBooks {
+//         allBooks(pages_lt: 200) {
+//           Books {
+//             _id
+//             title
+//           }
+//         }
+//       }
+//     `,
+//     context: {
+//       http: { includeQuery: false }
+//     }
+//   })
+//   .then(data => {
+//     debugger;
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     debugger;
+//     console.error(error);
+//   });
+
 import {
   setDesktop,
   setMobile,
@@ -20,10 +103,53 @@ import "util/ajaxUtil";
 import createHistory from "history/createBrowserHistory";
 
 (function() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
+  //if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
+  if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
+    try {
+      navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
+    } catch (er) {
+      console.log(er);
+    }
+
+    // if (Notification) {
+    //   Notification.requestPermission().then(permission => {});
+    // }
+
+    if (isLoggedIn()) {
+      // let subscriptionOptions = {
+      //   userVisibleOnly: true,
+      //   applicationServerKey: urlBase64ToUint8Array("BCC0wqyL-OGz5duRO9-kOSUEv72BMGf0x0oaMGryF1eLa3FF-sW2YmunhNqQegrXHykP-Wa6xC1rEnDuBGtjgUo")
+      // };
+      // navigator.serviceWorker.ready.then(registration => {
+      //   registration.pushManager.subscribe(subscriptionOptions).then(subscription => {
+      //     ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
+      //   });
+      // });
+    }
   }
 })();
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+function sendNotification(text) {
+  if ((Notification as any).permission == "granted") {
+    new Notification(text);
+  }
+}
+
+//sendNotification("Hi there");
 
 declare global {
   var require: any;

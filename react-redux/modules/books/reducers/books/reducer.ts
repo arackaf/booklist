@@ -183,11 +183,6 @@ export const selectBookList = createSelector<BooksModuleType, BookListType, bool
   (booksLoading, booksHash, subjectsHash, tagHash) => {
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
     books.forEach(b => {
-      if (b.smallImage && /http:\/\/my-library-cover-uploads/.test(b.smallImage)) {
-        b.smallImage =
-          "https://s3.amazonaws.com/my-library-cover-uploads/" +
-          b.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
-      }
       b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
       b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
       b.authors = b.authors || [];
