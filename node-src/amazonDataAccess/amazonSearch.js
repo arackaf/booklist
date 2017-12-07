@@ -33,24 +33,28 @@ export default class AmazonSearch {
 
             if (Array.isArray(itemsArray)) {
               //multiple sent back - pick the best
-              let paperbacks = itemsArray.filter(i => i.ItemAttributes && ("" + i.ItemAttributes.Binding).toLowerCase() == "paperback");
-              if (paperbacks.length === 1) {
-                resolve(projectResponse(paperbacks[0], userId));
-              } else if (paperbacks.length === 0) {
+              let books = itemsArray.filter(i => {
+                if (!i.ItemAttributes) return false;
+                let binding = ("" + i.ItemAttributes.Binding).toLowerCase();
+                return binding == "paperback" || binding == "hardcover";
+              });
+              if (books.length === 1) {
+                resolve(projectResponse(books[0], userId));
+              } else if (books.length === 0) {
                 resolve({ failure: true });
               } else {
                 //merge them I guess
                 let item = {
-                  ItemAttributes: paperbacks.reduce((attrs, item) => Object.assign(attrs, item.ItemAttributes || {}), {}),
-                  EditorialReviews: paperbacks[0].EditorialReviews
+                  ItemAttributes: books.reduce((attrs, item) => Object.assign(attrs, item.ItemAttributes || {}), {}),
+                  EditorialReviews: books[0].EditorialReviews
                 };
 
-                item.SmallImage = paperbacks.map(item => item.SmallImage).find(s => s);
-                item.MediumImage = paperbacks.map(item => item.MediumImage).find(m => m);
+                item.SmallImage = books.map(item => item.SmallImage).find(s => s);
+                item.MediumImage = books.map(item => item.MediumImage).find(m => m);
 
-                for (let i = 1; i < paperbacks.length; i++) {
-                  if (editorialReviewsCount(paperbacks[i]) > editorialReviewsCount(item.EditorialReviews)) {
-                    item.EditorialReviews = paperbacks[i].EditorialReviews;
+                for (let i = 1; i < books.length; i++) {
+                  if (editorialReviewsCount(books[i]) > editorialReviewsCount(item.EditorialReviews)) {
+                    item.EditorialReviews = books[i].EditorialReviews;
                   }
                 }
 
@@ -81,19 +85,19 @@ export default class AmazonSearch {
 }
 
 async function projectResponse(item, userId) {
-  let attributes = item.ItemAttributes,
-    result = {
-      title: safeAccess(attributes, "Title"),
-      isbn: safeAccess(attributes, "ISBN"),
-      ean: safeAccess(attributes, "EAN"),
-      pages: +safeAccess(attributes, "NumberOfPages") || undefined,
-      smallImage: safeAccess(safeAccessObject(item, "SmallImage"), "URL"),
-      mediumImage: safeAccess(safeAccessObject(item, "MediumImage"), "URL"),
-      publicationDate: safeAccess(attributes, "PublicationDate"),
-      publisher: safeAccess(attributes, "Publisher"),
-      authors: safeArray(attributes, attributes => attributes.Author),
-      editorialReviews: safeArray(item, item => item.EditorialReviews.EditorialReview)
-    };
+  let attributes = item.ItemAttributes;
+  let result = {
+    title: safeAccess(attributes, "Title"),
+    isbn: safeAccess(attributes, "ISBN"),
+    ean: safeAccess(attributes, "EAN"),
+    pages: +safeAccess(attributes, "NumberOfPages") || undefined,
+    smallImage: safeAccess(safeAccessObject(item, "SmallImage"), "URL"),
+    mediumImage: safeAccess(safeAccessObject(item, "MediumImage"), "URL"),
+    publicationDate: safeAccess(attributes, "PublicationDate"),
+    publisher: safeAccess(attributes, "Publisher"),
+    authors: safeArray(attributes, attributes => attributes.Author),
+    editorialReviews: safeArray(item, item => item.EditorialReviews.EditorialReview)
+  };
 
   if (typeof result.pages === "undefined") {
     delete result.pages;
