@@ -1,3 +1,6 @@
+import uuid from "uuid/v4";
+import del from "del";
+
 var awsCredentials = {
   awsId: process.env.AWS_ID,
   awsSecret: process.env.AWS_SECRET,
@@ -8,9 +11,9 @@ var OperationHelper = require("apac").OperationHelper,
   opHelper = new OperationHelper(awsCredentials),
   { nodeCallback } = require("../app-helpers/nodeHelpers.js");
 
-class AmazonSearch {
+export default class AmazonSearch {
   constructor() {}
-  lookupBook(isbn) {
+  lookupBook(isbn, userId) {
     return new Promise(function(resolve, reject) {
       opHelper
         .execute("ItemLookup", {
@@ -32,7 +35,7 @@ class AmazonSearch {
               //multiple sent back - pick the best
               let paperbacks = itemsArray.filter(i => i.ItemAttributes && ("" + i.ItemAttributes.Binding).toLowerCase() == "paperback");
               if (paperbacks.length === 1) {
-                resolve(projectResponse(paperbacks[0]));
+                resolve(projectResponse(paperbacks[0], userId));
               } else if (paperbacks.length === 0) {
                 resolve({ failure: true });
               } else {
@@ -51,7 +54,7 @@ class AmazonSearch {
                   }
                 }
 
-                resolve(projectResponse(item));
+                resolve(projectResponse(item, userId));
 
                 function editorialReviewsCount(EditorialReviews) {
                   if (!EditorialReviews || !EditorialReviews.EditorialReview) return 0;
@@ -67,18 +70,17 @@ class AmazonSearch {
               resolve({ failure: true });
             }
           } else {
-            resolve(projectResponse(result.ItemLookupResponse.Items.Item));
+            resolve(projectResponse(result.ItemLookupResponse.Items.Item, userId));
           }
         })
         .catch(err => {
-          debugger;
           resolve({ failure: true });
         });
     });
   }
 }
 
-function projectResponse(item) {
+async function projectResponse(item, userId) {
   let attributes = item.ItemAttributes,
     result = {
       title: safeAccess(attributes, "Title"),
@@ -96,6 +98,14 @@ function projectResponse(item) {
   if (typeof result.pages === "undefined") {
     delete result.pages;
   }
+
+  if (/^http:\/\//.test(result.smallImage)) {
+    try {
+      let newImage = await convertFile(result.smallImage, userId);
+      result.smallImage = newImage;
+    } catch (e) {}
+  }
+
   return result;
 
   function safeArray(item, lambda) {
@@ -122,4 +132,38 @@ function projectResponse(item) {
   }
 }
 
-export default AmazonSearch;
+function convertFile(url, userId) {
+  return new Promise((res, rej) => {
+    let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
+    let ext = path.extname(url);
+    let uniqueId = uuid();
+    let fileName = "file-" + uniqueId + ext;
+    let file = fs.createWriteStream(fileName);
+    let fullName = "./conversions/" + fileName;
+
+    request(url)
+      .pipe(file)
+      .on("finish", () => {
+        file.close();
+
+        fs.readFile(fullName, (err, data) => {
+          if (err) {
+            return rej(err);
+          }
+          let params = {
+            Key: `bookCovers/${userId}/converted-cover-${uniqueId}${ext}`,
+            Body: data
+          };
+
+          s3bucket.upload(params, function(err) {
+            try {
+              del.sync(fullName);
+            } catch (e) {}
+
+            if (err) rej(err);
+            else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
+          });
+        });
+      });
+  });
+}
