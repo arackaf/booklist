@@ -163,7 +163,7 @@ function convertFile(url, userId) {
             return rej(err);
           }
           let params = {
-            Key: `bookCovers/${userId}/converted-cover-${uniqueId}${ext}`,
+            Key: `bookCovers/${userId || "generic"}/converted-cover-${uniqueId}${ext}`,
             Body: data
           };
 
