@@ -176,6 +176,7 @@ function convertFile(url, userId) {
             else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
           });
         });
-      });
+      })
+      .on("error", () => rej());
   });
 }
