@@ -22,10 +22,7 @@ import {
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
-// import { HttpLink } from "apollo-link-http";
-// import { ApolloClient } from "apollo-client";
-// import { InMemoryCache } from "apollo-cache-inmemory";
-// import gql from "graphql-tag";
+import compress from "graphql-query-compress";
 
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
@@ -72,6 +69,59 @@ const nonEmptyProps = obj =>
 
 function booksSearch(bookSearchState, publicUserId) {
   let version = bookSearchState.searchVersion;
+
+  fetch(`/graphql?query=
+  ${compress(`query ALL_BOOKS_V_${version}(
+    $page: Int
+    $page_size: Int
+    $title_contains: String
+    $publisher_contains: String
+  ){
+    allBooks(
+      PAGE: $page
+      PAGE_SIZE: $page_size
+      title_contains: $title_contains
+      publisher_contains: $publisher_contains
+    ){
+      Books{
+        title 
+        _id 
+        publisher
+      }
+    }
+  }`)}&variables=${JSON.stringify({
+    title_contains: bookSearchState.search || void 0,
+    publisher_contains: bookSearchState.publisher || void 0,
+    page: bookSearchState.page,
+    page_size: bookSearchState.pageSize
+  })}`);
+
+  fetch(`/graphql?query=
+  query ALL_BOOKS_V_${version}(
+    $page: Int
+    $page_size: Int
+    $title_contains: String
+    $publisher_contains: String
+  ){
+    allBooks(
+      PAGE: $page
+      PAGE_SIZE: $page_size
+      title_contains: $title_contains
+      publisher_contains: $publisher_contains
+    ){
+      Books{
+        title 
+        _id 
+        publisher
+      }
+    }
+  }&variables=${JSON.stringify({
+    title_contains: bookSearchState.search || void 0,
+    publisher_contains: bookSearchState.publisher || void 0,
+    page: bookSearchState.page,
+    page_size: bookSearchState.pageSize
+  })}`);
+
   return ajaxUtil.get(
     "/book/searchBooks/",
     nonEmptyProps({
@@ -178,11 +228,6 @@ export function setBooksTags(books, add, remove) {
     });
   };
 }
-
-// const client = new ApolloClient({
-//   link: new HttpLink({ uri: "/graphql" }),
-//   cache: new InMemoryCache()
-// });
 
 export function saveEditingBook(book) {
   return function(dispatch, getState) {

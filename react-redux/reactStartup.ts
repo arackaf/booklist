@@ -6,28 +6,7 @@ import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
-import { HttpLink, createHttpLink } from "apollo-link-http";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
-
-import gql from "graphql-tag";
 import compress from "graphql-query-compress";
-
-import { request, GraphQLClient } from "graphql-request";
-
-// const query = `{
-//   allBooks(pages_lt: 200) {
-//     Books {
-//       _id
-//       title
-//     }
-//   }
-// }`;
-
-// const client = new GraphQLClient("/graphql", {
-//   method: "GET",
-
-// });
 
 console.log(`
   query ALL_BOOKS_QUERY($title_contains: String){
@@ -54,24 +33,6 @@ console.log(
   }
 `)
 );
-//debugger;
-
-const customFetch = (uri, options) => {
-  let { body, ...newOptions } = options;
-  let qs = queryString.stringify(body);
-  //let requestedString = uri + "?query={allBooks{Books{title}}}";
-  let requestedString =
-    uri +
-    `?query=query{allBooks($title_contains: String){allBooks(title_contains: $title_contains){Books{title}}}}&variables={title_contains: "Jefferson"}`;
-  //let requestedString = uri + "?query=%7BallBooks%7BBooks%7Btitle%7D%7D%7D";
-  debugger;
-  return fetch(requestedString, newOptions);
-};
-const link = createHttpLink({
-  uri: "/graphql",
-  fetchOptions: { method: "GET" },
-  fetch: customFetch
-});
 
 console.log(
   encodeURIComponent(
@@ -107,87 +68,6 @@ fetch(
     title_contains: "Jefferson"
   })}`
 );
-
-// fetch(`/graphql?query=
-// query allBooksQuery($title_contains: String){
-//   x: allBooks(title_contains: $title_contains){
-//     Books{title}
-//   }
-//   y: allBooks(title_contains: "Civil"){
-//     Books{title}
-//   }
-// }&variables=${JSON.stringify({ title_contains: "Jefferson" })}`);
-
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache()
-});
-
-// client
-//   .query({
-//     query: gql`
-//       query allBooks {
-//         allBooks(title_contains: "jefferson")
-//       }
-//     `
-//   })
-//   .then(resp => {
-//     debugger;
-//   })
-//   .catch(err => {
-//     debugger;
-//   });
-
-// client
-//   .request(query)
-//   .then(data => {
-//     debugger;
-//     console.log(data);
-//   })
-//   .catch(err => {
-//     debugger;
-//   });
-
-// request("/graphql", query)
-//   .then(data => {
-//     debugger;
-//     console.log(data);
-//   })
-//   .catch(err => {
-//     debugger;
-//   });
-
-// const link = new HttpLink({ uri: "/graphql", fetchOptions: { method: "get" } });
-
-// const client = new ApolloClient({
-//   link,
-//   cache: new InMemoryCache()
-// });
-
-// client
-//   .query({
-//     query: gql`
-//       query allBooks {
-//         allBooks(pages_lt: 200) {
-//           Books {
-//             _id
-//             title
-//           }
-//         }
-//       }
-//     `,
-//     context: {
-//       http: { includeQuery: false }
-//     }
-//   })
-//   .then(data => {
-//     debugger;
-//     console.log(data);
-//   })
-//   .catch(error => {
-//     debugger;
-//     console.error(error);
-//   });
 
 import {
   setDesktop,
