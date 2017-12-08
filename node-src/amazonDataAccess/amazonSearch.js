@@ -1,5 +1,12 @@
+import AWS from "aws-sdk";
+AWS.config.region = "us-east-1";
+
+import request from "request";
 import uuid from "uuid/v4";
 import del from "del";
+import path from "path";
+import fs from "fs";
+import mkdirp from "mkdirp";
 
 var awsCredentials = {
   awsId: process.env.AWS_ID,
@@ -142,8 +149,9 @@ function convertFile(url, userId) {
     let ext = path.extname(url);
     let uniqueId = uuid();
     let fileName = "file-" + uniqueId + ext;
-    let file = fs.createWriteStream(fileName);
-    let fullName = "./conversions/" + fileName;
+    let fullName = path.resolve("./conversions/" + fileName);
+    mkdirp.sync(path.resolve("./conversions"));
+    let file = fs.createWriteStream(fullName);
 
     request(url)
       .pipe(file)
