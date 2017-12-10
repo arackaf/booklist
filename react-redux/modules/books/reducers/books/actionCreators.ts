@@ -100,14 +100,23 @@ function booksSearch(bookSearchState, publicUserId) {
   query ALL_BOOKS_V_${version}(
     $page: Int
     $page_size: Int
-    $title_contains: String
-    $publisher_contains: String
+    $title: String
+    $subjects: [String]
+    $tags: [String]
+    $author: String
+    $publisher: String
+    $userId: String
   ){
     allBooks(
       PAGE: $page
       PAGE_SIZE: $page_size
-      title_contains: $title_contains
-      publisher_contains: $publisher_contains
+      title_contains: $title
+      subjects_containsAny: $subjects
+      tags_containsAny: $tags
+      authors_textContains: $author
+      publisher_contains: $publisher
+      userId: $userId
+      isRead: $isRead
     ){
       Books{
         title 
@@ -116,10 +125,15 @@ function booksSearch(bookSearchState, publicUserId) {
       }
     }
   }&variables=${JSON.stringify({
-    title_contains: bookSearchState.search || void 0,
-    publisher_contains: bookSearchState.publisher || void 0,
     page: bookSearchState.page,
-    page_size: bookSearchState.pageSize
+    page_size: bookSearchState.pageSize,
+    title: bookSearchState.search || void 0,
+    subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
+    tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
+    author: bookSearchState.author || void 0,
+    publisher: bookSearchState.publisher || void 0,
+    userId: publicUserId,
+    isRead: bookSearchState.isRead
   })}`);
 
   return ajaxUtil.get(
