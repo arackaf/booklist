@@ -15,6 +15,7 @@ export const type = `
     subjects: [String]
     tags: [String]
     isRead: Boolean
+    dateAdded: String
   
   }
   
@@ -46,6 +47,7 @@ export const type = `
     subjects: [String]
     tags: [String]
     isRead: Boolean
+    dateAdded: String
   }
   
   input BookMutationInput {
@@ -77,6 +79,7 @@ export const type = `
     tags_UPDATES: [StringArrayUpdate]
     tags_PULL: [String]
     isRead: Boolean
+    dateAdded: String
   }
   
   input BookSort {
@@ -94,6 +97,7 @@ export const type = `
     subjects: Int
     tags: Int
     isRead: Int
+    dateAdded: Int
   }
       
   input BookFilters {
@@ -194,6 +198,13 @@ export const type = `
     isRead: Boolean
     isRead_ne: Boolean
     isRead_in: [Boolean]
+    dateAdded_contains: String
+    dateAdded_startsWith: String
+    dateAdded_endsWith: String
+    dateAdded_regex: String
+    dateAdded: String
+    dateAdded_ne: String
+    dateAdded_in: [String]
     searchChildSubjects: Boolean
     OR: [BookFilters]
   }
@@ -319,6 +330,13 @@ export const type = `
       isRead: Boolean,
       isRead_ne: Boolean,
       isRead_in: [Boolean],
+      dateAdded_contains: String,
+      dateAdded_startsWith: String,
+      dateAdded_endsWith: String,
+      dateAdded_regex: String,
+      dateAdded: String,
+      dateAdded_ne: String,
+      dateAdded_in: [String],
       searchChildSubjects: Boolean,
       OR: [BookFilters],
       SORT: BookSort,
