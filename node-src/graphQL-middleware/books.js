@@ -1,8 +1,21 @@
 import moment from "moment";
 
 export default class BooksMiddleware {
-  queryPreprocess(root, args, context, ast) {}
-  queryMiddleware(queryPacket, root, args, context, ast) {}
+  queryPreprocess(root, args, context, ast) {
+    if (args.PAGE_SIZE > 100) {
+      args.PAGE_SIZE = 100; //don't allow user to request too much data
+    }
+    //bump it so we know if there's more results to page
+    args.PAGE_SIZE++;
+  }
+  queryMiddleware(queryPacket, root, args, context, ast) {
+    let { $project, $sort } = queryPacket;
+    $project.titleLower = { $toLower: "$title" };
+    if (typeof $sort.title !== "undefined") {
+      $sort.titleLower = $sort.title;
+      delete $sort.title;
+    }
+  }
   beforeInsert(objToBeInserted, root, args, context, ast) {}
   afterInsert(newObj, root, args, context, ast) {}
   beforeUpdate(match, updates, root, args, context, ast) {}
