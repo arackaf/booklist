@@ -28,6 +28,8 @@ export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
 
+import { bookSearchType } from "../bookSearch/reducer";
+
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
 export const deleteBook = ({ _id }) => {
@@ -67,14 +69,18 @@ const nonEmptyProps = obj =>
     return hash;
   }, {});
 
-function booksSearch(bookSearchState, publicUserId) {
+function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   let version = bookSearchState.searchVersion;
+  let bindableSortValue = !bookSearchState.sort ? "_id|desc" : `${bookSearchState.sort}|${bookSearchState.sortDirection == "1" ? "asc" : "desc"}`;
+  let [sortField, sortDirection] = bindableSortValue.split("|");
+  let sortObject = { [sortField]: sortDirection == "asc" ? 1 : -1 };
 
   return fetch(
     `/graphql?query=${compress(`
   query ALL_BOOKS_V_${version}(
     $page: Int
     $page_size: Int
+    $sort: BookSort
     $title: String
     $subjects: [String]
     $tags: [String]
@@ -86,6 +92,7 @@ function booksSearch(bookSearchState, publicUserId) {
     allBooks(
       PAGE: $page
       PAGE_SIZE: $page_size
+      SORT: $sort
       title_contains: $title
       subjects_containsAny: $subjects
       tags_containsAny: $tags
@@ -115,6 +122,7 @@ function booksSearch(bookSearchState, publicUserId) {
   }`)}&variables=${JSON.stringify({
       page: bookSearchState.page,
       page_size: bookSearchState.pageSize,
+      sort: sortObject,
       title: bookSearchState.search || void 0,
       subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
       tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
