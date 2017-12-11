@@ -15,6 +15,7 @@ export default {
     authors: "StringArray",
     subjects: "StringArray",
     tags: "StringArray",
-    isRead: "Boolean"
+    isRead: "Boolean",
+    dateAdded: "String"
   }
 };

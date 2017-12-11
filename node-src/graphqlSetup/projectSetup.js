@@ -32,7 +32,8 @@ const Book = {
     authors: StringArrayType,
     subjects: StringArrayType,
     tags: StringArrayType,
-    isRead: BoolType
+    isRead: BoolType,
+    dateAdded: StringType
   },
   manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }]
 };

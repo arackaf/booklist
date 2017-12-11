@@ -109,6 +109,7 @@ function booksSearch(bookSearchState, publicUserId) {
         publisher
         tags
         isRead
+        dateAdded
       }
     }
   }`)}&variables=${JSON.stringify({
