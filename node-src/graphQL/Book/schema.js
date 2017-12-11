@@ -204,6 +204,7 @@ export const type = `
     isRead_contains: String
     isRead_containsAny: [String]
     isRead_ne: [String]
+    searchChildSubjects: Boolean
     OR: [BookFilters]
   }
   
@@ -333,6 +334,7 @@ export const type = `
       isRead_contains: String,
       isRead_containsAny: [String],
       isRead_ne: [String],
+      searchChildSubjects: Boolean,
       OR: [BookFilters],
       SORT: BookSort,
       SORTS: [BookSort],
