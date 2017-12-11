@@ -4,6 +4,7 @@ const {
   MongoIdArrayType,
   StringType,
   StringArrayType,
+  BoolType,
   IntType,
   IntArrayType,
   FloatType,
@@ -31,7 +32,7 @@ const Book = {
     authors: StringArrayType,
     subjects: StringArrayType,
     tags: StringArrayType,
-    isRead: StringArrayType
+    isRead: BoolType
   },
   manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }]
 };

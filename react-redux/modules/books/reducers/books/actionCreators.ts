@@ -70,33 +70,8 @@ const nonEmptyProps = obj =>
 function booksSearch(bookSearchState, publicUserId) {
   let version = bookSearchState.searchVersion;
 
-  fetch(`/graphql?query=
-  ${compress(`query ALL_BOOKS_V_${version}(
-    $page: Int
-    $page_size: Int
-    $title_contains: String
-    $publisher_contains: String
-  ){
-    allBooks(
-      PAGE: $page
-      PAGE_SIZE: $page_size
-      title_contains: $title_contains
-      publisher_contains: $publisher_contains
-    ){
-      Books{
-        title 
-        _id 
-        publisher
-      }
-    }
-  }`)}&variables=${JSON.stringify({
-    title_contains: bookSearchState.search || void 0,
-    publisher_contains: bookSearchState.publisher || void 0,
-    page: bookSearchState.page,
-    page_size: bookSearchState.pageSize
-  })}`);
-
-  fetch(`/graphql?query=
+  return fetch(
+    `/graphql?query=${compress(`
   query ALL_BOOKS_V_${version}(
     $page: Int
     $page_size: Int
@@ -105,7 +80,8 @@ function booksSearch(bookSearchState, publicUserId) {
     $tags: [String]
     $author: String
     $publisher: String
-    $userId: String
+    $userId: String,
+    $isRead: Boolean
   ){
     allBooks(
       PAGE: $page
@@ -119,22 +95,41 @@ function booksSearch(bookSearchState, publicUserId) {
       isRead: $isRead
     ){
       Books{
-        title 
-        _id 
+        _id
+        title
+        isbn
+        ean
+        pages
+        smallImage
+        mediumImage
+        publicationDate
+        userId
+        subjects
+        authors
         publisher
+        tags
+        isRead
       }
     }
-  }&variables=${JSON.stringify({
-    page: bookSearchState.page,
-    page_size: bookSearchState.pageSize,
-    title: bookSearchState.search || void 0,
-    subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
-    tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
-    author: bookSearchState.author || void 0,
-    publisher: bookSearchState.publisher || void 0,
-    userId: publicUserId,
-    isRead: bookSearchState.isRead
-  })}`);
+  }`)}&variables=${JSON.stringify({
+      page: bookSearchState.page,
+      page_size: bookSearchState.pageSize,
+      title: bookSearchState.search || void 0,
+      subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
+      tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
+      author: bookSearchState.author || void 0,
+      publisher: bookSearchState.publisher || void 0,
+      userId: publicUserId || void 0,
+      isRead: bookSearchState.isRead ? true : void 0
+    })}`
+  )
+    .then(resp => resp.json())
+    .then(resp => {
+      debugger;
+      if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
+        return { results: resp.data.allBooks.Books };
+      }
+    });
 
   return ajaxUtil.get(
     "/book/searchBooks/",
