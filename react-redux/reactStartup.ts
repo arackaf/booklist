@@ -8,67 +8,6 @@ import "immutability-helper";
 
 import compress from "graphql-query-compress";
 
-console.log(`
-  query ALL_BOOKS_QUERY($title_contains: String){
-    allBooks( title_contains: $title_contains){
-      Books{
-        title 
-        _id 
-        publisher
-      }
-    }
-  }
-`);
-
-console.log(
-  compress(`
-  query ALL_BOOKS_QUERY($title_contains: String){
-    allBooks( title_contains: $title_contains){
-      Books{
-        title 
-        _id 
-        publisher
-      }
-    }
-  }
-`)
-);
-
-console.log(
-  encodeURIComponent(
-    `query($title_contains:String){allBooks(title_contains:$title_contains){Books{title,_id,publisher}}}&variables=${JSON.stringify({
-      title_contains: "Jefferson"
-    })}`
-  )
-);
-fetch(`/graphql?query=
-  query($title_contains: String){
-    allBooks(title_contains: $title_contains){
-      Books{title _id publisher}
-    }
-  }&variables=${JSON.stringify({ title_contains: "Jefferson" })}`);
-
-fetch(
-  `/graphql?query=query($title_contains:String){allBooks(title_contains:$title_contains){Books{title,_id,publisher}}}&variables=${JSON.stringify({
-    title_contains: "Jefferson"
-  })}`
-);
-
-fetch(`/graphql?query=
-${encodeURIComponent(`query ALL_BOOKS_QUERY($title_contains: String){
-  allBooks(title_contains: $title_contains){
-    Books{title _id publisher}
-  }
-}`)}&variables=${JSON.stringify({ title_contains: "Jefferson" })}`);
-
-fetch(
-  `/graphql?query=${encodeURIComponent(
-    `query ALL_BOOKS_QUERY($title_contains:String){allBooks(title_contains:$title_contains){Books{title,_id,publisher}}}`
-  )}&variables=${JSON.stringify({
-    title_contains: "Jefferson"
-  })}`
-);
-
 import {
   setDesktop,
   setMobile,
