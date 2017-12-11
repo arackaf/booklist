@@ -61,7 +61,7 @@
     "lazypipe": "1.0.1",
     "mkdirp": "0.5.1",
     "moment": "^2.13.0",
-    "mongo-graphql-starter": "0.4.3",
+    "mongo-graphql-starter": "0.4.5",
     "mongodb": "2.0.39",
     "multer": "1.1.0",
     "nodemailer": "2.3.0",

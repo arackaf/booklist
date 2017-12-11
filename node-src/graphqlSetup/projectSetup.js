@@ -32,7 +32,8 @@ const Book = {
     subjects: StringArrayType,
     tags: StringArrayType,
     isRead: StringArrayType
-  }
+  },
+  manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }]
 };
 
 export default {
