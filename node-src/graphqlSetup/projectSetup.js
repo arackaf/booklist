@@ -35,7 +35,7 @@ const Book = {
     isRead: BoolType,
     dateAdded: StringType
   },
-  manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }]
+  manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }, { name: "publicUserId", type: "String" }]
 };
 
 export default {

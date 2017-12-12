@@ -67,6 +67,7 @@ class BookDAO extends DAO {
         }
       }
 
+      let subjects = args.subjects_containsAny || [];
       if (subjects.length) {
         if (searchChildSubjects) {
           let allPaths = subjects.map(s => `,${s},`).join("|");
