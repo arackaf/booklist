@@ -2,7 +2,6 @@ import moment from "moment";
 
 export default class BooksMiddleware {
   async queryPreprocess(root, args, context, ast) {
-    debugger;
     args.userId = args.publicUserId || context.user.id;
     if (args.PAGE_SIZE > 100) {
       args.PAGE_SIZE = 100; //don't allow user to request too much data
