@@ -83,6 +83,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
     $sort: BookSort
     $title: String
     $subjects: [String]
+    $searchChildSubjects: Boolean
     $tags: [String]
     $author: String
     $publisher: String
@@ -95,6 +96,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
       SORT: $sort
       title_contains: $title
       subjects_containsAny: $subjects
+      searchChildSubjects: $searchChildSubjects
       tags_containsAny: $tags
       authors_textContains: $author
       publisher_contains: $publisher
@@ -125,12 +127,14 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
       sort: sortObject,
       title: bookSearchState.search || void 0,
       subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
+      searchChildSubjects: bookSearchState.searchChildSubjects || void 0,
       tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
       author: bookSearchState.author || void 0,
       publisher: bookSearchState.publisher || void 0,
       userId: publicUserId || void 0,
       isRead: bookSearchState.isRead ? true : void 0
-    })}`
+    })}`,
+    { credentials: "include" }
   )
     .then(resp => resp.json())
     .then(resp => {

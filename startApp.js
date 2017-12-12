@@ -25,26 +25,14 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
+import { easyControllers } from "easy-express-controllers";
+import expressWsImport from "express-ws";
 import webpush from "web-push";
-
 import { MongoClient } from "mongodb";
 import expressGraphql from "express-graphql";
 import resolvers from "./node-src/graphQL/resolver";
 import schema from "./node-src/graphQL/schema";
 import { makeExecutableSchema } from "graphql-tools";
-
-const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
-const root = { db: dbPromise };
-const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
-
-app.use(
-  "/graphql",
-  expressGraphql({
-    schema: executableSchema,
-    graphiql: true,
-    rootValue: root
-  })
-);
 
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
@@ -146,7 +134,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
-import expressWsImport from "express-ws";
+const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+const root = { db: dbPromise };
+const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
+
+app.use(
+  "/graphql",
+  expressGraphql({
+    schema: executableSchema,
+    graphiql: true,
+    rootValue: root
+  })
+);
+
 const expressWs = expressWsImport(app);
 
 app.use("/static/", express.static(__dirname + "/static/"));
@@ -159,7 +159,6 @@ app.ws("/bookEntryWS", function(ws, req) {
   bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 });
 
-import { easyControllers } from "easy-express-controllers";
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-dest" });
 
 app.get("react-redux/offline.htm", (req, response) => response.sendfile("/react-redux/offline.htm"));

@@ -1,12 +1,26 @@
 import moment from "moment";
 
 export default class BooksMiddleware {
-  queryPreprocess(root, args, context, ast) {
+  async queryPreprocess(root, args, context, ast) {
+    debugger;
+    args.userId = args.publicUserId || context.user.id;
     if (args.PAGE_SIZE > 100) {
       args.PAGE_SIZE = 100; //don't allow user to request too much data
     }
     //bump it so we know if there's more results to page
     args.PAGE_SIZE++;
+
+    let subjects = args.subjects_containsAny || [];
+    if (args.searchChildSubjects && subjects.length) {
+      let db = await root.db;
+      let allPaths = subjects.map(s => `,${s},`).join("|");
+      let childIds = (await db
+        .collection("subjects")
+        .find({ path: { $regex: allPaths } /*, userId: userIdToUse*/ }, { _id: 1 })
+        .toArray()).map(o => "" + o._id);
+
+      subjects.push(...childIds);
+    }
   }
   queryMiddleware(queryPacket, root, args, context, ast) {
     let { $project, $sort } = queryPacket;
