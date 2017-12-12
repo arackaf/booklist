@@ -89,7 +89,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
     $tags: [String]
     $author: String
     $publisher: String
-    $userId: String
+    $publicUserId: String
   ){
     allBooks(
       PAGE: $page
@@ -103,7 +103,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
       tags_containsAny: $tags
       authors_textContains: $author
       publisher_contains: $publisher
-      userId: $userId
+      publicUserId: $publicUserId
     ){
       Books{
         _id
@@ -135,13 +135,12 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
       tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
       author: bookSearchState.author || void 0,
       publisher: bookSearchState.publisher || void 0,
-      userId: publicUserId || void 0
+      publicUserId: publicUserId || void 0
     })}`,
     { credentials: "include" }
   )
     .then(resp => resp.json())
     .then(resp => {
-      debugger;
       if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
         return { results: resp.data.allBooks.Books };
       }
