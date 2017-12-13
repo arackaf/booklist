@@ -105,10 +105,10 @@ module.exports = {
         "offline.htm": "react-redux/offline.htm"
       },
       runtimeCaching: [
+        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+ALL_BOOKS_V_/, name: "book-search-graphql", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
-        getCache({ pattern: /book\/searchBooks/, name: "book-search", expires: 60 * 7 }), //7 minutes
         getCache({ pattern: /book\/loadDetails/, name: "book-details" })
       ]
     }),
