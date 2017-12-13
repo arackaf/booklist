@@ -121,7 +121,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
         tags
         isRead
         dateAdded
-      }
+      }, Meta {count}
     }
   }`)}&variables=${JSON.stringify({
       page: bookSearchState.page,
@@ -141,8 +141,8 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   )
     .then(resp => resp.json())
     .then(resp => {
-      if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
-        return { results: resp.data.allBooks.Books };
+      if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
+        return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
       }
     });
 
