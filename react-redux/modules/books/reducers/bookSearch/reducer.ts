@@ -121,7 +121,6 @@ export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearch
 export type entireBookSearchStateType = bookSearchType &
   bookSearchUiViewType & {
     allTagsSorted: tagOrSubject[];
-
     pendingSelectedSubjects: tagOrSubject[];
     pendingSelectedTags: tagOrSubject[];
     selectedSubjects: tagOrSubject[];

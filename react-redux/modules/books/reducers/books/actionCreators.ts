@@ -22,14 +22,14 @@ import {
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
-// import { HttpLink } from "apollo-link-http";
-// import { ApolloClient } from "apollo-client";
-// import { InMemoryCache } from "apollo-cache-inmemory";
-// import gql from "graphql-tag";
+import compress from "graphql-query-compress";
+import { request, GraphQLClient } from "graphql-request";
 
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
+
+import { bookSearchType } from "../bookSearch/reducer";
 
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
@@ -70,8 +70,83 @@ const nonEmptyProps = obj =>
     return hash;
   }, {});
 
-function booksSearch(bookSearchState, publicUserId) {
+function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   let version = bookSearchState.searchVersion;
+  let bindableSortValue = !bookSearchState.sort ? "_id|desc" : `${bookSearchState.sort}|${bookSearchState.sortDirection == "1" ? "asc" : "desc"}`;
+  let [sortField, sortDirection] = bindableSortValue.split("|");
+  let sortObject = { [sortField]: sortDirection == "asc" ? 1 : -1 };
+
+  return fetch(
+    `/graphql?query=${compress(`
+  query ALL_BOOKS_V_${version}(
+    $page: Int
+    $page_size: Int
+    $sort: BookSort
+    $title: String
+    $isRead: Boolean
+    $isRead_ne: Boolean
+    $subjects: [String]
+    $searchChildSubjects: Boolean
+    $tags: [String]
+    $author: String
+    $publisher: String
+    $publicUserId: String
+  ){
+    allBooks(
+      PAGE: $page
+      PAGE_SIZE: $page_size
+      SORT: $sort
+      title_contains: $title
+      isRead: $isRead
+      isRead_ne: $isRead_ne
+      subjects_containsAny: $subjects
+      searchChildSubjects: $searchChildSubjects
+      tags_containsAny: $tags
+      authors_textContains: $author
+      publisher_contains: $publisher
+      publicUserId: $publicUserId
+    ){
+      Books{
+        _id
+        title
+        isbn
+        ean
+        pages
+        smallImage
+        mediumImage
+        publicationDate
+        userId
+        subjects
+        authors
+        publisher
+        tags
+        isRead
+        dateAdded
+      }, Meta {count}
+    }
+  }`)}&variables=${JSON.stringify({
+      page: bookSearchState.page,
+      page_size: bookSearchState.pageSize,
+      sort: sortObject,
+      title: bookSearchState.search || void 0,
+      isRead: bookSearchState.isRead === "1" ? true : void 0,
+      isRead_ne: bookSearchState.isRead === "0" ? true : void 0,
+      subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
+      searchChildSubjects: bookSearchState.searchChildSubjects || void 0,
+      tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
+      author: bookSearchState.author || void 0,
+      publisher: bookSearchState.publisher || void 0,
+      publicUserId: publicUserId || void 0
+    })}`,
+    { credentials: "include" }
+  )
+    .then(resp => resp.json())
+    .then(resp => {
+      if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
+        return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
+      }
+    });
+
   return ajaxUtil.get(
     "/book/searchBooks/",
     nonEmptyProps({
@@ -179,70 +254,67 @@ export function setBooksTags(books, add, remove) {
   };
 }
 
-// const client = new ApolloClient({
-//   link: new HttpLink({ uri: "/graphql" }),
-//   cache: new InMemoryCache()
-// });
+const client = new GraphQLClient("/graphql", { credentials: "include" });
 
 export function saveEditingBook(book) {
   return function(dispatch, getState) {
-    return ajaxUtil.post("/book/update", { book }, () => {
-      dispatch({ type: EDITING_BOOK_SAVED, book });
-    });
+    console.log(book);
 
-    // return client
-    //   .mutate({
-    //     mutation: gql`
-    //       mutation updateBook(
-    //         $title: String,
-    //         $isbn: String,
-    //         $smallImage: String,
-    //         $pages: String,
-    //         $publisher: String,
-    //         $publicationDate: String,
-    //         $authors: [String]
-    //       ) {
-    //         updateBook(
-    //           _id: "${book._id}",
-    //           Book: {
-    //             title: $title,
-    //             isbn: $isbn,
-    //             smallImage: $smallImage,
-    //             pages: $pages,
-    //             publisher: $publisher,
-    //             publicationDate: $publicationDate,
-    //             authors: $authors
-    //           }
-    //         ) {
-    //           Book {
-    //             _id,
-    //             title,
-    //             isbn,
-    //             smallImage,
-    //             pages,
-    //             publisher,
-    //             publicationDate,
-    //             authors
-    //           }
-    //         }
-    //       }
-    //   `,
-    //     variables: {
-    //       title: book.title,
-    //       isbn: book.isbn,
-    //       smallImage: book.smallImage,
-    //       pages: book.pages,
-    //       publisher: book.publisher,
-    //       publicationDate: book.publicationDate,
-    //       authors: book.authors || []
-    //     }
-    //   })
-    //   .then(({ data: { updateBook } }) => {
-    //     dispatch({ type: EDITING_BOOK_SAVED, book: updateBook.Book });
-    //   })
-    //   .catch(error => {
-    //     debugger;
-    //     console.error(error);
-    //   });
+    return client
+      .request(
+        `
+          mutation updateBook(
+            $title: String,
+            $isbn: String,
+            $smallImage: String,
+            $pages: String,
+            $publisher: String,
+            $publicationDate: String,
+            $authors: [String]
+          ) {
+            updateBook(
+              _id: "${book._id}",
+              Book: {
+                title: $title,
+                isbn: $isbn,
+                smallImage: $smallImage,
+                pages: $pages,
+                publisher: $publisher,
+                publicationDate: $publicationDate,
+                authors: $authors
+              }
+            ) {
+              Book {
+                _id,
+                title,
+                isbn,
+                smallImage,
+                pages,
+                publisher,
+                publicationDate,
+                authors
+              }
+            }
+          }
+      `,
+        {
+          title: book.title,
+          isbn: book.isbn,
+          smallImage: book.smallImage,
+          pages: book.pages,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate,
+          authors: book.authors || []
+        }
+      )
+      .then((resp: any) => {
+        if (resp.updateBook && resp.updateBook.Book) {
+          dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
+        }
+      })
+      .catch(error => {
+        debugger;
+        console.error(error);
+      });
   };
 }

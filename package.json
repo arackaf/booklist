@@ -12,7 +12,8 @@
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
     "start": "node app.js",
-    "heroku-postbuild": "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack -p"
+    "heroku-postbuild":
+      "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack -p"
   },
   "dependencies": {
     "@std/esm": "^0.8.3",
@@ -60,7 +61,7 @@
     "lazypipe": "1.0.1",
     "mkdirp": "0.5.1",
     "moment": "^2.13.0",
-    "mongo-graphql-starter": "^0.3.2",
+    "mongo-graphql-starter": "0.4.5",
     "mongodb": "2.0.39",
     "multer": "1.1.0",
     "nodemailer": "2.3.0",
