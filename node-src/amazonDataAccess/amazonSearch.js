@@ -112,7 +112,7 @@ async function projectResponse(item, userId) {
 
   if (/^http:\/\//.test(result.smallImage)) {
     try {
-      let newImage = await convertFile(result.smallImage, userId);
+      let newImage = await saveImageToS3(result.smallImage, userId);
       result.smallImage = newImage;
     } catch (e) {}
   }
@@ -143,7 +143,7 @@ async function projectResponse(item, userId) {
   }
 }
 
-function convertFile(url, userId) {
+export function saveImageToS3(url, userId) {
   return new Promise((res, rej) => {
     let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
     let ext = path.extname(url);
