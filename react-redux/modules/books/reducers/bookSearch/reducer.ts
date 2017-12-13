@@ -96,8 +96,6 @@ const createMemoizedPSI = (getActiveIds: ((state: BooksModuleType) => lookupHash
 
 const selectSelectedSubjects = createMemoizedPSI(state => state.booksModule.bookSearch.subjects, state => state.app.subjectHash);
 const selectSelectedTags = createMemoizedPSI(state => state.booksModule.bookSearch.tags, state => state.booksModule.tags.tagHash);
-const selectPendingSelectedSubjects = createMemoizedPSI(state => state.booksModule.bookSearch.pending.subjects, state => state.app.subjectHash);
-const selectPendingSelectedTags = createMemoizedPSI(state => state.booksModule.bookSearch.pending.tags, state => state.booksModule.tags.tagHash);
 
 export type bookSearchUiViewType = {
   isGridView: boolean;
@@ -121,8 +119,6 @@ export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearch
 export type entireBookSearchStateType = bookSearchType &
   bookSearchUiViewType & {
     allTagsSorted: tagOrSubject[];
-    pendingSelectedSubjects: tagOrSubject[];
-    pendingSelectedTags: tagOrSubject[];
     selectedSubjects: tagOrSubject[];
     subjectsUnwound: tagOrSubject[];
     selectedTags: tagOrSubject[];
@@ -138,8 +134,6 @@ export const selectEntireBookSearchState = createSelector<
   StackedSubjectsType,
   tagOrSubject[],
   tagOrSubject[],
-  tagOrSubject[],
-  tagOrSubject[],
   bookSearchType,
   bookSearchUiViewType
 >(
@@ -147,11 +141,9 @@ export const selectEntireBookSearchState = createSelector<
   selectStackedSubjects,
   selectSelectedSubjects,
   selectSelectedTags,
-  selectPendingSelectedSubjects,
-  selectPendingSelectedTags,
   state => state.booksModule.bookSearch,
   selectBookSearchUiView,
-  (tagsState, subjectsState, selectedSubjects, selectedTags, pendingSelectedSubjects, pendingSelectedTags, bookSearch, searchUi) => {
+  (tagsState, subjectsState, selectedSubjects, selectedTags, bookSearch, searchUi) => {
     let bindableSortValue = !bookSearch.sort ? "_id|desc" : `${bookSearch.sort}|${bookSearch.sortDirection == "1" ? "asc" : "desc"}`;
 
     let filtersToCheckAgainstDefault = ["search", "author", "publisher", "pages", "isRead"];
@@ -170,8 +162,6 @@ export const selectEntireBookSearchState = createSelector<
       anyActiveFilters: !!anyActiveFilters,
       selectedSubjects,
       selectedTags,
-      pendingSelectedSubjects,
-      pendingSelectedTags,
       bindableSortValue,
       ...searchUi
     };
