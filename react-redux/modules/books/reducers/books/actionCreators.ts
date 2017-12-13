@@ -23,6 +23,7 @@ import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
 import compress from "graphql-query-compress";
+import { request, GraphQLClient } from "graphql-request";
 
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
@@ -253,65 +254,67 @@ export function setBooksTags(books, add, remove) {
   };
 }
 
+const client = new GraphQLClient("/graphql", { credentials: "include" });
+
 export function saveEditingBook(book) {
   return function(dispatch, getState) {
-    return ajaxUtil.post("/book/update", { book }, () => {
-      dispatch({ type: EDITING_BOOK_SAVED, book });
-    });
+    console.log(book);
 
-    // return client
-    //   .mutate({
-    //     mutation: gql`
-    //       mutation updateBook(
-    //         $title: String,
-    //         $isbn: String,
-    //         $smallImage: String,
-    //         $pages: String,
-    //         $publisher: String,
-    //         $publicationDate: String,
-    //         $authors: [String]
-    //       ) {
-    //         updateBook(
-    //           _id: "${book._id}",
-    //           Book: {
-    //             title: $title,
-    //             isbn: $isbn,
-    //             smallImage: $smallImage,
-    //             pages: $pages,
-    //             publisher: $publisher,
-    //             publicationDate: $publicationDate,
-    //             authors: $authors
-    //           }
-    //         ) {
-    //           Book {
-    //             _id,
-    //             title,
-    //             isbn,
-    //             smallImage,
-    //             pages,
-    //             publisher,
-    //             publicationDate,
-    //             authors
-    //           }
-    //         }
-    //       }
-    //   `,
-    //     variables: {
-    //       title: book.title,
-    //       isbn: book.isbn,
-    //       smallImage: book.smallImage,
-    //       pages: book.pages,
-    //       publisher: book.publisher,
-    //       publicationDate: book.publicationDate,
-    //       authors: book.authors || []
-    //     }
-    //   })
-    //   .then(({ data: { updateBook } }) => {
-    //     dispatch({ type: EDITING_BOOK_SAVED, book: updateBook.Book });
-    //   })
-    //   .catch(error => {
-    //     debugger;
-    //     console.error(error);
-    //   });
+    return client
+      .request(
+        `
+          mutation updateBook(
+            $title: String,
+            $isbn: String,
+            $smallImage: String,
+            $pages: String,
+            $publisher: String,
+            $publicationDate: String,
+            $authors: [String]
+          ) {
+            updateBook(
+              _id: "${book._id}",
+              Book: {
+                title: $title,
+                isbn: $isbn,
+                smallImage: $smallImage,
+                pages: $pages,
+                publisher: $publisher,
+                publicationDate: $publicationDate,
+                authors: $authors
+              }
+            ) {
+              Book {
+                _id,
+                title,
+                isbn,
+                smallImage,
+                pages,
+                publisher,
+                publicationDate,
+                authors
+              }
+            }
+          }
+      `,
+        {
+          title: book.title,
+          isbn: book.isbn,
+          smallImage: book.smallImage,
+          pages: book.pages,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate,
+          authors: book.authors || []
+        }
+      )
+      .then((resp: any) => {
+        if (resp.updateBook && resp.updateBook.Book) {
+          dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
+        }
+      })
+      .catch(error => {
+        debugger;
+        console.error(error);
+      });
   };
 }
