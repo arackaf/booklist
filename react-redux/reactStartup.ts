@@ -22,8 +22,7 @@ import "util/ajaxUtil";
 import createHistory from "history/createBrowserHistory";
 
 (function() {
-  //if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
-  if ("serviceWorker" in navigator) {
+  if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
     navigator.serviceWorker.register("/service-worker.js");
     try {
       navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
