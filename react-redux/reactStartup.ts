@@ -6,88 +6,7 @@ import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
-// import { HttpLink } from "apollo-link-http";
-// import { ApolloClient } from "apollo-client";
-// import { InMemoryCache } from "apollo-cache-inmemory";
-
-//import gql from "graphql-tag";
-
-//import { request, GraphQLClient } from "graphql-request";
-
-// const query = `{
-//   allBooks(pages_lt: 200) {
-//     Books {
-//       _id
-//       title
-//     }
-//   }
-// }`;
-
-// const client = new GraphQLClient("/graphql", {
-//   method: "GET"
-// });
-
-// client
-//   .request(query)
-//   .then(data => {
-//     debugger;
-//     console.log(data);
-//   })
-//   .catch(err => {
-//     debugger;
-//   });
-
-// request("/graphql", query)
-//   .then(data => {
-//     debugger;
-//     console.log(data);
-//   })
-//   .catch(err => {
-//     debugger;
-//   });
-
-// const link = new HttpLink({ uri: "/graphql", fetchOptions: { method: "get" } });
-
-// const client = new ApolloClient({
-//   link,
-//   cache: new InMemoryCache()
-// });
-
-// let X = gql`
-// query allBooks {
-//   allBooks(pages_lt: 200) {
-//     Books {
-//       _id
-//       title
-//     }
-//   }
-// }
-// `;
-
-// client
-//   .query({
-//     query: gql`
-//       query allBooks {
-//         allBooks(pages_lt: 200) {
-//           Books {
-//             _id
-//             title
-//           }
-//         }
-//       }
-//     `,
-//     context: {
-//       http: { includeQuery: false }
-//     }
-//   })
-//   .then(data => {
-//     debugger;
-//     console.log(data);
-//   })
-//   .catch(error => {
-//     debugger;
-//     console.error(error);
-//   });
+import compress from "graphql-query-compress";
 
 import {
   setDesktop,
@@ -103,8 +22,7 @@ import "util/ajaxUtil";
 import createHistory from "history/createBrowserHistory";
 
 (function() {
-  //if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
-  if ("serviceWorker" in navigator) {
+  if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
     navigator.serviceWorker.register("/service-worker.js");
     try {
       navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
