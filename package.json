@@ -10,10 +10,10 @@
   "scripts": {
     "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-redux-build",
-    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack -p",
+    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack",
     "start": "node app.js",
     "heroku-postbuild":
-      "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack -p"
+      "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
   },
   "dependencies": {
     "@std/esm": "^0.8.3",
