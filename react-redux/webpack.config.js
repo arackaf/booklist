@@ -1,10 +1,10 @@
 var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 var SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+var UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 var path = require("path");
 var webpack = require("webpack");
-var isProduction =
-  process.env.NODE_ENV === "production" || process.argv.slice(-1)[0] == "-p" || process.argv.some(arg => arg.indexOf("webpack-dev-server") >= 0);
+var isProduction = process.env.NODE_ENV === "production" || process.argv.some(arg => arg.indexOf("webpack-dev-server") >= 0);
 
 const asyncBundle = (name, { nodePaths = [], resources = [] }) =>
   new webpack.optimize.CommonsChunkPlugin({
@@ -65,8 +65,8 @@ module.exports = {
           {
             loader: "babel-loader",
             options: {
-              presets: ["react", "es2015-webpack", "stage-1", "stage-2"],
-              plugins: ["transform-decorators-legacy", "external-helpers"]
+              presets: ["react"],
+              plugins: ["transform-decorators-legacy", "transform-class-properties", "transform-object-rest-spread"]
             }
           },
           "ts-loader"
@@ -77,14 +77,18 @@ module.exports = {
         exclude: /node_modules/,
         loader: "babel-loader",
         query: {
-          presets: ["react", "es2015-webpack", "stage-1", "stage-2"],
-          plugins: ["transform-decorators-legacy", "external-helpers"]
+          presets: ["react"],
+          plugins: ["transform-decorators-legacy", "transform-class-properties", "transform-object-rest-spread"]
         }
       }
     ]
   },
   plugins: [
     //new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+    isProduction ? new UglifyJsPlugin({ uglifyOptions: { ie8: false, ecma: 8 } }) : null,
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development")
+    }),
 
     new SWPrecacheWebpackPlugin({
       mergeStaticsConfig: true,
