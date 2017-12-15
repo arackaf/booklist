@@ -153,19 +153,23 @@ class Bar extends PureComponent<any, any> {
       this.tooltip.style.display = "block";
       this.tooltip.style.visibility = "hidden";
 
-      let { count, index } = this.props,
-        tBox = this.tooltip.getBoundingClientRect(),
-        element = findDOMNode(this.el),
-        box = element.getBoundingClientRect(),
-        left = box.left + document.body.scrollLeft + 2,
-        top = box.top + document.body.scrollTop + 2;
+      let { count, index } = this.props;
+      let tBox = this.tooltip.getBoundingClientRect();
+      let element = findDOMNode(this.el);
+      let box = element.getBoundingClientRect();
+      let left = box.left + document.documentElement.scrollLeft + 2;
+      let top = box.top + document.documentElement.scrollTop + 2;
 
       if (tBox.width > box.width && index / count > 0.5) {
         left -= tBox.width - box.width + 4;
       }
 
-      if (tBox.height > box.height) {
+      if (tBox.height > box.height && box.top >= 54 + 7) {
         top -= tBox.height - box.height + 4;
+      }
+
+      if (box.top < 54) {
+        top += 51 - box.top;
       }
 
       this.tooltip.style.left = left + "px";
