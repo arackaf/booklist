@@ -1,7 +1,7 @@
 import React, { Component, CSSProperties } from "react";
 import { connect } from "react-redux";
 import { editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector } from "modules/subjects/reducers/reducer";
-import { subjectChildMapSelector, topLevelSubjectsSortedSelector, getChildSubjectsSorted } from "applicationRoot/rootReducer";
+import { subjectChildMapSelector, topLevelSubjectsSortedSelector } from "applicationRoot/rootReducer";
 import * as actionCreators from "modules/subjects/reducers/actionCreators";
 import { DragSource, DragDropContext, DropTarget, DragLayer } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
