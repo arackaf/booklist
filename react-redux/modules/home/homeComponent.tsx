@@ -7,7 +7,7 @@ import ajaxUtil from "util/ajaxUtil";
 import "d3-transition";
 
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
-import { topLevelSubjectsSortedSelector, RootApplicationType, getRootSubject } from "applicationRoot/rootReducer";
+import { topLevelSubjectsSortedSelector, RootApplicationType, getRootSubject, getChildSubjectsSorted } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
 import Bar from "./components/bar";
@@ -84,7 +84,8 @@ class HomeIfLoggedIn extends Component<any, any> {
             let subject = subjectHash[_id];
             return {
               name: subject.name,
-              color: subject.backgroundColor
+              color: subject.backgroundColor,
+              children: getChildSubjectsSorted(_id, subjectHash)
             };
           })
         };

@@ -64,7 +64,8 @@ export default class Bar extends PureComponent<any, any> {
     this.manageTooltip = debounce(this._manageTooltip, 50);
 
     let tooltip = document.createElement("div");
-    render(<Tooltip data={data} count={count} removeBar={this.removeBar} />, tooltip);
+    let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
+    render(<Tooltip {...{ data, count, childSubjects }} removeBar={this.removeBar} />, tooltip);
     tooltip.setAttribute("class", "d3-tooltip");
     tooltip.style.display = "none";
 
@@ -105,6 +106,7 @@ export default class Bar extends PureComponent<any, any> {
         hideTooltip={this._hideTooltip}
         ref={el => (this.el = el)}
         color={data.entries[0].color}
+        children={data.entries[0].children}
         {...{ height, width, x, graphWidth }}
       />
     ) : (
