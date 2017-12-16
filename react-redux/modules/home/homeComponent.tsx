@@ -129,13 +129,7 @@ class HomeIfLoggedIn extends Component<any, any> {
           Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
           <hr />
           {data ? <BarChart data={data} drilldown={this.getDrilldownChart} width={1100} height={600} /> : null}
-          <br />
-          <br />
           {drilldownData ? <BarChart data={drilldownData} drilldown={this.getDrilldownChart} width={1100} height={600} /> : null}
-          <br />
-          <br />
-          <br />
-          <br />
         </MainHomePane>
       </div>
     );
