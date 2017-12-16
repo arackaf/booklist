@@ -9,12 +9,17 @@ export default class Tooltip extends PureComponent<any, any> {
         .join(",");
 
     return (
-      <div>
-        <h4 style={{ margin: 0 }}>
+      <div style={{ position: "relative", marginLeft: "-5px" }}>
+        <a
+          onClick={this.props.removeBar}
+          style={{ position: "absolute", top: 0, right: 0, marginRight: -20, marginTop: -15, textDecoration: "none" }}
+        >
+          X
+        </a>
+        <h4 style={{ margin: 0, paddingBottom: "5px" }}>
           {display}: <span>{data.count}</span>
         </h4>
         <br />
-        <a onClick={this.props.removeBar}>Remove</a>
       </div>
     );
   }
