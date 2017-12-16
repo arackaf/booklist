@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from "react";
 
 export default class Tooltip extends PureComponent<any, any> {
   render() {
-    let { data, count, childSubjects, removeBar } = this.props,
+    let { data, count, childSubjects, removeBar, drilldown } = this.props,
       display = data.entries
         .map(e => e.name)
         .sort()
@@ -18,7 +18,7 @@ export default class Tooltip extends PureComponent<any, any> {
         </a>
         <h4 style={{ margin: 0, paddingBottom: "5px" }}>
           {display}: <span>{data.count}</span>
-          <div>{childSubjects.length}</div>
+          <div>{childSubjects.length ? <a onClick={() => drilldown(childSubjects)}>Drilldown</a> : null}</div>
         </h4>
         <br />
       </div>
