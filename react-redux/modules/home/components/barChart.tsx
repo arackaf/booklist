@@ -19,7 +19,7 @@ export default class BarChart extends PureComponent<any, any> {
 
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 },
-      { data, width, height } = this.props,
+      { data, width, height, drilldown } = this.props,
       { excluding } = this.state;
 
     if (!data || !data.length) {
@@ -75,6 +75,7 @@ export default class BarChart extends PureComponent<any, any> {
               .filter(d => !this.state.excluding[d.groupId])
               .map((d, i) => (
                 <Bar
+                  drilldown={drilldown}
                   removeBar={this.removeBar}
                   key={d.groupId}
                   index={i}
