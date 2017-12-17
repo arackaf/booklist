@@ -59,8 +59,8 @@ export default class BarChart extends PureComponent<any, any> {
           .filter(_id => subjectHash[_id])
           .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
 
-        let uniqueSubjects = Array.from(new Set(subjectsHeld)),
-          uniqueSubjectString = uniqueSubjects.sort().join(",");
+        let uniqueSubjects = Array.from(new Set(subjectsHeld));
+        let uniqueSubjectString = uniqueSubjects.sort().join(",");
 
         if (!subjectResultsMap.has(uniqueSubjectString)) {
           subjectResultsMap.set(uniqueSubjectString, 0);
@@ -105,29 +105,22 @@ export default class BarChart extends PureComponent<any, any> {
     let fullData = data;
 
     data = data.filter(d => !excluding[d.groupId]);
-
     width = Math.min(width, data.length * 110 + 60);
 
-    let dataValues = data.map(({ count }) => count),
-      displayValues = data.map(({ display }) => display),
-      chartHeight = height - margin.top - margin.bottom,
-      dataMax = max(dataValues),
-      dataScale = scaleLinear()
-        .domain([0, dataMax])
-        .range([0, chartHeight]),
-      scaleX = scaleBand()
-        .domain(displayValues)
-        .range([0, width])
-        .paddingInner([0.1])
-        .paddingOuter([0.3])
-        .align([0.5]),
-      svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
-    {
-      /*<Measure bounds={true} onResize={this.sized}>
-                  {({measureRef}) => (*/
-      /*    )}
-              </Measure> ref={measureRef} */
-    }
+    let dataValues = data.map(({ count }) => count);
+    let displayValues = data.map(({ display }) => display);
+    let chartHeight = height - margin.top - margin.bottom;
+    let dataMax = max(dataValues);
+    let dataScale = scaleLinear()
+      .domain([0, dataMax])
+      .range([0, chartHeight]);
+    let scaleX = scaleBand()
+      .domain(displayValues)
+      .range([0, width])
+      .paddingInner([0.1])
+      .paddingOuter([0.3])
+      .align([0.5]);
+    let svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
 
     let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
     return (
