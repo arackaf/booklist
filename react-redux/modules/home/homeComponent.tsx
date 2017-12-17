@@ -7,7 +7,13 @@ import ajaxUtil from "util/ajaxUtil";
 import "d3-transition";
 
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
-import { topLevelSubjectsSortedSelector, RootApplicationType, getRootSubject } from "applicationRoot/rootReducer";
+import {
+  topLevelSubjectsSortedSelector,
+  RootApplicationType,
+  getRootSubject,
+  getChildSubjectsSorted,
+  computeSubjectParentId
+} from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
 import Bar from "./components/bar";
@@ -34,74 +40,37 @@ const MainHomePane = props => (
   { loadSubjects }
 )
 class HomeIfLoggedIn extends Component<any, any> {
-  state = { data: null };
+  state = { chartPackets: [] };
   componentDidMount() {
     if (this.props.subjectsLoaded) {
-      this.getChart();
+      this.getTopChart();
     } else {
       this.props.loadSubjects();
     }
   }
   componentDidUpdate(prevProps, prevState) {
     if (!prevProps.subjectsLoaded && this.props.subjectsLoaded) {
-      this.getChart();
+      this.getTopChart();
     }
   }
-  getChart = () => {
-    let subjectIds = this.props.subjects.map(s => s._id),
-      targetSubjectsLookup = new Set(subjectIds),
-      subjectHash = this.props.subjectHash;
-
-    let subjectResultsMap = new Map<string, number>([]);
-
-    ajaxUtil.post("/book/booksBySubjects", { subjects: subjectIds, gatherToParents: 1 }).then(resp => {
-      resp.results.forEach(item => {
-        let subjectsHeld = item.subjects
-          .filter(_id => subjectHash[_id])
-          .map(_id => (targetSubjectsLookup.has(_id) ? _id : getRootSubject(subjectHash[_id].path)));
-
-        let uniqueSubjects = Array.from(new Set(subjectsHeld)),
-          uniqueSubjectString = uniqueSubjects.sort().join(",");
-
-        if (!subjectResultsMap.has(uniqueSubjectString)) {
-          subjectResultsMap.set(uniqueSubjectString, 0);
-        }
-        subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
-      });
-
-      let finalData = Array.from(subjectResultsMap).map(([name, count], i) => {
-        let _ids = name.split(",").filter(s => s);
-
-        let names = _ids
-          .map(_id => subjectHash[_id].name)
-          .sort()
-          .join(",");
-        return {
-          groupId: name,
-          count,
-          display: names,
-          entries: _ids.map(_id => {
-            let subject = subjectHash[_id];
-            return {
-              name: subject.name,
-              color: subject.backgroundColor
-            };
-          })
-        };
-      });
-
-      this.setState({ data: finalData });
-    });
+  getTopChart = () => {
+    this.setState({ chartPackets: [{ subjects: this.props.subjects, header: "All books" }] });
   };
+  getDrilldownChart = (index, subjects, header) => {
+    this.setState({ chartPackets: [...this.state.chartPackets.slice(0, index + 1), { subjects, header }] });
+  };
+
   render() {
-    //[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]
-    let { data } = this.state;
+    let { subjectsLoaded, subjectHash } = this.props;
+    let { chartPackets } = this.state;
     return (
       <div>
         <MainHomePane>
           Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
           <hr />
-          {data ? <BarChart data={this.state.data} width={1100} height={600} /> : null}
+          {subjectsLoaded
+            ? chartPackets.map((packet, i) => <BarChart {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={1100} height={600} />)
+            : null}
         </MainHomePane>
       </div>
     );
