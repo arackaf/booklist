@@ -1,4 +1,5 @@
 import React, { Component, PureComponent } from "react";
+import { connect } from "react-redux";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -7,8 +8,15 @@ import max from "d3-array/src/max";
 import Bar from "./bar";
 import Axis from "./axis";
 
+import { getChildSubjectsSorted, computeSubjectParentId, RootApplicationType } from "applicationRoot/rootReducer";
+import ajaxUtil from "util/ajaxUtil";
+
+@connect((state: RootApplicationType) => ({
+  subjectHash: state.app.subjectHash,
+  subjectsLoaded: state.app.subjectsLoaded
+}))
 export default class BarChart extends PureComponent<any, any> {
-  state = { left: 0, excluding: {} };
+  state = { left: 0, excluding: {}, data: null };
   sized = ({ bounds }) => {
     if (bounds.left != this.state.left) {
       this.setState({ left: bounds.left });
@@ -17,12 +25,81 @@ export default class BarChart extends PureComponent<any, any> {
   removeBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: true } }));
   restoreBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: false } }));
 
-  render() {
-    let margin = { top: 20, right: 10, bottom: 180, left: 0 },
-      { data, width, height, drilldown } = this.props,
-      { excluding } = this.state;
+  componentDidMount() {
+    this.getChart();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.subjects != this.props.subjects) {
+      this.getChart();
+    }
+  }
 
-    if (!data || !data.length) {
+  getChart = () => {
+    let { subjects, subjectHash } = this.props;
+    let subjectIds = subjects.map(s => s._id);
+    let targetSubjectsLookup = new Set(subjectIds);
+
+    let subjectResultsMap = new Map<string, number>([]);
+
+    function getApplicableRootSubject(subject) {
+      let parentId = computeSubjectParentId(subject.path);
+
+      if (!parentId) {
+        return subject;
+      } else if (targetSubjectsLookup.has(parentId)) {
+        return subjectHash[parentId];
+      } else {
+        return getApplicableRootSubject(subjectHash[parentId]);
+      }
+    }
+
+    return ajaxUtil.post("/book/booksBySubjects", { subjects: subjectIds, gatherToParents: 1 }).then(resp => {
+      resp.results.forEach(item => {
+        let subjectsHeld = item.subjects
+          .filter(_id => subjectHash[_id])
+          .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
+
+        let uniqueSubjects = Array.from(new Set(subjectsHeld)),
+          uniqueSubjectString = uniqueSubjects.sort().join(",");
+
+        if (!subjectResultsMap.has(uniqueSubjectString)) {
+          subjectResultsMap.set(uniqueSubjectString, 0);
+        }
+        subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
+      });
+
+      let data = Array.from(subjectResultsMap).map(([name, count], i) => {
+        let _ids = name.split(",").filter(s => s);
+        let names = _ids
+          .map(_id => subjectHash[_id].name)
+          .sort()
+          .join(",");
+
+        return {
+          groupId: name,
+          count,
+          display: names,
+          entries: _ids.map(_id => {
+            let subject = subjectHash[_id];
+            return {
+              name: subject.name,
+              color: subject.backgroundColor,
+              children: getChildSubjectsSorted(_id, subjectHash)
+            };
+          })
+        };
+      });
+
+      this.setState({ data });
+    });
+  };
+
+  render() {
+    let margin = { top: 20, right: 10, bottom: 180, left: 0 };
+    let { subjectsLoaded, width, height, drilldown, chartIndex } = this.props;
+    let { data, excluding } = this.state;
+
+    if (!subjectsLoaded || !data || !data.length) {
       return null;
     }
     let fullData = data;
@@ -76,6 +153,7 @@ export default class BarChart extends PureComponent<any, any> {
               .map((d, i) => (
                 <Bar
                   drilldown={drilldown}
+                  chartIndex={chartIndex}
                   removeBar={this.removeBar}
                   key={d.groupId}
                   index={i}

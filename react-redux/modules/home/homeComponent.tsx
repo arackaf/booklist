@@ -40,7 +40,7 @@ const MainHomePane = props => (
   { loadSubjects }
 )
 class HomeIfLoggedIn extends Component<any, any> {
-  state = { data: null, drilldownData: null };
+  state = { chartPackets: [] };
   componentDidMount() {
     if (this.props.subjectsLoaded) {
       this.getTopChart();
@@ -54,82 +54,27 @@ class HomeIfLoggedIn extends Component<any, any> {
     }
   }
   getTopChart = () => {
-    this.getChart(this.props.subjects).then(data => this.setState({ data }));
+    this.setState({ chartPackets: [{ subjects: this.props.subjects }] });
   };
-  getDrilldownChart = subjects => {
-    this.getChart(subjects).then(drilldownData => this.setState({ drilldownData }));
+  getDrilldownChart = (index, subjects) => {
+    debugger;
+    this.setState({ chartPackets: [...this.state.chartPackets.slice(0, index + 1), { subjects }] });
+    //this.getChart(subjects).then(drilldownData => this.setState({ drilldownData }));
   };
-  getChart = subjects => {
-    let subjectIds = subjects.map(s => s._id),
-      targetSubjectsLookup = new Set(subjectIds),
-      subjectHash = this.props.subjectHash;
 
-    let subjectResultsMap = new Map<string, number>([]);
-
-    function getApplicableRootSubject(subject) {
-      let parentId = computeSubjectParentId(subject.path);
-
-      if (!parentId) {
-        return subject;
-      } else if (targetSubjectsLookup.has(parentId)) {
-        return subjectHash[parentId];
-      } else {
-        return getApplicableRootSubject(subjectHash[parentId]);
-      }
-    }
-
-    return ajaxUtil.post("/book/booksBySubjects", { subjects: subjectIds, gatherToParents: 1 }).then(resp => {
-      resp.results.forEach(item => {
-        let subjectsHeld = item.subjects
-          .filter(_id => subjectHash[_id])
-          .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
-
-        let uniqueSubjects = Array.from(new Set(subjectsHeld)),
-          uniqueSubjectString = uniqueSubjects.sort().join(",");
-
-        if (!subjectResultsMap.has(uniqueSubjectString)) {
-          subjectResultsMap.set(uniqueSubjectString, 0);
-        }
-        subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
-      });
-
-      let finalData = Array.from(subjectResultsMap).map(([name, count], i) => {
-        let _ids = name.split(",").filter(s => s);
-        debugger;
-
-        let names = _ids
-          .map(_id => subjectHash[_id].name)
-          .sort()
-          .join(",");
-
-        return {
-          groupId: name,
-          count,
-          display: names,
-          entries: _ids.map(_id => {
-            let subject = subjectHash[_id];
-            return {
-              name: subject.name,
-              color: subject.backgroundColor,
-              children: getChildSubjectsSorted(_id, subjectHash)
-            };
-          })
-        };
-      });
-
-      return finalData;
-    });
-  };
   render() {
-    //[5, 10, 4, 5, 7, 11, /*6, 31, 3, 7, 9, 18, 5, 22, 5*/]
-    let { data, drilldownData } = this.state;
+    let { subjectsLoaded, subjectHash } = this.props;
+    let { chartPackets } = this.state;
     return (
       <div>
         <MainHomePane>
           Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
           <hr />
-          {data ? <BarChart data={data} drilldown={this.getDrilldownChart} width={1100} height={600} /> : null}
-          {drilldownData ? <BarChart data={drilldownData} drilldown={this.getDrilldownChart} width={1100} height={600} /> : null}
+          {subjectsLoaded
+            ? chartPackets.map((packet, i) => (
+                <BarChart subjects={packet.subjects} drilldown={this.getDrilldownChart} chartIndex={i} width={1100} height={600} />
+              ))
+            : null}
         </MainHomePane>
       </div>
     );
