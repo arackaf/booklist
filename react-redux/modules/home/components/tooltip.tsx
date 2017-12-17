@@ -18,7 +18,7 @@ export default class Tooltip extends PureComponent<any, any> {
         </a>
         <h4 style={{ margin: 0, paddingBottom: "5px" }}>
           {display}: <span>{data.count}</span>
-          <div>{childSubjects.length ? <a onClick={() => drilldown(chartIndex, childSubjects)}>Drilldown</a> : null}</div>
+          <div>{childSubjects.length ? <a onClick={() => drilldown(chartIndex, childSubjects, display)}>Drilldown</a> : null}</div>
         </h4>
         <br />
       </div>

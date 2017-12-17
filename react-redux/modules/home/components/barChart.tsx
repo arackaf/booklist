@@ -96,7 +96,7 @@ export default class BarChart extends PureComponent<any, any> {
 
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 };
-    let { subjectsLoaded, width, height, drilldown, chartIndex } = this.props;
+    let { subjectsLoaded, width, height, drilldown, chartIndex, header } = this.props;
     let { data, excluding } = this.state;
 
     if (!subjectsLoaded || !data || !data.length) {
@@ -105,6 +105,8 @@ export default class BarChart extends PureComponent<any, any> {
     let fullData = data;
 
     data = data.filter(d => !excluding[d.groupId]);
+
+    width = Math.min(width, data.length * 110 + 60);
 
     let dataValues = data.map(({ count }) => count),
       displayValues = data.map(({ display }) => display),
@@ -119,7 +121,7 @@ export default class BarChart extends PureComponent<any, any> {
         .paddingInner([0.1])
         .paddingOuter([0.3])
         .align([0.5]),
-      style = { display: "block" }; //, marginLeft: 'auto', marginRight: 'auto'};
+      svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
     {
       /*<Measure bounds={true} onResize={this.sized}>
                   {({measureRef}) => (*/
@@ -130,48 +132,51 @@ export default class BarChart extends PureComponent<any, any> {
     let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
     return (
       <div>
-        <span>
-          <h4 style={{ display: "inline" }}>All Books.</h4>
-          {excludedCount ? (
-            <span style={{ marginLeft: "10px" }}>
-              Excluding:{" "}
-              {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => (
-                <span style={{ marginLeft: "10px" }}>
-                  {d.display}{" "}
-                  <a onClick={() => this.restoreBar(d.groupId)}>
-                    <i className="fa fa-fw fa-undo" />
-                  </a>
-                </span>
-              ))}
-            </span>
-          ) : null}
-        </span>
-        <svg style={style} width={width} height={height}>
-          <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-            {data
-              .filter(d => !this.state.excluding[d.groupId])
-              .map((d, i) => (
-                <Bar
-                  drilldown={drilldown}
-                  chartIndex={chartIndex}
-                  removeBar={this.removeBar}
-                  key={d.groupId}
-                  index={i}
-                  data={d}
-                  count={data.length}
-                  x={scaleX(d.display)}
-                  y={0}
-                  width={scaleX.bandwidth()}
-                  height={dataScale(d.count)}
-                  graphWidth={width}
-                  adjustTooltip={this.state.left}
-                />
-              ))}
-          </g>
-          <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
-            <Axis scale={scaleX} transform={`translate(0, ${height})`} />
-          </g>
-        </svg>
+        <div style={{ ...width, height }}>
+          <div>
+            <h4 style={{ display: "inline" }}>{header}</h4>
+            {excludedCount ? (
+              <span style={{ marginLeft: "10px" }}>
+                Excluding:{" "}
+                {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => (
+                  <span style={{ marginLeft: "10px" }}>
+                    {d.display}{" "}
+                    <a onClick={() => this.restoreBar(d.groupId)}>
+                      <i className="fa fa-fw fa-undo" />
+                    </a>
+                  </span>
+                ))}
+              </span>
+            ) : null}
+          </div>
+          <svg style={svgStyle} width={width} height={height}>
+            <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
+              {data
+                .filter(d => !this.state.excluding[d.groupId])
+                .map((d, i) => (
+                  <Bar
+                    drilldown={drilldown}
+                    chartIndex={chartIndex}
+                    removeBar={this.removeBar}
+                    key={d.groupId}
+                    index={i}
+                    data={d}
+                    count={data.length}
+                    x={scaleX(d.display)}
+                    y={0}
+                    width={scaleX.bandwidth()}
+                    height={dataScale(d.count)}
+                    graphWidth={width}
+                    adjustTooltip={this.state.left}
+                  />
+                ))}
+            </g>
+            <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+              <Axis scale={scaleX} transform={`translate(0, ${height})`} />
+            </g>
+          </svg>
+        </div>
+        <hr />
       </div>
     );
   }
