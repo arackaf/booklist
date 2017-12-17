@@ -54,12 +54,10 @@ class HomeIfLoggedIn extends Component<any, any> {
     }
   }
   getTopChart = () => {
-    this.setState({ chartPackets: [{ subjects: this.props.subjects }] });
+    this.setState({ chartPackets: [{ subjects: this.props.subjects, header: "All books" }] });
   };
-  getDrilldownChart = (index, subjects) => {
-    debugger;
-    this.setState({ chartPackets: [...this.state.chartPackets.slice(0, index + 1), { subjects }] });
-    //this.getChart(subjects).then(drilldownData => this.setState({ drilldownData }));
+  getDrilldownChart = (index, subjects, header) => {
+    this.setState({ chartPackets: [...this.state.chartPackets.slice(0, index + 1), { subjects, header }] });
   };
 
   render() {
@@ -71,9 +69,7 @@ class HomeIfLoggedIn extends Component<any, any> {
           Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
           <hr />
           {subjectsLoaded
-            ? chartPackets.map((packet, i) => (
-                <BarChart subjects={packet.subjects} drilldown={this.getDrilldownChart} chartIndex={i} width={1100} height={600} />
-              ))
+            ? chartPackets.map((packet, i) => <BarChart {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={1100} height={600} />)
             : null}
         </MainHomePane>
       </div>
