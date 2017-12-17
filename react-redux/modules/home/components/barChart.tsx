@@ -16,6 +16,7 @@ import ajaxUtil from "util/ajaxUtil";
   subjectsLoaded: state.app.subjectsLoaded
 }))
 export default class BarChart extends PureComponent<any, any> {
+  el: any;
   state = { left: 0, excluding: {}, data: null };
   sized = ({ bounds }) => {
     if (bounds.left != this.state.left) {
@@ -26,7 +27,11 @@ export default class BarChart extends PureComponent<any, any> {
   restoreBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: false } }));
 
   componentDidMount() {
-    this.getChart();
+    this.getChart(() => {
+      if (this.props.chartIndex > 0) {
+        this.el.scrollIntoView({ behavior: "smooth" });
+      }
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.subjects != this.props.subjects) {
@@ -34,7 +39,7 @@ export default class BarChart extends PureComponent<any, any> {
     }
   }
 
-  getChart = () => {
+  getChart = (cb?: any) => {
     let { subjects, subjectHash } = this.props;
     let subjectIds = subjects.map(s => s._id);
     let targetSubjectsLookup = new Set(subjectIds);
@@ -90,7 +95,7 @@ export default class BarChart extends PureComponent<any, any> {
         };
       });
 
-      this.setState({ data });
+      this.setState({ data }, cb);
     });
   };
 
@@ -124,7 +129,7 @@ export default class BarChart extends PureComponent<any, any> {
 
     let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
     return (
-      <div>
+      <div ref={el => (this.el = el)}>
         <div style={{ ...width, height }}>
           <div>
             <h4 style={{ display: "inline" }}>{header}</h4>
