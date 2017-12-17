@@ -60,12 +60,12 @@ export default class Bar extends PureComponent<any, any> {
     this._manageTooltip(false);
   };
   componentDidMount() {
-    let { data, count, drilldown } = this.props;
+    let { data, count, drilldown, chartIndex } = this.props;
     this.manageTooltip = debounce(this._manageTooltip, 50);
 
     let tooltip = document.createElement("div");
     let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
-    render(<Tooltip {...{ data, count, childSubjects, drilldown }} removeBar={this.removeBar} />, tooltip);
+    render(<Tooltip {...{ data, count, childSubjects, drilldown, chartIndex }} removeBar={this.removeBar} />, tooltip);
     tooltip.setAttribute("class", "d3-tooltip");
     tooltip.style.display = "none";
 
