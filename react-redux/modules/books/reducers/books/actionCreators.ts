@@ -74,14 +74,12 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   let version = bookSearchState.searchVersion;
   let bindableSortValue = !bookSearchState.sort ? "_id|desc" : `${bookSearchState.sort}|${bookSearchState.sortDirection == "1" ? "asc" : "desc"}`;
   let [sortField, sortDirection] = bindableSortValue.split("|");
-  let sortObject = { [sortField]: sortDirection == "asc" ? 1 : -1 };
+  let sortObject = `{ ${sortField}: ${sortDirection == "asc" ? 1 : -1} }`;
 
   return fetch(
-    `/graphql?query=${compress(`
+    `/graphql?query=${encodeURIComponent(
+      compress(`
   query ALL_BOOKS_V_${version}(
-    $page: Int
-    $page_size: Int
-    $sort: BookSort
     $title: String
     $isRead: Boolean
     $isRead_ne: Boolean
@@ -93,9 +91,9 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
     $publicUserId: String
   ){
     allBooks(
-      PAGE: $page
-      PAGE_SIZE: $page_size
-      SORT: $sort
+      PAGE: ${bookSearchState.page}
+      PAGE_SIZE: ${bookSearchState.pageSize}
+      SORT: ${sortObject}
       title_contains: $title
       isRead: $isRead
       isRead_ne: $isRead_ne
@@ -113,9 +111,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
         ean
         pages
         smallImage
-        mediumImage
         publicationDate
-        userId
         subjects
         authors
         publisher
@@ -124,20 +120,20 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
         dateAdded
       }, Meta {count}
     }
-  }`)}&variables=${JSON.stringify({
-      page: bookSearchState.page,
-      page_size: bookSearchState.pageSize,
-      sort: sortObject,
-      title: bookSearchState.search || void 0,
-      isRead: bookSearchState.isRead === "1" ? true : void 0,
-      isRead_ne: bookSearchState.isRead === "0" ? true : void 0,
-      subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
-      searchChildSubjects: bookSearchState.searchChildSubjects || void 0,
-      tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
-      author: bookSearchState.author || void 0,
-      publisher: bookSearchState.publisher || void 0,
-      publicUserId: publicUserId || void 0
-    })}`,
+  }`)
+    )}&variables=${encodeURIComponent(
+      JSON.stringify({
+        title: bookSearchState.search || void 0,
+        isRead: bookSearchState.isRead === "1" ? true : void 0,
+        isRead_ne: bookSearchState.isRead === "0" ? true : void 0,
+        subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
+        searchChildSubjects: bookSearchState.searchChildSubjects || void 0,
+        tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
+        author: bookSearchState.author || void 0,
+        publisher: bookSearchState.publisher || void 0,
+        publicUserId: publicUserId || void 0
+      })
+    )}`,
     { credentials: "include" }
   )
     .then(resp => resp.json())
