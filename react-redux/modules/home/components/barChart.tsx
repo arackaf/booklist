@@ -16,8 +16,11 @@ import ajaxUtil from "util/ajaxUtil";
   subjectsLoaded: state.app.subjectsLoaded
 }))
 export default class BarChart extends PureComponent<any, any> {
+  constructor(props) {
+    super();
+    this.state = { left: 0, excluding: {}, data: null, initialWidth: props.width };
+  }
   el: any;
-  state = { left: 0, excluding: {}, data: null };
   sized = ({ bounds }) => {
     if (bounds.left != this.state.left) {
       this.setState({ left: bounds.left });
@@ -99,7 +102,6 @@ export default class BarChart extends PureComponent<any, any> {
     });
   };
 
-  width: any;
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 };
     let { subjectsLoaded, width, height, drilldown, chartIndex, header } = this.props;
@@ -112,10 +114,6 @@ export default class BarChart extends PureComponent<any, any> {
 
     data = data.filter(d => !excluding[d.groupId]);
     width = Math.min(width, data.length * 110 + 60);
-
-    if (this.width == null) {
-      this.width = width;
-    }
 
     let dataValues = data.map(({ count }) => count);
     let displayValues = data.map(({ display }) => display);
@@ -169,7 +167,7 @@ export default class BarChart extends PureComponent<any, any> {
                     y={0}
                     width={scaleX.bandwidth()}
                     height={dataScale(d.count)}
-                    graphWidth={this.width}
+                    graphWidth={this.state.initialWidth}
                     adjustTooltip={this.state.left}
                   />
                 ))}
