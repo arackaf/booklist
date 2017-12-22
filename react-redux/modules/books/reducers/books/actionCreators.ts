@@ -22,7 +22,6 @@ import {
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
-import compress from "graphql-query-compress";
 import { request, GraphQLClient } from "graphql-request";
 
 export function toggleSelectBook(_id) {
@@ -31,7 +30,7 @@ export function toggleSelectBook(_id) {
 
 import { bookSearchType } from "../bookSearch/reducer";
 
-import { args, numArg, strArg, boolArg, strArrArg } from "util/graphqlUtil";
+import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
 
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
@@ -78,9 +77,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   let [sortField, sortDirection] = bindableSortValue.split("|");
   let sortObject = `{ ${sortField}: ${sortDirection == "asc" ? 1 : -1} }`;
 
-  return fetch(
-    `/graphql?query=${encodeURIComponent(
-      compress(`query ALL_BOOKS_V_${version} {
+  return gqlGet(`query ALL_BOOKS_V_${version} {
     allBooks(
       PAGE: ${bookSearchState.page}
       PAGE_SIZE: ${bookSearchState.pageSize}
@@ -114,16 +111,11 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
         dateAdded
       }, Meta {count}
     }
-  }`)
-    )}`,
-    { credentials: "include" }
-  )
-    .then(resp => resp.json())
-    .then(resp => {
-      if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
-        return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
-      }
-    });
+  }`).then(resp => {
+    if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
+      return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
+    }
+  });
 
   return ajaxUtil.get(
     "/book/searchBooks/",
@@ -291,7 +283,6 @@ export function saveEditingBook(book) {
         }
       })
       .catch(error => {
-        debugger;
         console.error(error);
       });
   };
