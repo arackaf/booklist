@@ -1,25 +1,25 @@
 import { queryUtilities, processHook } from "mongo-graphql-starter";
-import hooksObj from "../hooks"
+import hooksObj from "../hooks";
 const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject } = queryUtilities;
 import { ObjectId } from "mongodb";
 import Book from "./Book";
 
-export async function loadBooks(db, queryPacket){
+export async function loadBooks(db, queryPacket) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
-    { $match }, 
+    { $match },
     { $project },
-    $sort ? { $sort } : null, 
-    $skip != null ? { $skip } : null, 
+    $sort ? { $sort } : null,
+    $skip != null ? { $skip } : null,
     $limit != null ? { $limit } : null
-  ].filter(item => item)
+  ].filter(item => item);
 
   let Books = await db
     .collection("books")
     .aggregate(aggregateItems)
     .toArray();
-  
+
   await processHook(hooksObj, "Book", "adjustResults", Books);
   return Books;
 }
@@ -44,19 +44,19 @@ export default {
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
       let result = {};
 
-      if (queryPacket.$project){
+      if (queryPacket.$project) {
         result.Books = await loadBooks(db, queryPacket);
       }
 
-      if (queryPacket.metadataRequested.size){
+      if (queryPacket.metadataRequested.size) {
         result.Meta = {};
 
-        if (queryPacket.metadataRequested.get("count")){
-          let countResults = (await db
+        if (queryPacket.metadataRequested.get("count")) {
+          let countResults = await db
             .collection("books")
             .aggregate([{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }])
-            .toArray());
-            
+            .toArray();
+
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }
@@ -71,7 +71,7 @@ export default {
       let requestMap = parseRequestedFields(ast, "Book");
       let $project = getMongoProjection(requestMap, Book, args);
 
-      if (await processHook(hooksObj, "Book", "beforeInsert", newObject, root, args, context, ast) === false){
+      if ((await processHook(hooksObj, "Book", "beforeInsert", newObject, root, args, context, ast)) === false) {
         return { Book: null };
       }
       await db.collection("books").insert(newObject);
@@ -80,10 +80,10 @@ export default {
       let result = (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0];
       return {
         Book: result
-      }
+      };
     },
     async updateBook(root, args, context, ast) {
-      if (!args._id){
+      if (!args._id) {
         throw "No _id sent";
       }
       let db = await root.db;
@@ -91,31 +91,31 @@ export default {
       let updates = getUpdateObject(args.Book || {}, Book);
 
       let res = await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast);
-      if (res === false){
+      if (res === false) {
         return { Book: null };
       }
       if (updates.$set || updates.$inc || updates.$push || updates.$pull) {
         await db.collection("books").update($match, updates);
       }
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
-      
+
       let requestMap = parseRequestedFields(ast, "Book");
       let $project = getMongoProjection(requestMap, Book, args);
-      
+
       let result = (await loadBooks(db, { $match, $project, $limit: 1 }))[0];
       return {
         Book: result
-      }
+      };
     },
     async deleteBook(root, args, context, ast) {
-      if (!args._id){
+      if (!args._id) {
         throw "No _id sent";
       }
       let db = await root.db;
       let $match = { _id: ObjectId(args._id) };
-      
+
       let res = await processHook(hooksObj, "Book", "beforeDelete", $match, root, args, context, ast);
-      if (res === false){
+      if (res === false) {
         return false;
       }
       await db.collection("books").remove($match);

@@ -31,6 +31,8 @@ export function toggleSelectBook(_id) {
 
 import { bookSearchType } from "../bookSearch/reducer";
 
+import { args, numArg, strArg, boolArg, strArrArg } from "util/graphqlUtil";
+
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
 export const deleteBook = ({ _id }) => {
@@ -78,31 +80,23 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
 
   return fetch(
     `/graphql?query=${encodeURIComponent(
-      compress(`
-  query ALL_BOOKS_V_${version}(
-    $title: String
-    $isRead: Boolean
-    $isRead_ne: Boolean
-    $subjects: [String]
-    $searchChildSubjects: Boolean
-    $tags: [String]
-    $author: String
-    $publisher: String
-    $publicUserId: String
-  ){
+      compress(`query ALL_BOOKS_V_${version} {
     allBooks(
       PAGE: ${bookSearchState.page}
       PAGE_SIZE: ${bookSearchState.pageSize}
       SORT: ${sortObject}
-      title_contains: $title
-      isRead: $isRead
-      isRead_ne: $isRead_ne
-      subjects_containsAny: $subjects
-      searchChildSubjects: $searchChildSubjects
-      tags_containsAny: $tags
-      authors_textContains: $author
-      publisher_contains: $publisher
-      publicUserId: $publicUserId
+      ${args(
+        strArg("title_contains", bookSearchState.search),
+        boolArg("isRead", bookSearchState.isRead === "1" ? true : null),
+        boolArg("isRead_ne", bookSearchState.isRead === "0" ? true : null),
+        strArrArg("subjects_containsAny", Object.keys(bookSearchState.subjects)),
+        boolArg("searchChildSubjects", bookSearchState.searchChildSubjects || null),
+        strArrArg("tags_containsAny", Object.keys(bookSearchState.tags)),
+        strArg("authors_textContains", bookSearchState.author),
+        strArg("publisher_contains", bookSearchState.publisher),
+        strArg("publicUserId", publicUserId),
+        bookSearchState.pages != "" ? numArg(bookSearchState.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchState.pages) : null
+      )}
     ){
       Books{
         _id
@@ -121,18 +115,6 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
       }, Meta {count}
     }
   }`)
-    )}&variables=${encodeURIComponent(
-      JSON.stringify({
-        title: bookSearchState.search || void 0,
-        isRead: bookSearchState.isRead === "1" ? true : void 0,
-        isRead_ne: bookSearchState.isRead === "0" ? true : void 0,
-        subjects: Object.keys(bookSearchState.subjects).length ? Object.keys(bookSearchState.subjects) : void 0,
-        searchChildSubjects: bookSearchState.searchChildSubjects || void 0,
-        tags: Object.keys(bookSearchState.tags).length ? Object.keys(bookSearchState.tags) : void 0,
-        author: bookSearchState.author || void 0,
-        publisher: bookSearchState.publisher || void 0,
-        publicUserId: publicUserId || void 0
-      })
     )}`,
     { credentials: "include" }
   )
