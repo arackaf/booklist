@@ -38,7 +38,7 @@ export default class BooksMiddleware {
       let allPaths = subjects.map(s => `,${s},`).join("|");
       let childIds = (await db
         .collection("subjects")
-        .find({ path: { $regex: allPaths }, userId: userIdToUse }, { _id: 1 })
+        .find({ path: { $regex: allPaths }, userId: args.userId }, { _id: 1 })
         .toArray()).map(o => "" + o._id);
 
       subjects.push(...childIds);

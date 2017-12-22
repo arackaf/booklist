@@ -11,7 +11,7 @@ export default {
     userId: "String",
     publisher: "String",
     publicationDate: "String",
-    pages: "String",
+    pages: "Int",
     authors: "StringArray",
     subjects: "StringArray",
     tags: "StringArray",

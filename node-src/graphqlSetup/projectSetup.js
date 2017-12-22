@@ -28,7 +28,7 @@ const Book = {
     userId: StringType,
     publisher: StringType,
     publicationDate: StringType,
-    pages: StringType,
+    pages: IntType,
     authors: StringArrayType,
     subjects: StringArrayType,
     tags: StringArrayType,
