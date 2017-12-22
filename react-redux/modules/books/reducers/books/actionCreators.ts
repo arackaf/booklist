@@ -228,7 +228,10 @@ const client = new GraphQLClient("/graphql", { credentials: "include" });
 
 export function saveEditingBook(book) {
   return function(dispatch, getState) {
-    console.log(book);
+    let pages = parseInt(book.pages);
+    if (isNaN(pages)) {
+      pages = null;
+    }
 
     return client
       .request(
@@ -237,7 +240,7 @@ export function saveEditingBook(book) {
             $title: String,
             $isbn: String,
             $smallImage: String,
-            $pages: String,
+            $pages: Int,
             $publisher: String,
             $publicationDate: String,
             $authors: [String]
@@ -271,7 +274,7 @@ export function saveEditingBook(book) {
           title: book.title,
           isbn: book.isbn,
           smallImage: book.smallImage,
-          pages: book.pages,
+          pages,
           publisher: book.publisher,
           publicationDate: book.publicationDate,
           authors: book.authors || []
