@@ -65,6 +65,10 @@ export default class BooksMiddleware {
   afterDelete(match, root, args, context, ast) {}
   adjustResults(results) {
     results.forEach(book => {
+      book.pages = parseInt(book.pages, 10);
+      if (typeof book.pages != "number" || isNaN(book.pages)) {
+        book.pages = null;
+      }
       book.dateAdded = +book._id.getTimestamp();
       if (/\d{4}-\d{2}-\d{2}/.test(book.publicationDate)) {
         book.publicationDate = moment(book.publicationDate).format("MMMM Do YYYY");
