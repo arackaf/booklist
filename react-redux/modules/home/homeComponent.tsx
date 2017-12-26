@@ -1,9 +1,10 @@
 import React, { Component, PureComponent } from "react";
 import { findDOMNode, render } from "react-dom";
 import { connect } from "react-redux";
+import Measure from "react-measure";
+
 import { isLoggedIn } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
-
 import "d3-transition";
 
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
@@ -21,7 +22,7 @@ import Axis from "./components/axis";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
-    <div style={{ marginLeft: "auto", marginRight: "auto", width: "1200px" }}>
+    <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px" }}>
       <div className="panel panel-default">
         <div className="panel-body" style={{ position: "relative" }}>
           {props.children}
@@ -31,6 +32,7 @@ const MainHomePane = props => (
   </div>
 );
 
+const MAX_CHART_WIDTH = 1100;
 @connect(
   (state: RootApplicationType) => ({
     subjects: topLevelSubjectsSortedSelector(state),
@@ -40,7 +42,7 @@ const MainHomePane = props => (
   { loadSubjects }
 )
 class HomeIfLoggedIn extends Component<any, any> {
-  state = { chartPackets: [] };
+  state = { chartPackets: [], chartWidth: MAX_CHART_WIDTH };
   componentDidMount() {
     if (this.props.subjectsLoaded) {
       this.getTopChart();
@@ -64,15 +66,28 @@ class HomeIfLoggedIn extends Component<any, any> {
     let { subjectsLoaded, subjectHash } = this.props;
     let { chartPackets } = this.state;
     return (
-      <div>
-        <MainHomePane>
-          Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
-          <hr />
-          {subjectsLoaded
-            ? chartPackets.map((packet, i) => <BarChart {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={1100} height={600} />)
-            : null}
-        </MainHomePane>
-      </div>
+      <MainHomePane>
+        <Measure
+          client
+          onResize={({ client }) => {
+            if (client.width != this.state.chartWidth && client.width <= MAX_CHART_WIDTH) {
+              this.setState({ chartWidth: client.width });
+            }
+          }}
+        >
+          {({ measureRef }) => (
+            <div ref={measureRef}>
+              Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
+              <hr />
+              {subjectsLoaded
+                ? chartPackets.map((packet, i) => (
+                    <BarChart {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
+                  ))
+                : null}
+            </div>
+          )}
+        </Measure>
+      </MainHomePane>
     );
   }
 }
