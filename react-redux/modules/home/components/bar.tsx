@@ -122,6 +122,10 @@ export default class Bar extends PureComponent<any, any> {
 
 class SingleBar extends PureComponent<any, any> {
   el: any;
+  constructor(props) {
+    super(props);
+    this.state = { initialWidth: this.props.graphWidth };
+  }
   componentDidMount() {
     this.drawBar();
   }
@@ -138,15 +142,20 @@ class SingleBar extends PureComponent<any, any> {
   }
   render() {
     let { x, height, width, color, graphWidth, showTooltip, hideTooltip } = this.props;
+    let { initialWidth } = this.state;
 
     return (
-      <rect onMouseOver={showTooltip} onMouseOut={hideTooltip} ref={el => (this.el = el)} x={graphWidth} y={0} height={0} fill={color} width={0} />
+      <rect onMouseOver={showTooltip} onMouseOut={hideTooltip} ref={el => (this.el = el)} x={initialWidth} y={0} height={0} fill={color} width={0} />
     );
   }
 }
 
 class MultiBar extends PureComponent<any, any> {
   el: any;
+  constructor(props) {
+    super(props);
+    this.state = { initialWidth: this.props.graphWidth };
+  }
   componentDidMount() {
     this.drawBar();
   }
@@ -176,12 +185,13 @@ class MultiBar extends PureComponent<any, any> {
     });
   }
   render() {
-    let { x, height, width, data, graphWidth, showTooltip, hideTooltip } = this.props,
-      colors = data.entries.map(e => e.color);
+    let { x, height, width, data, graphWidth, showTooltip, hideTooltip } = this.props;
+    let { initialWidth } = this.state;
+    let colors = data.entries.map(e => e.color);
 
     return (
       <g onMouseOver={showTooltip} onMouseOut={hideTooltip}>
-        {colors.map((color, i) => <rect ref={el => (this[`el${i}`] = el)} x={graphWidth} y={0} height={0} fill={color} width={0} />)}
+        {colors.map((color, i) => <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} />)}
       </g>
     );
   }

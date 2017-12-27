@@ -167,7 +167,7 @@ export default class BarChart extends PureComponent<any, any> {
                     y={0}
                     width={scaleX.bandwidth()}
                     height={dataScale(d.count)}
-                    graphWidth={this.state.initialWidth}
+                    graphWidth={width}
                     adjustTooltip={this.state.left}
                   />
                 ))}
