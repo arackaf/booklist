@@ -15,7 +15,7 @@ export default class Bar extends PureComponent<any, any> {
 
   manageTooltip: any;
 
-  _manageTooltip(show, evt?) {
+  _manageTooltip(show) {
     if (show && this.tooltipShown) {
       return;
     }
@@ -97,6 +97,9 @@ export default class Bar extends PureComponent<any, any> {
     evt.persist();
     this.manageTooltip(false);
   };
+  _toggleTooltip = () => {
+    this._manageTooltip(!this.tooltipShown);
+  };
   render() {
     let { x, data, height, width, graphWidth } = this.props;
 
@@ -104,6 +107,7 @@ export default class Bar extends PureComponent<any, any> {
       <SingleBar
         showTooltip={this._showTooltip}
         hideTooltip={this._hideTooltip}
+        toggleTooltip={this._toggleTooltip}
         ref={el => (this.el = el)}
         color={data.entries[0].color}
         children={data.entries[0].children}
@@ -113,6 +117,7 @@ export default class Bar extends PureComponent<any, any> {
       <MultiBar
         showTooltip={this._showTooltip}
         hideTooltip={this._hideTooltip}
+        toggleTooltip={this._toggleTooltip}
         ref={el => (this.el = el)}
         {...{ height, width, x, graphWidth, data }}
       />
@@ -141,11 +146,21 @@ class SingleBar extends PureComponent<any, any> {
       .attr("x", this.props.x);
   }
   render() {
-    let { x, height, width, color, graphWidth, showTooltip, hideTooltip } = this.props;
+    let { x, height, width, color, graphWidth, showTooltip, hideTooltip, toggleTooltip } = this.props;
     let { initialWidth } = this.state;
 
     return (
-      <rect onMouseOver={showTooltip} onMouseOut={hideTooltip} ref={el => (this.el = el)} x={initialWidth} y={0} height={0} fill={color} width={0} />
+      <rect
+        onTouchStart={toggleTooltip}
+        onMouseOver={showTooltip}
+        onMouseOut={hideTooltip}
+        ref={el => (this.el = el)}
+        x={initialWidth}
+        y={0}
+        height={0}
+        fill={color}
+        width={0}
+      />
     );
   }
 }
@@ -185,12 +200,12 @@ class MultiBar extends PureComponent<any, any> {
     });
   }
   render() {
-    let { x, height, width, data, graphWidth, showTooltip, hideTooltip } = this.props;
+    let { x, height, width, data, graphWidth, showTooltip, hideTooltip, toggleTooltip } = this.props;
     let { initialWidth } = this.state;
     let colors = data.entries.map(e => e.color);
 
     return (
-      <g onMouseOver={showTooltip} onMouseOut={hideTooltip}>
+      <g onTouchStart={toggleTooltip} onMouseOver={showTooltip} onMouseOut={hideTooltip}>
         {colors.map((color, i) => <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} />)}
       </g>
     );
