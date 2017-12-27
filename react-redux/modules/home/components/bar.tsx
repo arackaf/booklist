@@ -30,7 +30,7 @@ export default class Bar extends PureComponent<any, any> {
       let element = findDOMNode(this.el);
       let box = element.getBoundingClientRect();
       let left = box.left + document.documentElement.scrollLeft + 2;
-      let top = box.top + document.documentElement.scrollTop + 2;
+      let top = box.top + window.scrollY + 2;
 
       if (tBox.width > box.width && index / count > 0.5) {
         left -= tBox.width - box.width + 4;
