@@ -16,7 +16,7 @@
       "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
   },
   "dependencies": {
-    "@std/esm": "^0.8.3",
+    "@std/esm": "0.18.0",
     "apac": "3.0.2",
     "aws-sdk": "2.3.14",
     "babel-core": "^6.26.0",
