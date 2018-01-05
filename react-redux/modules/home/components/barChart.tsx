@@ -164,7 +164,7 @@ export default class BarChart extends PureComponent<any, any> {
               </span>
             ) : null}
           </div>
-          <svg onClick={this.svgClick} style={svgStyle} width={width} height={height}>
+          <svg onTouchStart={this.svgClick} style={svgStyle} width={width} height={height}>
             <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
               {data
                 .filter(d => !this.state.excluding[d.groupId])
