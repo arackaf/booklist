@@ -104,6 +104,7 @@ export default class BarChart extends PureComponent<any, any> {
   };
 
   topRef = el => {
+    if (!el) return;
     el.addEventListener("touchstart", this.svgTouch);
   };
   clearOnTouch = new Set(["text", "h4", "div", "svg"]);
