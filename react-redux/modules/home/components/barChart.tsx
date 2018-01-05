@@ -103,7 +103,10 @@ export default class BarChart extends PureComponent<any, any> {
     });
   };
 
-  svgClick = evt => {
+  svgRef = el => {
+    el.addEventListener("touchstart", this.svgTouch);
+  };
+  svgTouch = evt => {
     if (evt.target.tagName.toLowerCase() == "svg") {
       if (Array.isArray(this.state.data)) {
         this.state.data.forEach(d => {
@@ -164,7 +167,7 @@ export default class BarChart extends PureComponent<any, any> {
               </span>
             ) : null}
           </div>
-          <svg onTouchStart={this.svgClick} style={svgStyle} width={width} height={height}>
+          <svg ref={this.svgRef} style={svgStyle} width={width} height={height}>
             <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
               {data
                 .filter(d => !this.state.excluding[d.groupId])
