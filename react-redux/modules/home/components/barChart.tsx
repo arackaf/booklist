@@ -103,11 +103,12 @@ export default class BarChart extends PureComponent<any, any> {
     });
   };
 
-  svgRef = el => {
+  topRef = el => {
     el.addEventListener("touchstart", this.svgTouch);
   };
+  clearOnTouch = new Set(["text", "h4", "div"]);
   svgTouch = evt => {
-    if (evt.target.tagName.toLowerCase() == "svg") {
+    if (this.clearOnTouch.has(evt.target.tagName.toLowerCase())) {
       if (Array.isArray(this.state.data)) {
         this.state.data.forEach(d => {
           let componentMaybe = this.barMap.get(d.groupId);
@@ -149,7 +150,12 @@ export default class BarChart extends PureComponent<any, any> {
 
     let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
     return (
-      <div ref={el => (this.el = el)}>
+      <div
+        ref={el => {
+          this.topRef(el);
+          this.el = el;
+        }}
+      >
         <div style={{ ...width, height }}>
           <div>
             <h4 style={{ display: "inline" }}>{header}</h4>
@@ -167,7 +173,7 @@ export default class BarChart extends PureComponent<any, any> {
               </span>
             ) : null}
           </div>
-          <svg ref={this.svgRef} style={svgStyle} width={width} height={height}>
+          <svg style={svgStyle} width={width} height={height}>
             <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
               {data
                 .filter(d => !this.state.excluding[d.groupId])
