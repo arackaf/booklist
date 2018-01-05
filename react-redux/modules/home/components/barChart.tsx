@@ -21,6 +21,7 @@ export default class BarChart extends PureComponent<any, any> {
     this.state = { left: 0, excluding: {}, data: null, initialWidth: props.width };
   }
   el: any;
+  barMap = new Map();
   sized = ({ bounds }) => {
     if (bounds.left != this.state.left) {
       this.setState({ left: bounds.left });
@@ -102,6 +103,19 @@ export default class BarChart extends PureComponent<any, any> {
     });
   };
 
+  svgClick = evt => {
+    if (evt.target.tagName.toLowerCase() == "svg") {
+      if (Array.isArray(this.state.data)) {
+        this.state.data.forEach(d => {
+          let componentMaybe = this.barMap.get(d.groupId);
+          componentMaybe && componentMaybe.hideTooltip();
+        });
+      }
+    }
+  };
+
+  clearAllTooltips = () => {};
+
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 };
     let { subjectsLoaded, width, height, drilldown, chartIndex, header } = this.props;
@@ -150,12 +164,13 @@ export default class BarChart extends PureComponent<any, any> {
               </span>
             ) : null}
           </div>
-          <svg style={svgStyle} width={width} height={height}>
+          <svg onClick={this.svgClick} style={svgStyle} width={width} height={height}>
             <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
               {data
                 .filter(d => !this.state.excluding[d.groupId])
                 .map((d, i) => (
                   <Bar
+                    ref={el => this.barMap.set(d.groupId, el)}
                     drilldown={drilldown}
                     chartIndex={chartIndex}
                     removeBar={this.removeBar}
