@@ -89,12 +89,12 @@ export default class Bar extends PureComponent<any, any> {
     this.tooltip = tooltip;
     document.body.appendChild(tooltip);
   }
-  _showTooltip = evt => {
-    evt.persist();
-    this.manageTooltip(true, evt);
+  showTooltip = evt => {
+    evt && evt.persist();
+    this.manageTooltip(true);
   };
-  _hideTooltip = evt => {
-    evt.persist();
+  hideTooltip = evt => {
+    evt && evt.persist();
     this.manageTooltip(false);
   };
   _toggleTooltip = () => {
@@ -105,8 +105,8 @@ export default class Bar extends PureComponent<any, any> {
 
     return data.entries.length == 1 ? (
       <SingleBar
-        showTooltip={this._showTooltip}
-        hideTooltip={this._hideTooltip}
+        showTooltip={this.showTooltip}
+        hideTooltip={this.hideTooltip}
         toggleTooltip={this._toggleTooltip}
         ref={el => (this.el = el)}
         color={data.entries[0].color}
@@ -115,8 +115,8 @@ export default class Bar extends PureComponent<any, any> {
       />
     ) : (
       <MultiBar
-        showTooltip={this._showTooltip}
-        hideTooltip={this._hideTooltip}
+        showTooltip={this.showTooltip}
+        hideTooltip={this.hideTooltip}
         toggleTooltip={this._toggleTooltip}
         ref={el => (this.el = el)}
         {...{ height, width, x, graphWidth, data }}
