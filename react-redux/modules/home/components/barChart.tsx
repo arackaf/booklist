@@ -21,6 +21,7 @@ export default class BarChart extends PureComponent<any, any> {
     this.state = { left: 0, excluding: {}, data: null, initialWidth: props.width };
   }
   el: any;
+  barMap = new Map();
   sized = ({ bounds }) => {
     if (bounds.left != this.state.left) {
       this.setState({ left: bounds.left });
@@ -102,6 +103,23 @@ export default class BarChart extends PureComponent<any, any> {
     });
   };
 
+  topRef = el => {
+    el.addEventListener("touchstart", this.svgTouch);
+  };
+  clearOnTouch = new Set(["text", "h4", "div", "svg"]);
+  svgTouch = evt => {
+    if (this.clearOnTouch.has(evt.target.tagName.toLowerCase())) {
+      if (Array.isArray(this.state.data)) {
+        this.state.data.forEach(d => {
+          let componentMaybe = this.barMap.get(d.groupId);
+          componentMaybe && componentMaybe.hideTooltip();
+        });
+      }
+    }
+  };
+
+  clearAllTooltips = () => {};
+
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 };
     let { subjectsLoaded, width, height, drilldown, chartIndex, header } = this.props;
@@ -132,7 +150,12 @@ export default class BarChart extends PureComponent<any, any> {
 
     let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
     return (
-      <div ref={el => (this.el = el)}>
+      <div
+        ref={el => {
+          this.topRef(el);
+          this.el = el;
+        }}
+      >
         <div style={{ ...width, height }}>
           <div>
             <h4 style={{ display: "inline" }}>{header}</h4>
@@ -156,6 +179,7 @@ export default class BarChart extends PureComponent<any, any> {
                 .filter(d => !this.state.excluding[d.groupId])
                 .map((d, i) => (
                   <Bar
+                    ref={el => this.barMap.set(d.groupId, el)}
                     drilldown={drilldown}
                     chartIndex={chartIndex}
                     removeBar={this.removeBar}
