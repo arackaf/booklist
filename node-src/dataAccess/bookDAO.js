@@ -47,24 +47,6 @@ class BookDAO extends DAO {
     }
   }
 
-  async getBooksBySubjectList({ subjects, userId, gatherToParents }) {
-    let db = super.open(),
-      userIdToUse = userId || this.userId,
-      allPaths = subjects.map(s => `,${s},`).join("|");
-
-    if (gatherToParents) {
-      let childSubjects = await db
-        .collection("subjects")
-        .find({ path: { $regex: allPaths }, userId: userIdToUse }, { _id: 1 })
-        .toArray();
-      subjects.push(...childSubjects.map(s => "" + s._id));
-    }
-
-    return db
-      .collection("books")
-      .find({ subjects: { $in: subjects }, userId: userIdToUse }, { title: 1, subjects: 1 })
-      .toArray();
-  }
   async saveBook(book) {
     let db = await super.open();
     try {

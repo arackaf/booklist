@@ -10,6 +10,19 @@ import Axis from "./axis";
 
 import { getChildSubjectsSorted, computeSubjectParentId, RootApplicationType } from "applicationRoot/rootReducer";
 import ajaxUtil from "util/ajaxUtil";
+import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
+
+function getSubjectsList(subjectIds) {
+  return gqlGet(`query getBooksSubjects {
+    allBooks(
+      ${args(strArrArg("subjects_containsAny", subjectIds), boolArg("searchChildSubjects", 1))}
+    ){
+      Books{
+        subjects
+      }
+    }
+  }`);
+}
 
 @connect((state: RootApplicationType) => ({
   subjectHash: state.app.subjectHash,
@@ -62,8 +75,8 @@ export default class BarChart extends PureComponent<any, any> {
       }
     }
 
-    return ajaxUtil.post("/book/booksBySubjects", { subjects: subjectIds, gatherToParents: 1 }).then(resp => {
-      resp.results.forEach(item => {
+    return getSubjectsList(subjectIds).then(resp => {
+      resp.data.allBooks.Books.forEach(item => {
         let subjectsHeld = item.subjects
           .filter(_id => subjectHash[_id])
           .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
