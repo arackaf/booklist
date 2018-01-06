@@ -42,12 +42,6 @@ class bookController {
 
     this.send({ books, userId: this.request.user.id });
   }
-  async booksBySubjects(params) {
-    let bookDao = new BookDAO(this.request.user ? this.request.user.id : null),
-      books = await bookDao.getBooksBySubjectList({ ...params });
-
-    this.send({ results: books });
-  }
   async setRead({ _ids, isRead }) {
     let bookDao = new BookDAO(this.request.user.id);
     await bookDao.setRead(_ids, isRead);
