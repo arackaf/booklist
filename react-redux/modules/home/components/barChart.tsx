@@ -9,7 +9,7 @@ import Bar from "./bar";
 import Axis from "./axis";
 
 import { getChildSubjectsSorted, computeSubjectParentId, RootApplicationType } from "applicationRoot/rootReducer";
-import ajaxUtil from "util/ajaxUtil";
+
 import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
 
 function getSubjectsList(subjectIds) {
