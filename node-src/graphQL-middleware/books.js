@@ -26,11 +26,10 @@ function saveLocalImageToS3(imgPath, userId) {
 export default class BooksMiddleware {
   async queryPreprocess(root, args, context, ast) {
     args.userId = args.publicUserId || context.user.id;
-    if (args.PAGE_SIZE > 100) {
-      args.PAGE_SIZE = 100; //don't allow user to request too much data
+    if (args.PAGE_SIZE) {
+      //bump it so we know if there's more results to page
+      args.PAGE_SIZE++;
     }
-    //bump it so we know if there's more results to page
-    args.PAGE_SIZE++;
 
     let subjects = args.subjects_containsAny || [];
     if (args.searchChildSubjects && subjects.length) {
@@ -47,7 +46,7 @@ export default class BooksMiddleware {
   queryMiddleware(queryPacket, root, args, context, ast) {
     let { $project, $sort } = queryPacket;
     $project.titleLower = { $toLower: "$title" };
-    if (typeof $sort.title !== "undefined") {
+    if ($sort && typeof $sort.title !== "undefined") {
       $sort.titleLower = $sort.title;
       delete $sort.title;
     }
