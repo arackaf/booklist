@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Measure from "react-measure";
 
 import { isLoggedIn } from "reactStartup";
-import ajaxUtil from "util/ajaxUtil";
+
 import "d3-transition";
 
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";

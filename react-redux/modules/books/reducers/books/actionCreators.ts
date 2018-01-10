@@ -116,27 +116,6 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
       return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
     }
   });
-
-  return ajaxUtil.get(
-    "/book/searchBooks/",
-    nonEmptyProps({
-      version,
-      page: bookSearchState.page,
-      pageSize: bookSearchState.pageSize,
-      search: bookSearchState.search,
-      subjects: Object.keys(bookSearchState.subjects),
-      tags: Object.keys(bookSearchState.tags),
-      searchChildSubjects: bookSearchState.searchChildSubjects,
-      sort: bookSearchState.sort,
-      sortDirection: bookSearchState.sortDirection,
-      author: bookSearchState.author,
-      publisher: bookSearchState.publisher,
-      pages: bookSearchState.pages,
-      pagesOperator: bookSearchState.pagesOperator,
-      userId: publicUserId,
-      isRead: bookSearchState.isRead
-    })
-  );
 }
 
 export function expandBook(_id: string) {
