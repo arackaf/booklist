@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Modal } from "simple-react-bootstrap";
+import Modal from "simple-react-bootstrap/lib/modal";
 const { createSelector } = require("reselect");
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from "applicationRoot/components/bootstrapButton";
 import * as actionCreators from "../reducers/subjects/actionCreators";

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Modal } from "simple-react-bootstrap";
+import Modal from "simple-react-bootstrap/lib/modal";
 
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 import * as actionCreators from "../reducers/tags/actionCreators";

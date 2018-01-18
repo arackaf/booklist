@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import { Modal } from "simple-react-bootstrap";
+import Modal from "simple-react-bootstrap/lib/modal";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import SelectAvailable from "./availableTagsOrSubjects";
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
-import { NavBar } from "simple-react-bootstrap";
+import NavBar from "simple-react-bootstrap/lib/navBar";
 
 import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 

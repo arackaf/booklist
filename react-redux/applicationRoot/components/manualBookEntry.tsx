@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
-import { Modal } from "simple-react-bootstrap";
+import Modal from "simple-react-bootstrap/lib/modal";
 import ajaxUtil from "util/ajaxUtil";
 
 class ManualBookEntry extends Component<any, any> {

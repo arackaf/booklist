@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { NavBar } from "simple-react-bootstrap";
+import NavBar from "simple-react-bootstrap/lib/navBar";
 import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
 
