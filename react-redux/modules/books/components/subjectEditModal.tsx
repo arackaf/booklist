@@ -11,9 +11,9 @@ import ColorsPalette from "applicationRoot/components/colorsPalette";
 import { computeSubjectParentId, getEligibleParents } from "applicationRoot/rootReducer";
 
 const SubjectEditDeleteInfo = props => {
-  let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${props.affectedChildren > 1
-    ? "descendant subjects"
-    : "child subject"} which will also be deleted.`;
+  let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${
+    props.affectedChildren > 1 ? "descendant subjects" : "child subject"
+  } which will also be deleted.`;
 
   return (
     <div className="row">
