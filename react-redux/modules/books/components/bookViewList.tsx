@@ -165,16 +165,18 @@ export default class BookViewingList extends Component<mainSelectorType & action
               </div>
             ) : null}
 
-            {this.props.subjectsLoaded && this.props.tagsLoaded ? this.props.isGridView ? (
-              <GridView
-                editBook={this.editBook}
-                editBooksTags={this.editTagsForBook}
-                editBooksSubjects={this.editSubjectsForBook}
-                navBarHeight={this.state.navBarHeight}
-              />
-            ) : this.props.isBasicList ? (
-              <BasicListView editBook={this.editBook} />
-            ) : null : null}
+            {this.props.subjectsLoaded && this.props.tagsLoaded ? (
+              this.props.isGridView ? (
+                <GridView
+                  editBook={this.editBook}
+                  editBooksTags={this.editTagsForBook}
+                  editBooksSubjects={this.editSubjectsForBook}
+                  navBarHeight={this.state.navBarHeight}
+                />
+              ) : this.props.isBasicList ? (
+                <BasicListView editBook={this.editBook} />
+              ) : null
+            ) : null}
 
             {this.state.isEditingBook ? (
               <ManualBookEntry

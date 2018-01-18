@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { selectEntireBookSearchState, entireBookSearchStateType } from "modules/books/reducers/bookSearch/reducer";
-import { Modal } from "simple-react-bootstrap";
+import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
