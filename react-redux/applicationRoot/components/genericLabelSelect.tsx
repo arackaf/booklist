@@ -25,6 +25,7 @@ interface IPropsShape {
 class GenericLabelSelect extends Component<IPropsShape, any> {
   input: any;
   onSuggestionSelected: (evt: any, arg: any) => any;
+  state = { suggestions: [] };
   constructor() {
     super();
 
@@ -33,14 +34,19 @@ class GenericLabelSelect extends Component<IPropsShape, any> {
       setTimeout(() => this.input.blur(), 1);
     };
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.suggestions != this.props.suggestions && this.state.suggestions.length) {
+      this.setState({ suggestions: this.props.suggestions });
+    }
+  }
   render() {
     return (
       <div>
         <Autosuggest
           className="auto-suggest-label"
-          suggestions={this.props.suggestions}
-          onSuggestionsFetchRequested={() => void 0}
-          onSuggestionsClearRequested={() => void 0}
+          suggestions={this.state.suggestions}
+          onSuggestionsFetchRequested={({ value, reason }) => this.setState({ suggestions: this.props.suggestions })}
+          onSuggestionsClearRequested={() => this.setState({ suggestions: [] })}
           shouldRenderSuggestions={() => true}
           getSuggestionValue={getSuggestionValue}
           onSuggestionSelected={this.onSuggestionSelected}
