@@ -134,7 +134,6 @@
             padding: 0;
             margin-top: -2px;
             list-style-type: none;
-            border: 1px solid #aaa;
             background-color: #fff;
             border-radius: 2px;
             border-bottom-left-radius: 4px;
@@ -143,19 +142,28 @@
             max-height: 300px;
             overflow-y: auto;
         }
+        .react-autosuggest__suggestions-container--open {
+            border: 1px solid #aaa;
+        }
+
+        .react-autosuggest__suggestions-list {
+            padding-left: 5px;
+            padding-top: 3px;
+        }
 
         .react-autosuggest__suggestion {
             cursor: pointer;
             padding: 6px 6px;
             border-top: 1px solid white;
             border-bottom: 1px solid white;
+            list-style-type: none;
         }
 
         .react-autosuggest__suggestion > span {
             cursor: pointer;
         }
 
-        .react-autosuggest__suggestion--focused {
+        .react-autosuggest__suggestion--highlighted {
             border-top: 1px solid #aaa;
             border-bottom: 1px solid #aaa;
         }
