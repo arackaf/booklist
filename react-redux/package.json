@@ -50,7 +50,7 @@
     "react": "15.5.4",
     "react-addons-css-transition-group": "15.1.0",
     "react-autosuggest": "3.7.4",
-    "react-collapse": "4.0.2",
+    "react-collapse": "4.0.3",
     "react-dnd": "2.4.0",
     "react-dnd-html5-backend": "2.4.1",
     "react-dnd-touch-backend": "0.3.10",
