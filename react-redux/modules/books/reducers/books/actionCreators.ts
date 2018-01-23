@@ -226,7 +226,7 @@ export function saveEditingBook(book) {
           ) {
             updateBook(
               _id: "${book._id}",
-              Book: {
+              Updates: {
                 title: $title,
                 isbn: $isbn,
                 smallImage: $smallImage,
