@@ -150,30 +150,6 @@ class BookDAO extends DAO {
       super.dispose(db);
     }
   }
-  async setBooksSubjects(books, add, remove) {
-    let db = await super.open();
-    try {
-      await db
-        .collection("books")
-        .update(
-          { _id: { $in: books.map(_id => ObjectId(_id)) }, userId: this.userId },
-          { $addToSet: { subjects: { $each: add || [] } } },
-          { upsert: false, multi: true }
-        );
-
-      await db
-        .collection("books")
-        .update(
-          { _id: { $in: books.map(_id => ObjectId(_id)) }, userId: this.userId },
-          { $pullAll: { subjects: remove || [] } },
-          { upsert: false, multi: true }
-        );
-    } catch (errr) {
-      console.log(errr);
-    } finally {
-      super.dispose(db);
-    }
-  }
   async setBooksTags(books, add, remove) {
     let db = await super.open();
     try {
