@@ -8,10 +8,10 @@ export async function loadBooks(db, queryPacket) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
-    { $match },
+    { $match }, 
     { $project },
-    $sort ? { $sort } : null,
-    $skip != null ? { $skip } : null,
+    $sort ? { $sort } : null, 
+    $skip != null ? { $skip } : null, 
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
@@ -19,7 +19,7 @@ export async function loadBooks(db, queryPacket) {
     .collection("books")
     .aggregate(aggregateItems)
     .toArray();
-
+  
   await processHook(hooksObj, "Book", "adjustResults", Books);
   return Books;
 }
@@ -44,19 +44,19 @@ export default {
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
       let result = {};
 
-      if (queryPacket.$project) {
+      if (queryPacket.$project){
         result.Books = await loadBooks(db, queryPacket);
       }
 
-      if (queryPacket.metadataRequested.size) {
+      if (queryPacket.metadataRequested.size){
         result.Meta = {};
 
-        if (queryPacket.metadataRequested.get("count")) {
-          let countResults = await db
+        if (queryPacket.metadataRequested.get("count")){
+          let countResults = (await db
             .collection("books")
             .aggregate([{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }])
-            .toArray();
-
+            .toArray());
+            
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }
@@ -71,7 +71,7 @@ export default {
       let requestMap = parseRequestedFields(ast, "Book");
       let $project = getMongoProjection(requestMap, Book, args);
 
-      if ((await processHook(hooksObj, "Book", "beforeInsert", newObject, root, args, context, ast)) === false) {
+      if (await processHook(hooksObj, "Book", "beforeInsert", newObject, root, args, context, ast) === false){
         return { Book: null };
       }
       await db.collection("books").insert(newObject);
@@ -80,40 +80,74 @@ export default {
       let result = (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0];
       return {
         Book: result
-      };
+      }
     },
     async updateBook(root, args, context, ast) {
-      if (!args._id) {
+      if (!args._id){
         throw "No _id sent";
       }
       let db = await root.db;
-      let $match = { _id: ObjectId(args._id) };
-      let updates = getUpdateObject(args.Book || {}, Book);
+      let { $match, $project } = decontructGraphqlQuery({ _id: args._id }, ast, Book, "Book");
+      let updates = getUpdateObject(args.Updates || {}, Book);
 
       let res = await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast);
-      if (res === false) {
+      if (res === false){
         return { Book: null };
       }
-      if (updates.$set || updates.$inc || updates.$push || updates.$pull) {
+      if (updates.$set || updates.$inc || updates.$push || updates.$pull || updates.$addToSet) {
         await db.collection("books").update($match, updates);
       }
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
-
-      let requestMap = parseRequestedFields(ast, "Book");
-      let $project = getMongoProjection(requestMap, Book, args);
-
-      let result = (await loadBooks(db, { $match, $project, $limit: 1 }))[0];
+      
+      let result = $project ? (await loadBooks(db, { $match, $project, $limit: 1 }))[0] : null;
       return {
-        Book: result
+        Book: result,
+        success: true
       };
     },
+    async updateBooks(root, args, context, ast) {
+      let db = await root.db;
+      let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, Book, "Books");
+      let updates = getUpdateObject(args.Updates || {}, Book);
+
+      let res = await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast);
+      if (res === false) {
+        return { success: true };
+      }
+      if (updates.$set || updates.$inc || updates.$push || updates.$pull) {
+        await db.collection("books").update($match, updates, { multi: true });
+      }
+      await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
+      
+      let result = $project ? await loadBooks(db, { $match, $project }) : null;
+      return {
+        Books: result,
+        success: true
+      };
+    },
+    async updateBooksBulk(root, args, context, ast) {
+      let db = await root.db;
+      let { $match } = decontructGraphqlQuery(args.Match, ast, Book);
+      let updates = getUpdateObject(args.Updates || {}, Book);
+
+      let res = await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast);
+      if (res === false) {
+        return { success: true };
+      }
+      if (updates.$set || updates.$inc || updates.$push || updates.$pull) {
+        await db.collection("books").update($match, updates, { multi: true });
+      }
+      await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
+
+      return { success: true };
+    },    
     async deleteBook(root, args, context, ast) {
       if (!args._id) {
         throw "No _id sent";
       }
       let db = await root.db;
       let $match = { _id: ObjectId(args._id) };
-
+      
       let res = await processHook(hooksObj, "Book", "beforeDelete", $match, root, args, context, ast);
       if (res === false) {
         return false;
