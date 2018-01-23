@@ -62,7 +62,7 @@
     "mkdirp": "0.5.1",
     "moment": "^2.13.0",
     "mongo-graphql-starter": "0.6.0",
-    "mongodb": "2.0.39",
+    "mongodb": "2.2.34",
     "multer": "1.1.0",
     "nodemailer": "2.3.0",
     "nodemailer-smtp-transport": "2.4.1",
