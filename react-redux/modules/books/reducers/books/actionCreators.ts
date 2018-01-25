@@ -193,8 +193,7 @@ export function setBooksSubjects(books, add, remove) {
   return function(dispatch, getState) {
     return Promise.all([
       client.request(
-        `
-        mutation updateBooksSubjects($_ids: [String], $add: [String], $remove: [String]) {
+        `mutation updateBooksSubjects($_ids: [String], $add: [String], $remove: [String]) {
           remove: updateBooks(
             _ids: $_ids,
             Updates: { subjects_PULL: $remove }
@@ -213,9 +212,22 @@ export function setBooksSubjects(books, add, remove) {
 
 export function setBooksTags(books, add, remove) {
   return function(dispatch, getState) {
-    return ajaxUtil.post("/bookBulk/setTags", { books, add, remove }, resp => {
-      dispatch({ type: SET_BOOKS_TAGS, books, add, remove });
-    });
+    return Promise.all([
+      client.request(
+        `mutation updateBooksTags($_ids: [String], $add: [String], $remove: [String]) {
+            remove: updateBooks(
+              _ids: $_ids,
+              Updates: { tags_PULL: $remove }
+            ) { success }
+  
+            add: updateBooks(
+              _ids: $_ids,
+              Updates: { tags_ADDTOSET: $add }
+            ) { success }          
+          }`,
+        { _ids: books, add, remove }
+      )
+    ]).then(() => dispatch({ type: SET_BOOKS_TAGS, books, add, remove }));
   };
 }
 
