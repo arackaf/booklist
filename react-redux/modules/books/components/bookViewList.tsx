@@ -23,6 +23,48 @@ import { selectBookSearchUiView, bookSearchUiViewType } from "../reducers/bookSe
 
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
+import { Client, query } from "micro-graphql-react";
+
+const client = new Client({
+  endpoint: "/graphql",
+  fetchOptions: { credentials: "include" }
+});
+
+@query(client, props => ({
+  query: `
+    query ALL_BOOKS ($page: Int) {
+      allBooks(PAGE: $page, PAGE_SIZE: 3) {
+        Books {
+          _id
+          title
+        }
+      }
+    }`,
+  variables: {
+    page: props.page
+  }
+}))
+class BasicQueryWithVariables extends Component<any, any> {
+  render() {
+    let { loading, loaded, data, error } = this.props;
+    return (
+      <div>
+        {loading ? <div>LOADING</div> : null}
+        {loaded ? <div>LOADED</div> : null}
+        {data ? <ul>{data.allBooks.Books.map(book => <li key={book._id}>{book.title}</li>)}</ul> : null}
+        {error ? (
+          <div>
+            {error
+              .map(e => e.message)
+              .join(",")
+              .toString()}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+}
+
 const ManualBookEntry = Loadable({
   loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
   loading: ComponentLoading,
@@ -106,7 +148,8 @@ export default class BookViewingList extends Component<mainSelectorType & action
     booksTagModifying: null,
     isEditingBook: false,
     editingBookSaving: false,
-    editingBook: null
+    editingBook: null,
+    page: 1
   };
   editTags = () => this.setState({ tagEditModalOpen: true });
   stopEditingTags = () => this.setState({ tagEditModalOpen: false });
@@ -159,6 +202,14 @@ export default class BookViewingList extends Component<mainSelectorType & action
             navBarSized={this.navBarSized}
           />
           <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
+            <br />
+            <br />
+            <BasicQueryWithVariables page={this.state.page} />
+            <br />
+            <br />
+            <br />
+            <br />
+
             {!this.props.booksList.length && !this.props.booksLoading ? (
               <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
                 No books found
