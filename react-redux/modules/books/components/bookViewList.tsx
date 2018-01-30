@@ -23,7 +23,7 @@ import { selectBookSearchUiView, bookSearchUiViewType } from "../reducers/bookSe
 
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
-import { Client, query } from "micro-graphql-react";
+import { Client, query, mutation } from "micro-graphql-react";
 
 const client = new Client({
   endpoint: "/graphql",
@@ -32,32 +32,54 @@ const client = new Client({
 
 @query(client, props => ({
   query: `
-    query ALL_BOOKS ($page: Int) {
-      allBooks(PAGE: $page, PAGE_SIZE: 3) {
-        Books {
-          _id
-          title
+    query ALL_BOOKS {
+      allBooks(PAGE: 1, PAGE_SIZE: 3) {
+        Books { 
+          _id 
+          title 
         }
       }
-    }`,
-  variables: {
-    page: props.page
-  }
+    }`
 }))
-class BasicQueryWithVariables extends Component<any, any> {
+@mutation(
+  client,
+  `mutation modifyBook($_id: String, $title: String) {
+    updateBook(_id: $_id, Updates: { title: $title }) {
+      success
+    }
+  }`
+)
+class MutationAndQuery extends Component<any, any> {
+  state = { editingId: "", editingOriginaltitle: "" };
+  el: any;
+  edit = book => {
+    this.setState({ editingId: book._id, editingOriginaltitle: book.title });
+  };
   render() {
-    let { loading, loaded, data, error } = this.props;
+    let { loading, loaded, data, reload, running, finished, runMutation } = this.props;
+    let { editingId, editingOriginaltitle } = this.state;
     return (
       <div>
         {loading ? <div>LOADING</div> : null}
         {loaded ? <div>LOADED</div> : null}
-        {data ? <ul>{data.allBooks.Books.map(book => <li key={book._id}>{book.title}</li>)}</ul> : null}
-        {error ? (
+        <button onClick={reload}>Reload</button>
+        {data ? (
+          <ul>
+            {data.allBooks.Books.map(book => (
+              <li key={book._id}>
+                {book.title}
+                <button onClick={() => this.edit(book)}> edit</button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {editingId ? (
           <div>
-            {error
-              .map(e => e.message)
-              .join(",")
-              .toString()}
+            {running ? <div>RUNNING</div> : null}
+            {finished ? <div>SAVED</div> : null}
+            <input defaultValue={editingOriginaltitle} ref={el => (this.el = el)} placeholder="New title here!" />
+            <button onClick={() => runMutation({ _id: editingId, title: this.el.value })}>Save</button>
           </div>
         ) : null}
       </div>
@@ -204,7 +226,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
           <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
             <br />
             <br />
-            <BasicQueryWithVariables page={this.state.page} />
+            <MutationAndQuery />
             <br />
             <br />
             <br />
