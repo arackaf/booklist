@@ -27,19 +27,23 @@ import { Client, query, mutation } from "micro-graphql-react";
 
 const client = new Client({
   endpoint: "/graphql",
-  fetchOptions: { credentials: "include" }
+  fetchOptions: { credentials: "include" },
+  cacheSize: 3
 });
 
 @query(client, props => ({
   query: `
-    query ALL_BOOKS {
-      allBooks(PAGE: 1, PAGE_SIZE: 3) {
+    query ALL_BOOKS ($page: Int) {
+      allBooks(PAGE: $page, PAGE_SIZE: 3) {
         Books { 
           _id 
           title 
         }
       }
-    }`
+    }`,
+  variables: {
+    page: props.page
+  }
 }))
 @mutation(
   client,
@@ -56,12 +60,12 @@ class MutationAndQuery extends Component<any, any> {
     this.setState({ editingId: book._id, editingOriginaltitle: book.title });
   };
   render() {
-    let { loading, loaded, data, reload, running, finished, runMutation } = this.props;
+    let { loading, loaded, data, reload, running, finished, runMutation, page } = this.props;
     let { editingId, editingOriginaltitle } = this.state;
     return (
       <div>
         {loading ? <div>LOADING</div> : null}
-        {loaded ? <div>LOADED</div> : null}
+        {loaded ? <div>LOADED {page}</div> : null}
         <button onClick={reload}>Reload</button>
         {data ? (
           <ul>
@@ -171,7 +175,9 @@ export default class BookViewingList extends Component<mainSelectorType & action
     isEditingBook: false,
     editingBookSaving: false,
     editingBook: null,
-    page: 1
+    page: 1,
+    pageA: 1,
+    pageB: 1
   };
   editTags = () => this.setState({ tagEditModalOpen: true });
   stopEditingTags = () => this.setState({ tagEditModalOpen: false });
@@ -226,7 +232,13 @@ export default class BookViewingList extends Component<mainSelectorType & action
           <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
             <br />
             <br />
-            <MutationAndQuery />
+            <button onClick={() => this.setState((state, props) => ({ pageA: state.pageA - 1 }))}>A prev</button>
+            <button onClick={() => this.setState((state, props) => ({ pageA: state.pageA + 1 }))}>A next</button>
+            <button onClick={() => this.setState((state, props) => ({ pageB: state.pageB - 1 }))}>B prev</button>
+            <button onClick={() => this.setState((state, props) => ({ pageB: state.pageB + 1 }))}>B next</button>
+
+            <MutationAndQuery page={this.state.pageA} />
+            <MutationAndQuery page={this.state.pageB} />
             <br />
             <br />
             <br />
