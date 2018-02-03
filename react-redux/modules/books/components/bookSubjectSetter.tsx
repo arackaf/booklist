@@ -21,24 +21,20 @@ interface ILocalProps {
 
 @mutation(
   graphqlClient,
-  `mutation updateBooksSubjects($_ids: [String], $add: [String], $remove: [String]) {
+  `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
     remove: updateBooks(
-      _ids: $_ids,
+      _ids: $books,
       Updates: { subjects_PULL: $remove }
     ) { success }
 
     add: updateBooks(
-      _ids: $_ids,
+      _ids: $books,
       Updates: { subjects_ADDTOSET: $add }
     ) { success }          
   }`
 )
-@connect(selectStackedSubjects, (dispatch: any) => ({
-  saved({ _ids, add, remove }) {
-    dispatch({ type: SET_BOOKS_SUBJECTS, books: _ids, add, remove });
-  }
-}))
-export default class BookSubjectSetter extends Component<StackedSubjectsType & ILocalProps & { runMutation: any; saved: any; running: any }, any> {
+@connect(selectStackedSubjects)
+export default class BookSubjectSetter extends Component<StackedSubjectsType & ILocalProps & { runMutation: any; dispatch: any; running: any }, any> {
   state = {
     currentTab: "subjects",
     addingSubjects: [],
@@ -48,9 +44,9 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & I
   };
 
   setBooksSubjects = () => {
-    let args = { _ids: this.props.modifyingBooks.map(b => b._id), add: this.state.addingSubjects, remove: this.state.removingSubjects };
+    let args = { books: this.props.modifyingBooks.map(b => b._id), add: this.state.addingSubjects, remove: this.state.removingSubjects };
     Promise.resolve(this.props.runMutation(args)).then(() => {
-      this.props.saved(args);
+      this.props.dispatch({ type: SET_BOOKS_SUBJECTS, ...args });
       this.props.onDone();
     });
   };
