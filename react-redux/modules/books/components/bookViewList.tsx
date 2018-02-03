@@ -31,8 +31,10 @@ const client = new Client({
   cacheSize: 3
 });
 
-@query(client, props => ({
-  query: `
+@query(
+  client,
+  props => ({
+    query: `
     query ALL_BOOKS ($page: Int) {
       allBooks(PAGE: $page, PAGE_SIZE: 3) {
         Books { 
@@ -41,10 +43,12 @@ const client = new Client({
         }
       }
     }`,
-  variables: {
-    page: props.page
-  }
-}))
+    variables: {
+      page: props.page
+    }
+  }),
+  { shouldQueryUpdate: ({ props }) => props.page % 2 }
+)
 @mutation(
   client,
   `mutation modifyBook($_id: String, $title: String) {
