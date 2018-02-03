@@ -23,6 +23,78 @@ import { selectBookSearchUiView, bookSearchUiViewType } from "../reducers/bookSe
 
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
+import { Client, query, mutation } from "micro-graphql-react";
+
+const client = new Client({
+  endpoint: "/graphql",
+  fetchOptions: { credentials: "include" },
+  cacheSize: 3
+});
+
+@query(
+  client,
+  props => ({
+    query: `
+    query ALL_BOOKS ($page: Int) {
+      allBooks(PAGE: $page, PAGE_SIZE: 3) {
+        Books { 
+          _id 
+          title 
+        }
+      }
+    }`,
+    variables: {
+      page: props.page
+    }
+  }),
+  { shouldQueryUpdate: ({ props }) => props.page % 2 }
+)
+@mutation(
+  client,
+  `mutation modifyBook($_id: String, $title: String) {
+    updateBook(_id: $_id, Updates: { title: $title }) {
+      success
+    }
+  }`
+)
+class MutationAndQuery extends Component<any, any> {
+  state = { editingId: "", editingOriginaltitle: "" };
+  el: any;
+  edit = book => {
+    this.setState({ editingId: book._id, editingOriginaltitle: book.title });
+  };
+  render() {
+    let { loading, loaded, data, reload, running, finished, runMutation, page } = this.props;
+    let { editingId, editingOriginaltitle } = this.state;
+    return (
+      <div>
+        {loading ? <div>LOADING</div> : null}
+        {loaded ? <div>LOADED {page}</div> : null}
+        <button onClick={reload}>Reload</button>
+        {data ? (
+          <ul>
+            {data.allBooks.Books.map(book => (
+              <li key={book._id}>
+                {book.title}
+                <button onClick={() => this.edit(book)}> edit</button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {editingId ? (
+          <div>
+            {running ? <div>RUNNING</div> : null}
+            {finished ? <div>SAVED</div> : null}
+            <input defaultValue={editingOriginaltitle} ref={el => (this.el = el)} placeholder="New title here!" />
+            <button onClick={() => runMutation({ _id: editingId, title: this.el.value })}>Save</button>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+}
+
 const ManualBookEntry = Loadable({
   loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
   loading: ComponentLoading,
@@ -106,7 +178,10 @@ export default class BookViewingList extends Component<mainSelectorType & action
     booksTagModifying: null,
     isEditingBook: false,
     editingBookSaving: false,
-    editingBook: null
+    editingBook: null,
+    page: 1,
+    pageA: 1,
+    pageB: 1
   };
   editTags = () => this.setState({ tagEditModalOpen: true });
   stopEditingTags = () => this.setState({ tagEditModalOpen: false });
@@ -159,6 +234,20 @@ export default class BookViewingList extends Component<mainSelectorType & action
             navBarSized={this.navBarSized}
           />
           <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
+            <br />
+            <br />
+            <button onClick={() => this.setState((state, props) => ({ pageA: state.pageA - 1 }))}>A prev</button>
+            <button onClick={() => this.setState((state, props) => ({ pageA: state.pageA + 1 }))}>A next</button>
+            <button onClick={() => this.setState((state, props) => ({ pageB: state.pageB - 1 }))}>B prev</button>
+            <button onClick={() => this.setState((state, props) => ({ pageB: state.pageB + 1 }))}>B next</button>
+
+            <MutationAndQuery page={this.state.pageA} />
+            <MutationAndQuery page={this.state.pageB} />
+            <br />
+            <br />
+            <br />
+            <br />
+
             {!this.props.booksList.length && !this.props.booksLoading ? (
               <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
                 No books found

@@ -77,6 +77,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   let [sortField, sortDirection] = bindableSortValue.split("|");
   let sortObject = `{ ${sortField}: ${sortDirection == "asc" ? 1 : -1} }`;
 
+  return { results: [], count: 0 };
   return gqlGet(`query ALL_BOOKS_V_${version} {
     allBooks(
       PAGE: ${bookSearchState.page}
