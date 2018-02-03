@@ -189,27 +189,6 @@ export const toggleCheckAll = () => ({ type: TOGGLE_CHECK_ALL });
 
 const client = new GraphQLClient("/graphql", { credentials: "include" });
 
-export function setBooksSubjects(books, add, remove) {
-  return function(dispatch, getState) {
-    return Promise.all([
-      client.request(
-        `mutation updateBooksSubjects($_ids: [String], $add: [String], $remove: [String]) {
-          remove: updateBooks(
-            _ids: $_ids,
-            Updates: { subjects_PULL: $remove }
-          ) { success }
-
-          add: updateBooks(
-            _ids: $_ids,
-            Updates: { subjects_ADDTOSET: $add }
-          ) { success }          
-        }`,
-        { _ids: books, add, remove }
-      )
-    ]).then(() => dispatch({ type: SET_BOOKS_SUBJECTS, books, add, remove }));
-  };
-}
-
 export function setBooksTags(books, add, remove) {
   return function(dispatch, getState) {
     return Promise.all([

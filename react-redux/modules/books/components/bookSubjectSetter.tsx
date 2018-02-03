@@ -5,33 +5,48 @@ import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstra
 import Modal from "simple-react-bootstrap/lib/modal";
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { setBooksSubjects } from "modules/books/reducers/books/actionCreators";
 import { filterSubjects } from "modules/books/reducers/subjects/reducer";
 import { selectStackedSubjects, StackedSubjectsType } from "modules/books/reducers/subjects/reducer";
 const { createSelector } = require("reselect");
+
+import { graphqlClient } from "reactStartup";
+import { mutation } from "micro-graphql-react";
+
+import { SET_BOOKS_SUBJECTS } from "../reducers/books/actionNames";
 
 interface ILocalProps {
   modifyingBooks: any[];
   onDone: any;
 }
 
-@connect(selectStackedSubjects, { setBooksSubjects })
-export default class BookSubjectSetter extends Component<StackedSubjectsType & { setBooksSubjects } & ILocalProps, any> {
+@mutation(
+  graphqlClient,
+  `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
+    remove: updateBooks(
+      _ids: $books,
+      Updates: { subjects_PULL: $remove }
+    ) { success }
+
+    add: updateBooks(
+      _ids: $books,
+      Updates: { subjects_ADDTOSET: $add }
+    ) { success }          
+  }`
+)
+@connect(selectStackedSubjects)
+export default class BookSubjectSetter extends Component<StackedSubjectsType & ILocalProps & { runMutation: any; dispatch: any; running: any }, any> {
   state = {
     currentTab: "subjects",
     addingSubjects: [],
     removingSubjects: [],
     addingSubjectSearch: "",
-    removingSubjectSearch: "",
-    saving: false
+    removingSubjectSearch: ""
   };
 
   setBooksSubjects = () => {
-    this.setState({ saving: true });
-    Promise.resolve(
-      this.props.setBooksSubjects(this.props.modifyingBooks.map(b => b._id), this.state.addingSubjects, this.state.removingSubjects)
-    ).then(() => {
-      this.setState({ saving: false });
+    let args = { books: this.props.modifyingBooks.map(b => b._id), add: this.state.addingSubjects, remove: this.state.removingSubjects };
+    Promise.resolve(this.props.runMutation(args)).then(() => {
+      this.props.dispatch({ type: SET_BOOKS_SUBJECTS, ...args });
       this.props.onDone();
     });
   };
@@ -161,7 +176,7 @@ export default class BookSubjectSetter extends Component<StackedSubjectsType & {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <AjaxButton preset="primary" running={this.state.saving} runningText="Setting" onClick={this.setBooksSubjects}>
+          <AjaxButton preset="primary" running={this.props.running} runningText="Setting" onClick={this.setBooksSubjects}>
             Set
           </AjaxButton>
           <BootstrapButton preset="" onClick={this.props.onDone}>
