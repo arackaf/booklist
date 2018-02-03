@@ -6,7 +6,12 @@ import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
-import compress from "graphql-query-compress";
+import { Client } from "micro-graphql-react";
+
+export const graphqlClient = new Client({
+  endpoint: "/graphql",
+  fetchOptions: { credentials: "include" }
+});
 
 import {
   setDesktop,
