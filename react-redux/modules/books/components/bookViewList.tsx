@@ -4,23 +4,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
-import GV from "./bookViewList-grid";
-const GridView: any = GV;
-
-import BLV from "./bookViewList-basicList";
-const BasicListView: any = BLV;
+import DBR from "./displayBookResults";
+const DisplayBookResults: any = DBR;
 
 import BMB from "./booksMenuBar";
 const BooksMenuBar: any = BMB;
 
-import * as actionCreatorsBooks from "../reducers/books/actionCreators";
-import * as actionCreatorsSearch from "../reducers/bookSearch/actionCreators";
-import Loading from "applicationRoot/components/loading";
+import BooksLoading from "./booksLoading";
 import Loadable from "react-loadable";
 
 import { BookListType, selectBookList, selectBookSelection, BookSelectionType } from "../reducers/books/reducer";
-import { selectBookSearchUiView, bookSearchUiViewType } from "../reducers/bookSearch/reducer";
-
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
 import { graphqlClient, MutationType } from "reactStartup";
@@ -63,37 +56,16 @@ const BookSearchModal = Loadable({
   delay: 200
 });
 
-type mainSelectorType = bookSearchUiViewType &
-  BookListType &
-  BookSelectionType & {
-    subjectsLoaded: boolean;
-    tagsLoaded: boolean;
-    editingBookSearchFilters: boolean;
-  };
+type mainSelectorType = BookListType & BookSelectionType & { editingBookSearchFilters: boolean };
 
-const mainSelector = createSelector<
-  BooksModuleType,
-  mainSelectorType,
-  AppType,
-  TagsType,
-  bookSearchType,
-  BookListType,
-  BookSelectionType,
-  bookSearchUiViewType
->(
-  state => state.app,
-  state => state.booksModule.tags,
+const mainSelector = createSelector<BooksModuleType, mainSelectorType, bookSearchType, BookListType, BookSelectionType>(
   state => state.booksModule.bookSearch,
   selectBookList,
   selectBookSelection,
-  selectBookSearchUiView,
-  (app, tags, bookSearch, books, bookSelection, bookSearchUi) => {
+  (bookSearch, books, bookSelection) => {
     return {
-      subjectsLoaded: app.subjectsLoaded,
-      tagsLoaded: tags.loaded,
       editingBookSearchFilters: bookSearch.editingFilters,
       ...books,
-      ...bookSearchUi,
       ...bookSelection
     };
   }
@@ -173,9 +145,11 @@ export default class BookViewingList extends Component<mainSelectorType & Mutati
         ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
         : "";
 
+    let { editBook, editTagsForBook, editSubjectsForBook } = this;
+
     return (
       <div style={{ position: "relative" }}>
-        {this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null}
+        <BooksLoading />
         <div className="panel panel-default" style={{ margin: "10px" }}>
           <BooksMenuBar
             startTagModification={this.editTagsForSelectedBooks}
@@ -191,18 +165,7 @@ export default class BookViewingList extends Component<mainSelectorType & Mutati
               </div>
             ) : null}
 
-            {this.props.subjectsLoaded && this.props.tagsLoaded ? (
-              this.props.isGridView ? (
-                <GridView
-                  editBook={this.editBook}
-                  editBooksTags={this.editTagsForBook}
-                  editBooksSubjects={this.editSubjectsForBook}
-                  navBarHeight={this.state.navBarHeight}
-                />
-              ) : this.props.isBasicList ? (
-                <BasicListView editBook={this.editBook} />
-              ) : null
-            ) : null}
+            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={this.state.navBarHeight} />
 
             {this.state.isEditingBook ? (
               <ManualBookEntry
