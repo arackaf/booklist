@@ -23,6 +23,10 @@ import { selectBookSearchUiView, bookSearchUiViewType } from "../reducers/bookSe
 
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
+import { graphqlClient, MutationType } from "reactStartup";
+import { mutation } from "micro-graphql-react";
+import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
+
 const ManualBookEntry = Loadable({
   loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
   loading: ComponentLoading,
@@ -59,7 +63,6 @@ const BookSearchModal = Loadable({
   delay: 200
 });
 
-type actionsType = typeof actionCreatorsBooks & typeof actionCreatorsSearch;
 type mainSelectorType = bookSearchUiViewType &
   BookListType &
   BookSelectionType & {
@@ -96,8 +99,28 @@ const mainSelector = createSelector<
   }
 );
 
-@connect(mainSelector, { ...actionCreatorsBooks, ...actionCreatorsSearch })
-export default class BookViewingList extends Component<mainSelectorType & actionsType, any> {
+@mutation(
+  graphqlClient,
+  `mutation updateBook($_id: String, $book: BookMutationInput) {
+    updateBook(
+      _id: $_id,
+      Updates: $book
+    ) {
+      Book {
+        _id,
+        title,
+        isbn,
+        smallImage,
+        pages,
+        publisher,
+        publicationDate,
+        authors
+      }
+    }
+  }`
+)
+@connect(mainSelector)
+export default class BookViewingList extends Component<mainSelectorType & MutationType & { dispatch: any }, any> {
   state = {
     navBarHeight: null,
     tagEditModalOpen: false,
@@ -105,7 +128,6 @@ export default class BookViewingList extends Component<mainSelectorType & action
     booksSubjectModifying: null,
     booksTagModifying: null,
     isEditingBook: false,
-    editingBookSaving: false,
     editingBook: null
   };
   editTags = () => this.setState({ tagEditModalOpen: true });
@@ -128,13 +150,17 @@ export default class BookViewingList extends Component<mainSelectorType & action
     });
   stopEditingBook = () => this.setState({ isEditingBook: false });
   saveEditingBook = book => {
-    this.setState({ editingBookSaving: true });
-    Promise.resolve(this.props.saveEditingBook(book)).then(() => {
+    let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors"];
+    let pages = parseInt(book.pages, 10);
+    book.pages = isNaN(pages) ? void 0 : pages;
+
+    let bookToUse = propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
+    Promise.resolve(this.props.runMutation({ _id: book._id, book: bookToUse })).then(resp => {
       this.setState({
-        editingBookSaving: false,
         isEditingBook: false,
         editingBook: null
       });
+      this.props.dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
     });
   };
 
@@ -184,7 +210,7 @@ export default class BookViewingList extends Component<mainSelectorType & action
                 dragTitle={dragTitle}
                 bookToEdit={editingBook}
                 isOpen={this.state.isEditingBook}
-                isSaving={this.state.editingBookSaving}
+                isSaving={this.props.running}
                 isSaved={false}
                 saveBook={this.saveEditingBook}
                 saveMessage={"Saved"}
