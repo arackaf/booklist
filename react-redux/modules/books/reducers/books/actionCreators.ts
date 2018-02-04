@@ -22,8 +22,6 @@ import {
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
-import { request, GraphQLClient } from "graphql-request";
-
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
@@ -186,70 +184,3 @@ function executeSetRead(dispatch, ids, value) {
 export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });
 
 export const toggleCheckAll = () => ({ type: TOGGLE_CHECK_ALL });
-
-const client = new GraphQLClient("/graphql", { credentials: "include" });
-
-export function saveEditingBook(book) {
-  return function(dispatch, getState) {
-    let pages = parseInt(book.pages);
-    if (isNaN(pages)) {
-      pages = null;
-    }
-
-    return client
-      .request(
-        `
-          mutation updateBook(
-            $title: String,
-            $isbn: String,
-            $smallImage: String,
-            $pages: Int,
-            $publisher: String,
-            $publicationDate: String,
-            $authors: [String]
-          ) {
-            updateBook(
-              _id: "${book._id}",
-              Updates: {
-                title: $title,
-                isbn: $isbn,
-                smallImage: $smallImage,
-                pages: $pages,
-                publisher: $publisher,
-                publicationDate: $publicationDate,
-                authors: $authors
-              }
-            ) {
-              Book {
-                _id,
-                title,
-                isbn,
-                smallImage,
-                pages,
-                publisher,
-                publicationDate,
-                authors
-              }
-            }
-          }
-      `,
-        {
-          title: book.title,
-          isbn: book.isbn,
-          smallImage: book.smallImage,
-          pages,
-          publisher: book.publisher,
-          publicationDate: book.publicationDate,
-          authors: book.authors || []
-        }
-      )
-      .then((resp: any) => {
-        if (resp.updateBook && resp.updateBook.Book) {
-          dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-}
