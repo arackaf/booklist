@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import BookEntryItem from "./bookEntryItem";
 import { connect } from "react-redux";
-import ajaxUtil from "util/ajaxUtil";
 
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
@@ -14,6 +13,9 @@ import Loadable from "react-loadable";
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
 import { scanReducerType } from "modules/scan/reducers/reducer";
+
+import { graphqlClient, MutationType } from "reactStartup";
+import { mutation } from "micro-graphql-react";
 
 declare var webSocketAddress: any;
 
@@ -32,8 +34,14 @@ const defaultEmptyBook = () => ({
   authors: [""]
 });
 
+@mutation(
+  graphqlClient,
+  `mutation createBook($book: BookInput) {
+    createBook(Book: $book) { Book { _id }, success }
+  }`
+)
 @connect(state => state.scanModule, { ...bookEntryActionCreators })
-export default class BookEntryList extends Component<scanReducerType & typeof bookEntryActionCreators, any> {
+export default class BookEntryList extends Component<scanReducerType & typeof bookEntryActionCreators & MutationType, any> {
   refs: any;
   ws: any;
   state: any = { showIncomingQueue: false, showScanInstructions: false };
@@ -46,7 +54,6 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
   manuallyEnterBook() {
     this.setState({
       inManualEntry: true,
-      isSavingManual: false,
       manualSaved: false,
       manualBook: defaultEmptyBook()
     });
@@ -55,10 +62,11 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
     this.setState({ inManualEntry: false, bookToEdit: null });
   }
   saveNewBook(book) {
-    this.setState({ isSavingManual: true });
-    ajaxUtil.post("/book/saveManual", { book }).then(() => {
+    let pages = parseInt(book.pages, 10);
+    book.pages = isNaN(pages) ? void 0 : pages;
+
+    this.props.runMutation({ book }).then(() => {
       this.setState({
-        isSavingManual: false,
         manualSaved: true,
         manualBook: defaultEmptyBook()
       });
@@ -175,7 +183,7 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
             dragTitle={"Click or drag to upload a cover image. The uploaded image will be scaled down as needed"}
             bookToEdit={this.state.manualBook}
             isOpen={this.state.inManualEntry}
-            isSaving={this.state.isSavingManual}
+            isSaving={this.props.running}
             isSaved={this.state.manualSaved}
             saveBook={book => this.saveNewBook(book)}
             startOver={() => this.manuallyEnterBook()}

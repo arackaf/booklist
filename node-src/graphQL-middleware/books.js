@@ -23,6 +23,12 @@ function saveLocalImageToS3(imgPath, userId) {
   });
 }
 
+function clean(book) {
+  let propsToTrim = ["title", "isbn", "publisher", "publicationDate"];
+  propsToTrim.forEach(prop => (book[prop] = (book[prop] || "").substr(0, 500)));
+  book.authors = (book.authors || []).filter(a => a).map(a => ("" + a).substr(0, 500));
+}
+
 export default class BooksMiddleware {
   async queryPreprocess(root, args, context, ast) {
     args.userId = args.publicUserId || context.user.id;
@@ -51,9 +57,16 @@ export default class BooksMiddleware {
       delete $sort.title;
     }
   }
-  beforeInsert(objToBeInserted, root, args, context, ast) {}
+  async beforeInsert(book, root, args, context, ast) {
+    clean(book);
+    if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
+      book.smallImage = await saveLocalImageToS3(book.smallImage, context.user.id);
+    }
+    book.userId = context.user.id;
+  }
   afterInsert(newObj, root, args, context, ast) {}
   async beforeUpdate(match, updates, root, args, context, ast) {
+    clean(updates.$set);
     match.userId = context.user.id;
     if (updates.$set && updates.$set.smallImage && /^\/uploads\//.test(updates.$set.smallImage)) {
       updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, context.user.id);
