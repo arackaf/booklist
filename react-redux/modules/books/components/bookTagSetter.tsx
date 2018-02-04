@@ -6,31 +6,49 @@ import Modal from "simple-react-bootstrap/lib/modal";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { setBooksTags } from "modules/books/reducers/books/actionCreators";
 import { filterTags } from "modules/books/reducers/tags/reducer";
 import { selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
-const { createSelector } = require("reselect");
+
+import { graphqlClient } from "reactStartup";
+import { mutation } from "micro-graphql-react";
+
+import { SET_BOOKS_TAGS } from "../reducers/books/actionNames";
 
 interface ILocalProps {
   modifyingBooks: any[];
   onDone: any;
 }
 
-@connect(selectEntireTagsState, { setBooksTags })
-export default class BookTagSetterDesktopUnConnected extends Component<TagsStateType & { setBooksTags } & ILocalProps, any> {
+type MutationType = { runMutation: any; dispatch: any; running: any };
+
+@mutation(
+  graphqlClient,
+  `mutation updateBooksTags($books: [String], $add: [String], $remove: [String]) {
+    remove: updateBooks(
+      _ids: $books,
+      Updates: { tags_PULL: $remove }
+    ) { success }
+
+    add: updateBooks(
+      _ids: $books,
+      Updates: { tags_ADDTOSET: $add }
+    ) { success }          
+  }`
+)
+@connect(selectEntireTagsState)
+export default class BookTagSetterDesktopUnConnected extends Component<TagsStateType & ILocalProps & MutationType, any> {
   state = {
     currentTab: "tags",
     addingTags: [],
     removingTags: [],
     addingTagSearch: "",
-    removingTagSearch: "",
-    saving: false
+    removingTagSearch: ""
   };
 
   setBooksTags = () => {
-    this.setState({ saving: true });
-    Promise.resolve(this.props.setBooksTags(this.props.modifyingBooks.map(b => b._id), this.state.addingTags, this.state.removingTags)).then(() => {
-      this.setState({ saving: false });
+    let args = { books: this.props.modifyingBooks.map(b => b._id), add: this.state.addingTags, remove: this.state.removingTags };
+    Promise.resolve(this.props.runMutation(args)).then(() => {
+      this.props.dispatch({ type: SET_BOOKS_TAGS, ...args });
       this.props.onDone();
     });
   };
@@ -157,7 +175,7 @@ export default class BookTagSetterDesktopUnConnected extends Component<TagsState
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <AjaxButton preset="primary" running={this.state.saving} runningText="Setting" onClick={() => this.setBooksTags()}>
+          <AjaxButton preset="primary" running={this.props.running} runningText="Setting" onClick={this.setBooksTags}>
             Set
           </AjaxButton>
           <BootstrapButton preset="" onClick={this.props.onDone}>
