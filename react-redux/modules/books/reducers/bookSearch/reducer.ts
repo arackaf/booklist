@@ -99,11 +99,11 @@ const createMemoizedPSI = (getActiveIds: ((state: BooksModuleType) => lookupHash
 const selectSelectedSubjects = createMemoizedPSI(state => state.booksModule.bookSearch.subjects, state => state.app.subjectHash);
 const selectSelectedTags = createMemoizedPSI(state => state.booksModule.bookSearch.tags, state => state.booksModule.tags.tagHash);
 
-export type bookSearchUiViewType = {
+export type BookSearchUiViewType = {
   isGridView: boolean;
   isBasicList: boolean;
 };
-export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearchUiViewType, AppType, bookSearchType>(
+export const selectBookSearchUiView = createSelector<BooksModuleType, BookSearchUiViewType, AppType, bookSearchType>(
   state => state.app,
   state => state.booksModule.bookSearch,
   (app, bookSearch) => {
@@ -119,7 +119,7 @@ export const selectBookSearchUiView = createSelector<BooksModuleType, bookSearch
 );
 
 export type entireBookSearchStateType = bookSearchType &
-  bookSearchUiViewType & {
+  BookSearchUiViewType & {
     allTagsSorted: tagOrSubject[];
     selectedSubjects: tagOrSubject[];
     subjectsUnwound: tagOrSubject[];
@@ -137,7 +137,7 @@ export const selectEntireBookSearchState = createSelector<
   tagOrSubject[],
   tagOrSubject[],
   bookSearchType,
-  bookSearchUiViewType
+  BookSearchUiViewType
 >(
   selectEntireTagsState,
   selectStackedSubjects,
