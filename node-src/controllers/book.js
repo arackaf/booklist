@@ -21,16 +21,6 @@ class bookController {
     await bookDao.deleteBook(_id);
     this.send({ success: true });
   }
-  async saveManual({ book }) {
-    let bookDao = new BookDAO(this.request.user.id);
-    await bookDao.saveManual(book);
-    this.send({ success: true });
-  }
-  async update({ book }) {
-    let bookDao = new BookDAO(this.request.user.id);
-    await bookDao.update(book);
-    this.send({ success: true });
-  }
 
   @httpPost
   async offlineSync(params) {

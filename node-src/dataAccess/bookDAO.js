@@ -58,39 +58,7 @@ class BookDAO extends DAO {
       super.dispose(db);
     }
   }
-  async saveManual(book) {
-    let db = await super.open();
-    try {
-      let bookToInsert = {};
-      bookToInsert.userId = this.userId;
 
-      //coming right from the client, so we'll sanitize
-      const validProperties = ["title", "isbn", "pages", "publisher", "publicationDate"];
-      validProperties.forEach(prop => (bookToInsert[prop] = (book[prop] || "").substr(0, 500)));
-      bookToInsert.authors = (book.authors || []).filter(a => a).map(a => ("" + a).substr(0, 500));
-
-      if (bookToInsert.pages || bookToInsert.pages === "0") {
-        bookToInsert.pages = +bookToInsert.pages;
-      } else {
-        delete bookToInsert.pages;
-      }
-
-      if (book.smallImage) {
-        try {
-          let smallImageSavedToAws = await this.saveToAws(book.smallImage);
-          bookToInsert.smallImage = smallImageSavedToAws;
-        } catch (err) {
-          //for now just proceed and save the rest of the book
-        }
-      }
-
-      let result = await db.collection("books").insert(bookToInsert);
-
-      super.confirmSingleResult(result);
-    } finally {
-      super.dispose(db);
-    }
-  }
   saveToAws(webPath) {
     return new Promise((res, rej) => {
       fs.readFile("." + webPath, (err, data) => {
@@ -113,39 +81,6 @@ class BookDAO extends DAO {
     let db = await super.open();
     try {
       await db.collection("books").remove({ _id: ObjectId(id), userId: this.userId });
-    } finally {
-      super.dispose(db);
-    }
-  }
-  async update(book) {
-    let db = await super.open();
-    try {
-      //coming right from the client, so we'll sanitize
-      const validProperties = ["title", "isbn", "pages", "publisher", "publicationDate"];
-
-      let $set = {};
-      validProperties.forEach(prop => {
-        let val = book[prop] || "";
-        if (prop === "pages") {
-          let pagesVal = val || val === "0" ? +val : "";
-          $set[prop] = pagesVal;
-        } else if (typeof val === "string") {
-          $set[prop] = val.substr(0, 500);
-        }
-      });
-      $set.authors = (book.authors || []).filter(a => a).map(a => ("" + a).substr(0, 500));
-
-      if (book.smallImage) {
-        try {
-          let smallImageSavedToAws = await this.saveToAws(book.smallImage);
-          $set.smallImage = smallImageSavedToAws;
-        } catch (err) {
-          console.log(err);
-          //for now just proceed and save the rest of the book
-        }
-      }
-
-      await db.collection("books").update({ _id: ObjectId(book._id), userId: this.userId }, { $set });
     } finally {
       super.dispose(db);
     }

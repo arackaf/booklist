@@ -13,6 +13,8 @@ export const graphqlClient = new Client({
   fetchOptions: { credentials: "include" }
 });
 
+export type MutationType = { runMutation: any; dispatch: any; running: any };
+
 import {
   setDesktop,
   setMobile,
