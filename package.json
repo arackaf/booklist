@@ -1,5 +1,5 @@
 {
-  "name": "Booklist",
+  "name": "booklist",
   "main": "app.js",
   "engines": {
     "node": "8.4.0",

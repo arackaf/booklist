@@ -1,5 +1,5 @@
 {
-  "name": "Booklist",
+  "name": "booklist",
   "main": "app.js",
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
@@ -69,8 +69,8 @@
     "sw-precache-webpack-plugin": "0.11.4",
     "ts-loader": "2.3.0",
     "typescript": "2.4.0",
-    "uglify-js": "2.8.29",
-    "uglifyjs-webpack-plugin": "1.1.3",
+    "uglify-es": "3.3.9",
+    "uglifyjs-webpack-plugin": "1.1.8",
     "webpack": "3.3.0"
   },
   "devDependencies": {
