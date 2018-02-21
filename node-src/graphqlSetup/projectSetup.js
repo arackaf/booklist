@@ -38,6 +38,19 @@ const Book = {
   manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }, { name: "publicUserId", type: "String" }]
 };
 
+const Subject = {
+  table: "subjects",
+  fields: {
+    _id: MongoIdType,
+    name: StringType,
+    path: StringType,
+    userId: StringType,
+    backgroundColor: StringType,
+    textColor: StringType
+  }
+};
+
 export default {
-  Book
+  Book,
+  Subject
 };
