@@ -1,3 +1,5 @@
+import SchemaExtras1 from "../../graphQL-extras/subject/schema";
+
 export const type = `
   
   type Subject {
@@ -104,29 +106,16 @@ export const type = `
   
   
 export const mutation = `
-  
+
   createSubject(
     Subject: SubjectInput
   ): SubjectMutationResult
-  
-  updateSubject(
-    _id: String,
-    Updates: SubjectMutationInput
-  ): SubjectMutationResult
 
-  updateSubjects(
-    _ids: [String],
-    Updates: SubjectMutationInput
-  ): SubjectMutationResultMulti
-
-  updateSubjectsBulk(
-    Match: SubjectFilters,
-    Updates: SubjectMutationInput
-  ): SubjectBulkMutationResult    
-  
   deleteSubject(
     _id: String
   ): Boolean
+
+  ${SchemaExtras1.Mutation || ""}
   
 `;
   
@@ -180,10 +169,12 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int
   ): SubjectQueryResults
-  
+
   getSubject(
     _id: String
   ): SubjectSingleQueryResult
+
+  ${SchemaExtras1.Query || ""}
   
 `;
   

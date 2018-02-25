@@ -16,7 +16,7 @@
       "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
   },
   "dependencies": {
-    "@std/esm": "0.18.0",
+    "@std/esm": "0.23.0",
     "apac": "3.0.2",
     "aws-sdk": "2.3.14",
     "babel-core": "^6.26.0",
@@ -61,7 +61,7 @@
     "lazypipe": "1.0.1",
     "mkdirp": "0.5.1",
     "moment": "^2.13.0",
-    "mongo-graphql-starter": "0.6.1",
+    "mongo-graphql-starter": "0.6.6",
     "mongodb": "2.2.34",
     "multer": "1.1.0",
     "nodemailer": "2.3.0",
