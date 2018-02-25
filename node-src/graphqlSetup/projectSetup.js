@@ -47,6 +47,11 @@ const Subject = {
     userId: StringType,
     backgroundColor: StringType,
     textColor: StringType
+  },
+  extras: {
+    resolverSources: ["../../graphQL-extras/subject/resolver"],
+    schemaSources: ["../../graphQL-extras/subject/schema"],
+    overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk"]
   }
 };
 

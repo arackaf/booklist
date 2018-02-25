@@ -222,8 +222,6 @@ export const type = `
     dateAdded: String
     dateAdded_ne: String
     dateAdded_in: [String]
-    searchChildSubjects: Boolean
-    publicUserId: String
     OR: [BookFilters]
   }
   
@@ -231,11 +229,11 @@ export const type = `
   
   
 export const mutation = `
-  
+
   createBook(
     Book: BookInput
   ): BookMutationResult
-  
+
   updateBook(
     _id: String,
     Updates: BookMutationInput
@@ -249,8 +247,8 @@ export const mutation = `
   updateBooksBulk(
     Match: BookFilters,
     Updates: BookMutationInput
-  ): BookBulkMutationResult    
-  
+  ): BookBulkMutationResult
+
   deleteBook(
     _id: String
   ): Boolean
@@ -368,19 +366,21 @@ export const query = `
     dateAdded: String,
     dateAdded_ne: String,
     dateAdded_in: [String],
-    searchChildSubjects: Boolean,
-    publicUserId: String,
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int
+    PAGE_SIZE: Int,
+    searchChildSubjects: Boolean,
+    publicUserId: String
   ): BookQueryResults
-  
+
   getBook(
-    _id: String
+    _id: String,
+    searchChildSubjects: Boolean,
+    publicUserId: String
   ): BookSingleQueryResult
   
 `;

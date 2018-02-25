@@ -8,5 +8,10 @@ export default {
     userId: "String",
     backgroundColor: "String",
     textColor: "String"
+  },
+  extras: {
+    resolverSources: ["../../graphQL-extras/subject/resolver"],
+    schemaSources: ["../../graphQL-extras/subject/schema"],
+    overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk"]
   }
 };
