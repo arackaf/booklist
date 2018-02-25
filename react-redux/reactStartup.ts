@@ -75,10 +75,6 @@ function sendNotification(text) {
 //sendNotification("Hi there");
 
 declare global {
-  var require: any;
-}
-
-declare global {
   interface System {
     import(request: string): Promise<any>;
   }
