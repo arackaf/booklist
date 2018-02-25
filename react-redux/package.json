@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "webpack -w",
+    "webpack": "webpack",
     "deploy": "cd .. && npm run deploy"
   },
   "dependencies": {
