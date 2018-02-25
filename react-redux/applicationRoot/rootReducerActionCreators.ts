@@ -14,6 +14,13 @@ import {
   SUBJECT_DELETED
 } from "./rootReducerActionNames";
 
+import { Client } from "micro-graphql-react";
+
+const graphqlClient = new Client({
+  endpoint: "/graphql",
+  fetchOptions: { credentials: "include" }
+});
+
 import ajaxUtil from "util/ajaxUtil";
 
 export const setDesktop = () => ({ type: SET_DESKTOP });
@@ -65,7 +72,20 @@ export function loadSubjects() {
 
 export const subjectEditingActions = {
   saveSubject(subjectProps, dispatch) {
-    return ajaxUtil.post("/subject/setInfo", subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
+    //return ajaxUtil.post("/subject/setInfo", subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
+    graphqlClient
+      .runMutation(
+        `mutation updateSubject($_id: String, $name: String, $backgroundColor: String, $textColor: String, $parentId: String) {
+          updateSubject(_id: $_id, name: $name, backgroundColor: $backgroundColor, textColor: $textColor, parentId: $parentId) {
+            _id, name, backgroundColor, textColor, path
+          }
+        }`,
+        { ...subjectProps }
+      )
+      .then(resp => {
+        let affectedSubjects = resp.updateSubject;
+        dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
+      });
   },
   deleteSubject(_id, dispatch) {
     return ajaxUtil.post("/subject/delete", { _id: _id + "" }, resp =>
