@@ -66,7 +66,7 @@ module.exports = {
     ]
   },
   plugins: [
-    //new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+    new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProduction ? new UglifyJsPlugin({ uglifyOptions: { ie8: false, ecma: 8 } }) : null,
     new webpack.DefinePlugin({
       //"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development")
