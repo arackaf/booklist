@@ -7,26 +7,6 @@ var webpack = require("webpack");
 var isProduction = process.env.NODE_ENV === "production" || process.argv.some(arg => arg.indexOf("webpack-dev-server") >= 0);
 isProduction = true;
 
-const asyncBundle = (name, { nodePaths = [], resources = [] }) =>
-  new webpack.optimize.CommonsChunkPlugin({
-    name: "main",
-    async: name,
-    minChunks({ context, resource }, count) {
-      if (!context) return false;
-      let resourcePath = context.replace(/\\/g, "/");
-
-      return (
-        (resourcePath.indexOf("node_modules") >= 0 &&
-          (nodePaths.find(t => new RegExp("/" + t + "/", "i").test(resourcePath)) ||
-            nodePaths.find(t => new RegExp("/" + t + "$", "i").test(resourcePath)))) ||
-        (resource &&
-          (resources.find(r => !path.relative(r + ".js", resource)) ||
-            resources.find(r => !path.relative(r + ".ts", resource)) ||
-            resources.find(r => !path.relative(r + ".tsx", resource))))
-      );
-    }
-  });
-
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
   handler: "cacheFirst",
