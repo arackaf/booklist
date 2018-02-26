@@ -57,6 +57,7 @@ module.exports = {
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
   },
+  mode: "production",
   module: {
     rules: [
       {
