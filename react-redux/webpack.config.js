@@ -1,30 +1,6 @@
 var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 var SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
-var UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-
 var path = require("path");
-var webpack = require("webpack");
-var isProduction = process.env.NODE_ENV === "production" || process.argv.some(arg => arg.indexOf("webpack-dev-server") >= 0);
-
-const asyncBundle = (name, { nodePaths = [], resources = [] }) =>
-  new webpack.optimize.CommonsChunkPlugin({
-    name: "main",
-    async: name,
-    minChunks({ context, resource }, count) {
-      if (!context) return false;
-      let resourcePath = context.replace(/\\/g, "/");
-
-      return (
-        (resourcePath.indexOf("node_modules") >= 0 &&
-          (nodePaths.find(t => new RegExp("/" + t + "/", "i").test(resourcePath)) ||
-            nodePaths.find(t => new RegExp("/" + t + "$", "i").test(resourcePath)))) ||
-        (resource &&
-          (resources.find(r => !path.relative(r + ".js", resource)) ||
-            resources.find(r => !path.relative(r + ".ts", resource)) ||
-            resources.find(r => !path.relative(r + ".tsx", resource))))
-      );
-    }
-  });
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
@@ -56,8 +32,9 @@ module.exports = {
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
   },
+  mode: process.env.NODE_ENV == "production" ? "production" : "development",
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
@@ -84,12 +61,7 @@ module.exports = {
     ]
   },
   plugins: [
-    //new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
-    isProduction ? new UglifyJsPlugin({ uglifyOptions: { ie8: false, ecma: 8 } }) : null,
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development")
-    }),
-
+    //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     new SWPrecacheWebpackPlugin({
       mergeStaticsConfig: true,
       filename: "service-worker.js",
@@ -115,54 +87,6 @@ module.exports = {
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /book\/loadDetails/, name: "book-details" })
       ]
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "react-build",
-      minChunks(module, count) {
-        var context = module.context;
-        context = context.replace(/\\/g, "/");
-        return (
-          context &&
-          (context.indexOf("node_modules/react/") >= 0 ||
-            context.indexOf("node_modules/react-dom/") >= 0 ||
-            context.indexOf("node_modules/react-loadable/") >= 0)
-        );
-      }
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "manifest"
-    }),
-
-    //*********************************** async chunks*************************
-
-    //catch all - anything used in more than one place
-    // new webpack.optimize.CommonsChunkPlugin({
-    //     async: 'used-twice',
-    //     minChunks: (module, count) => count >= 2,
-    // }),
-
-    asyncBundle("react-dnd", { nodePaths: ["react-dnd", "react-dnd-html5-backend", "react-dnd-touch-backend", "dnd-core"] }),
-
-    asyncBundle("d3", { nodePaths: ["d3-.+"] }),
-
-    isProduction ? new webpack.optimize.ModuleConcatenationPlugin() : null
-  ].filter(p => p),
-  devServer: {
-    proxy: {
-      "/": "http://localhost:3000",
-      "/react-redux/login": "http://localhost:3000",
-      "/react-redux/logout": "http://localhost:3000",
-      "/react-redux/createUser": "http://localhost:3000",
-      "/react-redux/static": "http://localhost:3000",
-      "/subject": "http://localhost:3000",
-      "/tag": "http://localhost:3000",
-      "/book": "http://localhost:3000",
-      "/user": "http://localhost:3000",
-      "/static": "http://localhost:3000",
-      "/react-redux/util": "http://localhost:3000",
-      "/react-redux/logout": "http://localhost:3000"
-    }
-  }
+    })
+  ]
 };
