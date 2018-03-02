@@ -66,7 +66,9 @@ export default class BooksMiddleware {
   }
   afterInsert(newObj, root, args, context, ast) {}
   async beforeUpdate(match, updates, root, args, context, ast) {
-    clean(updates.$set);
+    if (updates.$set) {
+      clean(updates.$set);
+    }
     match.userId = context.user.id;
     if (updates.$set && updates.$set.smallImage && /^\/uploads\//.test(updates.$set.smallImage)) {
       updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, context.user.id);
