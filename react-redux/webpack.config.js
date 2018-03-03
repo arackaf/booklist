@@ -28,7 +28,8 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
-      jscolor: "util/jscolor.js"
+      jscolor: "util/jscolor.js",
+      tokenizr: "tokenizr/src/tokenizr-5-tokenizer"
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
   },
