@@ -1,5 +1,3 @@
-import compress from "graphql-query-compress";
-
 export const args = (...args) => args.filter(s => s).join("\n");
 
 export const strArg = (name, value, emptyVal = "") => {
@@ -26,4 +24,4 @@ export const strArrArg = (name, values, sendEmpty = false) => {
   return `${name}:${JSON.stringify(values)}`;
 };
 
-export const gqlGet = query => fetch(`/graphql?query=${encodeURIComponent(compress(query))}`, { credentials: "include" }).then(resp => resp.json());
+export const gqlGet = query => fetch(`/graphql?query=${encodeURIComponent(query)}`, { credentials: "include" }).then(resp => resp.json());
