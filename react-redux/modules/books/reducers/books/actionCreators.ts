@@ -22,6 +22,8 @@ import {
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import ajaxUtil from "util/ajaxUtil";
 
+import { compress } from "micro-graphql-react";
+
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
@@ -75,7 +77,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
   let [sortField, sortDirection] = bindableSortValue.split("|");
   let sortObject = `{ ${sortField}: ${sortDirection == "asc" ? 1 : -1} }`;
 
-  return gqlGet(`query ALL_BOOKS_V_${version} {
+  return gqlGet(compress`query ALL_BOOKS_V_${version} {
     allBooks(
       PAGE: ${bookSearchState.page}
       PAGE_SIZE: ${bookSearchState.pageSize}
