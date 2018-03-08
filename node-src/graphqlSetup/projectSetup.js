@@ -55,7 +55,20 @@ const Subject = {
   }
 };
 
+const LabelColor = {
+  table: "labelColors",
+  fields: {
+    _id: MongoIdType,
+    backgroundColor: StringType,
+    order: IntType
+  },
+  extras: {
+    overrides: ["updateLabelColor", "updateLabelColors", "updateLabelColorBulk", "createLabelColor", "deleteLabelColor"]
+  }
+};
+
 export default {
   Book,
-  Subject
+  Subject,
+  LabelColor
 };
