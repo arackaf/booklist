@@ -65,7 +65,7 @@ export function loadSubjects() {
 
     Promise.resolve(ajaxUtil.get("/subject/all", { userId: publicUserId })).then(subjectsResp => {
       dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
-      dispatch({ type: LOAD_COLORS, colors: subjectsResp.colors });
+      //dispatch({ type: LOAD_COLORS, colors: subjectsResp.colors });
     });
   };
 }
