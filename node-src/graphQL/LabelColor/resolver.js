@@ -28,18 +28,6 @@ export const LabelColor = {
 
 export default {
   Query: {
-    async getLabelColor(root, args, context, ast) {
-      await processHook(hooksObj, "LabelColor", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
-      context.__mgqlsdb = db;
-      let queryPacket = decontructGraphqlQuery(args, ast, LabelColorMetadata, "LabelColor");
-      await processHook(hooksObj, "LabelColor", "queryMiddleware", queryPacket, root, args, context, ast);
-      let results = await loadLabelColors(db, queryPacket);
-
-      return {
-        LabelColor: results[0] || null
-      };
-    },
     async allLabelColors(root, args, context, ast) {
       await processHook(hooksObj, "LabelColor", "queryPreprocess", root, args, context, ast);
       let db = await root.db;
@@ -65,18 +53,6 @@ export default {
     }
   },
   Mutation: {
-    async updateLabelColorsBulk(root, args, context, ast) {
-      let db = await root.db;
-      let { $match } = decontructGraphqlQuery(args.Match, ast, LabelColorMetadata);
-      let updates = getUpdateObject(args.Updates || {}, LabelColorMetadata);
 
-      if (await processHook(hooksObj, "LabelColor", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
-        return { success: true };
-      }
-      await dbHelpers.runUpdate(db, "labelColors", $match, updates, { multi: true });
-      await processHook(hooksObj, "LabelColor", "afterUpdate", $match, updates, root, args, context, ast);
-
-      return { success: true };
-    }
   }
 };

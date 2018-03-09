@@ -14,7 +14,7 @@ import {
   SUBJECT_DELETED
 } from "./rootReducerActionNames";
 
-import { Client } from "micro-graphql-react";
+import { Client, compress } from "micro-graphql-react";
 
 const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -63,16 +63,25 @@ export function loadSubjects() {
 
     dispatch({ type: LOAD_SUBJECTS });
 
-    Promise.resolve(ajaxUtil.get("/subject/all", { userId: publicUserId })).then(subjectsResp => {
+    Promise.all([
+      ajaxUtil.get("/subject/all", { userId: publicUserId }),
+      graphqlClient.runQuery(
+        compress`query labelColors {
+          allLabelColors(SORT: {order: 1}) {
+            LabelColors { _id, backgroundColor, order }
+          }
+        }`
+      )
+    ]).then(([subjectsResp, { data: { allLabelColors: { LabelColors: labelColors } } }]) => {
+      console.log(labelColors);
+      dispatch({ type: LOAD_COLORS, colors: labelColors });
       dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
-      //dispatch({ type: LOAD_COLORS, colors: subjectsResp.colors });
     });
   };
 }
 
 export const subjectEditingActions = {
   saveSubject(subjectProps, dispatch) {
-    //return ajaxUtil.post("/subject/setInfo", subjectProps, resp => dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: resp.affectedSubjects }));
     graphqlClient
       .runMutation(
         `mutation updateSubject($_id: String, $name: String, $backgroundColor: String, $textColor: String, $parentId: String) {
