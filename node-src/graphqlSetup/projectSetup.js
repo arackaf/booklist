@@ -52,7 +52,8 @@ const Subject = {
     resolverSources: ["../../graphQL-extras/subject/resolver"],
     schemaSources: ["../../graphQL-extras/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk"]
-  }
+  },
+  manualQueryArgs: [{ name: "publicUserId", type: "String" }]
 };
 
 const LabelColor = {
