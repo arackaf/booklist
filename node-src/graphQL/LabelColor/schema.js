@@ -74,10 +74,7 @@ export const type = `
   
 export const mutation = `
 
-  updateLabelColorsBulk(
-    Match: LabelColorFilters,
-    Updates: LabelColorMutationInput
-  ): LabelColorBulkMutationResult
+
   
 `;
   
@@ -110,10 +107,6 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int
   ): LabelColorQueryResults
-
-  getLabelColor(
-    _id: String
-  ): LabelColorSingleQueryResult
   
 `;
   

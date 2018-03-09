@@ -7,6 +7,6 @@ export default {
     order: "Int"
   },
   extras: {
-    overrides: ["updateLabelColor", "updateLabelColors", "updateLabelColorBulk", "createLabelColor", "deleteLabelColor"]
+    overrides: ["getLabelColor", "updateLabelColor", "updateLabelColors", "updateLabelColorsBulk", "createLabelColor", "deleteLabelColor"]
   }
 };

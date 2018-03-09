@@ -63,7 +63,7 @@ const LabelColor = {
     order: IntType
   },
   extras: {
-    overrides: ["updateLabelColor", "updateLabelColors", "updateLabelColorBulk", "createLabelColor", "deleteLabelColor"]
+    overrides: ["getLabelColor", "updateLabelColor", "updateLabelColors", "updateLabelColorsBulk", "createLabelColor", "deleteLabelColor"]
   }
 };
 
