@@ -29,24 +29,6 @@ class SubjectDAO extends DAO {
 
     return { subjectsDeleted: subjectsToDeleteString };
   }
-
-  async loadSubjects(userId) {
-    let db = await super.open();
-
-    let userIdToUse = userId || this.userId;
-
-    try {
-      let subjects = await db
-        .collection("subjects")
-        .find({ userId: userIdToUse })
-        .sort({ name: 1 })
-        .toArray();
-
-      return { subjects };
-    } finally {
-      super.dispose(db);
-    }
-  }
 }
 
 export default SubjectDAO;
