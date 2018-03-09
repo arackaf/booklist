@@ -65,6 +65,16 @@ export function loadSubjects() {
 
     Promise.all([
       ajaxUtil.get("/subject/all", { userId: publicUserId }),
+      graphqlClient.runQuery(compress`query allSubjects {
+        allSubjects(
+          publicUserId: ${JSON.stringify(publicUserId)},
+          SORT: {name: 1}
+        ) {
+          Subjects {
+            _id, name, backgroundColor, textColor, path,  
+          }
+        }
+      }`),
       graphqlClient.runQuery(
         compress`query labelColors {
           allLabelColors(SORT: {order: 1}) {
@@ -72,8 +82,8 @@ export function loadSubjects() {
           }
         }`
       )
-    ]).then(([subjectsResp, { data: { allLabelColors: { LabelColors: labelColors } } }]) => {
-      console.log(labelColors);
+    ]).then(([subjectsResp, dummy, { data: { allLabelColors: { LabelColors: labelColors } } }]) => {
+      debugger;
       dispatch({ type: LOAD_COLORS, colors: labelColors });
       dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: subjectsResp.results });
     });

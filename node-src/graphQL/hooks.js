@@ -1,4 +1,5 @@
 import BooksMiddleware from "../graphQL-middleware/books";
+import SubjectsMiddleware from "../graphQL-middleware/subjects";
 
 export default {
   Root: {
@@ -12,5 +13,6 @@ export default {
     afterDelete(match, root, args, context, ast) {},
     adjustResults(results) {}
   },
-  Book: BooksMiddleware
+  Book: BooksMiddleware,
+  Subject: SubjectsMiddleware
 };
