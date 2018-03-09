@@ -167,11 +167,13 @@ export const query = `
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int
+    PAGE_SIZE: Int,
+    publicUserId: String
   ): SubjectQueryResults
 
   getSubject(
-    _id: String
+    _id: String,
+    publicUserId: String
   ): SubjectSingleQueryResult
 
   ${SchemaExtras1.Query || ""}
