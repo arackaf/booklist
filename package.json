@@ -12,11 +12,10 @@
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack",
     "start": "node app.js",
-    "heroku-postbuild":
-      "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
+    "heroku-postbuild": "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
   },
   "dependencies": {
-    "@std/esm": "0.23.0",
+    "@std/esm": "^0.25.2",
     "apac": "3.0.2",
     "aws-sdk": "2.3.14",
     "babel-core": "^6.26.0",

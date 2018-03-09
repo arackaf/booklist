@@ -1,5 +1,6 @@
 import { query as BookQuery, mutation as BookMutation, type as BookType } from './Book/schema';
 import { query as SubjectQuery, mutation as SubjectMutation, type as SubjectType } from './Subject/schema';
+import { query as LabelColorQuery, mutation as LabelColorMutation, type as LabelColorType } from './LabelColor/schema';
     
 export default `
 
@@ -26,16 +27,22 @@ export default `
 
   ${SubjectType}
 
+  ${LabelColorType}
+
   type Query {
     ${BookQuery}
 
     ${SubjectQuery}
+
+    ${LabelColorQuery}
   }
 
   type Mutation {
     ${BookMutation}
 
     ${SubjectMutation}
+
+    ${LabelColorMutation}
   }
 
 `
