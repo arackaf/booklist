@@ -102,9 +102,16 @@ export const subjectEditingActions = {
       });
   },
   deleteSubject(_id, dispatch) {
-    return ajaxUtil.post("/subject/delete", { _id: _id + "" }, resp =>
-      dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.subjectsDeleted, _id })
-    );
+    return graphqlClient
+      .runMutation(
+        `mutation deleteSubject {
+          deleteSubject(_id: "${_id}")
+        }`
+      )
+      .then(resp => {
+        dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
+        return { subjectsDeleted: resp.deleteSubject };
+      });
   }
 };
 
