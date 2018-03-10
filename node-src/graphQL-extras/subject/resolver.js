@@ -70,6 +70,28 @@ class SubjectDAO {
       .find({ $or: [{ path: { $regex: `.*,${_id},` } }, { _id: ObjectId(_id) }] })
       .toArray();
   }
+  async deleteSubject(db, _id) {
+    let subjectsToDelete = (await db
+      .collection("subjects")
+      .find({ $or: [{ _id: ObjectId(_id) }, { path: { $regex: `.*,${_id},` } }], userId: this.userId })
+      .toArray()).map(o => o._id);
+
+    let subjectsToDeleteString = subjectsToDelete.map(_id => "" + _id);
+
+    if (!subjectsToDelete.length) return;
+
+    await db
+      .collection("books")
+      .update(
+        { userId: this.userId, subjects: { $in: subjectsToDeleteString } },
+        { $pull: { subjects: { $in: subjectsToDeleteString } } },
+        { upsert: false, multi: true }
+      );
+
+    await db.collection("subjects").remove({ _id: { $in: subjectsToDelete } });
+
+    return subjectsToDeleteString;
+  }
 }
 
 export default {
@@ -79,6 +101,11 @@ export default {
       let dao = new SubjectDAO(context.user.id);
       let { affectedSubjects } = await dao.updateSubjectInfo(db, args._id, args.name, args.backgroundColor, args.textColor, args.parentId);
       return affectedSubjects;
+    },
+    async deleteSubject(root, args, context, ast) {
+      let db = await root.db;
+      let dao = new SubjectDAO(context.user.id);
+      return dao.deleteSubject(db, args._id);
     }
   }
 };
