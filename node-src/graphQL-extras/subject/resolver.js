@@ -89,7 +89,6 @@ class SubjectDAO {
       );
 
     await db.collection("subjects").remove({ _id: { $in: subjectsToDelete } });
-
     return subjectsToDeleteString;
   }
 }
