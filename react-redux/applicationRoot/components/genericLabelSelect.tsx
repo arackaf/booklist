@@ -24,16 +24,11 @@ interface IPropsShape {
 
 class GenericLabelSelect extends Component<IPropsShape, any> {
   input: any;
-  onSuggestionSelected: (evt: any, arg: any) => any;
   state = { suggestions: [] };
-  constructor() {
-    super();
-
-    this.onSuggestionSelected = (evt, { suggestion }) => {
-      this.props.onSuggestionSelected({ ...suggestion });
-      setTimeout(() => this.input.blur(), 1);
-    };
-  }
+  onSuggestionSelected = (evt, { suggestion }) => {
+    this.props.onSuggestionSelected({ ...suggestion });
+    setTimeout(() => this.input.blur(), 1);
+  };
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.suggestions != this.props.suggestions && this.state.suggestions.length) {
       this.setState({ suggestions: this.props.suggestions });

@@ -14,7 +14,7 @@ import ComponentLoading from "applicationRoot/components/componentLoading";
 
 import { scanReducerType } from "modules/scan/reducers/reducer";
 
-import { graphqlClient, MutationType } from "reactStartup";
+import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 
 declare var webSocketAddress: any;
@@ -35,7 +35,6 @@ const defaultEmptyBook = () => ({
 });
 
 @mutation(
-  graphqlClient,
   `mutation createBook($book: BookInput) {
     createBook(Book: $book) { Book { _id }, success }
   }`

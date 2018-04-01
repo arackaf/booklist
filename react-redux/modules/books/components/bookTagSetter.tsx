@@ -9,7 +9,7 @@ import SelectAvailable from "./availableTagsOrSubjects";
 import { filterTags } from "modules/books/reducers/tags/reducer";
 import { selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
 
-import { graphqlClient, MutationType } from "reactStartup";
+import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 
 import { SET_BOOKS_TAGS } from "../reducers/books/actionNames";
@@ -20,7 +20,6 @@ interface ILocalProps {
 }
 
 @mutation(
-  graphqlClient,
   `mutation updateBooksTags($books: [String], $add: [String], $remove: [String]) {
     remove: updateBooks(
       _ids: $books,

@@ -6,15 +6,11 @@ declare var jscolor: any;
 let uniqueIdCounter = 0;
 
 class CustomColorPicker extends Component<any, any> {
-  uniqueId: string;
+  uniqueId = `customColorPickerId${++uniqueIdCounter}`;
   _colorChosen: () => any;
   jscolorInstance: any;
   rootElement: any;
   valueElement: any;
-  constructor() {
-    super();
-    this.uniqueId = `customColorPickerId${++uniqueIdCounter}`;
-  }
   get valueElementId() {
     return `${this.uniqueId}_value`;
   }
@@ -46,7 +42,7 @@ class CustomColorPicker extends Component<any, any> {
   render() {
     return (
       <div>
-        <a id={`${this.uniqueId}`} ref={el => (this.rootElement = el)} style={{ height: "20px", ...this.props.labelStyle || {} }}>
+        <a id={`${this.uniqueId}`} ref={el => (this.rootElement = el)} style={{ height: "20px", ...(this.props.labelStyle || {}) }}>
           Custom
         </a>
         <input style={{ display: "none" }} ref={el => (this.valueElement = el)} id={this.valueElementId} defaultValue={this.props.currentColor} />

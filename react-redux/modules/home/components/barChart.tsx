@@ -30,7 +30,7 @@ function getSubjectsList(subjectIds) {
 }))
 export default class BarChart extends PureComponent<any, any> {
   constructor(props) {
-    super();
+    super(props);
     this.state = { left: 0, excluding: {}, data: null, initialWidth: props.width };
   }
   el: any;

@@ -6,12 +6,14 @@ import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
-import { Client } from "micro-graphql-react";
+import { Client, setDefaultClient } from "micro-graphql-react";
 
-export const graphqlClient = new Client({
+const graphqlClient = new Client({
   endpoint: "/graphql",
   fetchOptions: { credentials: "include" }
 });
+
+setDefaultClient(graphqlClient);
 
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
@@ -147,7 +149,7 @@ function loadModule(location) {
     var userId = getCurrentHistoryState().searchState.userId;
 
     //switching to a new public viewing - reload page
-    if (!initial && store.getState().app.publicUserId != userId) {
+    if (!initial && (store.getState() as any).app.publicUserId != userId) {
       window.location.reload();
       return;
     }
@@ -157,7 +159,7 @@ function loadModule(location) {
     if (module === "view") {
       module = "books";
     }
-  } else if (store.getState().app.publicUserId) {
+  } else if ((store.getState() as any).app.publicUserId) {
     //leaving public viewing - reload page
     window.location.reload();
     return;

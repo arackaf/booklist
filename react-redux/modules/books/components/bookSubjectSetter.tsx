@@ -9,7 +9,6 @@ import { filterSubjects } from "modules/books/reducers/subjects/reducer";
 import { selectStackedSubjects, StackedSubjectsType } from "modules/books/reducers/subjects/reducer";
 const { createSelector } = require("reselect");
 
-import { graphqlClient } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 
 import { SET_BOOKS_SUBJECTS } from "../reducers/books/actionNames";
@@ -20,7 +19,6 @@ interface ILocalProps {
 }
 
 @mutation(
-  graphqlClient,
   `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
     remove: updateBooks(
       _ids: $books,

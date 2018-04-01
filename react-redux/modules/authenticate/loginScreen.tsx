@@ -12,10 +12,8 @@ const errorCodes = {
 
 class Login extends Component<any, any> {
   refs: any;
-  constructor() {
-    super();
-    this.state = { newUser: false, errorCode: null };
-  }
+  state = { newUser: false, errorCode: null, pendingActivation: false, invalidEmail: false, running: false };
+
   login(evt) {
     evt.preventDefault();
 
