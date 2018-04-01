@@ -14,11 +14,8 @@ const MainActivatePane = props => (
 );
 
 class ActivateIfLoggedIn extends Component<any, any> {
-  _timeoutToken: any;
-  constructor() {
-    super();
-    this._timeoutToken = setTimeout(() => history.replace("/home"), 5000);
-  }
+  _timeoutToken = setTimeout(() => history.replace("/home"), 5000);
+
   componentWillUnmount() {
     clearTimeout(this._timeoutToken);
   }

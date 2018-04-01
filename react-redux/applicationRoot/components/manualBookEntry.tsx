@@ -6,31 +6,22 @@ import Modal from "simple-react-bootstrap/lib/modal";
 import ajaxUtil from "util/ajaxUtil";
 
 class ManualBookEntry extends Component<any, any> {
-  syncStateFromInput: any;
-  SyncedInput: any;
-  syncAuthor: any;
   revertTo: any;
-  constructor() {
-    super();
-
-    this.state = { bookEditing: null };
-
-    this.syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
-    this.SyncedInput = ({ syncName, onEnter, ...props }) => (
-      <input
-        onKeyDown={evt => (evt.keyCode || evt.which) == 13 && props.onEnter()}
-        onChange={this.syncStateFromInput(syncName)}
-        value={this.state.bookEditing[syncName] || ""}
-        {...props}
-      />
-    );
-
-    this.syncAuthor = index => evt => {
-      let newAuthors = this.state.bookEditing.authors.concat();
-      newAuthors[index] = evt.target.value;
-      this.setState({ bookEditing: { ...this.state.bookEditing, authors: newAuthors } });
-    };
-  }
+  state = { bookEditing: null, pendingSmallImage: "", titleMissing: false, authorsChanged: false, smallCoverUploadError: "" };
+  syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
+  SyncedInput = ({ syncName, onEnter, ...props }) => (
+    <input
+      onKeyDown={evt => (evt.keyCode || evt.which) == 13 && props.onEnter()}
+      onChange={this.syncStateFromInput(syncName)}
+      value={this.state.bookEditing[syncName] || ""}
+      {...props}
+    />
+  );
+  syncAuthor = index => evt => {
+    let newAuthors = this.state.bookEditing.authors.concat();
+    newAuthors[index] = evt.target.value;
+    this.setState({ bookEditing: { ...this.state.bookEditing, authors: newAuthors } });
+  };
   addAuthor(evt) {
     evt.preventDefault();
     let bookEditing = this.state.bookEditing;

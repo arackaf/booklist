@@ -9,7 +9,7 @@
     "deploy": "cd .. && npm run deploy"
   },
   "dependencies": {
-    "@types/react": "15.0.28",
+    "@types/react": "16.1.0",
     "@types/react-dom": "15.5.0",
     "@types/zen-observable": "^0.5.3",
     "apollo-cache-inmemory": "^1.1.1",
@@ -44,7 +44,7 @@
     "immutability-helper": "2.2.2",
     "lodash.debounce": "4.0.8",
     "lodash.throttle": "4.1.1",
-    "micro-graphql-react": "0.1.0",
+    "micro-graphql-react": "^0.1.1-beta2",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
     "react": "^16.2.0",

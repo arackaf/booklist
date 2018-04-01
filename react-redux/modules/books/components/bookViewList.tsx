@@ -16,7 +16,7 @@ import Loadable from "react-loadable";
 import { BookListType, selectBookList, selectBookSelection, BookSelectionType } from "../reducers/books/reducer";
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
-import { graphqlClient, MutationType } from "reactStartup";
+import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
@@ -72,7 +72,6 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, bookSearc
 );
 
 @mutation(
-  graphqlClient,
   `mutation updateBook($_id: String, $book: BookMutationInput) {
     updateBook(
       _id: $_id,
