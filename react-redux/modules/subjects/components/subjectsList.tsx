@@ -461,7 +461,7 @@ class SubjectList extends Component<any, any> {
     );
   }
 }
-let isTouch = store.getState().app.isTouch;
+let isTouch = (store.getState() as any).app.isTouch;
 
 type subjectsComponentPropsType = {
   topLevelSubjects: any;

@@ -5,6 +5,8 @@ import * as actionCreators from "../../reducers/publicUserSettings/actionCreator
 import { SectionLoading } from "applicationRoot/components/loading";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 
+const styleTwenty: any = { left: "20%" };
+
 @connect(selector, { ...actionCreators })
 export default class PublicUserSettings extends Component<publicUserSettingsSelectorType & typeof actionCreators, any> {
   render() {
@@ -13,7 +15,7 @@ export default class PublicUserSettings extends Component<publicUserSettingsSele
         <div className="row">
           <div className="col-md-6 col-sm-12" style={{ position: "relative", minHeight: "200px" }}>
             {this.props.loading ? (
-              <SectionLoading style={{ left: "20%" }} />
+              <SectionLoading style={styleTwenty} />
             ) : (
               <div style={{ padding: "10px" }}>
                 {this.props.publicLink ? (
