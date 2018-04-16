@@ -16,12 +16,17 @@ import { filterTags } from "modules/books/reducers/tags/reducer";
 
 @connect(selectEntireBookSearchState, { ...bookSearchActionCreators })
 export default class BookSearchModal extends Component<entireBookSearchStateType & typeof bookSearchActionCreators, any> {
-  state = {
-    searchTagsValue: "",
-    searchSubjectsValue: "",
-    subjects: this.props.selectedSubjects.map(s => s._id),
-    tags: this.props.selectedTags.map(t => t._id)
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      searchTagsValue: "",
+      searchSubjectsValue: "",
+      subjects: this.props.selectedSubjects.map(s => s._id),
+      tags: this.props.selectedTags.map(t => t._id),
+      noSubjectsFilter: !!props.noSubjects
+    };
+  }
 
   setTagSearchVal = val => this.setState({ searchTagsValue: val });
   setSubjectSearchVal = val => this.setState({ searchSubjectsValue: val });
@@ -34,7 +39,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
   applyFilters = evt => {
     evt.preventDefault();
     this.props.applyFilters({
-      subjects: this.state.subjects,
+      subjects: this.state.noSubjectsFilter ? [] : this.state.subjects,
       tags: this.state.tags,
       search: this.searchEl.value,
       pages: this.pagesEl.value,
@@ -42,7 +47,8 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
       author: this.authorEl.value,
       publisher: this.publisherEl.value,
       isRead: this.isReadE.checked ? "" : this.isRead0.checked ? "0" : "1",
-      searchChildSubjects: this.childSubEl.checked
+      searchChildSubjects: this.childSubEl && this.childSubEl.checked,
+      noSubjects: this.state.noSubjectsFilter
     });
   };
 
@@ -160,31 +166,45 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
 
           <br />
 
-          <div className="row" style={{ position: "relative" }}>
-            <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Subjects"
-                search={this.state.searchSubjectsValue}
-                onSearchChange={this.setSubjectSearchVal}
-                items={this.props.subjectsUnwound}
-                currentlySelected={this.state.subjects}
-                onSelect={this.selectSubject}
-                filter={filterSubjects}
-              />
-            </div>
-            <div className="col-xs-9">
-              <div>
-                {this.state.subjects
-                  .map(_id => this.props.subjectHash[_id])
-                  .map(s => <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />)}
+          {!this.state.noSubjectsFilter ? (
+            <>
+              <div className="row" style={{ position: "relative" }}>
+                <div className="col-xs-3">
+                  <SelectAvailable
+                    placeholder="Subjects"
+                    search={this.state.searchSubjectsValue}
+                    onSearchChange={this.setSubjectSearchVal}
+                    items={this.props.subjectsUnwound}
+                    currentlySelected={this.state.subjects}
+                    onSelect={this.selectSubject}
+                    filter={filterSubjects}
+                  />
+                </div>
+                <div className="col-xs-9">
+                  <div>
+                    {this.state.subjects
+                      .map(_id => this.props.subjectHash[_id])
+                      .map(s => <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />)}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+              <div className="checkbox">
+                <label>
+                  <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.pending.searchChildSubjects} /> Also search
+                  child subjects
+                </label>
+              </div>
+            </>
+          ) : null}
 
-          <div className="checkbox">
+          <div className="checkbox" style={{ marginTop: "5px" }}>
             <label>
-              <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.pending.searchChildSubjects} /> Also search child
-              subjects
+              <input
+                type="checkbox"
+                checked={!!this.state.noSubjectsFilter}
+                onChange={el => this.setState({ noSubjectsFilter: !!el.target.checked })}
+              />{" "}
+              Search books with no subjects set
             </label>
           </div>
         </Modal.Body>

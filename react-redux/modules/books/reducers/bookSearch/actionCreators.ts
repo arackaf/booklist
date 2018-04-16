@@ -42,7 +42,8 @@ export function applyFilters(nextState: any) {
       publisher: nextState.publisher,
       pagesOperator: nextState.pages != "" ? nextState.pagesOperator : null,
       pages: nextState.pages,
-      isRead: nextState.isRead
+      isRead: nextState.isRead,
+      noSubjects: nextState.noSubjects ? "true" : ""
     });
     dispatch(endFilterChanging());
   };
@@ -60,7 +61,8 @@ export function clearAllFilters() {
       publisher: "",
       pagesOperator: null,
       pages: "",
-      isRead: ""
+      isRead: "",
+      noSubjects: ""
     });
   };
 }
@@ -164,8 +166,9 @@ function isDirty(oldState, newState) {
     return true;
   }
 
-  return !!["search", "author", "publisher", "pages", "sort", "sortDirection", "isRead"].filter(prop => oldState[prop] != (newState[prop] || ""))
-    .length;
+  return !!["search", "author", "publisher", "pages", "sort", "sortDirection", "isRead", "noSubjects"].filter(
+    prop => oldState[prop] != (newState[prop] || "")
+  ).length;
 }
 
 const itemsDifferent = (oldItems, newItems) =>

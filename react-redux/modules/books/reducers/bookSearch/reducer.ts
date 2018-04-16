@@ -30,7 +30,8 @@ const searchFields = {
   pagesOperator: "lt",
   page: 1,
   pageSize: 50,
-  isRead: ""
+  isRead: "",
+  noSubjects: ""
 };
 export type searchFieldsType = typeof searchFields;
 
