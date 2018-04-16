@@ -7,7 +7,6 @@ import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterSubjects } from "modules/books/reducers/subjects/reducer";
 import { selectStackedSubjects, StackedSubjectsType } from "modules/books/reducers/subjects/reducer";
-const { createSelector } = require("reselect");
 
 import { mutation } from "micro-graphql-react";
 
