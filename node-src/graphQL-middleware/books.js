@@ -62,6 +62,12 @@ export default class BooksMiddleware {
     if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
       book.smallImage = await saveLocalImageToS3(book.smallImage, context.user.id);
     }
+    if (!book.subjects) {
+      book.subjects = [];
+    }
+    if (!book.tags) {
+      book.tags = [];
+    }
     book.userId = context.user.id;
   }
   afterInsert(newObj, root, args, context, ast) {}

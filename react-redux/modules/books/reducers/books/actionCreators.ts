@@ -92,6 +92,7 @@ function booksSearch(bookSearchState: bookSearchType, publicUserId) {
         strArg("authors_textContains", bookSearchState.author),
         strArg("publisher_contains", bookSearchState.publisher),
         strArg("publicUserId", publicUserId),
+        numArg("subjects_count", bookSearchState.noSubjects ? 0 : null),
         bookSearchState.pages != "" ? numArg(bookSearchState.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchState.pages) : null
       )}
     ){
