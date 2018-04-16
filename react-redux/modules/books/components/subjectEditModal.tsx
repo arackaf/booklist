@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Modal from "simple-react-bootstrap/lib/modal";
-const { createSelector } = require("reselect");
+import { createSelector } from "reselect";
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from "applicationRoot/components/bootstrapButton";
 import * as actionCreators from "../reducers/subjects/actionCreators";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
@@ -48,8 +48,8 @@ export default class SubjectEditModal extends Component<EntireSubjectsStateType 
     super(props);
 
     this.currentEligibleParents = createSelector(
-      o => o.subjectHash,
-      o => o.editingSubject,
+      (o: any) => o.subjectHash,
+      (o: any) => o.editingSubject,
       (hash, subject) => {
         return subject ? getEligibleParents(hash, subject._id) : [];
       }
