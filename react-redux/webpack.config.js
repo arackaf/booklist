@@ -62,9 +62,6 @@ module.exports = {
       }
     ]
   },
-  optimization: {
-    minimize: true
-  },
   plugins: [
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null,
