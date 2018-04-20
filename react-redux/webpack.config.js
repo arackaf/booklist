@@ -1,6 +1,8 @@
 var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 var SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 var path = require("path");
+const isProd = process.env.NODE_ENV == "production";
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
@@ -32,7 +34,7 @@ module.exports = {
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
   },
-  mode: process.env.NODE_ENV == "production" ? "production" : "development",
+  mode: isProd ? "production" : "development",
   module: {
     rules: [
       {
@@ -60,8 +62,12 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimize: true
+  },
   plugins: [
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
+    isProd ? new MinifyPlugin() : null,
     new SWPrecacheWebpackPlugin({
       mergeStaticsConfig: true,
       filename: "service-worker.js",
@@ -88,5 +94,5 @@ module.exports = {
         getCache({ pattern: /book\/loadDetails/, name: "book-details" })
       ]
     })
-  ]
+  ].filter(p => p)
 };
