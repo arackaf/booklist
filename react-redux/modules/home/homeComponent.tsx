@@ -81,7 +81,7 @@ class HomeIfLoggedIn extends Component<any, any> {
               <hr />
               {subjectsLoaded
                 ? chartPackets.map((packet, i) => (
-                    <BarChart {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
+                    <BarChart key={i} {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
                   ))
                 : null}
             </div>
