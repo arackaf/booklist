@@ -206,7 +206,7 @@ class MultiBar extends PureComponent<any, any> {
 
     return (
       <g onTouchStart={toggleTooltip} onMouseOver={showTooltip} onMouseOut={hideTooltip}>
-        {colors.map((color, i) => <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} />)}
+        {colors.map((color, i) => <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} key={i} />)}
       </g>
     );
   }
