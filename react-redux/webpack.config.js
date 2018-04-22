@@ -45,7 +45,7 @@ module.exports = {
             loader: "babel-loader",
             options: {
               presets: ["react"],
-              plugins: ["transform-decorators-legacy", "transform-class-properties", "transform-object-rest-spread"]
+              plugins: ["transform-class-properties", "transform-object-rest-spread"]
             }
           },
           "ts-loader"
@@ -57,10 +57,13 @@ module.exports = {
         loader: "babel-loader",
         query: {
           presets: ["react"],
-          plugins: ["transform-decorators-legacy", "transform-class-properties", "transform-object-rest-spread"]
+          plugins: ["transform-class-properties", "transform-object-rest-spread"]
         }
       }
     ]
+  },
+  optimization: {
+    //minimize: false
   },
   plugins: [
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
