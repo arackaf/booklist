@@ -13,14 +13,14 @@
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack",
     "start": "node app.js",
     "startw": "nodemon app.js",
-    "heroku-postbuild": "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
+    "heroku-postbuild": "gulp transpile-all && cd react-redux && npm i && webpack"
   },
   "dependencies": {
-    "@std/esm": "^0.25.2",
+    "@std/esm": "0.25.2",
     "apac": "3.0.2",
     "aws-sdk": "2.3.14",
-    "babel-core": "^6.26.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-core": "6.26.0",
+    "babel-plugin-syntax-object-rest-spread": "6.13.0",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-plugin-transform-es2015-modules-commonjs": "6.8.0",
     "babel-preset-es2015": "6.9.0",
@@ -77,8 +77,5 @@
     "webpack": "3.3.0",
     "webpack-bundle-analyzer": "2.2.3",
     "ws": "1.0.1"
-  },
-  "devDependencies": {
-    "nodemon": "1.17.3"
   }
 }
