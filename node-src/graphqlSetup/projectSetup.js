@@ -75,7 +75,9 @@ const User = {
     publicName: StringType,
     publicBooksHeader: StringType
   },
-  overrides: ["createUser", "deleteUser"]
+  extras: {
+    overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
+  }
 };
 
 const PublicUser = {
@@ -85,7 +87,9 @@ const PublicUser = {
     publicName: StringType,
     publicBooksHeader: StringType
   },
-  overrides: ["updateUser", "updateUsers", "updateUsersBulk", "createUser", "deleteUser"]
+  extras: {
+    overrides: ["updatePublicUser", "updatePublicUsers", "updatePublicUsersBulk", "createPublicUser", "deletePublicUser"]
+  }
 };
 
 export default {

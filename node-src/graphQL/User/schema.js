@@ -83,28 +83,10 @@ export const type = `
   
 export const mutation = `
 
-  createUser(
-    User: UserInput
-  ): UserMutationResult
-
   updateUser(
     _id: String,
     Updates: UserMutationInput
   ): UserMutationResult
-
-  updateUsers(
-    _ids: [String],
-    Updates: UserMutationInput
-  ): UserMutationResultMulti
-
-  updateUsersBulk(
-    Match: UserFilters,
-    Updates: UserMutationInput
-  ): UserBulkMutationResult
-
-  deleteUser(
-    _id: String
-  ): Boolean
   
 `;
   
