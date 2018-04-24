@@ -12,6 +12,7 @@
     "build": "npm run react-redux-build",
     "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack",
     "start": "node app.js",
+    "startw": "nodemon app.js",
     "heroku-postbuild": "gulp transpile-all && cd react-redux && rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm i && webpack"
   },
   "dependencies": {
@@ -76,5 +77,8 @@
     "webpack": "3.3.0",
     "webpack-bundle-analyzer": "2.2.3",
     "ws": "1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "1.17.3"
   }
 }
