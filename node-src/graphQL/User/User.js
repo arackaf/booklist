@@ -6,5 +6,8 @@ export default {
     isPublic: "String",
     publicName: "String",
     publicBooksHeader: "String"
+  },
+  extras: {
+    overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
   }
 };

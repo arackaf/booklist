@@ -65,22 +65,6 @@ export default {
     }
   },
   Mutation: {
-    async createUser(root, args, context, ast) {
-      let db = await root.db;
-      context.__mongodb = db;
-      let newObject = await newObjectFromArgs(args.User, UserMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
-      let requestMap = parseRequestedFields(ast, "User");
-      let $project = requestMap.size ? getMongoProjection(requestMap, UserMetadata, args) : null;
-
-      if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: UserMetadata, hooksObj, root, args, context, ast })) == null) {
-        return { User: null };
-      }
-      let result = $project ? (await loadUsers(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0] : null;
-      return {
-        success: true,
-        User: result
-      }
-    },
     async updateUser(root, args, context, ast) {
       if (!args._id) {
         throw "No _id sent";
@@ -101,51 +85,6 @@ export default {
         User: result,
         success: true
       };
-    },
-    async updateUsers(root, args, context, ast) {
-      let db = await root.db;
-      context.__mongodb = db;
-      let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, UserMetadata, "Users");
-      let updates = await getUpdateObject(args.Updates || {}, UserMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
-
-      if (await processHook(hooksObj, "User", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
-        return { success: true };
-      }
-      await dbHelpers.runUpdate(db, "users", $match, updates, { multi: true });
-      await processHook(hooksObj, "User", "afterUpdate", $match, updates, root, args, context, ast);
-      
-      let result = $project ? await loadUsers(db, { $match, $project }) : null;
-      return {
-        Users: result,
-        success: true
-      };
-    },
-    async updateUsersBulk(root, args, context, ast) {
-      let db = await root.db;
-      let { $match } = decontructGraphqlQuery(args.Match, ast, UserMetadata);
-      let updates = await getUpdateObject(args.Updates || {}, UserMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
-
-      if (await processHook(hooksObj, "User", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
-        return { success: true };
-      }
-      await dbHelpers.runUpdate(db, "users", $match, updates, { multi: true });
-      await processHook(hooksObj, "User", "afterUpdate", $match, updates, root, args, context, ast);
-
-      return { success: true };
-    },
-    async deleteUser(root, args, context, ast) {
-      if (!args._id) {
-        throw "No _id sent";
-      }
-      let db = await root.db;
-      let $match = { _id: ObjectId(args._id) };
-      
-      if (await processHook(hooksObj, "User", "beforeDelete", $match, root, args, context, ast) === false) {
-        return false;
-      }
-      await dbHelpers.runDelete(db, "users", $match);
-      await processHook(hooksObj, "User", "afterDelete", $match, root, args, context, ast);
-      return true;
     }
   }
 };

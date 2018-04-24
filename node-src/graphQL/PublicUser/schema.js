@@ -83,28 +83,7 @@ export const type = `
   
 export const mutation = `
 
-  createPublicUser(
-    PublicUser: PublicUserInput
-  ): PublicUserMutationResult
 
-  updatePublicUser(
-    _id: String,
-    Updates: PublicUserMutationInput
-  ): PublicUserMutationResult
-
-  updatePublicUsers(
-    _ids: [String],
-    Updates: PublicUserMutationInput
-  ): PublicUserMutationResultMulti
-
-  updatePublicUsersBulk(
-    Match: PublicUserFilters,
-    Updates: PublicUserMutationInput
-  ): PublicUserBulkMutationResult
-
-  deletePublicUser(
-    _id: String
-  ): Boolean
   
 `;
   

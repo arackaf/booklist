@@ -1,5 +1,7 @@
 import BooksMiddleware from "../graphQL-middleware/books";
 import SubjectsMiddleware from "../graphQL-middleware/subjects";
+import UsersMiddleware from "../graphQL-middleware/users";
+import PublicUsersMiddleware from "../graphQL-middleware/publicUsers";
 
 export default {
   Root: {
@@ -14,5 +16,7 @@ export default {
     adjustResults(results) {}
   },
   Book: BooksMiddleware,
-  Subject: SubjectsMiddleware
+  Subject: SubjectsMiddleware,
+  User: UsersMiddleware,
+  PublicUser: PublicUsersMiddleware
 };
