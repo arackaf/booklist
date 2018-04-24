@@ -10,8 +10,8 @@ export async function loadLabelColors(db, queryPacket) {
 
   let aggregateItems = [
     { $match }, 
-    { $project },
     $sort ? { $sort } : null, 
+    { $project },
     $skip != null ? { $skip } : null, 
     $limit != null ? { $limit } : null
   ].filter(item => item);
@@ -31,7 +31,7 @@ export default {
     async allLabelColors(root, args, context, ast) {
       await processHook(hooksObj, "LabelColor", "queryPreprocess", root, args, context, ast);
       let db = await root.db;
-      context.__mgqlsdb = db;
+      context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, LabelColorMetadata, "LabelColors");
       await processHook(hooksObj, "LabelColor", "queryMiddleware", queryPacket, root, args, context, ast);
       let result = {};

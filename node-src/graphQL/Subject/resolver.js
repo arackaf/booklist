@@ -12,8 +12,8 @@ export async function loadSubjects(db, queryPacket) {
 
   let aggregateItems = [
     { $match }, 
-    { $project },
     $sort ? { $sort } : null, 
+    { $project },
     $skip != null ? { $skip } : null, 
     $limit != null ? { $limit } : null
   ].filter(item => item);
@@ -33,7 +33,7 @@ export default {
     async getSubject(root, args, context, ast) {
       await processHook(hooksObj, "Subject", "queryPreprocess", root, args, context, ast);
       let db = await root.db;
-      context.__mgqlsdb = db;
+      context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subject");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
       let results = await loadSubjects(db, queryPacket);
@@ -45,7 +45,7 @@ export default {
     async allSubjects(root, args, context, ast) {
       await processHook(hooksObj, "Subject", "queryPreprocess", root, args, context, ast);
       let db = await root.db;
-      context.__mgqlsdb = db;
+      context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subjects");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
       let result = {};
@@ -70,16 +70,14 @@ export default {
   Mutation: {
     async createSubject(root, args, context, ast) {
       let db = await root.db;
-      let newObject = newObjectFromArgs(args.Subject, SubjectMetadata);
+      context.__mongodb = db;
+      let newObject = await newObjectFromArgs(args.Subject, SubjectMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       let requestMap = parseRequestedFields(ast, "Subject");
       let $project = requestMap.size ? getMongoProjection(requestMap, SubjectMetadata, args) : null;
 
-      if (await processHook(hooksObj, "Subject", "beforeInsert", newObject, root, args, context, ast) === false) {
+      if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: SubjectMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Subject: null };
       }
-      await dbHelpers.runInsert(db, "subjects", newObject);
-      await processHook(hooksObj, "Subject", "afterInsert", newObject, root, args, context, ast);
-
       let result = $project ? (await loadSubjects(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0] : null;
       return {
         success: true,
