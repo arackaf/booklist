@@ -68,8 +68,30 @@ const LabelColor = {
   }
 };
 
+const User = {
+  table: "users",
+  fields: {
+    isPublic: StringType,
+    publicName: StringType,
+    publicBooksHeader: StringType
+  },
+  overrides: ["createUser", "deleteUser"]
+};
+
+const PublicUser = {
+  table: "users",
+  fields: {
+    isPublic: StringType,
+    publicName: StringType,
+    publicBooksHeader: StringType
+  },
+  overrides: ["updateUser", "updateUsers", "updateUsersBulk", "createUser", "deleteUser"]
+};
+
 export default {
   Book,
   Subject,
-  LabelColor
+  LabelColor,
+  User,
+  PublicUser
 };

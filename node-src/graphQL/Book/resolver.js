@@ -10,8 +10,8 @@ export async function loadBooks(db, queryPacket) {
 
   let aggregateItems = [
     { $match }, 
-    { $project },
     $sort ? { $sort } : null, 
+    { $project },
     $skip != null ? { $skip } : null, 
     $limit != null ? { $limit } : null
   ].filter(item => item);
@@ -31,7 +31,7 @@ export default {
     async getBook(root, args, context, ast) {
       await processHook(hooksObj, "Book", "queryPreprocess", root, args, context, ast);
       let db = await root.db;
-      context.__mgqlsdb = db;
+      context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Book");
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
       let results = await loadBooks(db, queryPacket);
@@ -43,7 +43,7 @@ export default {
     async allBooks(root, args, context, ast) {
       await processHook(hooksObj, "Book", "queryPreprocess", root, args, context, ast);
       let db = await root.db;
-      context.__mgqlsdb = db;
+      context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Books");
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
       let result = {};
@@ -67,16 +67,14 @@ export default {
   Mutation: {
     async createBook(root, args, context, ast) {
       let db = await root.db;
-      let newObject = newObjectFromArgs(args.Book, BookMetadata);
+      context.__mongodb = db;
+      let newObject = await newObjectFromArgs(args.Book, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       let requestMap = parseRequestedFields(ast, "Book");
       let $project = requestMap.size ? getMongoProjection(requestMap, BookMetadata, args) : null;
 
-      if (await processHook(hooksObj, "Book", "beforeInsert", newObject, root, args, context, ast) === false) {
+      if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: BookMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Book: null };
       }
-      await dbHelpers.runInsert(db, "books", newObject);
-      await processHook(hooksObj, "Book", "afterInsert", newObject, root, args, context, ast);
-
       let result = $project ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0] : null;
       return {
         success: true,
@@ -88,8 +86,9 @@ export default {
         throw "No _id sent";
       }
       let db = await root.db;
+      context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery({ _id: args._id }, ast, BookMetadata, "Book");
-      let updates = getUpdateObject(args.Updates || {}, BookMetadata);
+      let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
 
       if (await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { Book: null };
@@ -105,8 +104,9 @@ export default {
     },
     async updateBooks(root, args, context, ast) {
       let db = await root.db;
+      context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, BookMetadata, "Books");
-      let updates = getUpdateObject(args.Updates || {}, BookMetadata);
+      let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
 
       if (await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { success: true };
@@ -123,7 +123,7 @@ export default {
     async updateBooksBulk(root, args, context, ast) {
       let db = await root.db;
       let { $match } = decontructGraphqlQuery(args.Match, ast, BookMetadata);
-      let updates = getUpdateObject(args.Updates || {}, BookMetadata);
+      let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
 
       if (await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { success: true };
