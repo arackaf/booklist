@@ -71,7 +71,7 @@ const LabelColor = {
 const User = {
   table: "users",
   fields: {
-    isPublic: StringType,
+    isPublic: BoolType,
     publicName: StringType,
     publicBooksHeader: StringType
   },

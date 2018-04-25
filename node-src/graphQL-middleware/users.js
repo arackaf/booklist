@@ -6,6 +6,6 @@ export default class UsersMiddleware {
     $match._id = ObjectId(context.user.id);
   }
   async beforeUpdate(match, updates, root, args, context, ast) {
-    match.userId = ObjectId(context.user.id);
+    match._id = ObjectId(context.user.id);
   }
 }

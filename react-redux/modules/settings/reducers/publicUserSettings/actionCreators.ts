@@ -2,6 +2,7 @@ import { LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, 
 import ajaxUtil from "util/ajaxUtil";
 import { gqlGet } from "util/graphqlUtil";
 import { compress } from "micro-graphql-react";
+import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 export const loadPublicUserSettings = () => dispatch => {
   dispatch({ type: USER_INFO_LOADING });
@@ -28,7 +29,20 @@ export const editPublicBooksHeader = createEditingChange("publicBooksHeader");
 export const savePublicInfo = () => (dispatch, getState) => {
   let editingState = getState().settingsModule.publicUserSettings.editing;
   dispatch({ type: USER_INFO_SAVING });
-  ajaxUtil.post("/user/setPublicSettings", { ...editingState }, resp => {
-    dispatch({ type: USER_INFO_SAVED, ...editingState });
-  });
+
+  graphqlClient
+    .runMutation(
+      `mutation updateUser($isPublic: Boolean, $publicBooksHeader: String, $publicName: String) {
+          updateUser(Updates: { isPublic: $isPublic, publicBooksHeader: $publicBooksHeader, publicName: $publicName }) {
+            User{
+              isPublic, publicBooksHeader, publicName
+            }
+          }
+      }`,
+      { ...editingState }
+    )
+    .then(resp => {
+      let User = resp.updateUser && resp.updateUser.User;
+      User && dispatch({ type: USER_INFO_SAVED, ...User });
+    });
 };
