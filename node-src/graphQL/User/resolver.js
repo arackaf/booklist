@@ -68,7 +68,7 @@ export default {
     async updateUser(root, args, context, ast) {
       let db = await root.db;
       context.__mongodb = db;
-      let { $match, $project } = decontructGraphqlQuery({ _id: args._id }, ast, UserMetadata, "User");
+      let { $match, $project } = decontructGraphqlQuery(args._id ? { _id: args._id } : {}, ast, UserMetadata, "User");
       let updates = await getUpdateObject(args.Updates || {}, UserMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
 
       if (await processHook(hooksObj, "User", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
