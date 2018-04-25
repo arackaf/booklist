@@ -3,7 +3,7 @@ export default {
   typeName: "User",
   fields: {
     _id: "MongoId",
-    isPublic: "String",
+    isPublic: "Boolean",
     publicName: "String",
     publicBooksHeader: "String"
   },

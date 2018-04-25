@@ -16,7 +16,7 @@ import {
 
 import { Client, compress } from "micro-graphql-react";
 
-const graphqlClient = new Client({
+export const graphqlClient = new Client({
   endpoint: "/graphql",
   fetchOptions: { credentials: "include" }
 });

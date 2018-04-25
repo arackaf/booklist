@@ -2,7 +2,7 @@ export const type = `
   
   type User {
     _id: String
-    isPublic: String
+    isPublic: Boolean
     publicName: String
     publicBooksHeader: String
   }
@@ -32,13 +32,13 @@ export const type = `
 
   input UserInput {
     _id: String
-    isPublic: String
+    isPublic: Boolean
     publicName: String
     publicBooksHeader: String
   }
 
   input UserMutationInput {
-    isPublic: String
+    isPublic: Boolean
     publicName: String
     publicBooksHeader: String
   }
@@ -54,13 +54,10 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
-    isPublic_contains: String
-    isPublic_startsWith: String
-    isPublic_endsWith: String
-    isPublic_regex: String
-    isPublic: String
-    isPublic_ne: String
-    isPublic_in: [String]
+    isPublic: Boolean
+    isPublic: Boolean
+    isPublic_ne: Boolean
+    isPublic_in: [Boolean]
     publicName_contains: String
     publicName_startsWith: String
     publicName_endsWith: String
@@ -97,13 +94,10 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
-    isPublic_contains: String,
-    isPublic_startsWith: String,
-    isPublic_endsWith: String,
-    isPublic_regex: String,
-    isPublic: String,
-    isPublic_ne: String,
-    isPublic_in: [String],
+    isPublic: Boolean,
+    isPublic: Boolean,
+    isPublic_ne: Boolean,
+    isPublic_in: [Boolean],
     publicName_contains: String,
     publicName_startsWith: String,
     publicName_endsWith: String,
