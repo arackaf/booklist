@@ -6,9 +6,9 @@ export const type = `
     publicName: String
     publicBooksHeader: String
   }
-  
+
   type UserQueryResults {
-    Users: [User],
+    Users: [User]
     Meta: QueryResultsMetadata
   }
 
@@ -20,15 +20,15 @@ export const type = `
     success: Boolean
     User: User
   }
-  
+
   type UserMutationResultMulti {
     success: Boolean
     Users: [User]
-  }  
+  }
 
   type UserBulkMutationResult {
     success: Boolean
-  }  
+  }
 
   input UserInput {
     _id: String
@@ -36,20 +36,20 @@ export const type = `
     publicName: String
     publicBooksHeader: String
   }
-  
+
   input UserMutationInput {
     isPublic: String
     publicName: String
     publicBooksHeader: String
   }
-  
+
   input UserSort {
     _id: Int
     isPublic: Int
     publicName: Int
     publicBooksHeader: Int
   }
-      
+
   input UserFilters {
     _id: String
     _id_ne: String
@@ -83,17 +83,17 @@ export const type = `
   
 export const mutation = `
 
-  updateUser(
+  updateUser (
     _id: String,
     Updates: UserMutationInput
   ): UserMutationResult
-  
+
 `;
-  
-  
+
+
 export const query = `
-  
-  allUsers(
+
+  allUsers (
     _id: String,
     _id_ne: String,
     _id_in: [String],
@@ -127,11 +127,9 @@ export const query = `
     PAGE_SIZE: Int
   ): UserQueryResults
 
-  getUser(
+  getUser (
     _id: String
   ): UserSingleQueryResult
-  
+
 `;
-  
-  
   

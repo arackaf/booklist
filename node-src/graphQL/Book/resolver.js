@@ -82,9 +82,6 @@ export default {
       }
     },
     async updateBook(root, args, context, ast) {
-      if (!args._id) {
-        throw "No _id sent";
-      }
       let db = await root.db;
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery({ _id: args._id }, ast, BookMetadata, "Book");
@@ -92,6 +89,9 @@ export default {
 
       if (await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { Book: null };
+      }
+      if (!$match._id) {
+        throw "No _id sent, or inserted in middleware";
       }
       await dbHelpers.runUpdate(db, "books", $match, updates);
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
