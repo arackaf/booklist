@@ -6,11 +6,6 @@ class userController {
     let user = await new UserDAO().getPublicDisplayInfo(_id);
     this.send({ publicName: user && user.publicName, publicBooksHeader: user && user.publicBooksHeader });
   }
-  async getPublicSettings() {
-    let userId = this.request.user.id;
-    let result = await new UserDAO().getPublicSettings(userId);
-    this.send({ info: result });
-  }
   async setPublicSettings({ isPublic, publicName, publicBooksHeader }) {
     let userId = this.request.user.id;
     let result = await new UserDAO().setPublicSettings(userId, isPublic, publicName, publicBooksHeader);

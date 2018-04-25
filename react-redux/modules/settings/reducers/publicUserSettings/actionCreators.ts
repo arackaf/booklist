@@ -7,20 +7,15 @@ export const loadPublicUserSettings = () => dispatch => {
   dispatch({ type: USER_INFO_LOADING });
 
   gqlGet(compress`query GetUserPublicSettings {
-    allUsers{
-      Users{
+    getUser{
+      User{
         isPublic
         publicName
         publicBooksHeader
       }
     }
-  }`).then(resp => {
-    debugger;
-  });
-
-  ajaxUtil.post("/user/getPublicSettings", {}, resp => {
-    debugger;
-    dispatch({ type: USER_INFO_LOADED, info: resp.info });
+  }`).then(({ data: { getUser } }) => {
+    dispatch({ type: USER_INFO_LOADED, info: getUser.User });
   });
 };
 
