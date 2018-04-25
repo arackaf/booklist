@@ -55,7 +55,7 @@ class UserDAO extends DAO {
     email = email.toLowerCase();
     let db = await super.open();
     try {
-      return !!await db.collection("users").findOne({ email });
+      return !!(await db.collection("users").findOne({ email }));
     } finally {
       super.dispose(db);
     }
@@ -90,17 +90,6 @@ class UserDAO extends DAO {
       return { success: true, rememberMe: user.rememberMe, username: user.email, _id: user._id, id: user._id, token: user.token };
     } catch (err) {
       console.log("oops", err);
-    } finally {
-      super.dispose(db);
-    }
-  }
-  async getPublicSettings(_id) {
-    let db = await super.open();
-    try {
-      let user = await db.collection("users").findOne({ _id: ObjectID(_id) });
-      return { isPublic: user.isPublic, publicBooksHeader: user.publicBooksHeader || "", publicName: user.publicName || "" };
-    } catch (Err) {
-      console.log(Err);
     } finally {
       super.dispose(db);
     }
