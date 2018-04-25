@@ -302,6 +302,13 @@ app.post("/react-redux/createUser", function(req, response) {
   });
 });
 
+app.post("/react-redux/resetPassword", async function(req, response) {
+  let { oldPassword, newPassword } = req.body;
+  let userId = req.user.id;
+  let result = await new UserDao().resetPassword(userId, oldPassword, newPassword);
+  response.send({ ...result });
+});
+
 app.get("/activate", browseToReactRedux);
 app.get("/activate/:code", function(req, response) {
   let userDao = new UserDao(),

@@ -52,6 +52,15 @@ import { gqlGet } from "util/graphqlUtil";
       //     ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
       //   });
       // });
+      /*
+      
+        async saveNotificationSubscription({ subscription }) {
+          let userId = this.request.user.id;
+          await new UserDAO().updateSubscription(userId, JSON.parse(subscription));
+          this.send({ success: true });
+        }
+      
+      */
     }
   }
 })();
