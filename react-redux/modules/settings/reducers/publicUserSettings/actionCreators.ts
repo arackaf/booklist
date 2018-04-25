@@ -1,9 +1,25 @@
 import { LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED } from "./actionNames";
 import ajaxUtil from "util/ajaxUtil";
+import { gqlGet } from "util/graphqlUtil";
+import { compress } from "micro-graphql-react";
 
 export const loadPublicUserSettings = () => dispatch => {
   dispatch({ type: USER_INFO_LOADING });
+
+  gqlGet(compress`query GetUserPublicSettings {
+    allUsers{
+      Users{
+        isPublic
+        publicName
+        publicBooksHeader
+      }
+    }
+  }`).then(resp => {
+    debugger;
+  });
+
   ajaxUtil.post("/user/getPublicSettings", {}, resp => {
+    debugger;
     dispatch({ type: USER_INFO_LOADED, info: resp.info });
   });
 };
