@@ -5,9 +5,9 @@ export const type = `
     backgroundColor: String
     order: Int
   }
-  
+
   type LabelColorQueryResults {
-    LabelColors: [LabelColor],
+    LabelColors: [LabelColor]
     Meta: QueryResultsMetadata
   }
 
@@ -19,35 +19,35 @@ export const type = `
     success: Boolean
     LabelColor: LabelColor
   }
-  
+
   type LabelColorMutationResultMulti {
     success: Boolean
     LabelColors: [LabelColor]
-  }  
+  }
 
   type LabelColorBulkMutationResult {
     success: Boolean
-  }  
+  }
 
   input LabelColorInput {
     _id: String
     backgroundColor: String
     order: Int
   }
-  
+
   input LabelColorMutationInput {
     backgroundColor: String
     order: Int
     order_INC: Int
     order_DEC: Int
   }
-  
+
   input LabelColorSort {
     _id: Int
     backgroundColor: Int
     order: Int
   }
-      
+
   input LabelColorFilters {
     _id: String
     _id_ne: String
@@ -75,13 +75,13 @@ export const type = `
 export const mutation = `
 
 
-  
+
 `;
-  
-  
+
+
 export const query = `
-  
-  allLabelColors(
+
+  allLabelColors (
     _id: String,
     _id_ne: String,
     _id_in: [String],
@@ -107,8 +107,6 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int
   ): LabelColorQueryResults
-  
+
 `;
-  
-  
   

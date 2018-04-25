@@ -66,9 +66,6 @@ export default {
   },
   Mutation: {
     async updateUser(root, args, context, ast) {
-      if (!args._id) {
-        throw "No _id sent";
-      }
       let db = await root.db;
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery({ _id: args._id }, ast, UserMetadata, "User");
@@ -76,6 +73,9 @@ export default {
 
       if (await processHook(hooksObj, "User", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { User: null };
+      }
+      if (!$match._id) {
+        throw "No _id sent, or inserted in middleware";
       }
       await dbHelpers.runUpdate(db, "users", $match, updates);
       await processHook(hooksObj, "User", "afterUpdate", $match, updates, root, args, context, ast);

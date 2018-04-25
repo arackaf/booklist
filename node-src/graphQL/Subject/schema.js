@@ -10,9 +10,9 @@ export const type = `
     backgroundColor: String
     textColor: String
   }
-  
+
   type SubjectQueryResults {
-    Subjects: [Subject],
+    Subjects: [Subject]
     Meta: QueryResultsMetadata
   }
 
@@ -24,15 +24,15 @@ export const type = `
     success: Boolean
     Subject: Subject
   }
-  
+
   type SubjectMutationResultMulti {
     success: Boolean
     Subjects: [Subject]
-  }  
+  }
 
   type SubjectBulkMutationResult {
     success: Boolean
-  }  
+  }
 
   input SubjectInput {
     _id: String
@@ -42,7 +42,7 @@ export const type = `
     backgroundColor: String
     textColor: String
   }
-  
+
   input SubjectMutationInput {
     name: String
     path: String
@@ -50,7 +50,7 @@ export const type = `
     backgroundColor: String
     textColor: String
   }
-  
+
   input SubjectSort {
     _id: Int
     name: Int
@@ -59,7 +59,7 @@ export const type = `
     backgroundColor: Int
     textColor: Int
   }
-      
+
   input SubjectFilters {
     _id: String
     _id_ne: String
@@ -107,22 +107,22 @@ export const type = `
   
 export const mutation = `
 
-  createSubject(
+  createSubject (
     Subject: SubjectInput
   ): SubjectMutationResult
 
-  deleteSubject(
+  deleteSubject (
     _id: String
   ): Boolean
 
   ${SchemaExtras1.Mutation || ""}
-  
+
 `;
-  
-  
+
+
 export const query = `
-  
-  allSubjects(
+
+  allSubjects (
     _id: String,
     _id_ne: String,
     _id_in: [String],
@@ -171,14 +171,12 @@ export const query = `
     publicUserId: String
   ): SubjectQueryResults
 
-  getSubject(
+  getSubject (
     _id: String,
     publicUserId: String
   ): SubjectSingleQueryResult
 
   ${SchemaExtras1.Query || ""}
-  
+
 `;
-  
-  
   

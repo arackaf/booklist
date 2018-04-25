@@ -17,9 +17,9 @@ export const type = `
     isRead: Boolean
     dateAdded: String
   }
-  
+
   type BookQueryResults {
-    Books: [Book],
+    Books: [Book]
     Meta: QueryResultsMetadata
   }
 
@@ -31,15 +31,15 @@ export const type = `
     success: Boolean
     Book: Book
   }
-  
+
   type BookMutationResultMulti {
     success: Boolean
     Books: [Book]
-  }  
+  }
 
   type BookBulkMutationResult {
     success: Boolean
-  }  
+  }
 
   input BookInput {
     _id: String
@@ -58,7 +58,7 @@ export const type = `
     isRead: Boolean
     dateAdded: String
   }
-  
+
   input BookMutationInput {
     ean: String
     isbn: String
@@ -95,7 +95,7 @@ export const type = `
     isRead: Boolean
     dateAdded: String
   }
-  
+
   input BookSort {
     _id: Int
     ean: Int
@@ -113,7 +113,7 @@ export const type = `
     isRead: Int
     dateAdded: Int
   }
-      
+
   input BookFilters {
     _id: String
     _id_ne: String
@@ -230,35 +230,35 @@ export const type = `
   
 export const mutation = `
 
-  createBook(
+  createBook (
     Book: BookInput
   ): BookMutationResult
 
-  updateBook(
+  updateBook (
     _id: String,
     Updates: BookMutationInput
   ): BookMutationResult
 
-  updateBooks(
+  updateBooks (
     _ids: [String],
     Updates: BookMutationInput
   ): BookMutationResultMulti
 
-  updateBooksBulk(
+  updateBooksBulk (
     Match: BookFilters,
     Updates: BookMutationInput
   ): BookBulkMutationResult
 
-  deleteBook(
+  deleteBook (
     _id: String
   ): Boolean
-  
+
 `;
-  
-  
+
+
 export const query = `
-  
-  allBooks(
+
+  allBooks (
     _id: String,
     _id_ne: String,
     _id_in: [String],
@@ -377,13 +377,11 @@ export const query = `
     publicUserId: String
   ): BookQueryResults
 
-  getBook(
+  getBook (
     _id: String,
     searchChildSubjects: Boolean,
     publicUserId: String
   ): BookSingleQueryResult
-  
+
 `;
-  
-  
   
