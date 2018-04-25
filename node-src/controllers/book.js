@@ -21,8 +21,6 @@ class bookController {
     await bookDao.deleteBook(_id);
     this.send({ success: true });
   }
-
-  @httpPost
   async offlineSync(params) {
     if (!this.request.user.id) {
       this.send({});

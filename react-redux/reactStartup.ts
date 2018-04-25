@@ -6,7 +6,7 @@ import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
-import { Client, setDefaultClient } from "micro-graphql-react";
+import { Client, setDefaultClient, compress } from "micro-graphql-react";
 
 const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -29,6 +29,7 @@ import {
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
+import { gqlGet } from "util/graphqlUtil";
 
 (function() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
@@ -51,6 +52,15 @@ import createHistory from "history/createBrowserHistory";
       //     ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
       //   });
       // });
+      /*
+      
+        async saveNotificationSubscription({ subscription }) {
+          let userId = this.request.user.id;
+          await new UserDAO().updateSubscription(userId, JSON.parse(subscription));
+          this.send({ success: true });
+        }
+      
+      */
     }
   }
 })();
@@ -191,22 +201,24 @@ function loadModule(location) {
     }
   })();
 
-  Promise.all([modulePromise, publicUserPromise]).then(([{ default: moduleObject }, publicUserInfo]) => {
-    if (currentModule != module) return;
+  Promise.all([modulePromise, publicUserPromise])
+    .then(([{ default: moduleObject }, publicUserInfo]) => {
+      if (currentModule != module) return;
 
-    let priorState = store.getState();
-    currentModuleObject = moduleObject;
-    store.dispatch(setModule(currentModule));
+      let priorState = store.getState();
+      currentModuleObject = moduleObject;
+      store.dispatch(setModule(currentModule));
 
-    if (publicUserInfo) {
-      store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
-    }
+      if (publicUserInfo) {
+        store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
+      }
 
-    if (moduleObject.reducer) {
-      getNewReducer({ name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize, priorState });
-    }
-    renderUI(createElement(moduleObject.component));
-  });
+      if (moduleObject.reducer) {
+        getNewReducer({ name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize, priorState });
+      }
+      renderUI(createElement(moduleObject.component));
+    })
+    .catch(() => {});
 }
 
 export function isLoggedIn() {
@@ -251,8 +263,16 @@ export function setSearchValues(state) {
 
 function fetchPublicUserInfo(userId) {
   return new Promise((res, rej) => {
-    ajaxUtil.post("/user/getPubliclyAvailableUsersName", { _id: userId }, resp => {
-      res({ ...resp });
+    gqlGet(compress`query GetUserPublicSettings {
+      getPublicUser(_id: "${userId}"){
+        PublicUser{
+          publicName
+          publicBooksHeader
+        }
+      }
+    }`).then(resp => {
+      let publicUser = resp.data && resp.data.getPublicUser && resp.data.getPublicUser.PublicUser;
+      publicUser ? res(publicUser) : rej();
     });
   });
 }
