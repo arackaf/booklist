@@ -49,8 +49,8 @@ const Subject = {
     textColor: StringType
   },
   extras: {
-    resolverSources: ["../../graphQL-extras/subject/resolver"],
-    schemaSources: ["../../graphQL-extras/subject/schema"],
+    resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
+    schemaSources: ["../../graphQL-custom/extras/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk"]
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }]

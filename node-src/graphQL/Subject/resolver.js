@@ -4,7 +4,7 @@ const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObj
 import { ObjectId } from "mongodb";
 import SubjectMetadata from "./Subject";
 import * as dbHelpers from "../dbHelpers";
-import ResolverExtras1 from "../../graphQL-extras/subject/resolver";
+import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
 const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 
 export async function loadSubjects(db, queryPacket) {

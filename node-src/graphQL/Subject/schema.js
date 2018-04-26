@@ -1,4 +1,4 @@
-import SchemaExtras1 from "../../graphQL-extras/subject/schema";
+import SchemaExtras1 from "../../graphQL-custom/extras/subject/schema";
 
 export const type = `
   
