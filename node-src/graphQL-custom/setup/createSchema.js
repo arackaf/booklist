@@ -4,6 +4,6 @@ import projectSetup from "./projectSetup";
 import path from "path";
 import del from "del";
 
-del.sync(path.resolve("../graphQL"), { force: true });
+del.sync(path.resolve("../../graphQL"), { force: true });
 
-createGraphqlSchema(projectSetup, path.resolve("../"));
+createGraphqlSchema(projectSetup, path.resolve("../../"));
