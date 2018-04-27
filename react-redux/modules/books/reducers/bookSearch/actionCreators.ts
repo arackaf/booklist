@@ -6,7 +6,8 @@ import {
   SET_GRID_VIEW,
   SET_BASIC_LIST_VIEW,
   GRID_VIEW,
-  BASIC_LIST_VIEW
+  BASIC_LIST_VIEW,
+  HASH_CHANGED
 } from "./actionNames";
 
 import { loadBooks } from "../books/actionCreators";
@@ -17,6 +18,8 @@ import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 
 export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
+
+export const hashChanged = filters => ({ type: HASH_CHANGED, filters });
 
 export function beginFilterChange() {
   return { type: BEGIN_FILTER_CHANGE };

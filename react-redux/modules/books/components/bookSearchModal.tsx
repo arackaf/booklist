@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { selectEntireBookSearchState, entireBookSearchStateType } from "modules/books/reducers/bookSearch/reducer";
+import {
+  selectEntireBookSearchState,
+  BookSearchState,
+  selectBookSearchState,
+  tagOrSubject,
+  LookupHashType
+} from "modules/books/reducers/bookSearch/reducer";
 import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
@@ -11,11 +17,34 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { filterSubjects } from "modules/books/reducers/subjects/reducer";
-import { filterTags } from "modules/books/reducers/tags/reducer";
+import { filterSubjects, StackedSubjectsType, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
+import { filterTags, selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
+import { createSelector } from "reselect";
+
+type ModalProps = {
+  allTagsSorted: tagOrSubject[];
+  subjectsUnwound: tagOrSubject[];
+  subjectHash: LookupHashType;
+  tagHash: LookupHashType;
+} & BookSearchState;
+
+const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType, StackedSubjectsType>(
+  selectBookSearchState,
+  selectEntireTagsState,
+  selectStackedSubjects,
+  (bookSearchState, tagsState, subjectsState) => {
+    return {
+      ...bookSearchState,
+      tagHash: tagsState.tagHash,
+      allTagsSorted: tagsState.allTagsSorted,
+      subjectHash: subjectsState.subjectHash,
+      subjectsUnwound: subjectsState.subjectsUnwound
+    };
+  }
+);
 
 @connect(selectEntireBookSearchState, { ...bookSearchActionCreators })
-export default class BookSearchModal extends Component<entireBookSearchStateType & typeof bookSearchActionCreators, any> {
+export default class BookSearchModal extends Component<ModalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);
 
@@ -85,7 +114,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                   <label>Pages</label>
                   <div className="form-inline">
                     <div style={{ marginRight: 10 }} className="form-group">
-                      <select ref={el => (this.pagesDirEl = el)} defaultValue={this.props.pending.pagesOperator} className="form-control">
+                      <select ref={el => (this.pagesDirEl = el)} defaultValue={this.props.pagesOperator} className="form-control">
                         <option value="lt">{"<"}</option>
                         <option value="gt">{">"}</option>
                       </select>
@@ -190,8 +219,8 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
               </div>
               <div className="checkbox">
                 <label>
-                  <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.pending.searchChildSubjects} /> Also search
-                  child subjects
+                  <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.searchChildSubjects} /> Also search child
+                  subjects
                 </label>
               </div>
             </>

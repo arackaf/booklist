@@ -21,22 +21,6 @@ import { createSelector } from "reselect";
 import { selectStackedSubjects, StackedSubjectsType, filterSubjects as filterSubjectsOrTags } from "../subjects/reducer";
 import { selectEntireTagsState, TagsStateType } from "../tags/reducer";
 
-const searchFields = {
-  search: "",
-  subjects: {},
-  tags: {},
-  searchChildSubjects: false,
-  author: "",
-  publisher: "",
-  pages: "",
-  pagesOperator: "lt",
-  page: 1,
-  pageSize: 50,
-  isRead: "",
-  noSubjects: ""
-};
-export type searchFieldsType = typeof searchFields;
-
 const initialState = {
   editingFilters: false,
   hasMore: false,
@@ -76,6 +60,50 @@ export function bookSearchReducer(state = initialState, action): bookSearchType 
   return state;
 }
 
+export type tagOrSubject = {
+  _id: string;
+  name: string;
+};
+
+const defaultSearchValuesHash = {
+  search: "",
+  selectedSubjects: [] as tagOrSubject[],
+  selectedTags: [] as tagOrSubject[],
+  searchChildSubjects: "",
+  author: "",
+  publisher: "",
+  pages: "",
+  pagesOperator: "",
+  page: 1,
+  pageSize: 50,
+  isRead: "",
+  noSubjects: ""
+};
+export type BookSearchValues = typeof defaultSearchValuesHash;
+export type BookSearchState = BookSearchValues & {
+  editingFilters: boolean;
+};
+
+export type LookupHashType = {
+  [str: string]: tagOrSubject;
+};
+
+const selectSelectedSubjects = createSelector<any, any, any, any>(
+  state => state.booksModule.bookSearch,
+  state => state.app.subjectHash,
+  (filters, hash) => {
+    return projectSelectedItems(filters.subjects, hash);
+  }
+);
+
+const selectSelectedTags = createSelector<any, any, any, any>(
+  state => state.booksModule.bookSearch,
+  state => state.booksModule.tags.tagHash,
+  (filters, hash) => {
+    return projectSelectedItems(filters.tags, hash);
+  }
+);
+
 function projectSelectedItems(ids, hash) {
   return Object.keys(ids)
     .filter(k => ids[k])
@@ -83,21 +111,27 @@ function projectSelectedItems(ids, hash) {
     .filter(s => s);
 }
 
-type lookupHashType = {
-  [str: string]: tagOrSubject;
-};
-type tagOrSubject = {
-  _id: string;
-  name: string;
-};
+export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, bookSearchType, tagOrSubject[], tagOrSubject[]>(
+  state => state.booksModule.bookSearch,
+  selectSelectedSubjects,
+  selectSelectedTags,
+  (bookSearch, subjects, tags) => {
+    let filters = bookSearch.hashFilters;
+    return Object.assign({}, defaultSearchValuesHash, {
+      subjects,
+      tags
+    });
+  }
+);
 
-const createMemoizedPSI = (getActiveIds: ((state: BooksModuleType) => lookupHashType), getLookupHash: ((state: BooksModuleType) => lookupHashType)) =>
-  createSelector<BooksModuleType, tagOrSubject[], lookupHashType, lookupHashType>(getActiveIds, getLookupHash, (ids, hash) =>
-    projectSelectedItems(ids, hash)
-  );
-
-const selectSelectedSubjects = createMemoizedPSI(state => state.booksModule.bookSearch.subjects, state => state.app.subjectHash);
-const selectSelectedTags = createMemoizedPSI(state => state.booksModule.bookSearch.tags, state => state.booksModule.tags.tagHash);
+export const selectBookSearchState = createSelector<BooksModuleType, BookSearchState, BookSearchValues, bookSearchType>(
+  selectCurrentSearch,
+  state => state.booksModule.bookSearch,
+  (currentSearch, bookSearch) => ({
+    ...currentSearch,
+    editingFilters: bookSearch.editingFilters
+  })
+);
 
 export type BookSearchUiViewType = {
   isGridView: boolean;
