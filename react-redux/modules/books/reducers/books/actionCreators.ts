@@ -31,6 +31,7 @@ export function toggleSelectBook(_id) {
 import { bookSearchType } from "../bookSearch/reducer";
 
 import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
+import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
@@ -126,17 +127,19 @@ export function expandBook(_id: string) {
 
     if (!book.detailsLoaded) {
       dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
-      ajaxUtil.get("/book/loadDetails", { _id }).then(resp => {
-        (resp.editorialReviews || []).forEach(ev => {
-          if (ev.Source) {
-            ev.source = ev.Source;
+
+      graphqlClient
+        .runQuery(
+          compress`query GetBookDetails {
+          getBook(_id: ${JSON.stringify(_id)}) {
+            Book { editorialReviews { source, content } }
           }
-          if (ev.Content) {
-            ev.content = ev.Content;
-          }
+        }`
+        )
+        .then(({ data: { getBook } }) => {
+          let editorialReviews = getBook.Book.editorialReviews;
+          dispatch({ type: DETAILS_LOADED, _id, editorialReviews });
         });
-        dispatch({ type: DETAILS_LOADED, _id, editorialReviews: resp.editorialReviews });
-      });
     } else {
       dispatch({ type: EXPAND_BOOK, _id });
     }
