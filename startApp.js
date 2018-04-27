@@ -1,8 +1,8 @@
-import dao from "./node-dest/dataAccess/dao";
-import bookEntryQueueManager from "./node-dest/app-helpers/bookEntryQueueManager";
-import PendingBookEntryDao from "./node-dest/dataAccess/pendingBookEntryDAO";
-import ErrorLoggerDao from "./node-dest/dataAccess/errorLoggerDAO";
-import UserDao from "./node-dest/dataAccess/userDAO";
+import dao from "./node-src/dataAccess/dao";
+import bookEntryQueueManager from "./node-src/app-helpers/bookEntryQueueManager";
+import PendingBookEntryDao from "./node-src/dataAccess/pendingBookEntryDAO";
+import ErrorLoggerDao from "./node-src/dataAccess/errorLoggerDAO";
+import UserDao from "./node-src/dataAccess/userDAO";
 
 import express from "express";
 const app = express();
@@ -159,7 +159,7 @@ app.ws("/bookEntryWS", function(ws, req) {
   bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 });
 
-easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-dest" });
+easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-src" });
 
 app.get("react-redux/offline.htm", (req, response) => response.sendfile("/react-redux/offline.htm"));
 app.get("/", browseToReactRedux);

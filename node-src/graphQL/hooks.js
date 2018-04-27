@@ -1,5 +1,6 @@
 import BooksMiddleware from "../graphQL-custom/middleware/books";
 import SubjectsMiddleware from "../graphQL-custom/middleware/subjects";
+import TagsMiddleware from "../graphQL-custom/middleware/tags";
 import UsersMiddleware from "../graphQL-custom/middleware/users";
 import PublicUsersMiddleware from "../graphQL-custom/middleware/publicUsers";
 
@@ -17,6 +18,7 @@ export default {
   },
   Book: BooksMiddleware,
   Subject: SubjectsMiddleware,
+  Tag: TagsMiddleware,
   User: UsersMiddleware,
   PublicUser: PublicUsersMiddleware
 };

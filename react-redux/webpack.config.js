@@ -88,10 +88,10 @@ module.exports = {
       },
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+ALL_BOOKS_V_/, name: "book-search-graphql", expires: 60 * 5 }), //5 minutes
+        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+GetBookDetails/, name: "book-search-graphql", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
-        getCache({ pattern: /book\/loadDetails/, name: "book-details" })
+        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
       ]
     })
   ].filter(p => p)
