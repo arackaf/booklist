@@ -1,6 +1,8 @@
 import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, LOAD_COLORS, TAG_DELETED } from "./actionNames";
 
 import ajaxUtil from "util/ajaxUtil";
+import { compress } from "micro-graphql-react";
+import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 export function loadTags() {
   return function(dispatch, getState) {
@@ -8,9 +10,19 @@ export function loadTags() {
 
     dispatch({ type: LOAD_TAGS });
 
-    Promise.resolve(ajaxUtil.get("/tag/all", { userId: publicUserId })).then(tagsResp => {
-      dispatch({ type: LOAD_TAGS_RESULTS, tags: tagsResp.results });
-    });
+    graphqlClient
+      .runQuery(
+        compress`query allTags {
+          allTags(publicUserId: ${JSON.stringify(publicUserId)}, SORT: {name: 1}) {
+            Tags {
+              _id, name, backgroundColor, textColor, path,  
+            }
+          }
+        }`
+      )
+      .then(({ data: { allTags } }) => {
+        dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
+      });
   };
 }
 
