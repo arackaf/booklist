@@ -54,6 +54,7 @@
     "redux": "3.7.2",
     "redux-thunk": "2.2.0",
     "reselect": "2.0.1",
+    "shallow-equal": "^1.0.0",
     "simple-react-bootstrap": "^0.3.0-beta2",
     "sw-precache-webpack-plugin": "0.11.4",
     "ts-loader": "4.0.0",

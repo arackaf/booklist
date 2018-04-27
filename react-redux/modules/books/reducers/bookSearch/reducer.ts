@@ -1,15 +1,17 @@
 import { BooksModuleType, AppType, bookSearchType, TagsType } from "modules/books/reducers/reducer";
 
 import {
+  HASH_CHANGED,
   BEGIN_FILTER_CHANGE,
   END_FILTER_CHANGE,
-  SET_FILTERS,
   SET_VIEWING_USERID,
   SET_GRID_VIEW,
   SET_BASIC_LIST_VIEW,
   GRID_VIEW,
   BASIC_LIST_VIEW
 } from "./actionNames";
+
+import shallowEqual from "shallow-equal/objects";
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 
@@ -36,27 +38,18 @@ const searchFields = {
 export type searchFieldsType = typeof searchFields;
 
 const initialState = {
-  sort: "_id",
-  sortDirection: "-1",
   editingFilters: false,
   hasMore: false,
-  ...searchFields,
-  pending: {
-    ...searchFields
-  },
   view: "",
-  searchVersion: +new Date()
+  searchVersion: +new Date(),
+  hashFilters: {}
 };
 export type bookSearchType = typeof initialState;
 
 export function bookSearchReducer(state = initialState, action): bookSearchType {
   switch (action.type) {
-    case SET_FILTERS:
-      return { ...state, ...searchFields, ...action.packet, pending: { ...state.pending, ...searchFields, ...action.packet } };
     case BEGIN_FILTER_CHANGE:
-      let result = Object.assign({}, state, { editingFilters: true, searchSubjectsValue: "", searchTagsValue: "" });
-      Object.keys(searchFields).forEach(k => (state.pending[k] = state[k]));
-      return result;
+      return { ...state, editingFilters: true };
     case END_FILTER_CHANGE:
       return Object.assign({}, state, { editingFilters: false });
     case LOAD_BOOKS_RESULTS:
@@ -65,6 +58,12 @@ export function bookSearchReducer(state = initialState, action): bookSearchType 
       return { ...state, view: BASIC_LIST_VIEW };
     case SET_GRID_VIEW:
       return { ...state, view: GRID_VIEW };
+    case HASH_CHANGED:
+      let { filters } = action;
+      if (!shallowEqual(filters, state.hashFilters)) {
+        return { ...state, hashFilters: filters };
+      }
+      return { ...state };
     case BOOK_SAVED:
     case BOOK_READ_CHANGED:
     case BOOK_DELETED:
@@ -135,26 +134,23 @@ export const selectEntireBookSearchState = createSelector<
   entireBookSearchStateType,
   TagsStateType,
   StackedSubjectsType,
-  tagOrSubject[],
-  tagOrSubject[],
   bookSearchType,
   BookSearchUiViewType
 >(
   selectEntireTagsState,
   selectStackedSubjects,
-  selectSelectedSubjects,
-  selectSelectedTags,
+  //selectSelectedSubjects,
+  //selectSelectedTags,
   state => state.booksModule.bookSearch,
   selectBookSearchUiView,
-  (tagsState, subjectsState, selectedSubjects, selectedTags, bookSearch, searchUi) => {
-    let bindableSortValue = !bookSearch.sort ? "_id|desc" : `${bookSearch.sort}|${bookSearch.sortDirection == "1" ? "asc" : "desc"}`;
+  (tagsState, subjectsState, /*selectedSubjects, selectedTags,*/ bookSearch, searchUi) => {
+    //let bindableSortValue = !bookSearch.sort ? "_id|desc" : `${bookSearch.sort}|${bookSearch.sortDirection == "1" ? "asc" : "desc"}`;
 
-    let filtersToCheckAgainstDefault = ["search", "author", "publisher", "pages", "isRead"];
-    let anyActiveFilters =
-      filtersToCheckAgainstDefault.find(k => bookSearch[k] != initialState[k]) ||
-      !!bookSearch.searchChildSubjects != !!initialState.searchChildSubjects ||
-      Object.keys(bookSearch.tags).length ||
-      Object.keys(bookSearch.subjects).length;
+    //let filtersToCheckAgainstDefault = ["search", "author", "publisher", "pages", "isRead"];
+    //let anyActiveFilters = filtersToCheckAgainstDefault.find(k => bookSearch[k] != initialState[k]); //||
+    //!!bookSearch.searchChildSubjects != !!initialState.searchChildSubjects ||
+    //Object.keys(bookSearch.tags).length ||
+    //Object.keys(bookSearch.subjects).length;
 
     return {
       ...bookSearch,
@@ -162,10 +158,10 @@ export const selectEntireBookSearchState = createSelector<
       subjectHash: subjectsState.subjectHash,
       subjectsUnwound: subjectsState.subjectsUnwound,
       allTagsSorted: tagsState.allTagsSorted,
-      anyActiveFilters: !!anyActiveFilters,
-      selectedSubjects,
-      selectedTags,
-      bindableSortValue,
+      anyActiveFilters: false,
+      selectedSubjects: [],
+      selectedTags: [],
+      bindableSortValue: "_id",
       ...searchUi
     };
   }

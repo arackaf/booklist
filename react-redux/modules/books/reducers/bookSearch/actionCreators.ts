@@ -2,8 +2,6 @@ import { store } from "applicationRoot/store";
 import {
   BEGIN_FILTER_CHANGE,
   END_FILTER_CHANGE,
-  SET_FILTERS,
-  APPLY_PENDING_SEARCH,
   SET_VIEWING_USERID,
   SET_GRID_VIEW,
   SET_BASIC_LIST_VIEW,
@@ -81,102 +79,19 @@ export function booksInitialized({ priorState }) {
   let isActive = true;
   history.listen((location, action) => {
     let { pathname, searchState } = getCurrentHistoryState();
+    isActive = pathname === "/books" || pathname === "/view";
 
-    if (pathname === "/books" || pathname === "/view") {
-      store.dispatch(syncFiltersToHash(searchState, { reactivating: !isActive }));
-      isActive = true;
-    } else {
-      isActive = false;
-    }
+    debugger;
   });
 
   return function(dispatch, getState) {
     if (!priorState.booksModule) {
-      let searchState = getCurrentHistoryState().searchState,
-        nextSearchFilters = getNextFilters(searchState);
-
       dispatch(loadSubjects());
       dispatch(loadTags());
-
-      dispatch(setFilters(nextSearchFilters));
-      dispatch(loadBooks());
-    } else {
-      let { pathname, searchState } = getCurrentHistoryState();
-      store.dispatch(syncFiltersToHash(searchState, { initializingFromPriorState: !!priorState }));
-    }
-  };
-}
-
-export function syncFiltersToHash(searchProps, { reactivating = false, initializingFromPriorState = false } = {}) {
-  return function(dispatch, getState) {
-    let nextSearchFilters = getNextFilters(searchProps),
-      state = getState(),
-      searchState = state.booksModule.bookSearch,
-      booksState = state.booksModule.books;
-
-    if (!nextSearchFilters.sort) {
-      nextSearchFilters.sort = "_id";
-    }
-    if (!nextSearchFilters.sortDirection) {
-      nextSearchFilters.sortDirection = "-1";
-    }
-    let force = reactivating && booksState.reloadOnActivate;
-
-    if (force || isDirty(searchState, nextSearchFilters)) {
-      if (initializingFromPriorState) {
-        store.dispatch({ type: "LOAD_BOOKS_RESULTS", books: [], resultsCount: 0 });
-      }
-      dispatch(setFilters(nextSearchFilters));
       dispatch(loadBooks());
     }
   };
 }
-
-const getNextFilters = searchProps =>
-  Object.assign({}, searchProps, {
-    subjects: idStringToObject(searchProps.subjects),
-    tags: idStringToObject(searchProps.tags),
-    searchChildSubjects: searchProps.searchChildSubjects ? true : null,
-    sortDirection: searchProps.sortDirection == "asc" ? 1 : -1
-  });
-
-const idStringToObject = (str = "") =>
-  str
-    .split("-")
-    .filter(s => s)
-    .reduce((obj, val) => ((obj[val] = true), obj), {});
-
-export function setFilters(packet) {
-  return { type: SET_FILTERS, packet };
-}
-
-function isDirty(oldState, newState) {
-  if (itemsDifferent(oldState.subjects, newState.subjects)) return true;
-  if (itemsDifferent(oldState.tags, newState.tags)) return true;
-  if (oldState.pagesOperator != (newState.pagesOperator || "lt")) {
-    if (newState.pages !== "") return true;
-  }
-  if ((oldState.page || 1) != (newState.page || 1)) {
-    if (newState.pages !== "") return true;
-  }
-  if (!!oldState.searchChildSubjects != !!newState.searchChildSubjects) {
-    return true;
-  }
-
-  return !!["search", "author", "publisher", "pages", "sort", "sortDirection", "isRead", "noSubjects"].filter(
-    prop => oldState[prop] != (newState[prop] || "")
-  ).length;
-}
-
-const itemsDifferent = (oldItems, newItems) =>
-  Object.keys(oldItems)
-    .filter(k => oldItems[k])
-    .sort()
-    .join("-") !==
-  Object.keys(newItems)
-    .filter(k => newItems[k])
-    .sort()
-    .join("-");
 
 export function removeFilterSubject(_id) {
   return function(dispatch, getState) {
