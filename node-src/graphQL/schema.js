@@ -3,6 +3,8 @@ import { query as SubjectQuery, mutation as SubjectMutation, type as SubjectType
 import { query as LabelColorQuery, mutation as LabelColorMutation, type as LabelColorType } from './LabelColor/schema';
 import { query as UserQuery, mutation as UserMutation, type as UserType } from './User/schema';
 import { query as PublicUserQuery, mutation as PublicUserMutation, type as PublicUserType } from './PublicUser/schema';
+import { query as TagQuery, mutation as TagMutation, type as TagType } from './Tag/schema';
+import { type as EditorialReviewType } from './EditorialReview/schema';
     
 export default `
 
@@ -27,6 +29,8 @@ export default `
 
   ${BookType}
 
+  ${EditorialReviewType}
+
   ${SubjectType}
 
   ${LabelColorType}
@@ -34,6 +38,8 @@ export default `
   ${UserType}
 
   ${PublicUserType}
+
+  ${TagType}
 
   type Query {
     ${BookQuery}
@@ -45,6 +51,8 @@ export default `
     ${UserQuery}
 
     ${PublicUserQuery}
+
+    ${TagQuery}
   }
 
   type Mutation {
@@ -57,6 +65,8 @@ export default `
     ${UserMutation}
 
     ${PublicUserMutation}
+
+    ${TagMutation}
   }
 
 `

@@ -16,6 +16,7 @@ export const type = `
     tags: [String]
     isRead: Boolean
     dateAdded: String
+    editorialReviews: [EditorialReview]
   }
 
   type BookQueryResults {
@@ -57,6 +58,7 @@ export const type = `
     tags: [String]
     isRead: Boolean
     dateAdded: String
+    editorialReviews: [EditorialReviewInput]
   }
 
   input BookMutationInput {
@@ -94,6 +96,12 @@ export const type = `
     tags_ADDTOSET: [String]
     isRead: Boolean
     dateAdded: String
+    editorialReviews: [EditorialReviewInput]
+    editorialReviews_PUSH: EditorialReviewInput
+    editorialReviews_CONCAT: [EditorialReviewInput]
+    editorialReviews_UPDATE: EditorialReviewArrayMutationInput
+    editorialReviews_UPDATES: [EditorialReviewArrayMutationInput]
+    editorialReviews_PULL: EditorialReviewFilters
   }
 
   input BookSort {
@@ -112,6 +120,7 @@ export const type = `
     tags: Int
     isRead: Int
     dateAdded: Int
+    editorialReviews: Int
   }
 
   input BookFilters {
@@ -222,6 +231,8 @@ export const type = `
     dateAdded: String
     dateAdded_ne: String
     dateAdded_in: [String]
+    editorialReviews_count: Int
+    editorialReviews: EditorialReviewFilters
     OR: [BookFilters]
   }
   
@@ -366,6 +377,8 @@ export const query = `
     dateAdded: String,
     dateAdded_ne: String,
     dateAdded_in: [String],
+    editorialReviews_count: Int,
+    editorialReviews: EditorialReviewFilters,
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],
