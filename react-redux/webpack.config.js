@@ -44,8 +44,8 @@ module.exports = {
           {
             loader: "babel-loader",
             options: {
-              presets: ["react"],
-              plugins: ["transform-class-properties", "transform-object-rest-spread"]
+              presets: ["@babel/preset-react"],
+              plugins: ["@babel/plugin-proposal-class-properties", "@babel/plugin-proposal-object-rest-spread"]
             }
           },
           "ts-loader"
@@ -56,8 +56,8 @@ module.exports = {
         exclude: /node_modules/,
         loader: "babel-loader",
         query: {
-          presets: ["react"],
-          plugins: ["transform-class-properties", "transform-object-rest-spread"]
+          presets: ["@babel/preset-react"],
+          plugins: ["@babel/plugin-proposal-class-properties", "@babel/plugin-proposal-object-rest-spread"]
         }
       }
     ]
