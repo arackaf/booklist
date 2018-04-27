@@ -73,6 +73,33 @@ const nonEmptyProps = obj =>
   }, {});
 
 function booksSearch(bookSearchState: bookSearchType, publicUserId) {
+  return gqlGet(compress`query ALL_BOOKS_V_${98} {
+    allBooks(
+      PAGE: 1
+      PAGE_SIZE: 50
+    ){
+      Books{
+        _id
+        title
+        isbn
+        ean
+        pages
+        smallImage
+        publicationDate
+        subjects
+        authors
+        publisher
+        tags
+        isRead
+        dateAdded
+      }, Meta {count}
+    }
+  }`).then(resp => {
+    if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
+      return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
+    }
+  });
+
   let version = bookSearchState.searchVersion;
   let bindableSortValue = !bookSearchState.sort ? "_id|desc" : `${bookSearchState.sort}|${bookSearchState.sortDirection == "1" ? "asc" : "desc"}`;
   let [sortField, sortDirection] = bindableSortValue.split("|");
