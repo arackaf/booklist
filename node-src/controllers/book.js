@@ -2,8 +2,7 @@ import { httpPost, httpGet, route, nonRoutable, controller } from "easy-express-
 import BookDAO from "../dataAccess/bookDAO";
 import bookEntryQueueManager from "../app-helpers/bookEntryQueueManager";
 
-@controller({ defaultVerb: "post" })
-class bookController {
+class BookController {
   async saveFromIsbn({ isbn }) {
     const userId = this.request.user.id;
 
@@ -36,16 +35,8 @@ class bookController {
 
     this.send({ success: true });
   }
-  @httpGet
-  async loadDetails({ _id }) {
-    let bookDao = new BookDAO(this.request.user.id);
-    let book = await bookDao.loadBookDetails(_id);
-    if (book) {
-      this.send({ success: true, editorialReviews: book.editorialReviews || [] });
-    } else {
-      this.send({ success: false });
-    }
-  }
 }
 
-export default bookController;
+controller({ defaultVerb: "post" })(BookController);
+
+export default BookController;

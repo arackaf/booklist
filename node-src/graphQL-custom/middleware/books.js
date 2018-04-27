@@ -51,6 +51,9 @@ export default class BooksMiddleware {
   }
   queryMiddleware(queryPacket, root, args, context, ast) {
     let { $project, $sort } = queryPacket;
+    if ($project.editorialReviews) {
+      $project.editorialReviews = 1;
+    }
     $project.titleLower = { $toLower: "$title" };
     if ($sort && typeof $sort.title !== "undefined") {
       $sort.titleLower = $sort.title;
@@ -97,6 +100,13 @@ export default class BooksMiddleware {
         book.smallImage =
           "https://s3.amazonaws.com/my-library-cover-uploads/" +
           book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+      }
+
+      if (Array.isArray(book.editorialReviews)) {
+        book.editorialReviews = book.editorialReviews.map(entry => ({
+          content: entry.Content || entry.content,
+          source: entry.Source || entry.source
+        }));
       }
     });
   }
