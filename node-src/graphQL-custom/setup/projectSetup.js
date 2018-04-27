@@ -16,6 +16,13 @@ const {
   typeLiteral
 } = dataTypes;
 
+const EditorialReview = {
+  fields: {
+    source: StringType,
+    content: StringType
+  }
+};
+
 const Book = {
   table: "books",
   fields: {
@@ -33,7 +40,8 @@ const Book = {
     subjects: StringArrayType,
     tags: StringArrayType,
     isRead: BoolType,
-    dateAdded: StringType
+    dateAdded: StringType,
+    editorialReviews: arrayOf(EditorialReview)
   },
   manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }, { name: "publicUserId", type: "String" }]
 };
@@ -52,6 +60,19 @@ const Subject = {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
     schemaSources: ["../../graphQL-custom/extras/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk"]
+  },
+  manualQueryArgs: [{ name: "publicUserId", type: "String" }]
+};
+
+const Tag = {
+  table: "tags",
+  fields: {
+    _id: MongoIdType,
+    name: StringType,
+    path: StringType,
+    userId: StringType,
+    backgroundColor: StringType,
+    textColor: StringType
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }]
 };
@@ -94,8 +115,10 @@ const PublicUser = {
 
 export default {
   Book,
+  EditorialReview,
   Subject,
   LabelColor,
   User,
-  PublicUser
+  PublicUser,
+  Tag
 };

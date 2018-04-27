@@ -1,3 +1,5 @@
+import EditorialReview from "../EditorialReview/EditorialReview";
+
 export default {
   table: "books",
   typeName: "Book",
@@ -16,6 +18,10 @@ export default {
     subjects: "StringArray",
     tags: "StringArray",
     isRead: "Boolean",
-    dateAdded: "String"
+    dateAdded: "String",
+    editorialReviews: {
+      __isArray: true,
+      get type(){ return EditorialReview; }
+    }
   }
 };
