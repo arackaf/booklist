@@ -93,10 +93,7 @@ export function booksInitialized({ priorState }) {
   return function(dispatch, getState) {
     if (!priorState.booksModule) {
       let searchState = getCurrentHistoryState().searchState,
-        nextSearchFilters = getNextFilters(searchState),
-        state = getState(),
-        subjectsState = state.booksModule.subjects,
-        tagsState = state.booksModule.tags;
+        nextSearchFilters = getNextFilters(searchState);
 
       dispatch(loadSubjects());
       dispatch(loadTags());
