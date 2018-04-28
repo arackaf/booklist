@@ -71,19 +71,30 @@ export function setSortOrder(sort, direction) {
 
 export function booksInitialized({ priorState }) {
   let isActive = true;
+  let reactivating = false;
   history.listen((location, action) => {
-    let { pathname, searchState } = getCurrentHistoryState();
-    isActive = pathname === "/books" || pathname === "/view";
+    const { pathname, searchState } = getCurrentHistoryState();
+    let nowActive = pathname === "/books" || pathname === "/view";
+    reactivating = !isActive && nowActive;
+    isActive = nowActive;
 
-    store.dispatch(hashChanged(searchState));
+    if (isActive) {
+      store.dispatch(hashChanged(searchState));
+    }
   });
   store.dispatch(hashChanged(getCurrentHistoryState().searchState));
   let lastSearchState = (store.getState() as any).booksModule.bookSearch.hashFilters;
 
   store.subscribe(() => {
+    if (!isActive) return;
+
     let booksModuleState = (store.getState() as any).booksModule;
+    let { reloadOnActivate } = booksModuleState.books;
     let newSearchState = booksModuleState.bookSearch.hashFilters;
-    if (newSearchState !== lastSearchState) {
+    let isReactivating = reactivating;
+    reactivating = false; //reset this immediately, before any dispatches
+
+    if (newSearchState !== lastSearchState || (reloadOnActivate && isReactivating)) {
       lastSearchState = newSearchState;
       store.dispatch(loadBooks());
     }
