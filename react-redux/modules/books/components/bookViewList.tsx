@@ -1,4 +1,4 @@
-import { BooksModuleType, AppType, bookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -58,7 +58,7 @@ const BookSearchModal = Loadable({
 
 type mainSelectorType = BookListType & BookSelectionType & { editingBookSearchFilters: boolean };
 
-const mainSelector = createSelector<BooksModuleType, mainSelectorType, bookSearchType, BookListType, BookSelectionType>(
+const mainSelector = createSelector<BooksModuleType, mainSelectorType, BookSearchType, BookListType, BookSelectionType>(
   state => state.booksModule.bookSearch,
   selectBookList,
   selectBookSelection,

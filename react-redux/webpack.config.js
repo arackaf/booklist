@@ -48,12 +48,7 @@ module.exports = {
               plugins: ["@babel/plugin-proposal-class-properties", "@babel/plugin-proposal-object-rest-spread"]
             }
           },
-          {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: false
-            }
-          }
+          "ts-loader"
         ]
       },
       {

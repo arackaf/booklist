@@ -28,7 +28,7 @@ export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
 
-import { bookSearchType, selectCurrentSearch } from "../bookSearch/reducer";
+import { BookSearchType, selectCurrentSearch } from "../bookSearch/reducer";
 
 import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
@@ -73,7 +73,7 @@ const nonEmptyProps = obj =>
     return hash;
   }, {});
 
-function booksSearch(bookSearchState: bookSearchType, publicUserId) {
+function booksSearch(bookSearchState: BookSearchType, publicUserId) {
   let bookSearchFilters = selectCurrentSearch(store.getState() as any);
   let version = bookSearchState.searchVersion;
   let sortObject = `{ ${bookSearchFilters.sort}: ${bookSearchFilters.sortDirection == "asc" ? 1 : -1} }`;

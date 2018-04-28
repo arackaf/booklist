@@ -3,7 +3,7 @@ import Loading from "applicationRoot/components/loading";
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
-import { BooksModuleType, AppType, bookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 import { selectBookList, BookListType } from "modules/books/reducers/books/reducer";
 
 type SelectedType = { subjectsLoaded?: boolean; tagsLoaded?: boolean; booksLoading?: boolean };
