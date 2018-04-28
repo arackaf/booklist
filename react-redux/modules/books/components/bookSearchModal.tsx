@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { BookSearchState, selectBookSearchState, tagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
+import { BookSearchState, selectBookSearchState, TagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
 import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
@@ -16,8 +16,8 @@ import { filterTags, selectEntireTagsState, TagsStateType } from "modules/books/
 import { createSelector } from "reselect";
 
 type ModalProps = {
-  allTagsSorted: tagOrSubject[];
-  subjectsUnwound: tagOrSubject[];
+  allTagsSorted: TagOrSubject[];
+  subjectsUnwound: TagOrSubject[];
   subjectHash: LookupHashType;
   tagHash: LookupHashType;
 } & BookSearchState;
