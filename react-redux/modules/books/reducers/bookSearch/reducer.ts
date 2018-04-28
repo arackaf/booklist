@@ -79,13 +79,13 @@ export type BookSearchState = BookSearchValues & {
   bindableSortValue: string;
 };
 
-const selectSelectedSubjects = createSelector<any, any, BookSearchType, LookupHashType>(
+export const selectSelectedSubjects = createSelector<any, any, BookSearchType, LookupHashType>(
   state => state.booksModule.bookSearch,
   state => state.app.subjectHash,
   (filters, hash) => projectSelectedItems(filters.hashFilters.subjects, hash)
 );
 
-const selectSelectedTags = createSelector<any, any, BookSearchType, LookupHashType>(
+export const selectSelectedTags = createSelector<any, any, BookSearchType, LookupHashType>(
   state => state.booksModule.bookSearch,
   state => state.booksModule.tags.tagHash,
   (filters, hash) => {
