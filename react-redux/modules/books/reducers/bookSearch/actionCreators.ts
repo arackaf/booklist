@@ -6,12 +6,14 @@ import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
 import { loadTags } from "../tags/actionCreators";
 
 import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
+import { selectCurrentSearch } from "./reducer";
 
 export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
 
 export const hashChanged = filters => ({ type: HASH_CHANGED, filters });
 
+//TODO: move to component state - possibly use new context api ???
 export function beginFilterChange() {
   return { type: BEGIN_FILTER_CHANGE };
 }
@@ -111,26 +113,22 @@ export function booksInitialized({ priorState }) {
 
 export function removeFilterSubject(_id) {
   return function(dispatch, getState) {
-    let state = getState().booksModule.bookSearch,
-      newSubjects = Object.keys(state.subjects)
-        .filter(sId => sId != _id)
-        .join("-");
+    let currentSearch = selectCurrentSearch(getState());
+    let newSubjects = currentSearch.selectedSubjects.map(s => s._id).filter(sId => sId != _id);
 
     setSearchValues({
-      subjects: newSubjects,
-      searchChildSubjects: state.searchChildSubjects && newSubjects ? "true" : null
+      subjects: newSubjects.join("-"),
+      searchChildSubjects: currentSearch.searchChildSubjects && newSubjects ? "true" : null
     });
   };
 }
 
 export function removeFilterTag(_id) {
   return function(dispatch, getState) {
-    let state = getState().booksModule.bookSearch,
-      newTags = Object.keys(state.tags)
-        .filter(sId => sId != _id)
-        .join("-");
+    let currentSearch = selectCurrentSearch(getState());
+    let newTags = currentSearch.selectedTags.map(s => s._id).filter(sId => sId != _id);
 
-    setSearchValues({ tags: newTags });
+    setSearchValues({ tags: newTags.join("-") });
   };
 }
 
