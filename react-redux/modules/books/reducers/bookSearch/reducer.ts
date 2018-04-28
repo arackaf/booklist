@@ -60,7 +60,7 @@ export function bookSearchReducer(state = initialState, action): bookSearchType 
   return state;
 }
 
-export type tagOrSubject = {
+export type TagOrSubject = {
   _id: string;
   name: string;
 };
@@ -82,8 +82,8 @@ const defaultSearchValuesHash = {
   sortDirection: "desc"
 };
 export type BookSearchValues = typeof defaultSearchValuesHash & {
-  selectedSubjects: tagOrSubject[];
-  selectedTags: tagOrSubject[];
+  selectedSubjects: TagOrSubject[];
+  selectedTags: TagOrSubject[];
 };
 export type BookSearchState = BookSearchValues & {
   editingFilters: boolean;
@@ -92,7 +92,7 @@ export type BookSearchState = BookSearchValues & {
 };
 
 export type LookupHashType = {
-  [str: string]: tagOrSubject;
+  [str: string]: TagOrSubject;
 };
 
 const selectSelectedSubjects = createSelector<any, any, bookSearchType, LookupHashType>(
@@ -117,7 +117,7 @@ function projectSelectedItems(ids: string = "", hash) {
     .filter(s => s);
 }
 
-export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, bookSearchType, tagOrSubject[], tagOrSubject[]>(
+export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, bookSearchType, TagOrSubject[], TagOrSubject[]>(
   state => {
     return state.booksModule.bookSearch;
   },
