@@ -6,7 +6,12 @@ import NavBar from "simple-react-bootstrap/lib/navBar";
 import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 
 import { selectBookSelection, BookSelectionType } from "modules/books/reducers/books/reducer";
-import { selectEntireBookSearchState, BookSearchState, selectBookSearchState } from "modules/books/reducers/bookSearch/reducer";
+import {
+  selectEntireBookSearchState,
+  BookSearchState,
+  selectBookSearchState,
+  selectBookSearchUiView
+} from "modules/books/reducers/bookSearch/reducer";
 
 import * as booksActionCreators from "../reducers/books/actionCreators";
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
@@ -26,6 +31,8 @@ type bookMenuBarType = BookSearchState & {
   publicBooksHeader: string;
   publicName: string;
   resultsCount: number;
+  isGridView: boolean;
+  isBasicList: boolean;
 };
 
 type bookUtilMenuOptionsType = BookSelectionType & {
@@ -35,6 +42,7 @@ type bookUtilMenuOptionsType = BookSelectionType & {
 const menuBarSelector = (state: BooksModuleType): bookMenuBarType => {
   return {
     ...selectBookSearchState(state),
+    ...selectBookSearchUiView(state),
     resultsCount: state.booksModule.books.resultsCount,
     showingMobile: state.app.showingMobile,
     showingDesktop: state.app.showingDesktop,

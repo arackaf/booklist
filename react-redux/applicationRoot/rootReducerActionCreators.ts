@@ -58,9 +58,7 @@ export function loadSubjects() {
       return;
     }
     subjectsLoaded = true;
-
     let publicUserId = getState().app.publicUserId;
-
     dispatch({ type: LOAD_SUBJECTS });
 
     Promise.all([
