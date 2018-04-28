@@ -86,6 +86,8 @@ export default class BookSearchModal extends Component<ModalProps & typeof bookS
   publisherEl: any;
 
   render() {
+    let { selectedSubjects, selectedTags } = this.props;
+    debugger;
     return (
       <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
         <Modal.Header>

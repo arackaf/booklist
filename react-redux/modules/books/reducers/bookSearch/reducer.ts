@@ -112,9 +112,8 @@ const selectSelectedTags = createSelector<any, any, bookSearchType, LookupHashTy
 function projectSelectedItems(ids: string = "", hash) {
   return ids
     .split("-")
-    .filter(k => k && ids[k])
-    .map(_id => hash[_id])
-    .filter(s => s);
+    .map(_id => (_id ? hash[_id] : null))
+    .filter(res => res);
 }
 
 export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, bookSearchType, TagOrSubject[], TagOrSubject[]>(
