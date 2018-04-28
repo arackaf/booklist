@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  selectEntireBookSearchState,
-  BookSearchState,
-  selectBookSearchState,
-  tagOrSubject,
-  LookupHashType
-} from "modules/books/reducers/bookSearch/reducer";
+import { BookSearchState, selectBookSearchState, tagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
 import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
@@ -43,7 +37,7 @@ const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType,
   }
 );
 
-@connect(selectEntireBookSearchState, { ...bookSearchActionCreators })
+@connect(selector, { ...bookSearchActionCreators })
 export default class BookSearchModal extends Component<ModalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);
