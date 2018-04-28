@@ -1,25 +1,10 @@
-import { BooksModuleType, AppType, bookSearchType, TagsType } from "modules/books/reducers/reducer";
-
-import {
-  HASH_CHANGED,
-  BEGIN_FILTER_CHANGE,
-  END_FILTER_CHANGE,
-  SET_VIEWING_USERID,
-  SET_GRID_VIEW,
-  SET_BASIC_LIST_VIEW,
-  GRID_VIEW,
-  BASIC_LIST_VIEW
-} from "./actionNames";
-
+import { createSelector } from "reselect";
 import shallowEqual from "shallow-equal/objects";
 
+import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { HASH_CHANGED, BEGIN_FILTER_CHANGE, END_FILTER_CHANGE, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
-
 import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
-import { createSelector } from "reselect";
-
-import { selectStackedSubjects, StackedSubjectsType, filterSubjects as filterSubjectsOrTags } from "../subjects/reducer";
-import { selectEntireTagsState, TagsStateType } from "../tags/reducer";
 
 const initialState = {
   editingFilters: false,
@@ -28,9 +13,9 @@ const initialState = {
   searchVersion: +new Date(),
   hashFilters: {} as BookSearchValues
 };
-export type bookSearchType = typeof initialState;
+export type BookSearchType = typeof initialState;
 
-export function bookSearchReducer(state = initialState, action): bookSearchType {
+export function bookSearchReducer(state = initialState, action): BookSearchType {
   switch (action.type) {
     case BEGIN_FILTER_CHANGE:
       return { ...state, editingFilters: true };
@@ -64,6 +49,9 @@ export type TagOrSubject = {
   _id: string;
   name: string;
 };
+export type LookupHashType = {
+  [str: string]: TagOrSubject;
+};
 
 const defaultSearchValuesHash = {
   search: "",
@@ -91,17 +79,13 @@ export type BookSearchState = BookSearchValues & {
   bindableSortValue: string;
 };
 
-export type LookupHashType = {
-  [str: string]: TagOrSubject;
-};
-
-const selectSelectedSubjects = createSelector<any, any, bookSearchType, LookupHashType>(
+const selectSelectedSubjects = createSelector<any, any, BookSearchType, LookupHashType>(
   state => state.booksModule.bookSearch,
   state => state.app.subjectHash,
   (filters, hash) => projectSelectedItems(filters.hashFilters.subjects, hash)
 );
 
-const selectSelectedTags = createSelector<any, any, bookSearchType, LookupHashType>(
+const selectSelectedTags = createSelector<any, any, BookSearchType, LookupHashType>(
   state => state.booksModule.bookSearch,
   state => state.booksModule.tags.tagHash,
   (filters, hash) => {
@@ -116,10 +100,8 @@ function projectSelectedItems(ids: string = "", hash) {
     .filter(res => res);
 }
 
-export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, bookSearchType, TagOrSubject[], TagOrSubject[]>(
-  state => {
-    return state.booksModule.bookSearch;
-  },
+export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, BookSearchType, TagOrSubject[], TagOrSubject[]>(
+  state => state.booksModule.bookSearch,
   selectSelectedSubjects,
   selectSelectedTags,
   (bookSearch, subjects, tags) => {
@@ -131,7 +113,7 @@ export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchVal
   }
 );
 
-export const selectBookSearchState = createSelector<BooksModuleType, BookSearchState, BookSearchValues, bookSearchType>(
+export const selectBookSearchState = createSelector<BooksModuleType, BookSearchState, BookSearchValues, BookSearchType>(
   selectCurrentSearch,
   state => state.booksModule.bookSearch,
   (currentSearch, bookSearch) => ({
@@ -146,7 +128,7 @@ export type BookSearchUiViewType = {
   isGridView: boolean;
   isBasicList: boolean;
 };
-export const selectBookSearchUiView = createSelector<BooksModuleType, BookSearchUiViewType, AppType, bookSearchType>(
+export const selectBookSearchUiView = createSelector<BooksModuleType, BookSearchUiViewType, AppType, BookSearchType>(
   state => state.app,
   state => state.booksModule.bookSearch,
   (app, bookSearch) => {

@@ -1,14 +1,5 @@
 import { store } from "applicationRoot/store";
-import {
-  BEGIN_FILTER_CHANGE,
-  END_FILTER_CHANGE,
-  SET_VIEWING_USERID,
-  SET_GRID_VIEW,
-  SET_BASIC_LIST_VIEW,
-  GRID_VIEW,
-  BASIC_LIST_VIEW,
-  HASH_CHANGED
-} from "./actionNames";
+import { BEGIN_FILTER_CHANGE, END_FILTER_CHANGE, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW, HASH_CHANGED } from "./actionNames";
 
 import { loadBooks } from "../books/actionCreators";
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
@@ -160,8 +151,4 @@ export function pageDown() {
     let state = getState().booksModule.bookSearch;
     setSearchValues({ page: +state.page == 2 ? null : state.page - 1 });
   };
-}
-
-export function setViewingUserId(_id) {
-  return { type: SET_VIEWING_USERID, _id };
 }
