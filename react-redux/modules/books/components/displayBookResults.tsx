@@ -30,7 +30,7 @@ const selector = createSelector<BooksModuleType, Selected, AppType, TagsType, Bo
 );
 
 @connect(selector)
-export default class componentName extends Component<PassedIn & Selected, null> {
+export default class DisplayBookResults extends Component<PassedIn & Selected, null> {
   render() {
     let { editBook, editTagsForBook, editSubjectsForBook, navBarHeight } = this.props;
 
