@@ -26,7 +26,7 @@ const initialState = {
   hasMore: false,
   view: "",
   searchVersion: +new Date(),
-  hashFilters: {}
+  hashFilters: {} as BookSearchValues
 };
 export type bookSearchType = typeof initialState;
 
@@ -67,8 +67,8 @@ export type tagOrSubject = {
 
 const defaultSearchValuesHash = {
   search: "",
-  selectedSubjects: [] as tagOrSubject[],
-  selectedTags: [] as tagOrSubject[],
+  subjects: "",
+  tags: "",
   searchChildSubjects: "",
   author: "",
   publisher: "",
@@ -77,49 +77,57 @@ const defaultSearchValuesHash = {
   page: 1,
   pageSize: 50,
   isRead: "",
-  noSubjects: ""
+  noSubjects: "",
+  sort: "_id",
+  sortDirection: "desc"
 };
-export type BookSearchValues = typeof defaultSearchValuesHash;
+export type BookSearchValues = typeof defaultSearchValuesHash & {
+  selectedSubjects: tagOrSubject[];
+  selectedTags: tagOrSubject[];
+};
 export type BookSearchState = BookSearchValues & {
   editingFilters: boolean;
+  anyActiveFilters: boolean;
+  bindableSortValue: string;
 };
 
 export type LookupHashType = {
   [str: string]: tagOrSubject;
 };
 
-const selectSelectedSubjects = createSelector<any, any, any, any>(
+const selectSelectedSubjects = createSelector<any, any, bookSearchType, LookupHashType>(
   state => state.booksModule.bookSearch,
   state => state.app.subjectHash,
-  (filters, hash) => {
-    return projectSelectedItems(filters.subjects, hash);
-  }
+  (filters, hash) => projectSelectedItems(filters.hashFilters.subjects, hash)
 );
 
-const selectSelectedTags = createSelector<any, any, any, any>(
+const selectSelectedTags = createSelector<any, any, bookSearchType, LookupHashType>(
   state => state.booksModule.bookSearch,
   state => state.booksModule.tags.tagHash,
   (filters, hash) => {
-    return projectSelectedItems(filters.tags, hash);
+    return projectSelectedItems(filters.hashFilters.tags, hash);
   }
 );
 
-function projectSelectedItems(ids, hash) {
-  return Object.keys(ids)
-    .filter(k => ids[k])
+function projectSelectedItems(ids: string = "", hash) {
+  return ids
+    .split("-")
+    .filter(k => k && ids[k])
     .map(_id => hash[_id])
     .filter(s => s);
 }
 
 export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, bookSearchType, tagOrSubject[], tagOrSubject[]>(
-  state => state.booksModule.bookSearch,
+  state => {
+    return state.booksModule.bookSearch;
+  },
   selectSelectedSubjects,
   selectSelectedTags,
   (bookSearch, subjects, tags) => {
     let filters = bookSearch.hashFilters;
-    return Object.assign({}, defaultSearchValuesHash, {
-      subjects,
-      tags
+    return Object.assign({}, defaultSearchValuesHash, filters, {
+      selectedSubjects: subjects,
+      selectedTags: tags
     });
   }
 );
@@ -129,7 +137,9 @@ export const selectBookSearchState = createSelector<BooksModuleType, BookSearchS
   state => state.booksModule.bookSearch,
   (currentSearch, bookSearch) => ({
     ...currentSearch,
-    editingFilters: bookSearch.editingFilters
+    editingFilters: bookSearch.editingFilters,
+    anyActiveFilters: !!Object.keys(bookSearch.hashFilters).length,
+    bindableSortValue: `${currentSearch.sort}|${currentSearch.sortDirection}`
   })
 );
 

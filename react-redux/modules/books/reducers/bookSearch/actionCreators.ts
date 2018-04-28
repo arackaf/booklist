@@ -84,8 +84,20 @@ export function booksInitialized({ priorState }) {
     let { pathname, searchState } = getCurrentHistoryState();
     isActive = pathname === "/books" || pathname === "/view";
 
-    debugger;
+    store.dispatch(hashChanged(searchState));
   });
+  let lastSearchState = getCurrentHistoryState().searchState;
+  store.dispatch(hashChanged(lastSearchState));
+
+  // store.subscribe(() => {
+  //   debugger;
+  //   let booksModuleState = (store.getState() as any).booksModule;
+  //   let newSearchState = booksModuleState.bookSearch.hashFilters;
+  //   if (newSearchState !== lastSearchState) {
+  //     lastSearchState = newSearchState;
+  //     store.dispatch(loadBooks());
+  //   }
+  // });
 
   return function(dispatch, getState) {
     if (!priorState.booksModule) {
