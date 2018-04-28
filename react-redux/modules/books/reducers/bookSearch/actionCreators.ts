@@ -86,18 +86,17 @@ export function booksInitialized({ priorState }) {
 
     store.dispatch(hashChanged(searchState));
   });
-  let lastSearchState = getCurrentHistoryState().searchState;
-  store.dispatch(hashChanged(lastSearchState));
+  store.dispatch(hashChanged(getCurrentHistoryState().searchState));
+  let lastSearchState = (store.getState() as any).booksModule.bookSearch.hashFilters;
 
-  // store.subscribe(() => {
-  //   debugger;
-  //   let booksModuleState = (store.getState() as any).booksModule;
-  //   let newSearchState = booksModuleState.bookSearch.hashFilters;
-  //   if (newSearchState !== lastSearchState) {
-  //     lastSearchState = newSearchState;
-  //     store.dispatch(loadBooks());
-  //   }
-  // });
+  store.subscribe(() => {
+    let booksModuleState = (store.getState() as any).booksModule;
+    let newSearchState = booksModuleState.bookSearch.hashFilters;
+    if (newSearchState !== lastSearchState) {
+      lastSearchState = newSearchState;
+      store.dispatch(loadBooks());
+    }
+  });
 
   return function(dispatch, getState) {
     if (!priorState.booksModule) {
