@@ -69,9 +69,6 @@ const mainSelector = createSelector<BooksModuleType, MainSelectorType, BookListT
   }
 );
 
-const { Provider: EditingFiltersProvider, Consumer: EditingFiltersConsumer } = React.createContext(null);
-export { EditingFiltersConsumer };
-
 @mutation(
   `mutation updateBook($_id: String, $book: BookMutationInput) {
     updateBook(
@@ -101,11 +98,9 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
     booksTagModifying: null,
     isEditingBook: false,
     editingBook: null,
-    editFiltersInfo: {
-      editingFilters: false,
-      beginEditFilters: () => this.setState({ editFiltersInfo: { ...this.state.editFiltersInfo, editingFilters: true } }),
-      endEditFilters: () => this.setState({ editFiltersInfo: { ...this.state.editFiltersInfo, editingFilters: false } })
-    }
+    editingFilters: false,
+    beginEditFilters: () => this.setState({ editingFilters: true }),
+    endEditFilters: () => this.setState({ editingFilters: false })
   };
   editTags = () => this.setState({ tagEditModalOpen: true });
   stopEditingTags = () => this.setState({ tagEditModalOpen: false });
@@ -150,61 +145,55 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
         ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
         : "";
 
-    let { editBook, editTagsForBook, editSubjectsForBook } = this;
-    let { editFiltersInfo, isEditingBook, navBarHeight } = this.state;
+    let { state, editBook, editTagsForBook, editSubjectsForBook } = this;
+    let { isEditingBook, navBarHeight, editingFilters, beginEditFilters, endEditFilters } = state;
+    let { subjectEditModalOpen, booksSubjectModifying, booksTagModifying, tagEditModalOpen } = state;
 
     return (
       <div style={{ position: "relative" }}>
-        <EditingFiltersProvider value={editFiltersInfo}>
-          <BooksLoading />
-          <div className="panel panel-default" style={{ margin: "10px" }}>
-            <BooksMenuBar
-              startTagModification={this.editTagsForSelectedBooks}
-              startSubjectModification={this.editSubjectsForSelectedBooks}
-              editTags={this.editTags}
-              editSubjects={this.editSubjects}
-              navBarSized={this.navBarSized}
-            />
-            <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
-              {!this.props.booksList.length && !this.props.booksLoading ? (
-                <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
-                  No books found
-                </div>
-              ) : null}
+        <BooksLoading />
+        <div className="panel panel-default" style={{ margin: "10px" }}>
+          <BooksMenuBar
+            startTagModification={this.editTagsForSelectedBooks}
+            startSubjectModification={this.editSubjectsForSelectedBooks}
+            editTags={this.editTags}
+            editSubjects={this.editSubjects}
+            navBarSized={this.navBarSized}
+            beginEditFilters={beginEditFilters}
+          />
+          <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
+            {!this.props.booksList.length && !this.props.booksLoading ? (
+              <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
+                No books found
+              </div>
+            ) : null}
 
-              <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={navBarHeight} />
+            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={navBarHeight} />
 
-              {isEditingBook ? (
-                <ManualBookEntry
-                  title={editingBook ? `Edit ${editingBook.title}` : ""}
-                  dragTitle={dragTitle}
-                  bookToEdit={editingBook}
-                  isOpen={isEditingBook}
-                  isSaving={this.props.running}
-                  isSaved={false}
-                  saveBook={this.saveEditingBook}
-                  saveMessage={"Saved"}
-                  onClosing={this.stopEditingBook}
-                />
-              ) : null}
-            </div>
+            {isEditingBook ? (
+              <ManualBookEntry
+                title={editingBook ? `Edit ${editingBook.title}` : ""}
+                dragTitle={dragTitle}
+                bookToEdit={editingBook}
+                isOpen={isEditingBook}
+                isSaving={this.props.running}
+                isSaved={false}
+                saveBook={this.saveEditingBook}
+                saveMessage={"Saved"}
+                onClosing={this.stopEditingBook}
+              />
+            ) : null}
           </div>
-          <br />
-          <br />
+        </div>
+        <br />
+        <br />
 
-          {this.state.booksSubjectModifying ? (
-            <BookSubjectSetter modifyingBooks={this.state.booksSubjectModifying} onDone={this.doneEditingBooksSubjects} />
-          ) : null}
-          {this.state.booksTagModifying ? <BookTagSetter modifyingBooks={this.state.booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
+        {booksSubjectModifying ? <BookSubjectSetter modifyingBooks={booksSubjectModifying} onDone={this.doneEditingBooksSubjects} /> : null}
+        {booksTagModifying ? <BookTagSetter modifyingBooks={booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
 
-          {this.state.subjectEditModalOpen ? (
-            <SubjectEditModal editModalOpen={this.state.subjectEditModalOpen} stopEditing={this.stopEditingSubjects} />
-          ) : null}
-          {this.state.tagEditModalOpen ? <TagEditModal editModalOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
-          {editFiltersInfo.editingFilters ? (
-            <BookSearchModal isOpen={editFiltersInfo.editingFilters} onHide={editFiltersInfo.endEditFilters} />
-          ) : null}
-        </EditingFiltersProvider>
+        {subjectEditModalOpen ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={this.stopEditingSubjects} /> : null}
+        {tagEditModalOpen ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
+        {editingFilters ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
       </div>
     );
   }

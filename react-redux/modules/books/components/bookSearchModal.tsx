@@ -6,9 +6,7 @@ import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
 
-import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
-
 import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterSubjects, StackedSubjectsType, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
