@@ -6,7 +6,7 @@ import NavBar from "simple-react-bootstrap/lib/navBar";
 import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 
 import { selectBookSelection, BookSelectionType } from "modules/books/reducers/books/reducer";
-import { BookSearchState, selectBookSearchState, selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
+import { BookSearchState, selectBookSearchState, selectBookSearchUiView, BookSearchUiViewType } from "modules/books/reducers/bookSearch/reducer";
 
 import * as booksActionCreators from "../reducers/books/actionCreators";
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
@@ -18,23 +18,22 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import Measure from "react-measure";
 
-type bookMenuBarType = BookSearchState & {
-  showingMobile: boolean;
-  showingDesktop: boolean;
-  booksLoading: boolean;
-  isPublic: boolean;
-  publicBooksHeader: string;
-  publicName: string;
-  resultsCount: number;
-  isGridView: boolean;
-  isBasicList: boolean;
-};
+type BookMenuBarType = BookSearchState &
+  BookSearchUiViewType & {
+    showingMobile: boolean;
+    showingDesktop: boolean;
+    booksLoading: boolean;
+    isPublic: boolean;
+    publicBooksHeader: string;
+    publicName: string;
+    resultsCount: number;
+  };
 
-type bookUtilMenuOptionsType = BookSelectionType & {
+type BookUtilMenuOptionsType = BookSelectionType & {
   viewingPublic: boolean;
 };
 
-const menuBarSelector = (state: BooksModuleType): bookMenuBarType => {
+const menuBarSelector = (state: BooksModuleType): BookMenuBarType => {
   return {
     ...selectBookSearchState(state),
     ...selectBookSearchUiView(state),
@@ -48,7 +47,7 @@ const menuBarSelector = (state: BooksModuleType): bookMenuBarType => {
   };
 };
 
-const utilMenuOptionsSelector = (state): bookUtilMenuOptionsType => {
+const utilMenuOptionsSelector = (state): BookUtilMenuOptionsType => {
   return {
     ...selectBookSelection(state),
     viewingPublic: state.app.isPublic
@@ -65,7 +64,7 @@ interface IAddedMenuProps {
 }
 
 @connect(menuBarSelector, { ...bookSearchActionCreators })
-export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
+export default class BooksMenuBar extends Component<BookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
   navBar: any;
   quickSearchEl: any;
   sortChanged(evt) {
@@ -265,10 +264,10 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
   }
 }
 
-type utilMenuOptionsComponentType = bookUtilMenuOptionsType &
+type UtilMenuOptionsComponentType = BookUtilMenuOptionsType &
   typeof booksActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
 @connect(utilMenuOptionsSelector, { ...booksActionCreators })
-class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
+class UtilMenuOptions extends Component<UtilMenuOptionsComponentType, any> {
   render() {
     return (
       <NavBar.Nav>
