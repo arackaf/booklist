@@ -84,7 +84,6 @@ export default class BookSearchModal extends Component<ModalProps & LocalProps &
   pagesDirEl: any;
   isReadE: any;
   isRead0: any;
-  isRead1: any;
   childSubEl: any;
   authorEl: any;
   publisherEl: any;
@@ -154,7 +153,7 @@ export default class BookSearchModal extends Component<ModalProps & LocalProps &
                   </div>
                   <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
                     <label>
-                      <input type="radio" defaultChecked={this.props.isRead == "1"} ref={el => (this.isRead1 = el)} name="isRead" />
+                      <input type="radio" defaultChecked={this.props.isRead == "1"} name="isRead" />
                       Yes
                     </label>
                   </div>
