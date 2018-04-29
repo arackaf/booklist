@@ -194,6 +194,15 @@ export const selectBookList = createSelector<BooksModuleType, BookListType, bool
   }
 );
 
+export type BookLoadingType = {
+  resultsCount: number;
+  booksLoading: boolean;
+};
+export const selectBookLoadingInfo = createSelector<BooksModuleType, BookLoadingType, BooksReducerType>(
+  state => state.booksModule.books,
+  booksModule => ({ resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading })
+);
+
 export type BookSelectionType = {
   allAreChecked: boolean;
   selectedBooksCount: number;
