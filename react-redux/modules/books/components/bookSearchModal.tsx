@@ -22,6 +22,11 @@ type ModalProps = {
   tagHash: LookupHashType;
 } & BookSearchState;
 
+type LocalProps = {
+  isOpen: boolean;
+  onHide: any;
+};
+
 const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType, StackedSubjectsType>(
   selectBookSearchState,
   selectEntireTagsState,
@@ -38,7 +43,7 @@ const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType,
 );
 
 @connect(selector, { ...bookSearchActionCreators })
-export default class BookSearchModal extends Component<ModalProps & typeof bookSearchActionCreators, any> {
+export default class BookSearchModal extends Component<ModalProps & LocalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);
 
@@ -73,6 +78,7 @@ export default class BookSearchModal extends Component<ModalProps & typeof bookS
       searchChildSubjects: this.childSubEl && this.childSubEl.checked,
       noSubjects: this.state.noSubjectsFilter
     });
+    this.props.onHide();
   };
 
   searchEl: any;
@@ -86,11 +92,11 @@ export default class BookSearchModal extends Component<ModalProps & typeof bookS
   publisherEl: any;
 
   render() {
-    let { selectedSubjects, selectedTags } = this.props;
+    let { selectedSubjects, selectedTags, isOpen, onHide } = this.props;
     return (
-      <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
+      <Modal className="fade" show={isOpen} onHide={onHide}>
         <Modal.Header>
-          <button type="button" className="close" onClick={this.props.endFilterChanging} aria-label="Close">
+          <button type="button" className="close" onClick={onHide} aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 className="modal-title">Full search</h4>
@@ -236,7 +242,7 @@ export default class BookSearchModal extends Component<ModalProps & typeof bookS
           <BootstrapButton preset="primary" className="pull-left" onClick={this.applyFilters}>
             Filter
           </BootstrapButton>
-          <BootstrapButton preset="default" onClick={this.props.endFilterChanging}>
+          <BootstrapButton preset="default" onClick={onHide}>
             Close
           </BootstrapButton>
         </Modal.Footer>

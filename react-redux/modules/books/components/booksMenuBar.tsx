@@ -17,6 +17,7 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import Measure from "react-measure";
+import { EditingFiltersConsumer } from "./bookViewList";
 
 type bookMenuBarType = BookSearchState & {
   showingMobile: boolean;
@@ -133,59 +134,58 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                 editTags={editTags}
               />
               <div className="navbar-left navbar-form">
-                <div className="form-group" style={{ marginRight: "5px" }}>
-                  {this.props.showingMobile ? (
-                    <div>
-                      <BootstrapAnchorButton
-                        style={{ width: "100%" }}
-                        className="margin-bottom"
-                        preset="default"
-                        onClick={this.props.beginFilterChange}
-                      >
-                        Open full search modal
-                      </BootstrapAnchorButton>
-
-                      <form onSubmit={this.quickSearch}>
-                        <input
-                          ref={el => (this.quickSearchEl = el)}
-                          defaultValue={this.props.search}
-                          onBlur={this.resetSearch}
-                          name="search"
-                          className="margin-bottom form-control"
-                          placeholder="Quick title search"
-                        />
-                      </form>
-
-                      <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
-                        <option value="title|asc">Title A-Z</option>
-                        <option value="title|desc">Title Z-A</option>
-                        <option value="pages|asc">Pages, Low</option>
-                        <option value="pages|desc">Pages, High</option>
-                        <option value="_id|asc">Created, Earliest</option>
-                        <option value="_id|desc">Created, Latest</option>
-                      </select>
-                    </div>
-                  ) : (
-                    <form onSubmit={this.quickSearch}>
-                      <div className="input-group">
-                        <span className="input-group-btn">
-                          <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>
-                            Filter
+                <EditingFiltersConsumer>
+                  {({ beginEditFilters }) => (
+                    <div className="form-group" style={{ marginRight: "5px" }}>
+                      {this.props.showingMobile ? (
+                        <div>
+                          <BootstrapAnchorButton style={{ width: "100%" }} className="margin-bottom" preset="default" onClick={beginEditFilters}>
+                            Open full search modal
                           </BootstrapAnchorButton>
-                        </span>
-                        <input
-                          ref={el => (this.quickSearchEl = el)}
-                          defaultValue={this.props.search}
-                          onBlur={this.resetSearch}
-                          name="search"
-                          className="form-control"
-                          placeholder="Quick title search"
-                          style={{ width: "150px" }}
-                        />
-                      </div>
-                    </form>
+
+                          <form onSubmit={this.quickSearch}>
+                            <input
+                              ref={el => (this.quickSearchEl = el)}
+                              defaultValue={this.props.search}
+                              onBlur={this.resetSearch}
+                              name="search"
+                              className="margin-bottom form-control"
+                              placeholder="Quick title search"
+                            />
+                          </form>
+
+                          <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
+                            <option value="title|asc">Title A-Z</option>
+                            <option value="title|desc">Title Z-A</option>
+                            <option value="pages|asc">Pages, Low</option>
+                            <option value="pages|desc">Pages, High</option>
+                            <option value="_id|asc">Created, Earliest</option>
+                            <option value="_id|desc">Created, Latest</option>
+                          </select>
+                        </div>
+                      ) : (
+                        <form onSubmit={this.quickSearch}>
+                          <div className="input-group">
+                            <span className="input-group-btn">
+                              <BootstrapAnchorButton preset="default" onClick={beginEditFilters}>
+                                Filter
+                              </BootstrapAnchorButton>
+                            </span>
+                            <input
+                              ref={el => (this.quickSearchEl = el)}
+                              defaultValue={this.props.search}
+                              onBlur={this.resetSearch}
+                              name="search"
+                              className="form-control"
+                              placeholder="Quick title search"
+                              style={{ width: "150px" }}
+                            />
+                          </div>
+                        </form>
+                      )}
+                    </div>
                   )}
-                </div>
+                </EditingFiltersConsumer>
 
                 {this.props.showingDesktop ? (
                   <div className="btn-group" role="group">
