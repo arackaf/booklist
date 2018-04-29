@@ -2,12 +2,11 @@ import { createSelector } from "reselect";
 import shallowEqual from "shallow-equal/objects";
 
 import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
-import { HASH_CHANGED, BEGIN_FILTER_CHANGE, END_FILTER_CHANGE, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
+import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
 
 const initialState = {
-  editingFilters: false,
   hasMore: false,
   view: "",
   searchVersion: +new Date(),
@@ -17,10 +16,6 @@ export type BookSearchType = typeof initialState;
 
 export function bookSearchReducer(state = initialState, action): BookSearchType {
   switch (action.type) {
-    case BEGIN_FILTER_CHANGE:
-      return { ...state, editingFilters: true };
-    case END_FILTER_CHANGE:
-      return Object.assign({}, state, { editingFilters: false });
     case LOAD_BOOKS_RESULTS:
       return Object.assign({}, state, { hasMore: action.hasMore });
     case SET_BASIC_LIST_VIEW:
@@ -74,7 +69,6 @@ export type BookSearchValues = typeof defaultSearchValuesHash & {
   selectedTags: TagOrSubject[];
 };
 export type BookSearchState = BookSearchValues & {
-  editingFilters: boolean;
   anyActiveFilters: boolean;
   bindableSortValue: string;
 };
@@ -118,7 +112,6 @@ export const selectBookSearchState = createSelector<BooksModuleType, BookSearchS
   state => state.booksModule.bookSearch,
   (currentSearch, bookSearch) => ({
     ...currentSearch,
-    editingFilters: bookSearch.editingFilters,
     anyActiveFilters: !!Object.keys(bookSearch.hashFilters).length,
     bindableSortValue: `${currentSearch.sort}|${currentSearch.sortDirection}`
   })

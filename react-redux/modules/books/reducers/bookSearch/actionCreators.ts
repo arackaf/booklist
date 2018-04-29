@@ -1,5 +1,5 @@
 import { store } from "applicationRoot/store";
-import { BEGIN_FILTER_CHANGE, END_FILTER_CHANGE, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW, HASH_CHANGED } from "./actionNames";
+import { SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW, HASH_CHANGED } from "./actionNames";
 
 import { loadBooks } from "../books/actionCreators";
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
@@ -12,15 +12,6 @@ export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
 
 export const hashChanged = filters => ({ type: HASH_CHANGED, filters });
-
-//TODO: move to component state - possibly use new context api ???
-export function beginFilterChange() {
-  return { type: BEGIN_FILTER_CHANGE };
-}
-
-export function endFilterChanging() {
-  return { type: END_FILTER_CHANGE };
-}
 
 export function applyFilters(nextState: any) {
   return function(dispatch, getState) {
@@ -39,7 +30,6 @@ export function applyFilters(nextState: any) {
       isRead: nextState.isRead,
       noSubjects: nextState.noSubjects ? "true" : ""
     });
-    dispatch(endFilterChanging());
   };
 }
 

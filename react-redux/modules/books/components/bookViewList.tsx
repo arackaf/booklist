@@ -1,6 +1,6 @@
 import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 
-import React, { Component } from "react";
+import React, { Component, createContext } from "react";
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
@@ -56,20 +56,21 @@ const BookSearchModal = Loadable({
   delay: 200
 });
 
-type mainSelectorType = BookListType & BookSelectionType & { editingBookSearchFilters: boolean };
+type MainSelectorType = BookListType & BookSelectionType;
 
-const mainSelector = createSelector<BooksModuleType, mainSelectorType, BookSearchType, BookListType, BookSelectionType>(
-  state => state.booksModule.bookSearch,
+const mainSelector = createSelector<BooksModuleType, MainSelectorType, BookListType, BookSelectionType>(
   selectBookList,
   selectBookSelection,
-  (bookSearch, books, bookSelection) => {
+  (books, bookSelection) => {
     return {
-      editingBookSearchFilters: bookSearch.editingFilters,
       ...books,
       ...bookSelection
     };
   }
 );
+
+const { Provider: EditingFiltersProvider, Consumer: EditingFiltersConsumer } = React.createContext(null);
+export { EditingFiltersConsumer };
 
 @mutation(
   `mutation updateBook($_id: String, $book: BookMutationInput) {
@@ -91,7 +92,7 @@ const mainSelector = createSelector<BooksModuleType, mainSelectorType, BookSearc
   }`
 )
 @connect(mainSelector)
-export default class BookViewingList extends Component<mainSelectorType & MutationType & { dispatch: any }, any> {
+export default class BookViewingList extends Component<MainSelectorType & MutationType & { dispatch: any }, any> {
   state = {
     navBarHeight: null,
     tagEditModalOpen: false,
@@ -99,7 +100,12 @@ export default class BookViewingList extends Component<mainSelectorType & Mutati
     booksSubjectModifying: null,
     booksTagModifying: null,
     isEditingBook: false,
-    editingBook: null
+    editingBook: null,
+    editFiltersInfo: {
+      editingFilters: false,
+      beginEditFilters: () => this.setState({ editFiltersInfo: { ...this.state.editFiltersInfo, editingFilters: true } }),
+      endEditFilters: () => this.setState({ editFiltersInfo: { ...this.state.editFiltersInfo, editingFilters: false } })
+    }
   };
   editTags = () => this.setState({ tagEditModalOpen: true });
   stopEditingTags = () => this.setState({ tagEditModalOpen: false });
@@ -145,55 +151,60 @@ export default class BookViewingList extends Component<mainSelectorType & Mutati
         : "";
 
     let { editBook, editTagsForBook, editSubjectsForBook } = this;
+    let { editFiltersInfo, isEditingBook, navBarHeight } = this.state;
 
     return (
       <div style={{ position: "relative" }}>
-        <BooksLoading />
-        <div className="panel panel-default" style={{ margin: "10px" }}>
-          <BooksMenuBar
-            startTagModification={this.editTagsForSelectedBooks}
-            startSubjectModification={this.editSubjectsForSelectedBooks}
-            editTags={this.editTags}
-            editSubjects={this.editSubjects}
-            navBarSized={this.navBarSized}
-          />
-          <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
-            {!this.props.booksList.length && !this.props.booksLoading ? (
-              <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
-                No books found
-              </div>
-            ) : null}
+        <EditingFiltersProvider value={editFiltersInfo}>
+          <BooksLoading />
+          <div className="panel panel-default" style={{ margin: "10px" }}>
+            <BooksMenuBar
+              startTagModification={this.editTagsForSelectedBooks}
+              startSubjectModification={this.editSubjectsForSelectedBooks}
+              editTags={this.editTags}
+              editSubjects={this.editSubjects}
+              navBarSized={this.navBarSized}
+            />
+            <div className="panel-body" style={{ padding: 0, minHeight: 450, position: "relative" }}>
+              {!this.props.booksList.length && !this.props.booksLoading ? (
+                <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
+                  No books found
+                </div>
+              ) : null}
 
-            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={this.state.navBarHeight} />
+              <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={navBarHeight} />
 
-            {this.state.isEditingBook ? (
-              <ManualBookEntry
-                title={editingBook ? `Edit ${editingBook.title}` : ""}
-                dragTitle={dragTitle}
-                bookToEdit={editingBook}
-                isOpen={this.state.isEditingBook}
-                isSaving={this.props.running}
-                isSaved={false}
-                saveBook={this.saveEditingBook}
-                saveMessage={"Saved"}
-                onClosing={this.stopEditingBook}
-              />
-            ) : null}
+              {isEditingBook ? (
+                <ManualBookEntry
+                  title={editingBook ? `Edit ${editingBook.title}` : ""}
+                  dragTitle={dragTitle}
+                  bookToEdit={editingBook}
+                  isOpen={isEditingBook}
+                  isSaving={this.props.running}
+                  isSaved={false}
+                  saveBook={this.saveEditingBook}
+                  saveMessage={"Saved"}
+                  onClosing={this.stopEditingBook}
+                />
+              ) : null}
+            </div>
           </div>
-        </div>
-        <br />
-        <br />
+          <br />
+          <br />
 
-        {this.state.booksSubjectModifying ? (
-          <BookSubjectSetter modifyingBooks={this.state.booksSubjectModifying} onDone={this.doneEditingBooksSubjects} />
-        ) : null}
-        {this.state.booksTagModifying ? <BookTagSetter modifyingBooks={this.state.booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
+          {this.state.booksSubjectModifying ? (
+            <BookSubjectSetter modifyingBooks={this.state.booksSubjectModifying} onDone={this.doneEditingBooksSubjects} />
+          ) : null}
+          {this.state.booksTagModifying ? <BookTagSetter modifyingBooks={this.state.booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
 
-        {this.state.subjectEditModalOpen ? (
-          <SubjectEditModal editModalOpen={this.state.subjectEditModalOpen} stopEditing={this.stopEditingSubjects} />
-        ) : null}
-        {this.state.tagEditModalOpen ? <TagEditModal editModalOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
-        {this.props.editingBookSearchFilters ? <BookSearchModal /> : null}
+          {this.state.subjectEditModalOpen ? (
+            <SubjectEditModal editModalOpen={this.state.subjectEditModalOpen} stopEditing={this.stopEditingSubjects} />
+          ) : null}
+          {this.state.tagEditModalOpen ? <TagEditModal editModalOpen={this.state.tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
+          {editFiltersInfo.editingFilters ? (
+            <BookSearchModal isOpen={editFiltersInfo.editingFilters} onHide={editFiltersInfo.endEditFilters} />
+          ) : null}
+        </EditingFiltersProvider>
       </div>
     );
   }
