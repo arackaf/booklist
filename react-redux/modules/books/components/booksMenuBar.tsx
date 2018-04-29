@@ -266,10 +266,8 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
 }
 
 type utilMenuOptionsComponentType = bookUtilMenuOptionsType &
-  typeof booksActionCreators &
-  typeof subjectsActionCreators &
-  typeof tagsActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
-@connect(utilMenuOptionsSelector, { ...booksActionCreators, ...subjectsActionCreators, ...tagsActionCreators })
+  typeof booksActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
+@connect(utilMenuOptionsSelector, { ...booksActionCreators })
 class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
   render() {
     return (
