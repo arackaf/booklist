@@ -17,40 +17,13 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import Measure from "react-measure";
+import { AppUiState, selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
 
-type BookMenuBarType = BookSearchState &
-  BookLoadingType &
-  BookSearchUiViewType & {
-    showingMobile: boolean;
-    showingDesktop: boolean;
-    isPublic: boolean;
-    publicBooksHeader: string;
-    publicName: string;
-  };
+type BookMenuBarType = BookSearchState & BookLoadingType & BookSearchUiViewType & AppUiState;
+type BookUtilMenuOptionsType = BookSelectionType & AppUiState;
 
-type BookUtilMenuOptionsType = BookSelectionType & {
-  viewingPublic: boolean;
-};
-
-const menuBarSelector = (state: BooksModuleType): BookMenuBarType => {
-  return {
-    ...selectBookSearchState(state),
-    ...selectBookSearchUiView(state),
-    ...selectBookLoadingInfo(state),
-    showingMobile: state.app.showingMobile,
-    showingDesktop: state.app.showingDesktop,
-    isPublic: state.app.isPublic,
-    publicBooksHeader: state.app.publicBooksHeader,
-    publicName: state.app.publicName
-  };
-};
-
-const utilMenuOptionsSelector = (state): BookUtilMenuOptionsType => {
-  return {
-    ...selectBookSelection(state),
-    viewingPublic: state.app.isPublic
-  };
-};
+const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState);
+const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
 
 interface IAddedMenuProps {
   navBarSized: Function;
@@ -269,12 +242,12 @@ class UtilMenuOptions extends Component<UtilMenuOptionsComponentType, any> {
   render() {
     return (
       <NavBar.Nav>
-        <NavBar.Dropdown disabled={this.props.viewingPublic} text="Admin">
+        <NavBar.Dropdown disabled={this.props.isPublic} text="Admin">
           <NavBar.Item onClick={this.props.editSubjects}>Edit subjects</NavBar.Item>
           <NavBar.Item onClick={this.props.editTags}>Edit tags</NavBar.Item>
         </NavBar.Dropdown>
 
-        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text="Selected books" style={{ marginRight: "5px" }}>
+        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.isPublic} text="Selected books" style={{ marginRight: "5px" }}>
           <NavBar.Item onClick={this.props.startSubjectModification}>Set subjects</NavBar.Item>
           <NavBar.Item onClick={this.props.startTagModification}>Set tags</NavBar.Item>
           <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
