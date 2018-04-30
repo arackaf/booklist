@@ -1,6 +1,6 @@
 import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 
-import React, { Component, createContext } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
