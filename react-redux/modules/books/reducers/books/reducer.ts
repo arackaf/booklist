@@ -1,6 +1,6 @@
 import { hashOf } from "applicationRoot/rootReducer";
 import { bulkMerge } from "util/immutableHelpers";
-import { BooksModuleType, BooksReducerType, bookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType, BooksReducerType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 
 import update from "immutability-helper";
 
@@ -192,6 +192,15 @@ export const selectBookList = createSelector<BooksModuleType, BookListType, bool
     });
     return { booksList: books, booksLoading };
   }
+);
+
+export type BookLoadingType = {
+  resultsCount: number;
+  booksLoading: boolean;
+};
+export const selectBookLoadingInfo = createSelector<BooksModuleType, BookLoadingType, BooksReducerType>(
+  state => state.booksModule.books,
+  booksModule => ({ resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading })
 );
 
 export type BookSelectionType = {

@@ -1,21 +1,47 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { selectEntireBookSearchState, entireBookSearchStateType } from "modules/books/reducers/bookSearch/reducer";
+import { BookSearchState, selectBookSearchState, TagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
 import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
 
-import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
-
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { filterSubjects } from "modules/books/reducers/subjects/reducer";
-import { filterTags } from "modules/books/reducers/tags/reducer";
+import { filterSubjects, StackedSubjectsType, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
+import { filterTags, selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
+import { createSelector } from "reselect";
 
-@connect(selectEntireBookSearchState, { ...bookSearchActionCreators })
-export default class BookSearchModal extends Component<entireBookSearchStateType & typeof bookSearchActionCreators, any> {
+type ModalProps = {
+  allTagsSorted: TagOrSubject[];
+  subjectsUnwound: TagOrSubject[];
+  subjectHash: LookupHashType;
+  tagHash: LookupHashType;
+} & BookSearchState;
+
+type LocalProps = {
+  isOpen: boolean;
+  onHide: any;
+};
+
+const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType, StackedSubjectsType>(
+  selectBookSearchState,
+  selectEntireTagsState,
+  selectStackedSubjects,
+  (bookSearchState, tagsState, subjectsState) => {
+    return {
+      ...bookSearchState,
+      tagHash: tagsState.tagHash,
+      allTagsSorted: tagsState.allTagsSorted,
+      subjectHash: subjectsState.subjectHash,
+      subjectsUnwound: subjectsState.subjectsUnwound
+    };
+  }
+);
+
+@connect(selector, { ...bookSearchActionCreators })
+export default class BookSearchModal extends Component<ModalProps & LocalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);
 
@@ -50,6 +76,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
       searchChildSubjects: this.childSubEl && this.childSubEl.checked,
       noSubjects: this.state.noSubjectsFilter
     });
+    this.props.onHide();
   };
 
   searchEl: any;
@@ -57,16 +84,16 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
   pagesDirEl: any;
   isReadE: any;
   isRead0: any;
-  isRead1: any;
   childSubEl: any;
   authorEl: any;
   publisherEl: any;
 
   render() {
+    let { selectedSubjects, selectedTags, isOpen, onHide } = this.props;
     return (
-      <Modal className="fade" show={this.props.editingFilters} onHide={this.props.endFilterChanging}>
+      <Modal className="fade" show={isOpen} onHide={onHide}>
         <Modal.Header>
-          <button type="button" className="close" onClick={this.props.endFilterChanging} aria-label="Close">
+          <button type="button" className="close" onClick={onHide} aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 className="modal-title">Full search</h4>
@@ -85,7 +112,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                   <label>Pages</label>
                   <div className="form-inline">
                     <div style={{ marginRight: 10 }} className="form-group">
-                      <select ref={el => (this.pagesDirEl = el)} defaultValue={this.props.pending.pagesOperator} className="form-control">
+                      <select ref={el => (this.pagesDirEl = el)} defaultValue={this.props.pagesOperator} className="form-control">
                         <option value="lt">{"<"}</option>
                         <option value="gt">{">"}</option>
                       </select>
@@ -126,7 +153,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
                   </div>
                   <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
                     <label>
-                      <input type="radio" defaultChecked={this.props.isRead == "1"} ref={el => (this.isRead1 = el)} name="isRead" />
+                      <input type="radio" defaultChecked={this.props.isRead == "1"} name="isRead" />
                       Yes
                     </label>
                   </div>
@@ -190,8 +217,8 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
               </div>
               <div className="checkbox">
                 <label>
-                  <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.pending.searchChildSubjects} /> Also search
-                  child subjects
+                  <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.searchChildSubjects} /> Also search child
+                  subjects
                 </label>
               </div>
             </>
@@ -212,7 +239,7 @@ export default class BookSearchModal extends Component<entireBookSearchStateType
           <BootstrapButton preset="primary" className="pull-left" onClick={this.applyFilters}>
             Filter
           </BootstrapButton>
-          <BootstrapButton preset="default" onClick={this.props.endFilterChanging}>
+          <BootstrapButton preset="default" onClick={onHide}>
             Close
           </BootstrapButton>
         </Modal.Footer>

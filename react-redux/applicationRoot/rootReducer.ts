@@ -88,6 +88,27 @@ export default function rootReducer(state = initialState, action) {
   return state;
 }
 
+export type AppUiState = {
+  showingMobile: boolean;
+  showingDesktop: boolean;
+  isPublic: boolean;
+  publicBooksHeader: string;
+  publicName: string;
+};
+export const selectAppUiState = createSelector<RootApplicationType, AppUiState, AppType>(
+  state => state.app,
+  app => ({
+    showingMobile: app.showingMobile,
+    showingDesktop: app.showingDesktop,
+    isPublic: app.isPublic,
+    publicBooksHeader: app.publicBooksHeader,
+    publicName: app.publicName
+  })
+);
+
+export const combineSelectors = <TResult>(...selectors): ((state) => TResult) =>
+  (createSelector as any)(...selectors, (...results) => Object.assign({}, ...results));
+
 export const unwindSubjects = subjects => {
   let result = [];
   subjects.forEach(s => result.push(s, ...unwindSubjects(s.children || [])));

@@ -5,8 +5,8 @@ import NavBar from "simple-react-bootstrap/lib/navBar";
 
 import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 
-import { selectBookSelection, BookSelectionType } from "modules/books/reducers/books/reducer";
-import { selectEntireBookSearchState, entireBookSearchStateType } from "modules/books/reducers/bookSearch/reducer";
+import { selectBookSelection, BookSelectionType, BookLoadingType, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
+import { BookSearchState, selectBookSearchState, selectBookSearchUiView, BookSearchUiViewType } from "modules/books/reducers/bookSearch/reducer";
 
 import * as booksActionCreators from "../reducers/books/actionCreators";
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
@@ -17,40 +17,13 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import Measure from "react-measure";
+import { AppUiState, selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
 
-type bookMenuBarType = entireBookSearchStateType & {
-  showingMobile: boolean;
-  showingDesktop: boolean;
-  booksLoading: boolean;
-  isPublic: boolean;
-  publicBooksHeader: string;
-  publicName: string;
-  resultsCount: number;
-};
+type BookMenuBarType = BookSearchState & BookLoadingType & BookSearchUiViewType & AppUiState;
+type BookUtilMenuOptionsType = BookSelectionType & AppUiState;
 
-type bookUtilMenuOptionsType = BookSelectionType & {
-  viewingPublic: boolean;
-};
-
-const menuBarSelector = (state: BooksModuleType): bookMenuBarType => {
-  return {
-    ...selectEntireBookSearchState(state),
-    resultsCount: state.booksModule.books.resultsCount,
-    showingMobile: state.app.showingMobile,
-    showingDesktop: state.app.showingDesktop,
-    booksLoading: state.booksModule.books.booksLoading,
-    isPublic: state.app.isPublic,
-    publicBooksHeader: state.app.publicBooksHeader,
-    publicName: state.app.publicName
-  };
-};
-
-const utilMenuOptionsSelector = (state): bookUtilMenuOptionsType => {
-  return {
-    ...selectBookSelection(state),
-    viewingPublic: state.app.isPublic
-  };
-};
+const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState);
+const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
 
 interface IAddedMenuProps {
   navBarSized: Function;
@@ -58,10 +31,11 @@ interface IAddedMenuProps {
   editSubjects: any;
   startSubjectModification: any;
   startTagModification: any;
+  beginEditFilters: any;
 }
 
 @connect(menuBarSelector, { ...bookSearchActionCreators })
-export default class BooksMenuBar extends Component<bookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
+export default class BooksMenuBar extends Component<BookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
   navBar: any;
   quickSearchEl: any;
   sortChanged(evt) {
@@ -99,7 +73,8 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
       editTags,
       editSubjects,
       startSubjectModification,
-      startTagModification
+      startTagModification,
+      beginEditFilters
     } = this.props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
@@ -133,12 +108,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                 <div className="form-group" style={{ marginRight: "5px" }}>
                   {this.props.showingMobile ? (
                     <div>
-                      <BootstrapAnchorButton
-                        style={{ width: "100%" }}
-                        className="margin-bottom"
-                        preset="default"
-                        onClick={this.props.beginFilterChange}
-                      >
+                      <BootstrapAnchorButton style={{ width: "100%" }} className="margin-bottom" preset="default" onClick={beginEditFilters}>
                         Open full search modal
                       </BootstrapAnchorButton>
 
@@ -166,7 +136,7 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
                     <form onSubmit={this.quickSearch}>
                       <div className="input-group">
                         <span className="input-group-btn">
-                          <BootstrapAnchorButton preset="default" onClick={this.props.beginFilterChange}>
+                          <BootstrapAnchorButton preset="default" onClick={beginEditFilters}>
                             Filter
                           </BootstrapAnchorButton>
                         </span>
@@ -265,21 +235,19 @@ export default class BooksMenuBar extends Component<bookMenuBarType & typeof boo
   }
 }
 
-type utilMenuOptionsComponentType = bookUtilMenuOptionsType &
-  typeof booksActionCreators &
-  typeof subjectsActionCreators &
-  typeof tagsActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
-@connect(utilMenuOptionsSelector, { ...booksActionCreators, ...subjectsActionCreators, ...tagsActionCreators })
-class UtilMenuOptions extends Component<utilMenuOptionsComponentType, any> {
+type UtilMenuOptionsComponentType = BookUtilMenuOptionsType &
+  typeof booksActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
+@connect(utilMenuOptionsSelector, { ...booksActionCreators })
+class UtilMenuOptions extends Component<UtilMenuOptionsComponentType, any> {
   render() {
     return (
       <NavBar.Nav>
-        <NavBar.Dropdown disabled={this.props.viewingPublic} text="Admin">
+        <NavBar.Dropdown disabled={this.props.isPublic} text="Admin">
           <NavBar.Item onClick={this.props.editSubjects}>Edit subjects</NavBar.Item>
           <NavBar.Item onClick={this.props.editTags}>Edit tags</NavBar.Item>
         </NavBar.Dropdown>
 
-        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.viewingPublic} text="Selected books" style={{ marginRight: "5px" }}>
+        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.isPublic} text="Selected books" style={{ marginRight: "5px" }}>
           <NavBar.Item onClick={this.props.startSubjectModification}>Set subjects</NavBar.Item>
           <NavBar.Item onClick={this.props.startTagModification}>Set tags</NavBar.Item>
           <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
