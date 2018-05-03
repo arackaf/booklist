@@ -1,15 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
-
-// import * as actionCreatorsBooks from '../reducers/books/actionCreators';
-// import * as actionCreatorsBookSearch from '../reducers/bookSearch/actionCreators';
-// import * as actionCreatorsBookSubjectModification from '../reducers/booksSubjectModification/actionCreators';
-// import * as actionCreatorsEditBook from '../reducers/editBook/actionCreators';
-// import * as actionCreatorsBookTagModification from '../reducers/booksTagModification/actionCreators';
-
-// import { selector } from '../reducers/reducer';
-
 import { selectBookListComponentState, BookListComponentStateType, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
 @connect(null, actions)

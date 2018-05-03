@@ -7,7 +7,7 @@ import BLV from "./bookViewList-basicList";
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
-import { BooksModuleType, AppType, bookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 import { selectBookList, BookListType } from "modules/books/reducers/books/reducer";
 import { BookSearchUiViewType, selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
 
@@ -30,7 +30,7 @@ const selector = createSelector<BooksModuleType, Selected, AppType, TagsType, Bo
 );
 
 @connect(selector)
-export default class componentName extends Component<PassedIn & Selected, null> {
+export default class DisplayBookResults extends Component<PassedIn & Selected, null> {
   render() {
     let { editBook, editTagsForBook, editSubjectsForBook, navBarHeight } = this.props;
 

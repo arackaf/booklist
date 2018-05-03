@@ -28,10 +28,11 @@ export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
 
-import { bookSearchType } from "../bookSearch/reducer";
+import { BookSearchType, selectCurrentSearch } from "../bookSearch/reducer";
 
 import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
+import { store } from "applicationRoot/store";
 
 export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
@@ -49,9 +50,9 @@ export function loadBooks() {
   return function(dispatch, getState) {
     dispatch({ type: LOAD_BOOKS });
 
-    let state = getState(),
-      bookSearch = state.booksModule.bookSearch,
-      app = state.app;
+    let state = getState();
+    let bookSearch = state.booksModule.bookSearch;
+    let app = state.app;
 
     Promise.resolve(booksSearch(bookSearch, app.publicUserId)).then(booksResp => {
       let hasMore = booksResp.results.length > bookSearch.pageSize;
@@ -72,29 +73,28 @@ const nonEmptyProps = obj =>
     return hash;
   }, {});
 
-function booksSearch(bookSearchState: bookSearchType, publicUserId) {
+function booksSearch(bookSearchState: BookSearchType, publicUserId) {
+  let bookSearchFilters = selectCurrentSearch(store.getState() as any);
   let version = bookSearchState.searchVersion;
-  let bindableSortValue = !bookSearchState.sort ? "_id|desc" : `${bookSearchState.sort}|${bookSearchState.sortDirection == "1" ? "asc" : "desc"}`;
-  let [sortField, sortDirection] = bindableSortValue.split("|");
-  let sortObject = `{ ${sortField}: ${sortDirection == "asc" ? 1 : -1} }`;
+  let sortObject = `{ ${bookSearchFilters.sort}: ${bookSearchFilters.sortDirection == "asc" ? 1 : -1} }`;
 
   return gqlGet(compress`query ALL_BOOKS_V_${version} {
     allBooks(
-      PAGE: ${bookSearchState.page}
-      PAGE_SIZE: ${bookSearchState.pageSize}
+      PAGE: ${bookSearchFilters.page}
+      PAGE_SIZE: ${bookSearchFilters.pageSize}
       SORT: ${sortObject}
       ${args(
-        strArg("title_contains", bookSearchState.search),
-        boolArg("isRead", bookSearchState.isRead === "1" ? true : null),
-        boolArg("isRead_ne", bookSearchState.isRead === "0" ? true : null),
-        strArrArg("subjects_containsAny", Object.keys(bookSearchState.subjects)),
-        boolArg("searchChildSubjects", bookSearchState.searchChildSubjects || null),
-        strArrArg("tags_containsAny", Object.keys(bookSearchState.tags)),
-        strArg("authors_textContains", bookSearchState.author),
-        strArg("publisher_contains", bookSearchState.publisher),
+        strArg("title_contains", bookSearchFilters.search),
+        boolArg("isRead", bookSearchFilters.isRead === "1" ? true : null),
+        boolArg("isRead_ne", bookSearchFilters.isRead === "0" ? true : null),
+        strArrArg("subjects_containsAny", bookSearchFilters.selectedSubjects.map(s => s._id)),
+        boolArg("searchChildSubjects", bookSearchFilters.searchChildSubjects || null),
+        strArrArg("tags_containsAny", bookSearchFilters.selectedTags.map(t => t._id)),
+        strArg("authors_textContains", bookSearchFilters.author),
+        strArg("publisher_contains", bookSearchFilters.publisher),
         strArg("publicUserId", publicUserId),
-        numArg("subjects_count", bookSearchState.noSubjects ? 0 : null),
-        bookSearchState.pages != "" ? numArg(bookSearchState.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchState.pages) : null
+        numArg("subjects_count", bookSearchFilters.noSubjects ? 0 : null),
+        bookSearchFilters.pages != "" ? numArg(bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchFilters.pages) : null
       )}
     ){
       Books{
