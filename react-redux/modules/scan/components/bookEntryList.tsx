@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import BookEntryItem from "./bookEntryItem";
 import { connect } from "react-redux";
 
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import Collapse from "react-collapse";
 
@@ -112,13 +112,13 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
                   </div>
 
                   <ul style={{ marginBottom: 0 }}>
-                    <ReactCSSTransitionGroup transitionEnterTimeout={0} transitionName="book-scan-results" transitionLeaveTimeout={300}>
+                    <TransitionGroup>
                       {this.props.booksJustSaved.map(book => (
-                        <li style={{ color: book.success ? "green" : "red" }} key={book._id}>
-                          {book.title}
-                        </li>
+                        <CSSTransition classNames="book-scan-results" timeout={300} key={book._id}>
+                          <li style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
+                        </CSSTransition>
                       ))}
-                    </ReactCSSTransitionGroup>
+                    </TransitionGroup>
                   </ul>
                   <br />
                 </div>
