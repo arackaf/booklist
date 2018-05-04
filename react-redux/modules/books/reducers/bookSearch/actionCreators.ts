@@ -51,11 +51,11 @@ export function clearAllFilters() {
   };
 }
 
-export function setSortOrder(sort, direction) {
+export function setSortOrder(sort, sortDirection) {
   return function(dispatch, getState) {
     setSearchValues({
       sort: sort,
-      sortDirection: direction == 1 ? "asc" : "desc",
+      sortDirection,
       page: null
     });
   };
@@ -140,14 +140,14 @@ export function quickSearch(val) {
 
 export function pageUp() {
   return function(dispatch, getState) {
-    let state = getState().booksModule.bookSearch;
-    setSearchValues({ page: +state.page + 1 });
+    let bookSearchFilters = selectCurrentSearch(getState());
+    setSearchValues({ page: +bookSearchFilters.page + 1 });
   };
 }
 
 export function pageDown() {
   return function(dispatch, getState) {
-    let state = getState().booksModule.bookSearch;
-    setSearchValues({ page: +state.page == 2 ? null : state.page - 1 });
+    let bookSearchFilters = selectCurrentSearch(getState());
+    setSearchValues({ page: +bookSearchFilters.page == 2 ? null : bookSearchFilters.page - 1 });
   };
 }

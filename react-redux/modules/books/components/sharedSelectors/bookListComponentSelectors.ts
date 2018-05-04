@@ -3,6 +3,7 @@ import { selectBookSelection, BookSelectionType, selectBookList, BookListType } 
 
 import * as actionCreatorsBooks from "modules/books/reducers/books/actionCreators";
 import * as actionCreatorsBookSearch from "modules/books/reducers/bookSearch/actionCreators";
+import { selectCurrentSearch } from "modules/books/reducers/bookSearch/reducer";
 
 export const actions = {
   ...actionCreatorsBooks,
@@ -20,13 +21,14 @@ export type BookListComponentStateType = BookSelectionType &
     currentSort: string;
     sortDirection: string;
   };
-export const selectBookListComponentState = createSelector<any, BookListComponentStateType, any, any, any, BookListType, BookSelectionType>(
+export const selectBookListComponentState = createSelector<any, BookListComponentStateType, any, any, any, any, BookListType, BookSelectionType>(
   state => state.app,
   state => state.booksModule.books,
   state => state.booksModule.bookSearch,
+  selectCurrentSearch,
   selectBookList,
   selectBookSelection,
-  (app, books, bookSearch, bookListSelected, bookSelectionSelected) => {
+  (app, books, bookSearch, bookSearchFilters, bookListSelected, bookSelectionSelected) => {
     return {
       viewingPublic: app.isPublic,
 
@@ -35,9 +37,9 @@ export const selectBookListComponentState = createSelector<any, BookListComponen
       selectedBooks: books.selectedBooks,
 
       hasMoreBooks: bookSearch.hasMore,
-      currentPage: bookSearch.page,
-      currentSort: bookSearch.sort,
-      sortDirection: bookSearch.sortDirection
+      currentPage: bookSearchFilters.page,
+      currentSort: bookSearchFilters.sort,
+      sortDirection: bookSearchFilters.sortDirection
     };
   }
 );

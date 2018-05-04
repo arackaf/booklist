@@ -120,14 +120,16 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
         </td>
         <td>
           <div style={{ marginTop: !this.props.viewingPublic ? 5 : 0 }}>
-            {!this.props.viewingPublic ? !!book.isRead ? (
-              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} preset="success-xs">
-                Read <i className="fa fa-fw fa-check" />
-              </AjaxButton>
-            ) : (
-              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} preset="default-xs">
-                Set read
-              </AjaxButton>
+            {!this.props.viewingPublic ? (
+              !!book.isRead ? (
+                <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} preset="success-xs">
+                  Read <i className="fa fa-fw fa-check" />
+                </AjaxButton>
+              ) : (
+                <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setRead(book._id)} preset="default-xs">
+                  Set read
+                </AjaxButton>
+              )
             ) : !!book.isRead ? (
               <span className="label label-success">
                 Read <i className="fa fa-fw fa-check" />
@@ -184,15 +186,15 @@ export default class BookViewListGrid extends Component<
   state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
   setSort(column) {
     let currentSort = this.props.currentSort;
-    let newDirection = 1;
+    let newDirection = "asc";
     if (currentSort === column) {
-      newDirection = this.props.sortDirection == "1" ? -1 : 1;
+      newDirection = this.props.sortDirection == "asc" ? "desc" : "asc";
     }
 
     this.props.setSortOrder(column, newDirection);
   }
   render() {
-    let potentialSortIcon = <i className={"fa fa-angle-" + (this.props.sortDirection == "1" ? "up" : "down")} />,
+    let potentialSortIcon = <i className={"fa fa-angle-" + (this.props.sortDirection == "asc" ? "up" : "down")} />,
       sortIconIf = column => (column == this.props.currentSort ? potentialSortIcon : null);
 
     let { navBarHeight, editBooksSubjects, editBooksTags } = this.props;
