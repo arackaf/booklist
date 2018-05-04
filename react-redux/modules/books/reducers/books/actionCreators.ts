@@ -55,7 +55,8 @@ export function loadBooks() {
     let app = state.app;
 
     Promise.resolve(booksSearch(bookSearch, app.publicUserId)).then(booksResp => {
-      let hasMore = booksResp.results.length > bookSearch.pageSize;
+      let bookSearchFilters = selectCurrentSearch(store.getState() as any);
+      let hasMore = booksResp.results.length > bookSearchFilters.pageSize;
       if (hasMore) {
         booksResp.results = booksResp.results.slice(0, -1);
       }
