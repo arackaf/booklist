@@ -60,6 +60,17 @@ export default class BooksMiddleware {
       delete $sort.title;
     }
   }
+  queryPreAggregate(aggregateItems, root, args, context, ast) {
+    let project = aggregateItems.find(item => item.$project);
+    let sort = aggregateItems.find(item => item.$sort);
+
+    if (sort && sort.$sort.titleLower) {
+      aggregateItems.splice(aggregateItems.indexOf(sort), 1);
+      aggregateItems.splice(aggregateItems.indexOf(project), 1);
+
+      aggregateItems.splice(1, 0, project, sort);
+    }
+  }
   async beforeInsert(book, root, args, context, ast) {
     clean(book);
     if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
