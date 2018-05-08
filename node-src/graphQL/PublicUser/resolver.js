@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import PublicUserMetadata from "./PublicUser";
 import * as dbHelpers from "../dbHelpers";
 
-export async function loadPublicUsers(db, queryPacket) {
+export async function loadPublicUsers(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
@@ -16,6 +16,7 @@ export async function loadPublicUsers(db, queryPacket) {
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
+  await processHook(hooksObj, "PublicUser", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let PublicUsers = await dbHelpers.runQuery(db, "users", aggregateItems);
   await processHook(hooksObj, "PublicUser", "adjustResults", PublicUsers);
   return PublicUsers;
@@ -34,7 +35,7 @@ export default {
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, PublicUserMetadata, "PublicUser");
       await processHook(hooksObj, "PublicUser", "queryMiddleware", queryPacket, root, args, context, ast);
-      let results = await loadPublicUsers(db, queryPacket);
+      let results = await loadPublicUsers(db, queryPacket, root, args, context, ast);
 
       return {
         PublicUser: results[0] || null
@@ -49,7 +50,7 @@ export default {
       let result = {};
 
       if (queryPacket.$project) {
-        result.PublicUsers = await loadPublicUsers(db, queryPacket);
+        result.PublicUsers = await loadPublicUsers(db, queryPacket, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {

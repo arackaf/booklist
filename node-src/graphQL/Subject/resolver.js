@@ -7,7 +7,7 @@ import * as dbHelpers from "../dbHelpers";
 import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
 const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 
-export async function loadSubjects(db, queryPacket) {
+export async function loadSubjects(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
@@ -18,6 +18,7 @@ export async function loadSubjects(db, queryPacket) {
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
+  await processHook(hooksObj, "Subject", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Subjects = await dbHelpers.runQuery(db, "subjects", aggregateItems);
   await processHook(hooksObj, "Subject", "adjustResults", Subjects);
   return Subjects;
@@ -36,7 +37,7 @@ export default {
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subject");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
-      let results = await loadSubjects(db, queryPacket);
+      let results = await loadSubjects(db, queryPacket, root, args, context, ast);
 
       return {
         Subject: results[0] || null
@@ -51,7 +52,7 @@ export default {
       let result = {};
 
       if (queryPacket.$project) {
-        result.Subjects = await loadSubjects(db, queryPacket);
+        result.Subjects = await loadSubjects(db, queryPacket, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
@@ -78,7 +79,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: SubjectMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Subject: null };
       }
-      let result = $project ? (await loadSubjects(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0] : null;
+      let result = $project ? (await loadSubjects(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
         Subject: result

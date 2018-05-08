@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import LabelColorMetadata from "./LabelColor";
 import * as dbHelpers from "../dbHelpers";
 
-export async function loadLabelColors(db, queryPacket) {
+export async function loadLabelColors(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
@@ -16,6 +16,7 @@ export async function loadLabelColors(db, queryPacket) {
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
+  await processHook(hooksObj, "LabelColor", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let LabelColors = await dbHelpers.runQuery(db, "labelColors", aggregateItems);
   await processHook(hooksObj, "LabelColor", "adjustResults", LabelColors);
   return LabelColors;
@@ -37,7 +38,7 @@ export default {
       let result = {};
 
       if (queryPacket.$project) {
-        result.LabelColors = await loadLabelColors(db, queryPacket);
+        result.LabelColors = await loadLabelColors(db, queryPacket, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {

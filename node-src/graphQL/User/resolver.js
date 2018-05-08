@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import UserMetadata from "./User";
 import * as dbHelpers from "../dbHelpers";
 
-export async function loadUsers(db, queryPacket) {
+export async function loadUsers(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
@@ -16,6 +16,7 @@ export async function loadUsers(db, queryPacket) {
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
+  await processHook(hooksObj, "User", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Users = await dbHelpers.runQuery(db, "users", aggregateItems);
   await processHook(hooksObj, "User", "adjustResults", Users);
   return Users;
@@ -34,7 +35,7 @@ export default {
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, UserMetadata, "User");
       await processHook(hooksObj, "User", "queryMiddleware", queryPacket, root, args, context, ast);
-      let results = await loadUsers(db, queryPacket);
+      let results = await loadUsers(db, queryPacket, root, args, context, ast);
 
       return {
         User: results[0] || null
@@ -49,7 +50,7 @@ export default {
       let result = {};
 
       if (queryPacket.$project) {
-        result.Users = await loadUsers(db, queryPacket);
+        result.Users = await loadUsers(db, queryPacket, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
@@ -80,7 +81,7 @@ export default {
       await dbHelpers.runUpdate(db, "users", $match, updates);
       await processHook(hooksObj, "User", "afterUpdate", $match, updates, root, args, context, ast);
       
-      let result = $project ? (await loadUsers(db, { $match, $project, $limit: 1 }))[0] : null;
+      let result = $project ? (await loadUsers(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         User: result,
         success: true

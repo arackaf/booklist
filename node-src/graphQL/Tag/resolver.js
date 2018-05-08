@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import TagMetadata from "./Tag";
 import * as dbHelpers from "../dbHelpers";
 
-export async function loadTags(db, queryPacket) {
+export async function loadTags(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
@@ -16,6 +16,7 @@ export async function loadTags(db, queryPacket) {
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
+  await processHook(hooksObj, "Tag", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Tags = await dbHelpers.runQuery(db, "tags", aggregateItems);
   await processHook(hooksObj, "Tag", "adjustResults", Tags);
   return Tags;
@@ -34,7 +35,7 @@ export default {
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagMetadata, "Tag");
       await processHook(hooksObj, "Tag", "queryMiddleware", queryPacket, root, args, context, ast);
-      let results = await loadTags(db, queryPacket);
+      let results = await loadTags(db, queryPacket, root, args, context, ast);
 
       return {
         Tag: results[0] || null
@@ -49,7 +50,7 @@ export default {
       let result = {};
 
       if (queryPacket.$project) {
-        result.Tags = await loadTags(db, queryPacket);
+        result.Tags = await loadTags(db, queryPacket, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
@@ -75,7 +76,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: TagMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Tag: null };
       }
-      let result = $project ? (await loadTags(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0] : null;
+      let result = $project ? (await loadTags(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
         Tag: result
@@ -96,7 +97,7 @@ export default {
       await dbHelpers.runUpdate(db, "tags", $match, updates);
       await processHook(hooksObj, "Tag", "afterUpdate", $match, updates, root, args, context, ast);
       
-      let result = $project ? (await loadTags(db, { $match, $project, $limit: 1 }))[0] : null;
+      let result = $project ? (await loadTags(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         Tag: result,
         success: true
@@ -114,7 +115,7 @@ export default {
       await dbHelpers.runUpdate(db, "tags", $match, updates, { multi: true });
       await processHook(hooksObj, "Tag", "afterUpdate", $match, updates, root, args, context, ast);
       
-      let result = $project ? await loadTags(db, { $match, $project }) : null;
+      let result = $project ? await loadTags(db, { $match, $project }, root, args, context, ast) : null;
       return {
         Tags: result,
         success: true
