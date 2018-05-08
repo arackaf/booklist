@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import BookMetadata from "./Book";
 import * as dbHelpers from "../dbHelpers";
 
-export async function loadBooks(db, queryPacket) {
+export async function loadBooks(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
@@ -16,6 +16,7 @@ export async function loadBooks(db, queryPacket) {
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
+  await processHook(hooksObj, "Book", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Books = await dbHelpers.runQuery(db, "books", aggregateItems);
   await processHook(hooksObj, "Book", "adjustResults", Books);
   return Books;
@@ -34,7 +35,7 @@ export default {
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Book");
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
-      let results = await loadBooks(db, queryPacket);
+      let results = await loadBooks(db, queryPacket, root, args, context, ast);
 
       return {
         Book: results[0] || null
@@ -49,7 +50,7 @@ export default {
       let result = {};
 
       if (queryPacket.$project) {
-        result.Books = await loadBooks(db, queryPacket);
+        result.Books = await loadBooks(db, queryPacket, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
@@ -75,7 +76,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: BookMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Book: null };
       }
-      let result = $project ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }))[0] : null;
+      let result = $project ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
         Book: result
@@ -96,7 +97,7 @@ export default {
       await dbHelpers.runUpdate(db, "books", $match, updates);
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
       
-      let result = $project ? (await loadBooks(db, { $match, $project, $limit: 1 }))[0] : null;
+      let result = $project ? (await loadBooks(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         Book: result,
         success: true
@@ -114,7 +115,7 @@ export default {
       await dbHelpers.runUpdate(db, "books", $match, updates, { multi: true });
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
       
-      let result = $project ? await loadBooks(db, { $match, $project }) : null;
+      let result = $project ? await loadBooks(db, { $match, $project }, root, args, context, ast) : null;
       return {
         Books: result,
         success: true
