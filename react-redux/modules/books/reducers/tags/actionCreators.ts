@@ -28,17 +28,54 @@ export function loadTags() {
 
 export function createOrUpdateTag(editingTag) {
   return function(dispatch, getState) {
-    let { _id, name, backgroundColor, textColor } = editingTag,
-      request = { _id: _id || null, name, backgroundColor, textColor };
+    let { _id, name, backgroundColor, textColor } = editingTag;
+    let variables: any = { name, backgroundColor, textColor };
+    if (_id) {
+      variables._id = _id;
+    }
+    let promise: any = null;
 
-    return ajaxUtil.post("/tag/setInfo", request, resp => dispatch({ type: UPDATE_TAG_RESULTS, tag: resp.tag }));
+    if (_id) {
+      promise = graphqlClient.runMutation(
+        `mutation updateTag($_id: String, $name: String, $backgroundColor: String, $textColor: String) {
+            updateTag(_id: $_id, Updates: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
+              Tag{
+                _id, name, backgroundColor, textColor
+              }
+            }
+          }`,
+        variables
+      );
+    } else {
+      promise = graphqlClient.runMutation(
+        `mutation createTag($name: String, $backgroundColor: String, $textColor: String) {
+          createTag(Tag: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
+            Tag{
+              _id, name, backgroundColor, textColor
+            }
+          }
+        }`,
+        variables
+      );
+    }
+
+    promise.then(resp => {
+      dispatch({ type: UPDATE_TAG_RESULTS, tag: (resp.createTag || resp.updateTag).Tag });
+    });
   };
 }
 
 export function deleteTag(_id) {
   return function(dispatch, getState) {
-    return ajaxUtil.post("/tag/delete", { _id: _id + "" }, resp => {
-      dispatch({ type: TAG_DELETED, _id });
-    });
+    graphqlClient
+      .runMutation(
+        `mutation deleteTag($_id: String) {
+          deleteTag(_id: $_id)
+        }`,
+        { _id }
+      )
+      .then(resp => {
+        dispatch({ type: TAG_DELETED, _id });
+      });
   };
 }
