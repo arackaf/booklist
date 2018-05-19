@@ -25,8 +25,14 @@ function saveLocalImageToS3(imgPath, userId) {
 
 function clean(book) {
   let propsToTrim = ["title", "isbn", "publisher", "publicationDate"];
-  propsToTrim.forEach(prop => (book[prop] = (book[prop] || "").substr(0, 500)));
-  book.authors = (book.authors || []).filter(a => a).map(a => ("" + a).substr(0, 500));
+  propsToTrim.forEach(prop => {
+    if (book.prop != null) {
+      book[prop] = (book[prop] || "").substr(0, 500);
+    }
+  });
+  if (book.authors) {
+    book.authors = (book.authors || []).filter(a => a).map(a => ("" + a).substr(0, 500));
+  }
 }
 
 export default class BooksMiddleware {
