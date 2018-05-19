@@ -29,12 +29,6 @@ class BookController {
 
     this.send({ books, userId: this.request.user.id });
   }
-  async setRead({ _ids, isRead }) {
-    let bookDao = new BookDAO(this.request.user.id);
-    await bookDao.setRead(_ids, isRead);
-
-    this.send({ success: true });
-  }
 }
 
 controller({ defaultVerb: "post" })(BookController);

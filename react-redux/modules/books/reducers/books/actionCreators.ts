@@ -183,9 +183,17 @@ export function setSelectedUnRead() {
 
 function executeSetRead(dispatch, ids, value) {
   dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
-  ajaxUtil.post("/book/setRead", { _ids: ids, isRead: value }, () => {
-    dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
-  });
+
+  graphqlClient
+    .runMutation(
+      `mutation updateBooks($_ids: [String], $updates: BookMutationInput) {
+      updateBooks(_ids: $_ids, Updates: $updates) { success }
+    }`,
+      { _ids: ids, updates: { isRead: !!value } }
+    )
+    .then(res => {
+      dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
+    });
 }
 
 export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });
