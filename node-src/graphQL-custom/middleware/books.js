@@ -95,7 +95,9 @@ export default class BooksMiddleware {
     }
   }
   afterUpdate(match, updates, root, args, context, ast) {}
-  beforeDelete(match, root, args, context, ast) {}
+  beforeDelete(match, root, args, context, ast) {
+    match.userId = context.user.id;
+  }
   afterDelete(match, root, args, context, ast) {}
   adjustResults(results) {
     results.forEach(book => {
