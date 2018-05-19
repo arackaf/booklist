@@ -58,14 +58,14 @@ export default class TagEditModal extends Component<TagsStateType & ILocalProps 
 
   tagName: any;
   render() {
-    let props = this.props,
-      { tagHash, onDone, editModalOpen } = props,
-      { editingTag, editingTagName, tagSearch, deletingId, deleting } = this.state,
-      textColors = ["#ffffff", "#000000"];
+    let props = this.props;
+    let { tagHash, onDone, editModalOpen } = props;
+    let { editingTag, editingTagName, tagSearch, deletingId, deleting } = this.state;
+    let textColors = ["#ffffff", "#000000"];
 
-    let deletingTag = deletingId ? tagHash[deletingId] : null,
-      deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null,
-      searchedTags = filterTags(this.props.allTagsSorted, this.state.tagSearch);
+    let deletingTag = deletingId ? tagHash[deletingId] : null;
+    let deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null;
+    let searchedTags = filterTags(this.props.allTagsSorted, tagSearch);
 
     return (
       <Modal className="fade" show={!!editModalOpen} onHide={onDone}>
