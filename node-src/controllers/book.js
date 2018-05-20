@@ -15,11 +15,6 @@ class BookController {
       this.send({ failure: true });
     }
   }
-  async deleteBook({ _id }) {
-    let bookDao = new BookDAO(this.request.user.id);
-    await bookDao.deleteBook(_id);
-    this.send({ success: true });
-  }
   async offlineSync(params) {
     if (!this.request.user.id) {
       this.send({});

@@ -77,14 +77,6 @@ class BookDAO extends DAO {
       });
     });
   }
-  async deleteBook(id) {
-    let db = await super.open();
-    try {
-      await db.collection("books").remove({ _id: ObjectId(id), userId: this.userId });
-    } finally {
-      super.dispose(db);
-    }
-  }
 }
 
 function adjustForClient(book) {
