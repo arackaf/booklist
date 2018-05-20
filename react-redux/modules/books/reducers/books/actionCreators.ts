@@ -40,7 +40,7 @@ export const deleteBook = ({ _id }) => {
   return (dispatch, getState) => {
     dispatch({ type: BOOK_DELETING, _id });
 
-    ajaxUtil.post("/book/deleteBook", { _id }, () => {
+    graphqlClient.runMutation(`mutation deleteBook($_id: String) { deleteBook(_id: $_id) }`, { _id }).then(resp => {
       dispatch({ type: BOOK_DELETED, _id });
     });
   };
