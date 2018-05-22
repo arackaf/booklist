@@ -93,7 +93,8 @@ module.exports = {
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
-      ]
+      ],
+      importScripts: ["react-redux/sw-manual.js"]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null
