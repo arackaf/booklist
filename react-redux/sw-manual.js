@@ -11,7 +11,7 @@ function handleMain({ url, event }) {
 }
 
 workbox.routing.registerRoute(
-  ({ url, event }) => /\/graphql$/.test(url),
+  /graphql$/,
   ({ url, event }) => {
     //turning this off for now, until I can wrap some other things up
     return fetch(event.request);
