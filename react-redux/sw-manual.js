@@ -1,31 +1,35 @@
-toolbox.router.get(/books$/, handleMain);
-toolbox.router.get(/subjects$/, handleMain);
-toolbox.router.get(/localhost:3000\/$/, handleMain);
-toolbox.router.get(/mylibrary.io$/, handleMain);
-function handleMain(request) {
+workbox.routing.registerRoute(/books$/, handleMain);
+workbox.routing.registerRoute(/subjects$/, handleMain);
+workbox.routing.registerRoute(/localhost:3000\/$/, handleMain);
+workbox.routing.registerRoute(/mylibrary.io$/, handleMain);
+function handleMain({ url, event }) {
   //turning this off for now, until I can wrap some other things up
-  return fetch(request);
-  return fetch(request).catch(() => {
+  //return fetch(request);
+  return fetch(event.request).catch(() => {
     return caches.match("react-redux/offline.htm", { ignoreSearch: true });
   });
 }
 
-toolbox.router.post(/graphql/, request => {
-  //turning this off for now, until I can wrap some other things up
-  return fetch(request);
+workbox.routing.registerRoute(
+  ({ url, event }) => /\/graphql$/.test(url),
+  ({ url, event }) => {
+    //turning this off for now, until I can wrap some other things up
+    return fetch(event.request);
 
-  return fetch(request).then(response => {
-    let respClone = response.clone();
-    setTimeout(() => {
-      respClone.json().then(resp => {
-        if (resp && resp.data && resp.data.updateBook && resp.data.updateBook.Book) {
-          syncBook(resp.data.updateBook.Book);
-        }
-      }, 5);
+    return fetch(request).then(response => {
+      let respClone = response.clone();
+      setTimeout(() => {
+        respClone.json().then(resp => {
+          if (resp && resp.data && resp.data.updateBook && resp.data.updateBook.Book) {
+            syncBook(resp.data.updateBook.Book);
+          }
+        }, 5);
+      });
+      return response;
     });
-    return response;
-  });
-});
+  },
+  "POST"
+);
 
 function syncBook(book) {
   let open = indexedDB.open("books", 1);
@@ -44,7 +48,6 @@ function syncBook(book) {
 }
 
 self.addEventListener("push", () => {
-  console.log("typeof", typeof toolbox);
   console.log("Push notification received!!!");
   self.registration.showNotification("Push notification received!");
 });
