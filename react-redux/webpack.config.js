@@ -9,12 +9,14 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
   handler: "cacheFirst",
   options: {
-    cache: {
+    cacheName: name,
+    expiration: {
       maxEntries: maxEntries || 500,
-      name: name,
       maxAgeSeconds: expires || 60 * 60 * 24 * 365 * 2 //2 years
     },
-    successResponses: /0|[123].*/
+    cacheableResponse: {
+      statuses: [0, 200]
+    }
   }
 });
 
@@ -70,46 +72,30 @@ module.exports = {
     new GenerateSW({
       globDirectory: ".",
       globPatterns: [
-        "./static/bootstrap/css/bootstrap-booklist-build.css",
-        "./static/fontawesome/css/font-awesome-booklist-build.css",
-        "./static/fontawesome/fonts/fontawesome-webfont.woff2",
-        "./static/main-icon2.png",
-        "./offline.htm"
+        "static/bootstrap/css/bootstrap-booklist-build.css",
+        "static/fontawesome/css/font-awesome-booklist-build.css",
+        "static/fontawesome/fonts/fontawesome-webfont.woff2",
+        "static/main-icon2.png",
+        "offline.htm",
+        "node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css"
       ],
+      globIgnores: [],
       modifyUrlPrefix: {
         "static/": "react-redux/static/",
         "util/": "react-redux/util/",
-        "offline.htm": "react-redux/offline.htm"
+        "offline.htm": "react-redux/offline.htm",
+        "node_modules/": "react-redux/node_modules"
       },
-      ignoreUrlParametersMatching: [/./]
+      ignoreUrlParametersMatching: [/./],
+      runtimeCaching: [
+        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+ALL_BOOKS_V_/, name: "book-search-graphql", expires: 60 * 5 }), //5 minutes
+        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+GetBookDetails/, name: "book-details" }),
+        getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
+        getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
+        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
+      ]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null
-    // new SWPrecacheWebpackPlugin({
-    //   mergeStaticsConfig: true,
-    //   filename: "service-worker.js",
-    //   importScripts: ["../sw-manual.js?v=6"],
-    //   staticFileGlobs: [
-    //     "static/bootstrap/css/bootstrap-booklist-build.css",
-    //     "static/fontawesome/css/font-awesome-booklist-build.css",
-    //     "static/fontawesome/fonts/fontawesome-webfont.woff2",
-    //     "static/main-icon2.png",
-    //     "util/babelHelpers.min.js",
-    //     "offline.htm"
-    //   ],
-    //   ignoreUrlParametersMatching: /./,
-    //   stripPrefixMulti: {
-    //     "static/": "react-redux/static/",
-    //     "util/": "react-redux/util/",
-    //     "offline.htm": "react-redux/offline.htm"
-    //   },
-    //   runtimeCaching: [
-    //     getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+ALL_BOOKS_V_/, name: "book-search-graphql", expires: 60 * 5 }), //5 minutes
-    //     getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+GetBookDetails/, name: "book-details" }),
-    //     getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
-    //     getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-    //     getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
-    //   ]
-    // })
   ].filter(p => p)
 };
