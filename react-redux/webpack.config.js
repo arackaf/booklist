@@ -1,9 +1,8 @@
 var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const { GenerateSW } = require("workbox-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 var path = require("path");
 const isProd = process.env.NODE_ENV == "production";
-
-const { GenerateSW } = require("workbox-webpack-plugin");
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
