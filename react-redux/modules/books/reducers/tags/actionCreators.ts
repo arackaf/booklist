@@ -4,25 +4,17 @@ import ajaxUtil from "util/ajaxUtil";
 import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
+import getTags from "./getTags.graphql";
+
 export function loadTags() {
   return function(dispatch, getState) {
     let publicUserId = getState().app.publicUserId;
 
     dispatch({ type: LOAD_TAGS });
 
-    graphqlClient
-      .runQuery(
-        compress`query allTags {
-          allTags(publicUserId: ${JSON.stringify(publicUserId)}, SORT: {name: 1}) {
-            Tags {
-              _id, name, backgroundColor, textColor, path,  
-            }
-          }
-        }`
-      )
-      .then(({ data: { allTags } }) => {
-        dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
-      });
+    graphqlClient.runQuery(getTags, { publicUserId: publicUserId || void 0 }).then(({ data: { allTags } }) => {
+      dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
+    });
   };
 }
 

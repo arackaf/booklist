@@ -33,6 +33,7 @@ import expressGraphql from "express-graphql";
 import resolvers from "./node-src/graphQL/resolver";
 import schema from "./node-src/graphQL/schema";
 import { makeExecutableSchema } from "graphql-tools";
+import { middleware } from "generic-persistgraphql";
 
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
@@ -138,6 +139,7 @@ const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.en
 const root = { db: dbPromise };
 const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
+middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react-redux/extracted_queries.json") });
 app.use(
   "/graphql",
   expressGraphql({
