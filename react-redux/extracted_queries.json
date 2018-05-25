@@ -1,0 +1,1 @@
+{"query allTags($publicUserId: String) {\n  allTags(publicUserId: $publicUserId, SORT: {name: 1}) {\n    Tags {\n      _id\n      name\n      backgroundColor\n      textColor\n      path\n    }\n  }\n}\n":1}

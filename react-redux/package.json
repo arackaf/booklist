@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack -w",
     "webpack": "webpack",
-    "deploy": "cd .. && npm run deploy"
+    "deploy": "cd .. && npm run deploy",
+    "persistgraphql": "persistgraphql"
   },
   "dependencies": {
     "@babel/core": "7.0.0-beta.44",
@@ -35,6 +36,7 @@
     "lodash.debounce": "4.0.8",
     "lodash.throttle": "4.1.1",
     "micro-graphql-react": "^0.1.2",
+    "persistgraphql": "^0.3.11",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
     "react": "16.2.0",
