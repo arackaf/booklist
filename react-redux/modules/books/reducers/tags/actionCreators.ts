@@ -5,6 +5,7 @@ import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 import getTags from "./getTags.graphql";
+import updateTag from "./updateTag.graphql";
 
 export function loadTags() {
   return function(dispatch, getState) {
@@ -28,16 +29,7 @@ export function createOrUpdateTag(editingTag) {
     let promise: any = null;
 
     if (_id) {
-      promise = graphqlClient.runMutation(
-        `mutation updateTag($_id: String, $name: String, $backgroundColor: String, $textColor: String) {
-            updateTag(_id: $_id, Updates: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
-              Tag{
-                _id, name, backgroundColor, textColor
-              }
-            }
-          }`,
-        variables
-      );
+      promise = graphqlClient.runMutation(updateTag, variables);
     } else {
       promise = graphqlClient.runMutation(
         `mutation createTag($name: String, $backgroundColor: String, $textColor: String) {

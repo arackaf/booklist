@@ -7,7 +7,8 @@
     "start": "webpack -w",
     "webpack": "webpack",
     "deploy": "cd .. && npm run deploy",
-    "persistgraphql": "persistgraphql modules"
+    "persistgraphql": "persistgraphql modules",
+    "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {
     "@babel/core": "7.0.0-beta.44",
