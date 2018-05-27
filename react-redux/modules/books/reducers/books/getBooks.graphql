@@ -12,7 +12,8 @@ query SearchBooks(
   $authors_textContains: String
   $publisher_contains: String
   $subjects_count: Int
-  $pages: String
+  $pages_lt: Int
+  $pages_gt: Int
 ) {
   allBooks(
     PAGE: $page
@@ -28,14 +29,26 @@ query SearchBooks(
     publisher_contains: $publisher_contains
     publicUserId: $publicUserId
     subjects_count: $subjects_count
-    pages: $pages
+    pages_lt: $pages_lt
+    pages_gt: $pages_gt
   ) {
-    Tags {
+    Books {
       _id
-      name
-      backgroundColor
-      textColor
-      path
+      title
+      isbn
+      ean
+      pages
+      smallImage
+      publicationDate
+      subjects
+      authors
+      publisher
+      tags
+      isRead
+      dateAdded
+    }
+    Meta {
+      count
     }
   }
 }
