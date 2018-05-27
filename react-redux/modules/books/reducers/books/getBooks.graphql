@@ -1,0 +1,41 @@
+query SearchBooks(
+  $page: Int
+  $pageSize: Int
+  $sort: BookSort
+  $publicUserId: String
+  $title_contains: String
+  $isRead: Boolean
+  $isRead_ne: Boolean
+  $subjects_containsAny: [String]
+  $searchChildSubjects: Boolean
+  $tags_containsAny: [String]
+  $authors_textContains: String
+  $publisher_contains: String
+  $subjects_count: Int
+  $pages: String
+) {
+  allBooks(
+    PAGE: $page
+    PAGE_SIZE: $pageSize
+    SORT: $sort
+    title_contains: $title_contains
+    isRead: $isRead
+    isRead_ne: $isRead_ne
+    subjects_containsAny: $subjects_containsAny
+    searchChildSubjects: $searchChildSubjects
+    tags_containsAny: $tags_containsAny
+    authors_textContains: $authors_textContains
+    publisher_contains: $publisher_contains
+    publicUserId: $publicUserId
+    subjects_count: $subjects_count
+    pages: $pages
+  ) {
+    Tags {
+      _id
+      name
+      backgroundColor
+      textColor
+      path
+    }
+  }
+}
