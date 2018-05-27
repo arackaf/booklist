@@ -6,6 +6,8 @@ import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 import getTags from "./getTags.graphql";
 import updateTag from "./updateTag.graphql";
+import createTag from "./createTag.graphql";
+import deleteTagMutation from "./deleteTag.graphql";
 
 export function loadTags() {
   return function(dispatch, getState) {
@@ -31,16 +33,7 @@ export function createOrUpdateTag(editingTag) {
     if (_id) {
       promise = graphqlClient.runMutation(updateTag, variables);
     } else {
-      promise = graphqlClient.runMutation(
-        `mutation createTag($name: String, $backgroundColor: String, $textColor: String) {
-          createTag(Tag: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
-            Tag{
-              _id, name, backgroundColor, textColor
-            }
-          }
-        }`,
-        variables
-      );
+      promise = graphqlClient.runMutation(createTag, variables);
     }
 
     promise.then(resp => {
@@ -51,15 +44,8 @@ export function createOrUpdateTag(editingTag) {
 
 export function deleteTag(_id) {
   return function(dispatch, getState) {
-    graphqlClient
-      .runMutation(
-        `mutation deleteTag($_id: String) {
-          deleteTag(_id: $_id)
-        }`,
-        { _id }
-      )
-      .then(resp => {
-        dispatch({ type: TAG_DELETED, _id });
-      });
+    graphqlClient.runMutation(deleteTagMutation, { _id }).then(resp => {
+      dispatch({ type: TAG_DELETED, _id });
+    });
   };
 }
