@@ -1,0 +1,10 @@
+mutation updateTag($_id: String, $name: String, $backgroundColor: String, $textColor: String) {
+  updateTag(_id: $_id, Updates: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
+    Tag {
+      _id
+      name
+      backgroundColor
+      textColor
+    }
+  }
+}

@@ -77,8 +77,6 @@ const nonEmptyProps = obj =>
 
 function booksSearch(bookSearchState: BookSearchType, publicUserId) {
   let bookSearchFilters = selectCurrentSearch(store.getState() as any);
-  let version = bookSearchState.searchVersion;
-  let sortObject = `{ ${bookSearchFilters.sort}: ${bookSearchFilters.sortDirection == "asc" ? 1 : -1} }`;
 
   let getBooksVariables: any = {
     page: bookSearchFilters.page,
@@ -93,7 +91,8 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
     authors_textContains: bookSearchFilters.author || void 0,
     publisher_contains: bookSearchFilters.publisher || void 0,
     publicUserId: publicUserId,
-    subjects_count: bookSearchFilters.noSubjects ? 0 : void 0
+    subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
+    bookSearchVersion: bookSearchState.searchVersion
   };
   if (bookSearchFilters.pages != "") {
     getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = bookSearchFilters.pages;
