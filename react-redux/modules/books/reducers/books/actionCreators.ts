@@ -24,6 +24,8 @@ import ajaxUtil from "util/ajaxUtil";
 
 import { compress } from "micro-graphql-react";
 
+import GetBooksQuery from "./getBooks.graphql";
+
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
@@ -79,46 +81,69 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
   let version = bookSearchState.searchVersion;
   let sortObject = `{ ${bookSearchFilters.sort}: ${bookSearchFilters.sortDirection == "asc" ? 1 : -1} }`;
 
-  return gqlGet(compress`query ALL_BOOKS_V_${version} {
-    allBooks(
-      PAGE: ${bookSearchFilters.page}
-      PAGE_SIZE: ${bookSearchFilters.pageSize}
-      SORT: ${sortObject}
-      ${args(
-        strArg("title_contains", bookSearchFilters.search),
-        boolArg("isRead", bookSearchFilters.isRead === "1" ? true : null),
-        boolArg("isRead_ne", bookSearchFilters.isRead === "0" ? true : null),
-        strArrArg("subjects_containsAny", bookSearchFilters.selectedSubjects.map(s => s._id)),
-        boolArg("searchChildSubjects", bookSearchFilters.searchChildSubjects || null),
-        strArrArg("tags_containsAny", bookSearchFilters.selectedTags.map(t => t._id)),
-        strArg("authors_textContains", bookSearchFilters.author),
-        strArg("publisher_contains", bookSearchFilters.publisher),
-        strArg("publicUserId", publicUserId),
-        numArg("subjects_count", bookSearchFilters.noSubjects ? 0 : null),
-        bookSearchFilters.pages != "" ? numArg(bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchFilters.pages) : null
-      )}
-    ){
-      Books{
-        _id
-        title
-        isbn
-        ean
-        pages
-        smallImage
-        publicationDate
-        subjects
-        authors
-        publisher
-        tags
-        isRead
-        dateAdded
-      }, Meta {count}
-    }
-  }`).then(resp => {
+  let getBooksVariables = {
+    page: bookSearchFilters.page,
+    pageSize: bookSearchFilters.pageSize,
+    sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
+    title_contains: bookSearchFilters.search,
+    isRead: bookSearchFilters.isRead === "1" ? true : void 0,
+    isRead_ne: bookSearchFilters.isRead === "0" ? true : null,
+    subjects_containsAny: bookSearchFilters.selectedSubjects.map(s => s._id),
+    searchChildSubjects: bookSearchFilters.searchChildSubjects || void 0,
+    tags_containsAny: bookSearchFilters.selectedTags.map(t => t._id),
+    authors_textContains: bookSearchFilters.author,
+    publisher_contains: bookSearchFilters.publisher,
+    publicUserId: publicUserId,
+    subjects_count: bookSearchFilters.noSubjects ? 0 : void 0
+    //pages: bookSearchFilters.pages != "" ? numArg(bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchFilters.pages) : null
+  };
+
+  return graphqlClient.runQuery(GetBooksQuery, {}).then(resp => {
     if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
       return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
     }
   });
+
+  // gqlGet(compress`query ALL_BOOKS_V_${version} {
+  //   allBooks(
+  //     PAGE: ${bookSearchFilters.page}
+  //     PAGE_SIZE: ${bookSearchFilters.pageSize}
+  //     SORT: ${sortObject}
+  //     ${args(
+  //       strArg("title_contains", bookSearchFilters.search),
+  //       boolArg("isRead", bookSearchFilters.isRead === "1" ? true : null),
+  //       boolArg("isRead_ne", bookSearchFilters.isRead === "0" ? true : null),
+  //       strArrArg("subjects_containsAny", bookSearchFilters.selectedSubjects.map(s => s._id)),
+  //       boolArg("searchChildSubjects", bookSearchFilters.searchChildSubjects || null),
+  //       strArrArg("tags_containsAny", bookSearchFilters.selectedTags.map(t => t._id)),
+  //       strArg("authors_textContains", bookSearchFilters.author),
+  //       strArg("publisher_contains", bookSearchFilters.publisher),
+  //       strArg("publicUserId", publicUserId),
+  //       numArg("subjects_count", bookSearchFilters.noSubjects ? 0 : null),
+  //       bookSearchFilters.pages != "" ? numArg(bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchFilters.pages) : null
+  //     )}
+  //   ){
+  //     Books{
+  //       _id
+  //       title
+  //       isbn
+  //       ean
+  //       pages
+  //       smallImage
+  //       publicationDate
+  //       subjects
+  //       authors
+  //       publisher
+  //       tags
+  //       isRead
+  //       dateAdded
+  //     }, Meta {count}
+  //   }
+  // }`).then(resp => {
+  //   if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
+  //     return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
+  //   }
+  // });
 }
 
 export function expandBook(_id: string) {
