@@ -4,10 +4,10 @@ import ajaxUtil from "util/ajaxUtil";
 import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
-import getTags from "./getTags.graphql";
-import updateTag from "./updateTag.graphql";
-import createTag from "./createTag.graphql";
-import deleteTagMutation from "./deleteTag.graphql";
+import GetTags from "./getTags.graphql";
+import UpdateTag from "./updateTag.graphql";
+import CreateTag from "./createTag.graphql";
+import DeleteTagMutation from "./deleteTag.graphql";
 
 export function loadTags() {
   return function(dispatch, getState) {
@@ -15,7 +15,7 @@ export function loadTags() {
 
     dispatch({ type: LOAD_TAGS });
 
-    graphqlClient.runQuery(getTags, { publicUserId: publicUserId || void 0 }).then(({ data: { allTags } }) => {
+    graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0 }).then(({ data: { allTags } }) => {
       dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
     });
   };
@@ -31,9 +31,9 @@ export function createOrUpdateTag(editingTag) {
     let promise: any = null;
 
     if (_id) {
-      promise = graphqlClient.runMutation(updateTag, variables);
+      promise = graphqlClient.runMutation(UpdateTag, variables);
     } else {
-      promise = graphqlClient.runMutation(createTag, variables);
+      promise = graphqlClient.runMutation(CreateTag, variables);
     }
 
     promise.then(resp => {
@@ -44,7 +44,7 @@ export function createOrUpdateTag(editingTag) {
 
 export function deleteTag(_id) {
   return function(dispatch, getState) {
-    graphqlClient.runMutation(deleteTagMutation, { _id }).then(resp => {
+    graphqlClient.runMutation(DeleteTagMutation, { _id }).then(resp => {
       dispatch({ type: TAG_DELETED, _id });
     });
   };
