@@ -20,6 +20,8 @@ import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
+import UpdateBookMutation from "./updateBook.graphql";
+
 const ManualBookEntry = Loadable({
   loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
   loading: ComponentLoading,
@@ -69,25 +71,7 @@ const mainSelector = createSelector<BooksModuleType, MainSelectorType, BookListT
   }
 );
 
-@mutation(
-  `mutation updateBook($_id: String, $book: BookMutationInput) {
-    updateBook(
-      _id: $_id,
-      Updates: $book
-    ) {
-      Book {
-        _id,
-        title,
-        isbn,
-        smallImage,
-        pages,
-        publisher,
-        publicationDate,
-        authors
-      }
-    }
-  }`
-)
+@mutation(UpdateBookMutation)
 @connect(mainSelector)
 export default class BookViewingList extends Component<MainSelectorType & MutationType & { dispatch: any }, any> {
   state = {

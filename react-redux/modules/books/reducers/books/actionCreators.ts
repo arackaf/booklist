@@ -25,6 +25,9 @@ import ajaxUtil from "util/ajaxUtil";
 import { compress } from "micro-graphql-react";
 
 import GetBooksQuery from "./getBooks.graphql";
+import DeleteBookMutation from "./deleteBook.graphql";
+import UpdateBooksReadMutation from "./updateBooksRead.graphql";
+import BookDetailsQuery from "./getBookDetails.graphql";
 
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
@@ -41,7 +44,7 @@ export const deleteBook = ({ _id }) => {
   return (dispatch, getState) => {
     dispatch({ type: BOOK_DELETING, _id });
 
-    graphqlClient.runMutation(`mutation deleteBook($_id: String) { deleteBook(_id: $_id) }`, { _id }).then(resp => {
+    graphqlClient.runMutation(DeleteBookMutation, { _id }).then(resp => {
       dispatch({ type: BOOK_DELETED, _id });
     });
   };
@@ -113,18 +116,10 @@ export function expandBook(_id: string) {
     if (!book.detailsLoaded) {
       dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
 
-      graphqlClient
-        .runQuery(
-          compress`query GetBookDetails {
-          getBook(_id: ${JSON.stringify(_id)}) {
-            Book { editorialReviews { source, content } }
-          }
-        }`
-        )
-        .then(({ data: { getBook } }) => {
-          let editorialReviews = getBook.Book.editorialReviews;
-          dispatch({ type: DETAILS_LOADED, _id, editorialReviews });
-        });
+      graphqlClient.runQuery(BookDetailsQuery).then(({ data: { getBook } }) => {
+        let editorialReviews = getBook.Book.editorialReviews;
+        dispatch({ type: DETAILS_LOADED, _id, editorialReviews });
+      });
     } else {
       dispatch({ type: EXPAND_BOOK, _id });
     }
@@ -168,16 +163,9 @@ export function setSelectedUnRead() {
 function executeSetRead(dispatch, ids, value) {
   dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
 
-  graphqlClient
-    .runMutation(
-      `mutation updateBooks($_ids: [String], $updates: BookMutationInput) {
-      updateBooks(_ids: $_ids, Updates: $updates) { success }
-    }`,
-      { _ids: ids, updates: { isRead: !!value } }
-    )
-    .then(res => {
-      dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
-    });
+  graphqlClient.runMutation(UpdateBooksReadMutation, { _ids: ids, updates: { isRead: !!value } }).then(res => {
+    dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
+  });
 }
 
 export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });

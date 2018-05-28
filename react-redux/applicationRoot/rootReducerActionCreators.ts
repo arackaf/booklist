@@ -16,10 +16,10 @@ import {
 
 import { Client, compress } from "micro-graphql-react";
 
-import allLabelColors from "../modules/rootGraphql/allLabelColors.graphql";
-import allSubjects from "../modules/rootGraphql/allSubjects.graphql";
-import deleteSubject from "../modules/rootGraphql/deleteSubject.graphql";
-import updateSubject from "../modules/rootGraphql/updateSubject.graphql";
+import AllLabelColors from "../modules/rootGraphql/allLabelColors.graphql";
+import AllSubjects from "../modules/rootGraphql/allSubjects.graphql";
+import DeleteSubject from "../modules/rootGraphql/deleteSubject.graphql";
+import UpdateSubject from "../modules/rootGraphql/updateSubject.graphql";
 
 export const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -64,7 +64,7 @@ export function loadSubjects() {
     let publicUserId = getState().app.publicUserId;
     dispatch({ type: LOAD_SUBJECTS });
 
-    Promise.all([graphqlClient.runQuery(allSubjects, { publicUserId }), graphqlClient.runQuery(allLabelColors)]).then(
+    Promise.all([graphqlClient.runQuery(AllSubjects, { publicUserId }), graphqlClient.runQuery(AllLabelColors)]).then(
       ([
         { data },
         {
@@ -82,13 +82,13 @@ export function loadSubjects() {
 
 export const subjectEditingActions = {
   saveSubject(subjectProps, dispatch) {
-    graphqlClient.runMutation(updateSubject, { ...subjectProps }).then(resp => {
+    graphqlClient.runMutation(UpdateSubject, { ...subjectProps }).then(resp => {
       let affectedSubjects = resp.updateSubject;
       dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
     });
   },
   deleteSubject(_id, dispatch) {
-    return graphqlClient.runMutation(deleteSubject, { _id }).then(resp => {
+    return graphqlClient.runMutation(DeleteSubject, { _id }).then(resp => {
       dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
       return { subjectsDeleted: resp.deleteSubject };
     });
