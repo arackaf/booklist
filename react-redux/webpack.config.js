@@ -83,7 +83,7 @@ module.exports = {
         "static/": "react-redux/static/",
         "util/": "react-redux/util/",
         "offline.htm": "react-redux/offline.htm",
-        "node_modules/": "react-redux/node_modules"
+        "node_modules/": "react-redux/node_modules/"
       },
       ignoreUrlParametersMatching: [/./],
       runtimeCaching: [
