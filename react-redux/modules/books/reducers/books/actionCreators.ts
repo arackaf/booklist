@@ -110,15 +110,17 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
 
 export function expandBook(_id: string) {
   return (dispatch, getState: () => BooksModuleType) => {
+    let allState = getState();
+    let publicUserId = allState.app.publicUserId;
     let booksHash = getState().booksModule.books.booksHash;
     let book = booksHash[_id];
 
     if (!book.detailsLoaded) {
       dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
 
-      graphqlClient.runQuery(BookDetailsQuery).then(({ data: { getBook } }) => {
+      graphqlClient.runQuery(BookDetailsQuery, { _id, isBookDetails: "1", publicUserId }).then(({ data: { getBook } }) => {
         let editorialReviews = getBook.Book.editorialReviews;
-        dispatch({ type: DETAILS_LOADED, _id, editorialReviews });
+        dispatch({ type: DETAILS_LOADED, _id, editorialReviews: editorialReviews || [] });
       });
     } else {
       dispatch({ type: EXPAND_BOOK, _id });
