@@ -4,25 +4,20 @@ import ajaxUtil from "util/ajaxUtil";
 import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
+import GetTags from "./getTags.graphql";
+import UpdateTag from "./updateTag.graphql";
+import CreateTag from "./createTag.graphql";
+import DeleteTagMutation from "./deleteTag.graphql";
+
 export function loadTags() {
   return function(dispatch, getState) {
     let publicUserId = getState().app.publicUserId;
 
     dispatch({ type: LOAD_TAGS });
 
-    graphqlClient
-      .runQuery(
-        compress`query allTags {
-          allTags(publicUserId: ${JSON.stringify(publicUserId)}, SORT: {name: 1}) {
-            Tags {
-              _id, name, backgroundColor, textColor, path,  
-            }
-          }
-        }`
-      )
-      .then(({ data: { allTags } }) => {
-        dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
-      });
+    graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0 }).then(({ data: { allTags } }) => {
+      dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
+    });
   };
 }
 
@@ -36,27 +31,9 @@ export function createOrUpdateTag(editingTag) {
     let promise: any = null;
 
     if (_id) {
-      promise = graphqlClient.runMutation(
-        `mutation updateTag($_id: String, $name: String, $backgroundColor: String, $textColor: String) {
-            updateTag(_id: $_id, Updates: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
-              Tag{
-                _id, name, backgroundColor, textColor
-              }
-            }
-          }`,
-        variables
-      );
+      promise = graphqlClient.runMutation(UpdateTag, variables);
     } else {
-      promise = graphqlClient.runMutation(
-        `mutation createTag($name: String, $backgroundColor: String, $textColor: String) {
-          createTag(Tag: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
-            Tag{
-              _id, name, backgroundColor, textColor
-            }
-          }
-        }`,
-        variables
-      );
+      promise = graphqlClient.runMutation(CreateTag, variables);
     }
 
     promise.then(resp => {
@@ -67,15 +44,8 @@ export function createOrUpdateTag(editingTag) {
 
 export function deleteTag(_id) {
   return function(dispatch, getState) {
-    graphqlClient
-      .runMutation(
-        `mutation deleteTag($_id: String) {
-          deleteTag(_id: $_id)
-        }`,
-        { _id }
-      )
-      .then(resp => {
-        dispatch({ type: TAG_DELETED, _id });
-      });
+    graphqlClient.runMutation(DeleteTagMutation, { _id }).then(resp => {
+      dispatch({ type: TAG_DELETED, _id });
+    });
   };
 }

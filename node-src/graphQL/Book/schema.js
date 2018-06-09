@@ -387,13 +387,17 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int,
     searchChildSubjects: Boolean,
-    publicUserId: String
+    publicUserId: String,
+    bookSearchVersion: String,
+    isBookDetails: String
   ): BookQueryResults
 
   getBook (
     _id: String,
     searchChildSubjects: Boolean,
-    publicUserId: String
+    publicUserId: String,
+    bookSearchVersion: String,
+    isBookDetails: String
   ): BookSingleQueryResult
 
 `;
