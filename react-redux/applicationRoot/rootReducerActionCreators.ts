@@ -16,12 +16,15 @@ import {
 
 import { Client, compress } from "micro-graphql-react";
 
+import AllLabelColorsQuery from "../modules/rootGraphql/allLabelColors.graphql";
+import AllSubjectsQuery from "../modules/rootGraphql/allSubjects.graphql";
+import DeleteSubjectMutation from "../modules/rootGraphql/deleteSubject.graphql";
+import UpdateSubjectMutation from "../modules/rootGraphql/updateSubject.graphql";
+
 export const graphqlClient = new Client({
   endpoint: "/graphql",
   fetchOptions: { credentials: "include" }
 });
-
-import ajaxUtil from "util/ajaxUtil";
 
 export const setDesktop = () => ({ type: SET_DESKTOP });
 export const setMobile = () => ({ type: SET_MOBILE });
@@ -61,55 +64,34 @@ export function loadSubjects() {
     let publicUserId = getState().app.publicUserId;
     dispatch({ type: LOAD_SUBJECTS });
 
-    Promise.all([
-      graphqlClient.runQuery(compress`query allSubjects {
-        allSubjects(publicUserId: ${JSON.stringify(publicUserId)}, SORT: {name: 1}) {
-          Subjects {
-            _id, name, backgroundColor, textColor, path,  
+    Promise.all([graphqlClient.runQuery(AllSubjectsQuery, { publicUserId }), graphqlClient.runQuery(AllLabelColorsQuery)]).then(
+      ([
+        { data },
+        {
+          data: {
+            allLabelColors: { LabelColors: labelColors }
           }
         }
-      }`),
-      graphqlClient.runQuery(
-        compress`query labelColors {
-          allLabelColors(SORT: {order: 1}) {
-            LabelColors { _id, backgroundColor, order }
-          }
-        }`
-      )
-    ]).then(([{ data }, { data: { allLabelColors: { LabelColors: labelColors } } }]) => {
-      dispatch({ type: LOAD_COLORS, colors: labelColors });
-      dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: data.allSubjects.Subjects });
-    });
+      ]) => {
+        dispatch({ type: LOAD_COLORS, colors: labelColors });
+        dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: data.allSubjects.Subjects });
+      }
+    );
   };
 }
 
 export const subjectEditingActions = {
   saveSubject(subjectProps, dispatch) {
-    graphqlClient
-      .runMutation(
-        `mutation updateSubject($_id: String, $name: String, $backgroundColor: String, $textColor: String, $parentId: String) {
-          updateSubject(_id: $_id, name: $name, backgroundColor: $backgroundColor, textColor: $textColor, parentId: $parentId) {
-            _id, name, backgroundColor, textColor, path
-          }
-        }`,
-        { ...subjectProps }
-      )
-      .then(resp => {
-        let affectedSubjects = resp.updateSubject;
-        dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
-      });
+    graphqlClient.runMutation(UpdateSubjectMutation, { ...subjectProps }).then(resp => {
+      let affectedSubjects = resp.updateSubject;
+      dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
+    });
   },
   deleteSubject(_id, dispatch) {
-    return graphqlClient
-      .runMutation(
-        `mutation deleteSubject {
-          deleteSubject(_id: "${_id}")
-        }`
-      )
-      .then(resp => {
-        dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
-        return { subjectsDeleted: resp.deleteSubject };
-      });
+    return graphqlClient.runMutation(DeleteSubjectMutation, { _id }).then(resp => {
+      dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
+      return { subjectsDeleted: resp.deleteSubject };
+    });
   }
 };
 

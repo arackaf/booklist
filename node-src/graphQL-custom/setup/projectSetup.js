@@ -43,7 +43,12 @@ const Book = {
     dateAdded: StringType,
     editorialReviews: arrayOf(EditorialReview)
   },
-  manualQueryArgs: [{ name: "searchChildSubjects", type: "Boolean" }, { name: "publicUserId", type: "String" }]
+  manualQueryArgs: [
+    { name: "searchChildSubjects", type: "Boolean" },
+    { name: "publicUserId", type: "String" },
+    { name: "bookSearchVersion", type: "String" },
+    { name: "isBookDetails", type: "String" }
+  ]
 };
 
 const Subject = {

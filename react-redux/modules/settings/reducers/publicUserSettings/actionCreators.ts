@@ -4,18 +4,13 @@ import { gqlGet } from "util/graphqlUtil";
 import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
+import PublicUserSettingsQuery from "./getPublisUserSettingsQuery.graphql";
+import UpdatePublisUserSettingsMutation from "./updatePublicUserSettings.graphql";
+
 export const loadPublicUserSettings = () => dispatch => {
   dispatch({ type: USER_INFO_LOADING });
 
-  gqlGet(compress`query GetUserPublicSettings {
-    getUser{
-      User{
-        isPublic
-        publicName
-        publicBooksHeader
-      }
-    }
-  }`).then(({ data: { getUser } }) => {
+  gqlGet(PublicUserSettingsQuery).then(({ data: { getUser } }) => {
     dispatch({ type: USER_INFO_LOADED, info: getUser.User });
   });
 };
@@ -30,19 +25,8 @@ export const savePublicInfo = () => (dispatch, getState) => {
   let editingState = getState().settingsModule.publicUserSettings.editing;
   dispatch({ type: USER_INFO_SAVING });
 
-  graphqlClient
-    .runMutation(
-      `mutation updateUser($isPublic: Boolean, $publicBooksHeader: String, $publicName: String) {
-          updateUser(Updates: { isPublic: $isPublic, publicBooksHeader: $publicBooksHeader, publicName: $publicName }) {
-            User{
-              isPublic, publicBooksHeader, publicName
-            }
-          }
-      }`,
-      { ...editingState }
-    )
-    .then(resp => {
-      let User = resp.updateUser && resp.updateUser.User;
-      User && dispatch({ type: USER_INFO_SAVED, ...User });
-    });
+  graphqlClient.runMutation(UpdatePublisUserSettingsMutation, { ...editingState }).then(resp => {
+    let User = resp.updateUser && resp.updateUser.User;
+    User && dispatch({ type: USER_INFO_SAVED, ...User });
+  });
 };

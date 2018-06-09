@@ -1,0 +1,10 @@
+query GetBookDetails($_id: String, $isBookDetails: String) {
+  getBook(_id: $_id, isBookDetails: $isBookDetails) {
+    Book {
+      editorialReviews {
+        source
+        content
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ import Axis from "./axis";
 
 import { getChildSubjectsSorted, computeSubjectParentId, RootApplicationType } from "applicationRoot/rootReducer";
 
-import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
+import { args, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
 
 function getSubjectsList(subjectIds) {
   return gqlGet(`query getBooksSubjects {

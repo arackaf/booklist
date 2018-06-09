@@ -1,7 +1,7 @@
-var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { GenerateSW } = require("workbox-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
-var path = require("path");
+const path = require("path");
 const isProd = process.env.NODE_ENV == "production";
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
@@ -60,6 +60,16 @@ module.exports = {
         query: {
           presets: ["@babel/preset-react"],
           plugins: ["@babel/plugin-proposal-class-properties", "@babel/plugin-proposal-object-rest-spread"]
+        }
+      },
+      {
+        test: /\.graphql$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "generic-persistgraphql/loader",
+          options: {
+            path: path.resolve(__dirname, "extracted_queries.json")
+          }
         }
       }
     ]

@@ -24,13 +24,17 @@ import ajaxUtil from "util/ajaxUtil";
 
 import { compress } from "micro-graphql-react";
 
+import GetBooksQuery from "./getBooks.graphql";
+import DeleteBookMutation from "./deleteBook.graphql";
+import UpdateBooksReadMutation from "./updateBooksRead.graphql";
+import BookDetailsQuery from "./getBookDetails.graphql";
+
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };
 }
 
 import { BookSearchType, selectCurrentSearch } from "../bookSearch/reducer";
 
-import { args, numArg, strArg, boolArg, strArrArg, gqlGet } from "util/graphqlUtil";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 import { store } from "applicationRoot/store";
 
@@ -40,7 +44,7 @@ export const deleteBook = ({ _id }) => {
   return (dispatch, getState) => {
     dispatch({ type: BOOK_DELETING, _id });
 
-    graphqlClient.runMutation(`mutation deleteBook($_id: String) { deleteBook(_id: $_id) }`, { _id }).then(resp => {
+    graphqlClient.runMutation(DeleteBookMutation, { _id }).then(resp => {
       dispatch({ type: BOOK_DELETED, _id });
     });
   };
@@ -76,45 +80,28 @@ const nonEmptyProps = obj =>
 
 function booksSearch(bookSearchState: BookSearchType, publicUserId) {
   let bookSearchFilters = selectCurrentSearch(store.getState() as any);
-  let version = bookSearchState.searchVersion;
-  let sortObject = `{ ${bookSearchFilters.sort}: ${bookSearchFilters.sortDirection == "asc" ? 1 : -1} }`;
 
-  return gqlGet(compress`query ALL_BOOKS_V_${version} {
-    allBooks(
-      PAGE: ${bookSearchFilters.page}
-      PAGE_SIZE: ${bookSearchFilters.pageSize}
-      SORT: ${sortObject}
-      ${args(
-        strArg("title_contains", bookSearchFilters.search),
-        boolArg("isRead", bookSearchFilters.isRead === "1" ? true : null),
-        boolArg("isRead_ne", bookSearchFilters.isRead === "0" ? true : null),
-        strArrArg("subjects_containsAny", bookSearchFilters.selectedSubjects.map(s => s._id)),
-        boolArg("searchChildSubjects", bookSearchFilters.searchChildSubjects || null),
-        strArrArg("tags_containsAny", bookSearchFilters.selectedTags.map(t => t._id)),
-        strArg("authors_textContains", bookSearchFilters.author),
-        strArg("publisher_contains", bookSearchFilters.publisher),
-        strArg("publicUserId", publicUserId),
-        numArg("subjects_count", bookSearchFilters.noSubjects ? 0 : null),
-        bookSearchFilters.pages != "" ? numArg(bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt", bookSearchFilters.pages) : null
-      )}
-    ){
-      Books{
-        _id
-        title
-        isbn
-        ean
-        pages
-        smallImage
-        publicationDate
-        subjects
-        authors
-        publisher
-        tags
-        isRead
-        dateAdded
-      }, Meta {count}
-    }
-  }`).then(resp => {
+  let getBooksVariables: any = {
+    page: bookSearchFilters.page,
+    pageSize: bookSearchFilters.pageSize,
+    sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
+    title_contains: bookSearchFilters.search || void 0,
+    isRead: bookSearchFilters.isRead === "1" ? true : void 0,
+    isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
+    subjects_containsAny: bookSearchFilters.selectedSubjects.length ? bookSearchFilters.selectedSubjects.map(s => s._id) : void 0,
+    searchChildSubjects: bookSearchFilters.searchChildSubjects || void 0,
+    tags_containsAny: bookSearchFilters.selectedTags.length ? bookSearchFilters.selectedTags.map(t => t._id) : void 0,
+    authors_textContains: bookSearchFilters.author || void 0,
+    publisher_contains: bookSearchFilters.publisher || void 0,
+    publicUserId: publicUserId,
+    subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
+    bookSearchVersion: bookSearchState.searchVersion
+  };
+  if (bookSearchFilters.pages != "") {
+    getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = bookSearchFilters.pages;
+  }
+
+  return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
     if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
       return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
     }
@@ -129,18 +116,10 @@ export function expandBook(_id: string) {
     if (!book.detailsLoaded) {
       dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
 
-      graphqlClient
-        .runQuery(
-          compress`query GetBookDetails {
-          getBook(_id: ${JSON.stringify(_id)}) {
-            Book { editorialReviews { source, content } }
-          }
-        }`
-        )
-        .then(({ data: { getBook } }) => {
-          let editorialReviews = getBook.Book.editorialReviews;
-          dispatch({ type: DETAILS_LOADED, _id, editorialReviews });
-        });
+      graphqlClient.runQuery(BookDetailsQuery).then(({ data: { getBook } }) => {
+        let editorialReviews = getBook.Book.editorialReviews;
+        dispatch({ type: DETAILS_LOADED, _id, editorialReviews });
+      });
     } else {
       dispatch({ type: EXPAND_BOOK, _id });
     }
@@ -184,16 +163,9 @@ export function setSelectedUnRead() {
 function executeSetRead(dispatch, ids, value) {
   dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
 
-  graphqlClient
-    .runMutation(
-      `mutation updateBooks($_ids: [String], $updates: BookMutationInput) {
-      updateBooks(_ids: $_ids, Updates: $updates) { success }
-    }`,
-      { _ids: ids, updates: { isRead: !!value } }
-    )
-    .then(res => {
-      dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
-    });
+  graphqlClient.runMutation(UpdateBooksReadMutation, { _ids: ids, updates: { isRead: !!value } }).then(res => {
+    dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
+  });
 }
 
 export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });
