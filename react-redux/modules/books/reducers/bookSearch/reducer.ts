@@ -67,6 +67,7 @@ const defaultSearchValuesHash = {
 export type BookSearchValues = typeof defaultSearchValuesHash & {
   selectedSubjects: TagOrSubject[];
   selectedTags: TagOrSubject[];
+  tagIds: string[];
 };
 export type BookSearchState = BookSearchValues & {
   anyActiveFilters: boolean;
@@ -100,9 +101,11 @@ export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchVal
   selectSelectedTags,
   (bookSearch, subjects, tags) => {
     let filters = bookSearch.hashFilters;
+    let tagsHashValue = bookSearch.hashFilters.tags;
     return Object.assign({}, defaultSearchValuesHash, filters, {
       selectedSubjects: subjects,
-      selectedTags: tags
+      selectedTags: tags,
+      tagIds: tagsHashValue ? tagsHashValue.split(",") : []
     });
   }
 );
