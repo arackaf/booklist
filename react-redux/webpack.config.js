@@ -3,6 +3,7 @@ const { GenerateSW } = require("workbox-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const path = require("path");
 const isProd = process.env.NODE_ENV == "production";
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
@@ -24,8 +25,8 @@ module.exports = {
     main: "./reactStartup.ts"
   },
   output: {
-    filename: "[name]-bundle.js",
-    chunkFilename: "[name]-chunk.js",
+    filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",
+    chunkFilename: isProd ? "[name]-chunk-[contenthash].js" : "[name]-chunk.js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "react-redux/dist/"
   },
@@ -78,6 +79,7 @@ module.exports = {
     //minimize: false
   },
   plugins: [
+    new HtmlWebpackPlugin({ template: "default.htm" }),
     new GenerateSW({
       globDirectory: ".",
       globPatterns: [
