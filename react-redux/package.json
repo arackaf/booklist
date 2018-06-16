@@ -33,6 +33,7 @@
     "graphql": "0.11.7",
     "graphql-tag": "2.5.0",
     "history": "4.6.1",
+    "html-webpack-plugin": "^4.0.0-alpha",
     "immutability-helper": "2.2.2",
     "lodash.debounce": "4.0.8",
     "lodash.throttle": "4.1.1",

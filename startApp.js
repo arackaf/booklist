@@ -184,7 +184,7 @@ function browseToReactRedux(request, response) {
     response.clearCookie("remember_me");
     response.clearCookie("userId");
   }
-  response.sendFile(path.join(__dirname + "/react-redux/default.htm"));
+  response.sendFile(path.join(__dirname + "/react-redux/dist/index.html"));
 }
 
 app.get("/favicon.ico", function(request, response) {
@@ -270,7 +270,7 @@ app.post("/react-redux/upload", upload.single("fileUploaded"), function(req, res
     if (image.bitmap.width > 55) {
       let width = image.bitmap.width;
       let height = image.bitmap.height;
-      let newWidth = height * 50 / width;
+      let newWidth = (height * 50) / width;
 
       image.resize(50, newWidth);
       let resizedDestination = `${pathResult}/resized_${newName}`;
