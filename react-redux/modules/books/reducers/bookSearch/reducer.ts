@@ -6,10 +6,26 @@ import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
 
+const BOOK_SEARCH_VERSION_KEY = "bookSearchVersion";
+let initialSearchVersion = +localStorage.getItem(BOOK_SEARCH_VERSION_KEY);
+
+if (initialSearchVersion) {
+  let currentTime = +new Date();
+  let delta = currentTime - initialSearchVersion;
+
+  //30 minutes
+  if (delta > 30 * 60 * 1000) {
+    initialSearchVersion = +new Date();
+  }
+} else {
+  initialSearchVersion = +new Date();
+}
+localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + initialSearchVersion);
+
 const initialState = {
   hasMore: false,
   view: "",
-  searchVersion: +new Date(),
+  searchVersion: initialSearchVersion,
   hashFilters: {} as BookSearchValues
 };
 export type BookSearchType = typeof initialState;
@@ -35,7 +51,9 @@ export function bookSearchReducer(state = initialState, action): BookSearchType 
     case EDITING_BOOK_SAVED:
     case SET_BOOKS_SUBJECTS:
     case SET_BOOKS_TAGS:
-      return { ...state, searchVersion: +new Date() };
+      let newSearchVersion = +new Date();
+      localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + newSearchVersion);
+      return { ...state, searchVersion: newSearchVersion };
   }
   return state;
 }
