@@ -135,11 +135,16 @@ export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchVal
 export const selectBookSearchState = createSelector<BooksModuleType, BookSearchState, BookSearchValues, BookSearchType>(
   selectCurrentSearch,
   state => state.booksModule.bookSearch,
-  (currentSearch, bookSearch) => ({
-    ...currentSearch,
-    anyActiveFilters: !!Object.keys(bookSearch.hashFilters).length,
-    bindableSortValue: `${currentSearch.sort}|${currentSearch.sortDirection}`
-  })
+  (currentSearch, bookSearch) => {
+    let filtersHash = { ...bookSearch.hashFilters };
+    delete filtersHash.sort;
+    delete filtersHash.sortDirection;
+    return {
+      ...currentSearch,
+      anyActiveFilters: !!Object.keys(filtersHash).length,
+      bindableSortValue: `${currentSearch.sort}|${currentSearch.sortDirection}`
+    };
+  }
 );
 
 export type BookSearchUiViewType = {
