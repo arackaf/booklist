@@ -87,6 +87,7 @@ export type BookSearchValues = typeof defaultSearchValuesHash & {
   selectedTags: TagOrSubject[];
   tagIds: string[];
   subjectIds: string[];
+  userId?: number;
 };
 export type BookSearchState = BookSearchValues & {
   anyActiveFilters: boolean;
@@ -139,6 +140,7 @@ export const selectBookSearchState = createSelector<BooksModuleType, BookSearchS
     let filtersHash = { ...bookSearch.hashFilters };
     delete filtersHash.sort;
     delete filtersHash.sortDirection;
+    delete filtersHash.userId;
     return {
       ...currentSearch,
       anyActiveFilters: !!Object.keys(filtersHash).length,
