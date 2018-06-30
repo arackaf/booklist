@@ -1,3 +1,5 @@
+import GraphQLJSON from 'graphql-type-json';
+
 import Book, { Book as BookRest } from './Book/resolver';
 import Subject, { Subject as SubjectRest } from './Subject/resolver';
 import LabelColor, { LabelColor as LabelColorRest } from './LabelColor/resolver';
@@ -13,6 +15,7 @@ const { Query: PublicUserQuery, Mutation: PublicUserMutation } = PublicUser;
 const { Query: TagQuery, Mutation: TagMutation } = Tag;
 
 export default {
+  JSON: GraphQLJSON,
   Query: Object.assign(
     {},
     BookQuery,
