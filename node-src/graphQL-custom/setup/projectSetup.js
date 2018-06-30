@@ -64,7 +64,7 @@ const Subject = {
   extras: {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
     schemaSources: ["../../graphQL-custom/extras/subject/schema"],
-    overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk"]
+    overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }]
 };

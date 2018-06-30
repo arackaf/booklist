@@ -111,10 +111,6 @@ export const mutation = `
     Subject: SubjectInput
   ): SubjectMutationResult
 
-  deleteSubject (
-    _id: String
-  ): Boolean
-
   ${SchemaExtras1.Mutation || ""}
 
 `;

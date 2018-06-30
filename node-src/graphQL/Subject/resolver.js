@@ -84,20 +84,6 @@ export default {
         Subject: result
       }
     },
-    async deleteSubject(root, args, context, ast) {
-      if (!args._id) {
-        throw "No _id sent";
-      }
-      let db = await root.db;
-      let $match = { _id: ObjectId(args._id) };
-      
-      if (await processHook(hooksObj, "Subject", "beforeDelete", $match, root, args, context, ast) === false) {
-        return false;
-      }
-      await dbHelpers.runDelete(db, "subjects", $match);
-      await processHook(hooksObj, "Subject", "afterDelete", $match, root, args, context, ast);
-      return true;
-    },
     ...(MutationExtras1 || {})
   }
 };
