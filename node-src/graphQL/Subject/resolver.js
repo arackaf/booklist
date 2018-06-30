@@ -1,9 +1,8 @@
-import { queryUtilities, processHook } from "mongo-graphql-starter";
+import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
 import hooksObj from "../hooks";
 const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
 import { ObjectId } from "mongodb";
 import SubjectMetadata from "./Subject";
-import * as dbHelpers from "../dbHelpers";
 import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
 const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 

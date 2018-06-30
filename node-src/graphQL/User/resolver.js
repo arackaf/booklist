@@ -1,9 +1,8 @@
-import { queryUtilities, processHook } from "mongo-graphql-starter";
+import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
 import hooksObj from "../hooks";
 const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
 import { ObjectId } from "mongodb";
 import UserMetadata from "./User";
-import * as dbHelpers from "../dbHelpers";
 
 export async function loadUsers(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;

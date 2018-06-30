@@ -7,6 +7,7 @@ import { query as TagQuery, mutation as TagMutation, type as TagType } from './T
 import { type as EditorialReviewType } from './EditorialReview/schema';
     
 export default `
+  scalar JSON
 
   type QueryResultsMetadata {
     count: Int
