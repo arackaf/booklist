@@ -59,7 +59,7 @@
     "redux-thunk": "2.2.0",
     "reselect": "2.0.1",
     "shallow-equal": "^1.0.0",
-    "simple-react-bootstrap": "0.4.2",
+    "simple-react-bootstrap": "^0.4.3",
     "ts-loader": "4.0.0",
     "typescript": "2.7.2",
     "uglify-es": "3.3.9",
