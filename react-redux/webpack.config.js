@@ -81,6 +81,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm" }),
     new GenerateSW({
+      skipWaiting: true,
       globDirectory: ".",
       globPatterns: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
