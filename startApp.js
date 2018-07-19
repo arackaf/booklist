@@ -154,6 +154,19 @@ app.use(
   })
 );
 
+const dbPromisePublic = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+const rootPublic = { db: dbPromise };
+const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolversPublic });
+
+app.use(
+  "/graphql-public",
+  expressGraphql({
+    schema: executableSchemaPublic,
+    graphiql: true,
+    rootValue: rootPublic
+  })
+);
+
 const expressWs = expressWsImport(app);
 
 app.use("/static/", express.static(__dirname + "/static/"));

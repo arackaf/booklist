@@ -46,7 +46,8 @@ export default `
     ${TagQuery}
   }
 
-  type Mutation {
+  #type Mutation {
+
     ${BookMutation}
 
     ${SubjectMutation}
@@ -54,6 +55,6 @@ export default `
     ${LabelColorMutation}
 
     ${TagMutation}
-  }
+  #}
 
 `;
