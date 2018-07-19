@@ -42,6 +42,9 @@ export default class BooksMiddleware {
       //bump it so we know if there's more results to page
       args.PAGE_SIZE = 50;
     }
+    if (!args.PAGE) {
+      args.PAGE = 1;
+    }
 
     let subjects = args.subjects_containsAny || [];
     if (args.searchChildSubjects && subjects.length) {
