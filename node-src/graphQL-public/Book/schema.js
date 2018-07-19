@@ -162,13 +162,6 @@ export const type = `
     mediumImage: String
     mediumImage_ne: String
     mediumImage_in: [String]
-    userId_contains: String
-    userId_startsWith: String
-    userId_endsWith: String
-    userId_regex: String
-    userId: String
-    userId_ne: String
-    userId_in: [String]
     publisher_contains: String
     publisher_startsWith: String
     publisher_endsWith: String
@@ -285,13 +278,6 @@ export const query = `
     mediumImage: String,
     mediumImage_ne: String,
     mediumImage_in: [String],
-    userId_contains: String,
-    userId_startsWith: String,
-    userId_endsWith: String,
-    userId_regex: String,
-    userId: String,
-    userId_ne: String,
-    userId_in: [String],
     publisher_contains: String,
     publisher_startsWith: String,
     publisher_endsWith: String,
@@ -364,7 +350,6 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int,
     searchChildSubjects: Boolean,
-    publicUserId: String,
     bookSearchVersion: String,
     isBookDetails: String
   ): BookQueryResults
@@ -372,7 +357,6 @@ export const query = `
   getBook (
     _id: String,
     searchChildSubjects: Boolean,
-    publicUserId: String,
     bookSearchVersion: String,
     isBookDetails: String
   ): BookSingleQueryResult

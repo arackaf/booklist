@@ -76,13 +76,6 @@ export const type = `
     path: String
     path_ne: String
     path_in: [String]
-    userId_contains: String
-    userId_startsWith: String
-    userId_endsWith: String
-    userId_regex: String
-    userId: String
-    userId_ne: String
-    userId_in: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -128,13 +121,6 @@ export const query = `
     path: String,
     path_ne: String,
     path_in: [String],
-    userId_contains: String,
-    userId_startsWith: String,
-    userId_endsWith: String,
-    userId_regex: String,
-    userId: String,
-    userId_ne: String,
-    userId_in: [String],
     backgroundColor_contains: String,
     backgroundColor_startsWith: String,
     backgroundColor_endsWith: String,
@@ -155,13 +141,11 @@ export const query = `
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int,
-    publicUserId: String
+    PAGE_SIZE: Int
   ): TagQueryResults
 
   getTag (
-    _id: String,
-    publicUserId: String
+    _id: String
   ): TagSingleQueryResult
 
 `;
