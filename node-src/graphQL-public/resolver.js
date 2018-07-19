@@ -13,7 +13,7 @@ const { Query: TagQuery, Mutation: TagMutation } = Tag;
 export default {
   JSON: GraphQLJSON,
   Query: Object.assign({}, BookQuery, SubjectQuery, LabelColorQuery, TagQuery),
-  Mutation: Object.assign({}, BookMutation, SubjectMutation, LabelColorMutation, TagMutation),
+  //Mutation: Object.assign({}, BookMutation, SubjectMutation, LabelColorMutation, TagMutation),
   Book: {
     ...BookRest
   },

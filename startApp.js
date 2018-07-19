@@ -156,7 +156,7 @@ app.use(
 
 const dbPromisePublic = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
 const rootPublic = { db: dbPromise };
-const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolversPublic });
+const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
 
 app.use(
   "/graphql-public",
