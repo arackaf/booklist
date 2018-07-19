@@ -30,8 +30,13 @@ import expressWsImport from "express-ws";
 import webpush from "web-push";
 import { MongoClient } from "mongodb";
 import expressGraphql from "express-graphql";
+
 import resolvers from "./node-src/graphQL/resolver";
 import schema from "./node-src/graphQL/schema";
+
+import resolversPublic from "./node-src/graphQL-public/resolver";
+import schemaPublic from "./node-src/graphQL-public/schema";
+
 import { makeExecutableSchema } from "graphql-tools";
 import { middleware } from "generic-persistgraphql";
 
@@ -146,6 +151,19 @@ app.use(
     schema: executableSchema,
     graphiql: true,
     rootValue: root
+  })
+);
+
+const dbPromisePublic = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+const rootPublic = { db: dbPromise };
+const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
+
+app.use(
+  "/graphql-public",
+  expressGraphql({
+    schema: executableSchemaPublic,
+    graphiql: true,
+    rootValue: rootPublic
   })
 );
 
