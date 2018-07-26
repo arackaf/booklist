@@ -6,14 +6,20 @@ import { render } from "react-dom";
 import { requestDesktop, requestMobile } from "./rootReducerActionCreators";
 import MainNavigationBar from "applicationRoot/components/mainNavigation";
 
-const MobileMeta = connect(state => state.app, {})(app => (
+const MobileMeta = connect(
+  state => state.app,
+  {}
+)(app => (
   <meta
     name="viewport"
     content={app.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ""}
   />
 ));
 
-const WellUiSwitcher = connect(state => state.app, { requestDesktop, requestMobile })(props => {
+const WellUiSwitcher = connect(
+  state => state.app,
+  { requestDesktop, requestMobile }
+)(props => {
   let showChooseDesktop = props.isMobile && props.showingMobile,
     showSwitchBackMobile = props.isMobile && props.showingDesktop;
 

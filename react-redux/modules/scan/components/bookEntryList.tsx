@@ -39,7 +39,10 @@ const defaultEmptyBook = () => ({
     createBook(Book: $book) { Book { _id }, success }
   }`
 )
-@connect(state => state.scanModule, { ...bookEntryActionCreators })
+@connect(
+  state => state.scanModule,
+  { ...bookEntryActionCreators }
+)
 export default class BookEntryList extends Component<scanReducerType & typeof bookEntryActionCreators & MutationType, any> {
   refs: any;
   ws: any;

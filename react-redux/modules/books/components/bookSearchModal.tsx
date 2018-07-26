@@ -40,7 +40,10 @@ const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType,
   }
 );
 
-@connect(selector, { ...bookSearchActionCreators })
+@connect(
+  selector,
+  { ...bookSearchActionCreators }
+)
 export default class BookSearchModal extends Component<ModalProps & LocalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);

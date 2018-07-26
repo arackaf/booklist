@@ -34,7 +34,10 @@ interface IAddedMenuProps {
   beginEditFilters: any;
 }
 
-@connect(menuBarSelector, { ...bookSearchActionCreators })
+@connect(
+  menuBarSelector,
+  { ...bookSearchActionCreators }
+)
 export default class BooksMenuBar extends Component<BookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
   navBar: any;
   quickSearchEl: any;
@@ -237,7 +240,10 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
 
 type UtilMenuOptionsComponentType = BookUtilMenuOptionsType &
   typeof booksActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
-@connect(utilMenuOptionsSelector, { ...booksActionCreators })
+@connect(
+  utilMenuOptionsSelector,
+  { ...booksActionCreators }
+)
 class UtilMenuOptions extends Component<UtilMenuOptionsComponentType, any> {
   render() {
     return (

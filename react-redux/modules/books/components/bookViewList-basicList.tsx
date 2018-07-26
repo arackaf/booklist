@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { selectBookListComponentState, BookListComponentStateType, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
-@connect(null, actions)
+@connect(
+  null,
+  actions
+)
 class BookViewListMobileItem extends Component<any, any> {
   render() {
     let props = this.props,
@@ -64,7 +67,10 @@ class BookViewListMobileItem extends Component<any, any> {
   }
 }
 
-@connect(selectBookListComponentState, actions)
+@connect(
+  selectBookListComponentState,
+  actions
+)
 export default class BookViewListMobile extends Component<BookListComponentStateType & { editBook: any } & actionsType, any> {
   render() {
     let props = this.props;
