@@ -4,7 +4,10 @@ import { selector } from "../../reducers/publicUserSettings/reducer";
 import * as actionCreators from "../../reducers/passwordReset/actionCreators";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 
-@connect(null, { ...actionCreators })
+@connect(
+  null,
+  { ...actionCreators }
+)
 export default class PublicUserSettings extends Component<typeof actionCreators, any> {
   newPasswordEl: any;
   confirmPasswordEl: any;

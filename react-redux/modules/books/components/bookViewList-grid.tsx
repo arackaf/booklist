@@ -17,7 +17,10 @@ interface ILocalProps {
   editBook: any;
 }
 
-@connect(null, actions)
+@connect(
+  null,
+  actions
+)
 class BookRowRaw extends Component<ILocalProps & actionsType, any> {
   render() {
     let { book, index } = this.props,
@@ -150,7 +153,10 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
 }
 let BookRow: any = BookRowRaw;
 
-@connect(null, null)
+@connect(
+  null,
+  null
+)
 class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, any> {
   render() {
     let { book, index } = this.props;
@@ -178,7 +184,10 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
   }
 }
 
-@connect(selectBookListComponentState, actions)
+@connect(
+  selectBookListComponentState,
+  actions
+)
 export default class BookViewListGrid extends Component<
   BookListComponentStateType & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
   any

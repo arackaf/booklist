@@ -41,7 +41,10 @@ interface ILocalProps {
   stopEditing: any;
 }
 
-@connect(selectEntireSubjectsState, { ...actionCreators })
+@connect(
+  selectEntireSubjectsState,
+  { ...actionCreators }
+)
 export default class SubjectEditModal extends Component<EntireSubjectsStateType & ILocalProps & typeof actionCreators, any> {
   currentEligibleParents: any;
   constructor(props) {
