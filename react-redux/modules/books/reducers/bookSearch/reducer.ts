@@ -26,7 +26,7 @@ const initialState = {
   hasMore: false,
   view: "",
   searchVersion: initialSearchVersion,
-  hashFilters: {} as BookSearchValues
+  hashFilters: {} as typeof defaultSearchValuesHash
 };
 export type BookSearchType = typeof initialState;
 
@@ -80,43 +80,33 @@ const defaultSearchValuesHash = {
   isRead: "",
   noSubjects: "",
   sort: "_id",
-  sortDirection: "desc"
-};
-export type BookSearchValues = typeof defaultSearchValuesHash & {
-  selectedSubjects: TagOrSubject[];
-  selectedTags: TagOrSubject[];
-  tagIds: string[];
-  subjectIds: string[];
-  userId?: number;
-};
-export type BookSearchState = BookSearchValues & {
-  anyActiveFilters: boolean;
-  bindableSortValue: string;
+  sortDirection: "desc",
+  userId: ""
 };
 
-export const selectSelectedSubjects = createSelector<any, any, BookSearchType, LookupHashType>(
-  state => state.booksModule.bookSearch,
-  state => state.app.subjectHash,
+export const selectSelectedSubjects = createSelector(
+  (state: BooksModuleType) => state.booksModule.bookSearch,
+  (state: BooksModuleType) => state.app.subjectHash,
   (filters, hash) => projectSelectedItems(filters.hashFilters.subjects, hash)
 );
 
-export const selectSelectedTags = createSelector<any, any, BookSearchType, LookupHashType>(
-  state => state.booksModule.bookSearch,
-  state => state.booksModule.tags.tagHash,
+export const selectSelectedTags = createSelector(
+  (state: BooksModuleType) => state.booksModule.bookSearch,
+  (state: BooksModuleType) => state.booksModule.tags.tagHash,
   (filters, hash) => {
     return projectSelectedItems(filters.hashFilters.tags, hash);
   }
 );
 
-function projectSelectedItems(ids: string = "", hash) {
+function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
   return ids
     .split("-")
     .map(_id => (_id ? hash[_id] : null))
     .filter(res => res);
 }
 
-export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchValues, BookSearchType, TagOrSubject[], TagOrSubject[]>(
-  state => state.booksModule.bookSearch,
+export const selectCurrentSearch = createSelector(
+  (state: BooksModuleType) => state.booksModule.bookSearch,
   selectSelectedSubjects,
   selectSelectedTags,
   (bookSearch, subjects, tags) => {
@@ -133,9 +123,9 @@ export const selectCurrentSearch = createSelector<BooksModuleType, BookSearchVal
   }
 );
 
-export const selectBookSearchState = createSelector<BooksModuleType, BookSearchState, BookSearchValues, BookSearchType>(
+export const selectBookSearchState = createSelector(
   selectCurrentSearch,
-  state => state.booksModule.bookSearch,
+  (state: BooksModuleType) => state.booksModule.bookSearch,
   (currentSearch, bookSearch) => {
     let filtersHash = { ...bookSearch.hashFilters };
     delete filtersHash.sort;
