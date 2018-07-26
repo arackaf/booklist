@@ -20,7 +20,7 @@ const selector = createSelector(
 );
 
 @connect(selector)
-export default class BooksLoading extends Component<Opt<ReturnType<typeof selector>>, any> {
+export default class BooksLoading extends Component<Partial<ReturnType<typeof selector>>, any> {
   render() {
     return this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null;
   }

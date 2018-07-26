@@ -5,5 +5,3 @@ declare module "*.graphql" {
   const value: any;
   export default value;
 }
-
-type Opt<T> = { [x in keyof T]?: T[x] };
