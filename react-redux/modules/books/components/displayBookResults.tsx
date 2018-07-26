@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
 import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
-import { selectBookList, BookListType } from "modules/books/reducers/books/reducer";
+import { selectBookList } from "modules/books/reducers/books/reducer";
 import { BookSearchUiViewType, selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
 
 const BasicListView: any = BLV;

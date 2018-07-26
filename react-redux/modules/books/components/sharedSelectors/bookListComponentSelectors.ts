@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { selectBookSelection, selectBookList, BookListType } from "modules/books/reducers/books/reducer";
+import { selectBookSelection, selectBookList } from "modules/books/reducers/books/reducer";
 
 import * as actionCreatorsBooks from "modules/books/reducers/books/actionCreators";
 import * as actionCreatorsBookSearch from "modules/books/reducers/bookSearch/actionCreators";
@@ -13,7 +13,7 @@ export const actions = {
 export type actionsType = typeof actionCreatorsBooks & typeof actionCreatorsBookSearch;
 
 export type BookListComponentStateType = ReturnType<typeof selectBookSelection> &
-  BookListType & {
+  ReturnType<typeof selectBookList> & {
     viewingPublic: boolean;
     selectedBooks: { [s: string]: any };
     hasMoreBooks: boolean;
@@ -21,6 +21,7 @@ export type BookListComponentStateType = ReturnType<typeof selectBookSelection> 
     currentSort: string;
     sortDirection: string;
   };
+
 export const selectBookListComponentState = createSelector<
   any,
   BookListComponentStateType,
@@ -28,7 +29,7 @@ export const selectBookListComponentState = createSelector<
   any,
   any,
   any,
-  BookListType,
+  ReturnType<typeof selectBookList>,
   ReturnType<typeof selectBookSelection>
 >(
   state => state.app,
