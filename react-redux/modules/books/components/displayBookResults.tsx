@@ -9,14 +9,14 @@ import { createSelector } from "reselect";
 
 import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
 import { selectBookList } from "modules/books/reducers/books/reducer";
-import { BookSearchUiViewType, selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
+import { selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
 
 const BasicListView: any = BLV;
 
 type PassedIn = { editBook: any; editTagsForBook: any; editSubjectsForBook: any; navBarHeight: any };
-type Selected = { subjectsLoaded: boolean; tagsLoaded: boolean; isGridView: boolean; isBasicList: boolean } & BookSearchUiViewType;
+type Selected = { subjectsLoaded: boolean; tagsLoaded: boolean } & ReturnType<typeof selectBookSearchUiView>;
 
-const selector = createSelector<BooksModuleType, Selected, AppType, TagsType, BookSearchUiViewType>(
+const selector = createSelector<BooksModuleType, Selected, AppType, TagsType, ReturnType<typeof selectBookSearchUiView>>(
   state => state.app,
   state => state.booksModule.tags,
   selectBookSearchUiView,
