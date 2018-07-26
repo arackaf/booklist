@@ -251,7 +251,10 @@ class SubjectDisplayContent extends Component<any, any> {
   }
 }
 
-@connect(null, { ...actionCreators })
+@connect(
+  null,
+  { ...actionCreators }
+)
 class DefaultSubjectDisplay extends Component<any, any> {
   render() {
     let {
@@ -313,7 +316,10 @@ class DefaultSubjectDisplay extends Component<any, any> {
   }
 }
 
-@connect(null, { ...actionCreators })
+@connect(
+  null,
+  { ...actionCreators }
+)
 class EditingSubjectDisplay extends Component<any, any> {
   inputEl: any;
   componentDidMount() {
@@ -409,7 +415,10 @@ class EditingSubjectDisplay extends Component<any, any> {
   }
 }
 
-@connect(null, { ...actionCreators })
+@connect(
+  null,
+  { ...actionCreators }
+)
 class PendingDeleteSubjectDisplay extends Component<typeof actionCreators & any, any> {
   render() {
     let { className, deleteMessage, deleteSubject, cancelSubjectDelete, subject } = this.props,
@@ -431,7 +440,10 @@ class PendingDeleteSubjectDisplay extends Component<typeof actionCreators & any,
   }
 }
 
-@connect(null, { ...actionCreators })
+@connect(
+  null,
+  { ...actionCreators }
+)
 class DeletingSubjectDisplay extends Component<any, any> {
   render() {
     let { name, className } = this.props;
