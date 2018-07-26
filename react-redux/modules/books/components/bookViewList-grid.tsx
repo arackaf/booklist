@@ -5,7 +5,7 @@ import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstra
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { IBookDisplay } from "modules/books/reducers/books/reducer";
-import { selectBookListComponentState, BookListComponentStateType, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
+import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -17,7 +17,10 @@ interface ILocalProps {
   editBook: any;
 }
 
-@connect(null, actions)
+@connect(
+  null,
+  actions
+)
 class BookRowRaw extends Component<ILocalProps & actionsType, any> {
   render() {
     let { book, index } = this.props,
@@ -150,7 +153,10 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
 }
 let BookRow: any = BookRowRaw;
 
-@connect(null, null)
+@connect(
+  null,
+  null
+)
 class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, any> {
   render() {
     let { book, index } = this.props;
@@ -178,9 +184,12 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
   }
 }
 
-@connect(selectBookListComponentState, actions)
+@connect(
+  selectBookListComponentState,
+  actions
+)
 export default class BookViewListGrid extends Component<
-  BookListComponentStateType & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
+  ReturnType<typeof selectBookListComponentState> & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
   any
 > {
   state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };

@@ -13,25 +13,12 @@ import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/su
 import { filterTags, selectEntireTagsState } from "modules/books/reducers/tags/reducer";
 import { createSelector } from "reselect";
 
-type ModalProps = {
-  allTagsSorted: TagOrSubject[];
-  subjectsUnwound: TagOrSubject[];
-  subjectHash: LookupHashType;
-  tagHash: LookupHashType;
-} & ReturnType<typeof selectBookSearchState>;
-
 type LocalProps = {
   isOpen: boolean;
   onHide: any;
 };
 
-const selector = createSelector<
-  any,
-  ModalProps,
-  ReturnType<typeof selectBookSearchState>,
-  ReturnType<typeof selectEntireTagsState>,
-  ReturnType<typeof selectStackedSubjects>
->(selectBookSearchState, selectEntireTagsState, selectStackedSubjects, (bookSearchState, tagsState, subjectsState) => {
+const selector = createSelector(selectBookSearchState, selectEntireTagsState, selectStackedSubjects, (bookSearchState, tagsState, subjectsState) => {
   return {
     ...bookSearchState,
     tagHash: tagsState.tagHash,
@@ -45,7 +32,7 @@ const selector = createSelector<
   selector,
   { ...bookSearchActionCreators }
 )
-export default class BookSearchModal extends Component<ModalProps & LocalProps & typeof bookSearchActionCreators, any> {
+export default class BookSearchModal extends Component<ReturnType<typeof selector> & LocalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);
 
