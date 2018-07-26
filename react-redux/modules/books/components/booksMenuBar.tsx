@@ -5,7 +5,7 @@ import NavBar from "simple-react-bootstrap/lib/navBar";
 
 import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 
-import { selectBookSelection, BookLoadingType, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
+import { selectBookSelection, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
 import { BookSearchState, selectBookSearchState, selectBookSearchUiView, BookSearchUiViewType } from "modules/books/reducers/bookSearch/reducer";
 
 import * as booksActionCreators from "../reducers/books/actionCreators";
@@ -19,7 +19,7 @@ import { BooksModuleType } from "modules/books/reducers/reducer";
 import Measure from "react-measure";
 import { AppUiState, selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
 
-type BookMenuBarType = BookSearchState & BookLoadingType & BookSearchUiViewType & AppUiState;
+type BookMenuBarType = BookSearchState & ReturnType<typeof selectBookLoadingInfo> & BookSearchUiViewType & AppUiState;
 type BookUtilMenuOptionsType = ReturnType<typeof selectBookSelection> & AppUiState;
 
 const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState);

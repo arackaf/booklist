@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
 import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
-import { selectBookList, BookListType } from "modules/books/reducers/books/reducer";
+import { selectBookList } from "modules/books/reducers/books/reducer";
 
 type SelectedType = { subjectsLoaded?: boolean; tagsLoaded?: boolean; booksLoading?: boolean };
 
-const selector = createSelector<BooksModuleType, SelectedType, AppType, TagsType, BookListType>(
+const selector = createSelector<BooksModuleType, SelectedType, AppType, TagsType, ReturnType<typeof selectBookList>>(
   state => state.app,
   state => state.booksModule.tags,
   selectBookList,

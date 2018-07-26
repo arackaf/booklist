@@ -13,7 +13,7 @@ const BooksMenuBar: any = BMB;
 import BooksLoading from "./booksLoading";
 import Loadable from "react-loadable";
 
-import { BookListType, selectBookList, selectBookSelection } from "../reducers/books/reducer";
+import { selectBookList, selectBookSelection } from "../reducers/books/reducer";
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
 import { MutationType } from "reactStartup";
@@ -58,9 +58,9 @@ const BookSearchModal = Loadable({
   delay: 200
 });
 
-type MainSelectorType = BookListType & ReturnType<typeof selectBookSelection>;
+type MainSelectorType = ReturnType<typeof selectBookList> & ReturnType<typeof selectBookSelection>;
 
-const mainSelector = createSelector<BooksModuleType, MainSelectorType, BookListType, ReturnType<typeof selectBookSelection>>(
+const mainSelector = createSelector<BooksModuleType, MainSelectorType, ReturnType<typeof selectBookList>, ReturnType<typeof selectBookSelection>>(
   selectBookList,
   selectBookSelection,
   (books, bookSelection) => {
