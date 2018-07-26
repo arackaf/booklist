@@ -149,13 +149,9 @@ export const selectBookSearchState = createSelector<BooksModuleType, BookSearchS
   }
 );
 
-export type BookSearchUiViewType = {
-  isGridView: boolean;
-  isBasicList: boolean;
-};
-export const selectBookSearchUiView = createSelector<BooksModuleType, BookSearchUiViewType, AppType, BookSearchType>(
-  state => state.app,
-  state => state.booksModule.bookSearch,
+export const selectBookSearchUiView = createSelector(
+  (state: BooksModuleType) => state.app,
+  (state: BooksModuleType) => state.booksModule.bookSearch,
   (app, bookSearch) => {
     let view = bookSearch.view,
       isGridView = view == GRID_VIEW || (!view && app.showingDesktop),
