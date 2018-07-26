@@ -9,7 +9,7 @@ import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { filterSubjects, StackedSubjectsType, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
+import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
 import { filterTags, selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
 import { createSelector } from "reselect";
 
@@ -25,7 +25,7 @@ type LocalProps = {
   onHide: any;
 };
 
-const selector = createSelector<any, ModalProps, ReturnType<typeof selectBookSearchState>, TagsStateType, StackedSubjectsType>(
+const selector = createSelector<any, ModalProps, ReturnType<typeof selectBookSearchState>, TagsStateType, ReturnType<typeof selectStackedSubjects>>(
   selectBookSearchState,
   selectEntireTagsState,
   selectStackedSubjects,
