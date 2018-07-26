@@ -28,7 +28,7 @@ const initialState = {
   showingDesktop: false,
   isMobile: false,
   showingMobile: false,
-  subjectHash: {},
+  subjectHash: {} as { [s: string]: SubjectType },
   colors: [],
   module: "",
   isLoggedIn: false,
@@ -109,7 +109,7 @@ export const selectAppUiState = createSelector<RootApplicationType, AppUiState, 
 export const combineSelectors = <TResult>(...selectors): ((state) => TResult) =>
   (createSelector as any)(...selectors, (...results) => Object.assign({}, ...results));
 
-export const unwindSubjects = subjects => {
+export const unwindSubjects = (subjects): SubjectType[] => {
   let result = [];
   subjects.forEach(s => result.push(s, ...unwindSubjects(s.children || [])));
   return result;
@@ -156,7 +156,7 @@ export const subjectChildMapSelector = createSelector<{ app: AppType }, object, 
       .reduce((hash, o) => ((hash[o._id] = o.children), hash), {})
 );
 
-export const stackAndGetTopLevelSubjects = subjectsHash => {
+export const stackAndGetTopLevelSubjects = (subjectsHash): SubjectType[] => {
   let subjects = Object.keys(subjectsHash).map(_id => ({ ...subjectsHash[_id] }));
   subjects.sort(subjectSortCompare).forEach(s => {
     s.children = [];

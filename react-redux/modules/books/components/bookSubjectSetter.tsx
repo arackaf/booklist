@@ -6,7 +6,7 @@ import Modal from "simple-react-bootstrap/lib/modal";
 import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterSubjects } from "modules/books/reducers/subjects/reducer";
-import { selectStackedSubjects, StackedSubjectsType } from "modules/books/reducers/subjects/reducer";
+import { selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
 
 import { mutation } from "micro-graphql-react";
 
@@ -31,7 +31,10 @@ interface ILocalProps {
   }`
 )
 @connect(selectStackedSubjects)
-export default class BookSubjectSetter extends Component<StackedSubjectsType & ILocalProps & { runMutation: any; dispatch: any; running: any }, any> {
+export default class BookSubjectSetter extends Component<
+  ReturnType<typeof selectStackedSubjects> & ILocalProps & { runMutation: any; dispatch: any; running: any },
+  any
+> {
   state = {
     currentTab: "subjects",
     addingSubjects: [],
