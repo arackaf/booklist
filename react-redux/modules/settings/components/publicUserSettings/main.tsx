@@ -7,7 +7,10 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 
 const styleTwenty: any = { left: "20%" };
 
-@connect(selector, { ...actionCreators })
+@connect(
+  selector,
+  { ...actionCreators }
+)
 export default class PublicUserSettings extends Component<publicUserSettingsSelectorType & typeof actionCreators, any> {
   render() {
     return (
