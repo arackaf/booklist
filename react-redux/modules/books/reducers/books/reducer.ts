@@ -70,7 +70,7 @@ export interface IBookDisplay extends IBookRaw {
 const initialBooksState = {
   booksHash: hashOf<IBookRaw>(),
   booksLoading: false,
-  selectedBooks: {},
+  selectedBooks: {} as { [s: string]: boolean },
   resultsCount: 0,
   reloadOnActivate: false
 };

@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import shallowEqual from "shallow-equal/objects";
 
-import { BooksModuleType, AppType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType } from "modules/books/reducers/reducer";
 import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
