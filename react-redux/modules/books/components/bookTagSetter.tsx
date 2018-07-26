@@ -7,7 +7,7 @@ import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterTags } from "modules/books/reducers/tags/reducer";
-import { selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
+import { selectEntireTagsState } from "modules/books/reducers/tags/reducer";
 
 import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
@@ -33,7 +33,7 @@ interface ILocalProps {
   }`
 )
 @connect(selectEntireTagsState)
-export default class BookTagSetterDesktopUnConnected extends Component<TagsStateType & ILocalProps & MutationType, any> {
+export default class BookTagSetterDesktopUnConnected extends Component<ReturnType<typeof selectEntireTagsState> & ILocalProps & MutationType, any> {
   state = {
     currentTab: "tags",
     addingTags: [],

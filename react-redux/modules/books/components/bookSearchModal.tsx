@@ -10,7 +10,7 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
-import { filterTags, selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
+import { filterTags, selectEntireTagsState } from "modules/books/reducers/tags/reducer";
 import { createSelector } from "reselect";
 
 type ModalProps = {
@@ -25,20 +25,21 @@ type LocalProps = {
   onHide: any;
 };
 
-const selector = createSelector<any, ModalProps, ReturnType<typeof selectBookSearchState>, TagsStateType, ReturnType<typeof selectStackedSubjects>>(
-  selectBookSearchState,
-  selectEntireTagsState,
-  selectStackedSubjects,
-  (bookSearchState, tagsState, subjectsState) => {
-    return {
-      ...bookSearchState,
-      tagHash: tagsState.tagHash,
-      allTagsSorted: tagsState.allTagsSorted,
-      subjectHash: subjectsState.subjectHash,
-      subjectsUnwound: subjectsState.subjectsUnwound
-    };
-  }
-);
+const selector = createSelector<
+  any,
+  ModalProps,
+  ReturnType<typeof selectBookSearchState>,
+  ReturnType<typeof selectEntireTagsState>,
+  ReturnType<typeof selectStackedSubjects>
+>(selectBookSearchState, selectEntireTagsState, selectStackedSubjects, (bookSearchState, tagsState, subjectsState) => {
+  return {
+    ...bookSearchState,
+    tagHash: tagsState.tagHash,
+    allTagsSorted: tagsState.allTagsSorted,
+    subjectHash: subjectsState.subjectHash,
+    subjectsUnwound: subjectsState.subjectsUnwound
+  };
+});
 
 @connect(
   selector,
