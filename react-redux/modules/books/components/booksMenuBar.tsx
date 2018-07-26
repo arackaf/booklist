@@ -5,7 +5,7 @@ import NavBar from "simple-react-bootstrap/lib/navBar";
 
 import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 
-import { selectBookSelection, BookSelectionType, BookLoadingType, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
+import { selectBookSelection, BookLoadingType, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
 import { BookSearchState, selectBookSearchState, selectBookSearchUiView, BookSearchUiViewType } from "modules/books/reducers/bookSearch/reducer";
 
 import * as booksActionCreators from "../reducers/books/actionCreators";
@@ -20,7 +20,7 @@ import Measure from "react-measure";
 import { AppUiState, selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
 
 type BookMenuBarType = BookSearchState & BookLoadingType & BookSearchUiViewType & AppUiState;
-type BookUtilMenuOptionsType = BookSelectionType & AppUiState;
+type BookUtilMenuOptionsType = ReturnType<typeof selectBookSelection> & AppUiState;
 
 const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState);
 const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
@@ -34,7 +34,10 @@ interface IAddedMenuProps {
   beginEditFilters: any;
 }
 
-@connect(menuBarSelector, { ...bookSearchActionCreators })
+@connect(
+  menuBarSelector,
+  { ...bookSearchActionCreators }
+)
 export default class BooksMenuBar extends Component<BookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
   navBar: any;
   quickSearchEl: any;
@@ -237,7 +240,10 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
 
 type UtilMenuOptionsComponentType = BookUtilMenuOptionsType &
   typeof booksActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
-@connect(utilMenuOptionsSelector, { ...booksActionCreators })
+@connect(
+  utilMenuOptionsSelector,
+  { ...booksActionCreators }
+)
 class UtilMenuOptions extends Component<UtilMenuOptionsComponentType, any> {
   render() {
     return (

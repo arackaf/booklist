@@ -203,14 +203,9 @@ export const selectBookLoadingInfo = createSelector<BooksModuleType, BookLoading
   booksModule => ({ resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading })
 );
 
-export type BookSelectionType = {
-  allAreChecked: boolean;
-  selectedBooksCount: number;
-  selectedBookHash: any;
-};
-export const selectBookSelection = createSelector<BooksModuleType, BookSelectionType, any, any>(
-  state => state.booksModule.books.booksHash,
-  state => state.booksModule.books.selectedBooks,
+export const selectBookSelection = createSelector(
+  (state: BooksModuleType) => state.booksModule.books.booksHash,
+  (state: BooksModuleType) => state.booksModule.books.selectedBooks,
   (booksHash, selectedBooks) => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
     return {
