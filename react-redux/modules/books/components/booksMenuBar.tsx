@@ -15,13 +15,13 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import Measure from "react-measure";
-import { AppUiState, selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
+import { selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
 
 type BookMenuBarType = ReturnType<typeof selectBookSearchState> &
   ReturnType<typeof selectBookLoadingInfo> &
   ReturnType<typeof selectBookSearchUiView> &
-  AppUiState;
-type BookUtilMenuOptionsType = ReturnType<typeof selectBookSelection> & AppUiState;
+  ReturnType<typeof selectAppUiState>;
+type BookUtilMenuOptionsType = ReturnType<typeof selectBookSelection> & ReturnType<typeof selectAppUiState>;
 
 const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState);
 const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
