@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 
-import { stackAndGetTopLevelSubjects, getEligibleParents, topLevelSubjectsSortedSelector } from "applicationRoot/rootReducer";
+import { getEligibleParents } from "applicationRoot/rootReducer";
 import { AppType } from "applicationRoot/rootReducer";
 import update from "immutability-helper";
 
@@ -112,13 +112,10 @@ export const draggingSubjectSelector = createSelector(
 
 const tempSubjectCompare = ({ _id: id1 }, { _id: id2 }) => id1 - id2;
 
-export type pendingSubjectsType = {
-  [s: string]: SubjectType[];
-};
-export const pendingSubjectsSelector = createSelector<StoreSlice, pendingSubjectsType, any>(
-  state => state.subjectsModule.pendingSubjectsHash,
+export const pendingSubjectsSelector = createSelector(
+  (state: StoreSlice) => state.subjectsModule.pendingSubjectsHash,
   pendingSubjectsHash => {
-    let result = {};
+    let result: { [s: string]: SubjectType[] } = {};
     Object.keys(pendingSubjectsHash).forEach(_id => {
       let subject = pendingSubjectsHash[_id],
         resultKey = subject.parentId || "root";
