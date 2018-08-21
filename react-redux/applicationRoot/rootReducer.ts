@@ -117,8 +117,8 @@ export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
   return bothEqual ? 0 : name1After ? 1 : -1;
 };
 
-export const topLevelSubjectsSortedSelector = createSelector<{ app: AppType }, string[], object>(
-  state => state.app.subjectHash,
+export const topLevelSubjectsSortedSelector = createSelector(
+  (state: { app: AppType }) => state.app.subjectHash,
   subjectHash =>
     Object.keys(subjectHash)
       .map(_id => subjectHash[_id])
@@ -141,8 +141,8 @@ export const getChildSubjectsSorted = (_id, subjectHash) => {
     .sort(subjectSortCompare);
 };
 
-export const subjectChildMapSelector = createSelector<{ app: AppType }, object, any>(
-  state => state.app.subjectHash,
+export const subjectChildMapSelector = createSelector(
+  (state: { app: AppType }) => state.app.subjectHash,
   subjectHash =>
     Object.keys(subjectHash)
       .map(_id => ({ _id, children: getChildSubjectsSorted(_id, subjectHash) }))

@@ -30,7 +30,7 @@ const initialSubjectsState = {
   subjectsSaved: {}
 };
 
-export type subjectType = {
+export type SubjectType = {
   _id: string;
   name: string;
   parentId: string;
@@ -91,35 +91,31 @@ export function reducer(state = initialSubjectsState, action) {
   return state;
 }
 
-type storeSlice = { app: AppType; subjectsModule: subjectsType };
-export type editingSubjectHashType = { editingSubjectsHash: object };
-export const editingSubjectHashSelector = createSelector<storeSlice, editingSubjectHashType, object, object>(
-  state => state.app.subjectHash,
-  state => state.subjectsModule.editingSubjectsHash,
+type StoreSlice = { app: AppType; subjectsModule: subjectsType };
+export const editingSubjectHashSelector = createSelector(
+  (state: StoreSlice) => state.app.subjectHash,
+  (state: StoreSlice) => state.subjectsModule.editingSubjectsHash,
   (subjectHash, editingSubjectsHash) => {
     return {
       editingSubjectsHash: Object.keys(editingSubjectsHash)
         .map(_id => editingSubjectsHash[_id])
-        .reduce((hash, s) => ((hash[s._id] = { ...s, eligibleParents: getEligibleParents(subjectHash, s._id) }), hash), {})
+        .reduce((hash, s) => ((hash[s._id] = { ...s, eligibleParents: getEligibleParents(subjectHash, s._id) }), hash), {}) as object
     };
   }
 );
 
-export type draggingSubjectType = subjectType & {
-  candidateMove: boolean;
-};
-export const draggingSubjectSelector = createSelector<storeSlice, draggingSubjectType, object, string>(
-  state => state.app.subjectHash,
-  state => state.subjectsModule.draggingId,
+export const draggingSubjectSelector = createSelector(
+  (state: StoreSlice) => state.app.subjectHash,
+  (state: StoreSlice) => state.subjectsModule.draggingId,
   (subjectHash, draggingId) => (draggingId ? { ...subjectHash[draggingId], _id: draggingId + "_dragging", candidateMove: true } : null)
 );
 
 const tempSubjectCompare = ({ _id: id1 }, { _id: id2 }) => id1 - id2;
 
 export type pendingSubjectsType = {
-  [s: string]: subjectType[];
+  [s: string]: SubjectType[];
 };
-export const pendingSubjectsSelector = createSelector<storeSlice, pendingSubjectsType, any>(
+export const pendingSubjectsSelector = createSelector<StoreSlice, pendingSubjectsType, any>(
   state => state.subjectsModule.pendingSubjectsHash,
   pendingSubjectsHash => {
     let result = {};

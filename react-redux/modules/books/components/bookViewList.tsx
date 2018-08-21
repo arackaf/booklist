@@ -58,18 +58,13 @@ const BookSearchModal = Loadable({
   delay: 200
 });
 
-type MainSelectorType = ReturnType<typeof selectBookList> & ReturnType<typeof selectBookSelection>;
-
-const mainSelector = createSelector<BooksModuleType, MainSelectorType, ReturnType<typeof selectBookList>, ReturnType<typeof selectBookSelection>>(
-  selectBookList,
-  selectBookSelection,
-  (books, bookSelection) => {
-    return {
-      ...books,
-      ...bookSelection
-    };
-  }
-);
+const mainSelector = createSelector(selectBookList, selectBookSelection, (books, bookSelection) => {
+  return {
+    ...books,
+    ...bookSelection
+  };
+});
+type MainSelectorType = ReturnType<typeof mainSelector>;
 
 @mutation(UpdateBookMutation)
 @connect(mainSelector)
