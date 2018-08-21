@@ -61,7 +61,7 @@
     "shallow-equal": "^1.0.0",
     "simple-react-bootstrap": "^0.4.3",
     "ts-loader": "4.0.0",
-    "typescript": "2.9.2",
+    "typescript": "^3.0.1",
     "uglify-es": "3.3.9",
     "webpack": "4.6.0",
     "webpack-bundle-analyzer": "2.11.0",

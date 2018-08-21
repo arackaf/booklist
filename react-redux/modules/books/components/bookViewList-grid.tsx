@@ -5,7 +5,7 @@ import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstra
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { IBookDisplay } from "modules/books/reducers/books/reducer";
-import { selectBookListComponentState, BookListComponentStateType, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
+import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -189,7 +189,7 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
   actions
 )
 export default class BookViewListGrid extends Component<
-  BookListComponentStateType & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
+  ReturnType<typeof selectBookListComponentState> & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
   any
 > {
   state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };

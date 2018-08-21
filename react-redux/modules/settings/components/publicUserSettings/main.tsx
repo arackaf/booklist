@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { selector, publicUserSettingsSelectorType } from "../../reducers/publicUserSettings/reducer";
+import { selector } from "../../reducers/publicUserSettings/reducer";
 import * as actionCreators from "../../reducers/publicUserSettings/actionCreators";
 import { SectionLoading } from "applicationRoot/components/loading";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
@@ -11,7 +11,7 @@ const styleTwenty: any = { left: "20%" };
   selector,
   { ...actionCreators }
 )
-export default class PublicUserSettings extends Component<publicUserSettingsSelectorType & typeof actionCreators, any> {
+export default class PublicUserSettings extends Component<ReturnType<typeof selector> & typeof actionCreators, any> {
   render() {
     return (
       <div>

@@ -70,7 +70,7 @@ export interface IBookDisplay extends IBookRaw {
 const initialBooksState = {
   booksHash: hashOf<IBookRaw>(),
   booksLoading: false,
-  selectedBooks: {},
+  selectedBooks: {} as { [s: string]: boolean },
   resultsCount: 0,
   reloadOnActivate: false
 };
@@ -171,18 +171,14 @@ function createBooksHash(booksArr) {
   return result;
 }
 
-export type BookListType = {
-  booksLoading: boolean;
-  booksList: IBookDisplay[];
-};
-export const selectBookList = createSelector<BooksModuleType, BookListType, boolean, any, any, any>(
-  state => state.booksModule.books.booksLoading,
-  state => state.booksModule.books.booksHash,
-  state => state.app.subjectHash,
-  state => state.booksModule.tags.tagHash,
+export const selectBookList = createSelector(
+  (state: BooksModuleType) => state.booksModule.books.booksLoading,
+  (state: BooksModuleType) => state.booksModule.books.booksHash,
+  (state: BooksModuleType) => state.app.subjectHash,
+  (state: BooksModuleType) => state.booksModule.tags.tagHash,
   (booksLoading, booksHash, subjectsHash, tagHash) => {
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
-    books.forEach(b => {
+    books.forEach((b: IBookDisplay) => {
       b.subjectObjects = (b.subjects || []).map(s => subjectsHash[s]).filter(s => s);
       b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
       b.authors = b.authors || [];
@@ -190,27 +186,18 @@ export const selectBookList = createSelector<BooksModuleType, BookListType, bool
       let d = new Date(+b.dateAdded);
       b.dateAddedDisplay = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
     });
-    return { booksList: books, booksLoading };
+    return { booksList: books as IBookDisplay[], booksLoading };
   }
 );
 
-export type BookLoadingType = {
-  resultsCount: number;
-  booksLoading: boolean;
-};
-export const selectBookLoadingInfo = createSelector<BooksModuleType, BookLoadingType, BooksReducerType>(
-  state => state.booksModule.books,
+export const selectBookLoadingInfo = createSelector(
+  (state: BooksModuleType) => state.booksModule.books,
   booksModule => ({ resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading })
 );
 
-export type BookSelectionType = {
-  allAreChecked: boolean;
-  selectedBooksCount: number;
-  selectedBookHash: any;
-};
-export const selectBookSelection = createSelector<BooksModuleType, BookSelectionType, any, any>(
-  state => state.booksModule.books.booksHash,
-  state => state.booksModule.books.selectedBooks,
+export const selectBookSelection = createSelector(
+  (state: BooksModuleType) => state.booksModule.books.booksHash,
+  (state: BooksModuleType) => state.booksModule.books.selectedBooks,
   (booksHash, selectedBooks) => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
     return {

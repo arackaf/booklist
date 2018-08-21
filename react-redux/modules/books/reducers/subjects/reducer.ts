@@ -1,19 +1,12 @@
-import { BooksModuleType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType } from "modules/books/reducers/reducer";
 import { createSelector } from "reselect";
 
-import { UPDATE_SUBJECT } from "./actionNames";
-import { AppType, SubjectType, hashOf } from "applicationRoot/rootReducer";
+import { SubjectType } from "applicationRoot/rootReducer";
 
-import { stackAndGetTopLevelSubjects, subjectSortCompare, getEligibleParents, unwindSubjects } from "applicationRoot/rootReducer";
+import { stackAndGetTopLevelSubjects, subjectSortCompare, unwindSubjects } from "applicationRoot/rootReducer";
 
-export type StackedSubjectsType = {
-  subjects: SubjectType[];
-  allSubjectsSorted: SubjectType[];
-  subjectsUnwound: SubjectType[];
-  subjectHash: { [s: string]: SubjectType };
-};
-export const selectStackedSubjects = createSelector<BooksModuleType, StackedSubjectsType, any>(
-  state => state.app.subjectHash,
+export const selectStackedSubjects = createSelector(
+  (state: BooksModuleType) => state.app.subjectHash,
   subjectHash => {
     let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
       subjectsUnwound = unwindSubjects(mainSubjectsCollection);
@@ -26,21 +19,14 @@ export const selectStackedSubjects = createSelector<BooksModuleType, StackedSubj
   }
 );
 
-export type EntireSubjectsStateType = StackedSubjectsType & {
-  colors: any[];
-};
-export const selectEntireSubjectsState = createSelector<BooksModuleType, EntireSubjectsStateType, AppType, StackedSubjectsType>(
-  state => state.app,
-  selectStackedSubjects,
-  (app, stackedSubjects) => {
-    return {
-      colors: app.colors,
-      ...stackedSubjects
-    };
-  }
-);
+export const selectEntireSubjectsState = createSelector(state => state.app, selectStackedSubjects, (app, stackedSubjects) => {
+  return {
+    colors: app.colors,
+    ...stackedSubjects
+  };
+});
 
-function allSubjectsSorted(subjectsHash) {
+function allSubjectsSorted(subjectsHash): SubjectType[] {
   let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
   return subjects.sort(subjectSortCompare);
 }
