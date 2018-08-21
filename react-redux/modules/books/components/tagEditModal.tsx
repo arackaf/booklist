@@ -5,7 +5,7 @@ import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 import * as actionCreators from "../reducers/tags/actionCreators";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { selectEntireTagsState, TagsStateType, filterTags } from "../reducers/tags/reducer";
+import { selectEntireTagsState, filterTags } from "../reducers/tags/reducer";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 
@@ -18,7 +18,7 @@ interface ILocalProps {
   selectEntireTagsState,
   { ...actionCreators }
 )
-export default class TagEditModal extends Component<TagsStateType & ILocalProps & typeof actionCreators, any> {
+export default class TagEditModal extends Component<ReturnType<typeof selectEntireTagsState> & ILocalProps & typeof actionCreators, any> {
   state = {
     editingTag: null,
     editingTagName: "",

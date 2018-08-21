@@ -41,7 +41,7 @@ export const filterTags = (tags, search) => {
   return tags.filter(s => search(s.name));
 };
 
-function allTagssSorted(tagHash) {
+function allTagssSorted(tagHash): ITag[] {
   let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
   return tags.sort(({ name: name1 }, { name: name2 }) => {
     let name1After = name1.toLowerCase() > name2.toLowerCase(),
@@ -50,14 +50,9 @@ function allTagssSorted(tagHash) {
   });
 }
 
-export type TagsStateType = TagsType & {
-  colors: object[];
-  allTagsSorted: ITag[];
-};
-
-export const selectEntireTagsState = createSelector<BooksModuleType, TagsStateType, TagsType, object[]>(
-  state => state.booksModule.tags,
-  state => state.app.colors,
+export const selectEntireTagsState = createSelector(
+  (state: BooksModuleType) => state.booksModule.tags,
+  (state: BooksModuleType) => state.app.colors,
   (tags, colors) => ({
     ...tags,
     colors,

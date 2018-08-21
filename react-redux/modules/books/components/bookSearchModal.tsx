@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { BookSearchState, selectBookSearchState, TagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
+import { selectBookSearchState, TagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
 import Modal from "simple-react-bootstrap/lib/modal";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
@@ -9,42 +9,30 @@ import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { filterSubjects, StackedSubjectsType, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
-import { filterTags, selectEntireTagsState, TagsStateType } from "modules/books/reducers/tags/reducer";
+import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
+import { filterTags, selectEntireTagsState } from "modules/books/reducers/tags/reducer";
 import { createSelector } from "reselect";
-
-type ModalProps = {
-  allTagsSorted: TagOrSubject[];
-  subjectsUnwound: TagOrSubject[];
-  subjectHash: LookupHashType;
-  tagHash: LookupHashType;
-} & BookSearchState;
 
 type LocalProps = {
   isOpen: boolean;
   onHide: any;
 };
 
-const selector = createSelector<any, ModalProps, BookSearchState, TagsStateType, StackedSubjectsType>(
-  selectBookSearchState,
-  selectEntireTagsState,
-  selectStackedSubjects,
-  (bookSearchState, tagsState, subjectsState) => {
-    return {
-      ...bookSearchState,
-      tagHash: tagsState.tagHash,
-      allTagsSorted: tagsState.allTagsSorted,
-      subjectHash: subjectsState.subjectHash,
-      subjectsUnwound: subjectsState.subjectsUnwound
-    };
-  }
-);
+const selector = createSelector(selectBookSearchState, selectEntireTagsState, selectStackedSubjects, (bookSearchState, tagsState, subjectsState) => {
+  return {
+    ...bookSearchState,
+    tagHash: tagsState.tagHash,
+    allTagsSorted: tagsState.allTagsSorted,
+    subjectHash: subjectsState.subjectHash,
+    subjectsUnwound: subjectsState.subjectsUnwound
+  };
+});
 
 @connect(
   selector,
   { ...bookSearchActionCreators }
 )
-export default class BookSearchModal extends Component<ModalProps & LocalProps & typeof bookSearchActionCreators, any> {
+export default class BookSearchModal extends Component<ReturnType<typeof selector> & LocalProps & typeof bookSearchActionCreators, any> {
   constructor(props) {
     super(props);
 

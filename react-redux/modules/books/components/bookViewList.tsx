@@ -13,7 +13,7 @@ const BooksMenuBar: any = BMB;
 import BooksLoading from "./booksLoading";
 import Loadable from "react-loadable";
 
-import { BookListType, selectBookList, selectBookSelection, BookSelectionType } from "../reducers/books/reducer";
+import { selectBookList, selectBookSelection } from "../reducers/books/reducer";
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
 import { MutationType } from "reactStartup";
@@ -58,18 +58,13 @@ const BookSearchModal = Loadable({
   delay: 200
 });
 
-type MainSelectorType = BookListType & BookSelectionType;
-
-const mainSelector = createSelector<BooksModuleType, MainSelectorType, BookListType, BookSelectionType>(
-  selectBookList,
-  selectBookSelection,
-  (books, bookSelection) => {
-    return {
-      ...books,
-      ...bookSelection
-    };
-  }
-);
+const mainSelector = createSelector(selectBookList, selectBookSelection, (books, bookSelection) => {
+  return {
+    ...books,
+    ...bookSelection
+  };
+});
+type MainSelectorType = ReturnType<typeof mainSelector>;
 
 @mutation(UpdateBookMutation)
 @connect(mainSelector)
