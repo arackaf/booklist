@@ -33,14 +33,11 @@ export default (state = defaultState, action) => {
 };
 
 const dirtyProps = ["isPublic", "publicName", "publicBooksHeader"];
-export type publicUserSettingsSelectorType = publicUserSettingsType & {
-  isDirty: boolean;
-  publicLink: string;
-};
-type storeSlice = { app: AppType; settingsModule: { publicUserSettings: publicUserSettingsType } };
-export const selector = createSelector<storeSlice, publicUserSettingsSelectorType, AppType, publicUserSettingsType>(
-  state => state.app,
-  state => state.settingsModule.publicUserSettings,
+
+type StoreSlice = { app: AppType; settingsModule: { publicUserSettings: publicUserSettingsType } };
+export const selector = createSelector(
+  (state: StoreSlice) => state.app,
+  (state: StoreSlice) => state.settingsModule.publicUserSettings,
   (app, publicUserSettings) => {
     let publicLink = "";
     if (publicUserSettings.isPublic) {

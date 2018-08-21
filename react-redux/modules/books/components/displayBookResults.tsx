@@ -14,11 +14,10 @@ import { selectBookSearchUiView } from "modules/books/reducers/bookSearch/reduce
 const BasicListView: any = BLV;
 
 type PassedIn = { editBook: any; editTagsForBook: any; editSubjectsForBook: any; navBarHeight: any };
-type Selected = { subjectsLoaded: boolean; tagsLoaded: boolean } & ReturnType<typeof selectBookSearchUiView>;
 
-const selector = createSelector<BooksModuleType, Selected, AppType, TagsType, ReturnType<typeof selectBookSearchUiView>>(
-  state => state.app,
-  state => state.booksModule.tags,
+const selector = createSelector(
+  (state: BooksModuleType) => state.app,
+  (state: BooksModuleType) => state.booksModule.tags,
   selectBookSearchUiView,
   (app, tags, ui) => {
     return {
@@ -30,7 +29,7 @@ const selector = createSelector<BooksModuleType, Selected, AppType, TagsType, Re
 );
 
 @connect(selector)
-export default class DisplayBookResults extends Component<PassedIn & Selected, null> {
+export default class DisplayBookResults extends Component<PassedIn & ReturnType<typeof selector>, null> {
   render() {
     let { editBook, editTagsForBook, editSubjectsForBook, navBarHeight } = this.props;
 

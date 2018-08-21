@@ -10,7 +10,7 @@ import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstra
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import { store } from "applicationRoot/store";
-import { subjectType } from "modules/subjects/reducers/reducer";
+import { SubjectType } from "modules/subjects/reducers/reducer";
 
 type dragLayerType = {
   item: any;
@@ -64,7 +64,7 @@ type dropTargetType = {
 };
 
 type subjectDisplayProps = {
-  subject: subjectType & { candidateMove: boolean };
+  subject: SubjectType & { candidateMove: boolean };
   subjectDraggingOver: any;
   noDrop: boolean;
 };
@@ -281,7 +281,8 @@ class DefaultSubjectDisplay extends Component<any, any> {
     return (noDrop ? c => c : connectDropTarget)(
       <div className={className}>
         <div className="col-lg-12 show-on-hover-parent">
-          {mainIcon}&nbsp;
+          {mainIcon}
+          &nbsp;
           <div
             className="label label-default"
             style={{
@@ -468,7 +469,9 @@ class SubjectList extends Component<any, any> {
 
     return (
       <ul className="list-group" style={{ marginBottom: "5px", ...style }}>
-        {this.props.subjects.map(subject => <SD key={subject._id} noDrop={noDrop} subject={subject} />)}
+        {this.props.subjects.map(subject => (
+          <SD key={subject._id} noDrop={noDrop} subject={subject} />
+        ))}
       </ul>
     );
   }
