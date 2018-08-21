@@ -88,15 +88,8 @@ export default function rootReducer(state = initialState, action) {
   return state;
 }
 
-export type AppUiState = {
-  showingMobile: boolean;
-  showingDesktop: boolean;
-  isPublic: boolean;
-  publicBooksHeader: string;
-  publicName: string;
-};
-export const selectAppUiState = createSelector<RootApplicationType, AppUiState, AppType>(
-  state => state.app,
+export const selectAppUiState = createSelector(
+  (state: RootApplicationType) => state.app,
   app => ({
     showingMobile: app.showingMobile,
     showingDesktop: app.showingDesktop,
