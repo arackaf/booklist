@@ -5,7 +5,6 @@ import { subjectChildMapSelector, topLevelSubjectsSortedSelector } from "applica
 import * as actionCreators from "modules/subjects/reducers/actionCreators";
 import { DragSource, DragDropContext, DropTarget, DragLayer } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import TouchBackend from "react-dnd-touch-backend";
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
@@ -275,7 +274,7 @@ class DefaultSubjectDisplay extends Component<any, any> {
       ) : isSubjectSaved ? (
         <i style={{ color: "green" }} className="fa fa-fw fa-check" />
       ) : (
-        connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
+        isTouch ? null : connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
       );
 
     return (noDrop ? c => c : connectDropTarget)(
@@ -484,7 +483,7 @@ type subjectsComponentPropsType = {
   addNewSubject: any;
 };
 
-@DragDropContext(isTouch ? TouchBackend : HTML5Backend)
+@DragDropContext(HTML5Backend)
 @connect(
   state => {
     return {
