@@ -51,11 +51,11 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
             </a>
           ) : book.expanded ? (
             <a target="_new" onClick={() => this.props.collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-minus show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
             </a>
           ) : (
             <a target="_new" onClick={() => this.props.expandBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-plus show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
             </a>
           )}
           {book.isbn ? (
@@ -64,17 +64,17 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
               className="margin-right grid-hover-filter inline-filter"
               href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
             >
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-amazon show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
             </a>
           ) : null}
           {!this.props.viewingPublic ? (
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBook(book)}>
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-pencil show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
             </a>
           ) : null}
           {!this.props.viewingPublic ? (
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.setPendingDeleteBook(book)}>
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-trash show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
             </a>
           ) : null}
           {book.pendingDelete ? (
@@ -102,7 +102,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
           <div style={{ marginTop: 5, minHeight: 40 }}>
             {!this.props.viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksSubjects(book)}>
-                <i className="fa fa-fw fa-pencil show-on-hover-parent-td" />
+                <i className="fal fa-pencil-alt show-on-hover-parent-td" />
               </a>
             ) : null}
           </div>
@@ -116,7 +116,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
           <div style={{ marginTop: 5, minHeight: 40 }}>
             {!this.props.viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksTags(book)}>
-                <i className="fa fa-fw fa-pencil show-on-hover-parent-td" />
+                <i className="fal fa-pencil-alt show-on-hover-parent-td" />
               </a>
             ) : null}
           </div>
