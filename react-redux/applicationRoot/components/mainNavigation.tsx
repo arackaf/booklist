@@ -37,7 +37,6 @@ export default class MainNavigationBar extends Component<any, any> {
               <span style={{ display: "inline-block", verticalAlign: "top", marginLeft: "5px" }}>My Library</span>
             </a>
           </NavBar.Brand>
-          <NavBar.Toggle />
         </NavBar.Header>
         <NavBar.Nav>
           {isLoggedIn || isPublic ? (
