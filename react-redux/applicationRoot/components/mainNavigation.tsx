@@ -64,7 +64,7 @@ export default class MainNavigationBar extends Component<any, any> {
             {isLoggedIn || isPublic ? (
               <NavBarItem disabled={isPublic} onClick={() => goto("subjects")} active={isSubjects}>
                 <span className="hidden-xs">Subjects</span>
-                <i className="visible-xs fal fa-tags" />
+                <i className="visible-xs fal fa-sitemap" />
               </NavBarItem>
             ) : null}
             {isLoggedIn && isPublic ? (
