@@ -189,7 +189,7 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
   actions
 )
 export default class BookViewListGrid extends Component<
-  ReturnType<typeof selectBookListComponentState> & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
+  ReturnType<typeof selectBookListComponentState> & actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any },
   any
 > {
   state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
@@ -206,8 +206,8 @@ export default class BookViewListGrid extends Component<
     let potentialSortIcon = <i className={"fa fa-angle-" + (this.props.sortDirection == "asc" ? "up" : "down")} />,
       sortIconIf = column => (column == this.props.currentSort ? potentialSortIcon : null);
 
-    let { navBarHeight, editBooksSubjects, editBooksTags } = this.props;
-    let stickyHeaderStyle: CSSProperties = { position: "sticky", top: 50 + navBarHeight, backgroundColor: "white" };
+    let { editBooksSubjects, editBooksTags } = this.props;
+    let stickyHeaderStyle: CSSProperties = { position: "sticky", top: 100, backgroundColor: "white" };
 
     return (
       <div style={{ minHeight: 400 }}>
