@@ -147,7 +147,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
               </div>
             ) : null}
 
-            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} />
+            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={navBarHeight} />
 
             {isEditingBook ? (
               <ManualBookEntry
