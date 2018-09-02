@@ -40,10 +40,10 @@ export function clearUI() {
 export function renderUI(component) {
   render(
     <Provider store={store as any}>
-      <div>
+      <div style={{ display: "flex", overflow: "hidden", height: "100vh", margin: "auto" }}>
         <MobileMeta />
         <MainNavigationBar />
-        <div style={{ marginTop: 60 }}>{component}</div>
+        <div style={{ marginTop: 60, flex: 1, overflowY: "auto" }}>{component}</div>
         <WellUiSwitcher />
       </div>
     </Provider>,
