@@ -48,9 +48,6 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
     this.props.setSortOrder(sort, direction == "asc" ? 1 : 0);
   }
   componentDidUpdate(prevProps) {
-    if (!prevProps.booksLoading && this.props.booksLoading) {
-      this.navBar.closeIfOpen();
-    }
     if (prevProps.search != this.props.search) {
       this.quickSearchEl && (this.quickSearchEl.value = this.props.search);
     }
