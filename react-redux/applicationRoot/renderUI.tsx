@@ -40,10 +40,18 @@ export function clearUI() {
 export function renderUI(component) {
   render(
     <Provider store={store as any}>
-      <div style={{ display: "flex", overflow: "hidden", height: "100vh", margin: "auto" }}>
+      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
         <MobileMeta />
         <MainNavigationBar />
-        <div style={{ marginTop: 60, flex: 1, overflowY: "auto" }}>{component}</div>
+
+        <div style={{ marginTop: 60, flex: 1, overflowY: "auto" }}>
+          {component}
+          <div style={{ visibility: "hidden" }}>
+            <button>
+              <i className="fa fa-fw fa-spin fa-spinner" />
+            </button>
+          </div>
+        </div>
         <WellUiSwitcher />
       </div>
     </Provider>,

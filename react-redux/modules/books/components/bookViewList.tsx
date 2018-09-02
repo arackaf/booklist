@@ -129,9 +129,9 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
     let { subjectEditModalOpen, booksSubjectModifying, booksTagModifying, tagEditModalOpen } = state;
 
     return (
-      <div>
+      <div style={{}}>
         <BooksLoading />
-        <div className="panel panel-default" style={{ margin: "10px" }}>
+        <div style={{ margin: "10px", marginTop: 0, display: "flex", flexDirection: "column" }}>
           <BooksMenuBar
             startTagModification={this.editTagsForSelectedBooks}
             startSubjectModification={this.editSubjectsForSelectedBooks}
@@ -140,7 +140,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
             navBarSized={this.navBarSized}
             beginEditFilters={beginEditFilters}
           />
-          <div style={{ padding: 0, minHeight: 450 }}>
+          <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
             {!this.props.booksList.length && !this.props.booksLoading ? (
               <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
                 No books found

@@ -98,8 +98,8 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
       };
 
     return (
-      <div style={{ position: "sticky", top: 0, zIndex: 499, backgroundColor: "white" }}>
-        <div className="booksMenuBar" style={{ fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
+      <div style={{ zIndex: 499, backgroundColor: "white", flex: 1 }}>
+        <div className="booksMenuBar" style={{ position: "sticky", top: 0, fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
           <div
             style={{
               display: "flex",
