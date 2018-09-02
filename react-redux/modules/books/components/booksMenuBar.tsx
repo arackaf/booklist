@@ -54,10 +54,15 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
   }
   quickSearch = evt => {
     evt.preventDefault();
-    this.props.quickSearch(evt.currentTarget.search.value);
+    this.props.quickSearch(evt.currentTarget.value);
   };
   resetSearch = () => {
     this.quickSearchEl.value = this.props.search;
+  };
+  quickSearchType = evt => {
+    if (evt.keyCode == 13) {
+      this.quickSearch(evt);
+    }
   };
   render() {
     let selectedSubjectsCount = this.props.selectedSubjects.length;
@@ -135,6 +140,7 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
                   name="search"
                   className="form-control"
                   placeholder="Title search"
+                  onKeyDown={this.quickSearchType}
                   style={{
                     float: "left",
                     display: "inline-block",
