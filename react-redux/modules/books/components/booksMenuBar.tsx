@@ -74,10 +74,12 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
       startSubjectModification,
       startTagModification,
       beginEditFilters,
-      page,
-      pages
+      page
     } = this.props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
+
+    //TODO:
+    let pages = 1;
 
     let canPageUp = page < pages;
     let canPageDown = page > 1;
@@ -96,8 +98,13 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
     return (
       <div style={{ position: "sticky", top: 50, zIndex: 499 }}>
         <div className="booksMenuBar" style={{ fontSize: "11pt", padding: "5px" }}>
-          <div className="row">
-            <div className="col-xs-12 col-md-6 col-lg-4">
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap"
+            }}
+          >
+            <div style={{ flex: "0 0 auto" }}>
               <div className="btn-group">
                 <button disabled={!canPageOne} type="button" className="btn btn-default">
                   <i className="fal fa-angle-double-left" />
@@ -122,7 +129,7 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
 
               {resultsCount ? <span style={{ display: "inline", marginLeft: "3px" }}>{resultsDisplay}</span> : null}
             </div>
-            <div className="col-xs-12 col-md-6 col-lg-4 pull-left">
+            <div style={{ flex: "0 0 300px" }}>
               <div className="input-group" style={{ display: "block" }}>
                 <input
                   ref={el => (this.quickSearchEl = el)}
@@ -130,8 +137,8 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
                   onBlur={this.resetSearch}
                   name="search"
                   className="form-control"
-                  placeholder="Quick title search"
-                  style={{ width: "150px", borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0 }}
+                  placeholder="Title search"
+                  style={{ width: "100px", borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0 }}
                 />
 
                 <div className="input-group-addon">
@@ -162,7 +169,7 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
                 </div>
               </div>
             </div>
-            <div className="col-xs-12 col-md-6 col-lg-4">HEllo</div>
+            <div style={{ flex: "1 1 auto" }}>HEllo</div>
           </div>
         </div>
         <NavBar ref={el => (this.navBar = el)} style={{ border: 0, borderRadius: 0 }}>
