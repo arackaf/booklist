@@ -73,13 +73,20 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
       editSubjects,
       startSubjectModification,
       startTagModification,
-      beginEditFilters
+      beginEditFilters,
+      page,
+      pages
     } = this.props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
+    let canPageUp = page < pages;
+    let canPageDown = page > 1;
+    let canPageOne = page > 1;
+    let canPageLast = page < pages;
+
     let UtilMenu: any = UtilMenuOptions,
       resultsCount = this.props.resultsCount,
-      resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"} found` : "",
+      resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "",
       removeAllFiltersLabel = {
         backgroundColor: "red",
         textColor: "white",
@@ -88,6 +95,76 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
 
     return (
       <div style={{ position: "sticky", top: 50, zIndex: 499 }}>
+        <div className="booksMenuBar" style={{ fontSize: "11pt", padding: "5px" }}>
+          <div className="row">
+            <div className="col-xs-12 col-md-6 col-lg-4">
+              <div className="btn-group">
+                <button disabled={!canPageOne} type="button" className="btn btn-default">
+                  <i className="fal fa-angle-double-left" />
+                </button>
+                <button disabled={!canPageDown} type="button" className="btn btn-default" style={{ marginRight: "5px" }}>
+                  <i className="fal fa-angle-left" />
+                </button>
+              </div>
+              {resultsCount ? (
+                <span style={{ display: "inline" }}>
+                  Page {page} of {pages}
+                </span>
+              ) : null}
+              <div className="btn-group">
+                <button disabled={!canPageUp} type="button" className="btn btn-default" style={{ marginLeft: "5px" }}>
+                  <i className="fal fa-angle-right" />
+                </button>
+                <button disabled={!canPageLast} type="button" className="btn btn-default">
+                  <i className="fal fa-angle-double-right" />
+                </button>
+              </div>
+
+              {resultsCount ? <span style={{ display: "inline", marginLeft: "3px" }}>{resultsDisplay}</span> : null}
+            </div>
+            <div className="col-xs-12 col-md-6 col-lg-4 pull-left">
+              <div className="input-group" style={{ display: "block" }}>
+                <input
+                  ref={el => (this.quickSearchEl = el)}
+                  defaultValue={this.props.search}
+                  onBlur={this.resetSearch}
+                  name="search"
+                  className="form-control"
+                  placeholder="Quick title search"
+                  style={{ width: "150px", borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0 }}
+                />
+
+                <div className="input-group-addon">
+                  <div className="btn-group">
+                    <button
+                      type="button"
+                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                      onClick={beginEditFilters}
+                      className="btn btn-default"
+                    >
+                      <i className="fal fa-filter" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={this.props.setViewDesktop}
+                      className={"btn btn-default " + (this.props.isGridView ? "active" : "")}
+                    >
+                      <i className="fal fa-table" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={this.props.setViewBasicList}
+                      className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}
+                    >
+                      <i className="fal fa-list" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xs-12 col-md-6 col-lg-4">HEllo</div>
+          </div>
+        </div>
         <NavBar ref={el => (this.navBar = el)} style={{ border: 0, borderRadius: 0 }}>
           <NavBar.Header>
             <NavBar.Brand>
@@ -111,7 +188,6 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
 
                   <form onSubmit={this.quickSearch}>
                     <input
-                      ref={el => (this.quickSearchEl = el)}
                       defaultValue={this.props.search}
                       onBlur={this.resetSearch}
                       name="search"
@@ -138,7 +214,6 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
                       </BootstrapAnchorButton>
                     </span>
                     <input
-                      ref={el => (this.quickSearchEl = el)}
                       defaultValue={this.props.search}
                       onBlur={this.resetSearch}
                       name="search"
@@ -153,12 +228,6 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
 
             {this.props.showingDesktop ? (
               <div className="btn-group" role="group">
-                <button type="button" onClick={this.props.setViewDesktop} className={"btn btn-default " + (this.props.isGridView ? "active" : "")}>
-                  <i className="fa fa-fw fa-table" />
-                </button>
-                <button type="button" onClick={this.props.setViewBasicList} className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}>
-                  <i className="fa fa-fw fa-list" />
-                </button>
                 {0 ? (
                   <button type="button" className="btn btn-default">
                     <i className="fa fa-fw fa-th" />
