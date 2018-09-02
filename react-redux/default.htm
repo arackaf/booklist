@@ -237,6 +237,34 @@
             padding-bottom: 15px!important;
         }
 
+        .main-navbar i.visible-xs { font-size: 15pt; }
+
+        @media (max-width:500px){
+            .main-navbar ul.nav.navbar-nav li a  {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        @media (max-width:320px){
+            .main-navbar .container-fluid  {
+                padding-left: 5px;
+            }
+            .main-navbar ul.nav.navbar-nav li a  {
+                padding-left: 8px;
+                padding-right: 8px;
+
+                padding-top: 10px!important;
+                padding-bottom: 10px!important;
+            }
+            .main-navbar {
+                min-height: 20px
+            }
+            .main-navbar ul.nav.navbar-nav li a i {
+                font-size: 13pt;
+            }            
+        }
+
     </style>
 
 </head>
