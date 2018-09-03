@@ -12,7 +12,7 @@ import { selectBookSearchUiView } from "modules/books/reducers/bookSearch/reduce
 
 const BasicListView: any = BLV;
 
-type PassedIn = { editBook: any; editTagsForBook: any; editSubjectsForBook: any; navBarHeight: number };
+type PassedIn = { editBook: any; editTagsForBook: any; editSubjectsForBook: any };
 
 const selector = createSelector(
   (state: BooksModuleType) => state.app,
@@ -30,11 +30,11 @@ const selector = createSelector(
 @connect(selector)
 export default class DisplayBookResults extends Component<PassedIn & ReturnType<typeof selector>, null> {
   render() {
-    let { editBook, editTagsForBook, editSubjectsForBook, navBarHeight } = this.props;
+    let { editBook, editTagsForBook, editSubjectsForBook } = this.props;
 
     return this.props.subjectsLoaded && this.props.tagsLoaded ? (
       this.props.isGridView ? (
-        <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} navBarHeight={navBarHeight} />
+        <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
       ) : this.props.isBasicList ? (
         <BasicListView editBook={editBook} />
       ) : null
