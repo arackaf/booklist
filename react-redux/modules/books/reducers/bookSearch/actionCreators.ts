@@ -28,7 +28,9 @@ export function applyFilters(nextState: any) {
       pagesOperator: nextState.pages != "" ? nextState.pagesOperator : null,
       pages: nextState.pages,
       isRead: nextState.isRead,
-      noSubjects: nextState.noSubjects ? "true" : ""
+      noSubjects: nextState.noSubjects ? "true" : "",
+      sort: nextState.sort,
+      sortDirection: nextState.sortDirection
     });
   };
 }
@@ -53,11 +55,19 @@ export function clearAllFilters() {
 
 export function setSortOrder(sort, sortDirection) {
   return function(dispatch, getState) {
-    setSearchValues({
-      sort: sort,
-      sortDirection,
-      page: null
-    });
+    if (sort == "_id" && sortDirection == "desc") {
+      setSearchValues({
+        sort: "",
+        sortDirection: "",
+        page: null
+      });
+    } else {
+      setSearchValues({
+        sort: sort,
+        sortDirection,
+        page: null
+      });
+    }
   };
 }
 

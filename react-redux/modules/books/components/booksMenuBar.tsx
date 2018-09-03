@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Measure from "react-measure";
 
 import NavBar from "simple-react-bootstrap/lib/navBar";
-
-import { BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 
 import { selectBookSelection, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
 import { selectBookSearchState, selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
@@ -19,10 +16,17 @@ import { selectAppUiState, combineSelectors } from "applicationRoot/rootReducer"
 type BookMenuBarType = ReturnType<typeof selectBookSearchState> &
   ReturnType<typeof selectBookLoadingInfo> &
   ReturnType<typeof selectBookSearchUiView> &
-  ReturnType<typeof selectAppUiState>;
+  ReturnType<typeof selectAppUiState> &
+  ReturnType<typeof selectBookSelection>;
 type BookUtilMenuOptionsType = ReturnType<typeof selectBookSelection> & ReturnType<typeof selectAppUiState>;
 
-const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState);
+const menuBarSelector = combineSelectors<BookMenuBarType>(
+  selectBookSearchState,
+  selectBookSearchUiView,
+  selectBookLoadingInfo,
+  selectAppUiState,
+  selectBookSelection
+);
 const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
 
 interface IAddedMenuProps {
@@ -35,16 +39,19 @@ interface IAddedMenuProps {
 
 @connect(
   menuBarSelector,
-  { ...bookSearchActionCreators }
+  { ...bookSearchActionCreators, ...booksActionCreators }
 )
-export default class BooksMenuBar extends Component<BookMenuBarType & typeof bookSearchActionCreators & IAddedMenuProps, any> {
+export default class BooksMenuBar extends Component<
+  BookMenuBarType & typeof bookSearchActionCreators & typeof booksActionCreators & IAddedMenuProps,
+  any
+> {
   navBar: any;
   quickSearchEl: any;
   sortChanged(evt) {
     let value = evt.target.value,
       [sort, direction] = value.split("|");
 
-    this.props.setSortOrder(sort, direction == "asc" ? 1 : 0);
+    this.props.setSortOrder(sort, direction == "asc" ? "asc" : "desc");
   }
   componentDidUpdate(prevProps) {
     if (prevProps.search != this.props.search) {
@@ -77,7 +84,8 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
       startSubjectModification,
       startTagModification,
       beginEditFilters,
-      page
+      page,
+      selectedBooksCount
     } = this.props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
@@ -89,14 +97,13 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
     let canPageOne = page > 1;
     let canPageLast = page < pages;
 
-    let UtilMenu: any = UtilMenuOptions,
-      resultsCount = this.props.resultsCount,
-      resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "",
-      removeAllFiltersLabel = {
-        backgroundColor: "red",
-        textColor: "white",
-        name: "Remove all filters"
-      };
+    let resultsCount = this.props.resultsCount;
+    let resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "";
+    let removeAllFiltersLabel = {
+      backgroundColor: "red",
+      textColor: "white",
+      name: "Remove all filters"
+    };
 
     return (
       <div style={{ zIndex: 499, backgroundColor: "white" }}>
@@ -113,7 +120,8 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
               </div>
               {resultsCount ? (
                 <span style={{ display: "inline" }}>
-                  Page {page} of {pages}
+                  <span className="hidden-xs">Page</span> {page}
+                  <span className="hidden-xs"> of {pages}</span>
                 </span>
               ) : null}
               <div className="btn-group">
@@ -144,40 +152,50 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
                     borderRightWidth: 0
                   }}
                 />
-
-                <button
-                  type="button"
-                  style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                  onClick={beginEditFilters}
-                  className="btn btn-default"
-                >
-                  <i className="fal fa-filter" />
-                </button>
-                <button type="button" onClick={this.props.setViewDesktop} className={"btn btn-default " + (this.props.isGridView ? "active" : "")}>
-                  <i className="fal fa-table" />
-                </button>
-                <button type="button" onClick={this.props.setViewBasicList} className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}>
-                  <i className="fal fa-list" />
-                </button>
+                {!selectedBooksCount ? (
+                  <>
+                    <button
+                      type="button"
+                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                      onClick={beginEditFilters}
+                      className="btn btn-default"
+                    >
+                      <i className="fal fa-filter" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={this.props.setViewDesktop}
+                      className={"btn btn-default " + (this.props.isGridView ? "active" : "")}
+                    >
+                      <i className="fal fa-table" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={this.props.setViewBasicList}
+                      className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}
+                    >
+                      <i className="fal fa-list" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button type="button" onClick={this.props.startSubjectModification} className={"btn btn-default"}>
+                      <i className="fal fa-sitemap" />
+                    </button>
+                    <button type="button" onClick={this.props.startTagModification} className="btn btn-default">
+                      <i className="fal fa-tags" />
+                    </button>
+                    <button type="button" onClick={this.props.setSelectedRead} className={"btn btn-default"}>
+                      <i className="fal fa-eye" />
+                    </button>
+                    <button type="button" onClick={this.props.setSelectedUnRead} className="btn btn-default put-line-through">
+                      <i className="fal fa-eye-slash" />
+                    </button>
+                  </>
+                )}
               </div>
             </div>
-            {!this.props.isGridView ? (
-              <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
-                <select
-                  style={{ marginBottom: 0 }}
-                  value={this.props.bindableSortValue}
-                  onChange={evt => this.sortChanged(evt)}
-                  className="form-control margin-bottom"
-                >
-                  <option value="title|asc">Title A-Z</option>
-                  <option value="title|desc">Title Z-A</option>
-                  <option value="pages|asc">Pages, Low</option>
-                  <option value="pages|desc">Pages, High</option>
-                  <option value="_id|asc">Created, Earliest</option>
-                  <option value="_id|desc">Created, Latest</option>
-                </select>
-              </div>
-            ) : null}
+
             <div style={{ flex: "1 1 auto", display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap", marginTop: "5px" }}>
               {resultsCount ? <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>{resultsDisplay}</div> : null}
 
@@ -205,121 +223,6 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
             </div>
           </div>
         </div>
-        {null ? (
-          <NavBar ref={el => (this.navBar = el)} style={{ border: 0, borderRadius: 0 }}>
-            <NavBar.Header>
-              <NavBar.Brand>
-                <a style={{ cursor: "default" }}>{booksHeader}</a>
-              </NavBar.Brand>
-              <NavBar.Toggle />
-            </NavBar.Header>
-            <UtilMenu
-              startSubjectModification={startSubjectModification}
-              startTagModification={startTagModification}
-              editSubjects={editSubjects}
-              editTags={editTags}
-            />
-            <div className="navbar-left navbar-form">
-              <div className="form-group" style={{ marginRight: "5px" }}>
-                {this.props.showingMobile ? (
-                  <div>
-                    <BootstrapAnchorButton style={{ width: "100%" }} className="margin-bottom" preset="default" onClick={beginEditFilters}>
-                      Open full search modal
-                    </BootstrapAnchorButton>
-
-                    <form onSubmit={this.quickSearch}>
-                      <input
-                        defaultValue={this.props.search}
-                        onBlur={this.resetSearch}
-                        name="search"
-                        className="margin-bottom form-control"
-                        placeholder="Quick title search"
-                      />
-                    </form>
-
-                    <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
-                      <option value="title|asc">Title A-Z</option>
-                      <option value="title|desc">Title Z-A</option>
-                      <option value="pages|asc">Pages, Low</option>
-                      <option value="pages|desc">Pages, High</option>
-                      <option value="_id|asc">Created, Earliest</option>
-                      <option value="_id|desc">Created, Latest</option>
-                    </select>
-                  </div>
-                ) : (
-                  <form onSubmit={this.quickSearch}>
-                    <div className="input-group">
-                      <span className="input-group-btn">
-                        <BootstrapAnchorButton preset="default" onClick={beginEditFilters}>
-                          Filter
-                        </BootstrapAnchorButton>
-                      </span>
-                      <input
-                        defaultValue={this.props.search}
-                        onBlur={this.resetSearch}
-                        name="search"
-                        className="form-control"
-                        placeholder="Quick title search"
-                        style={{ width: "150px" }}
-                      />
-                    </div>
-                  </form>
-                )}
-              </div>
-
-              {this.props.showingDesktop ? (
-                <div className="btn-group" role="group">
-                  {0 ? (
-                    <button type="button" className="btn btn-default">
-                      <i className="fa fa-fw fa-th" />
-                    </button>
-                  ) : null}
-                </div>
-              ) : null}
-              {resultsCount ? <h5 style={{ display: "inline", marginLeft: "10px", verticalAlign: "middle" }}>{resultsDisplay}</h5> : null}
-            </div>
-
-            {anyActiveFilters && this.props.showingDesktop ? (
-              <NavBar.Nav>
-                <NavBar.Dropdown keepOpenIfItemClickedNoLongerInDocument={true} ignoreContentClick={true} text={"Quick filters"}>
-                  {selectedSubjectsCount ? (
-                    <li style={{ padding: "3px 20px" }}>
-                      <span>Subjects</span>
-                    </li>
-                  ) : null}
-
-                  {!!this.props.searchChildSubjects ? <NavBar.ItemDivider /> : null}
-                  {!!this.props.searchChildSubjects ? (
-                    <li style={{ paddingLeft: "20px", paddingRight: "20px", marginTop: "-5px" }} className="default-cursor no-hover">
-                      <span style={{ color: "white" }} className={"label label-primary"}>
-                        <a onClick={this.props.clearSearchChildSubjects} style={{ color: "white", cursor: "pointer" }}>
-                          X
-                        </a>
-                        <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: "1px solid white" }}>Searching child subjects</span>
-                      </span>
-                    </li>
-                  ) : null}
-                  {selectedSubjectsCount && selectedTagsCount ? <NavBar.ItemDivider /> : null}
-                  {selectedTagsCount ? (
-                    <li style={{ padding: "3px 20px" }}>
-                      <span>Tags</span>
-                    </li>
-                  ) : null}
-                  {this.props.selectedTags.map(t => (
-                    <li style={{ padding: "3px 20px" }} className="default-cursor no-hover" key={t._id}>
-                      <RemovableLabelDisplay item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
-                    </li>
-                  ))}
-
-                  {selectedSubjectsCount || selectedTagsCount ? <NavBar.ItemDivider /> : null}
-                  <li style={{ padding: "3px 20px" }} className="default-cursor no-hover" key={-1} />
-
-                  <li style={{ height: "5px" }} />
-                </NavBar.Dropdown>
-              </NavBar.Nav>
-            ) : null}
-          </NavBar>
-        ) : null}
       </div>
     );
   }
