@@ -44,7 +44,7 @@ export function renderUI(component) {
         <MobileMeta />
         <MainNavigationBar />
 
-        <div style={{ marginTop: 60, flex: 1, overflowY: "auto" }}>
+        <div style={{ flex: 1, overflowY: "auto" }}>
           {component}
           <div style={{ visibility: "hidden" }}>
             <button>
