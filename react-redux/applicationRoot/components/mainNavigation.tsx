@@ -35,7 +35,7 @@ export default class MainNavigationBar extends Component<any, any> {
     return (
       <nav
         className="navbar navbar-default main-navbar"
-        style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0, position: "fixed", top: 0, left: 0, right: 0, zIndex: 500 }}
+        style={{ borderRadius: 0, borderRight: 0, borderLeft: 0, borderTop: 0, marginBottom: "5px" }}
       >
         <div className="container-fluid">
           <div className="navbar-header hidden-xs" ref={el => (this.el = el)}>

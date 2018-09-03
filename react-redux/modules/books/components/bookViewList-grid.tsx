@@ -228,7 +228,7 @@ export default class BookViewListGrid extends Component<
               </div>
             ) : null}
             <table style={{ position: "relative" }} className="table no-padding-top">
-              <thead style={{ zIndex: 498 }}>
+              <thead>
                 <tr>
                   <th style={{ ...stickyHeaderStyle }}>
                     <input

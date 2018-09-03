@@ -106,7 +106,7 @@ export default class BooksMenuBar extends Component<
     };
 
     return (
-      <div style={{ zIndex: 499, backgroundColor: "white" }}>
+      <div>
         <div className="booksMenuBar" style={{ fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
