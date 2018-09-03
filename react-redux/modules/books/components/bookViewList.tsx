@@ -70,7 +70,6 @@ type MainSelectorType = ReturnType<typeof mainSelector>;
 @connect(mainSelector)
 export default class BookViewingList extends Component<MainSelectorType & MutationType & { dispatch: any }, any> {
   state = {
-    navBarHeight: null,
     tagEditModalOpen: false,
     subjectEditModalOpen: false,
     booksSubjectModifying: null,
@@ -115,9 +114,6 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
     });
   };
 
-  navBarSized = contentRect => {
-    this.setState({ navBarHeight: contentRect.client.height });
-  };
   render() {
     let editingBook = this.state.editingBook,
       dragTitle = editingBook
@@ -125,19 +121,18 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
         : "";
 
     let { state, editBook, editTagsForBook, editSubjectsForBook } = this;
-    let { isEditingBook, navBarHeight, editingFilters, beginEditFilters, endEditFilters } = state;
+    let { isEditingBook, editingFilters, beginEditFilters, endEditFilters } = state;
     let { subjectEditModalOpen, booksSubjectModifying, booksTagModifying, tagEditModalOpen } = state;
 
     return (
       <div style={{}}>
         <BooksLoading />
-        <div style={{ margin: "10px", marginTop: 0, display: "flex", flexDirection: "column" }}>
+        <div style={{ margin: "10px", marginTop: 0 }}>
           <BooksMenuBar
             startTagModification={this.editTagsForSelectedBooks}
             startSubjectModification={this.editSubjectsForSelectedBooks}
             editTags={this.editTags}
             editSubjects={this.editSubjects}
-            navBarSized={this.navBarSized}
             beginEditFilters={beginEditFilters}
           />
           <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
@@ -147,7 +142,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
               </div>
             ) : null}
 
-            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} navBarHeight={navBarHeight} />
+            <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} />
 
             {isEditingBook ? (
               <ManualBookEntry

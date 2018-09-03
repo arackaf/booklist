@@ -26,7 +26,6 @@ const menuBarSelector = combineSelectors<BookMenuBarType>(selectBookSearchState,
 const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
 
 interface IAddedMenuProps {
-  navBarSized: Function;
   editTags: any;
   editSubjects: any;
   startSubjectModification: any;
@@ -100,14 +99,9 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
       };
 
     return (
-      <div style={{ zIndex: 499, backgroundColor: "white", flex: 1 }}>
-        <div className="booksMenuBar" style={{ position: "sticky", top: 0, fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap"
-            }}
-          >
+      <div style={{ zIndex: 499, backgroundColor: "white" }}>
+        <div className="booksMenuBar" style={{ fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
             <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
                 <button disabled={!canPageOne} type="button" className="btn btn-default">
@@ -169,7 +163,12 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
             </div>
             {!this.props.isGridView ? (
               <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
-                <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
+                <select
+                  style={{ marginBottom: 0 }}
+                  value={this.props.bindableSortValue}
+                  onChange={evt => this.sortChanged(evt)}
+                  className="form-control margin-bottom"
+                >
                   <option value="title|asc">Title A-Z</option>
                   <option value="title|desc">Title Z-A</option>
                   <option value="pages|asc">Pages, Low</option>
