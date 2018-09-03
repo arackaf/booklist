@@ -167,6 +167,18 @@ export default class BooksMenuBar extends Component<BookMenuBarType & typeof boo
                 </button>
               </div>
             </div>
+            {!this.props.isGridView ? (
+              <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
+                <select value={this.props.bindableSortValue} onChange={evt => this.sortChanged(evt)} className="form-control margin-bottom">
+                  <option value="title|asc">Title A-Z</option>
+                  <option value="title|desc">Title Z-A</option>
+                  <option value="pages|asc">Pages, Low</option>
+                  <option value="pages|desc">Pages, High</option>
+                  <option value="_id|asc">Created, Earliest</option>
+                  <option value="_id|desc">Created, Latest</option>
+                </select>
+              </div>
+            ) : null}
             <div style={{ flex: "1 1 auto", display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap", marginTop: "5px" }}>
               {resultsCount ? <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>{resultsDisplay}</div> : null}
 
