@@ -130,7 +130,7 @@ export const selectBookSearchState = createSelector(
     delete filtersHash.userId;
     return {
       ...currentSearch,
-      anyActiveFilters: !!Object.keys(filtersHash).length,
+      anyActiveFilters: !!Object.keys(filtersHash).filter(k => k != "page").length,
       bindableSortValue: `${currentSearch.sort}|${currentSearch.sortDirection}`
     };
   }
