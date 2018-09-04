@@ -51,11 +51,11 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
             </a>
           ) : book.expanded ? (
             <a target="_new" onClick={() => this.props.collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-minus show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
             </a>
           ) : (
             <a target="_new" onClick={() => this.props.expandBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-plus show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
             </a>
           )}
           {book.isbn ? (
@@ -64,17 +64,17 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
               className="margin-right grid-hover-filter inline-filter"
               href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
             >
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-amazon show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
             </a>
           ) : null}
           {!this.props.viewingPublic ? (
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBook(book)}>
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-pencil show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
             </a>
           ) : null}
           {!this.props.viewingPublic ? (
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.setPendingDeleteBook(book)}>
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-trash show-on-hover-parent-td" />
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
             </a>
           ) : null}
           {book.pendingDelete ? (
@@ -102,7 +102,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
           <div style={{ marginTop: 5, minHeight: 40 }}>
             {!this.props.viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksSubjects(book)}>
-                <i className="fa fa-fw fa-pencil show-on-hover-parent-td" />
+                <i className="fal fa-pencil-alt show-on-hover-parent-td" />
               </a>
             ) : null}
           </div>
@@ -116,7 +116,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
           <div style={{ marginTop: 5, minHeight: 40 }}>
             {!this.props.viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksTags(book)}>
-                <i className="fa fa-fw fa-pencil show-on-hover-parent-td" />
+                <i className="fal fa-pencil-alt show-on-hover-parent-td" />
               </a>
             ) : null}
           </div>
@@ -189,7 +189,7 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
   actions
 )
 export default class BookViewListGrid extends Component<
-  ReturnType<typeof selectBookListComponentState> & actionsType & { navBarHeight: number; editBooksSubjects: any; editBooksTags: any; editBook: any },
+  ReturnType<typeof selectBookListComponentState> & actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any },
   any
 > {
   state = { booksSubjectsModalShown: false, editSubjectsFor: [], subjectsAdding: [], subjectsRemoving: [], editingSubject: null };
@@ -203,11 +203,11 @@ export default class BookViewListGrid extends Component<
     this.props.setSortOrder(column, newDirection);
   }
   render() {
-    let potentialSortIcon = <i className={"fa fa-angle-" + (this.props.sortDirection == "asc" ? "up" : "down")} />,
-      sortIconIf = column => (column == this.props.currentSort ? potentialSortIcon : null);
+    let potentialSortIcon = <i className={"fa fa-angle-" + (this.props.sortDirection == "asc" ? "up" : "down")} />;
+    let sortIconIf = column => (column == this.props.currentSort ? potentialSortIcon : null);
 
-    let { navBarHeight, editBooksSubjects, editBooksTags } = this.props;
-    let stickyHeaderStyle: CSSProperties = { position: "sticky", top: 50 + navBarHeight, backgroundColor: "white" };
+    let { editBooksSubjects, editBooksTags } = this.props;
+    let stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
 
     return (
       <div style={{ minHeight: 400 }}>
@@ -227,8 +227,8 @@ export default class BookViewListGrid extends Component<
                 ) : null}
               </div>
             ) : null}
-            <table className="table no-padding-top">
-              <thead style={{ zIndex: 498 }}>
+            <table style={{ position: "relative" }} className="table no-padding-top">
+              <thead>
                 <tr>
                   <th style={{ ...stickyHeaderStyle }}>
                     <input

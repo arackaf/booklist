@@ -195,15 +195,111 @@
 
         .drag-handle { cursor: move }
 
+        .navbar-brand {
+            margin-left: -15px!important;
+        }
+
+        .navbar-header { 
+            float: left!important;
+            margin-left: 0!important;
+            margin-right: 0!important;
+        }
+
+        .navbar-collapse {
+            margin-left: 0!important;
+            margin-right: 0!important;
+            border-top: 0!important;
+        }
+        .navbar-collapse.collapse {
+            display: block!important;
+        }
+
+        .navbar-nav>li, .navbar-nav {
+            float: left !important;
+        }
+
+        .nav.navbar-nav { margin: 0!important; }
+
+        .nav.navbar-nav.pull-right {
+            float: right!important;
+        }
+
+        .navbar-nav.navbar-right:last-child {
+            margin-right: -15px !important;
+        }
+
+        .navbar-right {
+            float: right!important;
+        }
+
+        .navbar-nav > li > a {
+            padding-top: 15px!important;
+            padding-bottom: 15px!important;
+        }
+
+        .main-navbar i.visible-xs { font-size: 15pt; }
+
+        @media (max-width:500px){
+            .main-navbar ul.nav.navbar-nav li a  {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        @media (max-width:320px){
+            .main-navbar .container-fluid  {
+                padding-left: 5px;
+            }
+            .main-navbar ul.nav.navbar-nav li a  {
+                padding-left: 8px;
+                padding-right: 8px;
+
+                padding-top: 10px!important;
+                padding-bottom: 10px!important;
+            }
+            .main-navbar {
+                min-height: 20px
+            }
+            .main-navbar ul.nav.navbar-nav li a i {
+                font-size: 13pt;
+            }            
+        }
+
+        .visible-tiny {
+            display: none;
+        }
+        @media (max-width:500px){
+            span.visible-tiny {
+                display: inline!important;
+            }
+            div.visible-tiny {
+                display: block!important;
+            }
+        }
+        @media (max-width:500px){
+            .hidden-tiny  {
+                display: none!important;
+            }
+
+            .booksMenuBar .btn-reset  {
+                border-top-left-radius: 4px!important;
+                border-bottom-left-radius: 4px!important;
+            }
+            .booksMenuBar .btn-reset-full  {
+                border-top-left-radius: 4px!important;
+                border-bottom-left-radius: 4px!important;
+                border-top-right-radius: 4px!important;
+                border-bottom-right-radius: 4px!important;
+            }
+        }
+
     </style>
 
 </head>
 <body>
     <div id="home"></div>
 
-    <div style="visibility: hidden">
-        <button><i class="fa fa-fw fa-spin fa-spinner"></i></button>
-    </div>
+
 
     <script>
         function webSocketAddress(path){

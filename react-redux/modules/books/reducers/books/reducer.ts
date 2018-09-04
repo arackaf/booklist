@@ -29,6 +29,7 @@ import {
 import { SUBJECT_DELETED } from "../subjects/actionNames";
 
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
+import { selectBookSearchState } from "../bookSearch/reducer";
 
 interface IEditorialReview {
   content: string;
@@ -192,7 +193,11 @@ export const selectBookList = createSelector(
 
 export const selectBookLoadingInfo = createSelector(
   (state: BooksModuleType) => state.booksModule.books,
-  booksModule => ({ resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading })
+  selectBookSearchState,
+  (booksModule, bookSearch) => {
+    let totalPages = Math.ceil(booksModule.resultsCount / bookSearch.pageSize);
+    return { resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading, totalPages };
+  }
 );
 
 export const selectBookSelection = createSelector(
