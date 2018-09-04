@@ -131,6 +131,7 @@ export const selectBookSearchState = createSelector(
     return {
       ...currentSearch,
       anyActiveFilters: !!Object.keys(filtersHash).filter(k => k != "page").length,
+      activeFilterCount: Object.keys(filtersHash).filter(k => k != "page").length,
       bindableSortValue: `${currentSearch.sort}|${currentSearch.sortDirection}`
     };
   }

@@ -67,20 +67,7 @@ export default class BooksMenuBar extends Component<
     }
   };
   render() {
-    let {
-      isPublic,
-      publicBooksHeader,
-      publicName,
-      anyActiveFilters,
-      editTags,
-      editSubjects,
-      startSubjectModification,
-      startTagModification,
-      beginEditFilters,
-      page,
-      selectedBooksCount,
-      totalPages
-    } = this.props;
+    let { isPublic, publicBooksHeader, publicName, page, selectedBooksCount, totalPages, activeFilterCount } = this.props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
     let canPageUp = page < totalPages;
@@ -151,9 +138,9 @@ export default class BooksMenuBar extends Component<
                     float: "left",
                     display: "inline-block",
                     width: "100px",
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0,
-                    borderRightWidth: 0
+                    borderTopRightRadius: isPublic && selectedBooksCount ? "4px" : 0,
+                    borderBottomRightRadius: isPublic && selectedBooksCount ? "4px" : 0,
+                    borderRightWidth: isPublic && selectedBooksCount ? "1px" : 0
                   }}
                 />
                 {!selectedBooksCount ? (
@@ -161,17 +148,21 @@ export default class BooksMenuBar extends Component<
                     <button
                       title="Filter search"
                       style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                      onClick={beginEditFilters}
+                      onClick={this.props.beginEditFilters}
                       className="btn btn-default btn-reset"
                     >
                       <i className="fal fa-filter" />
                     </button>
-                    <button title="Edit subjects" onClick={editSubjects} className="btn btn-default ">
-                      <i className="fal fa-sitemap" />
-                    </button>
-                    <button title="Edit tags" onClick={editTags} className="btn btn-default ">
-                      <i className="fal fa-tags" />
-                    </button>
+                    {!isPublic ? (
+                      <>
+                        <button title="Edit subjects" onClick={this.props.editSubjects} className="btn btn-default ">
+                          <i className="fal fa-sitemap" />
+                        </button>
+                        <button title="Edit tags" onClick={this.props.editTags} className="btn btn-default ">
+                          <i className="fal fa-tags" />
+                        </button>
+                      </>
+                    ) : null}
                     <button onClick={this.props.setViewDesktop} className={"btn btn-default " + (this.props.isGridView ? "active" : "")}>
                       <i className="fal fa-table" />
                     </button>
@@ -179,12 +170,12 @@ export default class BooksMenuBar extends Component<
                       <i className="fal fa-list" />
                     </button>
                   </>
-                ) : (
+                ) : !isPublic ? (
                   <>
-                    <button title="Add/remove subjects" onClick={startSubjectModification} className={"btn btn-default btn-reset"}>
+                    <button title="Add/remove subjects" onClick={this.props.startSubjectModification} className={"btn btn-default btn-reset"}>
                       <i className="fal fa-sitemap" />
                     </button>
-                    <button title="Add/remove tags" onClick={startTagModification} className="btn btn-default">
+                    <button title="Add/remove tags" onClick={this.props.startTagModification} className="btn btn-default">
                       <i className="fal fa-tags" />
                     </button>
                     <button title="Set read" onClick={this.props.setSelectedRead} className={"btn btn-default"}>
@@ -194,7 +185,7 @@ export default class BooksMenuBar extends Component<
                       <i className="fal fa-eye-slash" />
                     </button>
                   </>
-                )}
+                ) : null}
               </div>
             </div>
 
@@ -223,7 +214,7 @@ export default class BooksMenuBar extends Component<
                   doRemove={() => this.props.removeFilterTag(t._id)}
                 />
               ))}
-              {anyActiveFilters ? (
+              {activeFilterCount > 1 ? (
                 <RemovableLabelDisplay
                   style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
                   item={removeAllFiltersLabel}
