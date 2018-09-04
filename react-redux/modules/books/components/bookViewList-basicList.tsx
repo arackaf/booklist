@@ -76,21 +76,6 @@ export default class BookViewListMobile extends Component<ReturnType<typeof sele
     let props = this.props;
     return (
       <div>
-        {props.currentPage > 1 || props.hasMoreBooks ? (
-          <div style={{ marginLeft: "10px", marginBottom: "10px" }}>
-            {props.currentPage > 1 ? (
-              <BootstrapButton style={{ marginRight: "10px" }} preset="primary-xs" onClick={props.pageDown}>
-                <i className="fa fa-fw fa-chevron-left" /> Previous
-              </BootstrapButton>
-            ) : null}
-            {props.hasMoreBooks ? (
-              <BootstrapButton preset="primary-xs" onClick={props.pageUp}>
-                Next <i className="fa fa-fw fa-chevron-right" />
-              </BootstrapButton>
-            ) : null}
-          </div>
-        ) : null}
-
         <div style={{ paddingBottom: 15 }}>
           <div style={{ border: 0 }} className="list-group docked-to-panel">
             {props.booksList.map((book, i) => (
