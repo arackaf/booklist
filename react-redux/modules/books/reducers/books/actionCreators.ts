@@ -13,16 +13,10 @@ import {
   EDITORIAL_REVIEWS_LOADING,
   DETAILS_LOADED,
   EXPAND_BOOK,
-  COLLAPSE_BOOK,
-  SET_BOOKS_SUBJECTS,
-  SET_BOOKS_TAGS,
-  EDITING_BOOK_SAVED
+  COLLAPSE_BOOK
 } from "./actionNames";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
-import ajaxUtil from "util/ajaxUtil";
-
-import { compress } from "micro-graphql-react";
 
 import GetBooksQuery from "./getBooks.graphql";
 import DeleteBookMutation from "./deleteBook.graphql";
@@ -69,14 +63,6 @@ export function loadBooks() {
     });
   };
 }
-
-const nonEmptyProps = obj =>
-  Object.keys(obj).reduce((hash, k) => {
-    if ((Array.isArray(obj[k]) && obj[k].length) || (obj[k] !== "" && obj[k] != null)) {
-      hash[k] = obj[k];
-    }
-    return hash;
-  }, {});
 
 function booksSearch(bookSearchState: BookSearchType, publicUserId) {
   let bookSearchFilters = selectCurrentSearch(store.getState() as any);

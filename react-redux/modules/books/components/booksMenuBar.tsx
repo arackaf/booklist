@@ -69,9 +69,6 @@ export default class BooksMenuBar extends Component<
     }
   };
   render() {
-    let selectedSubjectsCount = this.props.selectedSubjects.length;
-    let selectedTagsCount = this.props.selectedTags.length;
-
     let {
       isPublic,
       publicBooksHeader,
@@ -172,10 +169,10 @@ export default class BooksMenuBar extends Component<
                     >
                       <i className="fal fa-filter" />
                     </button>
-                    <button title="Edit subjects" onClick={this.props.editSubjects} className="btn btn-default ">
+                    <button title="Edit subjects" onClick={editSubjects} className="btn btn-default ">
                       <i className="fal fa-sitemap" />
                     </button>
-                    <button title="Edit tags" onClick={this.props.editTags} className="btn btn-default ">
+                    <button title="Edit tags" onClick={editTags} className="btn btn-default ">
                       <i className="fal fa-tags" />
                     </button>
                     <button onClick={this.props.setViewDesktop} className={"btn btn-default " + (this.props.isGridView ? "active" : "")}>
