@@ -26,8 +26,6 @@ import {
   EDITING_BOOK_SAVED
 } from "./actionNames";
 
-import { SUBJECT_DELETED } from "../subjects/actionNames";
-
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 import { selectBookSearchState } from "../bookSearch/reducer";
 

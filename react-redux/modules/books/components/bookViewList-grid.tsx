@@ -1,7 +1,7 @@
 import React, { Component, CSSProperties } from "react";
 import { connect } from "react-redux";
 
-import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { IBookDisplay } from "modules/books/reducers/books/reducer";

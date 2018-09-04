@@ -1,7 +1,5 @@
 import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, LOAD_COLORS, TAG_DELETED } from "./actionNames";
 
-import ajaxUtil from "util/ajaxUtil";
-import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 import GetTags from "./getTags.graphql";
