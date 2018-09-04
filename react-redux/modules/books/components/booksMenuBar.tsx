@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import NavBar from "simple-react-bootstrap/lib/navBar";
-
 import { selectBookSelection, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
 import { selectBookSearchState, selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
 
@@ -242,32 +240,6 @@ export default class BooksMenuBar extends Component<
           </div>
         </div>
       </div>
-    );
-  }
-}
-
-type UtilMenuOptionsComponentType = BookUtilMenuOptionsType &
-  typeof booksActionCreators & { editTags: any; editSubjects: any; startSubjectModification: any; startTagModification: any };
-@connect(
-  utilMenuOptionsSelector,
-  { ...booksActionCreators }
-)
-class UtilMenuOptions extends Component<UtilMenuOptionsComponentType, any> {
-  render() {
-    return (
-      <NavBar.Nav>
-        <NavBar.Dropdown disabled={this.props.isPublic} text="Admin">
-          <NavBar.Item onClick={this.props.editSubjects}>Edit subjects</NavBar.Item>
-          <NavBar.Item onClick={this.props.editTags}>Edit tags</NavBar.Item>
-        </NavBar.Dropdown>
-
-        <NavBar.Dropdown disabled={!this.props.selectedBooksCount || this.props.isPublic} text="Selected books" style={{ marginRight: "5px" }}>
-          <NavBar.Item onClick={this.props.startSubjectModification}>Set subjects</NavBar.Item>
-          <NavBar.Item onClick={this.props.startTagModification}>Set tags</NavBar.Item>
-          <NavBar.Item onClick={this.props.setSelectedRead}>Set all read</NavBar.Item>
-          <NavBar.Item onClick={this.props.setSelectedUnRead}>Set all un-read</NavBar.Item>
-        </NavBar.Dropdown>
-      </NavBar.Nav>
     );
   }
 }
