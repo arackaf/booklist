@@ -81,7 +81,8 @@ export default class MainNavigationBar extends Component<any, any> {
             ) : null}
             {!isLoggedIn && !isLoginModule ? (
               <NavBarItem onClick={() => goto("login")}>
-                <span>Login</span>
+                <span className="hidden-xs">Login</span>
+                <i className="visible-xs fal fa-sign-in" />
               </NavBarItem>
             ) : null}
           </ul>
