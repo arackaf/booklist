@@ -54,6 +54,13 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
   removeTag = tag => this.setState(state => ({ tags: state.tags.filter(_id => _id != tag._id) }));
 
   applyFilters = evt => {
+    let sort = "";
+    let sortDirection = "";
+    let sortValue = this.sortSelectEl.value;
+    if (sortValue !== "_id|desc") {
+      [sort, sortDirection] = sortValue.split("|");
+    }
+
     evt.preventDefault();
     this.props.applyFilters({
       subjects: this.state.noSubjectsFilter ? [] : this.state.subjects,
@@ -65,7 +72,9 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
       publisher: this.publisherEl.value,
       isRead: this.isReadE.checked ? "" : this.isRead0.checked ? "0" : "1",
       searchChildSubjects: this.childSubEl && this.childSubEl.checked,
-      noSubjects: this.state.noSubjectsFilter
+      noSubjects: this.state.noSubjectsFilter,
+      sort,
+      sortDirection
     });
     this.props.onHide();
   };
@@ -78,6 +87,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
   childSubEl: any;
   authorEl: any;
   publisherEl: any;
+  sortSelectEl: any;
 
   render() {
     let { selectedSubjects, selectedTags, isOpen, onHide } = this.props;
@@ -156,6 +166,25 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
                   </div>
                 </div>
               </div>
+              <div className="col-xs-6">
+                <div className="form-group">
+                  <label>Sort</label>
+                  <br />
+                  <select
+                    ref={el => (this.sortSelectEl = el)}
+                    style={{ marginBottom: 0 }}
+                    defaultValue={this.props.bindableSortValue}
+                    className="form-control margin-bottom"
+                  >
+                    <option value="title|asc">Title A-Z</option>
+                    <option value="title|desc">Title Z-A</option>
+                    <option value="pages|asc">Pages, Low</option>
+                    <option value="pages|desc">Pages, High</option>
+                    <option value="_id|asc">Created, Earliest</option>
+                    <option value="_id|desc">Created, Latest</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <button style={{ display: "none" }} />
             <input type="submit" style={{ display: "inline", visibility: "hidden" }} />
@@ -175,9 +204,9 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
             </div>
             <div className="col-xs-9">
               <div>
-                {this.state.tags
-                  .map(_id => this.props.tagHash[_id])
-                  .map(t => <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => this.removeTag(t)} />)}
+                {this.state.tags.map(_id => this.props.tagHash[_id]).map(t => (
+                  <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => this.removeTag(t)} />
+                ))}
               </div>
             </div>
           </div>
@@ -200,9 +229,9 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
                 </div>
                 <div className="col-xs-9">
                   <div>
-                    {this.state.subjects
-                      .map(_id => this.props.subjectHash[_id])
-                      .map(s => <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />)}
+                    {this.state.subjects.map(_id => this.props.subjectHash[_id]).map(s => (
+                      <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />
+                    ))}
                   </div>
                 </div>
               </div>

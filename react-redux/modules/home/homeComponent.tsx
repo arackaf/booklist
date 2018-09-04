@@ -1,5 +1,4 @@
 import React, { Component, PureComponent } from "react";
-import { findDOMNode, render } from "react-dom";
 import { connect } from "react-redux";
 import Measure from "react-measure";
 
@@ -8,17 +7,9 @@ import { isLoggedIn } from "reactStartup";
 import "d3-transition";
 
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
-import {
-  topLevelSubjectsSortedSelector,
-  RootApplicationType,
-  getRootSubject,
-  getChildSubjectsSorted,
-  computeSubjectParentId
-} from "applicationRoot/rootReducer";
+import { topLevelSubjectsSortedSelector, RootApplicationType } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
-import Bar from "./components/bar";
-import Axis from "./components/axis";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
@@ -95,8 +86,7 @@ class HomeIfLoggedIn extends Component<any, any> {
 const HomeIfNotLoggedIn = () => (
   <div>
     <MainHomePane>
-      Welcome to <i>My Library</i>.
-      <br />
+      Welcome to <i>My Library</i>.<br />
       <br />
       This site is my own little passion project, the purpose of which is to track your library. You scan in your books (or manually type in the isbn)
       and the books' info is fetched from Amazon, and stored for you. You can then flexibly search and categorize your library.
