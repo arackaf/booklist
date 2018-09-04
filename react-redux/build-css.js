@@ -11,7 +11,7 @@ purify(content, ["./static/bootstrap/css/bootstrap.css"], {
   output: "./static/bootstrap/css/bootstrap-booklist-build.css"
 });
 
-purify(content, ["./static/fontawesome/css/font-awesome.css"], {
+purify(content, ["./static/fontawesome/css/all.css"], {
   minify: minify,
   output: "./static/fontawesome/css/font-awesome-booklist-build.css"
 });

@@ -87,7 +87,6 @@ module.exports = {
       globPatterns: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
         "static/fontawesome/css/font-awesome-booklist-build.css",
-        "static/fontawesome/fonts/fontawesome-webfont.woff2",
         "static/main-icon2.png",
         "offline.htm",
         "node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css"
@@ -105,7 +104,8 @@ module.exports = {
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+isBookDetails/, name: "book-details" }),
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
+        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
+        getCache({ pattern: /fontawesome\/webfonts/, name: "fontawesome-fonts" })
       ],
       importScripts: ["react-redux/sw-manual.js"]
     }),
