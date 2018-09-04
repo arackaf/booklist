@@ -1,8 +1,8 @@
 import { hashOf } from "applicationRoot/rootReducer";
-import { BooksModuleType, BooksReducerType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
-import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, TAG_DELETED } from "./actionNames";
+import { BooksModuleType, TagsType } from "modules/books/reducers/reducer";
+import { LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, TAG_DELETED } from "./actionNames";
 
-import { createSelector, Selector } from "reselect";
+import { createSelector } from "reselect";
 import update from "immutability-helper";
 
 interface ITag {

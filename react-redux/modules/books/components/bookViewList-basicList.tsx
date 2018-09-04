@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
 @connect(

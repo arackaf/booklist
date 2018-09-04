@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Modal from "simple-react-bootstrap/lib/modal";
-import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterTags } from "modules/books/reducers/tags/reducer";
@@ -166,7 +165,11 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
             </div>
             <div style={{ minHeight: "150px" }} className={"tab-pane " + (this.state.currentTab == "books" ? "active in" : "")}>
               <br />
-              <ul className="list-unstyled">{this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>)}</ul>
+              <ul className="list-unstyled">
+                {this.props.modifyingBooks.map(book => (
+                  <li key={book._id}>{book.title}</li>
+                ))}
+              </ul>
               <br />
             </div>
           </div>

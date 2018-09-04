@@ -1,5 +1,3 @@
-import { UPDATE_SUBJECT, UPDATE_SUBJECT_RESULTS } from "./actionNames";
-
 import { subjectEditingActions } from "applicationRoot/rootReducerActionCreators";
 const { saveSubject, deleteSubject: deleteSubjectRoot } = subjectEditingActions;
 

@@ -1,5 +1,5 @@
 import { store } from "applicationRoot/store";
-import { SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW, HASH_CHANGED } from "./actionNames";
+import { SET_GRID_VIEW, SET_BASIC_LIST_VIEW, HASH_CHANGED } from "./actionNames";
 
 import { loadBooks } from "../books/actionCreators";
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
