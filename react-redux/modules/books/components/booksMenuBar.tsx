@@ -109,7 +109,19 @@ export default class BooksMenuBar extends Component<
       <div>
         <div className="booksMenuBar" style={{ fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
-            <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
+            {!selectedBooksCount ? (
+              <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
+                <div className="btn-group">
+                  <button disabled={!canPageDown} type="button" className="btn btn-default">
+                    <i className="fal fa-angle-left" />
+                  </button>
+                  <button disabled={!canPageUp} type="button" className="btn btn-default">
+                    <i className="fal fa-angle-right" />
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            <div className="hidden-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
                 <button disabled={!canPageOne} type="button" className="btn btn-default">
                   <i className="fal fa-angle-double-left" />
@@ -140,7 +152,7 @@ export default class BooksMenuBar extends Component<
                   defaultValue={this.props.search}
                   onBlur={this.resetSearch}
                   name="search"
-                  className="form-control"
+                  className="form-control hidden-tiny"
                   placeholder="Title search"
                   onKeyDown={this.quickSearchType}
                   style={{
@@ -158,7 +170,7 @@ export default class BooksMenuBar extends Component<
                       type="button"
                       style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                       onClick={beginEditFilters}
-                      className="btn btn-default"
+                      className="btn btn-default btn-reset"
                     >
                       <i className="fal fa-filter" />
                     </button>
@@ -179,7 +191,7 @@ export default class BooksMenuBar extends Component<
                   </>
                 ) : (
                   <>
-                    <button type="button" onClick={this.props.startSubjectModification} className={"btn btn-default"}>
+                    <button type="button" onClick={this.props.startSubjectModification} className={"btn btn-default btn-reset"}>
                       <i className="fal fa-sitemap" />
                     </button>
                     <button type="button" onClick={this.props.startTagModification} className="btn btn-default">
@@ -197,7 +209,14 @@ export default class BooksMenuBar extends Component<
             </div>
 
             <div style={{ flex: "1 1 auto", display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap", marginTop: "5px" }}>
-              {resultsCount ? <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>{resultsDisplay}</div> : null}
+              {resultsCount ? (
+                <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
+                  <span className="visible-tiny">
+                    Page {page} of {pages}—
+                  </span>
+                  {resultsDisplay}
+                </div>
+              ) : null}
 
               {this.props.selectedSubjects.map(s => (
                 <RemovableLabelDisplay
