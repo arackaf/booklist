@@ -127,7 +127,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
     return (
       <div style={{}}>
         <BooksLoading />
-        <div style={{ margin: "10px", marginTop: 0 }}>
+        <div style={{ marginLeft: "5px", marginTop: 0 }}>
           <BooksMenuBar
             startTagModification={this.editTagsForSelectedBooks}
             startSubjectModification={this.editSubjectsForSelectedBooks}

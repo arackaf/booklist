@@ -107,15 +107,15 @@ export default class BooksMenuBar extends Component<
 
     return (
       <div>
-        <div className="booksMenuBar" style={{ fontSize: "11pt", paddingLeft: "5px", paddingBottom: "5px" }}>
+        <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {!selectedBooksCount ? (
               <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
                 <div className="btn-group">
-                  <button disabled={!canPageDown} type="button" className="btn btn-default">
+                  <button disabled={!canPageDown} className="btn btn-default">
                     <i className="fal fa-angle-left" />
                   </button>
-                  <button disabled={!canPageUp} type="button" className="btn btn-default">
+                  <button disabled={!canPageUp} className="btn btn-default">
                     <i className="fal fa-angle-right" />
                   </button>
                 </div>
@@ -123,10 +123,10 @@ export default class BooksMenuBar extends Component<
             ) : null}
             <div className="hidden-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
-                <button disabled={!canPageOne} type="button" className="btn btn-default">
+                <button disabled={!canPageOne} className="btn btn-default">
                   <i className="fal fa-angle-double-left" />
                 </button>
-                <button disabled={!canPageDown} type="button" className="btn btn-default" style={{ marginRight: "5px" }}>
+                <button disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
                   <i className="fal fa-angle-left" />
                 </button>
               </div>
@@ -137,10 +137,10 @@ export default class BooksMenuBar extends Component<
                 </span>
               ) : null}
               <div className="btn-group">
-                <button disabled={!canPageUp} type="button" className="btn btn-default" style={{ marginLeft: "5px" }}>
+                <button disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
                   <i className="fal fa-angle-right" />
                 </button>
-                <button disabled={!canPageLast} type="button" className="btn btn-default">
+                <button disabled={!canPageLast} className="btn btn-default">
                   <i className="fal fa-angle-double-right" />
                 </button>
               </div>
@@ -167,40 +167,38 @@ export default class BooksMenuBar extends Component<
                 {!selectedBooksCount ? (
                   <>
                     <button
-                      type="button"
+                      title="Filter search"
                       style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                       onClick={beginEditFilters}
                       className="btn btn-default btn-reset"
                     >
                       <i className="fal fa-filter" />
                     </button>
-                    <button
-                      type="button"
-                      onClick={this.props.setViewDesktop}
-                      className={"btn btn-default " + (this.props.isGridView ? "active" : "")}
-                    >
+                    <button title="Edit subjects" onClick={this.props.editSubjects} className="btn btn-default ">
+                      <i className="fal fa-sitemap" />
+                    </button>
+                    <button title="Edit tags" onClick={this.props.editTags} className="btn btn-default ">
+                      <i className="fal fa-tags" />
+                    </button>
+                    <button onClick={this.props.setViewDesktop} className={"btn btn-default " + (this.props.isGridView ? "active" : "")}>
                       <i className="fal fa-table" />
                     </button>
-                    <button
-                      type="button"
-                      onClick={this.props.setViewBasicList}
-                      className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}
-                    >
+                    <button onClick={this.props.setViewBasicList} className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}>
                       <i className="fal fa-list" />
                     </button>
                   </>
                 ) : (
                   <>
-                    <button type="button" onClick={this.props.startSubjectModification} className={"btn btn-default btn-reset"}>
+                    <button title="Add/remove subjects" onClick={this.props.startSubjectModification} className={"btn btn-default btn-reset"}>
                       <i className="fal fa-sitemap" />
                     </button>
-                    <button type="button" onClick={this.props.startTagModification} className="btn btn-default">
+                    <button title="Add/remove tags" onClick={this.props.startTagModification} className="btn btn-default">
                       <i className="fal fa-tags" />
                     </button>
-                    <button type="button" onClick={this.props.setSelectedRead} className={"btn btn-default"}>
+                    <button title="Set read" onClick={this.props.setSelectedRead} className={"btn btn-default"}>
                       <i className="fal fa-eye" />
                     </button>
-                    <button type="button" onClick={this.props.setSelectedUnRead} className="btn btn-default put-line-through">
+                    <button title="Set un-read" onClick={this.props.setSelectedUnRead} className="btn btn-default put-line-through">
                       <i className="fal fa-eye-slash" />
                     </button>
                   </>
@@ -212,7 +210,8 @@ export default class BooksMenuBar extends Component<
               {resultsCount ? (
                 <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
                   <span className="visible-tiny">
-                    Page {page} of {pages}—
+                    Page {page} of {pages}
+                    &nbsp;&nbsp;
                   </span>
                   {resultsDisplay}
                 </div>
