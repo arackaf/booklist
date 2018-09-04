@@ -16,7 +16,6 @@ type BookMenuBarType = ReturnType<typeof selectBookSearchState> &
   ReturnType<typeof selectBookSearchUiView> &
   ReturnType<typeof selectAppUiState> &
   ReturnType<typeof selectBookSelection>;
-type BookUtilMenuOptionsType = ReturnType<typeof selectBookSelection> & ReturnType<typeof selectAppUiState>;
 
 const menuBarSelector = combineSelectors<BookMenuBarType>(
   selectBookSearchState,
@@ -25,7 +24,6 @@ const menuBarSelector = combineSelectors<BookMenuBarType>(
   selectAppUiState,
   selectBookSelection
 );
-const utilMenuOptionsSelector = combineSelectors<BookUtilMenuOptionsType>(selectBookSelection, selectAppUiState);
 
 interface IAddedMenuProps {
   editTags: any;
@@ -80,17 +78,15 @@ export default class BooksMenuBar extends Component<
       startTagModification,
       beginEditFilters,
       page,
-      selectedBooksCount
+      selectedBooksCount,
+      totalPages
     } = this.props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
-    //TODO:
-    let pages = 1;
-
-    let canPageUp = page < pages;
+    let canPageUp = page < totalPages;
     let canPageDown = page > 1;
     let canPageOne = page > 1;
-    let canPageLast = page < pages;
+    let canPageLast = page < totalPages;
 
     let resultsCount = this.props.resultsCount;
     let resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "";
@@ -104,6 +100,7 @@ export default class BooksMenuBar extends Component<
       <div>
         <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {isPublic ? <h4 style={{ marginTop: "5px", marginRight: "5px", marginBottom: 0, alignSelf: "center" }}>{booksHeader}</h4> : null}
             {!selectedBooksCount ? (
               <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
                 <div className="btn-group">
@@ -128,7 +125,7 @@ export default class BooksMenuBar extends Component<
               {resultsCount ? (
                 <span style={{ display: "inline" }}>
                   <span className="hidden-xs">Page</span> {page}
-                  <span className="hidden-xs"> of {pages}</span>
+                  <span className="hidden-xs"> of {totalPages}</span>
                 </span>
               ) : null}
               <div className="btn-group">
@@ -184,10 +181,10 @@ export default class BooksMenuBar extends Component<
                   </>
                 ) : (
                   <>
-                    <button title="Add/remove subjects" onClick={this.props.startSubjectModification} className={"btn btn-default btn-reset"}>
+                    <button title="Add/remove subjects" onClick={startSubjectModification} className={"btn btn-default btn-reset"}>
                       <i className="fal fa-sitemap" />
                     </button>
-                    <button title="Add/remove tags" onClick={this.props.startTagModification} className="btn btn-default">
+                    <button title="Add/remove tags" onClick={startTagModification} className="btn btn-default">
                       <i className="fal fa-tags" />
                     </button>
                     <button title="Set read" onClick={this.props.setSelectedRead} className={"btn btn-default"}>
@@ -205,7 +202,7 @@ export default class BooksMenuBar extends Component<
               {resultsCount ? (
                 <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
                   <span className="visible-tiny">
-                    Page {page} of {pages}
+                    Page {page} of {totalPages}
                     &nbsp;&nbsp;
                   </span>
                   {resultsDisplay}
