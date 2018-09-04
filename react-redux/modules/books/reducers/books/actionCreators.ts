@@ -53,13 +53,8 @@ export function loadBooks() {
     let app = state.app;
 
     Promise.resolve(booksSearch(bookSearch, app.publicUserId)).then(booksResp => {
-      let bookSearchFilters = selectCurrentSearch(store.getState() as any);
-      let hasMore = booksResp.results.length > bookSearchFilters.pageSize;
-      if (hasMore) {
-        booksResp.results = booksResp.results.slice(0, -1);
-      }
       window.scrollTo(0, 0);
-      dispatch(booksResults(booksResp, hasMore, booksResp.count));
+      dispatch(booksResults(booksResp, booksResp.count));
     });
   };
 }
@@ -156,6 +151,6 @@ function executeSetRead(dispatch, ids, value) {
   });
 }
 
-export const booksResults = (resp, hasMore, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, hasMore, resultsCount: count });
+export const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, resultsCount: count });
 
 export const toggleCheckAll = () => ({ type: TOGGLE_CHECK_ALL });

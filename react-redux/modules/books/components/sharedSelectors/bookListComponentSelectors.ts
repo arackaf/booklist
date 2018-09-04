@@ -28,7 +28,6 @@ export const selectBookListComponentState = createSelector(
       ...bookSelectionSelected,
       selectedBooks: books.selectedBooks,
 
-      hasMoreBooks: bookSearch.hasMore,
       currentPage: bookSearchFilters.page,
       currentSort: bookSearchFilters.sort,
       sortDirection: bookSearchFilters.sortDirection

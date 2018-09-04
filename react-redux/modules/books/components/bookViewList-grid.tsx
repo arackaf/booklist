@@ -261,21 +261,6 @@ export default class BookViewListGrid extends Component<
                 ])}
               </tbody>
             </table>
-
-            {this.props.currentPage > 1 || this.props.hasMoreBooks ? (
-              <div style={{ marginLeft: "10px", marginTop: "10px", marginBottom: "10px" }}>
-                {this.props.currentPage > 1 ? (
-                  <BootstrapButton style={{ marginRight: "10px" }} preset="primary-xs" onClick={this.props.pageDown}>
-                    <i className="fa fa-fw fa-chevron-left" /> Previous
-                  </BootstrapButton>
-                ) : null}
-                {this.props.hasMoreBooks ? (
-                  <BootstrapButton preset="primary-xs" onClick={this.props.pageUp}>
-                    Next <i className="fa fa-fw fa-chevron-right" />
-                  </BootstrapButton>
-                ) : null}
-              </div>
-            ) : null}
           </div>
         ) : null}
       </div>

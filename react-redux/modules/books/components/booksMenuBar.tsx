@@ -104,7 +104,7 @@ export default class BooksMenuBar extends Component<
             {!selectedBooksCount ? (
               <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
                 <div className="btn-group">
-                  <button disabled={!canPageDown} className="btn btn-default">
+                  <button onClick={this.props.pageOne} disabled={!canPageDown} className="btn btn-default">
                     <i className="fal fa-angle-left" />
                   </button>
                   <button disabled={!canPageUp} className="btn btn-default">
@@ -115,10 +115,10 @@ export default class BooksMenuBar extends Component<
             ) : null}
             <div className="hidden-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
-                <button disabled={!canPageOne} className="btn btn-default">
+                <button onClick={this.props.pageOne} disabled={!canPageOne} className="btn btn-default">
                   <i className="fal fa-angle-double-left" />
                 </button>
-                <button disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
+                <button onClick={this.props.pageDown} disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
                   <i className="fal fa-angle-left" />
                 </button>
               </div>
@@ -129,10 +129,10 @@ export default class BooksMenuBar extends Component<
                 </span>
               ) : null}
               <div className="btn-group">
-                <button disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
+                <button onClick={this.props.pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
                   <i className="fal fa-angle-right" />
                 </button>
-                <button disabled={!canPageLast} className="btn btn-default">
+                <button onClick={this.props.pageLast} disabled={!canPageLast} className="btn btn-default">
                   <i className="fal fa-angle-double-right" />
                 </button>
               </div>
