@@ -7,6 +7,7 @@ import { loadTags } from "../tags/actionCreators";
 
 import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { selectCurrentSearch } from "./reducer";
+import { selectBookLoadingInfo } from "../books/reducer";
 
 export const setViewDesktop = view => ({ type: SET_GRID_VIEW });
 export const setViewBasicList = view => ({ type: SET_BASIC_LIST_VIEW });
@@ -148,16 +149,21 @@ export function quickSearch(val) {
   };
 }
 
-export function pageUp() {
-  return function(dispatch, getState) {
-    let bookSearchFilters = selectCurrentSearch(getState());
-    setSearchValues({ page: +bookSearchFilters.page + 1 });
-  };
-}
+export const pageOne = () => (dispatch, getState) => {
+  setSearchValues({ page: null });
+};
 
-export function pageDown() {
-  return function(dispatch, getState) {
-    let bookSearchFilters = selectCurrentSearch(getState());
-    setSearchValues({ page: +bookSearchFilters.page == 2 ? null : bookSearchFilters.page - 1 });
-  };
-}
+export const pageDown = () => (dispatch, getState) => {
+  let bookSearchFilters = selectCurrentSearch(getState());
+  setSearchValues({ page: +bookSearchFilters.page == 2 ? null : bookSearchFilters.page - 1 });
+};
+
+export const pageUp = () => (dispatch, getState) => {
+  let bookSearchFilters = selectCurrentSearch(getState());
+  setSearchValues({ page: +bookSearchFilters.page + 1 });
+};
+
+export const pageLast = () => (dispatch, getState) => {
+  let booksState = selectBookLoadingInfo(getState());
+  setSearchValues({ page: booksState.totalPages });
+};

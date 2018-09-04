@@ -23,7 +23,6 @@ if (initialSearchVersion) {
 localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + initialSearchVersion);
 
 const initialState = {
-  hasMore: false,
   view: "",
   searchVersion: initialSearchVersion,
   hashFilters: {} as typeof defaultSearchValuesHash
@@ -32,8 +31,6 @@ export type BookSearchType = typeof initialState;
 
 export function bookSearchReducer(state = initialState, action): BookSearchType {
   switch (action.type) {
-    case LOAD_BOOKS_RESULTS:
-      return Object.assign({}, state, { hasMore: action.hasMore });
     case SET_BASIC_LIST_VIEW:
       return { ...state, view: BASIC_LIST_VIEW };
     case SET_GRID_VIEW:
