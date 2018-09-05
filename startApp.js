@@ -1,5 +1,6 @@
 import dao from "./node-src/dataAccess/dao";
 import bookEntryQueueManager from "./node-src/app-helpers/bookEntryQueueManager";
+import bookSimilarityQueueManager from "./node-src/app-helpers/bookSimilarityQueueManager";
 import PendingBookEntryDao from "./node-src/dataAccess/pendingBookEntryDAO";
 import ErrorLoggerDao from "./node-src/dataAccess/errorLoggerDAO";
 import UserDao from "./node-src/dataAccess/userDAO";
@@ -381,6 +382,7 @@ function error(err) {
 Promise.resolve(dao.init()).then(() => {
   app.listen(process.env.PORT || 3000);
   bookEntryQueueManager.initialize();
+  bookSimilarityQueueManager.initialize();
 });
 
 export default null;
