@@ -8,15 +8,14 @@ import path from "path";
 import fs from "fs";
 import mkdirp from "mkdirp";
 
-var awsCredentials = {
+const awsCredentials = {
   awsId: process.env.AWS_ID,
   awsSecret: process.env.AWS_SECRET,
   assocId: process.env.ASSOC_ID
 };
 
-var OperationHelper = require("apac").OperationHelper,
-  opHelper = new OperationHelper(awsCredentials),
-  { nodeCallback } = require("../app-helpers/nodeHelpers.js");
+const OperationHelper = require("apac").OperationHelper;
+const opHelper = new OperationHelper(awsCredentials);
 
 export default class AmazonSearch {
   constructor() {}
