@@ -5,6 +5,12 @@ query GetBookDetails($_id: String, $isBookDetails: String, $publicUserId: String
         source
         content
       }
+      similarBooks {
+        title
+        authors
+        asin
+        smallImage
+      }
     }
   }
 }
