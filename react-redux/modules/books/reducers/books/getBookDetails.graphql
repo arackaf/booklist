@@ -8,7 +8,6 @@ query GetBookDetails($_id: String, $isBookDetails: String, $publicUserId: String
       similarBooks {
         title
         authors
-        asin
         smallImage
       }
     }

@@ -31,7 +31,7 @@ export const Book = {
       let db = await context.__mongodb;
       context.__Book_similarBooksDataLoader = new DataLoader(async keyArrays => {
         let $match = { asin: { $in: flatMap(keyArrays || [], ids => ids) } };
-        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, constants.useCurrentSelectionSet);
+        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, constants.useCurrentSelectionSet, { force: ["asin"] });
         let { $project, $sort, $limit, $skip } = queryPacket;
         
         let aggregateItems = [
