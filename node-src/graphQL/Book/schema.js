@@ -17,6 +17,8 @@ export const type = `
     isRead: Boolean
     dateAdded: String
     editorialReviews: [EditorialReview]
+    similarItems: [String]
+    similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary]
   }
 
   type BookQueryResults {
@@ -59,6 +61,8 @@ export const type = `
     isRead: Boolean
     dateAdded: String
     editorialReviews: [EditorialReviewInput]
+    similarItems: [String]
+    similarBooks: [BookSummaryInput]
   }
 
   input BookMutationInput {
@@ -102,6 +106,14 @@ export const type = `
     editorialReviews_UPDATE: EditorialReviewArrayMutationInput
     editorialReviews_UPDATES: [EditorialReviewArrayMutationInput]
     editorialReviews_PULL: EditorialReviewFilters
+    similarItems: [String]
+    similarItems_PUSH: String
+    similarItems_CONCAT: [String]
+    similarItems_UPDATE: StringArrayUpdate
+    similarItems_UPDATES: [StringArrayUpdate]
+    similarItems_PULL: [String]
+    similarItems_ADDTOSET: [String]
+    similarBooks_ADD: [BookSummaryInput]
   }
 
   input BookSort {
@@ -121,6 +133,7 @@ export const type = `
     isRead: Int
     dateAdded: Int
     editorialReviews: Int
+    similarItems: Int
   }
 
   input BookFilters {
@@ -233,6 +246,16 @@ export const type = `
     dateAdded_in: [String]
     editorialReviews_count: Int
     editorialReviews: EditorialReviewFilters
+    similarItems_count: Int
+    similarItems_textContains: String
+    similarItems_startsWith: String
+    similarItems_endsWith: String
+    similarItems_regex: String
+    similarItems: [String]
+    similarItems_in: [[String]]
+    similarItems_contains: String
+    similarItems_containsAny: [String]
+    similarItems_ne: [String]
     OR: [BookFilters]
   }
   
@@ -379,6 +402,16 @@ export const query = `
     dateAdded_in: [String],
     editorialReviews_count: Int,
     editorialReviews: EditorialReviewFilters,
+    similarItems_count: Int,
+    similarItems_textContains: String,
+    similarItems_startsWith: String,
+    similarItems_endsWith: String,
+    similarItems_regex: String,
+    similarItems: [String],
+    similarItems_in: [[String]],
+    similarItems_contains: String,
+    similarItems_containsAny: [String],
+    similarItems_ne: [String],
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],

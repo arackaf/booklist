@@ -32,7 +32,7 @@ export default {
   Query: {
     async getSubject(root, args, context, ast) {
       await processHook(hooksObj, "Subject", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subject");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -44,7 +44,7 @@ export default {
     },
     async allSubjects(root, args, context, ast) {
       await processHook(hooksObj, "Subject", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subjects");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -69,7 +69,7 @@ export default {
   },
   Mutation: {
     async createSubject(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let newObject = await newObjectFromArgs(args.Subject, SubjectMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       let requestMap = parseRequestedFields(ast, "Subject");

@@ -13,13 +13,28 @@ const {
   arrayOf,
   objectOf,
   formattedDate,
-  typeLiteral
+  typeLiteral,
+  relationshipHelpers
 } = dataTypes;
 
 const EditorialReview = {
   fields: {
     source: StringType,
     content: StringType
+  }
+};
+
+const BookSummary = {
+  table: "amazonReference",
+  fields: {
+    _id: MongoIdType,
+    title: StringType,
+    asin: StringType,
+    isbn: StringType,
+    ean: StringType,
+    smallImage: StringType,
+    mediumImage: StringType,
+    authors: StringArrayType
   }
 };
 
@@ -41,7 +56,8 @@ const Book = {
     tags: StringArrayType,
     isRead: BoolType,
     dateAdded: StringType,
-    editorialReviews: arrayOf(EditorialReview)
+    editorialReviews: arrayOf(EditorialReview),
+    similarItems: StringArrayType
   },
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
@@ -50,6 +66,12 @@ const Book = {
     { name: "isBookDetails", type: "String" }
   ]
 };
+
+relationshipHelpers.projectIds(Book, "similarBooks", {
+  type: BookSummary,
+  fkField: "similarItems",
+  keyField: "asin"
+});
 
 const Subject = {
   table: "subjects",
@@ -120,6 +142,7 @@ const PublicUser = {
 
 export default {
   Book,
+  BookSummary,
   EditorialReview,
   Subject,
   LabelColor,
