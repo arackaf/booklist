@@ -1,4 +1,5 @@
 import { query as BookQuery, mutation as BookMutation, type as BookType } from './Book/schema';
+import { query as BookSummaryQuery, mutation as BookSummaryMutation, type as BookSummaryType } from './BookSummary/schema';
 import { query as SubjectQuery, mutation as SubjectMutation, type as SubjectType } from './Subject/schema';
 import { query as LabelColorQuery, mutation as LabelColorMutation, type as LabelColorType } from './LabelColor/schema';
 import { query as UserQuery, mutation as UserMutation, type as UserType } from './User/schema';
@@ -30,6 +31,8 @@ export default `
 
   ${BookType}
 
+  ${BookSummaryType}
+
   ${EditorialReviewType}
 
   ${SubjectType}
@@ -45,6 +48,8 @@ export default `
   type Query {
     ${BookQuery}
 
+    ${BookSummaryQuery}
+
     ${SubjectQuery}
 
     ${LabelColorQuery}
@@ -58,6 +63,8 @@ export default `
 
   type Mutation {
     ${BookMutation}
+
+    ${BookSummaryMutation}
 
     ${SubjectMutation}
 
