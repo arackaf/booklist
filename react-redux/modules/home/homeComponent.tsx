@@ -1,17 +1,15 @@
 import React, { Component, PureComponent } from "react";
 import { connect } from "react-redux";
 import Measure from "react-measure";
-
-import { isLoggedIn } from "reactStartup";
-
 import "d3-transition";
 
+import { isLoggedIn } from "reactStartup";
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
 import { topLevelSubjectsSortedSelector, RootApplicationType } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
-
 import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
+import RecommendMain from "./components/recommend/main";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
@@ -92,7 +90,7 @@ class HomeIfLoggedIn extends Component<any, any> {
             </Measure>
           </Tab>
           <Tab name="search" caption="Search">
-            <h1>Hey</h1>
+            <RecommendMain />
           </Tab>
         </Tabs>
       </MainHomePane>

@@ -1,0 +1,40 @@
+query RecommendSearchBooks(
+  $page: Int
+  $pageSize: Int
+  $sort: BookSort
+  $title_contains: String
+  $isRead: Boolean
+  $isRead_ne: Boolean
+  $subjects_containsAny: [String]
+  $searchChildSubjects: Boolean
+  $tags_containsAny: [String]
+  $bookSearchVersion: String
+) {
+  allBooks(
+    PAGE: $page
+    PAGE_SIZE: $pageSize
+    SORT: $sort
+    title_contains: $title_contains
+    isRead: $isRead
+    isRead_ne: $isRead_ne
+    subjects_containsAny: $subjects_containsAny
+    searchChildSubjects: $searchChildSubjects
+    tags_containsAny: $tags_containsAny
+    bookSearchVersion: $bookSearchVersion
+  ) {
+    Books {
+      _id
+      title
+      isbn
+      smallImage
+      subjects
+      authors
+      tags
+      isRead
+      dateAdded
+    }
+    Meta {
+      count
+    }
+  }
+}
