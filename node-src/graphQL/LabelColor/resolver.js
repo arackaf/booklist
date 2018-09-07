@@ -30,7 +30,7 @@ export default {
   Query: {
     async allLabelColors(root, args, context, ast) {
       await processHook(hooksObj, "LabelColor", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, LabelColorMetadata, "LabelColors");
       await processHook(hooksObj, "LabelColor", "queryMiddleware", queryPacket, root, args, context, ast);

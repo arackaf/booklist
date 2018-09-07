@@ -163,21 +163,48 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
     let backgroundColor = index % 2 ? "white" : "#f9f9f9";
     return (
       <tr key={"details" + book._id} style={{ backgroundColor }}>
-        <td colSpan={11} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
-          {!book.editorialReviews.length ? (
-            <h4 style={{ marginTop: 0, marginBottom: 0 }}>No editorial reviews for this book</h4>
-          ) : (
-            <div>
-              {book.editorialReviews.map((review, index) => (
+        <td colSpan={9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
+          <div className="row">
+            <div className="col-xs-6">
+              {!book.editorialReviews.length ? (
+                <h4 style={{ marginTop: 0, marginBottom: 0 }}>No editorial reviews for this book</h4>
+              ) : (
                 <div>
-                  {index > 0 ? <hr style={{ border: "2px solid #eee" }} /> : null}
-                  <h4>{review.source || "<unknown source>"}</h4>
-                  <div dangerouslySetInnerHTML={{ __html: review.content }} />
+                  {book.editorialReviews.map((review, index) => (
+                    <div key={index}>
+                      {index > 0 ? <hr style={{ border: "2px solid #eee" }} /> : null}
+                      <h4>{review.source || "<unknown source>"}</h4>
+                      <div dangerouslySetInnerHTML={{ __html: review.content }} />
+                    </div>
+                  ))}
+                  <br />
                 </div>
-              ))}
-              <br />
+              )}
             </div>
-          )}
+
+            <div className="col-xs-6">
+              {!book.similarBooks.length ? (
+                <h4 style={{ marginTop: 0, marginBottom: 0 }}>No similar items found for this book</h4>
+              ) : (
+                <div>
+                  <h4>Similar Books</h4>
+                  <table className="table table-condensed" style={{ backgroundColor: "transparent" }}>
+                    <tbody>
+                      {book.similarBooks.map((book, i) => (
+                        <tr key={i}>
+                          <td>{book.smallImage ? <img src={book.smallImage} /> : null}</td>
+                          <td>
+                            <span style={{ fontWeight: "bold" }}>{book.title}</span>
+                            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
         </td>
       </tr>
     );

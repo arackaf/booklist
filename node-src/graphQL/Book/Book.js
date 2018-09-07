@@ -1,4 +1,5 @@
 import EditorialReview from "../EditorialReview/EditorialReview";
+import BookSummary from "../BookSummary/BookSummary";
 
 export default {
   table: "books",
@@ -22,6 +23,16 @@ export default {
     editorialReviews: {
       __isArray: true,
       get type(){ return EditorialReview; }
+    },
+    similarItems: "StringArray"
+  },
+  relationships: {
+    similarBooks: {
+      get type(){ return BookSummary; },
+      fkField: "similarItems",
+      keyField: "asin",
+      __isArray: true,
+      __isObject: false
     }
   }
 };

@@ -30,7 +30,7 @@ export default {
   Query: {
     async getUser(root, args, context, ast) {
       await processHook(hooksObj, "User", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, UserMetadata, "User");
       await processHook(hooksObj, "User", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -42,7 +42,7 @@ export default {
     },
     async allUsers(root, args, context, ast) {
       await processHook(hooksObj, "User", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, UserMetadata, "Users");
       await processHook(hooksObj, "User", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -66,7 +66,7 @@ export default {
   },
   Mutation: {
     async updateUser(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery(args._id ? { _id: args._id } : {}, ast, UserMetadata, "User");
       let updates = await getUpdateObject(args.Updates || {}, UserMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
