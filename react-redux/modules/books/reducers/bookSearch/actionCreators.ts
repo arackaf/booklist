@@ -112,42 +112,35 @@ export function booksInitialized({ priorState }) {
   };
 }
 
-export function removeFilterSubject(_id) {
-  return function(dispatch, getState) {
-    let currentSearch = selectCurrentSearch(getState());
-    let newSubjects = currentSearch.selectedSubjects.map(s => s._id).filter(sId => sId != _id);
+export const removeFilters = (...names) => (dispatch, getState) => {
+  setSearchValues(names.reduce((hash, item) => ((hash[item] = ""), hash), {}));
+};
 
-    setSearchValues({
-      subjects: newSubjects.join("-"),
-      searchChildSubjects: currentSearch.searchChildSubjects && newSubjects ? "true" : null
-    });
-  };
-}
+export const removeFilterSubject = _id => (dispatch, getState) => {
+  let currentSearch = selectCurrentSearch(getState());
+  let newSubjects = currentSearch.selectedSubjects.map(s => s._id).filter(sId => sId != _id);
 
-export function removeFilterTag(_id) {
-  return function(dispatch, getState) {
-    let currentSearch = selectCurrentSearch(getState());
-    let newTags = currentSearch.selectedTags.map(s => s._id).filter(sId => sId != _id);
+  setSearchValues({
+    subjects: newSubjects.join("-"),
+    searchChildSubjects: currentSearch.searchChildSubjects && newSubjects ? "true" : null
+  });
+};
 
-    setSearchValues({ tags: newTags.join("-") });
-  };
-}
+export const removeFilterTag = _id => (dispatch, getState) => {
+  let currentSearch = selectCurrentSearch(getState());
+  let newTags = currentSearch.selectedTags.map(s => s._id).filter(sId => sId != _id);
 
-export function clearSearchChildSubjects() {
-  return function(dispatch, getState) {
-    setSearchValues({ searchChildSubjects: null });
-  };
-}
+  setSearchValues({ tags: newTags.join("-") });
+};
 
-export function quickSearch(val) {
-  return function(dispatch, getState) {
-    let state = getState().booksModule.bookSearch;
-    setSearchValues({
-      page: null,
-      search: val
-    });
-  };
-}
+export const clearSearchChildSubjects = () => (dispatch, getState) => setSearchValues({ searchChildSubjects: null });
+
+export const quickSearch = val => (dispatch, getState) => {
+  setSearchValues({
+    page: null,
+    search: val
+  });
+};
 
 export const pageOne = () => (dispatch, getState) => {
   setSearchValues({ page: null });
