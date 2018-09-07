@@ -30,7 +30,7 @@ export default {
   Query: {
     async getPublicUser(root, args, context, ast) {
       await processHook(hooksObj, "PublicUser", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, PublicUserMetadata, "PublicUser");
       await processHook(hooksObj, "PublicUser", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -42,7 +42,7 @@ export default {
     },
     async allPublicUsers(root, args, context, ast) {
       await processHook(hooksObj, "PublicUser", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, PublicUserMetadata, "PublicUsers");
       await processHook(hooksObj, "PublicUser", "queryMiddleware", queryPacket, root, args, context, ast);

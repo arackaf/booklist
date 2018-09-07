@@ -34,11 +34,18 @@ interface IEditorialReview {
   source: string;
 }
 
+interface IBookSummary {
+  title: string;
+  authors: string[];
+  smallImage: string;
+}
+
 export interface IBookRaw {
   _id: string;
   dateAdded: number;
   ean: string;
   editorialReviews: IEditorialReview[];
+  similarBooks: IBookSummary[];
   isRead: boolean;
   readChanging?: boolean;
   isbn: string;
@@ -149,7 +156,15 @@ export function booksReducer(state = initialBooksState, action): BooksReducerTyp
     case DETAILS_LOADED:
       return update(state, {
         booksHash: {
-          [action._id]: { $merge: { detailsLoading: false, detailsLoaded: true, editorialReviews: action.editorialReviews, expanded: true } }
+          [action._id]: {
+            $merge: {
+              detailsLoading: false,
+              detailsLoaded: true,
+              expanded: true,
+              similarBooks: action.similarBooks,
+              editorialReviews: action.editorialReviews
+            }
+          }
         }
       });
   }

@@ -3,6 +3,10 @@ import hooksObj from "../hooks";
 const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
 import { ObjectId } from "mongodb";
 import BookMetadata from "./Book";
+import { loadBookSummarys} from "../BookSummary/resolver";
+import BookSummaryMetadata from "../BookSummary/BookSummary";
+import flatMap from "lodash.flatmap";
+import DataLoader from "dataloader";
 
 export async function loadBooks(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
@@ -22,7 +26,36 @@ export async function loadBooks(db, queryPacket, root, args, context, ast) {
 }
 
 export const Book = {
+  async similarBooks(obj, args, context, ast) {
+    if (context.__Book_similarBooksDataLoader == null) {
+      let db = await context.__mongodb;
+      context.__Book_similarBooksDataLoader = new DataLoader(async keyArrays => {
+        let $match = { asin: { $in: flatMap(keyArrays || [], ids => ids) } };
+        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, constants.useCurrentSelectionSet, { force: ["asin"] });
+        let { $project, $sort, $limit, $skip } = queryPacket;
+        
+        let aggregateItems = [
+          { $match }, 
+          $sort ? { $sort } : null,
+          { $project },
+        ].filter(item => item);
+        let results = await dbHelpers.runQuery(db, "amazonReference", aggregateItems);
 
+        let finalResult = keyArrays.map(keyArr => []);
+        let keySets = keyArrays.map(keyArr => new Set(keyArr.map(asin => "" + asin)));
+
+        for (let result of results){
+          for (let i = 0; i < keyArrays.length; i++){
+            if (keySets[i].has(result.asin + "")){
+              finalResult[i].push(result);
+            }
+          }
+        }
+        return finalResult;
+      });
+    }
+    return context.__Book_similarBooksDataLoader.load(obj.similarItems || []);
+  }
 
 }
 
@@ -30,7 +63,7 @@ export default {
   Query: {
     async getBook(root, args, context, ast) {
       await processHook(hooksObj, "Book", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Book");
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -42,7 +75,7 @@ export default {
     },
     async allBooks(root, args, context, ast) {
       await processHook(hooksObj, "Book", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Books");
       await processHook(hooksObj, "Book", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -66,7 +99,7 @@ export default {
   },
   Mutation: {
     async createBook(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let newObject = await newObjectFromArgs(args.Book, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       let requestMap = parseRequestedFields(ast, "Book");
@@ -82,7 +115,7 @@ export default {
       }
     },
     async updateBook(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery(args._id ? { _id: args._id } : {}, ast, BookMetadata, "Book");
       let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
@@ -103,7 +136,7 @@ export default {
       };
     },
     async updateBooks(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, BookMetadata, "Books");
       let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
@@ -121,7 +154,7 @@ export default {
       };
     },
     async updateBooksBulk(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       let { $match } = decontructGraphqlQuery(args.Match, ast, BookMetadata);
       let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
 
@@ -137,7 +170,7 @@ export default {
       if (!args._id) {
         throw "No _id sent";
       }
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       let $match = { _id: ObjectId(args._id) };
       
       if (await processHook(hooksObj, "Book", "beforeDelete", $match, root, args, context, ast) === false) {
