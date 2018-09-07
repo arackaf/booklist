@@ -11,10 +11,12 @@ import { topLevelSubjectsSortedSelector, RootApplicationType } from "application
 
 import BarChart from "./components/barChart";
 
+import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
+
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
     <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px" }}>
-      <div className="panel panel-default">
+      <div className="">
         <div className="panel-body" style={{ position: "relative" }}>
           {props.children}
         </div>
@@ -58,26 +60,41 @@ class HomeIfLoggedIn extends Component<any, any> {
     let { chartPackets } = this.state;
     return (
       <MainHomePane>
-        <Measure
-          client
-          onResize={({ client }) => {
-            if (client.width != this.state.chartWidth && client.width <= MAX_CHART_WIDTH) {
-              this.setState({ chartWidth: client.width });
+        <Tabs defaultTab="vis">
+          <Tab
+            name="vis"
+            caption={
+              <span>
+                <i className="far fa-chart-bar" /> Charts
+              </span>
             }
-          }}
-        >
-          {({ measureRef }) => (
-            <div ref={measureRef}>
-              Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
-              <hr />
-              {subjectsLoaded
-                ? chartPackets.map((packet, i) => (
-                    <BarChart key={i} {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
-                  ))
-                : null}
-            </div>
-          )}
-        </Measure>
+          >
+            <br />
+            <Measure
+              client
+              onResize={({ client }) => {
+                if (client.width != this.state.chartWidth && client.width <= MAX_CHART_WIDTH) {
+                  this.setState({ chartWidth: client.width });
+                }
+              }}
+            >
+              {({ measureRef }) => (
+                <div ref={measureRef}>
+                  Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
+                  <hr />
+                  {subjectsLoaded
+                    ? chartPackets.map((packet, i) => (
+                        <BarChart key={i} {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
+                      ))
+                    : null}
+                </div>
+              )}
+            </Measure>
+          </Tab>
+          <Tab name="search" caption="Search">
+            <h1>Hey</h1>
+          </Tab>
+        </Tabs>
       </MainHomePane>
     );
   }
