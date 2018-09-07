@@ -16,9 +16,9 @@ export const LabelDisplay = props => {
 };
 
 export const RemovableLabelDisplay = props => {
-  let item = props.item,
-    extraStyles = props.style || {},
-    extraClasses = props.className || "";
+  let item = props.item;
+  let extraStyles = props.style || {};
+  let extraClasses = props.className || "";
 
   return (
     <span

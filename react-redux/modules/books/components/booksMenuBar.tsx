@@ -33,6 +33,8 @@ interface IAddedMenuProps {
   beginEditFilters: any;
 }
 
+const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
+
 @connect(
   menuBarSelector,
   { ...bookSearchActionCreators, ...booksActionCreators }
@@ -200,26 +202,63 @@ export default class BooksMenuBar extends Component<
                 </div>
               ) : null}
 
-              {this.props.selectedSubjects.map(s => (
+              {this.props.search ? (
                 <RemovableLabelDisplay
                   style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-                  item={s}
-                  doRemove={() => this.props.removeFilterSubject(s._id)}
+                  item={{ name: `"${this.props.search}"` }}
+                  doRemove={() => this.props.removeFilters("search")}
                 />
+              ) : null}
+              {this.props.isRead == "1" || this.props.isRead == "0" ? (
+                <RemovableLabelDisplay
+                  style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
+                  item={{ backgroundColor: `${this.props.isRead == "1" ? "green" : "red"}` }}
+                  doRemove={() => this.props.removeFilters("isRead")}
+                >
+                  <span>
+                    {this.props.isRead == "1" ? "Is Read" : "Not Read"}
+                    &nbsp;
+                    {this.props.isRead == "1" ? <i className="far fa-check" /> : null}
+                  </span>
+                </RemovableLabelDisplay>
+              ) : null}
+              {this.props.publisher ? (
+                <RemovableLabelDisplay
+                  style={filterDisplayStyles}
+                  item={{ name: `publisher: "${this.props.publisher}"` }}
+                  doRemove={() => this.props.removeFilters("publisher")}
+                />
+              ) : null}
+              {this.props.author ? (
+                <RemovableLabelDisplay
+                  style={filterDisplayStyles}
+                  item={{ name: `author: "${this.props.author}"` }}
+                  doRemove={() => this.props.removeFilters("author")}
+                />
+              ) : null}
+              {this.props.pages || this.props.pages == "0" ? (
+                <RemovableLabelDisplay
+                  style={filterDisplayStyles}
+                  item={{ name: `pages: ${this.props.pagesOperator == "lt" ? "<" : ">"} ${this.props.pages}` }}
+                  doRemove={() => this.props.removeFilters("pages", "pagesOperator")}
+                />
+              ) : null}
+              {this.props.noSubjects ? (
+                <RemovableLabelDisplay
+                  style={filterDisplayStyles}
+                  item={{ name: `No subjects` }}
+                  doRemove={() => this.props.removeFilters("noSubjects")}
+                />
+              ) : null}
+
+              {this.props.selectedSubjects.map(s => (
+                <RemovableLabelDisplay style={filterDisplayStyles} item={s} doRemove={() => this.props.removeFilterSubject(s._id)} />
               ))}
               {this.props.selectedTags.map(t => (
-                <RemovableLabelDisplay
-                  style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-                  item={t}
-                  doRemove={() => this.props.removeFilterTag(t._id)}
-                />
+                <RemovableLabelDisplay style={filterDisplayStyles} item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
               ))}
               {activeFilterCount > 1 ? (
-                <RemovableLabelDisplay
-                  style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-                  item={removeAllFiltersLabel}
-                  doRemove={this.props.clearAllFilters}
-                />
+                <RemovableLabelDisplay style={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={this.props.clearAllFilters} />
               ) : null}
             </div>
           </div>
