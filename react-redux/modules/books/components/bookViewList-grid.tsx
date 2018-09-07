@@ -195,7 +195,16 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, an
                           <td>{book.smallImage ? <img src={book.smallImage} /> : null}</td>
                           <td>
                             <span style={{ fontWeight: "bold" }}>{book.title}</span>
-                            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+                            <br />
+                            {book.authors.length ? (
+                              <>
+                                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+                                <br />
+                              </>
+                            ) : null}
+                            <a target="_new" style={{ color: "black" }} href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
+                              <i className="fab fa-amazon" />
+                            </a>
                           </td>
                         </tr>
                       ))}

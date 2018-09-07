@@ -36,6 +36,7 @@ interface IEditorialReview {
 
 interface IBookSummary {
   title: string;
+  asin: string;
   authors: string[];
   smallImage: string;
 }

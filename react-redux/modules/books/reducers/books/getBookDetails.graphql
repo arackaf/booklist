@@ -9,6 +9,7 @@ query GetBookDetails($_id: String, $isBookDetails: String, $publicUserId: String
         title
         authors
         smallImage
+        asin
       }
     }
   }
