@@ -23,19 +23,18 @@ interface ILocalProps {
 )
 class BookRowRaw extends Component<ILocalProps & actionsType, any> {
   render() {
-    let { book, index } = this.props,
-      style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
+    let { book, index, viewingPublic } = this.props;
+    let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
     return (
       <tr key={book._id} style={style}>
-        <td>
-          <input
-            type="checkbox"
-            onClick={() => this.props.toggleSelectBook(book._id)}
-            checked={!!this.props.selectedBooks[book._id]}
-            disabled={this.props.viewingPublic}
-          />
-        </td>
+        {!viewingPublic ? (
+          <td>
+            <a style={{ fontSize: "12pt" }} onClick={() => this.props.toggleSelectBook(book._id)}>
+              <i className={"fal " + (!!this.props.selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
+            </a>
+          </td>
+        ) : null}
         <td>
           <div style={{ minWidth: "75px", minHeight: "75px" }}>
             <img src={book.smallImage} />
@@ -67,12 +66,12 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
             </a>
           ) : null}
-          {!this.props.viewingPublic ? (
+          {!viewingPublic ? (
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBook(book)}>
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
             </a>
           ) : null}
-          {!this.props.viewingPublic ? (
+          {!viewingPublic ? (
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.setPendingDeleteBook(book)}>
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
             </a>
@@ -100,7 +99,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
             </div>
           ))}
           <div style={{ marginTop: 5, minHeight: 40 }}>
-            {!this.props.viewingPublic ? (
+            {!viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksSubjects(book)}>
                 <i className="fal fa-pencil-alt show-on-hover-parent-td" />
               </a>
@@ -114,7 +113,7 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
             </div>
           ))}
           <div style={{ marginTop: 5, minHeight: 40 }}>
-            {!this.props.viewingPublic ? (
+            {!viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => this.props.editBooksTags(book)}>
                 <i className="fal fa-pencil-alt show-on-hover-parent-td" />
               </a>
@@ -122,8 +121,8 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
           </div>
         </td>
         <td>
-          <div style={{ marginTop: !this.props.viewingPublic ? 5 : 0 }}>
-            {!this.props.viewingPublic ? (
+          <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
+            {!viewingPublic ? (
               !!book.isRead ? (
                 <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => this.props.setUnRead(book._id)} preset="success-xs">
                   Read <i className="fa fa-fw fa-check" />
@@ -157,13 +156,13 @@ let BookRow: any = BookRowRaw;
   null,
   null
 )
-class BookRowDetails extends Component<{ book: IBookDisplay; index: number }, any> {
+class BookRowDetails extends Component<{ book: IBookDisplay; index: number; viewingPublic: boolean }, any> {
   render() {
-    let { book, index } = this.props;
+    let { book, index, viewingPublic } = this.props;
     let backgroundColor = index % 2 ? "white" : "#f9f9f9";
     return (
       <tr key={"details" + book._id} style={{ backgroundColor }}>
-        <td colSpan={9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
+        <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
           <div className="row">
             <div className="col-xs-6">
               {!book.editorialReviews.length ? (
@@ -242,9 +241,8 @@ export default class BookViewListGrid extends Component<
     let potentialSortIcon = <i className={"fa fa-angle-" + (this.props.sortDirection == "asc" ? "up" : "down")} />;
     let sortIconIf = column => (column == this.props.currentSort ? potentialSortIcon : null);
 
-    let { editBooksSubjects, editBooksTags } = this.props;
+    let { editBooksSubjects, editBooksTags, viewingPublic } = this.props;
     let stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
-
     return (
       <div style={{ minHeight: 400 }}>
         {this.props.booksList.length ? (
@@ -252,14 +250,13 @@ export default class BookViewListGrid extends Component<
             <table style={{ position: "relative" }} className="table no-padding-top">
               <thead>
                 <tr>
-                  <th style={{ ...stickyHeaderStyle }}>
-                    <input
-                      type="checkbox"
-                      checked={this.props.allAreChecked}
-                      onClick={this.props.toggleCheckAll}
-                      disabled={this.props.viewingPublic}
-                    />
-                  </th>
+                  {!viewingPublic ? (
+                    <th style={{ ...stickyHeaderStyle }}>
+                      <a style={{ fontSize: "12pt" }} onClick={this.props.toggleCheckAll}>
+                        <i className={"fal " + (!!this.props.allAreChecked ? "fa-check-square" : "fa-square")} />
+                      </a>
+                    </th>
+                  ) : null}
                   <th style={{ ...stickyHeaderStyle }} />
                   <th style={{ ...stickyHeaderStyle }}>
                     <a className="no-underline" onClick={() => this.setSort("title")}>
@@ -290,10 +287,10 @@ export default class BookViewListGrid extends Component<
                     book={book}
                     editBook={this.props.editBook}
                     index={index}
-                    viewingPublic={this.props.viewingPublic}
+                    viewingPublic={viewingPublic}
                     selectedBooks={this.props.selectedBooks}
                   />,
-                  book.expanded ? <BookRowDetails book={book} index={index} /> : null
+                  book.expanded ? <BookRowDetails book={book} index={index} viewingPublic={viewingPublic} /> : null
                 ])}
               </tbody>
             </table>
