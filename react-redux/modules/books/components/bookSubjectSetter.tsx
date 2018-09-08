@@ -38,9 +38,7 @@ export default class BookSubjectSetter extends Component<
   state = {
     currentTab: "subjects",
     addingSubjects: [],
-    removingSubjects: [],
-    addingSubjectSearch: "",
-    removingSubjectSearch: ""
+    removingSubjects: []
   };
 
   setBooksSubjects = () => {
@@ -52,16 +50,14 @@ export default class BookSubjectSetter extends Component<
   };
   addingSubjectSet = (adding, { _id }) => {
     this.setState({
-      addingSubjects: adding ? this.state.addingSubjects.concat(_id) : this.state.addingSubjects.filter(x => x != _id),
-      addingSubjectSearch: adding ? "" : this.state.addingSubjectSearch
+      addingSubjects: adding ? this.state.addingSubjects.concat(_id) : this.state.addingSubjects.filter(x => x != _id)
     });
   };
   subjectSelectedToAdd = this.addingSubjectSet.bind(null, true);
 
   removingSubjectSet = (adding, { _id }) => {
     this.setState({
-      removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id),
-      removingSubjectSearch: adding ? "" : this.state.removingSubjectSearch
+      removingSubjects: adding ? this.state.removingSubjects.concat(_id) : this.state.removingSubjects.filter(x => x != _id)
     });
   };
   subjectSelectedToRemove = this.removingSubjectSet.bind(null, true);
@@ -71,8 +67,6 @@ export default class BookSubjectSetter extends Component<
       removingSubjects: []
     });
   };
-  setAddingSearchVal = val => this.setState({ addingSubjectSearch: val });
-  setRemovingSearchVal = val => this.setState({ removingSubjectSearch: val + "" });
 
   render() {
     let dontAddSubject = this.addingSubjectSet.bind(null, false),
@@ -102,8 +96,6 @@ export default class BookSubjectSetter extends Component<
                 <div className="col-xs-3">
                   <SelectAvailable
                     placeholder="Adding"
-                    search={this.state.addingSubjectSearch}
-                    onSearchChange={this.setAddingSearchVal}
                     items={this.props.subjectsUnwound}
                     currentlySelected={this.state.addingSubjects}
                     onSelect={this.subjectSelectedToAdd}
@@ -134,8 +126,6 @@ export default class BookSubjectSetter extends Component<
                 <div className="col-xs-3">
                   <SelectAvailable
                     placeholder="Removing"
-                    search={this.state.removingSubjectSearch}
-                    onSearchChange={this.setRemovingSearchVal}
                     items={this.props.subjectsUnwound}
                     currentlySelected={this.state.removingSubjects}
                     onSelect={this.subjectSelectedToRemove}
