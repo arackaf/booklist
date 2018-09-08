@@ -1,6 +1,0 @@
-export const LOAD_COLORS = "LOAD_COLORS_TAGS";
-export const LOAD_TAGS = "LOAD_TAGS";
-export const LOAD_TAGS_RESULTS = "LOAD_TAGS_RESULTS";
-
-export const UPDATE_TAG_RESULTS = "UPDATE_TAG_RESULTS";
-export const TAG_DELETED = "TAG_DELETED";

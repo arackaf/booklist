@@ -6,18 +6,13 @@ import { createSelector } from "reselect";
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import { selectBookList } from "modules/books/reducers/books/reducer";
 
-const selector = createSelector(
-  (state: BooksModuleType) => state.app,
-  (state: BooksModuleType) => state.booksModule.tags,
-  selectBookList,
-  (app, tags, booksList) => {
-    return {
-      subjectsLoaded: app.subjectsLoaded,
-      tagsLoaded: tags.loaded,
-      booksLoading: booksList.booksLoading
-    };
-  }
-);
+const selector = createSelector((state: BooksModuleType) => state.app, selectBookList, (app, booksList) => {
+  return {
+    subjectsLoaded: app.subjectsLoaded,
+    tagsLoaded: app.tagsLoaded,
+    booksLoading: booksList.booksLoading
+  };
+});
 
 @connect(selector)
 export default class BooksLoading extends Component<Partial<ReturnType<typeof selector>>, any> {

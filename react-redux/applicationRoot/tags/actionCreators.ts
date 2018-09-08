@@ -1,4 +1,4 @@
-import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, LOAD_COLORS, TAG_DELETED } from "./actionNames";
+import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, LOAD_COLORS, TAG_DELETED } from "../rootReducerActionNames";
 
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 

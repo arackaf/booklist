@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { LOAD_BOOKS } from "./actionNames";
+import { LOAD_RECOMMENDATIONS } from "./actionNames";
 
 export interface IBookRaw {
   _id: string;
@@ -21,7 +21,7 @@ export type RecommendReducerType = typeof initialBooksState;
 
 export function recommendReducer(state = initialBooksState, action): RecommendReducerType {
   switch (action.type) {
-    case LOAD_BOOKS:
+    case LOAD_RECOMMENDATIONS:
       return { ...state, searching: true };
   }
   return state;
