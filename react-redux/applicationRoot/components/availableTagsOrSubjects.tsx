@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 
-import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
+import GenericLabelSelect from "./genericLabelSelect";
 
 interface Props {
   placeholder: string;

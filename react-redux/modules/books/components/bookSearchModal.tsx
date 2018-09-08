@@ -8,7 +8,7 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
-import SelectAvailable from "./availableTagsOrSubjects";
+import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
 import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
 import { createSelector } from "reselect";

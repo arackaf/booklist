@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Modal from "simple-react-bootstrap/lib/modal";
-import SelectAvailable from "./availableTagsOrSubjects";
+import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
 import { filterSubjects } from "modules/books/reducers/subjects/reducer";
 import { selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
@@ -169,7 +169,9 @@ export default class BookSubjectSetter extends Component<
             <div style={{ minHeight: "150px" }} className={"tab-pane " + (this.state.currentTab == "books" ? "active in" : "")}>
               <br />
               <ul className="list-unstyled" style={{ marginLeft: "10px" }}>
-                {this.props.modifyingBooks.map(book => <li key={book._id}>{book.title}</li>)}
+                {this.props.modifyingBooks.map(book => (
+                  <li key={book._id}>{book.title}</li>
+                ))}
               </ul>
               <br />
             </div>
