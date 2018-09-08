@@ -33,23 +33,14 @@ const selector = createSelector(selectBookSearchState, selectEntireTagsState, se
   { ...bookSearchActionCreators }
 )
 export default class BookSearchModal extends Component<ReturnType<typeof selector> & LocalProps & typeof bookSearchActionCreators, any> {
-  constructor(props) {
-    super(props);
+  state = {
+    subjects: this.props.selectedSubjects.map(s => s._id),
+    tags: this.props.selectedTags.map(t => t._id),
+    noSubjectsFilter: !!this.props.noSubjects
+  };
 
-    this.state = {
-      searchTagsValue: "",
-      searchSubjectsValue: "",
-      subjects: this.props.selectedSubjects.map(s => s._id),
-      tags: this.props.selectedTags.map(t => t._id),
-      noSubjectsFilter: !!props.noSubjects
-    };
-  }
-
-  setTagSearchVal = val => this.setState({ searchTagsValue: val });
-  setSubjectSearchVal = val => this.setState({ searchSubjectsValue: val });
-
-  selectSubject = subject => this.setState(state => ({ searchSubjectsValue: "", subjects: state.subjects.concat(subject._id) }));
-  selectTag = tag => this.setState(state => ({ searchTagsValue: "", tags: state.tags.concat(tag._id) }));
+  selectSubject = subject => this.setState(state => ({ subjects: state.subjects.concat(subject._id) }));
+  selectTag = tag => this.setState(state => ({ tags: state.tags.concat(tag._id) }));
   removeSubject = subject => this.setState(state => ({ subjects: state.subjects.filter(_id => _id != subject._id) }));
   removeTag = tag => this.setState(state => ({ tags: state.tags.filter(_id => _id != tag._id) }));
 
@@ -90,7 +81,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
   sortSelectEl: any;
 
   render() {
-    let { selectedSubjects, selectedTags, isOpen, onHide } = this.props;
+    let { isOpen, onHide } = this.props;
     return (
       <Modal className="fade" show={isOpen} onHide={onHide}>
         <Modal.Header>
@@ -194,8 +185,6 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Tags"
-                search={this.state.searchTagsValue}
-                onSearchChange={this.setTagSearchVal}
                 items={this.props.allTagsSorted}
                 currentlySelected={this.state.tags}
                 onSelect={this.selectTag}
@@ -219,8 +208,6 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
                 <div className="col-xs-3">
                   <SelectAvailable
                     placeholder="Subjects"
-                    search={this.state.searchSubjectsValue}
-                    onSearchChange={this.setSubjectSearchVal}
                     items={this.props.subjectsUnwound}
                     currentlySelected={this.state.subjects}
                     onSelect={this.selectSubject}

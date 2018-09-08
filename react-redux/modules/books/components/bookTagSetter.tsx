@@ -35,9 +35,7 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
   state = {
     currentTab: "tags",
     addingTags: [],
-    removingTags: [],
-    addingTagSearch: "",
-    removingTagSearch: ""
+    removingTags: []
   };
 
   setBooksTags = () => {
@@ -49,15 +47,13 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
   };
   addingTagSet = (adding, { _id }) => {
     this.setState({
-      addingTags: adding ? this.state.addingTags.concat(_id) : this.state.addingTags.filter(x => x != _id),
-      addingTagSearch: adding ? "" : this.state.addingTagSearch
+      addingTags: adding ? this.state.addingTags.concat(_id) : this.state.addingTags.filter(x => x != _id)
     });
   };
   tagSelectedToAdd = this.addingTagSet.bind(null, true);
   removingTagSet = (adding, { _id }) => {
     this.setState({
-      removingTags: adding ? this.state.removingTags.concat(_id) : this.state.removingTags.filter(x => x != _id),
-      removingTagSearch: adding ? "" : this.state.removingTagSearch
+      removingTags: adding ? this.state.removingTags.concat(_id) : this.state.removingTags.filter(x => x != _id)
     });
   };
   tagSelectedToRemove = this.removingTagSet.bind(null, true);
@@ -67,8 +63,6 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
       removingTags: []
     });
   };
-  setAddingSearchVal = val => this.setState({ addingTagSearch: val });
-  setRemovingSearchVal = val => this.setState({ removingTagSearch: val + "" });
 
   render() {
     let dontAddTag = this.addingTagSet.bind(null, false),
@@ -98,8 +92,6 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
                 <div className="col-xs-3">
                   <SelectAvailable
                     placeholder="Adding"
-                    search={this.state.addingTagSearch}
-                    onSearchChange={this.setAddingSearchVal}
                     items={this.props.allTagsSorted}
                     currentlySelected={this.state.addingTags}
                     onSelect={this.tagSelectedToAdd}
@@ -130,8 +122,6 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
                 <div className="col-xs-3">
                   <SelectAvailable
                     placeholder="Removing"
-                    search={this.state.removingTagSearch}
-                    onSearchChange={this.setRemovingSearchVal}
                     items={this.props.allTagsSorted}
                     currentlySelected={this.state.removingTags}
                     onSelect={this.tagSelectedToRemove}
