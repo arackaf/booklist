@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { selectBookSearchState, TagOrSubject, LookupHashType } from "modules/books/reducers/bookSearch/reducer";
+import { selectBookSearchState } from "modules/books/reducers/bookSearch/reducer";
 import Modal from "simple-react-bootstrap/lib/modal";
+
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
+import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
+import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
-
-import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import SelectAvailable from "./availableTagsOrSubjects";
 
 import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
-import { filterTags, selectEntireTagsState } from "modules/books/reducers/tags/reducer";
 import { createSelector } from "reselect";
 
 type LocalProps = {

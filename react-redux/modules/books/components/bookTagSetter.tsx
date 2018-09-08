@@ -5,8 +5,7 @@ import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstra
 import Modal from "simple-react-bootstrap/lib/modal";
 import SelectAvailable from "./availableTagsOrSubjects";
 
-import { filterTags } from "modules/books/reducers/tags/reducer";
-import { selectEntireTagsState } from "modules/books/reducers/tags/reducer";
+import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
 import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";

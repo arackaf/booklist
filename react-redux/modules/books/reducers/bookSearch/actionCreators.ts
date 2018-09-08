@@ -3,7 +3,7 @@ import { SET_GRID_VIEW, SET_BASIC_LIST_VIEW, HASH_CHANGED } from "./actionNames"
 
 import { loadBooks } from "../books/actionCreators";
 import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
-import { loadTags } from "../tags/actionCreators";
+import { loadTags } from "applicationRoot/tags/actionCreators";
 
 import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { selectCurrentSearch } from "./reducer";

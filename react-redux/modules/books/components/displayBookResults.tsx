@@ -20,18 +20,13 @@ const BasicListView = Loadable({
 
 type PassedIn = { editBook: any; editTagsForBook: any; editSubjectsForBook: any };
 
-const selector = createSelector(
-  (state: BooksModuleType) => state.app,
-  (state: BooksModuleType) => state.booksModule.tags,
-  selectBookSearchUiView,
-  (app, tags, ui) => {
-    return {
-      subjectsLoaded: app.subjectsLoaded,
-      tagsLoaded: tags.loaded,
-      ...ui
-    };
-  }
-);
+const selector = createSelector((state: BooksModuleType) => state.app, selectBookSearchUiView, (app, ui) => {
+  return {
+    subjectsLoaded: app.subjectsLoaded,
+    tagsLoaded: app.tagsLoaded,
+    ...ui
+  };
+});
 
 @connect(selector)
 export default class DisplayBookResults extends Component<PassedIn & ReturnType<typeof selector>, null> {
