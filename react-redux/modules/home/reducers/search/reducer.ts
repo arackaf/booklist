@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import { SET_SEARCH_VALUES, SEARCH_BOOKS, SEARCH_BOOKS_COMPLETE } from "./actionNames";
+import { HomeType } from "../reducer";
 
 interface IBookRaw {
   _id: string;
@@ -13,16 +14,18 @@ interface IBookRaw {
 }
 
 const initialSearchState = {
-  search: "",
+  title: "",
+  isRead: "",
   subjects: [] as string[],
+  searchChildSubjects: false,
   tags: [] as string[],
   searchResults: [] as IBookRaw[],
   searching: false,
   resultsCount: 0
 };
-export type RecommendReducerType = typeof initialSearchState;
+export type SearchReducerType = typeof initialSearchState;
 
-export function searchReducer(state = initialSearchState, action): RecommendReducerType {
+export function searchReducer(state = initialSearchState, action): SearchReducerType {
   switch (action.type) {
     case SET_SEARCH_VALUES:
       return { ...state, ...action.values };
@@ -33,3 +36,14 @@ export function searchReducer(state = initialSearchState, action): RecommendRedu
   }
   return state;
 }
+
+export const selectSearchVals = createSelector(
+  (state: HomeType) => state.home.search,
+  search => ({
+    title: search.title,
+    isRead: search.isRead,
+    selectedSubjects: search.subjects,
+    selectedTags: search.tags,
+    searchChildSubjects: search.searchChildSubjects
+  })
+);

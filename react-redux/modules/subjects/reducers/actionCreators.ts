@@ -17,8 +17,7 @@ import { SAVE_SUBJECT_RESULTS } from "applicationRoot/rootReducerActionNames";
 
 import { unwindSubjects, computeSubjectParentId, getAllDescendantsOfSubject } from "applicationRoot/rootReducer";
 
-import { subjectEditingActions } from "applicationRoot/rootReducerActionCreators";
-const { saveSubject: saveSubjectRoot, deleteSubject: deleteSubjectRoot } = subjectEditingActions;
+import { createOrUpdateSubject as saveSubjectRoot, deleteSubject as deleteSubjectRoot } from "applicationRoot/rootReducerActionCreators";
 
 const toIdHash = objs => objs.reduce((hash, obj) => ((hash[obj._id] = true), hash), {});
 
@@ -79,7 +78,7 @@ export const saveChanges = (subject, original) => (dispatch, getState) => {
 
   dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
-  Promise.resolve(saveSubjectRoot(request, dispatch)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+  Promise.resolve(dispatch(saveSubjectRoot(request))).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 };
 
 export const setNewParent = (subject, newParent) => (dispatch, getState) => {
@@ -105,7 +104,7 @@ export const setNewParent = (subject, newParent) => (dispatch, getState) => {
   //disable dragging and editing on the entire hierarchy until the save is done
   dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
-  Promise.resolve(saveSubjectRoot(request, dispatch)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+  Promise.resolve(dispatch(saveSubjectRoot(request))).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 };
 
 export const deleteSubject = _id => (dispatch, getState) => {
@@ -114,7 +113,7 @@ export const deleteSubject = _id => (dispatch, getState) => {
 
   dispatch({ type: DELETING_SUBJECTS, subjects: toIdHash(subjectsDeleting) });
 
-  Promise.resolve(deleteSubjectRoot(_id, dispatch)).then(resp =>
+  Promise.resolve(dispatch(deleteSubjectRoot(_id))).then(resp =>
     dispatch({ type: DONE_DELETING_SUBJECTS, subjects: toIdHash(resp.subjectsDeleted) })
   );
 };

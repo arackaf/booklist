@@ -3,12 +3,11 @@ import { connect } from "react-redux";
 import Modal from "simple-react-bootstrap/lib/modal";
 import { createSelector } from "reselect";
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from "applicationRoot/components/bootstrapButton";
-import * as actionCreators from "../reducers/subjects/actionCreators";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { selectEntireSubjectsState, filterSubjects } from "../reducers/subjects/reducer";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
-import { computeSubjectParentId, getEligibleParents } from "applicationRoot/rootReducer";
+import { computeSubjectParentId, getEligibleParents, filterSubjects, selectEntireSubjectsState } from "applicationRoot/rootReducer";
+import { createOrUpdateSubject, deleteSubject } from "applicationRoot/rootReducerActionCreators";
 
 const SubjectEditDeleteInfo = props => {
   let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${
@@ -40,6 +39,8 @@ interface ILocalProps {
   editModalOpen: boolean;
   stopEditing: any;
 }
+
+const actionCreators = { createOrUpdateSubject, deleteSubject };
 
 @connect(
   selectEntireSubjectsState,
