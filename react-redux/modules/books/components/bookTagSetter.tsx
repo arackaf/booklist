@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Modal from "simple-react-bootstrap/lib/modal";
-import SelectAvailable from "./availableTagsOrSubjects";
+import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
 import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
