@@ -10,7 +10,7 @@ import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
-import { filterSubjects, selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
+import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReducer";
 import { createSelector } from "reselect";
 
 type LocalProps = {

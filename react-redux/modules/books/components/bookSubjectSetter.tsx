@@ -5,12 +5,10 @@ import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstra
 import Modal from "simple-react-bootstrap/lib/modal";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
-import { filterSubjects } from "modules/books/reducers/subjects/reducer";
-import { selectStackedSubjects } from "modules/books/reducers/subjects/reducer";
-
 import { mutation } from "micro-graphql-react";
 
 import { SET_BOOKS_SUBJECTS } from "../reducers/books/actionNames";
+import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReducer";
 
 interface ILocalProps {
   modifyingBooks: any[];
