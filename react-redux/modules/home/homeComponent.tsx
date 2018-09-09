@@ -4,7 +4,6 @@ import Measure from "react-measure";
 import "d3-transition";
 
 import { isLoggedIn } from "reactStartup";
-import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
 import { topLevelSubjectsSortedSelector, RootApplicationType } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
@@ -24,21 +23,16 @@ const MainHomePane = props => (
 );
 
 const MAX_CHART_WIDTH = 1100;
-@connect(
-  (state: RootApplicationType) => ({
-    subjects: topLevelSubjectsSortedSelector(state),
-    subjectHash: state.app.subjectHash,
-    subjectsLoaded: state.app.subjectsLoaded
-  }),
-  { loadSubjects }
-)
+@connect((state: RootApplicationType) => ({
+  subjects: topLevelSubjectsSortedSelector(state),
+  subjectHash: state.app.subjectHash,
+  subjectsLoaded: state.app.subjectsLoaded
+}))
 class HomeIfLoggedIn extends Component<any, any> {
   state = { chartPackets: [], chartWidth: MAX_CHART_WIDTH };
   componentDidMount() {
     if (this.props.subjectsLoaded) {
       this.getTopChart();
-    } else {
-      this.props.loadSubjects();
     }
   }
   componentDidUpdate(prevProps, prevState) {

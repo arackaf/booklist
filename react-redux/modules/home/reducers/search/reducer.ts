@@ -38,7 +38,7 @@ export function searchReducer(state = initialSearchState, action): SearchReducer
 }
 
 export const selectSearchVals = createSelector(
-  (state: HomeType) => state.home.search,
+  (state: HomeType) => state.homeModule.search,
   search => ({
     title: search.title,
     isRead: search.isRead,
