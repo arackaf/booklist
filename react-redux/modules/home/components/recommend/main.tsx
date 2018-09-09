@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../reducers/search/actionCreators";
-import BookSearchModal from "../../../books/components/bookSearchModal";
+import SearchModal from "./searchModal";
 
 @connect(
   null,
@@ -9,13 +9,18 @@ import BookSearchModal from "../../../books/components/bookSearchModal";
 )
 export default class RecommendationList extends Component<Partial<typeof actions>, any> {
   state = { searchModalOpen: false };
+  closeModal = () => this.setState({ searchModalOpen: false });
+  openModal = () => this.setState({ searchModalOpen: true });
   render() {
     return (
-      <div className="row">
-        <div className="col-xs-6">
-          <button>Search your books</button>
+      <div>
+        <div className="row">
+          <div className="col-xs-6">
+            <button onClick={this.openModal}>Search your books</button>
+          </div>
+          <div className="col-xs-6">B</div>
         </div>
-        <div className="col-xs-6">B</div>
+        <SearchModal isOpen={this.state.searchModalOpen} onHide={this.closeModal} />
       </div>
     );
   }

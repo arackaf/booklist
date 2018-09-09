@@ -6,6 +6,7 @@ import BootstrapButton from "applicationRoot/components/bootstrapButton";
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 import { createSelector } from "reselect";
 import { selectEntireTagsState, selectStackedSubjects, filterTags, filterSubjects } from "applicationRoot/rootReducer";
+import { connect } from "react-redux";
 
 const selector = createSelector(selectSearchVals, selectEntireTagsState, selectStackedSubjects, (searchState, tagsState, subjectsState) => {
   return {
@@ -17,7 +18,8 @@ const selector = createSelector(selectSearchVals, selectEntireTagsState, selectS
   };
 });
 
-export default class SearchModal extends Component<{ isOpen: boolean; onHide: any } & ReturnType<typeof selector>, any> {
+@connect(selector)
+export default class SearchModal extends Component<Partial<{ isOpen: boolean; onHide: any } & ReturnType<typeof selector>>, any> {
   state = {
     subjects: this.props.selectedSubjects,
     tags: this.props.selectedTags

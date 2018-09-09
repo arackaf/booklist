@@ -5,7 +5,7 @@ import { AppType } from "applicationRoot/rootReducer";
 
 export type HomeType = {
   app: AppType;
-  home: {
+  homeModule: {
     search: SearchReducerType;
   };
 };
