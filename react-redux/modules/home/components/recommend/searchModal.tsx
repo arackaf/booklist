@@ -1,26 +1,17 @@
 import React, { Component } from "react";
-import { selectSearchVals } from "../../reducers/search/reducer";
-import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
-import BootstrapButton from "applicationRoot/components/bootstrapButton";
-import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
-import { createSelector } from "reselect";
-import { selectStackedSubjects, filterSubjects } from "applicationRoot/rootReducer";
 import { connect } from "react-redux";
-import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
 
-import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
 import Modal from "applicationRoot/components/modal";
+import BootstrapButton from "applicationRoot/components/bootstrapButton";
+import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
+import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
+import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
+import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
-const selector = createSelector(selectSearchVals, selectStackedSubjects, (searchState, subjectsState) => {
-  return {
-    ...searchState,
-    subjectHash: subjectsState.subjectHash,
-    subjectsUnwound: subjectsState.subjectsUnwound
-  };
-});
+import { selectSearchVals } from "../../reducers/search/reducer";
 
-@connect(selector)
-export default class SearchModal extends Component<Partial<{ isOpen: boolean; onHide: any } & ReturnType<typeof selector>>, any> {
+@connect(selectSearchVals)
+export default class SearchModal extends Component<Partial<{ isOpen: boolean; onHide: any } & ReturnType<typeof selectSearchVals>>, any> {
   state = {
     subjects: [],
     tags: []
@@ -99,19 +90,11 @@ export default class SearchModal extends Component<Partial<{ isOpen: boolean; on
         <>
           <div className="row" style={{ position: "relative" }}>
             <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Subjects"
-                items={this.props.subjectsUnwound}
-                currentlySelected={this.state.subjects}
-                onSelect={this.selectSubject}
-                filter={filterSubjects}
-              />
+              <SelectAvailableSubjects currentlySelected={this.state.subjects} onSelect={this.selectSubject} />
             </div>
             <div className="col-xs-9">
               <div>
-                {this.state.subjects.map(_id => this.props.subjectHash[_id]).map(s => (
-                  <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />
-                ))}
+                <DisplaySelectedSubjects currentlySelected={this.state.subjects} onRemove={this.removeSubject} />
               </div>
             </div>
           </div>
