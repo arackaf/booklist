@@ -47,7 +47,7 @@ export default class SearchModal extends Component<Partial<{ isOpen: boolean; on
         leave={{ opacity: 0, y: 10 }}
       >
         {isOpen
-          ? styles => (
+          ? (styles: any) => (
               <DialogOverlay onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
                 <DialogContent
                   style={{

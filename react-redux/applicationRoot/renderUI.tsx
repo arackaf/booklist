@@ -1,6 +1,5 @@
 import React from "react";
 import { Provider, connect } from "react-redux";
-import Header from "./components/header";
 import { store } from "./store";
 import { render } from "react-dom";
 import { requestDesktop, requestMobile } from "./rootReducerActionCreators";
