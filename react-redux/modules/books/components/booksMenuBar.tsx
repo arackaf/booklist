@@ -165,10 +165,18 @@ export default class BooksMenuBar extends Component<
                         </button>
                       </>
                     ) : null}
-                    <button onClick={this.props.setViewDesktop} className={"btn btn-default " + (this.props.isGridView ? "active" : "")}>
+                    <button
+                      style={{ position: "static" }}
+                      onClick={this.props.setViewDesktop}
+                      className={"btn btn-default " + (this.props.isGridView ? "active" : "")}
+                    >
                       <i className="fal fa-table" />
                     </button>
-                    <button onClick={this.props.setViewBasicList} className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}>
+                    <button
+                      style={{ position: "static" }}
+                      onClick={this.props.setViewBasicList}
+                      className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}
+                    >
                       <i className="fal fa-list" />
                     </button>
                   </>
