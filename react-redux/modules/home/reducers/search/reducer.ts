@@ -1,17 +1,6 @@
 import { createSelector } from "reselect";
-import { SET_SEARCH_VALUES, SEARCH_BOOKS, SEARCH_BOOKS_COMPLETE } from "./actionNames";
-import { HomeType } from "../reducer";
-
-export interface ISearchBookRaw {
-  _id: string;
-  isRead: boolean;
-  isbn: string;
-  smallImage: string;
-  authors: string[];
-  subjects: string[];
-  tags: string[];
-  title: string;
-}
+import { SET_SEARCH_VALUES, SEARCH_BOOKS, SEARCH_BOOKS_COMPLETE, SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR } from "./actionNames";
+import { HomeType, ISearchBookRaw } from "../reducer";
 
 const initialSearchState = {
   page: 1,
@@ -35,6 +24,8 @@ export function searchReducer(state = initialSearchState, action): SearchReducer
       return { ...state, searching: true };
     case SEARCH_BOOKS_COMPLETE:
       return { ...state, searching: false, searchResults: action.results, resultsCount: action.count };
+    case SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR:
+      return { ...state, searchResults: state.searchResults.filter(b => b !== action.book) };
   }
   return state;
 }
