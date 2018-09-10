@@ -9,15 +9,24 @@ import SelectAvailableSubjects from "applicationRoot/components/selectAvailableS
 import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
 import { selectSearchVals } from "../../reducers/search/reducer";
+import { booksSearch } from "../../reducers/search/actionCreators";
 
-@connect(selectSearchVals)
-export default class SearchModal extends Component<Partial<{ isOpen: boolean; onHide: any } & ReturnType<typeof selectSearchVals>>, any> {
+interface LocalProps {
+  isOpen: boolean;
+  onHide: any;
+}
+
+@connect(
+  selectSearchVals,
+  { booksSearch }
+)
+export default class SearchModal extends Component<Partial<LocalProps & ReturnType<typeof selectSearchVals> & { booksSearch }>, any> {
   state = { subjects: [], tags: [] };
   componentDidUpdate(prevProps) {
     if (this.props.isOpen && !prevProps.isOpen) {
       this.setState({
-        subjects: this.props.selectedSubjects,
-        tags: this.props.selectedTags
+        subjects: this.props.subjects,
+        tags: this.props.tags
       });
     }
   }
@@ -31,7 +40,15 @@ export default class SearchModal extends Component<Partial<{ isOpen: boolean; on
   isReadE: any;
   isRead0: any;
   isRead1: any;
-  applyFilters = () => {};
+  applyFilters = () => {
+    this.props.booksSearch({
+      title: this.searchEl.value,
+      isRead: this.isReadE.checked ? "" : this.isRead0.checked ? 0 : 1,
+      subjects: this.state.subjects,
+      tags: this.state.tags,
+      searchChildSubjects: this.childSubEl.checked
+    });
+  };
   render() {
     let { isOpen, onHide } = this.props;
     return (

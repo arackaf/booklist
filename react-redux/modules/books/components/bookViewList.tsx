@@ -18,7 +18,7 @@ import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
-import UpdateBookMutation from "./updateBook.graphql";
+import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 
 const ManualBookEntry = Loadable({
   loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
