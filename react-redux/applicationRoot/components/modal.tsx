@@ -18,7 +18,7 @@ export class StandardModalHeader extends Component<{ onHide: any; caption: any }
   }
 }
 
-export default class Modal extends Component<{ isOpen: boolean; onHide: any; headerCaption?: any }, any> {
+export default class Modal extends Component<{ isOpen: boolean; onHide: any; headerCaption?: any; className?: string }, any> {
   render() {
     let { isOpen, onHide, headerCaption, children } = this.props;
     return (

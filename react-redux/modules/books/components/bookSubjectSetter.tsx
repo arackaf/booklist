@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import Modal from "simple-react-bootstrap/lib/modal";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
 import { mutation } from "micro-graphql-react";
 
 import { SET_BOOKS_SUBJECTS } from "../reducers/books/actionNames";
 import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReducer";
+import Modal from "applicationRoot/components/modal";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -67,112 +67,104 @@ export default class BookSubjectSetter extends Component<
   };
 
   render() {
-    let dontAddSubject = this.addingSubjectSet.bind(null, false),
-      dontRemoveSubject = this.removingSubjectSet.bind(null, false);
+    let dontAddSubject = this.addingSubjectSet.bind(null, false);
+    let dontRemoveSubject = this.removingSubjectSet.bind(null, false);
+    let modifyingBooks = this.props.modifyingBooks || [];
 
     return (
-      <Modal className="fade" show={!!this.props.modifyingBooks.length} onHide={this.props.onDone}>
-        <Modal.Header>
-          <button type="button" className="close" onClick={this.props.onDone} aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 className="modal-title">Add / Remove Subjects:</h4>
-        </Modal.Header>
-        <Modal.Body>
-          <ul className="nav nav-tabs">
-            <li className={this.state.currentTab == "subjects" ? "active" : ""}>
-              <a onClick={() => this.setState({ currentTab: "subjects" })}>Choose subjects</a>
-            </li>
-            <li className={this.state.currentTab == "books" ? "active" : ""}>
-              <a onClick={() => this.setState({ currentTab: "books" })}>For books</a>
-            </li>
-          </ul>
-          <div className="tab-content">
-            <div style={{ minHeight: "150px" }} className={"tab-pane " + (this.state.currentTab == "subjects" ? "active in" : "")}>
-              <br />
-              <div style={{ position: "relative" }} className="row">
-                <div className="col-xs-3">
-                  <SelectAvailable
-                    placeholder="Adding"
-                    items={this.props.subjectsUnwound}
-                    currentlySelected={this.state.addingSubjects}
-                    onSelect={this.subjectSelectedToAdd}
-                    filter={filterSubjects}
-                  />
-                </div>
-                <div className="col-xs-9">
-                  <div>
-                    {this.state.addingSubjects.map(_id => this.props.subjectHash[_id]).map((s: any, i) => (
-                      <span
-                        key={i}
-                        style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                        className="label label-default margin-left"
-                      >
-                        <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                          X
-                        </a>
-                        {s.name}
-                      </span>
-                    ))}
-                  </div>
+      <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={this.props.onDone} headerCaption="Add / Remove Subjects:">
+        <ul className="nav nav-tabs">
+          <li className={this.state.currentTab == "subjects" ? "active" : ""}>
+            <a onClick={() => this.setState({ currentTab: "subjects" })}>Choose subjects</a>
+          </li>
+          <li className={this.state.currentTab == "books" ? "active" : ""}>
+            <a onClick={() => this.setState({ currentTab: "books" })}>For books</a>
+          </li>
+        </ul>
+        <div className="tab-content">
+          <div style={{ minHeight: "150px" }} className={"tab-pane " + (this.state.currentTab == "subjects" ? "active in" : "")}>
+            <br />
+            <div style={{ position: "relative" }} className="row">
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Adding"
+                  items={this.props.subjectsUnwound}
+                  currentlySelected={this.state.addingSubjects}
+                  onSelect={this.subjectSelectedToAdd}
+                  filter={filterSubjects}
+                />
+              </div>
+              <div className="col-xs-9">
+                <div>
+                  {this.state.addingSubjects.map(_id => this.props.subjectHash[_id]).map((s: any, i) => (
+                    <span
+                      key={i}
+                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
+                      className="label label-default margin-left"
+                    >
+                      <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                        X
+                      </a>
+                      {s.name}
+                    </span>
+                  ))}
                 </div>
               </div>
+            </div>
 
-              <br />
+            <br />
 
-              <div style={{ position: "relative" }} className="row">
-                <div className="col-xs-3">
-                  <SelectAvailable
-                    placeholder="Removing"
-                    items={this.props.subjectsUnwound}
-                    currentlySelected={this.state.removingSubjects}
-                    onSelect={this.subjectSelectedToRemove}
-                    filter={filterSubjects}
-                  />
-                </div>
-                <div className="col-xs-9">
-                  <div>
-                    {this.state.removingSubjects.map(_id => this.props.subjectHash[_id]).map((s: any, i) => (
-                      <span
-                        key={i}
-                        style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                        className="label label-default margin-left"
-                      >
-                        <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                          X
-                        </a>
-                        {s.name}
-                      </span>
-                    ))}
-                  </div>
+            <div style={{ position: "relative" }} className="row">
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Removing"
+                  items={this.props.subjectsUnwound}
+                  currentlySelected={this.state.removingSubjects}
+                  onSelect={this.subjectSelectedToRemove}
+                  filter={filterSubjects}
+                />
+              </div>
+              <div className="col-xs-9">
+                <div>
+                  {this.state.removingSubjects.map(_id => this.props.subjectHash[_id]).map((s: any, i) => (
+                    <span
+                      key={i}
+                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
+                      className="label label-default margin-left"
+                    >
+                      <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                        X
+                      </a>
+                      {s.name}
+                    </span>
+                  ))}
                 </div>
               </div>
+            </div>
 
-              <br />
-              <BootstrapButton onClick={this.resetSubjects} className="pull-right" preset="default-xs">
-                Reset subjects
-              </BootstrapButton>
-              <br style={{ clear: "both" }} />
-            </div>
-            <div style={{ minHeight: "150px" }} className={"tab-pane " + (this.state.currentTab == "books" ? "active in" : "")}>
-              <br />
-              <ul className="list-unstyled" style={{ marginLeft: "10px" }}>
-                {this.props.modifyingBooks.map(book => (
-                  <li key={book._id}>{book.title}</li>
-                ))}
-              </ul>
-              <br />
-            </div>
+            <br />
+            <BootstrapButton onClick={this.resetSubjects} className="pull-right" preset="default-xs">
+              Reset subjects
+            </BootstrapButton>
+            <br style={{ clear: "both" }} />
           </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <AjaxButton preset="primary" running={this.props.running} runningText="Setting" onClick={this.setBooksSubjects}>
-            Set
-          </AjaxButton>
-          <BootstrapButton preset="" onClick={this.props.onDone}>
-            Cancel
-          </BootstrapButton>
-        </Modal.Footer>
+          <div style={{ minHeight: "150px" }} className={"tab-pane " + (this.state.currentTab == "books" ? "active in" : "")}>
+            <br />
+            <ul className="list-unstyled" style={{ marginLeft: "10px" }}>
+              {modifyingBooks.map(book => (
+                <li key={book._id}>{book.title}</li>
+              ))}
+            </ul>
+            <br />
+          </div>
+        </div>
+        <AjaxButton preset="primary" running={this.props.running} runningText="Setting" onClick={this.setBooksSubjects}>
+          Set
+        </AjaxButton>
+        &nbsp;
+        <BootstrapButton preset="" onClick={this.props.onDone}>
+          Cancel
+        </BootstrapButton>
       </Modal>
     );
   }
