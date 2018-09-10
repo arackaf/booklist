@@ -2,25 +2,28 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import Modal from "applicationRoot/components/modal";
-import BootstrapButton from "applicationRoot/components/bootstrapButton";
 import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
 import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
 import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
-import { selectSearchVals } from "../../reducers/search/reducer";
+import { selectSearchVals, selectSearchStatus } from "../../reducers/search/reducer";
 import { booksSearch } from "../../reducers/search/actionCreators";
+import { combineSelectors } from "applicationRoot/rootReducer";
 
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
 }
 
+const selector = combineSelectors(selectSearchVals, selectSearchStatus) as any;
+type SelectorType = ReturnType<typeof selectSearchVals> & ReturnType<typeof selectSearchStatus>;
+
 @connect(
-  selectSearchVals,
+  selector,
   { booksSearch }
 )
-export default class SearchModal extends Component<Partial<LocalProps & ReturnType<typeof selectSearchVals> & { booksSearch }>, any> {
+export default class SearchModal extends Component<Partial<LocalProps & SelectorType & { booksSearch }>, any> {
   state = { subjects: [], tags: [] };
   componentDidUpdate(prevProps) {
     if (this.props.isOpen && !prevProps.isOpen) {
@@ -40,7 +43,8 @@ export default class SearchModal extends Component<Partial<LocalProps & ReturnTy
   isReadE: any;
   isRead0: any;
   isRead1: any;
-  applyFilters = () => {
+  applyFilters = evt => {
+    evt.preventDefault();
     this.props.booksSearch({
       title: this.searchEl.value,
       isRead: this.isReadE.checked ? "" : this.isRead0.checked ? 0 : 1,
@@ -87,8 +91,6 @@ export default class SearchModal extends Component<Partial<LocalProps & ReturnTy
               </div>
             </div>
           </div>
-          <button style={{ display: "none" }} />
-          <input type="submit" style={{ display: "inline", visibility: "hidden" }} />
         </form>
         <div className="row" style={{ position: "relative" }}>
           <div className="col-xs-3">
@@ -112,22 +114,75 @@ export default class SearchModal extends Component<Partial<LocalProps & ReturnTy
               </div>
             </div>
           </div>
-          <div className="checkbox">
-            <label>
-              <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.searchChildSubjects} /> Also search child
-              subjects
-            </label>
+          <div className="row" style={{ position: "relative" }}>
+            <div className="col-xs-6">
+              <div className="checkbox">
+                <label>
+                  <input type="checkbox" ref={el => (this.childSubEl = el)} defaultChecked={!!this.props.searchChildSubjects} /> Also search child
+                  subjects
+                </label>
+              </div>
+            </div>
+            <div className="col-xs-6">
+              {this.props.searching ? (
+                <button disabled={true} className="btn btn-default">
+                  <i className="fa fa-fw fa-spin fa-spinner" />
+                </button>
+              ) : (
+                <button onClick={this.applyFilters} className="btn btn-default">
+                  <i className="fal fa-search" />
+                </button>
+              )}
+            </div>
           </div>
         </>
-        <hr />
-        <BootstrapButton preset="primary" className="pull-left" onClick={this.applyFilters}>
-          Filter
-        </BootstrapButton>
-        &nbsp;
-        <BootstrapButton preset="default" onClick={onHide}>
-          Close
-        </BootstrapButton>
+        {typeof this.props.resultsCount === "number" ? <SearchResults /> : null}
       </Modal>
+    );
+  }
+}
+
+@connect(selectSearchStatus)
+class SearchResults extends Component<Partial<ReturnType<typeof selectSearchStatus>>, any> {
+  render() {
+    return (
+      <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
+        {this.props.resultsCount ? (
+          <table className="table table-condensed table-striped">
+            <thead>
+              <th />
+              <th />
+              <th />
+            </thead>
+            <tbody>
+              {this.props.searchResults.map(book => (
+                <tr>
+                  <td>
+                    <button style={{ cursor: "pointer" }} className="btn btn-primary">
+                      Add to list&nbsp;
+                      <i className="fal fa-plus" />
+                    </button>
+                  </td>
+                  <td>
+                    <img src={book.smallImage} />
+                  </td>
+                  <td>
+                    {book.title}
+                    {book.authors && book.authors.length ? (
+                      <>
+                        <br />
+                        <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+                      </>
+                    ) : null}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="alert alert-warning">No results</div>
+        )}
+      </div>
     );
   }
 }

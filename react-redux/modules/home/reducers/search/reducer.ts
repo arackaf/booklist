@@ -23,7 +23,7 @@ const initialSearchState = {
   tags: [] as string[],
   searchResults: [] as IBookRaw[],
   searching: false,
-  resultsCount: 0
+  resultsCount: null
 };
 export type SearchReducerType = typeof initialSearchState;
 
@@ -49,6 +49,15 @@ export const selectSearchVals = createSelector(
     subjects: search.subjects,
     tags: search.tags,
     searchChildSubjects: search.searchChildSubjects
+  })
+);
+
+export const selectSearchStatus = createSelector(
+  (state: HomeType) => state.homeModule.search,
+  search => ({
+    searching: search.searching,
+    searchResults: search.searchResults,
+    resultsCount: search.resultsCount
   })
 );
 
