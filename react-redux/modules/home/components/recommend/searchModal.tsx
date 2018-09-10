@@ -12,10 +12,7 @@ import { selectSearchVals } from "../../reducers/search/reducer";
 
 @connect(selectSearchVals)
 export default class SearchModal extends Component<Partial<{ isOpen: boolean; onHide: any } & ReturnType<typeof selectSearchVals>>, any> {
-  state = {
-    subjects: [],
-    tags: []
-  };
+  state = { subjects: [], tags: [] };
   componentDidUpdate(prevProps) {
     if (this.props.isOpen && !prevProps.isOpen) {
       this.setState({

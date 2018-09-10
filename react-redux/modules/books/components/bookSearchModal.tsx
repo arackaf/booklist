@@ -13,6 +13,10 @@ import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReduc
 import { createSelector } from "reselect";
 
 import Modal from "applicationRoot/components/modal";
+import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
+import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
+import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
+import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
 type LocalProps = {
   isOpen: boolean;
@@ -44,6 +48,15 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
   selectTag = tag => this.setState(state => ({ tags: state.tags.concat(tag._id) }));
   removeSubject = subject => this.setState(state => ({ subjects: state.subjects.filter(_id => _id != subject._id) }));
   removeTag = tag => this.setState(state => ({ tags: state.tags.filter(_id => _id != tag._id) }));
+
+  componentDidUpdate(prevProps) {
+    if (this.props.isOpen && !prevProps.isOpen) {
+      this.setState({
+        subjects: this.props.selectedSubjects,
+        tags: this.props.selectedTags
+      });
+    }
+  }
 
   applyFilters = evt => {
     let sort = "";
@@ -176,19 +189,11 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
         </form>
         <div className="row" style={{ position: "relative" }}>
           <div className="col-xs-3">
-            <SelectAvailable
-              placeholder="Tags"
-              items={this.props.allTagsSorted}
-              currentlySelected={this.state.tags}
-              onSelect={this.selectTag}
-              filter={filterTags}
-            />
+            <SelectAvailableTags currentlySelected={this.state.tags} onSelect={this.selectTag} />
           </div>
           <div className="col-xs-9">
             <div>
-              {this.state.tags.map(_id => this.props.tagHash[_id]).map(t => (
-                <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => this.removeTag(t)} />
-              ))}
+              <DisplaySelectedTags currentlySelected={this.state.tags} onRemove={this.removeTag} />
             </div>
           </div>
         </div>
@@ -197,19 +202,11 @@ export default class BookSearchModal extends Component<ReturnType<typeof selecto
           <>
             <div className="row" style={{ position: "relative" }}>
               <div className="col-xs-3">
-                <SelectAvailable
-                  placeholder="Subjects"
-                  items={this.props.subjectsUnwound}
-                  currentlySelected={this.state.subjects}
-                  onSelect={this.selectSubject}
-                  filter={filterSubjects}
-                />
+                <SelectAvailableSubjects currentlySelected={this.state.subjects} onSelect={this.selectSubject} />
               </div>
               <div className="col-xs-9">
                 <div>
-                  {this.state.subjects.map(_id => this.props.subjectHash[_id]).map(s => (
-                    <RemovableLabelDisplay key={s._id} className="margin-left" item={s} doRemove={() => this.removeSubject(s)} />
-                  ))}
+                  <DisplaySelectedSubjects currentlySelected={this.state.subjects} onRemove={this.removeSubject} />
                 </div>
               </div>
             </div>
