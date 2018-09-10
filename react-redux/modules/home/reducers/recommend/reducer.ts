@@ -1,5 +1,7 @@
 import { createSelector } from "reselect";
 import { LOAD_RECOMMENDATIONS } from "./actionNames";
+import { ISearchBookRaw, HomeType } from "../reducer";
+import { SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR } from "../search/actionNames";
 
 export interface IBookRaw {
   _id: string;
@@ -13,6 +15,7 @@ export interface IBookRaw {
 }
 
 const initialBooksState = {
+  selectedBooksToSearchAgainst: [] as ISearchBookRaw[],
   searchResults: [] as IBookRaw[],
   searching: false,
   resultsCount: 0
@@ -23,6 +26,8 @@ export function recommendReducer(state = initialBooksState, action): RecommendRe
   switch (action.type) {
     case LOAD_RECOMMENDATIONS:
       return { ...state, searching: true };
+    case SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR:
+      return { ...state, selectedBooksToSearchAgainst: [...state.selectedBooksToSearchAgainst, action.book] };
   }
   return state;
 }

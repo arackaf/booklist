@@ -1,7 +1,7 @@
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 import GetBooksQuery from "graphQL/home/searchBooks.graphql";
-import { SET_SEARCH_VALUES, SEARCH_BOOKS_COMPLETE, SEARCH_BOOKS } from "./actionNames";
+import { SET_SEARCH_VALUES, SEARCH_BOOKS_COMPLETE, SEARCH_BOOKS, SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR } from "./actionNames";
 import { selectSearchVariables } from "./reducer";
 
 export const booksSearch = searchValues => (dispatch, getState) => {
@@ -15,4 +15,8 @@ export const booksSearch = searchValues => (dispatch, getState) => {
       dispatch({ type: SEARCH_BOOKS_COMPLETE, results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count });
     }
   });
+};
+
+export const selectBookToSearchRecommendationsFor = book => dispatch => {
+  dispatch({ type: SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR, book });
 };

@@ -7,11 +7,12 @@ import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags"
 import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
-import { selectSearchVals, selectSearchStatus, ISearchBookRaw } from "../../reducers/search/reducer";
-import { booksSearch } from "../../reducers/search/actionCreators";
+import { selectSearchVals, selectSearchStatus } from "../../reducers/search/reducer";
+import { booksSearch, selectBookToSearchRecommendationsFor } from "../../reducers/search/actionCreators";
 import { combineSelectors } from "applicationRoot/rootReducer";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { ISearchBookRaw } from "../../reducers/reducer";
 
 interface LocalProps {
   isOpen: boolean;
@@ -147,6 +148,7 @@ export default class SearchModal extends Component<Partial<LocalProps & Selector
 @connect(selectSearchStatus)
 class SearchResults extends Component<Partial<ReturnType<typeof selectSearchStatus>>, any> {
   render() {
+    let { searchResults, searching } = this.props;
     return (
       <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
         {this.props.resultsCount ? (
@@ -159,8 +161,10 @@ class SearchResults extends Component<Partial<ReturnType<typeof selectSearchStat
               </tr>
             </thead>
             <TransitionGroup component="tbody">
-              {this.props.searchResults.map(book => (
-                <SearchResult book={book} />
+              {searchResults.map(book => (
+                <CSSTransition appear={false} enter={false} exit={!searching} classNames="fade-transition" timeout={300} key={book._id}>
+                  <SearchResult key={book._id} book={book} />
+                </CSSTransition>
               ))}
             </TransitionGroup>
           </table>
@@ -172,34 +176,35 @@ class SearchResults extends Component<Partial<ReturnType<typeof selectSearchStat
   }
 }
 
-class SearchResult extends Component<{ book: ISearchBookRaw }, any> {
-  state = { removing: false };
-
+@connect(
+  null,
+  { selectBookToSearchRecommendationsFor }
+)
+class SearchResult extends Component<{ book: ISearchBookRaw; selectBookToSearchRecommendationsFor?: any }, any> {
+  selectBook = () => this.props.selectBookToSearchRecommendationsFor(this.props.book);
   render() {
     let { book } = this.props;
     return (
-      <CSSTransition enter={false} appear={false} exit={false} classNames="fade-transition" timeout={300} key={book._id}>
-        <tr>
-          <td>
-            <button style={{ cursor: "pointer" }} className="btn btn-primary">
-              Add to list&nbsp;
-              <i className="fal fa-plus" />
-            </button>
-          </td>
-          <td>
-            <img src={book.smallImage} />
-          </td>
-          <td>
-            {book.title}
-            {book.authors && book.authors.length ? (
-              <>
-                <br />
-                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-              </>
-            ) : null}
-          </td>
-        </tr>
-      </CSSTransition>
+      <tr>
+        <td>
+          <button onClick={this.selectBook} style={{ cursor: "pointer" }} className="btn btn-primary">
+            Add to listU&nbsp;
+            <i className="fal fa-plus" />
+          </button>
+        </td>
+        <td>
+          <img src={book.smallImage} />
+        </td>
+        <td>
+          {book.title}
+          {book.authors && book.authors.length ? (
+            <>
+              <br />
+              <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+            </>
+          ) : null}
+        </td>
+      </tr>
     );
   }
 }
