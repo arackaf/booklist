@@ -7,7 +7,7 @@
     "start": "webpack -w",
     "webpack": "webpack",
     "deploy": "cd .. && npm run deploy",
-    "persistgraphql": "persistgraphql modules",
+    "persistgraphql": "persistgraphql graphQL",
     "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {

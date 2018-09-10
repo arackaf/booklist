@@ -1,11 +1,10 @@
-import { LOAD_USER_INFO, USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED } from "./actionNames";
-import ajaxUtil from "util/ajaxUtil";
+import { USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED } from "./actionNames";
+
 import { gqlGet } from "util/graphqlUtil";
-import { compress } from "micro-graphql-react";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
-import PublicUserSettingsQuery from "./getPublisUserSettingsQuery.graphql";
-import UpdatePublisUserSettingsMutation from "./updatePublicUserSettings.graphql";
+import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
+import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
 
 export const loadPublicUserSettings = () => dispatch => {
   dispatch({ type: USER_INFO_LOADING });

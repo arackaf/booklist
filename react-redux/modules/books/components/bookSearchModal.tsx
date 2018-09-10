@@ -3,14 +3,8 @@ import { connect } from "react-redux";
 import { selectBookSearchState } from "modules/books/reducers/bookSearch/reducer";
 
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
-import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
-import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
 import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
-import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
-
-import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReducer";
-import { createSelector } from "reselect";
 
 import Modal from "applicationRoot/components/modal";
 import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
@@ -23,21 +17,11 @@ type LocalProps = {
   onHide: any;
 };
 
-const selector = createSelector(selectBookSearchState, selectEntireTagsState, selectStackedSubjects, (bookSearchState, tagsState, subjectsState) => {
-  return {
-    ...bookSearchState,
-    tagHash: tagsState.tagHash,
-    allTagsSorted: tagsState.allTagsSorted,
-    subjectHash: subjectsState.subjectHash,
-    subjectsUnwound: subjectsState.subjectsUnwound
-  };
-});
-
 @connect(
-  selector,
+  selectBookSearchState,
   { ...bookSearchActionCreators }
 )
-export default class BookSearchModal extends Component<ReturnType<typeof selector> & LocalProps & typeof bookSearchActionCreators, any> {
+export default class BookSearchModal extends Component<ReturnType<typeof selectBookSearchState> & LocalProps & typeof bookSearchActionCreators, any> {
   state = {
     subjects: this.props.selectedSubjects.map(s => s._id),
     tags: this.props.selectedTags.map(t => t._id),

@@ -14,12 +14,12 @@ import {
   SUBJECT_DELETED
 } from "./rootReducerActionNames";
 
-import { Client, compress } from "micro-graphql-react";
+import { Client } from "micro-graphql-react";
 
-import AllLabelColorsQuery from "../modules/rootGraphql/allLabelColors.graphql";
-import AllSubjectsQuery from "../modules/rootGraphql/allSubjects.graphql";
-import DeleteSubjectMutation from "../modules/rootGraphql/deleteSubject.graphql";
-import UpdateSubjectMutation from "../modules/rootGraphql/updateSubject.graphql";
+import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
+import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
+import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 
 export const graphqlClient = new Client({
   endpoint: "/graphql",
