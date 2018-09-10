@@ -117,7 +117,7 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
                   <ul style={{ marginBottom: 0 }}>
                     <TransitionGroup>
                       {this.props.booksJustSaved.map(book => (
-                        <CSSTransition classNames="book-scan-results" timeout={300} key={book._id}>
+                        <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
                           <li style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
                         </CSSTransition>
                       ))}
