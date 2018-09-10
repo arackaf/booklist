@@ -18,9 +18,9 @@ export class StandardModalHeader extends Component<{ onHide: any; caption: any }
   }
 }
 
-export default class Modal extends Component<{ isOpen: boolean; onHide: any; headerCaption?: any; className?: string }, any> {
+export default class Modal extends Component<{ isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string }, any> {
   render() {
-    let { isOpen, onHide, headerCaption, children } = this.props;
+    let { isOpen, onHide, headerCaption, style = { maxWidth: "600px" }, children } = this.props;
     return (
       <Transition
         config={{ ...config.gentle, overshootClamping: true }}
@@ -35,7 +35,8 @@ export default class Modal extends Component<{ isOpen: boolean; onHide: any; hea
                   style={{
                     transform: `translate3d(0px, ${styles.y}px, 0px)`,
                     border: "4px solid hsla(0, 0%, 0%, 0.5)",
-                    borderRadius: 10
+                    borderRadius: 10,
+                    ...style
                   }}
                 >
                   {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
