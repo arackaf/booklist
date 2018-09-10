@@ -7,9 +7,11 @@ import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags"
 import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
-import { selectSearchVals, selectSearchStatus } from "../../reducers/search/reducer";
+import { selectSearchVals, selectSearchStatus, ISearchBookRaw } from "../../reducers/search/reducer";
 import { booksSearch } from "../../reducers/search/actionCreators";
 import { combineSelectors } from "applicationRoot/rootReducer";
+
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 interface LocalProps {
   isOpen: boolean;
@@ -150,39 +152,54 @@ class SearchResults extends Component<Partial<ReturnType<typeof selectSearchStat
         {this.props.resultsCount ? (
           <table className="table table-condensed table-striped">
             <thead>
-              <th />
-              <th />
-              <th />
+              <tr>
+                <th />
+                <th />
+                <th />
+              </tr>
             </thead>
-            <tbody>
+            <TransitionGroup component="tbody">
               {this.props.searchResults.map(book => (
-                <tr>
-                  <td>
-                    <button style={{ cursor: "pointer" }} className="btn btn-primary">
-                      Add to list&nbsp;
-                      <i className="fal fa-plus" />
-                    </button>
-                  </td>
-                  <td>
-                    <img src={book.smallImage} />
-                  </td>
-                  <td>
-                    {book.title}
-                    {book.authors && book.authors.length ? (
-                      <>
-                        <br />
-                        <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-                      </>
-                    ) : null}
-                  </td>
-                </tr>
+                <SearchResult book={book} />
               ))}
-            </tbody>
+            </TransitionGroup>
           </table>
         ) : (
           <div className="alert alert-warning">No results</div>
         )}
       </div>
+    );
+  }
+}
+
+class SearchResult extends Component<{ book: ISearchBookRaw }, any> {
+  state = { removing: false };
+
+  render() {
+    let { book } = this.props;
+    return (
+      <CSSTransition enter={false} appear={false} exit={false} classNames="fade-transition" timeout={300} key={book._id}>
+        <tr>
+          <td>
+            <button style={{ cursor: "pointer" }} className="btn btn-primary">
+              Add to list&nbsp;
+              <i className="fal fa-plus" />
+            </button>
+          </td>
+          <td>
+            <img src={book.smallImage} />
+          </td>
+          <td>
+            {book.title}
+            {book.authors && book.authors.length ? (
+              <>
+                <br />
+                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+              </>
+            ) : null}
+          </td>
+        </tr>
+      </CSSTransition>
     );
   }
 }

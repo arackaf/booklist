@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 import { SET_SEARCH_VALUES, SEARCH_BOOKS, SEARCH_BOOKS_COMPLETE } from "./actionNames";
 import { HomeType } from "../reducer";
 
-interface IBookRaw {
+export interface ISearchBookRaw {
   _id: string;
   isRead: boolean;
   isbn: string;
@@ -21,7 +21,7 @@ const initialSearchState = {
   subjects: [] as string[],
   searchChildSubjects: false,
   tags: [] as string[],
-  searchResults: [] as IBookRaw[],
+  searchResults: [] as ISearchBookRaw[],
   searching: false,
   resultsCount: null
 };
