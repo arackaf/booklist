@@ -3,6 +3,8 @@ export default `query findRecommendations($asins: [String]) {
     BookSummarys {
       _id
       asin
+      isbn
+      ean
       title
       authors
       smallImage
