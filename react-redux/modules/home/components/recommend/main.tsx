@@ -26,6 +26,7 @@ export default class RecommendationList extends Component<Partial<ReturnType<typ
         <div className="row">
           <div className="col-xs-6">
             <div style={{ marginTop: "5px" }}>
+              <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Find some books, and get Amazon recommendations based on what's similar</div>
               <button className="btn btn-default" onClick={this.openModal}>
                 <i className="fal fa-search" /> Search your books
               </button>
