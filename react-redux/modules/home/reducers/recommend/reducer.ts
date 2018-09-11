@@ -32,7 +32,7 @@ export function recommendReducer(state = initialBooksState, action): RecommendRe
     case LOAD_RECOMMENDATIONS:
       return { ...state, searching: true };
     case LOAD_RECOMMENDATIONS_COMPLETE:
-      return { ...state, searching: false, searchResults: action.results };
+      return { ...state, searching: false, searchResults: action.searchResults };
   }
   return state;
 }
@@ -45,4 +45,9 @@ export const selectSelectedBooks = createSelector(
 export const selectSelectedBookIds = createSelector(
   (state: HomeType) => state.homeModule.recommend.selectedBooksToSearchAgainst,
   selectedBooks => [...new Set([...selectedBooks.map(b => b._id)])]
+);
+
+export const selectRecommendations = createSelector(
+  (state: HomeType) => state.homeModule.recommend.searchResults,
+  recommendations => ({ recommendations })
 );
