@@ -9,14 +9,13 @@ import { removeSelectedBook } from "../../reducers/search/actionCreators";
 import { findRecommendations } from "../../reducers/recommend/actionCreators";
 import { combineSelectors } from "applicationRoot/rootReducer";
 
+const mainSelector = combineSelectors(selectSelectedBooks, selectRecommendations);
+
 @connect(
-  combineSelectors(selectSelectedBooks, selectRecommendations),
+  mainSelector,
   { findRecommendations }
 )
-export default class RecommendationList extends Component<
-  Partial<ReturnType<typeof selectSelectedBooks> & ReturnType<typeof selectRecommendations> & { findRecommendations: any }>,
-  any
-> {
+export default class RecommendationList extends Component<Partial<ReturnType<typeof mainSelector> & { findRecommendations: any }>, any> {
   state = { searchModalOpen: false };
   closeModal = () => this.setState({ searchModalOpen: false });
   openModal = () => this.setState({ searchModalOpen: true });

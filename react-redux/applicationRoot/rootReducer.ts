@@ -116,8 +116,35 @@ export const selectAppUiState = createSelector(
   })
 );
 
-export const combineSelectors = <TResult>(...selectors): ((state) => TResult) =>
-  (createSelector as any)(...selectors, (...results) => Object.assign({}, ...results));
+type F = (...args) => any;
+function combineSelectors<T extends F, U extends F>(a: T, b: U): (state: any) => ReturnType<T> & ReturnType<U>;
+function combineSelectors<T extends F, U extends F, V extends F>(a: T, b: U, c: V): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V>;
+function combineSelectors<T extends F, U extends F, V extends F, W extends F>(
+  a: T,
+  b: U,
+  c: V,
+  d: W
+): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V> & ReturnType<W>;
+function combineSelectors<T extends F, U extends F, V extends F, W extends F, X extends F>(
+  a: T,
+  b: U,
+  c: V,
+  d: W,
+  e: X
+): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V> & ReturnType<W> & ReturnType<X>;
+function combineSelectors<T extends F, U extends F, V extends F, W extends F, X extends F>(
+  a: T,
+  b: U,
+  c?: V,
+  d?: W,
+  e?: X
+): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V> & ReturnType<W> & ReturnType<X> {
+  let selectors = [a, b, c, d, e].filter(selector => selector);
+
+  return (createSelector as any)(...selectors, (...results) => Object.assign({}, ...results));
+}
+
+export { combineSelectors };
 
 export const unwindSubjects = (subjects): SubjectType[] => {
   let result = [];
