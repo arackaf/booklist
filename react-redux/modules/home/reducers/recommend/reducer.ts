@@ -49,5 +49,6 @@ export const selectSelectedBookIds = createSelector(
 
 export const selectRecommendations = createSelector(
   (state: HomeType) => state.homeModule.recommend.searchResults,
-  recommendations => ({ recommendations })
+  (state: HomeType) => state.homeModule.recommend.searching,
+  (recommendations, recommendationsSearching) => ({ recommendations, recommendationsSearching })
 );
