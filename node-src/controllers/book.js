@@ -9,6 +9,7 @@ import orderBy from "lodash.orderby";
 
 import findBooksQuery from "../graphql-queries/findBooks";
 import findRecommendationQuery from "../graphql-queries/findRecommendations";
+import findRecommendationMatches from "../graphql-queries/findRecommendationMatches";
 
 class BookController {
   async saveFromIsbn({ isbn }) {
@@ -52,7 +53,22 @@ class BookController {
       let resultRecommendations = results.data.allBookSummarys.BookSummarys;
       let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.asin, b]));
       let asinsOrdered = orderBy([...asinMap.entries()].map(([asin, count]) => ({ asin, count })), ["count"], ["desc"]);
-      let finalResults = asinsOrdered.map(b => resultRecommendationLookup.get(b.asin)).filter(b => b);
+      let potentialRecommendations = asinsOrdered.map(b => resultRecommendationLookup.get(b.asin)).filter(b => b);
+
+      let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
+      let potentialEans = potentialRecommendations.map(b => b.ean).filter(x => x);
+
+      let matches = (await graphql(executableSchema, findRecommendationMatches, root, this.request, {
+        userId: this.request.user.id,
+        isbns: potentialIsbns,
+        eans: potentialEans
+      })).data.allBooks.Books;
+
+      let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
+      let matchingEans = new Set(matches.map(m => m.ean).filter(x => x));
+
+      let finalResults = potentialRecommendations.filter(m => (!m.isbn || !matchingIsbns.has(m.isbn)) && (!m.ean || !matchingEans.has(m.ean)));
+
       this.send({ results: finalResults });
     } catch (err) {
       console.log("err", err);
