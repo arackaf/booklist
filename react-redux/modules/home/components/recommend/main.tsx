@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import SearchModal from "./searchModal";
-import { selectSelectedBooksToSearchAgainst } from "../../reducers/recommend/reducer";
+import { selectSelectedBooks } from "../../reducers/recommend/reducer";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { ISearchBookRaw } from "../../reducers/reducer";
 import { removeSelectedBook } from "../../reducers/search/actionCreators";
+import { findRecommendations } from "../../reducers/recommend/actionCreators";
 
-@connect(selectSelectedBooksToSearchAgainst)
-export default class RecommendationList extends Component<Partial<ReturnType<typeof selectSelectedBooksToSearchAgainst>>, any> {
+@connect(
+  selectSelectedBooks,
+  { findRecommendations }
+)
+export default class RecommendationList extends Component<Partial<ReturnType<typeof selectSelectedBooks> & { findRecommendations: any }>, any> {
   state = { searchModalOpen: false };
   closeModal = () => this.setState({ searchModalOpen: false });
   openModal = () => this.setState({ searchModalOpen: true });
@@ -33,7 +37,9 @@ export default class RecommendationList extends Component<Partial<ReturnType<typ
               </TransitionGroup>
             </table>
           </div>
-          <div className="col-xs-6">B</div>
+          <div className="col-xs-6">
+            <button onClick={this.props.findRecommendations}>Get Recommendations</button>
+          </div>
         </div>
         <SearchModal isOpen={this.state.searchModalOpen} onHide={this.closeModal} />
       </div>

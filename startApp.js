@@ -142,8 +142,8 @@ app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
 const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
-const root = { db: dbPromise };
-const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
+export const root = { db: dbPromise };
+export const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
 middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react-redux/extracted_queries.json") });
 app.use(
