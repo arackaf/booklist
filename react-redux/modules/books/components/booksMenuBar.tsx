@@ -11,19 +11,7 @@ import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { selectAppUiState, combineSelectors } from "applicationRoot/rootReducer";
 
-type BookMenuBarType = ReturnType<typeof selectBookSearchState> &
-  ReturnType<typeof selectBookLoadingInfo> &
-  ReturnType<typeof selectBookSearchUiView> &
-  ReturnType<typeof selectAppUiState> &
-  ReturnType<typeof selectBookSelection>;
-
-const menuBarSelector = combineSelectors<BookMenuBarType>(
-  selectBookSearchState,
-  selectBookSearchUiView,
-  selectBookLoadingInfo,
-  selectAppUiState,
-  selectBookSelection
-);
+const menuBarSelector = combineSelectors(selectBookSearchState, selectBookSearchUiView, selectBookLoadingInfo, selectAppUiState, selectBookSelection);
 
 interface IAddedMenuProps {
   editTags: any;
@@ -32,6 +20,7 @@ interface IAddedMenuProps {
   startTagModification: any;
   beginEditFilters: any;
 }
+type actions = typeof bookSearchActionCreators & typeof booksActionCreators;
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
@@ -39,10 +28,7 @@ const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight
   menuBarSelector,
   { ...bookSearchActionCreators, ...booksActionCreators }
 )
-export default class BooksMenuBar extends Component<
-  BookMenuBarType & typeof bookSearchActionCreators & typeof booksActionCreators & IAddedMenuProps,
-  any
-> {
+export default class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps, any> {
   navBar: any;
   quickSearchEl: any;
   sortChanged(evt) {

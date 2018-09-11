@@ -19,14 +19,13 @@ interface LocalProps {
   onHide: any;
 }
 
-const selector = combineSelectors(selectSearchVals, selectSearchStatus) as any;
-type SelectorType = ReturnType<typeof selectSearchVals> & ReturnType<typeof selectSearchStatus>;
+const selector = combineSelectors(selectSearchVals, selectSearchStatus);
 
 @connect(
   selector,
   { booksSearch }
 )
-export default class SearchModal extends Component<Partial<LocalProps & SelectorType & { booksSearch }>, any> {
+export default class SearchModal extends Component<Partial<LocalProps & ReturnType<typeof selector> & { booksSearch }>, any> {
   state = { subjects: [], tags: [] };
   componentDidUpdate(prevProps) {
     if (this.props.isOpen && !prevProps.isOpen) {
