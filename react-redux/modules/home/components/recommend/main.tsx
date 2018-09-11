@@ -21,14 +21,27 @@ export default class RecommendationList extends Component<
   closeModal = () => this.setState({ searchModalOpen: false });
   openModal = () => this.setState({ searchModalOpen: true });
   render() {
-    let { selectedBooks, recommendations } = this.props;
+    let { selectedBooks, recommendations, recommendationsSearching } = this.props;
     return (
       <div>
         <div className="row">
           <div className="col-xs-6">
-            <button className="btn btn-default" style={{ marginTop: "5px" }} onClick={this.openModal}>
-              Search your books
-            </button>
+            <div style={{ marginTop: "5px" }}>
+              <button className="btn btn-default" onClick={this.openModal}>
+                <i className="fal fa-search" /> Search your books
+              </button>
+              {selectedBooks.length ? (
+                recommendationsSearching ? (
+                  <button disabled={true} className="btn btn-default btn-primary pull-right" onClick={this.props.findRecommendations}>
+                    <i className="fa fa-fw fa-spin fa-spinner" /> Get Recommendations
+                  </button>
+                ) : (
+                  <button className="btn btn-default btn-primary pull-right" onClick={this.props.findRecommendations}>
+                    Get Recommendations
+                  </button>
+                )
+              ) : null}
+            </div>
             <br />
             <br />
             <table className="table table-condensed table-striped">
@@ -42,7 +55,6 @@ export default class RecommendationList extends Component<
             </table>
           </div>
           <div className="col-xs-6">
-            <button onClick={this.props.findRecommendations}>Get Recommendations</button>
             {recommendations && recommendations.length ? (
               <table className="table table-condensed table-striped">
                 <tbody>
