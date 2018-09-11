@@ -57,7 +57,7 @@ class HomeIfLoggedIn extends Component<any, any> {
             name="vis"
             caption={
               <span>
-                <i className="far fa-chart-bar" /> Charts
+                <i className="far fa-chart-bar" /> View
               </span>
             }
           >
@@ -83,7 +83,7 @@ class HomeIfLoggedIn extends Component<any, any> {
               )}
             </Measure>
           </Tab>
-          <Tab name="search" caption="Search">
+          <Tab name="search" caption="Find new books">
             <RecommendMain />
           </Tab>
         </Tabs>

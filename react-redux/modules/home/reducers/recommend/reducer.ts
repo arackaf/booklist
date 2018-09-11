@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { LOAD_RECOMMENDATIONS } from "./actionNames";
 import { ISearchBookRaw, HomeType } from "../reducer";
-import { SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR } from "../search/actionNames";
+import { SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR, REMOVE_SELECTED_BOOK } from "../search/actionNames";
 
 export interface IBookRaw {
   _id: string;
@@ -28,6 +28,13 @@ export function recommendReducer(state = initialBooksState, action): RecommendRe
       return { ...state, searching: true };
     case SELECT_BOOK_TO_SEARCH_RECOMMENDATIONS_FOR:
       return { ...state, selectedBooksToSearchAgainst: [...state.selectedBooksToSearchAgainst, action.book] };
+    case REMOVE_SELECTED_BOOK:
+      return { ...state, selectedBooksToSearchAgainst: state.selectedBooksToSearchAgainst.filter(b => b !== action.book) };
   }
   return state;
 }
+
+export const selectSelectedBooksToSearchAgainst = createSelector(
+  (state: HomeType) => state.homeModule.recommend.selectedBooksToSearchAgainst,
+  selectedBooks => ({ selectedBooks })
+);
