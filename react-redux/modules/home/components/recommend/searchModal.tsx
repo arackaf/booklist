@@ -181,14 +181,18 @@ class SearchResults extends Component<Partial<ReturnType<typeof selectSearchStat
   { selectBookToSearchRecommendationsFor }
 )
 class SearchResult extends Component<{ book: ISearchBookRaw; selectBookToSearchRecommendationsFor?: any }, any> {
-  selectBook = () => this.props.selectBookToSearchRecommendationsFor(this.props.book);
+  state = { adding: false };
+  selectBook = () => {
+    this.setState({ adding: true });
+    this.props.selectBookToSearchRecommendationsFor(this.props.book);
+  };
   render() {
     let { book } = this.props;
     return (
       <tr>
         <td>
-          <button onClick={this.selectBook} style={{ cursor: "pointer" }} className="btn btn-primary">
-            Add to listU&nbsp;
+          <button disabled={this.state.adding} onClick={this.selectBook} style={{ cursor: "pointer" }} className="btn btn-primary">
+            Add to list&nbsp;
             <i className="fal fa-plus" />
           </button>
         </td>
