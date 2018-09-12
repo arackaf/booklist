@@ -179,8 +179,8 @@ export default class BarChart extends PureComponent<any, any> {
                 {fullData.filter(d => excluding[d.groupId]).map((d, i, arr) => (
                   <span style={{ marginLeft: "10px" }}>
                     {d.display}{" "}
-                    <a onClick={() => this.restoreBar(d.groupId)}>
-                      <i className="fa fa-fw fa-undo" />
+                    <a style={{ color: "black" }} onClick={() => this.restoreBar(d.groupId)}>
+                      <i className="far fa-redo" />
                     </a>
                   </span>
                 ))}
@@ -189,26 +189,24 @@ export default class BarChart extends PureComponent<any, any> {
           </div>
           <svg style={svgStyle} width={width} height={height}>
             <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-              {data
-                .filter(d => !this.state.excluding[d.groupId])
-                .map((d, i) => (
-                  <Bar
-                    ref={el => this.barMap.set(d.groupId, el)}
-                    drilldown={drilldown}
-                    chartIndex={chartIndex}
-                    removeBar={this.removeBar}
-                    key={d.groupId}
-                    index={i}
-                    data={d}
-                    count={data.length}
-                    x={scaleX(d.display)}
-                    y={0}
-                    width={scaleX.bandwidth()}
-                    height={dataScale(d.count)}
-                    graphWidth={width}
-                    adjustTooltip={this.state.left}
-                  />
-                ))}
+              {data.filter(d => !this.state.excluding[d.groupId]).map((d, i) => (
+                <Bar
+                  ref={el => this.barMap.set(d.groupId, el)}
+                  drilldown={drilldown}
+                  chartIndex={chartIndex}
+                  removeBar={this.removeBar}
+                  key={d.groupId}
+                  index={i}
+                  data={d}
+                  count={data.length}
+                  x={scaleX(d.display)}
+                  y={0}
+                  width={scaleX.bandwidth()}
+                  height={dataScale(d.count)}
+                  graphWidth={width}
+                  adjustTooltip={this.state.left}
+                />
+              ))}
             </g>
             <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
               <Axis scale={scaleX} transform={`translate(0, ${height})`} />
