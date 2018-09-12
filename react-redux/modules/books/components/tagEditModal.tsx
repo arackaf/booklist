@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Modal from "simple-react-bootstrap/lib/modal";
 
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
-import * as actionCreators from "../reducers/tags/actionCreators";
+import * as actionCreators from "applicationRoot/tags/actionCreators";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { selectEntireTagsState, filterTags } from "../reducers/tags/reducer";
+import { selectEntireTagsState, filterTags } from "applicationRoot/rootReducer";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
+import Modal from "applicationRoot/components/modal";
 
 interface ILocalProps {
   onDone: any;
@@ -71,134 +71,120 @@ export default class TagEditModal extends Component<ReturnType<typeof selectEnti
     let searchedTags = filterTags(this.props.allTagsSorted, tagSearch);
 
     return (
-      <Modal className="fade" show={!!editModalOpen} onHide={onDone}>
-        <Modal.Header>
-          <button type="button" className="close" onClick={onDone} aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 className="modal-title">Edit tags</h4>
-        </Modal.Header>
-        <Modal.Body style={{ paddingBottom: 0 }}>
-          <div className="visible-xs">
-            <BootstrapButton onClick={this.newTag} preset="info-xs">
-              Add new tag <i className="fa fa-fw fa-plus" />
-            </BootstrapButton>
-            <br />
-            <br />
-          </div>
-          <div className="row">
-            <div className="col-xs-11">
-              <GenericLabelSelect
-                inputProps={{ placeholder: "Edit tag", value: tagSearch, onChange: evt => this.setTagSearch(evt.target.value) }}
-                suggestions={searchedTags}
-                onSuggestionSelected={item => this.editTag(item)}
-              />
-            </div>
-            <div className="col-xs-1" style={{ padding: 0 }}>
-              <BootstrapButton className="hidden-xs" onClick={this.newTag} preset="info-xs">
-                <i className="fa fa-fw fa-plus-square" />
-              </BootstrapButton>
-            </div>
-          </div>
+      <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags">
+        <div className="visible-xs">
+          <BootstrapButton onClick={this.newTag} preset="info-xs">
+            Add new tag <i className="fa fa-fw fa-plus" />
+          </BootstrapButton>
           <br />
+          <br />
+        </div>
+        <div className="row">
+          <div className="col-xs-11">
+            <GenericLabelSelect
+              inputProps={{ placeholder: "Edit tag", value: tagSearch, onChange: evt => this.setTagSearch(evt.target.value) }}
+              suggestions={searchedTags}
+              onSuggestionSelected={item => this.editTag(item)}
+            />
+          </div>
+          <div className="col-xs-1" style={{ padding: 0 }}>
+            <BootstrapButton className="hidden-xs" onClick={this.newTag} preset="info-xs">
+              <i className="fa fa-fw fa-plus-square" />
+            </BootstrapButton>
+          </div>
+        </div>
+        <br />
 
-          {editingTag ? (
-            <div className="panel panel-info">
-              <div className="panel-heading">
-                {editingTag._id ? `Edit ${editingTagName}` : "New Tag"}
-                {editingTag && editingTag._id ? (
-                  <BootstrapButton onClick={e => this.setState({ deletingId: editingTag._id })} preset="danger-xs" className="pull-right">
-                    <i className="fa fa-fw fa-trash" />
-                  </BootstrapButton>
-                ) : null}
-              </div>
-              <div className="panel-body">
-                <div>
-                  {deleteInfo ? (
-                    <div className="row">
-                      <div className="col-xs-12">
-                        <h4>Delete tag {editingTagName}</h4>
-
-                        <div style={{ marginTop: "5px" }}>
-                          <AjaxButton running={deleting} runningText="Deleting" onClick={this.deleteTag} preset="danger-sm">
-                            Delete
-                          </AjaxButton>
-                          <BootstrapAnchorButton
-                            onClick={() => this.setState({ deletingId: "" })}
-                            deleting={deleting}
-                            runningText="Deleting..."
-                            preset="default-sm"
-                            className="pull-right"
-                          >
-                            Cancel
-                          </BootstrapAnchorButton>
-                        </div>
-                        <hr />
-                      </div>
-                    </div>
-                  ) : null}
+        {editingTag ? (
+          <div className="panel panel-info">
+            <div className="panel-heading">
+              {editingTag._id ? `Edit ${editingTagName}` : "New Tag"}
+              {editingTag && editingTag._id ? (
+                <BootstrapButton onClick={e => this.setState({ deletingId: editingTag._id })} preset="danger-xs" className="pull-right">
+                  <i className="fa fa-fw fa-trash" />
+                </BootstrapButton>
+              ) : null}
+            </div>
+            <div className="panel-body">
+              <div>
+                {deleteInfo ? (
                   <div className="row">
-                    <div className="col-xs-6">
-                      <div className="form-group">
-                        <label>Tag name</label>
-                        <input className="form-control" value={editingTag.name} onChange={evt => this.setNewTagName(evt.target.value)} />
-                      </div>
-                    </div>
-                    <div className="col-xs-9">
-                      <div className="form-group">
-                        <label>Label color</label>
-                        <div>
-                          <ColorsPalette
-                            currentColor={editingTag.backgroundColor}
-                            colors={props.colors}
-                            onColorChosen={this.setNewTagBackgroundColor}
-                          />
-                          <CustomColorPicker
-                            labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
-                            onColorChosen={this.setNewTagBackgroundColor}
-                            currentColor={editingTag.backgroundColor}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-xs-3">
-                      <div className="form-group">
-                        <label>Text color</label>
-                        <div>
-                          <ColorsPalette colors={textColors} onColorChosen={this.setNewTagTextColor} />
-                        </div>
-                      </div>
-                    </div>
                     <div className="col-xs-12">
-                      <div style={{ marginTop: "10px" }} className="form-group">
-                        <label>Preview &nbsp;&nbsp;</label>
-                        <div className="label label-default" style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor }}>
-                          {editingTag.name}
-                        </div>
+                      <h4>Delete tag {editingTagName}</h4>
+
+                      <div style={{ marginTop: "5px" }}>
+                        <AjaxButton running={deleting} runningText="Deleting" onClick={this.deleteTag} preset="danger-sm">
+                          Delete
+                        </AjaxButton>
+                        <BootstrapAnchorButton
+                          onClick={() => this.setState({ deletingId: "" })}
+                          deleting={deleting}
+                          runningText="Deleting..."
+                          preset="default-sm"
+                          className="pull-right"
+                        >
+                          Cancel
+                        </BootstrapAnchorButton>
+                      </div>
+                      <hr />
+                    </div>
+                  </div>
+                ) : null}
+                <div className="row">
+                  <div className="col-xs-6">
+                    <div className="form-group">
+                      <label>Tag name</label>
+                      <input className="form-control" value={editingTag.name} onChange={evt => this.setNewTagName(evt.target.value)} />
+                    </div>
+                  </div>
+                  <div className="col-xs-9">
+                    <div className="form-group">
+                      <label>Label color</label>
+                      <div>
+                        <ColorsPalette
+                          currentColor={editingTag.backgroundColor}
+                          colors={props.colors}
+                          onColorChosen={this.setNewTagBackgroundColor}
+                        />
+                        <CustomColorPicker
+                          labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
+                          onColorChosen={this.setNewTagBackgroundColor}
+                          currentColor={editingTag.backgroundColor}
+                        />
                       </div>
                     </div>
                   </div>
-                  <br style={{ clear: "both" }} />
-
-                  <AjaxButtonAnchor
-                    className="btn btn-primary"
-                    running={this.state.saving}
-                    runningText={"Saving..."}
-                    onClick={this.createOrUpdateTag}
-                  >
-                    Save
-                  </AjaxButtonAnchor>
-                  <a className="btn btn-default pull-right" onClick={this.cancelTagEdit}>
-                    Cancel
-                  </a>
+                  <div className="col-xs-3">
+                    <div className="form-group">
+                      <label>Text color</label>
+                      <div>
+                        <ColorsPalette colors={textColors} onColorChosen={this.setNewTagTextColor} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-xs-12">
+                    <div style={{ marginTop: "10px" }} className="form-group">
+                      <label>Preview &nbsp;&nbsp;</label>
+                      <div className="label label-default" style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor }}>
+                        {editingTag.name}
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                <br style={{ clear: "both" }} />
+
+                <AjaxButtonAnchor className="btn btn-primary" running={this.state.saving} runningText={"Saving..."} onClick={this.createOrUpdateTag}>
+                  Save
+                </AjaxButtonAnchor>
+                <a className="btn btn-default pull-right" onClick={this.cancelTagEdit}>
+                  Cancel
+                </a>
               </div>
             </div>
-          ) : null}
-        </Modal.Body>
-        <Modal.Footer>
-          <BootstrapButton onClick={onDone}>Close</BootstrapButton>
-        </Modal.Footer>
+          </div>
+        ) : null}
+        <hr />
+        <BootstrapButton onClick={onDone}>Close</BootstrapButton>
       </Modal>
     );
   }

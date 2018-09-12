@@ -17,10 +17,10 @@ import {
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 
-import GetBooksQuery from "./getBooks.graphql";
-import DeleteBookMutation from "./deleteBook.graphql";
-import UpdateBooksReadMutation from "./updateBooksRead.graphql";
-import BookDetailsQuery from "./getBookDetails.graphql";
+import GetBooksQuery from "graphQL/books/getBooks.graphql";
+import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
+import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
+import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 
 export function toggleSelectBook(_id) {
   return { type: TOGGLE_SELECT_BOOK, _id };

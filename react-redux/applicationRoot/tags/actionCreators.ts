@@ -1,11 +1,11 @@
-import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, LOAD_COLORS, TAG_DELETED } from "./actionNames";
+import { LOAD_TAGS, LOAD_TAGS_RESULTS, UPDATE_TAG_RESULTS, LOAD_COLORS, TAG_DELETED } from "../rootReducerActionNames";
 
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
-import GetTags from "./getTags.graphql";
-import UpdateTag from "./updateTag.graphql";
-import CreateTag from "./createTag.graphql";
-import DeleteTagMutation from "./deleteTag.graphql";
+import GetTags from "graphQL/tags/getTags.graphql";
+import UpdateTag from "graphQL/tags/updateTag.graphql";
+import CreateTag from "graphQL/tags/createTag.graphql";
+import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 
 export function loadTags() {
   return function(dispatch, getState) {

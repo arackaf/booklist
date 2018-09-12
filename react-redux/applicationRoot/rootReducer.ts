@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import update from "immutability-helper";
 
 import {
   SET_IS_TOUCH,
@@ -14,8 +15,18 @@ import {
   LOAD_SUBJECTS_RESULTS,
   LOAD_COLORS,
   SAVE_SUBJECT_RESULTS,
-  SUBJECT_DELETED
+  SUBJECT_DELETED,
+  LOAD_TAGS_RESULTS,
+  UPDATE_TAG_RESULTS,
+  TAG_DELETED
 } from "./rootReducerActionNames";
+
+interface ITag {
+  _id: string;
+  name: string;
+}
+
+export const hashOf = <T>() => <{ [s: string]: T }>{};
 
 const initialState = {
   isTouch: false,
@@ -33,10 +44,10 @@ const initialState = {
   module: "",
   isLoggedIn: false,
   subjectsLoaded: false,
-  subjectsInitialQueryFired: false
+  subjectsInitialQueryFired: false,
+  tagHash: hashOf<ITag>(),
+  tagsLoaded: false
 };
-
-export const hashOf = <T>() => <{ [s: string]: T }>{};
 
 export type AppType = typeof initialState;
 export type SubjectType = {
@@ -83,6 +94,12 @@ export default function rootReducer(state = initialState, action) {
       let subjectHash = { ...state.subjectHash };
       action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
       return { ...state, subjectHash };
+    case LOAD_TAGS_RESULTS:
+      return { ...state, tagHash: objectsToHash(action.tags), tagsLoaded: true };
+    case UPDATE_TAG_RESULTS:
+      return { ...state, tagHash: { ...state.tagHash, ...objectsToHash([action.tag]) } };
+    case TAG_DELETED:
+      return update(state, { tagHash: { $unset: [action._id] } });
   }
 
   return state;
@@ -99,8 +116,35 @@ export const selectAppUiState = createSelector(
   })
 );
 
-export const combineSelectors = <TResult>(...selectors): ((state) => TResult) =>
-  (createSelector as any)(...selectors, (...results) => Object.assign({}, ...results));
+type F = (...args) => any;
+function combineSelectors<T extends F, U extends F>(a: T, b: U): (state: any) => ReturnType<T> & ReturnType<U>;
+function combineSelectors<T extends F, U extends F, V extends F>(a: T, b: U, c: V): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V>;
+function combineSelectors<T extends F, U extends F, V extends F, W extends F>(
+  a: T,
+  b: U,
+  c: V,
+  d: W
+): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V> & ReturnType<W>;
+function combineSelectors<T extends F, U extends F, V extends F, W extends F, X extends F>(
+  a: T,
+  b: U,
+  c: V,
+  d: W,
+  e: X
+): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V> & ReturnType<W> & ReturnType<X>;
+function combineSelectors<T extends F, U extends F, V extends F, W extends F, X extends F>(
+  a: T,
+  b: U,
+  c?: V,
+  d?: W,
+  e?: X
+): (state: any) => ReturnType<T> & ReturnType<U> & ReturnType<V> & ReturnType<W> & ReturnType<X> {
+  let selectors = [a, b, c, d, e].filter(selector => selector);
+
+  return (createSelector as any)(...selectors, (...results) => Object.assign({}, ...results));
+}
+
+export { combineSelectors };
 
 export const unwindSubjects = (subjects): SubjectType[] => {
   let result = [];
@@ -184,4 +228,69 @@ export const getEligibleParents = (subjectHash, _id) => {
   }
 
   return eligibleParents;
+};
+
+export const filterTags = (tags, search) => {
+  if (!search) {
+    search = () => true;
+  } else {
+    let regex = new RegExp(search, "i");
+    search = txt => regex.test(txt);
+  }
+  return tags.filter(s => search(s.name));
+};
+
+function allTagssSorted(tagHash): ITag[] {
+  let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
+  return tags.sort(({ name: name1 }, { name: name2 }) => {
+    let name1After = name1.toLowerCase() > name2.toLowerCase(),
+      bothEqual = name1.toLowerCase() === name2.toLowerCase();
+    return bothEqual ? 0 : name1After ? 1 : -1;
+  });
+}
+
+export const selectEntireTagsState = createSelector(
+  (state: RootApplicationType) => state.app.tagHash,
+  (state: RootApplicationType) => state.app.colors,
+  (tagHash, colors) => ({
+    colors,
+    tagHash,
+    allTagsSorted: allTagssSorted(tagHash)
+  })
+);
+
+export const selectStackedSubjects = createSelector(
+  (state: RootApplicationType) => state.app.subjectHash,
+  subjectHash => {
+    let mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash),
+      subjectsUnwound = unwindSubjects(mainSubjectsCollection);
+    return {
+      subjects: mainSubjectsCollection,
+      allSubjectsSorted: allSubjectsSorted(subjectHash),
+      subjectsUnwound: subjectsUnwound,
+      subjectHash
+    };
+  }
+);
+
+export const selectEntireSubjectsState = createSelector(state => state.app, selectStackedSubjects, (app, stackedSubjects) => {
+  return {
+    colors: app.colors,
+    ...stackedSubjects
+  };
+});
+
+function allSubjectsSorted(subjectsHash): SubjectType[] {
+  let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
+  return subjects.sort(subjectSortCompare);
+}
+
+export const filterSubjects = (subjects, search) => {
+  if (!search) {
+    search = () => true;
+  } else {
+    let regex = new RegExp(search, "i");
+    search = txt => regex.test(txt);
+  }
+  return subjects.filter(s => search(s.name));
 };

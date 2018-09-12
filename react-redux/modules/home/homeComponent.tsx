@@ -1,20 +1,19 @@
 import React, { Component, PureComponent } from "react";
 import { connect } from "react-redux";
 import Measure from "react-measure";
-
-import { isLoggedIn } from "reactStartup";
-
 import "d3-transition";
 
-import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
+import { isLoggedIn } from "reactStartup";
 import { topLevelSubjectsSortedSelector, RootApplicationType } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
+import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
+import RecommendMain from "./components/recommend/main";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
     <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px" }}>
-      <div className="panel panel-default">
+      <div className="">
         <div className="panel-body" style={{ position: "relative" }}>
           {props.children}
         </div>
@@ -24,21 +23,16 @@ const MainHomePane = props => (
 );
 
 const MAX_CHART_WIDTH = 1100;
-@connect(
-  (state: RootApplicationType) => ({
-    subjects: topLevelSubjectsSortedSelector(state),
-    subjectHash: state.app.subjectHash,
-    subjectsLoaded: state.app.subjectsLoaded
-  }),
-  { loadSubjects }
-)
+@connect((state: RootApplicationType) => ({
+  subjects: topLevelSubjectsSortedSelector(state),
+  subjectHash: state.app.subjectHash,
+  subjectsLoaded: state.app.subjectsLoaded
+}))
 class HomeIfLoggedIn extends Component<any, any> {
   state = { chartPackets: [], chartWidth: MAX_CHART_WIDTH };
   componentDidMount() {
     if (this.props.subjectsLoaded) {
       this.getTopChart();
-    } else {
-      this.props.loadSubjects();
     }
   }
   componentDidUpdate(prevProps, prevState) {
@@ -58,26 +52,41 @@ class HomeIfLoggedIn extends Component<any, any> {
     let { chartPackets } = this.state;
     return (
       <MainHomePane>
-        <Measure
-          client
-          onResize={({ client }) => {
-            if (client.width != this.state.chartWidth && client.width <= MAX_CHART_WIDTH) {
-              this.setState({ chartWidth: client.width });
+        <Tabs defaultTab="vis">
+          <Tab
+            name="vis"
+            caption={
+              <span>
+                <i className="far fa-chart-bar" /> View
+              </span>
             }
-          }}
-        >
-          {({ measureRef }) => (
-            <div ref={measureRef}>
-              Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
-              <hr />
-              {subjectsLoaded
-                ? chartPackets.map((packet, i) => (
-                    <BarChart key={i} {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
-                  ))
-                : null}
-            </div>
-          )}
-        </Measure>
+          >
+            <br />
+            <Measure
+              client
+              onResize={({ client }) => {
+                if (client.width != this.state.chartWidth && client.width <= MAX_CHART_WIDTH) {
+                  this.setState({ chartWidth: client.width });
+                }
+              }}
+            >
+              {({ measureRef }) => (
+                <div ref={measureRef}>
+                  Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
+                  <hr />
+                  {subjectsLoaded
+                    ? chartPackets.map((packet, i) => (
+                        <BarChart key={i} {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
+                      ))
+                    : null}
+                </div>
+              )}
+            </Measure>
+          </Tab>
+          <Tab name="search" caption="Discover books">
+            <RecommendMain />
+          </Tab>
+        </Tabs>
       </MainHomePane>
     );
   }

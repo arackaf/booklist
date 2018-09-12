@@ -18,7 +18,7 @@ import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
-import UpdateBookMutation from "./updateBook.graphql";
+import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 
 const ManualBookEntry = Loadable({
   loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
@@ -69,30 +69,39 @@ type MainSelectorType = ReturnType<typeof mainSelector>;
 export default class BookViewingList extends Component<MainSelectorType & MutationType & { dispatch: any }, any> {
   state = {
     tagEditModalOpen: false,
+    tagEditModalLoaded: false,
     subjectEditModalOpen: false,
+    subjectEditModalLoaded: false,
     booksSubjectModifying: null,
+    booksSubjectModalLoaded: null,
     booksTagModifying: null,
+    booksTagModalLoaded: null,
+    bookEditingModalLoaded: false,
     isEditingBook: false,
     editingBook: null,
     editingFilters: false,
-    beginEditFilters: () => this.setState({ editingFilters: true }),
+    editingFiltersLoaded: false,
+    beginEditFilters: () => this.setState({ editingFilters: true, editingFiltersLoaded: true }),
     endEditFilters: () => this.setState({ editingFilters: false })
   };
-  editTags = () => this.setState({ tagEditModalOpen: true });
+  editTags = () => this.setState({ tagEditModalOpen: true, tagEditModalLoaded: true });
   stopEditingTags = () => this.setState({ tagEditModalOpen: false });
-  editSubjects = () => this.setState({ subjectEditModalOpen: true });
+  editSubjects = () => this.setState({ subjectEditModalOpen: true, subjectEditModalLoaded: true });
   stopEditingSubjects = () => this.setState({ subjectEditModalOpen: false });
 
-  editSubjectsForBook = book => this.setState({ booksSubjectModifying: [book] });
-  editSubjectsForSelectedBooks = () => this.setState({ booksSubjectModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id]) });
+  editSubjectsForBook = book => this.setState({ booksSubjectModifying: [book], booksSubjectModalLoaded: true });
+  editSubjectsForSelectedBooks = () =>
+    this.setState({ booksSubjectModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id]), booksSubjectModalLoaded: true });
   doneEditingBooksSubjects = () => this.setState({ booksSubjectModifying: null });
 
-  editTagsForBook = book => this.setState({ booksTagModifying: [book] });
-  editTagsForSelectedBooks = () => this.setState({ booksTagModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id]) });
+  editTagsForBook = book => this.setState({ booksTagModifying: [book], booksTagModalLoaded: true });
+  editTagsForSelectedBooks = () =>
+    this.setState({ booksTagModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id]), booksTagModalLoaded: true });
   doneEditingBooksTags = () => this.setState({ booksTagModifying: null });
 
   editBook = book =>
     this.setState({
+      bookEditingModalLoaded: true,
       isEditingBook: true,
       editingBook: book
     });
@@ -119,7 +128,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
         : "";
 
     let { state, editBook, editTagsForBook, editSubjectsForBook } = this;
-    let { isEditingBook, editingFilters, beginEditFilters, endEditFilters } = state;
+    let { isEditingBook, bookEditingModalLoaded, editingFilters, beginEditFilters, endEditFilters } = state;
     let { subjectEditModalOpen, booksSubjectModifying, booksTagModifying, tagEditModalOpen } = state;
 
     return (
@@ -142,7 +151,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
 
             <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} />
 
-            {isEditingBook ? (
+            {bookEditingModalLoaded ? (
               <ManualBookEntry
                 title={editingBook ? `Edit ${editingBook.title}` : ""}
                 dragTitle={dragTitle}
@@ -160,12 +169,14 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
         <br />
         <br />
 
-        {booksSubjectModifying ? <BookSubjectSetter modifyingBooks={booksSubjectModifying} onDone={this.doneEditingBooksSubjects} /> : null}
-        {booksTagModifying ? <BookTagSetter modifyingBooks={booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
+        {this.state.booksSubjectModalLoaded ? (
+          <BookSubjectSetter modifyingBooks={booksSubjectModifying} onDone={this.doneEditingBooksSubjects} />
+        ) : null}
+        {this.state.booksTagModalLoaded ? <BookTagSetter modifyingBooks={booksTagModifying} onDone={this.doneEditingBooksTags} /> : null}
 
-        {subjectEditModalOpen ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={this.stopEditingSubjects} /> : null}
-        {tagEditModalOpen ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
-        {editingFilters ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
+        {this.state.subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={this.stopEditingSubjects} /> : null}
+        {this.state.tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
+        {this.state.editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
       </div>
     );
   }
