@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="react-redux/static/bootstrap/css/bootstrap-booklist-build.css">
     <link rel="stylesheet" href="react-redux/static/fontawesome/css/font-awesome-booklist-build.css">
     <link rel="stylesheet" href="react-redux/node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css">
+    <link rel="stylesheet" href="react-redux/node_modules/@reach/dialog/styles.css">
     
 
     <style type="text/css">
@@ -81,20 +82,20 @@
 
         .wait-for-loading > i { position: fixed; top: 50%; left: 50%; opacity:0.2; z-index: 5000; }
 
-        .book-scan-results-enter {
+        .fade-transition-enter {
             opacity: 0.01;
         }
 
-        .book-scan-results-enter.book-scan-results-enter-active {
+        .fade-transition-enter.fade-transition-enter-active {
             opacity: 1;
             transition: opacity 500ms ease-in;
         }
 
-        .book-scan-results-exit {
+        .fade-transition-exit {
             opacity: 1;
         }
 
-        .book-scan-results-exit.book-scan-results-exit-active {
+        .fade-transition-exit.fade-transition-exit-active {
             opacity: 0.01;
             transition: opacity 300ms ease-in;
         }

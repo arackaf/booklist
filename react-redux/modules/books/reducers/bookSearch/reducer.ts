@@ -89,7 +89,7 @@ export const selectSelectedSubjects = createSelector(
 
 export const selectSelectedTags = createSelector(
   (state: BooksModuleType) => state.booksModule.bookSearch,
-  (state: BooksModuleType) => state.booksModule.tags.tagHash,
+  (state: BooksModuleType) => state.app.tagHash,
   (filters, hash) => {
     return projectSelectedItems(filters.hashFilters.tags, hash);
   }

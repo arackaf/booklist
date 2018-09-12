@@ -1,6 +1,6 @@
 import { hashOf } from "applicationRoot/rootReducer";
 import { bulkMerge } from "util/immutableHelpers";
-import { BooksModuleType, BooksReducerType, BookSearchType, TagsType } from "modules/books/reducers/reducer";
+import { BooksModuleType, BooksReducerType, BookSearchType } from "modules/books/reducers/reducer";
 
 import update from "immutability-helper";
 
@@ -190,7 +190,7 @@ export const selectBookList = createSelector(
   (state: BooksModuleType) => state.booksModule.books.booksLoading,
   (state: BooksModuleType) => state.booksModule.books.booksHash,
   (state: BooksModuleType) => state.app.subjectHash,
-  (state: BooksModuleType) => state.booksModule.tags.tagHash,
+  (state: BooksModuleType) => state.app.tagHash,
   (booksLoading, booksHash, subjectsHash, tagHash) => {
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
     books.forEach((b: IBookDisplay) => {

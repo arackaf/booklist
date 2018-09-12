@@ -14,12 +14,12 @@ import {
   SUBJECT_DELETED
 } from "./rootReducerActionNames";
 
-import { Client, compress } from "micro-graphql-react";
+import { Client } from "micro-graphql-react";
 
-import AllLabelColorsQuery from "../modules/rootGraphql/allLabelColors.graphql";
-import AllSubjectsQuery from "../modules/rootGraphql/allSubjects.graphql";
-import DeleteSubjectMutation from "../modules/rootGraphql/deleteSubject.graphql";
-import UpdateSubjectMutation from "../modules/rootGraphql/updateSubject.graphql";
+import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
+import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
+import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 
 export const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -53,6 +53,8 @@ export const setModule = module => ({ type: SET_MODULE, module });
 export const setLoggedIn = userId => ({ type: SET_LOGGED_IN, userId });
 export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 
+export const setIsTouch = value => ({ type: SET_IS_TOUCH, value });
+
 let subjectsLoaded = false;
 
 export function loadSubjects() {
@@ -80,19 +82,19 @@ export function loadSubjects() {
   };
 }
 
-export const subjectEditingActions = {
-  saveSubject(subjectProps, dispatch) {
-    graphqlClient.runMutation(UpdateSubjectMutation, { ...subjectProps }).then(resp => {
-      let affectedSubjects = resp.updateSubject;
-      dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
-    });
-  },
-  deleteSubject(_id, dispatch) {
-    return graphqlClient.runMutation(DeleteSubjectMutation, { _id }).then(resp => {
-      dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
-      return { subjectsDeleted: resp.deleteSubject };
-    });
-  }
+export const deleteSubject = _id => dispatch => {
+  return graphqlClient.runMutation(DeleteSubjectMutation, { _id }).then(resp => {
+    dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
+    return { subjectsDeleted: resp.deleteSubject };
+  });
 };
 
-export const setIsTouch = value => ({ type: SET_IS_TOUCH, value });
+export const createOrUpdateSubject = subject => dispatch => {
+  let { _id, name, parentId, backgroundColor, textColor } = subject;
+  let request = { _id: _id || null, name, parentId, backgroundColor, textColor };
+
+  graphqlClient.runMutation(UpdateSubjectMutation, { ...request }).then(resp => {
+    let affectedSubjects = resp.updateSubject;
+    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
+  });
+};
