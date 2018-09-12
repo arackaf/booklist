@@ -60,6 +60,7 @@ export default class Bar extends PureComponent<any, any> {
     this._manageTooltip(false);
   };
   componentDidMount() {
+    document.getElementById("main-content").addEventListener("scroll", this.hideTooltipImmediate);
     let { data, count, drilldown, chartIndex } = this.props;
     this.manageTooltip = debounce(this._manageTooltip, 50);
 
@@ -89,13 +90,20 @@ export default class Bar extends PureComponent<any, any> {
     this.tooltip = tooltip;
     document.body.appendChild(tooltip);
   }
-  showTooltip = evt => {
-    evt && evt.persist();
+  componentWillUnmount() {
+    document.getElementById("main-content").removeEventListener("scroll", this.hideTooltipImmediate);
+  }
+  showTooltip = () => {
     this.manageTooltip(true);
   };
-  hideTooltip = evt => {
-    evt && evt.persist();
+  hideTooltip = () => {
     this.manageTooltip(false);
+  };
+  hideTooltipImmediate = () => {
+    this._manageTooltip(false);
+  };
+  showTooltipImmediate = () => {
+    this._manageTooltip(true);
   };
   _toggleTooltip = () => {
     this._manageTooltip(!this.tooltipShown);
@@ -106,6 +114,7 @@ export default class Bar extends PureComponent<any, any> {
     return data.entries.length == 1 ? (
       <SingleBar
         showTooltip={this.showTooltip}
+        showTooltipImmediate={this.showTooltipImmediate}
         hideTooltip={this.hideTooltip}
         toggleTooltip={this._toggleTooltip}
         ref={el => (this.el = el)}
@@ -116,6 +125,7 @@ export default class Bar extends PureComponent<any, any> {
     ) : (
       <MultiBar
         showTooltip={this.showTooltip}
+        showTooltipImmediate={this.showTooltipImmediate}
         hideTooltip={this.hideTooltip}
         toggleTooltip={this._toggleTooltip}
         ref={el => (this.el = el)}
@@ -146,12 +156,13 @@ class SingleBar extends PureComponent<any, any> {
       .attr("x", this.props.x);
   }
   render() {
-    let { x, height, width, color, graphWidth, showTooltip, hideTooltip, toggleTooltip } = this.props;
+    let { x, height, width, color, graphWidth, showTooltip, hideTooltip, toggleTooltip, showTooltipImmediate } = this.props;
     let { initialWidth } = this.state;
 
     return (
       <rect
         onTouchStart={toggleTooltip}
+        onMouseMove={showTooltipImmediate}
         onMouseOver={showTooltip}
         onMouseOut={hideTooltip}
         ref={el => (this.el = el)}
@@ -200,13 +211,15 @@ class MultiBar extends PureComponent<any, any> {
     });
   }
   render() {
-    let { x, height, width, data, graphWidth, showTooltip, hideTooltip, toggleTooltip } = this.props;
+    let { data, showTooltip, hideTooltip, toggleTooltip, showTooltipImmediate } = this.props;
     let { initialWidth } = this.state;
     let colors = data.entries.map(e => e.color);
 
     return (
-      <g onTouchStart={toggleTooltip} onMouseOver={showTooltip} onMouseOut={hideTooltip}>
-        {colors.map((color, i) => <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} key={i} />)}
+      <g onTouchStart={toggleTooltip} onMouseOver={showTooltip} onMouseMove={showTooltipImmediate} onMouseOut={hideTooltip}>
+        {colors.map((color, i) => (
+          <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} key={i} />
+        ))}
       </g>
     );
   }
