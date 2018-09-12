@@ -26,18 +26,30 @@
 
         .d3-tooltip {
             position: absolute;
-            border-radius: 8px;
+            border-radius: 3px;
             /*display: none;*/
             left: 100;
             top: 100;
             min-width: 80px;
             height: auto;
-            background: none repeat scroll 0 0 #ffffff;
-            background: lightsteelblue;	
+            background: white;
+            border: 1px solid darkgray;
             padding-top: 14px;
             padding-bottom: 14px;
             padding-right: 25px;
             padding-left: 8px;
+        }
+        
+        .d3-tooltip .heading {
+            margin: 0;
+            padding-bottom: 10px; 
+            color: black;
+            text-decoration: underline
+        }
+        .d3-tooltip a {
+            color: black;
+            font-size: 12pt;
+            text-decoration: none;
         }
 
         a { cursor: pointer; }

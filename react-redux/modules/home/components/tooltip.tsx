@@ -10,17 +10,17 @@ export default class Tooltip extends PureComponent<any, any> {
 
     return (
       <div style={{ position: "relative", marginLeft: "-5px" }}>
-        <a
-          onClick={this.props.removeBar}
-          style={{ position: "absolute", top: 0, right: 0, marginRight: -20, marginTop: -15, textDecoration: "none" }}
-        >
-          X
-        </a>
-        <h4 style={{ margin: 0, paddingBottom: "5px" }}>
+        <h4 className="heading">
           {display}: <span>{data.count}</span>
-          <div>{childSubjects.length ? <a onClick={() => drilldown(chartIndex, childSubjects, display)}>Drilldown</a> : null}</div>
         </h4>
-        <br />
+        <button className="btn btn-xs" onClick={this.props.removeBar}>
+          <i className="far fa-undo" />
+        </button>
+        {childSubjects.length ? (
+          <button className="btn btn-xs" style={{ marginLeft: "5px" }} onClick={() => drilldown(chartIndex, childSubjects, display)}>
+            <i className="far fa-angle-double-down" />
+          </button>
+        ) : null}
       </div>
     );
   }
