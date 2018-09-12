@@ -55,15 +55,20 @@ export default class RecommendationList extends Component<Partial<ReturnType<typ
             </table>
           </div>
           <div className="col-xs-6">
-            {recommendations && recommendations.length ? (
-              <table className="table table-condensed table-striped">
-                <tbody>
-                  {recommendations.map(book => (
-                    <DisplayRecommendation key={book._id} book={book} />
-                  ))}
-                </tbody>
-              </table>
-            ) : null}
+            <div style={{ marginTop: "5px" }}>
+              {recommendations && recommendations.length ? (
+                <>
+                  <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
+                  <table className="table table-condensed table-striped">
+                    <tbody>
+                      {recommendations.map(book => (
+                        <DisplayRecommendation key={book._id} book={book} />
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
         <SearchModal isOpen={this.state.searchModalOpen} onHide={this.closeModal} />
