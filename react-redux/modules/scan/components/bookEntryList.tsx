@@ -55,6 +55,7 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
   }
   manuallyEnterBook() {
     this.setState({
+      modalEntryLoaded: true,
       inManualEntry: true,
       manualSaved: false,
       manualBook: defaultEmptyBook()
@@ -179,7 +180,7 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
           </div>
         </div>
 
-        {this.state.inManualEntry ? (
+        {this.state.modalEntryLoaded ? (
           <ManualBookEntry
             title={"Manually enter a book"}
             dragTitle={"Click or drag to upload a cover image. The uploaded image will be scaled down as needed"}

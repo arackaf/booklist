@@ -76,6 +76,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
     booksSubjectModalLoaded: null,
     booksTagModifying: null,
     booksTagModalLoaded: null,
+    bookEditingModalLoaded: false,
     isEditingBook: false,
     editingBook: null,
     editingFilters: false,
@@ -100,6 +101,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
 
   editBook = book =>
     this.setState({
+      bookEditingModalLoaded: true,
       isEditingBook: true,
       editingBook: book
     });
@@ -126,7 +128,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
         : "";
 
     let { state, editBook, editTagsForBook, editSubjectsForBook } = this;
-    let { isEditingBook, editingFilters, beginEditFilters, endEditFilters } = state;
+    let { isEditingBook, bookEditingModalLoaded, editingFilters, beginEditFilters, endEditFilters } = state;
     let { subjectEditModalOpen, booksSubjectModifying, booksTagModifying, tagEditModalOpen } = state;
 
     return (
@@ -149,7 +151,7 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
 
             <DisplayBookResults {...{ editBook, editTagsForBook, editSubjectsForBook }} />
 
-            {isEditingBook ? (
+            {bookEditingModalLoaded ? (
               <ManualBookEntry
                 title={editingBook ? `Edit ${editingBook.title}` : ""}
                 dragTitle={dragTitle}
