@@ -83,7 +83,7 @@ class HomeIfLoggedIn extends Component<any, any> {
               )}
             </Measure>
           </Tab>
-          <Tab name="search" caption="Find new books">
+          <Tab name="search" caption="Discover books">
             <RecommendMain />
           </Tab>
         </Tabs>
