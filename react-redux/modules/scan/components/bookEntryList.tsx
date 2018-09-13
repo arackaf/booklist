@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
-import Collapse from "react-collapse";
-
 import * as bookEntryActionCreators from "../reducers/actionCreators";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 import Loadable from "react-loadable";
@@ -107,26 +105,30 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
                 )}
               </div>
 
-              <Collapse isOpened={this.state.showIncomingQueue} springConfig={{ stiffness: 280, damping: 26 }}>
-                <div>
-                  <br />
-                  <div className="alert alert-info alert-slim">
-                    Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated
-                    place to see what's been saved, and what failed to be found.
-                  </div>
+              <TransitionGroup>
+                {this.state.showIncomingQueue ? (
+                  <CSSTransition classNames="fade-transition" timeout={300} key={1}>
+                    <div>
+                      <br />
+                      <div className="alert alert-info alert-slim">
+                        Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a
+                        dedicated place to see what's been saved, and what failed to be found.
+                      </div>
 
-                  <ul style={{ marginBottom: 0 }}>
-                    <TransitionGroup>
-                      {this.props.booksJustSaved.map(book => (
-                        <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
-                          <li style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
-                        </CSSTransition>
-                      ))}
-                    </TransitionGroup>
-                  </ul>
-                  <br />
-                </div>
-              </Collapse>
+                      <ul style={{ marginBottom: 0 }}>
+                        <TransitionGroup>
+                          {this.props.booksJustSaved.map(book => (
+                            <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
+                              <li style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
+                            </CSSTransition>
+                          ))}
+                        </TransitionGroup>
+                      </ul>
+                      <br />
+                    </div>
+                  </CSSTransition>
+                ) : null}
+              </TransitionGroup>
             </div>
             <div className="col-md-6 col-md-pull-6">
               <h4 style={{ marginTop: 0, marginBottom: 0 }}>
@@ -135,24 +137,25 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
                   Manual entry
                 </a>
               </h4>
-              <Collapse
-                style={{ width: "80%" }}
-                isOpened={this.state.showScanInstructions}
-                springConfig={{ stiffness: 280, damping: 26 }}
-                keepCollapsedContent={true}
-              >
-                <div>
-                  <div style={{ height: 10 }} />
-                  <div style={{ margin: 0 }} className="alert alert-info alert-slim">
-                    Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for
-                    each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
-                    <br /> <br />
-                    After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books
-                    with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may
-                    get overridden.
-                  </div>
-                </div>
-              </Collapse>
+              <TransitionGroup>
+                {this.state.showScanInstructions ? (
+                  <CSSTransition classNames="fade-transition" timeout={300} key={1}>
+                    <div style={{ width: "80%" }}>
+                      <div>
+                        <div style={{ height: 10 }} />
+                        <div style={{ margin: 0 }} className="alert alert-info alert-slim">
+                          Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to
+                          search for each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                          <br /> <br />
+                          After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of
+                          books with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or
+                          else they may get overridden.
+                        </div>
+                      </div>
+                    </div>
+                  </CSSTransition>
+                ) : null}
+              </TransitionGroup>
               <br />
               {this.props.entryList.map((entry, i) => (
                 <div key={i}>
