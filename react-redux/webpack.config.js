@@ -89,7 +89,8 @@ module.exports = {
         "static/fontawesome/css/font-awesome-booklist-build.css",
         "static/main-icon2.png",
         "offline.htm",
-        "node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css"
+        "node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css",
+        "node_modules/@reach/dialog/styles.css"
       ],
       globIgnores: [],
       modifyUrlPrefix: {
