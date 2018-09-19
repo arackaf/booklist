@@ -104,8 +104,9 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
                     <input
                       defaultValue={this.props.pages}
                       ref={el => (this.pagesEl = el)}
+                      style={{ width: "100px" }}
                       type="number"
-                      placeholder="Number of pages"
+                      placeholder="Pages"
                       className="form-control"
                     />
                   </div>
