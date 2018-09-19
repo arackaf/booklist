@@ -164,7 +164,7 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number; view
       <tr key={"details" + book._id} style={{ backgroundColor }}>
         <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
           <div className="row">
-            <div className="col-xs-6">
+            <div style={{ position: "static" }} className="col-xs-6">
               {!book.editorialReviews.length ? (
                 <h4 style={{ marginTop: 0, marginBottom: 0 }}>No editorial reviews for this book</h4>
               ) : (
@@ -181,7 +181,7 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number; view
               )}
             </div>
 
-            <div className="col-xs-6">
+            <div style={{ position: "static" }} className="col-xs-6">
               {!book.similarBooks.length ? (
                 <h4 style={{ marginTop: 0, marginBottom: 0 }}>No similar items found for this book</h4>
               ) : (
