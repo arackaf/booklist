@@ -65,10 +65,13 @@ class SubjectDAO {
       )
     );
 
-    return await db
+    let results = await db
       .collection("subjects")
       .find({ $or: [{ path: { $regex: `.*,${_id},` } }, { _id: ObjectId(_id) }] })
       .toArray();
+
+    results.forEach(s => (s._id = s._id + ""));
+    return results;
   }
   async deleteSubject(db, _id) {
     let subjectsToDelete = (await db
