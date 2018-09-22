@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import TagMetadata from "./Tag";
 
@@ -18,6 +18,12 @@ export async function loadTags(db, queryPacket, root, args, context, ast) {
   await processHook(hooksObj, "Tag", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Tags = await dbHelpers.runQuery(db, "tags", aggregateItems);
   await processHook(hooksObj, "Tag", "adjustResults", Tags);
+  Tags.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(Tags, TagMetadata);
   return Tags;
 }
 
@@ -75,6 +81,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: TagMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Tag: null };
       }
+      await setUpOneToManyRelationships(newObject, args.Tag, TagMetadata, { db, hooksObj, root, args, context, ast });
       let result = $project ? (await loadTags(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
@@ -93,6 +100,7 @@ export default {
       if (!$match._id) {
         throw "No _id sent, or inserted in middleware";
       }
+      await setUpOneToManyRelationshipsForUpdate([args._id], args, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "tags", $match, updates);
       await processHook(hooksObj, "Tag", "afterUpdate", $match, updates, root, args, context, ast);
       
@@ -111,6 +119,7 @@ export default {
       if (await processHook(hooksObj, "Tag", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { success: true };
       }
+      await setUpOneToManyRelationshipsForUpdate(args._ids, args, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "tags", $match, updates, { multi: true });
       await processHook(hooksObj, "Tag", "afterUpdate", $match, updates, root, args, context, ast);
       

@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import SubjectMetadata from "./Subject";
 import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
@@ -20,6 +20,12 @@ export async function loadSubjects(db, queryPacket, root, args, context, ast) {
   await processHook(hooksObj, "Subject", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Subjects = await dbHelpers.runQuery(db, "subjects", aggregateItems);
   await processHook(hooksObj, "Subject", "adjustResults", Subjects);
+  Subjects.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(Subjects, SubjectMetadata);
   return Subjects;
 }
 
@@ -78,6 +84,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: SubjectMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Subject: null };
       }
+      await setUpOneToManyRelationships(newObject, args.Subject, SubjectMetadata, { db, hooksObj, root, args, context, ast });
       let result = $project ? (await loadSubjects(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,

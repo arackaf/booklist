@@ -1,9 +1,9 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import BookMetadata from "./Book";
-import { loadBookSummarys} from "../BookSummary/resolver";
+import { loadBookSummarys } from "../BookSummary/resolver";
 import BookSummaryMetadata from "../BookSummary/BookSummary";
 import flatMap from "lodash.flatmap";
 import DataLoader from "dataloader";
@@ -22,6 +22,12 @@ export async function loadBooks(db, queryPacket, root, args, context, ast) {
   await processHook(hooksObj, "Book", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Books = await dbHelpers.runQuery(db, "books", aggregateItems);
   await processHook(hooksObj, "Book", "adjustResults", Books);
+  Books.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(Books, BookMetadata);
   return Books;
 }
 
@@ -30,7 +36,7 @@ export const Book = {
     if (context.__Book_similarBooksDataLoader == null) {
       let db = await context.__mongodb;
       context.__Book_similarBooksDataLoader = new DataLoader(async keyArrays => {
-        let $match = { asin: { $in: flatMap(keyArrays || [], ids => ids) } };
+        let $match = { asin: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
         let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, constants.useCurrentSelectionSet, { force: ["asin"] });
         let { $project, $sort, $limit, $skip } = queryPacket;
         
@@ -40,6 +46,7 @@ export const Book = {
           { $project },
         ].filter(item => item);
         let results = await dbHelpers.runQuery(db, "amazonReference", aggregateItems);
+        cleanUpResults(results, BookSummaryMetadata);
 
         let finalResult = keyArrays.map(keyArr => []);
         let keySets = keyArrays.map(keyArr => new Set(keyArr.map(asin => "" + asin)));
@@ -108,6 +115,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: BookMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Book: null };
       }
+      await setUpOneToManyRelationships(newObject, args.Book, BookMetadata, { db, hooksObj, root, args, context, ast });
       let result = $project ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
@@ -126,6 +134,7 @@ export default {
       if (!$match._id) {
         throw "No _id sent, or inserted in middleware";
       }
+      await setUpOneToManyRelationshipsForUpdate([args._id], args, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "books", $match, updates);
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
       
@@ -144,6 +153,7 @@ export default {
       if (await processHook(hooksObj, "Book", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { success: true };
       }
+      await setUpOneToManyRelationshipsForUpdate(args._ids, args, BookMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "books", $match, updates, { multi: true });
       await processHook(hooksObj, "Book", "afterUpdate", $match, updates, root, args, context, ast);
       

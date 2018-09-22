@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import UserMetadata from "./User";
 
@@ -18,6 +18,12 @@ export async function loadUsers(db, queryPacket, root, args, context, ast) {
   await processHook(hooksObj, "User", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Users = await dbHelpers.runQuery(db, "users", aggregateItems);
   await processHook(hooksObj, "User", "adjustResults", Users);
+  Users.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(Users, UserMetadata);
   return Users;
 }
 
@@ -77,6 +83,7 @@ export default {
       if (!$match._id) {
         throw "No _id sent, or inserted in middleware";
       }
+      await setUpOneToManyRelationshipsForUpdate([args._id], args, UserMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "users", $match, updates);
       await processHook(hooksObj, "User", "afterUpdate", $match, updates, root, args, context, ast);
       

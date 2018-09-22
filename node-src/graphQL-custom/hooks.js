@@ -1,8 +1,8 @@
-import BooksMiddleware from "../graphQL-custom/middleware/books";
-import SubjectsMiddleware from "../graphQL-custom/middleware/subjects";
-import TagsMiddleware from "../graphQL-custom/middleware/tags";
-import UsersMiddleware from "../graphQL-custom/middleware/users";
-import PublicUsersMiddleware from "../graphQL-custom/middleware/publicUsers";
+import BooksMiddleware from "./middleware/books";
+import SubjectsMiddleware from "./middleware/subjects";
+import TagsMiddleware from "./middleware/tags";
+import UsersMiddleware from "./middleware/users";
+import PublicUsersMiddleware from "./middleware/publicUsers";
 
 export default {
   Root: {

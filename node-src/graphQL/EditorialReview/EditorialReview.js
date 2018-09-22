@@ -3,5 +3,8 @@ export default {
   fields: {
     source: "String",
     content: "String"
+  },
+  relationships: {
+
   }
 };

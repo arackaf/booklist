@@ -31,6 +31,7 @@ export default {
       get type(){ return BookSummary; },
       fkField: "similarItems",
       keyField: "asin",
+      manyToMany: true,
       __isArray: true,
       __isObject: false
     }

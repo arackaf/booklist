@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import PublicUserMetadata from "./PublicUser";
 
@@ -18,6 +18,12 @@ export async function loadPublicUsers(db, queryPacket, root, args, context, ast)
   await processHook(hooksObj, "PublicUser", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let PublicUsers = await dbHelpers.runQuery(db, "users", aggregateItems);
   await processHook(hooksObj, "PublicUser", "adjustResults", PublicUsers);
+  PublicUsers.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(PublicUsers, PublicUserMetadata);
   return PublicUsers;
 }
 
