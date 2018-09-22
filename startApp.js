@@ -17,6 +17,8 @@ import Jimp from "jimp";
 import compression from "compression";
 import http from "http";
 
+import connectToDb from "./node-src/dataAccess/connect";
+
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
 
@@ -29,7 +31,7 @@ import { Strategy as RememberMeStrategy } from "passport-remember-me";
 import { easyControllers } from "easy-express-controllers";
 import expressWsImport from "express-ws";
 import webpush from "web-push";
-import { MongoClient } from "mongodb";
+
 import expressGraphql from "express-graphql";
 
 import resolvers from "./node-src/graphQL/resolver";
@@ -141,7 +143,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
-const dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+const dbPromise = connectToDb();
 export const root = { db: dbPromise };
 export const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
@@ -155,7 +157,6 @@ app.use(
   })
 );
 
-const dbPromisePublic = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
 const rootPublic = { db: dbPromise };
 const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
 

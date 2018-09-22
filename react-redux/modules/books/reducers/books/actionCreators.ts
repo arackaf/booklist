@@ -75,7 +75,7 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
     publisher_contains: bookSearchFilters.publisher || void 0,
     publicUserId: publicUserId,
     subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-    bookSearchVersion: bookSearchState.searchVersion
+    bookSearchVersion: "" + bookSearchState.searchVersion
   };
   if (bookSearchFilters.pages != "") {
     getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = bookSearchFilters.pages;
