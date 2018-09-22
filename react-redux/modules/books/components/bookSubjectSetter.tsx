@@ -39,6 +39,12 @@ export default class BookSubjectSetter extends Component<
     removingSubjects: []
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (!(prevProps.modifyingBooks || []).length && (this.props.modifyingBooks || []).length) {
+      this.setState({ addingSubjects: [], removingSubjects: [] });
+    }
+  }
+
   setBooksSubjects = () => {
     let args = { books: this.props.modifyingBooks.map(b => b._id), add: this.state.addingSubjects, remove: this.state.removingSubjects };
     Promise.resolve(this.props.runMutation(args)).then(() => {
