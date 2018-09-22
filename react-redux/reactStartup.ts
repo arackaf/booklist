@@ -2,7 +2,6 @@ import { renderUI, clearUI } from "applicationRoot/renderUI";
 import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";
-import ajaxUtil from "util/ajaxUtil";
 import "react-loadable";
 import "immutability-helper";
 
@@ -24,12 +23,14 @@ import {
   setLoggedIn,
   setPublicInfo,
   setRequestDesktop,
-  setIsTouch
+  setIsTouch,
+  loadSubjects
 } from "./applicationRoot/rootReducerActionCreators";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import { gqlGet } from "util/graphqlUtil";
+import { loadTags } from "applicationRoot/tags/actionCreators";
 
 (function() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
@@ -112,8 +113,12 @@ if (desktopRequested) {
 }
 
 let currentModule;
-let currentModuleObject;
 let publicUserCache = {};
+
+if (isLoggedIn().logged_in) {
+  store.dispatch(loadTags());
+  store.dispatch(loadSubjects());
+}
 
 const history = createHistory();
 export { history };
@@ -206,7 +211,6 @@ function loadModule(location) {
       if (currentModule != module) return;
 
       let priorState = store.getState();
-      currentModuleObject = moduleObject;
       store.dispatch(setModule(currentModule));
 
       if (publicUserInfo) {
