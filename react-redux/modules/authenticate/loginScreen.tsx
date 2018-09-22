@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { loadCurrentModule } from "reactStartup";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
+import { store } from "applicationRoot/store";
+import { loadTags } from "applicationRoot/tags/actionCreators";
+import { loadSubjects } from "applicationRoot/rootReducerActionCreators";
 
 const errorCodes = {
   s1: "This user already exists",
@@ -22,8 +25,15 @@ class Login extends Component<any, any> {
       rememberme = this.refs.rememberme.checked ? 1 : 0;
 
     this.setState({ running: true });
-    ajaxUtil.post("/react-redux/login", { username, password, rememberme }, loadCurrentModule, () =>
-      this.setState({ running: false, errorCode: "c2" })
+    ajaxUtil.post(
+      "/react-redux/login",
+      { username, password, rememberme },
+      () => {
+        store.dispatch(loadTags());
+        store.dispatch(loadSubjects());
+        loadCurrentModule();
+      },
+      () => this.setState({ running: false, errorCode: "c2" })
     );
   }
   createUser(evt) {

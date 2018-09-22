@@ -2,8 +2,6 @@ import rootReducer from "./rootReducer";
 import thunkMiddleware from "redux-thunk";
 import { applyMiddleware, createStore, combineReducers } from "redux";
 import throttle from "lodash.throttle";
-import { loadTags } from "./tags/actionCreators";
-import { loadSubjects } from "./rootReducerActionCreators";
 
 let asyncReducers = {};
 export function getNewReducer(moduleInfo?, initialState = {}): any {
@@ -75,9 +73,6 @@ if (false && localStorage) {
 }
 
 export const store = createStoreWithMiddleware(getNewReducer(null, initialState), initialState);
-
-store.dispatch(loadTags());
-store.dispatch(loadSubjects());
 
 if (false && localStorage) {
   function saveState() {
