@@ -38,6 +38,12 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
     removingTags: []
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (!(prevProps.modifyingBooks || []).length && (this.props.modifyingBooks || []).length) {
+      this.setState({ addingTags: [], removingTags: [] });
+    }
+  }
+
   setBooksTags = () => {
     let args = { books: this.props.modifyingBooks.map(b => b._id), add: this.state.addingTags, remove: this.state.removingTags };
     Promise.resolve(this.props.runMutation(args)).then(() => {
