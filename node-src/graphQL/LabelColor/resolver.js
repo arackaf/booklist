@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import LabelColorMetadata from "./LabelColor";
 
@@ -18,6 +18,12 @@ export async function loadLabelColors(db, queryPacket, root, args, context, ast)
   await processHook(hooksObj, "LabelColor", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let LabelColors = await dbHelpers.runQuery(db, "labelColors", aggregateItems);
   await processHook(hooksObj, "LabelColor", "adjustResults", LabelColors);
+  LabelColors.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(LabelColors, LabelColorMetadata);
   return LabelColors;
 }
 

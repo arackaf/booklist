@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../graphQL-custom/hooks.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import BookSummaryMetadata from "./BookSummary";
 
@@ -18,6 +18,12 @@ export async function loadBookSummarys(db, queryPacket, root, args, context, ast
   await processHook(hooksObj, "BookSummary", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let BookSummarys = await dbHelpers.runQuery(db, "amazonReference", aggregateItems);
   await processHook(hooksObj, "BookSummary", "adjustResults", BookSummarys);
+  BookSummarys.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(BookSummarys, BookSummaryMetadata);
   return BookSummarys;
 }
 
@@ -75,6 +81,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: BookSummaryMetadata, hooksObj, root, args, context, ast })) == null) {
         return { BookSummary: null };
       }
+      await setUpOneToManyRelationships(newObject, args.BookSummary, BookSummaryMetadata, { db, hooksObj, root, args, context, ast });
       let result = $project ? (await loadBookSummarys(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
@@ -93,6 +100,7 @@ export default {
       if (!$match._id) {
         throw "No _id sent, or inserted in middleware";
       }
+      await setUpOneToManyRelationshipsForUpdate([args._id], args, BookSummaryMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "amazonReference", $match, updates);
       await processHook(hooksObj, "BookSummary", "afterUpdate", $match, updates, root, args, context, ast);
       
@@ -111,6 +119,7 @@ export default {
       if (await processHook(hooksObj, "BookSummary", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { success: true };
       }
+      await setUpOneToManyRelationshipsForUpdate(args._ids, args, BookSummaryMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "amazonReference", $match, updates, { multi: true });
       await processHook(hooksObj, "BookSummary", "afterUpdate", $match, updates, root, args, context, ast);
       

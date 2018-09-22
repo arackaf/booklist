@@ -9,5 +9,8 @@ export default {
   },
   extras: {
     overrides: ["updatePublicUser", "updatePublicUsers", "updatePublicUsersBulk", "createPublicUser", "deletePublicUser"]
+  },
+  relationships: {
+
   }
 };

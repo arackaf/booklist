@@ -10,5 +10,8 @@ export default {
     smallImage: "String",
     mediumImage: "String",
     authors: "StringArray"
+  },
+  relationships: {
+
   }
 };

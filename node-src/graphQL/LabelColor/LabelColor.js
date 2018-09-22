@@ -8,5 +8,8 @@ export default {
   },
   extras: {
     overrides: ["getLabelColor", "updateLabelColor", "updateLabelColors", "updateLabelColorsBulk", "createLabelColor", "deleteLabelColor"]
+  },
+  relationships: {
+
   }
 };

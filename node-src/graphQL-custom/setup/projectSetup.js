@@ -1,30 +1,14 @@
-import { dataTypes } from "mongo-graphql-starter";
-const {
-  MongoIdType,
-  MongoIdArrayType,
-  StringType,
-  StringArrayType,
-  BoolType,
-  IntType,
-  IntArrayType,
-  FloatType,
-  FloatArrayType,
-  DateType,
-  arrayOf,
-  objectOf,
-  formattedDate,
-  typeLiteral,
-  relationshipHelpers
-} = dataTypes;
+import { dataTypes, createGraphqlSchema, dbHelpers } from "mongo-graphql-starter";
+const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf } = dataTypes;
 
-const EditorialReview = {
+export const EditorialReview = {
   fields: {
     source: StringType,
     content: StringType
   }
 };
 
-const BookSummary = {
+export const BookSummary = {
   table: "amazonReference",
   fields: {
     _id: MongoIdType,
@@ -38,7 +22,7 @@ const BookSummary = {
   }
 };
 
-const Book = {
+export const Book = {
   table: "books",
   fields: {
     _id: MongoIdType,
@@ -64,16 +48,19 @@ const Book = {
     { name: "publicUserId", type: "String" },
     { name: "bookSearchVersion", type: "String" },
     { name: "isBookDetails", type: "String" }
-  ]
+  ],
+  relationships: {
+    similarBooks: {
+      get type() {
+        return BookSummary;
+      },
+      fkField: "similarItems",
+      keyField: "asin"
+    }
+  }
 };
 
-relationshipHelpers.projectIds(Book, "similarBooks", {
-  type: BookSummary,
-  fkField: "similarItems",
-  keyField: "asin"
-});
-
-const Subject = {
+export const Subject = {
   table: "subjects",
   fields: {
     _id: MongoIdType,
@@ -91,7 +78,7 @@ const Subject = {
   manualQueryArgs: [{ name: "publicUserId", type: "String" }]
 };
 
-const Tag = {
+export const Tag = {
   table: "tags",
   fields: {
     _id: MongoIdType,
@@ -104,7 +91,7 @@ const Tag = {
   manualQueryArgs: [{ name: "publicUserId", type: "String" }]
 };
 
-const LabelColor = {
+export const LabelColor = {
   table: "labelColors",
   fields: {
     _id: MongoIdType,
@@ -116,7 +103,7 @@ const LabelColor = {
   }
 };
 
-const User = {
+export const User = {
   table: "users",
   fields: {
     isPublic: BoolType,
@@ -128,7 +115,7 @@ const User = {
   }
 };
 
-const PublicUser = {
+export const PublicUser = {
   table: "users",
   fields: {
     isPublic: StringType,
@@ -138,15 +125,4 @@ const PublicUser = {
   extras: {
     overrides: ["updatePublicUser", "updatePublicUsers", "updatePublicUsersBulk", "createPublicUser", "deletePublicUser"]
   }
-};
-
-export default {
-  Book,
-  BookSummary,
-  EditorialReview,
-  Subject,
-  LabelColor,
-  User,
-  PublicUser,
-  Tag
 };
