@@ -1,7 +1,7 @@
-import { MongoClient } from "mongodb";
+import connectToDb from "./connect";
 
 let db;
-let dbPromise = MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL)
+let dbPromise = connectToDb()
   .then(database => (db = database))
   .then(() => db)
   .catch(err => console.log("Error connecting " + err));
