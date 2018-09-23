@@ -83,7 +83,7 @@ export default class BooksMiddleware {
   async beforeInsert(book, root, args, context, ast) {
     clean(book);
     if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
-      book.smallImage = await saveLocalImageToS3(book.smallImage, context.user.id);
+      book.smallImage = await saveLocalImageToS3(book.smallImage, "5b57f71b6871ae00145198ff");
     }
     if (!book.subjects) {
       book.subjects = [];
@@ -91,21 +91,21 @@ export default class BooksMiddleware {
     if (!book.tags) {
       book.tags = [];
     }
-    book.userId = context.user.id;
+    book.userId = "5b57f71b6871ae00145198ff";
   }
   afterInsert(newObj, root, args, context, ast) {}
   async beforeUpdate(match, updates, root, args, context, ast) {
     if (updates.$set) {
       clean(updates.$set);
     }
-    match.userId = context.user.id;
+    match.userId = "5b57f71b6871ae00145198ff";
     if (updates.$set && updates.$set.smallImage && /^\/uploads\//.test(updates.$set.smallImage)) {
-      updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, context.user.id);
+      updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, "5b57f71b6871ae00145198ff");
     }
   }
   afterUpdate(match, updates, root, args, context, ast) {}
   beforeDelete(match, root, args, context, ast) {
-    match.userId = context.user.id;
+    match.userId = "5b57f71b6871ae00145198ff";
   }
   afterDelete(match, root, args, context, ast) {}
   adjustResults(results) {

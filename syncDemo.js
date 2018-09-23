@@ -1,11 +1,18 @@
 require("dotenv").config();
 const { MongoClient, ObjectId } = require("mongodb");
 
+const connect = () => {
+  return MongoClient.connect(
+    process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL,
+    { useNewUrlParser: true }
+  ).then(client => client.db(process.env.DB_NAME));
+};
+
 let masterId = process.env.DEMO_REPLICATION_MASTER;
 let slaveId = process.env.DEMO_REPLICATION_SLAVE;
 
 async function sync() {
-  let db = await MongoClient.connect(process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL);
+  let db = await connect();
 
   await db.collection("books").remove({ userId: slaveId });
   await db.collection("subjects").remove({ userId: slaveId });
