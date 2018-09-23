@@ -157,7 +157,8 @@ app.use(
   })
 );
 
-const rootPublic = { db: dbPromise };
+const dbPromisePublic = connectToDb();
+const rootPublic = { db: dbPromisePublic };
 const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
 
 app.use("/graphql-public", function(req, res, next) {
