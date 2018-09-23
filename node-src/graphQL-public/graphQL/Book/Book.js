@@ -22,6 +22,10 @@ export default {
     editorialReviews: {
       __isArray: true,
       get type(){ return EditorialReview; }
-    }
+    },
+    similarItems: "StringArray"
+  },
+  relationships: {
+
   }
 };

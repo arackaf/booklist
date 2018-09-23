@@ -8,5 +8,8 @@ export default {
     userId: "String",
     backgroundColor: "String",
     textColor: "String"
+  },
+  relationships: {
+
   }
 };

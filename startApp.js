@@ -37,8 +37,8 @@ import expressGraphql from "express-graphql";
 import resolvers from "./node-src/graphQL/resolver";
 import schema from "./node-src/graphQL/schema";
 
-import resolversPublic from "./node-src/graphQL-public/resolver";
-import schemaPublic from "./node-src/graphQL-public/schema";
+import resolversPublic from "./node-src/graphQL-public/graphQL/resolver";
+import schemaPublic from "./node-src/graphQL-public/graphQL/schema";
 
 import { makeExecutableSchema } from "graphql-tools";
 import { middleware } from "generic-persistgraphql";

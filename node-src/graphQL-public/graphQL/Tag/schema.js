@@ -1,8 +1,6 @@
-import SchemaExtras1 from "../../graphQL-custom/extras/subject/schema";
-
 export const type = `
   
-  type Subject {
+  type Tag {
     _id: String
     name: String
     path: String
@@ -11,30 +9,30 @@ export const type = `
     textColor: String
   }
 
-  type SubjectQueryResults {
-    Subjects: [Subject]
+  type TagQueryResults {
+    Tags: [Tag]
     Meta: QueryResultsMetadata
   }
 
-  type SubjectSingleQueryResult {
-    Subject: Subject
+  type TagSingleQueryResult {
+    Tag: Tag
   }
 
-  type SubjectMutationResult {
+  type TagMutationResult {
     success: Boolean
-    Subject: Subject
+    Tag: Tag
   }
 
-  type SubjectMutationResultMulti {
+  type TagMutationResultMulti {
     success: Boolean
-    Subjects: [Subject]
+    Tags: [Tag]
   }
 
-  type SubjectBulkMutationResult {
+  type TagBulkMutationResult {
     success: Boolean
   }
 
-  input SubjectInput {
+  input TagInput {
     _id: String
     name: String
     path: String
@@ -43,7 +41,7 @@ export const type = `
     textColor: String
   }
 
-  input SubjectMutationInput {
+  input TagMutationInput {
     name: String
     path: String
     userId: String
@@ -51,7 +49,7 @@ export const type = `
     textColor: String
   }
 
-  input SubjectSort {
+  input TagSort {
     _id: Int
     name: Int
     path: Int
@@ -60,7 +58,7 @@ export const type = `
     textColor: Int
   }
 
-  input SubjectFilters {
+  input TagFilters {
     _id: String
     _id_ne: String
     _id_in: [String]
@@ -78,6 +76,13 @@ export const type = `
     path: String
     path_ne: String
     path_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -92,19 +97,43 @@ export const type = `
     textColor: String
     textColor_ne: String
     textColor_in: [String]
-    OR: [SubjectFilters]
+    OR: [TagFilters]
   }
   
 `;
-
+  
+  
 export const mutation = `
 
+  createTag (
+    Tag: TagInput
+  ): TagMutationResult
+
+  updateTag (
+    _id: String,
+    Updates: TagMutationInput
+  ): TagMutationResult
+
+  updateTags (
+    _ids: [String],
+    Updates: TagMutationInput
+  ): TagMutationResultMulti
+
+  updateTagsBulk (
+    Match: TagFilters,
+    Updates: TagMutationInput
+  ): TagBulkMutationResult
+
+  deleteTag (
+    _id: String
+  ): Boolean
 
 `;
 
+
 export const query = `
 
-  allSubjects (
+  allTags (
     _id: String,
     _id_ne: String,
     _id_in: [String],
@@ -122,6 +151,13 @@ export const query = `
     path: String,
     path_ne: String,
     path_in: [String],
+    userId_contains: String,
+    userId_startsWith: String,
+    userId_endsWith: String,
+    userId_regex: String,
+    userId: String,
+    userId_ne: String,
+    userId_in: [String],
     backgroundColor_contains: String,
     backgroundColor_startsWith: String,
     backgroundColor_endsWith: String,
@@ -136,19 +172,20 @@ export const query = `
     textColor: String,
     textColor_ne: String,
     textColor_in: [String],
-    OR: [SubjectFilters],
-    SORT: SubjectSort,
-    SORTS: [SubjectSort],
+    OR: [TagFilters],
+    SORT: TagSort,
+    SORTS: [TagSort],
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int
-  ): SubjectQueryResults
+    PAGE_SIZE: Int,
+    publicUserId: String
+  ): TagQueryResults
 
-  getSubject (
-    _id: String
-  ): SubjectSingleQueryResult
-
-  ${SchemaExtras1.Query || ""}
+  getTag (
+    _id: String,
+    publicUserId: String
+  ): TagSingleQueryResult
 
 `;
+  

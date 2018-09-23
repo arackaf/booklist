@@ -17,6 +17,7 @@ export const type = `
     isRead: Boolean
     dateAdded: String
     editorialReviews: [EditorialReview]
+    similarItems: [String]
   }
 
   type BookQueryResults {
@@ -59,6 +60,7 @@ export const type = `
     isRead: Boolean
     dateAdded: String
     editorialReviews: [EditorialReviewInput]
+    similarItems: [String]
   }
 
   input BookMutationInput {
@@ -102,6 +104,13 @@ export const type = `
     editorialReviews_UPDATE: EditorialReviewArrayMutationInput
     editorialReviews_UPDATES: [EditorialReviewArrayMutationInput]
     editorialReviews_PULL: EditorialReviewFilters
+    similarItems: [String]
+    similarItems_PUSH: String
+    similarItems_CONCAT: [String]
+    similarItems_UPDATE: StringArrayUpdate
+    similarItems_UPDATES: [StringArrayUpdate]
+    similarItems_PULL: [String]
+    similarItems_ADDTOSET: [String]
   }
 
   input BookSort {
@@ -121,6 +130,7 @@ export const type = `
     isRead: Int
     dateAdded: Int
     editorialReviews: Int
+    similarItems: Int
   }
 
   input BookFilters {
@@ -162,6 +172,13 @@ export const type = `
     mediumImage: String
     mediumImage_ne: String
     mediumImage_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
     publisher_contains: String
     publisher_startsWith: String
     publisher_endsWith: String
@@ -226,16 +243,49 @@ export const type = `
     dateAdded_in: [String]
     editorialReviews_count: Int
     editorialReviews: EditorialReviewFilters
+    similarItems_count: Int
+    similarItems_textContains: String
+    similarItems_startsWith: String
+    similarItems_endsWith: String
+    similarItems_regex: String
+    similarItems: [String]
+    similarItems_in: [[String]]
+    similarItems_contains: String
+    similarItems_containsAny: [String]
+    similarItems_ne: [String]
     OR: [BookFilters]
   }
   
 `;
-
+  
+  
 export const mutation = `
 
+  createBook (
+    Book: BookInput
+  ): BookMutationResult
 
+  updateBook (
+    _id: String,
+    Updates: BookMutationInput
+  ): BookMutationResult
+
+  updateBooks (
+    _ids: [String],
+    Updates: BookMutationInput
+  ): BookMutationResultMulti
+
+  updateBooksBulk (
+    Match: BookFilters,
+    Updates: BookMutationInput
+  ): BookBulkMutationResult
+
+  deleteBook (
+    _id: String
+  ): Boolean
 
 `;
+
 
 export const query = `
 
@@ -278,6 +328,13 @@ export const query = `
     mediumImage: String,
     mediumImage_ne: String,
     mediumImage_in: [String],
+    userId_contains: String,
+    userId_startsWith: String,
+    userId_endsWith: String,
+    userId_regex: String,
+    userId: String,
+    userId_ne: String,
+    userId_in: [String],
     publisher_contains: String,
     publisher_startsWith: String,
     publisher_endsWith: String,
@@ -342,6 +399,16 @@ export const query = `
     dateAdded_in: [String],
     editorialReviews_count: Int,
     editorialReviews: EditorialReviewFilters,
+    similarItems_count: Int,
+    similarItems_textContains: String,
+    similarItems_startsWith: String,
+    similarItems_endsWith: String,
+    similarItems_regex: String,
+    similarItems: [String],
+    similarItems_in: [[String]],
+    similarItems_contains: String,
+    similarItems_containsAny: [String],
+    similarItems_ne: [String],
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],
@@ -350,6 +417,7 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int,
     searchChildSubjects: Boolean,
+    publicUserId: String,
     bookSearchVersion: String,
     isBookDetails: String
   ): BookQueryResults
@@ -357,8 +425,10 @@ export const query = `
   getBook (
     _id: String,
     searchChildSubjects: Boolean,
+    publicUserId: String,
     bookSearchVersion: String,
     isBookDetails: String
   ): BookSingleQueryResult
 
 `;
+  
