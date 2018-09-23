@@ -19,7 +19,8 @@ export const BookSummary = {
     smallImage: StringType,
     mediumImage: StringType,
     authors: StringArrayType
-  }
+  },
+  readonly: true
 };
 
 export const Book = {
@@ -98,8 +99,9 @@ export const LabelColor = {
     backgroundColor: StringType,
     order: IntType
   },
+  readonly: true,
   extras: {
-    overrides: ["getLabelColor", "updateLabelColor", "updateLabelColors", "updateLabelColorsBulk", "createLabelColor", "deleteLabelColor"]
+    overrides: ["getLabelColor"]
   }
 };
 
@@ -122,7 +124,5 @@ export const PublicUser = {
     publicName: StringType,
     publicBooksHeader: StringType
   },
-  extras: {
-    overrides: ["updatePublicUser", "updatePublicUsers", "updatePublicUsersBulk", "createPublicUser", "deletePublicUser"]
-  }
+  readonly: true
 };
