@@ -10,8 +10,11 @@ export default {
     textColor: "String"
   },
   extras: {
-    resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
-    schemaSources: ["../../graphQL-custom/extras/subject/schema"],
+    resolverSources: ["../../../graphQL-custom/extras/subject/resolver"],
+    schemaSources: ["../../../graphQL-custom/extras/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
+  },
+  relationships: {
+
   }
 };

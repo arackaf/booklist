@@ -1,6 +1,8 @@
+import SchemaExtras1 from "../../../graphQL-custom/extras/subject/schema";
+
 export const type = `
   
-  type Tag {
+  type Subject {
     _id: String
     name: String
     path: String
@@ -9,30 +11,30 @@ export const type = `
     textColor: String
   }
 
-  type TagQueryResults {
-    Tags: [Tag]
+  type SubjectQueryResults {
+    Subjects: [Subject]
     Meta: QueryResultsMetadata
   }
 
-  type TagSingleQueryResult {
-    Tag: Tag
+  type SubjectSingleQueryResult {
+    Subject: Subject
   }
 
-  type TagMutationResult {
+  type SubjectMutationResult {
     success: Boolean
-    Tag: Tag
+    Subject: Subject
   }
 
-  type TagMutationResultMulti {
+  type SubjectMutationResultMulti {
     success: Boolean
-    Tags: [Tag]
+    Subjects: [Subject]
   }
 
-  type TagBulkMutationResult {
+  type SubjectBulkMutationResult {
     success: Boolean
   }
 
-  input TagInput {
+  input SubjectInput {
     _id: String
     name: String
     path: String
@@ -41,7 +43,7 @@ export const type = `
     textColor: String
   }
 
-  input TagMutationInput {
+  input SubjectMutationInput {
     name: String
     path: String
     userId: String
@@ -49,7 +51,7 @@ export const type = `
     textColor: String
   }
 
-  input TagSort {
+  input SubjectSort {
     _id: Int
     name: Int
     path: Int
@@ -58,7 +60,7 @@ export const type = `
     textColor: Int
   }
 
-  input TagFilters {
+  input SubjectFilters {
     _id: String
     _id_ne: String
     _id_in: [String]
@@ -76,6 +78,13 @@ export const type = `
     path: String
     path_ne: String
     path_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -90,20 +99,26 @@ export const type = `
     textColor: String
     textColor_ne: String
     textColor_in: [String]
-    OR: [TagFilters]
+    OR: [SubjectFilters]
   }
   
 `;
-
+  
+  
 export const mutation = `
 
+  createSubject (
+    Subject: SubjectInput
+  ): SubjectMutationResult
 
+  ${SchemaExtras1.Mutation || ""}
 
 `;
 
+
 export const query = `
 
-  allTags (
+  allSubjects (
     _id: String,
     _id_ne: String,
     _id_in: [String],
@@ -121,6 +136,13 @@ export const query = `
     path: String,
     path_ne: String,
     path_in: [String],
+    userId_contains: String,
+    userId_startsWith: String,
+    userId_endsWith: String,
+    userId_regex: String,
+    userId: String,
+    userId_ne: String,
+    userId_in: [String],
     backgroundColor_contains: String,
     backgroundColor_startsWith: String,
     backgroundColor_endsWith: String,
@@ -135,17 +157,22 @@ export const query = `
     textColor: String,
     textColor_ne: String,
     textColor_in: [String],
-    OR: [TagFilters],
-    SORT: TagSort,
-    SORTS: [TagSort],
+    OR: [SubjectFilters],
+    SORT: SubjectSort,
+    SORTS: [SubjectSort],
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int
-  ): TagQueryResults
+    PAGE_SIZE: Int,
+    publicUserId: String
+  ): SubjectQueryResults
 
-  getTag (
-    _id: String
-  ): TagSingleQueryResult
+  getSubject (
+    _id: String,
+    publicUserId: String
+  ): SubjectSingleQueryResult
+
+  ${SchemaExtras1.Query || ""}
 
 `;
+  

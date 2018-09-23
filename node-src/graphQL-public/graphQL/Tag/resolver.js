@@ -1,6 +1,6 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../../graphQL-custom/hooksPublic.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import TagMetadata from "./Tag";
 
@@ -18,6 +18,12 @@ export async function loadTags(db, queryPacket, root, args, context, ast) {
   await processHook(hooksObj, "Tag", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Tags = await dbHelpers.runQuery(db, "tags", aggregateItems);
   await processHook(hooksObj, "Tag", "adjustResults", Tags);
+  Tags.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(Tags, TagMetadata);
   return Tags;
 }
 
@@ -30,7 +36,7 @@ export default {
   Query: {
     async getTag(root, args, context, ast) {
       await processHook(hooksObj, "Tag", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagMetadata, "Tag");
       await processHook(hooksObj, "Tag", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -42,7 +48,7 @@ export default {
     },
     async allTags(root, args, context, ast) {
       await processHook(hooksObj, "Tag", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagMetadata, "Tags");
       await processHook(hooksObj, "Tag", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -66,7 +72,7 @@ export default {
   },
   Mutation: {
     async createTag(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let newObject = await newObjectFromArgs(args.Tag, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       let requestMap = parseRequestedFields(ast, "Tag");
@@ -75,6 +81,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: TagMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Tag: null };
       }
+      await setUpOneToManyRelationships(newObject, args.Tag, TagMetadata, { db, hooksObj, root, args, context, ast });
       let result = $project ? (await loadTags(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
@@ -82,7 +89,7 @@ export default {
       }
     },
     async updateTag(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery(args._id ? { _id: args._id } : {}, ast, TagMetadata, "Tag");
       let updates = await getUpdateObject(args.Updates || {}, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
@@ -93,6 +100,7 @@ export default {
       if (!$match._id) {
         throw "No _id sent, or inserted in middleware";
       }
+      await setUpOneToManyRelationshipsForUpdate([args._id], args, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "tags", $match, updates);
       await processHook(hooksObj, "Tag", "afterUpdate", $match, updates, root, args, context, ast);
       
@@ -103,7 +111,7 @@ export default {
       };
     },
     async updateTags(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, TagMetadata, "Tags");
       let updates = await getUpdateObject(args.Updates || {}, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
@@ -111,6 +119,7 @@ export default {
       if (await processHook(hooksObj, "Tag", "beforeUpdate", $match, updates, root, args, context, ast) === false) {
         return { success: true };
       }
+      await setUpOneToManyRelationshipsForUpdate(args._ids, args, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       await dbHelpers.runUpdate(db, "tags", $match, updates, { multi: true });
       await processHook(hooksObj, "Tag", "afterUpdate", $match, updates, root, args, context, ast);
       
@@ -121,7 +130,7 @@ export default {
       };
     },
     async updateTagsBulk(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       let { $match } = decontructGraphqlQuery(args.Match, ast, TagMetadata);
       let updates = await getUpdateObject(args.Updates || {}, TagMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
 
@@ -137,7 +146,7 @@ export default {
       if (!args._id) {
         throw "No _id sent";
       }
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       let $match = { _id: ObjectId(args._id) };
       
       if (await processHook(hooksObj, "Tag", "beforeDelete", $match, root, args, context, ast) === false) {

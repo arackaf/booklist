@@ -1,9 +1,9 @@
 import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
-import hooksObj from "../hooks";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, getUpdateObject, constants } = queryUtilities;
+import hooksObj from "../../../graphQL-custom/hooksPublic.js";
+const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
 import { ObjectId } from "mongodb";
 import SubjectMetadata from "./Subject";
-import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
+import ResolverExtras1 from "../../../graphQL-custom/extras/subject/resolver";
 const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 
 export async function loadSubjects(db, queryPacket, root, args, context, ast) {
@@ -20,6 +20,12 @@ export async function loadSubjects(db, queryPacket, root, args, context, ast) {
   await processHook(hooksObj, "Subject", "queryPreAggregate", aggregateItems, root, args, context, ast);
   let Subjects = await dbHelpers.runQuery(db, "subjects", aggregateItems);
   await processHook(hooksObj, "Subject", "adjustResults", Subjects);
+  Subjects.forEach(o => {
+    if (o._id){
+      o._id = "" + o._id;
+    }
+  });
+  cleanUpResults(Subjects, SubjectMetadata);
   return Subjects;
 }
 
@@ -32,7 +38,7 @@ export default {
   Query: {
     async getSubject(root, args, context, ast) {
       await processHook(hooksObj, "Subject", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subject");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -44,7 +50,7 @@ export default {
     },
     async allSubjects(root, args, context, ast) {
       await processHook(hooksObj, "Subject", "queryPreprocess", root, args, context, ast);
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subjects");
       await processHook(hooksObj, "Subject", "queryMiddleware", queryPacket, root, args, context, ast);
@@ -69,7 +75,7 @@ export default {
   },
   Mutation: {
     async createSubject(root, args, context, ast) {
-      let db = await root.db;
+      let db = await (typeof root.db === "function" ? root.db() : root.db);
       context.__mongodb = db;
       let newObject = await newObjectFromArgs(args.Subject, SubjectMetadata, { db, dbHelpers, hooksObj, root, args, context, ast });
       let requestMap = parseRequestedFields(ast, "Subject");
@@ -78,6 +84,7 @@ export default {
       if ((newObject = await dbHelpers.processInsertion(db, newObject, { typeMetadata: SubjectMetadata, hooksObj, root, args, context, ast })) == null) {
         return { Subject: null };
       }
+      await setUpOneToManyRelationships(newObject, args.Subject, SubjectMetadata, { db, hooksObj, root, args, context, ast });
       let result = $project ? (await loadSubjects(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
       return {
         success: true,
