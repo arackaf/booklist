@@ -37,7 +37,7 @@ function clean(book) {
 
 export default class BooksMiddleware {
   async queryPreprocess(root, args, context, ast) {
-    args.userId = "573d1b97120426ef0078aa92";
+    args.userId = "5b57f71b6871ae00145198ff";
     if (!args.PAGE_SIZE || args.PAGE_SIZE > 200) {
       //bump it so we know if there's more results to page
       args.PAGE_SIZE = 50;
