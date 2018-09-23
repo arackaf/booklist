@@ -136,28 +136,7 @@ export const type = `
   
 export const mutation = `
 
-  createBookSummary (
-    BookSummary: BookSummaryInput
-  ): BookSummaryMutationResult
 
-  updateBookSummary (
-    _id: String,
-    Updates: BookSummaryMutationInput
-  ): BookSummaryMutationResult
-
-  updateBookSummarys (
-    _ids: [String],
-    Updates: BookSummaryMutationInput
-  ): BookSummaryMutationResultMulti
-
-  updateBookSummarysBulk (
-    Match: BookSummaryFilters,
-    Updates: BookSummaryMutationInput
-  ): BookSummaryBulkMutationResult
-
-  deleteBookSummary (
-    _id: String
-  ): Boolean
 
 `;
 

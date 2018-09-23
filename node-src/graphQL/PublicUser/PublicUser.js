@@ -7,9 +7,6 @@ export default {
     publicName: "String",
     publicBooksHeader: "String"
   },
-  extras: {
-    overrides: ["updatePublicUser", "updatePublicUsers", "updatePublicUsersBulk", "createPublicUser", "deletePublicUser"]
-  },
   relationships: {
 
   }
