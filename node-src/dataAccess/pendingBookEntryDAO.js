@@ -22,7 +22,7 @@ class PendingBookEntryDAO extends DAO {
   async add(item) {
     let db = await super.open();
     try {
-      await db.collection("pendingEntries").insert(item);
+      await db.collection("pendingEntries").insertOne(item);
     } finally {
       super.dispose(db);
     }
@@ -30,7 +30,7 @@ class PendingBookEntryDAO extends DAO {
   async remove(_id) {
     let db = await super.open();
     try {
-      await db.collection("pendingEntries").remove({ _id: ObjectId(_id) });
+      await db.collection("pendingEntries").deleteOne({ _id: ObjectId(_id) });
     } finally {
       super.dispose(db);
     }

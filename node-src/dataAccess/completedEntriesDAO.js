@@ -5,7 +5,7 @@ class CompletedEntriesDao extends DAO {
     let db = await super.open();
     try {
       let bookInfo = { title: bookFound.title, author: bookFound.author, smallImage: bookFound.smallImage, mediumImage: bookFound.mediumImage };
-      return await db.collection("completedEntries").insert(Object.assign({}, bookInfo, { userId, requestedIsbn: isbn, success: true }));
+      return await db.collection("completedEntries").insertOne(Object.assign({}, bookInfo, { userId, requestedIsbn: isbn, success: true }));
     } finally {
       super.dispose(db);
     }
@@ -13,7 +13,7 @@ class CompletedEntriesDao extends DAO {
   async logFailedEntry(userId, isbn) {
     let db = await super.open();
     try {
-      return await db.collection("completedEntries").insert(Object.assign({}, { userId, requestedIsbn: isbn, success: false }));
+      return await db.collection("completedEntries").insertOne(Object.assign({}, { userId, requestedIsbn: isbn, success: false }));
     } finally {
       super.dispose(db);
     }
