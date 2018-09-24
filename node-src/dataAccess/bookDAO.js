@@ -51,7 +51,7 @@ class BookDAO extends DAO {
     let db = await super.open();
     try {
       book.userId = this.userId;
-      let result = await db.collection("books").insert(book);
+      let result = await db.collection("books").insertOne(book);
 
       super.confirmSingleResult(result);
     } finally {
@@ -83,7 +83,7 @@ class BookDAO extends DAO {
   async updateBookSimilarity(book, results) {
     let db = await super.open();
     try {
-      await db.collection("books").update(
+      await db.collection("books").updateOne(
         { _id: book._id },
         {
           $set: { similarItems: results.map(result => result.asin), similarItemsLastUpdate: +new Date() }
@@ -93,7 +93,7 @@ class BookDAO extends DAO {
       for (let book of results) {
         let user = await db.collection("amazonReference").findOne({ asin: book.asin });
         if (!user) {
-          await db.collection("amazonReference").insert(book);
+          await db.collection("amazonReference").insertOne(book);
         }
       }
     } finally {
