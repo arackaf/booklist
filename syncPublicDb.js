@@ -3,7 +3,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 
 const connectPrimary = () => {
   return MongoClient.connect(
-    process.env.MONGO_CONNECTION || process.env.MONGOHQ_URL,
+    process.env.MONGO_CONNECTION,
     { useNewUrlParser: true }
   ).then(client => [client, client.db(process.env.DB_NAME)]);
 };
