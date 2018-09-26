@@ -6,3 +6,4 @@ uploads/*
 .env
 node-dest/
 .esm-cache/
+real.env

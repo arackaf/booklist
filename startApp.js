@@ -43,6 +43,13 @@ import schemaPublic from "./node-src/graphQL-public/graphQL/schema";
 import { makeExecutableSchema } from "graphql-tools";
 import { middleware } from "generic-persistgraphql";
 
+const IS_PUBLIC = process.env.IS_PUBLIC;
+const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
+const PUBLIC_USER = {
+  _id: PUBLIC_USER_ID,
+  id: PUBLIC_USER_ID
+};
+
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
     let proto = request.header("x-forwarded-proto") || request.header("X-Forwarded-Proto") || request.get("X-Forwarded-Proto"),
@@ -75,6 +82,9 @@ if (!process.env.IS_DEV) {
 
 passport.use(
   new LocalStrategy(function(email, password, done) {
+    if (IS_PUBLIC) {
+      return done(null, PUBLIC_USER);
+    }
     let userDao = new UserDao();
 
     userDao.lookupUser(email, password).then(userResult => {
@@ -263,6 +273,7 @@ const upload = multer({ storage: multerBookCoverUploadStorage });
 //TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post("/react-redux/upload", upload.single("fileUploaded"), function(req, response) {
   //req.body.___ still has manual fields sent over
+
   if (req.file.size > 900000) {
     return response.send({ success: false, error: "Max size is 500K" });
   }
@@ -383,8 +394,10 @@ function error(err) {
 
 Promise.resolve(dao.init()).then(() => {
   app.listen(process.env.PORT || 3000);
-  bookEntryQueueManager.initialize();
-  bookSimilarityQueueManager.initialize();
+  if (!IS_PUBLIC) {
+    bookEntryQueueManager.initialize();
+    bookSimilarityQueueManager.initialize();
+  }
 });
 
 export default null;

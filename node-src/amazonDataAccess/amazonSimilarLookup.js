@@ -14,8 +14,10 @@ const awsCredentials = {
   assocId: process.env.ASSOC_ID
 };
 
-const OperationHelper = require("apac").OperationHelper;
-const opHelper = new OperationHelper(awsCredentials);
+if (!process.env.IS_PUBLIC) {
+  var OperationHelper = require("apac").OperationHelper;
+  var opHelper = new OperationHelper(awsCredentials);
+}
 
 export default class AmazonSearch {
   lookupBook(isbn) {
