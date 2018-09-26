@@ -62,7 +62,7 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
   let bookSearchFilters = selectCurrentSearch(store.getState() as any);
 
   let getBooksVariables: any = {
-    page: bookSearchFilters.page,
+    page: +bookSearchFilters.page,
     pageSize: bookSearchFilters.pageSize,
     sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
     title_contains: bookSearchFilters.search || void 0,
@@ -78,7 +78,7 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
     bookSearchVersion: "" + bookSearchState.searchVersion
   };
   if (bookSearchFilters.pages != "") {
-    getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = bookSearchFilters.pages;
+    getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
   }
 
   return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
