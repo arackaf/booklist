@@ -82,7 +82,7 @@ module.exports = {
     new HtmlWebpackPlugin({ template: "default.htm" }),
     new GenerateSW({
       clientsClaim: true,
-      skipWaiting: true,
+      navigateFallback: "react-redux/dist/index.html",
       globDirectory: ".",
       globPatterns: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
