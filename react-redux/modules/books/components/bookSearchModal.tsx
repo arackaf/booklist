@@ -129,19 +129,19 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
               <div className="form-group">
                 <label>Is read?</label>
                 <br />
-                <div style={{ display: "inline" }} className="radio">
+                <div className="radio responsive-radios">
                   <label>
                     <input type="radio" defaultChecked={this.props.isRead == ""} ref={el => (this.isReadE = el)} name="isRead" />
                     Either
                   </label>
                 </div>
-                <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
+                <div className="radio responsive-radios">
                   <label>
                     <input type="radio" defaultChecked={this.props.isRead == "1"} name="isRead" />
                     Yes
                   </label>
                 </div>
-                <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
+                <div className="radio responsive-radios">
                   <label>
                     <input type="radio" defaultChecked={this.props.isRead == "0"} ref={el => (this.isRead0 = el)} name="isRead" />
                     No
