@@ -84,27 +84,27 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
       <Modal {...{ isOpen, onHide, headerCaption: "Full search" }}>
         <form onSubmit={this.applyFilters}>
           <div className="row">
-            <div className="col-xs-6">
+            <div className="col-sm-6 col-xs-12">
               <div className="form-group">
                 <label>Title</label>
                 <input defaultValue={this.props.search} ref={el => (this.searchEl = el)} placeholder="Search title" className="form-control" />
               </div>
             </div>
-            <div className="col-xs-6">
+            <div className="col-sm-6 col-xs-12">
               <div className="form-group">
                 <label>Pages</label>
                 <div className="form-inline">
-                  <div style={{ marginRight: 10 }} className="form-group">
+                  <div style={{ marginRight: 5, display: "inline-block" }} className="form-group">
                     <select ref={el => (this.pagesDirEl = el)} defaultValue={this.props.pagesOperator} className="form-control">
                       <option value="lt">{"<"}</option>
                       <option value="gt">{">"}</option>
                     </select>
                   </div>
-                  <div className="form-group">
+                  <div className="form-group" style={{ display: "inline-block" }}>
                     <input
                       defaultValue={this.props.pages}
                       ref={el => (this.pagesEl = el)}
-                      style={{ width: "100px" }}
+                      style={{ width: "90px" }}
                       type="number"
                       placeholder="Pages"
                       className="form-control"
@@ -113,19 +113,19 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
                 </div>
               </div>
             </div>
-            <div className="col-xs-6">
+            <div className="col-sm-6 col-xs-12">
               <div className="form-group">
                 <label>Publisher</label>
                 <input ref={el => (this.publisherEl = el)} defaultValue={this.props.publisher} placeholder="Publisher" className="form-control" />
               </div>
             </div>
-            <div className="col-xs-6">
+            <div className="col-sm-6 col-xs-12">
               <div className="form-group">
                 <label>Author</label>
                 <input ref={el => (this.authorEl = el)} defaultValue={this.props.author} placeholder="Author" className="form-control" />
               </div>
             </div>
-            <div className="col-xs-6">
+            <div className="col-sm-6 col-xs-12">
               <div className="form-group">
                 <label>Is read?</label>
                 <br />
@@ -149,7 +149,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
                 </div>
               </div>
             </div>
-            <div className="col-xs-6">
+            <div className="col-sm-6 col-xs-12">
               <div className="form-group">
                 <label>Sort</label>
                 <br />
@@ -173,10 +173,10 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
           <input type="submit" style={{ display: "inline", visibility: "hidden" }} />
         </form>
         <div className="row" style={{ position: "relative" }}>
-          <div className="col-xs-3">
+          <div className="col-sm-3 col-xs-12">
             <SelectAvailableTags currentlySelected={this.state.tags} onSelect={this.selectTag} />
           </div>
-          <div className="col-xs-9">
+          <div className="col-sm-9 col-xs-12">
             <div>
               <DisplaySelectedTags currentlySelected={this.state.tags} onRemove={this.removeTag} />
             </div>
@@ -186,10 +186,10 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
         {!this.state.noSubjectsFilter ? (
           <>
             <div className="row" style={{ position: "relative" }}>
-              <div className="col-xs-3">
+              <div className="col-sm-3 col-xs-12">
                 <SelectAvailableSubjects currentlySelected={this.state.subjects} onSelect={this.selectSubject} />
               </div>
-              <div className="col-xs-9">
+              <div className="col-sm-9 col-xs-12">
                 <div>
                   <DisplaySelectedSubjects currentlySelected={this.state.subjects} onRemove={this.removeSubject} />
                 </div>
