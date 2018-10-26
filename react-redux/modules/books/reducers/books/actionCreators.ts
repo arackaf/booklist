@@ -69,7 +69,7 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
     isRead: bookSearchFilters.isRead === "1" ? true : void 0,
     isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
     subjects_containsAny: bookSearchFilters.subjectIds.length ? bookSearchFilters.subjectIds : void 0,
-    searchChildSubjects: bookSearchFilters.searchChildSubjects || void 0,
+    searchChildSubjects: bookSearchFilters.searchChildSubjects == "true" ? true : void 0,
     tags_containsAny: bookSearchFilters.tagIds.length ? bookSearchFilters.tagIds : void 0,
     authors_textContains: bookSearchFilters.author || void 0,
     publisher_contains: bookSearchFilters.publisher || void 0,

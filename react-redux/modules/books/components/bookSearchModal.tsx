@@ -36,7 +36,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
   componentDidUpdate(prevProps) {
     if (this.props.isOpen && !prevProps.isOpen) {
       this.setState({
-        subjects: this.props.selectedSubjects,
+        subjects: this.props.selectedSubjects.map(s => s._id),
         tags: this.props.selectedTags
       });
     }
