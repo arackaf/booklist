@@ -104,7 +104,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
                     <input
                       defaultValue={this.props.pages}
                       ref={el => (this.pagesEl = el)}
-                      style={{ width: "90px" }}
+                      style={{ width: "100px" }}
                       type="number"
                       placeholder="Pages"
                       className="form-control"
@@ -113,19 +113,19 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-xs-12">
+            <div className="col-xs-6">
               <div className="form-group">
                 <label>Publisher</label>
                 <input ref={el => (this.publisherEl = el)} defaultValue={this.props.publisher} placeholder="Publisher" className="form-control" />
               </div>
             </div>
-            <div className="col-sm-6 col-xs-12">
+            <div className="col-xs-6">
               <div className="form-group">
                 <label>Author</label>
                 <input ref={el => (this.authorEl = el)} defaultValue={this.props.author} placeholder="Author" className="form-control" />
               </div>
             </div>
-            <div className="col-sm-6 col-xs-12">
+            <div className="col-xs-6">
               <div className="form-group">
                 <label>Is read?</label>
                 <br />
@@ -149,7 +149,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-xs-12">
+            <div className="col-xs-6">
               <div className="form-group">
                 <label>Sort</label>
                 <br />
