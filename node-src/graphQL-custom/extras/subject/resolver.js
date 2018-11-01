@@ -102,6 +102,7 @@ export default {
       let db = await root.db;
       let dao = new SubjectDAO(context.user.id);
       let { affectedSubjects } = await dao.updateSubjectInfo(db, args._id, args.name, args.backgroundColor, args.textColor, args.parentId);
+      affectedSubjects.forEach(s => (s._id = s._id + ""));
       return affectedSubjects;
     },
     async deleteSubject(root, args, context, ast) {
