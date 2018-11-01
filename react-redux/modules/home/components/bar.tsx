@@ -28,7 +28,7 @@ export default class Bar extends PureComponent<any, any> {
       let { count, index } = this.props;
       let tBox = this.tooltip.getBoundingClientRect();
       let element = findDOMNode(this.el);
-      let box = element.getBoundingClientRect();
+      let box = (element as any).getBoundingClientRect();
       let left = box.left + document.documentElement.scrollLeft + 2;
       let top = box.top + window.scrollY + 2;
 
