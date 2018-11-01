@@ -81,7 +81,7 @@ type subjectDisplayProps = {
   {
     canDrop(props, monitor) {
       let sourceSubject = monitor.getItem(),
-        { subject: targetSubject } = props,
+        { subject: targetSubject } = props as any,
         isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
       return (
@@ -92,7 +92,7 @@ type subjectDisplayProps = {
         (targetSubject.path || "").indexOf(sourceSubject._id) < 0
       );
     },
-    drop(props, monitor) {
+    drop(props: any, monitor) {
       let { subject: targetSubject } = props,
         sourceSubject = monitor.getItem();
 
@@ -178,7 +178,7 @@ class SubjectDisplay extends Component<subjectDisplayProps & { isCurrentDropTarg
 @DragSource(
   "subject",
   {
-    beginDrag: props => {
+    beginDrag: (props: any) => {
       props.beginDrag(props.subject._id);
       return props.subject;
     },
@@ -273,8 +273,8 @@ class DefaultSubjectDisplay extends Component<any, any> {
         <i className="fa fa-fw fa-spinner fa-spin" />
       ) : isSubjectSaved ? (
         <i style={{ color: "green" }} className="fa fa-fw fa-check" />
-      ) : (
-        isTouch ? null : connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
+      ) : isTouch ? null : (
+        connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
       );
 
     return (noDrop ? c => c : connectDropTarget)(
