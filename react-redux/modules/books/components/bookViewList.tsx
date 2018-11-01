@@ -21,37 +21,37 @@ import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 
 const ManualBookEntry = Loadable({
-  loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
+  loader: () => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
   loading: ComponentLoading,
   delay: 200
 });
 
 const BookSubjectSetter = Loadable({
-  loader: () => System.import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"),
+  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"),
   loading: ComponentLoading,
   delay: 200
 });
 
 const BookTagSetter = Loadable({
-  loader: () => System.import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"),
+  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"),
   loading: ComponentLoading,
   delay: 200
 });
 
 const SubjectEditModal = Loadable({
-  loader: () => System.import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"),
+  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"),
   loading: ComponentLoading,
   delay: 200
 });
 
 const TagEditModal = Loadable({
-  loader: () => System.import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"),
+  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"),
   loading: ComponentLoading,
   delay: 200
 });
 
 const BookSearchModal = Loadable({
-  loader: () => System.import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"),
+  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"),
   loading: ComponentLoading,
   delay: 200
 });
