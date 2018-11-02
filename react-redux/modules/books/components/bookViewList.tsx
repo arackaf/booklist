@@ -79,6 +79,9 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
   const editTagsForBook = book => openBookTagModal([book]);
   const editTagsForSelectedBooks = () => openBookTagModal(props.booksList.filter(b => props.selectedBookHash[b._id]));
 
+  const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
+  const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();
+
   // state = {
   //   tagEditModalOpen: false,
   //   tagEditModalLoaded: false,
@@ -149,8 +152,8 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
         <BooksMenuBar
           startTagModification={editTagsForSelectedBooks}
           startSubjectModification={editSubjectsForSelectedBooks}
-          editTags={() => null}
-          editSubjects={() => null}
+          editTags={editTags}
+          editSubjects={editSubjects}
           beginEditFilters={() => null}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
@@ -189,9 +192,9 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
       {bookSubModalLoaded ? <BookSubjectSetter modifyingBooks={bookSubModifying} onDone={closeBookSubModal} /> : null}
       {bookTagModalLoaded ? <BookTagSetter modifyingBooks={bookTagModifying} onDone={closeBookTagModal} /> : null}
 
-      {/*this.state.subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={this.stopEditingSubjects} /> : null*/}
-      {/*this.state.tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={this.stopEditingTags} /> : null}
-        {/*this.state.editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null*/}
+      {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
+      {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
+      {/*this.state.editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null*/}
     </div>
   );
 };
