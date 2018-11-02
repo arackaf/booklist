@@ -5,8 +5,7 @@ import { connect } from "react-redux";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 
-@connect(selectStackedSubjects)
-export default class SelectAvailableSubjects extends Component<Partial<LocalProps & ReturnType<typeof selectStackedSubjects>>, never> {
+class SelectAvailableSubjects extends Component<Partial<LocalProps & ReturnType<typeof selectStackedSubjects>>, never> {
   render() {
     return (
       <SelectAvailableItems
@@ -19,3 +18,5 @@ export default class SelectAvailableSubjects extends Component<Partial<LocalProp
     );
   }
 }
+
+export default connect(selectStackedSubjects)(SelectAvailableSubjects);

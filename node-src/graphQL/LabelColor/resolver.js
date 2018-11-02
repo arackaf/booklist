@@ -1,6 +1,9 @@
-import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
+import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
+const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
+const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
+const { getMongoProjection, parseRequestedFields } = projectUtilities;
+const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import LabelColorMetadata from "./LabelColor";
 

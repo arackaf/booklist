@@ -15,21 +15,7 @@ interface ILocalProps {
   onDone: any;
 }
 
-@mutation(
-  `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
-    remove: updateBooks(
-      _ids: $books,
-      Updates: { subjects_PULL: $remove }
-    ) { success }
-
-    add: updateBooks(
-      _ids: $books,
-      Updates: { subjects_ADDTOSET: $add }
-    ) { success }          
-  }`
-)
-@connect(selectStackedSubjects)
-export default class BookSubjectSetter extends Component<
+class BookSubjectSetter extends Component<
   ReturnType<typeof selectStackedSubjects> & ILocalProps & { runMutation: any; dispatch: any; running: any },
   any
 > {
@@ -175,3 +161,17 @@ export default class BookSubjectSetter extends Component<
     );
   }
 }
+
+export default mutation(
+  `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
+    remove: updateBooks(
+      _ids: $books,
+      Updates: { subjects_PULL: $remove }
+    ) { success }
+
+    add: updateBooks(
+      _ids: $books,
+      Updates: { subjects_ADDTOSET: $add }
+    ) { success }          
+  }`
+)(connect(selectStackedSubjects)(BookSubjectSetter));
