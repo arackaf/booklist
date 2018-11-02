@@ -14,11 +14,7 @@ interface ILocalProps {
   editModalOpen: boolean;
 }
 
-@connect(
-  selectEntireTagsState,
-  { ...actionCreators }
-)
-export default class TagEditModal extends Component<ReturnType<typeof selectEntireTagsState> & ILocalProps & typeof actionCreators, any> {
+class TagEditModal extends Component<ReturnType<typeof selectEntireTagsState> & ILocalProps & typeof actionCreators, any> {
   state = {
     editingTag: null,
     editingTagName: "",
@@ -189,3 +185,8 @@ export default class TagEditModal extends Component<ReturnType<typeof selectEnti
     );
   }
 }
+
+export default connect(
+  selectEntireTagsState,
+  { ...actionCreators }
+)(TagEditModal);

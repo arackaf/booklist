@@ -24,11 +24,7 @@ type actions = typeof bookSearchActionCreators & typeof booksActionCreators;
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
-@connect(
-  menuBarSelector,
-  { ...bookSearchActionCreators, ...booksActionCreators }
-)
-export default class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps, any> {
+class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps, any> {
   navBar: any;
   quickSearchEl: any;
   sortChanged(evt) {
@@ -261,3 +257,8 @@ export default class BooksMenuBar extends Component<ReturnType<typeof menuBarSel
     );
   }
 }
+
+export default connect(
+  menuBarSelector,
+  { ...bookSearchActionCreators, ...booksActionCreators }
+)(BooksMenuBar);

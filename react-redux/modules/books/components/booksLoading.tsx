@@ -14,9 +14,10 @@ const selector = createSelector((state: BooksModuleType) => state.app, selectBoo
   };
 });
 
-@connect(selector)
-export default class BooksLoading extends Component<Partial<ReturnType<typeof selector>>, any> {
+class BooksLoading extends Component<Partial<ReturnType<typeof selector>>, any> {
   render() {
     return this.props.booksLoading || !this.props.subjectsLoaded || !this.props.tagsLoaded ? <Loading /> : null;
   }
 }
+
+export default connect(selector)(BooksLoading);

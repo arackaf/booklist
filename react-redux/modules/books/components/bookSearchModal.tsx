@@ -17,11 +17,7 @@ type LocalProps = {
   onHide: any;
 };
 
-@connect(
-  selectBookSearchState,
-  { ...bookSearchActionCreators }
-)
-export default class BookSearchModal extends Component<ReturnType<typeof selectBookSearchState> & LocalProps & typeof bookSearchActionCreators, any> {
+class BookSearchModal extends Component<ReturnType<typeof selectBookSearchState> & LocalProps & typeof bookSearchActionCreators, any> {
   state = {
     subjects: this.props.selectedSubjects.map(s => s._id),
     tags: this.props.selectedTags.map(t => t._id),
@@ -37,7 +33,7 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
     if (this.props.isOpen && !prevProps.isOpen) {
       this.setState({
         subjects: this.props.selectedSubjects.map(s => s._id),
-        tags: this.props.selectedTags
+        tags: this.props.selectedTags.map(t => t._id)
       });
     }
   }
@@ -225,3 +221,8 @@ export default class BookSearchModal extends Component<ReturnType<typeof selectB
     );
   }
 }
+
+export default connect(
+  selectBookSearchState,
+  { ...bookSearchActionCreators }
+)(BookSearchModal);

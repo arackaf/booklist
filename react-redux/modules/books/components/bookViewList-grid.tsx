@@ -17,10 +17,6 @@ interface ILocalProps {
   editBook: any;
 }
 
-@connect(
-  null,
-  actions
-)
 class BookRowRaw extends Component<ILocalProps & actionsType, any> {
   render() {
     let { book, index, viewingPublic } = this.props;
@@ -150,13 +146,12 @@ class BookRowRaw extends Component<ILocalProps & actionsType, any> {
     );
   }
 }
-let BookRow: any = BookRowRaw;
-
-@connect(
+let BookRow: any = connect(
   null,
-  null
-)
-class BookRowDetails extends Component<{ book: IBookDisplay; index: number; viewingPublic: boolean }, any> {
+  actions
+)(BookRowRaw);
+
+class BookRowDetailsRaw extends Component<{ book: IBookDisplay; index: number; viewingPublic: boolean }, any> {
   render() {
     let { book, index, viewingPublic } = this.props;
     let backgroundColor = index % 2 ? "white" : "#f9f9f9";
@@ -219,11 +214,12 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number; view
   }
 }
 
-@connect(
-  selectBookListComponentState,
-  actions
-)
-export default class BookViewListGrid extends Component<
+const BookRowDetails = connect(
+  null,
+  null
+)(BookRowDetailsRaw);
+
+class BookViewListGrid extends Component<
   ReturnType<typeof selectBookListComponentState> & actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any },
   any
 > {
@@ -300,3 +296,8 @@ export default class BookViewListGrid extends Component<
     );
   }
 }
+
+export default connect(
+  selectBookListComponentState,
+  actions
+)(BookViewListGrid);

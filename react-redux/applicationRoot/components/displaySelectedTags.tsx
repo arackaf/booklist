@@ -6,8 +6,7 @@ import { RemovableLabelDisplay } from "./labelDisplay";
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };
 
-@connect(selectEntireTagsState)
-export default class DisplaySelectedTags extends Component<Partial<LocalProps & ReturnType<typeof selectEntireTagsState>>, never> {
+class DisplaySelectedTags extends Component<Partial<LocalProps & ReturnType<typeof selectEntireTagsState>>, never> {
   render() {
     return (
       <>
@@ -18,3 +17,5 @@ export default class DisplaySelectedTags extends Component<Partial<LocalProps & 
     );
   }
 }
+
+export default connect(selectEntireTagsState)(DisplaySelectedTags);
