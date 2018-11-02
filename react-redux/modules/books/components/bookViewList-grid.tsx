@@ -219,11 +219,7 @@ class BookRowDetails extends Component<{ book: IBookDisplay; index: number; view
   }
 }
 
-@connect(
-  selectBookListComponentState,
-  actions
-)
-export default class BookViewListGrid extends Component<
+class BookViewListGrid extends Component<
   ReturnType<typeof selectBookListComponentState> & actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any },
   any
 > {
@@ -300,3 +296,8 @@ export default class BookViewListGrid extends Component<
     );
   }
 }
+
+export default connect(
+  selectBookListComponentState,
+  actions
+)(BookViewListGrid);
