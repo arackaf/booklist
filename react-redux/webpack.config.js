@@ -28,7 +28,7 @@ module.exports = {
     filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",
     chunkFilename: isProd ? "[name]-chunk-[contenthash].js" : "[name]-chunk.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "react-redux/dist/"
+    publicPath: "/react-redux/dist/"
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
