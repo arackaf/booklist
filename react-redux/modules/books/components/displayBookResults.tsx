@@ -13,7 +13,7 @@ import Loadable from "react-loadable";
 import ComponentLoading from "applicationRoot/components/componentLoading";
 
 const BasicListView = Loadable({
-  loader: () => System.import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"),
+  loader: () => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"),
   loading: ComponentLoading,
   delay: 200
 });
