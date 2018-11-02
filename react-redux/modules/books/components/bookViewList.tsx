@@ -64,9 +64,7 @@ const mainSelector = createSelector(selectBookList, selectBookSelection, (books,
 });
 type MainSelectorType = ReturnType<typeof mainSelector>;
 
-@mutation(UpdateBookMutation)
-@connect(mainSelector)
-export default class BookViewingList extends Component<MainSelectorType & MutationType & { dispatch: any }, any> {
+class BookViewingList extends Component<MainSelectorType & MutationType & { dispatch: any }, any> {
   state = {
     tagEditModalOpen: false,
     tagEditModalLoaded: false,
@@ -181,3 +179,5 @@ export default class BookViewingList extends Component<MainSelectorType & Mutati
     );
   }
 }
+
+export default mutation(UpdateBookMutation)(connect(mainSelector)(BookViewingList));

@@ -28,8 +28,7 @@ const selector = createSelector((state: BooksModuleType) => state.app, selectBoo
   };
 });
 
-@connect(selector)
-export default class DisplayBookResults extends Component<PassedIn & ReturnType<typeof selector>, null> {
+class DisplayBookResults extends Component<PassedIn & ReturnType<typeof selector>, null> {
   render() {
     let { editBook, editTagsForBook, editSubjectsForBook } = this.props;
 
@@ -42,3 +41,5 @@ export default class DisplayBookResults extends Component<PassedIn & ReturnType<
     ) : null;
   }
 }
+
+export default connect(selector)(DisplayBookResults);

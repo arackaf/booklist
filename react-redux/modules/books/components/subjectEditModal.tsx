@@ -42,11 +42,7 @@ interface ILocalProps {
 
 const actionCreators = { createOrUpdateSubject, deleteSubject };
 
-@connect(
-  selectEntireSubjectsState,
-  { ...actionCreators }
-)
-export default class SubjectEditModal extends Component<ReturnType<typeof selectEntireSubjectsState> & ILocalProps & typeof actionCreators, any> {
+class SubjectEditModal extends Component<ReturnType<typeof selectEntireSubjectsState> & ILocalProps & typeof actionCreators, any> {
   currentEligibleParents: any;
   constructor(props) {
     super(props);
@@ -239,3 +235,8 @@ export default class SubjectEditModal extends Component<ReturnType<typeof select
     );
   }
 }
+
+export default connect(
+  selectEntireSubjectsState,
+  { ...actionCreators }
+)(SubjectEditModal);
