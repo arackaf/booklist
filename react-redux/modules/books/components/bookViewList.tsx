@@ -70,6 +70,14 @@ const useCodeSplitModal = (initialOpenData = false) => {
   return [openState, isLoaded, (val = true) => setModalState([val, true]), () => setModalState([false, true])];
 };
 
+const prepBookForSaving = book => {
+  let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors"];
+  let pages = parseInt(book.pages, 10);
+  book.pages = isNaN(pages) ? void 0 : pages;
+
+  return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
+};
+
 const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> = props => {
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
@@ -81,69 +89,22 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
 
   const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();
+  const [editingFilters, editingFiltersLoaded, beginEditFilters, endEditFilters] = useCodeSplitModal();
 
-  // state = {
-  //   tagEditModalOpen: false,
-  //   tagEditModalLoaded: false,
-  //   subjectEditModalOpen: false,
-  //   subjectEditModalLoaded: false,
-  //   booksSubjectModifying: null,
-  //   booksSubjectModalLoaded: null,
-  //   booksTagModifying: null,
-  //   booksTagModalLoaded: null,
-  //   bookEditingModalLoaded: false,
-  //   isEditingBook: false,
-  //   editingBook: null,
-  //   editingFilters: false,
-  //   editingFiltersLoaded: false,
-  //   beginEditFilters: () => this.setState({ editingFilters: true, editingFiltersLoaded: true }),
-  //   endEditFilters: () => this.setState({ editingFilters: false })
-  // };
-  // editTags = () => this.setState({ tagEditModalOpen: true, tagEditModalLoaded: true });
-  // stopEditingTags = () => this.setState({ tagEditModalOpen: false });
-  // editSubjects = () => this.setState({ subjectEditModalOpen: true, subjectEditModalLoaded: true });
-  // stopEditingSubjects = () => this.setState({ subjectEditModalOpen: false });
+  const [editingBook, bookEditingModalLoaded, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
+  const editBook = book => openBookEditModal(book);
 
-  // editSubjectsForBook = book => this.setState({ booksSubjectModifying: [book], booksSubjectModalLoaded: true });
-  // editSubjectsForSelectedBooks = () =>
-  //   this.setState({ booksSubjectModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id]), booksSubjectModalLoaded: true });
-  // doneEditingBooksSubjects = () => this.setState({ booksSubjectModifying: null });
+  const saveEditingBook = book => {
+    let bookToUse = prepBookForSaving(book);
+    Promise.resolve(props.runMutation({ _id: book._id, book: bookToUse })).then(resp => {
+      stopEditingBook();
+      props.dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
+    });
+  };
 
-  // editTagsForBook = book => this.setState({ booksTagModifying: [book], booksTagModalLoaded: true });
-  // editTagsForSelectedBooks = () =>
-  //   this.setState({ booksTagModifying: this.props.booksList.filter(b => this.props.selectedBookHash[b._id]), booksTagModalLoaded: true });
-  // doneEditingBooksTags = () => this.setState({ booksTagModifying: null });
-
-  // editBook = book =>
-  //   this.setState({
-  //     bookEditingModalLoaded: true,
-  //     isEditingBook: true,
-  //     editingBook: book
-  //   });
-  // stopEditingBook = () => this.setState({ isEditingBook: false });
-  // saveEditingBook = book => {
-  //   let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors"];
-  //   let pages = parseInt(book.pages, 10);
-  //   book.pages = isNaN(pages) ? void 0 : pages;
-
-  //   let bookToUse = propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
-  //   Promise.resolve(this.props.runMutation({ _id: book._id, book: bookToUse })).then(resp => {
-  //     this.setState({
-  //       isEditingBook: false,
-  //       editingBook: null
-  //     });
-  //     this.props.dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
-  //   });
-  // };
-
-  let editingBook = null; //this.state.editingBook;
   let dragTitle = editingBook
     ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
     : "";
-
-  //let { state, editBook, editTagsForBook, editSubjectsForBook } = this;
-  //let { isEditingBook, bookEditingModalLoaded, editingFilters, beginEditFilters, endEditFilters } = state;
-  //let { subjectEditModalOpen, booksSubjectModifying, booksTagModifying, tagEditModalOpen } = state;
 
   return (
     <div style={{}}>
@@ -154,7 +115,7 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
           startSubjectModification={editSubjectsForSelectedBooks}
           editTags={editTags}
           editSubjects={editSubjects}
-          beginEditFilters={() => null}
+          beginEditFilters={beginEditFilters}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!props.booksList.length && !props.booksLoading ? (
@@ -163,27 +124,21 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
             </div>
           ) : null}
 
-          <DisplayBookResults
-            {...{
-              editSubjectsForBook,
-              editTagsForBook
-              /*editBook, , */
-            }}
-          />
+          <DisplayBookResults {...{ editSubjectsForBook, editTagsForBook, editBook }} />
 
-          {/*bookEditingModalLoaded ? (
-              <ManualBookEntry
-                title={editingBook ? `Edit ${editingBook.title}` : ""}
-                dragTitle={dragTitle}
-                bookToEdit={editingBook}
-                isOpen={isEditingBook}
-                isSaving={this.props.running}
-                isSaved={false}
-                saveBook={this.saveEditingBook}
-                saveMessage={"Saved"}
-                onClosing={this.stopEditingBook}
-              />
-            ) : null*/}
+          {bookEditingModalLoaded ? (
+            <ManualBookEntry
+              title={editingBook ? `Edit ${editingBook.title}` : ""}
+              dragTitle={dragTitle}
+              bookToEdit={editingBook}
+              isOpen={!!editingBook}
+              isSaving={props.running}
+              isSaved={false}
+              saveBook={saveEditingBook}
+              saveMessage={"Saved"}
+              onClosing={stopEditingBook}
+            />
+          ) : null}
         </div>
       </div>
       <br />
@@ -194,7 +149,7 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
 
       {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
       {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
-      {/*this.state.editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null*/}
+      {editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
     </div>
   );
 };
