@@ -1,6 +1,9 @@
-import { queryUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
+import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
-const { decontructGraphqlQuery, parseRequestedFields, getMongoProjection, newObjectFromArgs, setUpOneToManyRelationships, setUpOneToManyRelationshipsForUpdate, getUpdateObject, constants, cleanUpResults } = queryUtilities;
+const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
+const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
+const { getMongoProjection, parseRequestedFields } = projectUtilities;
+const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import BookMetadata from "./Book";
 import { loadBookSummarys } from "../BookSummary/resolver";
@@ -37,7 +40,7 @@ export const Book = {
       let db = await context.__mongodb;
       context.__Book_similarBooksDataLoader = new DataLoader(async keyArrays => {
         let $match = { asin: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
-        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, constants.useCurrentSelectionSet, { force: ["asin"] });
+        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, null, { force: ["asin"] });
         let { $project, $sort, $limit, $skip } = queryPacket;
         
         let aggregateItems = [
