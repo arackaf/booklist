@@ -18,7 +18,7 @@ import { mutation } from "micro-graphql-react";
 declare var webSocketAddress: any;
 
 const ManualBookEntry = Loadable({
-  loader: () => System.import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
+  loader: () => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
   loading: ComponentLoading,
   delay: 200
 });
