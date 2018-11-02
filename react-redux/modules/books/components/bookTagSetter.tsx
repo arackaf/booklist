@@ -17,21 +17,7 @@ interface ILocalProps {
   onDone: any;
 }
 
-@mutation(
-  `mutation updateBooksTags($books: [String], $add: [String], $remove: [String]) {
-    remove: updateBooks(
-      _ids: $books,
-      Updates: { tags_PULL: $remove }
-    ) { success }
-
-    add: updateBooks(
-      _ids: $books,
-      Updates: { tags_ADDTOSET: $add }
-    ) { success }          
-  }`
-)
-@connect(selectEntireTagsState)
-export default class BookTagSetterDesktopUnConnected extends Component<ReturnType<typeof selectEntireTagsState> & ILocalProps & MutationType, any> {
+class BookTagSetterDesktopUnConnected extends Component<ReturnType<typeof selectEntireTagsState> & ILocalProps & MutationType, any> {
   state = {
     currentTab: "tags",
     addingTags: [],
@@ -173,3 +159,17 @@ export default class BookTagSetterDesktopUnConnected extends Component<ReturnTyp
     );
   }
 }
+
+export default mutation(
+  `mutation updateBooksTags($books: [String], $add: [String], $remove: [String]) {
+    remove: updateBooks(
+      _ids: $books,
+      Updates: { tags_PULL: $remove }
+    ) { success }
+
+    add: updateBooks(
+      _ids: $books,
+      Updates: { tags_ADDTOSET: $add }
+    ) { success }          
+  }`
+)(connect(selectEntireTagsState)(BookTagSetterDesktopUnConnected));
