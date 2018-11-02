@@ -146,13 +146,13 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
     <div style={{}}>
       <BooksLoading />
       <div style={{ marginLeft: "5px", marginTop: 0 }}>
-        {/*<BooksMenuBar
-            startTagModification={this.editTagsForSelectedBooks}
-            startSubjectModification={this.editSubjectsForSelectedBooks}
-            editTags={this.editTags}
-            editSubjects={this.editSubjects}
-            beginEditFilters={beginEditFilters}
-          />*/}
+        <BooksMenuBar
+          startTagModification={editTagsForSelectedBooks}
+          startSubjectModification={editSubjectsForSelectedBooks}
+          editTags={() => null}
+          editSubjects={() => null}
+          beginEditFilters={() => null}
+        />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!props.booksList.length && !props.booksLoading ? (
             <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
