@@ -5,8 +5,7 @@ import { connect } from "react-redux";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 
-@connect(selectEntireTagsState)
-export default class SelectAvailableTags extends Component<Partial<LocalProps & ReturnType<typeof selectEntireTagsState>>, never> {
+class SelectAvailableTags extends Component<Partial<LocalProps & ReturnType<typeof selectEntireTagsState>>, never> {
   render() {
     return (
       <SelectAvailableItems
@@ -19,3 +18,5 @@ export default class SelectAvailableTags extends Component<Partial<LocalProps & 
     );
   }
 }
+
+export default connect(selectEntireTagsState)(SelectAvailableTags);

@@ -16,8 +16,7 @@ const NavBarItem = props => {
   );
 };
 
-@connect(state => state.app)
-export default class MainNavigationBar extends Component<any, any> {
+class MainNavigationBar extends Component<any, any> {
   el: any;
   logout = () => {
     localStorage.setItem("reduxState", "");
@@ -99,3 +98,5 @@ export default class MainNavigationBar extends Component<any, any> {
     );
   }
 }
+
+export default connect(state => state.app)(MainNavigationBar);
