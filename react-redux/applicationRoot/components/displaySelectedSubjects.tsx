@@ -5,8 +5,7 @@ import { RemovableLabelDisplay } from "./labelDisplay";
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };
 
-@connect(selectStackedSubjects)
-export default class DisplaySelectedSubjects extends Component<Partial<LocalProps & ReturnType<typeof selectStackedSubjects>>, never> {
+class DisplaySelectedSubjects extends Component<Partial<LocalProps & ReturnType<typeof selectStackedSubjects>>, never> {
   render() {
     return (
       <>
@@ -17,3 +16,5 @@ export default class DisplaySelectedSubjects extends Component<Partial<LocalProp
     );
   }
 }
+
+export default connect(selectStackedSubjects)(DisplaySelectedSubjects);
