@@ -32,9 +32,41 @@ import createHistory from "history/createBrowserHistory";
 import { gqlGet } from "util/graphqlUtil";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 
+console.log("M");
+
 (function() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
-    navigator.serviceWorker.register("/service-worker.js");
+  if ("serviceWorker" in navigator) {
+    // && !/localhost/.test(window.location as any)) {
+    navigator.serviceWorker.register("/service-worker.js").then(registration => {
+      if (registration.waiting && registration.active) {
+        newerSwAvailable();
+      }
+      registration.onupdatefound = () => {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === "installed") {
+            if (navigator.serviceWorker.controller) {
+              newerSwAvailable();
+            }
+          }
+        };
+      };
+      function newerSwAvailable() {
+        try {
+          navigator.serviceWorker.addEventListener("message", event => {
+            if (event.data == "sw-updated") {
+              console.log("IT WORKED - REFRESH");
+            }
+          });
+          if (navigator.serviceWorker.controller) {
+            Promise.resolve("todo").then(() => {
+              console.log("POSTING MESSAGE THAT I ACCEPTED THE UPDATE");
+              navigator.serviceWorker.controller.postMessage("sw-update-accepted");
+            });
+          }
+        } catch (er) {}
+      }
+    });
     try {
       navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
     } catch (er) {}

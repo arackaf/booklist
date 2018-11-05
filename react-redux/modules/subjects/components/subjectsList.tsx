@@ -11,6 +11,8 @@ import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import { store } from "applicationRoot/store";
 import { SubjectType } from "modules/subjects/reducers/reducer";
 
+console.log("L");
+
 type dragLayerType = {
   item: any;
   currentOffset: { x: number; y: number };
