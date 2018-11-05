@@ -81,7 +81,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm" }),
     new GenerateSW({
-      clientsClaim: true,
       navigateFallback: "react-redux/dist/index.html",
       globDirectory: ".",
       globPatterns: [
