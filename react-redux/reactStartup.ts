@@ -215,6 +215,8 @@ function loadModule(location) {
 
       if (publicUserInfo) {
         store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
+        store.dispatch(loadTags());
+        store.dispatch(loadSubjects());
       }
 
       if (moduleObject.reducer) {
