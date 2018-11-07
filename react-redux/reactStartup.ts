@@ -32,37 +32,35 @@ import createHistory from "history/createBrowserHistory";
 import { gqlGet } from "util/graphqlUtil";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 
-console.log("M");
+console.log("8");
 
 (function() {
   if ("serviceWorker" in navigator) {
     // && !/localhost/.test(window.location as any)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
-        newerSwAvailable();
+        newerSwAvailable(registration.waiting);
       }
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
           if (installingWorker.state === "installed") {
             if (navigator.serviceWorker.controller) {
-              newerSwAvailable();
+              newerSwAvailable(installingWorker);
             }
           }
         };
       };
-      function newerSwAvailable() {
+      function newerSwAvailable(sw) {
         try {
-          navigator.serviceWorker.addEventListener("message", event => {
+          sw.addEventListener("message", event => {
             if (event.data == "sw-updated") {
               console.log("IT WORKED - REFRESH");
             }
           });
-          if (navigator.serviceWorker.controller) {
-            Promise.resolve("todo").then(() => {
-              console.log("POSTING MESSAGE THAT I ACCEPTED THE UPDATE");
-              navigator.serviceWorker.controller.postMessage("sw-update-accepted");
-            });
+          if (confirm("update?")) {
+            console.log("POSTING MESSAGE THAT I ACCEPTED THE UPDATE");
+            sw.postMessage("sw-update-accepted");
           }
         } catch (er) {}
       }
