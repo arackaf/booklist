@@ -4,6 +4,7 @@ const MinifyPlugin = require("babel-minify-webpack-plugin");
 const path = require("path");
 const isProd = 1 || process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
@@ -72,6 +73,10 @@ module.exports = {
             path: path.resolve(__dirname, "extracted_queries.json")
           }
         }
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"]
       }
     ]
   },
@@ -80,6 +85,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm" }),
+    new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     new GenerateSW({
       navigateFallback: "react-redux/dist/index.html",
       globDirectory: ".",
