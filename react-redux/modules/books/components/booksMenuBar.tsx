@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, SFC } from "react";
 import { connect } from "react-redux";
 
 import { selectBookSelection, selectBookLoadingInfo } from "modules/books/reducers/books/reducer";
@@ -24,34 +24,36 @@ type actions = typeof bookSearchActionCreators & typeof booksActionCreators;
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
-class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps, any> {
-  navBar: any;
-  quickSearchEl: any;
-  sortChanged(evt) {
-    let value = evt.target.value,
-      [sort, direction] = value.split("|");
+//class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps, any> {
 
-    this.props.setSortOrder(sort, direction == "asc" ? "asc" : "desc");
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.search != this.props.search) {
-      this.quickSearchEl && (this.quickSearchEl.value = this.props.search);
-    }
-  }
-  quickSearch = evt => {
+const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps> = props => {
+  // navBar: any;
+  // quickSearchEl: any;
+  // sortChanged(evt) {
+  //   let value = evt.target.value,
+  //     [sort, direction] = value.split("|");
+
+  //   this.props.setSortOrder(sort, direction == "asc" ? "asc" : "desc");
+  // }
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.search != this.props.search) {
+  //     this.quickSearchEl && (this.quickSearchEl.value = this.props.search);
+  //   }
+  // }
+  const quickSearch = evt => {
     evt.preventDefault();
-    this.props.quickSearch(evt.currentTarget.value);
+    props.quickSearch(evt.currentTarget.value);
   };
-  resetSearch = () => {
-    this.quickSearchEl.value = this.props.search;
-  };
-  quickSearchType = evt => {
+  // resetSearch = () => {
+  //   this.quickSearchEl.value = this.props.search;
+  // };
+  const quickSearchType = evt => {
     if (evt.keyCode == 13) {
-      this.quickSearch(evt);
+      quickSearch(evt);
     }
   };
-  render() {
-    let { isPublic, publicBooksHeader, publicName, page, selectedBooksCount, totalPages, activeFilterCount } = this.props;
+
+    let { isPublic, publicBooksHeader, publicName, page, selectedBooksCount, totalPages, activeFilterCount } = props;
     let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
     let canPageUp = page < totalPages;
@@ -59,7 +61,7 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
     let canPageOne = page > 1;
     let canPageLast = page < totalPages;
 
-    let resultsCount = this.props.resultsCount;
+    let resultsCount = props.resultsCount;
     let resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "";
     let removeAllFiltersLabel = {
       backgroundColor: "red",
@@ -75,7 +77,7 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
             {!selectedBooksCount ? (
               <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
                 <div className="btn-group">
-                  <button onClick={this.props.pageOne} disabled={!canPageDown} className="btn btn-default">
+                  <button onClick={props.pageOne} disabled={!canPageDown} className="btn btn-default">
                     <i className="fal fa-angle-left" />
                   </button>
                   <button disabled={!canPageUp} className="btn btn-default">
@@ -86,10 +88,10 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
             ) : null}
             <div className="hidden-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
-                <button onClick={this.props.pageOne} disabled={!canPageOne} className="btn btn-default">
+                <button onClick={props.pageOne} disabled={!canPageOne} className="btn btn-default">
                   <i className="fal fa-angle-double-left" />
                 </button>
-                <button onClick={this.props.pageDown} disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
+                <button onClick={props.pageDown} disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
                   <i className="fal fa-angle-left" />
                 </button>
               </div>
@@ -100,10 +102,10 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
                 </span>
               ) : null}
               <div className="btn-group">
-                <button onClick={this.props.pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
+                <button onClick={props.pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
                   <i className="fal fa-angle-right" />
                 </button>
-                <button onClick={this.props.pageLast} disabled={!canPageLast} className="btn btn-default">
+                <button onClick={props.pageLast} disabled={!canPageLast} className="btn btn-default">
                   <i className="fal fa-angle-double-right" />
                 </button>
               </div>
@@ -111,13 +113,13 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
             <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
                 <input
-                  ref={el => (this.quickSearchEl = el)}
-                  defaultValue={this.props.search}
-                  onBlur={this.resetSearch}
+                  //ref={el => (quickSearchEl = el)}
+                  defaultValue={props.search}
+                  //onBlur={resetSearch}
                   name="search"
                   className="form-control hidden-tiny"
                   placeholder="Title search"
-                  onKeyDown={this.quickSearchType}
+                  onKeyDown={quickSearchType}
                   style={{
                     float: "left",
                     display: "inline-block",
@@ -132,48 +134,48 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
                     <button
                       title="Filter search"
                       style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                      onClick={this.props.beginEditFilters}
+                      onClick={props.beginEditFilters}
                       className="btn btn-default btn-reset"
                     >
                       <i className="fal fa-filter" />
                     </button>
                     {!isPublic ? (
                       <>
-                        <button title="Edit subjects" onClick={this.props.editSubjects} className="btn btn-default ">
+                        <button title="Edit subjects" onClick={props.editSubjects} className="btn btn-default ">
                           <i className="fal fa-sitemap" />
                         </button>
-                        <button title="Edit tags" onClick={this.props.editTags} className="btn btn-default ">
+                        <button title="Edit tags" onClick={props.editTags} className="btn btn-default ">
                           <i className="fal fa-tags" />
                         </button>
                       </>
                     ) : null}
                     <button
                       style={{ position: "static" }}
-                      onClick={this.props.setViewDesktop}
-                      className={"btn btn-default " + (this.props.isGridView ? "active" : "")}
+                      onClick={props.setViewDesktop}
+                      className={"btn btn-default " + (props.isGridView ? "active" : "")}
                     >
                       <i className="fal fa-table" />
                     </button>
                     <button
                       style={{ position: "static" }}
-                      onClick={this.props.setViewBasicList}
-                      className={"btn btn-default " + (this.props.isBasicList ? "active" : "")}
+                      onClick={props.setViewBasicList}
+                      className={"btn btn-default " + (props.isBasicList ? "active" : "")}
                     >
                       <i className="fal fa-list" />
                     </button>
                   </>
                 ) : !isPublic ? (
                   <>
-                    <button title="Add/remove subjects" onClick={this.props.startSubjectModification} className={"btn btn-default btn-reset"}>
+                    <button title="Add/remove subjects" onClick={props.startSubjectModification} className={"btn btn-default btn-reset"}>
                       <i className="fal fa-sitemap" />
                     </button>
-                    <button title="Add/remove tags" onClick={this.props.startTagModification} className="btn btn-default">
+                    <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default">
                       <i className="fal fa-tags" />
                     </button>
-                    <button title="Set read" onClick={this.props.setSelectedRead} className={"btn btn-default"}>
+                    <button title="Set read" onClick={props.setSelectedRead} className={"btn btn-default"}>
                       <i className="fal fa-eye" />
                     </button>
-                    <button title="Set un-read" onClick={this.props.setSelectedUnRead} className="btn btn-default put-line-through">
+                    <button title="Set un-read" onClick={props.setSelectedUnRead} className="btn btn-default put-line-through">
                       <i className="fal fa-eye-slash" />
                     </button>
                   </>
@@ -192,63 +194,63 @@ class BooksMenuBar extends Component<ReturnType<typeof menuBarSelector> & action
                 </div>
               ) : null}
 
-              {this.props.search ? (
+              {props.search ? (
                 <RemovableLabelDisplay
                   style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-                  item={{ name: `"${this.props.search}"` }}
-                  doRemove={() => this.props.removeFilters("search")}
+                  item={{ name: `"${props.search}"` }}
+                  doRemove={() => props.removeFilters("search")}
                 />
               ) : null}
-              {this.props.isRead == "1" || this.props.isRead == "0" ? (
+              {props.isRead == "1" || props.isRead == "0" ? (
                 <RemovableLabelDisplay
                   style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-                  item={{ backgroundColor: `${this.props.isRead == "1" ? "green" : "red"}` }}
-                  doRemove={() => this.props.removeFilters("isRead")}
+                  item={{ backgroundColor: `${props.isRead == "1" ? "green" : "red"}` }}
+                  doRemove={() => props.removeFilters("isRead")}
                 >
                   <span>
-                    {this.props.isRead == "1" ? "Is Read" : "Not Read"}
+                    {props.isRead == "1" ? "Is Read" : "Not Read"}
                     &nbsp;
-                    {this.props.isRead == "1" ? <i className="far fa-check" /> : null}
+                    {props.isRead == "1" ? <i className="far fa-check" /> : null}
                   </span>
                 </RemovableLabelDisplay>
               ) : null}
-              {this.props.publisher ? (
+              {props.publisher ? (
                 <RemovableLabelDisplay
                   style={filterDisplayStyles}
-                  item={{ name: `publisher: "${this.props.publisher}"` }}
-                  doRemove={() => this.props.removeFilters("publisher")}
+                  item={{ name: `publisher: "${props.publisher}"` }}
+                  doRemove={() => props.removeFilters("publisher")}
                 />
               ) : null}
-              {this.props.author ? (
+              {props.author ? (
                 <RemovableLabelDisplay
                   style={filterDisplayStyles}
-                  item={{ name: `author: "${this.props.author}"` }}
-                  doRemove={() => this.props.removeFilters("author")}
+                  item={{ name: `author: "${props.author}"` }}
+                  doRemove={() => props.removeFilters("author")}
                 />
               ) : null}
-              {this.props.pages || this.props.pages == "0" ? (
+              {props.pages || props.pages == "0" ? (
                 <RemovableLabelDisplay
                   style={filterDisplayStyles}
-                  item={{ name: `pages: ${this.props.pagesOperator == "lt" ? "<" : ">"} ${this.props.pages}` }}
-                  doRemove={() => this.props.removeFilters("pages", "pagesOperator")}
+                  item={{ name: `pages: ${props.pagesOperator == "lt" ? "<" : ">"} ${props.pages}` }}
+                  doRemove={() => props.removeFilters("pages", "pagesOperator")}
                 />
               ) : null}
-              {this.props.noSubjects ? (
+              {props.noSubjects ? (
                 <RemovableLabelDisplay
                   style={filterDisplayStyles}
                   item={{ name: `No subjects` }}
-                  doRemove={() => this.props.removeFilters("noSubjects")}
+                  doRemove={() => props.removeFilters("noSubjects")}
                 />
               ) : null}
 
-              {this.props.selectedSubjects.map(s => (
-                <RemovableLabelDisplay style={filterDisplayStyles} item={s} doRemove={() => this.props.removeFilterSubject(s._id)} />
+              {props.selectedSubjects.map(s => (
+                <RemovableLabelDisplay style={filterDisplayStyles} item={s} doRemove={() => props.removeFilterSubject(s._id)} />
               ))}
-              {this.props.selectedTags.map(t => (
-                <RemovableLabelDisplay style={filterDisplayStyles} item={t} doRemove={() => this.props.removeFilterTag(t._id)} />
+              {props.selectedTags.map(t => (
+                <RemovableLabelDisplay style={filterDisplayStyles} item={t} doRemove={() => props.removeFilterTag(t._id)} />
               ))}
               {activeFilterCount > 1 ? (
-                <RemovableLabelDisplay style={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={this.props.clearAllFilters} />
+                <RemovableLabelDisplay style={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={props.clearAllFilters} />
               ) : null}
             </div>
           </div>
