@@ -32,12 +32,10 @@ import createHistory from "history/createBrowserHistory";
 import { gqlGet } from "util/graphqlUtil";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 
-console.log("20");
 declare var window: any;
 
 (function() {
-  if ("serviceWorker" in navigator) {
-    // && !/localhost/.test(window.location as any)) {
+  if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
