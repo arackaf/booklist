@@ -2,7 +2,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const { GenerateSW } = require("workbox-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const path = require("path");
-const isProd = 1 || process.env.NODE_ENV == "production";
+const isProd = process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
