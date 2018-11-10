@@ -4,6 +4,7 @@ const MinifyPlugin = require("babel-minify-webpack-plugin");
 const path = require("path");
 const isProd = process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
@@ -72,6 +73,10 @@ module.exports = {
             path: path.resolve(__dirname, "extracted_queries.json")
           }
         }
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"]
       }
     ]
   },
@@ -80,6 +85,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm" }),
+    new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     new GenerateSW({
       navigateFallback: "react-redux/dist/index.html",
       globDirectory: ".",
@@ -106,8 +112,8 @@ module.exports = {
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /fontawesome\/webfonts/, name: "fontawesome-fonts" })
-      ]
-      //importScripts: ["react-redux/sw-manual.js"]
+      ],
+      importScripts: ["react-redux/sw-manual-update-sync.js"]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null

@@ -32,9 +32,55 @@ import createHistory from "history/createBrowserHistory";
 import { gqlGet } from "util/graphqlUtil";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 
+declare var window: any;
+
 (function() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
-    navigator.serviceWorker.register("/service-worker.js");
+    navigator.serviceWorker.register("/service-worker.js").then(registration => {
+      if (registration.waiting && registration.active) {
+        newerSwAvailable(registration.waiting);
+      }
+      registration.onupdatefound = () => {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === "installed") {
+            if (navigator.serviceWorker.controller) {
+              newerSwAvailable(installingWorker);
+            }
+          }
+        };
+      };
+    });
+
+    function newerSwAvailable(sw) {
+      try {
+        navigator.serviceWorker.addEventListener("message", event => {
+          if (event.data == "sw-updated") {
+            location.reload();
+          }
+        });
+        import("toastify-js").then(({ default: Toastify }) => {
+          window.addEventListener("click", evt => {
+            try {
+              if (evt.target.classList.contains("do-sw-update")) {
+                sw.postMessage("sw-update-accepted");
+              }
+            } catch (e) {}
+          });
+          Toastify({
+            text: `
+              <h4 style='display: inline'>An update is available!</h4>
+              <br><br>
+              <a class='do-sw-update' style='color: white'>Click to update and reload</a>&nbsp;&nbsp;
+            `.trim(),
+            duration: 7000,
+            gravity: "bottom",
+            close: true
+          }).showToast();
+        });
+      } catch (er) {}
+    }
+
     try {
       navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
     } catch (er) {}
