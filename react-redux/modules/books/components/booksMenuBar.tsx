@@ -1,4 +1,4 @@
-import React, { Component, SFC } from "react";
+import React, { SFC } from "react";
 const { useRef, useEffect } = React as any;
 import { connect } from "react-redux";
 
