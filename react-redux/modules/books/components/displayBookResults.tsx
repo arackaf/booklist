@@ -29,12 +29,12 @@ const selector = createSelector((state: BooksModuleType) => state.app, selectBoo
 });
 
 const DisplayBookResults: SFC<PassedIn & ReturnType<typeof selector>> = props => {
-  let { editBook, editTagsForBook, editSubjectsForBook } = this.props;
+  let { editBook, editTagsForBook, editSubjectsForBook } = props;
 
-  return this.props.subjectsLoaded && this.props.tagsLoaded ? (
-    this.props.isGridView ? (
+  return props.subjectsLoaded && props.tagsLoaded ? (
+    props.isGridView ? (
       <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
-    ) : this.props.isBasicList ? (
+    ) : props.isBasicList ? (
       <BasicListView editBook={editBook} />
     ) : null
   ) : null;
