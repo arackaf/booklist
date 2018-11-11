@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, SFC } from "react";
 
 import GV from "./bookViewList-grid";
 const GridView: any = GV;
@@ -28,18 +28,16 @@ const selector = createSelector((state: BooksModuleType) => state.app, selectBoo
   };
 });
 
-class DisplayBookResults extends Component<PassedIn & ReturnType<typeof selector>, null> {
-  render() {
-    let { editBook, editTagsForBook, editSubjectsForBook } = this.props;
+const DisplayBookResults: SFC<PassedIn & ReturnType<typeof selector>> = props => {
+  let { editBook, editTagsForBook, editSubjectsForBook } = props;
 
-    return this.props.subjectsLoaded && this.props.tagsLoaded ? (
-      this.props.isGridView ? (
-        <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
-      ) : this.props.isBasicList ? (
-        <BasicListView editBook={editBook} />
-      ) : null
-    ) : null;
-  }
-}
+  return props.subjectsLoaded && props.tagsLoaded ? (
+    props.isGridView ? (
+      <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
+    ) : props.isBasicList ? (
+      <BasicListView editBook={editBook} />
+    ) : null
+  ) : null;
+};
 
 export default connect(selector)(DisplayBookResults);
