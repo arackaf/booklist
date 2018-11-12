@@ -2,7 +2,6 @@ import { renderUI, clearUI } from "applicationRoot/renderUI";
 import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";
-import "react-loadable";
 import "immutability-helper";
 
 import { Client, setDefaultClient, compress } from "micro-graphql-react";

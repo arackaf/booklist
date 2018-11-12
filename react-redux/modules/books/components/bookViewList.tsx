@@ -1,19 +1,14 @@
-import React, { Component, SFC } from "react";
+import React, { SFC, Suspense, lazy } from "react";
 const { useState } = React as any;
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
-import DBR from "./displayBookResults";
-const DisplayBookResults: any = DBR;
-
-import BMB from "./booksMenuBar";
-const BooksMenuBar: any = BMB;
-
+import DisplayBookResults from "./displayBookResults";
+import BooksMenuBar from "./booksMenuBar";
 import BooksLoading from "./booksLoading";
-import Loadable from "react-loadable";
 
 import { selectBookList, selectBookSelection } from "../reducers/books/reducer";
-import ComponentLoading from "applicationRoot/components/componentLoading";
+import Loading from "applicationRoot/components/loading";
 
 import { MutationType } from "reactStartup";
 import { mutation } from "micro-graphql-react";
@@ -21,48 +16,23 @@ import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 
-const ManualBookEntry = Loadable({
-  loader: () => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
-  loading: ComponentLoading,
-  delay: 200
-});
+const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
+const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
+const BookTagSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
+const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));
+const TagEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
+const BookSearchModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
 
-const BookSubjectSetter = Loadable({
-  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"),
-  loading: ComponentLoading,
-  delay: 200
-});
-
-const BookTagSetter = Loadable({
-  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"),
-  loading: ComponentLoading,
-  delay: 200
-});
-
-const SubjectEditModal = Loadable({
-  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"),
-  loading: ComponentLoading,
-  delay: 200
-});
-
-const TagEditModal = Loadable({
-  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"),
-  loading: ComponentLoading,
-  delay: 200
-});
-
-const BookSearchModal = Loadable({
-  loader: () => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"),
-  loading: ComponentLoading,
-  delay: 200
-});
-
-const mainSelector = createSelector(selectBookList, selectBookSelection, (books, bookSelection) => {
-  return {
-    ...books,
-    ...bookSelection
-  };
-});
+const mainSelector = createSelector(
+  selectBookList,
+  selectBookSelection,
+  (books, bookSelection) => {
+    return {
+      ...books,
+      ...bookSelection
+    };
+  }
+);
 type MainSelectorType = ReturnType<typeof mainSelector>;
 
 const useCodeSplitModal = (initialOpenData = false) => {
@@ -109,23 +79,29 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
   return (
     <div style={{}}>
       <BooksLoading />
-      <div style={{ marginLeft: "5px", marginTop: 0 }}>
-        <BooksMenuBar
-          startTagModification={editTagsForSelectedBooks}
-          startSubjectModification={editSubjectsForSelectedBooks}
-          editTags={editTags}
-          editSubjects={editSubjects}
-          beginEditFilters={beginEditFilters}
-        />
-        <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!props.booksList.length && !props.booksLoading ? (
-            <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
-              No books found
-            </div>
-          ) : null}
+      <Suspense fallback={<Loading />}>
+        <div style={{ marginLeft: "5px", marginTop: 0 }}>
+          <BooksMenuBar
+            startTagModification={editTagsForSelectedBooks}
+            startSubjectModification={editSubjectsForSelectedBooks}
+            editTags={editTags}
+            editSubjects={editSubjects}
+            beginEditFilters={beginEditFilters}
+          />
+          <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
+            {!props.booksList.length && !props.booksLoading ? (
+              <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
+                No books found
+              </div>
+            ) : null}
 
-          <DisplayBookResults {...{ editSubjectsForBook, editTagsForBook, editBook }} />
+            <DisplayBookResults {...{ editSubjectsForBook, editTagsForBook, editBook }} />
+          </div>
+        </div>
+        <br />
+        <br />
 
+        <Suspense fallback={<Loading />}>
           {bookEditingModalLoaded ? (
             <ManualBookEntry
               title={editingBook ? `Edit ${editingBook.title}` : ""}
@@ -139,17 +115,14 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
               onClosing={stopEditingBook}
             />
           ) : null}
-        </div>
-      </div>
-      <br />
-      <br />
+          {bookSubModalLoaded ? <BookSubjectSetter modifyingBooks={bookSubModifying} onDone={closeBookSubModal} /> : null}
+          {bookTagModalLoaded ? <BookTagSetter modifyingBooks={bookTagModifying} onDone={closeBookTagModal} /> : null}
 
-      {bookSubModalLoaded ? <BookSubjectSetter modifyingBooks={bookSubModifying} onDone={closeBookSubModal} /> : null}
-      {bookTagModalLoaded ? <BookTagSetter modifyingBooks={bookTagModifying} onDone={closeBookTagModal} /> : null}
-
-      {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
-      {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
-      {editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
+          {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
+          {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
+          {editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
+        </Suspense>
+      </Suspense>
     </div>
   );
 };

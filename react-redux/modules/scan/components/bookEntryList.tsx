@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense, lazy } from "react";
 import BookEntryItem from "./bookEntryItem";
 import { connect } from "react-redux";
 
@@ -6,9 +6,8 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import * as bookEntryActionCreators from "../reducers/actionCreators";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
-import Loadable from "react-loadable";
 
-import ComponentLoading from "applicationRoot/components/componentLoading";
+import Loading from "applicationRoot/components/loading";
 
 import { scanReducerType } from "modules/scan/reducers/reducer";
 
@@ -17,11 +16,7 @@ import { mutation } from "micro-graphql-react";
 
 declare var webSocketAddress: any;
 
-const ManualBookEntry = Loadable({
-  loader: () => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"),
-  loading: ComponentLoading,
-  delay: 200
-});
+const ManualBookEntry = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 
 const defaultEmptyBook = () => ({
   title: "",
@@ -183,19 +178,21 @@ export default class BookEntryList extends Component<scanReducerType & typeof bo
           </div>
         </div>
 
-        {this.state.modalEntryLoaded ? (
-          <ManualBookEntry
-            title={"Manually enter a book"}
-            dragTitle={"Click or drag to upload a cover image. The uploaded image will be scaled down as needed"}
-            bookToEdit={this.state.manualBook}
-            isOpen={this.state.inManualEntry}
-            isSaving={this.props.running}
-            isSaved={this.state.manualSaved}
-            saveBook={book => this.saveNewBook(book)}
-            startOver={() => this.manuallyEnterBook()}
-            onClosing={() => this.manualEntryEnding()}
-          />
-        ) : null}
+        <Suspense fallback={<Loading />}>
+          {this.state.modalEntryLoaded ? (
+            <ManualBookEntry
+              title={"Manually enter a book"}
+              dragTitle={"Click or drag to upload a cover image. The uploaded image will be scaled down as needed"}
+              bookToEdit={this.state.manualBook}
+              isOpen={this.state.inManualEntry}
+              isSaving={this.props.running}
+              isSaved={this.state.manualSaved}
+              saveBook={book => this.saveNewBook(book)}
+              startOver={() => this.manuallyEnterBook()}
+              onClosing={() => this.manualEntryEnding()}
+            />
+          ) : null}
+        </Suspense>
       </div>
     );
   }
