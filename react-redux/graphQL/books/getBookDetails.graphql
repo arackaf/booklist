@@ -1,5 +1,5 @@
 query GetBookDetails($_id: String, $publicUserId: String) {
-  getBook(_id: $_id, cache: 9, publicUserId: $publicUserId) {
+  getBook(_id: $_id, publicUserId: $publicUserId) {
     Book {
       editorialReviews {
         source

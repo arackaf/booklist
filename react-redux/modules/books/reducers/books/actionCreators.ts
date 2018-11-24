@@ -99,7 +99,7 @@ export function expandBook(_id: string) {
     if (!book.detailsLoaded) {
       dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
 
-      graphqlClient.runQuery(BookDetailsQuery, { _id, publicUserId }).then(({ data: { getBook } }) => {
+      graphqlClient.runQuery(BookDetailsQuery, { _id, publicUserId, cache: 9 }).then(({ data: { getBook } }) => {
         let { editorialReviews, similarBooks } = getBook.Book;
         dispatch({ type: DETAILS_LOADED, _id, editorialReviews: editorialReviews || [], similarBooks: similarBooks || [] });
       });
