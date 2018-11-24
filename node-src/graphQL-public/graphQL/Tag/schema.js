@@ -179,12 +179,16 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int,
-    publicUserId: String
+    publicUserId: String,
+    ver: String,
+    cache: Int
   ): TagQueryResults
 
   getTag (
     _id: String,
-    publicUserId: String
+    publicUserId: String,
+    ver: String,
+    cache: Int
   ): TagSingleQueryResult
 
 `;
