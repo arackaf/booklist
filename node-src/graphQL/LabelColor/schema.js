@@ -105,7 +105,8 @@ export const query = `
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int
+    PAGE_SIZE: Int,
+    cache: Int
   ): LabelColorQueryResults
 
 `;

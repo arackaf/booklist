@@ -7,6 +7,7 @@ export const REQUEST_MOBILE = "root.REQUEST_MOBILE";
 export const SET_PUBLIC_INFO = "root.SET_PUBLIC_INFO";
 export const RESET_PUBLIC_INFO = "root.RESET_PUBLIC_INFO";
 export const SET_MODULE = "root.SET_MODULE";
+export const NEW_LOGIN = "root.NEW_LOGIN";
 export const SET_LOGGED_IN = "root.SET_LOGGED_IN";
 
 export const LOAD_SUBJECTS = "root.LOAD_SUBJECTS";

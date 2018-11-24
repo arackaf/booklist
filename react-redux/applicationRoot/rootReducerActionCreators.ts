@@ -11,7 +11,8 @@ import {
   LOAD_SUBJECTS_RESULTS,
   LOAD_COLORS,
   SAVE_SUBJECT_RESULTS,
-  SUBJECT_DELETED
+  SUBJECT_DELETED,
+  NEW_LOGIN
 } from "./rootReducerActionNames";
 
 import { Client } from "micro-graphql-react";
@@ -49,6 +50,7 @@ export const requestMobile = () => dispatch => {
 };
 export const setRequestDesktop = () => ({ type: REQUEST_DESKTOP });
 
+export const newLogin = () => ({ type: NEW_LOGIN });
 export const setModule = module => ({ type: SET_MODULE, module });
 export const setLoggedIn = userId => ({ type: SET_LOGGED_IN, userId });
 export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });

@@ -12,7 +12,7 @@ import { selectSearchVariables } from "./reducer";
 
 export const booksSearch = searchValues => (dispatch, getState) => {
   dispatch({ type: SET_SEARCH_VALUES, values: { ...searchValues, page: 1 } });
-  let queryVariables = selectSearchVariables(getState());
+  let queryVariables = { ...selectSearchVariables(getState()), cache: 1 };
 
   dispatch({ type: SEARCH_BOOKS });
 

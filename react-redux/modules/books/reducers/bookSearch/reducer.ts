@@ -4,9 +4,10 @@ import shallowEqual from "shallow-equal/objects";
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
-import { LOAD_BOOKS_RESULTS, EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
+import { EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
+import { BOOK_SEARCH_VERSION_KEY } from "applicationRoot/rootReducer";
+import { NEW_LOGIN } from "applicationRoot/rootReducerActionNames";
 
-const BOOK_SEARCH_VERSION_KEY = "bookSearchVersion";
 let initialSearchVersion = +localStorage.getItem(BOOK_SEARCH_VERSION_KEY);
 
 if (initialSearchVersion) {
@@ -48,6 +49,7 @@ export function bookSearchReducer(state = initialState, action): BookSearchType 
     case EDITING_BOOK_SAVED:
     case SET_BOOKS_SUBJECTS:
     case SET_BOOKS_TAGS:
+    case NEW_LOGIN:
       let newSearchVersion = +new Date();
       localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + newSearchVersion);
       return { ...state, searchVersion: newSearchVersion };
