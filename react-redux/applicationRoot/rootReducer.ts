@@ -21,6 +21,8 @@ import {
   TAG_DELETED
 } from "./rootReducerActionNames";
 
+export const BOOK_SEARCH_VERSION_KEY = "bookSearchVersion";
+
 interface ITag {
   _id: string;
   name: string;
@@ -273,12 +275,16 @@ export const selectStackedSubjects = createSelector(
   }
 );
 
-export const selectEntireSubjectsState = createSelector(state => state.app, selectStackedSubjects, (app, stackedSubjects) => {
-  return {
-    colors: app.colors,
-    ...stackedSubjects
-  };
-});
+export const selectEntireSubjectsState = createSelector(
+  state => state.app,
+  selectStackedSubjects,
+  (app, stackedSubjects) => {
+    return {
+      colors: app.colors,
+      ...stackedSubjects
+    };
+  }
+);
 
 function allSubjectsSorted(subjectsHash): SubjectType[] {
   let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);

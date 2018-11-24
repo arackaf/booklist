@@ -21,7 +21,7 @@ query HomeModuleBooks(
     searchChildSubjects: $searchChildSubjects
     tags_containsAny: $tags
     ver: $ver
-    cache: "1"
+    cache: 1
   ) {
     Books {
       _id
