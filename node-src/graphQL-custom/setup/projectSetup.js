@@ -47,8 +47,8 @@ export const Book = {
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
     { name: "publicUserId", type: "String" },
-    { name: "bookSearchVersion", type: "String" },
-    { name: "isBookDetails", type: "String" }
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
   ],
   relationships: {
     similarBooks: {
@@ -76,7 +76,7 @@ export const Subject = {
     schemaSources: ["../../graphQL-custom/extras/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }]
+  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
 
 export const Tag = {
@@ -89,7 +89,7 @@ export const Tag = {
     backgroundColor: StringType,
     textColor: StringType
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }]
+  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
 
 export const LabelColor = {
@@ -102,7 +102,8 @@ export const LabelColor = {
   readonly: true,
   extras: {
     overrides: ["getLabelColor"]
-  }
+  },
+  manualQueryArgs: [{ name: "cache", type: "Int" }]
 };
 
 export const User = {

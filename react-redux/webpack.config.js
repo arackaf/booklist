@@ -106,8 +106,8 @@ module.exports = {
       },
       ignoreUrlParametersMatching: [/./],
       runtimeCaching: [
-        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+bookSearchVersion/, name: "book-search-graphql", expires: 60 * 5 }), //5 minutes
-        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+isBookDetails/, name: "book-details" }),
+        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+cache=1/, name: "short-cache-search", expires: 60 * 5 }), //5 minutes
+        getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?query=.+cache=9/, name: "max-cache-search" }),
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),

@@ -32,8 +32,7 @@ export const Book = {
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
     { name: "publicUserId", type: "String" },
-    { name: "bookSearchVersion", type: "String" },
-    { name: "isBookDetails", type: "String" }
+    { name: "bookSearchVersion", type: "String" }
   ]
 };
 
