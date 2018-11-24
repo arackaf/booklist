@@ -14,7 +14,7 @@ query SearchBooks(
   $subjects_count: Int
   $pages_lt: Int
   $pages_gt: Int
-  $bookSearchVersion: String
+  $ver: String
 ) {
   allBooks(
     PAGE: $page
@@ -32,7 +32,8 @@ query SearchBooks(
     subjects_count: $subjects_count
     pages_lt: $pages_lt
     pages_gt: $pages_gt
-    bookSearchVersion: $bookSearchVersion
+    ver: $ver
+    cache: "1"
   ) {
     Books {
       _id

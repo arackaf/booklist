@@ -1,4 +1,4 @@
-query RecommendSearchBooks(
+query HomeModuleBooks(
   $page: Int
   $pageSize: Int
   $sort: BookSort
@@ -8,7 +8,7 @@ query RecommendSearchBooks(
   $subjects: [String]
   $searchChildSubjects: Boolean
   $tags: [String]
-  $bookSearchVersion: String
+  $ver: String
 ) {
   allBooks(
     PAGE: $page
@@ -20,7 +20,8 @@ query RecommendSearchBooks(
     subjects_containsAny: $subjects
     searchChildSubjects: $searchChildSubjects
     tags_containsAny: $tags
-    bookSearchVersion: $bookSearchVersion
+    ver: $ver
+    cache: "1"
   ) {
     Books {
       _id
