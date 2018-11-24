@@ -75,7 +75,8 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
     publisher_contains: bookSearchFilters.publisher || void 0,
     publicUserId: publicUserId,
     subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-    bookSearchVersion: "" + bookSearchState.searchVersion
+    ver: "" + bookSearchState.searchVersion,
+    cache: 1
   };
   if (bookSearchFilters.pages != "") {
     getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
@@ -98,7 +99,7 @@ export function expandBook(_id: string) {
     if (!book.detailsLoaded) {
       dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
 
-      graphqlClient.runQuery(BookDetailsQuery, { _id, isBookDetails: "1", publicUserId }).then(({ data: { getBook } }) => {
+      graphqlClient.runQuery(BookDetailsQuery, { _id, publicUserId }).then(({ data: { getBook } }) => {
         let { editorialReviews, similarBooks } = getBook.Book;
         dispatch({ type: DETAILS_LOADED, _id, editorialReviews: editorialReviews || [], similarBooks: similarBooks || [] });
       });
