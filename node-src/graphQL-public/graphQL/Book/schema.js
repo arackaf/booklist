@@ -418,16 +418,16 @@ export const query = `
     PAGE_SIZE: Int,
     searchChildSubjects: Boolean,
     publicUserId: String,
-    bookSearchVersion: String,
-    isBookDetails: String
+    ver: String,
+    cache: Int
   ): BookQueryResults
 
   getBook (
     _id: String,
     searchChildSubjects: Boolean,
     publicUserId: String,
-    bookSearchVersion: String,
-    isBookDetails: String
+    ver: String,
+    cache: Int
   ): BookSingleQueryResult
 
 `;
