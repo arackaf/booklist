@@ -21,6 +21,7 @@ import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
+import { AppType } from "modules/books/reducers/reducer";
 
 export const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -65,22 +66,18 @@ export function loadSubjects() {
       return;
     }
     subjectsLoaded = true;
-    let publicUserId = getState().app.publicUserId;
+    let app: AppType = getState().app;
+    let publicUserId = app.publicUserId;
+    let subjectsVersion = app.subjectsVersion;
     dispatch({ type: LOAD_SUBJECTS });
 
-    Promise.all([graphqlClient.runQuery(AllSubjectsQuery, { publicUserId }), graphqlClient.runQuery(AllLabelColorsQuery)]).then(
-      ([
-        { data },
-        {
-          data: {
-            allLabelColors: { LabelColors: labelColors }
-          }
-        }
-      ]) => {
-        dispatch({ type: LOAD_COLORS, colors: labelColors });
-        dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: data.allSubjects.Subjects });
-      }
-    );
+    Promise.all([
+      graphqlClient.runQuery(AllSubjectsQuery, { publicUserId, cache: 5, ver: subjectsVersion }),
+      graphqlClient.runQuery(AllLabelColorsQuery, { cache: 9 })
+    ]).then(([{ data }, { data: { allLabelColors: { LabelColors: labelColors } } }]) => {
+      dispatch({ type: LOAD_COLORS, colors: labelColors });
+      dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: data.allSubjects.Subjects });
+    });
   };
 }
 

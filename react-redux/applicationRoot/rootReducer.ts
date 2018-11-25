@@ -18,10 +18,34 @@ import {
   SUBJECT_DELETED,
   LOAD_TAGS_RESULTS,
   UPDATE_TAG_RESULTS,
-  TAG_DELETED
+  TAG_DELETED,
+  NEW_LOGIN
 } from "./rootReducerActionNames";
 
+export function getSearchVersion(key) {
+  let initialSearchVersion = +localStorage.getItem(key);
+
+  if (initialSearchVersion) {
+    let currentTime = +new Date();
+    let delta = currentTime - initialSearchVersion;
+
+    //2 hours
+    if (delta > 2 * 60 * 60 * 1000) {
+      initialSearchVersion = +new Date();
+    }
+  } else {
+    initialSearchVersion = +new Date();
+  }
+  localStorage.setItem(key, "" + initialSearchVersion);
+  return initialSearchVersion;
+}
+
 export const BOOK_SEARCH_VERSION_KEY = "bookSearchVersion";
+export const SUBJECTS_SEARCH_VERSION_KEY = "subjectsSearchVersion";
+export const TAGS_SEARCH_VERSION_KEY = "tagsSearchVersion";
+
+let initialSubjectsVersion = getSearchVersion(SUBJECTS_SEARCH_VERSION_KEY);
+let initialTagsVersion = getSearchVersion(TAGS_SEARCH_VERSION_KEY);
 
 interface ITag {
   _id: string;
@@ -48,7 +72,9 @@ const initialState = {
   subjectsLoaded: false,
   subjectsInitialQueryFired: false,
   tagHash: hashOf<ITag>(),
-  tagsLoaded: false
+  tagsLoaded: false,
+  tagsVersion: initialTagsVersion,
+  subjectsVersion: initialSubjectsVersion
 };
 
 export type AppType = typeof initialState;
@@ -65,6 +91,24 @@ export type RootApplicationType = {
 export const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
 
 export default function rootReducer(state = initialState, action) {
+  switch (action.type) {
+    case SAVE_SUBJECT_RESULTS:
+    case SUBJECT_DELETED:
+    case NEW_LOGIN:
+      let newSearchVersion = +new Date();
+      localStorage.setItem(SUBJECTS_SEARCH_VERSION_KEY, "" + newSearchVersion);
+      state = { ...state, subjectsVersion: newSearchVersion };
+  }
+
+  switch (action.type) {
+    case UPDATE_TAG_RESULTS:
+    case TAG_DELETED:
+    case NEW_LOGIN:
+      let newSearchVersion = +new Date();
+      localStorage.setItem(TAGS_SEARCH_VERSION_KEY, "" + newSearchVersion);
+      state = { ...state, tagsVersion: newSearchVersion };
+  }
+
   switch (action.type) {
     case SET_IS_TOUCH:
       return { ...state, isTouch: action.value };
