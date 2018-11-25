@@ -2,6 +2,8 @@ import { renderUI, clearUI } from "applicationRoot/renderUI";
 import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";
+import getPublicUser from "graphQL/getPublicUser.graphql";
+
 import "immutability-helper";
 
 import { Client, setDefaultClient, compress } from "micro-graphql-react";
@@ -28,7 +30,6 @@ import {
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
-import { gqlGet } from "util/graphqlUtil";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 
 declare var window: any;
@@ -314,14 +315,7 @@ export function setSearchValues(state) {
 
 function fetchPublicUserInfo(userId) {
   return new Promise((res, rej) => {
-    gqlGet(compress`query GetUserPublicSettings {
-      getPublicUser(_id: "${userId}"){
-        PublicUser{
-          publicName
-          publicBooksHeader
-        }
-      }
-    }`).then(resp => {
+    graphqlClient.runQuery(getPublicUser, { _id: userId, cache: 5 }).then(resp => {
       let publicUser = resp.data && resp.data.getPublicUser && resp.data.getPublicUser.PublicUser;
       publicUser ? res(publicUser) : rej();
     });

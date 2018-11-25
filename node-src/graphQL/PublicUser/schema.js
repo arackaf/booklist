@@ -121,11 +121,13 @@ export const query = `
     LIMIT: Int,
     SKIP: Int,
     PAGE: Int,
-    PAGE_SIZE: Int
+    PAGE_SIZE: Int,
+    cache: Int
   ): PublicUserQueryResults
 
   getPublicUser (
-    _id: String
+    _id: String,
+    cache: Int
   ): PublicUserSingleQueryResult
 
 `;
