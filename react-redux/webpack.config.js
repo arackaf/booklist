@@ -92,6 +92,7 @@ module.exports = {
       globPatterns: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
         "static/fontawesome/css/font-awesome-booklist-build.css",
+        "static/fontawesome/webfonts/*.woff2",
         "static/main-icon2.png",
         "offline.htm",
         "node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css",
