@@ -5,23 +5,10 @@ import { BooksModuleType } from "modules/books/reducers/reducer";
 import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 import { EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
-import { BOOK_SEARCH_VERSION_KEY } from "applicationRoot/rootReducer";
+import { BOOK_SEARCH_VERSION_KEY, getSearchVersion } from "applicationRoot/rootReducer";
 import { NEW_LOGIN } from "applicationRoot/rootReducerActionNames";
 
-let initialSearchVersion = +localStorage.getItem(BOOK_SEARCH_VERSION_KEY);
-
-if (initialSearchVersion) {
-  let currentTime = +new Date();
-  let delta = currentTime - initialSearchVersion;
-
-  //30 minutes
-  if (delta > 30 * 60 * 1000) {
-    initialSearchVersion = +new Date();
-  }
-} else {
-  initialSearchVersion = +new Date();
-}
-localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + initialSearchVersion);
+let initialSearchVersion = getSearchVersion(BOOK_SEARCH_VERSION_KEY);
 
 const initialState = {
   view: "",

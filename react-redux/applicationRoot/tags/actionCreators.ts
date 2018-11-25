@@ -6,14 +6,17 @@ import GetTags from "graphQL/tags/getTags.graphql";
 import UpdateTag from "graphQL/tags/updateTag.graphql";
 import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
+import { AppType } from "modules/books/reducers/reducer";
 
 export function loadTags() {
   return function(dispatch, getState) {
-    let publicUserId = getState().app.publicUserId;
+    let app: AppType = getState().app;
+    let publicUserId = app.publicUserId;
+    let tagsVersion = app.tagsVersion;
 
     dispatch({ type: LOAD_TAGS });
 
-    graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0 }).then(({ data: { allTags } }) => {
+    graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0, cache: 5, ver: tagsVersion }).then(({ data: { allTags } }) => {
       dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
     });
   };
