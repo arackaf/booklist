@@ -125,5 +125,6 @@ export const PublicUser = {
     publicName: StringType,
     publicBooksHeader: StringType
   },
-  readonly: true
+  readonly: true,
+  manualQueryArgs: [{ name: "cache", type: "Int" }]
 };
