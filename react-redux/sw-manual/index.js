@@ -1,3 +1,11 @@
+import "./update-sync";
+import extractedQueries from "./extracted-queries";
+import parseQueryString from "./query-string";
+
+import a from "../graphQL/books/deleteBook.graphql";
+import b from "../graphQL/books/getBooks.graphql";
+import c from "../graphQL/home/searchBooks.graphql";
+
 workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
@@ -76,7 +84,6 @@ self.addEventListener("message", evt => {
 self.addEventListener("activate", masterSync);
 
 function masterSync() {
-  console.log("typeof parseQueryString", typeof parseQueryString);
   let open = indexedDB.open("books", 1);
 
   open.onupgradeneeded = evt => {
