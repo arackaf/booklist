@@ -35,7 +35,8 @@ import { loadTags } from "applicationRoot/tags/actionCreators";
 declare var window: any;
 
 (function() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location as any)) {
+  if ("serviceWorker" in navigator) {
+    //  && !/localhost/.test(window.location as any)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
@@ -50,6 +51,12 @@ declare var window: any;
           }
         };
       };
+
+      if (isLoggedIn().logged_in) {
+        try {
+          navigator.serviceWorker.controller.postMessage({ command: "do-sync" });
+        } catch (er) {}
+      }
     });
 
     function newerSwAvailable(sw) {
@@ -80,10 +87,6 @@ declare var window: any;
         });
       } catch (er) {}
     }
-
-    try {
-      navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
-    } catch (er) {}
 
     // if (Notification) {
     //   Notification.requestPermission().then(permission => {});

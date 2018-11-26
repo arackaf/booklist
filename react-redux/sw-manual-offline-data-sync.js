@@ -1,15 +1,3 @@
-workbox.routing.registerRoute(/books$/, handleMain);
-workbox.routing.registerRoute(/subjects$/, handleMain);
-workbox.routing.registerRoute(/localhost:3000\/$/, handleMain);
-workbox.routing.registerRoute(/mylibrary.io$/, handleMain);
-function handleMain({ url, event }) {
-  //turning this off for now, until I can wrap some other things up
-  //return fetch(request);
-  return fetch(event.request).catch(() => {
-    return caches.match("react-redux/offline.htm", { ignoreSearch: true });
-  });
-}
-
 workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
@@ -52,12 +40,15 @@ self.addEventListener("push", () => {
   self.registration.showNotification("Push notification received!");
 });
 
-self.addEventListener("activate", () => {
-  //turning this off until I have time to finish some other things.
-  return;
+self.addEventListener("message", evt => {
+  if (!evt.data || evt.data.command != "do-sync") {
+    return;
+  }
+
   let open = indexedDB.open("books", 1);
 
   open.onupgradeneeded = evt => {
+    console.log("Setting up DB");
     let db = open.result;
     if (!db.objectStoreNames.contains("books") || !db.objectStoreNames.contains("syncInfo")) {
       if (!db.objectStoreNames.contains("books")) {
@@ -75,21 +66,8 @@ self.addEventListener("activate", () => {
   };
 });
 
-self.addEventListener("message", evt => {
-  //turning this off until I can finish some other things
-  if (false && evt.data && evt.data.command == "sync-images") {
-    let open = indexedDB.open("books", 1);
-
-    open.onsuccess = evt => {
-      let db = open.result;
-      if (db.objectStoreNames.contains("books")) {
-        syncImages(db);
-      }
-    };
-  }
-});
-
 function syncImages(db) {
+  console.log("SYNCING IMAGES");
   let tran = db.transaction("books");
   let booksStore = tran.objectStore("books");
   let idx = booksStore.index("imgSync");
@@ -184,16 +162,17 @@ function fullSyncPage(db, page) {
         }
       }
     });
-}
 
-function loadDone(db) {
-  let transaction = db.transaction("syncInfo", "readwrite");
-  let syncInfoStore = transaction.objectStore("syncInfo");
-  let req = syncInfoStore.get(1);
-  req.onsuccess = ({ target: { result } }) => {
-    Object.assign(result, { lastLoad: +new Date(), lastLoadStarted: null });
-    syncInfoStore.put(result);
-  };
+  async function loadDone(db) {
+    await syncImages(db);
+    let transaction = db.transaction("syncInfo", "readwrite");
+    let syncInfoStore = transaction.objectStore("syncInfo");
+    let req = syncInfoStore.get(1);
+    req.onsuccess = ({ target: { result } }) => {
+      Object.assign(result, { lastLoad: +new Date(), lastLoadStarted: null });
+      syncInfoStore.put(result);
+    };
+  }
 }
 
 async function preCacheBookImage(book) {
@@ -205,6 +184,20 @@ async function preCacheBookImage(book) {
 
   if (/https:\/\/s3.amazonaws.com\/my-library-cover-uploads/.test(smallImage)) {
     let cache = await caches.open("local-images1");
+    let img = await fetch(smallImage, { mode: "no-cors" });
+    await cache.put(smallImage, img);
+    return true;
+  }
+
+  if (/https:\/\/images-na\.ssl-images-amazon\.com/.test(smallImage)) {
+    let cache = await caches.open("amazon-images1");
+    let img = await fetch(smallImage, { mode: "no-cors" });
+    await cache.put(smallImage, img);
+    return true;
+  }
+
+  if (/https:\/\/ecx\.images-amazon\.com/.test(smallImage)) {
+    let cache = await caches.open("amazon-images1");
     let img = await fetch(smallImage, { mode: "no-cors" });
     await cache.put(smallImage, img);
     return true;
