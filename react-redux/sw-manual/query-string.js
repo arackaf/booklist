@@ -72,7 +72,7 @@ function keysSorter(input) {
   return input;
 }
 
-self.parseQueryString = function(str, opts) {
+function parseQueryString(str, opts) {
   opts = Object.assign({ arrayFormat: "none" }, opts);
 
   var formatter = parserForArrayFormat(opts);
@@ -118,4 +118,6 @@ self.parseQueryString = function(str, opts) {
 
       return result;
     }, Object.create(null));
-};
+}
+
+export default parseQueryString;

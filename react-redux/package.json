@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack -w",
     "webpack": "webpack",
+    "build-sw": "cd sw-manual && webpack",
     "deploy": "cd .. && npm run deploy",
     "persistgraphql": "persistgraphql graphQL && node buildSwExtractedQueries",
     "refresh": "npm run persistgraphql && npm start"
@@ -54,6 +55,9 @@
     "redux": "^4.0.1",
     "redux-thunk": "2.2.0",
     "reselect": "2.0.1",
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel-minify": "^6.2.0",
+    "rollup-plugin-uglify": "^6.0.0",
     "shallow-equal": "^1.0.0",
     "simple-react-bootstrap": "^0.4.3",
     "toastify-js": "^1.3.1",
