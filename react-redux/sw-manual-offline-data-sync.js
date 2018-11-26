@@ -22,15 +22,29 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
   /graphql/,
   ({ url, event }) => {
-    console.log("FETCHING");
-    console.log(url);
-    return fetch(event.request).catch(err => {
-      console.log(err);
-      console.log(url);
-    });
+    event.respondWith(
+      fetch(event.request).catch(err => {
+        const { query, variables } = parseQueryString(url.search);
+        const graphqlQuery = extractedQueries[query];
+
+        switch (true) {
+          case /query SearchBooks/i.test(graphqlQuery):
+            return searchBooks(variables, res => event.respondWith(res));
+        }
+      })
+    );
   },
   "GET"
 );
+
+function searchBooks(variables, cb) {
+  return new Response(
+    JSON.stringify({
+      data: {}
+    }),
+    { ok: true, status: 200 }
+  );
+}
 
 function syncBook(book) {
   let open = indexedDB.open("books", 1);
