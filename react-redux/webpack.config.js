@@ -115,7 +115,7 @@ module.exports = {
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /fontawesome\/webfonts/, name: "fontawesome-fonts" })
       ],
-      importScripts: ["react-redux/sw-manual-update-sync.js"]
+      importScripts: ["react-redux/sw-manual-update-sync.js", "react-redux/sw-manual-offline-data-sync.js"]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null
