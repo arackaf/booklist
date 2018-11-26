@@ -19,6 +19,19 @@ workbox.routing.registerRoute(
   "POST"
 );
 
+workbox.routing.registerRoute(
+  /graphql/,
+  ({ url, event }) => {
+    console.log("FETCHING");
+    console.log(url);
+    return fetch(event.request).catch(err => {
+      console.log(err);
+      console.log(url);
+    });
+  },
+  "GET"
+);
+
 function syncBook(book) {
   let open = indexedDB.open("books", 1);
 
@@ -49,6 +62,7 @@ self.addEventListener("message", evt => {
 self.addEventListener("activate", masterSync);
 
 function masterSync() {
+  console.log("typeof parseQueryString", typeof parseQueryString);
   let open = indexedDB.open("books", 1);
 
   open.onupgradeneeded = evt => {
