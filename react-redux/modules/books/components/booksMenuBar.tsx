@@ -28,7 +28,7 @@ const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight
 const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
 
-  useEffect(() => (quickSearchEl.current.value = props.search), [props.search]);
+  useEffect(() => void (quickSearchEl.current.value = props.search), [props.search]);
 
   const quickSearch = evt => {
     evt.preventDefault();
