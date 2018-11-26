@@ -41,30 +41,32 @@ self.addEventListener("push", () => {
 });
 
 self.addEventListener("message", evt => {
-  if (!evt.data || evt.data.command != "do-sync") {
-    return;
+  if (evt.data && evt.data.command == "do-sync") {
+    masterSync();
   }
+});
 
+self.addEventListener("activate", masterSync);
+
+function masterSync() {
   let open = indexedDB.open("books", 1);
 
   open.onupgradeneeded = evt => {
     console.log("Setting up DB");
     let db = open.result;
-    if (!db.objectStoreNames.contains("books") || !db.objectStoreNames.contains("syncInfo")) {
-      if (!db.objectStoreNames.contains("books")) {
-        let bookStore = db.createObjectStore("books", { keyPath: "_id" });
-        bookStore.createIndex("imgSync", "imgSync", { unique: false });
-      }
-      if (!db.objectStoreNames.contains("syncInfo")) {
-        db.createObjectStore("syncInfo", { keyPath: "id" });
-        evt.target.transaction
-          .objectStore("syncInfo")
-          .add({ id: 1, lastImgSync: null, lastImgSyncStarted: null, lastLoadStarted: +new Date(), lastLoad: null });
-      }
-      evt.target.transaction.oncomplete = fullSync;
+    if (!db.objectStoreNames.contains("books")) {
+      let bookStore = db.createObjectStore("books", { keyPath: "_id" });
+      bookStore.createIndex("imgSync", "imgSync", { unique: false });
     }
+    if (!db.objectStoreNames.contains("syncInfo")) {
+      db.createObjectStore("syncInfo", { keyPath: "id" });
+      evt.target.transaction
+        .objectStore("syncInfo")
+        .add({ id: 1, lastImgSync: null, lastImgSyncStarted: null, lastLoadStarted: +new Date(), lastLoad: null });
+    }
+    evt.target.transaction.oncomplete = fullSync;
   };
-});
+}
 
 function syncImages(db) {
   console.log("SYNCING IMAGES");
