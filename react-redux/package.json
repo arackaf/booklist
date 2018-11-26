@@ -7,7 +7,7 @@
     "start": "webpack -w",
     "webpack": "webpack",
     "deploy": "cd .. && npm run deploy",
-    "persistgraphql": "persistgraphql graphQL",
+    "persistgraphql": "persistgraphql graphQL && node buildSwExtractedQueries",
     "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "html-webpack-plugin": "4.0.0-beta.2",
     "immutability-helper": "2.2.2",
     "lodash.debounce": "4.0.8",
+    "lodash.invert": "^4.3.0",
     "lodash.throttle": "4.1.1",
     "micro-graphql-react": "0.2.3",
     "mini-css-extract-plugin": "^0.4.4",
