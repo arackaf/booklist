@@ -24,15 +24,6 @@ class BookController {
       this.send({ failure: true });
     }
   }
-  async offlineSync(params) {
-    if (!this.request.user.id) {
-      this.send({});
-    }
-    let bookDao = new BookDAO(this.request.user.id);
-    let { books } = await bookDao.offlineSync({ ...params });
-
-    this.send({ books, userId: this.request.user.id });
-  }
   async getRecommendations(params) {
     try {
       let resp = await graphql(executableSchema, findBooksQuery, root, this.request, { ids: params.bookIds });
