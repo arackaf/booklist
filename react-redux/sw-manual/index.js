@@ -1,6 +1,7 @@
 import "./update-sync";
 import parseQueryString from "./query-string";
 import searchBooksQuery from "../graphQL/books/getBooks.graphql";
+import offlineBookSyncQuery from "../graphQL/books/offlineBookSync.graphql";
 
 workbox.routing.registerRoute(
   /graphql$/,
@@ -141,15 +142,14 @@ function syncImages(db) {
   }
 }
 
-const doFetch = (url, data) =>
+const doFetch = url =>
   fetch(url, {
-    method: "post",
+    method: "get",
     credentials: "include",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
+    }
   });
 
 function fullSync(page = 1) {
@@ -164,12 +164,11 @@ function fullSync(page = 1) {
 
 function fullSyncPage(db, page) {
   let pageSize = 50;
-  doFetch("/book/offlineSync", { page, pageSize })
+  doFetch(`/graphql/?query=${offlineBookSyncQuery}&variables=${JSON.stringify({ page, pageSize })}`)
     .then(resp => resp.json())
     .then(resp => {
-      if (!resp.books) return;
-      let books = resp.books;
-      let count = books.count;
+      let books = resp.data && resp.data.allBooks && resp.data.allBooks.Books;
+      if (!books) return;
       let i = 0;
       putNext();
 

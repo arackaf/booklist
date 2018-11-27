@@ -7,3 +7,4 @@ uploads/*
 node-dest/
 .esm-cache/
 real.env
+react-redux/sw-manual/sw-index-bundle.js

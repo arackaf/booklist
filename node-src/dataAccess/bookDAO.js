@@ -13,40 +13,6 @@ class BookDAO extends DAO {
     this.userId = userId;
   }
 
-  async offlineSync({ page, pageSize }) {
-    let db = await super.open();
-    let userIdToUse = this.userId;
-
-    let skip = (page - 1) * pageSize;
-    let limit = +pageSize + 1;
-
-    try {
-      let query = { userId: userIdToUse };
-      let sortObj = { _id: -1 };
-
-      let allFields = ["_id", "title", "isbn", "smallImage", "subjects", "authors", "tags", "isRead"];
-      let project = allFields.reduce((hash, key) => ((hash[key] = 1), hash), {});
-      try {
-        let books = (await db
-          .collection("books")
-          .aggregate([{ $match: query }, { $project: project }, { $sort: sortObj }, { $skip: skip }, { $limit: limit }])
-          .toArray())
-          .map(adjustForClient)
-          .map(b => {
-            delete b.dateAdded;
-            delete b.publicationDate;
-            return b;
-          });
-
-        return { books };
-      } catch (err) {
-        console.log(err);
-      }
-    } finally {
-      super.dispose(db);
-    }
-  }
-
   async saveBook(book) {
     let db = await super.open();
     try {
