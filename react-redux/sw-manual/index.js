@@ -90,15 +90,13 @@ function masterSync() {
     }
     if (!db.objectStoreNames.contains("syncInfo")) {
       db.createObjectStore("syncInfo", { keyPath: "id" });
-      evt.target.transaction
-        .objectStore("syncInfo")
-        .add({ id: 1, lastImgSync: null, lastImgSyncStarted: null, lastLoadStarted: +new Date(), lastLoad: null });
+      evt.target.transaction.objectStore("syncInfo").add({ id: 1 });
     }
     evt.target.transaction.oncomplete = fullSync;
   };
 }
 
-function syncImages(db) {
+async function syncImages(db) {
   console.log("SYNCING IMAGES");
   let tran = db.transaction("books");
   let booksStore = tran.objectStore("books");
@@ -158,7 +156,7 @@ function fullSync(page = 1) {
   // Set up the database schema
   open.onsuccess = evt => {
     let db = open.result;
-    fullSyncPage(db, 1);
+    doBooksSync(db);
   };
 }
 
@@ -189,28 +187,27 @@ function insertItems(db, items, storeName, { transformItem = x => x } = {}) {
   });
 }
 
-function fullSyncPage(db, page) {
+function updateSyncInfo(db, updates) {
+  let transaction = db.transaction("syncInfo", "readwrite");
+  let syncInfoStore = transaction.objectStore("syncInfo");
+  let req = syncInfoStore.get(1);
+  req.onsuccess = ({ target: { result } }) => {
+    Object.assign(result, updates);
+    syncInfoStore.put(result);
+  };
+}
+
+function doBooksSync(db, page = 1) {
   let pageSize = 50;
   getGraphqlResults(offlineBookSyncQuery, { page, pageSize }, "allBooks", "Books").then(books => {
     insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0 }) }).then(() => {
       if (books.length == pageSize) {
-        fullSyncPage(db, page + 1);
+        doBooksSync(db, page + 1);
       } else {
-        loadDone(db);
+        syncImages(db).then(() => updateSyncInfo(db, { lastBookSync: +new Date() }));
       }
     });
   });
-
-  async function loadDone(db) {
-    await syncImages(db);
-    let transaction = db.transaction("syncInfo", "readwrite");
-    let syncInfoStore = transaction.objectStore("syncInfo");
-    let req = syncInfoStore.get(1);
-    req.onsuccess = ({ target: { result } }) => {
-      Object.assign(result, { lastLoad: +new Date(), lastLoadStarted: null });
-      syncInfoStore.put(result);
-    };
-  }
 }
 
 async function preCacheBookImage(book) {
