@@ -9,9 +9,6 @@ const graphqlPlugin = require("./rollupGraphqlPlugin");
 rollup
   .rollup({
     input: "./index.js",
-    plugins: [
-      //minify({})
-      graphqlPlugin({ path: path.resolve(__dirname, "../extracted_queries.json") })
-    ]
+    plugins: [minify({}), graphqlPlugin({ path: path.resolve(__dirname, "../extracted_queries.json") })]
   })
-  .then(lib => lib.write({ format: "iife", file: "./rollup.js" }));
+  .then(lib => lib.write({ format: "iife", file: "./sw-index-bundle.js" }));
