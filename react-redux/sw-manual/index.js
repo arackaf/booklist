@@ -170,32 +170,35 @@ function getGraphqlResults(query, variables, op, name) {
     });
 }
 
-function fullSyncPage(db, page) {
-  let pageSize = 50;
-  getGraphqlResults(offlineBookSyncQuery, { page, pageSize }, "allBooks", "Books").then(books => {
-    if (!books) return;
+function insertItems(db, items, storeName, { transformItem = x => x } = {}) {
+  return new Promise(res => {
+    if (!items) return res();
     let i = 0;
     putNext();
 
     function putNext() {
-      if (i < pageSize) {
-        let book = books[i++];
-        if (!book) {
-          loadDone(db);
-          return;
-        }
-
-        let transaction = db.transaction("books", "readwrite");
-        let booksStore = transaction.objectStore("books");
-        booksStore.add(Object.assign(book, { imgSync: 0 })).onsuccess = putNext;
-      } else {
-        if (books.length > pageSize) {
-          fullSyncPage(db, page + 1);
-        } else {
-          loadDone(db);
-        }
+      let item = items[i++];
+      if (!item) {
+        return res();
       }
+
+      let transaction = db.transaction(storeName, "readwrite");
+      let store = transaction.objectStore(storeName);
+      store.add(transformItem(item)).onsuccess = putNext;
     }
+  });
+}
+
+function fullSyncPage(db, page) {
+  let pageSize = 50;
+  getGraphqlResults(offlineBookSyncQuery, { page, pageSize }, "allBooks", "Books").then(books => {
+    insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0 }) }).then(() => {
+      if (books.length == pageSize) {
+        fullSyncPage(db, page + 1);
+      } else {
+        loadDone(db);
+      }
+    });
   });
 
   async function loadDone(db) {
