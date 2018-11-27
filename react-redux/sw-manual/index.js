@@ -162,36 +162,41 @@ function fullSync(page = 1) {
   };
 }
 
-function fullSyncPage(db, page) {
-  let pageSize = 50;
-  doFetch(`/graphql/?query=${offlineBookSyncQuery}&variables=${JSON.stringify({ page, pageSize })}`)
+function getGraphqlResults(query, variables, op, name) {
+  return doFetch(`/graphql/?query=${query}&variables=${JSON.stringify(variables)}`)
     .then(resp => resp.json())
     .then(resp => {
-      let books = resp.data && resp.data.allBooks && resp.data.allBooks.Books;
-      if (!books) return;
-      let i = 0;
-      putNext();
+      return resp.data && resp.data[op] && resp.data[op][name];
+    });
+}
 
-      function putNext() {
-        if (i < pageSize) {
-          let book = books[i++];
-          if (!book) {
-            loadDone(db);
-            return;
-          }
+function fullSyncPage(db, page) {
+  let pageSize = 50;
+  getGraphqlResults(offlineBookSyncQuery, { page, pageSize }, "allBooks", "Books").then(books => {
+    if (!books) return;
+    let i = 0;
+    putNext();
 
-          let transaction = db.transaction("books", "readwrite");
-          let booksStore = transaction.objectStore("books");
-          booksStore.add(Object.assign(book, { imgSync: 0 })).onsuccess = putNext;
+    function putNext() {
+      if (i < pageSize) {
+        let book = books[i++];
+        if (!book) {
+          loadDone(db);
+          return;
+        }
+
+        let transaction = db.transaction("books", "readwrite");
+        let booksStore = transaction.objectStore("books");
+        booksStore.add(Object.assign(book, { imgSync: 0 })).onsuccess = putNext;
+      } else {
+        if (books.length > pageSize) {
+          fullSyncPage(db, page + 1);
         } else {
-          if (books.length > pageSize) {
-            fullSyncPage(db, page + 1);
-          } else {
-            loadDone(db);
-          }
+          loadDone(db);
         }
       }
-    });
+    }
+  });
 
   async function loadDone(db) {
     await syncImages(db);
