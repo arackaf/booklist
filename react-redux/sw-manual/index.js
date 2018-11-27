@@ -1,10 +1,6 @@
 import "./update-sync";
-import extractedQueries from "./extracted-queries";
 import parseQueryString from "./query-string";
-
-import a from "../graphQL/books/deleteBook.graphql";
-import b from "../graphQL/books/getBooks.graphql";
-import c from "../graphQL/home/searchBooks.graphql";
+import searchBooksQuery from "../graphQL/books/getBooks.graphql";
 
 workbox.routing.registerRoute(
   /graphql$/,
@@ -33,11 +29,9 @@ workbox.routing.registerRoute(
     event.respondWith(
       fetch(event.request).catch(err => {
         const { query, variables } = parseQueryString(url.search);
-        const graphqlQuery = extractedQueries[query];
 
-        switch (true) {
-          case /query SearchBooks/i.test(graphqlQuery):
-            return searchBooks(variables, res => event.respondWith(res));
+        if (query == searchBooksQuery) {
+          return searchBooks(variables, res => event.respondWith(res));
         }
       })
     );
