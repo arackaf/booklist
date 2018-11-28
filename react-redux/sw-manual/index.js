@@ -2,6 +2,8 @@ import "./update-sync";
 import parseQueryString from "./query-string";
 import searchBooksQuery from "../graphQL/books/getBooks.graphql";
 import offlineBookSyncQuery from "../graphQL/books/offlineBookSync.graphql";
+import allSubjects from "../graphQL/subjects/allSubjects.graphql";
+import allTags from "../graphQL/tags/getTags.graphql";
 
 workbox.routing.registerRoute(
   /graphql$/,
@@ -92,6 +94,12 @@ function masterSync() {
       db.createObjectStore("syncInfo", { keyPath: "id" });
       evt.target.transaction.objectStore("syncInfo").add({ id: 1 });
     }
+    if (!db.objectStoreNames.contains("subjects")) {
+      db.createObjectStore("subjects", { keyPath: "_id" });
+    }
+    if (!db.objectStoreNames.contains("tags")) {
+      db.createObjectStore("tags", { keyPath: "_id" });
+    }
     evt.target.transaction.oncomplete = fullSync;
   };
 }
@@ -157,6 +165,8 @@ function fullSync(page = 1) {
   open.onsuccess = evt => {
     let db = open.result;
     doBooksSync(db);
+    doSubjectsSync(db);
+    doTagsSync(db);
   };
 }
 
@@ -206,6 +216,22 @@ function doBooksSync(db, page = 1) {
       } else {
         syncImages(db).then(() => updateSyncInfo(db, { lastBookSync: +new Date() }));
       }
+    });
+  });
+}
+
+function doSubjectsSync(db, page = 1) {
+  getGraphqlResults(allSubjects, {}, "allSubjects", "Subjects").then(subjects => {
+    insertItems(db, subjects, "subjects").then(() => {
+      updateSyncInfo(db, { lastSubjectsSync: +new Date() });
+    });
+  });
+}
+
+function doTagsSync(db, page = 1) {
+  getGraphqlResults(allTags, {}, "allTags", "Tags").then(tags => {
+    insertItems(db, tags, "tags").then(() => {
+      updateSyncInfo(db, { lastTagsSync: +new Date() });
     });
   });
 }
