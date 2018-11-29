@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
-import { mutation } from "micro-graphql-react";
+// import { mutation } from "micro-graphql-react";
 
 import { SET_BOOKS_SUBJECTS } from "../reducers/books/actionNames";
 import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReducer";
@@ -88,18 +88,20 @@ class BookSubjectSetter extends Component<
               </div>
               <div className="col-xs-9">
                 <div>
-                  {this.state.addingSubjects.map(_id => this.props.subjectHash[_id]).map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
+                  {this.state.addingSubjects
+                    .map(_id => this.props.subjectHash[_id])
+                    .map((s: any, i) => (
+                      <span
+                        key={i}
+                        style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
+                        className="label label-default margin-left"
+                      >
+                        <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                          X
+                        </a>
+                        {s.name}
+                      </span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -118,18 +120,20 @@ class BookSubjectSetter extends Component<
               </div>
               <div className="col-xs-9">
                 <div>
-                  {this.state.removingSubjects.map(_id => this.props.subjectHash[_id]).map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
+                  {this.state.removingSubjects
+                    .map(_id => this.props.subjectHash[_id])
+                    .map((s: any, i) => (
+                      <span
+                        key={i}
+                        style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
+                        className="label label-default margin-left"
+                      >
+                        <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                          X
+                        </a>
+                        {s.name}
+                      </span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -162,16 +166,17 @@ class BookSubjectSetter extends Component<
   }
 }
 
-export default mutation(
-  `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
-    remove: updateBooks(
-      _ids: $books,
-      Updates: { subjects_PULL: $remove }
-    ) { success }
+// export default mutation(
+//   `mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
+//     remove: updateBooks(
+//       _ids: $books,
+//       Updates: { subjects_PULL: $remove }
+//     ) { success }
 
-    add: updateBooks(
-      _ids: $books,
-      Updates: { subjects_ADDTOSET: $add }
-    ) { success }          
-  }`
-)(connect(selectStackedSubjects)(BookSubjectSetter));
+//     add: updateBooks(
+//       _ids: $books,
+//       Updates: { subjects_ADDTOSET: $add }
+//     ) { success }
+//   }`
+//)
+export default connect(selectStackedSubjects)(BookSubjectSetter);

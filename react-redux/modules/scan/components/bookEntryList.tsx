@@ -12,7 +12,7 @@ import Loading from "applicationRoot/components/loading";
 import { scanReducerType } from "modules/scan/reducers/reducer";
 
 import { MutationType } from "reactStartup";
-import { mutation } from "micro-graphql-react";
+// import { mutation } from "micro-graphql-react";
 
 declare var webSocketAddress: any;
 
@@ -27,11 +27,11 @@ const defaultEmptyBook = () => ({
   authors: [""]
 });
 
-@mutation(
-  `mutation createBook($book: BookInput) {
-    createBook(Book: $book) { Book { _id }, success }
-  }`
-)
+// @mutation(
+//   `mutation createBook($book: BookInput) {
+//     createBook(Book: $book) { Book { _id }, success }
+//   }`
+// )
 @connect(
   state => state.scanModule,
   { ...bookEntryActionCreators }

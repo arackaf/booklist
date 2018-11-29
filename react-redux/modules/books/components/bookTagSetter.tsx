@@ -7,7 +7,7 @@ import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects"
 import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
 import { MutationType } from "reactStartup";
-import { mutation } from "micro-graphql-react";
+//import { mutation } from "micro-graphql-react";
 
 import { SET_BOOKS_TAGS } from "../reducers/books/actionNames";
 import Modal from "applicationRoot/components/modal";
@@ -86,18 +86,20 @@ class BookTagSetterDesktopUnConnected extends Component<ReturnType<typeof select
               </div>
               <div className="col-xs-9">
                 <div>
-                  {this.state.addingTags.map(_id => this.props.tagHash[_id]).map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
+                  {this.state.addingTags
+                    .map(_id => this.props.tagHash[_id])
+                    .map((s: any, i) => (
+                      <span
+                        key={i}
+                        style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
+                        className="label label-default margin-left"
+                      >
+                        <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                          X
+                        </a>
+                        {s.name}
+                      </span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -116,18 +118,20 @@ class BookTagSetterDesktopUnConnected extends Component<ReturnType<typeof select
               </div>
               <div className="col-xs-9">
                 <div>
-                  {this.state.removingTags.map(_id => this.props.tagHash[_id]).map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
+                  {this.state.removingTags
+                    .map(_id => this.props.tagHash[_id])
+                    .map((s: any, i) => (
+                      <span
+                        key={i}
+                        style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
+                        className="label label-default margin-left"
+                      >
+                        <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                          X
+                        </a>
+                        {s.name}
+                      </span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -160,16 +164,18 @@ class BookTagSetterDesktopUnConnected extends Component<ReturnType<typeof select
   }
 }
 
-export default mutation(
-  `mutation updateBooksTags($books: [String], $add: [String], $remove: [String]) {
-    remove: updateBooks(
-      _ids: $books,
-      Updates: { tags_PULL: $remove }
-    ) { success }
+// export default mutation(
+//   `mutation updateBooksTags($books: [String], $add: [String], $remove: [String]) {
+//     remove: updateBooks(
+//       _ids: $books,
+//       Updates: { tags_PULL: $remove }
+//     ) { success }
 
-    add: updateBooks(
-      _ids: $books,
-      Updates: { tags_ADDTOSET: $add }
-    ) { success }          
-  }`
-)(connect(selectEntireTagsState)(BookTagSetterDesktopUnConnected));
+//     add: updateBooks(
+//       _ids: $books,
+//       Updates: { tags_ADDTOSET: $add }
+//     ) { success }
+//   }`
+// )(connect(selectEntireTagsState)(BookTagSetterDesktopUnConnected));
+
+export default connect(selectEntireTagsState)(BookTagSetterDesktopUnConnected);
