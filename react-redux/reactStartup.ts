@@ -6,7 +6,7 @@ import getPublicUser from "graphQL/getPublicUser.graphql";
 
 import "immutability-helper";
 
-import { Client, setDefaultClient, compress } from "micro-graphql-react";
+import { Client, setDefaultClient } from "micro-graphql-react";
 
 const graphqlClient = new Client({
   endpoint: "/graphql",
