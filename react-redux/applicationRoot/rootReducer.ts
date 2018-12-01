@@ -4,7 +4,6 @@ import update from "immutability-helper";
 import {
   SET_PUBLIC_INFO,
   RESET_PUBLIC_INFO,
-  SET_LOGGED_IN,
   REQUEST_DESKTOP,
   REQUEST_MOBILE,
   SET_MODULE,
@@ -55,6 +54,9 @@ const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
 
+const { logged_in, userId } = isLoggedIn();
+const authSettings = logged_in && userId ? { isLoggedIn: true, userId } : { isLoggedIn: false, userId: "" };
+
 if (window.screen.width < 700) {
   Object.assign(uiSettings, { isDesktop: false, showingDesktop: false, isMobile: true, showingMobile: true });
 } else {
@@ -67,7 +69,7 @@ if (!!localStorage.getItem("useDesktop")) {
 
 const initialState = {
   ...uiSettings,
-  userId: "",
+  ...authSettings,
   publicUserId: "",
   publicName: "",
   publicBooksHeader: "",
@@ -75,7 +77,6 @@ const initialState = {
   subjectHash: {} as { [s: string]: SubjectType },
   colors: [],
   module: "",
-  isLoggedIn: false,
   subjectsLoaded: false,
   subjectsInitialQueryFired: false,
   tagHash: hashOf<ITag>(),
@@ -127,8 +128,6 @@ export default function rootReducer(state = initialState, action) {
       return { ...state, showingDesktop: false, showingMobile: true };
     case SET_MODULE:
       return { ...state, module: action.module };
-    case SET_LOGGED_IN:
-      return { ...state, isLoggedIn: true, userId: action.userId };
     case LOAD_SUBJECTS:
       return { ...state, subjectsInitialQueryFired: true };
     case LOAD_SUBJECTS_RESULTS:
@@ -345,3 +344,16 @@ export const filterSubjects = (subjects, search) => {
   }
   return subjects.filter(s => search(s.name));
 };
+
+export function isLoggedIn() {
+  let logged_in = getCookie("logged_in"),
+    userId = getCookie("userId");
+  return { logged_in, userId };
+}
+
+function getCookie(name) {
+  return document.cookie.split("; ").reduce((r, v) => {
+    const parts = v.split("=");
+    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+  }, "");
+}

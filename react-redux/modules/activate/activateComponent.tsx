@@ -1,5 +1,6 @@
-import { isLoggedIn, history, getCurrentHistoryState } from "reactStartup";
+import { history, getCurrentHistoryState } from "reactStartup";
 import React, { Component } from "react";
+import { isLoggedIn } from "applicationRoot/rootReducer";
 
 const MainActivatePane = props => (
   <div className="row" style={{ margin: 0 }}>

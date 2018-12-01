@@ -2,7 +2,6 @@ import {
   REQUEST_DESKTOP,
   REQUEST_MOBILE,
   SET_MODULE,
-  SET_LOGGED_IN,
   SET_PUBLIC_INFO,
   LOAD_SUBJECTS,
   LOAD_SUBJECTS_RESULTS,
@@ -46,7 +45,6 @@ export const requestMobile = () => dispatch => {
 
 export const newLogin = () => ({ type: NEW_LOGIN });
 export const setModule = module => ({ type: SET_MODULE, module });
-export const setLoggedIn = userId => ({ type: SET_LOGGED_IN, userId });
 export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 
 let subjectsLoaded = false;

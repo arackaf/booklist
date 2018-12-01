@@ -15,12 +15,13 @@ setDefaultClient(graphqlClient);
 
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
-import { setModule, setLoggedIn, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
+import { setModule, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 import setupServiceWorker from "./util/setupServiceWorker";
+import { isLoggedIn } from "applicationRoot/rootReducer";
 
 setupServiceWorker();
 
@@ -63,10 +64,6 @@ function loadModule(location) {
       history.push("/books");
       return;
     }
-  }
-
-  if (loggedIn) {
-    store.dispatch(setLoggedIn(currentUserId));
   }
 
   if (publicModule) {
@@ -134,19 +131,6 @@ function loadModule(location) {
       renderUI(createElement(moduleObject.component));
     })
     .catch(() => {});
-}
-
-export function isLoggedIn() {
-  let logged_in = getCookie("logged_in"),
-    userId = getCookie("userId");
-  return { logged_in, userId };
-}
-
-function getCookie(name) {
-  return document.cookie.split("; ").reduce((r, v) => {
-    const parts = v.split("=");
-    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
-  }, "");
 }
 
 export function goto(module, search?) {
