@@ -2,12 +2,9 @@ import { createSelector } from "reselect";
 import update from "immutability-helper";
 
 import {
-  SET_IS_TOUCH,
   SET_PUBLIC_INFO,
   RESET_PUBLIC_INFO,
   SET_LOGGED_IN,
-  SET_DESKTOP,
-  SET_MOBILE,
   REQUEST_DESKTOP,
   REQUEST_MOBILE,
   SET_MODULE,
@@ -54,17 +51,27 @@ interface ITag {
 
 export const hashOf = <T>() => <{ [s: string]: T }>{};
 
+const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
+
+const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
+
+if (window.screen.width < 700) {
+  Object.assign(uiSettings, { isDesktop: false, showingDesktop: false, isMobile: true, showingMobile: true });
+} else {
+  Object.assign(uiSettings, { isDesktop: true, showingDesktop: true, isMobile: false, showingMobile: false });
+}
+
+if (!!localStorage.getItem("useDesktop")) {
+  Object.assign(uiSettings, { showingDesktop: true, showingMobile: false });
+}
+
 const initialState = {
-  isTouch: false,
+  ...uiSettings,
   userId: "",
   publicUserId: "",
   publicName: "",
   publicBooksHeader: "",
   isPublic: false,
-  isDesktop: false,
-  showingDesktop: false,
-  isMobile: false,
-  showingMobile: false,
   subjectHash: {} as { [s: string]: SubjectType },
   colors: [],
   module: "",
@@ -110,16 +117,10 @@ export default function rootReducer(state = initialState, action) {
   }
 
   switch (action.type) {
-    case SET_IS_TOUCH:
-      return { ...state, isTouch: action.value };
     case SET_PUBLIC_INFO:
       return { ...state, isPublic: true, publicName: action.publicName, publicBooksHeader: action.publicBooksHeader, publicUserId: action.userId };
     case RESET_PUBLIC_INFO:
       return { ...state, isPublic: false, publicName: "", publicBooksHeader: "", publicUserId: "" };
-    case SET_DESKTOP:
-      return { ...state, isDesktop: true, showingDesktop: true, isMobile: false, showingMobile: false };
-    case SET_MOBILE:
-      return { ...state, isDesktop: false, showingDesktop: false, isMobile: true, showingMobile: true };
     case REQUEST_DESKTOP:
       return { ...state, showingDesktop: true, showingMobile: false };
     case REQUEST_MOBILE:

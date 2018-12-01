@@ -12,21 +12,11 @@ const graphqlClient = new Client({
   endpoint: "/graphql",
   fetchOptions: { credentials: "include" }
 });
-
 setDefaultClient(graphqlClient);
 
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
-import {
-  setDesktop,
-  setMobile,
-  setModule,
-  setLoggedIn,
-  setPublicInfo,
-  setRequestDesktop,
-  setIsTouch,
-  loadSubjects
-} from "./applicationRoot/rootReducerActionCreators";
+import { setModule, setLoggedIn, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
@@ -34,20 +24,6 @@ import { loadTags } from "applicationRoot/tags/actionCreators";
 import setupServiceWorker from "./util/setupServiceWorker";
 
 setupServiceWorker();
-
-if ("ontouchstart" in window || "onmsgesturechange" in window) {
-  store.dispatch(setIsTouch(true));
-}
-
-if (window.screen.width < 700) {
-  store.dispatch(setMobile());
-} else {
-  store.dispatch(setDesktop());
-}
-
-if (!!localStorage.getItem("useDesktop")) {
-  store.dispatch(setRequestDesktop());
-}
 
 let currentModule;
 let publicUserCache = {};
