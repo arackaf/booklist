@@ -112,34 +112,6 @@ declare var window: any;
   }
 })();
 
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-function sendNotification(text) {
-  if ((Notification as any).permission == "granted") {
-    new Notification(text);
-  }
-}
-
-//sendNotification("Hi there");
-
-declare global {
-  interface System {
-    import(request: string): Promise<any>;
-  }
-  var System: System;
-}
-
 if ("ontouchstart" in window || "onmsgesturechange" in window) {
   store.dispatch(setIsTouch(true));
 }
@@ -171,10 +143,8 @@ export { history };
 
 const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings"]);
 let initial = true;
-const unlisten = history.listen((location, action) => {
-  // location is an object like window.location
-  loadModule(location);
-});
+
+history.listen(location => loadModule(location));
 loadCurrentModule();
 
 export function loadCurrentModule() {
