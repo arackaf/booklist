@@ -1,17 +1,5 @@
 export const args = (...args) => args.filter(s => s).join("\n");
 
-export const strArg = (name, value, emptyVal = "") => {
-  if (value == null || value === emptyVal) return "";
-
-  return `${name}:"${value}"`;
-};
-
-export const numArg = (name, value, emptyVal = "") => {
-  if (value == null || value === emptyVal || isNaN(value)) return "";
-
-  return `${name}:${value}`;
-};
-
 export const boolArg = (name, value, emptyVal = "") => {
   if (value == null || value === emptyVal) return "";
 
