@@ -1,12 +1,11 @@
+import "immutability-helper";
+import { Client, setDefaultClient } from "micro-graphql-react";
+
 import { renderUI, clearUI } from "applicationRoot/renderUI";
 import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
-
-import "immutability-helper";
-
-import { Client, setDefaultClient } from "micro-graphql-react";
 
 const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -46,12 +45,12 @@ export function loadCurrentModule() {
 }
 
 function loadModule(location) {
-  let originalModule = location.pathname.replace(/\//g, "").toLowerCase(),
-    module = originalModule || "home",
-    publicModule = module === "view" || module == "activate";
+  let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
+  let module = originalModule || "home";
+  let publicModule = module === "view" || module == "activate";
 
-  let { logged_in, userId: currentUserId } = isLoggedIn(),
-    loggedIn = logged_in && currentUserId;
+  let { logged_in, userId: currentUserId } = isLoggedIn();
+  let loggedIn = logged_in && currentUserId;
 
   if (!loggedIn && !publicModule) {
     if (originalModule && module != "home") {
