@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import Measure from "react-measure";
 import "d3-transition";
