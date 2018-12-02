@@ -1,3 +1,5 @@
+import { isLoggedIn } from "applicationRoot/rootReducer";
+
 export default function setupServiceWorker() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
