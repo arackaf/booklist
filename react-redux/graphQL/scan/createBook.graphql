@@ -1,0 +1,8 @@
+mutation createBook($book: BookInput) {
+  createBook(Book: $book) {
+    Book {
+      _id
+    }
+    success
+  }
+}
