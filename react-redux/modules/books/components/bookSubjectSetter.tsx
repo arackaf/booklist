@@ -14,9 +14,10 @@ import Modal from "applicationRoot/components/modal";
 interface ILocalProps {
   modifyingBooks: any[];
   onDone: any;
+  dispatch: any;
 }
 
-const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalProps & { dispatch: any }> = props => {
+const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalProps> = props => {
   const [currentTab, setTab] = useState("subjects");
   const [addingSubjects, setAddingSubjects] = useState([]);
   const [removingSubjects, setRemovingSubjects] = useState([]);
