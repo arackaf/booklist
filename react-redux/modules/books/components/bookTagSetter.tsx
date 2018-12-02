@@ -45,15 +45,14 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
     });
   };
   const addingTagSet = (adding, { _id }) => setAddingTags(adding ? addingTags.concat(_id) : addingTags.filter(x => x != _id));
-
   const tagSelectedToAdd = addingTagSet.bind(null, true);
-  const removingTagSet = (adding, { _id }) => setRemovingTags(adding ? removingTags.concat(_id) : removingTags.filter(x => x != _id));
 
+  const removingTagSet = (adding, { _id }) => setRemovingTags(adding ? removingTags.concat(_id) : removingTags.filter(x => x != _id));
   const tagSelectedToRemove = removingTagSet.bind(null, true);
 
-  let dontAddTag = addingTagSet.bind(null, false);
-  let dontRemoveTag = removingTagSet.bind(null, false);
-  let modifyingBooks = props.modifyingBooks || [];
+  const dontAddTag = addingTagSet.bind(null, false);
+  const dontRemoveTag = removingTagSet.bind(null, false);
+  const modifyingBooks = props.modifyingBooks || [];
 
   return (
     <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:">
