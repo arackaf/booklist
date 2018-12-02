@@ -1,6 +1,4 @@
 import { USER_INFO_LOADING, USER_INFO_LOADED, SET_EDITING_INFO, USER_INFO_SAVING, USER_INFO_SAVED } from "./actionNames";
-
-import { gqlGet } from "util/graphqlUtil";
 import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
@@ -9,7 +7,7 @@ import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserS
 export const loadPublicUserSettings = () => dispatch => {
   dispatch({ type: USER_INFO_LOADING });
 
-  gqlGet(PublicUserSettingsQuery).then(({ data: { getUser } }) => {
+  graphqlClient.runQuery(PublicUserSettingsQuery).then(({ data: { getUser } }) => {
     dispatch({ type: USER_INFO_LOADED, info: getUser.User });
   });
 };

@@ -1,10 +1,9 @@
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import Measure from "react-measure";
 import "d3-transition";
 
-import { isLoggedIn } from "reactStartup";
-import { topLevelSubjectsSortedSelector, RootApplicationType } from "applicationRoot/rootReducer";
+import { topLevelSubjectsSortedSelector, RootApplicationType, isLoggedIn } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
 import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
