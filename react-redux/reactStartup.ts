@@ -1,165 +1,29 @@
+import "immutability-helper";
+import { Client, setDefaultClient } from "micro-graphql-react";
+
 import { renderUI, clearUI } from "applicationRoot/renderUI";
 import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
 
-import "immutability-helper";
-
-import { Client, setDefaultClient, compress } from "micro-graphql-react";
-
 const graphqlClient = new Client({
   endpoint: "/graphql",
   fetchOptions: { credentials: "include" }
 });
-
 setDefaultClient(graphqlClient);
 
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
-import {
-  setDesktop,
-  setMobile,
-  setModule,
-  setLoggedIn,
-  setPublicInfo,
-  setRequestDesktop,
-  setIsTouch,
-  loadSubjects
-} from "./applicationRoot/rootReducerActionCreators";
+import { setModule, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import { loadTags } from "applicationRoot/tags/actionCreators";
+import setupServiceWorker from "./util/setupServiceWorker";
+import { isLoggedIn } from "applicationRoot/rootReducer";
 
-declare var window: any;
-
-(function() {
-  if ("serviceWorker" in navigator) {
-    //  && !/localhost/.test(window.location as any)) {
-    navigator.serviceWorker.register("/service-worker.js").then(registration => {
-      if (registration.waiting && registration.active) {
-        newerSwAvailable(registration.waiting);
-      }
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === "installed") {
-            if (navigator.serviceWorker.controller) {
-              newerSwAvailable(installingWorker);
-            }
-          }
-        };
-      };
-
-      if (isLoggedIn().logged_in) {
-        try {
-          navigator.serviceWorker.controller.postMessage({ command: "do-sync" });
-        } catch (er) {}
-      }
-    });
-
-    function newerSwAvailable(sw) {
-      try {
-        navigator.serviceWorker.addEventListener("message", event => {
-          if (event.data == "sw-updated") {
-            location.reload();
-          }
-        });
-        import("toastify-js").then(({ default: Toastify }) => {
-          window.addEventListener("click", evt => {
-            try {
-              if (evt.target.classList.contains("do-sw-update")) {
-                sw.postMessage("sw-update-accepted");
-              }
-            } catch (e) {}
-          });
-          Toastify({
-            text: `
-              <h4 style='display: inline'>An update is available!</h4>
-              <br><br>
-              <a class='do-sw-update' style='color: white'>Click to update and reload</a>&nbsp;&nbsp;
-            `.trim(),
-            duration: 7000,
-            gravity: "bottom",
-            close: true
-          }).showToast();
-        });
-      } catch (er) {}
-    }
-
-    // if (Notification) {
-    //   Notification.requestPermission().then(permission => {});
-    // }
-
-    if (isLoggedIn()) {
-      // let subscriptionOptions = {
-      //   userVisibleOnly: true,
-      //   applicationServerKey: urlBase64ToUint8Array("BCC0wqyL-OGz5duRO9-kOSUEv72BMGf0x0oaMGryF1eLa3FF-sW2YmunhNqQegrXHykP-Wa6xC1rEnDuBGtjgUo")
-      // };
-      // navigator.serviceWorker.ready.then(registration => {
-      //   registration.pushManager.subscribe(subscriptionOptions).then(subscription => {
-      //     ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
-      //   });
-      // });
-      /*
-      
-        async saveNotificationSubscription({ subscription }) {
-          let userId = this.request.user.id;
-          await new UserDAO().updateSubscription(userId, JSON.parse(subscription));
-          this.send({ success: true });
-        }
-      
-      */
-    }
-  }
-})();
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-function sendNotification(text) {
-  if ((Notification as any).permission == "granted") {
-    new Notification(text);
-  }
-}
-
-//sendNotification("Hi there");
-
-declare global {
-  interface System {
-    import(request: string): Promise<any>;
-  }
-  var System: System;
-}
-
-if ("ontouchstart" in window || "onmsgesturechange" in window) {
-  store.dispatch(setIsTouch(true));
-}
-
-try {
-  var desktopRequested = !!localStorage.getItem("useDesktop");
-} catch (x) {}
-
-if (window.screen.width < 700) {
-  store.dispatch(setMobile());
-} else {
-  store.dispatch(setDesktop());
-}
-
-if (desktopRequested) {
-  store.dispatch(setRequestDesktop());
-}
+setupServiceWorker();
 
 let currentModule;
 let publicUserCache = {};
@@ -169,15 +33,12 @@ if (isLoggedIn().logged_in) {
   store.dispatch(loadSubjects());
 }
 
-const history = createHistory();
-export { history };
+export const history = createHistory();
 
 const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings"]);
 let initial = true;
-const unlisten = history.listen((location, action) => {
-  // location is an object like window.location
-  loadModule(location);
-});
+
+history.listen(location => loadModule(location));
 loadCurrentModule();
 
 export function loadCurrentModule() {
@@ -185,12 +46,12 @@ export function loadCurrentModule() {
 }
 
 function loadModule(location) {
-  let originalModule = location.pathname.replace(/\//g, "").toLowerCase(),
-    module = originalModule || "home",
-    publicModule = module === "view" || module == "activate";
+  let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
+  let module = originalModule || "home";
+  let publicModule = module === "view" || module == "activate";
 
-  let { logged_in, userId: currentUserId } = isLoggedIn(),
-    loggedIn = logged_in && currentUserId;
+  let { logged_in, userId: currentUserId } = isLoggedIn();
+  let loggedIn = logged_in && currentUserId;
 
   if (!loggedIn && !publicModule) {
     if (originalModule && module != "home") {
@@ -203,10 +64,6 @@ function loadModule(location) {
       history.push("/books");
       return;
     }
-  }
-
-  if (loggedIn) {
-    store.dispatch(setLoggedIn(currentUserId));
   }
 
   if (publicModule) {
@@ -274,19 +131,6 @@ function loadModule(location) {
       renderUI(createElement(moduleObject.component));
     })
     .catch(() => {});
-}
-
-export function isLoggedIn() {
-  let logged_in = getCookie("logged_in"),
-    userId = getCookie("userId");
-  return { logged_in, userId };
-}
-
-function getCookie(name) {
-  return document.cookie.split("; ").reduce((r, v) => {
-    const parts = v.split("=");
-    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
-  }, "");
 }
 
 export function goto(module, search?) {
