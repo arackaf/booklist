@@ -11,7 +11,7 @@ import { selectBookList, selectBookSelection } from "../reducers/books/reducer";
 import Loading from "applicationRoot/components/loading";
 
 import { MutationType } from "reactStartup";
-import { mutation } from "micro-graphql-react";
+import { useMutation, buildMutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
@@ -64,9 +64,11 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
   const [editingBook, bookEditingModalLoaded, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
   const editBook = book => openBookEditModal(book);
 
+  const { runMutation, running } = useMutation(buildMutation(UpdateBookMutation));
+
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
-    Promise.resolve(props.runMutation({ _id: book._id, book: bookToUse })).then(resp => {
+    Promise.resolve(runMutation({ _id: book._id, book: bookToUse })).then(resp => {
       stopEditingBook();
       props.dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
     });
@@ -108,7 +110,7 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
               dragTitle={dragTitle}
               bookToEdit={editingBook}
               isOpen={!!editingBook}
-              isSaving={props.running}
+              isSaving={running}
               isSaved={false}
               saveBook={saveEditingBook}
               saveMessage={"Saved"}
@@ -127,4 +129,4 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
   );
 };
 
-export default mutation(UpdateBookMutation)(connect(mainSelector)(BookViewingList));
+export default connect(mainSelector)(BookViewingList);

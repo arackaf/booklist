@@ -11,6 +11,7 @@
     "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {
+    "": "^0.3.0-beta1",
     "@babel/core": "7.0.0-beta.44",
     "@babel/plugin-proposal-class-properties": "7.0.0-beta.46",
     "@babel/plugin-proposal-object-rest-spread": "7.0.0-beta.46",
@@ -34,7 +35,7 @@
     "immutability-helper": "2.2.2",
     "lodash.debounce": "4.0.8",
     "lodash.throttle": "4.1.1",
-    "micro-graphql-react": "0.2.3",
+    "micro-graphql-react": "^0.3.0-beta2",
     "mini-css-extract-plugin": "^0.4.4",
     "persistgraphql": "^0.3.11",
     "purify-css": "1.2.2",

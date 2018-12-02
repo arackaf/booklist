@@ -1,11 +1,7 @@
 import {
-  SET_IS_TOUCH,
-  SET_DESKTOP,
-  SET_MOBILE,
   REQUEST_DESKTOP,
   REQUEST_MOBILE,
   SET_MODULE,
-  SET_LOGGED_IN,
   SET_PUBLIC_INFO,
   LOAD_SUBJECTS,
   LOAD_SUBJECTS_RESULTS,
@@ -28,9 +24,6 @@ export const graphqlClient = new Client({
   fetchOptions: { credentials: "include" }
 });
 
-export const setDesktop = () => ({ type: SET_DESKTOP });
-export const setMobile = () => ({ type: SET_MOBILE });
-
 export const setDeviceOverride = view => {
   try {
     if (view == "mobile") {
@@ -49,14 +42,10 @@ export const requestMobile = () => dispatch => {
   setDeviceOverride("mobile");
   dispatch({ type: REQUEST_MOBILE });
 };
-export const setRequestDesktop = () => ({ type: REQUEST_DESKTOP });
 
 export const newLogin = () => ({ type: NEW_LOGIN });
 export const setModule = module => ({ type: SET_MODULE, module });
-export const setLoggedIn = userId => ({ type: SET_LOGGED_IN, userId });
 export const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
-
-export const setIsTouch = value => ({ type: SET_IS_TOUCH, value });
 
 let subjectsLoaded = false;
 
