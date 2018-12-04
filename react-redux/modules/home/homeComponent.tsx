@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, SFC } from "react";
 import { connect } from "react-redux";
 import Measure from "react-measure";
 import "d3-transition";
 
-import { topLevelSubjectsSortedSelector, RootApplicationType, isLoggedIn } from "applicationRoot/rootReducer";
+import { topLevelSubjectsSortedSelector, RootApplicationType, selectLoggedIn } from "applicationRoot/rootReducer";
 
 import BarChart from "./components/barChart";
 import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
@@ -22,6 +22,7 @@ const MainHomePane = props => (
 );
 
 const MAX_CHART_WIDTH = 1100;
+
 @connect((state: RootApplicationType) => ({
   subjects: topLevelSubjectsSortedSelector(state),
   subjectHash: state.app.subjectHash,
@@ -121,13 +122,9 @@ const HomeIfNotLoggedIn = () => (
   </div>
 );
 
-export default class Home extends Component<any, any> {
-  state = { isLoggedIn: isLoggedIn().logged_in };
-  render() {
-    return (
-      <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
-        {this.state.isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}
-      </div>
-    );
-  }
-}
+const Home: SFC<ReturnType<typeof selectLoggedIn>> = props => (
+  <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
+    {props.isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}
+  </div>
+);
+export default connect(selectLoggedIn)(Home);
