@@ -1,6 +1,7 @@
 import { history, getCurrentHistoryState } from "reactStartup";
-import React, { Component } from "react";
-import { isLoggedIn } from "applicationRoot/rootReducer";
+import React, { Component, SFC } from "react";
+import { selectLoggedIn } from "applicationRoot/rootReducer";
+import { connect } from "react-redux";
 
 const MainActivatePane = props => (
   <div className="row" style={{ margin: 0 }}>
@@ -48,4 +49,8 @@ const ActivateIfNotLoggedIn = props => {
   );
 };
 
-export default props => <div>{isLoggedIn() ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</div>;
+const HomeComponent: SFC<ReturnType<typeof selectLoggedIn>> = ({ isLoggedIn }) => (
+  <div>{isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</div>
+);
+
+export default connect(selectLoggedIn)(HomeComponent);
