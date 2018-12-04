@@ -1,360 +1,452 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <script>
-        if (typeof fetch === 'undefined'){
-            var fetchPolyfill = document.createElement('script');
-            fetchPolyfill.setAttribute('src','/react-redux/util/unfetch.js');
-            document.head.appendChild(fetchPolyfill);
-            fetchPolyfill.onload = function(){
-                window.fetch = unfetch;
-            }
-        }
+      if (typeof fetch === "undefined") {
+        var fetchPolyfill = document.createElement("script");
+        fetchPolyfill.setAttribute("src", "/react-redux/util/unfetch.js");
+        document.head.appendChild(fetchPolyfill);
+        fetchPolyfill.onload = function() {
+          window.fetch = unfetch;
+        };
+      }
     </script>
 
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Book tracker</title>
 
-    <link rel="stylesheet" href="react-redux/static/bootstrap/css/bootstrap-booklist-build.css">
-    <link rel="stylesheet" href="react-redux/static/fontawesome/css/font-awesome-booklist-build.css">
-    <link rel="stylesheet" href="react-redux/node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css">
-    <link rel="stylesheet" href="react-redux/node_modules/@reach/dialog/styles.css">
+    <link rel="stylesheet" href="/react-redux/static/bootstrap/css/bootstrap-booklist-build.css" />
+    <link rel="stylesheet" href="/react-redux/static/fontawesome/css/font-awesome-booklist-build.css" />
+    <link rel="stylesheet" href="/react-redux/node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css" />
+    <link rel="stylesheet" href="/react-redux/node_modules/@reach/dialog/styles.css" />
 
     <style type="text/css">
+      .d3-tooltip {
+        position: absolute;
+        border-radius: 3px;
+        /*display: none;*/
+        left: 100;
+        top: 100;
+        min-width: 80px;
+        height: auto;
+        background: white;
+        border: 1px solid darkgray;
+        padding-top: 14px;
+        padding-bottom: 14px;
+        padding-right: 25px;
+        padding-left: 8px;
+      }
 
-        .d3-tooltip {
-            position: absolute;
-            border-radius: 3px;
-            /*display: none;*/
-            left: 100;
-            top: 100;
-            min-width: 80px;
-            height: auto;
-            background: white;
-            border: 1px solid darkgray;
-            padding-top: 14px;
-            padding-bottom: 14px;
-            padding-right: 25px;
-            padding-left: 8px;
+      .d3-tooltip .heading {
+        margin: 0;
+        padding-bottom: 10px;
+        color: black;
+        text-decoration: underline;
+      }
+      .d3-tooltip a {
+        color: black;
+        font-size: 12pt;
+        text-decoration: none;
+      }
+
+      a {
+        cursor: pointer;
+      }
+      a.no-underline {
+        text-decoration: none;
+      }
+      ul.nav > li.active a {
+        cursor: default;
+      }
+      .margin-left {
+        margin-left: 10px;
+      }
+      .margin-right {
+        margin-right: 10px;
+      }
+      .margin-top {
+        margin-top: 10px;
+      }
+      .margin-bottom {
+        margin-bottom: 10px;
+      }
+
+      li.default-cursor a {
+        cursor: default;
+      }
+      ul.nav li > a {
+        outline: none;
+      }
+      .modal-header a {
+        outline: none;
+      }
+      .modal-header button {
+        outline: none;
+      }
+
+      ul.nav-tabs > li > a {
+        color: #555;
+      }
+
+      li.list-group-item > ul.list-group {
+        margin-top: 10px;
+      }
+
+      span.list-group-item:hover {
+        background-color: #f5f5f5;
+      }
+
+      .dropdown-menu > li.no-hover > a:focus,
+      .dropdown-menu > li.no-hover > a:hover {
+        background-color: inherit;
+      }
+
+      .alert.alert-slim {
+        padding: 10px;
+      }
+
+      a.grid-hover-filter:hover {
+        text-decoration: none;
+      }
+      a.inline-filter {
+        color: #31708f;
+      }
+      td:hover .show-on-hover-parent-td {
+        display: inherit;
+        color: #555;
+      }
+      .inline-filter i {
+        color: #555;
+      }
+      .show-on-hover-parent-td {
+        display: none;
+      }
+      a.inline-filter {
+        outline: none !important;
+        text-decoration: none;
+      }
+
+      .show-on-hover-parent:hover > .show-on-hover-inline {
+        display: inline;
+      }
+      .show-on-hover-inline {
+        display: none;
+      }
+
+      .docked-to-panel .list-group-item:first-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+      .docked-to-panel .list-group-item {
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .wait-for-loading > i {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        opacity: 0.2;
+        z-index: 5000;
+      }
+
+      .fade-transition-enter {
+        opacity: 0.01;
+      }
+
+      .fade-transition-enter.fade-transition-enter-active {
+        opacity: 1;
+        transition: opacity 500ms ease-in;
+      }
+
+      .fade-transition-exit {
+        opacity: 1;
+      }
+
+      .fade-transition-exit.fade-transition-exit-active {
+        opacity: 0.01;
+        transition: opacity 300ms ease-in;
+      }
+
+      .table.no-padding-top > thead > tr > th {
+        padding-top: 0;
+      }
+
+      .color-choice {
+        float: left;
+        border: 1px solid black;
+        height: 20px;
+        width: 20px;
+        margin: 3px;
+        cursor: pointer;
+      }
+      .color-choice.color-choice-current {
+        border: 3px solid white;
+      }
+
+      .modal {
+        z-index: 990; /* tweak to make the color picker happy :-\  */
+      }
+
+      .modal-backdrop {
+        z-index: 980; /* tweak to make the color picker happy :-\  */
+      }
+
+      .react-autosuggest__container {
+        /*position: relative;*/
+        float: left;
+      }
+
+      .react-autosuggest__input {
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+        width: 100px;
+      }
+
+      .react-autosuggest__input:focus {
+        outline: none;
+      }
+
+      .react-autosuggest__suggestions-container {
+        position: absolute;
+        /*width: calc(100% - 30px);*/
+        padding: 0;
+        margin-top: -2px;
+        list-style-type: none;
+        background-color: #fff;
+        border-radius: 2px;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        z-index: 2;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .react-autosuggest__suggestions-container--open {
+        border: 1px solid #aaa;
+      }
+
+      .react-autosuggest__suggestions-list {
+        padding-left: 5px;
+        padding-top: 3px;
+      }
+
+      .react-autosuggest__suggestion {
+        cursor: pointer;
+        padding: 6px 6px;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+        list-style-type: none;
+      }
+
+      .react-autosuggest__suggestion > span {
+        cursor: pointer;
+      }
+
+      .react-autosuggest__suggestion--highlighted {
+        border-top: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+      }
+
+      .react-autosuggest__suggestion--focused:first-child {
+        border-top: 1px solid white;
+      }
+
+      .react-autosuggest__suggestion--focused:last-child {
+        border-bottom: 1px solid white;
+      }
+
+      .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Chrome/Safari/Opera */
+        -khtml-user-select: none; /* Konqueror */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently not supported by any browser */
+        cursor: default;
+      }
+
+      .padding-top {
+        padding-top: 10px;
+      }
+      .padding-bottom {
+        padding-bottom: 10px;
+      }
+      .padding-bottom-small {
+        padding-bottom: 5px;
+      }
+
+      .pending-subject-drop {
+        border: 1px solid green;
+      }
+      .pending-subject-drop + li {
+        border-top: 1px solid green;
+      }
+
+      .drag-handle {
+        cursor: move;
+      }
+
+      .navbar-brand {
+        margin-left: -15px !important;
+      }
+
+      .navbar-header {
+        float: left !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      .navbar-collapse {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        border-top: 0 !important;
+      }
+      .navbar-collapse.collapse {
+        display: block !important;
+      }
+
+      .navbar-nav > li,
+      .navbar-nav {
+        float: left !important;
+      }
+
+      .nav.navbar-nav {
+        margin: 0 !important;
+      }
+
+      .nav.navbar-nav.pull-right {
+        float: right !important;
+      }
+
+      .navbar-nav.navbar-right:last-child {
+        margin-right: -15px !important;
+      }
+
+      .navbar-right {
+        float: right !important;
+      }
+
+      .navbar-nav > li > a {
+        padding-top: 15px !important;
+        padding-bottom: 15px !important;
+      }
+
+      .main-navbar i.visible-xs {
+        font-size: 15pt;
+      }
+
+      @media (max-width: 500px) {
+        .main-navbar ul.nav.navbar-nav li a {
+          padding-left: 10px;
+          padding-right: 10px;
         }
-        
-        .d3-tooltip .heading {
-            margin: 0;
-            padding-bottom: 10px; 
-            color: black;
-            text-decoration: underline
+      }
+
+      @media (max-width: 320px) {
+        .main-navbar .container-fluid {
+          padding-left: 5px;
         }
-        .d3-tooltip a {
-            color: black;
-            font-size: 12pt;
-            text-decoration: none;
+        .main-navbar ul.nav.navbar-nav li a {
+          padding-left: 8px;
+          padding-right: 8px;
+
+          padding-top: 10px !important;
+          padding-bottom: 10px !important;
         }
-
-        a { cursor: pointer; }
-        a.no-underline { text-decoration: none; }
-        ul.nav > li.active a { cursor: default }
-        .margin-left { margin-left: 10px; }
-        .margin-right { margin-right: 10px; }
-        .margin-top { margin-top: 10px; }
-        .margin-bottom { margin-bottom: 10px; }
-
-        li.default-cursor a { cursor: default }
-        ul.nav li > a { outline: none }
-        .modal-header a { outline: none }
-        .modal-header button { outline: none }
-
-        ul.nav-tabs > li > a { color: #555 }
-
-        li.list-group-item > ul.list-group { margin-top: 10px; }
-
-        span.list-group-item:hover{
-            background-color: #f5f5f5;
+        .main-navbar {
+          min-height: 20px;
         }
-
-        .dropdown-menu > li.no-hover > a:focus, .dropdown-menu > li.no-hover > a:hover {
-            background-color: inherit
+        .main-navbar ul.nav.navbar-nav li a i {
+          font-size: 13pt;
         }
+      }
 
-        .alert.alert-slim { padding: 10px; }
-
-        a.grid-hover-filter:hover { text-decoration: none; }
-        a.inline-filter { color: #31708f; }
-        td:hover .show-on-hover-parent-td { display: inherit; color: #555; }
-        .inline-filter i { color: #555; }
-        .show-on-hover-parent-td { display: none; }
-        a.inline-filter { outline: none !important; text-decoration: none; }
-
-        .show-on-hover-parent:hover > .show-on-hover-inline { display: inline; }
-        .show-on-hover-inline { display: none; }
-
-        .docked-to-panel .list-group-item:first-child { border-top-left-radius: 0; border-top-right-radius: 0; }
-        .docked-to-panel .list-group-item { border-left: 0; border-right: 0; }
-
-        .wait-for-loading > i { position: fixed; top: 50%; left: 50%; opacity:0.2; z-index: 5000; }
-
-        .fade-transition-enter {
-            opacity: 0.01;
+      .visible-tiny {
+        display: none;
+      }
+      @media (min-width: 800px) {
+        div.responsive-radios {
+          margin-right: 10px;
+          margin-left: 0;
+          display: inline;
         }
+      }
+      @media (max-width: 800px) {
+        div.responsive-radios {
+          margin-right: 0;
+          margin-left: 0;
+          display: block !important;
+        }
+      }
+      @media (max-width: 500px) {
+        span.visible-tiny {
+          display: inline !important;
+        }
+        div.visible-tiny {
+          display: block !important;
+        }
+        .hidden-tiny {
+          display: none !important;
+        }
+      }
+      @media (max-width: 500px) {
+        .booksMenuBar .btn-reset {
+          border-top-left-radius: 4px !important;
+          border-bottom-left-radius: 4px !important;
+        }
+        .booksMenuBar .btn-reset-full {
+          border-top-left-radius: 4px !important;
+          border-bottom-left-radius: 4px !important;
+          border-top-right-radius: 4px !important;
+          border-bottom-right-radius: 4px !important;
+        }
+      }
 
-        .fade-transition-enter.fade-transition-enter-active {
-            opacity: 1;
-            transition: opacity 500ms ease-in;
+      @media (max-width: 1000px) {
+        div[data-reach-dialog-content] {
+          width: 55vw;
         }
+      }
+      @media (max-width: 800px) {
+        div[data-reach-dialog-content] {
+          width: 60vw;
+        }
+      }
+      @media (max-width: 650px) {
+        div[data-reach-dialog-content] {
+          width: 65vw;
+        }
+      }
+      @media (max-width: 600px) {
+        div[data-reach-dialog-content] {
+          width: 70vw;
+        }
+      }
+      @media (max-width: 550px) {
+        div[data-reach-dialog-content] {
+          width: 80vw;
+        }
+      }
+      @media (max-width: 500px) {
+        div[data-reach-dialog-content] {
+          width: 85vw;
+        }
+      }
 
-        .fade-transition-exit {
-            opacity: 1;
-        }
-
-        .fade-transition-exit.fade-transition-exit-active {
-            opacity: 0.01;
-            transition: opacity 300ms ease-in;
-        }
-
-        .table.no-padding-top > thead > tr > th { padding-top: 0; }
-
-        .color-choice { float: left; border: 1px solid black; height: 20px; width: 20px; margin: 3px; cursor: pointer; }
-        .color-choice.color-choice-current { border: 3px solid white; }
-
-        .modal {
-            z-index: 990; /* tweak to make the color picker happy :-\  */
-        }
-
-        .modal-backdrop {
-            z-index: 980; /* tweak to make the color picker happy :-\  */
-        }
-
-        .react-autosuggest__container {
-            /*position: relative;*/
-            float: left;
-        }
-
-        .react-autosuggest__input {
-            border-top: 0;
-            border-left: 0;
-            border-right: 0;
-            width: 100px;
-        }
-
-        .react-autosuggest__input:focus {
-            outline: none;
-        }
-
-        .react-autosuggest__suggestions-container {
-            position: absolute;
-            /*width: calc(100% - 30px);*/
-            padding: 0;
-            margin-top: -2px;
-            list-style-type: none;
-            background-color: #fff;
-            border-radius: 2px;
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-            z-index: 2;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .react-autosuggest__suggestions-container--open {
-            border: 1px solid #aaa;
-        }
-
-        .react-autosuggest__suggestions-list {
-            padding-left: 5px;
-            padding-top: 3px;
-        }
-
-        .react-autosuggest__suggestion {
-            cursor: pointer;
-            padding: 6px 6px;
-            border-top: 1px solid white;
-            border-bottom: 1px solid white;
-            list-style-type: none;
-        }
-
-        .react-autosuggest__suggestion > span {
-            cursor: pointer;
-        }
-
-        .react-autosuggest__suggestion--highlighted {
-            border-top: 1px solid #aaa;
-            border-bottom: 1px solid #aaa;
-        }
-
-        .react-autosuggest__suggestion--focused:first-child {
-            border-top: 1px solid white;
-        }
-
-        .react-autosuggest__suggestion--focused:last-child {
-            border-bottom: 1px solid white;
-        }
-
-        .noselect {
-            -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-select: none;   /* Chrome/Safari/Opera */
-            -khtml-user-select: none;    /* Konqueror */
-            -moz-user-select: none;      /* Firefox */
-            -ms-user-select: none;       /* Internet Explorer/Edge */
-            user-select: none;           /* Non-prefixed version, currently not supported by any browser */
-            cursor: default;
-        }
-
-        .padding-top { padding-top: 10px;  }
-        .padding-bottom { padding-bottom: 10px; }
-        .padding-bottom-small { padding-bottom: 5px; }
-
-        .pending-subject-drop { border: 1px solid green; }
-        .pending-subject-drop + li { border-top: 1px solid green; }
-
-        .drag-handle { cursor: move }
-
-        .navbar-brand {
-            margin-left: -15px!important;
-        }
-
-        .navbar-header { 
-            float: left!important;
-            margin-left: 0!important;
-            margin-right: 0!important;
-        }
-
-        .navbar-collapse {
-            margin-left: 0!important;
-            margin-right: 0!important;
-            border-top: 0!important;
-        }
-        .navbar-collapse.collapse {
-            display: block!important;
-        }
-
-        .navbar-nav>li, .navbar-nav {
-            float: left !important;
-        }
-
-        .nav.navbar-nav { margin: 0!important; }
-
-        .nav.navbar-nav.pull-right {
-            float: right!important;
-        }
-
-        .navbar-nav.navbar-right:last-child {
-            margin-right: -15px !important;
-        }
-
-        .navbar-right {
-            float: right!important;
-        }
-
-        .navbar-nav > li > a {
-            padding-top: 15px!important;
-            padding-bottom: 15px!important;
-        }
-
-        .main-navbar i.visible-xs { font-size: 15pt; }
-
-        @media (max-width:500px){
-            .main-navbar ul.nav.navbar-nav li a  {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-        }
-
-        @media (max-width:320px){
-            .main-navbar .container-fluid  {
-                padding-left: 5px;
-            }
-            .main-navbar ul.nav.navbar-nav li a  {
-                padding-left: 8px;
-                padding-right: 8px;
-
-                padding-top: 10px!important;
-                padding-bottom: 10px!important;
-            }
-            .main-navbar {
-                min-height: 20px
-            }
-            .main-navbar ul.nav.navbar-nav li a i {
-                font-size: 13pt;
-            }            
-        }
-
-        .visible-tiny {
-            display: none;
-        }
-        @media (min-width: 800px){
-            div.responsive-radios {
-                margin-right: 10px;
-                margin-left: 0;
-                display: inline;
-            }
-        }
-        @media (max-width: 800px){
-            div.responsive-radios {
-                margin-right: 0;
-                margin-left: 0;
-                display: block !important;
-            }            
-        }
-        @media (max-width: 500px){
-            span.visible-tiny {
-                display: inline!important;
-            }
-            div.visible-tiny {
-                display: block!important;
-            }
-            .hidden-tiny  {
-                display: none!important;
-            }
-        }
-        @media (max-width:500px){
-            .booksMenuBar .btn-reset  {
-                border-top-left-radius: 4px!important;
-                border-bottom-left-radius: 4px!important;
-            }
-            .booksMenuBar .btn-reset-full  {
-                border-top-left-radius: 4px!important;
-                border-bottom-left-radius: 4px!important;
-                border-top-right-radius: 4px!important;
-                border-bottom-right-radius: 4px!important;
-            }
-        }
-
-        @media (max-width: 1000px){
-            div[data-reach-dialog-content] { width: 55vw; }
-        }
-        @media (max-width: 800px){
-            div[data-reach-dialog-content] { width: 60vw; }
-        }
-        @media (max-width: 650px){
-            div[data-reach-dialog-content] { width: 65vw; }
-        }
-        @media (max-width: 600px){
-            div[data-reach-dialog-content] { width: 70vw; }
-        }
-        @media (max-width: 550px){
-            div[data-reach-dialog-content] { width: 80vw; }
-        }
-        @media (max-width: 500px){
-            div[data-reach-dialog-content] { width: 85vw; }
-        }
-
-        .toastify {
-            z-index: 10;
-            margin-right: 10px;
-        }
-
+      .toastify {
+        z-index: 10;
+        margin-right: 10px;
+      }
     </style>
-
-</head>
-<body>
+  </head>
+  <body>
     <div id="home"></div>
 
-
-
     <script>
-        function webSocketAddress(path){
-            return 'wss://' + window.location.host + (path || '');
-        }
+      function webSocketAddress(path) {
+        return "wss://" + window.location.host + (path || "");
+      }
     </script>
-    
-</body>
+  </body>
 </html>
