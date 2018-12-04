@@ -357,3 +357,9 @@ function getCookie(name) {
     return parts[0] === name ? decodeURIComponent(parts[1]) : r;
   }, "");
 }
+
+export const selectLoggedIn = createSelector(
+  (state: RootApplicationType) => state.app.isLoggedIn,
+  (state: RootApplicationType) => state.app.userId,
+  (isLoggedIn, userId) => ({ isLoggedIn, userId })
+);
