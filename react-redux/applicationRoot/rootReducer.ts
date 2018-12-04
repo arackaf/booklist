@@ -146,6 +146,9 @@ export default function rootReducer(state = initialState, action) {
       return { ...state, tagHash: { ...state.tagHash, ...objectsToHash([action.tag]) } };
     case TAG_DELETED:
       return update(state, { tagHash: { $unset: [action._id] } });
+    case NEW_LOGIN:
+      let { logged_in, userId } = isLoggedIn();
+      return { ...state, isLoggedIn: !!logged_in, userId };
   }
 
   return state;
