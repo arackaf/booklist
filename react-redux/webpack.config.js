@@ -115,7 +115,8 @@ module.exports = {
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /fontawesome\/webfonts/, name: "fontawesome-fonts" })
       ],
-      importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
+      importScripts: ["react-redux/sw-manual/sw-index-bundle.js"],
+      navigateFallbackBlacklist: [/\/activate\b/]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null
