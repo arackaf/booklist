@@ -4,6 +4,7 @@ import searchBooksQuery from "../graphQL/books/getBooks.graphql";
 import offlineBookSyncQuery from "../graphQL/books/offlineBookSync.graphql";
 import allSubjects from "../graphQL/subjects/allSubjects.graphql";
 import allTags from "../graphQL/tags/getTags.graphql";
+import allLabelColors from "../graphQL/misc/allLabelColors.graphql";
 
 workbox.routing.registerRoute(
   /graphql$/,
@@ -33,8 +34,10 @@ workbox.routing.registerRoute(
       fetch(event.request).catch(err => {
         const { query, variables } = parseQueryString(url.search);
 
-        if (query == searchBooksQuery) {
-          return searchBooks(variables, res => event.respondWith(res));
+        if (query == allLabelColors) {
+          return readTable("labelColors", "order").then(res => {
+            return new Response(JSON.stringify({ data: res }), { ok: true, status: 200 });
+          });
         }
       })
     );
@@ -95,16 +98,47 @@ function masterSync() {
       evt.target.transaction.objectStore("syncInfo").add({ id: 1 });
     }
     if (!db.objectStoreNames.contains("subjects")) {
-      db.createObjectStore("subjects", { keyPath: "_id" });
+      let tagStore = db.createObjectStore("subjects", { keyPath: "_id" });
+      tagStore.createIndex("name", "name", { unique: false });
     }
     if (!db.objectStoreNames.contains("tags")) {
-      db.createObjectStore("tags", { keyPath: "_id" });
+      let subjectStore = db.createObjectStore("tags", { keyPath: "_id" });
+      subjectStore.createIndex("name", "name", { unique: false });
+    }
+    if (!db.objectStoreNames.contains("labelColors")) {
+      let labelColorStore = db.createObjectStore("labelColors", { keyPath: "_id" });
+      labelColorStore.createIndex("order", "order", { unique: false });
     }
     evt.target.transaction.oncomplete = fullSync;
   };
 }
 
-async function syncImages(db) {
+function readTable(table, idxName) {
+  let open = indexedDB.open("books", 1);
+
+  return new Promise(res => {
+    open.onsuccess = evt => {
+      let db = open.result;
+      let tran = db.transaction(table);
+      let objStore = tran.objectStore(table);
+      let idx = objStore.index(idxName);
+      let tranCursor = idx.openCursor();
+
+      let result = [];
+
+      tranCursor.onsuccess = evt => {
+        let cursor = evt.target.result;
+        if (!cursor) return res(result);
+
+        let item = cursor.value;
+        result.push(item);
+        cursor.continue();
+      };
+    };
+  });
+}
+
+async function syncImages(db, onComplete) {
   console.log("SYNCING IMAGES");
   let tran = db.transaction("books");
   let booksStore = tran.objectStore("books");
@@ -145,6 +179,7 @@ async function syncImages(db) {
       } finally {
       }
     }
+    onComplete();
   }
 }
 
@@ -164,9 +199,14 @@ function fullSync(page = 1) {
   // Set up the database schema
   open.onsuccess = evt => {
     let db = open.result;
-    doBooksSync(db);
-    doSubjectsSync(db);
-    doTagsSync(db);
+    Promise.all([new Promise(res => doBooksSync(db, res)), doSubjectsSync(db), doTagsSync(db), doLabelColorsSync(db)]).then(() => {
+      updateSyncInfo(db, {
+        lastLabelColorSync: +new Date(),
+        lastTagSync: +new Date(),
+        lastSubjectSync: +new Date(),
+        lastBookSync: +new Date()
+      });
+    });
   };
 }
 
@@ -207,33 +247,29 @@ function updateSyncInfo(db, updates) {
   };
 }
 
-function doBooksSync(db, page = 1) {
+function doBooksSync(db, onFinish, page = 1) {
   let pageSize = 50;
   getGraphqlResults(offlineBookSyncQuery, { page, pageSize }, "allBooks", "Books").then(books => {
     insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0 }) }).then(() => {
       if (books.length == pageSize) {
-        doBooksSync(db, page + 1);
+        doBooksSync(db, onFinish, page + 1);
       } else {
-        syncImages(db).then(() => updateSyncInfo(db, { lastBookSync: +new Date() }));
+        syncImages(db, onFinish);
       }
     });
   });
 }
 
 function doSubjectsSync(db, page = 1) {
-  getGraphqlResults(allSubjects, {}, "allSubjects", "Subjects").then(subjects => {
-    insertItems(db, subjects, "subjects").then(() => {
-      updateSyncInfo(db, { lastSubjectsSync: +new Date() });
-    });
-  });
+  return getGraphqlResults(allSubjects, {}, "allSubjects", "Subjects").then(subjects => insertItems(db, subjects, "subjects"));
 }
 
 function doTagsSync(db, page = 1) {
-  getGraphqlResults(allTags, {}, "allTags", "Tags").then(tags => {
-    insertItems(db, tags, "tags").then(() => {
-      updateSyncInfo(db, { lastTagsSync: +new Date() });
-    });
-  });
+  return getGraphqlResults(allTags, {}, "allTags", "Tags").then(tags => insertItems(db, tags, "tags"));
+}
+
+function doLabelColorsSync(db, page = 1) {
+  return getGraphqlResults(allLabelColors, {}, "allLabelColors", "LabelColors").then(labelColors => insertItems(db, labelColors, "labelColors"));
 }
 
 async function preCacheBookImage(book) {
