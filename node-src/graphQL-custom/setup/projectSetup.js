@@ -103,7 +103,7 @@ export const LabelColor = {
   extras: {
     overrides: ["getLabelColor"]
   },
-  manualQueryArgs: [{ name: "cache", type: "Int" }]
+  manualQueryArgs: [{ name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
 
 export const User = {
