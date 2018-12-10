@@ -361,6 +361,7 @@ app.get("/activate/:code", function(req, response) {
     result => {
       if (result.success) {
         req.login(result, function() {
+          response.cookie("logged_in", "true", { maxAge: 900000 });
           response.cookie("userId", result._id, { maxAge: 900000 });
           if (result.rememberMe) {
             response.cookie("remember_me", result.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
