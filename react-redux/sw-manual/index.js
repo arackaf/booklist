@@ -38,6 +38,10 @@ workbox.routing.registerRoute(
 
         if (query == allLabelColors) {
           return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
+        } else if (query == allSubjects) {
+          return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
+        } else if (query == allTags) {
+          return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
         }
       })
     );
