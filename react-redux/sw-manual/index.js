@@ -27,6 +27,8 @@ workbox.routing.registerRoute(
   "POST"
 );
 
+const gqlResponse = (op, coll) => data => new Response(JSON.stringify({ data: { [op]: { [coll]: data } } }), { ok: true, status: 200 });
+
 workbox.routing.registerRoute(
   /graphql/,
   ({ url, event }) => {
@@ -35,9 +37,7 @@ workbox.routing.registerRoute(
         const { query, variables } = parseQueryString(url.search);
 
         if (query == allLabelColors) {
-          return readTable("labelColors", "order").then(res => {
-            return new Response(JSON.stringify({ data: res }), { ok: true, status: 200 });
-          });
+          return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
         }
       })
     );
