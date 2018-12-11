@@ -16,6 +16,7 @@ setDefaultClient(graphqlClient);
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
 import { setModule, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
+import { IS_OFFLINE, IS_ONLINE } from "applicationRoot/rootReducerActionNames";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
@@ -44,6 +45,9 @@ loadCurrentModule();
 export function loadCurrentModule() {
   loadModule(history.location);
 }
+
+window.addEventListener("offline", () => store.dispatch({ type: IS_OFFLINE }));
+window.addEventListener("online", () => store.dispatch({ type: IS_ONLINE }));
 
 function loadModule(location) {
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
