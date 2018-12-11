@@ -13,9 +13,9 @@ workbox.routing.registerRoute(
       let respClone = response.clone();
       setTimeout(() => {
         respClone.json().then(resp => {
-          if (resp && resp.data && resp.data.updateBook && resp.data.updateBook.Book) {
-            syncBook(resp.data.updateBook.Book);
-          }
+          syncResultsFor(resp, "Book");
+          syncResultsFor(resp, "Subject");
+          syncResultsFor(resp, "Tag");
         }, 5);
       });
       return response;
@@ -23,6 +23,13 @@ workbox.routing.registerRoute(
   },
   "POST"
 );
+
+function syncResultsFor(resp, name) {
+  let updateName = `update${name}`;
+  if (resp && resp.data && resp.data[updateName] && resp.data[updateName][name]) {
+    syncItem(resp.data[updateName][name], `${name.toLowerCase()}s`);
+  }
+}
 
 const gqlResponse = (op, coll) => data => new Response(JSON.stringify({ data: { [op]: { [coll]: data } } }), { ok: true, status: 200 });
 
@@ -55,16 +62,16 @@ function searchBooks(variables, cb) {
   );
 }
 
-function syncBook(item) {
+function syncItem(item, table) {
   let open = indexedDB.open("books", 1);
 
   open.onsuccess = evt => {
     let db = open.result;
-    let tran = db.transaction("books", "readwrite");
-    let booksStore = tran.objectStore("books");
-    booksStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
+    let tran = db.transaction(table, "readwrite");
+    let objStore = tran.objectStore(table);
+    objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
       Object.assign(itemToUpdate, item);
-      booksStore.put(itemToUpdate);
+      objStore.put(itemToUpdate);
     };
   };
 }
