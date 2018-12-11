@@ -17,3 +17,6 @@ export const LOAD_TAGS = "root.LOAD_TAGS";
 export const LOAD_TAGS_RESULTS = "root.LOAD_TAGS_RESULTS";
 export const UPDATE_TAG_RESULTS = "root.UPDATE_TAG_RESULTS";
 export const TAG_DELETED = "root.TAG_DELETED";
+
+export const IS_OFFLINE = "root.IS_OFFLINE";
+export const IS_ONLINE = "root.IS_ONLINE";
