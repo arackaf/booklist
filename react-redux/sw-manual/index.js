@@ -9,10 +9,7 @@ import allLabelColors from "../graphQL/misc/allLabelColors.graphql";
 workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
-    //turning this off for now, until I can wrap some other things up
-    return fetch(event.request);
-
-    return fetch(request).then(response => {
+    return fetch(event.request).then(response => {
       let respClone = response.clone();
       setTimeout(() => {
         respClone.json().then(resp => {
@@ -58,19 +55,17 @@ function searchBooks(variables, cb) {
   );
 }
 
-function syncBook(book) {
+function syncBook(item) {
   let open = indexedDB.open("books", 1);
 
   open.onsuccess = evt => {
     let db = open.result;
-    if (db.objectStoreNames.contains("books")) {
-      let tran = db.transaction("books", "readwrite");
-      let booksStore = tran.objectStore("books");
-      booksStore.get(book._id).onsuccess = ({ target: { result: bookToUpdate } }) => {
-        ["title", "authors", "isbn"].forEach(prop => (bookToUpdate[prop] = book[prop]));
-        booksStore.put(bookToUpdate);
-      };
-    }
+    let tran = db.transaction("books", "readwrite");
+    let booksStore = tran.objectStore("books");
+    booksStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
+      Object.assign(itemToUpdate, item);
+      booksStore.put(itemToUpdate);
+    };
   };
 }
 

@@ -3,13 +3,16 @@ query OfflineBookSync($page: Int, $pageSize: Int) {
     Books {
       _id
       title
+      isbn
       pages
       smallImage
       publicationDate
       subjects
-      tags
       authors
+      publisher
+      tags
       isRead
+      dateAdded
     }
   }
 }
