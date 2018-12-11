@@ -7,6 +7,7 @@ export const type = `
     userId: String
     backgroundColor: String
     textColor: String
+    timestamp: Int
   }
 
   type TagQueryResults {
@@ -39,6 +40,7 @@ export const type = `
     userId: String
     backgroundColor: String
     textColor: String
+    timestamp: Int
   }
 
   input TagMutationInput {
@@ -47,6 +49,9 @@ export const type = `
     userId: String
     backgroundColor: String
     textColor: String
+    timestamp: Int
+    timestamp_INC: Int
+    timestamp_DEC: Int
   }
 
   input TagSort {
@@ -56,6 +61,7 @@ export const type = `
     userId: Int
     backgroundColor: Int
     textColor: Int
+    timestamp: Int
   }
 
   input TagFilters {
@@ -97,6 +103,13 @@ export const type = `
     textColor: String
     textColor_ne: String
     textColor_in: [String]
+    timestamp_lt: Int
+    timestamp_lte: Int
+    timestamp_gt: Int
+    timestamp_gte: Int
+    timestamp: Int
+    timestamp_ne: Int
+    timestamp_in: [Int]
     OR: [TagFilters]
   }
   
@@ -172,6 +185,13 @@ export const query = `
     textColor: String,
     textColor_ne: String,
     textColor_in: [String],
+    timestamp_lt: Int,
+    timestamp_lte: Int,
+    timestamp_gt: Int,
+    timestamp_gte: Int,
+    timestamp: Int,
+    timestamp_ne: Int,
+    timestamp_in: [Int],
     OR: [TagFilters],
     SORT: TagSort,
     SORTS: [TagSort],
