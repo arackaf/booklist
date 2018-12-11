@@ -42,7 +42,8 @@ export const Book = {
     isRead: BoolType,
     dateAdded: StringType,
     editorialReviews: arrayOf(EditorialReview),
-    similarItems: StringArrayType
+    similarItems: StringArrayType,
+    timestamp: IntType
   },
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
@@ -69,7 +70,8 @@ export const Subject = {
     path: StringType,
     userId: StringType,
     backgroundColor: StringType,
-    textColor: StringType
+    textColor: StringType,
+    timestamp: IntType
   },
   extras: {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
@@ -87,7 +89,8 @@ export const Tag = {
     path: StringType,
     userId: StringType,
     backgroundColor: StringType,
-    textColor: StringType
+    textColor: StringType,
+    timestamp: IntType
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };

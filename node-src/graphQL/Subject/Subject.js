@@ -7,7 +7,8 @@ export default {
     path: "String",
     userId: "String",
     backgroundColor: "String",
-    textColor: "String"
+    textColor: "String",
+    timestamp: "Int"
   },
   extras: {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],

@@ -18,6 +18,7 @@ export const type = `
     dateAdded: String
     editorialReviews: [EditorialReview]
     similarItems: [String]
+    timestamp: Int
     similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary]
   }
 
@@ -62,6 +63,7 @@ export const type = `
     dateAdded: String
     editorialReviews: [EditorialReviewInput]
     similarItems: [String]
+    timestamp: Int
     similarBooks: [BookSummaryInput]
   }
 
@@ -113,6 +115,9 @@ export const type = `
     similarItems_UPDATES: [StringArrayUpdate]
     similarItems_PULL: [String]
     similarItems_ADDTOSET: [String]
+    timestamp: Int
+    timestamp_INC: Int
+    timestamp_DEC: Int
     similarBooks_ADD: [BookSummaryInput]
   }
 
@@ -134,6 +139,7 @@ export const type = `
     dateAdded: Int
     editorialReviews: Int
     similarItems: Int
+    timestamp: Int
   }
 
   input BookFilters {
@@ -256,6 +262,13 @@ export const type = `
     similarItems_contains: String
     similarItems_containsAny: [String]
     similarItems_ne: [String]
+    timestamp_lt: Int
+    timestamp_lte: Int
+    timestamp_gt: Int
+    timestamp_gte: Int
+    timestamp: Int
+    timestamp_ne: Int
+    timestamp_in: [Int]
     OR: [BookFilters]
   }
   
@@ -412,6 +425,13 @@ export const query = `
     similarItems_contains: String,
     similarItems_containsAny: [String],
     similarItems_ne: [String],
+    timestamp_lt: Int,
+    timestamp_lte: Int,
+    timestamp_gt: Int,
+    timestamp_gte: Int,
+    timestamp: Int,
+    timestamp_ne: Int,
+    timestamp_in: [Int],
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],
