@@ -20,6 +20,6 @@ export default class SubjectsMiddleware {
   async afterDelete(match, root, args, context, ast) {
     let db = await root.db;
     let ids = args._id ? [args._id] : args._ids;
-    await db.collection("tagsDeleted").insertMany(ids.map(_id => ({ _id, userId: context.user.id })));
+    await db.collection("tagsDeleted").insertMany(ids.map(_id => ({ _id, userId: context.user.id, deletedTimestamp: Date.now() })));
   }
 }
