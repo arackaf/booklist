@@ -56,7 +56,7 @@ workbox.routing.registerRoute(
         } else if (query == allTags) {
           return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
         } else if (query == searchBooksQuery) {
-          return readBooks(variables).then(gqlResponse("allBooks", "Books"));
+          return readBooks(variables);
         }
       })
     );
@@ -127,8 +127,7 @@ function masterSync() {
         for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
         for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
         for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
-
-        console.log("SYNC NOW", Date.now() - syncInfo.lastSync, syncEvery);
+        console.log("SYNC COMPLETE");
       }
     }
   };
@@ -161,12 +160,17 @@ function masterSync() {
 }
 
 function readBooks(variables) {
-  const { page = 1, pageSize = 50, search } = variables;
+  const { page = 1, pageSize = 50, search, sort } = variables;
   const predicate = book => book;
-  return readTable("books", idx, { predicate });
+
+  const sortField = sort ? Object.keys(sort)[0] : null;
+  const idx = !sort ? "title" : sortField == "_id" ? "dateAdded" : "title";
+  const idxDir = !sortField || sort[sortField] == -1 ? "prev" : void 0;
+
+  return readTable("books", idx, { predicate }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
 }
 
-function readTable(table, idxName, { predicate = () => true, skip, limit } = {}) {
+function readTable(table, idxName = null, { predicate = () => true, direction, skip, limit } = {}) {
   let open = indexedDB.open("books", 1);
 
   return new Promise(resolve => {
@@ -175,7 +179,7 @@ function readTable(table, idxName, { predicate = () => true, skip, limit } = {})
       let tran = db.transaction(table);
       let objStore = tran.objectStore(table);
 
-      let tranCursor = idxName ? objStore.index(idxName).openCursor() : objStore.openCursor();
+      let tranCursor = idxName ? objStore.index(idxName).openCursor(null, direction) : objStore.openCursor();
       if (skip) {
         tranCursor.advance(skip);
       }
