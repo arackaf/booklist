@@ -131,3 +131,30 @@ export const PublicUser = {
   readonly: true,
   manualQueryArgs: [{ name: "cache", type: "Int" }]
 };
+
+export const SubjectsDeleted = {
+  table: "subjectsDeleted",
+  readonly: true,
+  fields: {
+    userId: StringType,
+    deletedTimestamp: IntType
+  }
+};
+
+export const TagsDeleted = {
+  table: "tagsDeleted",
+  readonly: true,
+  fields: {
+    userId: StringType,
+    deletedTimestamp: IntType
+  }
+};
+
+export const BooksDeleted = {
+  table: "booksDeleted",
+  readonly: true,
+  fields: {
+    userId: StringType,
+    deletedTimestamp: IntType
+  }
+};
