@@ -21,7 +21,7 @@ class SubjectDAO {
     let existing = await db.collection("subjects").findOne({ _id: ObjectId(_id), userId: this.userId });
     if (!existing) return;
 
-    await db.collection("subjects").update({ _id: ObjectId(_id) }, { $set: { name, backgroundColor, textColor } });
+    await db.collection("subjects").update({ _id: ObjectId(_id) }, { $set: { name, backgroundColor, textColor, timestamp: Date.now() } });
 
     let existingParent;
     if (existing.path == null) {
@@ -53,7 +53,7 @@ class SubjectDAO {
       newParentPath = newParentObj ? (newParentObj.path || ",") + `${newParentObj._id},` : null,
       newDescendantPathPiece = `${newParentPath || ","}${_id},`;
 
-    await db.collection("subjects").update({ _id: ObjectId(_id) }, { $set: { path: newParentPath } });
+    await db.collection("subjects").update({ _id: ObjectId(_id) }, { $set: { path: newParentPath, timestamp: Date.now() } });
     let descendantsToUpdate = await db
       .collection("subjects")
       .find({ path: { $regex: `.*,${_id},` } })
@@ -61,7 +61,9 @@ class SubjectDAO {
 
     await Promise.all(
       descendantsToUpdate.map(s =>
-        db.collection("subjects").update({ _id: s._id }, { $set: { path: s.path.replace(new RegExp(`.*,${_id},`), newDescendantPathPiece) } })
+        db
+          .collection("subjects")
+          .update({ _id: s._id }, { $set: { path: s.path.replace(new RegExp(`.*,${_id},`), newDescendantPathPiece), timestamp: Date.now() } })
       )
     );
 
@@ -92,6 +94,9 @@ class SubjectDAO {
       );
 
     await db.collection("subjects").remove({ _id: { $in: subjectsToDelete } });
+
+    await db.collection("subjectsDeleted").insertMany(subjectsToDelete.map(_id => ({ _id, userId: context.user.id })));
+
     return subjectsToDeleteString;
   }
 }
