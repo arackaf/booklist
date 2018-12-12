@@ -14,8 +14,8 @@ workbox.routing.registerRoute(
       setTimeout(() => {
         respClone.json().then(resp => {
           syncResultsFor(resp, "Book");
-          syncResultsFor(resp, "Subject");
           syncResultsFor(resp, "Tag");
+          syncSubjectsResults(resp);
         }, 5);
       });
       return response;
@@ -28,6 +28,12 @@ function syncResultsFor(resp, name) {
   let updateName = `update${name}`;
   if (resp && resp.data && resp.data[updateName] && resp.data[updateName][name]) {
     syncItem(resp.data[updateName][name], `${name.toLowerCase()}s`);
+  }
+}
+
+function syncSubjectsResults(resp) {
+  if (resp && resp.data && resp.data.updateSubject) {
+    resp.data.updateSubject.forEach(s => syncItem(s, `subjects`));
   }
 }
 
@@ -88,9 +94,22 @@ self.addEventListener("message", evt => {
 
 self.addEventListener("activate", masterSync);
 
+const syncEvery = 1000 * 1; //
+
 function masterSync() {
   let open = indexedDB.open("books", 1);
 
+  open.onsuccess = async evt => {
+    console.log("EXISTS");
+    let db = open.result;
+    if (db.objectStoreNames.contains("syncInfo")) {
+      let [syncInfo = {}] = await readTable("syncInfo");
+
+      if (Date.now() - syncInfo.lastSync > syncEvery) {
+        console.log("SYNC NOW", Date.now() - syncInfo.lastSync, syncEvery);
+      }
+    }
+  };
   open.onupgradeneeded = evt => {
     let db = open.result;
     if (!db.objectStoreNames.contains("books")) {
@@ -125,9 +144,8 @@ function readTable(table, idxName) {
       let db = open.result;
       let tran = db.transaction(table);
       let objStore = tran.objectStore(table);
-      let idx = objStore.index(idxName);
-      let tranCursor = idx.openCursor();
 
+      let tranCursor = idxName ? objStore.index(idxName).openCursor() : objStore.openCursor();
       let result = [];
 
       tranCursor.onsuccess = evt => {
