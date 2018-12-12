@@ -3,7 +3,7 @@ export const type = `
   type SubjectsDeleted {
     _id: String
     userId: String
-    deletedTimestamp: Int
+    deletedTimestamp: Float
   }
 
   type SubjectsDeletedQueryResults {
@@ -32,12 +32,12 @@ export const type = `
   input SubjectsDeletedInput {
     _id: String
     userId: String
-    deletedTimestamp: Int
+    deletedTimestamp: Float
   }
 
   input SubjectsDeletedMutationInput {
     userId: String
-    deletedTimestamp: Int
+    deletedTimestamp: Float
     deletedTimestamp_INC: Int
     deletedTimestamp_DEC: Int
   }
@@ -59,13 +59,13 @@ export const type = `
     userId: String
     userId_ne: String
     userId_in: [String]
-    deletedTimestamp_lt: Int
-    deletedTimestamp_lte: Int
-    deletedTimestamp_gt: Int
-    deletedTimestamp_gte: Int
-    deletedTimestamp: Int
-    deletedTimestamp_ne: Int
-    deletedTimestamp_in: [Int]
+    deletedTimestamp_lt: Float
+    deletedTimestamp_lte: Float
+    deletedTimestamp_gt: Float
+    deletedTimestamp_gte: Float
+    deletedTimestamp: Float
+    deletedTimestamp_ne: Float
+    deletedTimestamp_in: [Float]
     OR: [SubjectsDeletedFilters]
   }
   
@@ -92,13 +92,13 @@ export const query = `
     userId: String,
     userId_ne: String,
     userId_in: [String],
-    deletedTimestamp_lt: Int,
-    deletedTimestamp_lte: Int,
-    deletedTimestamp_gt: Int,
-    deletedTimestamp_gte: Int,
-    deletedTimestamp: Int,
-    deletedTimestamp_ne: Int,
-    deletedTimestamp_in: [Int],
+    deletedTimestamp_lt: Float,
+    deletedTimestamp_lte: Float,
+    deletedTimestamp_gt: Float,
+    deletedTimestamp_gte: Float,
+    deletedTimestamp: Float,
+    deletedTimestamp_ne: Float,
+    deletedTimestamp_in: [Float],
     OR: [SubjectsDeletedFilters],
     SORT: SubjectsDeletedSort,
     SORTS: [SubjectsDeletedSort],
