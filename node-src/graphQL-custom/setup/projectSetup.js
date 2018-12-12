@@ -1,5 +1,5 @@
 import { dataTypes, createGraphqlSchema, dbHelpers } from "mongo-graphql-starter";
-const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf } = dataTypes;
+const { MongoIdType, StringType, StringArrayType, BoolType, IntType, FloatType, arrayOf } = dataTypes;
 
 export const EditorialReview = {
   fields: {
@@ -43,7 +43,7 @@ export const Book = {
     dateAdded: StringType,
     editorialReviews: arrayOf(EditorialReview),
     similarItems: StringArrayType,
-    timestamp: IntType
+    timestamp: FloatType
   },
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
@@ -71,7 +71,7 @@ export const Subject = {
     userId: StringType,
     backgroundColor: StringType,
     textColor: StringType,
-    timestamp: IntType
+    timestamp: FloatType
   },
   extras: {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
@@ -90,7 +90,7 @@ export const Tag = {
     userId: StringType,
     backgroundColor: StringType,
     textColor: StringType,
-    timestamp: IntType
+    timestamp: FloatType
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
@@ -137,7 +137,7 @@ export const SubjectsDeleted = {
   readonly: true,
   fields: {
     userId: StringType,
-    deletedTimestamp: IntType
+    deletedTimestamp: FloatType
   }
 };
 
@@ -146,7 +146,7 @@ export const TagsDeleted = {
   readonly: true,
   fields: {
     userId: StringType,
-    deletedTimestamp: IntType
+    deletedTimestamp: FloatType
   }
 };
 
@@ -155,6 +155,6 @@ export const BooksDeleted = {
   readonly: true,
   fields: {
     userId: StringType,
-    deletedTimestamp: IntType
+    deletedTimestamp: FloatType
   }
 };

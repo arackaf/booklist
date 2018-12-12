@@ -1,4 +1,4 @@
-query($timestamp: Int) {
+query($timestamp: Float) {
   allBooks(timestamp_lte: $timestamp) {
     Books {
       _id

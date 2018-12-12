@@ -8,7 +8,7 @@ export default {
     userId: "String",
     backgroundColor: "String",
     textColor: "String",
-    timestamp: "Int"
+    timestamp: "Float"
   },
   extras: {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],

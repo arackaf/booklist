@@ -4,7 +4,7 @@ export default {
   fields: {
     _id: "MongoId",
     userId: "String",
-    deletedTimestamp: "Int"
+    deletedTimestamp: "Float"
   },
   relationships: {
 
