@@ -118,7 +118,6 @@ function masterSync() {
   let open = indexedDB.open("books", 1);
 
   open.onsuccess = async evt => {
-    console.log("EXISTS");
     let db = open.result;
     if (db.objectStoreNames.contains("syncInfo")) {
       let [syncInfo = {}] = await readTable("syncInfo");
@@ -129,7 +128,7 @@ function masterSync() {
 
         for (let b of data.allBooks.Books) await syncItem(b, "books");
         for (let s of data.allSubjects.Subjects) await syncItem(s, "subjects");
-        for (let t of data.allTags.Tags) syncItem(t, "tags");
+        for (let t of data.allTags.Tags) await syncItem(t, "tags");
 
         for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
         for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
