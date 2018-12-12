@@ -108,7 +108,7 @@ export default class BooksMiddleware {
   async afterDelete(match, root, args, context, ast) {
     let db = await root.db;
     let ids = args._id ? [args._id] : args._ids;
-    await db.collection("subjectsDeleted").insertMany(ids.map(_id => ({ _id, userId: context.user.id })));
+    await db.collection("booksDeleted").insertMany(ids.map(_id => ({ _id, userId: context.user.id, deletedTimestamp: Date.now() })));
   }
   adjustResults(results) {
     results.forEach(book => {

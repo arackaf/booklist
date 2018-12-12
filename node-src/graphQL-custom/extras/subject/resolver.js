@@ -13,7 +13,7 @@ class SubjectDAO {
 
         newPath = (existingParent.path || ",") + ("" + existingParent._id) + ",";
       }
-      let newSubject = { name, backgroundColor, textColor, path: newPath, userId: this.userId };
+      let newSubject = { name, backgroundColor, textColor, path: newPath, userId: this.userId, timestamp: Date.now() };
       await db.collection("subjects").insert(newSubject);
       return { affectedSubjects: [newSubject] };
     }
@@ -95,7 +95,9 @@ class SubjectDAO {
 
     await db.collection("subjects").remove({ _id: { $in: subjectsToDelete } });
 
-    await db.collection("subjectsDeleted").insertMany(subjectsToDelete.map(_id => ({ _id, userId: context.user.id })));
+    await db
+      .collection("subjectsDeleted")
+      .insertMany(subjectsToDelete.map(_id => ({ _id: "" + _id, userId: this.userId, deletedTimestamp: Date.now() })));
 
     return subjectsToDeleteString;
   }
