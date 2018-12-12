@@ -6,6 +6,8 @@ import allSubjects from "../graphQL/subjects/allSubjects.graphql";
 import allTags from "../graphQL/tags/getTags.graphql";
 import allLabelColors from "../graphQL/misc/allLabelColors.graphql";
 
+import offlineUpdateSync from "../graphQL/misc/offlineUpdateSync.graphql";
+
 workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
@@ -94,7 +96,7 @@ self.addEventListener("message", evt => {
 
 self.addEventListener("activate", masterSync);
 
-const syncEvery = 1000 * 1; //
+const syncEvery = 10; //
 
 function masterSync() {
   let open = indexedDB.open("books", 1);
@@ -106,6 +108,15 @@ function masterSync() {
       let [syncInfo = {}] = await readTable("syncInfo");
 
       if (Date.now() - syncInfo.lastSync > syncEvery) {
+        let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: Date.now() })}`;
+        let X = await doFetch(syncQuery).then(resp => resp.json());
+
+        debugger;
+        let data = X.data;
+        data.allBooks.Books.forEach(b => syncItem(b, "books"));
+        data.allSubjects.Subjects.forEach(s => syncItem(s, "subjects"));
+        data.allTags.Tags.forEach(t => syncItem(t, "tags"));
+
         console.log("SYNC NOW", Date.now() - syncInfo.lastSync, syncEvery);
       }
     }
