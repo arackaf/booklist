@@ -1,0 +1,52 @@
+query($timestamp: Int) {
+  allBooks(timestamp_lte: $timestamp) {
+    Books {
+      _id
+      title
+      isbn
+      ean
+      pages
+      smallImage
+      publicationDate
+      subjects
+      authors
+      publisher
+      tags
+      isRead
+      dateAdded
+    }
+  }
+  allSubjects(timestamp_lte: $timestamp) {
+    Subjects {
+      _id
+      name
+      backgroundColor
+      textColor
+      path
+    }
+  }
+  allTags(timestamp_lte: $timestamp) {
+    Tags {
+      _id
+      name
+      backgroundColor
+      textColor
+      path
+    }
+  }
+  deletedBooks: allBooksDeleteds(deletedTimestamp_lte: $timestamp) {
+    _ids: BooksDeleteds {
+      _id
+    }
+  }
+  deletedSubjects: allSubjectsDeleteds(deletedTimestamp_lte: $timestamp) {
+    _ids: SubjectsDeleteds {
+      _id
+    }
+  }
+  deletedTags: allTagsDeleteds(deletedTimestamp_lte: $timestamp) {
+    _ids: TagsDeleteds {
+      _id
+    }
+  }
+}
