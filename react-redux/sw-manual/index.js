@@ -73,15 +73,31 @@ function searchBooks(variables, cb) {
 function syncItem(item, table) {
   let open = indexedDB.open("books", 1);
 
-  open.onsuccess = evt => {
-    let db = open.result;
-    let tran = db.transaction(table, "readwrite");
-    let objStore = tran.objectStore(table);
-    objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
-      Object.assign(itemToUpdate, item);
-      objStore.put(itemToUpdate);
+  return new Promise(res => {
+    open.onsuccess = evt => {
+      let db = open.result;
+      let tran = db.transaction(table, "readwrite");
+      let objStore = tran.objectStore(table);
+      objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
+        Object.assign(itemToUpdate, item);
+        objStore.put(itemToUpdate);
+        res();
+      };
     };
-  };
+  });
+}
+
+function deleteItem(_id, table) {
+  let open = indexedDB.open("books", 1);
+
+  return new Promise(res => {
+    open.onsuccess = evt => {
+      let db = open.result;
+      let tran = db.transaction(table, "readwrite");
+      let objStore = tran.objectStore(table);
+      objStore.delete(_id).onsuccess = res;
+    };
+  });
 }
 
 self.addEventListener("push", () => {
@@ -109,13 +125,15 @@ function masterSync() {
 
       if (Date.now() - syncInfo.lastSync > syncEvery) {
         let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: Date.now() })}`;
-        let X = await doFetch(syncQuery).then(resp => resp.json());
+        let { data } = await doFetch(syncQuery).then(resp => resp.json());
 
-        debugger;
-        let data = X.data;
-        data.allBooks.Books.forEach(b => syncItem(b, "books"));
-        data.allSubjects.Subjects.forEach(s => syncItem(s, "subjects"));
-        data.allTags.Tags.forEach(t => syncItem(t, "tags"));
+        for (let b of data.allBooks.Books) await syncItem(b, "books");
+        for (let s of data.allSubjects.Subjects) await syncItem(s, "subjects");
+        for (let t of data.allTags.Tags) syncItem(t, "tags");
+
+        for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
+        for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
+        for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
 
         console.log("SYNC NOW", Date.now() - syncInfo.lastSync, syncEvery);
       }
