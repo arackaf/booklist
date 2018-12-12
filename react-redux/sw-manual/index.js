@@ -1,7 +1,8 @@
 import "./update-sync";
 import parseQueryString from "./query-string";
-import searchBooksQuery from "../graphQL/books/getBooks.graphql";
 import offlineBookSyncQuery from "../graphQL/books/offlineBookSync.graphql";
+
+import searchBooksQuery from "../graphQL/books/getBooks.graphql";
 import allSubjects from "../graphQL/subjects/allSubjects.graphql";
 import allTags from "../graphQL/tags/getTags.graphql";
 import allLabelColors from "../graphQL/misc/allLabelColors.graphql";
@@ -54,21 +55,14 @@ workbox.routing.registerRoute(
           return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
         } else if (query == allTags) {
           return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
+        } else if (query == searchBooksQuery) {
+          return readBooks(variables).then(gqlResponse("allBooks", "Books"));
         }
       })
     );
   },
   "GET"
 );
-
-function searchBooks(variables, cb) {
-  return new Response(
-    JSON.stringify({
-      data: {}
-    }),
-    { ok: true, status: 200 }
-  );
-}
 
 function syncItem(item, table) {
   let open = indexedDB.open("books", 1);
@@ -143,6 +137,8 @@ function masterSync() {
     if (!db.objectStoreNames.contains("books")) {
       let bookStore = db.createObjectStore("books", { keyPath: "_id" });
       bookStore.createIndex("imgSync", "imgSync", { unique: false });
+      bookStore.createIndex("title", "title", { unique: false });
+      bookStore.createIndex("dateAdded", "dateAdded", { unique: false });
     }
     if (!db.objectStoreNames.contains("syncInfo")) {
       db.createObjectStore("syncInfo", { keyPath: "id" });
@@ -164,24 +160,38 @@ function masterSync() {
   };
 }
 
-function readTable(table, idxName) {
+function readBooks(variables) {
+  const { page = 1, pageSize = 50, search } = variables;
+  const predicate = book => book;
+  return readTable("books", idx, { predicate });
+}
+
+function readTable(table, idxName, { predicate = () => true, skip, limit } = {}) {
   let open = indexedDB.open("books", 1);
 
-  return new Promise(res => {
+  return new Promise(resolve => {
     open.onsuccess = evt => {
       let db = open.result;
       let tran = db.transaction(table);
       let objStore = tran.objectStore(table);
 
       let tranCursor = idxName ? objStore.index(idxName).openCursor() : objStore.openCursor();
+      if (skip) {
+        tranCursor.advance(skip);
+      }
       let result = [];
 
       tranCursor.onsuccess = evt => {
         let cursor = evt.target.result;
-        if (!cursor) return res(result);
+        if (!cursor) return resolve(result);
 
         let item = cursor.value;
-        result.push(item);
+        if (predicate(item)) {
+          result.push(item);
+          if (limit && result.length == limit) {
+            return resolve(result);
+          }
+        }
         cursor.continue();
       };
     };
