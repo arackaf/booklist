@@ -77,7 +77,6 @@ function syncItem(item, table) {
 }
 
 self.addEventListener("push", () => {
-  console.log("Push notification received!!!");
   self.registration.showNotification("Push notification received!");
 });
 
@@ -93,7 +92,6 @@ function masterSync() {
   let open = indexedDB.open("books", 1);
 
   open.onupgradeneeded = evt => {
-    console.log("Setting up DB");
     let db = open.result;
     if (!db.objectStoreNames.contains("books")) {
       let bookStore = db.createObjectStore("books", { keyPath: "_id" });
@@ -145,7 +143,6 @@ function readTable(table, idxName) {
 }
 
 async function syncImages(db, onComplete) {
-  console.log("SYNCING IMAGES");
   let tran = db.transaction("books");
   let booksStore = tran.objectStore("books");
   let idx = booksStore.index("imgSync");
@@ -206,12 +203,7 @@ function fullSync(page = 1) {
   open.onsuccess = evt => {
     let db = open.result;
     Promise.all([new Promise(res => doBooksSync(db, res)), doSubjectsSync(db), doTagsSync(db), doLabelColorsSync(db)]).then(() => {
-      updateSyncInfo(db, {
-        lastLabelColorSync: +new Date(),
-        lastTagSync: +new Date(),
-        lastSubjectSync: +new Date(),
-        lastBookSync: +new Date()
-      });
+      updateSyncInfo(db, { lastSync: +new Date() });
     });
   };
 }
