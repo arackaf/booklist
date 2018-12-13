@@ -168,7 +168,8 @@ export const selectAppUiState = createSelector(
     showingDesktop: app.showingDesktop,
     isPublic: app.isPublic,
     publicBooksHeader: app.publicBooksHeader,
-    publicName: app.publicName
+    publicName: app.publicName,
+    online: app.online
   })
 );
 

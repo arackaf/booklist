@@ -4,7 +4,7 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
 const _BookViewListMobileItem = props => {
-  let book = props.book;
+  let { book, online } = props;
 
   let publisherDisplay = null,
     isbnPages = null;
@@ -28,15 +28,15 @@ const _BookViewListMobileItem = props => {
             {publisherDisplay ? <p className="list-group-item-text">{publisherDisplay}</p> : null}
             {isbnPages ? <p className="list-group-item-text">{isbnPages}</p> : null}
 
-            {!props.viewingPublic ? (
-              <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}>
-                <i className="fa fa-fw fa-pencil" />
-              </button>
-            ) : null}
-            {!props.viewingPublic ? (
-              <button className="margin-left btn btn-danger btn-xs" onClick={() => props.setPendingDeleteBook(book)}>
-                <i className="fa fa-fw fa-trash" />
-              </button>
+            {!props.viewingPublic && online ? (
+              <>
+                <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}>
+                  <i className="fa fa-fw fa-pencil" />
+                </button>
+                <button className="margin-left btn btn-danger btn-xs" onClick={() => props.setPendingDeleteBook(book)}>
+                  <i className="fa fa-fw fa-trash" />
+                </button>
+              </>
             ) : null}
             {book.pendingDelete ? (
               <AjaxButton
@@ -71,7 +71,7 @@ const BookViewListMobile: SFC<ReturnType<typeof selectBookListComponentState> & 
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className="list-group docked-to-panel">
           {props.booksList.map((book, i) => (
-            <BookViewListMobileItem key={book._id} book={book} editBook={props.editBook} viewingPublic={props.viewingPublic} />
+            <BookViewListMobileItem online={props.online} key={book._id} book={book} editBook={props.editBook} viewingPublic={props.viewingPublic} />
           ))}
         </div>
       </div>

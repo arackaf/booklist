@@ -23,6 +23,7 @@ export const selectBookListComponentState = createSelector(
   (app, books, bookSearch, bookSearchFilters, bookListSelected, bookSelectionSelected) => {
     return {
       viewingPublic: app.isPublic,
+      online: app.online,
 
       ...bookListSelected,
       ...bookSelectionSelected,

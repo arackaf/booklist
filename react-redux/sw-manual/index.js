@@ -1,4 +1,5 @@
 import "./update-sync";
+import escapeRegex from "./escape-regex";
 import parseQueryString from "./query-string";
 import offlineBookSyncQuery from "../graphQL/books/offlineBookSync.graphql";
 
@@ -47,7 +48,7 @@ workbox.routing.registerRoute(
   ({ url, event }) => {
     event.respondWith(
       fetch(event.request).catch(err => {
-        const { query, variables } = parseQueryString(url.search);
+        let { query, variables } = parseQueryString(url.search);
 
         if (query == allLabelColors) {
           return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
@@ -160,17 +161,32 @@ function masterSync() {
 }
 
 function readBooks(variables) {
-  const { page = 1, pageSize = 50, search, sort } = variables;
-  const predicate = book => book;
+  let { page = 1, pageSize = 50, search, sort } = variables;
+  pageSize = 5;
 
-  const sortField = sort ? Object.keys(sort)[0] : null;
-  const idx = !sort ? "title" : sortField == "_id" ? "dateAdded" : "title";
-  const idxDir = !sortField || sort[sortField] == -1 ? "prev" : void 0;
+  let predicate = null;
+  let limit = pageSize;
+  let skipAmount = (page - 1) * pageSize;
+  let skip, cursorSkip;
+
+  if (search) {
+    let searchRegex = new RegExp(escapeRegex(search));
+    predicate = book => searchRegex.test(book.title);
+    cursorSkip = 0;
+    skip = skipAmount;
+  } else {
+    cursorSkip = skipAmount;
+    skip = 0;
+  }
+
+  let sortField = sort ? Object.keys(sort)[0] : null;
+  let idx = !sort ? "title" : sortField == "_id" ? "dateAdded" : "title";
+  let idxDir = !sortField || sort[sortField] == -1 ? "prev" : void 0;
 
   return readTable("books", idx, { predicate }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
 }
 
-function readTable(table, idxName = null, { predicate = () => true, direction, skip, limit } = {}) {
+function readTable(table, idxName = null, { predicate = () => true, direction, cursorSkip, skip, limit } = {}) {
   let open = indexedDB.open("books", 1);
 
   return new Promise(resolve => {
@@ -180,10 +196,11 @@ function readTable(table, idxName = null, { predicate = () => true, direction, s
       let objStore = tran.objectStore(table);
 
       let tranCursor = idxName ? objStore.index(idxName).openCursor(null, direction) : objStore.openCursor();
-      if (skip) {
-        tranCursor.advance(skip);
+      if (cursorSkip) {
+        tranCursor.advance(cursorSkip);
       }
       let result = [];
+      let skipped = 0;
 
       tranCursor.onsuccess = evt => {
         let cursor = evt.target.result;
@@ -191,7 +208,11 @@ function readTable(table, idxName = null, { predicate = () => true, direction, s
 
         let item = cursor.value;
         if (predicate(item)) {
-          result.push(item);
+          if (skip && skipped < skip) {
+            skipped++;
+          } else {
+            result.push(item);
+          }
           if (limit && result.length == limit) {
             return resolve(result);
           }
