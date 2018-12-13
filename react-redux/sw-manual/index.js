@@ -10,6 +10,8 @@ import allLabelColors from "../graphQL/misc/allLabelColors.graphql";
 
 import offlineUpdateSync from "../graphQL/misc/offlineUpdateSync.graphql";
 
+const bookSyncTransform = book => Object.assign(book, { title_ci: (book.title || "").toLowerCase() });
+
 workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
@@ -17,7 +19,7 @@ workbox.routing.registerRoute(
       let respClone = response.clone();
       setTimeout(() => {
         respClone.json().then(resp => {
-          syncResultsFor(resp, "Book");
+          syncResultsFor(resp, "Book", bookSyncTransform);
           syncResultsFor(resp, "Tag");
           syncSubjectsResults(resp);
         }, 5);
@@ -28,10 +30,10 @@ workbox.routing.registerRoute(
   "POST"
 );
 
-function syncResultsFor(resp, name) {
+function syncResultsFor(resp, name, transform = item => item) {
   let updateName = `update${name}`;
   if (resp && resp.data && resp.data[updateName] && resp.data[updateName][name]) {
-    syncItem(resp.data[updateName][name], `${name.toLowerCase()}s`);
+    syncItem(transform(resp.data[updateName][name]), `${name.toLowerCase()}s`);
   }
 }
 
@@ -65,7 +67,7 @@ workbox.routing.registerRoute(
   "GET"
 );
 
-function syncItem(item, table) {
+function syncItem(item, table, transform = item => item) {
   let open = indexedDB.open("books", 1);
 
   return new Promise(res => {
@@ -74,7 +76,7 @@ function syncItem(item, table) {
       let tran = db.transaction(table, "readwrite");
       let objStore = tran.objectStore(table);
       objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
-        Object.assign(itemToUpdate, item);
+        Object.assign(itemToUpdate, transform(item));
         objStore.put(itemToUpdate).onsuccess = res;
       };
     };
@@ -120,7 +122,7 @@ function masterSync() {
         let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: Date.now() })}`;
         let { data } = await doFetch(syncQuery).then(resp => resp.json());
 
-        for (let b of data.allBooks.Books) await syncItem(b, "books");
+        for (let b of data.allBooks.Books) await syncItem(b, "books", bookSyncTransform);
         for (let s of data.allSubjects.Subjects) await syncItem(s, "subjects");
         for (let t of data.allTags.Tags) await syncItem(t, "tags");
 
@@ -136,7 +138,7 @@ function masterSync() {
     if (!db.objectStoreNames.contains("books")) {
       let bookStore = db.createObjectStore("books", { keyPath: "_id" });
       bookStore.createIndex("imgSync", "imgSync", { unique: false });
-      bookStore.createIndex("title", "title", { unique: false });
+      bookStore.createIndex("title_ci", "title_ci", { unique: false });
       bookStore.createIndex("dateAdded", "dateAdded", { unique: false });
     }
     if (!db.objectStoreNames.contains("syncInfo")) {
@@ -180,7 +182,7 @@ function readBooks(variableString) {
   }
 
   let sortField = sort ? Object.keys(sort)[0] : null;
-  let idx = !sort ? "title" : sortField == "_id" ? "dateAdded" : "title";
+  let idx = !sort ? "title" : sortField == "_id" ? "dateAdded" : "title_ci";
   let idxDir = !sortField || sort[sortField] == -1 ? "prev" : void 0;
 
   return readTable("books", idx, { predicate }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
@@ -332,13 +334,15 @@ function updateSyncInfo(db, updates) {
 function doBooksSync(db, onFinish, page = 1) {
   let pageSize = 50;
   getGraphqlResults(offlineBookSyncQuery, { page, pageSize }, "allBooks", "Books").then(books => {
-    insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0 }) }).then(() => {
-      if (books.length == pageSize) {
-        doBooksSync(db, onFinish, page + 1);
-      } else {
-        syncImages(db, onFinish);
+    insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0, title_ci: (book.title || "").toLowerCase() }) }).then(
+      () => {
+        if (books.length == pageSize) {
+          doBooksSync(db, onFinish, page + 1);
+        } else {
+          syncImages(db, onFinish);
+        }
       }
-    });
+    );
   });
 }
 
