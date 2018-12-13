@@ -75,8 +75,7 @@ function syncItem(item, table) {
       let objStore = tran.objectStore(table);
       objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
         Object.assign(itemToUpdate, item);
-        objStore.put(itemToUpdate);
-        res();
+        objStore.put(itemToUpdate).onsuccess = res;
       };
     };
   });
@@ -160,8 +159,9 @@ function masterSync() {
   };
 }
 
-function readBooks(variables) {
-  let { page = 1, pageSize = 50, search, sort } = variables;
+function readBooks(variableString) {
+  let variables = JSON.parse(variableString);
+  let { page = 1, pageSize = 50, title_contains, sort } = variables;
   pageSize = 5;
 
   let predicate = null;
@@ -169,8 +169,8 @@ function readBooks(variables) {
   let skipAmount = (page - 1) * pageSize;
   let skip, cursorSkip;
 
-  if (search) {
-    let searchRegex = new RegExp(escapeRegex(search));
+  if (title_contains) {
+    let searchRegex = new RegExp(escapeRegex(title_contains));
     predicate = book => searchRegex.test(book.title);
     cursorSkip = 0;
     skip = skipAmount;
@@ -186,8 +186,12 @@ function readBooks(variables) {
   return readTable("books", idx, { predicate }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
 }
 
-function readTable(table, idxName = null, { predicate = () => true, direction, cursorSkip, skip, limit } = {}) {
+function readTable(table, idxName = null, { predicate, direction, cursorSkip, skip, limit } = {}) {
   let open = indexedDB.open("books", 1);
+
+  if (!predicate) {
+    predicate = () => true;
+  }
 
   return new Promise(resolve => {
     open.onsuccess = evt => {
@@ -252,8 +256,7 @@ async function syncImages(db, onComplete) {
             let req = booksStore.get(_book._id);
             req.onsuccess = ({ target: { result: bookToUpdate } }) => {
               bookToUpdate.imgSync = 1;
-              booksStore.put(bookToUpdate);
-              res();
+              booksStore.put(bookToUpdate).onsuccess = res;
             };
             req.onerror = () => res();
           });
