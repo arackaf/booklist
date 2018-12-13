@@ -43,15 +43,14 @@ const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMen
     }
   };
 
-  let { isPublic, publicBooksHeader, publicName, page, selectedBooksCount, totalPages, activeFilterCount } = props;
+  let { isPublic, publicBooksHeader, publicName, page, pageSize, selectedBooksCount, totalPages, activeFilterCount, online, resultsCount } = props;
   let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
-  let canPageUp = page < totalPages;
+  let canPageUp = online ? page < totalPages : resultsCount == pageSize;
   let canPageDown = page > 1;
   let canPageOne = page > 1;
   let canPageLast = page < totalPages;
 
-  let resultsCount = props.resultsCount;
   let resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "";
   let removeAllFiltersLabel = {
     backgroundColor: "red",
@@ -67,10 +66,10 @@ const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMen
           {!selectedBooksCount ? (
             <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
               <div className="btn-group">
-                <button onClick={props.pageOne} disabled={!canPageDown} className="btn btn-default">
+                <button onClick={props.pageDown} disabled={!canPageDown} className="btn btn-default">
                   <i className="fal fa-angle-left" />
                 </button>
-                <button disabled={!canPageUp} className="btn btn-default">
+                <button onClick={props.pageUp} disabled={!canPageUp} className="btn btn-default">
                   <i className="fal fa-angle-right" />
                 </button>
               </div>
@@ -85,7 +84,7 @@ const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMen
                 <i className="fal fa-angle-left" />
               </button>
             </div>
-            {resultsCount ? (
+            {online && resultsCount ? (
               <span style={{ display: "inline" }}>
                 <span className="hidden-xs">Page</span> {page}
                 <span className="hidden-xs"> of {totalPages}</span>
@@ -95,9 +94,11 @@ const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMen
               <button onClick={props.pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
                 <i className="fal fa-angle-right" />
               </button>
-              <button onClick={props.pageLast} disabled={!canPageLast} className="btn btn-default">
-                <i className="fal fa-angle-double-right" />
-              </button>
+              {online ? (
+                <button onClick={props.pageLast} disabled={!canPageLast} className="btn btn-default">
+                  <i className="fal fa-angle-double-right" />
+                </button>
+              ) : null}
             </div>
           </div>
           <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
@@ -121,22 +122,26 @@ const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMen
               />
               {!selectedBooksCount ? (
                 <>
-                  <button
-                    title="Filter search"
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                    onClick={props.beginEditFilters}
-                    className="btn btn-default btn-reset"
-                  >
-                    <i className="fal fa-filter" />
-                  </button>
-                  {!isPublic ? (
+                  {online ? (
                     <>
-                      <button title="Edit subjects" onClick={props.editSubjects} className="btn btn-default ">
-                        <i className="fal fa-sitemap" />
+                      <button
+                        title="Filter search"
+                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                        onClick={props.beginEditFilters}
+                        className="btn btn-default btn-reset"
+                      >
+                        <i className="fal fa-filter" />
                       </button>
-                      <button title="Edit tags" onClick={props.editTags} className="btn btn-default ">
-                        <i className="fal fa-tags" />
-                      </button>
+                      {!isPublic ? (
+                        <>
+                          <button title="Edit subjects" onClick={props.editSubjects} className="btn btn-default ">
+                            <i className="fal fa-sitemap" />
+                          </button>
+                          <button title="Edit tags" onClick={props.editTags} className="btn btn-default ">
+                            <i className="fal fa-tags" />
+                          </button>
+                        </>
+                      ) : null}
                     </>
                   ) : null}
                   <button
@@ -174,7 +179,7 @@ const BooksMenuBar: SFC<ReturnType<typeof menuBarSelector> & actions & IAddedMen
           </div>
 
           <div style={{ flex: "1 1 auto", display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap", marginTop: "5px" }}>
-            {resultsCount ? (
+            {online && resultsCount ? (
               <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
                 <span className="visible-tiny">
                   Page {page} of {totalPages}
