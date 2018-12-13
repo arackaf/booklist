@@ -1,6 +1,9 @@
 import BooksMiddleware from "./middleware/books";
+import BooksDeletedMiddleware from "./middleware/booksDeleted";
 import SubjectsMiddleware from "./middleware/subjects";
+import SubjectsDeletedMiddleware from "./middleware/subjectsDeleted";
 import TagsMiddleware from "./middleware/tags";
+import TagsDeletedMiddleware from "./middleware/tagsDeleted";
 import UsersMiddleware from "./middleware/users";
 import PublicUsersMiddleware from "./middleware/publicUsers";
 
@@ -17,8 +20,11 @@ export default {
     adjustResults(results) {}
   },
   Book: BooksMiddleware,
+  BooksDeleted: BooksDeletedMiddleware,
   Subject: SubjectsMiddleware,
+  SubjectsDeleted: SubjectsDeletedMiddleware,
   Tag: TagsMiddleware,
+  TagsDeleted: TagsDeletedMiddleware,
   User: UsersMiddleware,
   PublicUser: PublicUsersMiddleware
 };
