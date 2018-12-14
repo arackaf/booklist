@@ -108,7 +108,7 @@ self.addEventListener("message", evt => {
 
 self.addEventListener("activate", masterSync);
 
-const syncEvery = 10; //
+const syncEvery = 1500 * 10; // 10 seconds
 
 function masterSync() {
   let open = indexedDB.open("books", 1);
@@ -119,7 +119,7 @@ function masterSync() {
       let [syncInfo = {}] = await readTable("syncInfo");
 
       if (Date.now() - syncInfo.lastSync > syncEvery) {
-        let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: Date.now() })}`;
+        let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: syncInfo.lastSync })}`;
         let { data } = await doFetch(syncQuery).then(resp => resp.json());
 
         for (let b of data.allBooks.Books) await syncItem(b, "books", bookSyncTransform);
@@ -129,6 +129,7 @@ function masterSync() {
         for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
         for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
         for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
+        await updateSyncInfo(db, { lastSync: +new Date() });
         console.log("SYNC COMPLETE");
       }
     }
@@ -325,10 +326,12 @@ function updateSyncInfo(db, updates) {
   let transaction = db.transaction("syncInfo", "readwrite");
   let syncInfoStore = transaction.objectStore("syncInfo");
   let req = syncInfoStore.get(1);
-  req.onsuccess = ({ target: { result } }) => {
-    Object.assign(result, updates);
-    syncInfoStore.put(result);
-  };
+  return new Promise(res => {
+    req.onsuccess = ({ target: { result } }) => {
+      Object.assign(result, updates);
+      syncInfoStore.put(result).onsuccess = res;
+    };
+  });
 }
 
 function doBooksSync(db, onFinish, page = 1) {
