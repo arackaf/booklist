@@ -34,7 +34,7 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
       ) : null}
       <td>
         <div style={{ minWidth: "75px", minHeight: "75px" }}>
-          <img src={book.smallImage} />
+          <img crossOrigin="anonymous" src={book.smallImage} />
         </div>
       </td>
       <td>

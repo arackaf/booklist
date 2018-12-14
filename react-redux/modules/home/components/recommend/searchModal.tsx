@@ -196,7 +196,7 @@ class SearchResult extends Component<{ book: ISearchBookRaw; selectBookToSearchR
           </button>
         </td>
         <td>
-          <img src={book.smallImage} />
+          <img crossOrigin="anonymous" src={book.smallImage} />
         </td>
         <td>
           {book.title}
