@@ -37,7 +37,7 @@ function clean(book) {
 
 export default class BooksMiddleware {
   async queryPreprocess(root, args, context, ast) {
-    args.userId = args.publicUserId || context.user.id;
+    args.userId = args.publicUserId || (context.user && context.user.id);
 
     let subjects = args.subjects_containsAny || [];
     if (args.searchChildSubjects && subjects.length) {
