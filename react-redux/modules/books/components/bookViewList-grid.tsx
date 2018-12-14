@@ -16,15 +16,16 @@ interface ILocalProps {
   viewingPublic: boolean;
   selectedBooks: any;
   editBook: any;
+  online: any;
 }
 
 const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
-  let { book, index, viewingPublic } = props;
+  let { book, index, viewingPublic, online } = props;
   let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
   return (
     <tr key={book._id} style={style}>
-      {!viewingPublic ? (
+      {!viewingPublic && online ? (
         <td>
           <a style={{ fontSize: "12pt" }} onClick={() => props.toggleSelectBook(book._id)}>
             <i className={"fal " + (!!props.selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
@@ -40,20 +41,22 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
         <div style={{ fontWeight: "bold" }}>{book.title}</div>
         {book.authors ? <div style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</div> : null}
 
-        {book.detailsLoading ? (
-          <a target="_new" className="margin-right grid-hover-filter inline-filter">
-            <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-spin fa-spinner" />
-          </a>
-        ) : book.expanded ? (
-          <a target="_new" onClick={() => props.collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-            <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
-          </a>
-        ) : (
-          <a target="_new" onClick={() => props.expandBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-            <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
-          </a>
-        )}
-        {book.isbn ? (
+        {online ? (
+          book.detailsLoading ? (
+            <a target="_new" className="margin-right grid-hover-filter inline-filter">
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-spin fa-spinner" />
+            </a>
+          ) : book.expanded ? (
+            <a target="_new" onClick={() => props.collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
+            </a>
+          ) : (
+            <a target="_new" onClick={() => props.expandBook(book._id)} className="margin-right grid-hover-filter inline-filter">
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
+            </a>
+          )
+        ) : null}
+        {book.isbn && online ? (
           <a
             target="_new"
             className="margin-right grid-hover-filter inline-filter"
@@ -62,15 +65,15 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
             <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
           </a>
         ) : null}
-        {!viewingPublic ? (
-          <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBook(book)}>
-            <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
-          </a>
-        ) : null}
-        {!viewingPublic ? (
-          <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.setPendingDeleteBook(book)}>
-            <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
-          </a>
+        {!viewingPublic && online ? (
+          <>
+            <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBook(book)}>
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
+            </a>
+            <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.setPendingDeleteBook(book)}>
+              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
+            </a>
+          </>
         ) : null}
         {book.pendingDelete ? (
           <AjaxButton
@@ -233,7 +236,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const potentialSortIcon = <i className={"fa fa-angle-" + (props.sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == props.currentSort ? potentialSortIcon : null);
 
-  const { editBooksSubjects, editBooksTags, viewingPublic } = props;
+  const { editBooksSubjects, editBooksTags, viewingPublic, online } = props;
   const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
 
   return (
@@ -243,7 +246,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
           <table style={{ position: "relative" }} className="table no-padding-top">
             <thead>
               <tr>
-                {!viewingPublic ? (
+                {!viewingPublic && online ? (
                   <th style={{ ...stickyHeaderStyle }}>
                     <a style={{ fontSize: "12pt" }} onClick={props.toggleCheckAll}>
                       <i className={"fal " + (!!props.allAreChecked ? "fa-check-square" : "fa-square")} />
@@ -282,6 +285,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   index={index}
                   viewingPublic={viewingPublic}
                   selectedBooks={props.selectedBooks}
+                  online={online}
                 />,
                 book.expanded ? <BookRowDetails book={book} index={index} viewingPublic={viewingPublic} /> : null
               ])}

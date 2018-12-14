@@ -24,7 +24,8 @@ export default {
       __isArray: true,
       get type(){ return EditorialReview; }
     },
-    similarItems: "StringArray"
+    similarItems: "StringArray",
+    timestamp: "Float"
   },
   relationships: {
     similarBooks: {

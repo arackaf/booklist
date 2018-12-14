@@ -1,5 +1,5 @@
 import { dataTypes, createGraphqlSchema, dbHelpers } from "mongo-graphql-starter";
-const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf } = dataTypes;
+const { MongoIdType, StringType, StringArrayType, BoolType, IntType, FloatType, arrayOf } = dataTypes;
 
 export const EditorialReview = {
   fields: {
@@ -42,7 +42,8 @@ export const Book = {
     isRead: BoolType,
     dateAdded: StringType,
     editorialReviews: arrayOf(EditorialReview),
-    similarItems: StringArrayType
+    similarItems: StringArrayType,
+    timestamp: FloatType
   },
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
@@ -69,7 +70,8 @@ export const Subject = {
     path: StringType,
     userId: StringType,
     backgroundColor: StringType,
-    textColor: StringType
+    textColor: StringType,
+    timestamp: FloatType
   },
   extras: {
     resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
@@ -87,7 +89,8 @@ export const Tag = {
     path: StringType,
     userId: StringType,
     backgroundColor: StringType,
-    textColor: StringType
+    textColor: StringType,
+    timestamp: FloatType
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
@@ -103,7 +106,7 @@ export const LabelColor = {
   extras: {
     overrides: ["getLabelColor"]
   },
-  manualQueryArgs: [{ name: "cache", type: "Int" }]
+  manualQueryArgs: [{ name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
 
 export const User = {
@@ -127,4 +130,31 @@ export const PublicUser = {
   },
   readonly: true,
   manualQueryArgs: [{ name: "cache", type: "Int" }]
+};
+
+export const SubjectsDeleted = {
+  table: "subjectsDeleted",
+  readonly: true,
+  fields: {
+    userId: StringType,
+    deletedTimestamp: FloatType
+  }
+};
+
+export const TagsDeleted = {
+  table: "tagsDeleted",
+  readonly: true,
+  fields: {
+    userId: StringType,
+    deletedTimestamp: FloatType
+  }
+};
+
+export const BooksDeleted = {
+  table: "booksDeleted",
+  readonly: true,
+  fields: {
+    userId: StringType,
+    deletedTimestamp: FloatType
+  }
 };

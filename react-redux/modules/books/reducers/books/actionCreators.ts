@@ -51,14 +51,14 @@ export function loadBooks() {
     let bookSearch = state.booksModule.bookSearch;
     let app = state.app;
 
-    Promise.resolve(booksSearch(bookSearch, app.publicUserId)).then(booksResp => {
+    Promise.resolve(booksSearch(bookSearch, app.publicUserId, app.online)).then(booksResp => {
       window.scrollTo(0, 0);
       dispatch(booksResults(booksResp, booksResp.count));
     });
   };
 }
 
-function booksSearch(bookSearchState: BookSearchType, publicUserId) {
+function booksSearch(bookSearchState: BookSearchType, publicUserId, online) {
   let bookSearchFilters = selectCurrentSearch(store.getState() as any);
 
   let getBooksVariables: any = {
@@ -76,15 +76,15 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId) {
     publicUserId: publicUserId,
     subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
     ver: "" + bookSearchState.searchVersion,
-    cache: 1
+    cache: online ? 1 : void 0
   };
   if (bookSearchFilters.pages != "") {
     getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
   }
 
   return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
-    if (resp.data && resp.data.allBooks && resp.data.allBooks.Books && resp.data.allBooks.Meta) {
-      return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta.count };
+    if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
+      return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta ? resp.data.allBooks.Meta.count : -1 };
     }
   });
 }

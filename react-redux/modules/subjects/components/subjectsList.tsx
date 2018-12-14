@@ -194,24 +194,24 @@ class SubjectDisplay extends Component<subjectDisplayProps & { isCurrentDropTarg
 class SubjectDisplayContent extends Component<any, any> {
   render() {
     let {
-        subject,
-        connectDragSource,
-        connectDragPreview,
-        noDrop,
-        isPendingDelete,
-        isDeleting,
-        connectDropTarget,
-        childSubjects = [],
-        pendingChildren = [],
-        isEditingSubject,
-        dropCandidateSubject,
-        isSubjectSaving,
-        isSubjectSaved,
-        editingSubject,
-        colors
-      } = this.props,
-      effectiveChildren = pendingChildren.concat(childSubjects),
-      deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
+      subject,
+      connectDragSource,
+      connectDragPreview,
+      noDrop,
+      isPendingDelete,
+      isDeleting,
+      connectDropTarget,
+      childSubjects = [],
+      pendingChildren = [],
+      isEditingSubject,
+      dropCandidateSubject,
+      isSubjectSaving,
+      isSubjectSaved,
+      editingSubject,
+      colors
+    } = this.props;
+    let effectiveChildren = pendingChildren.concat(childSubjects);
+    let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
 
     if (dropCandidateSubject) {
       effectiveChildren.unshift(dropCandidateSubject);
@@ -251,31 +251,33 @@ class SubjectDisplayContent extends Component<any, any> {
 }
 
 @connect(
-  null,
+  state => ({ online: state.app.online }),
   { ...actionCreators }
 )
 class DefaultSubjectDisplay extends Component<any, any> {
   render() {
     let {
-        connectDropTarget,
-        connectDragSource,
-        isSubjectSaving,
-        isSubjectSaved,
-        className,
-        subject,
-        beginSubjectEdit,
-        addNewSubject,
-        beginSubjectDelete,
-        noDrop
-      } = this.props,
-      { _id, name, backgroundColor, textColor } = subject,
-      mainIcon = isSubjectSaving ? (
-        <i className="fa fa-fw fa-spinner fa-spin" />
-      ) : isSubjectSaved ? (
-        <i style={{ color: "green" }} className="fa fa-fw fa-check" />
-      ) : isTouch ? null : (
-        connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
-      );
+      connectDropTarget,
+      connectDragSource,
+      isSubjectSaving,
+      isSubjectSaved,
+      className,
+      subject,
+      beginSubjectEdit,
+      addNewSubject,
+      beginSubjectDelete,
+      noDrop,
+      online
+    } = this.props;
+
+    let { _id, name, backgroundColor, textColor } = subject;
+    let mainIcon = isSubjectSaving ? (
+      <i className="fa fa-fw fa-spinner fa-spin" />
+    ) : isSubjectSaved ? (
+      <i style={{ color: "green" }} className="fa fa-fw fa-check" />
+    ) : isTouch || !online ? null : (
+      connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
+    );
 
     return (noDrop ? c => c : connectDropTarget)(
       <div className={className}>
@@ -488,23 +490,24 @@ type subjectsComponentPropsType = {
   state => {
     return {
       topLevelSubjects: topLevelSubjectsSortedSelector(state),
-      pendingSubjectsLookup: pendingSubjectsSelector(state)
+      pendingSubjectsLookup: pendingSubjectsSelector(state),
+      online: state.app.online
     };
   },
   { ...actionCreators }
 )
-export default class SubjectsComponent extends Component<subjectsComponentPropsType & typeof actionCreators, any> {
+export default class SubjectsComponent extends Component<subjectsComponentPropsType & typeof actionCreators & { online: any }, any> {
   render() {
-    let { addNewSubject, pendingSubjectsLookup, topLevelSubjects } = this.props,
-      rootPendingSubjects = pendingSubjectsLookup["root"] || [],
-      allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
+    let { addNewSubject, pendingSubjectsLookup, topLevelSubjects, online } = this.props;
+    let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
+    let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
 
     let SDL: any = SubjectDragLayer;
 
     return (
       <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
-        <div className="col-lg-6 col-xs-12">
-          <BootstrapButton onClick={() => addNewSubject()} preset="primary">
+        <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
+          <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
             New subject
           </BootstrapButton>
           <br />

@@ -1,7 +1,8 @@
 import { isLoggedIn } from "applicationRoot/rootReducer";
 
 export default function setupServiceWorker() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
+  if ("serviceWorker" in navigator) {
+    //  && !/localhost/.test(window.location as any)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
@@ -16,6 +17,12 @@ export default function setupServiceWorker() {
           }
         };
       };
+
+      if (isLoggedIn().logged_in) {
+        try {
+          navigator.serviceWorker.controller.postMessage({ command: "do-sync" });
+        } catch (er) {}
+      }
     });
 
     function newerSwAvailable(sw) {
@@ -35,10 +42,10 @@ export default function setupServiceWorker() {
           });
           Toastify({
             text: `
-                <h4 style='display: inline'>An update is available!</h4>
-                <br><br>
-                <a class='do-sw-update' style='color: white'>Click to update and reload</a>&nbsp;&nbsp;
-              `.trim(),
+              <h4 style='display: inline'>An update is available!</h4>
+              <br><br>
+              <a class='do-sw-update' style='color: white'>Click to update and reload</a>&nbsp;&nbsp;
+            `.trim(),
             duration: 7000,
             gravity: "bottom",
             close: true
@@ -46,10 +53,6 @@ export default function setupServiceWorker() {
         });
       } catch (er) {}
     }
-
-    try {
-      navigator.serviceWorker.controller.postMessage({ command: "sync-images" });
-    } catch (er) {}
 
     // if (Notification) {
     //   Notification.requestPermission().then(permission => {});
@@ -66,14 +69,14 @@ export default function setupServiceWorker() {
       //   });
       // });
       /*
-        
-          async saveNotificationSubscription({ subscription }) {
-            let userId = this.request.user.id;
-            await new UserDAO().updateSubscription(userId, JSON.parse(subscription));
-            this.send({ success: true });
-          }
-        
-        */
+      
+        async saveNotificationSubscription({ subscription }) {
+          let userId = this.request.user.id;
+          await new UserDAO().updateSubscription(userId, JSON.parse(subscription));
+          this.send({ success: true });
+        }
+      
+      */
     }
   }
 }

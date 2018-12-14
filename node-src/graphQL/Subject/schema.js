@@ -9,6 +9,7 @@ export const type = `
     userId: String
     backgroundColor: String
     textColor: String
+    timestamp: Float
   }
 
   type SubjectQueryResults {
@@ -41,6 +42,7 @@ export const type = `
     userId: String
     backgroundColor: String
     textColor: String
+    timestamp: Float
   }
 
   input SubjectMutationInput {
@@ -49,6 +51,9 @@ export const type = `
     userId: String
     backgroundColor: String
     textColor: String
+    timestamp: Float
+    timestamp_INC: Int
+    timestamp_DEC: Int
   }
 
   input SubjectSort {
@@ -58,6 +63,7 @@ export const type = `
     userId: Int
     backgroundColor: Int
     textColor: Int
+    timestamp: Int
   }
 
   input SubjectFilters {
@@ -99,6 +105,13 @@ export const type = `
     textColor: String
     textColor_ne: String
     textColor_in: [String]
+    timestamp_lt: Float
+    timestamp_lte: Float
+    timestamp_gt: Float
+    timestamp_gte: Float
+    timestamp: Float
+    timestamp_ne: Float
+    timestamp_in: [Float]
     OR: [SubjectFilters]
   }
   
@@ -157,6 +170,13 @@ export const query = `
     textColor: String,
     textColor_ne: String,
     textColor_in: [String],
+    timestamp_lt: Float,
+    timestamp_lte: Float,
+    timestamp_gt: Float,
+    timestamp_gte: Float,
+    timestamp: Float,
+    timestamp_ne: Float,
+    timestamp_in: [Float],
     OR: [SubjectFilters],
     SORT: SubjectSort,
     SORTS: [SubjectSort],

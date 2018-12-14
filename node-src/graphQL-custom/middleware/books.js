@@ -75,6 +75,7 @@ export default class BooksMiddleware {
   }
   async beforeInsert(book, root, args, context, ast) {
     clean(book);
+    book.timestamp = Date.now();
     if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
       book.smallImage = await saveLocalImageToS3(book.smallImage, context.user.id);
     }
@@ -90,7 +91,11 @@ export default class BooksMiddleware {
   async beforeUpdate(match, updates, root, args, context, ast) {
     if (updates.$set) {
       clean(updates.$set);
+    } else {
+      updates.$set = {};
     }
+    updates.$set.timestamp = Date.now();
+
     match.userId = context.user.id;
     if (updates.$set && updates.$set.smallImage && /^\/uploads\//.test(updates.$set.smallImage)) {
       updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, context.user.id);
@@ -100,7 +105,11 @@ export default class BooksMiddleware {
   beforeDelete(match, root, args, context, ast) {
     match.userId = context.user.id;
   }
-  afterDelete(match, root, args, context, ast) {}
+  async afterDelete(match, root, args, context, ast) {
+    let db = await root.db;
+    let ids = args._id ? [args._id] : args._ids;
+    await db.collection("booksDeleted").insertMany(ids.map(_id => ({ _id, userId: context.user.id, deletedTimestamp: Date.now() })));
+  }
   adjustResults(results) {
     results.forEach(book => {
       book.pages = parseInt(book.pages, 10);

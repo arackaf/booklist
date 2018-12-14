@@ -106,6 +106,7 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int,
+    ver: String,
     cache: Int
   ): LabelColorQueryResults
 
