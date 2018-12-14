@@ -19,7 +19,7 @@ const _BookViewListMobileItem = props => {
     <span className="list-group-item" style={{ cursor: "pointer" }}>
       <div className="row">
         <div className="col-xs-3 col-sm-1">
-          <img src={book.smallImage} />
+          <img crossOrigin="anonymous" src={book.smallImage} />
         </div>
         <div className="col-xs-9 col-sm-11">
           <h4 className="list-group-item-heading">{book.title}</h4>
