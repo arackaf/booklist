@@ -15,7 +15,9 @@ import {
   LOAD_TAGS_RESULTS,
   UPDATE_TAG_RESULTS,
   TAG_DELETED,
-  NEW_LOGIN
+  NEW_LOGIN,
+  IS_OFFLINE,
+  IS_ONLINE
 } from "./rootReducerActionNames";
 
 export function getSearchVersion(key) {
@@ -82,7 +84,8 @@ const initialState = {
   tagHash: hashOf<ITag>(),
   tagsLoaded: false,
   tagsVersion: initialTagsVersion,
-  subjectsVersion: initialSubjectsVersion
+  subjectsVersion: initialSubjectsVersion,
+  online: navigator.onLine
 };
 
 export type AppType = typeof initialState;
@@ -149,6 +152,10 @@ export default function rootReducer(state = initialState, action) {
     case NEW_LOGIN:
       let { logged_in, userId } = isLoggedIn();
       return { ...state, isLoggedIn: !!logged_in, userId };
+    case IS_OFFLINE:
+      return { ...state, online: false };
+    case IS_ONLINE:
+      return { ...state, online: true };
   }
 
   return state;
@@ -161,7 +168,8 @@ export const selectAppUiState = createSelector(
     showingDesktop: app.showingDesktop,
     isPublic: app.isPublic,
     publicBooksHeader: app.publicBooksHeader,
-    publicName: app.publicName
+    publicName: app.publicName,
+    online: app.online
   })
 );
 
