@@ -1,5 +1,5 @@
 query($timestamp: Float) {
-  allBooks(timestamp_lte: $timestamp) {
+  allBooks(timestamp_gt: $timestamp) {
     Books {
       _id
       title
