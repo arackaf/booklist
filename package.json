@@ -10,10 +10,10 @@
   "scripts": {
     "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-redux-build",
-    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack",
+    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack && cd sw-manual && node buildRollup",
     "start": "node app.js",
     "startw": "nodemon app.js",
-    "heroku-postbuild": "cd react-redux && npm i && webpack"
+    "heroku-postbuild": "cd react-redux && npm i && webpack && cd sw-manual && node buildRollup"
   },
   "dependencies": {
     "apac": "3.0.2",
