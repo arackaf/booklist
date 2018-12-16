@@ -16,7 +16,7 @@ query($timestamp: Float) {
       dateAdded
     }
   }
-  allSubjects(timestamp_lte: $timestamp) {
+  allSubjects(timestamp_gt: $timestamp) {
     Subjects {
       _id
       name
@@ -25,7 +25,7 @@ query($timestamp: Float) {
       path
     }
   }
-  allTags(timestamp_lte: $timestamp) {
+  allTags(timestamp_gt: $timestamp) {
     Tags {
       _id
       name
@@ -34,17 +34,17 @@ query($timestamp: Float) {
       path
     }
   }
-  deletedBooks: allBooksDeleteds(deletedTimestamp_lte: $timestamp) {
+  deletedBooks: allBooksDeleteds(deletedTimestamp_gt: $timestamp) {
     _ids: BooksDeleteds {
       _id
     }
   }
-  deletedSubjects: allSubjectsDeleteds(deletedTimestamp_lte: $timestamp) {
+  deletedSubjects: allSubjectsDeleteds(deletedTimestamp_gt: $timestamp) {
     _ids: SubjectsDeleteds {
       _id
     }
   }
-  deletedTags: allTagsDeleteds(deletedTimestamp_lte: $timestamp) {
+  deletedTags: allTagsDeleteds(deletedTimestamp_gt: $timestamp) {
     _ids: TagsDeleteds {
       _id
     }
