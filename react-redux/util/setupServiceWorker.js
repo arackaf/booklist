@@ -1,8 +1,7 @@
 import { isLoggedIn } from "applicationRoot/rootReducer";
 
 export default function setupServiceWorker() {
-  if ("serviceWorker" in navigator) {
-    //  && !/localhost/.test(window.location as any)) {
+  if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
