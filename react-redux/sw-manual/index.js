@@ -141,6 +141,7 @@ function masterSync() {
       bookStore.createIndex("imgSync", "imgSync", { unique: false });
       bookStore.createIndex("title_ci", "title_ci", { unique: false });
       bookStore.createIndex("dateAdded", "dateAdded", { unique: false });
+      bookStore.createIndex("pages", "pages", { unique: false });
     }
     if (!db.objectStoreNames.contains("syncInfo")) {
       db.createObjectStore("syncInfo", { keyPath: "id" });
@@ -165,7 +166,6 @@ function masterSync() {
 function readBooks(variableString) {
   let variables = JSON.parse(variableString);
   let { page = 1, pageSize = 50, title_contains, sort } = variables;
-  pageSize = 5;
 
   let predicate = null;
   let limit = pageSize;
@@ -173,7 +173,7 @@ function readBooks(variableString) {
   let skip, cursorSkip;
 
   if (title_contains) {
-    let searchRegex = new RegExp(escapeRegex(title_contains));
+    let searchRegex = new RegExp(escapeRegex(title_contains), "i");
     predicate = book => searchRegex.test(book.title);
     cursorSkip = 0;
     skip = skipAmount;
@@ -183,13 +183,15 @@ function readBooks(variableString) {
   }
 
   let sortField = sort ? Object.keys(sort)[0] : null;
-  let idx = !sort ? "title" : sortField == "_id" ? "dateAdded" : "title_ci";
-  let idxDir = !sortField || sort[sortField] == -1 ? "prev" : void 0;
 
-  return readTable("books", idx, { predicate }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
+  let idx = !sort || sortField == "_id" ? "dateAdded" : sortField == "pages" ? "pages" : "title_ci";
+
+  let idxDir = sortField && sort[sortField] == -1 ? "prev" : void 0;
+
+  return readTable("books", idx, { predicate, skip, cursorSkip, limit, idxDir }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
 }
 
-function readTable(table, idxName = null, { predicate, direction, cursorSkip, skip, limit } = {}) {
+function readTable(table, idxName = null, { predicate, idxDir, cursorSkip, skip, limit } = {}) {
   let open = indexedDB.open("books", 1);
 
   if (!predicate) {
@@ -202,15 +204,17 @@ function readTable(table, idxName = null, { predicate, direction, cursorSkip, sk
       let tran = db.transaction(table);
       let objStore = tran.objectStore(table);
 
-      let tranCursor = idxName ? objStore.index(idxName).openCursor(null, direction) : objStore.openCursor();
-      if (cursorSkip) {
-        tranCursor.advance(cursorSkip);
-      }
+      let tranCursor = idxName ? objStore.index(idxName).openCursor(null, idxDir) : objStore.openCursor(idxDir);
       let result = [];
       let skipped = 0;
+      let hasSkipped = false;
 
       tranCursor.onsuccess = evt => {
         let cursor = evt.target.result;
+        if (cursorSkip && !hasSkipped) {
+          hasSkipped = true;
+          return cursor.advance(cursorSkip);
+        }
         if (!cursor) return resolve(result);
 
         let item = cursor.value;
