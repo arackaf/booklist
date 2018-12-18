@@ -109,7 +109,7 @@ export function booksInitialized({ priorState }) {
 }
 
 export const removeFilters = (...names) => (dispatch, getState) => {
-  setSearchValues(names.reduce((hash, item) => ((hash[item] = ""), hash), {}));
+  setSearchValues(names.concat("page").reduce((hash, item) => ((hash[item] = ""), hash), {}));
 };
 
 export const removeFilterSubject = _id => (dispatch, getState) => {
