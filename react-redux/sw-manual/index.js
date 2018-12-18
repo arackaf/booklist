@@ -371,6 +371,7 @@ async function preCacheBookImage(book) {
   if (/https:\/\/s3.amazonaws.com\/my-library-cover-uploads/.test(smallImage)) {
     let cache = await caches.open("local-images1");
     let img = await fetch(smallImage, { mode: "cors", credentials: "omit" });
+
     await cache.put(smallImage, img);
     return true;
   }
@@ -383,7 +384,7 @@ async function preCacheBookImage(book) {
   }
 
   if (/https:\/\/ecx\.images-amazon\.com/.test(smallImage)) {
-    let cache = await caches.open("amazon-images1");
+    let cache = await caches.open("amazon-images2");
     let img = await fetch(smallImage, { mode: "cors", credentials: "omit" });
     await cache.put(smallImage, img);
     return true;
