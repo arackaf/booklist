@@ -1,5 +1,9 @@
 mutation updateBooksRead($_ids: [String], $updates: BookMutationInput) {
   updateBooks(_ids: $_ids, Updates: $updates) {
     success
+    Books {
+      _id
+      isRead
+    }
   }
 }
