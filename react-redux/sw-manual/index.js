@@ -31,9 +31,13 @@ workbox.routing.registerRoute(
 );
 
 function syncResultsFor(resp, name, transform = item => item) {
-  let updateName = `update${name}`;
-  if (resp && resp.data && resp.data[updateName] && resp.data[updateName][name]) {
-    syncItem(transform(resp.data[updateName][name]), `${name.toLowerCase()}s`);
+  let updateNameSingle = `update${name}`;
+  if (resp && resp.data && resp.data[updateNameSingle] && resp.data[updateNameSingle][name]) {
+    syncItem(transform(resp.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
+  }
+  let updateNamePlural = `update${name}s`;
+  if (resp && resp.data && resp.data[updateNamePlural] && resp.data[updateNamePlural][name + "s"]) {
+    resp.data[updateNamePlural][name + "s"].forEach(item => syncItem(transform(item), `${name.toLowerCase()}s`));
   }
 }
 
