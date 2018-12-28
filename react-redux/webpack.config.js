@@ -87,7 +87,6 @@ module.exports = {
     new HtmlWebpackPlugin({ template: "default.htm" }),
     new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     new GenerateSW({
-      navigateFallback: "react-redux/dist/index.html",
       globDirectory: ".",
       globPatterns: [
         "static/bootstrap/css/bootstrap-booklist-build.css",
@@ -116,6 +115,7 @@ module.exports = {
         getCache({ pattern: /fontawesome\/webfonts/, name: "fontawesome-fonts" })
       ],
       importScripts: ["react-redux/sw-manual/sw-index-bundle.js"],
+      navigateFallback: "react-redux/dist/index.html",
       navigateFallbackBlacklist: [/\/activate\b/]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
