@@ -15,13 +15,14 @@ const bookSyncTransform = book => Object.assign(book, { title_ci: (book.title ||
 workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
+    let request = event.request.clone();
     return fetch(event.request).then(response => {
       let respClone = response.clone();
       setTimeout(() => {
         respClone.json().then(response => {
           syncResultsFor({ request, response }, "Book", bookSyncTransform);
           syncResultsFor({ request, response }, "Tag");
-          syncSubjectsResults(resp);
+          syncSubjectsResults(response);
         }, 5);
       });
       return response;
@@ -30,7 +31,7 @@ workbox.routing.registerRoute(
   "POST"
 );
 
-function syncResultsFor({ request, response }, name, transform = item => item) {
+async function syncResultsFor({ request, response }, name, transform = item => item) {
   let updateNameSingle = `update${name}`;
   if (response && response.data && response.data[updateNameSingle] && response.data[updateNameSingle][name]) {
     syncItem(transform(response.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
@@ -41,7 +42,8 @@ function syncResultsFor({ request, response }, name, transform = item => item) {
   }
   let deleteNameSingle = `delete${name}`;
   if (response && response.data && response.data[deleteNameSingle]) {
-    syncItem(transform(response.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
+    let reqJson = await request.json();
+    deleteItem(reqJson.variables._id, name.toLowerCase() + "s");
   }
 }
 
@@ -84,8 +86,12 @@ function syncItem(item, table, transform = item => item) {
       let tran = db.transaction(table, "readwrite");
       let objStore = tran.objectStore(table);
       objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
-        Object.assign(itemToUpdate, transform(item));
-        objStore.put(itemToUpdate).onsuccess = res;
+        if (!itemToUpdate) {
+          objStore.add(transform(item)).onsuccess = res;
+        } else {
+          Object.assign(itemToUpdate, transform(item));
+          objStore.put(itemToUpdate).onsuccess = res;
+        }
       };
     };
   });
