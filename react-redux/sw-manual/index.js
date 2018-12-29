@@ -32,6 +32,10 @@ workbox.routing.registerRoute(
 );
 
 async function syncResultsFor({ request, response }, name, transform = item => item) {
+  let createNameSingle = `create${name}`;
+  if (response && response.data && response.data[createNameSingle] && response.data[createNameSingle][name]) {
+    syncItem(transform(response.data[createNameSingle][name]), `${name.toLowerCase()}s`);
+  }
   let updateNameSingle = `update${name}`;
   if (response && response.data && response.data[updateNameSingle] && response.data[updateNameSingle][name]) {
     syncItem(transform(response.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
