@@ -18,9 +18,9 @@ workbox.routing.registerRoute(
     return fetch(event.request).then(response => {
       let respClone = response.clone();
       setTimeout(() => {
-        respClone.json().then(resp => {
-          syncResultsFor(resp, "Book", bookSyncTransform);
-          syncResultsFor(resp, "Tag");
+        respClone.json().then(response => {
+          syncResultsFor({ request, response }, "Book", bookSyncTransform);
+          syncResultsFor({ request, response }, "Tag");
           syncSubjectsResults(resp);
         }, 5);
       });
@@ -30,14 +30,18 @@ workbox.routing.registerRoute(
   "POST"
 );
 
-function syncResultsFor(resp, name, transform = item => item) {
+function syncResultsFor({ request, response }, name, transform = item => item) {
   let updateNameSingle = `update${name}`;
-  if (resp && resp.data && resp.data[updateNameSingle] && resp.data[updateNameSingle][name]) {
-    syncItem(transform(resp.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
+  if (response && response.data && response.data[updateNameSingle] && response.data[updateNameSingle][name]) {
+    syncItem(transform(response.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
   }
   let updateNamePlural = `update${name}s`;
-  if (resp && resp.data && resp.data[updateNamePlural] && resp.data[updateNamePlural][name + "s"]) {
-    resp.data[updateNamePlural][name + "s"].forEach(item => syncItem(transform(item), `${name.toLowerCase()}s`));
+  if (response && response.data && response.data[updateNamePlural] && response.data[updateNamePlural][name + "s"]) {
+    response.data[updateNamePlural][name + "s"].forEach(item => syncItem(transform(item), `${name.toLowerCase()}s`));
+  }
+  let deleteNameSingle = `delete${name}`;
+  if (response && response.data && response.data[deleteNameSingle]) {
+    syncItem(transform(response.data[updateNameSingle][name]), `${name.toLowerCase()}s`);
   }
 }
 
