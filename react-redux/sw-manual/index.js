@@ -201,9 +201,7 @@ function readBooks(variableString) {
   }
 
   let sortField = sort ? Object.keys(sort)[0] : null;
-
   let idx = !sort || sortField == "_id" ? "dateAdded" : sortField == "pages" ? "pages" : "title_ci";
-
   let idxDir = sortField && sort[sortField] == -1 ? "prev" : void 0;
 
   return readTable("books", idx, { predicate, skip, cursorSkip, limit, idxDir }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
