@@ -98,7 +98,7 @@ module.exports = {
       ignoreUrlParametersMatching: [/./],
       exclude: [/\.(ttf|eot|svg|woff)$/],
       navigateFallback: "react-redux/dist/index.html",
-      navigateFallbackBlacklist: [/\/activate\b/]
+      navigateFallbackBlacklist: [/\/activate\b/],
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:5/, name: "medium-cache", expires: 60 * 60 * 24 }), //1 day
@@ -108,7 +108,7 @@ module.exports = {
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
       ],
-      importScripts: ["react-redux/sw-manual/sw-index-bundle.js"],
+      importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null
