@@ -77,6 +77,14 @@ module.exports = {
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"]
+      },
+      {
+        test: /\.(png|jpg|gif|svg|eot|woff|woff2|ttf)$/,
+        use: [
+          {
+            loader: "file-loader"
+          }
+        ]
       }
     ]
   },
@@ -87,36 +95,20 @@ module.exports = {
     new HtmlWebpackPlugin({ template: "default.htm" }),
     new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     new GenerateSW({
-      globDirectory: ".",
-      globPatterns: [
-        "static/bootstrap/css/bootstrap-booklist-build.css",
-        "static/fontawesome/css/font-awesome-booklist-build.css",
-        "static/fontawesome/webfonts/*.woff2",
-        "static/main-icon2.png",
-        "offline.htm",
-        "node_modules/simple-react-bootstrap/simple-react-bootstrap-styles.css",
-        "node_modules/@reach/dialog/styles.css"
-      ],
-      globIgnores: [],
-      modifyUrlPrefix: {
-        "static/": "react-redux/static/",
-        "util/": "react-redux/util/",
-        "offline.htm": "react-redux/offline.htm",
-        "node_modules/": "react-redux/node_modules/"
-      },
       ignoreUrlParametersMatching: [/./],
+      exclude: [/\.(ttf|eot|svg|woff)$/],
+      navigateFallback: "react-redux/dist/index.html",
+      navigateFallbackBlacklist: [/\/activate\b/]
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:5/, name: "medium-cache", expires: 60 * 60 * 24 }), //1 day
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:9/, name: "max-cache" }),
+        getCache({ pattern: /react-redux\/static\//, name: "local-static" }),
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
-        getCache({ pattern: /fontawesome\/webfonts/, name: "fontawesome-fonts" })
+        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
       ],
       importScripts: ["react-redux/sw-manual/sw-index-bundle.js"],
-      navigateFallback: "react-redux/dist/index.html",
-      navigateFallbackBlacklist: [/\/activate\b/]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     isProd ? new MinifyPlugin() : null
