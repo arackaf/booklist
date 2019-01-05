@@ -16,6 +16,7 @@ workbox.routing.registerRoute(
   /graphql$/,
   ({ url, event }) => {
     let request = event.request.clone();
+
     return fetch(event.request).then(response => {
       let respClone = response.clone();
       setTimeout(() => {
