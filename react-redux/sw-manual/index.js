@@ -58,7 +58,7 @@ function syncSubjectsResults(resp) {
   }
 }
 
-const gqlResponse = (op, coll) => data => new Response(JSON.stringify({ data: { [op]: { [coll]: data } } }), { ok: true, status: 200 });
+const gqlResponse = (op, coll) => data => new Response(JSON.stringify({ data: { [op]: { [coll]: data } } }));
 
 workbox.routing.registerRoute(
   /graphql/,
