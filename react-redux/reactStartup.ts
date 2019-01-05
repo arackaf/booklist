@@ -1,3 +1,9 @@
+import "./static/bootstrap/css/bootstrap-booklist-build.css";
+import "./static/fontawesome/css/font-awesome-booklist-build.css";
+import "simple-react-bootstrap/simple-react-bootstrap-styles.css";
+import "@reach/dialog/styles.css";
+import "./styles.css";
+
 import "immutability-helper";
 import { Client, setDefaultClient } from "micro-graphql-react";
 

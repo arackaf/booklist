@@ -62,21 +62,19 @@ const gqlResponse = (op, coll) => data => new Response(JSON.stringify({ data: { 
 workbox.routing.registerRoute(
   /graphql/,
   ({ url, event }) => {
-    event.respondWith(
-      fetch(event.request).catch(err => {
-        let { query, variables } = parseQueryString(url.search);
+    return fetch(event.request).catch(err => {
+      let { query, variables } = parseQueryString(url.search);
 
-        if (query == allLabelColors) {
-          return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
-        } else if (query == allSubjects) {
-          return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
-        } else if (query == allTags) {
-          return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
-        } else if (query == searchBooksQuery) {
-          return readBooks(variables);
-        }
-      })
-    );
+      if (query == allLabelColors) {
+        return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
+      } else if (query == allSubjects) {
+        return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
+      } else if (query == allTags) {
+        return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
+      } else if (query == searchBooksQuery) {
+        return readBooks(variables);
+      }
+    });
   },
   "GET"
 );
