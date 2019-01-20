@@ -19,12 +19,10 @@ workbox.routing.registerRoute(
 
     return fetch(event.request).then(response => {
       let respClone = response.clone();
-      setTimeout(() => {
-        respClone.json().then(response => {
-          syncResultsFor({ request, response }, "Book", bookSyncTransform);
-          syncResultsFor({ request, response }, "Tag");
-          syncSubjectsResults(response);
-        }, 5);
+      respClone.json().then(response => {
+        syncResultsFor({ request, response }, "Book", bookSyncTransform);
+        syncResultsFor({ request, response }, "Tag");
+        syncSubjectsResults(response);
       });
       return response;
     });
