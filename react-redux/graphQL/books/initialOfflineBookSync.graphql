@@ -1,4 +1,4 @@
-query OfflineBookSync($page: Int, $pageSize: Int) {
+query InitialOfflineBookSync($page: Int, $pageSize: Int) {
   allBooks(PAGE: $page, PAGE_SIZE: $pageSize) {
     Books {
       _id
