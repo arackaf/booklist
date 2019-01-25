@@ -1,14 +1,13 @@
 import "./update-sync";
-import escapeRegex from "./escape-regex";
-import parseQueryString from "./query-string";
-import offlineBookSyncQuery from "../graphQL/books/offlineBookSync.graphql";
+import escapeRegex from "./lib/escape-regex";
+import parseQueryString from "./lib/query-string";
 
-import searchBooksQuery from "../graphQL/books/getBooks.graphql";
-import allSubjects from "../graphQL/subjects/allSubjects.graphql";
-import allTags from "../graphQL/tags/getTags.graphql";
-import allLabelColors from "../graphQL/misc/allLabelColors.graphql";
-
-import offlineUpdateSync from "../graphQL/misc/offlineUpdateSync.graphql";
+import searchBooksQuery from "../../graphQL/books/getBooks.graphql";
+import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
+import allTags from "../../graphQL/tags/getTags.graphql";
+import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
+import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
+import offlineBookSyncQuery from "../../graphQL/books/offlineBookSync.graphql";
 
 const bookSyncTransform = book => Object.assign(book, { title_ci: (book.title || "").toLowerCase() });
 

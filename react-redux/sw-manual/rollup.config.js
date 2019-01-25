@@ -3,7 +3,7 @@ const minify = require("rollup-plugin-babel-minify");
 const path = require("path");
 
 module.exports = {
-  input: "./index.js",
+  input: "./src/index.js",
   output: {
     format: "iife",
     file: "./sw-index-bundle.js"
