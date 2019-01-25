@@ -9,7 +9,7 @@
     "build-sw": "cd sw-manual && webpack",
     "deploy": "cd .. && npm run deploy",
     "rollup": "cd ./sw-manual && rollup -c -w",
-    "persistgraphql": "persistgraphql graphQL && node buildSwExtractedQueries",
+    "persistgraphql": "persistgraphql graphQL",
     "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {
