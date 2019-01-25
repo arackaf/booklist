@@ -1,4 +1,3 @@
-import "./update-sync";
 import escapeRegex from "./lib/escape-regex";
 import parseQueryString from "./lib/query-string";
 
@@ -14,6 +13,18 @@ import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
 import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
+
+self.addEventListener("message", event => {
+  if (event.data == "sw-update-accepted") {
+    self.skipWaiting().then(() => {
+      self.clients.claim().then(() => {
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => client.postMessage("sw-updated"));
+        });
+      });
+    });
+  }
+});
 
 self.addEventListener("push", () => {
   self.registration.showNotification("Push notification received!");
