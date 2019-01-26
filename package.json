@@ -10,10 +10,10 @@
   "scripts": {
     "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-redux-build",
-    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack && cd sw-manual && node buildRollup",
+    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack && cd sw-manual && rollup -c",
     "start": "node app.js",
     "startw": "nodemon app.js",
-    "heroku-postbuild": "cd react-redux && npm i && webpack && cd sw-manual && node buildRollup"
+    "heroku-postbuild": "cd react-redux && npm i && webpack && cd sw-manual && rollup -c"
   },
   "dependencies": {
     "apac": "3.0.2",
@@ -49,6 +49,9 @@
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
     "request": "2.83.0",
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel-minify": "^6.2.0",
+    "rollup-plugin-uglify": "^6.0.0",
     "typescript": "^3.0.1",
     "uuid": "3.1.0",
     "web-push": "3.2.4",
