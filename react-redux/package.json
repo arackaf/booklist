@@ -6,9 +6,8 @@
   "scripts": {
     "start": "webpack -w",
     "webpack": "webpack",
-    "build-sw": "cd sw-manual && webpack",
     "deploy": "cd .. && npm run deploy",
-    "rollup": "cd ./sw-manual && rollup -c -w",
+    "rollup-sw": "cd ./sw-manual && rollup -c -w",
     "persistgraphql": "persistgraphql graphQL",
     "refresh": "npm run persistgraphql && npm start"
   },
