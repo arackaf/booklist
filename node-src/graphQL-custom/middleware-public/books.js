@@ -36,7 +36,7 @@ function clean(book) {
 }
 
 export default class BooksMiddleware {
-  async queryPreprocess(root, args, context, ast) {
+  async queryPreprocess({ root, args, context, ast }) {
     args.userId = "5b57f71b6871ae00145198ff";
     if (!args.PAGE_SIZE || args.PAGE_SIZE > 200) {
       //bump it so we know if there's more results to page
@@ -58,7 +58,7 @@ export default class BooksMiddleware {
       subjects.push(...childIds);
     }
   }
-  queryMiddleware(queryPacket, root, args, context, ast) {
+  queryMiddleware(queryPacket, { root, args, context, ast }) {
     let { $project, $sort } = queryPacket;
     if ($project.editorialReviews) {
       $project.editorialReviews = 1;
@@ -69,7 +69,7 @@ export default class BooksMiddleware {
       delete $sort.title;
     }
   }
-  queryPreAggregate(aggregateItems, root, args, context, ast) {
+  queryPreAggregate(aggregateItems, { root, args, context, ast }) {
     let project = aggregateItems.find(item => item.$project);
     let sort = aggregateItems.find(item => item.$sort);
 
@@ -80,7 +80,7 @@ export default class BooksMiddleware {
       aggregateItems.splice(1, 0, project, sort);
     }
   }
-  async beforeInsert(book, root, args, context, ast) {
+  async beforeInsert(book, { root, args, context, ast }) {
     clean(book);
     if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
       book.smallImage = await saveLocalImageToS3(book.smallImage, "5b57f71b6871ae00145198ff");
@@ -93,7 +93,7 @@ export default class BooksMiddleware {
     }
     book.userId = "5b57f71b6871ae00145198ff";
   }
-  afterInsert(newObj, root, args, context, ast) {}
+  afterInsert(newObj, { root, args, context, ast }) {}
   async beforeUpdate(match, updates, root, args, context, ast) {
     if (updates.$set) {
       clean(updates.$set);
@@ -103,11 +103,11 @@ export default class BooksMiddleware {
       updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, "5b57f71b6871ae00145198ff");
     }
   }
-  afterUpdate(match, updates, root, args, context, ast) {}
-  beforeDelete(match, root, args, context, ast) {
+  afterUpdate(match, updates, { root, args, context, ast }) {}
+  beforeDelete(match, { root, args, context, ast }) {
     match.userId = "5b57f71b6871ae00145198ff";
   }
-  afterDelete(match, root, args, context, ast) {}
+  afterDelete(match, { root, args, context, ast }) {}
   adjustResults(results) {
     results.forEach(book => {
       book.pages = parseInt(book.pages, 10);
