@@ -8,10 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}\\app.js",
-      "outFiles": [
-        "${workspaceFolder}/**/*.js"
-      ]
+      "program": "${workspaceFolder}/app.js",
+      "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v8.14.1/bin/node",
+      "outFiles": ["${workspaceFolder}/**/*.js"]
     }
   ]
 }
