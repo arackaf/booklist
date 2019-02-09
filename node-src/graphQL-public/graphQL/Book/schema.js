@@ -30,17 +30,20 @@ export const type = `
   }
 
   type BookMutationResult {
-    success: Boolean
     Book: Book
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type BookMutationResultMulti {
-    success: Boolean
     Books: [Book]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type BookBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input BookInput {
@@ -231,7 +234,6 @@ export const type = `
     tags_containsAny: [String]
     tags_ne: [String]
     isRead: Boolean
-    isRead: Boolean
     isRead_ne: Boolean
     isRead_in: [Boolean]
     dateAdded_contains: String
@@ -282,7 +284,7 @@ export const mutation = `
 
   deleteBook (
     _id: String
-  ): Boolean
+  ): DeletionResultInfo
 
 `;
 
@@ -386,7 +388,6 @@ export const query = `
     tags_contains: String,
     tags_containsAny: [String],
     tags_ne: [String],
-    isRead: Boolean,
     isRead: Boolean,
     isRead_ne: Boolean,
     isRead_in: [Boolean],
