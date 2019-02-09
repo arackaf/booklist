@@ -17,17 +17,20 @@ export const type = `
   }
 
   type UserMutationResult {
-    success: Boolean
     User: User
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type UserMutationResultMulti {
-    success: Boolean
     Users: [User]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type UserBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input UserInput {
@@ -54,7 +57,6 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
-    isPublic: Boolean
     isPublic: Boolean
     isPublic_ne: Boolean
     isPublic_in: [Boolean]
@@ -94,7 +96,6 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
-    isPublic: Boolean,
     isPublic: Boolean,
     isPublic_ne: Boolean,
     isPublic_in: [Boolean],
