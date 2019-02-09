@@ -36,7 +36,7 @@ function clean(book) {
 }
 
 export default class BooksMiddleware {
-  async queryPreprocess(root, args, context, ast) {
+  async queryPreprocess({ root, args, context, ast }) {
     args.userId = args.publicUserId || (context.user && context.user.id);
 
     let subjects = args.subjects_containsAny || [];
@@ -51,7 +51,7 @@ export default class BooksMiddleware {
       subjects.push(...childIds);
     }
   }
-  queryMiddleware(queryPacket, root, args, context, ast) {
+  queryMiddleware(queryPacket, { root, args, context, ast }) {
     let { $project, $sort } = queryPacket;
     if ($project.editorialReviews) {
       $project.editorialReviews = 1;
@@ -62,7 +62,7 @@ export default class BooksMiddleware {
       delete $sort.title;
     }
   }
-  queryPreAggregate(aggregateItems, root, args, context, ast) {
+  queryPreAggregate(aggregateItems, { root, args, context, ast }) {
     let project = aggregateItems.find(item => item.$project);
     let sort = aggregateItems.find(item => item.$sort);
 
@@ -73,7 +73,7 @@ export default class BooksMiddleware {
       aggregateItems.splice(1, 0, project, sort);
     }
   }
-  async beforeInsert(book, root, args, context, ast) {
+  async beforeInsert(book, { root, args, context, ast }) {
     clean(book);
     book.timestamp = Date.now();
     if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
@@ -87,8 +87,8 @@ export default class BooksMiddleware {
     }
     book.userId = context.user.id;
   }
-  afterInsert(newObj, root, args, context, ast) {}
-  async beforeUpdate(match, updates, root, args, context, ast) {
+  afterInsert(newObj, { root, args, context, ast }) {}
+  async beforeUpdate(match, updates, { root, args, context, ast }) {
     if (updates.$set) {
       clean(updates.$set);
     } else {
@@ -101,11 +101,11 @@ export default class BooksMiddleware {
       updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, context.user.id);
     }
   }
-  afterUpdate(match, updates, root, args, context, ast) {}
-  beforeDelete(match, root, args, context, ast) {
+  afterUpdate(match, updates, { root, args, context, ast }) {}
+  beforeDelete(match, { root, args, context, ast }) {
     match.userId = context.user.id;
   }
-  async afterDelete(match, root, args, context, ast) {
+  async afterDelete(match, { root, args, context, ast }) {
     let db = await root.db;
     let ids = args._id ? [args._id] : args._ids;
     await db.collection("booksDeleted").insertMany(ids.map(_id => ({ _id, userId: context.user.id, deletedTimestamp: Date.now() })));
