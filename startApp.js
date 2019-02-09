@@ -16,6 +16,7 @@ import mkdirp from "mkdirp";
 import Jimp from "jimp";
 import compression from "compression";
 import http from "http";
+import { MongoClient } from "mongodb";
 
 import connectToDb from "./node-src/dataAccess/connect";
 
@@ -49,6 +50,9 @@ const PUBLIC_USER = {
   _id: PUBLIC_USER_ID,
   id: PUBLIC_USER_ID
 };
+
+const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
+const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
 
 if (!process.env.IS_DEV) {
   app.use(function ensureSec(request, response, next) {
@@ -153,8 +157,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
-const dbPromise = connectToDb();
-export const root = { db: dbPromise };
+const mongoClientPromise = MongoClient.connect(connString, { useNewUrlParser: true });
+const mongoDbPromise = mongoClientPromise.then(client => client.db(dbName));
+
+export const root = { client: mongoClientPromise, db: mongoDbPromise };
 export const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
 middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react-redux/extracted_queries.json") });
@@ -167,8 +173,9 @@ app.use(
   })
 );
 
-const dbPromisePublic = connectToDb();
-const rootPublic = { db: dbPromisePublic };
+const mongoClientPublicPromise = MongoClient.connect(connString, { useNewUrlParser: true });
+const mongoDbPublicPromise = mongoClientPromise.then(client => client.db(dbName));
+const rootPublic = { client: mongoClientPublicPromise, db: mongoDbPublicPromise };
 const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
 
 app.use("/graphql-public", function(req, res, next) {
