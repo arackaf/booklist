@@ -16,17 +16,20 @@ export const type = `
   }
 
   type LabelColorMutationResult {
-    success: Boolean
     LabelColor: LabelColor
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type LabelColorMutationResultMulti {
-    success: Boolean
     LabelColors: [LabelColor]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type LabelColorBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input LabelColorInput {

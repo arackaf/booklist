@@ -16,17 +16,20 @@ export const type = `
   }
 
   type TagsDeletedMutationResult {
-    success: Boolean
     TagsDeleted: TagsDeleted
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type TagsDeletedMutationResultMulti {
-    success: Boolean
     TagsDeleteds: [TagsDeleted]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type TagsDeletedBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input TagsDeletedInput {

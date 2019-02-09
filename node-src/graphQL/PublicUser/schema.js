@@ -17,17 +17,20 @@ export const type = `
   }
 
   type PublicUserMutationResult {
-    success: Boolean
     PublicUser: PublicUser
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type PublicUserMutationResultMulti {
-    success: Boolean
     PublicUsers: [PublicUser]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type PublicUserBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input PublicUserInput {
