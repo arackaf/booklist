@@ -94,7 +94,7 @@ export default class BooksMiddleware {
     book.userId = "5b57f71b6871ae00145198ff";
   }
   afterInsert(newObj, { root, args, context, ast }) {}
-  async beforeUpdate(match, updates, root, args, context, ast) {
+  async beforeUpdate(match, updates, { root, args, context, ast }) {
     if (updates.$set) {
       clean(updates.$set);
     }
