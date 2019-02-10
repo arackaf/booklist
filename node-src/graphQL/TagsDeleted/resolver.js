@@ -1,5 +1,6 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
+import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
+const runHook = processHook.bind(this, hooksObj, "TagsDeleted")
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -18,7 +19,7 @@ export async function loadTagsDeleteds(db, queryPacket, root, args, context, ast
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
-  await processHook(hooksObj, "TagsDeleted", "queryPreAggregate", aggregateItems, root, args, context, ast);
+  await processHook(hooksObj, "TagsDeleted", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
   let TagsDeleteds = await dbHelpers.runQuery(db, "tagsDeleted", aggregateItems);
   await processHook(hooksObj, "TagsDeleted", "adjustResults", TagsDeleteds);
   TagsDeleteds.forEach(o => {
@@ -38,11 +39,11 @@ export const TagsDeleted = {
 export default {
   Query: {
     async getTagsDeleted(root, args, context, ast) {
-      await processHook(hooksObj, "TagsDeleted", "queryPreprocess", root, args, context, ast);
       let db = await (typeof root.db === "function" ? root.db() : root.db);
+      await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagsDeletedMetadata, "TagsDeleted");
-      await processHook(hooksObj, "TagsDeleted", "queryMiddleware", queryPacket, root, args, context, ast);
+      await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let results = await loadTagsDeleteds(db, queryPacket, root, args, context, ast);
 
       return {
@@ -50,11 +51,11 @@ export default {
       };
     },
     async allTagsDeleteds(root, args, context, ast) {
-      await processHook(hooksObj, "TagsDeleted", "queryPreprocess", root, args, context, ast);
       let db = await (typeof root.db === "function" ? root.db() : root.db);
+      await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagsDeletedMetadata, "TagsDeleteds");
-      await processHook(hooksObj, "TagsDeleted", "queryMiddleware", queryPacket, root, args, context, ast);
+      await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {

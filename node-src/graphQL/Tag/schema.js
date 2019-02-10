@@ -20,17 +20,20 @@ export const type = `
   }
 
   type TagMutationResult {
-    success: Boolean
     Tag: Tag
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type TagMutationResultMulti {
-    success: Boolean
     Tags: [Tag]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type TagBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input TagInput {
@@ -139,7 +142,7 @@ export const mutation = `
 
   deleteTag (
     _id: String
-  ): Boolean
+  ): DeletionResultInfo
 
 `;
 

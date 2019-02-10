@@ -1,5 +1,6 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
+import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
+const runHook = processHook.bind(this, hooksObj, "BookSummary")
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -18,7 +19,7 @@ export async function loadBookSummarys(db, queryPacket, root, args, context, ast
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
-  await processHook(hooksObj, "BookSummary", "queryPreAggregate", aggregateItems, root, args, context, ast);
+  await processHook(hooksObj, "BookSummary", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
   let BookSummarys = await dbHelpers.runQuery(db, "amazonReference", aggregateItems);
   await processHook(hooksObj, "BookSummary", "adjustResults", BookSummarys);
   BookSummarys.forEach(o => {
@@ -38,11 +39,11 @@ export const BookSummary = {
 export default {
   Query: {
     async getBookSummary(root, args, context, ast) {
-      await processHook(hooksObj, "BookSummary", "queryPreprocess", root, args, context, ast);
       let db = await (typeof root.db === "function" ? root.db() : root.db);
+      await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, "BookSummary");
-      await processHook(hooksObj, "BookSummary", "queryMiddleware", queryPacket, root, args, context, ast);
+      await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let results = await loadBookSummarys(db, queryPacket, root, args, context, ast);
 
       return {
@@ -50,11 +51,11 @@ export default {
       };
     },
     async allBookSummarys(root, args, context, ast) {
-      await processHook(hooksObj, "BookSummary", "queryPreprocess", root, args, context, ast);
       let db = await (typeof root.db === "function" ? root.db() : root.db);
+      await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, "BookSummarys");
-      await processHook(hooksObj, "BookSummary", "queryMiddleware", queryPacket, root, args, context, ast);
+      await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {

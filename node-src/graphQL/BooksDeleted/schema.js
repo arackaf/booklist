@@ -16,17 +16,20 @@ export const type = `
   }
 
   type BooksDeletedMutationResult {
-    success: Boolean
     BooksDeleted: BooksDeleted
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type BooksDeletedMutationResultMulti {
-    success: Boolean
     BooksDeleteds: [BooksDeleted]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type BooksDeletedBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input BooksDeletedInput {

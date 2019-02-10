@@ -22,17 +22,20 @@ export const type = `
   }
 
   type SubjectMutationResult {
-    success: Boolean
     Subject: Subject
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type SubjectMutationResultMulti {
-    success: Boolean
     Subjects: [Subject]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type SubjectBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input SubjectInput {
