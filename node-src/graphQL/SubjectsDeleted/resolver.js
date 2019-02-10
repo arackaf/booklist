@@ -1,5 +1,6 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers } from "mongo-graphql-starter";
+import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
+const runHook = processHook.bind(this, hooksObj, "SubjectsDeleted")
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -18,7 +19,7 @@ export async function loadSubjectsDeleteds(db, queryPacket, root, args, context,
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
-  await processHook(hooksObj, "SubjectsDeleted", "queryPreAggregate", aggregateItems, root, args, context, ast);
+  await processHook(hooksObj, "SubjectsDeleted", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
   let SubjectsDeleteds = await dbHelpers.runQuery(db, "subjectsDeleted", aggregateItems);
   await processHook(hooksObj, "SubjectsDeleted", "adjustResults", SubjectsDeleteds);
   SubjectsDeleteds.forEach(o => {
@@ -38,11 +39,11 @@ export const SubjectsDeleted = {
 export default {
   Query: {
     async getSubjectsDeleted(root, args, context, ast) {
-      await processHook(hooksObj, "SubjectsDeleted", "queryPreprocess", root, args, context, ast);
       let db = await (typeof root.db === "function" ? root.db() : root.db);
+      await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectsDeletedMetadata, "SubjectsDeleted");
-      await processHook(hooksObj, "SubjectsDeleted", "queryMiddleware", queryPacket, root, args, context, ast);
+      await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let results = await loadSubjectsDeleteds(db, queryPacket, root, args, context, ast);
 
       return {
@@ -50,11 +51,11 @@ export default {
       };
     },
     async allSubjectsDeleteds(root, args, context, ast) {
-      await processHook(hooksObj, "SubjectsDeleted", "queryPreprocess", root, args, context, ast);
       let db = await (typeof root.db === "function" ? root.db() : root.db);
+      await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectsDeletedMetadata, "SubjectsDeleteds");
-      await processHook(hooksObj, "SubjectsDeleted", "queryMiddleware", queryPacket, root, args, context, ast);
+      await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {

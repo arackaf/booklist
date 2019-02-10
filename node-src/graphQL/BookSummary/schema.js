@@ -21,17 +21,20 @@ export const type = `
   }
 
   type BookSummaryMutationResult {
-    success: Boolean
     BookSummary: BookSummary
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type BookSummaryMutationResultMulti {
-    success: Boolean
     BookSummarys: [BookSummary]
+    success: Boolean
+    Meta: MutationResultInfo
   }
 
   type BookSummaryBulkMutationResult {
     success: Boolean
+    Meta: MutationResultInfo
   }
 
   input BookSummaryInput {
