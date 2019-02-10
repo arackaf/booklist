@@ -54,7 +54,9 @@ const PUBLIC_USER = {
 const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
 const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
 
-if (!process.env.IS_DEV) {
+const IS_DEV = process.env.IS_DEV;
+
+if (!IS_DEV) {
   app.use(function ensureSec(request, response, next) {
     let proto = request.header("x-forwarded-proto") || request.header("X-Forwarded-Proto") || request.get("X-Forwarded-Proto"),
       secure = proto == "https";
@@ -160,7 +162,7 @@ app.use(passport.authenticate("remember-me"));
 const mongoClientPromise = MongoClient.connect(connString, { useNewUrlParser: true });
 const mongoDbPromise = mongoClientPromise.then(client => client.db(dbName));
 
-export const root = { client: mongoClientPromise, db: mongoDbPromise };
+export const root = { client: IS_DEV ? null : mongoClientPromise, db: mongoDbPromise };
 export const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
 middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react-redux/extracted_queries.json") });
@@ -175,7 +177,7 @@ app.use(
 
 const mongoClientPublicPromise = MongoClient.connect(connString, { useNewUrlParser: true });
 const mongoDbPublicPromise = mongoClientPromise.then(client => client.db(dbName));
-const rootPublic = { client: mongoClientPublicPromise, db: mongoDbPublicPromise };
+const rootPublic = { client: IS_DEV ? null : mongoClientPublicPromise, db: mongoDbPublicPromise };
 const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
 
 app.use("/graphql-public", function(req, res, next) {
