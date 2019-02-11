@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, lazy } from "react";
+import React, { SFC, Suspense, lazy, useContext, useEffect } from "react";
 const { useState } = React as any;
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
@@ -15,6 +15,8 @@ import { useMutation, buildMutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
+import { AppContext } from "applicationRoot/renderUI";
+import { REQUEST_MOBILE, REQUEST_DESKTOP } from "applicationRoot/appState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
@@ -77,6 +79,11 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
   let dragTitle = editingBook
     ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
     : "";
+
+  const [appState, dispatch] = useContext(AppContext);
+
+  console.log("appState.showingDesktop", appState.showingDesktop);
+  setTimeout(() => dispatch({ type: appState.showingDesktop ? REQUEST_MOBILE : REQUEST_DESKTOP }), 1000);
 
   return (
     <div style={{}}>

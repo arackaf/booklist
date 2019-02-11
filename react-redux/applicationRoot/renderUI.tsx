@@ -1,9 +1,10 @@
-import React from "react";
+import React, { createContext } from "react";
 import { Provider, connect } from "react-redux";
 import { store } from "./store";
 import { render } from "react-dom";
 import { requestDesktop, requestMobile } from "./rootReducerActionCreators";
 import MainNavigationBar from "applicationRoot/components/mainNavigation";
+import { useAppState, AppState } from "./appState";
 
 const MobileMeta = connect(
   state => state.app,
@@ -36,9 +37,15 @@ export function clearUI() {
   render(<div />, document.getElementById("home"));
 }
 
+export const AppContext = createContext<[AppState, any]>(null);
+
 export function renderUI(component) {
-  render(
-    <Provider store={store as any}>
+  render(<App component={component} />, document.getElementById("home"));
+}
+
+const App = ({ component }) => (
+  <Provider store={store as any}>
+    <AppContext.Provider value={useAppState()}>
       <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
         <MobileMeta />
         <MainNavigationBar />
@@ -53,7 +60,6 @@ export function renderUI(component) {
         </div>
         <WellUiSwitcher />
       </div>
-    </Provider>,
-    document.getElementById("home")
-  );
-}
+    </AppContext.Provider>
+  </Provider>
+);
