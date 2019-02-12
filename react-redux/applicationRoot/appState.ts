@@ -1,4 +1,4 @@
-import { useReducer, useMemo } from "react";
+import { getStatePacket, isLoggedIn } from "./rootReducer";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -76,45 +76,7 @@ const requestMobile = () => dispatch => {
 
 const setModule = module => ({ type: SET_MODULE, module });
 
-function makeActionCreators(dispatch, fns) {
-  return Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
-    hash[name] = (...args) => dispatch(fn(...args));
-    return hash;
-  }, {});
-}
-
-function getStatePacket<T>(reducer, initialState, actions?): [T, any, any] {
-  let [state, dispatch] = useReducer(reducer, initialState);
-  let newDispatch = actions
-    ? useMemo(
-        () => val => {
-          if (typeof val === "object") {
-            dispatch(val);
-          } else if (typeof val === "function") {
-            val(dispatch);
-          } else throw "Fuck off";
-        },
-        [dispatch]
-      )
-    : null;
-
-  return useMemo(() => [state, actions ? makeActionCreators(newDispatch, actions) : {}, dispatch], [state]) as any;
-}
-
 export function useAppState(): [AppState, any, any] {
   let actions = { requestDesktop, requestMobile, setModule };
   return getStatePacket<AppState>(appReducer, initialState, actions);
-}
-
-export function isLoggedIn() {
-  let logged_in = getCookie("logged_in");
-  let userId = getCookie("userId");
-  return { logged_in, userId };
-}
-
-function getCookie(name) {
-  return document.cookie.split("; ").reduce((r, v) => {
-    const parts = v.split("=");
-    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
-  }, "");
 }

@@ -19,6 +19,16 @@ import {
   IS_OFFLINE,
   IS_ONLINE
 } from "./rootReducerActionNames";
+import { useMemo, useReducer } from "react";
+
+import { setDefaultClient, Client } from "micro-graphql-react";
+
+export const graphqlClient = new Client({
+  endpoint: "/graphql",
+  fetchOptions: { credentials: "include" }
+});
+
+setDefaultClient(graphqlClient);
 
 export function getSearchVersion(key) {
   let initialSearchVersion = +localStorage.getItem(key);
@@ -45,7 +55,7 @@ export const TAGS_SEARCH_VERSION_KEY = "tagsSearchVersion";
 let initialSubjectsVersion = getSearchVersion(SUBJECTS_SEARCH_VERSION_KEY);
 let initialTagsVersion = getSearchVersion(TAGS_SEARCH_VERSION_KEY);
 
-interface ITag {
+export interface ITag {
   _id: string;
   name: string;
 }
@@ -374,3 +384,27 @@ export const selectLoggedIn = createSelector(
   (state: RootApplicationType) => state.app.userId,
   (isLoggedIn, userId) => ({ isLoggedIn, userId })
 );
+
+export function makeActionCreators(dispatch, fns) {
+  return Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
+    hash[name] = (...args) => dispatch(fn(...args));
+    return hash;
+  }, {});
+}
+
+export function getStatePacket<T>(reducer, initialState, actions?): [T, any, any] {
+  let [state, dispatch] = useReducer(reducer, initialState);
+  let newDispatch = actions
+    ? useMemo(() => {
+        return val => {
+          if (typeof val === "object") {
+            dispatch(val);
+          } else if (typeof val === "function") {
+            val(dispatch, state);
+          } else throw "Fuck off";
+        };
+      }, [dispatch, state])
+    : null;
+
+  return useMemo(() => [state, actions ? makeActionCreators(newDispatch, actions) : {}, dispatch], [state]) as any;
+}

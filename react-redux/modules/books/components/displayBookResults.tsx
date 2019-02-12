@@ -28,7 +28,7 @@ const selector = createSelector(
 const DisplayBookResults: SFC<PassedIn & ReturnType<typeof selector>> = props => {
   let { editBook, editTagsForBook, editSubjectsForBook } = props;
 
-  return props.subjectsLoaded && props.tagsLoaded ? (
+  return props.subjectsLoaded ? (
     props.isGridView ? (
       <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
     ) : props.isBasicList ? (

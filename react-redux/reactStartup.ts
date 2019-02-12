@@ -26,7 +26,6 @@ import { IS_OFFLINE, IS_ONLINE } from "applicationRoot/rootReducerActionNames";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
-import { loadTags } from "applicationRoot/tags/actionCreators";
 import setupServiceWorker from "./util/setupServiceWorker";
 import { isLoggedIn } from "applicationRoot/rootReducer";
 
@@ -36,7 +35,6 @@ let currentModule;
 let publicUserCache = {};
 
 if (isLoggedIn().logged_in) {
-  store.dispatch(loadTags());
   store.dispatch(loadSubjects());
 }
 
@@ -123,7 +121,7 @@ function loadModule(location) {
   })();
 
   Promise.all([modulePromise, publicUserPromise])
-    .then(([{ default: moduleObject }, publicUserInfo]) => {
+    .then(([{ default: moduleObject }, publicUserInfo]: [any, any]) => {
       if (currentModule != module) return;
 
       let priorState = store.getState();
@@ -131,7 +129,6 @@ function loadModule(location) {
 
       if (publicUserInfo) {
         store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
-        store.dispatch(loadTags());
         store.dispatch(loadSubjects());
       }
 
