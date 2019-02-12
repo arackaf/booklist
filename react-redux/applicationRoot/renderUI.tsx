@@ -37,11 +37,11 @@ export function clearUI() {
   render(<div />, document.getElementById("home"));
 }
 
-export const AppContext = createContext<[AppState, any]>(null);
-
 export function renderUI(component) {
   render(<App component={component} />, document.getElementById("home"));
 }
+
+export const AppContext = createContext<[AppState, any, any]>(null);
 
 const App = ({ component }) => (
   <Provider store={store as any}>

@@ -54,9 +54,57 @@ function appReducer(state: AppState, action): AppState {
   return state;
 }
 
-export function useAppState() {
+const setDeviceOverride = view => {
+  try {
+    if (view == "mobile") {
+      localStorage.removeItem("useDesktop");
+    } else {
+      localStorage.setItem("useDesktop", "1");
+    }
+  } catch (e) {}
+};
+
+const requestDesktop = () => dispatch => {
+  setDeviceOverride("desktop");
+  dispatch({ type: REQUEST_DESKTOP });
+};
+
+const requestMobile = () => dispatch => {
+  setDeviceOverride("mobile");
+  dispatch({ type: REQUEST_MOBILE });
+};
+
+const setModule = module => ({ type: SET_MODULE, module });
+
+function makeActionCreators(dispatch, fns) {
+  return useMemo(
+    () =>
+      Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
+        hash[name] = (...args) => dispatch(fn(...args));
+        return hash;
+      }, {}),
+    []
+  );
+}
+
+export function useAppState(): [AppState, any, any] {
   let [appState, dispatch] = useReducer(appReducer, initialState);
-  return useMemo<[AppState, any]>(() => [appState, dispatch], [appState]);
+  if ((useAppState as any).__lastState === appState) {
+    return (useAppState as any).__lastResult;
+  }
+  let actions = { requestDesktop, requestMobile, setModule };
+
+  let myDispatch = val => {
+    if (typeof val === "object") {
+      dispatch(val);
+    } else if (typeof val === "function") {
+      val(dispatch);
+    } else throw "Fuck off";
+  };
+
+  (useAppState as any).__lastResult = [appState, myDispatch, makeActionCreators(myDispatch, actions)];
+  (useAppState as any).__lastState = appState;
+  return (useAppState as any).__lastResult;
 }
 
 export function isLoggedIn() {
