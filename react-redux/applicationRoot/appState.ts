@@ -77,34 +77,33 @@ const requestMobile = () => dispatch => {
 const setModule = module => ({ type: SET_MODULE, module });
 
 function makeActionCreators(dispatch, fns) {
-  return useMemo(
-    () =>
-      Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
-        hash[name] = (...args) => dispatch(fn(...args));
-        return hash;
-      }, {}),
-    []
-  );
+  return Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
+    hash[name] = (...args) => dispatch(fn(...args));
+    return hash;
+  }, {});
+}
+
+function getStatePacket<T>(reducer, initialState, actions?): [T, any, any] {
+  let [state, dispatch] = useReducer(reducer, initialState);
+  let newDispatch = actions
+    ? useMemo(
+        () => val => {
+          if (typeof val === "object") {
+            dispatch(val);
+          } else if (typeof val === "function") {
+            val(dispatch);
+          } else throw "Fuck off";
+        },
+        [dispatch]
+      )
+    : null;
+
+  return useMemo(() => [state, actions ? makeActionCreators(newDispatch, actions) : {}, dispatch], [state]) as any;
 }
 
 export function useAppState(): [AppState, any, any] {
-  let [appState, dispatch] = useReducer(appReducer, initialState);
-  if ((useAppState as any).__lastState === appState) {
-    return (useAppState as any).__lastResult;
-  }
   let actions = { requestDesktop, requestMobile, setModule };
-
-  let myDispatch = val => {
-    if (typeof val === "object") {
-      dispatch(val);
-    } else if (typeof val === "function") {
-      val(dispatch);
-    } else throw "Fuck off";
-  };
-
-  (useAppState as any).__lastResult = [appState, myDispatch, makeActionCreators(myDispatch, actions)];
-  (useAppState as any).__lastState = appState;
-  return (useAppState as any).__lastResult;
+  return getStatePacket<AppState>(appReducer, initialState, actions);
 }
 
 export function isLoggedIn() {

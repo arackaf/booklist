@@ -81,19 +81,15 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
     : "";
 
   //now use the hook in a function component
-  const [appState, dispatch, { requestDesktop, requestMobile, setModule }] = useContext(AppContext);
+  const [appState, { requestDesktop, requestMobile, setModule }, dispatch] = useContext(AppContext);
 
   console.log("appState.showingDesktop", appState.showingDesktop, "appState.module", appState.module);
 
   setTimeout(() => {
     appState.showingDesktop ? requestMobile() : requestDesktop();
     //setModule(appState.module === "books" ? "scan" : "books");
-
-    if (0) {
-      dispatch({});
-    }
     //dispatch({ type: appState.showingDesktop ? REQUEST_MOBILE : REQUEST_DESKTOP });
-  }, 1000);
+  }, 3000);
 
   return (
     <div style={{}}>
