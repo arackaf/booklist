@@ -9,7 +9,7 @@
     "moduleResolution": "node",
     "module": "esNext",
     "experimentalDecorators": true,
-    "lib": ["es2015", "dom"],
+    "lib": ["es2015", "es2017", "dom"],
     "paths": {
       "@reach/dialog": ["./typings/modules/@reach/dialog"]
     }

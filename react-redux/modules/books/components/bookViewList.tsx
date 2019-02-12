@@ -80,10 +80,20 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
     ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
     : "";
 
-  const [appState, dispatch] = useContext(AppContext);
+  //now use the hook in a function component
+  const [appState, dispatch, { requestDesktop, requestMobile, setModule }] = useContext(AppContext);
 
-  console.log("appState.showingDesktop", appState.showingDesktop);
-  setTimeout(() => dispatch({ type: appState.showingDesktop ? REQUEST_MOBILE : REQUEST_DESKTOP }), 1000);
+  console.log("appState.showingDesktop", appState.showingDesktop, "appState.module", appState.module);
+
+  setTimeout(() => {
+    appState.showingDesktop ? requestMobile() : requestDesktop();
+    //setModule(appState.module === "books" ? "scan" : "books");
+
+    if (0) {
+      dispatch({});
+    }
+    //dispatch({ type: appState.showingDesktop ? REQUEST_MOBILE : REQUEST_DESKTOP });
+  }, 1000);
 
   return (
     <div style={{}}>
