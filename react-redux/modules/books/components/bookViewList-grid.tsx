@@ -278,6 +278,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
             <tbody>
               {props.booksList.map((book, index) => [
                 <BookRow
+                  key={0}
                   editBooksSubjects={editBooksSubjects}
                   editBooksTags={editBooksTags}
                   book={book}
@@ -287,7 +288,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   selectedBooks={props.selectedBooks}
                   online={online}
                 />,
-                book.expanded ? <BookRowDetails book={book} index={index} viewingPublic={viewingPublic} /> : null
+                book.expanded ? <BookRowDetails key={1} book={book} index={index} viewingPublic={viewingPublic} /> : null
               ])}
             </tbody>
           </table>

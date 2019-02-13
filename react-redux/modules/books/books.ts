@@ -1,9 +1,9 @@
-import BookViewList from "./components/bookViewList";
+import { BookModuleRoot } from "./components/bookViewList";
 import { reducer } from "./reducers/reducer";
 import { booksInitialized } from "./reducers/bookSearch/actionCreators";
 
 export default {
   reducer: reducer,
-  component: BookViewList,
+  component: BookModuleRoot,
   initialize: booksInitialized
 };

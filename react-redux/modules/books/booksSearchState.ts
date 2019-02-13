@@ -12,11 +12,8 @@ const GRID_VIEW = "books table view";
 const BASIC_LIST_VIEW = "books mobile view";
 const HASH_CHANGED = "books search hash changed";
 
-let initialSearchVersion = getSearchVersion(BOOK_SEARCH_VERSION_KEY);
-
 const initialState = {
   view: "",
-  searchVersion: initialSearchVersion,
   hashFilters: {} as typeof defaultSearchValuesHash
 };
 export type BookSearchType = typeof initialState;
@@ -33,19 +30,6 @@ export function bookSearchReducer(state = initialState, action): BookSearchType 
         return { ...state, hashFilters: filters };
       }
       return { ...state };
-
-    //TODO:
-    // case BOOK_SAVED:
-    // case BOOK_READ_CHANGED:
-    // case BOOK_DELETED:
-    // case MANUAL_BOOK_SAVED:
-    // case EDITING_BOOK_SAVED:
-    // case SET_BOOKS_SUBJECTS:
-    // case SET_BOOKS_TAGS:
-    // case NEW_LOGIN:
-    //   let newSearchVersion = +new Date();
-    //   localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + newSearchVersion);
-    //   return { ...state, searchVersion: newSearchVersion };
   }
   return state;
 }
