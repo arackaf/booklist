@@ -23,6 +23,8 @@ const initialState = {
   subjectsVersion: initialSubjectsVersion
 };
 
+export type SubjectState = typeof initialState;
+
 function subjectsReducer(state = initialState, action) {
   switch (action.type) {
     case SAVE_SUBJECT_RESULTS:
@@ -59,7 +61,7 @@ const loadSubjects = (app: AppType) => dispatch => {
   });
 };
 
-export function useAppState(): [SubjectType, any, any] {
+export function useSubjectsState(): [SubjectState, any, any] {
   let actions = { loadSubjects };
-  return getStatePacket<SubjectType>(subjectsReducer, initialState, actions);
+  return getStatePacket<SubjectState>(subjectsReducer, initialState, actions);
 }
