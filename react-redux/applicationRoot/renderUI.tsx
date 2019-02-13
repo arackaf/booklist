@@ -5,6 +5,7 @@ import { render } from "react-dom";
 import { requestDesktop, requestMobile } from "./rootReducerActionCreators";
 import MainNavigationBar from "applicationRoot/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
+import { useColors } from "./colorsState";
 
 const MobileMeta = connect(
   state => state.app,
@@ -42,26 +43,31 @@ export function renderUI(component) {
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
+export const ColorsContext = createContext<any>(null);
 
 const App = ({ component }) => {
+  let packet = useColors();
+  debugger;
   return (
     <Provider store={store as any}>
-      <AppContext.Provider value={useAppState()}>
-        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-          <MobileMeta />
-          <MainNavigationBar />
+      <ColorsContext.Provider value={packet}>
+        <AppContext.Provider value={useAppState()}>
+          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+            <MobileMeta />
+            <MainNavigationBar />
 
-          <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-            {component}
-            <div style={{ visibility: "hidden" }}>
-              <button>
-                <i className="fa fa-fw fa-spin fa-spinner" />
-              </button>
+            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+              {component}
+              <div style={{ visibility: "hidden" }}>
+                <button>
+                  <i className="fa fa-fw fa-spin fa-spinner" />
+                </button>
+              </div>
             </div>
+            <WellUiSwitcher />
           </div>
-          <WellUiSwitcher />
-        </div>
-      </AppContext.Provider>
+        </AppContext.Provider>
+      </ColorsContext.Provider>
     </Provider>
   );
 };
