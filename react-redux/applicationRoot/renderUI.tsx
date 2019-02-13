@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { Provider, connect } from "react-redux";
 import { store } from "./store";
 import { render } from "react-dom";
@@ -6,6 +6,7 @@ import { requestDesktop, requestMobile } from "./rootReducerActionCreators";
 import MainNavigationBar from "applicationRoot/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
 import { useColors } from "./colorsState";
+import { SubjectState, useSubjectsState } from "./subjectsState";
 
 const MobileMeta = connect(
   state => state.app,
@@ -44,30 +45,39 @@ export function renderUI(component) {
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 export const ColorsContext = createContext<any>(null);
+export const SubjectsContext = createContext<[SubjectState, any, any]>(null);
 
 const App = ({ component }) => {
-  let packet = useColors();
-  debugger;
+  let appStatePacket = useAppState();
+  let [appState] = appStatePacket;
+
+  let subjectsPacket = useSubjectsState();
+  let [subjectState, { loadSubjects }] = subjectsPacket;
+
+  useEffect(() => loadSubjects(appState), []);
+
   return (
     <Provider store={store as any}>
-      <ColorsContext.Provider value={packet}>
-        <AppContext.Provider value={useAppState()}>
-          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-            <MobileMeta />
-            <MainNavigationBar />
+      <SubjectsContext.Provider value={subjectsPacket}>
+        <ColorsContext.Provider value={useColors()}>
+          <AppContext.Provider value={appStatePacket}>
+            <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+              <MobileMeta />
+              <MainNavigationBar />
 
-            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-              {component}
-              <div style={{ visibility: "hidden" }}>
-                <button>
-                  <i className="fa fa-fw fa-spin fa-spinner" />
-                </button>
+              <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+                {component}
+                <div style={{ visibility: "hidden" }}>
+                  <button>
+                    <i className="fa fa-fw fa-spin fa-spinner" />
+                  </button>
+                </div>
               </div>
+              <WellUiSwitcher />
             </div>
-            <WellUiSwitcher />
-          </div>
-        </AppContext.Provider>
-      </ColorsContext.Provider>
+          </AppContext.Provider>
+        </ColorsContext.Provider>
+      </SubjectsContext.Provider>
     </Provider>
   );
 };
