@@ -18,6 +18,7 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
 import { REQUEST_MOBILE, REQUEST_DESKTOP } from "applicationRoot/appState";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
+import { useBooksState, BooksState } from "../booksState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
@@ -51,7 +52,20 @@ const prepBookForSaving = book => {
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
 
+export const BooksContext = createContext<[BooksState, any, any]>(null);
 export const TagsContext = createContext<[TagsState, any, any]>(null);
+
+export const BookModuleRoot = ({ children }) => (
+  <div style={{}}>
+    <Suspense fallback={<Loading />}>
+      <BooksContext.Provider value={useBooksState()}>
+        <TagsContext.Provider value={useTagsState()}>
+          <ConnectedBookViewingList />
+        </TagsContext.Provider>
+      </BooksContext.Provider>
+    </Suspense>
+  </div>
+);
 
 const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> = props => {
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
@@ -81,11 +95,17 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
 
   let tagsPacket = useTagsState();
   let [tagsState, { loadTags }, dispatch] = tagsPacket;
-  let [app] = useContext(AppContext);
+  let [appState] = useContext(AppContext);
+
+  let booksPacket = useBooksState();
+  let [booksState, actions] = booksPacket;
 
   useEffect(() => {
-    dispatch({ type: "XXX" });
-    loadTags(app);
+    actions.loadBooks(appState);
+  }, []);
+
+  useEffect(() => {
+    loadTags(appState);
   }, []);
 
   let dragTitle = editingBook
@@ -93,56 +113,52 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
     : "";
 
   return (
-    <div style={{}}>
-      <Suspense fallback={<Loading />}>
-        <TagsContext.Provider value={tagsPacket}>
-          <BooksLoading />
-          <div style={{ marginLeft: "5px", marginTop: 0 }}>
-            <BooksMenuBar
-              startTagModification={editTagsForSelectedBooks}
-              startSubjectModification={editSubjectsForSelectedBooks}
-              editTags={editTags}
-              editSubjects={editSubjects}
-              beginEditFilters={beginEditFilters}
-            />
-            <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-              {!props.booksList.length && !props.booksLoading ? (
-                <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
-                  No books found
-                </div>
-              ) : null}
-
-              <DisplayBookResults {...{ editSubjectsForBook, editTagsForBook, editBook }} />
+    <>
+      <BooksLoading />
+      <div style={{ marginLeft: "5px", marginTop: 0 }}>
+        <BooksMenuBar
+          startTagModification={editTagsForSelectedBooks}
+          startSubjectModification={editSubjectsForSelectedBooks}
+          editTags={editTags}
+          editSubjects={editSubjects}
+          beginEditFilters={beginEditFilters}
+        />
+        <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
+          {!props.booksList.length && !props.booksLoading ? (
+            <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
+              No books found
             </div>
-          </div>
-          <br />
-          <br />
+          ) : null}
 
-          <Suspense fallback={<Loading />}>
-            {bookEditingModalLoaded ? (
-              <ManualBookEntry
-                title={editingBook ? `Edit ${editingBook.title}` : ""}
-                dragTitle={dragTitle}
-                bookToEdit={editingBook}
-                isOpen={!!editingBook}
-                isSaving={running}
-                isSaved={false}
-                saveBook={saveEditingBook}
-                saveMessage={"Saved"}
-                onClosing={stopEditingBook}
-              />
-            ) : null}
-            {bookSubModalLoaded ? <BookSubjectSetter modifyingBooks={bookSubModifying} onDone={closeBookSubModal} /> : null}
-            {bookTagModalLoaded ? <BookTagSetter modifyingBooks={bookTagModifying} onDone={closeBookTagModal} /> : null}
+          <DisplayBookResults {...{ editSubjectsForBook, editTagsForBook, editBook }} />
+        </div>
+      </div>
+      <br />
+      <br />
 
-            {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
-            {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
-            {editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
-          </Suspense>
-        </TagsContext.Provider>
+      <Suspense fallback={<Loading />}>
+        {bookEditingModalLoaded ? (
+          <ManualBookEntry
+            title={editingBook ? `Edit ${editingBook.title}` : ""}
+            dragTitle={dragTitle}
+            bookToEdit={editingBook}
+            isOpen={!!editingBook}
+            isSaving={running}
+            isSaved={false}
+            saveBook={saveEditingBook}
+            saveMessage={"Saved"}
+            onClosing={stopEditingBook}
+          />
+        ) : null}
+        {bookSubModalLoaded ? <BookSubjectSetter modifyingBooks={bookSubModifying} onDone={closeBookSubModal} /> : null}
+        {bookTagModalLoaded ? <BookTagSetter modifyingBooks={bookTagModifying} onDone={closeBookTagModal} /> : null}
+
+        {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
+        {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
+        {editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
       </Suspense>
-    </div>
+    </>
   );
 };
 
-export default connect(mainSelector)(BookViewingList);
+const ConnectedBookViewingList = connect(mainSelector)(BookViewingList);

@@ -8,6 +8,10 @@ import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { BookSearchType } from "./booksSearchState";
+import { AppState } from "applicationRoot/appState";
+import { useMemo, useContext } from "react";
+import { SubjectsContext } from "applicationRoot/renderUI";
+import { TagsContext, BooksContext } from "./components/bookViewList";
 
 const LOAD_BOOKS = "LOAD_BOOKS";
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
@@ -31,6 +35,8 @@ const EXPAND_BOOK = "EXPAND_BOOK";
 const COLLAPSE_BOOK = "COLLAPSE_BOOK";
 
 const EDITING_BOOK_SAVED = "EDITING_BOOK_SAVED";
+
+let initialSearchVersion = getSearchVersion(BOOK_SEARCH_VERSION_KEY);
 
 interface IEditorialReview {
   content: string;
@@ -82,7 +88,8 @@ const initialBooksState = {
   booksLoading: false,
   selectedBooks: {} as { [s: string]: boolean },
   resultsCount: 0,
-  reloadOnActivate: false
+  reloadOnActivate: false,
+  searchVersion: initialSearchVersion
 };
 export type BooksState = typeof initialBooksState;
 
@@ -173,6 +180,20 @@ export function booksReducer(state = initialBooksState, action): BooksState {
         }
       });
   }
+
+  //TODO:
+  // case BOOK_SAVED:
+  // case BOOK_READ_CHANGED:
+  // case BOOK_DELETED:
+  // case MANUAL_BOOK_SAVED:
+  // case EDITING_BOOK_SAVED:
+  // case SET_BOOKS_SUBJECTS:
+  // case SET_BOOKS_TAGS:
+  // case NEW_LOGIN:
+  //   let newSearchVersion = +new Date();
+  //   localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + newSearchVersion);
+  //   return { ...state, searchVersion: newSearchVersion };
+
   return state;
 }
 
@@ -190,24 +211,18 @@ function createBooksHash(booksArr) {
   return result;
 }
 
-export function loadBooks() {
-  return function(dispatch, getState) {
-    dispatch({ type: LOAD_BOOKS });
+export const loadBooks = (app: AppState) => dispatch => {
+  dispatch({ type: LOAD_BOOKS });
 
-    let state = getState();
-    let bookSearch = state.booksModule.bookSearch;
-    let app = state.app;
+  Promise.resolve(booksSearch(app.publicUserId, app.online)).then(booksResp => {
+    window.scrollTo(0, 0);
+    dispatch(booksResults(booksResp, booksResp.count));
+  });
+};
 
-    Promise.resolve(booksSearch(bookSearch, app.publicUserId, app.online)).then(booksResp => {
-      window.scrollTo(0, 0);
-      dispatch(booksResults(booksResp, booksResp.count));
-    });
-  };
-}
-
-function booksSearch(bookSearchState: BookSearchType, publicUserId, online) {
+function booksSearch(publicUserId, online) {
   //let bookSearchFilters = selectCurrentSearch(store.getState() as any);
-  let bookSearchFilters: any = { page: 1, pageSize: 50, subjectIds: [], tagIds: [] };
+  let bookSearchFilters: any = { page: 1, pageSize: 50, subjectIds: [], tagIds: [], searchVersion: "", sort: "_id" };
 
   let getBooksVariables: any = {
     page: +bookSearchFilters.page,
@@ -223,15 +238,15 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId, online) {
     publisher_contains: bookSearchFilters.publisher || void 0,
     publicUserId: publicUserId,
     subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-    ver: "" + bookSearchState.searchVersion,
+    ver: "" + bookSearchFilters.searchVersion,
     cache: online ? 1 : void 0
   };
-  if (bookSearchFilters.pages != "") {
+
+  if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {
     getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
   }
 
   return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
-    debugger;
     if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
       return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta ? resp.data.allBooks.Meta.count : -1 };
     }
@@ -244,3 +259,22 @@ export function useBooksState(): [BooksState, any, any] {
   let actions = { loadBooks };
   return getStatePacket<BooksState>(booksReducer, initialBooksState, actions);
 }
+
+export const useBookList = () => {
+  let [{ subjectHash }] = useContext(SubjectsContext);
+  let [{ tagHash }] = useContext(TagsContext);
+  let [{ booksHash, booksLoading }] = useContext(BooksContext);
+
+  return useMemo(() => {
+    let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
+    books.forEach((b: IBookDisplay) => {
+      b.subjectObjects = (b.subjects || []).map(s => subjectHash[s]).filter(s => s);
+      b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
+      b.authors = b.authors || [];
+
+      let d = new Date(+b.dateAdded);
+      b.dateAddedDisplay = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    });
+    return { booksList: books as IBookDisplay[], booksLoading };
+  }, [booksHash, booksLoading, subjectHash, tagHash]);
+};
