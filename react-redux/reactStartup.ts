@@ -28,6 +28,7 @@ import "util/ajaxUtil";
 import createHistory from "history/createBrowserHistory";
 import setupServiceWorker from "./util/setupServiceWorker";
 import { isLoggedIn } from "applicationRoot/rootReducer";
+import { loadTags } from "applicationRoot/tags/actionCreators";
 
 setupServiceWorker();
 
@@ -36,6 +37,7 @@ let publicUserCache = {};
 
 if (isLoggedIn().logged_in) {
   store.dispatch(loadSubjects());
+  store.dispatch(loadTags());
 }
 
 export const history = createHistory();
@@ -130,6 +132,7 @@ function loadModule(location) {
       if (publicUserInfo) {
         store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
         store.dispatch(loadSubjects());
+        store.dispatch(loadTags());
       }
 
       if (moduleObject.reducer) {
