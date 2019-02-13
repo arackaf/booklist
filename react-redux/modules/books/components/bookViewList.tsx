@@ -18,7 +18,7 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
 import { REQUEST_MOBILE, REQUEST_DESKTOP } from "applicationRoot/appState";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
-import { useBooksState, BooksState } from "../booksState";
+import { useBooksState, BooksState, useBookList } from "../booksState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
@@ -55,26 +55,29 @@ const prepBookForSaving = book => {
 export const BooksContext = createContext<[BooksState, any, any]>(null);
 export const TagsContext = createContext<[TagsState, any, any]>(null);
 
-export const BookModuleRoot = ({ children }) => (
-  <div style={{}}>
-    <Suspense fallback={<Loading />}>
-      <BooksContext.Provider value={useBooksState()}>
-        <TagsContext.Provider value={useTagsState()}>
-          <ConnectedBookViewingList />
-        </TagsContext.Provider>
-      </BooksContext.Provider>
-    </Suspense>
-  </div>
-);
+export const BookModuleRoot = ({ children }) => {
+  return (
+    <div style={{}}>
+      <Suspense fallback={<Loading />}>
+        <BooksContext.Provider value={useBooksState()}>
+          <TagsContext.Provider value={useTagsState()}>
+            <ConnectedBookViewingList />
+          </TagsContext.Provider>
+        </BooksContext.Provider>
+      </Suspense>
+    </div>
+  );
+};
 
 const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> = props => {
+  const { booksList, booksLoading } = useBookList();
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
-  const editSubjectsForSelectedBooks = () => openBookSubModal(props.booksList.filter(b => props.selectedBookHash[b._id]));
+  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => props.selectedBookHash[b._id]));
 
   const [bookTagModifying, bookTagModalLoaded, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
   const editTagsForBook = book => openBookTagModal([book]);
-  const editTagsForSelectedBooks = () => openBookTagModal(props.booksList.filter(b => props.selectedBookHash[b._id]));
+  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => props.selectedBookHash[b._id]));
 
   const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();
@@ -124,7 +127,7 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
           beginEditFilters={beginEditFilters}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!props.booksList.length && !props.booksLoading ? (
+          {!booksList.length && !booksLoading ? (
             <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
               No books found
             </div>
