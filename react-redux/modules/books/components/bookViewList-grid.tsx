@@ -20,11 +20,14 @@ interface ILocalProps {
   online: any;
 }
 
-const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
-  let [{ isPublic: viewingPublic }] = useContext(AppContext);
+const BookRow: SFC<ILocalProps> = props => {
+  let [{ isPublic: viewingPublic, publicUserId }] = useContext(AppContext);
   let { book, index } = props;
 
-  let [{ selectedBooks }] = useContext(BooksContext);
+  let [
+    { selectedBooks },
+    { toggleSelectBook, collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead }
+  ] = useContext(BooksContext);
   let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
   let [{ online }] = useContext(AppContext);
@@ -33,7 +36,7 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
     <tr key={book._id} style={style}>
       {!viewingPublic && online ? (
         <td>
-          <a style={{ fontSize: "12pt" }} onClick={() => props.toggleSelectBook(book._id)}>
+          <a style={{ fontSize: "12pt" }} onClick={() => toggleSelectBook(book._id)}>
             <i className={"fal " + (!!selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
           </a>
         </td>
@@ -53,11 +56,11 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-spin fa-spinner" />
             </a>
           ) : book.expanded ? (
-            <a target="_new" onClick={() => props.collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
+            <a target="_new" onClick={() => collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
             </a>
           ) : (
-            <a target="_new" onClick={() => props.expandBook(book._id)} className="margin-right grid-hover-filter inline-filter">
+            <a target="_new" onClick={() => expandBook(book._id, publicUserId)} className="margin-right grid-hover-filter inline-filter">
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
             </a>
           )
@@ -76,23 +79,18 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBook(book)}>
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
             </a>
-            <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.setPendingDeleteBook(book)}>
+            <a className="margin-right grid-hover-filter inline-filter" onClick={() => setPendingDeleteBook(book)}>
               <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
             </a>
           </>
         ) : null}
         {book.pendingDelete ? (
-          <AjaxButton
-            running={book.deleting}
-            runningText="Deleting"
-            onClick={() => props.deleteBook(book)}
-            className="btn btn-xs btn-danger margin-right"
-          >
+          <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => deleteBook(book)} className="btn btn-xs btn-danger margin-right">
             Confirm delete
           </AjaxButton>
         ) : null}
         {book.pendingDelete ? (
-          <button onClick={() => props.cancelPendingDeleteBook(book)} className="btn btn-xs btn-primary">
+          <button onClick={() => cancelPendingDeleteBook(book)} className="btn btn-xs btn-primary">
             Cancel
           </button>
         ) : null}
@@ -129,11 +127,11 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
         <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
           {!viewingPublic ? (
             !!book.isRead ? (
-              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => props.setUnRead(book._id)} preset="success-xs">
+              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => setUnRead(book._id)} preset="success-xs">
                 Read <i className="fa fa-fw fa-check" />
               </AjaxButton>
             ) : (
-              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => props.setRead(book._id)} preset="default-xs">
+              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => setRead(book._id)} preset="default-xs">
                 Set read
               </AjaxButton>
             )
@@ -154,10 +152,6 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
     </tr>
   );
 };
-let BookRow: any = connect(
-  null,
-  actions
-)(BookRowRaw);
 
 const BookRowDetailsRaw: SFC<{ book: IBookDisplay; index: number }> = props => {
   let [{ isPublic: viewingPublic }] = useContext(AppContext);
