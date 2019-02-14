@@ -3,7 +3,10 @@ import shallowEqual from "shallow-equal/objects";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 
-import { BOOK_SEARCH_VERSION_KEY, getSearchVersion } from "applicationRoot/rootReducer";
+import { BOOK_SEARCH_VERSION_KEY, getSearchVersion, getStatePacket } from "applicationRoot/rootReducer";
+import { useContext, useMemo } from "react";
+import { SubjectsContext } from "applicationRoot/renderUI";
+import { BooksSearchContext, TagsContext, BooksContext } from "./components/bookViewList";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
 const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
@@ -16,9 +19,9 @@ const initialState = {
   view: "",
   hashFilters: {} as typeof defaultSearchValuesHash
 };
-export type BookSearchType = typeof initialState;
+export type BookSearchState = typeof initialState;
 
-export function bookSearchReducer(state = initialState, action): BookSearchType {
+export function bookSearchReducer(state = initialState, action): BookSearchState {
   switch (action.type) {
     case SET_BASIC_LIST_VIEW:
       return { ...state, view: BASIC_LIST_VIEW };
@@ -60,19 +63,26 @@ const defaultSearchValuesHash = {
   userId: ""
 };
 
-export const selectSelectedSubjects = createSelector(
-  (state: BooksModuleType) => state.booksModule.bookSearch,
-  (state: BooksModuleType) => state.app.subjectHash,
-  (filters, hash) => projectSelectedItems(filters.hashFilters.subjects, hash)
-);
+export function useBooksSearchState(): [BookSearchState, any, any] {
+  let actions = {};
+  return getStatePacket<BookSearchState>(bookSearchReducer, initialState, actions);
+}
 
-export const selectSelectedTags = createSelector(
-  (state: BooksModuleType) => state.booksModule.bookSearch,
-  (state: BooksModuleType) => state.app.tagHash,
-  (filters, hash) => {
-    return projectSelectedItems(filters.hashFilters.tags, hash);
-  }
-);
+export const useSelectedSubjects = () => {
+  const [{ hashFilters }] = useContext(BooksSearchContext);
+  const { subjects } = hashFilters;
+  const [{ subjectHash }] = useContext(SubjectsContext);
+
+  return useMemo(() => projectSelectedItems(subjects, subjectHash), [subjects, subjectHash]);
+};
+
+export const useSelectedTags = () => {
+  const [{ hashFilters }] = useContext(BooksSearchContext);
+  const { tags } = hashFilters;
+  const [{ tagHash }] = useContext(TagsContext);
+
+  return useMemo(() => projectSelectedItems(tags, tagHash), [tags, tagHash]);
+};
 
 function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
   return ids
@@ -81,26 +91,27 @@ function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
     .filter(res => res);
 }
 
-export const selectCurrentSearch = createSelector(
-  (state: BooksModuleType) => state.booksModule.bookSearch,
-  selectSelectedSubjects,
-  selectSelectedTags,
-  (bookSearch, subjects, tags) => {
-    let filters = bookSearch.hashFilters;
-    let tagsHashValue = bookSearch.hashFilters.tags;
-    let subjectsHashValue = bookSearch.hashFilters.subjects;
+export const useCurrentSearch = () => {
+  const [{ hashFilters: filters }] = useContext(BooksSearchContext);
+  const { subjects: subjectsHashValue, tags: tagsHashValue } = filters;
 
-    return Object.assign({}, defaultSearchValuesHash, filters, {
-      selectedSubjects: subjects,
-      selectedTags: tags,
-      tagIds: tagsHashValue ? tagsHashValue.split("-") : [],
-      subjectIds: subjectsHashValue ? subjectsHashValue.split("-") : []
-    });
-  }
-);
+  const subjects = useSelectedSubjects();
+  const tags = useSelectedTags();
+
+  return useMemo(
+    () =>
+      Object.assign({}, defaultSearchValuesHash, filters, {
+        selectedSubjects: subjects,
+        selectedTags: tags,
+        tagIds: tagsHashValue ? tagsHashValue.split("-") : [],
+        subjectIds: subjectsHashValue ? subjectsHashValue.split("-") : []
+      }),
+    [filters, subjects, tags, subjectsHashValue, tagsHashValue]
+  );
+};
 
 export const selectBookSearchState = createSelector(
-  selectCurrentSearch,
+  useCurrentSearch,
   (state: BooksModuleType) => state.booksModule.bookSearch,
   (currentSearch, bookSearch) => {
     let filtersHash = { ...bookSearch.hashFilters };

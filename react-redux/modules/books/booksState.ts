@@ -7,7 +7,7 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
-import { BookSearchType } from "./booksSearchState";
+import { BookSearchState } from "./booksSearchState";
 import { AppState } from "applicationRoot/appState";
 import { useMemo, useContext } from "react";
 import { SubjectsContext } from "applicationRoot/renderUI";

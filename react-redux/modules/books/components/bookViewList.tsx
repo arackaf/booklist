@@ -19,6 +19,7 @@ import { AppContext } from "applicationRoot/renderUI";
 import { REQUEST_MOBILE, REQUEST_DESKTOP } from "applicationRoot/appState";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
 import { useBooksState, BooksState, useBookList } from "../booksState";
+import { BookSearchState, useBooksSearchState } from "../booksSearchState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
@@ -41,16 +42,23 @@ const prepBookForSaving = book => {
 };
 
 export const BooksContext = createContext<[BooksState, any, any]>(null);
+export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
 export const TagsContext = createContext<[TagsState, any, any]>(null);
 
-export const BookModuleRoot = ({ children }) => {
+export const BookModuleRoot = () => {
+  let booksState = useBooksState();
+  let booksSearchState = useBooksSearchState();
+  let tagsState = useTagsState();
+
   return (
     <div style={{}}>
       <Suspense fallback={<Loading />}>
-        <BooksContext.Provider value={useBooksState()}>
-          <TagsContext.Provider value={useTagsState()}>
-            <BookViewingList />
-          </TagsContext.Provider>
+        <BooksContext.Provider value={booksState}>
+          <BooksSearchContext.Provider value={booksSearchState}>
+            <TagsContext.Provider value={tagsState}>
+              <BookViewingList />
+            </TagsContext.Provider>
+          </BooksSearchContext.Provider>
         </BooksContext.Provider>
       </Suspense>
     </div>

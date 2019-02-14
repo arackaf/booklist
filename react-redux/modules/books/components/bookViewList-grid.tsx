@@ -8,13 +8,14 @@ import { IBookDisplay } from "modules/books/reducers/books/reducer";
 import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 import { AppContext } from "applicationRoot/renderUI";
 import { useBookSelection, useBookList } from "../booksState";
+import { useCurrentSearch } from "../booksSearchState";
+import { BooksContext } from "./bookViewList";
 
 interface ILocalProps {
   book: IBookDisplay;
   editBooksSubjects: any;
   editBooksTags: any;
   index: number;
-  selectedBooks: any;
   editBook: any;
   online: any;
 }
@@ -22,6 +23,8 @@ interface ILocalProps {
 const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
   let [{ isPublic: viewingPublic }] = useContext(AppContext);
   let { book, index } = props;
+
+  let [{ selectedBooks }] = useContext(BooksContext);
   let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
   let [{ online }] = useContext(AppContext);
@@ -31,7 +34,7 @@ const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
       {!viewingPublic && online ? (
         <td>
           <a style={{ fontSize: "12pt" }} onClick={() => props.toggleSelectBook(book._id)}>
-            <i className={"fal " + (!!props.selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
+            <i className={"fal " + (!!selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
           </a>
         </td>
       ) : null}
@@ -227,22 +230,23 @@ type BookViewListGridTypes = ReturnType<typeof selectBookListComponentState> &
   actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
+  let [{ selectedBooks }] = useContext(BooksContext);
   const { booksList } = useBookList();
   const { allAreChecked } = useBookSelection();
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
+  const { sort: currentSort, sortDirection } = useCurrentSearch();
 
   const setSort = column => {
-    let currentSort = props.currentSort;
     let newDirection = "asc";
     if (currentSort === column) {
-      newDirection = props.sortDirection == "asc" ? "desc" : "asc";
+      newDirection = sortDirection == "asc" ? "desc" : "asc";
     }
 
     props.setSortOrder(column, newDirection);
   };
 
-  const potentialSortIcon = <i className={"fa fa-angle-" + (props.sortDirection == "asc" ? "up" : "down")} />;
-  const sortIconIf = column => (column == props.currentSort ? potentialSortIcon : null);
+  const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
+  const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
   const { editBooksSubjects, editBooksTags } = props;
   const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
@@ -293,7 +297,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   editBook={props.editBook}
                   index={index}
                   viewingPublic={viewingPublic}
-                  selectedBooks={props.selectedBooks}
+                  selectedBooks={selectedBooks}
                   online={online}
                 />,
                 book.expanded ? <BookRowDetails key={1} book={book} index={index} viewingPublic={viewingPublic} /> : null
@@ -307,6 +311,6 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
 };
 
 export default connect(
-  selectBookListComponentState,
+  null,
   actions
 )(BookViewListGrid);
