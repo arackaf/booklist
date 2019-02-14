@@ -27,18 +27,6 @@ const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-
 const TagEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
 const BookSearchModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
 
-const mainSelector = createSelector(
-  selectBookList,
-  selectBookSelection,
-  (books, bookSelection) => {
-    return {
-      ...books,
-      ...bookSelection
-    };
-  }
-);
-type MainSelectorType = ReturnType<typeof mainSelector>;
-
 const useCodeSplitModal = (initialOpenData = false) => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
   return [openState, isLoaded, (val = true) => setModalState([val, true]), () => setModalState([false, true])];
@@ -61,7 +49,7 @@ export const BookModuleRoot = ({ children }) => {
       <Suspense fallback={<Loading />}>
         <BooksContext.Provider value={useBooksState()}>
           <TagsContext.Provider value={useTagsState()}>
-            <ConnectedBookViewingList />
+            <BookViewingList />
           </TagsContext.Provider>
         </BooksContext.Provider>
       </Suspense>
@@ -69,15 +57,30 @@ export const BookModuleRoot = ({ children }) => {
   );
 };
 
-const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> = props => {
+const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
+  let tagsPacket = useTagsState();
+  let [tagsState, { loadTags }, dispatch] = tagsPacket;
+  let [appState] = useContext(AppContext);
+
+  let booksPacket = useContext(BooksContext);
+  let [booksState, actions] = booksPacket;
+
+  useEffect(() => {
+    actions.loadBooks(appState);
+  }, []);
+
+  useEffect(() => {
+    loadTags(appState);
+  }, []);
+
   const { booksList, booksLoading } = useBookList();
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
-  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => props.selectedBookHash[b._id]));
+  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => booksState.selectedBooks[b._id]));
 
   const [bookTagModifying, bookTagModalLoaded, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
   const editTagsForBook = book => openBookTagModal([book]);
-  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => props.selectedBookHash[b._id]));
+  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => booksState.selectedBooks[b._id]));
 
   const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();
@@ -95,21 +98,6 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
       props.dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
     });
   };
-
-  let tagsPacket = useTagsState();
-  let [tagsState, { loadTags }, dispatch] = tagsPacket;
-  let [appState] = useContext(AppContext);
-
-  let booksPacket = useBooksState();
-  let [booksState, actions] = booksPacket;
-
-  useEffect(() => {
-    actions.loadBooks(appState);
-  }, []);
-
-  useEffect(() => {
-    loadTags(appState);
-  }, []);
 
   let dragTitle = editingBook
     ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
@@ -163,5 +151,3 @@ const BookViewingList: SFC<MainSelectorType & MutationType & { dispatch: any }> 
     </>
   );
 };
-
-const ConnectedBookViewingList = connect(mainSelector)(BookViewingList);
