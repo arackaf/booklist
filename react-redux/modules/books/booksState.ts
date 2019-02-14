@@ -85,7 +85,7 @@ export interface IBookDisplay extends IBookRaw {
 
 const initialBooksState = {
   booksHash: hashOf<IBookRaw>(),
-  booksLoading: false,
+  booksLoading: true,
   selectedBooks: {} as { [s: string]: boolean },
   resultsCount: 0,
   reloadOnActivate: false,
@@ -277,4 +277,17 @@ export const useBookList = () => {
     });
     return { booksList: books as IBookDisplay[], booksLoading };
   }, [booksHash, booksLoading, subjectHash, tagHash]);
+};
+
+export const useBookSelection = () => {
+  let [{ booksHash, selectedBooks }] = useContext(BooksContext);
+
+  return useMemo(() => {
+    let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
+    return {
+      allAreChecked: Object.keys(booksHash).length == selectedIds,
+      selectedBooksCount: selectedIds,
+      selectedBookHash: selectedBooks
+    };
+  }, [booksHash, selectedBooks]);
 };

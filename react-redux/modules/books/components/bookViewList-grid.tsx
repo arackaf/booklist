@@ -1,5 +1,4 @@
-import React, { SFC, CSSProperties } from "react";
-const { useState, useMemo } = React as any;
+import React, { SFC, CSSProperties, useContext } from "react";
 import { connect } from "react-redux";
 
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
@@ -7,21 +6,25 @@ import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { IBookDisplay } from "modules/books/reducers/books/reducer";
 import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
+import { AppContext } from "applicationRoot/renderUI";
+import { useBookSelection, useBookList } from "../booksState";
 
 interface ILocalProps {
   book: IBookDisplay;
   editBooksSubjects: any;
   editBooksTags: any;
   index: number;
-  viewingPublic: boolean;
   selectedBooks: any;
   editBook: any;
   online: any;
 }
 
 const BookRowRaw: SFC<ILocalProps & actionsType> = props => {
-  let { book, index, viewingPublic, online } = props;
+  let [{ isPublic: viewingPublic }] = useContext(AppContext);
+  let { book, index } = props;
   let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
+
+  let [{ online }] = useContext(AppContext);
 
   return (
     <tr key={book._id} style={style}>
@@ -153,8 +156,9 @@ let BookRow: any = connect(
   actions
 )(BookRowRaw);
 
-const BookRowDetailsRaw: SFC<{ book: IBookDisplay; index: number; viewingPublic: boolean }> = props => {
-  let { book, index, viewingPublic } = props;
+const BookRowDetailsRaw: SFC<{ book: IBookDisplay; index: number }> = props => {
+  let [{ isPublic: viewingPublic }] = useContext(AppContext);
+  let { book, index } = props;
   let backgroundColor = index % 2 ? "white" : "#f9f9f9";
   return (
     <tr key={"details" + book._id} style={{ backgroundColor }}>
@@ -223,6 +227,10 @@ type BookViewListGridTypes = ReturnType<typeof selectBookListComponentState> &
   actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
+  const { booksList } = useBookList();
+  const { allAreChecked } = useBookSelection();
+  const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
+
   const setSort = column => {
     let currentSort = props.currentSort;
     let newDirection = "asc";
@@ -236,12 +244,12 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const potentialSortIcon = <i className={"fa fa-angle-" + (props.sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == props.currentSort ? potentialSortIcon : null);
 
-  const { editBooksSubjects, editBooksTags, viewingPublic, online } = props;
+  const { editBooksSubjects, editBooksTags } = props;
   const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
 
   return (
     <div style={{ minHeight: 400 }}>
-      {props.booksList.length ? (
+      {booksList.length ? (
         <div>
           <table style={{ position: "relative" }} className="table no-padding-top">
             <thead>
@@ -249,7 +257,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                 {!viewingPublic && online ? (
                   <th style={{ ...stickyHeaderStyle }}>
                     <a style={{ fontSize: "12pt" }} onClick={props.toggleCheckAll}>
-                      <i className={"fal " + (!!props.allAreChecked ? "fa-check-square" : "fa-square")} />
+                      <i className={"fal " + (!!allAreChecked ? "fa-check-square" : "fa-square")} />
                     </a>
                   </th>
                 ) : null}
@@ -276,7 +284,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
               </tr>
             </thead>
             <tbody>
-              {props.booksList.map((book, index) => [
+              {booksList.map((book, index) => [
                 <BookRow
                   key={0}
                   editBooksSubjects={editBooksSubjects}
