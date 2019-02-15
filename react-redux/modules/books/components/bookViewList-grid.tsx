@@ -290,8 +290,6 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   book={book}
                   editBook={props.editBook}
                   index={index}
-                  viewingPublic={viewingPublic}
-                  selectedBooks={selectedBooks}
                   online={online}
                 />,
                 book.expanded ? <BookRowDetails key={1} book={book} index={index} viewingPublic={viewingPublic} /> : null
