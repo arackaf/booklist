@@ -75,7 +75,6 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId, online) {
     publisher_contains: bookSearchFilters.publisher || void 0,
     publicUserId: publicUserId,
     subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-    ver: "" + bookSearchState.searchVersion,
     cache: online ? 1 : void 0
   };
   if (bookSearchFilters.pages != "") {

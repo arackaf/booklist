@@ -12,11 +12,10 @@ export function loadTags() {
   return function(dispatch, getState) {
     let app: AppType = getState().app;
     let publicUserId = app.publicUserId;
-    let tagsVersion = app.tagsVersion;
 
     dispatch({ type: LOAD_TAGS });
 
-    graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0, cache: 5, ver: tagsVersion }).then(({ data: { allTags } }) => {
+    graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0, cache: 5 }).then(({ data: { allTags } }) => {
       dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
     });
   };
