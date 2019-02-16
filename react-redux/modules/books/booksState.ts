@@ -7,7 +7,7 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
-import { BookSearchState } from "./booksSearchState";
+import { BookSearchState, useBooksSearchState, useCurrentSearch } from "./booksSearchState";
 import { AppState } from "applicationRoot/appState";
 import { useMemo, useContext } from "react";
 import { SubjectsContext } from "applicationRoot/renderUI";
@@ -358,4 +358,12 @@ export const useBookSelection = () => {
       selectedBookHash: selectedBooks
     };
   }, [booksHash, selectedBooks]);
+};
+
+export const useBookLoadingInfo = () => {
+  const [booksModule] = useBooksState();
+  const bookSearch = useCurrentSearch();
+
+  const totalPages = Math.ceil(booksModule.resultsCount / bookSearch.pageSize);
+  return { resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading, totalPages };
 };
