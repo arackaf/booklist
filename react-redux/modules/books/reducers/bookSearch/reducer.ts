@@ -5,14 +5,11 @@ import { BooksModuleType } from "modules/books/reducers/reducer";
 import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
 import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
 import { EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
-import { BOOK_SEARCH_VERSION_KEY, getSearchVersion } from "applicationRoot/rootReducer";
+import { BOOK_SEARCH_VERSION_KEY } from "applicationRoot/rootReducer";
 import { NEW_LOGIN } from "applicationRoot/rootReducerActionNames";
-
-let initialSearchVersion = getSearchVersion(BOOK_SEARCH_VERSION_KEY);
 
 const initialState = {
   view: "",
-  searchVersion: initialSearchVersion,
   hashFilters: {} as typeof defaultSearchValuesHash
 };
 export type BookSearchType = typeof initialState;
@@ -29,17 +26,6 @@ export function bookSearchReducer(state = initialState, action): BookSearchType 
         return { ...state, hashFilters: filters };
       }
       return { ...state };
-    case BOOK_SAVED:
-    case BOOK_READ_CHANGED:
-    case BOOK_DELETED:
-    case MANUAL_BOOK_SAVED:
-    case EDITING_BOOK_SAVED:
-    case SET_BOOKS_SUBJECTS:
-    case SET_BOOKS_TAGS:
-    case NEW_LOGIN:
-      let newSearchVersion = +new Date();
-      localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + newSearchVersion);
-      return { ...state, searchVersion: newSearchVersion };
   }
   return state;
 }

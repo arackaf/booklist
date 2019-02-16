@@ -57,11 +57,10 @@ export function loadSubjects() {
     subjectsLoaded = true;
     let app: AppType = getState().app;
     let publicUserId = app.publicUserId;
-    let subjectsVersion = app.subjectsVersion;
     dispatch({ type: LOAD_SUBJECTS });
 
     Promise.all([
-      graphqlClient.runQuery(AllSubjectsQuery, { publicUserId, cache: 5, ver: subjectsVersion }),
+      graphqlClient.runQuery(AllSubjectsQuery, { publicUserId, cache: 5 }),
       graphqlClient.runQuery(AllLabelColorsQuery, { cache: 9 })
     ]).then(([{ data }, { data: { allLabelColors: { LabelColors: labelColors } } }]) => {
       dispatch({ type: LOAD_COLORS, colors: labelColors });
