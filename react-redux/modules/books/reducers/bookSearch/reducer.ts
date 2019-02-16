@@ -3,10 +3,6 @@ import shallowEqual from "shallow-equal/objects";
 
 import { BooksModuleType } from "modules/books/reducers/reducer";
 import { HASH_CHANGED, SET_GRID_VIEW, SET_BASIC_LIST_VIEW, GRID_VIEW, BASIC_LIST_VIEW } from "./actionNames";
-import { BOOK_SAVED, MANUAL_BOOK_SAVED } from "modules/scan/reducers/actionNames";
-import { EDITING_BOOK_SAVED, BOOK_READ_CHANGED, BOOK_DELETED, SET_BOOKS_SUBJECTS, SET_BOOKS_TAGS } from "../books/actionNames";
-import { BOOK_SEARCH_VERSION_KEY } from "applicationRoot/rootReducer";
-import { NEW_LOGIN } from "applicationRoot/rootReducerActionNames";
 
 const initialState = {
   view: "",
