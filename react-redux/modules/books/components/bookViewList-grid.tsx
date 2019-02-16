@@ -214,7 +214,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number }> = props => {
   );
 };
 
-type BookViewListGridTypes = ReturnType<typeof selectBookListComponentState> & { editBooksSubjects: any; editBooksTags: any; editBook: any };
+type BookViewListGridTypes = { editBooksSubjects: any; editBooksTags: any; editBook: any };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   let [{}, { setSortOrder, toggleCheckAll }] = useContext(BooksContext);

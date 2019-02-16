@@ -1,13 +1,12 @@
-import { BOOK_SEARCH_VERSION_KEY, hashOf, getSearchVersion, getStatePacket, graphqlClient } from "applicationRoot/rootReducer";
+import { hashOf, getStatePacket, graphqlClient } from "applicationRoot/rootReducer";
 import update from "immutability-helper";
 import { bulkMerge } from "util/immutableHelpers";
-import shallowEqual from "shallow-equal/objects";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
-import { BookSearchState, useBooksSearchState, useCurrentSearch } from "./booksSearchState";
+import { useCurrentSearch } from "./booksSearchState";
 import { AppState } from "applicationRoot/appState";
 import { useMemo, useContext } from "react";
 import { SubjectsContext } from "applicationRoot/renderUI";
@@ -35,8 +34,6 @@ const EXPAND_BOOK = "EXPAND_BOOK";
 const COLLAPSE_BOOK = "COLLAPSE_BOOK";
 
 const EDITING_BOOK_SAVED = "EDITING_BOOK_SAVED";
-
-let initialSearchVersion = getSearchVersion(BOOK_SEARCH_VERSION_KEY);
 
 interface IEditorialReview {
   content: string;
@@ -88,8 +85,7 @@ const initialBooksState = {
   booksLoading: true,
   selectedBooks: {} as { [s: string]: boolean },
   resultsCount: 0,
-  reloadOnActivate: false,
-  searchVersion: initialSearchVersion
+  reloadOnActivate: false
 };
 export type BooksState = typeof initialBooksState;
 
@@ -135,10 +131,7 @@ export function booksReducer(state = initialBooksState, action): BooksState {
         }
       });
     }
-    //TODO:
-    // case BOOK_SAVED:
-    // case MANUAL_BOOK_SAVED:
-    //   return { ...state, reloadOnActivate: true };
+
     case BOOK_READ_CHANGING:
       return update(state, { booksHash: bulkMerge(action._ids, { readChanging: true }) });
     case BOOK_READ_CHANGED:
@@ -180,19 +173,6 @@ export function booksReducer(state = initialBooksState, action): BooksState {
         }
       });
   }
-
-  //TODO:
-  // case BOOK_SAVED:
-  // case BOOK_READ_CHANGED:
-  // case BOOK_DELETED:
-  // case MANUAL_BOOK_SAVED:
-  // case EDITING_BOOK_SAVED:
-  // case SET_BOOKS_SUBJECTS:
-  // case SET_BOOKS_TAGS:
-  // case NEW_LOGIN:
-  //   let newSearchVersion = +new Date();
-  //   localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + newSearchVersion);
-  //   return { ...state, searchVersion: newSearchVersion };
 
   return state;
 }
