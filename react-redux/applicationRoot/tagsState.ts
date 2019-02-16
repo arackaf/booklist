@@ -32,7 +32,7 @@ export default function tagsReducer(state = initialState, action) {
   return state;
 }
 
-const loadTags = (app: AppState) => (dispatch, state: TagsState) => {
+const loadTags = (app: AppState) => dispatch => {
   let publicUserId = app.publicUserId;
 
   dispatch({ type: LOAD_TAGS });
