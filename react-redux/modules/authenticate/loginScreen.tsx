@@ -5,7 +5,6 @@ import ajaxUtil from "util/ajaxUtil";
 import { store } from "applicationRoot/store";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 import { loadSubjects, newLogin } from "applicationRoot/rootReducerActionCreators";
-import { BOOK_SEARCH_VERSION_KEY, SUBJECTS_SEARCH_VERSION_KEY, TAGS_SEARCH_VERSION_KEY } from "applicationRoot/rootReducer";
 
 const errorCodes = {
   s1: "This user already exists",
@@ -30,9 +29,6 @@ class Login extends Component<any, any> {
       "/react-redux/login",
       { username, password, rememberme },
       () => {
-        localStorage.setItem(BOOK_SEARCH_VERSION_KEY, "" + +new Date());
-        localStorage.setItem(SUBJECTS_SEARCH_VERSION_KEY, "" + +new Date());
-        localStorage.setItem(TAGS_SEARCH_VERSION_KEY, "" + +new Date());
         store.dispatch(newLogin());
         store.dispatch(loadTags());
         store.dispatch(loadSubjects());
