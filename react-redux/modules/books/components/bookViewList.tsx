@@ -14,7 +14,7 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
 import { useBooksState, BooksState, useBookList } from "../booksState";
-import { BookSearchState, useBooksSearchState } from "../booksSearchState";
+import { BookSearchState, useBooksSearchState, useCurrentSearch } from "../booksSearchState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
@@ -67,9 +67,11 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
   let booksPacket = useContext(BooksContext);
   let [booksState, { loadBooks }] = booksPacket;
 
+  let searchState = useCurrentSearch();
+
   useEffect(() => {
-    loadBooks(appState);
-  }, []);
+    loadBooks(searchState, appState);
+  }, [searchState]);
 
   useEffect(() => {
     loadTags(appState);

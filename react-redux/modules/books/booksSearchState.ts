@@ -2,7 +2,7 @@ import shallowEqual from "shallow-equal/objects";
 
 import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { getStatePacket } from "applicationRoot/rootReducer";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useEffect } from "react";
 import { SubjectsContext } from "applicationRoot/renderUI";
 import { BooksSearchContext, TagsContext, BooksContext } from "./components/bookViewList";
 import { AppState } from "applicationRoot/appState";
@@ -65,7 +65,18 @@ const defaultSearchValuesHash = {
 
 export function useBooksSearchState(): [BookSearchState, any, any] {
   let actions = { setViewDesktop, setViewBasicList, hashChanged };
-  return getStatePacket<BookSearchState>(bookSearchReducer, initialState, actions);
+  let initialSearchState = useMemo(() => ({ ...initialState, hashFilters: getCurrentHistoryState().searchState }), []);
+  let result = getStatePacket<BookSearchState>(bookSearchReducer, initialSearchState, actions);
+  let dispatch = result[2];
+
+  useEffect(() => {
+    return history.listen(() => {
+      const { searchState } = getCurrentHistoryState();
+      dispatch(hashChanged(searchState));
+    });
+  }, []);
+
+  return result;
 }
 
 export const useSelectedSubjects = () => {
