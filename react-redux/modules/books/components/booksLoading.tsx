@@ -1,27 +1,15 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import Loading from "applicationRoot/components/loading";
-import { connect } from "react-redux";
-import { createSelector } from "reselect";
+import { TagsContext, BooksContext } from "./bookViewList";
+import { SubjectsContext } from "applicationRoot/renderUI";
 
-import { BooksModuleType } from "modules/books/reducers/reducer";
-import { selectBookList } from "modules/books/reducers/books/reducer";
+const BooksLoading = () => {
+  const [{ booksLoading }] = useContext(BooksContext);
+  const [{ loaded: tagsLoaded }] = useContext(TagsContext);
+  const [{ subjectsLoaded }] = useContext(SubjectsContext);
 
-const selector = createSelector(
-  (state: BooksModuleType) => state.app,
-  selectBookList,
-  (app, booksList) => {
-    return {
-      subjectsLoaded: app.subjectsLoaded,
-      tagsLoaded: app.tagsLoaded,
-      booksLoading: booksList.booksLoading
-    };
-  }
-);
+  console.log({ booksLoading, subjectsLoaded, tagsLoaded });
+  return booksLoading || !subjectsLoaded || !tagsLoaded ? <Loading /> : null;
+};
 
-class BooksLoading extends Component<Partial<ReturnType<typeof selector>>, any> {
-  render() {
-    return this.props.booksLoading || !this.props.subjectsLoaded ? <Loading /> : null;
-  }
-}
-
-export default connect(selector)(BooksLoading);
+export default BooksLoading;

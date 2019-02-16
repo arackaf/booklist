@@ -61,8 +61,7 @@ export const BookModuleRoot = () => {
 };
 
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
-  let tagsPacket = useTagsState();
-  let [tagsState, { loadTags }, dispatch] = tagsPacket;
+  let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
 
   let booksPacket = useContext(BooksContext);
