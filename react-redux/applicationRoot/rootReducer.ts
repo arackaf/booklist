@@ -30,10 +30,6 @@ export const graphqlClient = new Client({
 
 setDefaultClient(graphqlClient);
 
-export const BOOK_SEARCH_VERSION_KEY = "bookSearchVersion";
-export const SUBJECTS_SEARCH_VERSION_KEY = "subjectsSearchVersion";
-export const TAGS_SEARCH_VERSION_KEY = "tagsSearchVersion";
-
 interface ITag {
   _id: string;
   name: string;
