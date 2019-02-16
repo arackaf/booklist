@@ -7,7 +7,7 @@ import "./styles.css";
 import "immutability-helper";
 import { Client, setDefaultClient } from "micro-graphql-react";
 
-import { renderUI, clearUI } from "applicationRoot/renderUI";
+import { renderUI } from "applicationRoot/renderUI";
 import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";

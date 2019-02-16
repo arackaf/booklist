@@ -191,19 +191,16 @@ function createBooksHash(booksArr) {
   return result;
 }
 
-export const loadBooks = (app: AppState) => dispatch => {
+export const loadBooks = (bookSearchFilters, app: AppState) => dispatch => {
   dispatch({ type: LOAD_BOOKS });
 
-  Promise.resolve(booksSearch(app.publicUserId, app.online)).then(booksResp => {
+  Promise.resolve(booksSearch(bookSearchFilters, app.publicUserId, app.online)).then(booksResp => {
     window.scrollTo(0, 0);
     dispatch(booksResults(booksResp, booksResp.count));
   });
 };
 
-function booksSearch(publicUserId, online) {
-  //let bookSearchFilters = selectCurrentSearch(store.getState() as any);
-  let bookSearchFilters: any = { page: 1, pageSize: 50, subjectIds: [], tagIds: [], searchVersion: "", sort: "_id" };
-
+function booksSearch(bookSearchFilters, publicUserId, online) {
   let getBooksVariables: any = {
     page: +bookSearchFilters.page,
     pageSize: bookSearchFilters.pageSize,
@@ -218,7 +215,6 @@ function booksSearch(publicUserId, online) {
     publisher_contains: bookSearchFilters.publisher || void 0,
     publicUserId: publicUserId,
     subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-    ver: "" + bookSearchFilters.searchVersion,
     cache: online ? 1 : void 0
   };
 
