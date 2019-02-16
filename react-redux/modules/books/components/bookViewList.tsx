@@ -1,13 +1,10 @@
 import React, { SFC, Suspense, lazy, useContext, useEffect, createContext } from "react";
 const { useState } = React as any;
-import { connect } from "react-redux";
-import { createSelector } from "reselect";
 
 import DisplayBookResults from "./displayBookResults";
 import BooksMenuBar from "./booksMenuBar";
 import BooksLoading from "./booksLoading";
 
-import { selectBookList, selectBookSelection } from "../reducers/books/reducer";
 import Loading from "applicationRoot/components/loading";
 
 import { MutationType } from "reactStartup";
@@ -16,7 +13,6 @@ import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
-import { REQUEST_MOBILE, REQUEST_DESKTOP } from "applicationRoot/appState";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
 import { useBooksState, BooksState, useBookList } from "../booksState";
 import { BookSearchState, useBooksSearchState } from "../booksSearchState";
