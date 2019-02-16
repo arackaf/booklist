@@ -197,64 +197,6 @@ export function booksReducer(state = initialBooksState, action): BooksState {
   return state;
 }
 
-export function toggleSelectBook(_id) {
-  return { type: TOGGLE_SELECT_BOOK, _id };
-}
-
-export function setRead(_id) {
-  return function(dispatch) {
-    executeSetRead(dispatch, [_id], true);
-  };
-}
-
-export function setUnRead(_id) {
-  return function(dispatch) {
-    executeSetRead(dispatch, [_id], false);
-  };
-}
-
-function executeSetRead(dispatch, ids, value) {
-  dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
-
-  graphqlClient.runMutation(UpdateBooksReadMutation, { _ids: ids, updates: { isRead: !!value } }).then(res => {
-    dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
-  });
-}
-
-export function expandBook(_id, publicUserId) {
-  return (dispatch, allState: BooksState) => {
-    let booksHash = allState.booksHash;
-    let book = booksHash[_id];
-
-    if (!book.detailsLoaded) {
-      dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
-
-      graphqlClient.runQuery(BookDetailsQuery, { _id, publicUserId, cache: 9 }).then(({ data: { getBook } }) => {
-        let { editorialReviews, similarBooks } = getBook.Book;
-        dispatch({ type: DETAILS_LOADED, _id, editorialReviews: editorialReviews || [], similarBooks: similarBooks || [] });
-      });
-    } else {
-      dispatch({ type: EXPAND_BOOK, _id });
-    }
-  };
-}
-
-export function collapseBook(_id: string) {
-  return { type: COLLAPSE_BOOK, _id };
-}
-
-export const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
-export const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
-export const deleteBook = ({ _id }) => {
-  return (dispatch, getState) => {
-    dispatch({ type: BOOK_DELETING, _id });
-
-    graphqlClient.runMutation(DeleteBookMutation, { _id }).then(resp => {
-      dispatch({ type: BOOK_DELETED, _id });
-    });
-  };
-};
-
 function createBooksHash(booksArr) {
   let result = {};
   booksArr.forEach(book => {
@@ -323,7 +265,9 @@ export function useBooksState(): [BooksState, any, any] {
     cancelPendingDeleteBook,
     deleteBook,
     setUnRead,
-    setRead
+    setRead,
+    setSelectedRead,
+    setSelectedUnRead
   };
   return getStatePacket<BooksState>(booksReducer, initialBooksState, actions);
 }
@@ -366,4 +310,76 @@ export const useBookLoadingInfo = () => {
 
   const totalPages = Math.ceil(booksModule.resultsCount / bookSearch.pageSize);
   return { resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading, totalPages };
+};
+
+// ----- actions -----
+
+export function toggleSelectBook(_id) {
+  return { type: TOGGLE_SELECT_BOOK, _id };
+}
+
+export function setRead(_id) {
+  return function(dispatch) {
+    executeSetRead(dispatch, [_id], true);
+  };
+}
+
+export function setUnRead(_id) {
+  return function(dispatch) {
+    executeSetRead(dispatch, [_id], false);
+  };
+}
+
+function executeSetRead(dispatch, ids, value) {
+  dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
+
+  graphqlClient.runMutation(UpdateBooksReadMutation, { _ids: ids, updates: { isRead: !!value } }).then(res => {
+    dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
+  });
+}
+
+function expandBook(_id, publicUserId) {
+  return (dispatch, allState: BooksState) => {
+    let booksHash = allState.booksHash;
+    let book = booksHash[_id];
+
+    if (!book.detailsLoaded) {
+      dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
+
+      graphqlClient.runQuery(BookDetailsQuery, { _id, publicUserId, cache: 9 }).then(({ data: { getBook } }) => {
+        let { editorialReviews, similarBooks } = getBook.Book;
+        dispatch({ type: DETAILS_LOADED, _id, editorialReviews: editorialReviews || [], similarBooks: similarBooks || [] });
+      });
+    } else {
+      dispatch({ type: EXPAND_BOOK, _id });
+    }
+  };
+}
+
+function collapseBook(_id: string) {
+  return { type: COLLAPSE_BOOK, _id };
+}
+
+const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
+const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
+const deleteBook = ({ _id }) => {
+  return (dispatch, getState) => {
+    dispatch({ type: BOOK_DELETING, _id });
+
+    graphqlClient.runMutation(DeleteBookMutation, { _id }).then(resp => {
+      dispatch({ type: BOOK_DELETED, _id });
+    });
+  };
+};
+
+const setSelectedRead = selectedBooks => dispatch => {
+  const ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
+
+  executeSetRead(dispatch, ids, true);
+};
+
+const setSelectedUnRead = selectedBooks => dispatch => {
+  const ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
+
+  executeSetRead(dispatch, ids, false);
 };

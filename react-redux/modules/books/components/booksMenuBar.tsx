@@ -1,10 +1,4 @@
-import React, { SFC } from "react";
-const { useRef, useEffect } = React as any;
-import { connect } from "react-redux";
-
-import * as booksActionCreators from "../reducers/books/actionCreators";
-import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
-
+import React, { SFC, useContext, useRef, useEffect } from "react";
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import {
@@ -20,8 +14,9 @@ import {
   clearAllFilters,
   quickSearch as quickTitleSearch
 } from "../booksSearchState";
-import { useAppState } from "applicationRoot/appState";
-import { useBookLoadingInfo, useBookSelection } from "../booksState";
+import { useBookLoadingInfo, useBookSelection, useBooksState } from "../booksState";
+import { BooksContext } from "./bookViewList";
+import { AppContext } from "applicationRoot/renderUI";
 
 interface IAddedMenuProps {
   editTags: any;
@@ -30,14 +25,15 @@ interface IAddedMenuProps {
   startTagModification: any;
   beginEditFilters: any;
 }
-type actions = typeof booksActionCreators;
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
-const BooksMenuBar: SFC<actions & IAddedMenuProps> = props => {
+const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
 
-  const [appState, { setViewDesktop, setViewBasicList }] = useAppState();
+  const [appState, { setViewDesktop, setViewBasicList }] = useContext(AppContext);
+  const [{ selectedBooks }, { setSelectedRead, setSelectedUnRead }] = useContext(BooksContext);
+
   const bookLoadingInfo = useBookLoadingInfo();
   const bookSearchUiView = useBookSearchUiView(appState);
   const bookSearchState = useCurrentSearch();
@@ -182,10 +178,10 @@ const BooksMenuBar: SFC<actions & IAddedMenuProps> = props => {
                   <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default">
                     <i className="fal fa-tags" />
                   </button>
-                  <button title="Set read" onClick={props.setSelectedRead} className={"btn btn-default"}>
+                  <button title="Set read" onClick={() => setSelectedRead(selectedBooks)} className={"btn btn-default"}>
                     <i className="fal fa-eye" />
                   </button>
-                  <button title="Set un-read" onClick={props.setSelectedUnRead} className="btn btn-default put-line-through">
+                  <button title="Set un-read" onClick={() => setSelectedUnRead(selectedBooks)} className="btn btn-default put-line-through">
                     <i className="fal fa-eye-slash" />
                   </button>
                 </>
@@ -265,7 +261,4 @@ const BooksMenuBar: SFC<actions & IAddedMenuProps> = props => {
   );
 };
 
-export default connect(
-  null,
-  { ...bookSearchActionCreators, ...booksActionCreators }
-)(BooksMenuBar);
+export default BooksMenuBar;

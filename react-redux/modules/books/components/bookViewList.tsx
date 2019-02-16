@@ -1,5 +1,4 @@
-import React, { SFC, Suspense, lazy, useContext, useEffect, createContext } from "react";
-const { useState } = React as any;
+import React, { SFC, Suspense, lazy, useContext, useEffect, createContext, useState } from "react";
 
 import DisplayBookResults from "./displayBookResults";
 import BooksMenuBar from "./booksMenuBar";
@@ -24,7 +23,7 @@ const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-
 const TagEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
 const BookSearchModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
 
-const useCodeSplitModal = (initialOpenData = false) => {
+const useCodeSplitModal = (initialOpenData = false): any => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
   return [openState, isLoaded, (val = true) => setModalState([val, true]), () => setModalState([false, true])];
 };

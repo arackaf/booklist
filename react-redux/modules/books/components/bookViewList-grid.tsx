@@ -1,5 +1,4 @@
 import React, { SFC, CSSProperties, useContext } from "react";
-import { connect } from "react-redux";
 
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
@@ -153,7 +152,7 @@ const BookRow: SFC<ILocalProps> = props => {
   );
 };
 
-const BookRowDetailsRaw: SFC<{ book: IBookDisplay; index: number }> = props => {
+const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number }> = props => {
   let [{ isPublic: viewingPublic }] = useContext(AppContext);
   let { book, index } = props;
   let backgroundColor = index % 2 ? "white" : "#f9f9f9";
@@ -215,16 +214,10 @@ const BookRowDetailsRaw: SFC<{ book: IBookDisplay; index: number }> = props => {
   );
 };
 
-const BookRowDetails = connect(
-  null,
-  null
-)(BookRowDetailsRaw);
-
-type BookViewListGridTypes = ReturnType<typeof selectBookListComponentState> &
-  actionsType & { editBooksSubjects: any; editBooksTags: any; editBook: any };
+type BookViewListGridTypes = ReturnType<typeof selectBookListComponentState> & { editBooksSubjects: any; editBooksTags: any; editBook: any };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  let [{ selectedBooks }] = useContext(BooksContext);
+  let [{}, { setSortOrder, toggleCheckAll }] = useContext(BooksContext);
   const { booksList } = useBookList();
   const { allAreChecked } = useBookSelection();
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
@@ -236,7 +229,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
       newDirection = sortDirection == "asc" ? "desc" : "asc";
     }
 
-    props.setSortOrder(column, newDirection);
+    setSortOrder(column, newDirection);
   };
 
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
@@ -254,7 +247,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
               <tr>
                 {!viewingPublic && online ? (
                   <th style={{ ...stickyHeaderStyle }}>
-                    <a style={{ fontSize: "12pt" }} onClick={props.toggleCheckAll}>
+                    <a style={{ fontSize: "12pt" }} onClick={toggleCheckAll}>
                       <i className={"fal " + (!!allAreChecked ? "fa-check-square" : "fa-square")} />
                     </a>
                   </th>
@@ -292,7 +285,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   index={index}
                   online={online}
                 />,
-                book.expanded ? <BookRowDetails key={1} book={book} index={index} viewingPublic={viewingPublic} /> : null
+                book.expanded ? <BookRowDetails key={1} book={book} index={index} /> : null
               ])}
             </tbody>
           </table>
@@ -302,7 +295,4 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   );
 };
 
-export default connect(
-  null,
-  actions
-)(BookViewListGrid);
+export default BookViewListGrid;
