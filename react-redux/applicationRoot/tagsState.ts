@@ -14,7 +14,7 @@ const TAG_DELETED = "root.TAG_DELETED";
 
 const initialState = {
   tagHash: hashOf<ITag>(),
-  loaded: false
+  tagsLoaded: false
 };
 
 export type TagsState = typeof initialState;
