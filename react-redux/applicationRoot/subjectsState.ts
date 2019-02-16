@@ -1,4 +1,4 @@
-import { getSearchVersion, SUBJECTS_SEARCH_VERSION_KEY, objectsToHash, AppType, graphqlClient, getStatePacket } from "./rootReducer";
+import { objectsToHash, AppType, graphqlClient, getStatePacket } from "./rootReducer";
 
 const LOAD_SUBJECTS = "root.LOAD_SUBJECTS";
 const LOAD_SUBJECTS_RESULTS = "root.LOAD_SUBJECTS_RESULTS";
@@ -14,27 +14,15 @@ export type SubjectType = {
   path: string;
 };
 
-let initialSubjectsVersion = getSearchVersion(SUBJECTS_SEARCH_VERSION_KEY);
-
 const initialState = {
   subjectHash: {} as { [s: string]: SubjectType },
   subjectsLoaded: false,
-  subjectsInitialQueryFired: false,
-  subjectsVersion: initialSubjectsVersion
+  subjectsInitialQueryFired: false
 };
 
 export type SubjectState = typeof initialState;
 
 function subjectsReducer(state = initialState, action) {
-  switch (action.type) {
-    case SAVE_SUBJECT_RESULTS:
-    case SUBJECT_DELETED:
-      //case NEW_LOGIN:
-      let newSearchVersion = +new Date();
-      localStorage.setItem(SUBJECTS_SEARCH_VERSION_KEY, "" + newSearchVersion);
-      state = { ...state, subjectsVersion: newSearchVersion };
-  }
-
   switch (action.type) {
     case LOAD_SUBJECTS:
       return { ...state, subjectsInitialQueryFired: true };
@@ -53,10 +41,9 @@ function subjectsReducer(state = initialState, action) {
 
 const loadSubjects = (app: AppType) => dispatch => {
   let publicUserId = app.publicUserId;
-  let subjectsVersion = app.subjectsVersion;
   dispatch({ type: LOAD_SUBJECTS });
 
-  Promise.resolve(graphqlClient.runQuery(AllSubjectsQuery, { publicUserId, cache: 5, ver: subjectsVersion })).then(({ data }) => {
+  Promise.resolve(graphqlClient.runQuery(AllSubjectsQuery, { publicUserId, cache: 5 })).then(({ data }) => {
     dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: data.allSubjects.Subjects });
   });
 };

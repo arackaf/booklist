@@ -30,7 +30,7 @@ export const graphqlClient = new Client({
 
 setDefaultClient(graphqlClient);
 
-interface ITag {
+export interface ITag {
   _id: string;
   name: string;
 }
