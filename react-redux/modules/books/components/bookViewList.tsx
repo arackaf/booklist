@@ -65,10 +65,10 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
   let [appState] = useContext(AppContext);
 
   let booksPacket = useContext(BooksContext);
-  let [booksState, actions] = booksPacket;
+  let [booksState, { loadBooks }] = booksPacket;
 
   useEffect(() => {
-    actions.loadBooks(appState);
+    loadBooks(appState);
   }, []);
 
   useEffect(() => {

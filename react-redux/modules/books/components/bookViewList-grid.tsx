@@ -4,7 +4,6 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { IBookDisplay } from "modules/books/reducers/books/reducer";
-import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 import { AppContext } from "applicationRoot/renderUI";
 import { useBookSelection, useBookList } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";

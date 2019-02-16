@@ -5,10 +5,9 @@ import { SubjectsContext } from "applicationRoot/renderUI";
 
 const BooksLoading = () => {
   const [{ booksLoading }] = useContext(BooksContext);
-  const [{ loaded: tagsLoaded }] = useContext(TagsContext);
+  const [{ tagsLoaded }] = useContext(TagsContext);
   const [{ subjectsLoaded }] = useContext(SubjectsContext);
 
-  console.log({ booksLoading, subjectsLoaded, tagsLoaded });
   return booksLoading || !subjectsLoaded || !tagsLoaded ? <Loading /> : null;
 };
 
