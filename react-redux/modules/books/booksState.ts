@@ -315,8 +315,8 @@ function executeSetRead(dispatch, ids, value) {
 }
 
 function expandBook(_id, publicUserId) {
-  return (dispatch, allState: BooksState) => {
-    let booksHash = allState.booksHash;
+  return (dispatch, getState: () => BooksState) => {
+    let booksHash = getState().booksHash;
     let book = booksHash[_id];
 
     if (!book.detailsLoaded) {
@@ -339,7 +339,7 @@ function collapseBook(_id: string) {
 const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
 const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
 const deleteBook = ({ _id }) => {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch({ type: BOOK_DELETING, _id });
 
     graphqlClient.runMutation(DeleteBookMutation, { _id }).then(resp => {
@@ -348,13 +348,15 @@ const deleteBook = ({ _id }) => {
   };
 };
 
-const setSelectedRead = selectedBooks => dispatch => {
+const setSelectedRead = () => (dispatch, getState: () => BooksState) => {
+  const selectedBooks = getState().selectedBooks;
   const ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
 
   executeSetRead(dispatch, ids, true);
 };
 
-const setSelectedUnRead = selectedBooks => dispatch => {
+const setSelectedUnRead = () => (dispatch, getState: () => BooksState) => {
+  const selectedBooks = getState().selectedBooks;
   const ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
 
   executeSetRead(dispatch, ids, false);

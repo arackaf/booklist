@@ -349,17 +349,16 @@ export function makeActionCreators(dispatch, fns) {
 
 export function getStatePacket<T>(reducer, initialState, actions?): [T, any, any] {
   let [state, dispatch] = useReducer(reducer, initialState);
-  let newDispatch = actions
-    ? useMemo(() => {
-        return val => {
-          if (typeof val === "object") {
-            dispatch(val);
-          } else if (typeof val === "function") {
-            val(dispatch, state);
-          } else throw "Fuck off";
-        };
-      }, [dispatch, state])
-    : null;
+  let newDispatch = useMemo(
+    () => val => {
+      if (typeof val === "object") {
+        dispatch(val);
+      } else if (typeof val === "function") {
+        val(dispatch, () => state);
+      } else throw "Fuck off";
+    },
+    [state, dispatch]
+  );
 
   return useMemo(() => [state, actions ? makeActionCreators(newDispatch, actions) : {}, dispatch], [state]) as any;
 }
