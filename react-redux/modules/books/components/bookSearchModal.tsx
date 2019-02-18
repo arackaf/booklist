@@ -1,6 +1,5 @@
-import React, { FunctionComponent, Component, useState, useLayoutEffect, useRef } from "react";
+import React, { FunctionComponent, Component, useState, useLayoutEffect, useRef, useContext } from "react";
 import { connect } from "react-redux";
-import { selectBookSearchState } from "modules/books/reducers/bookSearch/reducer";
 
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 
@@ -11,13 +10,16 @@ import SelectAvailableTags from "applicationRoot/components/selectAvailableTags"
 import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
 import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
+import { applyFilters, useCurrentSearch } from "../booksSearchState";
 
 type LocalProps = {
   isOpen: boolean;
   onHide: any;
 };
 
-const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState> & LocalProps & typeof bookSearchActionCreators> = props => {
+const BookSearchModal: FunctionComponent<LocalProps> = props => {
+  const filters = useCurrentSearch();
+
   const searchEl = useRef(null);
   const pagesEl = useRef(null);
   const pagesDirEl = useRef(null);
@@ -30,7 +32,7 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
-  const [noSubjectsFilter, setNoSubjectsFilter] = useState(!!props.noSubjects);
+  const [noSubjectsFilter, setNoSubjectsFilter] = useState(!!filters.noSubjects);
 
   const selectSubject = subject => setSubjects(subjects.concat(subject._id));
   const selectTag = tag => setTags(tags.concat(tag._id));
@@ -39,12 +41,12 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
 
   useLayoutEffect(() => {
     if (props.isOpen) {
-      setSubjects(props.selectedSubjects.map(s => s._id));
-      setTags(props.selectedTags.map(t => t._id));
+      setSubjects(filters.selectedSubjects.map(s => s._id));
+      setTags(filters.selectedTags.map(t => t._id));
     }
   }, [props.isOpen]);
 
-  const applyFilters = evt => {
+  const updateFilters = evt => {
     let sort = "";
     let sortDirection = "";
     let sortValue = sortSelectEl.current.value;
@@ -53,7 +55,7 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
     }
 
     evt.preventDefault();
-    props.applyFilters({
+    applyFilters({
       subjects: noSubjectsFilter ? [] : subjects,
       tags,
       search: searchEl.current.value,
@@ -74,12 +76,12 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
 
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Full search" }}>
-      <form onSubmit={applyFilters}>
+      <form onSubmit={updateFilters}>
         <div className="row">
           <div className="col-sm-6 col-xs-12">
             <div className="form-group">
               <label>Title</label>
-              <input defaultValue={props.search} ref={searchEl} placeholder="Search title" className="form-control" />
+              <input defaultValue={filters.search} ref={searchEl} placeholder="Search title" className="form-control" />
             </div>
           </div>
           <div className="col-sm-6 col-xs-12">
@@ -87,14 +89,14 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
               <label>Pages</label>
               <div className="form-inline">
                 <div style={{ marginRight: 5, display: "inline-block" }} className="form-group">
-                  <select ref={pagesDirEl} defaultValue={props.pagesOperator} className="form-control">
+                  <select ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
                     <option value="lt">{"<"}</option>
                     <option value="gt">{">"}</option>
                   </select>
                 </div>
                 <div className="form-group" style={{ display: "inline-block" }}>
                   <input
-                    defaultValue={props.pages}
+                    defaultValue={filters.pages}
                     ref={pagesEl}
                     style={{ width: "100px" }}
                     type="number"
@@ -108,13 +110,13 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
           <div className="col-xs-6">
             <div className="form-group">
               <label>Publisher</label>
-              <input ref={publisherEl} defaultValue={props.publisher} placeholder="Publisher" className="form-control" />
+              <input ref={publisherEl} defaultValue={filters.publisher} placeholder="Publisher" className="form-control" />
             </div>
           </div>
           <div className="col-xs-6">
             <div className="form-group">
               <label>Author</label>
-              <input ref={authorEl} defaultValue={props.author} placeholder="Author" className="form-control" />
+              <input ref={authorEl} defaultValue={filters.author} placeholder="Author" className="form-control" />
             </div>
           </div>
           <div className="col-xs-6">
@@ -123,19 +125,19 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
               <br />
               <div className="radio responsive-radios">
                 <label>
-                  <input type="radio" defaultChecked={props.isRead == ""} ref={isReadE} name="isRead" />
+                  <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" />
                   Either
                 </label>
               </div>
               <div className="radio responsive-radios">
                 <label>
-                  <input type="radio" defaultChecked={props.isRead == "1"} name="isRead" />
+                  <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" />
                   Yes
                 </label>
               </div>
               <div className="radio responsive-radios">
                 <label>
-                  <input type="radio" defaultChecked={props.isRead == "0"} ref={isRead0} name="isRead" />
+                  <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" />
                   No
                 </label>
               </div>
@@ -145,7 +147,7 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
             <div className="form-group">
               <label>Sort</label>
               <br />
-              <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={props.bindableSortValue} className="form-control margin-bottom">
+              <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={filters.bindableSortValue} className="form-control margin-bottom">
                 <option value="title|asc">Title A-Z</option>
                 <option value="title|desc">Title Z-A</option>
                 <option value="pages|asc">Pages, Low</option>
@@ -184,7 +186,7 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
           </div>
           <div className="checkbox">
             <label>
-              <input type="checkbox" ref={childSubEl} defaultChecked={!!props.searchChildSubjects} /> Also search child subjects
+              <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
             </label>
           </div>
         </>
@@ -208,6 +210,6 @@ const BookSearchModal: FunctionComponent<ReturnType<typeof selectBookSearchState
 };
 
 export default connect(
-  selectBookSearchState,
+  null,
   { ...bookSearchActionCreators }
 )(BookSearchModal);

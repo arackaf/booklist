@@ -109,19 +109,20 @@ export const useCurrentSearch = () => {
   const subjects = useSelectedSubjects();
   const tags = useSelectedTags();
 
-  return useMemo(
-    () =>
-      Object.assign({}, defaultSearchValuesHash, filters, {
-        selectedSubjects: subjects,
-        selectedTags: tags,
-        tagIds: tagsHashValue ? tagsHashValue.split("-") : [],
-        subjectIds: subjectsHashValue ? subjectsHashValue.split("-") : [],
-        anyActiveFilters: !!Object.keys(filters).filter(k => k != "page").length,
-        activeFilterCount: Object.keys(filters).filter(k => k != "page").length,
-        bindableSortValue: `${filters.sort}|${filters.sortDirection}`
-      }),
-    [filters, subjects, tags, subjectsHashValue, tagsHashValue]
-  );
+  return useMemo(() => {
+    let result = Object.assign({}, defaultSearchValuesHash, filters, {
+      selectedSubjects: subjects,
+      selectedTags: tags,
+      tagIds: tagsHashValue ? tagsHashValue.split("-") : [],
+      subjectIds: subjectsHashValue ? subjectsHashValue.split("-") : []
+    });
+
+    return Object.assign(result, {
+      anyActiveFilters: !!Object.keys(filters).filter(k => k != "page").length,
+      activeFilterCount: Object.keys(filters).filter(k => k != "page").length,
+      bindableSortValue: `${result.sort}|${result.sortDirection}`
+    });
+  }, [filters, subjects, tags, subjectsHashValue, tagsHashValue]);
 };
 
 export const useBookSearchUiView = (app: AppState) => {
