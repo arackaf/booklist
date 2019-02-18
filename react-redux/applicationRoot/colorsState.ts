@@ -9,7 +9,7 @@ export function useColors() {
   useEffect(() => {
     Promise.resolve(graphqlClient.runQuery(AllLabelColorsQuery, { cache: 9 })).then<any>(({ data: { allLabelColors } }) => {
       let { LabelColors: labelColors } = allLabelColors;
-      update({ loaded: true, colors: labelColors });
+      update({ loaded: true, colors: labelColors.map(c => c.backgroundColor) });
     });
   }, []);
 

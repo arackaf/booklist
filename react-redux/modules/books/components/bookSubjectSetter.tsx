@@ -1,15 +1,14 @@
-import React, { Component, SFC, useState, useLayoutEffect } from "react";
-import { connect } from "react-redux";
-import { GraphQL, buildMutation, useMutation } from "micro-graphql-react";
+import React, { SFC, useState, useLayoutEffect, useContext } from "react";
+import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
-import { SET_BOOKS_SUBJECTS } from "../reducers/books/actionNames";
-import { filterSubjects, selectStackedSubjects } from "applicationRoot/rootReducer";
 import Modal from "applicationRoot/components/modal";
+import { useStackedSubjects, filterSubjects } from "applicationRoot/subjectsState";
+import { BooksContext } from "./bookViewList";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -17,7 +16,9 @@ interface ILocalProps {
   dispatch: any;
 }
 
-const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalProps> = props => {
+const BookSubjectSetter: SFC<ILocalProps> = props => {
+  const [booksState, { setBooksSubjects }] = useContext(BooksContext);
+  const { subjectHash, subjectsUnwound } = useStackedSubjects();
   const [currentTab, setTab] = useState("subjects");
   const [addingSubjects, setAddingSubjects] = useState([]);
   const [removingSubjects, setRemovingSubjects] = useState([]);
@@ -26,21 +27,18 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
     setAddingSubjects([]);
   };
 
-  useLayoutEffect(
-    () => {
-      if (props.modifyingBooks.length) {
-        resetSubjects();
-      }
-    },
-    [props.modifyingBooks.length]
-  );
+  useLayoutEffect(() => {
+    if (props.modifyingBooks.length) {
+      resetSubjects();
+    }
+  }, [props.modifyingBooks.length]);
 
   const { runMutation, running } = useMutation(buildMutation(updateBookSubjects));
 
-  const setBooksSubjects = () => {
+  const save = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };
     Promise.resolve(runMutation(args)).then(() => {
-      props.dispatch({ type: SET_BOOKS_SUBJECTS, ...args });
+      setBooksSubjects(args);
       props.onDone();
     });
   };
@@ -71,7 +69,7 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Adding"
-                items={props.subjectsUnwound}
+                items={subjectsUnwound}
                 currentlySelected={addingSubjects}
                 onSelect={subjectSelectedToAdd}
                 filter={filterSubjects}
@@ -80,7 +78,7 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
             <div className="col-xs-9">
               <div>
                 {addingSubjects
-                  .map(_id => props.subjectHash[_id])
+                  .map(_id => subjectHash[_id])
                   .map((s: any, i) => (
                     <span
                       key={i}
@@ -103,7 +101,7 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Removing"
-                items={props.subjectsUnwound}
+                items={subjectsUnwound}
                 currentlySelected={removingSubjects}
                 onSelect={subjectSelectedToRemove}
                 filter={filterSubjects}
@@ -112,7 +110,7 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
             <div className="col-xs-9">
               <div>
                 {removingSubjects
-                  .map(_id => props.subjectHash[_id])
+                  .map(_id => subjectHash[_id])
                   .map((s: any, i) => (
                     <span
                       key={i}
@@ -145,7 +143,7 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
           <br />
         </div>
       </div>
-      <AjaxButton preset="primary" running={running} runningText="Setting" onClick={setBooksSubjects}>
+      <AjaxButton preset="primary" running={running} runningText="Setting" onClick={save}>
         Set
       </AjaxButton>
       &nbsp;
@@ -156,4 +154,4 @@ const BookSubjectSetter: SFC<ReturnType<typeof selectStackedSubjects> & ILocalPr
   );
 };
 
-export default connect(selectStackedSubjects)(BookSubjectSetter);
+export default BookSubjectSetter;
