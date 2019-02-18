@@ -3,9 +3,8 @@ import shallowEqual from "shallow-equal/objects";
 import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { getStatePacket } from "applicationRoot/rootReducer";
 import { useContext, useMemo, useEffect } from "react";
-import { SubjectsContext } from "applicationRoot/renderUI";
+import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { BooksSearchContext, TagsContext, BooksContext } from "./components/bookViewList";
-import { AppState } from "applicationRoot/appState";
 import { useBookLoadingInfo } from "./booksState";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
@@ -127,8 +126,9 @@ export const useCurrentSearch = () => {
   }, [filters, subjects, tags, subjectsHashValue, tagsHashValue]);
 };
 
-export const useBookSearchUiView = (app: AppState) => {
-  let [bookSearch] = useBooksSearchState();
+export const useBookSearchUiView = () => {
+  let [app] = useContext(AppContext);
+  let [bookSearch] = useContext(BooksSearchContext);
 
   let view = bookSearch.view;
   let isGridView = view == GRID_VIEW || (!view && app.showingDesktop);

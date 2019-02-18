@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
 
-const _BookViewListMobileItem = props => {
+const BookViewListMobileItem = props => {
   let { book, online } = props;
 
   let publisherDisplay = null,
@@ -59,11 +59,6 @@ const _BookViewListMobileItem = props => {
     </span>
   );
 };
-
-const BookViewListMobileItem = connect(
-  null,
-  actions
-)(_BookViewListMobileItem);
 
 const BookViewListMobile: SFC<ReturnType<typeof selectBookListComponentState> & { editBook: any } & actionsType> = props => {
   return (
