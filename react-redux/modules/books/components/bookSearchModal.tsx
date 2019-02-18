@@ -198,7 +198,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
         </label>
       </div>
       <hr />
-      <BootstrapButton preset="primary" className="pull-left" onClick={applyFilters}>
+      <BootstrapButton preset="primary" className="pull-left" onClick={updateFilters}>
         Filter
       </BootstrapButton>
       &nbsp;

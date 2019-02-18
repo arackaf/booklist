@@ -102,6 +102,8 @@ function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
     .filter(res => res);
 }
 
+const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection";
+
 export const useCurrentSearch = () => {
   const [{ hashFilters: filters }] = useContext(BooksSearchContext);
   const { subjects: subjectsHashValue, tags: tagsHashValue } = filters;
@@ -118,8 +120,8 @@ export const useCurrentSearch = () => {
     });
 
     return Object.assign(result, {
-      anyActiveFilters: !!Object.keys(filters).filter(k => k != "page").length,
-      activeFilterCount: Object.keys(filters).filter(k => k != "page").length,
+      anyActiveFilters: !!Object.keys(filters).filter(keyIsFilter).length,
+      activeFilterCount: Object.keys(filters).filter(keyIsFilter).length,
       bindableSortValue: `${result.sort}|${result.sortDirection}`
     });
   }, [filters, subjects, tags, subjectsHashValue, tagsHashValue]);
