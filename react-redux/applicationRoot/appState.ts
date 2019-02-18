@@ -6,6 +6,16 @@ const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile:
 const { logged_in, userId } = isLoggedIn();
 const authSettings = logged_in && userId ? { isLoggedIn: true, userId } : { isLoggedIn: false, userId: "" };
 
+if (window.screen.width < 700) {
+  Object.assign(uiSettings, { isDesktop: false, showingDesktop: false, isMobile: true, showingMobile: true });
+} else {
+  Object.assign(uiSettings, { isDesktop: true, showingDesktop: true, isMobile: false, showingMobile: false });
+}
+
+if (!!localStorage.getItem("useDesktop")) {
+  Object.assign(uiSettings, { showingDesktop: true, showingMobile: false });
+}
+
 export const REQUEST_DESKTOP = "root.REQUEST_DESKTOP";
 export const REQUEST_MOBILE = "root.REQUEST_MOBILE";
 

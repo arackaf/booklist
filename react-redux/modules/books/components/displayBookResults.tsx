@@ -1,42 +1,22 @@
-import React, { SFC, Suspense, lazy } from "react";
+import React, { Suspense, lazy, FunctionComponent } from "react";
 import GridView from "./bookViewList-grid";
 
-import { connect } from "react-redux";
-import { createSelector } from "reselect";
-
-import { BooksModuleType } from "modules/books/reducers/reducer";
-import { selectBookSearchUiView } from "modules/books/reducers/bookSearch/reducer";
-
 import Loading from "applicationRoot/components/loading";
+import { useBookSearchUiView } from "../booksSearchState";
 
 const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"));
 
-type PassedIn = { editBook: any; editTagsForBook: any; editSubjectsForBook: any };
+const DisplayBookResults: FunctionComponent<{ editBook: any; editTagsForBook: any; editSubjectsForBook: any }> = props => {
+  const { editBook, editTagsForBook, editSubjectsForBook } = props;
+  const uiView = useBookSearchUiView();
 
-const selector = createSelector(
-  (state: BooksModuleType) => state.app,
-  selectBookSearchUiView,
-  (app, ui) => {
-    return {
-      subjectsLoaded: app.subjectsLoaded,
-      tagsLoaded: app.tagsLoaded,
-      ...ui
-    };
-  }
-);
-
-const DisplayBookResults: SFC<PassedIn & ReturnType<typeof selector>> = props => {
-  let { editBook, editTagsForBook, editSubjectsForBook } = props;
-
-  return props.subjectsLoaded ? (
-    props.isGridView ? (
-      <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
-    ) : props.isBasicList ? (
-      <Suspense fallback={<Loading />}>
-        <BasicListView editBook={editBook} />
-      </Suspense>
-    ) : null
+  return uiView.isGridView ? (
+    <GridView editBook={editBook} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
+  ) : uiView.isBasicList ? (
+    <Suspense fallback={<Loading />}>
+      <BasicListView editBook={editBook} />
+    </Suspense>
   ) : null;
 };
 
-export default connect(selector)(DisplayBookResults);
+export default DisplayBookResults;
