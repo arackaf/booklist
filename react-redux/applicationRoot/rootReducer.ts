@@ -227,31 +227,6 @@ export const stackAndGetTopLevelSubjects = (subjectsHash): SubjectType[] => {
 
 export const getRootSubject = path => (path ? path.split(",")[1] : null);
 
-export const computeSubjectParentId = path => {
-  if (path) {
-    let pathParts = path.split(",");
-    return pathParts[pathParts.length - 2];
-  } else {
-    return "";
-  }
-};
-
-export const flattenSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
-
-export const getEligibleParents = (subjectHash, _id) => {
-  let eligibleParents = null;
-  if (!_id && _id != null) {
-    eligibleParents = flattenSubjects(subjectHash);
-  } else if (_id) {
-    eligibleParents = flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path));
-  }
-  if (eligibleParents) {
-    eligibleParents.sort(subjectSortCompare);
-  }
-
-  return eligibleParents;
-};
-
 export const filterTags = (tags, search) => {
   if (!search) {
     search = () => true;
@@ -310,16 +285,6 @@ function allSubjectsSorted(subjectsHash): SubjectType[] {
   let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
   return subjects.sort(subjectSortCompare);
 }
-
-export const filterSubjects = (subjects, search) => {
-  if (!search) {
-    search = () => true;
-  } else {
-    let regex = new RegExp(search, "i");
-    search = txt => regex.test(txt);
-  }
-  return subjects.filter(s => search(s.name));
-};
 
 export function isLoggedIn() {
   let logged_in = getCookie("logged_in"),

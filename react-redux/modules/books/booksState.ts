@@ -243,7 +243,8 @@ export function useBooksState(): [BooksState, any, any] {
     setUnRead,
     setRead,
     setSelectedRead,
-    setSelectedUnRead
+    setSelectedUnRead,
+    setBooksSubjects
   };
   return getStatePacket<BooksState>(booksReducer, initialBooksState, actions);
 }
@@ -361,3 +362,5 @@ const setSelectedUnRead = () => (dispatch, getState: () => BooksState) => {
 
   executeSetRead(dispatch, ids, false);
 };
+
+const setBooksSubjects = ({ books, add, remove }) => ({ type: SET_BOOKS_SUBJECTS, books, add, remove });

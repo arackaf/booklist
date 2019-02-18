@@ -53,13 +53,14 @@ const App = ({ component }) => {
 
   let subjectsPacket = useSubjectsState();
   let [subjectState, { loadSubjects }] = subjectsPacket;
+  const colorsPacket = useColors();
 
   useEffect(() => loadSubjects(appState), []);
 
   return (
     <Provider store={store as any}>
       <SubjectsContext.Provider value={subjectsPacket}>
-        <ColorsContext.Provider value={useColors()}>
+        <ColorsContext.Provider value={colorsPacket}>
           <AppContext.Provider value={appStatePacket}>
             <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
               <MobileMeta />

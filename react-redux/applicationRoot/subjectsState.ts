@@ -7,6 +7,10 @@ const SAVE_SUBJECT_RESULTS = "root.SAVE_SUBJECT_RESULTS";
 const SUBJECT_DELETED = "root.SUBJECT_DELETED";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
+import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
+import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+import { useContext, useMemo } from "react";
+import { SubjectsContext } from "./renderUI";
 
 export type SubjectType = {
   _id: string;
@@ -49,6 +53,103 @@ const loadSubjects = (app: AppType) => dispatch => {
 };
 
 export function useSubjectsState(): [SubjectState, any, any] {
-  let actions = { loadSubjects };
+  let actions = { loadSubjects, createOrUpdateSubject, deleteSubject };
   return getStatePacket<SubjectState>(subjectsReducer, initialState, actions);
 }
+
+function allSubjectsSorted(subjectsHash): SubjectType[] {
+  let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
+  return subjects.sort(subjectSortCompare);
+}
+
+export const useStackedSubjects = () => {
+  const [{ subjectHash }] = useContext(SubjectsContext);
+
+  return useMemo(() => {
+    const mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
+    const subjectsUnwound = unwindSubjects(mainSubjectsCollection);
+    return {
+      subjects: mainSubjectsCollection,
+      allSubjectsSorted: allSubjectsSorted(subjectHash),
+      subjectsUnwound: subjectsUnwound,
+      subjectHash
+    };
+  }, [subjectHash]);
+};
+
+export const subjectSortCompare = ({ name: name1 }, { name: name2 }) => {
+  name1 = name1 || "";
+  name2 = name2 || "";
+
+  let name1After = name1.toLowerCase() > name2.toLowerCase(),
+    bothEqual = name1.toLowerCase() === name2.toLowerCase();
+  return bothEqual ? 0 : name1After ? 1 : -1;
+};
+
+const stackAndGetTopLevelSubjects = (subjectsHash): SubjectType[] => {
+  let subjects = Object.keys(subjectsHash).map(_id => ({ ...subjectsHash[_id] }));
+  subjects.sort(subjectSortCompare).forEach(s => {
+    s.children = [];
+    s.children.push(...subjects.filter(sc => new RegExp(`,${s._id},$`).test(sc.path)).sort(subjectSortCompare));
+    s.childLevel = !s.path ? 0 : (s.path.match(/\,/g) || []).length - 1;
+  });
+  return subjects.filter(s => s.path == null);
+};
+
+const unwindSubjects = (subjects): SubjectType[] => {
+  let result = [];
+  subjects.forEach(s => result.push(s, ...unwindSubjects(s.children || [])));
+  return result;
+};
+
+export const filterSubjects = (subjects, search) => {
+  if (!search) {
+    search = () => true;
+  } else {
+    let regex = new RegExp(search, "i");
+    search = txt => regex.test(txt);
+  }
+  return subjects.filter(s => search(s.name));
+};
+
+export const getEligibleParents = (subjectHash, _id) => {
+  let eligibleParents = null;
+  if (!_id && _id != null) {
+    eligibleParents = flattenSubjects(subjectHash);
+  } else if (_id) {
+    eligibleParents = flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path));
+  }
+  if (eligibleParents) {
+    eligibleParents.sort(subjectSortCompare);
+  }
+
+  return eligibleParents;
+};
+
+export const flattenSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
+
+export const createOrUpdateSubject = subject => dispatch => {
+  let { _id, name, parentId, backgroundColor, textColor } = subject;
+  let request = { _id: _id || null, name, parentId, backgroundColor, textColor };
+
+  graphqlClient.runMutation(UpdateSubjectMutation, { ...request }).then(resp => {
+    let affectedSubjects = resp.updateSubject;
+    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
+  });
+};
+
+export const deleteSubject = _id => dispatch => {
+  return graphqlClient.runMutation(DeleteSubjectMutation, { _id }).then(resp => {
+    dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
+    return { subjectsDeleted: resp.deleteSubject };
+  });
+};
+
+export const computeSubjectParentId = path => {
+  if (path) {
+    let pathParts = path.split(",");
+    return pathParts[pathParts.length - 2];
+  } else {
+    return "";
+  }
+};

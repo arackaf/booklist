@@ -1,9 +1,6 @@
 import React, { FunctionComponent, Component, useState, useLayoutEffect, useRef, useContext } from "react";
-import { connect } from "react-redux";
 
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
-
-import * as bookSearchActionCreators from "../reducers/bookSearch/actionCreators";
 
 import Modal from "applicationRoot/components/modal";
 import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
@@ -209,7 +206,4 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
   );
 };
 
-export default connect(
-  null,
-  { ...bookSearchActionCreators }
-)(BookSearchModal);
+export default BookSearchModal;

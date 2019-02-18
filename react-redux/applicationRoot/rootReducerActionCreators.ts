@@ -15,8 +15,6 @@ import { Client } from "micro-graphql-react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
-import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import { AppType } from "modules/books/reducers/reducer";
 
 export const graphqlClient = new Client({
@@ -68,20 +66,3 @@ export function loadSubjects() {
     });
   };
 }
-
-export const deleteSubject = _id => dispatch => {
-  return graphqlClient.runMutation(DeleteSubjectMutation, { _id }).then(resp => {
-    dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
-    return { subjectsDeleted: resp.deleteSubject };
-  });
-};
-
-export const createOrUpdateSubject = subject => dispatch => {
-  let { _id, name, parentId, backgroundColor, textColor } = subject;
-  let request = { _id: _id || null, name, parentId, backgroundColor, textColor };
-
-  graphqlClient.runMutation(UpdateSubjectMutation, { ...request }).then(resp => {
-    let affectedSubjects = resp.updateSubject;
-    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
-  });
-};
