@@ -143,7 +143,7 @@ class SubjectDisplay extends Component<subjectDisplayProps & { isCurrentDropTarg
   }
 }
 
-@connect(
+const SubjectDisplayContent = connect(
   (state, ownProps) => {
     let subjectsModule = state.subjectsModule,
       editingSubjectsHash = subjectsModule.editingSubjectsHash,
@@ -174,25 +174,23 @@ class SubjectDisplay extends Component<subjectDisplayProps & { isCurrentDropTarg
     };
   },
   { ...actionCreators }
-)
-@DragSource(
-  "subject",
-  {
-    beginDrag: (props: any) => {
-      props.beginDrag(props.subject._id);
-      return props.subject;
+)(
+  DragSource(
+    "subject",
+    {
+      beginDrag: (props: any) => {
+        props.beginDrag(props.subject._id);
+        return props.subject;
+      },
+      endDrag: props => {
+        props.clearSubjectDragging();
+      }
     },
-    endDrag: props => {
-      props.clearSubjectDragging();
-    }
-  },
-  (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview()
-  })
-)
-class SubjectDisplayContent extends Component<any, any> {
-  render() {
+    (connect, monitor) => ({
+      connectDragSource: connect.dragSource(),
+      connectDragPreview: connect.dragPreview()
+    })
+  )(props => {
     let {
       subject,
       connectDragSource,
@@ -209,7 +207,7 @@ class SubjectDisplayContent extends Component<any, any> {
       isSubjectSaved,
       editingSubject,
       colors
-    } = this.props;
+    } = props;
     let effectiveChildren = pendingChildren.concat(childSubjects);
     let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
 
@@ -247,8 +245,8 @@ class SubjectDisplayContent extends Component<any, any> {
         {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
       </div>
     );
-  }
-}
+  })
+);
 
 @connect(
   state => ({ online: state.app.online }),
