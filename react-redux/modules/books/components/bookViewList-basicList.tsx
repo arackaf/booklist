@@ -1,7 +1,7 @@
-import React, { SFC } from "react";
-import { connect } from "react-redux";
+import React, { SFC, useContext } from "react";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import { selectBookListComponentState, actions, actionsType } from "./sharedSelectors/bookListComponentSelectors";
+import { useBookList } from "../booksState";
+import { AppContext } from "applicationRoot/renderUI";
 
 const BookViewListMobileItem = props => {
   let { book, online } = props;
@@ -60,13 +60,16 @@ const BookViewListMobileItem = props => {
   );
 };
 
-const BookViewListMobile: SFC<ReturnType<typeof selectBookListComponentState> & { editBook: any } & actionsType> = props => {
+const BookViewListMobile: SFC<{ editBook: any }> = props => {
+  const booksState = useBookList();
+  const [appState] = useContext(AppContext);
+
   return (
     <div>
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className="list-group docked-to-panel">
-          {props.booksList.map((book, i) => (
-            <BookViewListMobileItem online={props.online} key={book._id} book={book} editBook={props.editBook} viewingPublic={props.viewingPublic} />
+          {booksState.booksList.map((book, i) => (
+            <BookViewListMobileItem online={appState.online} key={book._id} book={book} editBook={props.editBook} viewingPublic={appState.isPublic} />
           ))}
         </div>
       </div>
@@ -74,7 +77,4 @@ const BookViewListMobile: SFC<ReturnType<typeof selectBookListComponentState> & 
   );
 };
 
-export default connect(
-  selectBookListComponentState,
-  actions
-)(BookViewListMobile);
+export default BookViewListMobile;
