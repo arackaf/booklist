@@ -19,7 +19,6 @@ class CustomColorPicker extends Component<any, any> {
   }
   onColorChosen: any;
   componentDidMount() {
-    this.onColorChosen = this.props.onColorChosen;
     let inst = this;
 
     this._colorChosen = function() {
@@ -27,7 +26,7 @@ class CustomColorPicker extends Component<any, any> {
         .map(n => (~~n).toString(16))
         .map(n => (n.length == 1 ? `0${n}` : n))
         .join("");
-      inst.onColorChosen("#" + hexColor);
+      inst.props.onColorChosen("#" + hexColor);
     };
     this.jscolorInstance = new jscolor(this.rootElement, {
       valueElement: this.valueElementId,
@@ -35,12 +34,10 @@ class CustomColorPicker extends Component<any, any> {
       onFineChange: this._colorChosen
     });
   }
-  shouldComponentUpdate(props) {
-    this.onColorChosen = props.onColorChosen;
-    if (props.currentColor) {
-      this.jscolorInstance.fromString(props.currentColor);
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.currentColor) {
+      this.jscolorInstance.fromString(this.props.currentColor);
     }
-    return false;
   }
   render() {
     return (
