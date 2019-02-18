@@ -327,3 +327,28 @@ export function getStatePacket<T>(reducer, initialState, actions?): [T, any, any
 
   return useMemo(() => [state, actions ? makeActionCreators(newDispatch, actions) : {}, dispatch], [state]) as any;
 }
+
+export const computeSubjectParentId = path => {
+  if (path) {
+    let pathParts = path.split(",");
+    return pathParts[pathParts.length - 2];
+  } else {
+    return "";
+  }
+};
+
+export const flattenSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
+
+export const getEligibleParents = (subjectHash, _id) => {
+  let eligibleParents = null;
+  if (!_id && _id != null) {
+    eligibleParents = flattenSubjects(subjectHash);
+  } else if (_id) {
+    eligibleParents = flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path));
+  }
+  if (eligibleParents) {
+    eligibleParents.sort(subjectSortCompare);
+  }
+
+  return eligibleParents;
+};
