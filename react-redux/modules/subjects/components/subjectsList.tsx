@@ -246,73 +246,70 @@ const SubjectDisplayContent = connect(
   })
 );
 
-@connect(
+const DefaultSubjectDisplay = connect(
   state => ({ online: state.app.online }),
   { ...actionCreators }
-)
-class DefaultSubjectDisplay extends Component<any, any> {
-  render() {
-    let {
-      connectDropTarget,
-      connectDragSource,
-      isSubjectSaving,
-      isSubjectSaved,
-      className,
-      subject,
-      beginSubjectEdit,
-      addNewSubject,
-      beginSubjectDelete,
-      noDrop,
-      online
-    } = this.props;
+)(props => {
+  let {
+    connectDropTarget,
+    connectDragSource,
+    isSubjectSaving,
+    isSubjectSaved,
+    className,
+    subject,
+    beginSubjectEdit,
+    addNewSubject,
+    beginSubjectDelete,
+    noDrop,
+    online
+  } = props;
 
-    let { _id, name, backgroundColor, textColor } = subject;
-    let mainIcon = isSubjectSaving ? (
-      <i className="fa fa-fw fa-spinner fa-spin" />
-    ) : isSubjectSaved ? (
-      <i style={{ color: "green" }} className="fa fa-fw fa-check" />
-    ) : isTouch || !online ? null : (
-      connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
-    );
+  let { _id, name, backgroundColor, textColor } = subject;
+  let mainIcon = isSubjectSaving ? (
+    <i className="fa fa-fw fa-spinner fa-spin" />
+  ) : isSubjectSaved ? (
+    <i style={{ color: "green" }} className="fa fa-fw fa-check" />
+  ) : isTouch || !online ? null : (
+    connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
+  );
 
-    return (noDrop ? c => c : connectDropTarget)(
-      <div className={className}>
-        <div className="col-lg-12 show-on-hover-parent">
-          {mainIcon}
-          &nbsp;
-          <div
-            className="label label-default"
-            style={{
-              backgroundColor: backgroundColor,
-              color: textColor,
-              maxWidth: "100%",
-              display: "inline-block",
-              overflow: "hidden",
-              verticalAlign: "text-top"
-            }}
-          >
-            {name || "<label preview>"}
-          </div>{" "}
-          {!isSubjectSaving ? (
-            <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id)}>
-              <i className="fa fa-fw fa-pencil" />
-            </a>
-          ) : null}
-          {!isSubjectSaving ? (
-            <a className="show-on-hover-inline inline-filter" onClick={() => addNewSubject(_id)}>
-              <i className="fa fa-fw fa-plus" />
-            </a>
-          ) : null}
-          {!isSubjectSaving ? (
-            <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectDelete(_id)} style={{ color: "red", marginLeft: "20px" }}>
-              <i className="fa fa-fw fa-trash" />
-            </a>
-          ) : null}
-        </div>
+  return (noDrop ? c => c : connectDropTarget)(
+    <div className={className}>
+      <div className="col-lg-12 show-on-hover-parent">
+        {mainIcon}
+        &nbsp;
+        <div
+          className="label label-default"
+          style={{
+            backgroundColor: backgroundColor,
+            color: textColor,
+            maxWidth: "100%",
+            display: "inline-block",
+            overflow: "hidden",
+            verticalAlign: "text-top"
+          }}
+        >
+          {name || "<label preview>"}
+        </div>{" "}
+        {!isSubjectSaving ? (
+          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id)}>
+            <i className="fa fa-fw fa-pencil" />
+          </a>
+        ) : null}
+        {!isSubjectSaving ? (
+          <a className="show-on-hover-inline inline-filter" onClick={() => addNewSubject(_id)}>
+            <i className="fa fa-fw fa-plus" />
+          </a>
+        ) : null}
+        {!isSubjectSaving ? (
+          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectDelete(_id)} style={{ color: "red", marginLeft: "20px" }}>
+            <i className="fa fa-fw fa-trash" />
+          </a>
+        ) : null}
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
 
 @connect(
   null,
