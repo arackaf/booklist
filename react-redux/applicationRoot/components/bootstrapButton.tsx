@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 const cssPresets = {};
 const buttonTypes = ["default", "primary", "success", "info", "warning", "danger"];
