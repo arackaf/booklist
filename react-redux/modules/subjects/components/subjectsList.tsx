@@ -1,6 +1,6 @@
-import React, { CSSProperties, FunctionComponent, useLayoutEffect, useEffect, useRef } from "react";
+import React, { CSSProperties, FunctionComponent, useLayoutEffect, useEffect, useRef, useContext } from "react";
 import { connect } from "react-redux";
-import { editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector } from "modules/subjects/reducers/reducer";
+import { useEditingSubjectHash, usePendingSubjects, useDraggingSubject, useSubjectEditInfo } from "modules/subjects/useSubjectsDndState";
 import * as actionCreators from "modules/subjects/reducers/actionCreators";
 import { DragSource, DragDropContext, DropTarget, DragLayer } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
@@ -11,6 +11,7 @@ import { store } from "applicationRoot/store";
 import { SubjectType } from "modules/subjects/reducers/reducer";
 import { useLevelSubjectsSortedSelector, useChildMapSelector } from "applicationRoot/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
+import { ColorsContext } from "applicationRoot/renderUI";
 
 type dragLayerType = {
   item: any;
@@ -136,109 +137,78 @@ const SubjectDisplay = connect(
   }) as FunctionComponent<subjectDisplayProps & { isCurrentDropTarget: boolean } & dropTargetType>)
 );
 
-const SubjectDisplayContent = connect(
-  (state, ownProps) => {
-    let subjectsModule = state.subjectsModule,
-      editingSubjectsHash = subjectsModule.editingSubjectsHash,
-      pendingDeleteHash = subjectsModule.pendingDeleteHash,
-      deletingHash = subjectsModule.deletingHash,
-      pendingSubjectsLookup = pendingSubjectsSelector(state),
-      draggingSubject = draggingSubjectSelector(state),
-      currentDropCandidateId = subjectsModule.currentDropCandidateId,
-      subject = ownProps.subject,
-      { _id } = subject,
-      dropCandidateSubject = currentDropCandidateId == _id ? draggingSubject : null,
-      subjectsSaving = state.subjectsModule.subjectsSaving,
-      subjectsSaved = state.subjectsModule.subjectsSaved,
-      { editingSubjectsHash: shapedEditingSubjectHash } = editingSubjectHashSelector(state);
-
-    return {
-      isEditingSubject: !!editingSubjectsHash[_id],
-      isPendingDelete: pendingDeleteHash[_id],
-      isDeleting: deletingHash[_id],
-      isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
-      isSubjectSaved: !!subjectsSaved[ownProps.subject._id],
-      pendingChildren: pendingSubjectsLookup[_id],
-      dropCandidateSubject,
-      editingSubject: shapedEditingSubjectHash[ownProps.subject._id],
-      colors: state.app.colors
-    };
-  },
-  { ...actionCreators }
-)(
-  DragSource(
-    "subject",
-    {
-      beginDrag: (props: any) => {
-        props.beginDrag(props.subject._id);
-        return props.subject;
-      },
-      endDrag: props => {
-        props.clearSubjectDragging();
-      }
+const SubjectDisplayContent = DragSource(
+  "subject",
+  {
+    beginDrag: (props: any) => {
+      props.beginDrag(props.subject._id);
+      return props.subject;
     },
-    connect => ({
-      connectDragSource: connect.dragSource(),
-      connectDragPreview: connect.dragPreview()
-    })
-  )(props => {
-    let {
-      subject,
-      connectDragSource,
-      connectDragPreview,
-      noDrop,
-      isPendingDelete,
-      isDeleting,
-      connectDropTarget,
-      pendingChildren = [],
-      isEditingSubject,
-      dropCandidateSubject,
-      isSubjectSaving,
-      isSubjectSaved,
-      editingSubject,
-      colors
-    } = props;
-    let childSubjectsMap = useChildMapSelector();
-    let childSubjects = childSubjectsMap[subject._id] || [];
-    let effectiveChildren = pendingChildren.concat(childSubjects);
-    let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
-
-    if (dropCandidateSubject) {
-      effectiveChildren.unshift(dropCandidateSubject);
+    endDrag: props => {
+      props.clearSubjectDragging();
     }
-
-    let classToPass = "row padding-top padding-bottom";
-    return connectDragPreview(
-      <div>
-        {isEditingSubject ? (
-          <EditingSubjectDisplay
-            className={classToPass}
-            subject={subject}
-            isSubjectSaving={isSubjectSaving}
-            editingSubject={editingSubject}
-            colors={colors}
-          />
-        ) : isDeleting ? (
-          <DeletingSubjectDisplay className={classToPass} name={subject.name} />
-        ) : isPendingDelete ? (
-          <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} />
-        ) : (
-          <DefaultSubjectDisplay
-            className={classToPass}
-            subject={subject}
-            connectDragSource={connectDragSource}
-            connectDropTarget={connectDropTarget}
-            noDrop={noDrop}
-            isSubjectSaving={isSubjectSaving}
-            isSubjectSaved={isSubjectSaved}
-          />
-        )}
-
-        {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
-      </div>
-    );
+  },
+  connect => ({
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview()
   })
-);
+)(props => {
+  const { subject, connectDragSource, connectDragPreview, noDrop, connectDropTarget } = props;
+
+  const { colors } = useContext(ColorsContext);
+
+  const { _id } = subject;
+  const [{ currentDropCandidateId }] = useContext(SubjectsDnDContext);
+  const { isEditingSubject, isPendingDelete, isDeleting, isSubjectSaving, isSubjectSaved } = useSubjectEditInfo(subject);
+
+  const pendingSubjectsLookup = usePendingSubjects();
+  const draggingSubject = useDraggingSubject();
+  const dropCandidateSubject = currentDropCandidateId == _id ? draggingSubject : null;
+  const pendingChildren = pendingSubjectsLookup[subject._id] || [];
+
+  const { editingSubjectsHash: shapedEditingSubjectHash } = useEditingSubjectHash();
+  const editingSubject = shapedEditingSubjectHash[_id];
+
+  let childSubjectsMap = useChildMapSelector();
+  let childSubjects = childSubjectsMap[subject._id] || [];
+  let effectiveChildren = pendingChildren.concat(childSubjects);
+  let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
+
+  if (dropCandidateSubject) {
+    effectiveChildren.unshift(dropCandidateSubject as any);
+  }
+
+  let classToPass = "row padding-top padding-bottom";
+  return connectDragPreview(
+    <div>
+      {isEditingSubject ? (
+        <EditingSubjectDisplay
+          className={classToPass}
+          subject={subject}
+          isSubjectSaving={isSubjectSaving}
+          editingSubject={editingSubject}
+          colors={colors}
+        />
+      ) : isDeleting ? (
+        <DeletingSubjectDisplay className={classToPass} name={subject.name} />
+      ) : isPendingDelete ? (
+        <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} />
+      ) : (
+        <DefaultSubjectDisplay
+          className={classToPass}
+          subject={subject}
+          connectDragSource={connectDragSource}
+          connectDropTarget={connectDropTarget}
+          noDrop={noDrop}
+          isSubjectSaving={isSubjectSaving}
+          isSubjectSaved={isSubjectSaved}
+        />
+      )}
+
+      {effectiveChildren.length ? <SubjectList noDrop={noDrop} style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
+    </div>
+  );
+});
 
 const DefaultSubjectDisplay = connect(
   state => ({ online: state.app.online }),
@@ -466,13 +436,13 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(
   connect(
     state => {
       return {
-        pendingSubjectsLookup: pendingSubjectsSelector(state),
         online: state.app.online
       };
     },
     { ...actionCreators }
   )((props => {
-    let { addNewSubject, pendingSubjectsLookup, online } = props;
+    const pendingSubjectsLookup = usePendingSubjects();
+    let { addNewSubject, online } = props;
     let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
     let topLevelSubjects = useLevelSubjectsSortedSelector();
     let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
@@ -497,6 +467,7 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(
 
 export default () => {
   let subjectsState = useSubjectsDndState();
+
   return (
     <SubjectsDnDContext.Provider value={subjectsState}>
       <TopSubjectsList />
