@@ -153,3 +153,36 @@ export const computeSubjectParentId = path => {
     return "";
   }
 };
+
+export const useLevelSubjectsSortedSelector = () => {
+  const [{ subjectHash }] = useContext(SubjectsContext);
+
+  return useMemo(
+    () =>
+      Object.keys(subjectHash)
+        .map(_id => subjectHash[_id])
+        .filter(s => !s.path)
+        .sort(subjectSortCompare),
+    [subjectHash]
+  );
+};
+
+export const getChildSubjectsSorted = (_id, subjectHash) => {
+  let regex = new RegExp(`,${_id},$`);
+  return Object.keys(subjectHash)
+    .map(_id => subjectHash[_id])
+    .filter(sc => regex.test(sc.path))
+    .sort(subjectSortCompare);
+};
+
+export const useChildMapSelector = () => {
+  const [{ subjectHash }] = useContext(SubjectsContext);
+
+  return useMemo(
+    () =>
+      Object.keys(subjectHash)
+        .map(_id => ({ _id, children: getChildSubjectsSorted(_id, subjectHash) }))
+        .reduce((hash, o) => ((hash[o._id] = o.children), hash), {}),
+    [subjectHash]
+  );
+};
