@@ -101,7 +101,7 @@ export function useSubjectsDndState(): [SubjectsDndType, any, any] {
 
 export const SubjectsDnDContext = createContext<[SubjectsDndType, any, any]>(null);
 
-export const editingSubjectHashSelector = () => {
+export const useEditingSubjectHash = () => {
   const [{ subjectHash }] = useContext(SubjectsContext);
   const [{ editingSubjectsHash }] = useContext(SubjectsDnDContext);
 
@@ -114,7 +114,7 @@ export const editingSubjectHashSelector = () => {
   }, [subjectHash, editingSubjectsHash]);
 };
 
-export const draggingSubjectSelector = () => {
+export const useDraggingSubject = () => {
   const [{ subjectHash }] = useContext(SubjectsContext);
   const [{ draggingId }] = useContext(SubjectsDnDContext);
 
@@ -126,7 +126,7 @@ export const draggingSubjectSelector = () => {
 
 const tempSubjectCompare = ({ _id: id1 }, { _id: id2 }) => id1 - id2;
 
-export const pendingSubjectsSelector = () => {
+export const usePendingSubjects = () => {
   const [{ pendingSubjectsHash }] = useContext(SubjectsDnDContext);
 
   return useMemo(() => {
@@ -143,4 +143,20 @@ export const pendingSubjectsSelector = () => {
     Object.keys(result).forEach(parentId => result[parentId].sort(tempSubjectCompare));
     return result;
   }, [pendingSubjectsHash]);
+};
+
+export const useSubjectEditInfo = subject => {
+  const [{ editingSubjectsHash, pendingDeleteHash, deletingHash, subjectsSaving, subjectsSaved }] = useContext(SubjectsDnDContext);
+  const { _id } = subject;
+
+  return useMemo(
+    () => ({
+      isEditingSubject: !!editingSubjectsHash[_id],
+      isPendingDelete: pendingDeleteHash[_id],
+      isDeleting: deletingHash[_id],
+      isSubjectSaving: !!subjectsSaving[_id],
+      isSubjectSaved: !!subjectsSaved[_id]
+    }),
+    [editingSubjectsHash, pendingDeleteHash, deletingHash, subjectsSaving, subjectsSaved, _id]
+  );
 };
