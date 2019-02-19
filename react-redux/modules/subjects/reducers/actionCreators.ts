@@ -31,6 +31,14 @@ export const subjectDraggingOver = targetId => (dispatch, getState) => {
   let sourceId = getState().subjectsModule.draggingId;
   dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
 };
+export const subjectNotDraggingOver = targetId => (dispatch, getState) => {
+  let sourceId = getState().subjectsModule.draggingId;
+  let currentTarget = getState().subjectsModule.currentDropCandidateId;
+
+  if (currentTarget == targetId) {
+    dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId: null });
+  }
+};
 
 export const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
 export const beginSubjectEdit = _id => (dispatch, getState) => {
