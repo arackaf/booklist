@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties } from "react";
+import React, { Component, CSSProperties, FunctionComponent } from "react";
 import { connect } from "react-redux";
 import { editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector } from "modules/subjects/reducers/reducer";
 import { subjectChildMapSelector, topLevelSubjectsSortedSelector } from "applicationRoot/rootReducer";
@@ -17,21 +17,19 @@ type dragLayerType = {
   isDragging: boolean;
 };
 
-@connect((state, ownProps) => {
+const SubjectDragLayer = connect(state => {
   return {
     currentlyDragging: state.subjectsModule.draggingId
   };
-})
-@DragLayer((monitor, x) => {
-  return {
-    item: monitor.getItem(),
-    currentOffset: monitor.getSourceClientOffset(),
-    isDragging: monitor.isDragging()
-  };
-})
-class SubjectDragLayer extends Component<{ currentlyDragging: string } & dragLayerType, any> {
-  render() {
-    let { isDragging, currentOffset, item, currentlyDragging } = this.props;
+})(
+  DragLayer((monitor, x) => {
+    return {
+      item: monitor.getItem(),
+      currentOffset: monitor.getSourceClientOffset(),
+      isDragging: monitor.isDragging()
+    };
+  })((props => {
+    let { isDragging, currentOffset, item, currentlyDragging } = props;
     if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
     let { x, y } = currentOffset;
 
@@ -53,8 +51,8 @@ class SubjectDragLayer extends Component<{ currentlyDragging: string } & dragLay
         </div>
       </div>
     ) : null;
-  }
-}
+  }) as FunctionComponent<{ currentlyDragging: string } & dragLayerType>)
+);
 
 type dropTargetType = {
   connectDropTarget: any;
