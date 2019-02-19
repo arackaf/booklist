@@ -1,7 +1,6 @@
 import React, { CSSProperties, FunctionComponent, useLayoutEffect, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector } from "modules/subjects/reducers/reducer";
-import { subjectChildMapSelector, topLevelSubjectsSortedSelector } from "applicationRoot/rootReducer";
 import * as actionCreators from "modules/subjects/reducers/actionCreators";
 import { DragSource, DragDropContext, DropTarget, DragLayer } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
@@ -10,6 +9,7 @@ import ColorsPalette from "applicationRoot/components/colorsPalette";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import { store } from "applicationRoot/store";
 import { SubjectType } from "modules/subjects/reducers/reducer";
+import { useLevelSubjectsSortedSelector, useChildMapSelector } from "applicationRoot/subjectsState";
 
 type dragLayerType = {
   item: any;
@@ -142,7 +142,6 @@ const SubjectDisplayContent = connect(
       pendingDeleteHash = subjectsModule.pendingDeleteHash,
       deletingHash = subjectsModule.deletingHash,
       pendingSubjectsLookup = pendingSubjectsSelector(state),
-      childSubjectsMap = subjectChildMapSelector(state),
       draggingSubject = draggingSubjectSelector(state),
       currentDropCandidateId = subjectsModule.currentDropCandidateId,
       subject = ownProps.subject,
@@ -159,7 +158,6 @@ const SubjectDisplayContent = connect(
       isSubjectSaving: !!subjectsSaving[ownProps.subject._id],
       isSubjectSaved: !!subjectsSaved[ownProps.subject._id],
       pendingChildren: pendingSubjectsLookup[_id],
-      childSubjects: childSubjectsMap[_id],
       dropCandidateSubject,
       editingSubject: shapedEditingSubjectHash[ownProps.subject._id],
       colors: state.app.colors
@@ -178,7 +176,7 @@ const SubjectDisplayContent = connect(
         props.clearSubjectDragging();
       }
     },
-    (connect, monitor) => ({
+    connect => ({
       connectDragSource: connect.dragSource(),
       connectDragPreview: connect.dragPreview()
     })
@@ -191,7 +189,6 @@ const SubjectDisplayContent = connect(
       isPendingDelete,
       isDeleting,
       connectDropTarget,
-      childSubjects = [],
       pendingChildren = [],
       isEditingSubject,
       dropCandidateSubject,
@@ -200,6 +197,8 @@ const SubjectDisplayContent = connect(
       editingSubject,
       colors
     } = props;
+    let childSubjectsMap = useChildMapSelector();
+    let childSubjects = childSubjectsMap[subject._id] || [];
     let effectiveChildren = pendingChildren.concat(childSubjects);
     let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
 
@@ -466,15 +465,15 @@ export default DragDropContext(HTML5Backend)(
   connect(
     state => {
       return {
-        topLevelSubjects: topLevelSubjectsSortedSelector(state),
         pendingSubjectsLookup: pendingSubjectsSelector(state),
         online: state.app.online
       };
     },
     { ...actionCreators }
   )((props => {
-    let { addNewSubject, pendingSubjectsLookup, topLevelSubjects, online } = props;
+    let { addNewSubject, pendingSubjectsLookup, online } = props;
     let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
+    let topLevelSubjects = useLevelSubjectsSortedSelector();
     let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
 
     let SDL: any = SubjectDragLayer;
