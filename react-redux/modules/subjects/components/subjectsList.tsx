@@ -10,6 +10,7 @@ import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import { store } from "applicationRoot/store";
 import { SubjectType } from "modules/subjects/reducers/reducer";
 import { useLevelSubjectsSortedSelector, useChildMapSelector } from "applicationRoot/subjectsState";
+import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 
 type dragLayerType = {
   item: any;
@@ -461,7 +462,7 @@ type subjectsComponentPropsType = {
   addNewSubject: any;
 };
 
-export default DragDropContext(HTML5Backend)(
+const TopSubjectsList = DragDropContext(HTML5Backend)(
   connect(
     state => {
       return {
@@ -493,3 +494,12 @@ export default DragDropContext(HTML5Backend)(
     );
   }) as FunctionComponent<subjectsComponentPropsType & typeof actionCreators & { online: any }>)
 );
+
+export default () => {
+  let subjectsState = useSubjectsDndState();
+  return (
+    <SubjectsDnDContext.Provider value={subjectsState}>
+      <TopSubjectsList />
+    </SubjectsDnDContext.Provider>
+  );
+};
