@@ -410,66 +410,59 @@ class EditingSubjectDisplay extends Component<any, any> {
   }
 }
 
-@connect(
+const PendingDeleteSubjectDisplay = connect(
   null,
   { ...actionCreators }
-)
-class PendingDeleteSubjectDisplay extends Component<typeof actionCreators & any, any> {
-  render() {
-    let { className, deleteMessage, deleteSubject, cancelSubjectDelete, subject } = this.props,
-      { name, _id } = subject;
+)((props => {
+  let { className, deleteMessage, deleteSubject, cancelSubjectDelete, subject } = props;
+  let { name, _id } = subject;
 
-    return (
-      <div className={className}>
-        <div className="col-lg-12">
-          {name}
-          <BootstrapButton onClick={() => deleteSubject(_id)} style={{ marginLeft: "20px" }} preset="danger-sm">
-            {deleteMessage}
-          </BootstrapButton>
-          <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} preset="primary-sm">
-            Cancel
-          </BootstrapButton>
-        </div>
+  return (
+    <div className={className}>
+      <div className="col-lg-12">
+        {name}
+        <BootstrapButton onClick={() => deleteSubject(_id)} style={{ marginLeft: "20px" }} preset="danger-sm">
+          {deleteMessage}
+        </BootstrapButton>
+        <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} preset="primary-sm">
+          Cancel
+        </BootstrapButton>
       </div>
-    );
-  }
-}
+    </div>
+  );
+}) as FunctionComponent<typeof actionCreators & any>);
 
-@connect(
+const DeletingSubjectDisplay = connect(
   null,
   { ...actionCreators }
-)
-class DeletingSubjectDisplay extends Component<any, any> {
-  render() {
-    let { name, className } = this.props;
-    return (
-      <div className={className}>
-        <div className="col-lg-12">
-          {name}
-          <BootstrapButton preset="danger-xs" disabled={true} style={{ marginLeft: "20px" }}>
-            Deleting <i className="fa fa-fw fa-spinner fa-spin" />
-          </BootstrapButton>
-        </div>
+)(props => {
+  let { name, className } = props;
+  return (
+    <div className={className}>
+      <div className="col-lg-12">
+        {name}
+        <BootstrapButton preset="danger-xs" disabled={true} style={{ marginLeft: "20px" }}>
+          Deleting <i className="fa fa-fw fa-spinner fa-spin" />
+        </BootstrapButton>
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
 
-class SubjectList extends Component<any, any> {
-  render() {
-    let { style = {}, noDrop } = this.props;
+const SubjectList = props => {
+  let { style = {}, noDrop } = props;
 
-    let SD: any = SubjectDisplay;
+  let SD: any = SubjectDisplay;
 
-    return (
-      <ul className="list-group" style={{ marginBottom: "5px", ...style }}>
-        {this.props.subjects.map(subject => (
-          <SD key={subject._id} noDrop={noDrop} subject={subject} />
-        ))}
-      </ul>
-    );
-  }
-}
+  return (
+    <ul className="list-group" style={{ marginBottom: "5px", ...style }}>
+      {props.subjects.map(subject => (
+        <SD key={subject._id} noDrop={noDrop} subject={subject} />
+      ))}
+    </ul>
+  );
+};
+
 let isTouch = (store.getState() as any).app.isTouch;
 
 type subjectsComponentPropsType = {
@@ -478,20 +471,18 @@ type subjectsComponentPropsType = {
   addNewSubject: any;
 };
 
-@DragDropContext(HTML5Backend)
-@connect(
-  state => {
-    return {
-      topLevelSubjects: topLevelSubjectsSortedSelector(state),
-      pendingSubjectsLookup: pendingSubjectsSelector(state),
-      online: state.app.online
-    };
-  },
-  { ...actionCreators }
-)
-export default class SubjectsComponent extends Component<subjectsComponentPropsType & typeof actionCreators & { online: any }, any> {
-  render() {
-    let { addNewSubject, pendingSubjectsLookup, topLevelSubjects, online } = this.props;
+export default DragDropContext(HTML5Backend)(
+  connect(
+    state => {
+      return {
+        topLevelSubjects: topLevelSubjectsSortedSelector(state),
+        pendingSubjectsLookup: pendingSubjectsSelector(state),
+        online: state.app.online
+      };
+    },
+    { ...actionCreators }
+  )((props => {
+    let { addNewSubject, pendingSubjectsLookup, topLevelSubjects, online } = props;
     let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
     let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
 
@@ -510,5 +501,5 @@ export default class SubjectsComponent extends Component<subjectsComponentPropsT
         </div>
       </div>
     );
-  }
-}
+  }) as FunctionComponent<subjectsComponentPropsType & typeof actionCreators & { online: any }>)
+);
