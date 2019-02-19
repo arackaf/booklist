@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties, FunctionComponent } from "react";
+import React, { Component, CSSProperties, FunctionComponent, useLayoutEffect } from "react";
 import { connect } from "react-redux";
 import { editingSubjectHashSelector, pendingSubjectsSelector, draggingSubjectSelector } from "modules/subjects/reducers/reducer";
 import { subjectChildMapSelector, topLevelSubjectsSortedSelector } from "applicationRoot/rootReducer";
@@ -63,67 +63,61 @@ type dropTargetType = {
 type subjectDisplayProps = {
   subject: SubjectType & { candidateMove: boolean };
   subjectDraggingOver: any;
+  subjectNotDraggingOver: any;
   noDrop: boolean;
 };
 
-@connect(
+const SubjectDisplay = connect(
   (state, ownProps) => {
     return {
       isCurrentDropTarget: state.subjectsModule.currentDropCandidateId == ownProps.subject._id
     };
   },
   { ...actionCreators }
-)
-@DropTarget(
-  "subject",
-  {
-    canDrop(props, monitor) {
-      let sourceSubject = monitor.getItem(),
-        { subject: targetSubject } = props as any,
-        isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
+)(
+  DropTarget(
+    "subject",
+    {
+      canDrop(props, monitor) {
+        let sourceSubject = monitor.getItem(),
+          { subject: targetSubject } = props as any,
+          isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
-      return (
-        sourceSubject._id != targetSubject._id &&
-        !targetSubject.pending &&
-        !isCurrentParent &&
-        monitor.isOver() &&
-        (targetSubject.path || "").indexOf(sourceSubject._id) < 0
-      );
+        return (
+          sourceSubject._id != targetSubject._id &&
+          !targetSubject.pending &&
+          !isCurrentParent &&
+          monitor.isOver() &&
+          (targetSubject.path || "").indexOf(sourceSubject._id) < 0
+        );
+      },
+      drop(props: any, monitor) {
+        let { subject: targetSubject } = props,
+          sourceSubject = monitor.getItem();
+
+        props.setNewParent(sourceSubject, targetSubject);
+      }
     },
-    drop(props: any, monitor) {
-      let { subject: targetSubject } = props,
-        sourceSubject = monitor.getItem();
+    (connect, monitor) => ({
+      connectDropTarget: connect.dropTarget(),
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  )((props => {
+    let isOver = props.isOver && props.canDrop;
+    let { subject, connectDropTarget } = props;
+    let { _id, candidateMove } = subject;
+    let pendingSubjectDrop = props.isOver && props.canDrop;
+    let style: any = {};
+    let noDrop = candidateMove || props.noDrop;
 
-      props.setNewParent(sourceSubject, targetSubject);
-    }
-  },
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()
-  })
-)
-class SubjectDisplay extends Component<subjectDisplayProps & { isCurrentDropTarget: boolean } & dropTargetType, any> {
-  componentDidUpdate(prevProps) {
-    let wasOver = prevProps.isOver && prevProps.canDrop,
-      isOver = this.props.isOver && this.props.canDrop,
-      canDrop = this.props.canDrop,
-      notOverAtAll = !this.props.isOver,
-      { subject } = this.props,
-      { _id } = subject;
-
-    if (!wasOver && isOver) {
-      this.props.subjectDraggingOver(_id);
-    } else if ((notOverAtAll || !canDrop) && this.props.isCurrentDropTarget) {
-      this.props.subjectDraggingOver(null);
-    }
-  }
-  render() {
-    let { subject, connectDropTarget } = this.props,
-      { _id, candidateMove } = subject,
-      pendingSubjectDrop = this.props.isOver && this.props.canDrop,
-      style: any = {},
-      noDrop = candidateMove || this.props.noDrop;
+    useLayoutEffect(() => {
+      if (isOver) {
+        props.subjectDraggingOver(_id);
+      } else {
+        props.subjectNotDraggingOver(_id);
+      }
+    }, [isOver]);
 
     if (candidateMove) {
       style.backgroundColor = "lavender";
@@ -138,8 +132,8 @@ class SubjectDisplay extends Component<subjectDisplayProps & { isCurrentDropTarg
         <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
       </li>
     );
-  }
-}
+  }) as FunctionComponent<subjectDisplayProps & { isCurrentDropTarget: boolean } & dropTargetType>)
+);
 
 const SubjectDisplayContent = connect(
   (state, ownProps) => {
