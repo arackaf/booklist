@@ -1,4 +1,4 @@
-import React, { FunctionComponent, Component, useState, useLayoutEffect, useRef, useContext } from "react";
+import React, { FunctionComponent, useState, useLayoutEffect, useRef } from "react";
 
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 

@@ -3,9 +3,8 @@ import React, { SFC, CSSProperties, useContext } from "react";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
-import { IBookDisplay } from "modules/books/reducers/books/reducer";
 import { AppContext } from "applicationRoot/renderUI";
-import { useBookSelection, useBookList } from "../booksState";
+import { useBookSelection, useBookList, IBookDisplay } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";
 import { BooksContext } from "./bookViewList";
 
