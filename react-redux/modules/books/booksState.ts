@@ -1,4 +1,4 @@
-import { hashOf, getStatePacket, graphqlClient } from "applicationRoot/rootReducer";
+import { hashOf, getStatePacket, graphqlClient, makeStateBoundHelpers } from "applicationRoot/rootReducer";
 import update from "immutability-helper";
 import { bulkMerge } from "util/immutableHelpers";
 
@@ -7,21 +7,18 @@ import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { AppState } from "applicationRoot/appState";
-import { useMemo, useContext } from "react";
-import { SubjectsContext } from "applicationRoot/renderUI";
-import { TagsContext, BooksContext } from "./components/bookViewList";
+import { useMemo, useContext, useRef, useState, useLayoutEffect } from "react";
+import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
+import { TagsContext } from "./components/bookViewList";
+import { useQuery, buildQuery } from "micro-graphql-react";
 
-const LOAD_BOOKS = "LOAD_BOOKS";
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const TOGGLE_SELECT_BOOK = "TOGGLE_SELECT_BOOK";
 const BOOK_READ_CHANGING = "BOOK_READ_CHANGING";
 const BOOK_READ_CHANGED = "BOOK_READ_CHANGED";
-const TOGGLE_CHECK_ALL = "TOGGLE_CHECK_ALL";
 
 const SET_PENDING_DELETE_BOOK = "SET_PENDING_DELETE_BOOK";
 const CANCEL_PENDING_DELETE_BOOK = "CANCEL_PENDING_DELETE_BOOK";
-const DELETE_BOOK = "DELETE_BOOK";
 const BOOK_DELETING = "BOOK_DELETING";
 const BOOK_DELETED = "BOOK_DELETED";
 
@@ -81,20 +78,18 @@ export interface IBookDisplay extends IBookRaw {
 }
 
 const initialBooksState = {
-  booksHash: hashOf<IBookRaw>(),
-  booksLoading: true,
   selectedBooks: {} as { [s: string]: boolean },
   resultsCount: 0,
   reloadOnActivate: false
 };
-export type BooksState = typeof initialBooksState;
+export type BooksState = typeof initialBooksState & { booksHash: any };
 
 export function booksReducer(state = initialBooksState, action): BooksState {
   switch (action.type) {
-    case LOAD_BOOKS:
-      return { ...state, booksLoading: true, reloadOnActivate: false };
-    case LOAD_BOOKS_RESULTS:
-      return { ...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books), resultsCount: action.resultsCount };
+    // case LOAD_BOOKS:
+    //   return { ...state, booksLoading: true, reloadOnActivate: false };
+    // case LOAD_BOOKS_RESULTS:
+    //   return { ...state, booksLoading: false, selectedBooks: {}, booksHash: createBooksHash(action.books), resultsCount: action.resultsCount };
     case EDITING_BOOK_SAVED:
       return update(state, { booksHash: { [action.book._id]: { $merge: action.book } } });
     case TOGGLE_SELECT_BOOK:
@@ -136,14 +131,14 @@ export function booksReducer(state = initialBooksState, action): BooksState {
       return update(state, { booksHash: bulkMerge(action._ids, { readChanging: true }) });
     case BOOK_READ_CHANGED:
       return update(state, { booksHash: bulkMerge(action._ids, { readChanging: false, isRead: action.value }) });
-    case TOGGLE_CHECK_ALL:
-      let selectedCount = Object.keys(state.selectedBooks).filter(k => state.selectedBooks[k]).length,
-        allBooksCount = Object.keys(state.booksHash).length,
-        willSelectAll = !selectedCount || (selectedCount && allBooksCount != selectedCount);
+    // case TOGGLE_CHECK_ALL:
+    //   let selectedCount = Object.keys(state.selectedBooks).filter(k => state.selectedBooks[k]).length,
+    //     allBooksCount = Object.keys(state.booksHash).length,
+    //     willSelectAll = !selectedCount || (selectedCount && allBooksCount != selectedCount);
 
-      return update(state, {
-        selectedBooks: { $set: willSelectAll ? Object.keys(state.booksHash).reduce((hash, _id) => ((hash[_id] = true), hash), {}) : {} }
-      });
+    //   return update(state, {
+    //     selectedBooks: { $set: willSelectAll ? Object.keys(state.booksHash).reduce((hash, _id) => ((hash[_id] = true), hash), {}) : {} }
+    //   });
     case SET_PENDING_DELETE_BOOK:
       return update(state, { booksHash: { [action._id]: { $merge: { pendingDelete: true } } } });
     case CANCEL_PENDING_DELETE_BOOK:
@@ -174,7 +169,7 @@ export function booksReducer(state = initialBooksState, action): BooksState {
       });
   }
 
-  return state;
+  return state as any;
 }
 
 function createBooksHash(booksArr) {
@@ -191,49 +186,57 @@ function createBooksHash(booksArr) {
   return result;
 }
 
-export const loadBooks = (bookSearchFilters, app: AppState) => dispatch => {
-  dispatch({ type: LOAD_BOOKS });
+export const useBooks = () => {
+  const [app] = useContext(AppContext);
+  const searchState = useCurrentSearch();
 
-  Promise.resolve(booksSearch(bookSearchFilters, app.publicUserId, app.online)).then(booksResp => {
-    window.scrollTo(0, 0);
-    dispatch(booksResults(booksResp, booksResp.count));
-  });
+  const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
+  const { data, loading, loaded } = useQuery(buildQuery(GetBooksQuery, variables));
+
+  const allBooksPacket = data && data.allBooks;
+  //TODO:
+  //useLayoutEffect(() => setSelectedBooks({}), [allBooksPacket]);
+
+  return useMemo(() => {
+    return {
+      booksHash: allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {},
+      resultsCount: allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1,
+      booksLoading: loading
+    };
+  }, [loaded, loading, allBooksPacket]);
 };
 
-function booksSearch(bookSearchFilters, publicUserId, online) {
-  let getBooksVariables: any = {
-    page: +bookSearchFilters.page,
-    pageSize: bookSearchFilters.pageSize,
-    sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
-    title_contains: bookSearchFilters.search || void 0,
-    isRead: bookSearchFilters.isRead === "1" ? true : void 0,
-    isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
-    subjects_containsAny: bookSearchFilters.subjectIds.length ? bookSearchFilters.subjectIds : void 0,
-    searchChildSubjects: bookSearchFilters.searchChildSubjects == "true" ? true : void 0,
-    tags_containsAny: bookSearchFilters.tagIds.length ? bookSearchFilters.tagIds : void 0,
-    authors_textContains: bookSearchFilters.author || void 0,
-    publisher_contains: bookSearchFilters.publisher || void 0,
-    publicUserId: publicUserId,
-    subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-    cache: online ? 1 : void 0
-  };
+function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
+  return useMemo(() => {
+    let getBooksVariables: any = {
+      page: +bookSearchFilters.page,
+      pageSize: bookSearchFilters.pageSize,
+      sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
+      title_contains: bookSearchFilters.search || void 0,
+      isRead: bookSearchFilters.isRead === "1" ? true : void 0,
+      isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
+      subjects_containsAny: bookSearchFilters.subjectIds.length ? bookSearchFilters.subjectIds : void 0,
+      searchChildSubjects: bookSearchFilters.searchChildSubjects == "true" ? true : void 0,
+      tags_containsAny: bookSearchFilters.tagIds.length ? bookSearchFilters.tagIds : void 0,
+      authors_textContains: bookSearchFilters.author || void 0,
+      publisher_contains: bookSearchFilters.publisher || void 0,
+      publicUserId: publicUserId,
+      subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
+      cache: online ? 1 : void 0
+    };
 
-  if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {
-    getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
-  }
-
-  return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
-    if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
-      return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta ? resp.data.allBooks.Meta.count : -1 };
+    if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {
+      getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
     }
-  });
+
+    return getBooksVariables;
+  }, [bookSearchFilters, publicUserId]);
 }
 
 export const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, resultsCount: count });
 
-export function useBooksState(): [BooksState, any, any] {
+function useBooksState() {
   let actions = {
-    loadBooks,
     toggleSelectBook,
     collapseBook,
     expandBook,
@@ -246,13 +249,17 @@ export function useBooksState(): [BooksState, any, any] {
     setSelectedUnRead,
     setBooksSubjects
   };
-  return getStatePacket<BooksState>(booksReducer, initialBooksState, actions);
+
+  const [selectedBooks, setSelectedBooks] = useState({});
+  let selectedActions = makeStateBoundHelpers(selectedBooks, setSelectedBooks, { toggleSelectBook });
+
+  return useMemo(() => ({ ...selectedActions }), [selectedBooks]);
 }
 
 export const useBookList = () => {
   let [{ subjectHash }] = useContext(SubjectsContext);
   let [{ tagHash }] = useContext(TagsContext);
-  let [{ booksHash, booksLoading }] = useContext(BooksContext);
+  let { booksHash, booksLoading } = useBooks();
 
   return useMemo(() => {
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
@@ -269,7 +276,7 @@ export const useBookList = () => {
 };
 
 export const useBookSelection = () => {
-  let [{ booksHash, selectedBooks }] = useContext(BooksContext);
+  let { booksHash, selectedBooks } = useBooks();
 
   return useMemo(() => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
@@ -284,16 +291,18 @@ export const useBookSelection = () => {
 export const useBookLoadingInfo = () => {
   const [booksModule] = useBooksState();
   const bookSearch = useCurrentSearch();
+  const { booksLoading } = useBooks();
 
   const totalPages = Math.ceil(booksModule.resultsCount / bookSearch.pageSize);
-  return { resultsCount: booksModule.resultsCount, booksLoading: booksModule.booksLoading, totalPages };
+  return { resultsCount: booksModule.resultsCount, booksLoading: booksLoading, totalPages };
 };
 
 // ----- actions -----
 
-export function toggleSelectBook(_id) {
-  return { type: TOGGLE_SELECT_BOOK, _id };
-}
+export const toggleSelectBook = selected => (selected2, _id) => {
+  debugger;
+  return { ...selected, [Math.random()]: true, [_id]: !selected[_id] };
+};
 
 export function setRead(_id) {
   return function(dispatch) {

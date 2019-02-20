@@ -305,6 +305,21 @@ export const selectLoggedIn = createSelector(
   (isLoggedIn, userId) => ({ isLoggedIn, userId })
 );
 
+export function makeStateBoundHelpers<T>(state, updateState, fns: T): { [k in keyof T]: any } {
+  return useMemo(
+    () =>
+      Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
+        let boundFn = fn(state);
+        hash[name] = (...args) => {
+          debugger;
+          updateState(boundFn(state, ...args));
+        };
+        return hash;
+      }, {}),
+    [state]
+  ) as any;
+}
+
 export function makeActionCreators(dispatch, fns) {
   return Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
     hash[name] = (...args) => dispatch(fn(...args));

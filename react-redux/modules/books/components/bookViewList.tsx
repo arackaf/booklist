@@ -13,7 +13,7 @@ import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
-import { useBooksState, BooksState, useBookList } from "../booksState";
+import { BooksState, useBookList, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useCurrentSearch } from "../booksSearchState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
@@ -36,25 +36,22 @@ const prepBookForSaving = book => {
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
 
-export const BooksContext = createContext<[BooksState, any, any]>(null);
+export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
 export const TagsContext = createContext<[TagsState, any, any]>(null);
 
 export const BookModuleRoot = () => {
-  let booksState = useBooksState();
   let booksSearchState = useBooksSearchState();
   let tagsState = useTagsState();
 
   return (
     <div style={{}}>
       <Suspense fallback={<Loading />}>
-        <BooksContext.Provider value={booksState}>
-          <BooksSearchContext.Provider value={booksSearchState}>
-            <TagsContext.Provider value={tagsState}>
-              <BookViewingList />
-            </TagsContext.Provider>
-          </BooksSearchContext.Provider>
-        </BooksContext.Provider>
+        <BooksSearchContext.Provider value={booksSearchState}>
+          <TagsContext.Provider value={tagsState}>
+            <BookViewingList />
+          </TagsContext.Provider>
+        </BooksSearchContext.Provider>
       </Suspense>
     </div>
   );
@@ -64,27 +61,21 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
 
-  let booksPacket = useContext(BooksContext);
-  let [booksState, { loadBooks }] = booksPacket;
-
-  let searchState = useCurrentSearch();
-
-  useEffect(() => {
-    loadBooks(searchState, appState);
-  }, [searchState]);
+  let { selectedBooks } = useContext(BooksContext);
 
   useEffect(() => {
     loadTags(appState);
   }, []);
 
   const { booksList, booksLoading } = useBookList();
+
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
-  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => booksState.selectedBooks[b._id]));
+  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => selectedBooks[b._id]));
 
   const [bookTagModifying, bookTagModalLoaded, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
   const editTagsForBook = book => openBookTagModal([book]);
-  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => booksState.selectedBooks[b._id]));
+  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => selectedBooks[b._id]));
 
   const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();

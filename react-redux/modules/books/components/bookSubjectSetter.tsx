@@ -8,7 +8,6 @@ import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects"
 
 import Modal from "applicationRoot/components/modal";
 import { useStackedSubjects, filterSubjects } from "applicationRoot/subjectsState";
-import { BooksContext } from "./bookViewList";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -17,7 +16,8 @@ interface ILocalProps {
 }
 
 const BookSubjectSetter: SFC<ILocalProps> = props => {
-  const [booksState, { setBooksSubjects }] = useContext(BooksContext);
+  let setBooksSubjects = x => {};
+  //const [booksState, { setBooksSubjects }] = useContext(BooksContext);
   const { subjectHash, subjectsUnwound } = useStackedSubjects();
   const [currentTab, setTab] = useState("subjects");
   const [addingSubjects, setAddingSubjects] = useState([]);
