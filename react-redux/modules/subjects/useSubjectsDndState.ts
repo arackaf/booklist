@@ -20,13 +20,10 @@ import update from "immutability-helper";
 import { getStatePacket } from "applicationRoot/rootReducer";
 import { SubjectsContext } from "applicationRoot/renderUI";
 import { createContext, useContext, useMemo } from "react";
-import {
-  getEligibleParents,
-  computeSubjectParentId,
-  createOrUpdateSubject,
-  unwindSubjects,
-  getAllDescendantsOfSubject
-} from "applicationRoot/subjectsState";
+import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject } from "applicationRoot/subjectsState";
+
+import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
+import { syncUpdates } from "applicationRoot/graphqlHelpers";
 
 const initialSubjectsState = {
   draggingId: null,
@@ -258,7 +255,7 @@ const saveChanges = (subject, original, subjectHash, runUpdate) => dispatch => {
 };
 
 //TODO:
-const setNewParent = (subject, newParent, runInsert) => dispatch => {
+const setNewParent = (subject, newParent, subjectHash, runInsert) => dispatch => {
   let { _id, name, backgroundColor, textColor } = subject,
     adjustedSubject = { ...subject },
     request = { _id, name, backgroundColor, textColor, parentId: newParent._id };
@@ -273,16 +270,18 @@ const setNewParent = (subject, newParent, runInsert) => dispatch => {
   adjustedSubject.path
     .split(",")
     .filter(s => s)
+    .concat(getAllDescendantsOfSubject(adjustedSubject._id, subjectHash).map(s => s._id))
     .forEach(_id => (subjectsSavingHash[_id] = true));
 
   //provide immediate feedback, so the DnD "sticks"
-  //TODO:
-  //dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
+  syncUpdates(AllSubjectsQuery, [adjustedSubject], "allSubjects", "Subjects", { force: true });
   dispatch(clearSubjectDragging());
   //disable dragging and editing on the entire hierarchy until the save is done
   dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
-  Promise.resolve(runInsert(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+  setTimeout(() => {
+    Promise.resolve(runInsert(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+  }, 2000);
 };
 
 const deleteSubject = (_id, subjectHash, deleteSubject) => dispatch => {
