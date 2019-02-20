@@ -6,6 +6,7 @@ export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: 
   const lookupNew = new Map(newResults.map(o => [o._id, o]));
 
   [...cache.entries].forEach(([uri, currentResults]) => {
+    currentResults.data[resultSet][arrName] = currentResults.data[resultSet][arrName].concat();
     currentResults.data[resultSet][arrName].forEach(o => {
       if (lookupNew.has(o._id)) {
         Object.assign(o, lookupNew.get(o._id));
