@@ -6,6 +6,8 @@ import UpdateTag from "graphQL/tags/updateTag.graphql";
 import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 import { AppState } from "./appState";
+import { useContext, useMemo } from "react";
+import { TagsContext } from "modules/books/components/bookViewList";
 
 const LOAD_TAGS = "root.LOAD_TAGS";
 const LOAD_TAGS_RESULTS = "root.LOAD_TAGS_RESULTS";
@@ -75,3 +77,27 @@ export function useTagsState(): [TagsState, any, any] {
   let actions = { loadTags };
   return getStatePacket<TagsState>(tagsReducer, initialState, actions);
 }
+
+function allTagssSorted(tagHash): ITag[] {
+  let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
+  return tags.sort(({ name: name1 }, { name: name2 }) => {
+    let name1After = name1.toLowerCase() > name2.toLowerCase(),
+      bothEqual = name1.toLowerCase() === name2.toLowerCase();
+    return bothEqual ? 0 : name1After ? 1 : -1;
+  });
+}
+
+export const useSortedTags = () => {
+  let [{ tagHash }] = useContext(TagsContext);
+  return useMemo(() => allTagssSorted(tagHash), [tagHash]);
+};
+
+export const filterTags = (tags, search) => {
+  if (!search) {
+    search = () => true;
+  } else {
+    let regex = new RegExp(search, "i");
+    search = txt => regex.test(txt);
+  }
+  return tags.filter(s => search(s.name));
+};

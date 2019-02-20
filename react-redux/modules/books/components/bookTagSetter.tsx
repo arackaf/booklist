@@ -1,24 +1,19 @@
-import React, { SFC, useState, useLayoutEffect } from "react";
-import { connect } from "react-redux";
+import React, { SFC, useState, useLayoutEffect, useContext } from "react";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
-
-import { filterTags, selectEntireTagsState } from "applicationRoot/rootReducer";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
 import { SET_BOOKS_TAGS } from "../reducers/books/actionNames";
 import Modal from "applicationRoot/components/modal";
+import { TagsContext } from "./bookViewList";
+import { useSortedTags, filterTags } from "applicationRoot/tagsState";
 
-interface ILocalProps {
-  modifyingBooks: any[];
-  onDone: any;
-  dispatch: any;
-}
-
-const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILocalProps> = props => {
+const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
+  const [{ tagHash }] = useContext(TagsContext);
+  const allTagsSorted = useSortedTags();
   const [currentTab, setTab] = useState("tags");
   const [addingTags, setAddingTags] = useState([]);
   const [removingTags, setRemovingTags] = useState([]);
@@ -27,20 +22,17 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
     setAddingTags([]);
   };
 
-  useLayoutEffect(
-    () => {
-      if (props.modifyingBooks.length) {
-        resetTags();
-      }
-    },
-    [props.modifyingBooks.length]
-  );
+  useLayoutEffect(() => {
+    if (props.modifyingBooks.length) {
+      resetTags();
+    }
+  }, [props.modifyingBooks.length]);
   const { runMutation, running } = useMutation(buildMutation(updateBookSubjects));
 
   const setBooksTags = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingTags, remove: removingTags };
     Promise.resolve(runMutation(args)).then(() => {
-      props.dispatch({ type: SET_BOOKS_TAGS, ...args });
+      //props.dispatch({ type: SET_BOOKS_TAGS, ...args });
       props.onDone();
     });
   };
@@ -71,7 +63,7 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Adding"
-                items={props.allTagsSorted}
+                items={allTagsSorted}
                 currentlySelected={addingTags}
                 onSelect={tagSelectedToAdd}
                 filter={filterTags}
@@ -80,7 +72,7 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
             <div className="col-xs-9">
               <div>
                 {addingTags
-                  .map(_id => props.tagHash[_id])
+                  .map(_id => tagHash[_id])
                   .map((s: any, i) => (
                     <span
                       key={i}
@@ -103,7 +95,7 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Removing"
-                items={props.allTagsSorted}
+                items={allTagsSorted}
                 currentlySelected={removingTags}
                 onSelect={tagSelectedToRemove}
                 filter={filterTags}
@@ -112,7 +104,7 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
             <div className="col-xs-9">
               <div>
                 {removingTags
-                  .map(_id => props.tagHash[_id])
+                  .map(_id => tagHash[_id])
                   .map((s: any, i) => (
                     <span
                       key={i}
@@ -156,4 +148,4 @@ const BookTagSetterDesktop: SFC<ReturnType<typeof selectEntireTagsState> & ILoca
   );
 };
 
-export default connect(selectEntireTagsState)(BookTagSetterDesktop);
+export default BookTagSetterDesktop;
