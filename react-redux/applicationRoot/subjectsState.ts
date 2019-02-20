@@ -1,16 +1,12 @@
-import { objectsToHash, AppType, graphqlClient, getStatePacket } from "./rootReducer";
-
-const LOAD_SUBJECTS = "root.LOAD_SUBJECTS";
-const LOAD_SUBJECTS_RESULTS = "root.LOAD_SUBJECTS_RESULTS";
-const LOAD_COLORS = "root.LOAD_COLORS_SUBJECTS";
-const SAVE_SUBJECT_RESULTS = "root.SAVE_SUBJECT_RESULTS";
-const SUBJECT_DELETED = "root.SUBJECT_DELETED";
+import { objectsToHash, AppType, getStatePacket, graphqlClient } from "./rootReducer";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
-import { useContext, useMemo } from "react";
-import { SubjectsContext } from "./renderUI";
+import { useContext, useMemo, useRef } from "react";
+import { SubjectsContext, AppContext } from "./renderUI";
+import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { syncUpdates, syncDeletes } from "./graphqlHelpers";
 
 export type SubjectType = {
   _id: string;
@@ -18,43 +14,28 @@ export type SubjectType = {
   path: string;
 };
 
-const initialState = {
-  subjectHash: {} as { [s: string]: SubjectType },
-  subjectsLoaded: false,
-  subjectsInitialQueryFired: false
-};
-
-export type SubjectState = typeof initialState;
-
-function subjectsReducer(state = initialState, action) {
-  switch (action.type) {
-    case LOAD_SUBJECTS:
-      return { ...state, subjectsInitialQueryFired: true };
-    case LOAD_SUBJECTS_RESULTS:
-      return { ...state, subjectHash: objectsToHash(action.subjects), subjectsLoaded: true };
-    case SAVE_SUBJECT_RESULTS:
-      return { ...state, subjectHash: { ...state.subjectHash, ...objectsToHash(action.affectedSubjects) } };
-    case SUBJECT_DELETED:
-      let subjectHash = { ...state.subjectHash };
-      action.subjectsDeleted.forEach(_id => delete subjectHash[_id]);
-      return { ...state, subjectHash };
-  }
-
-  return state;
+export interface SubjectState {
+  subjectHash: { [s: string]: SubjectType };
+  subjectsLoaded: false;
 }
 
-const loadSubjects = (app: AppType) => dispatch => {
-  let publicUserId = app.publicUserId;
-  dispatch({ type: LOAD_SUBJECTS });
+graphqlClient.subscribeMutation([
+  { when: /updateSubject/, run: (op, res) => syncUpdates(graphqlClient.getCache(AllSubjectsQuery), res.updateSubject, "allSubjects", "Subjects") },
+  { when: /deleteSubject/, run: (op, res) => syncDeletes(graphqlClient.getCache(AllSubjectsQuery), res.deleteSubject, "allSubjects", "Subjects") }
+]);
 
-  Promise.resolve(graphqlClient.runQuery(AllSubjectsQuery, { publicUserId, cache: 5 })).then(({ data }) => {
-    dispatch({ type: LOAD_SUBJECTS_RESULTS, subjects: data.allSubjects.Subjects });
-  });
-};
+export function useSubjectsState({ publicUserId }): [SubjectState, any] {
+  let { loading, loaded, data } = useQuery(
+    buildQuery(AllSubjectsQuery, { publicUserId, cache: 5 }, { onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } })
+  );
+  let results = useRef({});
+  if (loaded) {
+    results.current = objectsToHash(data.allSubjects.Subjects);
+  }
+  let { runMutation: updateSubject, running: updateRunning } = useMutation(buildMutation(UpdateSubjectMutation));
+  let { runMutation: deleteSubject, running: deleteRunning } = useMutation(buildMutation(DeleteSubjectMutation));
 
-export function useSubjectsState(): [SubjectState, any, any] {
-  let actions = { loadSubjects, createOrUpdateSubject, deleteSubject };
-  return getStatePacket<SubjectState>(subjectsReducer, initialState, actions);
+  return [{ subjectsLoaded: loaded, subjectHash: results.current }, { updateSubject, deleteSubject }];
 }
 
 function allSubjectsSorted(subjectsHash): SubjectType[] {
@@ -127,23 +108,6 @@ export const getEligibleParents = (subjectHash, _id) => {
 };
 
 export const flattenSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
-
-export const createOrUpdateSubject = subject => dispatch => {
-  let { _id, name, parentId, backgroundColor, textColor } = subject;
-  let request = { _id: _id || null, name, parentId, backgroundColor, textColor };
-
-  graphqlClient.runMutation(UpdateSubjectMutation, { ...request }).then(resp => {
-    let affectedSubjects = resp.updateSubject;
-    dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects });
-  });
-};
-
-export const deleteSubject = _id => dispatch => {
-  return graphqlClient.runMutation(DeleteSubjectMutation, { _id }).then(resp => {
-    dispatch({ type: SUBJECT_DELETED, subjectsDeleted: resp.deleteSubject, _id });
-    return { subjectsDeleted: resp.deleteSubject };
-  });
-};
 
 export const computeSubjectParentId = path => {
   if (path) {

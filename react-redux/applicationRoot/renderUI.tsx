@@ -45,17 +45,14 @@ export function renderUI(component) {
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 export const ColorsContext = createContext<any>(null);
-export const SubjectsContext = createContext<[SubjectState, any, any]>(null);
+export const SubjectsContext = createContext<[SubjectState, any]>(null);
 
 const App = ({ component }) => {
   let appStatePacket = useAppState();
   let [appState] = appStatePacket;
 
-  let subjectsPacket = useSubjectsState();
-  let [subjectState, { loadSubjects }] = subjectsPacket;
+  let subjectsPacket = useSubjectsState(appState);
   const colorsPacket = useColors();
-
-  useEffect(() => loadSubjects(appState), []);
 
   return (
     <Provider store={store as any}>
