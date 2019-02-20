@@ -13,12 +13,6 @@ import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
 
-const graphqlClient = new Client({
-  endpoint: "/graphql",
-  fetchOptions: { credentials: "include" }
-});
-setDefaultClient(graphqlClient);
-
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
 import { setModule, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
@@ -27,7 +21,7 @@ import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import setupServiceWorker from "./util/setupServiceWorker";
-import { isLoggedIn } from "applicationRoot/rootReducer";
+import { isLoggedIn, graphqlClient } from "applicationRoot/rootReducer";
 import { loadTags } from "applicationRoot/tags/actionCreators";
 
 setupServiceWorker();
