@@ -96,7 +96,7 @@ const stackAndGetTopLevelSubjects = (subjectsHash): SubjectType[] => {
   return subjects.filter(s => s.path == null);
 };
 
-const unwindSubjects = (subjects): SubjectType[] => {
+export const unwindSubjects = (subjects): SubjectType[] => {
   let result = [];
   subjects.forEach(s => result.push(s, ...unwindSubjects(s.children || [])));
   return result;
@@ -185,4 +185,11 @@ export const useChildMapSelector = () => {
         .reduce((hash, o) => ((hash[o._id] = o.children), hash), {}),
     [subjectHash]
   );
+};
+
+export const getAllDescendantsOfSubject = (_id, subjectHash) => {
+  let regex = new RegExp(`,${_id},`);
+  return Object.keys(subjectHash)
+    .map(_id => subjectHash[_id])
+    .filter(s => regex.test(s.path));
 };
