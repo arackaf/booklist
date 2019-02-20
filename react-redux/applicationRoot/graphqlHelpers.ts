@@ -1,4 +1,8 @@
-export const syncUpdates = (cache, newResults, resultSet, arrName) => {
+import { getDefaultClient } from "micro-graphql-react";
+let graphqlClient = getDefaultClient();
+
+export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: any = {}) => {
+  const cache = graphqlClient.getCache(cacheName);
   const lookupNew = new Map(newResults.map(o => [o._id, o]));
 
   [...cache.entries].forEach(([uri, currentResults]) => {
@@ -10,9 +14,14 @@ export const syncUpdates = (cache, newResults, resultSet, arrName) => {
     const existingLookup = new Set(currentResults.data[resultSet][arrName].map(o => o._id));
     currentResults.data[resultSet][arrName].push(...newResults.filter(o => !existingLookup.has(o._id)));
   });
+
+  if (options.force) {
+    graphqlClient.forceUpdate(cacheName);
+  }
 };
 
-export const syncDeletes = (cache, _ids, resultSet, arrName) => {
+export const syncDeletes = (cacheName, _ids, resultSet, arrName) => {
+  const cache = graphqlClient.getCache(cacheName);
   const deletedMap = new Set(_ids);
 
   [...cache.entries].forEach(([uri, currentResults]) => {

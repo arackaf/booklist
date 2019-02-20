@@ -83,7 +83,7 @@ const SubjectDisplay = DropTarget(
       let { subject: targetSubject } = props,
         sourceSubject = monitor.getItem();
 
-      props.setNewParent(sourceSubject, targetSubject);
+      props.setNewParent(sourceSubject, targetSubject, props.subjectHash, props.runInsert);
     }
   },
   (connect, monitor) => ({
@@ -98,7 +98,7 @@ const SubjectDisplay = DropTarget(
   const pendingSubjectDrop = props.isOver && props.canDrop;
   const style: any = {};
   const noDrop = candidateMove || props.noDrop;
-  const [{}, { subjectDraggingOver, subjectNotDraggingOver }] = useContext(SubjectsDnDContext);
+  const [{}, { subjectDraggingOver, subjectNotDraggingOver, beginDrag, clearSubjectDragging }] = useContext(SubjectsDnDContext);
 
   useLayoutEffect(() => {
     if (isOver) {
@@ -118,7 +118,7 @@ const SubjectDisplay = DropTarget(
       key={_id}
       style={{ ...style, paddingTop: 0, paddingBottom: 0 }}
     >
-      <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
+      <SubjectDisplayContent connectDropTarget={connectDropTarget} {...{ noDrop, subject, beginDrag, clearSubjectDragging }} />
     </li>
   );
 }) as FunctionComponent<subjectDisplayProps & dropTargetType>);
@@ -383,14 +383,17 @@ const DeletingSubjectDisplay = props => {
 };
 
 const SubjectList = props => {
-  let { style = {}, noDrop } = props;
+  const { style = {}, noDrop } = props;
 
-  let SD: any = SubjectDisplay;
+  const SD: any = SubjectDisplay;
+
+  const [{ subjectHash }, { updateSubject: runInsert }] = useContext(SubjectsContext);
+  const [{}, { setNewParent }] = useContext(SubjectsDnDContext);
 
   return (
     <ul className="list-group" style={{ marginBottom: "5px", ...style }}>
       {props.subjects.map(subject => (
-        <SD key={subject._id} noDrop={noDrop} subject={subject} />
+        <SD key={subject._id} {...{ setNewParent, noDrop, subject, subjectHash, runInsert }} />
       ))}
     </ul>
   );
