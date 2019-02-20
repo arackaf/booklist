@@ -1,14 +1,11 @@
 import React, { CSSProperties, FunctionComponent, useLayoutEffect, useEffect, useRef, useContext } from "react";
-import { connect } from "react-redux";
-import { useEditingSubjectHash, usePendingSubjects, useDraggingSubject, useSubjectEditInfo } from "modules/subjects/useSubjectsDndState";
-import * as actionCreators from "modules/subjects/reducers/actionCreators";
+import { useEditingSubjectHash, usePendingSubjects, useDraggingSubject, useSubjectEditInfo, SubjectType } from "modules/subjects/useSubjectsDndState";
 import { DragSource, DragDropContext, DropTarget, DragLayer } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import { store } from "applicationRoot/store";
-import { SubjectType } from "modules/subjects/reducers/reducer";
 import { useLevelSubjectsSortedSelector, useChildMapSelector } from "applicationRoot/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
@@ -196,8 +193,9 @@ const SubjectDisplayContent = DragSource(
   );
 });
 
-const DefaultSubjectDisplay = connect(state => ({ online: state.app.online }))(props => {
-  const { connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, noDrop, online } = props;
+const DefaultSubjectDisplay = props => {
+  const [{ online }] = useContext(AppContext);
+  const { connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, noDrop } = props;
 
   const { _id, name, backgroundColor, textColor } = subject;
   const mainIcon = isSubjectSaving ? (
@@ -247,12 +245,9 @@ const DefaultSubjectDisplay = connect(state => ({ online: state.app.online }))(p
       </div>
     </div>
   );
-});
+};
 
-const EditingSubjectDisplay = connect(
-  null,
-  { ...actionCreators }
-)(props => {
+const EditingSubjectDisplay = props => {
   const inputEl = useRef(null);
   useEffect(() => inputEl.current.focus(), []);
   const [{ subjectHash }, { updateSubject }] = useContext(SubjectsContext);
@@ -345,9 +340,9 @@ const EditingSubjectDisplay = connect(
       </div>
     </div>
   );
-});
+};
 
-const PendingDeleteSubjectDisplay = (props => {
+const PendingDeleteSubjectDisplay = props => {
   const { className, deleteMessage, subject } = props;
   const { name, _id } = subject;
   const [{ subjectHash }, { deleteSubject: runDelete }] = useContext(SubjectsContext);
@@ -366,7 +361,7 @@ const PendingDeleteSubjectDisplay = (props => {
       </div>
     </div>
   );
-}) as FunctionComponent<typeof actionCreators & any>;
+};
 
 const DeletingSubjectDisplay = props => {
   let { name, className } = props;
