@@ -350,14 +350,14 @@ const EditingSubjectDisplay = connect(
 const PendingDeleteSubjectDisplay = (props => {
   const { className, deleteMessage, subject } = props;
   const { name, _id } = subject;
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const [{ subjectHash }, { deleteSubject: runDelete }] = useContext(SubjectsContext);
   const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
 
   return (
     <div className={className}>
       <div className="col-lg-12">
         {name}
-        <BootstrapButton onClick={() => deleteSubject(_id, subjectHash)} style={{ marginLeft: "20px" }} preset="danger-xs">
+        <BootstrapButton onClick={() => deleteSubject(_id, subjectHash, runDelete)} style={{ marginLeft: "20px" }} preset="danger-xs">
           {deleteMessage}
         </BootstrapButton>
         <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} preset="primary-xs">

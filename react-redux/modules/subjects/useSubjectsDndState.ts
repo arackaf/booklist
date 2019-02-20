@@ -20,7 +20,13 @@ import update from "immutability-helper";
 import { getStatePacket } from "applicationRoot/rootReducer";
 import { SubjectsContext } from "applicationRoot/renderUI";
 import { createContext, useContext, useMemo } from "react";
-import { getEligibleParents } from "applicationRoot/subjectsState";
+import {
+  getEligibleParents,
+  computeSubjectParentId,
+  createOrUpdateSubject,
+  unwindSubjects,
+  getAllDescendantsOfSubject
+} from "applicationRoot/subjectsState";
 
 const initialSubjectsState = {
   draggingId: null,
@@ -95,7 +101,21 @@ function reducer(state = initialSubjectsState, action) {
 }
 
 export function useSubjectsDndState(): [SubjectsDndType, any, any] {
-  let actions = {};
+  let actions = {
+    addNewSubject,
+    beginDrag,
+    clearSubjectDragging,
+    subjectDraggingOver,
+    subjectNotDraggingOver,
+    beginSubjectEdit,
+    cancelSubjectEdit,
+    beginSubjectDelete,
+    cancelSubjectDelete,
+    setEditingSubjectField,
+    setNewParent,
+    deleteSubject,
+    saveChanges
+  };
   return getStatePacket<SubjectsDndType>(reducer, initialSubjectsState, actions);
 }
 
@@ -158,5 +178,119 @@ export const useSubjectEditInfo = subject => {
       isSubjectSaved: !!subjectsSaved[_id]
     }),
     [editingSubjectsHash, pendingDeleteHash, deletingHash, subjectsSaving, subjectsSaved, _id]
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------- actions ---------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------------
+
+const toIdHash = objs => objs.reduce((hash, obj) => ((hash[obj._id] = true), hash), {});
+
+let tempId = -1;
+
+const addNewSubject = parentId => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: "", parentId: parentId || null, pending: true } });
+
+//TODO:
+const beginDrag = sourceId => ({ type: SET_SUBJECT_DRAGGING, sourceId });
+//TODO
+const clearSubjectDragging = () => ({ type: SUBJECT_DRAGGING_OVER, sourceId: null, targetId: null });
+const subjectDraggingOver = targetId => (dispatch, getState) => {
+  let sourceId = getState().draggingId;
+  dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId });
+};
+const subjectNotDraggingOver = targetId => (dispatch, getState) => {
+  let sourceId = getState().draggingId;
+  let currentTarget = getState().currentDropCandidateId;
+
+  if (currentTarget == targetId) {
+    dispatch({ type: SUBJECT_DRAGGING_OVER, sourceId, targetId: null });
+  }
+};
+
+const cancelSubjectEdit = _id => ({ type: CANCEL_SUBJECT_EDIT, _id });
+const beginSubjectEdit = (_id, subjectHash) => dispatch => {
+  let subject = { ...subjectHash[_id] };
+  subject.parentId = computeSubjectParentId(subject.path);
+  dispatch({ type: BEGIN_SUBJECT_EDIT, _id, subject });
+};
+
+const beginSubjectDelete = _id => ({ type: BEGIN_PENDNIG_DELETE, _id });
+const cancelSubjectDelete = _id => ({ type: CANCEL_PENDNIG_DELETE, _id });
+
+const setEditingSubjectField = (_id, field, value) => ({ type: SET_EDITING_SUBJECT_FIELD, _id, field, value });
+
+const saveChanges = (subject, original, subjectHash, runUpdate) => dispatch => {
+  let { _id, name, parentId, backgroundColor, textColor } = subject;
+  let request = { _id, name, parentId, backgroundColor, textColor };
+
+  if (!name) {
+    dispatch(setEditingSubjectField(_id, "validationError", "Name is required"));
+    return;
+  }
+
+  if (original.pending) {
+    request._id = null;
+  }
+
+  let oldParentId = original.pending ? "" : computeSubjectParentId(subjectHash[_id].path);
+  let subjectsSavingHash;
+  if (oldParentId != subject.parentId) {
+    subjectsSavingHash = toIdHash(unwindSubjects([original]));
+    subjectsSavingHash[subject.parentId] = true;
+
+    if (subject.parentId) {
+      let newParentPath = subjectHash[subject.parentId].path;
+      if (newParentPath) {
+        newParentPath
+          .split(",")
+          .filter(s => s)
+          .forEach(_id => (subjectsSavingHash[_id] = true));
+      }
+    }
+  } else {
+    subjectsSavingHash = toIdHash([subject]);
+  }
+
+  dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
+
+  Promise.resolve(runUpdate(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+};
+
+//TODO:
+const setNewParent = (subject, newParent, runInsert) => dispatch => {
+  let { _id, name, backgroundColor, textColor } = subject,
+    adjustedSubject = { ...subject },
+    request = { _id, name, backgroundColor, textColor, parentId: newParent._id };
+
+  if (!newParent.path) {
+    adjustedSubject.path = `,${newParent._id},`;
+  } else {
+    adjustedSubject.path = `${newParent.path},${newParent._id},`;
+  }
+
+  let subjectsSavingHash = toIdHash(unwindSubjects([adjustedSubject]));
+  adjustedSubject.path
+    .split(",")
+    .filter(s => s)
+    .forEach(_id => (subjectsSavingHash[_id] = true));
+
+  //provide immediate feedback, so the DnD "sticks"
+  //TODO:
+  //dispatch({ type: SAVE_SUBJECT_RESULTS, affectedSubjects: [adjustedSubject] });
+  dispatch(clearSubjectDragging());
+  //disable dragging and editing on the entire hierarchy until the save is done
+  dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
+
+  Promise.resolve(runInsert(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
+};
+
+const deleteSubject = (_id, subjectHash, deleteSubject) => dispatch => {
+  let subjectsDeleting = [{ _id }, ...getAllDescendantsOfSubject(_id, subjectHash)];
+
+  dispatch({ type: DELETING_SUBJECTS, subjects: toIdHash(subjectsDeleting) });
+
+  Promise.resolve(deleteSubject({ _id })).then(resp =>
+    dispatch({ type: DONE_DELETING_SUBJECTS, subjects: resp.deleteSubject.reduce((o, _id) => ((o[_id] = true), o), {}) })
   );
 };
