@@ -4,7 +4,7 @@ import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { getStatePacket } from "applicationRoot/rootReducer";
 import { useContext, useMemo, useEffect } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
-import { BooksSearchContext, TagsContext, BooksContext } from "./components/bookViewList";
+import { BooksSearchContext, TagsContext } from "./components/bookViewList";
 import { useBookLoadingInfo } from "./booksState";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";

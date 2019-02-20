@@ -4,9 +4,8 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { AppContext } from "applicationRoot/renderUI";
-import { useBookSelection, useBookList, IBookDisplay } from "../booksState";
+import { useBookSelection, useBookList, IBookDisplay, useBooks } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";
-import { BooksContext } from "./bookViewList";
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -21,10 +20,9 @@ const BookRow: SFC<ILocalProps> = props => {
   let [{ isPublic: viewingPublic, publicUserId }] = useContext(AppContext);
   let { book, index } = props;
 
-  let [
-    { selectedBooks },
-    { toggleSelectBook, collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead }
-  ] = useContext(BooksContext);
+  let { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead } = {} as any;
+
+  let { selectedBooks, toggleSelectBook } = useBooks();
   let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
   let [{ online }] = useContext(AppContext);
@@ -215,7 +213,8 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number }> = props => {
 type BookViewListGridTypes = { editBooksSubjects: any; editBooksTags: any; editBook: any };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  let [{}, { setSortOrder, toggleCheckAll }] = useContext(BooksContext);
+  //let [{}, ] = useContext(BooksContext);
+  let { setSortOrder, toggleCheckAll } = {} as any;
   const { booksList } = useBookList();
   const { allAreChecked } = useBookSelection();
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);

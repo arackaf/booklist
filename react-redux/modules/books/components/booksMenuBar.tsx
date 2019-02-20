@@ -14,8 +14,8 @@ import {
   clearAllFilters,
   quickSearch as quickTitleSearch
 } from "../booksSearchState";
-import { useBookLoadingInfo, useBookSelection } from "../booksState";
-import { BooksContext, BooksSearchContext } from "./bookViewList";
+import { useBookLoadingInfo, useBookSelection, useBooks } from "../booksState";
+import { BooksSearchContext } from "./bookViewList";
 import { AppContext } from "applicationRoot/renderUI";
 
 interface IAddedMenuProps {
@@ -32,8 +32,12 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
 
   const [appState] = useContext(AppContext);
-  const [booksSearchState, { setViewDesktop, setViewBasicList }] = useContext(BooksSearchContext);
-  const [{ selectedBooks }, { setSelectedRead, setSelectedUnRead }] = useContext(BooksContext);
+  const [{}, { setViewDesktop, setViewBasicList }] = useContext(BooksSearchContext);
+
+  //TODO:
+  const setSelectedRead: any = null,
+    setSelectedUnRead: any = null;
+  const { selectedBooks } = useBooks();
 
   const bookLoadingInfo = useBookLoadingInfo();
   const bookSearchUiView = useBookSearchUiView();
