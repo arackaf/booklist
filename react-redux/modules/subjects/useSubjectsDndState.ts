@@ -188,9 +188,7 @@ let tempId = -1;
 
 const addNewSubject = parentId => ({ type: ADD_NEW_SUBJECT, subject: { _id: tempId--, name: "", parentId: parentId || null, pending: true } });
 
-//TODO:
 const beginDrag = sourceId => ({ type: SET_SUBJECT_DRAGGING, sourceId });
-//TODO
 const clearSubjectDragging = () => ({ type: SUBJECT_DRAGGING_OVER, sourceId: null, targetId: null });
 const subjectDraggingOver = targetId => (dispatch, getState) => {
   let sourceId = getState().draggingId;
@@ -254,7 +252,6 @@ const saveChanges = (subject, original, subjectHash, runUpdate) => dispatch => {
   Promise.resolve(runUpdate(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 };
 
-//TODO:
 const setNewParent = (subject, newParent, subjectHash, runInsert) => dispatch => {
   let { _id, name, backgroundColor, textColor } = subject,
     adjustedSubject = { ...subject },
@@ -279,9 +276,7 @@ const setNewParent = (subject, newParent, subjectHash, runInsert) => dispatch =>
   //disable dragging and editing on the entire hierarchy until the save is done
   dispatch({ type: SUBJECTS_SAVING, subjects: subjectsSavingHash });
 
-  setTimeout(() => {
-    Promise.resolve(runInsert(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
-  }, 2000);
+  Promise.resolve(runInsert(request)).then(() => dispatch({ type: CLEAR_SAVING_STATE, subjects: subjectsSavingHash }));
 };
 
 const deleteSubject = (_id, subjectHash, deleteSubject) => dispatch => {
