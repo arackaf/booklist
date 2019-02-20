@@ -11,7 +11,7 @@ import { store } from "applicationRoot/store";
 import { SubjectType } from "modules/subjects/reducers/reducer";
 import { useLevelSubjectsSortedSelector, useChildMapSelector } from "applicationRoot/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
-import { ColorsContext } from "applicationRoot/renderUI";
+import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
 
 type dragLayerType = {
   item: any;
@@ -19,42 +19,38 @@ type dragLayerType = {
   isDragging: boolean;
 };
 
-const SubjectDragLayer = connect(state => {
+const SubjectDragLayer = DragLayer((monitor, x) => {
   return {
-    currentlyDragging: state.subjectsModule.draggingId
+    item: monitor.getItem(),
+    currentOffset: monitor.getSourceClientOffset(),
+    isDragging: monitor.isDragging()
   };
-})(
-  DragLayer((monitor, x) => {
-    return {
-      item: monitor.getItem(),
-      currentOffset: monitor.getSourceClientOffset(),
-      isDragging: monitor.isDragging()
-    };
-  })((props => {
-    let { isDragging, currentOffset, item, currentlyDragging } = props;
-    if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
-    let { x, y } = currentOffset;
+})((props => {
+  const [{ draggingId: currentlyDragging }] = useContext(SubjectsDnDContext);
 
-    const parentStyles: CSSProperties = {
-      position: "fixed",
-      pointerEvents: "none",
-      zIndex: 100,
-      left: 0,
-      top: 0,
-      width: "100%",
-      height: "100%"
-    };
-    const itemTransform = `translate(${x}px, ${y}px)`;
+  const { isDragging, currentOffset, item } = props;
+  if (!currentOffset || !item || !currentlyDragging || !isDragging) return null;
+  const { x, y } = currentOffset;
 
-    return isDragging ? (
-      <div style={parentStyles}>
-        <div style={{ transform: itemTransform }}>
-          <h3>{item.name}</h3>
-        </div>
+  const parentStyles: CSSProperties = {
+    position: "fixed",
+    pointerEvents: "none",
+    zIndex: 100,
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "100%"
+  };
+  const itemTransform = `translate(${x}px, ${y}px)`;
+
+  return isDragging ? (
+    <div style={parentStyles}>
+      <div style={{ transform: itemTransform }}>
+        <h3>{item.name}</h3>
       </div>
-    ) : null;
-  }) as FunctionComponent<{ currentlyDragging: string } & dragLayerType>)
-);
+    </div>
+  ) : null;
+}) as FunctionComponent<{ currentlyDragging: string } & dragLayerType>);
 
 type dropTargetType = {
   connectDropTarget: any;
@@ -64,78 +60,68 @@ type dropTargetType = {
 
 type subjectDisplayProps = {
   subject: SubjectType & { candidateMove: boolean };
-  subjectDraggingOver: any;
-  subjectNotDraggingOver: any;
   noDrop: boolean;
 };
 
-const SubjectDisplay = connect(
-  (state, ownProps) => {
-    return {
-      isCurrentDropTarget: state.subjectsModule.currentDropCandidateId == ownProps.subject._id
-    };
-  },
-  { ...actionCreators }
-)(
-  DropTarget(
-    "subject",
-    {
-      canDrop(props, monitor) {
-        let sourceSubject = monitor.getItem(),
-          { subject: targetSubject } = props as any,
-          isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
+const SubjectDisplay = DropTarget(
+  "subject",
+  {
+    canDrop(props, monitor) {
+      let sourceSubject = monitor.getItem();
+      let { subject: targetSubject } = props as any;
+      let isCurrentParent = sourceSubject.path && new RegExp(`,${targetSubject._id},$`).test(sourceSubject.path);
 
-        return (
-          sourceSubject._id != targetSubject._id &&
-          !targetSubject.pending &&
-          !isCurrentParent &&
-          monitor.isOver() &&
-          (targetSubject.path || "").indexOf(sourceSubject._id) < 0
-        );
-      },
-      drop(props: any, monitor) {
-        let { subject: targetSubject } = props,
-          sourceSubject = monitor.getItem();
-
-        props.setNewParent(sourceSubject, targetSubject);
-      }
+      return (
+        sourceSubject._id != targetSubject._id &&
+        !targetSubject.pending &&
+        !isCurrentParent &&
+        monitor.isOver() &&
+        (targetSubject.path || "").indexOf(sourceSubject._id) < 0
+      );
     },
-    (connect, monitor) => ({
-      connectDropTarget: connect.dropTarget(),
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
-  )((props => {
-    let isOver = props.isOver && props.canDrop;
-    let { subject, connectDropTarget } = props;
-    let { _id, candidateMove } = subject;
-    let pendingSubjectDrop = props.isOver && props.canDrop;
-    let style: any = {};
-    let noDrop = candidateMove || props.noDrop;
+    drop(props: any, monitor) {
+      let { subject: targetSubject } = props,
+        sourceSubject = monitor.getItem();
 
-    useLayoutEffect(() => {
-      if (isOver) {
-        props.subjectDraggingOver(_id);
-      } else {
-        props.subjectNotDraggingOver(_id);
-      }
-    }, [isOver]);
-
-    if (candidateMove) {
-      style.backgroundColor = "lavender";
+      props.setNewParent(sourceSubject, targetSubject);
     }
+  },
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
+  })
+)((props => {
+  const { subject, connectDropTarget } = props;
+  const isOver = props.isOver && props.canDrop;
+  const { _id, candidateMove } = subject;
+  const pendingSubjectDrop = props.isOver && props.canDrop;
+  const style: any = {};
+  const noDrop = candidateMove || props.noDrop;
+  const [{}, { subjectDraggingOver, subjectNotDraggingOver }] = useContext(SubjectsDnDContext);
 
-    return (
-      <li
-        className={`list-group-item ${pendingSubjectDrop ? "pending-subject-drop" : ""}`}
-        key={_id}
-        style={{ ...style, paddingTop: 0, paddingBottom: 0 }}
-      >
-        <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
-      </li>
-    );
-  }) as FunctionComponent<subjectDisplayProps & { isCurrentDropTarget: boolean } & dropTargetType>)
-);
+  useLayoutEffect(() => {
+    if (isOver) {
+      subjectDraggingOver(_id);
+    } else {
+      subjectNotDraggingOver(_id);
+    }
+  }, [isOver]);
+
+  if (candidateMove) {
+    style.backgroundColor = "lavender";
+  }
+
+  return (
+    <li
+      className={`list-group-item ${pendingSubjectDrop ? "pending-subject-drop" : ""}`}
+      key={_id}
+      style={{ ...style, paddingTop: 0, paddingBottom: 0 }}
+    >
+      <SubjectDisplayContent connectDropTarget={connectDropTarget} noDrop={noDrop} subject={subject} />
+    </li>
+  );
+}) as FunctionComponent<subjectDisplayProps & dropTargetType>);
 
 const SubjectDisplayContent = DragSource(
   "subject",
@@ -210,32 +196,20 @@ const SubjectDisplayContent = DragSource(
   );
 });
 
-const DefaultSubjectDisplay = connect(
-  state => ({ online: state.app.online }),
-  { ...actionCreators }
-)(props => {
-  let {
-    connectDropTarget,
-    connectDragSource,
-    isSubjectSaving,
-    isSubjectSaved,
-    className,
-    subject,
-    beginSubjectEdit,
-    addNewSubject,
-    beginSubjectDelete,
-    noDrop,
-    online
-  } = props;
+const DefaultSubjectDisplay = connect(state => ({ online: state.app.online }))(props => {
+  const { connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, noDrop, online } = props;
 
-  let { _id, name, backgroundColor, textColor } = subject;
-  let mainIcon = isSubjectSaving ? (
+  const { _id, name, backgroundColor, textColor } = subject;
+  const mainIcon = isSubjectSaving ? (
     <i className="fa fa-fw fa-spinner fa-spin" />
   ) : isSubjectSaved ? (
     <i style={{ color: "green" }} className="fa fa-fw fa-check" />
   ) : isTouch || !online ? null : (
     connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
   );
+
+  const [{ subjectHash }] = useContext(SubjectsContext);
+  const [{}, { beginSubjectEdit, addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
 
   return (noDrop ? c => c : connectDropTarget)(
     <div className={className}>
@@ -256,7 +230,7 @@ const DefaultSubjectDisplay = connect(
           {name || "<label preview>"}
         </div>{" "}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id)}>
+          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
             <i className="fa fa-fw fa-pencil" />
           </a>
         ) : null}
@@ -281,16 +255,18 @@ const EditingSubjectDisplay = connect(
 )(props => {
   const inputEl = useRef(null);
   useEffect(() => inputEl.current.focus(), []);
+  const [{ subjectHash }, { updateSubject }] = useContext(SubjectsContext);
+  const [{}, { cancelSubjectEdit, setEditingSubjectField, saveChanges }] = useContext(SubjectsDnDContext);
 
   const subjectEditingKeyDown = evt => {
     let key = evt.keyCode || evt.which;
     if (key == 13) {
-      let { subject, editingSubject, saveChanges } = props;
-      saveChanges(editingSubject, subject);
+      let { subject, editingSubject } = props;
+      saveChanges(editingSubject, subject, subjectHash, updateSubject);
     }
   };
 
-  const { setEditingSubjectField, cancelSubjectEdit, isSubjectSaving, className, subject, editingSubject, saveChanges, colors } = props;
+  const { isSubjectSaving, className, subject, editingSubject, colors } = props;
   const { _id, name } = subject;
   const textColors = ["#ffffff", "#000000"];
   const { validationError } = editingSubject;
@@ -361,7 +337,7 @@ const EditingSubjectDisplay = connect(
           disabled={isSubjectSaving}
           style={{ marginRight: "5px" }}
           preset="primary-xs"
-          onClick={() => saveChanges(editingSubject, subject)}
+          onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
         >
           <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
         </BootstrapButton>
@@ -371,18 +347,17 @@ const EditingSubjectDisplay = connect(
   );
 });
 
-const PendingDeleteSubjectDisplay = connect(
-  null,
-  { ...actionCreators }
-)((props => {
-  let { className, deleteMessage, deleteSubject, cancelSubjectDelete, subject } = props;
-  let { name, _id } = subject;
+const PendingDeleteSubjectDisplay = (props => {
+  const { className, deleteMessage, subject } = props;
+  const { name, _id } = subject;
+  const [{ subjectHash }] = useContext(SubjectsContext);
+  const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
 
   return (
     <div className={className}>
       <div className="col-lg-12">
         {name}
-        <BootstrapButton onClick={() => deleteSubject(_id)} style={{ marginLeft: "20px" }} preset="danger-xs">
+        <BootstrapButton onClick={() => deleteSubject(_id, subjectHash)} style={{ marginLeft: "20px" }} preset="danger-xs">
           {deleteMessage}
         </BootstrapButton>
         <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} preset="primary-xs">
@@ -391,12 +366,9 @@ const PendingDeleteSubjectDisplay = connect(
       </div>
     </div>
   );
-}) as FunctionComponent<typeof actionCreators & any>);
+}) as FunctionComponent<typeof actionCreators & any>;
 
-const DeletingSubjectDisplay = connect(
-  null,
-  { ...actionCreators }
-)(props => {
+const DeletingSubjectDisplay = props => {
   let { name, className } = props;
   return (
     <div className={className}>
@@ -408,7 +380,7 @@ const DeletingSubjectDisplay = connect(
       </div>
     </div>
   );
-});
+};
 
 const SubjectList = props => {
   let { style = {}, noDrop } = props;
@@ -426,44 +398,30 @@ const SubjectList = props => {
 
 let isTouch = (store.getState() as any).app.isTouch;
 
-type subjectsComponentPropsType = {
-  topLevelSubjects: any;
-  pendingSubjectsLookup: any;
-  addNewSubject: any;
-};
+const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
+  const [{ online }] = useContext(AppContext);
+  const [{}, { addNewSubject }] = useContext(SubjectsDnDContext);
+  const pendingSubjectsLookup = usePendingSubjects();
+  let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
+  let topLevelSubjects = useLevelSubjectsSortedSelector();
+  let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
 
-const TopSubjectsList = DragDropContext(HTML5Backend)(
-  connect(
-    state => {
-      return {
-        online: state.app.online
-      };
-    },
-    { ...actionCreators }
-  )((props => {
-    const pendingSubjectsLookup = usePendingSubjects();
-    let { addNewSubject, online } = props;
-    let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
-    let topLevelSubjects = useLevelSubjectsSortedSelector();
-    let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
+  let SDL: any = SubjectDragLayer;
 
-    let SDL: any = SubjectDragLayer;
-
-    return (
-      <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
-        <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
-          <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
-            New subject
-          </BootstrapButton>
-          <br />
-          <br />
-          <SubjectList subjects={allSubjects} />
-          {isTouch ? <SDL /> : null}
-        </div>
+  return (
+    <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
+      <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
+        <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
+          New subject
+        </BootstrapButton>
+        <br />
+        <br />
+        <SubjectList subjects={allSubjects} />
+        {isTouch ? <SDL /> : null}
       </div>
-    );
-  }) as FunctionComponent<subjectsComponentPropsType & typeof actionCreators & { online: any }>)
-);
+    </div>
+  );
+});
 
 export default () => {
   let subjectsState = useSubjectsDndState();
