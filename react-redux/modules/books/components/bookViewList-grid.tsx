@@ -1,4 +1,4 @@
-import React, { SFC, CSSProperties, useContext, useMemo, useState, useLayoutEffect, useCallback, Fragment, memo } from "react";
+import React, { SFC, CSSProperties, useContext, useMemo, useState, useLayoutEffect, useCallback, Fragment, memo, useRef } from "react";
 
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
@@ -27,16 +27,7 @@ const BookRow: SFC<ILocalProps> = props => {
   const { setReadStatus } = useContext(BooksContext);
 
   const [savingRead, setSavingRead] = useState({});
-
   const toggleSelectBook = _id => setSelectedBooks({ ...selectedBooks, [_id]: !selectedBooks[_id] });
-  if (book._id == "5c6de1bae847d7142ae6c4ea") {
-    debugger;
-  }
-
-  const toggleBookRead = () => {
-    debugger;
-    setReadStatus([book._id], !book.isRead);
-  };
 
   useLayoutEffect(() => {}, [book]);
 
@@ -135,29 +126,11 @@ const BookRow: SFC<ILocalProps> = props => {
         <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
           {!viewingPublic ? (
             !!book.isRead ? (
-              <AjaxButton
-                runningText=" "
-                running={savingRead[book._id]}
-                data-b="b"
-                onClick={() => {
-                  debugger;
-                  toggleBookRead();
-                }}
-                preset="success-xs"
-              >
+              <AjaxButton runningText=" " running={savingRead[book._id]} onClick={() => setReadStatus([book._id], false)} preset="success-xs">
                 Read <i className="fa fa-fw fa-check" />
               </AjaxButton>
             ) : (
-              <AjaxButton
-                runningText=" "
-                running={savingRead[book._id]}
-                data-a="a"
-                onClick={() => {
-                  debugger;
-                  toggleBookRead();
-                }}
-                preset="default-xs"
-              >
+              <AjaxButton runningText=" " running={savingRead[book._id]} onClick={() => setReadStatus([book._id], true)} preset="default-xs">
                 Set read
               </AjaxButton>
             )
