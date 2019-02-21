@@ -193,13 +193,13 @@ export const useBooks = () => {
   const [selectedBooks, setSelectedBooks] = useState({});
   const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
   const { data, loading, loaded } = useQuery(buildQuery(GetBooksQuery, variables));
-
   const allBooksPacket = data && data.allBooks;
+  const booksHash = useMemo(() => (allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {}), [allBooksPacket]);
 
   useLayoutEffect(() => setSelectedBooks({}), [allBooksPacket]);
-  let selectedActions = makeStateBoundHelpers(selectedBooks, setSelectedBooks, { toggleSelectBook });
+  let selectFns = { toggleSelectBook, toggleCheckAll };
+  let selectedActions = makeStateBoundHelpers(selectedBooks, setSelectedBooks, selectFns, { pass: [booksHash] });
 
-  const booksHash = useMemo(() => (allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {}), [allBooksPacket]);
   return {
     booksHash,
     resultsCount: allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1,
@@ -300,7 +300,14 @@ export const useBookLoadingInfo = () => {
 
 // ----- actions -----
 
-export const toggleSelectBook = selected => _id => ({ ...selected, [_id]: !selected[_id] });
+const toggleSelectBook = selected => _id => ({ ...selected, [_id]: !selected[_id] });
+
+const toggleCheckAll = (selected, booksHash) => () => {
+  let selectedCount = Object.keys(selected).filter(k => selected[k]).length;
+  let allBooksCount = Object.keys(booksHash).length;
+  let willSelectAll = !selectedCount || (selectedCount && allBooksCount != selectedCount);
+  return willSelectAll ? Object.keys(booksHash).reduce((hash, k) => ((hash[k] = true), hash), {}) : {};
+};
 
 export function setRead(_id) {
   return function(dispatch) {
