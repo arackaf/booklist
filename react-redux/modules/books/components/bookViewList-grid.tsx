@@ -1,10 +1,10 @@
-import React, { SFC, CSSProperties, useContext } from "react";
+import React, { SFC, CSSProperties, useContext, useMemo } from "react";
 
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { AppContext } from "applicationRoot/renderUI";
-import { useBookSelection, useBookList, IBookDisplay, BooksContext } from "../booksState";
+import { useBookList, IBookDisplay, BooksContext } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";
 
 interface ILocalProps {
@@ -14,18 +14,18 @@ interface ILocalProps {
   index: number;
   editBook: any;
   online: any;
+  selectedBooks: any;
+  setSelectedBooks: any;
 }
 
 const BookRow: SFC<ILocalProps> = props => {
-  let [{ isPublic: viewingPublic, publicUserId }] = useContext(AppContext);
-  let { book, index } = props;
+  const [{ isPublic: viewingPublic, publicUserId, online }] = useContext(AppContext);
+  const { book, index, selectedBooks, setSelectedBooks } = props;
 
-  let { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead } = {} as any;
+  const { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead } = {} as any;
+  const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
-  let { selectedBooks, toggleSelectBook } = useContext(BooksContext);
-  let style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
-
-  let [{ online }] = useContext(AppContext);
+  const toggleSelectBook = _id => setSelectedBooks({ ...selectedBooks, [_id]: !selectedBooks[_id] });
 
   return (
     <tr key={book._id} style={style}>
@@ -210,15 +210,36 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number }> = props => {
   );
 };
 
-type BookViewListGridTypes = { editBooksSubjects: any; editBooksTags: any; editBook: any };
+type BookViewListGridTypes = { editBooksSubjects: any; editBooksTags: any; editBook: any; selectedBooks: any; setSelectedBooks: any };
+
+const useBookSelection = (booksHash, selectedBooks) => {
+  return useMemo(() => {
+    let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
+    return {
+      allAreChecked: Object.keys(booksHash).length == selectedIds,
+      selectedBooksCount: selectedIds,
+      selectedBookHash: selectedBooks
+    };
+  }, [booksHash, selectedBooks]);
+};
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  let { toggleCheckAll } = useContext(BooksContext);
+  const { editBooksSubjects, editBooksTags, selectedBooks, setSelectedBooks, editBook } = props;
+
   let { setSortOrder } = {} as any;
+  const { booksHash } = useContext(BooksContext);
   const { booksList } = useBookList();
-  const { allAreChecked } = useBookSelection();
+  const { allAreChecked } = useBookSelection(booksHash, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
+
+  const toggleCheckAll = () => {
+    if (allAreChecked) {
+      setSelectedBooks({});
+    } else {
+      setSelectedBooks(Object.keys(booksHash).reduce((hash, k) => ((hash[k] = true), hash), {}));
+    }
+  };
 
   const setSort = column => {
     let newDirection = "asc";
@@ -232,7 +253,6 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
-  const { editBooksSubjects, editBooksTags } = props;
   const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
 
   return (
@@ -277,10 +297,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   key={0}
                   editBooksSubjects={editBooksSubjects}
                   editBooksTags={editBooksTags}
-                  book={book}
-                  editBook={props.editBook}
-                  index={index}
-                  online={online}
+                  {...{ book, editBook, index, online, selectedBooks, setSelectedBooks }}
                 />,
                 book.expanded ? <BookRowDetails key={1} book={book} index={index} /> : null
               ])}

@@ -5,7 +5,6 @@ import { getStatePacket } from "applicationRoot/rootReducer";
 import { useContext, useMemo, useEffect } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { BooksSearchContext, TagsContext } from "./components/bookViewList";
-import { useBookLoadingInfo } from "./booksState";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
 const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
@@ -236,7 +235,7 @@ export const pageUp = () => {
   setSearchValues({ page: +bookSearchFilters.page + 1 });
 };
 
-export const pageLast = () => {
-  let booksState = useBookLoadingInfo();
-  setSearchValues({ page: booksState.totalPages });
-};
+// const pageLast = () => {
+//   let booksState = useBookLoadingInfo();
+//   setSearchValues({ page: booksState.totalPages });
+// };
