@@ -213,8 +213,8 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number }> = props => {
 type BookViewListGridTypes = { editBooksSubjects: any; editBooksTags: any; editBook: any };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  //let [{}, ] = useContext(BooksContext);
-  let { setSortOrder, toggleCheckAll } = {} as any;
+  let { toggleCheckAll } = useContext(BooksContext);
+  let { setSortOrder } = {} as any;
   const { booksList } = useBookList();
   const { allAreChecked } = useBookSelection();
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
