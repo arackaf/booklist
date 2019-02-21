@@ -199,15 +199,14 @@ export const useBooks = () => {
   useLayoutEffect(() => setSelectedBooks({}), [allBooksPacket]);
   let selectedActions = makeStateBoundHelpers(selectedBooks, setSelectedBooks, { toggleSelectBook });
 
-  return useMemo(() => {
-    return {
-      booksHash: allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {},
-      resultsCount: allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1,
-      booksLoading: loading,
-      selectedBooks,
-      ...selectedActions
-    };
-  }, [loaded, loading, selectedBooks, allBooksPacket]);
+  const booksHash = useMemo(() => (allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {}), [allBooksPacket]);
+  return {
+    booksHash,
+    resultsCount: allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1,
+    booksLoading: loading,
+    selectedBooks,
+    ...selectedActions
+  };
 };
 
 function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
