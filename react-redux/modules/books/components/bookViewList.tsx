@@ -1,6 +1,5 @@
-import React, { SFC, Suspense, lazy, useContext, useEffect, createContext, useState } from "react";
+import React, { SFC, Suspense, lazy, useContext, useEffect, createContext, useState, useLayoutEffect } from "react";
 
-import DisplayBookResults from "./displayBookResults";
 import BooksMenuBar from "./booksMenuBar";
 import BooksLoading from "./booksLoading";
 
@@ -14,7 +13,10 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
 import { useBookList, BooksContext, useBooks } from "../booksState";
-import { BookSearchState, useBooksSearchState, useCurrentSearch } from "../booksSearchState";
+import { BookSearchState, useBooksSearchState, useCurrentSearch, useBookSearchUiView } from "../booksSearchState";
+
+import GridView from "./bookViewList-grid";
+const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"));
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
@@ -69,14 +71,16 @@ const BooksContexHolder = () => {
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
+  const { booksLoading, booksHash } = useContext(BooksContext);
 
-  let { selectedBooks } = useContext(BooksContext);
+  const [selectedBooks, setSelectedBooks] = useState({});
+  useLayoutEffect(() => setSelectedBooks({}), [booksHash]);
 
   useEffect(() => {
     loadTags(appState);
   }, []);
 
-  const { booksList, booksLoading } = useBookList();
+  const { booksList } = useBookList();
 
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
@@ -107,6 +111,8 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
     ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
     : "";
 
+  const uiView = useBookSearchUiView();
+
   return (
     <>
       <BooksLoading />
@@ -117,6 +123,7 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
           editTags={editTags}
           editSubjects={editSubjects}
           beginEditFilters={beginEditFilters}
+          {...{ selectedBooks, booksHash }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!booksList.length && !booksLoading ? (
@@ -125,7 +132,13 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
             </div>
           ) : null}
 
-          <DisplayBookResults {...{ editSubjectsForBook, editTagsForBook, editBook }} />
+          {uiView.isGridView ? (
+            <GridView {...{ editBook, selectedBooks, setSelectedBooks }} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
+          ) : uiView.isBasicList ? (
+            <Suspense fallback={<Loading />}>
+              <BasicListView editBook={editBook} />
+            </Suspense>
+          ) : null}
         </div>
       </div>
       <br />

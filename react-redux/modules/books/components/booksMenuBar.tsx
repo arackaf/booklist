@@ -1,4 +1,4 @@
-import React, { SFC, useContext, useRef, useEffect } from "react";
+import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
 import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import {
@@ -10,11 +10,11 @@ import {
   pageOne,
   pageDown,
   pageUp,
-  pageLast,
+  //pageLast,
   clearAllFilters,
   quickSearch as quickTitleSearch
 } from "../booksSearchState";
-import { useBookLoadingInfo, useBookSelection, BooksContext } from "../booksState";
+import { BooksContext } from "../booksState";
 import { BooksSearchContext } from "./bookViewList";
 import { AppContext } from "applicationRoot/renderUI";
 
@@ -24,6 +24,7 @@ interface IAddedMenuProps {
   startSubjectModification: any;
   startTagModification: any;
   beginEditFilters: any;
+  selectedBooks: any;
 }
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
@@ -32,17 +33,17 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
 
   const [appState] = useContext(AppContext);
+  const { totalPages, resultsCount } = useContext(BooksContext);
   const [{}, { setViewDesktop, setViewBasicList }] = useContext(BooksSearchContext);
 
   //TODO:
-  const setSelectedRead: any = null,
-    setSelectedUnRead: any = null;
-  const { selectedBooks } = useContext(BooksContext);
+  const setSelectedRead: any = null;
+  const setSelectedUnRead: any = null;
+  const { selectedBooks } = props;
+  const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
 
-  const bookLoadingInfo = useBookLoadingInfo();
   const bookSearchUiView = useBookSearchUiView();
   const bookSearchState = useCurrentSearch();
-  const bookSelectionInfo = useBookSelection();
 
   useEffect(() => void (quickSearchEl.current.value = bookSearchState.search), [bookSearchState.search]);
 
@@ -57,9 +58,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   };
 
   let { page, pageSize, activeFilterCount } = bookSearchState;
-  let { totalPages, resultsCount } = bookLoadingInfo;
   let { isPublic, publicBooksHeader, publicName, online } = appState;
-  let { selectedBooksCount } = bookSelectionInfo;
   let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
 
   let canPageUp = online ? page < totalPages : resultsCount == pageSize;
@@ -110,8 +109,9 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
               <button onClick={pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
                 <i className="fal fa-angle-right" />
               </button>
+              {/* TODO: pageLast */}
               {online ? (
-                <button onClick={pageLast} disabled={!canPageLast} className="btn btn-default">
+                <button onClick={void 0 && "pageLast"} disabled={!canPageLast} className="btn btn-default">
                   <i className="fal fa-angle-double-right" />
                 </button>
               ) : null}
