@@ -311,8 +311,7 @@ export function makeStateBoundHelpers<T>(state, updateState, fns: T): { [k in ke
       Object.entries(fns).reduce((hash, [name, fn]: [any, any]) => {
         let boundFn = fn(state);
         hash[name] = (...args) => {
-          debugger;
-          updateState(boundFn(state, ...args));
+          updateState(boundFn(...args));
         };
         return hash;
       }, {}),

@@ -13,7 +13,7 @@ import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
-import { BooksState, useBookList, useBooks } from "../booksState";
+import { useBookList, BooksContext, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useCurrentSearch } from "../booksSearchState";
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
@@ -36,7 +36,6 @@ const prepBookForSaving = book => {
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
 
-export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
 export const TagsContext = createContext<[TagsState, any, any]>(null);
 
@@ -49,11 +48,21 @@ export const BookModuleRoot = () => {
       <Suspense fallback={<Loading />}>
         <BooksSearchContext.Provider value={booksSearchState}>
           <TagsContext.Provider value={tagsState}>
-            <BookViewingList />
+            <BooksContexHolder />
           </TagsContext.Provider>
         </BooksSearchContext.Provider>
       </Suspense>
     </div>
+  );
+};
+
+const BooksContexHolder = () => {
+  let booksState = useBooks();
+
+  return (
+    <BooksContext.Provider value={booksState}>
+      <BookViewingList />
+    </BooksContext.Provider>
   );
 };
 
