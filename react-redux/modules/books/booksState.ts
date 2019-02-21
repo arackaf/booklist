@@ -184,16 +184,13 @@ export const useBooks = () => {
   const onBooksMutation = {
     when: /updateBooks?/,
     run: ({ currentResults, softReset, refresh }, resp) => {
-      let newR = syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
-
-      Object.assign(currentResults.allBooks, { Books: newR });
+      syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
       softReset(currentResults);
     }
   };
   const { data, loading, loaded, currentQuery } = useQuery(buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation }));
   const { runMutation: setBooksRead } = useMutation(buildMutation(UpdateBooksReadMutation));
   const setReadStatus = (_ids, isRead) => {
-    debugger;
     setBooksRead({ _ids, isRead });
   };
 
@@ -250,7 +247,6 @@ export const useBookList = () => {
   let { booksHash, booksLoading } = useContext(BooksContext);
 
   return useMemo(() => {
-    debugger;
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
     books.forEach((b: IBookDisplay) => {
       b.subjectObjects = (b.subjects || []).map(s => subjectHash[s]).filter(s => s);

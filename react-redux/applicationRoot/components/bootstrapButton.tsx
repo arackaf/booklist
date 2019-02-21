@@ -28,14 +28,15 @@ export const BootstrapAnchorButton = props => (
 export const AjaxButton = props => {
   const controlled = useRef(props.running !== void 0);
   const [isRunning, setRunning] = useState(controlled.current ? props.running : false);
-  const onClick = useCallback((...args) => {
+
+  const onClick = (...args) => {
     if (controlled.current) {
       props.onClick(...args);
     } else {
       setRunning(true);
       Promise.resolve(props.onClick(...args)).then(() => setRunning(false));
     }
-  }, []);
+  };
 
   return isRunning ? (
     <button className={cssFromPreset(props)} disabled={true}>
