@@ -7,7 +7,7 @@ import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useContext, useRef, useState, useLayoutEffect } from "react";
+import { useMemo, useContext, useRef, useState, useLayoutEffect, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { TagsContext } from "./components/bookViewList";
 import { useQuery, buildQuery } from "micro-graphql-react";
@@ -190,20 +190,24 @@ export const useBooks = () => {
   const [app] = useContext(AppContext);
   const searchState = useCurrentSearch();
 
+  const [selectedBooks, setSelectedBooks] = useState({});
   const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
   const { data, loading, loaded } = useQuery(buildQuery(GetBooksQuery, variables));
 
   const allBooksPacket = data && data.allBooks;
-  //TODO:
-  //useLayoutEffect(() => setSelectedBooks({}), [allBooksPacket]);
+
+  useLayoutEffect(() => setSelectedBooks({}), [allBooksPacket]);
+  let selectedActions = makeStateBoundHelpers(selectedBooks, setSelectedBooks, { toggleSelectBook });
 
   return useMemo(() => {
     return {
       booksHash: allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {},
       resultsCount: allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1,
-      booksLoading: loading
+      booksLoading: loading,
+      selectedBooks,
+      ...selectedActions
     };
-  }, [loaded, loading, allBooksPacket]);
+  }, [loaded, loading, selectedBooks, allBooksPacket]);
 };
 
 function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
@@ -235,7 +239,7 @@ function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
 
 export const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, resultsCount: count });
 
-function useBooksState() {
+function useBooksState(): [BooksState, any, any] {
   let actions = {
     toggleSelectBook,
     collapseBook,
@@ -249,17 +253,15 @@ function useBooksState() {
     setSelectedUnRead,
     setBooksSubjects
   };
-
-  const [selectedBooks, setSelectedBooks] = useState({});
-  let selectedActions = makeStateBoundHelpers(selectedBooks, setSelectedBooks, { toggleSelectBook });
-
-  return useMemo(() => ({ ...selectedActions }), [selectedBooks]);
+  return getStatePacket<BooksState>(booksReducer, initialBooksState, actions);
 }
+
+export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 
 export const useBookList = () => {
   let [{ subjectHash }] = useContext(SubjectsContext);
   let [{ tagHash }] = useContext(TagsContext);
-  let { booksHash, booksLoading } = useBooks();
+  let { booksHash, booksLoading } = useContext(BooksContext);
 
   return useMemo(() => {
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
@@ -276,7 +278,7 @@ export const useBookList = () => {
 };
 
 export const useBookSelection = () => {
-  let { booksHash, selectedBooks } = useBooks();
+  let { booksHash, selectedBooks } = useContext(BooksContext);
 
   return useMemo(() => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
@@ -291,7 +293,7 @@ export const useBookSelection = () => {
 export const useBookLoadingInfo = () => {
   const [booksModule] = useBooksState();
   const bookSearch = useCurrentSearch();
-  const { booksLoading } = useBooks();
+  const { booksLoading } = useContext(BooksContext);
 
   const totalPages = Math.ceil(booksModule.resultsCount / bookSearch.pageSize);
   return { resultsCount: booksModule.resultsCount, booksLoading: booksLoading, totalPages };
@@ -299,10 +301,7 @@ export const useBookLoadingInfo = () => {
 
 // ----- actions -----
 
-export const toggleSelectBook = selected => (selected2, _id) => {
-  debugger;
-  return { ...selected, [Math.random()]: true, [_id]: !selected[_id] };
-};
+export const toggleSelectBook = selected => _id => ({ ...selected, [_id]: !selected[_id] });
 
 export function setRead(_id) {
   return function(dispatch) {
