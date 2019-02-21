@@ -7,10 +7,11 @@ import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useContext, useRef, useState, useLayoutEffect, createContext } from "react";
+import { useMemo, useContext, useRef, useState, useLayoutEffect, createContext, useCallback } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { TagsContext } from "./components/bookViewList";
-import { useQuery, buildQuery } from "micro-graphql-react";
+import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { syncResults } from "applicationRoot/graphqlHelpers";
 
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const TOGGLE_SELECT_BOOK = "TOGGLE_SELECT_BOOK";
@@ -180,18 +181,36 @@ export const useBooks = () => {
   const searchState = useCurrentSearch();
 
   const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
-  const { data, loading, loaded } = useQuery(buildQuery(GetBooksQuery, variables));
+  const onBooksMutation = {
+    when: /updateBooks?/,
+    run: ({ currentResults, softReset, refresh }, resp) => {
+      let newR = syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
+
+      Object.assign(currentResults.allBooks, { Books: newR });
+      softReset(currentResults);
+    }
+  };
+  const { data, loading, loaded, currentQuery } = useQuery(buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation }));
+  const { runMutation: setBooksRead } = useMutation(buildMutation(UpdateBooksReadMutation));
+  const setReadStatus = (_ids, isRead) => {
+    debugger;
+    setBooksRead({ _ids, isRead });
+  };
+
   const allBooksPacket = data && data.allBooks;
-  const booksHash = useMemo(() => (allBooksPacket && allBooksPacket.Books ? createBooksHash(data.allBooks.Books) : {}), [allBooksPacket]);
+  const Books = allBooksPacket && allBooksPacket.Books;
+  const booksHash = useMemo(() => (Books ? createBooksHash(data.allBooks.Books) : {}), [Books]);
 
   const resultsCount = allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1;
   const totalPages = useMemo(() => (resultsCount && resultsCount > 0 ? Math.ceil(resultsCount / searchState.pageSize) : 0), [resultsCount]);
 
   return {
+    currentQuery,
     booksHash,
     resultsCount,
     totalPages,
-    booksLoading: loading
+    booksLoading: loading,
+    setReadStatus
   };
 };
 
@@ -231,6 +250,7 @@ export const useBookList = () => {
   let { booksHash, booksLoading } = useContext(BooksContext);
 
   return useMemo(() => {
+    debugger;
     let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
     books.forEach((b: IBookDisplay) => {
       b.subjectObjects = (b.subjects || []).map(s => subjectHash[s]).filter(s => s);
