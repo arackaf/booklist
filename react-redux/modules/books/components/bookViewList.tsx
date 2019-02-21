@@ -71,10 +71,10 @@ const BooksContexHolder = () => {
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
-  const { booksLoading, booksHash } = useContext(BooksContext);
+  const { booksLoading, booksHash, currentQuery } = useContext(BooksContext);
 
   const [selectedBooks, setSelectedBooks] = useState({});
-  useLayoutEffect(() => setSelectedBooks({}), [booksHash]);
+  useLayoutEffect(() => setSelectedBooks({}), [currentQuery]);
 
   useEffect(() => {
     loadTags(appState);

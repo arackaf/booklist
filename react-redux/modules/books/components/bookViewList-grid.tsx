@@ -1,4 +1,4 @@
-import React, { SFC, CSSProperties, useContext, useMemo } from "react";
+import React, { SFC, CSSProperties, useContext, useMemo, useState, useLayoutEffect, useCallback, Fragment, memo } from "react";
 
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
@@ -24,11 +24,24 @@ const BookRow: SFC<ILocalProps> = props => {
 
   const { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead } = {} as any;
   const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
+  const { setReadStatus } = useContext(BooksContext);
+
+  const [savingRead, setSavingRead] = useState({});
 
   const toggleSelectBook = _id => setSelectedBooks({ ...selectedBooks, [_id]: !selectedBooks[_id] });
+  if (book._id == "5c6de1bae847d7142ae6c4ea") {
+    debugger;
+  }
+
+  const toggleBookRead = () => {
+    debugger;
+    setReadStatus([book._id], !book.isRead);
+  };
+
+  useLayoutEffect(() => {}, [book]);
 
   return (
-    <tr key={book._id} style={style}>
+    <tr style={style}>
       {!viewingPublic && online ? (
         <td>
           <a style={{ fontSize: "12pt" }} onClick={() => toggleSelectBook(book._id)}>
@@ -122,11 +135,29 @@ const BookRow: SFC<ILocalProps> = props => {
         <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
           {!viewingPublic ? (
             !!book.isRead ? (
-              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => setUnRead(book._id)} preset="success-xs">
+              <AjaxButton
+                runningText=" "
+                running={savingRead[book._id]}
+                data-b="b"
+                onClick={() => {
+                  debugger;
+                  toggleBookRead();
+                }}
+                preset="success-xs"
+              >
                 Read <i className="fa fa-fw fa-check" />
               </AjaxButton>
             ) : (
-              <AjaxButton running={!!book.readChanging} runningText=" " onClick={() => setRead(book._id)} preset="default-xs">
+              <AjaxButton
+                runningText=" "
+                running={savingRead[book._id]}
+                data-a="a"
+                onClick={() => {
+                  debugger;
+                  toggleBookRead();
+                }}
+                preset="default-xs"
+              >
                 Set read
               </AjaxButton>
             )
@@ -292,15 +323,16 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
               </tr>
             </thead>
             <tbody>
-              {booksList.map((book, index) => [
-                <BookRow
-                  key={0}
-                  editBooksSubjects={editBooksSubjects}
-                  editBooksTags={editBooksTags}
-                  {...{ book, editBook, index, online, selectedBooks, setSelectedBooks }}
-                />,
-                book.expanded ? <BookRowDetails key={1} book={book} index={index} /> : null
-              ])}
+              {booksList.map((book, index) => (
+                <Fragment key={book._id}>
+                  <BookRow
+                    editBooksSubjects={editBooksSubjects}
+                    editBooksTags={editBooksTags}
+                    {...{ book, editBook, index, online, selectedBooks, setSelectedBooks }}
+                  />
+                  {book.expanded ? <BookRowDetails book={book} index={index} /> : null}
+                </Fragment>
+              ))}
             </tbody>
           </table>
         </div>

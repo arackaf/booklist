@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState, useCallback } from "react";
 
 const cssPresets = {};
 const buttonTypes = ["default", "primary", "success", "info", "warning", "danger"];
@@ -25,17 +25,29 @@ export const BootstrapAnchorButton = props => (
   </a>
 );
 
-export const AjaxButton = props =>
-  props.running ? (
+export const AjaxButton = props => {
+  const controlled = useRef(props.running !== void 0);
+  const [isRunning, setRunning] = useState(controlled.current ? props.running : false);
+  const onClick = useCallback((...args) => {
+    if (controlled.current) {
+      props.onClick(...args);
+    } else {
+      setRunning(true);
+      Promise.resolve(props.onClick(...args)).then(() => setRunning(false));
+    }
+  }, []);
+
+  return isRunning ? (
     <button className={cssFromPreset(props)} disabled={true}>
       <i className="fa fa-fw fa-spin fa-spinner" />
       {props.runningText || props.text ? " " + props.runningText || props.text : props.children}
     </button>
   ) : (
-    <button className={cssFromPreset(props)} disabled={props.disabled || false} onClick={props.onClick}>
+    <button className={cssFromPreset(props)} disabled={props.disabled || false} onClick={onClick}>
       {props.children}
     </button>
   );
+};
 
 export const AjaxButtonAnchor = props =>
   props.running ? (
