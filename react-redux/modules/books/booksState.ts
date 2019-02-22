@@ -3,14 +3,13 @@ import update from "immutability-helper";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
-import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { TagsContext } from "./components/bookViewList";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncResults, clearCache } from "applicationRoot/graphqlHelpers";
+import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHelpers";
 
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const TOGGLE_SELECT_BOOK = "TOGGLE_SELECT_BOOK";
@@ -177,18 +176,23 @@ export const useBooks = () => {
   const searchState = useCurrentSearch();
 
   const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
-  const onBooksMutation = {
-    when: /updateBooks?/,
-    run: ({ currentResults, softReset }, resp) => {
-      syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
-      softReset(currentResults);
+  const onBooksMutation = [
+    {
+      when: /updateBooks?/,
+      run: ({ currentResults, softReset }, resp) => {
+        syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
+        softReset(currentResults);
+      }
+    },
+    {
+      when: /deleteBook/,
+      run: ({ refresh }, res, req) => {
+        syncDeletes(GetBooksQuery, [req._id], "allBooks", "Books");
+        refresh();
+      }
     }
-  };
+  ];
   const { data, loading, loaded, currentQuery } = useQuery(buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation }));
-  const { runMutation: setBooksRead } = useMutation(buildMutation(UpdateBooksReadMutation));
-  const setReadStatus = (_ids, isRead) => {
-    setBooksRead({ _ids, isRead });
-  };
 
   const allBooksPacket = data && data.allBooks;
   const Books = allBooksPacket && allBooksPacket.Books;
@@ -202,8 +206,7 @@ export const useBooks = () => {
     booksHash,
     resultsCount,
     totalPages,
-    booksLoading: loading,
-    setReadStatus
+    booksLoading: loading
   };
 };
 
