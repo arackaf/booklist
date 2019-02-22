@@ -119,7 +119,7 @@ export function useSubjectsDndState(): [SubjectsDndType, any, any] {
 export const SubjectsDnDContext = createContext<[SubjectsDndType, any, any]>(null);
 
 export const useEditingSubjectHash = () => {
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
   const [{ editingSubjectsHash }] = useContext(SubjectsDnDContext);
 
   return useMemo(() => {
@@ -132,7 +132,7 @@ export const useEditingSubjectHash = () => {
 };
 
 export const useDraggingSubject = () => {
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
   const [{ draggingId }] = useContext(SubjectsDnDContext);
 
   return useMemo(() => (draggingId ? { ...subjectHash[draggingId], _id: draggingId + "_dragging", candidateMove: true } : null), [

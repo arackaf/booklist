@@ -6,7 +6,7 @@ import BootstrapButton from "applicationRoot/components/bootstrapButton";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import { store } from "applicationRoot/store";
-import { useLevelSubjectsSortedSelector, useChildMapSelector } from "applicationRoot/subjectsState";
+import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations } from "applicationRoot/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
 
@@ -206,7 +206,7 @@ const DefaultSubjectDisplay = props => {
     connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
   );
 
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
   const [{}, { beginSubjectEdit, addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
 
   return (noDrop ? c => c : connectDropTarget)(
@@ -250,7 +250,8 @@ const DefaultSubjectDisplay = props => {
 const EditingSubjectDisplay = props => {
   const inputEl = useRef(null);
   useEffect(() => inputEl.current.focus(), []);
-  const [{ subjectHash }, { updateSubject }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
+  const { updateSubject } = useSubjectMutations();
   const [{}, { cancelSubjectEdit, setEditingSubjectField, saveChanges }] = useContext(SubjectsDnDContext);
 
   const subjectEditingKeyDown = evt => {
@@ -345,7 +346,8 @@ const EditingSubjectDisplay = props => {
 const PendingDeleteSubjectDisplay = props => {
   const { className, deleteMessage, subject } = props;
   const { name, _id } = subject;
-  const [{ subjectHash }, { deleteSubject: runDelete }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
+  const { deleteSubject: runDelete } = useSubjectMutations();
   const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
 
   return (
@@ -382,7 +384,8 @@ const SubjectList = props => {
 
   const SD: any = SubjectDisplay;
 
-  const [{ subjectHash }, { updateSubject: runInsert }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
+  const { updateSubject: runInsert } = useSubjectMutations();
   const [{}, { setNewParent }] = useContext(SubjectsDnDContext);
 
   return (

@@ -7,7 +7,7 @@ import { BooksContext } from "../booksState";
 const BooksLoading = () => {
   const { booksLoading } = useContext(BooksContext);
   const [{ tagsLoaded }] = useContext(TagsContext);
-  const [{ subjectsLoaded }] = useContext(SubjectsContext);
+  const { subjectsLoaded } = useContext(SubjectsContext);
 
   return booksLoading || !subjectsLoaded || !tagsLoaded ? <Loading /> : null;
 };

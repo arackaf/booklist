@@ -80,7 +80,7 @@ export function useBooksSearchState(): [BookSearchState, any, any] {
 export const useSelectedSubjects = () => {
   const [{ hashFilters }] = useContext(BooksSearchContext);
   const { subjects } = hashFilters;
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
 
   return useMemo(() => projectSelectedItems(subjects, subjectHash), [subjects, subjectHash]);
 };

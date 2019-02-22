@@ -24,18 +24,21 @@ graphqlClient.subscribeMutation([
   { when: /deleteSubject/, run: (op, res) => syncDeletes(AllSubjectsQuery, res.deleteSubject, "allSubjects", "Subjects") }
 ]);
 
-export function useSubjectsState({ publicUserId }): [SubjectState, any] {
+export function useSubjectsState({ publicUserId }) {
   let { loading, loaded, data } = useQuery(
     buildQuery(AllSubjectsQuery, { publicUserId, cache: 5 }, { onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } })
   );
-  let results = useRef({});
-  if (loaded) {
-    results.current = objectsToHash(data.allSubjects.Subjects);
-  }
+  const subjects = data && data.allSubjects && data.allSubjects.Subjects;
+  const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);
+
+  return { subjectsLoaded: loaded, subjectHash };
+}
+
+export function useSubjectMutations() {
   let { runMutation: updateSubject, running: updateRunning } = useMutation(buildMutation(UpdateSubjectMutation));
   let { runMutation: deleteSubject, running: deleteRunning } = useMutation(buildMutation(DeleteSubjectMutation));
 
-  return [{ subjectsLoaded: loaded, subjectHash: results.current }, { updateSubject, deleteSubject }];
+  return { updateSubject, deleteSubject };
 }
 
 function allSubjectsSorted(subjectsHash): SubjectType[] {
@@ -44,7 +47,7 @@ function allSubjectsSorted(subjectsHash): SubjectType[] {
 }
 
 export const useStackedSubjects = () => {
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
 
   return useMemo(() => {
     const mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
@@ -119,7 +122,7 @@ export const computeSubjectParentId = path => {
 };
 
 export const useLevelSubjectsSortedSelector = () => {
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
 
   return useMemo(
     () =>
@@ -140,7 +143,7 @@ export const getChildSubjectsSorted = (_id, subjectHash) => {
 };
 
 export const useChildMapSelector = () => {
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
 
   return useMemo(
     () =>
