@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, lazy, useContext, useEffect, createContext, useState, useLayoutEffect } from "react";
+import React, { SFC, Suspense, lazy, useContext, useEffect, createContext, useState, useLayoutEffect, useReducer } from "react";
 
 import BooksMenuBar from "./booksMenuBar";
 import BooksLoading from "./booksLoading";
@@ -68,14 +68,36 @@ const BooksContexHolder = () => {
   );
 };
 
+const initialBooksState = { selectedBooks: {}, savingReadForBooks: {} };
+
+const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
+
+function booksUiStateReducer(state, [action, payload = null]) {
+  switch (action) {
+    case "select":
+      return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, true) } };
+    case "de-select":
+      return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, false) } };
+    case "toggle-select":
+      return { ...state, selectedBooks: { ...state.selectedBooks, [payload]: !state.selectedBooks[payload] } };
+    case "read-saving":
+      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, true) } };
+    case "read-saved":
+      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, false) } };
+    case "reset":
+      return { ...initialBooksState };
+    default:
+      throw "Invalid key";
+  }
+}
+
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
   const { booksLoading, booksHash, currentQuery, setReadStatus } = useContext(BooksContext);
 
-  const [savingRead, setSavingRead] = useState({});
-  const [selectedBooks, setSelectedBooks] = useState({});
-  useLayoutEffect(() => setSelectedBooks({}), [currentQuery]);
+  const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
+  useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
 
   useEffect(() => {
     loadTags(appState);
@@ -85,11 +107,11 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
 
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
-  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => selectedBooks[b._id]));
+  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => booksUiState.selectedBooks[b._id]));
 
   const [bookTagModifying, bookTagModalLoaded, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
   const editTagsForBook = book => openBookTagModal([book]);
-  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => selectedBooks[b._id]));
+  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => booksUiState.selectedBooks[b._id]));
 
   const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();
@@ -109,10 +131,9 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
   };
 
   const setRead = (_ids, isRead) => {
-    let _idMap = val => _ids.reduce((hash, _id) => ((hash[_id] = val), hash), {});
-    setSavingRead({ ...savingRead, ..._idMap(true) });
+    dispatchBooksUiState(["read-saving", _ids]);
     Promise.resolve(setReadStatus(_ids, isRead)).then(() => {
-      setSavingRead({ ...savingRead, ..._idMap(false) });
+      dispatchBooksUiState(["read-saved", _ids]);
     });
   };
 
@@ -132,7 +153,7 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
           editTags={editTags}
           editSubjects={editSubjects}
           beginEditFilters={beginEditFilters}
-          {...{ selectedBooks, booksHash, setRead }}
+          {...{ booksUiState, booksHash, setRead }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!booksList.length && !booksLoading ? (
@@ -143,7 +164,7 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
 
           {uiView.isGridView ? (
             <GridView
-              {...{ editBook, selectedBooks, setSelectedBooks, savingRead, setSavingRead, setRead }}
+              {...{ editBook, setRead, booksUiState, dispatchBooksUiState }}
               editBooksTags={editTagsForBook}
               editBooksSubjects={editSubjectsForBook}
             />
