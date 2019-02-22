@@ -53,7 +53,7 @@ export function loadBooks() {
 
     Promise.resolve(booksSearch(bookSearch, app.publicUserId, app.online)).then(booksResp => {
       window.scrollTo(0, 0);
-      dispatch(booksResults(booksResp, booksResp.count));
+      //dispatch(booksResults(booksResp, booksResp.count));
     });
   };
 }
@@ -81,11 +81,11 @@ function booksSearch(bookSearchState: BookSearchType, publicUserId, online) {
     getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
   }
 
-  return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
-    if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
-      return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta ? resp.data.allBooks.Meta.count : -1 };
-    }
-  });
+  // return graphqlClient.runQuery(GetBooksQuery, getBooksVariables).then(resp => {
+  //   if (resp.data && resp.data.allBooks && resp.data.allBooks.Books) {
+  //     return { results: resp.data.allBooks.Books, count: resp.data.allBooks.Meta ? resp.data.allBooks.Meta.count : -1 };
+  //   }
+  // });
 }
 
 export function expandBook(_id: string) {
