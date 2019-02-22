@@ -16,17 +16,19 @@ interface ILocalProps {
   online: any;
   selectedBooks: any;
   setSelectedBooks: any;
+  savingRead: any;
+  setSavingRead: any;
+  setRead: any;
 }
 
 const BookRow: SFC<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, publicUserId, online }] = useContext(AppContext);
-  const { book, index, selectedBooks, setSelectedBooks } = props;
+  const { book, index, selectedBooks, setSelectedBooks, savingRead, setSavingRead, setRead } = props;
 
-  const { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook, setUnRead, setRead } = {} as any;
+  const { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook } = {} as any;
   const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
   const { setReadStatus } = useContext(BooksContext);
 
-  const [savingRead, setSavingRead] = useState({});
   const toggleSelectBook = _id => setSelectedBooks({ ...selectedBooks, [_id]: !selectedBooks[_id] });
 
   useLayoutEffect(() => {}, [book]);
@@ -126,11 +128,11 @@ const BookRow: SFC<ILocalProps> = props => {
         <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
           {!viewingPublic ? (
             !!book.isRead ? (
-              <AjaxButton runningText=" " running={savingRead[book._id]} onClick={() => setReadStatus([book._id], false)} preset="success-xs">
+              <AjaxButton runningText=" " running={!!savingRead[book._id]} onClick={() => setRead([book._id], !book.isRead)} preset="success-xs">
                 Read <i className="fa fa-fw fa-check" />
               </AjaxButton>
             ) : (
-              <AjaxButton runningText=" " running={savingRead[book._id]} onClick={() => setReadStatus([book._id], true)} preset="default-xs">
+              <AjaxButton runningText=" " running={!!savingRead[book._id]} onClick={() => setRead([book._id], !book.isRead)} preset="default-xs">
                 Set read
               </AjaxButton>
             )
@@ -214,7 +216,16 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number }> = props => {
   );
 };
 
-type BookViewListGridTypes = { editBooksSubjects: any; editBooksTags: any; editBook: any; selectedBooks: any; setSelectedBooks: any };
+type BookViewListGridTypes = {
+  editBooksSubjects: any;
+  editBooksTags: any;
+  editBook: any;
+  selectedBooks: any;
+  setSelectedBooks: any;
+  savingRead: any;
+  setSavingRead: any;
+  setRead: any;
+};
 
 const useBookSelection = (booksHash, selectedBooks) => {
   return useMemo(() => {
@@ -228,7 +239,7 @@ const useBookSelection = (booksHash, selectedBooks) => {
 };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  const { editBooksSubjects, editBooksTags, selectedBooks, setSelectedBooks, editBook } = props;
+  const { editBooksSubjects, editBooksTags, selectedBooks, setSelectedBooks, editBook, savingRead, setSavingRead, setRead } = props;
 
   let { setSortOrder } = {} as any;
   const { booksHash } = useContext(BooksContext);
@@ -301,7 +312,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   <BookRow
                     editBooksSubjects={editBooksSubjects}
                     editBooksTags={editBooksTags}
-                    {...{ book, editBook, index, online, selectedBooks, setSelectedBooks }}
+                    {...{ book, editBook, index, online, selectedBooks, setSelectedBooks, savingRead, setSavingRead, setRead }}
                   />
                   {book.expanded ? <BookRowDetails book={book} index={index} /> : null}
                 </Fragment>
