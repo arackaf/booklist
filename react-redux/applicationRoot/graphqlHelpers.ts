@@ -34,3 +34,10 @@ export const syncDeletes = (cacheName, _ids, resultSet, arrName) => {
     res[arrName] = res[arrName].filter(o => !deletedMap.has(o._id));
   });
 };
+
+export const clearCache = (...cacheNames) => {
+  cacheNames.forEach(name => {
+    let cache = graphqlClient.getCache(name);
+    cache && cache.clearCache();
+  });
+};
