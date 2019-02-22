@@ -4,10 +4,10 @@ import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import Modal from "applicationRoot/components/modal";
-import { filterSubjects, getEligibleParents, useStackedSubjects, computeSubjectParentId } from "applicationRoot/subjectsState";
+import { filterSubjects, getEligibleParents, useStackedSubjects, computeSubjectParentId, useSubjectMutations } from "applicationRoot/subjectsState";
 import { SubjectsContext, ColorsContext } from "applicationRoot/renderUI";
 
-const SubjectEditDeleteInfo = props => {
+const SubjectDeletingInfo = props => {
   let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${
     props.affectedChildren > 1 ? "descendant subjects" : "child subject"
   } which will also be deleted.`;
@@ -39,17 +39,19 @@ interface ILocalProps {
 }
 
 const useEligibleParents = editingSubject => {
-  const [{ subjectHash }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
 
   return useMemo(() => (editingSubject ? getEligibleParents(subjectHash, editingSubject._id) : []), [subjectHash, editingSubject]);
 };
 
 const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
-  const [{ subjectHash }, { createOrUpdateSubject, deleteSubject }] = useContext(SubjectsContext);
+  const { subjectHash } = useContext(SubjectsContext);
+  const { updateSubject, deleteSubject } = useSubjectMutations();
+
   const { subjectsUnwound } = useStackedSubjects();
   const { colors } = useContext(ColorsContext);
   const [editingSubject, setEditingSubject] = useState(null);
-  debugger;
+
   const [editingSubjectName, setEditingSubjectName] = useState("");
   const [subjectSearch, setSubjectSearch] = useState("");
   const [deletingId, setDeletingId] = useState("");
@@ -64,7 +66,6 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
     setSubjectSearch("");
   };
   const startEditing = (subject, parentId) => {
-    debugger;
     setEditingSubject(subject);
     setEditingSubjectName(subject.name);
     setParentId(parentId);
@@ -83,27 +84,15 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
     setAffectedChildren(affectedChildren);
   };
 
-  const setNewSubjectName = value => {
-    let X = editingSubject;
-    debugger;
-    setEditingValue("name", value);
-  };
+  const setNewSubjectName = value => setEditingValue("name", value);
   const setNewSubjectParent = value => setParentId(value);
-  const setNewSubjectBackgroundColor = value => {
-    let X = editingSubject;
-    debugger;
-    setEditingValue("backgroundColor", value);
-  };
+  const setNewSubjectBackgroundColor = value => setEditingValue("backgroundColor", value);
   const setNewSubjectTextColor = value => setEditingValue("textColor", value);
-  const setEditingValue = (name, value) => {
-    let X = editingSubject;
-    debugger;
-    setEditingSubject({ ...editingSubject, [name]: value });
-  };
+  const setEditingValue = (name, value) => setEditingSubject({ ...editingSubject, [name]: value });
 
   const save = () => {
     setSaving(true);
-    Promise.resolve(createOrUpdateSubject({ ...editingSubject, parentId: parentId })).then(() => {
+    Promise.resolve(updateSubject({ ...editingSubject, parentId: parentId })).then(() => {
       cancelSubjectEdit();
 
       setSubjectSearch("");
@@ -112,7 +101,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   };
   const runDelete = () => {
     setDeleting(true);
-    Promise.resolve(deleteSubject(deletingId)).then(() => {
+    Promise.resolve(deleteSubject({ _id: deletingId })).then(() => {
       setDeleting(false);
       cancelSubjectEdit();
     });
@@ -161,7 +150,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
           <div className="panel-body">
             <div>
               {deletingId ? (
-                <SubjectEditDeleteInfo
+                <SubjectDeletingInfo
                   deleting={deleting}
                   cancelDeleteSubject={() => setDeletingId("")}
                   affectedChildren={affectedChildren}

@@ -45,7 +45,7 @@ export function renderUI(component) {
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 export const ColorsContext = createContext<any>(null);
-export const SubjectsContext = createContext<[SubjectState, any]>(null);
+export const SubjectsContext = createContext<SubjectState>(null);
 
 const App = ({ component }) => {
   let appStatePacket = useAppState();

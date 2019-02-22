@@ -236,7 +236,7 @@ export const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books:
 export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 
 export const useBookList = () => {
-  let [{ subjectHash }] = useContext(SubjectsContext);
+  let { subjectHash } = useContext(SubjectsContext);
   let [{ tagHash }] = useContext(TagsContext);
   let { booksHash, booksLoading } = useContext(BooksContext);
 
