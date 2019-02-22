@@ -24,6 +24,7 @@ interface ILocalProps {
 }
 
 const BookRow: SFC<ILocalProps> = props => {
+  const [deleting, setDeleting] = useState(false);
   const [{ isPublic: viewingPublic, publicUserId, online }] = useContext(AppContext);
   const { book, index, booksUiState, dispatchBooksUiState, setRead, deleteBook } = props;
   const { _id } = book;
@@ -31,6 +32,11 @@ const BookRow: SFC<ILocalProps> = props => {
 
   const { collapseBook, expandBook } = {} as any;
   const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
+
+  const runDelete = () => {
+    setDeleting(true);
+    deleteBook({ _id });
+  };
 
   useLayoutEffect(() => {}, [book]);
 
@@ -87,7 +93,7 @@ const BookRow: SFC<ILocalProps> = props => {
           </>
         ) : null}
         {pendingDelete[_id] ? (
-          <AjaxButton running={0} runningText="Deleting" onClick={() => deleteBook({ _id })} className="btn btn-xs btn-danger margin-right">
+          <AjaxButton running={deleting} runningText="Deleting" onClick={runDelete} className="btn btn-xs btn-danger margin-right">
             Confirm delete
           </AjaxButton>
         ) : null}
