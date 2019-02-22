@@ -1,13 +1,12 @@
-import { hashOf, getStatePacket, graphqlClient, makeStateBoundHelpers } from "applicationRoot/rootReducer";
+import { graphqlClient } from "applicationRoot/rootReducer";
 import update from "immutability-helper";
-import { bulkMerge } from "util/immutableHelpers";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useContext, useRef, useState, useLayoutEffect, createContext, useCallback } from "react";
+import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { TagsContext } from "./components/bookViewList";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
@@ -124,11 +123,6 @@ export function booksReducer(state = initialBooksState, action): BooksState {
       });
     }
 
-    case BOOK_READ_CHANGING:
-      return update(state, { booksHash: bulkMerge(action._ids, { readChanging: true }) });
-    case BOOK_READ_CHANGED:
-      return update(state, { booksHash: bulkMerge(action._ids, { readChanging: false, isRead: action.value }) });
-
     case SET_PENDING_DELETE_BOOK:
       return update(state, { booksHash: { [action._id]: { $merge: { pendingDelete: true } } } });
     case CANCEL_PENDING_DELETE_BOOK:
@@ -183,7 +177,7 @@ export const useBooks = () => {
   const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
   const onBooksMutation = {
     when: /updateBooks?/,
-    run: ({ currentResults, softReset, refresh }, resp) => {
+    run: ({ currentResults, softReset }, resp) => {
       syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
       softReset(currentResults);
     }
@@ -262,26 +256,6 @@ export const useBookList = () => {
 
 // ----- actions -----
 
-export function setRead(_id) {
-  return function(dispatch) {
-    executeSetRead(dispatch, [_id], true);
-  };
-}
-
-export function setUnRead(_id) {
-  return function(dispatch) {
-    executeSetRead(dispatch, [_id], false);
-  };
-}
-
-function executeSetRead(dispatch, ids, value) {
-  dispatch({ type: BOOK_READ_CHANGING, _ids: ids });
-
-  graphqlClient.runMutation(UpdateBooksReadMutation, { _ids: ids, updates: { isRead: !!value } }).then(res => {
-    dispatch({ type: BOOK_READ_CHANGED, _ids: ids, value: value });
-  });
-}
-
 function expandBook(_id, publicUserId) {
   return (dispatch, getState: () => BooksState) => {
     let booksHash = getState().booksHash;
@@ -315,19 +289,3 @@ const deleteBook = ({ _id }) => {
     });
   };
 };
-
-const setSelectedRead = () => (dispatch, getState: () => BooksState) => {
-  const selectedBooks = getState().selectedBooks;
-  const ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
-
-  executeSetRead(dispatch, ids, true);
-};
-
-const setSelectedUnRead = () => (dispatch, getState: () => BooksState) => {
-  const selectedBooks = getState().selectedBooks;
-  const ids = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]);
-
-  executeSetRead(dispatch, ids, false);
-};
-
-const setBooksSubjects = ({ books, add, remove }) => ({ type: SET_BOOKS_SUBJECTS, books, add, remove });
