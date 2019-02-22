@@ -2,34 +2,21 @@ import { graphqlClient } from "applicationRoot/rootReducer";
 import update from "immutability-helper";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
-import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { TagsContext } from "./components/bookViewList";
-import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHelpers";
 
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
-const TOGGLE_SELECT_BOOK = "TOGGLE_SELECT_BOOK";
-const BOOK_READ_CHANGING = "BOOK_READ_CHANGING";
-const BOOK_READ_CHANGED = "BOOK_READ_CHANGED";
-
-const SET_PENDING_DELETE_BOOK = "SET_PENDING_DELETE_BOOK";
-const CANCEL_PENDING_DELETE_BOOK = "CANCEL_PENDING_DELETE_BOOK";
-const BOOK_DELETING = "BOOK_DELETING";
-const BOOK_DELETED = "BOOK_DELETED";
-
-const SET_BOOKS_SUBJECTS = "SET_BOOKS_SUBJECTS";
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 
 const EDITORIAL_REVIEWS_LOADING = "LOADING_EDITORIAL_REVIEWS";
 const DETAILS_LOADED = "EDITORIAL_REVIEWS_LOADED";
 const EXPAND_BOOK = "EXPAND_BOOK";
 const COLLAPSE_BOOK = "COLLAPSE_BOOK";
-
-const EDITING_BOOK_SAVED = "EDITING_BOOK_SAVED";
 
 interface IEditorialReview {
   content: string;
@@ -85,26 +72,6 @@ export type BooksState = typeof initialBooksState & { booksHash: any };
 
 export function booksReducer(state = initialBooksState, action): BooksState {
   switch (action.type) {
-    case EDITING_BOOK_SAVED:
-      return update(state, { booksHash: { [action.book._id]: { $merge: action.book } } });
-    case TOGGLE_SELECT_BOOK:
-      return update(state, { selectedBooks: { [action._id]: { $set: !state.selectedBooks[action._id] } } });
-    case SET_BOOKS_SUBJECTS: {
-      let remove = new Set<string>(action.remove);
-      return update(state, {
-        booksHash: {
-          ...action.books.reduce(
-            (hash, _id) => (
-              (hash[_id] = {
-                subjects: { $apply: currentSubjects => Array.from(new Set(currentSubjects.filter(t => !remove.has(t)).concat(action.add))) }
-              }),
-              hash
-            ),
-            {}
-          )
-        }
-      });
-    }
     case SET_BOOKS_TAGS: {
       let remove = new Set<string>(action.remove);
       return update(state, {
@@ -121,15 +88,6 @@ export function booksReducer(state = initialBooksState, action): BooksState {
         }
       });
     }
-
-    case SET_PENDING_DELETE_BOOK:
-      return update(state, { booksHash: { [action._id]: { $merge: { pendingDelete: true } } } });
-    case CANCEL_PENDING_DELETE_BOOK:
-      return update(state, { booksHash: { [action._id]: { $merge: { pendingDelete: false } } } });
-    case BOOK_DELETING:
-      return update(state, { booksHash: { [action._id]: { $merge: { deleting: true } } } });
-    case BOOK_DELETED:
-      return update(state, { booksHash: { $unset: [action._id] } });
     case EDITORIAL_REVIEWS_LOADING:
       return update(state, { booksHash: { [action._id]: { $merge: { detailsLoading: true } } } });
     case EXPAND_BOOK:
@@ -282,15 +240,3 @@ function expandBook(_id, publicUserId) {
 function collapseBook(_id: string) {
   return { type: COLLAPSE_BOOK, _id };
 }
-
-const setPendingDeleteBook = ({ _id }) => ({ type: SET_PENDING_DELETE_BOOK, _id });
-const cancelPendingDeleteBook = ({ _id }) => ({ type: CANCEL_PENDING_DELETE_BOOK, _id });
-const deleteBook = ({ _id }) => {
-  return dispatch => {
-    dispatch({ type: BOOK_DELETING, _id });
-
-    graphqlClient.runMutation(DeleteBookMutation, { _id }).then(resp => {
-      dispatch({ type: BOOK_DELETED, _id });
-    });
-  };
-};
