@@ -24,7 +24,7 @@ interface IAddedMenuProps {
   startSubjectModification: any;
   startTagModification: any;
   beginEditFilters: any;
-  selectedBooks: any;
+  booksUiState: any;
   setRead: any;
 }
 
@@ -37,12 +37,10 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const { totalPages, resultsCount } = useContext(BooksContext);
   const [{}, { setViewDesktop, setViewBasicList }] = useContext(BooksSearchContext);
 
-  //TODO:
-  const setSelectedRead: any = null;
-  const setSelectedUnRead: any = null;
-  const { selectedBooks, setRead } = props;
+  const { booksUiState, setRead } = props;
+  const { selectedBooks } = booksUiState;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
-  const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks), [selectedBooks]);
+  const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
 
   const bookSearchUiView = useBookSearchUiView();
   const bookSearchState = useCurrentSearch();

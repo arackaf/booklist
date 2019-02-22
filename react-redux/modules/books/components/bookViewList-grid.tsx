@@ -14,22 +14,18 @@ interface ILocalProps {
   index: number;
   editBook: any;
   online: any;
-  selectedBooks: any;
-  setSelectedBooks: any;
-  savingRead: any;
-  setSavingRead: any;
   setRead: any;
+  booksUiState: any;
+  dispatchBooksUiState: any;
 }
 
 const BookRow: SFC<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, publicUserId, online }] = useContext(AppContext);
-  const { book, index, selectedBooks, setSelectedBooks, savingRead, setSavingRead, setRead } = props;
+  const { book, index, booksUiState, dispatchBooksUiState, setRead } = props;
+  const { selectedBooks, savingReadForBooks: savingRead } = booksUiState;
 
   const { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook } = {} as any;
   const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
-  const { setReadStatus } = useContext(BooksContext);
-
-  const toggleSelectBook = _id => setSelectedBooks({ ...selectedBooks, [_id]: !selectedBooks[_id] });
 
   useLayoutEffect(() => {}, [book]);
 
@@ -37,7 +33,7 @@ const BookRow: SFC<ILocalProps> = props => {
     <tr style={style}>
       {!viewingPublic && online ? (
         <td>
-          <a style={{ fontSize: "12pt" }} onClick={() => toggleSelectBook(book._id)}>
+          <a style={{ fontSize: "12pt" }} onClick={() => dispatchBooksUiState(["toggle-select", book._id])}>
             <i className={"fal " + (!!selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
           </a>
         </td>
@@ -220,11 +216,9 @@ type BookViewListGridTypes = {
   editBooksSubjects: any;
   editBooksTags: any;
   editBook: any;
-  selectedBooks: any;
-  setSelectedBooks: any;
-  savingRead: any;
-  setSavingRead: any;
   setRead: any;
+  booksUiState: any;
+  dispatchBooksUiState: any;
 };
 
 const useBookSelection = (booksHash, selectedBooks) => {
@@ -239,9 +233,10 @@ const useBookSelection = (booksHash, selectedBooks) => {
 };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  const { editBooksSubjects, editBooksTags, selectedBooks, setSelectedBooks, editBook, savingRead, setSavingRead, setRead } = props;
+  const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead } = props;
+  const { selectedBooks } = booksUiState;
 
-  let { setSortOrder } = {} as any;
+  const { setSortOrder } = {} as any;
   const { booksHash } = useContext(BooksContext);
   const { booksList } = useBookList();
   const { allAreChecked } = useBookSelection(booksHash, selectedBooks);
@@ -249,11 +244,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { sort: currentSort, sortDirection } = useCurrentSearch();
 
   const toggleCheckAll = () => {
-    if (allAreChecked) {
-      setSelectedBooks({});
-    } else {
-      setSelectedBooks(Object.keys(booksHash).reduce((hash, k) => ((hash[k] = true), hash), {}));
-    }
+    dispatchBooksUiState([allAreChecked ? "de-select" : "select", Object.keys(booksHash)]);
   };
 
   const setSort = column => {
@@ -312,7 +303,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   <BookRow
                     editBooksSubjects={editBooksSubjects}
                     editBooksTags={editBooksTags}
-                    {...{ book, editBook, index, online, selectedBooks, setSelectedBooks, savingRead, setSavingRead, setRead }}
+                    {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState }}
                   />
                   {book.expanded ? <BookRowDetails book={book} index={index} /> : null}
                 </Fragment>
