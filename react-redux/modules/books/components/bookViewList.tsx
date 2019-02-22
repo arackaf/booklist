@@ -10,6 +10,8 @@ import { useMutation, buildMutation } from "micro-graphql-react";
 import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
+import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
+
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
 import { useBookList, BooksContext, useBooks } from "../booksState";
@@ -68,7 +70,7 @@ const BooksContexHolder = () => {
   );
 };
 
-const initialBooksState = { selectedBooks: {}, savingReadForBooks: {} };
+const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {} };
 
 const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
 
@@ -84,6 +86,10 @@ function booksUiStateReducer(state, [action, payload = null]) {
       return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, true) } };
     case "read-saved":
       return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, false) } };
+    case "start-delete":
+      return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
+    case "cancel-delete":
+      return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, false) } };
     case "reset":
       return { ...initialBooksState };
     default:
@@ -94,7 +100,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
-  const { booksLoading, booksHash, currentQuery, setReadStatus } = useContext(BooksContext);
+  const { booksLoading, booksHash, currentQuery } = useContext(BooksContext);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
@@ -121,6 +127,7 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
   const editBook = book => openBookEditModal(book);
 
   const { runMutation, running } = useMutation(buildMutation(UpdateBookMutation));
+  const { runMutation: setReadStatus } = useMutation(buildMutation(UpdateBooksReadMutation));
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
@@ -132,7 +139,7 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
 
   const setRead = (_ids, isRead) => {
     dispatchBooksUiState(["read-saving", _ids]);
-    Promise.resolve(setReadStatus(_ids, isRead)).then(() => {
+    Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
       dispatchBooksUiState(["read-saved", _ids]);
     });
   };

@@ -7,6 +7,9 @@ import { AppContext } from "applicationRoot/renderUI";
 import { useBookList, IBookDisplay, BooksContext } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";
 
+import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
+import { useMutation, buildMutation } from "micro-graphql-react";
+
 interface ILocalProps {
   book: IBookDisplay;
   editBooksSubjects: any;
@@ -17,14 +20,16 @@ interface ILocalProps {
   setRead: any;
   booksUiState: any;
   dispatchBooksUiState: any;
+  deleteBook: any;
 }
 
 const BookRow: SFC<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, publicUserId, online }] = useContext(AppContext);
-  const { book, index, booksUiState, dispatchBooksUiState, setRead } = props;
-  const { selectedBooks, savingReadForBooks: savingRead } = booksUiState;
+  const { book, index, booksUiState, dispatchBooksUiState, setRead, deleteBook } = props;
+  const { _id } = book;
+  const { selectedBooks, savingReadForBooks: savingRead, pendingDelete } = booksUiState;
 
-  const { collapseBook, expandBook, setPendingDeleteBook, cancelPendingDeleteBook, deleteBook } = {} as any;
+  const { collapseBook, expandBook } = {} as any;
   const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
   useLayoutEffect(() => {}, [book]);
@@ -33,8 +38,8 @@ const BookRow: SFC<ILocalProps> = props => {
     <tr style={style}>
       {!viewingPublic && online ? (
         <td>
-          <a style={{ fontSize: "12pt" }} onClick={() => dispatchBooksUiState(["toggle-select", book._id])}>
-            <i className={"fal " + (!!selectedBooks[book._id] ? "fa-check-square" : "fa-square")} />
+          <a style={{ fontSize: "12pt" }} onClick={() => dispatchBooksUiState(["toggle-select", _id])}>
+            <i className={"fal " + (!!selectedBooks[_id] ? "fa-check-square" : "fa-square")} />
           </a>
         </td>
       ) : null}
@@ -50,15 +55,15 @@ const BookRow: SFC<ILocalProps> = props => {
         {online ? (
           book.detailsLoading ? (
             <a target="_new" className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fa fa-fw fa-spin fa-spinner" />
+              <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fa fa-fw fa-spin fa-spinner" />
             </a>
           ) : book.expanded ? (
-            <a target="_new" onClick={() => collapseBook(book._id)} className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
+            <a target="_new" onClick={() => collapseBook(_id)} className="margin-right grid-hover-filter inline-filter">
+              <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
             </a>
           ) : (
-            <a target="_new" onClick={() => expandBook(book._id, publicUserId)} className="margin-right grid-hover-filter inline-filter">
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
+            <a target="_new" onClick={() => expandBook(_id, publicUserId)} className="margin-right grid-hover-filter inline-filter">
+              <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
             </a>
           )
         ) : null}
@@ -68,26 +73,26 @@ const BookRow: SFC<ILocalProps> = props => {
             className="margin-right grid-hover-filter inline-filter"
             href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
           >
-            <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
+            <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
           </a>
         ) : null}
         {!viewingPublic && online ? (
           <>
             <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBook(book)}>
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
+              <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
             </a>
-            <a className="margin-right grid-hover-filter inline-filter" onClick={() => setPendingDeleteBook(book)}>
-              <i style={{ display: book.pendingDelete ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
+            <a className="margin-right grid-hover-filter inline-filter" onClick={() => dispatchBooksUiState(["start-delete", _id])}>
+              <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
             </a>
           </>
         ) : null}
-        {book.pendingDelete ? (
-          <AjaxButton running={book.deleting} runningText="Deleting" onClick={() => deleteBook(book)} className="btn btn-xs btn-danger margin-right">
+        {pendingDelete[_id] ? (
+          <AjaxButton running={0} runningText="Deleting" onClick={() => deleteBook({ _id })} className="btn btn-xs btn-danger margin-right">
             Confirm delete
           </AjaxButton>
         ) : null}
-        {book.pendingDelete ? (
-          <button onClick={() => cancelPendingDeleteBook(book)} className="btn btn-xs btn-primary">
+        {pendingDelete[_id] ? (
+          <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs btn-primary">
             Cancel
           </button>
         ) : null}
@@ -124,11 +129,11 @@ const BookRow: SFC<ILocalProps> = props => {
         <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
           {!viewingPublic ? (
             !!book.isRead ? (
-              <AjaxButton runningText=" " running={!!savingRead[book._id]} onClick={() => setRead([book._id], !book.isRead)} preset="success-xs">
+              <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="success-xs">
                 Read <i className="fa fa-fw fa-check" />
               </AjaxButton>
             ) : (
-              <AjaxButton runningText=" " running={!!savingRead[book._id]} onClick={() => setRead([book._id], !book.isRead)} preset="default-xs">
+              <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="default-xs">
                 Set read
               </AjaxButton>
             )
@@ -242,6 +247,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { allAreChecked } = useBookSelection(booksHash, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
+  const { runMutation: deleteBook } = useMutation(buildMutation(DeleteBookMutation));
 
   const toggleCheckAll = () => {
     dispatchBooksUiState([allAreChecked ? "de-select" : "select", Object.keys(booksHash)]);
@@ -303,7 +309,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   <BookRow
                     editBooksSubjects={editBooksSubjects}
                     editBooksTags={editBooksTags}
-                    {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState }}
+                    {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState, deleteBook }}
                   />
                   {book.expanded ? <BookRowDetails book={book} index={index} /> : null}
                 </Fragment>
