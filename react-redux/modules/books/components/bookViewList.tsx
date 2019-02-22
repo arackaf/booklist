@@ -71,8 +71,9 @@ const BooksContexHolder = () => {
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
-  const { booksLoading, booksHash, currentQuery } = useContext(BooksContext);
+  const { booksLoading, booksHash, currentQuery, setReadStatus } = useContext(BooksContext);
 
+  const [savingRead, setSavingRead] = useState({});
   const [selectedBooks, setSelectedBooks] = useState({});
   useLayoutEffect(() => setSelectedBooks({}), [currentQuery]);
 
@@ -107,6 +108,14 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
     });
   };
 
+  const setRead = (_ids, isRead) => {
+    let _idMap = val => _ids.reduce((hash, _id) => ((hash[_id] = val), hash), {});
+    setSavingRead({ ...savingRead, ..._idMap(true) });
+    Promise.resolve(setReadStatus(_ids, isRead)).then(() => {
+      setSavingRead({ ...savingRead, ..._idMap(false) });
+    });
+  };
+
   let dragTitle = editingBook
     ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
     : "";
@@ -123,7 +132,7 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
           editTags={editTags}
           editSubjects={editSubjects}
           beginEditFilters={beginEditFilters}
-          {...{ selectedBooks, booksHash }}
+          {...{ selectedBooks, booksHash, setRead }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!booksList.length && !booksLoading ? (
@@ -133,7 +142,11 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
           ) : null}
 
           {uiView.isGridView ? (
-            <GridView {...{ editBook, selectedBooks, setSelectedBooks }} editBooksTags={editTagsForBook} editBooksSubjects={editSubjectsForBook} />
+            <GridView
+              {...{ editBook, selectedBooks, setSelectedBooks, savingRead, setSavingRead, setRead }}
+              editBooksTags={editTagsForBook}
+              editBooksSubjects={editSubjectsForBook}
+            />
           ) : uiView.isBasicList ? (
             <Suspense fallback={<Loading />}>
               <BasicListView editBook={editBook} />

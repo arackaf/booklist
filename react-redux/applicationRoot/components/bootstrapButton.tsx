@@ -38,7 +38,9 @@ export const AjaxButton = props => {
     }
   };
 
-  return isRunning ? (
+  let isRunningAdjusted = controlled.current ? props.running : isRunning;
+
+  return isRunningAdjusted ? (
     <button className={cssFromPreset(props)} disabled={true}>
       <i className="fa fa-fw fa-spin fa-spinner" />
       {props.runningText || props.text ? " " + props.runningText || props.text : props.children}

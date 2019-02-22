@@ -25,6 +25,7 @@ interface IAddedMenuProps {
   startTagModification: any;
   beginEditFilters: any;
   selectedBooks: any;
+  setRead: any;
 }
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
@@ -39,8 +40,9 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   //TODO:
   const setSelectedRead: any = null;
   const setSelectedUnRead: any = null;
-  const { selectedBooks } = props;
+  const { selectedBooks, setRead } = props;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
+  const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks), [selectedBooks]);
 
   const bookSearchUiView = useBookSearchUiView();
   const bookSearchState = useCurrentSearch();
@@ -183,10 +185,10 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                   <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default">
                     <i className="fal fa-tags" />
                   </button>
-                  <button title="Set read" onClick={() => setSelectedRead(selectedBooks)} className={"btn btn-default"}>
+                  <button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default"}>
                     <i className="fal fa-eye" />
                   </button>
-                  <button title="Set un-read" onClick={() => setSelectedUnRead(selectedBooks)} className="btn btn-default put-line-through">
+                  <button title="Set un-read" onClick={() => setRead(selectedBooksIds, false)} className="btn btn-default put-line-through">
                     <i className="fal fa-eye-slash" />
                   </button>
                 </>
