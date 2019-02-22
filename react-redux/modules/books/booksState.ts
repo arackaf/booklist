@@ -10,7 +10,7 @@ import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { TagsContext } from "./components/bookViewList";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncResults } from "applicationRoot/graphqlHelpers";
+import { syncResults, clearCache } from "applicationRoot/graphqlHelpers";
 
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const TOGGLE_SELECT_BOOK = "TOGGLE_SELECT_BOOK";
@@ -169,6 +169,8 @@ function createBooksHash(booksArr) {
   });
   return result;
 }
+
+graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
 
 export const useBooks = () => {
   const [app] = useContext(AppContext);
