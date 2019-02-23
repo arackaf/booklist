@@ -2,7 +2,6 @@ import { graphqlClient } from "applicationRoot/rootReducer";
 import update from "immutability-helper";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
-import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
@@ -12,11 +11,6 @@ import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHel
 
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
-
-const EDITORIAL_REVIEWS_LOADING = "LOADING_EDITORIAL_REVIEWS";
-const DETAILS_LOADED = "EDITORIAL_REVIEWS_LOADED";
-const EXPAND_BOOK = "EXPAND_BOOK";
-const COLLAPSE_BOOK = "COLLAPSE_BOOK";
 
 interface IEditorialReview {
   content: string;
@@ -88,26 +82,6 @@ export function booksReducer(state = initialBooksState, action): BooksState {
         }
       });
     }
-    case EDITORIAL_REVIEWS_LOADING:
-      return update(state, { booksHash: { [action._id]: { $merge: { detailsLoading: true } } } });
-    case EXPAND_BOOK:
-      return update(state, { booksHash: { [action._id]: { $merge: { expanded: true } } } });
-    case COLLAPSE_BOOK:
-      return update(state, { booksHash: { [action._id]: { $merge: { expanded: false } } } });
-    case DETAILS_LOADED:
-      return update(state, {
-        booksHash: {
-          [action._id]: {
-            $merge: {
-              detailsLoading: false,
-              detailsLoaded: true,
-              expanded: true,
-              similarBooks: action.similarBooks,
-              editorialReviews: action.editorialReviews
-            }
-          }
-        }
-      });
   }
 
   return state as any;
@@ -216,27 +190,3 @@ export const useBookList = () => {
     return { booksList: books as IBookDisplay[], booksLoading };
   }, [booksHash, booksLoading, subjectHash, tagHash]);
 };
-
-// ----- actions -----
-
-function expandBook(_id, publicUserId) {
-  return (dispatch, getState: () => BooksState) => {
-    let booksHash = getState().booksHash;
-    let book = booksHash[_id];
-
-    if (!book.detailsLoaded) {
-      dispatch({ type: EDITORIAL_REVIEWS_LOADING, _id });
-
-      graphqlClient.runQuery(BookDetailsQuery, { _id, publicUserId, cache: 9 }).then(({ data: { getBook } }) => {
-        let { editorialReviews, similarBooks } = getBook.Book;
-        dispatch({ type: DETAILS_LOADED, _id, editorialReviews: editorialReviews || [], similarBooks: similarBooks || [] });
-      });
-    } else {
-      dispatch({ type: EXPAND_BOOK, _id });
-    }
-  };
-}
-
-function collapseBook(_id: string) {
-  return { type: COLLAPSE_BOOK, _id };
-}
