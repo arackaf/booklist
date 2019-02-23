@@ -7,9 +7,8 @@ import { AppContext } from "applicationRoot/renderUI";
 import { IBookDisplay, BooksContext } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";
 
-import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
-import { useMutation, buildMutation, useQuery, buildQuery } from "micro-graphql-react";
+import { useQuery, buildQuery } from "micro-graphql-react";
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -17,32 +16,22 @@ interface ILocalProps {
   editBooksTags: any;
   index: number;
   editBook: any;
-  online: any;
   setRead: any;
   booksUiState: any;
   dispatchBooksUiState: any;
-  deleteBook: any;
+  runDelete: any;
 }
 
 const BookRow: SFC<ILocalProps> = props => {
-  const [deleting, setDeleting] = useState(false);
-  const [{ isPublic: viewingPublic, publicUserId, online }] = useContext(AppContext);
-  const { book, index, booksUiState, dispatchBooksUiState, setRead, deleteBook } = props;
+  const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
+  const { book, index, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { _id } = book;
-  const { selectedBooks, savingReadForBooks: savingRead, pendingDelete } = booksUiState;
+  const { selectedBooks, savingReadForBooks: savingRead, pendingDelete, deleting } = booksUiState;
 
-  const { collapseBook, expandBook } = {} as any;
   const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
 
   const [expanded, setExpanded] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
-
-  const runDelete = () => {
-    setDeleting(true);
-    deleteBook({ _id });
-  };
-
-  useLayoutEffect(() => {}, [book]);
 
   return (
     <>
@@ -98,7 +87,7 @@ const BookRow: SFC<ILocalProps> = props => {
             </>
           ) : null}
           {pendingDelete[_id] ? (
-            <AjaxButton running={deleting} runningText="Deleting" onClick={runDelete} className="btn btn-xs btn-danger margin-right">
+            <AjaxButton running={deleting[_id]} runningText="Deleting" onClick={() => runDelete(_id)} className="btn btn-xs btn-danger margin-right">
               Confirm delete
             </AjaxButton>
           ) : null}
@@ -250,6 +239,7 @@ type BookViewListGridTypes = {
   editBooksTags: any;
   editBook: any;
   setRead: any;
+  runDelete: any;
   booksUiState: any;
   dispatchBooksUiState: any;
 };
@@ -266,7 +256,7 @@ const useBookSelection = (books, selectedBooks) => {
 };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead } = props;
+  const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { selectedBooks } = booksUiState;
 
   const { setSortOrder } = {} as any;
@@ -274,7 +264,6 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
-  const { runMutation: deleteBook } = useMutation(buildMutation(DeleteBookMutation));
 
   const toggleCheckAll = () => {
     dispatchBooksUiState([allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
@@ -333,9 +322,10 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
             <tbody>
               {books.map((book, index) => (
                 <BookRow
+                  key={book._id}
                   editBooksSubjects={editBooksSubjects}
                   editBooksTags={editBooksTags}
-                  {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState, deleteBook }}
+                  {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
                 />
               ))}
             </tbody>

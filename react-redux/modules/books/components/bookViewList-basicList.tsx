@@ -4,10 +4,12 @@ import { AppContext } from "applicationRoot/renderUI";
 import { BooksContext } from "../booksState";
 
 const BookViewListMobileItem = props => {
-  let { book, online } = props;
+  const { book, online, booksUiState, dispatchBooksUiState } = props;
+  const { pendingDelete, deleting } = booksUiState;
 
-  let publisherDisplay = null,
-    isbnPages = null;
+  let publisherDisplay = null;
+  let isbnPages = null;
+
   if (book.publisher || book.publicationDate) {
     publisherDisplay = [book.publisher, book.publicationDate].filter(s => s).join(" ");
   }
@@ -33,23 +35,23 @@ const BookViewListMobileItem = props => {
                 <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}>
                   <i className="fa fa-fw fa-pencil" />
                 </button>
-                <button className="margin-left btn btn-danger btn-xs" onClick={() => props.setPendingDeleteBook(book)}>
+                <button className="margin-left btn btn-danger btn-xs" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
                   <i className="fa fa-fw fa-trash" />
                 </button>
               </>
             ) : null}
-            {book.pendingDelete ? (
+            {pendingDelete[book._id] ? (
               <AjaxButton
-                running={book.deleting}
+                running={deleting[book._id]}
                 runningText="Deleting"
-                onClick={() => props.deleteBook(book)}
+                onClick={() => props.runDelete(book._id)}
                 className="margin-left btn btn-xs btn-danger"
               >
                 Confirm delete
               </AjaxButton>
             ) : null}
-            {book.pendingDelete ? (
-              <button onClick={() => props.cancelPendingDeleteBook(book)} className="margin-left btn btn-xs btn-primary">
+            {pendingDelete[book._id] ? (
+              <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xs btn-primary">
                 Cancel
               </button>
             ) : null}
@@ -60,16 +62,21 @@ const BookViewListMobileItem = props => {
   );
 };
 
-const BookViewListMobile: SFC<{ editBook: any }> = props => {
+const BookViewListMobile: SFC<{ editBook: any; booksUiState: any; dispatchBooksUiState: any; runDelete: any }> = props => {
   const { books } = useContext(BooksContext);
-  const [appState] = useContext(AppContext);
+  const [{ online, isPublic }] = useContext(AppContext);
+  const { booksUiState, dispatchBooksUiState, editBook, runDelete } = props;
 
   return (
     <div>
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className="list-group docked-to-panel">
           {books.map((book, i) => (
-            <BookViewListMobileItem online={appState.online} key={book._id} book={book} editBook={props.editBook} viewingPublic={appState.isPublic} />
+            <BookViewListMobileItem
+              key={book._id}
+              {...{ book, editBook, booksUiState, dispatchBooksUiState, online, runDelete }}
+              viewingPublic={isPublic}
+            />
           ))}
         </div>
       </div>

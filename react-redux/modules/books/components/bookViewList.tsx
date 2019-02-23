@@ -11,11 +11,12 @@ import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
+import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
 import { BooksContext, useBooks } from "../booksState";
-import { BookSearchState, useBooksSearchState, useCurrentSearch, useBookSearchUiView } from "../booksSearchState";
+import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
 
 import GridView from "./bookViewList-grid";
 const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"));
@@ -70,7 +71,7 @@ const BooksContexHolder = () => {
   );
 };
 
-const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {} };
+const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {}, deleting: {} };
 
 const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
 
@@ -90,6 +91,8 @@ function booksUiStateReducer(state, [action, payload = null]) {
       return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
     case "cancel-delete":
       return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, false) } };
+    case "delete":
+      return { ...state, deleting: { ...state.deleting, [payload]: true } };
     case "reset":
       return { ...initialBooksState };
     default:
@@ -97,7 +100,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
   }
 }
 
-const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
+const BookViewingList: SFC<{}> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
   const { books, booksLoading, currentQuery } = useContext(BooksContext);
@@ -126,12 +129,12 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
 
   const { runMutation, running } = useMutation(buildMutation(UpdateBookMutation));
   const { runMutation: setReadStatus } = useMutation(buildMutation(UpdateBooksReadMutation));
+  const { runMutation: deleteBook } = useMutation(buildMutation(DeleteBookMutation));
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
     Promise.resolve(runMutation({ _id: book._id, book: bookToUse })).then(resp => {
       stopEditingBook();
-      props.dispatch({ type: EDITING_BOOK_SAVED, book: resp.updateBook.Book });
     });
   };
 
@@ -140,6 +143,11 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
     Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
       dispatchBooksUiState(["read-saved", _ids]);
     });
+  };
+
+  const runDelete = _id => {
+    dispatchBooksUiState(["delete", _id]);
+    deleteBook({ _id });
   };
 
   let dragTitle = editingBook
@@ -169,13 +177,13 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
 
           {uiView.isGridView ? (
             <GridView
-              {...{ editBook, setRead, booksUiState, dispatchBooksUiState }}
+              {...{ editBook, setRead, booksUiState, dispatchBooksUiState, runDelete }}
               editBooksTags={editTagsForBook}
               editBooksSubjects={editSubjectsForBook}
             />
           ) : uiView.isBasicList ? (
             <Suspense fallback={<Loading />}>
-              <BasicListView editBook={editBook} />
+              <BasicListView {...{ booksUiState, dispatchBooksUiState, editBook, runDelete }} />
             </Suspense>
           ) : null}
         </div>
