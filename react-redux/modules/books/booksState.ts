@@ -9,6 +9,8 @@ import { TagsContext } from "./components/bookViewList";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHelpers";
 
+import delve from "dlv";
+
 const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 
@@ -87,20 +89,6 @@ export function booksReducer(state = initialBooksState, action): BooksState {
   return state as any;
 }
 
-function createBooksHash(booksArr) {
-  let result = {};
-  booksArr.forEach(book => {
-    if (!book.subjects) {
-      book.subjects = [];
-    }
-    if (!book.tags) {
-      book.tags = [];
-    }
-    result[book._id] = book;
-  });
-  return result;
-}
-
 graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
 
 export const useBooks = () => {
@@ -126,16 +114,16 @@ export const useBooks = () => {
   ];
   const { data, loading, loaded, currentQuery } = useQuery(buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation }));
 
-  const allBooksPacket = data && data.allBooks;
-  const Books = allBooksPacket && allBooksPacket.Books;
-  const booksHash = useMemo(() => (Books ? createBooksHash(data.allBooks.Books) : {}), [Books]);
+  const booksRaw = delve(data, "allBooks.Books") || null;
+  const books = adjustBooks(booksRaw);
+  const booksCount = delve(data, "allBooks.Meta.count") || null;
 
-  const resultsCount = allBooksPacket && allBooksPacket.Meta ? data.allBooks.Meta.count : -1;
+  const resultsCount = booksCount != null ? booksCount : -1;
   const totalPages = useMemo(() => (resultsCount && resultsCount > 0 ? Math.ceil(resultsCount / searchState.pageSize) : 0), [resultsCount]);
 
   return {
     currentQuery,
-    booksHash,
+    books,
     resultsCount,
     totalPages,
     booksLoading: loading
@@ -169,24 +157,25 @@ function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
   }, [bookSearchFilters, publicUserId]);
 }
 
-export const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, resultsCount: count });
+const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, resultsCount: count });
 export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 
-export const useBookList = () => {
-  let { subjectHash } = useContext(SubjectsContext);
-  let [{ tagHash }] = useContext(TagsContext);
-  let { booksHash, booksLoading } = useContext(BooksContext);
+const adjustBooks = books => {
+  let { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
+  let [{ tagHash, tagsLoaded }] = useContext(TagsContext);
 
   return useMemo(() => {
-    let books = Object.keys(booksHash).map(_id => ({ ...booksHash[_id] }));
-    books.forEach((b: IBookDisplay) => {
-      b.subjectObjects = (b.subjects || []).map(s => subjectHash[s]).filter(s => s);
-      b.tagObjects = (b.tags || []).map(s => tagHash[s]).filter(s => s);
-      b.authors = b.authors || [];
+    if (!subjectsLoaded || !tagsLoaded || !books) return [];
 
-      let d = new Date(+b.dateAdded);
-      b.dateAddedDisplay = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    return books.map((bookRaw: IBookDisplay) => {
+      let result = { ...bookRaw };
+      result.subjectObjects = (result.subjects || []).map(s => subjectHash[s]).filter(s => s);
+      result.tagObjects = (result.tags || []).map(s => tagHash[s]).filter(s => s);
+      result.authors = result.authors || [];
+
+      let d = new Date(+result.dateAdded);
+      result.dateAddedDisplay = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+      return result;
     });
-    return { booksList: books as IBookDisplay[], booksLoading };
-  }, [booksHash, booksLoading, subjectHash, tagHash]);
+  }, [books, subjectHash, tagHash, subjectsLoaded, tagsLoaded]);
 };

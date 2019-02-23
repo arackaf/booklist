@@ -1,7 +1,7 @@
 import React, { SFC, useContext } from "react";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import { useBookList } from "../booksState";
 import { AppContext } from "applicationRoot/renderUI";
+import { BooksContext } from "../booksState";
 
 const BookViewListMobileItem = props => {
   let { book, online } = props;
@@ -61,14 +61,14 @@ const BookViewListMobileItem = props => {
 };
 
 const BookViewListMobile: SFC<{ editBook: any }> = props => {
-  const booksState = useBookList();
+  const { books } = useContext(BooksContext);
   const [appState] = useContext(AppContext);
 
   return (
     <div>
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className="list-group docked-to-panel">
-          {booksState.booksList.map((book, i) => (
+          {books.map((book, i) => (
             <BookViewListMobileItem online={appState.online} key={book._id} book={book} editBook={props.editBook} viewingPublic={appState.isPublic} />
           ))}
         </div>
