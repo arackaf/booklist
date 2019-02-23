@@ -11,7 +11,6 @@ import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHel
 
 import delve from "dlv";
 
-const LOAD_BOOKS_RESULTS = "LOAD_BOOKS_RESULTS";
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 
 interface IEditorialReview {
@@ -59,14 +58,9 @@ export interface IBookDisplay extends IBookRaw {
   dateAddedDisplay: string;
 }
 
-const initialBooksState = {
-  selectedBooks: {} as { [s: string]: boolean },
-  resultsCount: 0,
-  reloadOnActivate: false
-};
-export type BooksState = typeof initialBooksState & { booksHash: any };
+export type BooksState = { booksHash: any };
 
-export function booksReducer(state = initialBooksState, action): BooksState {
+export function booksReducer(state = {}, action): BooksState {
   switch (action.type) {
     case SET_BOOKS_TAGS: {
       let remove = new Set<string>(action.remove);
@@ -116,7 +110,7 @@ export const useBooks = () => {
 
   const booksRaw = delve(data, "allBooks.Books") || null;
   const books = adjustBooks(booksRaw);
-  const booksCount = delve(data, "allBooks.Meta.count") || null;
+  const booksCount = loaded ? delve(data, "allBooks.Meta.count") || null : "";
 
   const resultsCount = booksCount != null ? booksCount : -1;
   const totalPages = useMemo(() => (resultsCount && resultsCount > 0 ? Math.ceil(resultsCount / searchState.pageSize) : 0), [resultsCount]);
@@ -157,7 +151,6 @@ function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
   }, [bookSearchFilters, publicUserId]);
 }
 
-const booksResults = (resp, count) => ({ type: LOAD_BOOKS_RESULTS, books: resp.results, resultsCount: count });
 export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 
 const adjustBooks = books => {
