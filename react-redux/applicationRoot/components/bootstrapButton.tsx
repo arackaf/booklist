@@ -26,11 +26,11 @@ export const BootstrapAnchorButton = props => (
 );
 
 export const AjaxButton = props => {
-  const controlled = useRef(props.running !== void 0);
-  const [isRunning, setRunning] = useState(controlled.current ? props.running : false);
+  const controlled = props.hasOwnProperty("running");
+  const [isRunning, setRunning] = useState(controlled ? props.running : false);
 
   const onClick = (...args) => {
-    if (controlled.current) {
+    if (controlled) {
       props.onClick(...args);
     } else {
       setRunning(true);
@@ -38,7 +38,7 @@ export const AjaxButton = props => {
     }
   };
 
-  let isRunningAdjusted = controlled.current ? props.running : isRunning;
+  let isRunningAdjusted = controlled ? props.running : isRunning;
 
   return isRunningAdjusted ? (
     <button className={cssFromPreset(props)} disabled={true}>
