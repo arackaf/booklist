@@ -14,7 +14,7 @@ import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 
 import { AppContext } from "applicationRoot/renderUI";
 import { TagsState, useTagsState } from "applicationRoot/tagsState";
-import { useBookList, BooksContext, useBooks } from "../booksState";
+import { BooksContext, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useCurrentSearch, useBookSearchUiView } from "../booksSearchState";
 
 import GridView from "./bookViewList-grid";
@@ -100,7 +100,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
 const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props => {
   let [tagsState, { loadTags }] = useContext(TagsContext);
   let [appState] = useContext(AppContext);
-  const { booksLoading, booksHash, currentQuery } = useContext(BooksContext);
+  const { books, booksLoading, currentQuery } = useContext(BooksContext);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
@@ -109,15 +109,13 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
     loadTags(appState);
   }, []);
 
-  const { booksList } = useBookList();
-
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
-  const editSubjectsForSelectedBooks = () => openBookSubModal(booksList.filter(b => booksUiState.selectedBooks[b._id]));
+  const editSubjectsForSelectedBooks = () => openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
 
   const [bookTagModifying, bookTagModalLoaded, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
   const editTagsForBook = book => openBookTagModal([book]);
-  const editTagsForSelectedBooks = () => openBookTagModal(booksList.filter(b => booksUiState.selectedBooks[b._id]));
+  const editTagsForSelectedBooks = () => openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
 
   const [tagEditModalOpen, tagEditModalLoaded, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, subjectEditModalLoaded, editSubjects, stopEditingSubjects] = useCodeSplitModal();
@@ -160,10 +158,10 @@ const BookViewingList: SFC<Partial<MutationType> & { dispatch?: any }> = props =
           editTags={editTags}
           editSubjects={editSubjects}
           beginEditFilters={beginEditFilters}
-          {...{ booksUiState, booksHash, setRead }}
+          {...{ booksUiState, setRead }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!booksList.length && !booksLoading ? (
+          {!books.length && !booksLoading ? (
             <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0 }}>
               No books found
             </div>

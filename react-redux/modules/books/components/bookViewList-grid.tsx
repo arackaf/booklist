@@ -4,7 +4,7 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { AppContext } from "applicationRoot/renderUI";
-import { useBookList, IBookDisplay, BooksContext } from "../booksState";
+import { IBookDisplay, BooksContext } from "../booksState";
 import { useCurrentSearch } from "../booksSearchState";
 
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
@@ -174,6 +174,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
   let backgroundColor = index % 2 ? "white" : "#f9f9f9";
 
   let [{ publicUserId }] = useContext(AppContext);
+
   let { loading, data } = useQuery(buildQuery(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 }));
 
   setDetailsLoading(loading);
@@ -183,8 +184,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
 
   let editorialReviews, similarBooks;
   if (data && data.getBook && data.getBook.Book) {
-    ({ editorialReviews, similarBooks } = data.getBook.Book.editorialReviews || []);
-    similarBooks = data.getBook.Book.similarBooks || [];
+    ({ editorialReviews, similarBooks } = data.getBook.Book);
   }
 
   return (
@@ -254,15 +254,15 @@ type BookViewListGridTypes = {
   dispatchBooksUiState: any;
 };
 
-const useBookSelection = (booksHash, selectedBooks) => {
+const useBookSelection = (books, selectedBooks) => {
   return useMemo(() => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
     return {
-      allAreChecked: Object.keys(booksHash).length == selectedIds,
+      allAreChecked: books.length == selectedIds,
       selectedBooksCount: selectedIds,
       selectedBookHash: selectedBooks
     };
-  }, [booksHash, selectedBooks]);
+  }, [books, selectedBooks]);
 };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
@@ -270,15 +270,14 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { selectedBooks } = booksUiState;
 
   const { setSortOrder } = {} as any;
-  const { booksHash } = useContext(BooksContext);
-  const { booksList } = useBookList();
-  const { allAreChecked } = useBookSelection(booksHash, selectedBooks);
+  const { books } = useContext(BooksContext);
+  const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
   const { runMutation: deleteBook } = useMutation(buildMutation(DeleteBookMutation));
 
   const toggleCheckAll = () => {
-    dispatchBooksUiState([allAreChecked ? "de-select" : "select", Object.keys(booksHash)]);
+    dispatchBooksUiState([allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
   };
 
   const setSort = column => {
@@ -297,7 +296,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
 
   return (
     <div style={{ minHeight: 400 }}>
-      {booksList.length ? (
+      {books.length ? (
         <div>
           <table style={{ position: "relative" }} className="table no-padding-top">
             <thead>
@@ -332,7 +331,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
               </tr>
             </thead>
             <tbody>
-              {booksList.map((book, index) => (
+              {books.map((book, index) => (
                 <BookRow
                   editBooksSubjects={editBooksSubjects}
                   editBooksTags={editBooksTags}
