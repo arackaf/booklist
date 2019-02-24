@@ -9,11 +9,10 @@ import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 import { SET_BOOKS_TAGS } from "../reducers/books/actionNames";
 import Modal from "applicationRoot/components/modal";
 import { TagsContext } from "./bookViewList";
-import { useSortedTags, filterTags } from "applicationRoot/tagsState";
+import { filterTags } from "applicationRoot/tagsState";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
-  const [{ tagHash }] = useContext(TagsContext);
-  const allTagsSorted = useSortedTags();
+  const { tagHash, tags } = useContext(TagsContext);
   const [currentTab, setTab] = useState("tags");
   const [addingTags, setAddingTags] = useState([]);
   const [removingTags, setRemovingTags] = useState([]);
@@ -61,13 +60,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
           <br />
           <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Adding"
-                items={allTagsSorted}
-                currentlySelected={addingTags}
-                onSelect={tagSelectedToAdd}
-                filter={filterTags}
-              />
+              <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
             </div>
             <div className="col-xs-9">
               <div>
@@ -95,7 +88,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Removing"
-                items={allTagsSorted}
+                items={tags}
                 currentlySelected={removingTags}
                 onSelect={tagSelectedToRemove}
                 filter={filterTags}
