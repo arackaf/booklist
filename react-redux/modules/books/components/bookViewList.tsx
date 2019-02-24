@@ -5,9 +5,7 @@ import BooksLoading from "./booksLoading";
 
 import Loading from "applicationRoot/components/loading";
 
-import { MutationType } from "reactStartup";
 import { useMutation, buildMutation } from "micro-graphql-react";
-import { EDITING_BOOK_SAVED } from "modules/books/reducers/books/actionNames";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
