@@ -155,7 +155,7 @@ export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 
 const adjustBooks = books => {
   let { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
-  let [{ tagHash, tagsLoaded }] = useContext(TagsContext);
+  let { tagHash, tagsLoaded } = useContext(TagsContext);
 
   return useMemo(() => {
     if (!subjectsLoaded || !tagsLoaded || !books) return [];

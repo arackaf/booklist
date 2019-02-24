@@ -88,7 +88,7 @@ export const useSelectedSubjects = () => {
 export const useSelectedTags = () => {
   const [{ hashFilters }] = useContext(BooksSearchContext);
   const { tags } = hashFilters;
-  const [{ tagHash }] = useContext(TagsContext);
+  const { tagHash } = useContext(TagsContext);
 
   return useMemo(() => projectSelectedItems(tags, tagHash), [tags, tagHash]);
 };

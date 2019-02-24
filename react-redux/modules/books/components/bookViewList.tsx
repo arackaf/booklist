@@ -42,7 +42,7 @@ const prepBookForSaving = book => {
 };
 
 export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
-export const TagsContext = createContext<[TagsState, any, any]>(null);
+export const TagsContext = createContext<TagsState>(null);
 
 export const BookModuleRoot = () => {
   let booksSearchState = useBooksSearchState();
@@ -101,16 +101,12 @@ function booksUiStateReducer(state, [action, payload = null]) {
 }
 
 const BookViewingList: SFC<{}> = props => {
-  let [tagsState, { loadTags }] = useContext(TagsContext);
+  let { tags } = useContext(TagsContext);
   let [appState] = useContext(AppContext);
   const { books, booksLoading, currentQuery } = useContext(BooksContext);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
-
-  useEffect(() => {
-    loadTags(appState);
-  }, []);
 
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);

@@ -1,95 +1,42 @@
-import { hashOf, objectsToHash, graphqlClient, getStatePacket, ITag } from "./rootReducer";
-import update from "immutability-helper";
+import { graphqlClient, ITag } from "./rootReducer";
 
 import GetTags from "graphQL/tags/getTags.graphql";
-import UpdateTag from "graphQL/tags/updateTag.graphql";
-import CreateTag from "graphQL/tags/createTag.graphql";
-import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
-import { AppState } from "./appState";
 import { useContext, useMemo } from "react";
-import { TagsContext } from "modules/books/components/bookViewList";
+import { buildQuery, useQuery } from "micro-graphql-react";
+import { AppContext } from "./renderUI";
 
-const LOAD_TAGS = "root.LOAD_TAGS";
-const LOAD_TAGS_RESULTS = "root.LOAD_TAGS_RESULTS";
-const UPDATE_TAG_RESULTS = "root.UPDATE_TAG_RESULTS";
-const TAG_DELETED = "root.TAG_DELETED";
+import delve from "dlv";
+import { syncUpdates, syncDeletes } from "./graphqlHelpers";
 
-const initialState = {
-  tagHash: hashOf<ITag>(),
-  tagsLoaded: false
-};
-
-export type TagsState = typeof initialState;
-
-export default function tagsReducer(state = initialState, action) {
-  switch (action.type) {
-    case LOAD_TAGS_RESULTS:
-      return { ...state, tagHash: objectsToHash(action.tags), tagsLoaded: true };
-    case UPDATE_TAG_RESULTS:
-      return { ...state, tagHash: { ...state.tagHash, ...objectsToHash([action.tag]) } };
-    case TAG_DELETED:
-      return update(state, { tagHash: { $unset: [action._id] } });
-  }
-
-  return state;
+export interface TagsState {
+  tagsLoaded: boolean;
+  tags: ITag[];
+  tagHash: any;
 }
 
-const loadTags = (app: AppState) => dispatch => {
-  let publicUserId = app.publicUserId;
+graphqlClient.subscribeMutation([
+  {
+    when: /(update|create)Tag/,
+    run: (op, res) => syncUpdates(GetTags, [(res.updateTag || res.createTag).Tag], "allTags", "Tags", { sort: tagsSort })
+  },
+  { when: /deleteTag/, run: (op, res, req) => syncDeletes(GetTags, [req._id], "allTags", "Tags", { sort: tagsSort }) }
+]);
 
-  dispatch({ type: LOAD_TAGS });
+export function useTagsState(): TagsState {
+  const [{ publicUserId }] = useContext(AppContext);
+  const req = { publicUserId: publicUserId || void 0 };
+  const { loaded, data } = useQuery(buildQuery(GetTags, req, { onMutation: { when: /(update|delete|create)Tag/, run: ({ refresh }) => refresh() } }));
 
-  graphqlClient.runQuery(GetTags, { publicUserId: publicUserId || void 0, cache: 5 }).then(({ data: { allTags } }) => {
-    dispatch({ type: LOAD_TAGS_RESULTS, tags: allTags.Tags });
-  });
-};
+  const tags = delve(data, "allTags.Tags") || [];
+  const tagHash = useMemo(() => (tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);
 
-function createOrUpdateTag(editingTag) {
-  return function(dispatch, getState) {
-    let { _id, name, backgroundColor, textColor } = editingTag;
-    let variables: any = { name, backgroundColor, textColor };
-    if (_id) {
-      variables._id = _id;
-    }
-    let promise: any = null;
-
-    if (_id) {
-      promise = graphqlClient.runMutation(UpdateTag, variables);
-    } else {
-      promise = graphqlClient.runMutation(CreateTag, variables);
-    }
-
-    promise.then(resp => {
-      dispatch({ type: UPDATE_TAG_RESULTS, tag: (resp.createTag || resp.updateTag).Tag });
-    });
-  };
+  return { tagsLoaded: loaded, tags, tagHash };
 }
 
-function deleteTag(_id) {
-  return function(dispatch, getState) {
-    graphqlClient.runMutation(DeleteTagMutation, { _id }).then(resp => {
-      dispatch({ type: TAG_DELETED, _id });
-    });
-  };
-}
-
-export function useTagsState(): [TagsState, any, any] {
-  let actions = { loadTags };
-  return getStatePacket<TagsState>(tagsReducer, initialState, actions);
-}
-
-function allTagssSorted(tagHash): ITag[] {
-  let tags = Object.keys(tagHash).map(_id => tagHash[_id]);
-  return tags.sort(({ name: name1 }, { name: name2 }) => {
-    let name1After = name1.toLowerCase() > name2.toLowerCase(),
-      bothEqual = name1.toLowerCase() === name2.toLowerCase();
-    return bothEqual ? 0 : name1After ? 1 : -1;
-  });
-}
-
-export const useSortedTags = () => {
-  let [{ tagHash }] = useContext(TagsContext);
-  return useMemo(() => allTagssSorted(tagHash), [tagHash]);
+const tagsSort = ({ name: name1 }, { name: name2 }) => {
+  let name1After = name1.toLowerCase() > name2.toLowerCase();
+  let bothEqual = name1.toLowerCase() === name2.toLowerCase();
+  return bothEqual ? 0 : name1After ? 1 : -1;
 };
 
 export const filterTags = (tags, search) => {

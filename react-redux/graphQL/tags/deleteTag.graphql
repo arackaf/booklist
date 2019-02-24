@@ -1,3 +1,5 @@
 mutation deleteTag($_id: String) {
-  deleteTag(_id: $_id)
+  deleteTag(_id: $_id) {
+    success
+  }
 }
