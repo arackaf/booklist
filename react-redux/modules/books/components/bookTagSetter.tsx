@@ -6,7 +6,6 @@ import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects"
 import { useMutation, buildMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
-import { SET_BOOKS_TAGS } from "../reducers/books/actionNames";
 import Modal from "applicationRoot/components/modal";
 import { TagsContext } from "./bookViewList";
 import { filterTags } from "applicationRoot/tagsState";
@@ -31,7 +30,6 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
   const setBooksTags = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingTags, remove: removingTags };
     Promise.resolve(runMutation(args)).then(() => {
-      //props.dispatch({ type: SET_BOOKS_TAGS, ...args });
       props.onDone();
     });
   };
