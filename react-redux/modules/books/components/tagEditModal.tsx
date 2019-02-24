@@ -1,10 +1,8 @@
-import React, { Component, FunctionComponent, useState, useContext } from "react";
-import { connect } from "react-redux";
+import React, { FunctionComponent, useState, useContext } from "react";
 
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
-import * as actionCreators from "applicationRoot/tags/actionCreators";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { selectEntireTagsState, filterTags } from "applicationRoot/rootReducer";
+import { filterTags } from "applicationRoot/rootReducer";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import Modal from "applicationRoot/components/modal";
@@ -83,6 +81,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   };
 
   let { tags } = useContext(TagsContext);
+
   let { colors } = useContext(ColorsContext);
   let { onDone, editModalOpen } = props;
   let { editingTag, editingTagName, tagSearch, deletingId, deleting } = state;
@@ -207,7 +206,4 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   );
 };
 
-export default connect(
-  selectEntireTagsState,
-  { ...actionCreators }
-)(TagEditModal);
+export default TagEditModal;
