@@ -6,11 +6,10 @@ import GetTags from "graphQL/tags/getTags.graphql";
 import UpdateTag from "graphQL/tags/updateTag.graphql";
 import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
-import { AppType } from "modules/books/reducers/reducer";
 
 export function loadTags() {
   return function(dispatch, getState) {
-    let app: AppType = getState().app;
+    let app: any = getState().app;
     let publicUserId = app.publicUserId;
 
     dispatch({ type: LOAD_TAGS });

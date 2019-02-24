@@ -18,7 +18,6 @@ import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import { AppType } from "modules/books/reducers/reducer";
 
 export const graphqlClient = new Client({
   endpoint: "/graphql",
@@ -56,7 +55,7 @@ export function loadSubjects() {
       return;
     }
     subjectsLoaded = true;
-    let app: AppType = getState().app;
+    let app: any = getState().app;
     let publicUserId = app.publicUserId;
     dispatch({ type: LOAD_SUBJECTS });
 
