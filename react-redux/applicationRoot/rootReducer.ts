@@ -8,6 +8,8 @@ export const graphqlClient = new Client({
   fetchOptions: { credentials: "include" }
 });
 
+export const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
+
 setDefaultClient(graphqlClient);
 
 export function isLoggedIn() {

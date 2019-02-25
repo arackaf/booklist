@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState, useContext } from "react";
+import React, { FunctionComponent, useRef, useState, useContext, useEffect } from "react";
 import { loadCurrentModule } from "reactStartup";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
@@ -12,7 +12,7 @@ const errorCodes = {
 };
 
 const Login: FunctionComponent<{}> = props => {
-  const [{}, { newLogin }] = useContext(AppContext);
+  const [{}, appActions] = useContext(AppContext);
   const usernameEl = useRef(null);
   const passwordEl = useRef(null);
   const rememberMeEl = useRef(null);
@@ -22,6 +22,11 @@ const Login: FunctionComponent<{}> = props => {
 
   const login = evt => {
     evt.preventDefault();
+    const [app, actions] = useContext(AppContext);
+
+    useEffect(() => {
+      loadCurrentModule(app, appActions);
+    }, [app.userId]);
 
     let username = usernameEl.current.value;
     let password = passwordEl.current.value;
@@ -31,10 +36,7 @@ const Login: FunctionComponent<{}> = props => {
     ajaxUtil.post(
       "/react-redux/login",
       { username, password, rememberme },
-      () => {
-        newLogin();
-        loadCurrentModule();
-      },
+      () => appActions.newLogin(),
       () => setState(state => ({ ...state, running: false, errorCode: "c2" }))
     );
   };

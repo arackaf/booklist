@@ -1,4 +1,4 @@
-import { objectsToHash, AppType, getStatePacket, graphqlClient } from "./rootReducer";
+import { objectsToHash, graphqlClient } from "./rootReducer";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";

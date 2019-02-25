@@ -2,7 +2,6 @@ import React, { FunctionComponent, useState, useContext } from "react";
 
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { filterTags } from "applicationRoot/rootReducer";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import Modal from "applicationRoot/components/modal";
@@ -14,6 +13,7 @@ import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { TagsContext } from "./bookViewList";
 import { ColorsContext } from "applicationRoot/renderUI";
+import { filterTags } from "applicationRoot/tagsState";
 
 interface ILocalProps {
   onDone: any;
