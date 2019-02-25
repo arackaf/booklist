@@ -5,10 +5,8 @@ import "@reach/dialog/styles.css";
 import "./styles.css";
 
 import "immutability-helper";
-import { Client, setDefaultClient } from "micro-graphql-react";
 
 import { renderUI } from "applicationRoot/renderUI";
-import { store, getNewReducer } from "applicationRoot/store";
 import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
@@ -29,11 +27,6 @@ setupServiceWorker();
 let currentModule;
 let publicUserCache = {};
 
-if (isLoggedIn().logged_in) {
-  store.dispatch(loadSubjects());
-  store.dispatch(loadTags());
-}
-
 export const history = createHistory();
 
 const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings"]);
@@ -46,6 +39,7 @@ export function loadCurrentModule() {
   loadModule(history.location);
 }
 
+//TODO:
 window.addEventListener("offline", () => store.dispatch({ type: IS_OFFLINE }));
 window.addEventListener("online", () => store.dispatch({ type: IS_ONLINE }));
 
@@ -120,17 +114,12 @@ function loadModule(location) {
     .then(([{ default: moduleObject }, publicUserInfo]: [any, any]) => {
       if (currentModule != module) return;
 
-      let priorState = store.getState();
       store.dispatch(setModule(currentModule));
 
       if (publicUserInfo) {
         store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
         store.dispatch(loadSubjects());
         store.dispatch(loadTags());
-      }
-
-      if (moduleObject.reducer) {
-        getNewReducer({ name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize, priorState });
       }
       renderUI(createElement(moduleObject.component));
     })

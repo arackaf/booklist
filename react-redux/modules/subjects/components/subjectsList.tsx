@@ -5,7 +5,6 @@ import HTML5Backend from "react-dnd-html5-backend";
 import BootstrapButton from "applicationRoot/components/bootstrapButton";
 import ColorsPalette from "applicationRoot/components/colorsPalette";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { store } from "applicationRoot/store";
 import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations } from "applicationRoot/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
@@ -194,7 +193,7 @@ const SubjectDisplayContent = DragSource(
 });
 
 const DefaultSubjectDisplay = props => {
-  const [{ online }] = useContext(AppContext);
+  const [{ online, isTouch }] = useContext(AppContext);
   const { connectDropTarget, connectDragSource, isSubjectSaving, isSubjectSaved, className, subject, noDrop } = props;
 
   const { _id, name, backgroundColor, textColor } = subject;
@@ -397,10 +396,8 @@ const SubjectList = props => {
   );
 };
 
-let isTouch = (store.getState() as any).app.isTouch;
-
 const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
-  const [{ online }] = useContext(AppContext);
+  const [{ online, isTouch }] = useContext(AppContext);
   const [{}, { addNewSubject }] = useContext(SubjectsDnDContext);
   const pendingSubjectsLookup = usePendingSubjects();
   let rootPendingSubjects = pendingSubjectsLookup["root"] || [];

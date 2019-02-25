@@ -84,9 +84,11 @@ const requestMobile = () => dispatch => {
   dispatch({ type: REQUEST_MOBILE });
 };
 
+const newLogin = () => ({ type: NEW_LOGIN });
+
 const setModule = module => ({ type: SET_MODULE, module });
 
 export function useAppState(): [AppState, any, any] {
-  let actions = { requestDesktop, requestMobile, setModule };
+  let actions = { requestDesktop, requestMobile, setModule, newLogin };
   return getStatePacket<AppState>(appReducer, initialState, actions);
 }
