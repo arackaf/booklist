@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { findDOMNode, render } from "react-dom";
 
 import select from "d3-selection/src/select";

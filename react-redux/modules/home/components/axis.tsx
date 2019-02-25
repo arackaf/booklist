@@ -1,5 +1,4 @@
-import React, { Component, PureComponent } from "react";
-import { findDOMNode, render } from "react-dom";
+import React, { Component } from "react";
 
 import { axisBottom } from "d3-axis";
 import select from "d3-selection/src/select";

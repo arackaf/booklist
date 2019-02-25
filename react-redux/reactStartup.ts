@@ -4,73 +4,68 @@ import "simple-react-bootstrap/simple-react-bootstrap-styles.css";
 import "@reach/dialog/styles.css";
 import "./styles.css";
 
-import "immutability-helper";
-import { Client, setDefaultClient } from "micro-graphql-react";
-
-import { renderUI, clearUI } from "applicationRoot/renderUI";
-import { store, getNewReducer } from "applicationRoot/store";
+import { renderUI } from "applicationRoot/renderUI";
 import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
 
-const graphqlClient = new Client({
-  endpoint: "/graphql",
-  fetchOptions: { credentials: "include" }
-});
-setDefaultClient(graphqlClient);
-
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
-import { setModule, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
-import { IS_OFFLINE, IS_ONLINE } from "applicationRoot/rootReducerActionNames";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
-import { loadTags } from "applicationRoot/tags/actionCreators";
 import setupServiceWorker from "./util/setupServiceWorker";
-import { isLoggedIn } from "applicationRoot/rootReducer";
+import { isLoggedIn, graphqlClient } from "applicationRoot/rootReducer";
+import { AppState } from "applicationRoot/appState";
 
 setupServiceWorker();
 
 let currentModule;
 let publicUserCache = {};
 
-if (isLoggedIn().logged_in) {
-  store.dispatch(loadTags());
-  store.dispatch(loadSubjects());
-}
-
 export const history = createHistory();
 
 const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings"]);
 let initial = true;
 
-history.listen(location => loadModule(location));
-loadCurrentModule();
+export const getModulePromise = moduleToLoad => {
+  switch (moduleToLoad.toLowerCase()) {
+    case "activate":
+      return import(/* webpackChunkName: "small-modules" */ "./modules/activate/activate");
+    case "authenticate":
+      return import(/* webpackChunkName: "small-modules" */ "./modules/authenticate/authenticate");
+    case "books":
+      return import(/* webpackChunkName: "books-module" */ "./modules/books/books");
+    case "home":
+      return import(/* webpackChunkName: "home-module" */ "./modules/home/home");
+    case "scan":
+      return import(/* webpackChunkName: "scan-module" */ "./modules/scan/scan");
+    case "subjects":
+      return import(/* webpackChunkName: "subject-module" */ "./modules/subjects/subjects");
+    case "settings":
+      return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
+  }
+};
 
-export function loadCurrentModule() {
-  loadModule(history.location);
-}
+renderUI();
 
-window.addEventListener("offline", () => store.dispatch({ type: IS_OFFLINE }));
-window.addEventListener("online", () => store.dispatch({ type: IS_ONLINE }));
-
-function loadModule(location) {
+export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
+  let location = history.location;
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
-  let module = originalModule || "home";
-  let publicModule = module === "view" || module == "activate";
+  let moduleToLoad = originalModule || "home";
+  let publicModule = moduleToLoad === "view" || moduleToLoad == "activate";
 
   let { logged_in, userId: currentUserId } = isLoggedIn();
   let loggedIn = logged_in && currentUserId;
 
   if (!loggedIn && !publicModule) {
-    if (originalModule && module != "home") {
-      module = "authenticate";
+    if (originalModule && moduleToLoad != "home") {
+      moduleToLoad = "authenticate";
     } else {
-      module = "home";
+      moduleToLoad = "home";
     }
   } else {
-    if (!validModules.has(module)) {
+    if (!validModules.has(moduleToLoad)) {
       history.push("/books");
       return;
     }
@@ -80,17 +75,17 @@ function loadModule(location) {
     var userId = getCurrentHistoryState().searchState.userId;
 
     //switching to a new public viewing - reload page
-    if (!initial && (store.getState() as any).app.publicUserId != userId) {
+    if (!initial && app.publicUserId != userId) {
       window.location.reload();
       return;
     }
 
     var publicUserPromise = userId ? publicUserCache[userId] || (publicUserCache[userId] = fetchPublicUserInfo(userId)) : null;
 
-    if (module === "view") {
-      module = "books";
+    if (moduleToLoad === "view") {
+      moduleToLoad = "books";
     }
-  } else if ((store.getState() as any).app.publicUserId) {
+  } else if (app.publicUserId) {
     //leaving public viewing - reload page
     window.location.reload();
     return;
@@ -98,45 +93,21 @@ function loadModule(location) {
 
   initial = false;
 
-  if (module === currentModule) {
+  if (moduleToLoad === currentModule) {
     return;
   }
-  currentModule = module;
+  currentModule = moduleToLoad;
 
-  let modulePromise = (() => {
-    switch (module.toLowerCase()) {
-      case "activate":
-        return import(/* webpackChunkName: "small-modules" */ "./modules/activate/activate");
-      case "authenticate":
-        return import(/* webpackChunkName: "small-modules" */ "./modules/authenticate/authenticate");
-      case "books":
-        return import(/* webpackChunkName: "books-module" */ "./modules/books/books");
-      case "home":
-        return import(/* webpackChunkName: "home-module" */ "./modules/home/home");
-      case "scan":
-        return import(/* webpackChunkName: "scan-module" */ "./modules/scan/scan");
-      case "subjects":
-        return import(/* webpackChunkName: "subject-module" */ "./modules/subjects/subjects");
-      case "settings":
-        return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
-    }
-  })();
+  let modulePromise = getModulePromise(moduleToLoad);
 
   Promise.all([modulePromise, publicUserPromise])
-    .then(([{ default: moduleObject }, publicUserInfo]) => {
-      if (currentModule != module) return;
+    .then(([{ default: moduleObject }, publicUserInfo]: [any, any]) => {
+      if (currentModule != moduleToLoad) return;
 
-      let priorState = store.getState();
-      store.dispatch(setModule(currentModule));
+      setModule(currentModule);
 
       if (publicUserInfo) {
-        store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
-        store.dispatch(loadTags());
-        store.dispatch(loadSubjects());
-      }
-
-      if (moduleObject.reducer) {
-        getNewReducer({ name: module, reducer: moduleObject.reducer, initialize: moduleObject.initialize, priorState });
+        setPublicInfo({ ...publicUserInfo, userId });
       }
       renderUI(createElement(moduleObject.component));
     })

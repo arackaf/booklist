@@ -1,78 +1,85 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import * as actionCreators from "../../reducers/passwordReset/actionCreators";
+import React, { Component, useState, useRef } from "react";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import ajaxUtil from "util/ajaxUtil";
 
-@connect(
-  null,
-  { ...actionCreators }
-)
-export default class PublicUserSettings extends Component<typeof actionCreators, any> {
-  newPasswordEl: any;
-  confirmPasswordEl: any;
-  currentPasswordEl: any;
-  state = { saving: false, mismatch: false, wrongPassword: false, saved: false };
+const exectueResetPassword = (oldPassword, newPassword) => {
+  return ajaxUtil.post("/react-redux/resetPassword", { oldPassword, newPassword }, resp => {});
+};
 
-  resetPassword = () => {
-    if (this.newPasswordEl.value != this.confirmPasswordEl.value) {
-      this.setState({ mismatch: true });
+const PublicUserSettings = props => {
+  const newPasswordEl = useRef(null);
+  const confirmPasswordEl = useRef(null);
+  const currentPasswordEl = useRef(null);
+  const [saving, setSaving] = useState(false);
+  const [mismatch, setMismatch] = useState(false);
+  const [wrongPassword, setWrongPassword] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const resetPassword = () => {
+    if (newPasswordEl.current.value != confirmPasswordEl.current.value) {
+      setMismatch(true);
       return;
     }
-    this.setState({ mismatch: false, saving: true, wrongPassword: false });
-    Promise.resolve(this.props.resetPassword(this.currentPasswordEl.value, this.newPasswordEl.value)).then((res: any) => {
+
+    setMismatch(false);
+    setSaving(true);
+    setWrongPassword(false);
+
+    Promise.resolve(exectueResetPassword(currentPasswordEl.current.value, newPasswordEl.current.value)).then((res: any) => {
       if (res.error == 1) {
-        this.setState({ wrongPassword: true });
+        setWrongPassword(true);
       } else if (res.success) {
-        this.setState({ saved: true });
-        setTimeout(() => this.setState({ saved: false }), 2000);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
       }
-      this.setState({ saving: false });
+      setSaving(false);
     });
   };
-  render() {
-    return (
-      <div className="row" style={{ position: "relative" }}>
-        <div className="col-md-6 col-sm-12">
-          <div style={{ padding: "10px" }}>
-            <h2>Reset your password</h2>
-            <div>
-              <div className="form-group">
-                <label htmlFor="existingPasswordInput">Current password</label>
-                <input ref={el => (this.currentPasswordEl = el)} type="password" className="form-control" id="existingPasswordInput" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="newPasswordInput">New password</label>
-                <input ref={el => (this.newPasswordEl = el)} type="password" className="form-control" id="newPasswordInput" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
-                <input ref={el => (this.confirmPasswordEl = el)} type="password" className="form-control" id="confirmNewPasswordInput" />
-              </div>
+
+  return (
+    <div className="row" style={{ position: "relative" }}>
+      <div className="col-md-6 col-sm-12">
+        <div style={{ padding: "10px" }}>
+          <h2>Reset your password</h2>
+          <div>
+            <div className="form-group">
+              <label htmlFor="existingPasswordInput">Current password</label>
+              <input ref={currentPasswordEl} type="password" className="form-control" id="existingPasswordInput" />
             </div>
-            <AjaxButton onClick={this.resetPassword} disabled={this.state.saved} running={this.state.saving} runningText="Saving" preset="primary">
-              Save
-            </AjaxButton>
-            {this.state.mismatch ? (
-              <div>
-                <br />
-                <div className="alert alert-danger">Passwords must match</div>
-              </div>
-            ) : null}
-            {this.state.wrongPassword ? (
-              <div>
-                <br />
-                <div className="alert alert-danger">Your existing password does not match</div>
-              </div>
-            ) : null}
-            {this.state.saved ? (
-              <div>
-                <br />
-                <div className="alert alert-success">Your password has been updated</div>
-              </div>
-            ) : null}
+            <div className="form-group">
+              <label htmlFor="newPasswordInput">New password</label>
+              <input ref={newPasswordEl} type="password" className="form-control" id="newPasswordInput" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
+              <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
+            </div>
           </div>
+          <AjaxButton onClick={resetPassword} disabled={saved} running={saving} runningText="Saving" preset="primary">
+            Save
+          </AjaxButton>
+          {mismatch ? (
+            <div>
+              <br />
+              <div className="alert alert-danger">Passwords must match</div>
+            </div>
+          ) : null}
+          {wrongPassword ? (
+            <div>
+              <br />
+              <div className="alert alert-danger">Your existing password does not match</div>
+            </div>
+          ) : null}
+          {saved ? (
+            <div>
+              <br />
+              <div className="alert alert-success">Your password has been updated</div>
+            </div>
+          ) : null}
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default PublicUserSettings;
