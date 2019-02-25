@@ -8,9 +8,8 @@ import max from "d3-array/src/max";
 import Bar from "./bar";
 import Axis from "./axis";
 
-import { getChildSubjectsSorted, computeSubjectParentId, RootApplicationType } from "applicationRoot/rootReducer";
 import barCharQuery from "graphQL/home/barChart.graphql";
-import { graphqlClient } from "applicationRoot/rootReducerActionCreators";
+import { graphqlClient } from "applicationRoot/rootReducer";
 
 function getSubjectsList(subjectIds) {
   return graphqlClient.runQuery(barCharQuery, { subjectIds, searchChildSubjects: true });
