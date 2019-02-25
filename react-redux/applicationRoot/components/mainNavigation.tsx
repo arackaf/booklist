@@ -83,7 +83,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
         </ul>
         {isLoggedIn ? (
           <ul className={"nav navbar-nav pull-right"}>
-            <NavBarItem className="pull-right" onClick={this.logout}>
+            <NavBarItem className="pull-right" onClick={logout}>
               <span className="hidden-xs">Logout</span>
               <i className="visible-xs fal fa-sign-out" />
             </NavBarItem>

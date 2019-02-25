@@ -47,6 +47,8 @@ export const getModulePromise = moduleToLoad => {
   }
 };
 
+renderUI();
+
 export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   let location = history.location;
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();

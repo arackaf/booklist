@@ -19,14 +19,13 @@ const Login: FunctionComponent<{}> = props => {
   const confirmPasswordEl = useRef(null);
 
   const [state, setState] = useState({ newUser: false, errorCode: null, pendingActivation: false, invalidEmail: false, running: false });
+  const [app, actions] = useContext(AppContext);
+  useEffect(() => {
+    loadCurrentModule(app, appActions);
+  }, [app.userId]);
 
   const login = evt => {
     evt.preventDefault();
-    const [app, actions] = useContext(AppContext);
-
-    useEffect(() => {
-      loadCurrentModule(app, appActions);
-    }, [app.userId]);
 
     let username = usernameEl.current.value;
     let password = passwordEl.current.value;
@@ -93,7 +92,7 @@ const Login: FunctionComponent<{}> = props => {
               <form>
                 <div className="form-group">
                   <label htmlFor="username">Email address</label>
-                  <input className="form-control" ref="username" id="username" />
+                  <input className="form-control" ref={usernameEl} id="username" />
 
                   {state.newUser ? (
                     <div className="alert alert-info margin-top">
@@ -106,19 +105,19 @@ const Login: FunctionComponent<{}> = props => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
-                  <input className="form-control" ref="password" id="password" type="password" />
+                  <input className="form-control" ref={passwordEl} id="password" type="password" />
                 </div>
 
                 {state.newUser ? (
                   <div className="form-group">
                     <label htmlFor="password">Confirm password</label>
-                    <input className="form-control" ref="confirmPassword" type="password" />
+                    <input className="form-control" ref={confirmPasswordEl} type="password" />
                   </div>
                 ) : null}
 
                 <div className="checkbox">
                   <label>
-                    <input type="checkbox" ref="rememberme" /> Remember me
+                    <input type="checkbox" ref={rememberMeEl} /> Remember me
                   </label>
                 </div>
                 {state.newUser ? (

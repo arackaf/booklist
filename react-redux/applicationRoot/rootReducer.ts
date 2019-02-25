@@ -1,4 +1,3 @@
-import { createSelector } from "reselect";
 import { useMemo, useReducer } from "react";
 
 import { setDefaultClient, Client } from "micro-graphql-react";
