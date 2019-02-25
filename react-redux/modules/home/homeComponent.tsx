@@ -7,7 +7,7 @@ import { topLevelSubjectsSortedSelector, RootApplicationType, selectLoggedIn } f
 
 import BarChart from "./components/barChart";
 import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
-import RecommendMain from "./components/recommend/main";
+//import RecommendMain from "./components/recommend/main";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
@@ -84,7 +84,8 @@ class HomeIfLoggedIn extends Component<any, any> {
             </Measure>
           </Tab>
           <Tab name="search" caption="Discover books">
-            <RecommendMain />
+            {/* <RecommendMain /> */}
+            <h2>Returning soon ...</h2>
           </Tab>
         </Tabs>
       </MainHomePane>
