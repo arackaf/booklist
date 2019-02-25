@@ -13,14 +13,11 @@ import getPublicUser from "graphQL/getPublicUser.graphql";
 
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
-import { setModule, setPublicInfo, loadSubjects } from "./applicationRoot/rootReducerActionCreators";
-import { IS_OFFLINE, IS_ONLINE } from "applicationRoot/rootReducerActionNames";
 import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import setupServiceWorker from "./util/setupServiceWorker";
 import { isLoggedIn, graphqlClient } from "applicationRoot/rootReducer";
-import { loadTags } from "applicationRoot/tags/actionCreators";
 
 setupServiceWorker();
 
@@ -118,8 +115,6 @@ function loadModule(location) {
 
       if (publicUserInfo) {
         store.dispatch(setPublicInfo({ ...publicUserInfo, userId }));
-        store.dispatch(loadSubjects());
-        store.dispatch(loadTags());
       }
       renderUI(createElement(moduleObject.component));
     })
