@@ -1,5 +1,5 @@
-mutation updateBooksRead($_ids: [String], $updates: BookMutationInput) {
-  updateBooks(_ids: $_ids, Updates: $updates) {
+mutation updateBooksRead($_ids: [String], $isRead: Boolean) {
+  updateBooks(_ids: $_ids, Updates: { isRead: $isRead }) {
     success
     Books {
       _id

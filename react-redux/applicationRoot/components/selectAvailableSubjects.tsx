@@ -1,22 +1,19 @@
-import React, { Component } from "react";
+import React, { FunctionComponent } from "react";
 import SelectAvailableItems from "./availableTagsOrSubjects";
-import { filterTags, selectStackedSubjects } from "../rootReducer";
-import { connect } from "react-redux";
+import { filterTags } from "applicationRoot/tagsState";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 
-class SelectAvailableSubjects extends Component<Partial<LocalProps & ReturnType<typeof selectStackedSubjects>>, never> {
-  render() {
-    return (
-      <SelectAvailableItems
-        placeholder="Subjects"
-        items={this.props.subjectsUnwound}
-        currentlySelected={this.props.currentlySelected}
-        onSelect={this.props.onSelect}
-        filter={filterTags}
-      />
-    );
-  }
-}
+const SelectAvailableSubjects: FunctionComponent<LocalProps> = props => {
+  return (
+    <SelectAvailableItems
+      placeholder="Subjects"
+      items={this.props.subjectsUnwound}
+      currentlySelected={this.props.currentlySelected}
+      onSelect={this.props.onSelect}
+      filter={filterTags}
+    />
+  );
+};
 
-export default connect(selectStackedSubjects)(SelectAvailableSubjects);
+export default SelectAvailableSubjects;

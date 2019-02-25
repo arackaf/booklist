@@ -1,21 +1,10 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import SearchModal from "./searchModal";
-import { selectSelectedBooks, selectRecommendations } from "../../reducers/recommend/reducer";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { ISearchBookRaw } from "../../reducers/reducer";
-import { removeSelectedBook } from "../../reducers/search/actionCreators";
-import { findRecommendations } from "../../reducers/recommend/actionCreators";
-import { combineSelectors } from "applicationRoot/rootReducer";
+import { ISearchBookRaw } from "modules/home/searchState";
 
-const mainSelector = combineSelectors(selectSelectedBooks, selectRecommendations);
-
-@connect(
-  mainSelector,
-  { findRecommendations }
-)
-export default class RecommendationList extends Component<Partial<ReturnType<typeof mainSelector> & { findRecommendations: any }>, any> {
+export default class RecommendationList extends Component<any, any> {
   state = { searchModalOpen: false };
   closeModal = () => this.setState({ searchModalOpen: false });
   openModal = () => this.setState({ searchModalOpen: true });
@@ -77,10 +66,6 @@ export default class RecommendationList extends Component<Partial<ReturnType<typ
   }
 }
 
-@connect(
-  null,
-  { removeSelectedBook }
-)
 class DisplayBook extends Component<{ book: ISearchBookRaw; selectBookToSearchRecommendationsFor?: any; removeSelectedBook?: any }, any> {
   removeBook = () => this.props.removeSelectedBook(this.props.book);
   render() {

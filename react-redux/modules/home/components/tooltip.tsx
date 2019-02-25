@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from "react";
+import React, { PureComponent } from "react";
 
 export default class Tooltip extends PureComponent<any, any> {
   render() {

@@ -17,15 +17,16 @@ class CustomColorPicker extends Component<any, any> {
   get styleElementId() {
     return `${this.uniqueId}_style`;
   }
+  onColorChosen: any;
   componentDidMount() {
-    let onColorChosen = this.props.onColorChosen;
+    let inst = this;
 
     this._colorChosen = function() {
       let hexColor = this.rgb
         .map(n => (~~n).toString(16))
         .map(n => (n.length == 1 ? `0${n}` : n))
         .join("");
-      onColorChosen("#" + hexColor);
+      inst.props.onColorChosen("#" + hexColor);
     };
     this.jscolorInstance = new jscolor(this.rootElement, {
       valueElement: this.valueElementId,
@@ -33,11 +34,10 @@ class CustomColorPicker extends Component<any, any> {
       onFineChange: this._colorChosen
     });
   }
-  shouldComponentUpdate(props) {
-    if (props.currentColor) {
-      this.jscolorInstance.fromString(props.currentColor);
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.currentColor) {
+      this.jscolorInstance.fromString(this.props.currentColor);
     }
-    return false;
   }
   render() {
     return (
