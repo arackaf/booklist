@@ -1,4 +1,4 @@
-import { graphqlClient, ITag } from "./rootReducer";
+import { graphqlClient } from "./rootReducer";
 
 import GetTags from "graphQL/tags/getTags.graphql";
 import { useContext, useMemo } from "react";
@@ -7,6 +7,11 @@ import { AppContext } from "./renderUI";
 
 import delve from "dlv";
 import { syncUpdates, syncDeletes } from "./graphqlHelpers";
+
+interface ITag {
+  _id: string;
+  name: string;
+}
 
 export interface TagsState {
   tagsLoaded: boolean;

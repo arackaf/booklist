@@ -16,16 +16,16 @@ if (!!localStorage.getItem("useDesktop")) {
   Object.assign(uiSettings, { showingDesktop: true, showingMobile: false });
 }
 
-export const REQUEST_DESKTOP = "root.REQUEST_DESKTOP";
-export const REQUEST_MOBILE = "root.REQUEST_MOBILE";
+const REQUEST_DESKTOP = "root.REQUEST_DESKTOP";
+const REQUEST_MOBILE = "root.REQUEST_MOBILE";
 
-export const SET_PUBLIC_INFO = "root.SET_PUBLIC_INFO";
-export const RESET_PUBLIC_INFO = "root.RESET_PUBLIC_INFO";
-export const SET_MODULE = "root.SET_MODULE";
-export const NEW_LOGIN = "root.NEW_LOGIN";
+const SET_PUBLIC_INFO = "root.SET_PUBLIC_INFO";
+const RESET_PUBLIC_INFO = "root.RESET_PUBLIC_INFO";
+const SET_MODULE = "root.SET_MODULE";
+const NEW_LOGIN = "root.NEW_LOGIN";
 
-export const IS_OFFLINE = "root.IS_OFFLINE";
-export const IS_ONLINE = "root.IS_ONLINE";
+const IS_OFFLINE = "root.IS_OFFLINE";
+const IS_ONLINE = "root.IS_ONLINE";
 
 const initialState = {
   ...uiSettings,
@@ -84,11 +84,14 @@ const requestMobile = () => dispatch => {
   dispatch({ type: REQUEST_MOBILE });
 };
 
-const newLogin = () => ({ type: NEW_LOGIN });
+const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 
+const newLogin = () => ({ type: NEW_LOGIN });
 const setModule = module => ({ type: SET_MODULE, module });
+const isOnline = () => ({ type: IS_ONLINE });
+const isOffline = () => ({ type: IS_OFFLINE });
 
 export function useAppState(): [AppState, any, any] {
-  let actions = { requestDesktop, requestMobile, setModule, newLogin };
+  let actions = { requestDesktop, requestMobile, setModule, newLogin, isOffline, isOnline, setPublicInfo };
   return getStatePacket<AppState>(appReducer, initialState, actions);
 }

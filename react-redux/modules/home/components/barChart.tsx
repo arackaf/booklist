@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import { connect } from "react-redux";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -10,15 +9,12 @@ import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
 import { graphqlClient } from "applicationRoot/rootReducer";
+import { computeSubjectParentId, getChildSubjectsSorted } from "applicationRoot/subjectsState";
 
 function getSubjectsList(subjectIds) {
   return graphqlClient.runQuery(barCharQuery, { subjectIds, searchChildSubjects: true });
 }
 
-@connect((state: RootApplicationType) => ({
-  subjectHash: state.app.subjectHash,
-  subjectsLoaded: state.app.subjectsLoaded
-}))
 export default class BarChart extends PureComponent<any, any> {
   constructor(props) {
     super(props);

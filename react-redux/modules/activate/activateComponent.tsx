@@ -1,7 +1,6 @@
 import { history, getCurrentHistoryState } from "reactStartup";
-import React, { Component, SFC } from "react";
-import { isLoggedIn, selectLoggedIn } from "applicationRoot/rootReducer";
-import { connect } from "react-redux";
+import React, { Component, SFC, useContext } from "react";
+import { AppContext } from "applicationRoot/renderUI";
 
 const MainActivatePane = props => (
   <div className="row" style={{ margin: 0 }}>
@@ -49,8 +48,9 @@ const ActivateIfNotLoggedIn = props => {
   );
 };
 
-const ActivationComponent: SFC<ReturnType<typeof selectLoggedIn>> = props => (
-  <div>{props.isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</div>
-);
+const ActivationComponent: SFC<{}> = props => {
+  const [{ isLoggedIn }] = useContext(AppContext);
+  return <div>{isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</div>;
+};
 
-export default connect(selectLoggedIn)(ActivationComponent);
+export default ActivationComponent;

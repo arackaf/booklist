@@ -1,12 +1,11 @@
-import React, { Component, SFC } from "react";
-import { connect } from "react-redux";
+import React, { FunctionComponent, useContext, useState, useEffect } from "react";
 import Measure from "react-measure";
 import "d3-transition";
 
-import { topLevelSubjectsSortedSelector, RootApplicationType, selectLoggedIn } from "applicationRoot/rootReducer";
-
 import BarChart from "./components/barChart";
 import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
+import { AppContext, SubjectsContext } from "applicationRoot/renderUI";
+import { useStackedSubjects } from "applicationRoot/subjectsState";
 //import RecommendMain from "./components/recommend/main";
 
 const MainHomePane = props => (
@@ -23,75 +22,74 @@ const MainHomePane = props => (
 
 const MAX_CHART_WIDTH = 1100;
 
-@connect((state: RootApplicationType) => ({
-  subjects: topLevelSubjectsSortedSelector(state),
-  subjectHash: state.app.subjectHash,
-  subjectsLoaded: state.app.subjectsLoaded
-}))
-class HomeIfLoggedIn extends Component<any, any> {
-  state = { chartPackets: [], chartWidth: MAX_CHART_WIDTH };
-  componentDidMount() {
-    if (this.props.subjectsLoaded) {
-      this.getTopChart();
+const HomeIfLoggedIn: FunctionComponent<{}> = props => {
+  const [state, setState] = useState({ chartPackets: [], chartWidth: MAX_CHART_WIDTH });
+  const { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
+  const { subjects } = useStackedSubjects();
+
+  useEffect(() => {
+    if (subjectsLoaded) {
+      getTopChart();
     }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (!prevProps.subjectsLoaded && this.props.subjectsLoaded) {
-      this.getTopChart();
-    }
-  }
-  getTopChart = () => {
-    this.setState({ chartPackets: [{ subjects: this.props.subjects, header: "All books" }] });
+  }, [subjectsLoaded]);
+
+  const getTopChart = () => {
+    setState({ ...state, chartPackets: [{ subjects: subjects, header: "All books" }] });
   };
-  getDrilldownChart = (index, subjects, header) => {
-    this.setState({ chartPackets: [...this.state.chartPackets.slice(0, index + 1), { subjects, header }] });
+  const getDrilldownChart = (index, subjects, header) => {
+    setState({ ...state, chartPackets: [...state.chartPackets.slice(0, index + 1), { subjects, header }] });
   };
 
-  render() {
-    let { subjectsLoaded, subjectHash } = this.props;
-    let { chartPackets } = this.state;
-    return (
-      <MainHomePane>
-        <Tabs defaultTab="vis">
-          <Tab
-            name="vis"
-            caption={
-              <span>
-                <i className="far fa-chart-bar" /> View
-              </span>
-            }
+  const { chartPackets } = state;
+  return (
+    <MainHomePane>
+      <Tabs defaultTab="vis">
+        <Tab
+          name="vis"
+          caption={
+            <span>
+              <i className="far fa-chart-bar" /> View
+            </span>
+          }
+        >
+          <br />
+          <Measure
+            client
+            onResize={({ client }) => {
+              if (client.width != state.chartWidth && client.width <= MAX_CHART_WIDTH) {
+                setState({ ...state, chartWidth: client.width });
+              }
+            }}
           >
-            <br />
-            <Measure
-              client
-              onResize={({ client }) => {
-                if (client.width != this.state.chartWidth && client.width <= MAX_CHART_WIDTH) {
-                  this.setState({ chartWidth: client.width });
-                }
-              }}
-            >
-              {({ measureRef }) => (
-                <div ref={measureRef}>
-                  Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
-                  <hr />
-                  {subjectsLoaded
-                    ? chartPackets.map((packet, i) => (
-                        <BarChart key={i} {...packet} drilldown={this.getDrilldownChart} chartIndex={i} width={this.state.chartWidth} height={600} />
-                      ))
-                    : null}
-                </div>
-              )}
-            </Measure>
-          </Tab>
-          <Tab name="search" caption="Discover books">
-            {/* <RecommendMain /> */}
-            <h2>Returning soon ...</h2>
-          </Tab>
-        </Tabs>
-      </MainHomePane>
-    );
-  }
-}
+            {({ measureRef }) => (
+              <div ref={measureRef}>
+                Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
+                <hr />
+                {subjectsLoaded
+                  ? chartPackets.map((packet, i) => (
+                      <BarChart
+                        key={i}
+                        {...packet}
+                        {...{ subjectHash, subjectsLoaded }}
+                        drilldown={getDrilldownChart}
+                        chartIndex={i}
+                        width={state.chartWidth}
+                        height={600}
+                      />
+                    ))
+                  : null}
+              </div>
+            )}
+          </Measure>
+        </Tab>
+        <Tab name="search" caption="Discover books">
+          {/* <RecommendMain /> */}
+          <h2>Returning soon ...</h2>
+        </Tab>
+      </Tabs>
+    </MainHomePane>
+  );
+};
 
 const HomeIfNotLoggedIn = () => (
   <div>
@@ -123,9 +121,12 @@ const HomeIfNotLoggedIn = () => (
   </div>
 );
 
-const Home: SFC<ReturnType<typeof selectLoggedIn>> = props => (
-  <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
-    {props.isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}
-  </div>
-);
-export default connect(selectLoggedIn)(Home);
+const Home: FunctionComponent<{}> = props => {
+  const [{ isLoggedIn }] = useContext(AppContext);
+  return (
+    <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
+      {isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}
+    </div>
+  );
+};
+export default Home;

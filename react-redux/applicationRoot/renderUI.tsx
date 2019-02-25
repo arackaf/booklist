@@ -1,9 +1,10 @@
-import React, { createContext, useContext, FunctionComponent } from "react";
+import React, { createContext, useContext, FunctionComponent, useEffect } from "react";
 import { render } from "react-dom";
 import MainNavigationBar from "applicationRoot/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
 import { useColors } from "./colorsState";
 import { SubjectState, useSubjectsState } from "./subjectsState";
+import { history, loadCurrentModule } from "reactStartup";
 
 const MobileMeta = props => {
   const [app] = useContext(AppContext);
@@ -45,10 +46,18 @@ export const SubjectsContext = createContext<SubjectState>(null);
 
 const App = ({ component }) => {
   let appStatePacket = useAppState();
-  let [appState] = appStatePacket;
+  let [appState, appActions] = appStatePacket;
 
   let subjectsPacket = useSubjectsState(appState);
   const colorsPacket = useColors();
+
+  useEffect(() => {
+    window.addEventListener("offline", appActions.isOffline);
+    window.addEventListener("online", appActions.isOnline);
+    loadCurrentModule(appState, appActions);
+  }, []);
+
+  history.listen(location => loadCurrentModule(appState, appActions));
 
   return (
     <SubjectsContext.Provider value={subjectsPacket}>

@@ -1,22 +1,19 @@
-import React, { Component } from "react";
+import React, { Component, FunctionComponent } from "react";
 import SelectAvailableItems from "./availableTagsOrSubjects";
-import { filterTags, selectEntireTagsState } from "../rootReducer";
-import { connect } from "react-redux";
+import { filterTags } from "applicationRoot/tagsState";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 
-class SelectAvailableTags extends Component<Partial<LocalProps & ReturnType<typeof selectEntireTagsState>>, never> {
-  render() {
-    return (
-      <SelectAvailableItems
-        placeholder="Tags"
-        items={this.props.allTagsSorted}
-        currentlySelected={this.props.currentlySelected}
-        onSelect={this.props.onSelect}
-        filter={filterTags}
-      />
-    );
-  }
-}
+const SelectAvailableTags: FunctionComponent<LocalProps> = props => {
+  return (
+    <SelectAvailableItems
+      placeholder="Tags"
+      items={this.props.allTagsSorted}
+      currentlySelected={this.props.currentlySelected}
+      onSelect={this.props.onSelect}
+      filter={filterTags}
+    />
+  );
+};
 
-export default connect(selectEntireTagsState)(SelectAvailableTags);
+export default SelectAvailableTags;
