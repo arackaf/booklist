@@ -36,7 +36,7 @@ export function clearUI() {
   render(<div />, document.getElementById("home"));
 }
 
-export function renderUI(component) {
+export function renderUI(component = null) {
   render(<App component={component} />, document.getElementById("home"));
 }
 
@@ -44,7 +44,7 @@ export const AppContext = createContext<[AppState, any, any]>(null);
 export const ColorsContext = createContext<any>(null);
 export const SubjectsContext = createContext<SubjectState>(null);
 
-const App = ({ component }) => {
+const App = ({ component = null } = {}) => {
   let appStatePacket = useAppState();
   let [appState, appActions] = appStatePacket;
 
@@ -60,9 +60,9 @@ const App = ({ component }) => {
   history.listen(location => loadCurrentModule(appState, appActions));
 
   return (
-    <SubjectsContext.Provider value={subjectsPacket}>
-      <ColorsContext.Provider value={colorsPacket}>
-        <AppContext.Provider value={appStatePacket}>
+    <AppContext.Provider value={appStatePacket}>
+      <SubjectsContext.Provider value={subjectsPacket}>
+        <ColorsContext.Provider value={colorsPacket}>
           <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
             <MobileMeta />
             <MainNavigationBar />
@@ -77,8 +77,10 @@ const App = ({ component }) => {
             </div>
             <WellUiSwitcher />
           </div>
-        </AppContext.Provider>
-      </ColorsContext.Provider>
-    </SubjectsContext.Provider>
+        </ColorsContext.Provider>
+      </SubjectsContext.Provider>
+    </AppContext.Provider>
   );
 };
+
+const LoggedInApp = ({ component }) => {};

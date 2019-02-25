@@ -7,6 +7,7 @@ import { useContext, useMemo, useRef } from "react";
 import { SubjectsContext } from "./renderUI";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { syncUpdates, syncDeletes } from "./graphqlHelpers";
+import { AppState } from "./appState";
 
 export type SubjectType = {
   _id: string;
@@ -24,9 +25,10 @@ graphqlClient.subscribeMutation([
   { when: /deleteSubject/, run: (op, res) => syncDeletes(AllSubjectsQuery, res.deleteSubject, "allSubjects", "Subjects") }
 ]);
 
-export function useSubjectsState({ publicUserId }) {
+export function useSubjectsState(app: AppState) {
+  let { userId, publicUserId } = app;
   let { loading, loaded, data } = useQuery(
-    buildQuery(AllSubjectsQuery, { publicUserId, cache: 5 }, { onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } })
+    buildQuery(AllSubjectsQuery, { publicUserId, userId }, { onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } })
   );
   const subjects = data && data.allSubjects && data.allSubjects.Subjects;
   const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);
