@@ -110,7 +110,7 @@ export const useBooks = () => {
 
   const booksRaw = delve(data, "allBooks.Books") || null;
   const books = adjustBooks(booksRaw);
-  const booksCount = loaded ? delve(data, "allBooks.Meta.count") || null : "";
+  const booksCount = loaded ? delve(data, "allBooks.Meta.count") : "";
 
   const resultsCount = booksCount != null ? booksCount : -1;
   const totalPages = useMemo(() => (resultsCount && resultsCount > 0 ? Math.ceil(resultsCount / searchState.pageSize) : 0), [resultsCount]);
