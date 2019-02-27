@@ -17,7 +17,7 @@ export type SubjectType = {
 
 export interface SubjectState {
   subjectHash: { [s: string]: SubjectType };
-  subjectsLoaded: false;
+  subjectsLoaded: boolean;
 }
 
 graphqlClient.subscribeMutation([
