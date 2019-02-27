@@ -6,6 +6,8 @@ const isProd = process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const TerserPlugin = require("terser-webpack-plugin");
+
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
   handler: "cacheFirst",
@@ -89,6 +91,7 @@ module.exports = {
     ]
   },
   optimization: {
+    //minimizer: [new TerserPlugin()]
     //minimize: false
   },
   plugins: [
