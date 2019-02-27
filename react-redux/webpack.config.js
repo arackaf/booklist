@@ -91,7 +91,7 @@ module.exports = {
     ]
   },
   optimization: {
-    //minimizer: [new TerserPlugin()]
+    minimizer: [new TerserPlugin()]
     //minimize: false
   },
   plugins: [
@@ -112,8 +112,7 @@ module.exports = {
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
       ],
       importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
-    }),
+    })
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
-    isProd ? new MinifyPlugin() : null
   ].filter(p => p)
 };
