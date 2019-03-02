@@ -1,6 +1,7 @@
 import PendingBookEntryDao from "../dataAccess/pendingBookEntryDAO";
 import CompletedEntriesDao from "../dataAccess/completedEntriesDAO";
 import AmazonSearch from "../amazonDataAccess/amazonSearch.js";
+import GoodreadsSearch from "../goodreadsDataAccess/goodreadsSearch";
 import amazonOperationQueue from "../amazonDataAccess/amazonOperationQueue";
 import BookDAO from "../dataAccess/bookDAO";
 
@@ -11,6 +12,7 @@ class BookEntryQueueManager {
     this.localQueue = [];
     this.wsSubscriptions = new Map();
     this.amazonSearch = new AmazonSearch();
+    this.goodreadsSearch = new GoodreadsSearch();
   }
   async initialize() {
     this.running = true;
@@ -31,7 +33,8 @@ class BookEntryQueueManager {
   }
   pendingItemToPromise(item) {
     return Promise.delayed(resolve => {
-      this.amazonSearch.lookupBook(item.isbn, item.userId).then(async bookFromAmazon => {
+      this.goodreadsSearch.lookupBook(item.isbn, item.userId).then(async bookFromAmazon => {
+        debugger;
         let bookDao = new BookDAO(item.userId);
 
         if (bookFromAmazon.failure) {
