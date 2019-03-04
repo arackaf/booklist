@@ -14,15 +14,15 @@ export default class AmazonSearch {
   constructor() {}
   lookupBook(isbn, userId) {
     return new Promise((resolve, reject) => {
-      request(`https://www.goodreads.com/book/isbn/${isbn}?format=xml&key=${grKey}`, {}, (err, res, body) => {
-        err && reject(err);
+      request(`https://www.goodreads.com/book/isbn/${isbn}?format=xml&key=undefined`, {}, (err, res, body) => {
+        err && resolve({ failure: true });
 
         parseString(body, async (err, result) => {
-          err && reject(err);
+          err && resolve({ failure: true });
 
           let book = result.GoodreadsResponse && result.GoodreadsResponse.book && result.GoodreadsResponse.book[0];
           if (!book) {
-            reject("No results found");
+            resolve({ failure: true });
           }
 
           let authorsRaw = book.authors;
