@@ -37,7 +37,7 @@ function scanReducer(state, [type, payload]) {
   return state;
 }
 
-const BookEntryList: FunctionComponent<{}> = props => {
+const BookEntryList: FunctionComponent<{}> = () => {
   let inputRefs = [] as any;
   for (let i = 0; i < 10; i++) {
     inputRefs.push(useRef(null));
