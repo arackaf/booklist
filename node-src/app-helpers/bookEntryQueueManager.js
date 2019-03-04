@@ -34,7 +34,6 @@ class BookEntryQueueManager {
   pendingItemToPromise(item) {
     return Promise.delayed(resolve => {
       this.goodreadsSearch.lookupBook(item.isbn, item.userId).then(async bookFromAmazon => {
-        debugger;
         let bookDao = new BookDAO(item.userId);
 
         if (bookFromAmazon.failure) {
