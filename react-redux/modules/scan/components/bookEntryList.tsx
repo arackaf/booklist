@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState } from "react";
+import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState, useReducer } from "react";
 import BookEntryItem from "./bookEntryItem";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -22,6 +22,21 @@ const defaultEmptyBook = () => ({
 
 const entryList = Array.from({ length: 10 });
 
+function scanReducer(state, [type, payload]) {
+  switch (type) {
+    case "initial":
+      return { ...state, pending: payload.pending };
+    case "pendingBookAdded":
+      return { ...state, pending: state.pending + 1 };
+    case "bookAdded":
+      return { ...state, pending: state.pending - 1, booksSaved: [payload].concat(state.booksSaved).slice(0, 15) };
+    case "bookLookupFailed":
+      let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
+      return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
+  }
+  return state;
+}
+
 const BookEntryList: FunctionComponent<{}> = props => {
   let inputRefs = [] as any;
   for (let i = 0; i < 10; i++) {
@@ -29,8 +44,7 @@ const BookEntryList: FunctionComponent<{}> = props => {
   }
   const [showIncomingQueue, setShowIncomingQueue] = useState(false);
   const [showScanInstructions, setShowScanInstructions] = useState(false);
-  const [pending, setPending] = useState(0);
-  const [booksJustSaved, setBooksJustSaved] = useState([]);
+  const [{ pending, booksSaved: booksJustSaved }, dispatch] = useReducer(scanReducer, { pending: 0, booksSaved: [] });
 
   let ws: any = null;
 
@@ -39,18 +53,7 @@ const BookEntryList: FunctionComponent<{}> = props => {
 
     ws.onmessage = ({ data }) => {
       let packet = JSON.parse(data);
-      if (packet._messageType == "initial") {
-        setPending(+packet.pending);
-      } else if (packet._messageType == "bookAdded") {
-        setPending(+pending - 1 || 0);
-        setBooksJustSaved([packet].concat(booksJustSaved).slice(0, 15));
-      } else if (packet._messageType == "pendingBookAdded") {
-        setPending(+pending + 1 || 0);
-      } else if (packet._messageType == "bookLookupFailed") {
-        setPending(+pending - 1 || 0);
-        let entry = { _id: "" + new Date(), title: `Failed lookup for ${packet.isbn}`, success: false };
-        setBooksJustSaved([entry].concat(booksJustSaved).slice(0, 15));
-      }
+      dispatch([packet._messageType, packet]);
     };
     inputRefs[0].current.focusInput();
     return () => {
