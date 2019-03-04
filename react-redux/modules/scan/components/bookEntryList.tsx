@@ -123,10 +123,6 @@ const BookEntryList: FunctionComponent<{}> = props => {
 
   return (
     <div>
-      <div className="alert alert-danger" style={{ marginLeft: "20px", marginTop: "5px", width: "500px" }}>
-        <b>Note</b>: scanning books will likely not work. Amazon has drastically restricted who can use their product lookup api, which snagged me.
-        I'm looking for alternatives, but for now you may be limited to manual entry.
-      </div>
       <GraphQL mutation={{ createBook: buildMutation(createBookMutation) }}>
         {({ createBook: { runMutation, running } }) => (
           <>

@@ -4,6 +4,7 @@ import del from "del";
 import path from "path";
 import fs from "fs";
 import mkdirp from "mkdirp";
+import flatMap from "lodash.flatmap";
 
 var parseString = require("xml2js").parseString;
 
@@ -17,7 +18,6 @@ export default class AmazonSearch {
         err && reject(err);
 
         parseString(body, async (err, result) => {
-          debugger;
           err && reject(err);
 
           let book = result.GoodreadsResponse && result.GoodreadsResponse.book && result.GoodreadsResponse.book[0];
@@ -29,8 +29,7 @@ export default class AmazonSearch {
           let authors = [];
           if (Array.isArray(authorsRaw)) {
             try {
-              //TODO: author[0]
-              authors = authorsRaw.map(a => a.author && a.author.name).filter(name => name);
+              authors = flatMap(authorsRaw, a => flatMap(a.author || [], a => a.name));
             } catch (er) {
               authors = [];
             }
@@ -45,10 +44,8 @@ export default class AmazonSearch {
           }
 
           let pubYear = safeItem(book, "publication_year");
-
-          //TODO: left pad
-          let pubMonth = safeItem(book, "publication_month");
-          let pubDay = safeItem(book, "publication_day");
+          let pubMonth = ("" + safeItem(book, "publication_month")).padStart(2, "0");
+          let pubDay = ("" + safeItem(book, "publication_day")).padStart(2, "0");
 
           let bookResult = {
             title: safeItem(book, "title"),
@@ -82,6 +79,6 @@ export default class AmazonSearch {
 }
 
 function safeItem(obj, path, fallback = "") {
-  let val = obj[path] || obj[path][0];
+  let val = obj[path] && obj[path][0];
   return val == null ? fallback : val;
 }
