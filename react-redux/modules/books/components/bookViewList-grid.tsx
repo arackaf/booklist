@@ -45,7 +45,7 @@ const BookRow: SFC<ILocalProps> = props => {
         ) : null}
         <td>
           <div style={{ minWidth: "75px", minHeight: "75px" }}>
-            <img crossOrigin="anonymous" src={book.smallImage} />
+            <img src={book.smallImage} />
           </div>
         </td>
         <td>

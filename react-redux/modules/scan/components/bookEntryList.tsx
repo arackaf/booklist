@@ -29,7 +29,7 @@ function scanReducer(state, [type, payload]) {
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
     case "bookAdded":
-      return { ...state, pending: state.pending - 1, booksSaved: [payload].concat(state.booksSaved).slice(0, 15) };
+      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 15) };
     case "bookLookupFailed":
       let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
       return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
