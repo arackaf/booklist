@@ -14,7 +14,7 @@ export default class AmazonSearch {
   constructor() {}
   lookupBook(isbn, userId) {
     return new Promise((resolve, reject) => {
-      request(`https://www.goodreads.com/book/isbn/${isbn}?format=xml&key=undefined`, {}, (err, res, body) => {
+      request(`https://www.goodreads.com/book/isbn/${isbn}?format=xml&key=${grKey}`, {}, (err, res, body) => {
         err && resolve({ failure: true });
 
         parseString(body, async (err, result) => {
