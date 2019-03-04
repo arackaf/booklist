@@ -8,11 +8,9 @@ import {
   removeFilterSubject,
   removeFilterTag,
   pageOne,
-  pageDown,
-  pageUp,
-  //pageLast,
   clearAllFilters,
-  quickSearch as quickTitleSearch
+  quickSearch as quickTitleSearch,
+  setPage
 } from "../booksSearchState";
 import { BooksContext } from "../booksState";
 import { BooksSearchContext } from "./bookViewList";
@@ -73,6 +71,10 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
     name: "Remove all filters"
   };
 
+  let pageUp = () => setPage(page + 1);
+  let pageDown = () => setPage(page - 1);
+  let pageLast = () => setPage(totalPages);
+
   return (
     <div>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
@@ -111,7 +113,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
               </button>
               {/* TODO: pageLast */}
               {online ? (
-                <button onClick={void 0 && "pageLast"} disabled={!canPageLast} className="btn btn-default">
+                <button onClick={pageLast} disabled={!canPageLast} className="btn btn-default">
                   <i className="fal fa-angle-double-right" />
                 </button>
               ) : null}
