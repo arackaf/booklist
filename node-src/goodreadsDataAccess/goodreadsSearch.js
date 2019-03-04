@@ -71,7 +71,7 @@ export default class AmazonSearch {
             } catch (e) {}
           }
 
-          return bookResult;
+          resolve(bookResult);
         });
       });
     });
