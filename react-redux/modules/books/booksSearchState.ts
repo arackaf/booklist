@@ -225,15 +225,7 @@ export const pageOne = () => {
   setSearchValues({ page: null });
 };
 
-export const pageDown = () => {
-  let bookSearchFilters = useCurrentSearch();
-  setSearchValues({ page: +bookSearchFilters.page == 2 ? null : bookSearchFilters.page - 1 });
-};
-
-export const pageUp = () => {
-  let bookSearchFilters = useCurrentSearch();
-  setSearchValues({ page: +bookSearchFilters.page + 1 });
-};
+export const setPage = page => setSearchValues({ page: page == 1 ? null : page });
 
 // const pageLast = () => {
 //   let booksState = useBookLoadingInfo();
