@@ -1,3 +1,5 @@
+import { gqlResponse } from "./util";
+
 export function readBooks(variableString) {
   let variables = JSON.parse(variableString);
   let { page = 1, pageSize = 50, title_contains, sort } = variables;
