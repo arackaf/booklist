@@ -71,8 +71,8 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
     name: "Remove all filters"
   };
 
-  let pageUp = () => setPage(page + 1);
-  let pageDown = () => setPage(page - 1);
+  let pageUp = () => setPage(+page + 1);
+  let pageDown = () => setPage(+page - 1);
   let pageLast = () => setPage(totalPages);
 
   return (
