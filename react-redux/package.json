@@ -38,7 +38,7 @@
     "lodash.debounce": "4.0.8",
     "lodash.invert": "^4.3.0",
     "lodash.throttle": "4.1.1",
-    "micro-graphql-react": "^0.3.0-beta17",
+    "micro-graphql-react": "^0.3.1",
     "mini-css-extract-plugin": "^0.4.4",
     "persistgraphql": "^0.3.11",
     "purify-css": "1.2.2",
