@@ -19,20 +19,28 @@ export default class GoodreadsSimilarityLookup {
       request(`https://www.goodreads.com/book/isbn/${isbn}?format=xml&key=${grKey}`, {}, (err, res, body) => {
         err && resolve([]);
 
-        parseString(body, async (err, result) => {
-          err && resolve([]);
+        try {
+          parseString(body, (err, result) => {
+            try {
+              err && resolve([]);
 
-          let book = result.GoodreadsResponse && result.GoodreadsResponse.book && result.GoodreadsResponse.book[0];
-          if (!book) {
-            resolve({ failure: true });
-          }
+              let book = result.GoodreadsResponse && result.GoodreadsResponse.book && result.GoodreadsResponse.book[0];
+              if (!book) {
+                resolve({ failure: true });
+              }
 
-          let similarBooks = book.similar_books && book.similar_books[0] && book.similar_books[0].book;
-          if (!Array.isArray(similarBooks)) {
-            resolve([]);
-          }
-          resolve(similarBooks.map(projectResponse).filter(x => x));
-        });
+              let similarBooks = book.similar_books && book.similar_books[0] && book.similar_books[0].book;
+              if (!Array.isArray(similarBooks)) {
+                resolve([]);
+              }
+              resolve(similarBooks.map(projectResponse).filter(x => x));
+            } catch (er) {
+              resolve([]);
+            }
+          });
+        } catch (er) {
+          resolve([]);
+        }
       });
     });
   }
