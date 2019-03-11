@@ -52,14 +52,14 @@ class BookDAO extends DAO {
       await db.collection("books").updateOne(
         { _id: book._id },
         {
-          $set: { similarItems: results.map(result => result.asin), similarItemsLastUpdate: +new Date() }
+          $set: { similarItems: results.map(result => result.isbn), similarItemsLastUpdate: +new Date() }
         }
       );
 
       for (let book of results) {
-        let user = await db.collection("amazonReference").findOne({ asin: book.asin });
-        if (!user) {
-          await db.collection("amazonReference").insertOne(book);
+        let existingEntry = await db.collection("bookSummaries").findOne({ isbn: book.isbn });
+        if (!existingEntry) {
+          await db.collection("bookSummaries").insertOne(book);
         }
       }
     } finally {

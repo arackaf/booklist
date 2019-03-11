@@ -1,11 +1,11 @@
-import AmazonSimilarityLookup from "../amazonDataAccess/amazonSimilarLookup";
+import GoodreadsSimilarityLookup from "../goodreadsDataAccess/goodreadsSimilarLookup";
 import amazonOperationQueue from "../amazonDataAccess/amazonOperationQueue";
 import BookDAO from "../dataAccess/bookDAO";
 
 class BookSimilarityQueueManager {
   constructor() {
     this.localQueue = [];
-    this.amazonLookup = new AmazonSimilarityLookup();
+    this.grSimilarLookup = new GoodreadsSimilarityLookup();
     this.bookDao = new BookDAO();
   }
   async initialize() {
@@ -25,7 +25,7 @@ class BookSimilarityQueueManager {
   }
   pendingItemToPromise(item) {
     return Promise.delayed(resolve => {
-      this.amazonLookup.lookupBook(item.isbn).then(async booksFromAmazon => {
+      this.grSimilarLookup.lookupBook(item.isbn).then(async booksFromAmazon => {
         await this.bookDao.updateBookSimilarity(item, booksFromAmazon);
         resolve();
       });

@@ -25,13 +25,14 @@ export default {
       get type(){ return EditorialReview; }
     },
     similarItems: "StringArray",
+    similarItemsLastUpdate: "Int",
     timestamp: "Float"
   },
   relationships: {
     similarBooks: {
       get type(){ return BookSummary; },
       fkField: "similarItems",
-      keyField: "asin",
+      keyField: "isbn",
       manyToMany: true,
       __isArray: true,
       __isObject: false

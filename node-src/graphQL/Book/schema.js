@@ -18,6 +18,7 @@ export const type = `
     dateAdded: String
     editorialReviews: [EditorialReview]
     similarItems: [String]
+    similarItemsLastUpdate: Int
     timestamp: Float
     similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary]
   }
@@ -66,6 +67,7 @@ export const type = `
     dateAdded: String
     editorialReviews: [EditorialReviewInput]
     similarItems: [String]
+    similarItemsLastUpdate: Int
     timestamp: Float
     similarBooks: [BookSummaryInput]
   }
@@ -118,6 +120,9 @@ export const type = `
     similarItems_UPDATES: [StringArrayUpdate]
     similarItems_PULL: [String]
     similarItems_ADDTOSET: [String]
+    similarItemsLastUpdate: Int
+    similarItemsLastUpdate_INC: Int
+    similarItemsLastUpdate_DEC: Int
     timestamp: Float
     timestamp_INC: Int
     timestamp_DEC: Int
@@ -142,6 +147,7 @@ export const type = `
     dateAdded: Int
     editorialReviews: Int
     similarItems: Int
+    similarItemsLastUpdate: Int
     timestamp: Int
   }
 
@@ -264,6 +270,13 @@ export const type = `
     similarItems_contains: String
     similarItems_containsAny: [String]
     similarItems_ne: [String]
+    similarItemsLastUpdate_lt: Int
+    similarItemsLastUpdate_lte: Int
+    similarItemsLastUpdate_gt: Int
+    similarItemsLastUpdate_gte: Int
+    similarItemsLastUpdate: Int
+    similarItemsLastUpdate_ne: Int
+    similarItemsLastUpdate_in: [Int]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -426,6 +439,13 @@ export const query = `
     similarItems_contains: String,
     similarItems_containsAny: [String],
     similarItems_ne: [String],
+    similarItemsLastUpdate_lt: Int,
+    similarItemsLastUpdate_lte: Int,
+    similarItemsLastUpdate_gt: Int,
+    similarItemsLastUpdate_gte: Int,
+    similarItemsLastUpdate: Int,
+    similarItemsLastUpdate_ne: Int,
+    similarItemsLastUpdate_in: [Int],
     timestamp_lt: Float,
     timestamp_lte: Float,
     timestamp_gt: Float,

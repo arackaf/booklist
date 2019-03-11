@@ -1,5 +1,5 @@
 export default {
-  table: "amazonReference",
+  table: "bookSummaries",
   typeName: "BookSummary",
   fields: {
     _id: "MongoId",

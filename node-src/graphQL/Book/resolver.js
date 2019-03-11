@@ -40,20 +40,20 @@ export const Book = {
     if (context.__Book_similarBooksDataLoader == null) {
       let db = await context.__mongodb;
       context.__Book_similarBooksDataLoader = new DataLoader(async keyArrays => {
-        let $match = { asin: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
-        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, null, { force: ["asin"] });
+        let $match = { isbn: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
+        let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, null, { force: ["isbn"] });
         let { $project, $sort, $limit, $skip } = queryPacket;
         
         let aggregateItems = [{ $match }, $sort ? { $sort } : null, { $project }].filter(item => item);
-        let results = await dbHelpers.runQuery(db, "amazonReference", aggregateItems);
+        let results = await dbHelpers.runQuery(db, "bookSummaries", aggregateItems);
         cleanUpResults(results, BookSummaryMetadata);
 
         let finalResult = keyArrays.map(keyArr => []);
-        let keySets = keyArrays.map(keyArr => new Set(keyArr.map(asin => "" + asin)));
+        let keySets = keyArrays.map(keyArr => new Set(keyArr.map(isbn => "" + isbn)));
 
         for (let result of results){
           for (let i = 0; i < keyArrays.length; i++){
-            if (keySets[i].has(result.asin + "")){
+            if (keySets[i].has(result.isbn + "")){
               finalResult[i].push(result);
             }
           }

@@ -20,7 +20,7 @@ export async function loadBookSummarys(db, queryPacket, root, args, context, ast
   ].filter(item => item);
 
   await processHook(hooksObj, "BookSummary", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
-  let BookSummarys = await dbHelpers.runQuery(db, "amazonReference", aggregateItems);
+  let BookSummarys = await dbHelpers.runQuery(db, "bookSummaries", aggregateItems);
   await processHook(hooksObj, "BookSummary", "adjustResults", BookSummarys);
   BookSummarys.forEach(o => {
     if (o._id){
@@ -66,7 +66,7 @@ export default {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
-          let countResults = await dbHelpers.runQuery(db, "amazonReference", [{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }]);  
+          let countResults = await dbHelpers.runQuery(db, "bookSummaries", [{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }]);  
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }

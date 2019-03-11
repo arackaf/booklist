@@ -2,17 +2,11 @@ require("dotenv").config();
 const { MongoClient, ObjectId } = require("mongodb");
 
 const connectPrimary = () => {
-  return MongoClient.connect(
-    process.env.MONGO_CONNECTION,
-    { useNewUrlParser: true }
-  ).then(client => [client, client.db(process.env.DB_NAME)]);
+  return MongoClient.connect(process.env.MONGO_CONNECTION, { useNewUrlParser: true }).then(client => [client, client.db(process.env.DB_NAME)]);
 };
 
 const connectPublic = () => {
-  return MongoClient.connect(
-    process.env.MONGO_PUBLIC,
-    { useNewUrlParser: true }
-  ).then(client => [client, client.db(process.env.DB_NAME_PUBLIC)]);
+  return MongoClient.connect(process.env.MONGO_PUBLIC, { useNewUrlParser: true }).then(client => [client, client.db(process.env.DB_NAME_PUBLIC)]);
 };
 
 let masterId = process.env.DEMO_REPLICATION_MASTER;
@@ -25,12 +19,12 @@ async function sync() {
     dbPublic.collection("books").deleteMany({}),
     dbPublic.collection("tags").deleteMany({}),
     dbPublic.collection("subjects").deleteMany({}),
-    dbPublic.collection("amazonReference").deleteMany({}),
+    dbPublic.collection("bookSummaries").deleteMany({}),
     dbPublic.collection("users").deleteMany({}),
     dbPublic.collection("labelColors").deleteMany({})
   ]);
 
-  let [users, books, subjects, tags, labelColors, amazonReference] = await Promise.all([
+  let [users, books, subjects, tags, labelColors, bookSummaries] = await Promise.all([
     dbPrimary
       .collection("users")
       .find({ _id: ObjectId(masterId) })
@@ -52,7 +46,7 @@ async function sync() {
       .find({})
       .toArray(),
     dbPrimary
-      .collection("amazonReference")
+      .collection("bookSummaries")
       .find({})
       .toArray()
   ]);
@@ -65,7 +59,7 @@ async function sync() {
     dbPublic.collection("subjects").insertMany(subjects),
     dbPublic.collection("tags").insertMany(tags),
     dbPublic.collection("labelColors").insertMany(labelColors),
-    dbPublic.collection("amazonReference").insertMany(amazonReference)
+    dbPublic.collection("bookSummaries").insertMany(bookSummaries)
   ]);
   clientPrimary.close();
   clientPublic.close();
