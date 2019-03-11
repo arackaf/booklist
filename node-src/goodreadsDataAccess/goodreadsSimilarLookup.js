@@ -26,7 +26,7 @@ export default class GoodreadsSimilarityLookup {
 
               let book = result.GoodreadsResponse && result.GoodreadsResponse.book && result.GoodreadsResponse.book[0];
               if (!book) {
-                resolve({ failure: true });
+                resolve([]);
               }
 
               let similarBooks = book.similar_books && book.similar_books[0] && book.similar_books[0].book;
