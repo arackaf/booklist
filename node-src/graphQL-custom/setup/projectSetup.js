@@ -9,7 +9,7 @@ export const EditorialReview = {
 };
 
 export const BookSummary = {
-  table: "amazonReference",
+  table: "bookSummaries",
   fields: {
     _id: MongoIdType,
     title: StringType,
@@ -43,6 +43,7 @@ export const Book = {
     dateAdded: StringType,
     editorialReviews: arrayOf(EditorialReview),
     similarItems: StringArrayType,
+    similarItemsLastUpdate: IntType,
     timestamp: FloatType
   },
   manualQueryArgs: [
@@ -57,7 +58,7 @@ export const Book = {
         return BookSummary;
       },
       fkField: "similarItems",
-      keyField: "asin"
+      keyField: "isbn"
     }
   }
 };
