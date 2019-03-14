@@ -8,8 +8,6 @@ query HomeModuleBooks(
   $subjects: [String]
   $searchChildSubjects: Boolean
   $tags: [String]
-  $ver: String
-  $cache: Int
 ) {
   allBooks(
     PAGE: $page
@@ -21,8 +19,6 @@ query HomeModuleBooks(
     subjects_containsAny: $subjects
     searchChildSubjects: $searchChildSubjects
     tags_containsAny: $tags
-    ver: $ver
-    cache: $cache
   ) {
     Books {
       _id
