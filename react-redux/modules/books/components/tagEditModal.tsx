@@ -1,19 +1,18 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, { FunctionComponent, useState, useContext } from 'react';
 
-import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
-import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
-import ColorsPalette from "applicationRoot/components/colorsPalette";
-import Modal from "applicationRoot/components/modal";
+import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from 'applicationRoot/components/bootstrapButton';
+import CustomColorPicker from 'applicationRoot/components/customColorPicker';
+import GenericLabelSelect from 'applicationRoot/components/genericLabelSelect';
+import ColorsPalette from 'applicationRoot/components/colorsPalette';
+import Modal from 'applicationRoot/components/modal';
 
-import UpdateTag from "graphQL/tags/updateTag.graphql";
-import CreateTag from "graphQL/tags/createTag.graphql";
-import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
+import UpdateTag from 'graphQL/tags/updateTag.graphql';
+import CreateTag from 'graphQL/tags/createTag.graphql';
+import DeleteTagMutation from 'graphQL/tags/deleteTag.graphql';
 
-import { useMutation, buildMutation } from "micro-graphql-react";
-import { TagsContext } from "./bookViewList";
-import { ColorsContext } from "applicationRoot/renderUI";
-import { filterTags } from "applicationRoot/tagsState";
+import { useMutation, buildMutation } from 'micro-graphql-react';
+import { ColorsContext } from 'applicationRoot/renderUI';
+import { filterTags, TagsContext } from 'applicationRoot/tagsState';
 
 interface ILocalProps {
   onDone: any;
@@ -23,15 +22,15 @@ interface ILocalProps {
 const TagEditModal: FunctionComponent<ILocalProps> = props => {
   const [state, setStateRaw] = useState({
     editingTag: null,
-    editingTagName: "",
-    tagSearch: "",
-    deletingId: "",
+    editingTagName: '',
+    tagSearch: '',
+    deletingId: '',
     saving: false,
     deleting: false
   } as any);
 
   const setState = newState => {
-    if (typeof newState === "function") {
+    if (typeof newState === 'function') {
       setStateRaw(newState);
     } else {
       setStateRaw(state => ({ ...state, ...newState }));
@@ -40,17 +39,17 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
   const setTagSearch = value => setState({ tagSearch: value });
 
-  const newTag = () => startEditing({ _id: "", name: "", backgroundColor: "", textColor: "" });
+  const newTag = () => startEditing({ _id: '', name: '', backgroundColor: '', textColor: '' });
   const editTag = tag => {
     startEditing(tag);
-    setTagSearch("");
+    setTagSearch('');
   };
   const startEditing = tag => setState({ editingTag: tag, editingTagName: tag.name });
   const cancelTagEdit = () => setState({ editingTag: null });
 
-  const setNewTagName = value => setEditingValue("name", value);
-  const setNewTagBackgroundColor = value => setEditingValue("backgroundColor", value);
-  const setNewTagTextColor = value => setEditingValue("textColor", value);
+  const setNewTagName = value => setEditingValue('name', value);
+  const setNewTagBackgroundColor = value => setEditingValue('backgroundColor', value);
+  const setNewTagTextColor = value => setEditingValue('textColor', value);
   const setEditingValue = (name, value) => setState(state => ({ ...state, editingTag: { ...state.editingTag, [name]: value } }));
 
   const { runMutation: updateTag } = useMutation(buildMutation(UpdateTag));
@@ -67,7 +66,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
     promise.then(resp => {
       cancelTagEdit();
-      setTagSearch("");
+      setTagSearch('');
       setState({ saving: false });
     });
   };
@@ -85,7 +84,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   let { colors } = useContext(ColorsContext);
   let { onDone, editModalOpen } = props;
   let { editingTag, editingTagName, tagSearch, deletingId, deleting } = state;
-  let textColors = ["#ffffff", "#000000"];
+  let textColors = ['#ffffff', '#000000'];
 
   let deletingTag = deletingId ? tags.find(t => t._id == deletingId) : null;
   let deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null;
@@ -103,7 +102,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
       <div className="row">
         <div className="col-xs-11">
           <GenericLabelSelect
-            inputProps={{ placeholder: "Edit tag", value: tagSearch, onChange: evt => setTagSearch(evt.target.value) }}
+            inputProps={{ placeholder: 'Edit tag', value: tagSearch, onChange: evt => setTagSearch(evt.target.value) }}
             suggestions={searchedTags}
             onSuggestionSelected={item => editTag(item)}
           />
@@ -119,7 +118,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
       {editingTag ? (
         <div className="panel panel-info">
           <div className="panel-heading">
-            {editingTag._id ? `Edit ${editingTagName}` : "New Tag"}
+            {editingTag._id ? `Edit ${editingTagName}` : 'New Tag'}
             {editingTag && editingTag._id ? (
               <BootstrapButton onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs" className="pull-right">
                 <i className="fa fa-fw fa-trash" />
@@ -133,12 +132,12 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
                   <div className="col-xs-12">
                     <h4>Delete tag {editingTagName}</h4>
 
-                    <div style={{ marginTop: "5px" }}>
+                    <div style={{ marginTop: '5px' }}>
                       <AjaxButton running={deleting} runningText="Deleting" onClick={runDelete} preset="danger-sm">
                         Delete
                       </AjaxButton>
                       <BootstrapAnchorButton
-                        onClick={() => setState({ deletingId: "" })}
+                        onClick={() => setState({ deletingId: '' })}
                         deleting={deleting}
                         runningText="Deleting..."
                         preset="default-sm"
@@ -164,7 +163,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
                     <div>
                       <ColorsPalette currentColor={editingTag.backgroundColor} colors={colors} onColorChosen={setNewTagBackgroundColor} />
                       <CustomColorPicker
-                        labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
+                        labelStyle={{ marginLeft: '5px', marginTop: '3px', display: 'inline-block' }}
                         onColorChosen={setNewTagBackgroundColor}
                         currentColor={editingTag.backgroundColor}
                       />
@@ -180,7 +179,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
                   </div>
                 </div>
                 <div className="col-xs-12">
-                  <div style={{ marginTop: "10px" }} className="form-group">
+                  <div style={{ marginTop: '10px' }} className="form-group">
                     <label>Preview &nbsp;&nbsp;</label>
                     <div className="label label-default" style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor }}>
                       {editingTag.name}
@@ -188,9 +187,9 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
                   </div>
                 </div>
               </div>
-              <br style={{ clear: "both" }} />
+              <br style={{ clear: 'both' }} />
 
-              <AjaxButtonAnchor className="btn btn-primary" running={state.saving} runningText={"Saving..."} onClick={createOrUpdateTag}>
+              <AjaxButtonAnchor className="btn btn-primary" running={state.saving} runningText={'Saving...'} onClick={createOrUpdateTag}>
                 Save
               </AjaxButtonAnchor>
               <a className="btn btn-default pull-right" onClick={cancelTagEdit}>
