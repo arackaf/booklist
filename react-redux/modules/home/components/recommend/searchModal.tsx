@@ -8,27 +8,26 @@ import DisplaySelectedSubjects from 'applicationRoot/components/displaySelectedS
 
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { SearchContext, ISearchBookRaw } from 'modules/home/searchState';
-import { SubjectsContext } from 'applicationRoot/renderUI';
-import { useStackedSubjects } from 'applicationRoot/subjectsState';
-import { useTagsState } from 'applicationRoot/tagsState';
 
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
   setBookSearchState: any;
   searchState: any;
+  searchResults: any;
 }
 
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
-  const { isOpen, onHide, setBookSearchState, searchState } = props;
+  const { isOpen, onHide, setBookSearchState, searchState, searchResults } = props;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
+  const { loading, loaded, data, error } = searchResults;
 
   useEffect(() => {
     if (props.isOpen) {
-      setSubjects(searchState.subjects);
-      setTags(searchState.tags);
+      setSubjects(searchState.subjects || []);
+      setTags(searchState.tags || []);
     }
   }, [props.isOpen]);
 
@@ -46,10 +45,10 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const applyFilters = evt => {
     evt.preventDefault();
     setBookSearchState({
-      title: searchEl.current.value,
-      isRead: isReadE.current.checked ? '' : isRead0.current.checked ? 0 : 1,
-      subjects: subjects,
-      tags: tags,
+      title: searchEl.current.value || void 0,
+      isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
+      subjects: subjects.length ? subjects : void 0,
+      tags: tags.length ? tags : void 0,
       searchChildSubjects: childSubEl.current.checked
     });
   };
@@ -70,7 +69,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
               <br />
               <div style={{ display: 'inline' }} className="radio">
                 <label>
-                  <input type="radio" defaultChecked={searchState.isRead == ''} ref={isReadE} name="isRead" />
+                  <input type="radio" defaultChecked={searchState.isRead == null} ref={isReadE} name="isRead" />
                   Either
                 </label>
               </div>
@@ -121,7 +120,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             </div>
           </div>
           <div className="col-xs-6">
-            {searchState.searching ? (
+            {loading ? (
               <button disabled={true} className="btn btn-default">
                 <i className="fa fa-fw fa-spin fa-spinner" />
               </button>
@@ -133,20 +132,20 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
         </div>
       </>
-      {typeof searchState.resultsCount === 'number' ? <SearchResults /> : null}
+      {loaded ? <SearchResults loaded={loaded} loading={loading} data={data} error={error} /> : null}
     </Modal>
   );
 };
 
 export default SearchModal;
 
-const SearchResults: FunctionComponent<{}> = props => {
-  const [searchState, { booksSearch }] = useContext(SearchContext);
+const SearchResults = props => {
+  const books = props.data.allBooks.Books;
+  const loading = props.loading;
 
-  let { searchResults, searching } = searchState;
   return (
     <div style={{ maxHeight: '300px', overflowY: 'auto', marginTop: '5px' }}>
-      {searchState.resultsCount ? (
+      {books.length ? (
         <table className="table table-condensed table-striped">
           <thead>
             <tr>
@@ -156,8 +155,8 @@ const SearchResults: FunctionComponent<{}> = props => {
             </tr>
           </thead>
           <TransitionGroup component="tbody">
-            {searchResults.map(book => (
-              <CSSTransition appear={false} enter={false} exit={!searching} classNames="fade-transition" timeout={300} key={book._id}>
+            {books.map(book => (
+              <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
                 <SearchResult key={book._id} book={book} />
               </CSSTransition>
             ))}
@@ -171,12 +170,12 @@ const SearchResults: FunctionComponent<{}> = props => {
 };
 
 const SearchResult: FunctionComponent<{ book: ISearchBookRaw }> = props => {
-  const [{}, { selectBookToSearchRecommendationsFor }] = useContext(SearchContext);
   const [adding, setAdding] = useState(false);
 
   const selectBook = () => {
     setAdding(true);
-    selectBookToSearchRecommendationsFor(props.book);
+    //TODO:
+    //selectBookToSearchRecommendationsFor(props.book);
   };
 
   let { book } = props;

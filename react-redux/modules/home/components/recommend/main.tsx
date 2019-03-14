@@ -3,12 +3,18 @@ import SearchModal from './searchModal';
 
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { TagsContext, useTagsState } from 'applicationRoot/tagsState';
+import BooksQuery from 'graphQL/home/searchBooks.graphql';
+import { useQuery, buildQuery } from 'micro-graphql-react';
 
 const initialState = {
   selectedBooks: [],
   recommendations: [],
   recommendationsSearching: false,
   searchState: {
+    active: false,
+    page: 1,
+    pageSize: 50,
+    sort: { title: 1 },
     tags: [],
     subjects: []
   }
@@ -16,7 +22,7 @@ const initialState = {
 function reducer(state, [type, payload]) {
   switch (type) {
     case 'setSearchState':
-      return { ...state, searchState: payload };
+      return { ...state, searchState: { active: true, page: 1, ...payload } };
   }
   return state;
 }
@@ -24,12 +30,15 @@ function reducer(state, [type, payload]) {
 export default props => {
   const tagsState = useTagsState();
   const [searchModalOpen, setSearchModalOpen] = useState(false);
-
   const [{ selectedBooks, recommendations, recommendationsSearching, searchState }, dispatch] = useReducer(reducer, initialState);
+  const { active, ...searchStateToUse } = searchState;
 
+  const { loading, loaded, data, error } = useQuery(buildQuery(BooksQuery, searchStateToUse, { active }));
   const closeModal = () => setSearchModalOpen(false);
   const openModal = () => setSearchModalOpen(true);
-  const setBookSearchState = searchState => dispatch(['searchState', searchState]);
+  const setBookSearchState = searchState => {
+    dispatch(['setSearchState', searchState]);
+  };
 
   return (
     <TagsContext.Provider value={tagsState}>
@@ -82,7 +91,12 @@ export default props => {
             </div>
           </div>
         </div>
-        <SearchModal isOpen={searchModalOpen} onHide={closeModal} {...{ setBookSearchState, searchState }} />
+        <SearchModal
+          isOpen={searchModalOpen}
+          onHide={closeModal}
+          searchResults={{ loading, loaded, data, error }}
+          {...{ setBookSearchState, searchState }}
+        />
       </div>
     </TagsContext.Provider>
   );
