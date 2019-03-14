@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useContext } from "react";
-import { RemovableLabelDisplay } from "./labelDisplay";
-import { TagsContext } from "modules/books/components/bookViewList";
+import React, { FunctionComponent, useContext } from 'react';
+import { RemovableLabelDisplay } from './labelDisplay';
+import { TagsContext } from 'applicationRoot/tagsState';
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };
 

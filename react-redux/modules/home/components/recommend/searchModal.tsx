@@ -1,21 +1,27 @@
-import React, { FunctionComponent, useState, useContext, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useContext, useEffect, useRef } from 'react';
 
-import Modal from "applicationRoot/components/modal";
-import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
-import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
-import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
-import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
+import Modal from 'applicationRoot/components/modal';
+import SelectAvailableTags from 'applicationRoot/components/selectAvailableTags';
+import DisplaySelectedTags from 'applicationRoot/components/displaySelectedTags';
+import SelectAvailableSubjects from 'applicationRoot/components/selectAvailableSubjects';
+import DisplaySelectedSubjects from 'applicationRoot/components/displaySelectedSubjects';
 
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { SearchContext, ISearchBookRaw } from "modules/home/searchState";
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { SearchContext, ISearchBookRaw } from 'modules/home/searchState';
+import { SubjectsContext } from 'applicationRoot/renderUI';
+import { useStackedSubjects } from 'applicationRoot/subjectsState';
+import { useTagsState } from 'applicationRoot/tagsState';
 
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
+  setBookSearchState: any;
+  searchState: any;
 }
 
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
-  const [searchState, { booksSearch }] = useContext(SearchContext);
+  const { isOpen, onHide, setBookSearchState, searchState } = props;
+
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
 
@@ -39,17 +45,16 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 
   const applyFilters = evt => {
     evt.preventDefault();
-    booksSearch({
+    setBookSearchState({
       title: searchEl.current.value,
-      isRead: isReadE.current.checked ? "" : isRead0.current.checked ? 0 : 1,
+      isRead: isReadE.current.checked ? '' : isRead0.current.checked ? 0 : 1,
       subjects: subjects,
       tags: tags,
       searchChildSubjects: childSubEl.current.checked
     });
   };
-  const { isOpen, onHide } = props;
   return (
-    <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
+    <Modal {...{ isOpen, onHide, headerCaption: 'Search your books' }}>
       <form onSubmit={applyFilters}>
         <div className="row">
           <div className="col-xs-6">
@@ -63,21 +68,21 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             <div className="form-group">
               <label>Is read?</label>
               <br />
-              <div style={{ display: "inline" }} className="radio">
+              <div style={{ display: 'inline' }} className="radio">
                 <label>
-                  <input type="radio" defaultChecked={searchState.isRead == ""} ref={isReadE} name="isRead" />
+                  <input type="radio" defaultChecked={searchState.isRead == ''} ref={isReadE} name="isRead" />
                   Either
                 </label>
               </div>
-              <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
+              <div style={{ display: 'inline', marginLeft: '20px' }} className="radio">
                 <label>
-                  <input type="radio" defaultChecked={searchState.isRead == "1"} name="isRead" />
+                  <input type="radio" defaultChecked={searchState.isRead == '1'} ref={isRead1} name="isRead" />
                   Yes
                 </label>
               </div>
-              <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
+              <div style={{ display: 'inline', marginLeft: '20px' }} className="radio">
                 <label>
-                  <input type="radio" defaultChecked={searchState.isRead == "0"} ref={isRead0} name="isRead" />
+                  <input type="radio" defaultChecked={searchState.isRead == '0'} ref={isRead0} name="isRead" />
                   No
                 </label>
               </div>
@@ -85,7 +90,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
         </div>
       </form>
-      <div className="row" style={{ position: "relative" }}>
+      <div className="row" style={{ position: 'relative' }}>
         <div className="col-xs-3">
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
@@ -97,7 +102,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
       </div>
       <br />
       <>
-        <div className="row" style={{ position: "relative" }}>
+        <div className="row" style={{ position: 'relative' }}>
           <div className="col-xs-3">
             <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
           </div>
@@ -107,7 +112,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             </div>
           </div>
         </div>
-        <div className="row" style={{ position: "relative" }}>
+        <div className="row" style={{ position: 'relative' }}>
           <div className="col-xs-6">
             <div className="checkbox">
               <label>
@@ -128,7 +133,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
         </div>
       </>
-      {typeof searchState.resultsCount === "number" ? <SearchResults /> : null}
+      {typeof searchState.resultsCount === 'number' ? <SearchResults /> : null}
     </Modal>
   );
 };
@@ -140,7 +145,7 @@ const SearchResults: FunctionComponent<{}> = props => {
 
   let { searchResults, searching } = searchState;
   return (
-    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
+    <div style={{ maxHeight: '300px', overflowY: 'auto', marginTop: '5px' }}>
       {searchState.resultsCount ? (
         <table className="table table-condensed table-striped">
           <thead>
@@ -178,7 +183,7 @@ const SearchResult: FunctionComponent<{ book: ISearchBookRaw }> = props => {
   return (
     <tr>
       <td>
-        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer" }} className="btn btn-primary">
+        <button disabled={adding} onClick={selectBook} style={{ cursor: 'pointer' }} className="btn btn-primary">
           Add to list&nbsp;
           <i className="fal fa-plus" />
         </button>
@@ -191,7 +196,7 @@ const SearchResult: FunctionComponent<{ book: ISearchBookRaw }> = props => {
         {book.authors && book.authors.length ? (
           <>
             <br />
-            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+            <span style={{ fontStyle: 'italic' }}>{book.authors.join(', ')}</span>
           </>
         ) : null}
       </td>
