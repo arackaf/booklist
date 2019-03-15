@@ -4,7 +4,8 @@ import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { getStatePacket } from "applicationRoot/rootReducer";
 import { useContext, useMemo, useEffect } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
-import { BooksSearchContext, TagsContext } from "./components/bookViewList";
+import { BooksSearchContext } from "./components/bookViewList";
+import { TagsContext } from "applicationRoot/tagsState";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
 const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
@@ -226,8 +227,3 @@ export const pageOne = () => {
 };
 
 export const setPage = page => setSearchValues({ page: page == 1 ? null : page });
-
-// const pageLast = () => {
-//   let booksState = useBookLoadingInfo();
-//   setSearchValues({ page: booksState.totalPages });
-// };

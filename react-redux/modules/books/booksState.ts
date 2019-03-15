@@ -5,11 +5,11 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
-import { TagsContext } from "./components/bookViewList";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHelpers";
 
 import delve from "dlv";
+import { TagsContext } from "applicationRoot/tagsState";
 
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 

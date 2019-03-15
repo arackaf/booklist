@@ -11,9 +11,8 @@ import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
-import { TagsContext } from "./bookViewList";
 import { ColorsContext } from "applicationRoot/renderUI";
-import { filterTags } from "applicationRoot/tagsState";
+import { filterTags, TagsContext } from "applicationRoot/tagsState";
 
 interface ILocalProps {
   onDone: any;

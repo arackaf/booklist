@@ -6,7 +6,7 @@ import BarChart from "./components/barChart";
 import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
 import { AppContext, SubjectsContext } from "applicationRoot/renderUI";
 import { useStackedSubjects } from "applicationRoot/subjectsState";
-//import RecommendMain from "./components/recommend/main";
+import RecommendMain from "./components/recommend/main";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
@@ -83,8 +83,7 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
           </Measure>
         </Tab>
         <Tab name="search" caption="Discover books">
-          {/* <RecommendMain /> */}
-          <h2>Returning soon ...</h2>
+          <RecommendMain />
         </Tab>
       </Tabs>
     </MainHomePane>
