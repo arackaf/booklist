@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useContext } from 'react';
-import SelectAvailableItems from './availableTagsOrSubjects';
-import { filterTags, TagsContext } from 'applicationRoot/tagsState';
+import React, { FunctionComponent, useContext } from "react";
+import SelectAvailableItems from "./availableTagsOrSubjects";
+import { filterTags, TagsContext } from "applicationRoot/tagsState";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 

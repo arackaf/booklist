@@ -1,17 +1,17 @@
-import { graphqlClient } from 'applicationRoot/rootReducer';
-import update from 'immutability-helper';
+import { graphqlClient } from "applicationRoot/rootReducer";
+import update from "immutability-helper";
 
-import GetBooksQuery from 'graphQL/books/getBooks.graphql';
-import { useCurrentSearch } from './booksSearchState';
-import { useMemo, useContext, createContext } from 'react';
-import { SubjectsContext, AppContext } from 'applicationRoot/renderUI';
-import { useQuery, buildQuery } from 'micro-graphql-react';
-import { syncResults, clearCache, syncDeletes } from 'applicationRoot/graphqlHelpers';
+import GetBooksQuery from "graphQL/books/getBooks.graphql";
+import { useCurrentSearch } from "./booksSearchState";
+import { useMemo, useContext, createContext } from "react";
+import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
+import { useQuery, buildQuery } from "micro-graphql-react";
+import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHelpers";
 
-import delve from 'dlv';
-import { TagsContext } from 'applicationRoot/tagsState';
+import delve from "dlv";
+import { TagsContext } from "applicationRoot/tagsState";
 
-const SET_BOOKS_TAGS = 'SET_BOOKS_TAGS';
+const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 
 interface IEditorialReview {
   content: string;
@@ -94,23 +94,23 @@ export const useBooks = () => {
     {
       when: /updateBooks?/,
       run: ({ currentResults, softReset }, resp) => {
-        syncResults(currentResults.allBooks, 'Books', resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
+        syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
         softReset(currentResults);
       }
     },
     {
       when: /deleteBook/,
       run: ({ refresh }, res, req) => {
-        syncDeletes(GetBooksQuery, [req._id], 'allBooks', 'Books');
+        syncDeletes(GetBooksQuery, [req._id], "allBooks", "Books");
         refresh();
       }
     }
   ];
   const { data, loading, loaded, currentQuery } = useQuery(buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation }));
 
-  const booksRaw = delve(data, 'allBooks.Books') || null;
+  const booksRaw = delve(data, "allBooks.Books") || null;
   const books = adjustBooks(booksRaw);
-  const booksCount = loaded ? delve(data, 'allBooks.Meta.count') : '';
+  const booksCount = loaded ? delve(data, "allBooks.Meta.count") : "";
 
   const resultsCount = booksCount != null ? booksCount : -1;
   const totalPages = useMemo(() => (resultsCount && resultsCount > 0 ? Math.ceil(resultsCount / searchState.pageSize) : 0), [resultsCount]);
@@ -129,12 +129,12 @@ function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
     let getBooksVariables: any = {
       page: +bookSearchFilters.page,
       pageSize: bookSearchFilters.pageSize,
-      sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == 'asc' ? 1 : -1 },
+      sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
       title_contains: bookSearchFilters.search || void 0,
-      isRead: bookSearchFilters.isRead === '1' ? true : void 0,
-      isRead_ne: bookSearchFilters.isRead === '0' ? true : void 0,
+      isRead: bookSearchFilters.isRead === "1" ? true : void 0,
+      isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
       subjects_containsAny: bookSearchFilters.subjectIds.length ? bookSearchFilters.subjectIds : void 0,
-      searchChildSubjects: bookSearchFilters.searchChildSubjects == 'true' ? true : void 0,
+      searchChildSubjects: bookSearchFilters.searchChildSubjects == "true" ? true : void 0,
       tags_containsAny: bookSearchFilters.tagIds.length ? bookSearchFilters.tagIds : void 0,
       authors_textContains: bookSearchFilters.author || void 0,
       publisher_contains: bookSearchFilters.publisher || void 0,
@@ -143,8 +143,8 @@ function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
       cache: online ? 1 : void 0
     };
 
-    if (bookSearchFilters.pages != '' && bookSearchFilters.pages != null) {
-      getBooksVariables[bookSearchFilters.pagesOperator == 'lt' ? 'pages_lt' : 'pages_gt'] = +bookSearchFilters.pages;
+    if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {
+      getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
     }
 
     return getBooksVariables;

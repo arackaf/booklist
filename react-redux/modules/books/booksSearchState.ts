@@ -1,21 +1,21 @@
-import shallowEqual from 'shallow-equal/objects';
+import shallowEqual from "shallow-equal/objects";
 
-import { setSearchValues, getCurrentHistoryState, history } from 'reactStartup';
-import { getStatePacket } from 'applicationRoot/rootReducer';
-import { useContext, useMemo, useEffect } from 'react';
-import { SubjectsContext, AppContext } from 'applicationRoot/renderUI';
-import { BooksSearchContext } from './components/bookViewList';
-import { TagsContext } from 'applicationRoot/tagsState';
+import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
+import { getStatePacket } from "applicationRoot/rootReducer";
+import { useContext, useMemo, useEffect } from "react";
+import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
+import { BooksSearchContext } from "./components/bookViewList";
+import { TagsContext } from "applicationRoot/tagsState";
 
-const SET_GRID_VIEW = 'booksSearch.SET_GRID_VIEW';
-const SET_BASIC_LIST_VIEW = 'booksSearch.SET_BasicList_VIEW';
+const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
+const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
 
-const GRID_VIEW = 'books table view';
-const BASIC_LIST_VIEW = 'books mobile view';
-const HASH_CHANGED = 'books search hash changed';
+const GRID_VIEW = "books table view";
+const BASIC_LIST_VIEW = "books mobile view";
+const HASH_CHANGED = "books search hash changed";
 
 const initialState = {
-  view: '',
+  view: "",
   hashFilters: {} as typeof defaultSearchValuesHash
 };
 export type BookSearchState = typeof initialState;
@@ -45,21 +45,21 @@ export type LookupHashType = {
 };
 
 const defaultSearchValuesHash = {
-  search: '',
-  subjects: '',
-  tags: '',
-  searchChildSubjects: '',
-  author: '',
-  publisher: '',
-  pages: '',
-  pagesOperator: '',
+  search: "",
+  subjects: "",
+  tags: "",
+  searchChildSubjects: "",
+  author: "",
+  publisher: "",
+  pages: "",
+  pagesOperator: "",
   page: 1,
   pageSize: 50,
-  isRead: '',
-  noSubjects: '',
-  sort: '_id',
-  sortDirection: 'desc',
-  userId: ''
+  isRead: "",
+  noSubjects: "",
+  sort: "_id",
+  sortDirection: "desc",
+  userId: ""
 };
 
 export function useBooksSearchState(): [BookSearchState, any, any] {
@@ -94,14 +94,14 @@ export const useSelectedTags = () => {
   return useMemo(() => projectSelectedItems(tags, tagHash), [tags, tagHash]);
 };
 
-function projectSelectedItems(ids: string = '', hash): TagOrSubject[] {
+function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
   return ids
-    .split('-')
+    .split("-")
     .map(_id => (_id ? hash[_id] : null))
     .filter(res => res);
 }
 
-const keyIsFilter = k => k != 'page' && k != 'sort' && k != 'sortDirection';
+const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection";
 
 export const useCurrentSearch = () => {
   const [{ hashFilters: filters }] = useContext(BooksSearchContext);
@@ -114,8 +114,8 @@ export const useCurrentSearch = () => {
     let result = Object.assign({}, defaultSearchValuesHash, filters, {
       selectedSubjects: subjects,
       selectedTags: tags,
-      tagIds: tagsHashValue ? tagsHashValue.split('-') : [],
-      subjectIds: subjectsHashValue ? subjectsHashValue.split('-') : []
+      tagIds: tagsHashValue ? tagsHashValue.split("-") : [],
+      subjectIds: subjectsHashValue ? subjectsHashValue.split("-") : []
     });
 
     return Object.assign(result, {
@@ -146,20 +146,20 @@ const setViewBasicList = () => ({ type: SET_BASIC_LIST_VIEW });
 const hashChanged = filters => ({ type: HASH_CHANGED, filters });
 
 export const applyFilters = (nextState: any) => {
-  let filterSubjectsVal = nextState.subjects.join('-');
+  let filterSubjectsVal = nextState.subjects.join("-");
 
   setSearchValues({
     page: null,
     search: nextState.search,
     subjects: filterSubjectsVal,
-    tags: nextState.tags.join('-'),
-    searchChildSubjects: nextState.searchChildSubjects && filterSubjectsVal ? 'true' : null,
+    tags: nextState.tags.join("-"),
+    searchChildSubjects: nextState.searchChildSubjects && filterSubjectsVal ? "true" : null,
     author: nextState.author,
     publisher: nextState.publisher,
-    pagesOperator: nextState.pages != '' ? nextState.pagesOperator : null,
+    pagesOperator: nextState.pages != "" ? nextState.pagesOperator : null,
     pages: nextState.pages,
     isRead: nextState.isRead,
-    noSubjects: nextState.noSubjects ? 'true' : '',
+    noSubjects: nextState.noSubjects ? "true" : "",
     sort: nextState.sort,
     sortDirection: nextState.sortDirection
   });
@@ -168,24 +168,24 @@ export const applyFilters = (nextState: any) => {
 export const clearAllFilters = () => {
   setSearchValues({
     page: null,
-    search: '',
-    subjects: '',
-    tags: '',
+    search: "",
+    subjects: "",
+    tags: "",
     searchChildSubjects: null,
-    author: '',
-    publisher: '',
+    author: "",
+    publisher: "",
     pagesOperator: null,
-    pages: '',
-    isRead: '',
-    noSubjects: ''
+    pages: "",
+    isRead: "",
+    noSubjects: ""
   });
 };
 
 export const setSortOrder = (sort, sortDirection) => {
-  if (sort == '_id' && sortDirection == 'desc') {
+  if (sort == "_id" && sortDirection == "desc") {
     setSearchValues({
-      sort: '',
-      sortDirection: '',
+      sort: "",
+      sortDirection: "",
       page: null
     });
   } else {
@@ -198,7 +198,7 @@ export const setSortOrder = (sort, sortDirection) => {
 };
 
 export const removeFilters = (...names) => {
-  setSearchValues(names.concat('page').reduce((hash, item) => ((hash[item] = ''), hash), {}));
+  setSearchValues(names.concat("page").reduce((hash, item) => ((hash[item] = ""), hash), {}));
 };
 
 export const removeFilterSubject = _id => {
@@ -206,8 +206,8 @@ export const removeFilterSubject = _id => {
   let newSubjects = currentSearch.selectedSubjects.map(s => s._id).filter(sId => sId != _id);
 
   setSearchValues({
-    subjects: newSubjects.join('-'),
-    searchChildSubjects: currentSearch.searchChildSubjects && newSubjects ? 'true' : null
+    subjects: newSubjects.join("-"),
+    searchChildSubjects: currentSearch.searchChildSubjects && newSubjects ? "true" : null
   });
 };
 
@@ -215,7 +215,7 @@ export const removeFilterTag = _id => {
   let currentSearch = useCurrentSearch();
   let newTags = currentSearch.selectedTags.map(s => s._id).filter(sId => sId != _id);
 
-  setSearchValues({ tags: newTags.join('-') });
+  setSearchValues({ tags: newTags.join("-") });
 };
 
 export const clearSearchChildSubjects = () => setSearchValues({ searchChildSubjects: null });
