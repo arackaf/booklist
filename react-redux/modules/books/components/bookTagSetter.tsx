@@ -1,17 +1,17 @@
-import React, { SFC, useState, useLayoutEffect, useContext } from 'react';
+import React, { SFC, useState, useLayoutEffect, useContext } from "react";
 
-import BootstrapButton, { AjaxButton } from 'applicationRoot/components/bootstrapButton';
-import SelectAvailable from 'applicationRoot/components/availableTagsOrSubjects';
+import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
 
-import { useMutation, buildMutation } from 'micro-graphql-react';
-import updateBookSubjects from 'graphQL/books/updateBookTags.graphql';
+import { useMutation, buildMutation } from "micro-graphql-react";
+import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
-import Modal from 'applicationRoot/components/modal';
-import { filterTags, TagsContext } from 'applicationRoot/tagsState';
+import Modal from "applicationRoot/components/modal";
+import { filterTags, TagsContext } from "applicationRoot/tagsState";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
   const { tagHash, tags } = useContext(TagsContext);
-  const [currentTab, setTab] = useState('tags');
+  const [currentTab, setTab] = useState("tags");
   const [addingTags, setAddingTags] = useState([]);
   const [removingTags, setRemovingTags] = useState([]);
   const resetTags = () => {
@@ -45,17 +45,17 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
   return (
     <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:">
       <ul className="nav nav-tabs">
-        <li className={currentTab == 'tags' ? 'active' : ''}>
-          <a onClick={() => setTab('tags')}>Choose tags</a>
+        <li className={currentTab == "tags" ? "active" : ""}>
+          <a onClick={() => setTab("tags")}>Choose tags</a>
         </li>
-        <li className={currentTab == 'books' ? 'active' : ''}>
-          <a onClick={() => setTab('books')}>For books</a>
+        <li className={currentTab == "books" ? "active" : ""}>
+          <a onClick={() => setTab("books")}>For books</a>
         </li>
       </ul>
       <div className="tab-content">
-        <div style={{ minHeight: '150px' }} className={'tab-pane ' + (currentTab == 'tags' ? 'active in' : '')}>
+        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "tags" ? "active in" : "")}>
           <br />
-          <div style={{ position: 'relative' }} className="row">
+          <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
               <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
             </div>
@@ -66,10 +66,10 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                   .map((s: any, i) => (
                     <span
                       key={i}
-                      style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }}
+                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
                       className="label label-default margin-left"
                     >
-                      <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>
+                      <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
                         X
                       </a>
                       {s.name}
@@ -81,7 +81,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
 
           <br />
 
-          <div style={{ position: 'relative' }} className="row">
+          <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Removing"
@@ -98,10 +98,10 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                   .map((s: any, i) => (
                     <span
                       key={i}
-                      style={{ color: s.textColor || 'white', backgroundColor: s.backgroundColor, display: 'inline-table' }}
+                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
                       className="label label-default margin-left"
                     >
-                      <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || 'white', paddingRight: '5px', marginRight: '5px' }}>
+                      <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
                         X
                       </a>
                       {s.name}
@@ -117,7 +117,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
           </BootstrapButton>
           <br />
         </div>
-        <div style={{ minHeight: '150px' }} className={'tab-pane ' + (currentTab == 'books' ? 'active in' : '')}>
+        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active in" : "")}>
           <br />
           <ul className="list-unstyled">
             {modifyingBooks.map(book => (

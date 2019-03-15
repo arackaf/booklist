@@ -1,30 +1,30 @@
-import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLayoutEffect, useReducer } from 'react';
+import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLayoutEffect, useReducer } from "react";
 
-import BooksMenuBar from './booksMenuBar';
-import BooksLoading from './booksLoading';
+import BooksMenuBar from "./booksMenuBar";
+import BooksLoading from "./booksLoading";
 
-import Loading from 'applicationRoot/components/loading';
+import Loading from "applicationRoot/components/loading";
 
-import { useMutation, buildMutation } from 'micro-graphql-react';
+import { useMutation, buildMutation } from "micro-graphql-react";
 
-import UpdateBookMutation from 'graphQL/books/updateBook.graphql';
-import UpdateBooksReadMutation from 'graphQL/books/updateBooksRead.graphql';
-import DeleteBookMutation from 'graphQL/books/deleteBook.graphql';
+import UpdateBookMutation from "graphQL/books/updateBook.graphql";
+import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
+import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
-import { AppContext } from 'applicationRoot/renderUI';
-import { useTagsState, TagsContext } from 'applicationRoot/tagsState';
-import { BooksContext, useBooks } from '../booksState';
-import { BookSearchState, useBooksSearchState, useBookSearchUiView } from '../booksSearchState';
+import { AppContext } from "applicationRoot/renderUI";
+import { useTagsState, TagsContext } from "applicationRoot/tagsState";
+import { BooksContext, useBooks } from "../booksState";
+import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
 
-import GridView from './bookViewList-grid';
-const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ './bookViewList-basicList'));
+import GridView from "./bookViewList-grid";
+const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"));
 
-const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ 'applicationRoot/components/manualBookEntry'));
-const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ './bookSubjectSetter'));
-const BookTagSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ './bookTagSetter'));
-const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ './subjectEditModal'));
-const TagEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ './tagEditModal'));
-const BookSearchModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ './bookSearchModal'));
+const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
+const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
+const BookTagSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
+const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));
+const TagEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
+const BookSearchModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
 
 const useCodeSplitModal = (initialOpenData = false): any => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
@@ -32,7 +32,7 @@ const useCodeSplitModal = (initialOpenData = false): any => {
 };
 
 const prepBookForSaving = book => {
-  let propsToUpdate = ['title', 'isbn', 'smallImage', 'pages', 'publisher', 'publicationDate', 'authors'];
+  let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors"];
   let pages = parseInt(book.pages, 10);
   book.pages = isNaN(pages) ? void 0 : pages;
 
@@ -74,26 +74,26 @@ const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce
 
 function booksUiStateReducer(state, [action, payload = null]) {
   switch (action) {
-    case 'select':
+    case "select":
       return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, true) } };
-    case 'de-select':
+    case "de-select":
       return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, false) } };
-    case 'toggle-select':
+    case "toggle-select":
       return { ...state, selectedBooks: { ...state.selectedBooks, [payload]: !state.selectedBooks[payload] } };
-    case 'read-saving':
+    case "read-saving":
       return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, true) } };
-    case 'read-saved':
+    case "read-saved":
       return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, false) } };
-    case 'start-delete':
+    case "start-delete":
       return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
-    case 'cancel-delete':
+    case "cancel-delete":
       return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, false) } };
-    case 'delete':
+    case "delete":
       return { ...state, deleting: { ...state.deleting, [payload]: true } };
-    case 'reset':
+    case "reset":
       return { ...initialBooksState };
     default:
-      throw 'Invalid key';
+      throw "Invalid key";
   }
 }
 
@@ -103,7 +103,7 @@ const BookViewingList: SFC<{}> = props => {
   const { books, booksLoading, currentQuery } = useContext(BooksContext);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
-  useLayoutEffect(() => dispatchBooksUiState(['reset']), [currentQuery]);
+  useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
 
   const [bookSubModifying, bookSubModalLoaded, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
@@ -132,27 +132,27 @@ const BookViewingList: SFC<{}> = props => {
   };
 
   const setRead = (_ids, isRead) => {
-    dispatchBooksUiState(['read-saving', _ids]);
+    dispatchBooksUiState(["read-saving", _ids]);
     Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
-      dispatchBooksUiState(['read-saved', _ids]);
+      dispatchBooksUiState(["read-saved", _ids]);
     });
   };
 
   const runDelete = _id => {
-    dispatchBooksUiState(['delete', _id]);
+    dispatchBooksUiState(["delete", _id]);
     deleteBook({ _id });
   };
 
   let dragTitle = editingBook
-    ? `Click or drag to upload a ${editingBook.smallImage ? 'new' : ''} cover image.  The uploaded image will be scaled down as needed`
-    : '';
+    ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
+    : "";
 
   const uiView = useBookSearchUiView();
 
   return (
     <>
       <BooksLoading />
-      <div style={{ marginLeft: '5px', marginTop: 0 }}>
+      <div style={{ marginLeft: "5px", marginTop: 0 }}>
         <BooksMenuBar
           startTagModification={editTagsForSelectedBooks}
           startSubjectModification={editSubjectsForSelectedBooks}
@@ -163,7 +163,7 @@ const BookViewingList: SFC<{}> = props => {
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!books.length && !booksLoading ? (
-            <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0, marginTop: '20px' }}>
+            <div className="alert alert-warning" style={{ borderLeftWidth: 0, borderRightWidth: 0, borderRadius: 0, marginTop: "20px" }}>
               No books found
             </div>
           ) : null}
@@ -187,14 +187,14 @@ const BookViewingList: SFC<{}> = props => {
       <Suspense fallback={<Loading />}>
         {bookEditingModalLoaded ? (
           <ManualBookEntry
-            title={editingBook ? `Edit ${editingBook.title}` : ''}
+            title={editingBook ? `Edit ${editingBook.title}` : ""}
             dragTitle={dragTitle}
             bookToEdit={editingBook}
             isOpen={!!editingBook}
             isSaving={running}
             isSaved={false}
             saveBook={saveEditingBook}
-            saveMessage={'Saved'}
+            saveMessage={"Saved"}
             onClosing={stopEditingBook}
           />
         ) : null}
