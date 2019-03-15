@@ -15,10 +15,12 @@ interface LocalProps {
   setBookSearchState: any;
   searchState: any;
   searchResults: any;
+  dispatch: any;
+  selectedBooksSet: any;
 }
 
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
-  const { isOpen, onHide, setBookSearchState, searchState, searchResults } = props;
+  const { isOpen, onHide, setBookSearchState, searchState, searchResults, dispatch, selectedBooksSet } = props;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
@@ -46,7 +48,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
     evt.preventDefault();
     setBookSearchState({
       title: searchEl.current.value || "",
-      isRead: isReadE.current.checked ? null : isRead0.current.checked ? false : true,
+      isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
       subjects: subjects.length ? subjects : null,
       tags: tags.length ? tags : null,
       searchChildSubjects: childSubEl.current.checked
@@ -132,7 +134,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
         </div>
       </>
-      {loaded ? <SearchResults loaded={loaded} loading={loading} data={data} error={error} /> : null}
+      {loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet }} /> : null}
     </Modal>
   );
 };
@@ -141,7 +143,7 @@ export default SearchModal;
 
 const SearchResults = props => {
   const books = props.data.allBooks.Books;
-  const loading = props.loading;
+  const { loading, selectedBooksSet } = props;
 
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
@@ -155,11 +157,13 @@ const SearchResults = props => {
             </tr>
           </thead>
           <TransitionGroup component="tbody">
-            {books.map(book => (
-              <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
-                <SearchResult key={book._id} book={book} />
-              </CSSTransition>
-            ))}
+            {books
+              .filter(b => !selectedBooksSet.has(b._id))
+              .map(book => (
+                <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
+                  <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                </CSSTransition>
+              ))}
           </TransitionGroup>
         </table>
       ) : (
@@ -169,13 +173,12 @@ const SearchResults = props => {
   );
 };
 
-const SearchResult: FunctionComponent<{ book: ISearchBookRaw }> = props => {
+const SearchResult = props => {
   const [adding, setAdding] = useState(false);
 
   const selectBook = () => {
     setAdding(true);
-    //TODO:
-    //selectBookToSearchRecommendationsFor(props.book);
+    props.dispatch(["selectBook", props.book]);
   };
 
   let { book } = props;
