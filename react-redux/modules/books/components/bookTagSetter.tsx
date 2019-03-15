@@ -7,8 +7,7 @@ import { useMutation, buildMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
 import Modal from "applicationRoot/components/modal";
-import { TagsContext } from "./bookViewList";
-import { filterTags } from "applicationRoot/tagsState";
+import { filterTags, TagsContext } from "applicationRoot/tagsState";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
   const { tagHash, tags } = useContext(TagsContext);

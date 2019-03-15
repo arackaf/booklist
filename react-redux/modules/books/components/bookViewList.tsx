@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, lazy, useContext, useEffect, createContext, useState, useLayoutEffect, useReducer } from "react";
+import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLayoutEffect, useReducer } from "react";
 
 import BooksMenuBar from "./booksMenuBar";
 import BooksLoading from "./booksLoading";
@@ -12,7 +12,7 @@ import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
 import { AppContext } from "applicationRoot/renderUI";
-import { TagsState, useTagsState } from "applicationRoot/tagsState";
+import { useTagsState, TagsContext } from "applicationRoot/tagsState";
 import { BooksContext, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
 
@@ -40,7 +40,6 @@ const prepBookForSaving = book => {
 };
 
 export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
-export const TagsContext = createContext<TagsState>(null);
 
 export const BookModuleRoot = () => {
   let booksSearchState = useBooksSearchState();

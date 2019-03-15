@@ -1,7 +1,7 @@
 import { graphqlClient } from "./rootReducer";
 
 import GetTags from "graphQL/tags/getTags.graphql";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, createContext } from "react";
 import { buildQuery, useQuery } from "micro-graphql-react";
 import { AppContext } from "./renderUI";
 
@@ -18,6 +18,8 @@ export interface TagsState {
   tags: ITag[];
   tagHash: any;
 }
+
+export const TagsContext = createContext<TagsState>(null);
 
 graphqlClient.subscribeMutation([
   {
