@@ -1,5 +1,5 @@
-export default `query findRecommendations($asins: [String]) {
-  allBookSummarys(asin_in: $asins) {
+export default `query findRecommendations($isbns: [String]) {
+  allBookSummarys(isbn_in: $isbns) {
     BookSummarys {
       _id
       asin
