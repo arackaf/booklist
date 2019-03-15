@@ -1,13 +1,13 @@
-import React, { FunctionComponent, useState, useContext, useEffect, useRef } from 'react';
+import React, { FunctionComponent, useState, useContext, useEffect, useRef } from "react";
 
-import Modal from 'applicationRoot/components/modal';
-import SelectAvailableTags from 'applicationRoot/components/selectAvailableTags';
-import DisplaySelectedTags from 'applicationRoot/components/displaySelectedTags';
-import SelectAvailableSubjects from 'applicationRoot/components/selectAvailableSubjects';
-import DisplaySelectedSubjects from 'applicationRoot/components/displaySelectedSubjects';
+import Modal from "applicationRoot/components/modal";
+import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
+import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
+import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
+import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
 
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { SearchContext, ISearchBookRaw } from 'modules/home/searchState';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { SearchContext, ISearchBookRaw } from "modules/home/searchState";
 
 interface LocalProps {
   isOpen: boolean;
@@ -45,15 +45,15 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const applyFilters = evt => {
     evt.preventDefault();
     setBookSearchState({
-      title: searchEl.current.value || void 0,
-      isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
-      subjects: subjects.length ? subjects : void 0,
-      tags: tags.length ? tags : void 0,
+      title: searchEl.current.value || "",
+      isRead: isReadE.current.checked ? null : isRead0.current.checked ? false : true,
+      subjects: subjects.length ? subjects : null,
+      tags: tags.length ? tags : null,
       searchChildSubjects: childSubEl.current.checked
     });
   };
   return (
-    <Modal {...{ isOpen, onHide, headerCaption: 'Search your books' }}>
+    <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
       <form onSubmit={applyFilters}>
         <div className="row">
           <div className="col-xs-6">
@@ -67,21 +67,21 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             <div className="form-group">
               <label>Is read?</label>
               <br />
-              <div style={{ display: 'inline' }} className="radio">
+              <div style={{ display: "inline" }} className="radio">
                 <label>
                   <input type="radio" defaultChecked={searchState.isRead == null} ref={isReadE} name="isRead" />
                   Either
                 </label>
               </div>
-              <div style={{ display: 'inline', marginLeft: '20px' }} className="radio">
+              <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
                 <label>
-                  <input type="radio" defaultChecked={searchState.isRead == '1'} ref={isRead1} name="isRead" />
+                  <input type="radio" defaultChecked={searchState.isRead == "1"} ref={isRead1} name="isRead" />
                   Yes
                 </label>
               </div>
-              <div style={{ display: 'inline', marginLeft: '20px' }} className="radio">
+              <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
                 <label>
-                  <input type="radio" defaultChecked={searchState.isRead == '0'} ref={isRead0} name="isRead" />
+                  <input type="radio" defaultChecked={searchState.isRead == "0"} ref={isRead0} name="isRead" />
                   No
                 </label>
               </div>
@@ -89,7 +89,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
         </div>
       </form>
-      <div className="row" style={{ position: 'relative' }}>
+      <div className="row" style={{ position: "relative" }}>
         <div className="col-xs-3">
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
@@ -101,7 +101,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
       </div>
       <br />
       <>
-        <div className="row" style={{ position: 'relative' }}>
+        <div className="row" style={{ position: "relative" }}>
           <div className="col-xs-3">
             <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
           </div>
@@ -111,7 +111,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             </div>
           </div>
         </div>
-        <div className="row" style={{ position: 'relative' }}>
+        <div className="row" style={{ position: "relative" }}>
           <div className="col-xs-6">
             <div className="checkbox">
               <label>
@@ -144,7 +144,7 @@ const SearchResults = props => {
   const loading = props.loading;
 
   return (
-    <div style={{ maxHeight: '300px', overflowY: 'auto', marginTop: '5px' }}>
+    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
       {books.length ? (
         <table className="table table-condensed table-striped">
           <thead>
@@ -182,20 +182,20 @@ const SearchResult: FunctionComponent<{ book: ISearchBookRaw }> = props => {
   return (
     <tr>
       <td>
-        <button disabled={adding} onClick={selectBook} style={{ cursor: 'pointer' }} className="btn btn-primary">
+        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer" }} className="btn btn-primary">
           Add to list&nbsp;
           <i className="fal fa-plus" />
         </button>
       </td>
       <td>
-        <img crossOrigin="anonymous" src={book.smallImage} />
+        <img src={book.smallImage} />
       </td>
       <td>
         {book.title}
         {book.authors && book.authors.length ? (
           <>
             <br />
-            <span style={{ fontStyle: 'italic' }}>{book.authors.join(', ')}</span>
+            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
           </>
         ) : null}
       </td>
