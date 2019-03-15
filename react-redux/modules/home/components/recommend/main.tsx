@@ -5,11 +5,12 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { TagsContext, useTagsState } from "applicationRoot/tagsState";
 import BooksQuery from "graphQL/home/searchBooks.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
+import ajaxUtil from "util/ajaxUtil";
 
 const initialState = {
   selectedBooks: [],
+  recommendationsLoading: false,
   recommendations: [],
-  recommendationsSearching: false,
   searchState: {
     active: false,
     page: 1,
@@ -19,7 +20,7 @@ const initialState = {
     subjects: []
   }
 };
-function reducer(state, [type, payload]) {
+function reducer(state, [type, payload = null]) {
   switch (type) {
     case "selectBook":
       return { ...state, selectedBooks: [...state.selectedBooks, payload] };
@@ -27,6 +28,10 @@ function reducer(state, [type, payload]) {
       return { ...state, selectedBooks: state.selectedBooks.filter(b => b != payload) };
     case "setSearchState":
       return { ...state, searchState: { active: true, page: 1, ...payload } };
+    case "startRecommendationsFetch":
+      return { ...state, recommendationsLoading: true };
+    case "setRecommendations":
+      return { ...state, recommendationsLoading: false, recommendations: payload };
   }
   return state;
 }
@@ -34,7 +39,7 @@ function reducer(state, [type, payload]) {
 export default props => {
   const tagsState = useTagsState();
   const [searchModalOpen, setSearchModalOpen] = useState(false);
-  const [{ selectedBooks, recommendations, recommendationsSearching, searchState }, dispatch] = useReducer(reducer, initialState);
+  const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
   const { active, ...searchStateToUse } = searchState;
 
   const { loading, loaded, data, error } = useQuery(buildQuery(BooksQuery, searchStateToUse, { active }));
@@ -45,6 +50,13 @@ export default props => {
   };
 
   const selectedBooksSet = useMemo(() => new Set(selectedBooks.map(b => b._id)), [selectedBooks]);
+
+  const getRecommendations = () => {
+    dispatch(["startRecommendationsFetch"]);
+    ajaxUtil.post("/book/getRecommendations", { bookIds: [...selectedBooksSet] }).then(resp => {
+      dispatch(["setRecommendations", resp.results]);
+    });
+  };
 
   return (
     <TagsContext.Provider value={tagsState}>
@@ -57,15 +69,9 @@ export default props => {
                 <i className="fal fa-search" /> Search your books
               </button>
               {selectedBooks.length ? (
-                recommendationsSearching ? (
-                  <button disabled={true} className="btn btn-default btn-primary pull-right" onClick={props.findRecommendations}>
-                    <i className="fa fa-fw fa-spin fa-spinner" /> Get Recommendations
-                  </button>
-                ) : (
-                  <button className="btn btn-default btn-primary pull-right" onClick={props.findRecommendations}>
-                    Get Recommendations
-                  </button>
-                )
+                <button onClick={getRecommendations} disabled={recommendationsLoading} className="btn btn-default btn-primary pull-right">
+                  {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
+                </button>
               ) : null}
             </div>
             <br />
@@ -82,7 +88,7 @@ export default props => {
           </div>
           <div className="col-xs-6">
             <div style={{ marginTop: "5px" }}>
-              {recommendations && recommendations.length ? (
+              {recommendations.length ? (
                 <>
                   <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
                   <table className="table table-condensed table-striped">
