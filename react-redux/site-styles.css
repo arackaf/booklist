@@ -1,1 +1,14 @@
-h1{color: blue}
+.nav {
+  display: flex;
+  background-color: red;
+}
+.nav-items {
+  display: flex;
+  list-style-type: none;
+}
+.nav-items-right {
+  margin-left: auto;
+  margin-right: 30px;
+  display: flex;
+  list-style-type: none;
+}
