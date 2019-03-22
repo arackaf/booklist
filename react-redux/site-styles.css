@@ -1,9 +1,31 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.scheme1 {
+  --color1: hsl(262, 60%, 38%);
+  --mainTextColor: hsl(262, 61%, 93%);
+}
+
 .nav {
+  margin-top: 0;
+  margin-bottom: 0;
   display: flex;
-  background-color: red;
+  align-items: stretch;
+  color: var(--mainTextColor);
+  background-color: var(--color1);
+  height: 50px;
+  font-size: 14px;
+}
+.nav li a, .nav li span {
+  padding-left: 15px;
+  padding-right: 15px;
 }
 .nav-items {
+  margin-top: 0;
+  margin-bottom: 0;
   display: flex;
+  align-items: stretch;
   list-style-type: none;
 }
 .nav-items-right {
