@@ -419,3 +419,7 @@ a.inline-filter {
   z-index: 10;
   margin-right: 10px;
 }
+
+button {
+  outline: 0 !important;
+}
