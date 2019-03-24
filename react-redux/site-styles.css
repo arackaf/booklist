@@ -16,7 +16,7 @@
   color: var(--mainTextColor);
   background-color: var(--color1);
   height: 50px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .nav-header {
   font-size: 18px;
@@ -45,3 +45,5 @@
 .nav-items-right {
   margin-left: auto;
 }
+
+
