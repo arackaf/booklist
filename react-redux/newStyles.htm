@@ -13,18 +13,56 @@
       <h1>Hello World</h1>
 
       <div class="nav">
-        <div class="nav-header">
-          <i class="fal fa-books" style="margin-right: 5px;"></i>
-          <span>My Library</span>
+        <div class="nav-header hidden-xs">
+          <a>
+            <i class="fal fa-book" style="margin-right: 5px;"></i>
+            <span>My Library</span>
+          </a>
         </div>
         <ul class="nav-items">
-          <li><a>Home</a></li>
-          <li><a>Scan</a></li>
-          <li><span>Books</span></li>
-          <li><a>View Collection</a></li>
+          <li class="visible-xs active">
+            <a style="margin-top: 2px;">
+              <i class="fal fa-home visible-xs"></i>
+            </a>
+          </li>
+          <li>
+            <a>
+              <span class="hidden-xs">Scan</span>
+              <i class="visible-xs fal fa-scanner"></i>
+            </a>
+          </li>
+          <li>
+            <a>
+              <span class="hidden-xs">Books</span>
+              <i class="visible-xs fal fa-books"></i>
+            </a>
+          </li>
+          <li class="active">
+            <a>
+              <span class="hidden-xs">Subjects</span>
+              <i class="visible-xs fal fa-sitemap"></i>
+            </a>
+          </li>
+          <li>
+            <a>
+              <span class="hidden-xs">Settings</span>
+              <i class="visible-xs fal fa-cogs"></i>
+            </a>
+          </li>
+          <li>
+            <a>
+              <span class="hidden-xs">Login</span>
+              <i class="visible-xs fal fa-sign-in"></i>
+            </a>
+          </li>
         </ul>
         <ul class="nav-items-right">
-          <li><a>Logout</a></li>
+          <li>
+            <a>
+              <span class="hidden-xs">Logout</span>
+              <i class="visible-xs fal fa-sign-out"></i>
+            </a>
+          </li>
         </ul>
       </div>
 
