@@ -4,6 +4,7 @@
 
 .scheme1 {
   --color1: hsl(262, 60%, 38%);
+  --color1-inactive: hsl(261, 47%, 58%);
   --mainTextColor: hsl(262, 61%, 93%);
 }
 
@@ -18,15 +19,22 @@
   height: 50px;
   font-size: 16px;
 }
+
+.nav li.active {
+  background-color: var(--color1-inactive);
+}
 .nav-header {
   font-size: 18px;
   display: flex;
   align-items: center;
   margin-right: 30px;
 }
-.nav li a, .nav li span {
+.nav li a {
   padding-left: 15px;
   padding-right: 15px;
+}
+.nav a i.visible-xs {
+  font-size: 20px;
 }
 .nav-items {
   padding-left: 0;
@@ -46,4 +54,46 @@
   margin-left: auto;
 }
 
+@media (max-width: 767px){
+  .nav {
+    padding-left: 0px;
+  }
+  .hidden-xs {
+    display: none !important;
+  }
+}
 
+@media (min-width: 768px){
+  .visible-xs {
+    display: none !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .nav {
+    padding-left: 0;
+  }
+  .nav li a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+/* @media (max-width: 320px) { */
+@media (max-width: 480px) {
+  .nav {
+    padding-left: 0;
+  }
+  .nav li a {
+    padding-left: 8px;
+    padding-right: 8px;
+
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+  .nav {
+    min-height: 20px;
+  }
+  .nav li a i {
+    font-size: 13pt !important;
+  }
+}
