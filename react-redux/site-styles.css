@@ -246,7 +246,7 @@ button, input {
 }
 .table td {
   font-size: 14px;
-  vertical-align: text-top;
+  vertical-align: top;
   padding: 5px;
   border-top: 1px solid var(--lightest-primary-2);
 }
