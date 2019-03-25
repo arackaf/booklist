@@ -143,6 +143,7 @@ input.form-control {
   padding: 6px 12px;
   font-size: 15px;
   border-radius: var(--input-border-radius);
+  cursor: pointer;
 }
 .btn.btn-xs {
   font-size: 12px;
