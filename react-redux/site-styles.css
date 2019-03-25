@@ -3,6 +3,10 @@
   --input-border-radius: 5px;
 }
 
+* {
+  box-sizing: border-box
+}
+
 .scheme1 {
   --darkest-primary: hsl(263, 85%, 18%);
   --lightest-primary-1: hsl(262, 61%, 93%);
@@ -221,6 +225,7 @@ button, input {
   padding: 3px 6px;
   border-radius: 3px;
   font-weight: bold;
+  white-space: nowrap
 }
 
 .label.label-success {
@@ -235,12 +240,25 @@ button, input {
 
 .table {
   width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
 }
 .table td {
   font-size: 14px;
   vertical-align: text-top;
+  padding: 5px;
+  border-top: 1px solid var(--lightest-primary-2);
 }
 .table th {
   font-size: 16px;
   text-align: left;
+}
+.table th {
+  padding-bottom: 5px;
+}
+.table th {
+  border-bottom: 2px solid var(--lightest-primary-2);
+}
+.table tr:nth-child(even){
+  background-color: var(--lightest-primary-1);
 }
