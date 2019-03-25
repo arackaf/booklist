@@ -209,6 +209,7 @@ app.ws("/bookEntryWS", function(ws, req) {
 
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-src" });
 
+app.get("react-redux/newStyles.htm", (req, response) => response.sendfile("/react-redux/newStyles.htm"));
 app.get("react-redux/offline.htm", (req, response) => response.sendfile("/react-redux/offline.htm"));
 app.get("/", browseToReactRedux);
 app.get("/books", browseToReactRedux);
