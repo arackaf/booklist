@@ -63,7 +63,7 @@ const App = ({ component = null } = {}) => {
     <AppContext.Provider value={appStatePacket}>
       <SubjectsContext.Provider value={subjectsPacket}>
         <ColorsContext.Provider value={colorsPacket}>
-          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+          <div className="scheme1" style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
             <MobileMeta />
             <MainNavigationBar />
 

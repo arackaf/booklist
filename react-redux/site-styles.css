@@ -3,6 +3,10 @@
   --input-border-radius: 5px;
 }
 
+body {
+  margin: 0;
+}
+
 * {
   box-sizing: border-box
 }
@@ -48,6 +52,9 @@
 
 .nav li.active {
   background-color: var(--lightest-primary-4);
+}
+.nav li.disabled {
+  color: var(--lightest-primary-4);
 }
 .nav-header {
   font-size: 18px;
@@ -104,8 +111,7 @@
     padding-right: 10px;
   }
 }
-/* @media (max-width: 320px) { */
-@media (max-width: 480px) {
+@media (max-width: 350px) {
   .nav {
     padding-left: 0;
   }
