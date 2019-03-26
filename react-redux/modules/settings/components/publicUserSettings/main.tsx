@@ -62,6 +62,9 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
           </a>
         </div>
       ) : null}
+
+      <hr />
+
       <div className="form-group">
         <label className="checkbox">
           Allow your book collection to be viewed publicly?{" "}
@@ -92,7 +95,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
             />
           </div>
           <div className="form-group">
-            <label htmlFor="publicBooksHeader">Publicly display your name as</label>
+            <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
             <input
               ref={pubHeaderEl}
               defaultValue={publicBooksHeader}
@@ -102,11 +105,6 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               placeholder="Book header"
             />
           </div>
-          <div className="alert alert-info" role="alert">
-            This is what will show in the navigation when people view your book collection. Leave it blank to default to [public name]'s Books. See
-            below
-          </div>
-          <img src="/react-redux/static/publicBookHeaderInfo.png" />
         </div>
       ) : null}
       <AjaxButton disabled={!isDirty} onClick={update} running={saving} runningText="Saving" preset="primary">
