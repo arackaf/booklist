@@ -93,7 +93,6 @@ const SubjectDisplay = DropTarget(
   const { subject, connectDropTarget } = props;
   const isOver = props.isOver && props.canDrop;
   const { _id, candidateMove } = subject;
-  const pendingSubjectDrop = props.isOver && props.canDrop;
   const style: any = {};
   const noDrop = candidateMove || props.noDrop;
   const [{}, { subjectDraggingOver, subjectNotDraggingOver, beginDrag, clearSubjectDragging }] = useContext(SubjectsDnDContext);
@@ -106,12 +105,8 @@ const SubjectDisplay = DropTarget(
     }
   }, [isOver]);
 
-  if (candidateMove) {
-    style.backgroundColor = "lavender";
-  }
-
   return (
-    <li className={`${pendingSubjectDrop ? "pending-subject-drop" : ""}`} key={_id} style={{ ...style, paddingTop: 0, paddingBottom: 0 }}>
+    <li key={_id} style={{ ...style, paddingTop: 0, paddingBottom: 0 }}>
       <SubjectDisplayContent connectDropTarget={connectDropTarget} {...{ noDrop, subject, beginDrag, clearSubjectDragging }} />
     </li>
   );
@@ -256,8 +251,8 @@ const EditingSubjectDisplay = props => {
   const { validationError } = editingSubject;
 
   return (
-    <div className={className}>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
+    <div className={className + " edit-pane"}>
+      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
         <input
           ref={inputEl}
           onKeyDown={subjectEditingKeyDown}
@@ -301,7 +296,7 @@ const EditingSubjectDisplay = props => {
           ))}
         </select>
       </div>
-      <div className="col-xs-12 col-lg-9">
+      <div className="col-xs-12 col-lg-6">
         <ColorsPalette
           currentColor={editingSubject.backgroundColor}
           colors={colors}
@@ -313,19 +308,19 @@ const EditingSubjectDisplay = props => {
           currentColor={editingSubject.backgroundColor}
         />
       </div>
-      <div className="col-xs-12 col-lg-1 padding-bottom-small">
-        <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, "textColor", color)} />
-      </div>
-      <div className="col-xs-12 col-lg-2">
-        <BootstrapButton
-          disabled={isSubjectSaving}
-          style={{ marginRight: "5px" }}
-          preset="primary-xs"
-          onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
-        >
-          <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-        </BootstrapButton>
-        <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
+      <div className="col-xs-12 col-lg-6">
+        <div className="text-color-save-box">
+          <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
+          <BootstrapButton
+            disabled={isSubjectSaving}
+            style={{ marginRight: "5px", marginLeft: "10px" }}
+            preset="primary-xs"
+            onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
+          >
+            <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
+          </BootstrapButton>
+          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, "textColor", color)} />
+        </div>
       </div>
     </div>
   );

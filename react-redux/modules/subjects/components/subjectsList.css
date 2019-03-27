@@ -8,6 +8,10 @@ ul.list-group ul.list-group {
   padding-left: 20px;
 }
 
+.edit-pane > div {
+  padding-bottom: 10px;
+}
+
 .defaultSubjectDisplay {
   display: flex;
   align-items: center;
@@ -28,3 +32,8 @@ ul.list-group ul.list-group {
   white-space: nowrap;
 }
 
+.text-color-save-box {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
