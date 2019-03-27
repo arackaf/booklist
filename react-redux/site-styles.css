@@ -36,7 +36,7 @@ body {
   --danger-color-4:hsl(350, 94%, 28%);
 }
 
-#main-content, input {
+#main-content, input, select {
   color: var(--neutral-text);
 }
 
@@ -145,13 +145,15 @@ li {
   }
 }
 
-.form-group input, input.form-control {
+.form-group input, input.form-control, select.form-control {
   border: 1px solid var(--lightest-primary-2);
   padding: 6px 12px;
   border-radius: var(--input-border-radius);
   height: 34px;
+  background-color: white;
+  width: 100%;
 }
-input.form-control {
+input.form-control, select.form-control {
   font-size: 14px;
 }
 .btn-group {
