@@ -9,6 +9,8 @@ import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutation
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
 
+import "./subjectsList.css";
+
 type dragLayerType = {
   item: any;
   currentOffset: { x: number; y: number };
@@ -109,11 +111,7 @@ const SubjectDisplay = DropTarget(
   }
 
   return (
-    <li
-      className={`list-group-item ${pendingSubjectDrop ? "pending-subject-drop" : ""}`}
-      key={_id}
-      style={{ ...style, paddingTop: 0, paddingBottom: 0 }}
-    >
+    <li className={`${pendingSubjectDrop ? "pending-subject-drop" : ""}`} key={_id} style={{ ...style, paddingTop: 0, paddingBottom: 0 }}>
       <SubjectDisplayContent connectDropTarget={connectDropTarget} {...{ noDrop, subject, beginDrag, clearSubjectDragging }} />
     </li>
   );
@@ -210,34 +208,25 @@ const DefaultSubjectDisplay = props => {
 
   return (noDrop ? c => c : connectDropTarget)(
     <div className={className}>
-      <div className="col-lg-12 show-on-hover-parent">
+      <div
+        className="col-lg-12 show-on-hover-parent defaultSubjectDisplay"
+        style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
+      >
         {mainIcon}
         &nbsp;
-        <div
-          className="label label-default"
-          style={{
-            backgroundColor: backgroundColor,
-            color: textColor,
-            maxWidth: "100%",
-            display: "inline-block",
-            overflow: "hidden",
-            verticalAlign: "text-top"
-          }}
-        >
-          {name || "<label preview>"}
-        </div>{" "}
+        <div className="subject-preview">{name || "<label preview>"}</div>
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
+          <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
             <i className="fa fa-fw fa-pencil" />
           </a>
         ) : null}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => addNewSubject(_id)}>
+          <a className="show-on-hover-inline Xinline-filter" onClick={() => addNewSubject(_id)}>
             <i className="fa fa-fw fa-plus" />
           </a>
         ) : null}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectDelete(_id)} style={{ color: "red", marginLeft: "20px" }}>
+          <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
             <i className="fa fa-fw fa-trash" />
           </a>
         ) : null}
@@ -409,7 +398,7 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
   return (
     <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
       <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
-        <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
+        <BootstrapButton style={{ marginLeft: "5px" }} disabled={!online} onClick={() => addNewSubject()} preset="primary">
           New subject
         </BootstrapButton>
         <br />

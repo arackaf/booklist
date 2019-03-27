@@ -1,0 +1,30 @@
+ul.list-group {
+  margin-left: 0;
+  padding-left: 10px;
+}
+
+ul.list-group ul.list-group {
+  margin-left: 10px;
+  padding-left: 20px;
+}
+
+.defaultSubjectDisplay {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.defaultSubjectDisplay > a {
+  font-size: 12px;
+}
+
+.subject-preview {
+  margin-right: 10px;
+
+  max-width: 300px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+

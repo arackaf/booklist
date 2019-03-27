@@ -49,6 +49,10 @@ hr {
   border: 1px solid var(--lightest-primary-2)
 }
 
+li {
+  list-style-type: none;
+}
+
 .nav {
   margin-top: 0;
   margin-bottom: 0;
@@ -250,6 +254,14 @@ button, input {
   border-radius: 3px;
   font-weight: bold;
   white-space: nowrap
+}
+.label-default {
+  background-color: var(--neutral-text);
+  color: white
+}
+
+.label.label-inherit {
+  background-color: transparent
 }
 
 .label.label-success {
