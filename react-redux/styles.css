@@ -335,17 +335,7 @@ a.inline-filter {
 .visible-tiny {
   display: none;
 }
-div.responsive-radios {
-  display: flex;
-}
-@media (min-width: 800px) {
-  div.responsive-radios input {
-    vertical-align: text-bottom;
-  }
-}
-@media (max-width: 800px) {
-  /* div.responsive-radios { } */
-}
+
 @media (max-width: 500px) {
   span.visible-tiny {
     display: inline !important;
