@@ -14,7 +14,7 @@ export class StandardModalHeader extends Component<{ onHide: any; caption: any }
             <span>&times;</span>
           </a>
         </div>
-        <hr style={{ marginTop: "15px", marginBottom: "15px" }} />
+        <hr />
       </>
     );
   }

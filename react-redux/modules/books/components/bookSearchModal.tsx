@@ -169,7 +169,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
               </div>
             </div>
           </div>
-          <div className="checkbox">
+          <div className="checkbox" style={{ marginTop: "20px" }}>
             <label>
               <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
             </label>
