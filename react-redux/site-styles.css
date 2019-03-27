@@ -184,9 +184,10 @@ input.form-control, select.form-control {
 
 div.responsive-radios {
   display: flex;
+  align-items: center;
 }
 div.responsive-radios input {
-  vertical-align: text-top;
+  margin-right: 5px;
 }
 @media (min-width: 800px) {
   div.responsive-radios label {
@@ -199,9 +200,6 @@ div.responsive-radios input {
   }
   div.responsive-radios label {
     padding-right: 0;
-  }
-  div.responsive-radios input {
-    margin-right: 5px;
   }
 }
 
