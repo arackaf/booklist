@@ -117,7 +117,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </div>
           </div>
           <div className="col-xs-6">
-            <div className="form-group">
+            <div>
               <label>Is read?</label>
               <br />
               <div className="radio responsive-radios">
@@ -125,14 +125,10 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                   <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" />
                   Either
                 </label>
-              </div>
-              <div className="radio responsive-radios">
                 <label>
                   <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" />
                   Yes
                 </label>
-              </div>
-              <div className="radio responsive-radios">
                 <label>
                   <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" />
                   No
