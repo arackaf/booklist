@@ -36,9 +36,15 @@ body {
   --danger-color-4:hsl(350, 94%, 28%);
 }
 
-#main-content {
+#main-content, input {
   color: var(--neutral-text);
 }
+
+#footer {
+  background-color: var(--lightest-primary-2);
+  padding: 9px;
+}
+
 hr {
   border: 1px solid var(--lightest-primary-2)
 }
@@ -135,10 +141,14 @@ hr {
   }
 }
 
-input.form-control {
+.form-group input, input.form-control {
   border: 1px solid var(--lightest-primary-2);
   padding: 6px 12px;
-  font-size: 15px;
+  border-radius: var(--input-border-radius);
+  height: 34px;
+}
+input.form-control {
+  font-size: 14px;
 }
 .btn-group {
   display: flex;
@@ -463,12 +473,26 @@ button, input {
   }
 }
 
-
-
-
-
-.row > div {
-  border: 1px solid red;
-  font-size: 10px;
-  text-overflow: clip;
+.form-group, .checkbox-group {
+  margin-bottom: 15px;
 }
+.form-group {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.form-group label{
+  display: block;
+  margin-bottom: 5px;
+}
+.form-group input{
+  width: 100%;
+  display: block;
+}
+.checkbox-group {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  /* align-items: center; */
+}
+

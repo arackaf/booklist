@@ -65,7 +65,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
 
       <hr />
 
-      <div className="form-group">
+      <div className="checkbox-group" style={{ marginTop: "15px" }}>
         <label className="checkbox">
           Allow your book collection to be viewed publicly?{" "}
           <input
@@ -105,11 +105,11 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               placeholder="Book header"
             />
           </div>
+          <AjaxButton disabled={!isDirty} onClick={update} running={saving} runningText="Saving" preset="primary">
+            Save
+          </AjaxButton>
         </div>
       ) : null}
-      <AjaxButton disabled={!isDirty} onClick={update} running={saving} runningText="Saving" preset="primary">
-        Save
-      </AjaxButton>
     </div>
   );
 };
