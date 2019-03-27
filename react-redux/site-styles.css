@@ -61,6 +61,10 @@ h4 {
   display: flex;
 }
 
+label {
+  font-size: 14px;
+}
+
 [data-reach-dialog-content] {
   padding: 20px;
   border-color: var(--primary-color-2) !important;
@@ -177,6 +181,30 @@ h4 {
 input.form-control, select.form-control {
   font-size: 14px;
 }
+
+div.responsive-radios {
+  display: flex;
+}
+div.responsive-radios input {
+  vertical-align: text-top;
+}
+@media (min-width: 800px) {
+  div.responsive-radios label {
+    padding-right: 10px;
+  }
+}
+@media (max-width: 800px) {
+  div.responsive-radios {
+    flex-direction: column
+  }
+  div.responsive-radios label {
+    padding-right: 0;
+  }
+  div.responsive-radios input {
+    margin-right: 5px;
+  }
+}
+
 .btn-group {
   display: flex;
 }
@@ -517,12 +545,11 @@ button, input {
 .form-group, .checkbox-group {
   margin-bottom: 15px;
 }
-.form-group {
+.form-group, .form-label {
   font-size: 14px;
   font-weight: bold;
-  margin-bottom: 15px;
 }
-.form-group label{
+.form-group label, .form-label{
   display: block;
   margin-bottom: 5px;
 }
