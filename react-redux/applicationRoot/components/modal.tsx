@@ -8,11 +8,13 @@ export class StandardModalHeader extends Component<{ onHide: any; caption: any }
     let { onHide, caption } = this.props;
     return (
       <>
-        <button type="button" className="close" onClick={onHide} aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 className="modal-title">{caption}</h4>
-        <hr />
+        <div className="standard-reach-header">
+          <h4 className="modal-title">{caption}</h4>
+          <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
+            <span>&times;</span>
+          </a>
+        </div>
+        <hr style={{ marginTop: "15px", marginBottom: "15px" }} />
       </>
     );
   }

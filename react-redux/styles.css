@@ -335,19 +335,16 @@ a.inline-filter {
 .visible-tiny {
   display: none;
 }
+div.responsive-radios {
+  display: flex;
+}
 @media (min-width: 800px) {
-  div.responsive-radios {
-    margin-right: 10px;
-    margin-left: 0;
-    display: inline;
+  div.responsive-radios input {
+    vertical-align: text-bottom;
   }
 }
 @media (max-width: 800px) {
-  div.responsive-radios {
-    margin-right: 0;
-    margin-left: 0;
-    display: block !important;
-  }
+  /* div.responsive-radios { } */
 }
 @media (max-width: 500px) {
   span.visible-tiny {
