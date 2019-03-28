@@ -66,27 +66,20 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-6">
-            <div className="form-group">
-              <label>Is read?</label>
-              <br />
-              <div style={{ display: "inline" }} className="radio">
-                <label>
-                  <input type="radio" defaultChecked={searchState.isRead == null} ref={isReadE} name="isRead" />
-                  Either
-                </label>
-              </div>
-              <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
-                <label>
-                  <input type="radio" defaultChecked={searchState.isRead == "1"} ref={isRead1} name="isRead" />
-                  Yes
-                </label>
-              </div>
-              <div style={{ display: "inline", marginLeft: "20px" }} className="radio">
-                <label>
-                  <input type="radio" defaultChecked={searchState.isRead == "0"} ref={isRead0} name="isRead" />
-                  No
-                </label>
-              </div>
+            <label className="form-label">Is read?</label>
+            <div className="radio responsive-radios">
+              <span>
+                <input type="radio" defaultChecked={searchState.isRead == null} ref={isReadE} name="isRead" id="isReadE" />
+                <label htmlFor="isReadE">Either</label>
+              </span>
+              <span>
+                <input type="radio" defaultChecked={searchState.isRead == "1"} ref={isRead1} name="isRead" id="isReadY" />
+                <label htmlFor="isReadY">Yes</label>
+              </span>
+              <span>
+                <input type="radio" defaultChecked={searchState.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
+                <label htmlFor="isReadN">No</label>
+              </span>
             </div>
           </div>
         </div>
@@ -113,6 +106,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             </div>
           </div>
         </div>
+        <br />
         <div className="row" style={{ position: "relative" }}>
           <div className="col-xs-6">
             <div className="checkbox">
@@ -121,7 +115,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
               </label>
             </div>
           </div>
-          <div className="col-xs-6">
+          <div className="col-xs-12 margin-top">
             {loading ? (
               <button disabled={true} className="btn btn-default">
                 <i className="fa fa-fw fa-spin fa-spinner" />
@@ -185,7 +179,7 @@ const SearchResult = props => {
   return (
     <tr>
       <td>
-        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer" }} className="btn btn-primary">
+        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer", whiteSpace: "nowrap" }} className="btn btn-primary btn-xs">
           Add to list&nbsp;
           <i className="fal fa-plus" />
         </button>

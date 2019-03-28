@@ -43,9 +43,20 @@ body {
   --danger-color-3:hsl(352, 90%, 35%);
   --danger-color-4:hsl(350, 94%, 28%);
 
+  --alert-info-background: hsl(186, 100%, 94%);
+  --alert-info-border: hsl(185, 94%, 87%);
+  --alert-info-color: hsl(185, 84%, 25%);
+
+  --alert-danger-background: hsl(360, 100%, 95%);
+  --alert-danger-border: hsl(360, 100%, 87%);
+  --alert-danger-color: hsl(350, 94%, 28%);
+
   --bright-button-1: hsl(185, 57%, 50%);
   --bright-button-2: hsl(185, 62%, 45%);
   --bright-button-3: hsl(184, 77%, 34%);
+  --bright-button-4: hsl(185, 81%, 29%);
+  --bright-button-5: hsl(185, 84%, 25%);
+
   --bright-button-color: white;
 }
 
@@ -237,6 +248,9 @@ div.responsive-radios input {
   div.responsive-radios {
     flex-direction: column
   }
+  div.responsive-radios > span {
+    align-self: flex-start;
+  }
   div.responsive-radios label {
     padding-right: 0;
   }
@@ -389,6 +403,16 @@ button, input {
   background-color: var(--warning-color);
   border: 1px solid var(--warning-border-color);
 }
+.alert.alert-info{ 
+  background-color: var(--alert-info-background);
+  border: 1px solid var(--alert-info-border);
+  color: var(--alert-info-color);  
+}
+.alert.alert-danger{ 
+  background-color: var(--alert-danger-background);
+  border: 1px solid var(--alert-danger-border);
+  color: var(--alert-danger-color);
+}
 
 .table {
   width: 100%;
@@ -456,8 +480,6 @@ button, input {
 @media (max-width: 768px) {
   .row.xs-pull-reverse {
     flex-direction: column-reverse;
-    align-items: flex-start;
-    /* justify-content: flex-start; */
   }
   .row.xs-pull-reverse > .col-xs-12 {
     align-self: stretch;
