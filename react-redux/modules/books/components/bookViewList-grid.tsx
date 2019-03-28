@@ -28,14 +28,12 @@ const BookRow: SFC<ILocalProps> = props => {
   const { _id } = book;
   const { selectedBooks, savingReadForBooks: savingRead, pendingDelete, deleting } = booksUiState;
 
-  const style: any = { backgroundColor: index % 2 ? "white" : "#f9f9f9" };
-
   const [expanded, setExpanded] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
 
   return (
     <>
-      <tr style={style}>
+      <tr>
         {!viewingPublic && online ? (
           <td>
             <a style={{ fontSize: "12pt" }} onClick={() => dispatchBooksUiState(["toggle-select", _id])}>
@@ -99,11 +97,11 @@ const BookRow: SFC<ILocalProps> = props => {
         </td>
         <td>
           {book.subjectObjects.map((s, i) => (
-            <div key={i}>
+            <div key={i} style={{ marginBottom: "4px" }}>
               <LabelDisplay item={s} />
             </div>
           ))}
-          <div style={{ marginTop: 5, minHeight: 40 }}>
+          <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBooksSubjects(book)}>
                 <i className="fal fa-pencil-alt show-on-hover-parent-td" />
@@ -113,11 +111,11 @@ const BookRow: SFC<ILocalProps> = props => {
         </td>
         <td>
           {book.tagObjects.map((s, i) => (
-            <div key={i}>
+            <div key={i} style={{ marginBottom: "4px" }}>
               <LabelDisplay item={s} />
             </div>
           ))}
-          <div style={{ marginTop: 5, minHeight: 40 }}>
+          <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBooksTags(book)}>
                 <i className="fal fa-pencil-alt show-on-hover-parent-td" />
@@ -303,8 +301,8 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                     Title {sortIconIf("title")}
                   </a>
                 </th>
-                <th style={{ ...stickyHeaderStyle }}>Subjects</th>
-                <th style={{ ...stickyHeaderStyle }}>Tags</th>
+                <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Subjects</th>
+                <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Tags</th>
                 <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Read?</th>
                 <th style={{ ...stickyHeaderStyle }}>Info</th>
                 <th style={{ minWidth: "85px", ...stickyHeaderStyle }}>
