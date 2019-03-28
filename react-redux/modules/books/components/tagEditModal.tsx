@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, { FunctionComponent, useState, useContext, useRef } from "react";
 
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
@@ -89,9 +89,10 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   let deletingTag = deletingId ? tags.find(t => t._id == deletingId) : null;
   let deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null;
   let searchedTags = filterTags(tags, tagSearch);
+  let junkRef = useRef(document.createElement("input"));
 
   return (
-    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags">
+    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags" focusRef={junkRef}>
       <div className="visible-xs">
         <BootstrapButton onClick={newTag} preset="info-xs">
           Add new tag <i className="fa fa-fw fa-plus" />
@@ -120,7 +121,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
           <div className="panel-heading">
             {editingTag._id ? `Edit ${editingTagName}` : "New Tag"}
             {editingTag && editingTag._id ? (
-              <BootstrapButton onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs" className="pull-right">
+              <BootstrapButton onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs" style={{ marginLeft: "auto" }}>
                 <i className="fa fa-fw fa-trash" />
               </BootstrapButton>
             ) : null}
@@ -189,12 +190,14 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
               </div>
               <br style={{ clear: "both" }} />
 
-              <AjaxButtonAnchor className="btn btn-primary" running={state.saving} runningText={"Saving..."} onClick={createOrUpdateTag}>
-                Save
-              </AjaxButtonAnchor>
-              <a className="btn btn-default pull-right" onClick={cancelTagEdit}>
-                Cancel
-              </a>
+              <div style={{ display: "flex" }}>
+                <AjaxButtonAnchor className="btn btn-primary" running={state.saving} runningText={"Saving..."} onClick={createOrUpdateTag}>
+                  Save
+                </AjaxButtonAnchor>
+                <a className="btn btn-default" onClick={cancelTagEdit} style={{ marginLeft: "auto" }}>
+                  Cancel
+                </a>
+              </div>
             </div>
           </div>
         </div>
