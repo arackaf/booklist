@@ -20,9 +20,10 @@ export class StandardModalHeader extends Component<{ onHide: any; caption: any }
   }
 }
 
-export default class Modal extends Component<{ isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string }, any> {
+type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
+export default class Modal extends Component<ModalTypes, any> {
   render() {
-    let { isOpen, onHide, headerCaption, style = { maxWidth: "600px" }, children } = this.props;
+    let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = this.props;
     return (
       <Transition
         config={{ ...config.gentle, overshootClamping: true }}
@@ -32,7 +33,7 @@ export default class Modal extends Component<{ isOpen: boolean; style?: any; onH
       >
         {isOpen
           ? (styles: any) => (
-              <DialogOverlay onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
+              <DialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
                 <DialogContent
                   style={{
                     transform: `translate3d(0px, ${styles.y}px, 0px)`,

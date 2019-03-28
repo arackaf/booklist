@@ -14,6 +14,8 @@ body {
 .scheme1 {
   --neutral-text: hsl(37, 11%, 28%);
   --neutral-border: hsl(41, 8%, 61%);
+  --neutral-light-background: hsl(40, 23%, 97%);
+  --neutral-dark-background: hsl(43, 13%, 90%);
 
   --darkest-primary: hsl(263, 85%, 18%);
   --lightest-primary-1: hsl(262, 61%, 93%);
@@ -35,6 +37,11 @@ body {
   --danger-color-2:hsl(354, 85%, 44%);
   --danger-color-3:hsl(352, 90%, 35%);
   --danger-color-4:hsl(350, 94%, 28%);
+
+  --bright-button-1: hsl(185, 57%, 50%);
+  --bright-button-2: hsl(185, 62%, 45%);
+  --bright-button-3: hsl(184, 77%, 34%);
+  --bright-button-color: white;
 }
 
 #main-content, input, select, reach-portal {
@@ -47,7 +54,7 @@ body {
 }
 
 hr {
-  border: 1px solid var(--lightest-primary-2);
+  border: 1px solid var(--neutral-border);
 }
 
 ul {
@@ -82,6 +89,25 @@ label {
 }
 [data-reach-dialog-content] .standard-reach-header a {
   font-size: 22px;
+}
+
+.panel {
+  padding: 15px;
+  border: 1px solid var(--neutral-border);
+  border-radius: 3px;
+}
+.panel.panel-info {
+  border-color: var(--lightest-primary-1);
+}
+.panel.panel-info .panel-heading {
+  background-color: var(--lightest-primary-1);
+  margin-top: -15px;
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
 }
 
 
@@ -245,6 +271,18 @@ div.responsive-radios input {
   background-color: var(--lightest-primary-3);
 }
 
+.btn-info {
+  color: var(--bright-button-color);
+  background-color: var(--bright-button-1);
+  border-color: var(--bright-button-1)
+}
+.btn-info:hover {
+  background-color: var(--bright-button-2)
+}
+.btn-info:active {
+  background-color: var(--bright-button-3);
+}
+
 .btn-group > input, .btn-group > button {
   border-radius: 0;
 }
@@ -309,7 +347,8 @@ button, input {
   padding: 3px 6px;
   border-radius: 3px;
   font-weight: bold;
-  white-space: nowrap
+  white-space: nowrap;
+  display: inline;
 }
 .label-default {
   background-color: var(--neutral-text);
@@ -339,7 +378,7 @@ button, input {
   font-size: 14px;
   vertical-align: top;
   padding: 5px;
-  border-top: 1px solid var(--lightest-primary-2);
+  border-top: 1px solid var(--neutral-border);
 }
 .table th {
   font-size: 16px;
@@ -352,7 +391,7 @@ button, input {
   border-bottom: 2px solid var(--lightest-primary-2);
 }
 .table tr:nth-child(even){
-  background-color: var(--lightest-primary-1);
+  background-color: var(--neutral-light-background);
 }
 
 .tab-headers {
