@@ -39,8 +39,7 @@ const PublicUserSettings = props => {
   return (
     <div className="row" style={{ position: "relative" }}>
       <div className="col-md-6 col-sm-12">
-        <div style={{ padding: "10px" }}>
-          <h2>Reset your password</h2>
+        <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
           <div>
             <div className="form-group">
               <label htmlFor="existingPasswordInput">Current password</label>

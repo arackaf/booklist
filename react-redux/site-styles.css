@@ -360,7 +360,7 @@ button, input {
   background-color: var(--neutral-background);
   color: white
 }
-.label-bright {
+.label-info {
   background-color: var(--bright-button-3);
   color: white
 }

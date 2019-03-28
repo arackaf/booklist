@@ -3,7 +3,6 @@ import Measure from "react-measure";
 import "d3-transition";
 
 import BarChart from "./components/barChart";
-import Tabs, { Tab } from "simple-react-bootstrap/lib/tabs";
 import { AppContext, SubjectsContext } from "applicationRoot/renderUI";
 import { useStackedSubjects } from "applicationRoot/subjectsState";
 import RecommendMain from "./components/recommend/main";
@@ -39,53 +38,68 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   const getDrilldownChart = (index, subjects, header) => {
     setState({ ...state, chartPackets: [...state.chartPackets.slice(0, index + 1), { subjects, header }] });
   };
+  const [tab, setTab] = useState("vis");
 
   const { chartPackets } = state;
   return (
     <MainHomePane>
-      <Tabs defaultTab="vis">
-        <Tab
-          name="vis"
-          caption={
+      <h4 className="margin-top margin-bottom">
+        Welcome to <i>My Library</i>. Below is a basic data visualization of your library, book recommendations search. More to come!
+      </h4>
+      <div className="tab-headers">
+        <div className={"tab-header " + (tab == "vis" ? "active" : "")}>
+          <a onClick={() => setTab("vis")}>
             <span>
               <i className="far fa-chart-bar" /> View
             </span>
-          }
-        >
+          </a>
+        </div>
+        <div className={"tab-header " + (tab == "rec" ? "active" : "")}>
+          <a onClick={() => setTab("rec")}>
+            <span>Discover books</span>
+          </a>
+        </div>
+      </div>
+      <div className="tab-content">
+        <div className={"tab-pane " + (tab == "vis" ? "active" : "")}>
           <br />
-          <Measure
-            client
-            onResize={({ client }) => {
-              if (client.width != state.chartWidth && client.width <= MAX_CHART_WIDTH) {
-                setState({ ...state, chartWidth: client.width });
-              }
-            }}
-          >
-            {({ measureRef }) => (
-              <div ref={measureRef}>
-                Welcome to <i>My Library</i>. Below is the beginnings of a data visualization of your library. More to come!
-                <hr />
-                {subjectsLoaded
-                  ? chartPackets.map((packet, i) => (
-                      <BarChart
-                        key={i}
-                        {...packet}
-                        {...{ subjectHash, subjectsLoaded }}
-                        drilldown={getDrilldownChart}
-                        chartIndex={i}
-                        width={state.chartWidth}
-                        height={600}
-                      />
-                    ))
-                  : null}
-              </div>
-            )}
-          </Measure>
-        </Tab>
-        <Tab name="search" caption="Discover books">
+          {tab == "vis" ? (
+            <Measure
+              client
+              onResize={({ client }) => {
+                if (client.width != state.chartWidth && client.width <= MAX_CHART_WIDTH) {
+                  setState({ ...state, chartWidth: client.width });
+                }
+              }}
+            >
+              {({ measureRef }) => (
+                <div ref={measureRef}>
+                  {subjectsLoaded
+                    ? chartPackets.map((packet, i) => (
+                        <BarChart
+                          key={i}
+                          {...packet}
+                          {...{ subjectHash, subjectsLoaded }}
+                          drilldown={getDrilldownChart}
+                          chartIndex={i}
+                          width={state.chartWidth}
+                          height={600}
+                        />
+                      ))
+                    : null}
+                </div>
+              )}
+            </Measure>
+          ) : null}
+        </div>
+        <div className={"tab-pane " + (tab == "rec" ? "active" : "")}>
           <RecommendMain />
+        </div>
+      </div>
+
+      {/* <Tab name="search" caption="Discover books">
         </Tab>
-      </Tabs>
+      </Tabs> */}
     </MainHomePane>
   );
 };
