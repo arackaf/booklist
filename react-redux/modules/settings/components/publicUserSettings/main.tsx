@@ -52,7 +52,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   };
 
   return (
-    <div style={{ padding: "10px" }}>
+    <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
       {publicLink ? (
         <div className="panel panel-default" style={{ padding: "10px" }}>
           Your collection is currently public, viewable at <br />

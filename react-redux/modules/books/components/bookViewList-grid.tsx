@@ -289,7 +289,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
             <thead>
               <tr>
                 {!viewingPublic && online ? (
-                  <th style={{ ...stickyHeaderStyle }}>
+                  <th style={{ ...stickyHeaderStyle, textAlign: "center" }}>
                     <a style={{ fontSize: "12pt" }} onClick={toggleCheckAll}>
                       <i className={"fal " + (!!allAreChecked ? "fa-check-square" : "fa-square")} />
                     </a>

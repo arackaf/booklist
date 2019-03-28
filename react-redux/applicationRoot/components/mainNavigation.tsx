@@ -36,7 +36,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   return (
     <div className="nav" style={{ marginBottom: "5px" }}>
       <div className="nav-header hidden-xs">
-        <a>
+        <a onClick={() => goto("home")}>
           <i className="fal fa-book" style={{ marginRight: "5px" }} />
           <span>My Library</span>
         </a>
