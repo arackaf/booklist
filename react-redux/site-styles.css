@@ -16,6 +16,8 @@ body {
   --neutral-border: hsl(41, 8%, 61%);
   --neutral-light-background: hsl(40, 23%, 97%);
   --neutral-dark-background: hsl(43, 13%, 90%);
+  --warning-color: hsl(45, 86%, 81%);
+  --warning-border-color: hsl(43, 89%, 70%);
 
   --darkest-primary: hsl(263, 85%, 18%);
   --lightest-primary-1: hsl(262, 61%, 93%);
@@ -369,6 +371,17 @@ button, input {
   color: white;
 }
 
+.alert{
+  padding: 15px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+}
+.alert.alert-warning{ 
+  background-color: var(--warning-color);
+  border: 1px solid var(--warning-border-color);
+}
+
 .table {
   width: 100%;
   max-width: 100%;
@@ -392,6 +405,7 @@ button, input {
 }
 .table tr:nth-child(even){
   background-color: var(--neutral-light-background);
+  border-color: var(--neutral-border)
 }
 
 .tab-headers {
