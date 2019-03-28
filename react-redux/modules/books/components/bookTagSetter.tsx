@@ -1,4 +1,4 @@
-import React, { SFC, useState, useLayoutEffect, useContext } from "react";
+import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
 
 import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
@@ -41,19 +41,22 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
   const dontAddTag = addingTagSet.bind(null, false);
   const dontRemoveTag = removingTagSet.bind(null, false);
   const modifyingBooks = props.modifyingBooks || [];
+  const selectRef = useRef(null);
 
   return (
-    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:">
-      <ul className="nav nav-tabs">
-        <li className={currentTab == "tags" ? "active" : ""}>
-          <a onClick={() => setTab("tags")}>Choose tags</a>
-        </li>
-        <li className={currentTab == "books" ? "active" : ""}>
+    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:" focusRef={selectRef}>
+      <div className="tab-headers">
+        <div className={"tab-header " + (currentTab == "tags" ? "active" : "")}>
+          <a ref={selectRef} onClick={() => setTab("tags")}>
+            Choose tags
+          </a>
+        </div>
+        <div className={"tab-header " + (currentTab == "books" ? "active" : "")}>
           <a onClick={() => setTab("books")}>For books</a>
-        </li>
-      </ul>
+        </div>
+      </div>
       <div className="tab-content">
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "tags" ? "active in" : "")}>
+        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "tags" ? "active" : "")}>
           <br />
           <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
@@ -117,9 +120,9 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
           </BootstrapButton>
           <br />
         </div>
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active in" : "")}>
+        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
           <br />
-          <ul className="list-unstyled">
+          <ul style={{ fontSize: "14px", marginLeft: "10px" }}>
             {modifyingBooks.map(book => (
               <li key={book._id}>{book.title}</li>
             ))}

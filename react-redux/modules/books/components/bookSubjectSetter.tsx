@@ -1,4 +1,4 @@
-import React, { SFC, useState, useLayoutEffect, useContext } from "react";
+import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
 import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
@@ -51,19 +51,22 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
   const dontAddSubject = addingSubjectSet.bind(null, false);
   const dontRemoveSubject = removingSubjectSet.bind(null, false);
   const modifyingBooks = props.modifyingBooks || [];
+  const selectRef = useRef(null);
 
   return (
-    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Subjects:">
-      <ul className="nav nav-tabs">
-        <li className={currentTab == "subjects" ? "active" : ""}>
-          <a onClick={() => setTab("subjects")}>Choose subjects</a>
-        </li>
-        <li className={currentTab == "books" ? "active" : ""}>
+    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Subjects:" focusRef={selectRef}>
+      <div className="tab-headers">
+        <div className={"tab-header " + (currentTab == "subjects" ? "active" : "")}>
+          <a ref={selectRef} onClick={() => setTab("subjects")}>
+            Choose subjects
+          </a>
+        </div>
+        <div className={"tab-header " + (currentTab == "books" ? "active" : "")}>
           <a onClick={() => setTab("books")}>For books</a>
-        </li>
-      </ul>
+        </div>
+      </div>
       <div className="tab-content">
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "subjects" ? "active in" : "")}>
+        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "subjects" ? "active" : "")}>
           <br />
           <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
@@ -133,9 +136,9 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
           </BootstrapButton>
           <br style={{ clear: "both" }} />
         </div>
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active in" : "")}>
+        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
           <br />
-          <ul className="list-unstyled" style={{ marginLeft: "10px" }}>
+          <ul style={{ fontSize: "14px", marginLeft: "10px" }}>
             {modifyingBooks.map(book => (
               <li key={book._id}>{book.title}</li>
             ))}
