@@ -8,7 +8,8 @@ const errorCodes = {
   s1: "This user already exists",
   c1: "Passwords do not match",
   c2: "No login found for this Email / Password",
-  c3: "Password is required"
+  c3: "Password is required",
+  c4: "Email is required"
 };
 
 const Login: FunctionComponent<{}> = props => {
@@ -31,7 +32,9 @@ const Login: FunctionComponent<{}> = props => {
     let password = passwordEl.current.value;
     let rememberme = rememberMeEl.current.checked ? 1 : 0;
 
-    if (!password) {
+    if (!username) {
+      return setState(state => ({ ...state, errorCode: "c4" }));
+    } else if (!password) {
       return setState(state => ({ ...state, errorCode: "c3" }));
     } else {
       setState(state => ({ ...state, errorCode: null }));
@@ -88,8 +91,9 @@ const Login: FunctionComponent<{}> = props => {
     setState(state => ({ ...state, newUser: true, errorCode: null, invalidEmail: false }));
   };
 
+  const emailError = state.errorCode && state.errorCode == "c4";
   const pwdError = state.errorCode && (state.errorCode == "c1" || state.errorCode == "c3");
-  const nonPwdError = state.errorCode && !(state.errorCode == "c1" || state.errorCode == "c3");
+  const miscError = state.errorCode && !emailError && !pwdError;
 
   return (
     <div>
@@ -115,6 +119,7 @@ const Login: FunctionComponent<{}> = props => {
                   ) : null}
 
                   {state.invalidEmail ? <div className="alert alert-danger margin-top">Invalid email</div> : null}
+                  {emailError ? <div className="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div> : null}
                 </div>
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
@@ -145,7 +150,7 @@ const Login: FunctionComponent<{}> = props => {
                   </AjaxButton>
                 )}
 
-                {nonPwdError ? <div className="alert alert-danger margin-bottom">{errorCodes[state.errorCode]}</div> : null}
+                {miscError ? <div className="alert alert-danger margin-bottom">{errorCodes[state.errorCode]}</div> : null}
                 <hr />
 
                 {state.newUser ? (
