@@ -9,7 +9,7 @@ import RecommendMain from "./components/recommend/main";
 
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
-    <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px" }}>
+    <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px", marginTop: "15px" }}>
       <div className="">
         <div className="panel-body" style={{ position: "relative" }}>
           {props.children}
@@ -127,7 +127,7 @@ const HomeIfNotLoggedIn = () => (
       </a>
       <br />
       <br />
-      <a className="btn btn-primary" href="/login">
+      <a style={{ textDecoration: "none" }} className="btn btn-primary" href="/login">
         Login or create an account
       </a>
     </MainHomePane>
