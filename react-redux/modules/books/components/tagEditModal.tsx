@@ -89,12 +89,12 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   let deletingTag = deletingId ? tags.find(t => t._id == deletingId) : null;
   let deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null;
   let searchedTags = filterTags(tags, tagSearch);
-  let junkRef = useRef(document.createElement("input"));
+  let selectRef = useRef(null);
 
   return (
-    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags" focusRef={junkRef}>
+    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags" focusRef={selectRef}>
       <div className="visible-xs">
-        <BootstrapButton onClick={newTag} preset="info-xs">
+        <BootstrapButton ref={selectRef} onClick={newTag} preset="info-xs">
           Add new tag <i className="fa fa-fw fa-plus" />
         </BootstrapButton>
         <br />
@@ -131,18 +131,18 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
               {deleteInfo ? (
                 <div className="row">
                   <div className="col-xs-12">
-                    <h4>Delete tag {editingTagName}</h4>
+                    <h4 style={{ marginBottom: "15px", fontSize: "16px" }}>Delete tag {editingTagName}</h4>
 
-                    <div style={{ marginTop: "5px" }}>
-                      <AjaxButton running={deleting} runningText="Deleting" onClick={runDelete} preset="danger-sm">
+                    <div style={{ display: "flex" }}>
+                      <AjaxButton running={deleting} runningText="Deleting" onClick={runDelete} preset="danger-xs">
                         Delete
                       </AjaxButton>
                       <BootstrapAnchorButton
                         onClick={() => setState({ deletingId: "" })}
                         deleting={deleting}
                         runningText="Deleting..."
-                        preset="default-sm"
-                        className="pull-right"
+                        preset="default-xs"
+                        style={{ marginLeft: "auto" }}
                       >
                         Cancel
                       </BootstrapAnchorButton>
