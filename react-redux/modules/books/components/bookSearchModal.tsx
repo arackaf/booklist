@@ -120,12 +120,18 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             <div>
               <label className="form-label">Is read?</label>
               <div className="radio responsive-radios">
-                <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
-                <label htmlFor="isReadE">Either</label>
-                <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" id="isReadY" />
-                <label htmlFor="isReadY">Yes</label>
-                <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
-                <label htmlFor="isReadN">No</label>
+                <span>
+                  <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
+                  <label htmlFor="isReadE">Either</label>
+                </span>
+                <span>
+                  <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" id="isReadY" />
+                  <label htmlFor="isReadY">Yes</label>
+                </span>
+                <span>
+                  <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
+                  <label htmlFor="isReadN">No</label>
+                </span>
               </div>
             </div>
           </div>
