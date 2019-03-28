@@ -14,8 +14,11 @@ body {
 .scheme1 {
   --neutral-text: hsl(37, 11%, 28%);
   --neutral-border: hsl(41, 8%, 61%);
+
   --neutral-light-background: hsl(40, 23%, 97%);
+  --neutral-background: hsl(41, 8%, 48%);
   --neutral-dark-background: hsl(43, 13%, 90%);
+  
   --warning-color: hsl(45, 86%, 81%);
   --warning-border-color: hsl(43, 89%, 70%);
 
@@ -354,7 +357,11 @@ button, input {
   display: inline;
 }
 .label-default {
-  background-color: var(--neutral-text);
+  background-color: var(--neutral-background);
+  color: white
+}
+.label-bright {
+  background-color: var(--bright-button-3);
   color: white
 }
 
@@ -445,6 +452,17 @@ button, input {
 .row > div {
   padding-left: 15px;
   padding-right: 15px;
+}
+@media (max-width: 768px) {
+  .row.xs-pull-reverse {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    /* justify-content: flex-start; */
+  }
+  .row.xs-pull-reverse > .col-xs-12 {
+    align-self: stretch;
+    margin-bottom: 15px;
+  }
 }
 
 .col-xs-12 {
