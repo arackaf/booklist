@@ -61,7 +61,7 @@ export default props => {
   return (
     <TagsContext.Provider value={tagsState}>
       <div>
-        <div className="row">
+        <div className="row margin-top">
           <div className="col-xs-6">
             <div style={{ marginTop: "5px" }}>
               <div className="margin-top" style={{ fontWeight: "bold", marginBottom: "5px" }}>
@@ -72,12 +72,7 @@ export default props => {
                   <i className="fal fa-search" /> Search your books
                 </button>
                 {selectedBooks.length ? (
-                  <button
-                    onClick={getRecommendations}
-                    disabled={recommendationsLoading}
-                    style={{ marginLeft: "auto" }}
-                    className="btn btn-default btn-primary"
-                  >
+                  <button onClick={getRecommendations} disabled={recommendationsLoading} style={{ marginLeft: "auto" }} className="btn btn-primary">
                     {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
                   </button>
                 ) : null}
