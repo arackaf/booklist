@@ -181,7 +181,7 @@ export const clearAllFilters = () => {
   });
 };
 
-export const setSortOrder = (sort, sortDirection) => {
+export const setBooksSort = (sort, sortDirection) => {
   if (sort == "_id" && sortDirection == "desc") {
     setSearchValues({
       sort: "",

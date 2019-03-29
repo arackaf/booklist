@@ -5,7 +5,7 @@ import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { AppContext } from "applicationRoot/renderUI";
 import { IBookDisplay, BooksContext } from "../booksState";
-import { useCurrentSearch } from "../booksSearchState";
+import { useCurrentSearch, setBooksSort } from "../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
@@ -257,7 +257,6 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { selectedBooks } = booksUiState;
 
-  const { setSortOrder } = {} as any;
   const { books } = useContext(BooksContext);
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
@@ -273,7 +272,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
       newDirection = sortDirection == "asc" ? "desc" : "asc";
     }
 
-    setSortOrder(column, newDirection);
+    setBooksSort(column, newDirection);
   };
 
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
@@ -303,8 +302,8 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                 </th>
                 <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Subjects</th>
                 <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Tags</th>
-                <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Read?</th>
-                <th style={{ ...stickyHeaderStyle }}>Info</th>
+                <th style={{ minWidth: "90px", ...stickyHeaderStyle }} />
+                <th style={{ ...stickyHeaderStyle }} />
                 <th style={{ minWidth: "85px", ...stickyHeaderStyle }}>
                   <a className="no-underline" onClick={() => setSort("pages")}>
                     Pages {sortIconIf("pages")}

@@ -54,7 +54,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   return (
     <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
       {publicLink ? (
-        <div className="panel panel-default" style={{ padding: "10px" }}>
+        <div style={{ marginBottom: "20px" }}>
           Your collection is currently public, viewable at <br />
           <br />
           <a target="_blank" href={publicLink}>
@@ -67,7 +67,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
 
       <div className="checkbox-group" style={{ marginTop: "15px" }}>
         <label className="checkbox">
-          Allow your book collection to be viewed publicly?{" "}
+          Allow your book collection to be viewed publicly?
           <input
             onChange={evt => {
               setDirty();

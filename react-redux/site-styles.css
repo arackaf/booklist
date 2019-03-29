@@ -64,8 +64,12 @@ body {
   --bright-button-color: white;
 }
 
-#main-content, input, select, reach-portal {
+#main-content, input, select, reach-portal, a {
   color: var(--neutral-text);
+}
+
+.nav a {
+  color: var(--lightest-primary-1) 
 }
 
 #footer {
@@ -74,7 +78,7 @@ body {
 }
 
 hr {
-  border: 1px solid var(--neutral-border);
+  border: 1px solid var(--primary-color-1);
 }
 
 ul {
@@ -277,6 +281,11 @@ div.responsive-radios input {
   font-size: 15px;
   border-radius: var(--input-border-radius);
   cursor: pointer;
+}
+.btn.btn-default[disabled]{
+  color: var(--neutral-background);
+  background-color: var(--neutral-light-background);
+  cursor: not-allowed;
 }
 .btn.btn-xs {
   font-size: 12px;
