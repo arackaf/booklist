@@ -51,6 +51,10 @@ body {
   --alert-danger-border: hsl(360, 100%, 87%);
   --alert-danger-color: hsl(350, 94%, 28%);
 
+  --alert-success-background: hsl(125, 65%, 93%);
+  --alert-success-border: hsl(127, 65%, 85%);
+  --alert-success-color: hsl(125, 86%, 20%);
+
   --bright-button-1: hsl(185, 57%, 50%);
   --bright-button-2: hsl(185, 62%, 45%);
   --bright-button-3: hsl(184, 77%, 34%);
@@ -412,6 +416,11 @@ button, input {
   background-color: var(--alert-danger-background);
   border: 1px solid var(--alert-danger-border);
   color: var(--alert-danger-color);
+}
+.alert.alert-success{ 
+  background-color: var(--alert-success-background);
+  border: 1px solid var(--alert-success-border);
+  color: var(--alert-success-color);
 }
 
 .table {
