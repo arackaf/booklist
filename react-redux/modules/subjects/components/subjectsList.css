@@ -22,6 +22,9 @@ ul.list-group ul.list-group {
 .defaultSubjectDisplay > a {
   font-size: 12px;
 }
+.defaultSubjectDisplay a {
+  color: inherit;
+}
 
 .subject-preview {
   margin-right: 10px;
