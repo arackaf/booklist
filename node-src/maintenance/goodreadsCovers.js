@@ -17,6 +17,8 @@ const { graphql } = require("graphql");
 
 const IS_DEV = process.env.IS_DEV;
 
+const LT_THING_KEY = process.env.LIBRARY_THING_KEY;
+
 const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
 const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
 
@@ -28,8 +30,14 @@ const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
 import BookSummariesWithBadCovers from "../graphql-queries/bookSummariesWithBadCovers";
 
+const delay = () => new Promise(res => setTimeout(res, 1000));
+
 export async function updateBookSummaryCovers(howMany) {
   let resp = await graphql(executableSchema, BookSummariesWithBadCovers, root, {}, { pageSize: howMany });
+
+  let getUri = isbn => `https://www.librarything.com/devkey/${LT_THING_KEY}/small/${isbn}/`;
+
+  let goodisbn = "019514970X";
 
   for (let bookSummary of resp.data.allBookSummarys.BookSummarys) {
     console.log(bookSummary);
