@@ -282,16 +282,15 @@ div.responsive-radios input {
   border-radius: var(--input-border-radius);
   cursor: pointer;
 }
-.btn.btn-default[disabled]{
-  color: var(--neutral-background);
-  background-color: var(--neutral-light-background);
+.btn[disabled]{
+  opacity: 0.6;
   cursor: not-allowed;
 }
 .btn.btn-xs {
   font-size: 12px;
   padding: 3px 6px;
 }
-.btn:hover {
+.btn:hover:not([disabled]) {
   background-color: var(--lightest-primary-1)
 }
 .btn:hover.active {
@@ -300,7 +299,7 @@ div.responsive-radios input {
 .btn.active {
   background-color: var(--lightest-primary-1)
 }
-.btn:active, .btn.active:active {
+.btn:active:not([disabled]), .btn.active:active:not([disabled]) {
   background-color: var(--lightest-primary-3);
 }
 
@@ -309,10 +308,10 @@ div.responsive-radios input {
   background-color: var(--bright-button-1);
   border-color: var(--bright-button-1)
 }
-.btn-info:hover {
+.btn-info:hover:not([disabled]) {
   background-color: var(--bright-button-2)
 }
-.btn-info:active {
+.btn-info:active:not([disabled]) {
   background-color: var(--bright-button-3);
 }
 
@@ -336,11 +335,11 @@ div.responsive-radios input {
   background: var(--primary-color-1);
   border-color: var(--primary-color-2);
 }
-.btn.btn-primary:hover {
+.btn.btn-primary:hover:not([disabled]) {
   background: var(--primary-color-2);
   border-color: var(--primary-color-3);
 }
-.btn.btn-primary:active {
+.btn.btn-primary:active:not([disabled]) {
   background: var(--primary-color-3);
   border-color: var(--primary-color-4);
 }
@@ -349,11 +348,11 @@ div.responsive-radios input {
   background: var(--success-color-1);
   border-color: var(--success-color-2);
 }
-.btn.btn-success:hover {
+.btn.btn-success:hover:not([disabled]) {
   background: var(--success-color-2);
   border-color: var(--success-color-3);
 }
-.btn.btn-success:active {
+.btn.btn-success:active:not([disabled]) {
   background: var(--success-color-3);
   border-color: var(--success-color-4);
 }
@@ -362,11 +361,11 @@ div.responsive-radios input {
   background: var(--danger-color-1);
   border-color: var(--danger-color-2);
 }
-.btn.btn-danger:hover {
+.btn.btn-danger:hover:not([disabled]) {
   background: var(--danger-color-2);
   border-color: var(--danger-color-3);
 }
-.btn.btn-danger:active {
+.btn.btn-danger:active:not([disabled]) {
   background: var(--danger-color-3);
   border-color: var(--danger-color-4);
 }
