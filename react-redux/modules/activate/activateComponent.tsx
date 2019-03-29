@@ -5,9 +5,9 @@ import { AppContext } from "applicationRoot/renderUI";
 const MainActivatePane = props => (
   <div className="row" style={{ margin: 0 }}>
     <div className="hidden-xs hidden-sm col-md-1 col-lg-3" />
-    <div style={{ marginLeft: 10, marginRight: 10 }} className="col-md-10 col-lg-6">
-      <div className="panel panel-default">
-        <div className="panel-body">{props.children}</div>
+    <div style={{ marginLeft: 10, marginRight: 10, marginTop: "20px" }} className="col-md-10 col-lg-6">
+      <div>
+        <div>{props.children}</div>
       </div>
     </div>
     <div className="hidden-xs hidden-sm col-md-1 col-lg-3" />
