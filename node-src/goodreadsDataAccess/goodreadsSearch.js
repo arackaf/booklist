@@ -10,6 +10,9 @@ var parseString = require("xml2js").parseString;
 
 const grKey = process.env.GOODREADS_KEY;
 
+//request(`https://www.goodreads.com/book/isbn/068482471X?format=xml&key=CCLB1EiR7Tg9HAW7vwc1HA`, {}, (err, res, body) => {
+
+//
 export default class AmazonSearch {
   constructor() {}
   lookupBook(isbn, userId) {
