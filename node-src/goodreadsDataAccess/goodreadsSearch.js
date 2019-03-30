@@ -1,10 +1,6 @@
 import request from "request";
-import uuid from "uuid/v4";
-import del from "del";
-import path from "path";
-import fs from "fs";
-import mkdirp from "mkdirp";
 import flatMap from "lodash.flatmap";
+import { downloadBookCover, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri } from "../util/bookCovers/bookCoverHelpers";
 
 var parseString = require("xml2js").parseString;
 
@@ -62,6 +58,21 @@ export default class AmazonSearch {
             authors,
             editorialReviews
           };
+
+          if (/nophoto/.test(bookResult.smallImage)) {
+            let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium
+            if (res) {
+              let { fileName, fullName } = res;
+              let newPath = await resizeIfNeeded(fileName);
+
+              if (newPath) {
+                let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId || "generic"}/converted-cover-${fileName}`);
+                if (s3Key) {
+                  bookResult.smallImage = s3Key;
+                }
+              }
+            }
+          }
 
           if (typeof bookResult.pages == null) {
             delete bookResult.pages;

@@ -10,6 +10,8 @@ import mkdirp from "mkdirp";
 
 import Jimp from "jimp";
 
+export const getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
+
 export function downloadBookCover(url, minSizeToAccept) {
   let ext = path.extname(url) || ".jpg";
 

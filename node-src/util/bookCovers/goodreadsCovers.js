@@ -11,7 +11,7 @@ import resolvers from "../../graphQL/resolver";
 import schema from "../../graphQL/schema";
 import Jimp from "jimp";
 
-import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3 } from "./bookCoverHelpers";
+import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri } from "./bookCoverHelpers";
 
 const { graphql } = require("graphql");
 
@@ -35,8 +35,7 @@ const delay = () => new Promise(res => setTimeout(res, 2500));
 let count = 1;
 
 export async function updateBookSummaryCovers() {
-  let resp = await graphql(executableSchema, BookSummariesWithBadCovers, root, {}, {});
-  let getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
+  let resp = await graphql(executableSchema, BookSummariesWithBadCovers, root, {}, { pageSize: 500 });
 
   let testIsbns = ["038549517X", "1560258489", "0674002350", "0393327795", "0199205647", "0807010030", "9781594204876", "019514970X"];
 
@@ -44,8 +43,11 @@ export async function updateBookSummaryCovers() {
     let db = await mongoDbPromise;
     let { _id, isbn, title } = bookSummary;
 
+    await delay();
     let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium
-    if (!res) continue;
+    if (!res) {
+      continue;
+    }
 
     let { fileName, fullName } = res;
     let newPath = await resizeIfNeeded(fileName);
@@ -64,7 +66,6 @@ export async function updateBookSummaryCovers() {
 
     removeFile(fullName);
     newPath && removeFile(newPath);
-    await delay();
   }
   mongoClientPromise
     .then(client => {
