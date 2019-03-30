@@ -38,11 +38,13 @@ export async function updateBookSummaryCovers() {
   let resp = await graphql(executableSchema, BookSummariesWithBadCovers, root, {}, {});
   let getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
 
+  let testIsbns = ["038549517X", "1560258489", "0674002350", "0393327795", "0199205647", "0807010030", "9781594204876", "019514970X"];
+
   for (let bookSummary of resp.data.allBookSummarys.BookSummarys) {
     let db = await mongoDbPromise;
     let { _id, isbn, title } = bookSummary;
 
-    let res = await downloadBookCover(getOpenLibraryCoverUri(isbn));
+    let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium
     if (!res) continue;
 
     let { fileName, fullName } = res;

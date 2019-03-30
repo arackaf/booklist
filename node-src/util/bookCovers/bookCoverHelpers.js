@@ -10,7 +10,7 @@ import mkdirp from "mkdirp";
 
 import Jimp from "jimp";
 
-export function downloadBookCover(url) {
+export function downloadBookCover(url, minSizeToAccept) {
   let ext = path.extname(url) || ".jpg";
 
   let uniqueId = uuid();
@@ -25,6 +25,13 @@ export function downloadBookCover(url) {
       .pipe(file)
       .on("finish", () => {
         file.close();
+
+        let stats = fs.statSync(fullName);
+        let fileSizeInBytes = stats.size;
+
+        if (fileSizeInBytes < minSizeToAccept) {
+          res(null);
+        }
 
         fs.readFile(fullName, (err, data) => {
           if (err) {
