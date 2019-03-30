@@ -31,7 +31,7 @@ const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
 
 import BookSummariesWithBadCovers from "../../graphql-queries/bookSummariesWithBadCovers";
 
-const delay = () => new Promise(res => setTimeout(res, 1000));
+const delay = () => new Promise(res => setTimeout(res, 2500));
 let count = 1;
 
 export async function updateBookSummaryCovers() {
