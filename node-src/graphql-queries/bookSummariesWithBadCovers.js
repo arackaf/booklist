@@ -1,8 +1,9 @@
-export default `query findBookSummariesWithBadCovers($pageSize: Int) {
-  allBookSummarys(smallImage_contains: "nophoto", PAGE: 1, PAGE_SIZE: $pageSize) {
+export default `query findBookSummariesWithBadCovers {
+  allBookSummarys(smallImage_contains: "nophoto") {
     BookSummarys {
       _id
       isbn
+      title
     }
   }
 }`;
