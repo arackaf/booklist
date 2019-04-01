@@ -78,23 +78,21 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
                 filter={filterSubjects}
               />
             </div>
-            <div className="col-xs-9">
-              <div>
-                {addingSubjects
-                  .map(_id => subjectHash[_id])
-                  .map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
-              </div>
+            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+              {addingSubjects
+                .map(_id => subjectHash[_id])
+                .map((s: any, i) => (
+                  <span
+                    key={i}
+                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, marginTop: "5px" }}
+                    className="label label-default margin-left"
+                  >
+                    <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                      X
+                    </a>
+                    {s.name}
+                  </span>
+                ))}
             </div>
           </div>
 
@@ -110,23 +108,21 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
                 filter={filterSubjects}
               />
             </div>
-            <div className="col-xs-9">
-              <div>
-                {removingSubjects
-                  .map(_id => subjectHash[_id])
-                  .map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, display: "inline-table" }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
-              </div>
+            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+              {removingSubjects
+                .map(_id => subjectHash[_id])
+                .map((s: any, i) => (
+                  <span
+                    key={i}
+                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, marginTop: "5px" }}
+                    className="label label-default margin-left"
+                  >
+                    <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                      X
+                    </a>
+                    {s.name}
+                  </span>
+                ))}
             </div>
           </div>
 
