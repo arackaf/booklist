@@ -160,8 +160,11 @@ class ManualBookEntry extends Component<any, any> {
             <div className="row">
               <div className="col-xs-6">
                 <Dropzone
-                  acceptStyle={{ borderColor: "blue" }}
-                  style={{ border: "3px groove", padding: 30 }}
+                  acceptStyle={{ border: "3px solid var(--lightest-primary-3)" }}
+                  rejectStyle={{ border: "3px solid var(--lightest-primary-2)" }}
+                  activeStyle={{ border: "3px solid var(--lightest-primary-2)" }}
+                  disabledStyle={{ border: "3px solid var(--lightest-primary-2)" }}
+                  style={{ border: "3px solid var(--lightest-primary-2)", padding: 30 }}
                   onDrop={files => this.onDrop(files)}
                   multiple={false}
                 >
