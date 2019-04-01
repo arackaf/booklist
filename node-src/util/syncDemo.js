@@ -1,21 +1,18 @@
 require("dotenv").config();
 const { MongoClient, ObjectId } = require("mongodb");
 
-const connect = () => {
-  return MongoClient.connect(
-    process.env.MONGO_CONNECTION,
-    { useNewUrlParser: true }
-  ).then(client => client.db(process.env.DB_NAME));
-};
+const mongoClientPromise = MongoClient.connect(process.env.MONGO_CONNECTION, { useNewUrlParser: true });
+const mongoDbPromise = mongoClientPromise.then(client => client.db(process.env.DB_NAME));
 
 let masterId = process.env.DEMO_REPLICATION_MASTER;
 let slaveId = process.env.DEMO_REPLICATION_SLAVE;
 
 async function sync() {
-  let db = await connect();
+  let client = await mongoClientPromise;
+  let db = await mongoDbPromise;
 
-  await db.collection("books").remove({ userId: slaveId });
-  await db.collection("subjects").remove({ userId: slaveId });
+  await db.collection("books").deleteMany({ userId: slaveId });
+  await db.collection("subjects").deleteMany({ userId: slaveId });
 
   let newSubjects = await db
     .collection("subjects")
@@ -33,7 +30,7 @@ async function sync() {
     let oldId = s._id;
     delete s._id;
     s.userId = slaveId;
-    await db.collection("subjects").insert(s);
+    await db.collection("subjects").insertOne(s);
     subjectMap.set("" + oldId, "" + s._id);
   }
 
@@ -46,7 +43,9 @@ async function sync() {
   }
   await db.collection("books").insertMany(booksToAdd);
 
-  db.close();
+  try {
+    client.close();
+  } catch (er) {}
 }
 
 sync();

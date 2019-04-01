@@ -17,8 +17,6 @@ const { graphql } = require("graphql");
 
 const IS_DEV = process.env.IS_DEV;
 
-const LT_THING_KEY = process.env.LIBRARY_THING_KEY;
-
 const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
 
 const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
@@ -44,7 +42,7 @@ export async function updateBookSummaryCovers() {
     let { _id, isbn, title } = bookSummary;
 
     await delay();
-    let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium
+    let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000); // < 1200 bytes on a medium
     if (!res) {
       continue;
     }
@@ -75,5 +73,10 @@ export async function updateBookSummaryCovers() {
 }
 
 (async function() {
-  updateBookSummaryCovers();
+  try {
+    console.log("Starting...\n");
+    await updateBookSummaryCovers();
+  } catch (err) {
+    console.log("Error caught at the top level: ", err);
+  }
 })();
