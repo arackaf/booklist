@@ -44,6 +44,7 @@ export async function updateBookSummaryCovers() {
     await delay();
     let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000); // < 1200 bytes on a medium
     if (!res) {
+      console.log("No cover found on OpenLibrary for", title);
       continue;
     }
 
