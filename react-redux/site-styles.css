@@ -679,3 +679,10 @@ button, input {
   display: flex;
 }
 
+.list-group-item-heading, .list-group-item-text {
+  margin: 0;
+}
+
+.list-group-item {
+  border-bottom: 1px solid var(--lightest-primary-2)
+}
