@@ -51,6 +51,9 @@ export async function updateBookSummaryCovers() {
       console.log("\nTrying Google...\n");
 
       let cover = await getGoogleCoverUrl(isbn);
+      if (!cover) {
+        continue;
+      }
       res = await downloadBookCover(cover, 1000);
 
       if (!res) {
