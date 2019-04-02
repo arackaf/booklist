@@ -24,6 +24,7 @@
     "compression": "1.6.2",
     "cookie-parser": "1.4.0",
     "del": "^3.0.0",
+    "dlv": "^1.1.2",
     "dotenv": "^4.0.0",
     "easy-express-controllers": "1.0.2",
     "esm": "^3.0.84",

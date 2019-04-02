@@ -10,7 +10,10 @@ import mkdirp from "mkdirp";
 
 import Jimp from "jimp";
 
+const GOOGLE_LIBRARY_KEY = process.env.GOOGLE_LIBRARY_KEY;
+
 export const getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
+export const getGoogleLibraryUri = isbn => `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${GOOGLE_LIBRARY_KEY}`;
 
 export function downloadBookCover(url, minSizeToAccept) {
   let ext = path.extname(url) || ".jpg";
@@ -32,6 +35,7 @@ export function downloadBookCover(url, minSizeToAccept) {
         let fileSizeInBytes = stats.size;
 
         if (fileSizeInBytes < minSizeToAccept) {
+          removeFile(fullName);
           res(null);
         }
 
