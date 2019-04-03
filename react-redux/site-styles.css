@@ -22,26 +22,37 @@ body {
   --primary-8: hsl(261, 54%, 68%);
   --primary-9: hsl(261, 68%, 84%);
   --primary-10: hsl(262, 61%, 93%);
-
-  --neutral-text: hsl(37, 11%, 28%);
-  --neutral-border: hsl(41, 8%, 61%);
-
-  --neutral-light-background: hsl(40, 23%, 97%);
-  --neutral-background: hsl(41, 8%, 48%);
-  --neutral-dark-background: hsl(43, 13%, 90%);
   
+  --neutral-1: hsl(42, 15%, 13%);
+  --neutral-2: hsl(40, 13%, 23%);
+  --neutral-3: hsl(37, 11%, 28%);
+  --neutral-4: hsl(41, 9%, 35%);
+  --neutral-5: hsl(41, 8%, 48%);
+  --neutral-6: hsl(41, 8%, 61%);
+  --neutral-7: hsl(39, 11%, 69%);
+  --neutral-8: hsl(40, 15%, 80%);
+  --neutral-9: hsl(43, 13%, 90%);
+  --neutral-10: hsl(40, 23%, 97%);
+
+  --success-1:hsl(122, 73%, 35%);
+  --success-2:hsl(122, 80%, 29%);
+  --success-3:hsl(125, 79%, 26%);
+  --success-4: hsl(125, 86%, 20%);
+
+  --danger-1:hsl(350, 94%, 28%);
+  --danger-2:hsl(352, 90%, 35%);
+  --danger-3:hsl(354, 85%, 44%);
+  --danger-4:hsl(356, 75%, 53%);
+
   --warning-color: hsl(45, 86%, 81%);
   --warning-border-color: hsl(43, 89%, 70%);
 
-  --success-color-1:hsl(122, 73%, 35%);
-  --success-color-2:hsl(122, 80%, 29%);
-  --success-color-3:hsl(125, 79%, 26%);
-  --success-color-4: hsl(125, 86%, 20%);
+  --neutral-text: var(--neutral-3);
+  --neutral-border: var(--neutral-6);
 
-  --danger-color-1:hsl(356, 75%, 53%);
-  --danger-color-2:hsl(354, 85%, 44%);
-  --danger-color-3:hsl(352, 90%, 35%);
-  --danger-color-4:hsl(350, 94%, 28%);
+  --neutral-light-background: var(--neutral-10);
+  --neutral-background: var(--neutral-5);
+  --neutral-dark-background: var(--neutral-9);
 
   --alert-info-background: hsl(186, 100%, 94%);
   --alert-info-border: hsl(185, 94%, 87%);
@@ -49,7 +60,7 @@ body {
 
   --alert-danger-background: hsl(360, 100%, 95%);
   --alert-danger-border: hsl(360, 100%, 87%);
-  --alert-danger-color: hsl(350, 94%, 28%);
+  --alert-danger-color: var(--danger-1);
 
   --alert-success-background: hsl(125, 65%, 93%);
   --alert-success-border: hsl(127, 65%, 85%);
@@ -342,29 +353,29 @@ div.responsive-radios input {
 }
 
 .btn.btn-success {
-  background: var(--success-color-1);
-  border-color: var(--success-color-2);
+  background: var(--success-1);
+  border-color: var(--success-2);
 }
 .btn.btn-success:hover:not([disabled]) {
-  background: var(--success-color-2);
-  border-color: var(--success-color-3);
+  background: var(--success-2);
+  border-color: var(--success-3);
 }
 .btn.btn-success:active:not([disabled]) {
-  background: var(--success-color-3);
-  border-color: var(--success-color-4);
+  background: var(--success-3);
+  border-color: var(--success-4);
 }
 
 .btn.btn-danger {
-  background: var(--danger-color-1);
-  border-color: var(--danger-color-2);
+  background: var(--danger-4);
+  border-color: var(--danger-3);
 }
 .btn.btn-danger:hover:not([disabled]) {
-  background: var(--danger-color-2);
-  border-color: var(--danger-color-3);
+  background: var(--danger-3);
+  border-color: var(--danger-2);
 }
 .btn.btn-danger:active:not([disabled]) {
-  background: var(--danger-color-3);
-  border-color: var(--danger-color-4);
+  background: var(--danger-2);
+  border-color: var(--danger-1);
 }
 
 button, input {
@@ -393,12 +404,12 @@ button, input {
 }
 
 .label.label-success {
-  background-color: var(--success-color-1);
+  background-color: var(--success-1);
   color: white;
 }
 
 .label.label-danger {
-  background-color: var(--danger-color-1);
+  background-color: var(--danger-4);
   color: white;
 }
 
