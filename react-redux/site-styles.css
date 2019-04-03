@@ -33,7 +33,7 @@ body {
   --neutral-8: hsl(40, 15%, 80%);
   --neutral-9: hsl(43, 13%, 90%);
   --neutral-10: hsl(40, 23%, 97%);
-
+  
   --success-1: hsl(125, 97%, 14%);
   --success-2: hsl(125, 86%, 20%);
   --success-3: hsl(125, 79%, 26%);
@@ -44,6 +44,17 @@ body {
   --success-8: hsl(124, 63%, 74%);
   --success-9: hsl(127, 65%, 85%);
   --success-10: hsl(125, 65%, 93%);
+
+  --warning-1: hsl(43, 86%, 17%);
+  --warning-2: hsl(43, 77%, 27%);
+  --warning-3: hsl(43, 72%, 37%);
+  --warning-4: hsl(42, 63%, 48%);
+  --warning-5: hsl(42, 78%, 60%);
+  --warning-6: hsl(43, 89%, 70%);
+  --warning-7: hsl(43, 90%, 76%);
+  --warning-8: hsl(45, 86%, 81%);
+  --warning-9: hsl(45, 90%, 88%);
+  --warning-10: hsl(45, 100%, 96%);
 
   --danger-1:hsl(348, 94%, 20%);
   --danger-2:hsl(350, 94%, 28%);
@@ -56,9 +67,16 @@ body {
   --danger-9:hsl(360, 100%, 87%);
   --danger-10:hsl(360, 100%, 95%);
 
-
-  --warning-color: hsl(45, 86%, 81%);
-  --warning-border-color: hsl(43, 89%, 70%);
+  --info-1: hsl(184, 91%, 17%);
+  --info-2: hsl(185, 84%, 25%);
+  --info-3: hsl(185, 81%, 29%);
+  --info-4: hsl(184, 77%, 34%);
+  --info-5: hsl(185, 62%, 45%);
+  --info-6: hsl(185, 57%, 50%);
+  --info-7: hsl(184, 65%, 59%);
+  --info-8: hsl(184, 80%, 74%);
+  --info-9: hsl(185, 94%, 87%);
+  --info-10: hsl(186, 100%, 94%);
 
   --neutral-text: var(--neutral-3);
   --neutral-border: var(--neutral-6);
@@ -67,22 +85,7 @@ body {
   --neutral-background: var(--neutral-5);
   --neutral-dark-background: var(--neutral-9);
 
-  --alert-info-background: hsl(186, 100%, 94%);
-  --alert-info-border: hsl(185, 94%, 87%);
-  --alert-info-color: hsl(185, 84%, 25%);
-
-  --alert-danger-background: var(--danger-10);
-  --alert-danger-border: var(--danger-9);
-  --alert-danger-color: var(--danger-2);
-
-  --alert-success-background: hsl(125, 65%, 93%);
-  --alert-success-border: hsl(127, 65%, 85%);
-  --alert-success-color: hsl(125, 86%, 20%);
-
-  --bright-button-1: hsl(185, 57%, 50%);
-  --bright-button-2: hsl(185, 62%, 45%);
-  --bright-button-3: hsl(184, 77%, 34%);
-  --bright-button-color: white;
+  --info-button-color: white;
 }
 
 #main-content, input, select, reach-portal, a {
@@ -288,12 +291,6 @@ div.responsive-radios input {
 .btn-group {
   display: flex;
 }
-.btn.btn-primary {
-  color: var(--primary-10);
-}
-.btn.btn-success, .btn.btn-danger {
-  color: white;
-}
 
 .btn {
   border: 1px solid var(--neutral-border);
@@ -324,18 +321,6 @@ div.responsive-radios input {
   background-color: var(--primary-8);
 }
 
-.btn-info {
-  color: var(--bright-button-color);
-  background-color: var(--bright-button-1);
-  border-color: var(--bright-button-1)
-}
-.btn-info:hover:not([disabled]) {
-  background-color: var(--bright-button-2)
-}
-.btn-info:active:not([disabled]) {
-  background-color: var(--bright-button-3);
-}
-
 .btn-group > input, .btn-group > button {
   border-radius: 0;
 }
@@ -352,43 +337,57 @@ div.responsive-radios input {
   border-bottom-right-radius: var(--input-border-radius);
 }
 
+.btn-info {
+  background-color: var(--info-5);
+  border-color: var(--info-5);
+}
+.btn-info:hover:not([disabled]) {
+  background-color: var(--info-4);
+  border-color: var(--info-4);
+}
+.btn-info:active:not([disabled]) {
+  background-color: var(--info-3);
+  border-color: var(--info-3);
+}
+
 .btn.btn-primary {
-  background: var(--primary-4);
-  border-color: var(--primary-3);
+  background-color: var(--primary-5);
+  border-color: var(--primary-5);
+  color: var(--primary-10);
 }
 .btn.btn-primary:hover:not([disabled]) {
-  background: var(--primary-3);
-  border-color: var(--primary-2);
+  background-color: var(--primary-4);
+  border-color: var(--primary-4);
 }
 .btn.btn-primary:active:not([disabled]) {
-  background: var(--primary-2);
-  border-color: var(--primary-1);
+  background: var(--primary-3);
+  border-color: var(--primary-3);
 }
 
 .btn.btn-success {
-  background: var(--success-5);
-  border-color: var(--success-4);
+  background-color: var(--success-5);
+  border-color: var(--success-5);
 }
 .btn.btn-success:hover:not([disabled]) {
-  background: var(--success-4);
-  border-color: var(--success-3);
+  background-color: var(--success-4);
+  border-color: var(--success-4);
 }
 .btn.btn-success:active:not([disabled]) {
-  background: var(--success-3);
-  border-color: var(--success-2);
+  background-color: var(--success-3);
+  border-color: var(--success-3);
 }
 
 .btn.btn-danger {
   background: var(--danger-5);
-  border-color: var(--danger-4);
+  border-color: var(--danger-5);
 }
 .btn.btn-danger:hover:not([disabled]) {
   background: var(--danger-4);
-  border-color: var(--danger-3);
+  border-color: var(--danger-4);
 }
 .btn.btn-danger:active:not([disabled]) {
   background: var(--danger-3);
-  border-color: var(--danger-2);
+  border-color: var(--danger-3);
 }
 
 button, input {
@@ -408,8 +407,11 @@ button, input {
   color: white
 }
 .label-info {
-  background-color: var(--bright-button-3);
-  color: white
+  background-color: var(--info-5);
+}
+
+.label.label-info, .btn.btn-info {
+  color: var(--info-10)
 }
 
 .label.label-inherit {
@@ -418,12 +420,16 @@ button, input {
 
 .label.label-success {
   background-color: var(--success-5);
-  color: white;
+}
+.label.label-success, .btn.btn-success {
+  color: var(--success-10);
 }
 
+.label.label-danger, .btn.btn-danger {
+  color: var(--danger-10);
+}
 .label.label-danger {
   background-color: var(--danger-5);
-  color: white;
 }
 
 .alert{
@@ -433,23 +439,24 @@ button, input {
   align-items: center;
 }
 .alert.alert-warning{ 
-  background-color: var(--warning-color);
-  border: 1px solid var(--warning-border-color);
+  background-color: var(--warning-9);
+  border: 1px solid var(--warning-8);
+  color: var(--warning-1);
 }
 .alert.alert-info{ 
-  background-color: var(--alert-info-background);
-  border: 1px solid var(--alert-info-border);
-  color: var(--alert-info-color);  
+  background-color: var(--info-9);
+  border: 1px solid var(--info-8);
+  color: var(--info-1);  
 }
 .alert.alert-danger{ 
-  background-color: var(--alert-danger-background);
-  border: 1px solid var(--alert-danger-border);
-  color: var(--alert-danger-color);
+  background-color: var(--danger-9);
+  border: 1px solid var(--danger-8);
+  color: var(--danger-1);
 }
 .alert.alert-success{ 
-  background-color: var(--alert-success-background);
-  border: 1px solid var(--alert-success-border);
-  color: var(--alert-success-color);
+  background-color: var(--success-9);
+  border: 1px solid var(--success-8);
+  color: var(--success-1);
 }
 
 .table {
