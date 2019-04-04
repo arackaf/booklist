@@ -12,7 +12,7 @@ const DisplaySelectedTags: FunctionComponent<LocalProps> = props => {
       {props.currentlySelected
         .map(_id => tagHash[_id])
         .map(t => (
-          <RemovableLabelDisplay key={t._id} className="margin-left" item={t} doRemove={() => props.onRemove(t)} />
+          <RemovableLabelDisplay key={t._id} className="margin-right" style={{ marginTop: "5px" }} item={t} doRemove={() => props.onRemove(t)} />
         ))}
     </>
   );

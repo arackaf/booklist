@@ -9,6 +9,8 @@ import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutation
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
 
+import "./subjectsList.css";
+
 type dragLayerType = {
   item: any;
   currentOffset: { x: number; y: number };
@@ -91,7 +93,6 @@ const SubjectDisplay = DropTarget(
   const { subject, connectDropTarget } = props;
   const isOver = props.isOver && props.canDrop;
   const { _id, candidateMove } = subject;
-  const pendingSubjectDrop = props.isOver && props.canDrop;
   const style: any = {};
   const noDrop = candidateMove || props.noDrop;
   const [{}, { subjectDraggingOver, subjectNotDraggingOver, beginDrag, clearSubjectDragging }] = useContext(SubjectsDnDContext);
@@ -104,16 +105,8 @@ const SubjectDisplay = DropTarget(
     }
   }, [isOver]);
 
-  if (candidateMove) {
-    style.backgroundColor = "lavender";
-  }
-
   return (
-    <li
-      className={`list-group-item ${pendingSubjectDrop ? "pending-subject-drop" : ""}`}
-      key={_id}
-      style={{ ...style, paddingTop: 0, paddingBottom: 0 }}
-    >
+    <li key={_id} style={{ ...style, paddingTop: 0, paddingBottom: 0 }}>
       <SubjectDisplayContent connectDropTarget={connectDropTarget} {...{ noDrop, subject, beginDrag, clearSubjectDragging }} />
     </li>
   );
@@ -210,34 +203,25 @@ const DefaultSubjectDisplay = props => {
 
   return (noDrop ? c => c : connectDropTarget)(
     <div className={className}>
-      <div className="col-lg-12 show-on-hover-parent">
+      <div
+        className="col-lg-12 show-on-hover-parent defaultSubjectDisplay"
+        style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
+      >
         {mainIcon}
         &nbsp;
-        <div
-          className="label label-default"
-          style={{
-            backgroundColor: backgroundColor,
-            color: textColor,
-            maxWidth: "100%",
-            display: "inline-block",
-            overflow: "hidden",
-            verticalAlign: "text-top"
-          }}
-        >
-          {name || "<label preview>"}
-        </div>{" "}
+        <div className="subject-preview">{name || "<label preview>"}</div>
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
+          <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
             <i className="fa fa-fw fa-pencil" />
           </a>
         ) : null}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => addNewSubject(_id)}>
+          <a className="show-on-hover-inline Xinline-filter" onClick={() => addNewSubject(_id)}>
             <i className="fa fa-fw fa-plus" />
           </a>
         ) : null}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline inline-filter" onClick={() => beginSubjectDelete(_id)} style={{ color: "red", marginLeft: "20px" }}>
+          <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
             <i className="fa fa-fw fa-trash" />
           </a>
         ) : null}
@@ -267,8 +251,8 @@ const EditingSubjectDisplay = props => {
   const { validationError } = editingSubject;
 
   return (
-    <div className={className}>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
+    <div className={className + " edit-pane"}>
+      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
         <input
           ref={inputEl}
           onKeyDown={subjectEditingKeyDown}
@@ -312,7 +296,7 @@ const EditingSubjectDisplay = props => {
           ))}
         </select>
       </div>
-      <div className="col-xs-12 col-lg-9">
+      <div className="col-xs-12 col-lg-6">
         <ColorsPalette
           currentColor={editingSubject.backgroundColor}
           colors={colors}
@@ -324,19 +308,19 @@ const EditingSubjectDisplay = props => {
           currentColor={editingSubject.backgroundColor}
         />
       </div>
-      <div className="col-xs-12 col-lg-1 padding-bottom-small">
-        <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, "textColor", color)} />
-      </div>
-      <div className="col-xs-12 col-lg-2">
-        <BootstrapButton
-          disabled={isSubjectSaving}
-          style={{ marginRight: "5px" }}
-          preset="primary-xs"
-          onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
-        >
-          <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-        </BootstrapButton>
-        <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
+      <div className="col-xs-12 col-lg-6">
+        <div className="text-color-save-box">
+          <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
+          <BootstrapButton
+            disabled={isSubjectSaving}
+            style={{ marginRight: "5px", marginLeft: "10px" }}
+            preset="primary-xs"
+            onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
+          >
+            <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
+          </BootstrapButton>
+          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, "textColor", color)} />
+        </div>
       </div>
     </div>
   );
@@ -409,7 +393,7 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
   return (
     <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
       <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
-        <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
+        <BootstrapButton style={{ marginLeft: "5px" }} disabled={!online} onClick={() => addNewSubject()} preset="primary">
           New subject
         </BootstrapButton>
         <br />

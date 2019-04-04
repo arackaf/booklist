@@ -78,10 +78,10 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   return (
     <div>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {isPublic ? <h4 style={{ marginTop: "5px", marginRight: "5px", marginBottom: 0, alignSelf: "center" }}>{booksHeader}</h4> : null}
+        <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
+          {isPublic ? <h4 style={{ marginRight: "5px", marginBottom: 0, alignSelf: "center" }}>{booksHeader}</h4> : null}
           {!selectedBooksCount ? (
-            <div className="visible-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
+            <div className="visible-tiny" style={{ marginRight: "5px" }}>
               <div className="btn-group">
                 <button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
                   <i className="fal fa-angle-left" />
@@ -92,7 +92,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
               </div>
             </div>
           ) : null}
-          <div className="hidden-tiny" style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
+          <div className="hidden-tiny" style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
             <div className="btn-group">
               <button onClick={pageOne} disabled={!canPageOne} className="btn btn-default">
                 <i className="fal fa-angle-double-left" />
@@ -119,7 +119,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
               ) : null}
             </div>
           </div>
-          <div style={{ flex: "0 0 auto", marginTop: "5px", marginRight: "5px" }}>
+          <div style={{ marginRight: "5px" }}>
             <div className="btn-group">
               <input
                 ref={quickSearchEl}
@@ -196,12 +196,11 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
             </div>
           </div>
 
-          <div style={{ flex: "1 1 auto", display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap", marginTop: "5px" }}>
+          <div style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
             {online && resultsCount ? (
               <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
                 <span className="visible-tiny">
-                  Page {page} of {totalPages}
-                  &nbsp;&nbsp;
+                  Page {page} of {totalPages}&nbsp;&nbsp;—&nbsp;&nbsp;
                 </span>
                 {resultsDisplay}
               </div>

@@ -10,27 +10,28 @@ export default class PublicUserSettingsMain extends Component<any, any> {
   render() {
     let PUS: any = PublicUserSettings;
     let PR: any = PasswordReset;
+    let currentTab = this.state.currentTab;
     return (
       <div style={{ margin: "10px", padding: "10px" }}>
-        <ul className="nav nav-tabs">
-          <li className={classNames({ active: this.state.currentTab == "publicSettings" })}>
-            <a onClick={() => this.setTab("publicSettings")}>Public settings</a>
-          </li>
-          <li className={classNames({ active: this.state.currentTab == "passwordReset" })}>
-            <a onClick={() => this.setTab("passwordReset")}>Reset password</a>
-          </li>
-          <li className={classNames({ active: this.state.currentTab == "scanHistory" })}>
-            <a onClick={() => this.setTab("scanHistory")}>Scan history</a>
-          </li>
-        </ul>
+        <div className="tab-headers">
+          <div onClick={() => this.setTab("publicSettings")} className={classNames("tab-header", { active: currentTab == "publicSettings" })}>
+            <a>Public settings</a>
+          </div>
+          <div onClick={() => this.setTab("passwordReset")} className={classNames("tab-header", { active: currentTab == "passwordReset" })}>
+            <a>Reset password</a>
+          </div>
+          <div onClick={() => this.setTab("scanHistory")} className={classNames("tab-header", { active: currentTab == "scanHistory" })}>
+            <a>Scan history</a>
+          </div>
+        </div>
         <div className="tab-content">
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { "active in": this.state.currentTab == "publicSettings" })}>
+          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "publicSettings" })}>
             <PUS />
           </div>
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { "active in": this.state.currentTab == "passwordReset" })}>
+          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "passwordReset" })}>
             <PR />
           </div>
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { "active in": this.state.currentTab == "scanHistory" })}>
+          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "scanHistory" })}>
             <h1>Coming soon...</h1>
           </div>
         </div>

@@ -179,6 +179,9 @@ a.inline-filter {
   border-left: 0;
   border-right: 0;
   width: 100px;
+  font-size: 14px;
+  border-color: var(--neutral-border);
+  border-width: 1px;
 }
 
 .react-autosuggest__input:focus {
@@ -204,7 +207,7 @@ a.inline-filter {
 }
 
 .react-autosuggest__suggestions-list {
-  padding-left: 5px;
+  padding-left: 0;
   padding-top: 3px;
 }
 
@@ -221,8 +224,7 @@ a.inline-filter {
 }
 
 .react-autosuggest__suggestion--highlighted {
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
+  background-color: var(--neutral-dark-background)
 }
 
 .react-autosuggest__suggestion--focused:first-child {
@@ -251,13 +253,6 @@ a.inline-filter {
 }
 .padding-bottom-small {
   padding-bottom: 5px;
-}
-
-.pending-subject-drop {
-  border: 1px solid green;
-}
-.pending-subject-drop + li {
-  border-top: 1px solid green;
 }
 
 .drag-handle {
@@ -342,20 +337,7 @@ a.inline-filter {
 .visible-tiny {
   display: none;
 }
-@media (min-width: 800px) {
-  div.responsive-radios {
-    margin-right: 10px;
-    margin-left: 0;
-    display: inline;
-  }
-}
-@media (max-width: 800px) {
-  div.responsive-radios {
-    margin-right: 0;
-    margin-left: 0;
-    display: block !important;
-  }
-}
+
 @media (max-width: 500px) {
   span.visible-tiny {
     display: inline !important;
@@ -418,4 +400,8 @@ a.inline-filter {
 .toastify {
   z-index: 10;
   margin-right: 10px;
+}
+
+button {
+  outline: 0 !important;
 }

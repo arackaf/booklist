@@ -181,7 +181,7 @@ export const clearAllFilters = () => {
   });
 };
 
-export const setSortOrder = (sort, sortDirection) => {
+export const setBooksSort = (sort, sortDirection) => {
   if (sort == "_id" && sortDirection == "desc") {
     setSearchValues({
       sort: "",
@@ -202,18 +202,24 @@ export const removeFilters = (...names) => {
 };
 
 export const removeFilterSubject = _id => {
-  let currentSearch = useCurrentSearch();
-  let newSubjects = currentSearch.selectedSubjects.map(s => s._id).filter(sId => sId != _id);
+  let hashFilters = getCurrentHistoryState().searchState;
+  let existingSubjects = hashFilters.subjects.split("-").filter(s => s);
+  let newSubjects = existingSubjects.filter(sId => sId != _id);
+  let newFilters: any = {
+    subjects: newSubjects.join("-")
+  };
+  if (!newSubjects.length) {
+    newFilters.searchChildSubjects = null;
+  }
 
-  setSearchValues({
-    subjects: newSubjects.join("-"),
-    searchChildSubjects: currentSearch.searchChildSubjects && newSubjects ? "true" : null
-  });
+  setSearchValues(newFilters);
 };
 
 export const removeFilterTag = _id => {
-  let currentSearch = useCurrentSearch();
-  let newTags = currentSearch.selectedTags.map(s => s._id).filter(sId => sId != _id);
+  let hashFilters = getCurrentHistoryState().searchState;
+  let existingTags = hashFilters.tags.split("-").filter(t => t);
+
+  let newTags = existingTags.filter(tId => tId != _id);
 
   setSearchValues({ tags: newTags.join("-") });
 };
