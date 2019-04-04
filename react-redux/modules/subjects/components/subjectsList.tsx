@@ -394,12 +394,10 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
 
   return (
     <div className="row subject-row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
-      <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
-        <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
+      <div style={{ marginTop: "10px" }} className="col-lg-6 col-xs-12">
+        <BootstrapButton style={{ marginBottom: "5px" }} disabled={!online} onClick={() => addNewSubject()} preset="primary">
           New subject
         </BootstrapButton>
-        <br />
-        <br />
         <SubjectList subjects={allSubjects} />
         {isTouch ? <SDL /> : null}
       </div>
