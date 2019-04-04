@@ -177,8 +177,9 @@ label {
 .nav li.active {
   background-color: var(--primary-7);
 }
-.nav li.disabled {
+.nav li.disabled, .nav li.disabled a {
   color: var(--primary-7);
+  cursor: not-allowed;
 }
 .nav-header {
   font-size: 18px;
