@@ -43,9 +43,7 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   const { chartPackets } = state;
   return (
     <MainHomePane>
-      <h4 style={{ marginBottom: "20px", marginTop: "20px" }}>
-        Welcome to <i>My Library</i>. Below is a basic data visualization of your library, book recommendations search. More to come!
-      </h4>
+
       <div className="tab-headers">
         <div className={"tab-header " + (tab == "vis" ? "active" : "")}>
           <a onClick={() => setTab("vis")}>
