@@ -92,12 +92,13 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               className="form-control"
               id="pName"
               placeholder="Public name"
-            />
+              />
           </div>
           <div className="form-group">
             <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
             <input
               ref={pubHeaderEl}
+              onChange={setDirty}
               defaultValue={publicBooksHeader}
               disabled={saving}
               className="form-control"
