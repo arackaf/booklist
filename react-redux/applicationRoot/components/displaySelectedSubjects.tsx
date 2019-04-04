@@ -12,7 +12,7 @@ const DisplaySelectedSubjects: FunctionComponent<LocalProps> = props => {
       {props.currentlySelected
         .map(_id => subjectHash[_id])
         .map(t => (
-          <RemovableLabelDisplay key={t._id} className="margin-left" style={{ marginTop: "5px" }} item={t} doRemove={() => props.onRemove(t)} />
+          <RemovableLabelDisplay key={t._id} className="margin-right" style={{ marginTop: "5px" }} item={t} doRemove={() => props.onRemove(t)} />
         ))}
     </>
   );
