@@ -70,6 +70,8 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             <i className="visible-xs fal fa-cogs" />
           </NavBarItem>
         ) : null}
+      </ul>
+      <ul className="nav-items-right">
         {!isLoggedIn && !isLoginModule ? (
           <NavBarItem onClick={() => goto("login")}>
             <span className="hidden-xs">Login</span>
@@ -79,7 +81,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
       </ul>
       {isLoggedIn ? (
         <ul className="nav-items-right">
-          <NavBarItem className="pull-right" onClick={logout}>
+          <NavBarItem onClick={logout}>
             <span className="hidden-xs">Logout</span>
             <i className="visible-xs fal fa-sign-out" />
           </NavBarItem>
