@@ -153,7 +153,7 @@ const SubjectDisplayContent = DragSource(
     effectiveChildren.unshift(dropCandidateSubject as any);
   }
 
-  let classToPass = "row padding-top padding-bottom";
+  let classToPass = "row padding-top padding-bottom subject-row";
   return connectDragPreview(
     <div>
       {isEditingSubject ? (
@@ -328,15 +328,17 @@ const EditingSubjectDisplay = props => {
 
 const PendingDeleteSubjectDisplay = props => {
   const { className, deleteMessage, subject } = props;
-  const { name, _id } = subject;
+  const { name, _id, backgroundColor, textColor } = subject;
   const { subjectHash } = useContext(SubjectsContext);
   const { deleteSubject: runDelete } = useSubjectMutations();
   const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
 
   return (
-    <div className={className}>
+    <div className={className + " delete-pane"}>
       <div className="col-lg-12">
-        {name}
+        <div className="label label-default" style={{ display: "inline", color: textColor, backgroundColor }}>
+          {name}
+        </div>
         <BootstrapButton onClick={() => deleteSubject(_id, subjectHash, runDelete)} style={{ marginLeft: "20px" }} preset="danger-xs">
           {deleteMessage}
         </BootstrapButton>
@@ -391,9 +393,9 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
   let SDL: any = SubjectDragLayer;
 
   return (
-    <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
+    <div className="row subject-row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
       <div style={{ marginTop: "5px" }} className="col-lg-6 col-xs-12">
-        <BootstrapButton style={{ marginLeft: "5px" }} disabled={!online} onClick={() => addNewSubject()} preset="primary">
+        <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
           New subject
         </BootstrapButton>
         <br />

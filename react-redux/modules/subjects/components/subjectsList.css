@@ -1,6 +1,6 @@
 ul.list-group {
   margin-left: 0;
-  padding-left: 10px;
+  padding-left: 0;
 }
 
 ul.list-group ul.list-group {
@@ -39,4 +39,12 @@ ul.list-group ul.list-group {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+}
+
+div.row.subject-row {
+  padding-left: 0;
+  margin-left: 0;
+}
+div.row.subject-row.edit-pane > div, div.row.subject-row.delete-pane > div {
+  padding-left: 0;
 }
