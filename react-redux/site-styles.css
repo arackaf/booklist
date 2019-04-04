@@ -77,7 +77,9 @@ body {
   --info-8: hsl(184, 80%, 74%);
   --info-9: hsl(185, 94%, 87%);
   --info-10: hsl(186, 100%, 94%);
+}
 
+#home {
   --neutral-text: var(--neutral-3);
   --neutral-border: var(--neutral-6);
 
