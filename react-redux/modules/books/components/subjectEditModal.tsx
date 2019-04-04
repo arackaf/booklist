@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useMemo, useState } from "react";
+import React, { FunctionComponent, useContext, useMemo, useState, useRef } from "react";
 import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from "applicationRoot/components/bootstrapButton";
 import CustomColorPicker from "applicationRoot/components/customColorPicker";
 import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
@@ -15,15 +15,19 @@ const SubjectDeletingInfo = props => {
   return (
     <div className="row">
       <div className="col-xs-12">
-        <h4>Delete subject {props.subjectName}</h4>
+        <h4 style={{ marginBottom: "15px", fontSize: "16px" }}>Delete subject {props.subjectName}</h4>
 
-        {props.affectedChildren ? <div className="alter alter-warning">{deleteWarning}</div> : null}
+        {props.affectedChildren ? (
+          <div style={{ fontSize: "14px" }} className="alter alter-warning">
+            {deleteWarning}
+          </div>
+        ) : null}
 
-        <div style={{ marginTop: "5px" }}>
-          <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteSubject(props._id)} preset="danger-sm">
+        <div style={{ marginTop: "5px", display: "flex" }}>
+          <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteSubject(props._id)} preset="danger-xs">
             Delete
           </AjaxButton>
-          <BootstrapButton onClick={props.cancelDeleteSubject} className="pull-right" preset="default-sm">
+          <BootstrapButton onClick={props.cancelDeleteSubject} style={{ marginLeft: "auto" }} preset="default-xs">
             Cancel
           </BootstrapButton>
         </div>
@@ -110,11 +114,12 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   let eligibleParents = useEligibleParents(editingSubject);
   let textColors = ["#ffffff", "#000000"];
   let searchedSubjects = filterSubjects(subjectsUnwound, subjectSearch);
+  let selectRef = useRef(null);
 
   return (
-    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects">
+    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects" focusRef={selectRef}>
       <div className="visible-xs">
-        <BootstrapButton onClick={newSubject} preset="info-xs">
+        <BootstrapButton ref={selectRef} onClick={newSubject} preset="info-xs">
           Add new subject <i className="fa fa-fw fa-plus" />
         </BootstrapButton>
         <br />
@@ -142,7 +147,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
           <div className="panel-heading">
             {editingSubject && editingSubject._id ? `Edit ${editingSubject.name}` : "New Subject"}
             {editingSubject && editingSubject._id ? (
-              <BootstrapButton onClick={startDeletingSubject} preset="danger-xs" className="pull-right">
+              <BootstrapButton onClick={startDeletingSubject} preset="danger-xs" style={{ marginLeft: "auto" }}>
                 <i className="fa fa-fw fa-trash" />
               </BootstrapButton>
             ) : null}
@@ -209,12 +214,14 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
               </div>
               <br style={{ clear: "both" }} />
 
-              <AjaxButtonAnchor className="btn btn-primary" running={saving} onClick={save}>
-                Save
-              </AjaxButtonAnchor>
-              <a className="btn btn-default pull-right" onClick={cancelSubjectEdit}>
-                Cancel
-              </a>
+              <div style={{ display: "flex" }}>
+                <AjaxButtonAnchor className="btn btn-primary" running={saving} onClick={save}>
+                  Save
+                </AjaxButtonAnchor>
+                <a className="btn btn-default" onClick={cancelSubjectEdit} style={{ marginLeft: "auto" }}>
+                  Cancel
+                </a>
+              </div>
             </div>
           </div>
         </div>

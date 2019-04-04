@@ -18,47 +18,46 @@ const BookViewListMobileItem = props => {
   }
 
   return (
-    <span className="list-group-item" style={{ cursor: "pointer" }}>
-      <div className="row">
-        <div className="col-xs-3 col-sm-1">
+    <div className="list-group-item" style={{ cursor: "pointer" }}>
+      <div style={{ display: "flex" }}>
+        <div style={{ marginTop: "5px", marginRight: "15px", minWidth: "60px" }}>
           <img src={book.smallImage} />
         </div>
-        <div className="col-xs-9 col-sm-11">
-          <h4 className="list-group-item-heading">{book.title}</h4>
-          <p className="list-group-item-text">{book.authors.length ? <b>{book.authors.join(", ")}</b> : "No author"}</p>
-          <div>
-            {publisherDisplay ? <p className="list-group-item-text">{publisherDisplay}</p> : null}
-            {isbnPages ? <p className="list-group-item-text">{isbnPages}</p> : null}
-
-            {!props.viewingPublic && online ? (
-              <>
-                <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}>
-                  <i className="fa fa-fw fa-pencil" />
+        <div>
+          <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+            <h4 className="list-group-item-heading">{book.title}</h4>
+            <p className="list-group-item-text">{book.authors.length ? <b>{book.authors.join(", ")}</b> : "No author"}</p>
+            <div style={{ marginTop: "auto", marginBottom: "5px" }}>
+              {!props.viewingPublic && online ? (
+                <>
+                  <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}>
+                    <i className="fa fa-fw fa-pencil" />
+                  </button>
+                  <button className="margin-left btn btn-danger btn-xs" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
+                    <i className="fa fa-fw fa-trash" />
+                  </button>
+                </>
+              ) : null}
+              {pendingDelete[book._id] ? (
+                <AjaxButton
+                  running={deleting[book._id]}
+                  runningText="Deleting"
+                  onClick={() => props.runDelete(book._id)}
+                  className="margin-left btn btn-xs btn-danger"
+                >
+                  Confirm delete
+                </AjaxButton>
+              ) : null}
+              {pendingDelete[book._id] ? (
+                <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xs btn-primary">
+                  Cancel
                 </button>
-                <button className="margin-left btn btn-danger btn-xs" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
-                  <i className="fa fa-fw fa-trash" />
-                </button>
-              </>
-            ) : null}
-            {pendingDelete[book._id] ? (
-              <AjaxButton
-                running={deleting[book._id]}
-                runningText="Deleting"
-                onClick={() => props.runDelete(book._id)}
-                className="margin-left btn btn-xs btn-danger"
-              >
-                Confirm delete
-              </AjaxButton>
-            ) : null}
-            {pendingDelete[book._id] ? (
-              <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xs btn-primary">
-                Cancel
-              </button>
-            ) : null}
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
-    </span>
+    </div>
   );
 };
 

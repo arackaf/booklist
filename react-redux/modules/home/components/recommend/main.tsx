@@ -61,18 +61,22 @@ export default props => {
   return (
     <TagsContext.Provider value={tagsState}>
       <div>
-        <div className="row">
+        <div className="row margin-top">
           <div className="col-xs-6">
             <div style={{ marginTop: "5px" }}>
-              <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Find some books, and get Amazon recommendations based on what's similar</div>
-              <button className="btn btn-default" onClick={openModal}>
-                <i className="fal fa-search" /> Search your books
-              </button>
-              {selectedBooks.length ? (
-                <button onClick={getRecommendations} disabled={recommendationsLoading} className="btn btn-default btn-primary pull-right">
-                  {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
+              <div className="margin-top" style={{ fontWeight: "bold", marginBottom: "5px" }}>
+                Find some books, and get recommendations based on what's similar
+              </div>
+              <div className="margin-top" style={{ display: "flex" }}>
+                <button className="btn btn-default" onClick={openModal}>
+                  <i className="fal fa-search" /> Search your books
                 </button>
-              ) : null}
+                {selectedBooks.length ? (
+                  <button onClick={getRecommendations} disabled={recommendationsLoading} style={{ marginLeft: "auto" }} className="btn btn-primary">
+                    {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
+                  </button>
+                ) : null}
+              </div>
             </div>
             <br />
             <br />

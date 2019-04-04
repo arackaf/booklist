@@ -23,8 +23,8 @@ const WellUiSwitcher: FunctionComponent<{}> = props => {
   const showSwitchBackMobile = app.isMobile && app.showingDesktop;
 
   return (
-    <div className="well well-sm" style={{ position: "fixed", bottom: 0, left: 0, right: 0, marginBottom: 0 }}>
-      <img width="16" height="16" src="/react-redux/static/main-icon2.png" />
+    <div id="footer" style={{ position: "fixed", bottom: 0, left: 0, right: 0, marginBottom: 0 }}>
+      <i className="fal fa-book" />
       <span style={{ marginLeft: "5px", marginRight: "5px" }}>My Library</span>
       {showChooseDesktop ? <a onClick={requestDesktop}>Use desktop version</a> : null}
       {showSwitchBackMobile ? <a onClick={requestMobile}>Use mobile version</a> : null}

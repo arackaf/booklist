@@ -117,33 +117,27 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </div>
           </div>
           <div className="col-xs-6">
-            <div className="form-group">
-              <label>Is read?</label>
-              <br />
+            <div>
+              <label className="form-label">Is read?</label>
               <div className="radio responsive-radios">
-                <label>
-                  <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" />
-                  Either
-                </label>
-              </div>
-              <div className="radio responsive-radios">
-                <label>
-                  <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" />
-                  Yes
-                </label>
-              </div>
-              <div className="radio responsive-radios">
-                <label>
-                  <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" />
-                  No
-                </label>
+                <span>
+                  <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
+                  <label htmlFor="isReadE">Either</label>
+                </span>
+                <span>
+                  <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" id="isReadY" />
+                  <label htmlFor="isReadY">Yes</label>
+                </span>
+                <span>
+                  <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
+                  <label htmlFor="isReadN">No</label>
+                </span>
               </div>
             </div>
           </div>
           <div className="col-xs-6">
             <div className="form-group">
               <label>Sort</label>
-              <br />
               <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={filters.bindableSortValue} className="form-control margin-bottom">
                 <option value="title|asc">Title A-Z</option>
                 <option value="title|desc">Title Z-A</option>
@@ -162,10 +156,8 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
         <div className="col-sm-3 col-xs-12">
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
-        <div className="col-sm-9 col-xs-12">
-          <div>
-            <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
-          </div>
+        <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+          <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
         </div>
       </div>
       <br />
@@ -175,13 +167,11 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             <div className="col-sm-3 col-xs-12">
               <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
             </div>
-            <div className="col-sm-9 col-xs-12">
-              <div>
-                <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
-              </div>
+            <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+              <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
             </div>
           </div>
-          <div className="checkbox">
+          <div className="checkbox" style={{ marginTop: "20px" }}>
             <label>
               <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
             </label>

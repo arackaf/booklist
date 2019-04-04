@@ -52,9 +52,9 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   };
 
   return (
-    <div style={{ padding: "10px" }}>
+    <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
       {publicLink ? (
-        <div className="panel panel-default" style={{ padding: "10px" }}>
+        <div style={{ marginBottom: "20px" }}>
           Your collection is currently public, viewable at <br />
           <br />
           <a target="_blank" href={publicLink}>
@@ -62,9 +62,12 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
           </a>
         </div>
       ) : null}
-      <div className="form-group">
+
+      <hr />
+
+      <div className="checkbox-group" style={{ marginTop: "15px" }}>
         <label className="checkbox">
-          Allow your book collection to be viewed publicly?{" "}
+          Allow your book collection to be viewed publicly?
           <input
             onChange={evt => {
               setDirty();
@@ -89,12 +92,13 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               className="form-control"
               id="pName"
               placeholder="Public name"
-            />
+              />
           </div>
           <div className="form-group">
-            <label htmlFor="publicBooksHeader">Publicly display your name as</label>
+            <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
             <input
               ref={pubHeaderEl}
+              onChange={setDirty}
               defaultValue={publicBooksHeader}
               disabled={saving}
               className="form-control"
@@ -102,16 +106,11 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               placeholder="Book header"
             />
           </div>
-          <div className="alert alert-info" role="alert">
-            This is what will show in the navigation when people view your book collection. Leave it blank to default to [public name]'s Books. See
-            below
-          </div>
-          <img src="/react-redux/static/publicBookHeaderInfo.png" />
+          <AjaxButton disabled={!isDirty} onClick={update} running={saving} runningText="Saving" preset="primary">
+            Save
+          </AjaxButton>
         </div>
       ) : null}
-      <AjaxButton disabled={!isDirty} onClick={update} running={saving} runningText="Saving" preset="primary">
-        Save
-      </AjaxButton>
     </div>
   );
 };

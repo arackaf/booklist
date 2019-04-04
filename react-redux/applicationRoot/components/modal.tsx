@@ -8,19 +8,22 @@ export class StandardModalHeader extends Component<{ onHide: any; caption: any }
     let { onHide, caption } = this.props;
     return (
       <>
-        <button type="button" className="close" onClick={onHide} aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 className="modal-title">{caption}</h4>
+        <div className="standard-reach-header">
+          <h4 className="modal-title">{caption}</h4>
+          <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
+            <span>&times;</span>
+          </a>
+        </div>
         <hr />
       </>
     );
   }
 }
 
-export default class Modal extends Component<{ isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string }, any> {
+type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
+export default class Modal extends Component<ModalTypes, any> {
   render() {
-    let { isOpen, onHide, headerCaption, style = { maxWidth: "600px" }, children } = this.props;
+    let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = this.props;
     return (
       <Transition
         config={{ ...config.gentle, overshootClamping: true }}
@@ -30,7 +33,7 @@ export default class Modal extends Component<{ isOpen: boolean; style?: any; onH
       >
         {isOpen
           ? (styles: any) => (
-              <DialogOverlay onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
+              <DialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
                 <DialogContent
                   style={{
                     transform: `translate3d(0px, ${styles.y}px, 0px)`,
