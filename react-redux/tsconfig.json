@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "allowUnreachableCode": true,
-    "target": "esnext",
-    "baseUrl": "./",
-    "jsx": "react",
-    "allowSyntheticDefaultImports": true,
     "allowJs": true,
-    "moduleResolution": "node",
-    "module": "esNext",
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": true,
+    "baseUrl": "./",
     "experimentalDecorators": true,
+    "jsx": "react",
     "lib": ["es2015", "es2017", "dom"],
+    "module": "esNext",
+    "moduleResolution": "node",
     "paths": {
       "@reach/dialog": ["./typings/modules/@reach/dialog"]
-    }
+    },
+    "target": "esnext"
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["./node_modules", "./dist"]
 }

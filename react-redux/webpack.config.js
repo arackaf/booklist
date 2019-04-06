@@ -44,25 +44,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-react"],
-              plugins: ["@babel/plugin-proposal-class-properties", "@babel/plugin-proposal-object-rest-spread", "@babel/plugin-syntax-dynamic-import"]
-            }
-          },
-          "ts-loader"
-        ]
-      },
-      {
-        test: /\.js$/,
+        test: /\.(t|j)sx?$/,
         exclude: /node_modules/,
         loader: "babel-loader",
         query: {
-          presets: ["@babel/preset-react"],
+          presets: ["@babel/preset-react", "@babel/preset-typescript"],
           plugins: ["@babel/plugin-proposal-class-properties", "@babel/plugin-proposal-object-rest-spread", "@babel/plugin-syntax-dynamic-import"]
         }
       },
