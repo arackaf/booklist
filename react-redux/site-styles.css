@@ -717,3 +717,11 @@ button, input, select {
 .list-group-item {
   border-bottom: 1px solid var(--primary-9)
 }
+
+div.toast-notification {
+  background: var(--primary-4);
+  color: var(--primary-10)
+}
+div.toast-notification a, div.toast-notification span, div.toast-notification h4 {
+  color: var(--primary-10)
+}
