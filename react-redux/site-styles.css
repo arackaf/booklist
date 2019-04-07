@@ -79,7 +79,7 @@ body {
   --primary-10: hsl(262, 61%, 93%);
 }
 
-#home {
+#home, [data-reach-dialog-overlay] {
   --neutral-text: var(--neutral-3);
   --neutral-border: var(--neutral-6);
   
@@ -393,7 +393,7 @@ div.responsive-radios input {
   border-color: var(--danger-3);
 }
 
-button, input {
+button, input, select {
   outline: 0;
 }
 
