@@ -43,11 +43,12 @@ export default function setupServiceWorker() {
             text: `
               <h4 style='display: inline'>An update is available!</h4>
               <br><br>
-              <a class='do-sw-update' style='color: white'>Click to update and reload</a>&nbsp;&nbsp;
+              <a class='do-sw-update'>Click to update and reload</a>&nbsp;&nbsp;
             `.trim(),
             duration: 7000,
             gravity: "bottom",
-            close: true
+            close: true,
+            className: "toast-notification"
           }).showToast();
         });
       } catch (er) {}
