@@ -12,6 +12,9 @@ export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: 
 };
 
 export const syncResults = (resultSet, arrName, newResults, { sort } = {} as any) => {
+  if (!Array.isArray(newResults)) {
+    newResults = [newResults];
+  }
   const lookupNew = new Map(newResults.map(o => [o._id, o]));
 
   resultSet[arrName] = resultSet[arrName].concat();
