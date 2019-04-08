@@ -33,7 +33,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
 
   const [appState] = useContext(AppContext);
   const { totalPages, resultsCount } = useContext(BooksContext);
-  const [{}, { setViewDesktop, setViewBasicList }] = useContext(BooksSearchContext);
+  const [{}, { setViewDesktop, setViewBasicList, setCoversList }] = useContext(BooksSearchContext);
 
   const { booksUiState, setRead } = props;
   const { selectedBooks } = booksUiState;
@@ -175,6 +175,13 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                     className={"btn btn-default " + (bookSearchUiView.isBasicList ? "active" : "")}
                   >
                     <i className="fal fa-list" />
+                  </button>
+                  <button
+                    style={{ position: "static" }}
+                    onClick={setCoversList}
+                    className={"btn btn-default " + (bookSearchUiView.isCoversList ? "active" : "")}
+                  >
+                    <i className="fas fa-th" />
                   </button>
                 </>
               ) : !isPublic ? (

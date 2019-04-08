@@ -1,0 +1,14 @@
+.covers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-rows: 1fr;
+  grid-gap: 15px;
+}
+
+.covers-list figure {
+  margin: 0
+} 
+
+.covers-list img {
+  cursor: pointer;
+}
