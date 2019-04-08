@@ -1,13 +1,22 @@
-import React, { Component, useRef } from "react";
+import React, { Component, useRef, useState, useContext } from "react";
 import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
 import ajaxUtil from "util/ajaxUtil";
 import Modal from "applicationRoot/components/modal";
+import { AppContext } from "applicationRoot/renderUI";
 
 const DetailsView = props => {
   let { book } = props;
   const focusRef = useRef(null);
+
+  const [newImageUrl, setNewImageUrl] = useState("");
+  const [savingNewImageUrl, setSavingNewImageUrl] = useState(false);
+  const [{ userId }] = useContext(AppContext);
+
+  const saveImage = () => {
+    ajaxUtil.post("/book/newMediumImage", { _id: book._id, userId, url: newImageUrl });
+  };
 
   if (!book) return null;
   return (
@@ -29,8 +38,8 @@ const DetailsView = props => {
           {book.isbn ? <div>{book.isbn}</div> : null}
           <div style={{ marginTop: "auto" }}>
             <div className="btn-group">
-              <input className="form-control" placeholder="New Cover URL" />
-              <button className="btn btn-default">
+              <input value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} className="form-control" placeholder="New Cover URL" />
+              <button className="btn btn-default" disabled={!newImageUrl || savingNewImageUrl} onClick={saveImage}>
                 <i className="far fa-cloud-upload-alt" />
               </button>
             </div>
