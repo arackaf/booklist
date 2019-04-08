@@ -11,6 +11,10 @@ import findBooksQuery from "../graphql-queries/findBooks";
 import findRecommendationQuery from "../graphql-queries/findRecommendations";
 import findRecommendationMatches from "../graphql-queries/findRecommendationMatches";
 
+import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3 } from "../util/bookCovers/bookCoverHelpers";
+
+import { MongoClient, ObjectId } from "mongodb";
+
 class BookController {
   async saveFromIsbn({ isbn }) {
     const userId = this.request.user.id;
@@ -62,6 +66,39 @@ class BookController {
     } catch (err) {
       console.log("err", err);
     }
+  }
+  async newMediumImage({ _id, userId, url }) {
+    debugger;
+    let res = await downloadBookCover(url, 1000);
+
+    if (!res) {
+      this.send({ failure: true });
+    }
+
+    let { fileName, fullName } = res;
+    let newPath = await resizeIfNeeded(fileName, 106);
+
+    if (!newPath) {
+      this.send({ failure: true });
+    }
+
+    let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId}/${fileName}`);
+
+    const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
+    const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
+    let client = await MongoClient.connect(connString, { useNewUrlParser: true });
+    let db = await client.db(dbName);
+
+    await db.collection("books").updateOne(
+      { _id: ObjectId(_id) },
+      {
+        $set: { mediumImage: s3Key }
+      }
+    );
+
+    await client.close();
+
+    this.send({ url: s3Key });
   }
 }
 
