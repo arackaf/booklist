@@ -68,7 +68,6 @@ class BookController {
     }
   }
   async newMediumImage({ _id, userId, url }) {
-    debugger;
     let res = await downloadBookCover(url, 1000);
 
     if (!res) {
@@ -97,6 +96,9 @@ class BookController {
     );
 
     await client.close();
+
+    removeFile(fullName);
+    removeFile(newPath);
 
     this.send({ url: s3Key });
   }
