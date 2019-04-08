@@ -1,6 +1,6 @@
 .covers-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(110px, 110px));
   grid-template-rows: 1fr;
   grid-gap: 15px;
 }
@@ -11,4 +11,5 @@
 
 .covers-list img {
   cursor: pointer;
+  max-width: 100%;
 }
