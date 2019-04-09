@@ -9,9 +9,11 @@ import { TagsContext } from "applicationRoot/tagsState";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
 const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
+const SET_COVERS_LIST_VIEW = "booksSearch.SET_Covers_VIEW";
 
 const GRID_VIEW = "books table view";
 const BASIC_LIST_VIEW = "books mobile view";
+const COVERS_LIST = "books covers view";
 const HASH_CHANGED = "books search hash changed";
 
 const initialState = {
@@ -26,6 +28,8 @@ export function bookSearchReducer(state = initialState, action): BookSearchState
       return { ...state, view: BASIC_LIST_VIEW };
     case SET_GRID_VIEW:
       return { ...state, view: GRID_VIEW };
+    case SET_COVERS_LIST_VIEW:
+      return { ...state, view: COVERS_LIST };
     case HASH_CHANGED:
       let { filters } = action;
       if (!shallowEqual(filters, state.hashFilters)) {
@@ -63,7 +67,7 @@ const defaultSearchValuesHash = {
 };
 
 export function useBooksSearchState(): [BookSearchState, any, any] {
-  let actions = { setViewDesktop, setViewBasicList, hashChanged };
+  let actions = { setViewDesktop, setViewBasicList, setCoversList, hashChanged };
   let initialSearchState = useMemo(() => ({ ...initialState, hashFilters: getCurrentHistoryState().searchState }), []);
   let result = getStatePacket<BookSearchState>(bookSearchReducer, initialSearchState, actions);
   let dispatch = result[2];
@@ -133,15 +137,18 @@ export const useBookSearchUiView = () => {
   let view = bookSearch.view;
   let isGridView = view == GRID_VIEW || (!view && app.showingDesktop);
   let isBasicList = view == BASIC_LIST_VIEW || (!view && app.showingMobile);
+  let isCoversList = view == COVERS_LIST;
 
   return {
     isGridView,
-    isBasicList
+    isBasicList,
+    isCoversList
   };
 };
 
 const setViewDesktop = () => ({ type: SET_GRID_VIEW });
 const setViewBasicList = () => ({ type: SET_BASIC_LIST_VIEW });
+const setCoversList = () => ({ type: SET_COVERS_LIST_VIEW });
 
 const hashChanged = filters => ({ type: HASH_CHANGED, filters });
 

@@ -43,6 +43,7 @@ query SearchBooks(
       ean
       pages
       smallImage
+      mediumImage
       publicationDate
       subjects
       authors

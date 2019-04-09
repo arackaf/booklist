@@ -1,7 +1,6 @@
 import dao from "./node-src/dataAccess/dao";
 import bookEntryQueueManager from "./node-src/app-helpers/bookEntryQueueManager";
 import bookSimilarityQueueManager from "./node-src/app-helpers/bookSimilarityQueueManager";
-import PendingBookEntryDao from "./node-src/dataAccess/pendingBookEntryDAO";
 import ErrorLoggerDao from "./node-src/dataAccess/errorLoggerDAO";
 import UserDao from "./node-src/dataAccess/userDAO";
 
@@ -15,10 +14,6 @@ import fs from "fs";
 import mkdirp from "mkdirp";
 import Jimp from "jimp";
 import compression from "compression";
-import http from "http";
-import { MongoClient } from "mongodb";
-
-import connectToDb from "./node-src/dataAccess/connect";
 
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
@@ -35,14 +30,8 @@ import webpush from "web-push";
 
 import expressGraphql from "express-graphql";
 
-import resolvers from "./node-src/graphQL/resolver";
-import schema from "./node-src/graphQL/schema";
-
-import resolversPublic from "./node-src/graphQL-public/graphQL/resolver";
-import schemaPublic from "./node-src/graphQL-public/graphQL/schema";
-
-import { makeExecutableSchema } from "graphql-tools";
 import { middleware } from "generic-persistgraphql";
+import { getPublicGraphqlSchema, getGraphqlSchema } from "./node-src/util/graphqlUtils";
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
@@ -50,9 +39,6 @@ const PUBLIC_USER = {
   _id: PUBLIC_USER_ID,
   id: PUBLIC_USER_ID
 };
-
-const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
-const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
 
 const IS_DEV = process.env.IS_DEV;
 
@@ -159,11 +145,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
-const mongoClientPromise = MongoClient.connect(connString, { useNewUrlParser: true });
-const mongoDbPromise = mongoClientPromise.then(client => client.db(dbName));
-
-export const root = { client: IS_DEV ? null : mongoClientPromise, db: mongoDbPromise };
-export const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
+const { root, executableSchema } = getGraphqlSchema();
+export { root, executableSchema };
 
 middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react-redux/extracted_queries.json") });
 app.use(
@@ -175,10 +158,7 @@ app.use(
   })
 );
 
-const mongoClientPublicPromise = MongoClient.connect(connString, { useNewUrlParser: true });
-const mongoDbPublicPromise = mongoClientPromise.then(client => client.db(dbName));
-const rootPublic = { client: IS_DEV ? null : mongoClientPublicPromise, db: mongoDbPublicPromise };
-const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
+const { rootPublic, executableSchemaPublic } = getPublicGraphqlSchema();
 
 app.use("/graphql-public", function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
