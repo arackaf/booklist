@@ -140,9 +140,9 @@ export const useBookSearchUiView = () => {
   let isCoversList = view == COVERS_LIST;
 
   return {
-    isGridView: false,
-    isBasicList: false,
-    isCoversList: true
+    isGridView,
+    isBasicList,
+    isCoversList
   };
 };
 
