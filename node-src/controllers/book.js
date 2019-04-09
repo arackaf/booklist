@@ -13,7 +13,8 @@ import findRecommendationMatches from "../graphql-queries/findRecommendationMatc
 
 import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3 } from "../util/bookCovers/bookCoverHelpers";
 
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
+import { getDbConnection } from "../util/dbUtils";
 
 class BookController {
   async saveFromIsbn({ isbn }) {
@@ -82,11 +83,7 @@ class BookController {
     }
 
     let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId}/${fileName}`);
-
-    const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
-    const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
-    let client = await MongoClient.connect(connString, { useNewUrlParser: true });
-    let db = await client.db(dbName);
+    let { db, client } = await getDbConnection();
 
     await db.collection("books").updateOne(
       { _id: ObjectId(_id) },

@@ -1,46 +1,29 @@
 import request from "request";
 import uuid from "uuid/v4";
-import del from "del";
-import path from "path";
-import fs from "fs";
-import mkdirp from "mkdirp";
-import { MongoClient, ObjectId } from "mongodb";
-
-import { makeExecutableSchema } from "graphql-tools";
-import resolvers from "../../graphQL/resolver";
-import schema from "../../graphQL/schema";
 import Jimp from "jimp";
 import dlv from "dlv";
-
+import { getDbConnection } from "../dbUtils";
+import { getGraphqlSchema } from "../graphqlUtils";
+import BookSummariesWithBadCovers from "../../graphql-queries/bookSummariesWithBadCovers";
 import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "./bookCoverHelpers";
 
+import { ObjectId } from "mongodb";
 const { graphql } = require("graphql");
 
-const IS_DEV = process.env.IS_DEV;
-
-const connString = process.env.IS_PUBLIC ? process.env.MONGO_PUBLIC : process.env.MONGO_CONNECTION;
-
-const dbName = process.env.IS_PUBLIC ? process.env.DB_NAME_PUBLIC : process.env.DB_NAME;
-
-const mongoClientPromise = MongoClient.connect(connString, { useNewUrlParser: true });
-const mongoDbPromise = mongoClientPromise.then(client => client.db(dbName));
-
-const root = { client: IS_DEV ? null : mongoClientPromise, db: mongoDbPromise };
-const executableSchema = makeExecutableSchema({ typeDefs: schema, resolvers });
-
-import BookSummariesWithBadCovers from "../../graphql-queries/bookSummariesWithBadCovers";
+const dbPromise = getDbConnection();
 
 const delay = () => new Promise(res => setTimeout(res, 2500));
 let count = 1;
 
 export async function updateBookSummaryCovers() {
+  const { db, client } = await dbPromise;
+  const { root, executableSchema } = getGraphqlSchema(dbPromise);
   let resp = await graphql(executableSchema, BookSummariesWithBadCovers, root, {}, { pageSize: 500 });
 
   let title = "";
   let testIsbns = ["081664733X", "0801878918", "0525951040", "0199596654"];
 
   for (let bookSummary of resp.data.allBookSummarys.BookSummarys) {
-    let db = await mongoDbPromise;
     let { _id, isbn, title } = bookSummary;
 
     await delay();
@@ -81,11 +64,8 @@ export async function updateBookSummaryCovers() {
     removeFile(fullName);
     newPath && removeFile(newPath);
   }
-  mongoClientPromise
-    .then(client => {
-      client.close();
-    })
-    .catch(err => {});
+
+  client.close();
 }
 
 function getGoogleCoverUrl(isbn) {
