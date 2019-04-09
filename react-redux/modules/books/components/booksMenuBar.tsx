@@ -171,17 +171,17 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                   </button>
                   <button
                     style={{ position: "static" }}
-                    onClick={setViewBasicList}
-                    className={"btn btn-default " + (bookSearchUiView.isBasicList ? "active" : "")}
-                  >
-                    <i className="fal fa-list" />
-                  </button>
-                  <button
-                    style={{ position: "static" }}
                     onClick={setCoversList}
                     className={"btn btn-default " + (bookSearchUiView.isCoversList ? "active" : "")}
                   >
                     <i className="fas fa-th" />
+                  </button>
+                  <button
+                    style={{ position: "static" }}
+                    onClick={setViewBasicList}
+                    className={"btn btn-default " + (bookSearchUiView.isBasicList ? "active" : "")}
+                  >
+                    <i className="fal fa-list" />
                   </button>
                 </>
               ) : !isPublic ? (
