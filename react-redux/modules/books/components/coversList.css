@@ -1,13 +1,27 @@
 .covers-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 110px));
-  grid-template-rows: 1fr;
-  grid-gap: 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .covers-list figure {
-  margin: 0
-} 
+  width: 120px;
+  margin: 10px 15px 0 0;
+}
+
+@media(max-width: 600px){
+  .covers-list figure {
+    width: 70px;
+    margin: 7px 10px 0 0;
+  }
+}
+
+@media(max-width: 420px){
+  .covers-list figure {
+    width: 50px;
+    margin: 5px 5px 0 0;
+  }
+}
 
 .covers-list img {
   cursor: pointer;
