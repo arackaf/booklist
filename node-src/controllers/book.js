@@ -86,7 +86,7 @@ class BookController {
     let { db, client } = await getDbConnection();
 
     await db.collection("books").updateOne(
-      { _id: ObjectId(_id) },
+      { _id: ObjectId(_id), userId },
       {
         $set: { mediumImage: s3Key }
       }
