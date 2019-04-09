@@ -179,7 +179,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
                     <CSSTransition classNames="fade-transition" timeout={300} key={1}>
                       <div>
                         <br />
-                        <div className="alert alert-info alert-slim">
+                        <div className="alert alert-info alert-slim" style={{ marginBottom: "15px" }}>
                           Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a
                           dedicated place to see what's been saved, and what failed to be found.
                         </div>
