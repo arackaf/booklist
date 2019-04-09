@@ -56,7 +56,7 @@ export function downloadBookCover(url, minSizeToAccept) {
   });
 }
 
-export function resizeIfNeeded(fileName) {
+export function resizeIfNeeded(fileName, width = 50) {
   let pathToFileUploaded = path.resolve("./conversions/" + fileName);
   let resizedDestination = path.resolve("./conversions/" + "resized_" + fileName);
 
@@ -67,8 +67,8 @@ export function resizeIfNeeded(fileName) {
           return res(null);
         }
 
-        if (image.bitmap.width > 50) {
-          image.resize(50, Jimp.AUTO);
+        if (image.bitmap.width > width) {
+          image.resize(width, Jimp.AUTO);
 
           image.write(resizedDestination, err => {
             if (err) {
