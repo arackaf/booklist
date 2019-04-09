@@ -24,6 +24,11 @@
 }
 
 .covers-list img {
-  cursor: pointer;
   max-width: 100%;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.covers-list figure {
+  cursor: pointer;
 }
