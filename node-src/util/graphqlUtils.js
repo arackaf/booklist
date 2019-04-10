@@ -22,7 +22,7 @@ export function getPublicGraphqlSchema(dbPromise) {
   dbPromise = dbPromise || getDbConnection();
 
   const rootPublic = { client: IS_DEV ? null : dbPromise.then(({ client }) => client), db: dbPromise.then(({ db }) => db) };
-  const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolversPublic });
+  const executableSchemaPublic = makeExecutableSchema({ typeDefs: schemaPublic, resolvers: resolversPublic });
 
   return { rootPublic, executableSchemaPublic };
 }
