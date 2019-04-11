@@ -43,7 +43,6 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   const { chartPackets } = state;
   return (
     <MainHomePane>
-
       <div className="tab-headers">
         <div className={"tab-header " + (tab == "vis" ? "active" : "")}>
           <a onClick={() => setTab("vis")}>
@@ -135,7 +134,7 @@ const HomeIfNotLoggedIn = () => (
 const Home: FunctionComponent<{}> = props => {
   const [{ isLoggedIn }] = useContext(AppContext);
   return (
-    <div style={{ paddingLeft: 0, paddingRight: 0 }} className="container-fluid">
+    <div style={{ paddingLeft: 0, paddingRight: 0, marginLeft: "15px", marginRight: "15px" }} className="container-fluid">
       {isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}
     </div>
   );
