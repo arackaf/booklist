@@ -30,10 +30,10 @@ const BookViewListMobileItem = props => {
             <div style={{ marginTop: "auto", marginBottom: "5px" }}>
               {!props.viewingPublic && online ? (
                 <>
-                  <button className="btn btn-primary btn-xs" onClick={() => props.editBook(book)}>
+                  <button className="btn btn-xs" onClick={() => props.editBook(book)}>
                     <i className="fa fa-fw fa-pencil" />
                   </button>
-                  <button className="margin-left btn btn-danger btn-xs" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
+                  <button className="margin-left btn btn-xs" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
                     <i className="fa fa-fw fa-trash" />
                   </button>
                 </>
@@ -49,7 +49,7 @@ const BookViewListMobileItem = props => {
                 </AjaxButton>
               ) : null}
               {pendingDelete[book._id] ? (
-                <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xs btn-primary">
+                <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xs">
                   Cancel
                 </button>
               ) : null}
