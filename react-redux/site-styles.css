@@ -122,6 +122,10 @@ h4 {
   margin: 0;
   font-size: 18px;
 }
+h5 {
+  margin: 0;
+  font-size: 16px;
+}
 .form-inline {
   display: flex;
 }
@@ -714,12 +718,17 @@ button, input, select {
   display: flex;
 }
 
+.list-group > .list-group-item:first-of-type {
+  border-top: 2px solid var(--primary-9);
+}
 .list-group-item-heading, .list-group-item-text {
   margin: 0;
 }
 
 .list-group-item {
-  border-bottom: 1px solid var(--primary-9)
+  border-bottom: 1px solid var(--neutral-border);
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 div.toast-notification {
