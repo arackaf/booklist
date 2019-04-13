@@ -27,7 +27,7 @@ const BookViewListMobileItem = props => {
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <div className="list-group-item-heading book-title">{book.title}</div>
             <span className="list-group-item-text book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
-            <div style={{ marginTop: "5px", marginBottom: "5px" }}>
+            <div style={{ marginTop: "auto" }}>
               {!props.viewingPublic && online ? (
                 <>
                   <button className="btn btn-xs no-border btn-light btn-round-icon" onClick={() => props.editBook(book)}>
