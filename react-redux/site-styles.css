@@ -317,7 +317,14 @@ div.responsive-radios input {
   border: 0;
 }
 .btn.btn-light {
-  color: var(--primary-8);
+  background-color: var(--primary-9);
+  color: white
+}
+.btn.btn-light:hover:not([disabled]) {
+  background-color: var(--primary-6)
+}
+.btn.btn-light:active:not([disabled]), .btn.btn-light.active:active:not([disabled]) {
+  background-color: var(--primary-5);
 }
 .btn[disabled]{
   opacity: 0.6;
@@ -331,6 +338,12 @@ div.responsive-radios input {
   font-size: 11px;
   padding: 2px 5px;
 }
+.btn.btn-round-icon{
+  border-radius: 50%;
+  text-align: center;
+  display: inline-block;
+  padding: 4px;
+}
 .btn:hover:not([disabled]) {
   background-color: var(--primary-10)
 }
@@ -342,9 +355,6 @@ div.responsive-radios input {
 }
 .btn:active:not([disabled]), .btn.active:active:not([disabled]) {
   background-color: var(--primary-8);
-}
-.btn.btn-light:active:not([disabled]), .btn.btn-light.active:active:not([disabled]) {
-  background-color: var(--primary-9);
 }
 
 .btn-group > input, .btn-group > button {
