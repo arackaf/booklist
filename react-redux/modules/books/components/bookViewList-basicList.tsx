@@ -33,7 +33,7 @@ const BookViewListMobileItem = props => {
                   <button className="btn btn-xs no-border btn-light" onClick={() => props.editBook(book)}>
                     <i className="fa fa-fw fa-pencil" />
                   </button>
-                  <button className="margin-left btn btn-xs no-border btn-light" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
+                  <button className="btn btn-xs no-border btn-light" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
                     <i className="fa fa-fw fa-trash" />
                   </button>
                 </>
@@ -43,13 +43,13 @@ const BookViewListMobileItem = props => {
                   running={deleting[book._id]}
                   runningText="Deleting"
                   onClick={() => props.runDelete(book._id)}
-                  className="margin-left btn btn-xs btn-danger"
+                  className="margin-left btn btn-xxs btn-danger"
                 >
-                  Confirm delete
+                  Confirm Delete
                 </AjaxButton>
               ) : null}
               {pendingDelete[book._id] ? (
-                <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xs">
+                <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xxs">
                   Cancel
                 </button>
               ) : null}
