@@ -343,6 +343,7 @@ div.responsive-radios input {
   text-align: center;
   display: inline-block;
   padding: 4px;
+  font-size: 9px;
 }
 .btn:hover:not([disabled]) {
   background-color: var(--primary-10)
