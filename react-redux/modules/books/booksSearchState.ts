@@ -105,7 +105,7 @@ function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
     .filter(res => res);
 }
 
-const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection";
+const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection" && k != "userId";
 
 export const useCurrentSearch = () => {
   const [{ hashFilters: filters }] = useContext(BooksSearchContext);
