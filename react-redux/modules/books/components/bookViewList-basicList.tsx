@@ -20,13 +20,17 @@ const BookViewListMobileItem = props => {
   return (
     <div className="list-group-item" style={{ cursor: "pointer" }}>
       <div style={{ display: "flex" }}>
-        <div style={{ marginTop: "5px", marginRight: "15px", minWidth: "60px" }}>
+        <div style={{ marginRight: "5px", minWidth: "55px" }}>
           <img src={book.smallImage} />
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <h4 className="list-group-item-heading">{book.title}</h4>
-            <p className="list-group-item-text">{book.authors.length ? <b>{book.authors.join(", ")}</b> : "No author"}</p>
+            <h5 className="list-group-item-heading" style={{ fontSize: "14px" }}>
+              {book.title}
+            </h5>
+            <span className="list-group-item-text" style={{ fontSize: "13px", fontStyle: "italic" }}>
+              {book.authors.length ? book.authors.join(", ") : ""}
+            </span>
             <div style={{ marginTop: "auto", marginBottom: "5px" }}>
               {!props.viewingPublic && online ? (
                 <>
