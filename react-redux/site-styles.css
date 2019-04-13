@@ -86,6 +86,7 @@ body {
 #home, [data-reach-dialog-overlay] {
   --neutral-text: var(--neutral-3);
   --neutral-light-text: var(--neutral-5);
+  --neutral-lighter-text: var(--neutral-7);
   --neutral-border: var(--neutral-6);
   
   --neutral-light-background: var(--neutral-10);
@@ -316,7 +317,7 @@ div.responsive-radios input {
   border: 0;
 }
 .btn.btn-light {
-  color: var(--neutral-light-text)
+  color: var(--primary-8);
 }
 .btn[disabled]{
   opacity: 0.6;
@@ -325,6 +326,10 @@ div.responsive-radios input {
 .btn.btn-xs {
   font-size: 12px;
   padding: 3px 6px;
+}
+.btn.btn-xxs {
+  font-size: 11px;
+  padding: 2px 5px;
 }
 .btn:hover:not([disabled]) {
   background-color: var(--primary-10)
@@ -337,6 +342,9 @@ div.responsive-radios input {
 }
 .btn:active:not([disabled]), .btn.active:active:not([disabled]) {
   background-color: var(--primary-8);
+}
+.btn.btn-light:active:not([disabled]), .btn.btn-light.active:active:not([disabled]) {
+  background-color: var(--primary-9);
 }
 
 .btn-group > input, .btn-group > button {
