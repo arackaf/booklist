@@ -85,6 +85,7 @@ body {
 
 #home, [data-reach-dialog-overlay] {
   --neutral-text: var(--neutral-3);
+  --neutral-light-text: var(--neutral-5);
   --neutral-border: var(--neutral-6);
   
   --neutral-light-background: var(--neutral-10);
@@ -311,6 +312,12 @@ div.responsive-radios input {
   border-radius: var(--default-border-radius);
   cursor: pointer;
 }
+.btn.no-border {
+  border: 0;
+}
+.btn.btn-light {
+  color: var(--neutral-light-text)
+}
 .btn[disabled]{
   opacity: 0.6;
   cursor: not-allowed;
@@ -491,10 +498,10 @@ button, input, select {
 .table th {
   border-bottom: 2px solid var(--primary-9);
 }
-.table tr:nth-child(even){
+/* .table tr:nth-child(even){
   background-color: var(--neutral-light-background);
   border-color: var(--neutral-border)
-}
+} */
 
 .tab-headers {
   display: flex;
@@ -737,4 +744,16 @@ div.toast-notification {
 }
 div.toast-notification a, div.toast-notification span, div.toast-notification h4 {
   color: var(--primary-10)
+}
+
+.book-title{
+  font-size: 15px;
+  font-weight: normal;
+  margin-bottom: 2px;
+}
+
+.book-author{
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--neutral-light-text)
 }

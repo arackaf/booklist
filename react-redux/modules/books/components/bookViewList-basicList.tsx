@@ -25,19 +25,15 @@ const BookViewListMobileItem = props => {
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <h5 className="list-group-item-heading" style={{ fontSize: "14px" }}>
-              {book.title}
-            </h5>
-            <span className="list-group-item-text" style={{ fontSize: "13px", fontStyle: "italic" }}>
-              {book.authors.length ? book.authors.join(", ") : ""}
-            </span>
+            <div className="list-group-item-heading book-title">{book.title}</div>
+            <span className="list-group-item-text book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
             <div style={{ marginTop: "auto", marginBottom: "5px" }}>
               {!props.viewingPublic && online ? (
                 <>
-                  <button className="btn btn-xs" onClick={() => props.editBook(book)}>
+                  <button className="btn btn-xs no-border btn-light" onClick={() => props.editBook(book)}>
                     <i className="fa fa-fw fa-pencil" />
                   </button>
-                  <button className="margin-left btn btn-xs" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
+                  <button className="margin-left btn btn-xs no-border btn-light" onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}>
                     <i className="fa fa-fw fa-trash" />
                   </button>
                 </>

@@ -47,8 +47,8 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          <div style={{ fontWeight: "bold" }}>{book.title}</div>
-          {book.authors ? <div style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</div> : null}
+          <div className="book-title">{book.title}</div>
+          {book.authors ? <div className="book-author">{book.authors.join(", ")}</div> : null}
 
           {online ? (
             detailsLoading ? (
