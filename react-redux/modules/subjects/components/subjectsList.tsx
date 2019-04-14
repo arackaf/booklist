@@ -11,6 +11,12 @@ import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/rend
 
 import "./subjectsList.css";
 
+import cssMod from "./subj.module.css";
+
+let X = cssMod;
+alert(cssMod.foo);
+debugger;
+
 type dragLayerType = {
   item: any;
   currentOffset: { x: number; y: number };
