@@ -14,8 +14,8 @@ import "./subjectsList.css";
 import cssMod from "./subj.module.css";
 
 let X = cssMod;
-alert(cssMod.foo);
-debugger;
+console.log(cssMod.foo);
+//debugger;
 
 type dragLayerType = {
   item: any;
