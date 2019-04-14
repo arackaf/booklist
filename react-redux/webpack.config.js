@@ -67,7 +67,7 @@ module.exports = {
         oneOf: [
           {
             test: /\.module\.css$/,
-            use: [MiniCssExtractPlugin.loader, { loader: "css-loader", options: { modules: true } }]
+            use: [MiniCssExtractPlugin.loader, { loader: "css-loader", options: { modules: true, exportOnlyLocals: false } }]
           },
           {
             use: [MiniCssExtractPlugin.loader, "css-loader"]
