@@ -64,7 +64,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
+        oneOf: [
+          {
+            test: /\.module\.css$/,
+            use: [MiniCssExtractPlugin.loader, { loader: "css-loader", options: { modules: true, exportOnlyLocals: true } }]
+          },
+          {
+            use: [MiniCssExtractPlugin.loader, "css-loader"]
+          }
+        ]
       },
       {
         test: /\.(png|jpg|gif|svg|eot|woff|woff2|ttf)$/,
