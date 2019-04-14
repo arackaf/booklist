@@ -405,3 +405,7 @@ a.inline-filter {
 button {
   outline: 0 !important;
 }
+
+#main-content {
+  -webkit-overflow-scrolling: touch;
+}
