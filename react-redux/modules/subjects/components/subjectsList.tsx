@@ -9,13 +9,9 @@ import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutation
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
 
-import "./subjectsList.css";
+import subjectsListStyles from "./subjectsList.module.css";
 
-import cssMod from "./subj.module.css";
-
-let X = cssMod;
-console.log(cssMod.foo);
-//debugger;
+const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow } = subjectsListStyles;
 
 type dragLayerType = {
   item: any;
@@ -159,7 +155,7 @@ const SubjectDisplayContent = DragSource(
     effectiveChildren.unshift(dropCandidateSubject as any);
   }
 
-  let classToPass = "row padding-top padding-bottom subject-row";
+  let classToPass = `row padding-top padding-bottom ${subjectRow}`;
   return connectDragPreview(
     <div>
       {isEditingSubject ? (
@@ -210,12 +206,12 @@ const DefaultSubjectDisplay = props => {
   return (noDrop ? c => c : connectDropTarget)(
     <div className={className}>
       <div
-        className="col-lg-12 show-on-hover-parent defaultSubjectDisplay"
+        className={`col-lg-12 show-on-hover-parent ${defaultSubjectDisplay}`}
         style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
       >
         {mainIcon}
         &nbsp;
-        <div className="subject-preview">{name || "<label preview>"}</div>
+        <div className={subjectPreview}>{name || "<label preview>"}</div>
         {!isSubjectSaving ? (
           <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
             <i className="fa fa-fw fa-pencil" />
@@ -257,7 +253,7 @@ const EditingSubjectDisplay = props => {
   const { validationError } = editingSubject;
 
   return (
-    <div className={className + " edit-pane"}>
+    <div className={className + ` ${editPane}`}>
       <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
         <input
           ref={inputEl}
@@ -315,7 +311,7 @@ const EditingSubjectDisplay = props => {
         />
       </div>
       <div className="col-xs-12 col-lg-6">
-        <div className="text-color-save-box">
+        <div className={textColorSaveBox}>
           <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
           <BootstrapButton
             disabled={isSubjectSaving}
@@ -348,7 +344,7 @@ const PendingDeleteSubjectDisplay = props => {
         <BootstrapButton onClick={() => deleteSubject(_id, subjectHash, runDelete)} style={{ marginLeft: "20px" }} preset="danger-xs">
           {deleteMessage}
         </BootstrapButton>
-        <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} preset="primary-xs">
+        <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} className="btn btn-xs">
           Cancel
         </BootstrapButton>
       </div>
@@ -380,7 +376,7 @@ const SubjectList = props => {
   const [{}, { setNewParent }] = useContext(SubjectsDnDContext);
 
   return (
-    <ul className="list-group" style={{ marginBottom: "5px", ...style }}>
+    <ul className={listGroup} style={{ marginBottom: "5px", ...style }}>
       {props.subjects.map(subject => (
         <SD key={subject._id} {...{ setNewParent, noDrop, subject, subjectHash, runInsert }} />
       ))}
