@@ -114,12 +114,11 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   let eligibleParents = useEligibleParents(editingSubject);
   let textColors = ["#ffffff", "#000000"];
   let searchedSubjects = filterSubjects(subjectsUnwound, subjectSearch);
-  let selectRef = useRef(null);
 
   return (
-    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects" focusRef={selectRef}>
+    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects">
       <div className="visible-xs">
-        <BootstrapButton ref={selectRef} onClick={newSubject} preset="info-xs">
+        <BootstrapButton onClick={newSubject} preset="info-xs">
           Add new subject <i className="fa fa-fw fa-plus" />
         </BootstrapButton>
         <br />
@@ -128,7 +127,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
       <div className="row">
         <div className="col-xs-11">
           <GenericLabelSelect
-            inputProps={{ placeholder: "Edit subject", value: subjectSearch, onChange: evt => setSubjectSearch(evt.target.value) }}
+            inputProps={{ tabIndex: "-1", placeholder: "Edit subject", value: subjectSearch, onChange: evt => setSubjectSearch(evt.target.value) }}
             suggestions={searchedSubjects}
             onSuggestionSelected={item => editSubject(item)}
           />

@@ -89,12 +89,11 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   let deletingTag = deletingId ? tags.find(t => t._id == deletingId) : null;
   let deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null;
   let searchedTags = filterTags(tags, tagSearch);
-  let selectRef = useRef(null);
 
   return (
-    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags" focusRef={selectRef}>
+    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags">
       <div className="visible-xs">
-        <BootstrapButton ref={selectRef} onClick={newTag} preset="info-xs">
+        <BootstrapButton onClick={newTag} preset="info-xs">
           Add new tag <i className="fa fa-fw fa-plus" />
         </BootstrapButton>
         <br />
@@ -103,7 +102,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
       <div className="row">
         <div className="col-xs-11">
           <GenericLabelSelect
-            inputProps={{ placeholder: "Edit tag", value: tagSearch, onChange: evt => setTagSearch(evt.target.value) }}
+            inputProps={{ tabIndex: "-1", placeholder: "Edit tag", value: tagSearch, onChange: evt => setTagSearch(evt.target.value) }}
             suggestions={searchedTags}
             onSuggestionSelected={item => editTag(item)}
           />

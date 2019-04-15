@@ -296,40 +296,7 @@ a.inline-filter {
   }
 }
 
-@media (max-width: 1000px) {
-  div[data-reach-dialog-content] {
-    width: 55vw;
-  }
-}
-@media (max-width: 800px) {
-  div[data-reach-dialog-content] {
-    width: 60vw;
-  }
-}
-@media (max-width: 650px) {
-  div[data-reach-dialog-content] {
-    width: 65vw;
-  }
-}
-@media (max-width: 600px) {
-  div[data-reach-dialog-content] {
-    width: 70vw;
-  }
-}
-@media (max-width: 550px) {
-  div[data-reach-dialog-content] {
-    width: 80vw;
-  }
-}
-@media (max-width: 500px) {
-  div[data-reach-dialog-content] {
-    width: 85vw;
-  }
-}
 
-[data-reach-dialog-overlay] {
-  z-index: 2;
-}
 
 .toastify {
   z-index: 10;
