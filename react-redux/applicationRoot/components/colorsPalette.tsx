@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import "css/color-picker.css";
+
 export default class ColorsPalette extends Component<any, any> {
   render() {
     let { currentColor, colors, onColorChosen } = this.props;
