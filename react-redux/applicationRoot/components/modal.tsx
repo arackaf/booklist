@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { Transition, config } from "react-spring";
 
-import "../../css/reach-modal-overrides.css";
+import "css/reach-modal-overrides.css";
 
 export class StandardModalHeader extends Component<{ onHide: any; caption: any }, any> {
   render() {

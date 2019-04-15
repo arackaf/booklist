@@ -45,15 +45,6 @@ span.list-group-item:hover {
   background-color: #f5f5f5;
 }
 
-.dropdown-menu > li.no-hover > a:focus,
-.dropdown-menu > li.no-hover > a:hover {
-  background-color: inherit;
-}
-
-.alert.alert-slim {
-  padding: 10px;
-}
-
 a.grid-hover-filter:hover {
   text-decoration: none;
 }
@@ -119,26 +110,6 @@ a.inline-filter {
 
 .table.no-padding-top > thead > tr > th {
   padding-top: 0;
-}
-
-.color-choice {
-  float: left;
-  border: 1px solid black;
-  height: 20px;
-  width: 20px;
-  margin: 3px;
-  cursor: pointer;
-}
-.color-choice.color-choice-current {
-  border: 3px solid white;
-}
-
-.modal {
-  z-index: 990; /* tweak to make the color picker happy :-\  */
-}
-
-.modal-backdrop {
-  z-index: 980; /* tweak to make the color picker happy :-\  */
 }
 
 .noselect {

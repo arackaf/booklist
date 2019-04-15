@@ -481,6 +481,9 @@ button, input, select {
   border: 1px solid var(--success-8);
   color: var(--success-1);
 }
+.alert.alert-slim {
+  padding: 10px;
+}
 
 .table {
   width: 100%;
