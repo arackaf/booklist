@@ -136,21 +136,7 @@ label {
   font-size: 14px;
 }
 
-[data-reach-dialog-content] hr {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-[data-reach-dialog-content] {
-  padding: 20px;
-  border-color: var(--primary-3) !important;
-}
-[data-reach-dialog-content] .standard-reach-header {
-  display: flex;
-  align-items: center;
-}
-[data-reach-dialog-content] .standard-reach-header a {
-  font-size: 22px;
-}
+
 
 .panel {
   padding: 15px;
