@@ -36,6 +36,7 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
+      "react-autosuggest$": "applicationRoot/components/react-autosuggest-styled.tsx",
       jscolor: "util/jscolor.js"
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
