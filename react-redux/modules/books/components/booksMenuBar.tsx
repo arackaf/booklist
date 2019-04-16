@@ -132,10 +132,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 style={{
                   float: "left",
                   display: "inline-block",
-                  width: "100px",
-                  borderTopRightRadius: isPublic && selectedBooksCount ? "4px" : 0,
-                  borderBottomRightRadius: isPublic && selectedBooksCount ? "4px" : 0,
-                  borderRightWidth: isPublic && selectedBooksCount ? "1px" : 0
+                  width: "100px"
                 }}
               />
               {!selectedBooksCount ? (

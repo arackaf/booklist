@@ -64,12 +64,14 @@
   display: flex;
 }
 
-.btn-group > input, .btn-group > button {
-  border-radius: 0;
+.btn-group :not(:first-child) { 
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
-
 .btn-group :not(:last-child) { 
   border-right-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .btn-group :first-child {
   border-top-left-radius: var(--default-border-radius);
