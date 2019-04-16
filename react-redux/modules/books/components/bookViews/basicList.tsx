@@ -3,8 +3,10 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { AppContext } from "applicationRoot/renderUI";
 import { BooksContext } from "../../booksState";
 
+import uiStyles from "./uiStyles.module.css";
 import basicListClasses from "./basicList.module.css";
 
+const { bookTitle, bookAuthor } = uiStyles;
 const { dockedToPanel, listGroup, listGroupItem, listGroupItemHeading, listGroupItemText } = basicListClasses;
 
 const BookViewListMobileItem = props => {
@@ -19,8 +21,8 @@ const BookViewListMobileItem = props => {
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <div className={`${listGroupItemHeading} book-title`}>{book.title}</div>
-            <span className={`${listGroupItemText} book-author`}>{book.authors.length ? book.authors.join(", ") : ""}</span>
+            <div className={`${listGroupItemHeading} ${bookTitle}`}>{book.title}</div>
+            <span className={`${listGroupItemText} ${bookAuthor}`}>{book.authors.length ? book.authors.join(", ") : ""}</span>
             <div style={{ marginTop: "auto" }}>
               {!props.viewingPublic && online ? (
                 <>

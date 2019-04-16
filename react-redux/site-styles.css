@@ -509,14 +509,3 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
   color: var(--primary-10)
 }
 
-.book-title{
-  font-size: 15px;
-  font-weight: normal;
-  margin-bottom: 2px;
-}
-
-.book-author{
-  font-size: 14px;
-  font-weight: normal;
-  color: var(--neutral-light-text)
-}

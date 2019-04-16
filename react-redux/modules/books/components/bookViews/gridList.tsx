@@ -10,8 +10,10 @@ import { useCurrentSearch, setBooksSort } from "../../booksSearchState";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
 
+import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
 
+const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter } = gridStyles;
 
 interface ILocalProps {
@@ -53,8 +55,8 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          <div className="book-title">{book.title}</div>
-          {book.authors ? <div className="book-author">{book.authors.join(", ")}</div> : null}
+          <div className={bookTitle}>{book.title}</div>
+          {book.authors ? <div className={bookAuthor}>{book.authors.join(", ")}</div> : null}
 
           <div style={{ display: "flex", flexDirection: "row", marginTop: "3px", alignItems: "center", minHeight: "25px" }}>
             {online ? (
