@@ -11,7 +11,16 @@ import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/rend
 
 import subjectsListStyles from "./subjectsList.module.css";
 
-const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow } = subjectsListStyles;
+const {
+  listGroup,
+  editPane,
+  defaultSubjectDisplay,
+  subjectPreview,
+  textColorSaveBox,
+  subjectRow,
+  showOnHoverParent,
+  showOnHoverInline
+} = subjectsListStyles;
 
 type dragLayerType = {
   item: any;
@@ -206,24 +215,24 @@ const DefaultSubjectDisplay = props => {
   return (noDrop ? c => c : connectDropTarget)(
     <div className={className}>
       <div
-        className={`col-lg-12 show-on-hover-parent ${defaultSubjectDisplay}`}
+        className={`col-lg-12 ${showOnHoverParent} ${defaultSubjectDisplay}`}
         style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
       >
         {mainIcon}
         &nbsp;
         <div className={subjectPreview}>{name || "<label preview>"}</div>
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectEdit(_id, subjectHash)}>
+          <a className={showOnHoverInline} onClick={() => beginSubjectEdit(_id, subjectHash)}>
             <i className="fa fa-fw fa-pencil" />
           </a>
         ) : null}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline Xinline-filter" onClick={() => addNewSubject(_id)}>
+          <a className={showOnHoverInline} onClick={() => addNewSubject(_id)}>
             <i className="fa fa-fw fa-plus" />
           </a>
         ) : null}
         {!isSubjectSaving ? (
-          <a className="show-on-hover-inline Xinline-filter" onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
+          <a className={showOnHoverInline} onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
             <i className="fa fa-fw fa-trash" />
           </a>
         ) : null}

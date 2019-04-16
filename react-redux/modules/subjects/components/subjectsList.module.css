@@ -48,3 +48,10 @@ div:global(.row).subjectRow {
 div:global(.row).subjectRow.editPane > div, div:global(.row).subjectRow.delete-pane > div {
   padding-left: 0;
 }
+
+.showOnHoverParent:hover > .showOnHoverInline {
+  display: inline;
+}
+.showOnHoverInline {
+  display: none;
+}

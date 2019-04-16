@@ -8,17 +8,6 @@ import navClasses from "css/navbar.module.css";
 
 const { nav, navHeader, navItems, navItemsRight } = navClasses;
 
-console.log(navClasses);
-
-/*
-
-nav: "rxJq7yOHh74kHsCRWs9Uz"
-nav-header: "gOM1SW0grwwNdjJ3vNwNo"
-nav-items: "_386kAv2WZzSumSb0tE-Anm"
-nav-items-right: "_3FOSsCf11OjQZue7K-me8J"
-
-*/
-
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
 const NavBarItem = props => {

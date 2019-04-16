@@ -1,0 +1,23 @@
+.dockedToPanel .listGroupItem:first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.dockedToPanel .listGroupItem {
+  border-left: 0;
+  border-right: 0;
+}
+
+.listGroup > .listGroupItem:first-of-type {
+  border-top: 2px solid var(--primary-9);
+}
+
+.listGroupItemHeading, .listGroupItemText {
+  margin: 0;
+}
+
+.listGroupItem {
+  border-bottom: 1px solid var(--neutral-border);
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
