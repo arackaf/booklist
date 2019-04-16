@@ -14,7 +14,7 @@
   color: var(--primary-10) 
 }
 
-.nav li:global(.active) {
+.nav li:global(.active), .nav div:global(.active) {
   background-color: var(--primary-7);
 }
 .nav li:global(.active) a {
@@ -28,7 +28,8 @@
   font-size: 18px;
   display: flex;
   align-items: center;
-  margin-right: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 .nav li a {
   padding-left: 15px;
