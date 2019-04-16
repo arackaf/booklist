@@ -158,11 +158,7 @@ const DisplayRecommendation = props => {
             <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
             <br />
             {book.isbn ? (
-              <a
-                target="_new"
-                className="margin-right grid-hover-filter inline-filter"
-                href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
-              >
+              <a target="_new" className="margin-right" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
                 <i className="fab fa-amazon" />
               </a>
             ) : null}

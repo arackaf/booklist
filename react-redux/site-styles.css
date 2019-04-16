@@ -185,7 +185,7 @@ div.responsive-radios input {
   }
 }
 
-button, input, select {
+button, input, select, a {
   outline: 0;
 }
 
@@ -278,10 +278,6 @@ button, input, select {
 .table th {
   border-bottom: 2px solid var(--primary-9);
 }
-/* .table tr:nth-child(even){
-  background-color: var(--neutral-light-background);
-  border-color: var(--neutral-border)
-} */
 
 .tab-headers {
   display: flex;
@@ -503,19 +499,6 @@ button, input, select {
   font-size: 14px;
   font-weight: bold;
   display: flex;
-}
-
-.list-group > .list-group-item:first-of-type {
-  border-top: 2px solid var(--primary-9);
-}
-.list-group-item-heading, .list-group-item-text {
-  margin: 0;
-}
-
-.list-group-item {
-  border-bottom: 1px solid var(--neutral-border);
-  padding-top: 5px;
-  padding-bottom: 5px;
 }
 
 div.toast-notification {
