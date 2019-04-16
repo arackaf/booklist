@@ -4,6 +4,21 @@ import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "applicationRoot/renderUI";
 
+import navClasses from "css/navbar.module.css";
+
+const { nav, navHeader, navItems, navItemsRight } = navClasses;
+
+console.log(navClasses);
+
+/*
+
+nav: "rxJq7yOHh74kHsCRWs9Uz"
+nav-header: "gOM1SW0grwwNdjJ3vNwNo"
+nav-items: "_386kAv2WZzSumSb0tE-Anm"
+nav-items-right: "_3FOSsCf11OjQZue7K-me8J"
+
+*/
+
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
 const NavBarItem = props => {
@@ -34,15 +49,15 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettings = module == "settings";
 
   return (
-    <div className="nav" style={{ marginBottom: "5px" }}>
-      <div className="nav-header hidden-xs">
+    <div className={nav} style={{ marginBottom: "5px" }}>
+      <div className={`${navHeader} hidden-xs`}>
         <a onClick={() => goto("home")}>
           <i className="fal fa-book" style={{ marginRight: "5px" }} />
           <span>My Library</span>
         </a>
       </div>
 
-      <ul className="nav-items">
+      <ul className={navItems}>
         <NavBarItem className="visible-xs" disabled={isPublic} onClick={() => goto("home")} active={isHome} aStyle={{ marginTop: "2px" }}>
           <i className="fal fa-home visible-xs" />
         </NavBarItem>
@@ -71,7 +86,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           </NavBarItem>
         ) : null}
       </ul>
-      <ul className="nav-items-right">
+      <ul className={navItemsRight}>
         {!isLoggedIn && !isLoginModule ? (
           <NavBarItem onClick={() => goto("login")}>
             <span className="hidden-xs">Login</span>
@@ -80,7 +95,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
         ) : null}
       </ul>
       {isLoggedIn ? (
-        <ul className="nav-items-right">
+        <ul className={navItemsRight}>
           <NavBarItem onClick={logout}>
             <span className="hidden-xs">Logout</span>
             <i className="visible-xs fal fa-sign-out" />
