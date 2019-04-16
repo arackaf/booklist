@@ -17,7 +17,7 @@
 .btn.btn-light:hover:not([disabled]) {
   background-color: var(--primary-6)
 }
-.btn.btn-light:active:not([disabled]), .btn.btn-light.active:active:not([disabled]) {
+.btn.btn-light:active:not([disabled]) {
   background-color: var(--primary-5);
 }
 .btn[disabled]{
@@ -39,17 +39,25 @@
   padding: 4px;
   font-size: 9px;
 }
-.btn:hover:not([disabled]) {
+
+.btn-group .btn:hover:not([disabled]) {
   background-color: var(--primary-10)
 }
-.btn:hover.active {
+.btn-group .btn:hover.active {
   background-color: var(--primary-9)
 }
-.btn.active {
+.btn-group .btn.active {
   background-color: var(--primary-10)
 }
-.btn:active:not([disabled]), .btn.active:active:not([disabled]) {
+.btn-group .btn:active:not([disabled]), .btn-group .btn.active:active:not([disabled]) {
   background-color: var(--primary-8);
+}
+
+.btn:hover:not([disabled]) {
+  background-color: var(--neutral-10)
+}
+.btn:active:not([disabled]) {
+  background-color: var(--neutral-9);
 }
 
 .btn-group {
