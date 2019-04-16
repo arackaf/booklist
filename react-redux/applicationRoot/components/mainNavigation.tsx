@@ -62,19 +62,19 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           <i className="fal fa-home visible-xs" />
         </NavBarItem>
         {isLoggedIn || isPublic ? (
-          <NavBarItem disabled={isPublic} onClick={isBookEntry || isPublic ? null : () => goto("scan")} active={isBookEntry}>
+          <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry}>
             <span className="hidden-xs">Book entry</span>
             <i className="visible-xs fal fa-scanner" />
           </NavBarItem>
         ) : null}
         {isLoggedIn || isPublic ? (
-          <NavBarItem active={isBookList} onClick={isBookList ? null : () => goto("books")}>
+          <NavBarItem active={isBookList} onClick={() => goto("books")}>
             <span className="hidden-xs">Books</span>
             <i className="visible-xs fal fa-books" />
           </NavBarItem>
         ) : null}
         {isLoggedIn || isPublic ? (
-          <NavBarItem disabled={isPublic} onClick={() => goto("subjects")} active={isSubjects}>
+          <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("subjects")} active={isSubjects}>
             <span className="hidden-xs">Subjects</span>
             <i className="visible-xs fal fa-sitemap" />
           </NavBarItem>
