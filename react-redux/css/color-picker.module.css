@@ -1,4 +1,4 @@
-.color-choice {
+.colorChoice {
   float: left;
   border: 1px solid black;
   height: 20px;
@@ -6,6 +6,6 @@
   margin: 3px;
   cursor: pointer;
 }
-.color-choice.color-choice-current {
+.colorChoice.colorChoiceCurrent {
   border: 3px solid white;
 }
