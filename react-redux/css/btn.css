@@ -64,6 +64,13 @@
   display: flex;
 }
 
+@media (max-width: 500px) {
+  .btn-first-tiny {
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+  }
+}
+
 .btn-group :not(:first-child) { 
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;

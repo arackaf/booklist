@@ -17,6 +17,9 @@
 .nav li:global(.active) {
   background-color: var(--primary-7);
 }
+.nav li:global(.active) a {
+  cursor: default;
+}
 .nav li:global(.disabled), .nav li:global(.disabled) a {
   color: var(--primary-7);
   cursor: not-allowed;
