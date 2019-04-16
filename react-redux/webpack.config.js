@@ -110,5 +110,8 @@ module.exports = {
       importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
     })
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
-  ].filter(p => p)
+  ].filter(p => p),
+  stats: {
+    warningsFilter: warning => !/mini-css-extract-plugin.*conflicting order between/i.test(warning)
+  }
 };
