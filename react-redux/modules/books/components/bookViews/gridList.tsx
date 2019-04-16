@@ -4,8 +4,8 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { AppContext } from "applicationRoot/renderUI";
-import { IBookDisplay, BooksContext } from "../booksState";
-import { useCurrentSearch, setBooksSort } from "../booksSearchState";
+import { IBookDisplay, BooksContext } from "../../booksState";
+import { useCurrentSearch, setBooksSort } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";

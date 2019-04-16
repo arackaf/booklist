@@ -1,5 +1,5 @@
 import React, { SFC, useContext, useState } from "react";
-import { BooksContext } from "../booksState";
+import { BooksContext } from "../../booksState";
 import DetailsView from "./detailView";
 
 import coversClasses from "./coversList.module.css";
