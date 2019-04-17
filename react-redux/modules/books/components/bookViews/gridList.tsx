@@ -4,11 +4,17 @@ import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { LabelDisplay } from "applicationRoot/components/labelDisplay";
 
 import { AppContext } from "applicationRoot/renderUI";
-import { IBookDisplay, BooksContext } from "../booksState";
-import { useCurrentSearch, setBooksSort } from "../booksSearchState";
+import { IBookDisplay, BooksContext } from "../../booksState";
+import { useCurrentSearch, setBooksSort } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
+
+import uiStyles from "./uiStyles.module.css";
+import gridStyles from "./gridList.module.css";
+
+const { bookTitle, bookAuthor } = uiStyles;
+const { gridHoverFilter } = gridStyles;
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -31,6 +37,8 @@ const BookRow: SFC<ILocalProps> = props => {
   const [expanded, setExpanded] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
 
+  const hoverOverride = { display: pendingDelete[_id] ? "inline" : "" };
+
   return (
     <>
       <tr>
@@ -47,53 +55,61 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          <div className="book-title">{book.title}</div>
-          {book.authors ? <div className="book-author">{book.authors.join(", ")}</div> : null}
+          <div className={bookTitle}>{book.title}</div>
+          {book.authors ? <div className={bookAuthor}>{book.authors.join(", ")}</div> : null}
 
-          {online ? (
-            detailsLoading ? (
-              <a target="_new" className="margin-right grid-hover-filter inline-filter">
-                <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fa fa-fw fa-spin fa-spinner" />
+          <div style={{ display: "flex", flexDirection: "row", marginTop: "3px", alignItems: "center", minHeight: "25px" }}>
+            {online ? (
+              detailsLoading ? (
+                <a style={hoverOverride} target="_new" className={`margin-right ${gridHoverFilter}`}>
+                  <i className="fa fa-fw fa-spin fa-spinner" />
+                </a>
+              ) : expanded ? (
+                <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} className={`margin-right ${gridHoverFilter}`}>
+                  <i className={`far fa-minus`} />
+                </a>
+              ) : (
+                <a style={hoverOverride} target="_new" onClick={() => setExpanded(true)} className={`margin-right ${gridHoverFilter}`}>
+                  <i className={`far fa-plus`} />
+                </a>
+              )
+            ) : null}
+            {book.isbn && online ? (
+              <a
+                style={hoverOverride}
+                target="_new"
+                className={`margin-right ${gridHoverFilter}`}
+                href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
+              >
+                <i className={`fab fa-amazon`} />
               </a>
-            ) : expanded ? (
-              <a target="_new" onClick={() => setExpanded(false)} className="margin-right grid-hover-filter inline-filter">
-                <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="far fa-minus show-on-hover-parent-td" />
-              </a>
-            ) : (
-              <a target="_new" onClick={() => setExpanded(true)} className="margin-right grid-hover-filter inline-filter">
-                <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="far fa-plus show-on-hover-parent-td" />
-              </a>
-            )
-          ) : null}
-          {book.isbn && online ? (
-            <a
-              target="_new"
-              className="margin-right grid-hover-filter inline-filter"
-              href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
-            >
-              <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fab fa-amazon show-on-hover-parent-td" />
-            </a>
-          ) : null}
-          {!viewingPublic && online ? (
-            <>
-              <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBook(book)}>
-                <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fal fa-pencil-alt show-on-hover-parent-td" />
-              </a>
-              <a className="margin-right grid-hover-filter inline-filter" onClick={() => dispatchBooksUiState(["start-delete", _id])}>
-                <i style={{ display: pendingDelete[_id] ? "inline" : "" }} className="fal fa-trash-alt show-on-hover-parent-td" />
-              </a>
-            </>
-          ) : null}
-          {pendingDelete[_id] ? (
-            <AjaxButton running={deleting[_id]} runningText="Deleting" onClick={() => runDelete(_id)} className="btn btn-xs btn-danger margin-right">
-              Confirm delete
-            </AjaxButton>
-          ) : null}
-          {pendingDelete[_id] ? (
-            <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs btn-primary">
-              Cancel
-            </button>
-          ) : null}
+            ) : null}
+            {!viewingPublic && online ? (
+              <>
+                <a style={hoverOverride} className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBook(book)}>
+                  <i className={`fal fa-pencil-alt`} />
+                </a>
+                <a style={hoverOverride} className={`margin-right ${gridHoverFilter}`} onClick={() => dispatchBooksUiState(["start-delete", _id])}>
+                  <i className={`fal fa-trash-alt`} />
+                </a>
+              </>
+            ) : null}
+            {pendingDelete[_id] ? (
+              <AjaxButton
+                running={deleting[_id]}
+                runningText="Deleting"
+                onClick={() => runDelete(_id)}
+                className="btn btn-xs btn-danger margin-right"
+              >
+                Confirm delete
+              </AjaxButton>
+            ) : null}
+            {pendingDelete[_id] ? (
+              <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs">
+                Cancel
+              </button>
+            ) : null}
+          </div>
         </td>
         <td>
           {book.subjectObjects.map((s, i) => (
@@ -103,8 +119,8 @@ const BookRow: SFC<ILocalProps> = props => {
           ))}
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
-              <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBooksSubjects(book)}>
-                <i className="fal fa-pencil-alt show-on-hover-parent-td" />
+              <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
+                <i className={`fal fa-pencil-alt`} />
               </a>
             ) : null}
           </div>
@@ -117,8 +133,8 @@ const BookRow: SFC<ILocalProps> = props => {
           ))}
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
-              <a className="margin-right grid-hover-filter inline-filter" onClick={() => props.editBooksTags(book)}>
-                <i className="fal fa-pencil-alt show-on-hover-parent-td" />
+              <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
+                <i className={`fal fa-pencil-alt`} />
               </a>
             ) : null}
           </div>

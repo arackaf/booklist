@@ -4,6 +4,10 @@ import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "applicationRoot/renderUI";
 
+import navClasses from "css/navbar.module.css";
+
+const { nav, navHeader, navItems, navItemsRight } = navClasses;
+
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
 const NavBarItem = props => {
@@ -34,32 +38,32 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettings = module == "settings";
 
   return (
-    <div className="nav" style={{ marginBottom: "5px" }}>
-      <div className="nav-header hidden-xs">
+    <div className={nav} style={{ marginBottom: "5px" }}>
+      <div className={`${navHeader} hidden-xs ${isHome ? "active" : ""}`}>
         <a onClick={() => goto("home")}>
           <i className="fal fa-book" style={{ marginRight: "5px" }} />
           <span>My Library</span>
         </a>
       </div>
 
-      <ul className="nav-items">
+      <ul className={navItems}>
         <NavBarItem className="visible-xs" disabled={isPublic} onClick={() => goto("home")} active={isHome} aStyle={{ marginTop: "2px" }}>
           <i className="fal fa-home visible-xs" />
         </NavBarItem>
         {isLoggedIn || isPublic ? (
-          <NavBarItem disabled={isPublic} onClick={isBookEntry || isPublic ? null : () => goto("scan")} active={isBookEntry}>
+          <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry}>
             <span className="hidden-xs">Book entry</span>
             <i className="visible-xs fal fa-scanner" />
           </NavBarItem>
         ) : null}
         {isLoggedIn || isPublic ? (
-          <NavBarItem active={isBookList} onClick={isBookList ? null : () => goto("books")}>
+          <NavBarItem active={isBookList} onClick={() => goto("books")}>
             <span className="hidden-xs">Books</span>
             <i className="visible-xs fal fa-books" />
           </NavBarItem>
         ) : null}
         {isLoggedIn || isPublic ? (
-          <NavBarItem disabled={isPublic} onClick={() => goto("subjects")} active={isSubjects}>
+          <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("subjects")} active={isSubjects}>
             <span className="hidden-xs">Subjects</span>
             <i className="visible-xs fal fa-sitemap" />
           </NavBarItem>
@@ -71,7 +75,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           </NavBarItem>
         ) : null}
       </ul>
-      <ul className="nav-items-right">
+      <ul className={navItemsRight}>
         {!isLoggedIn && !isLoginModule ? (
           <NavBarItem onClick={() => goto("login")}>
             <span className="hidden-xs">Login</span>
@@ -80,7 +84,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
         ) : null}
       </ul>
       {isLoggedIn ? (
-        <ul className="nav-items-right">
+        <ul className={navItemsRight}>
           <NavBarItem onClick={logout}>
             <span className="hidden-xs">Logout</span>
             <i className="visible-xs fal fa-sign-out" />

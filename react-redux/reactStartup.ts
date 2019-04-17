@@ -1,7 +1,6 @@
 import "./static/fontawesome/css/font-awesome-booklist-build.css";
 import "@reach/dialog/styles.css";
 import "./site-styles.css";
-import "./styles.css";
 
 import { renderUI } from "applicationRoot/renderUI";
 import { createElement } from "react";
@@ -24,7 +23,7 @@ let publicUserCache = {};
 
 export const history = createHistory();
 
-const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings"]);
+const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings", "styledemo"]);
 let initial = true;
 
 export const getModulePromise = moduleToLoad => {
@@ -41,6 +40,8 @@ export const getModulePromise = moduleToLoad => {
       return import(/* webpackChunkName: "scan-module" */ "./modules/scan/scan");
     case "subjects":
       return import(/* webpackChunkName: "subject-module" */ "./modules/subjects/subjects");
+    case "styledemo":
+      return import(/* webpackChunkName: "styledemo-module" */ "./modules/styledemo/styledemo");
     case "settings":
       return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
   }

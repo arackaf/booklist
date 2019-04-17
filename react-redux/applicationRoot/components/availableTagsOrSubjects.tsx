@@ -24,7 +24,7 @@ export default class SelectAvailableItems extends PureComponent<Props, any> {
 
     return (
       <GenericLabelSelect
-        inputProps={{ placeholder, value: search, onChange: this.setSearch }}
+        inputProps={{ tabIndex: -1, placeholder, value: search, onChange: this.setSearch }}
         suggestions={eligible}
         onSuggestionSelected={this.onSelect}
       />

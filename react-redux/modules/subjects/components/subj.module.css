@@ -1,0 +1,36 @@
+.foo {
+  color: red;
+}
+
+.bar {
+  color: blue;
+}
+
+ul {
+  margin: 20px;
+}
+
+:global .gA {
+  color: red;
+}
+
+:global .gb {
+  color: blue;
+}
+
+
+.foo:global(.row):local(.bar):global(.row2) {
+  padding: 0;
+  color: antiquewhite
+}
+
+
+.xyz {
+  color: purple;
+}
+
+.abc {
+  color: salmon;
+}
+
+

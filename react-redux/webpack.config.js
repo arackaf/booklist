@@ -36,6 +36,7 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
+      "react-autosuggest$": "applicationRoot/components/react-autosuggest-styled.tsx",
       jscolor: "util/jscolor.js"
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
@@ -64,7 +65,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
+        oneOf: [
+          {
+            test: /\.module\.css$/,
+            use: [MiniCssExtractPlugin.loader, { loader: "css-loader", options: { modules: true, exportOnlyLocals: false } }]
+          },
+          {
+            use: [MiniCssExtractPlugin.loader, "css-loader"]
+          }
+        ]
       },
       {
         test: /\.(png|jpg|gif|svg|eot|woff|woff2|ttf)$/,
@@ -101,5 +110,8 @@ module.exports = {
       importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
     })
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
-  ].filter(p => p)
+  ].filter(p => p),
+  stats: {
+    warningsFilter: warning => !/mini-css-extract-plugin.*conflicting order between/i.test(warning)
+  }
 };
