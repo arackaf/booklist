@@ -63,6 +63,7 @@ async function syncImages(db, onComplete) {
   };
 
   async function runIt() {
+    return;
     if (!booksToUpdate.length) return;
 
     for (let _book of booksToUpdate) {

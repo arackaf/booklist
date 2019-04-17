@@ -41,7 +41,7 @@ const DetailsView = props => {
     <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose} focusRef={focusRef}>
       <div style={{ display: "flex", alignItems: "top" }}>
         <div>
-          <img src={url} />
+          <img src={url} crossOrigin="anonymous" />
         </div>
         <div style={{ paddingLeft: "10px", display: "flex", flexDirection: "column" }}>
           <h3 ref={focusRef} style={{ marginTop: 0 }}>

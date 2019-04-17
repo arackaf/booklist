@@ -104,7 +104,6 @@ module.exports = {
         getCache({ pattern: /react-redux\/static\//, name: "local-static" }),
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
-        getCache({ pattern: /^https:\/\/images\.gr/, name: "goodreads-images1" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
       ],
       importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
