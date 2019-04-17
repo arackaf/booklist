@@ -17,7 +17,7 @@ const BookViewListMobileItem = props => {
     <div className={listGroupItem} style={{ cursor: "pointer" }}>
       <div style={{ display: "flex" }}>
         <div style={{ marginRight: "5px", minWidth: "55px" }}>
-          <img src={book.smallImage} />
+          <img src={book.smallImage} crossOrigin="anonymous" />
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>

@@ -24,7 +24,7 @@ const BookViewCovers: SFC<any> = props => {
         <div style={{ border: 0 }} className={coversList}>
           {books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
-              <img src={book.mediumImage} />
+              <img src={book.mediumImage} crossOrigin="anonymous" />
             </figure>
           ))}
         </div>

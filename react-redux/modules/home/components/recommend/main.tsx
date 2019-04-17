@@ -128,7 +128,7 @@ const DisplayBook = props => {
         </button>
       </td>
       <td>
-        <img src={book.smallImage} />
+        <img src={book.smallImage} crossOrigin="anonymous" />
       </td>
       <td>
         {book.title}
