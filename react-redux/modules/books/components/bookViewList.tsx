@@ -16,9 +16,9 @@ import { useTagsState, TagsContext } from "applicationRoot/tagsState";
 import { BooksContext, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
 
-import GridView from "./bookViewList-grid";
-const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-basicList"));
-const CoversView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViewList-coversList"));
+import GridView from "./bookViews/gridList";
+const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/basicList"));
+const CoversView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/coversList"));
 
 const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));

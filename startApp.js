@@ -189,8 +189,6 @@ app.ws("/bookEntryWS", function(ws, req) {
 
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-src" });
 
-app.get("react-redux/newStyles.htm", (req, response) => response.sendfile("/react-redux/newStyles.htm"));
-app.get("react-redux/offline.htm", (req, response) => response.sendfile("/react-redux/offline.htm"));
 app.get("/", browseToReactRedux);
 app.get("/books", browseToReactRedux);
 app.get("/login", browseToReactRedux);
@@ -199,6 +197,7 @@ app.get("/settings", browseToReactRedux);
 app.get("/scan", browseToReactRedux);
 app.get("/home", browseToReactRedux);
 app.get("/view", browseToReactRedux);
+app.get("/styledemo", browseToReactRedux);
 app.get("/react-redux", browseToReactRedux);
 app.get("/service-worker.js", (request, response) => {
   response.sendFile(path.join(__dirname + "/react-redux/dist/service-worker.js"));

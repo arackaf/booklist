@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+import colorClasses from "css/color-picker.module.css";
+
+const { colorChoice, colorChoiceCurrent } = colorClasses;
+
 export default class ColorsPalette extends Component<any, any> {
   render() {
     let { currentColor, colors, onColorChosen } = this.props;
@@ -9,7 +13,7 @@ export default class ColorsPalette extends Component<any, any> {
         {colors.map(color => (
           <div
             key={color}
-            className={`color-choice ${color == currentColor ? "color-choice-current" : ""}`}
+            className={`${colorChoice} ${color == currentColor ? colorChoiceCurrent : ""}`}
             onClick={() => onColorChosen(color)}
             style={{ backgroundColor: color }}
           />

@@ -7,6 +7,8 @@ import { AppContext, SubjectsContext } from "applicationRoot/renderUI";
 import { useStackedSubjects } from "applicationRoot/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
+import "./d3-styles.css";
+
 const MainHomePane = props => (
   <div style={{ margin: 0 }}>
     <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px", marginTop: "15px" }}>

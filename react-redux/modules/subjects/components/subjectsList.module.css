@@ -1,14 +1,14 @@
-ul.list-group {
+ul.listGroup {
   margin-left: 0;
   padding-left: 0;
 }
 
-ul.list-group ul.list-group {
+ul.listGroup ul.listGroup {
   margin-left: 10px;
   padding-left: 20px;
 }
 
-.edit-pane > div {
+.editPane > div {
   padding-bottom: 10px;
 }
 
@@ -26,7 +26,7 @@ ul.list-group ul.list-group {
   color: inherit;
 }
 
-.subject-preview {
+.subjectPreview {
   margin-right: 10px;
 
   max-width: 300px;
@@ -35,16 +35,23 @@ ul.list-group ul.list-group {
   white-space: nowrap;
 }
 
-.text-color-save-box {
+.textColorSaveBox {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
 }
 
-div.row.subject-row {
+div:global(.row).subjectRow {
   padding-left: 0;
   margin-left: 0;
 }
-div.row.subject-row.edit-pane > div, div.row.subject-row.delete-pane > div {
+div:global(.row).subjectRow.editPane > div, div:global(.row).subjectRow.delete-pane > div {
   padding-left: 0;
+}
+
+.showOnHoverParent:hover > .showOnHoverInline {
+  display: inline;
+}
+.showOnHoverInline {
+  display: none;
 }

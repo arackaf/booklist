@@ -1,32 +1,28 @@
 import React, { SFC, useContext } from "react";
 import { AjaxButton } from "applicationRoot/components/bootstrapButton";
 import { AppContext } from "applicationRoot/renderUI";
-import { BooksContext } from "../booksState";
+import { BooksContext } from "../../booksState";
+
+import uiStyles from "./uiStyles.module.css";
+import basicListClasses from "./basicList.module.css";
+
+const { bookTitle, bookAuthor } = uiStyles;
+const { dockedToPanel, listGroup, listGroupItem, listGroupItemHeading, listGroupItemText } = basicListClasses;
 
 const BookViewListMobileItem = props => {
   const { book, online, booksUiState, dispatchBooksUiState } = props;
   const { pendingDelete, deleting } = booksUiState;
 
-  let publisherDisplay = null;
-  let isbnPages = null;
-
-  if (book.publisher || book.publicationDate) {
-    publisherDisplay = [book.publisher, book.publicationDate].filter(s => s).join(" ");
-  }
-  if (book.isbn || book.pages) {
-    isbnPages = [book.pages ? `${book.pages} pages` : null, book.isbn ? `ISBN ${book.isbn}` : null].filter(o => o).join("; ");
-  }
-
   return (
-    <div className="list-group-item" style={{ cursor: "pointer" }}>
+    <div className={listGroupItem} style={{ cursor: "pointer" }}>
       <div style={{ display: "flex" }}>
         <div style={{ marginRight: "5px", minWidth: "55px" }}>
           <img src={book.smallImage} />
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <div className="list-group-item-heading book-title">{book.title}</div>
-            <span className="list-group-item-text book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
+            <div className={`${listGroupItemHeading} ${bookTitle}`}>{book.title}</div>
+            <span className={`${listGroupItemText} ${bookAuthor}`}>{book.authors.length ? book.authors.join(", ") : ""}</span>
             <div style={{ marginTop: "auto" }}>
               {!props.viewingPublic && online ? (
                 <>
@@ -73,7 +69,7 @@ const BookViewListMobile: SFC<{ editBook: any; booksUiState: any; dispatchBooksU
   return (
     <div>
       <div style={{ paddingBottom: 15 }}>
-        <div style={{ border: 0 }} className="list-group docked-to-panel">
+        <div style={{ border: 0 }} className={`${listGroup} ${dockedToPanel}`}>
           {books.map((book, i) => (
             <BookViewListMobileItem
               key={book._id}

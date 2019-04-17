@@ -1,34 +1,34 @@
-.covers-list {
+.coversList {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.covers-list figure {
+.coversList figure {
   width: 120px;
   margin: 10px 15px 0 0;
 }
 
 @media(max-width: 600px){
-  .covers-list figure {
+  .coversList figure {
     width: 70px;
     margin: 7px 10px 0 0;
   }
 }
 
 @media(max-width: 420px){
-  .covers-list figure {
+  .coversList figure {
     width: 50px;
     margin: 5px 5px 0 0;
   }
 }
 
-.covers-list img {
+.coversList img {
   max-width: 100%;
   min-width: 30px;
   min-height: 30px;
 }
 
-.covers-list figure {
+.coversList figure {
   cursor: pointer;
 }

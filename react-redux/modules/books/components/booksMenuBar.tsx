@@ -132,10 +132,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 style={{
                   float: "left",
                   display: "inline-block",
-                  width: "100px",
-                  borderTopRightRadius: isPublic && selectedBooksCount ? "4px" : 0,
-                  borderBottomRightRadius: isPublic && selectedBooksCount ? "4px" : 0,
-                  borderRightWidth: isPublic && selectedBooksCount ? "1px" : 0
+                  width: "100px"
                 }}
               />
               {!selectedBooksCount ? (
@@ -146,7 +143,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                         title="Filter search"
                         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                         onClick={props.beginEditFilters}
-                        className="btn btn-default btn-reset"
+                        className="btn btn-default btn-first-tiny"
                       >
                         <i className="fal fa-filter" />
                       </button>
@@ -186,7 +183,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 </>
               ) : !isPublic ? (
                 <>
-                  <button title="Add/remove subjects" onClick={props.startSubjectModification} className={"btn btn-default btn-reset"}>
+                  <button title="Add/remove subjects" onClick={props.startSubjectModification} className={"btn btn-default btn-first-tiny"}>
                     <i className="fal fa-sitemap" />
                   </button>
                   <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default">
