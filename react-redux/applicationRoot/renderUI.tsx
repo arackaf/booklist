@@ -57,7 +57,10 @@ const App = ({ component = null } = {}) => {
     loadCurrentModule(appState, appActions);
   }, []);
 
-  history.listen(location => loadCurrentModule(appState, appActions));
+  useEffect(() => {
+    let unlisten = history.listen(location => loadCurrentModule(appState, appActions));
+    return () => unlisten();
+  }, [appState]);
 
   return (
     <AppContext.Provider value={appStatePacket}>
