@@ -120,7 +120,8 @@ export const useBooks = () => {
     books,
     resultsCount,
     totalPages,
-    booksLoading: loading
+    booksLoading: loading,
+    booksLoaded: loaded
   };
 };
 
