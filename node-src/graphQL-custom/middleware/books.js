@@ -125,6 +125,11 @@ export default class BooksMiddleware {
           "https://s3.amazonaws.com/my-library-cover-uploads/" +
           book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
       }
+      if (/http:\/\/my-library-cover-uploads/.test(book.mediumImage)) {
+        book.mediumImage =
+          "https://s3.amazonaws.com/my-library-cover-uploads/" +
+          book.mediumImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+      }
 
       if (Array.isArray(book.editorialReviews)) {
         book.editorialReviews = book.editorialReviews.map(entry => ({

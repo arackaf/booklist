@@ -1,6 +1,6 @@
 import request from "request";
 import flatMap from "lodash.flatmap";
-import { downloadBookCover, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri } from "../util/bookCovers/bookCoverHelpers";
+import { downloadBookCover, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri, removeFile } from "../util/bookCovers/bookCoverHelpers";
 
 var parseString = require("xml2js").parseString;
 
@@ -56,20 +56,73 @@ export default class AmazonSearch {
             editorialReviews
           };
 
-          if (/nophoto/.test(bookResult.smallImage)) {
-            let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium
-            if (res) {
-              let { fileName, fullName } = res;
-              let newPath = await resizeIfNeeded(fileName);
+          try {
+            if (/nophoto/.test(bookResult.smallImage)) {
+              let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a small cover
+              if (res) {
+                let { fileName, fullName } = res;
+                let newPath = await resizeIfNeeded(fileName);
 
-              if (newPath) {
-                let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId || "generic"}/converted-cover-${fileName}`);
-                if (s3Key) {
-                  bookResult.smallImage = s3Key;
+                if (newPath) {
+                  let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId || "generic"}/converted-cover-${fileName}`);
+                  if (s3Key) {
+                    bookResult.smallImage = s3Key;
+                  }
                 }
+                removeFile(fullName);
+                removeFile(newPath);
+              }
+            } else if (bookResult.smallImage) {
+              let res = await downloadBookCover(bookResult.smallImage, 1200); // < 1200 bytes on a small cover
+              if (res) {
+                let { fileName, fullName } = res;
+                let newPath = await resizeIfNeeded(fileName);
+
+                if (newPath) {
+                  let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId || "generic"}/converted-cover-${fileName}`);
+                  if (s3Key) {
+                    bookResult.smallImage = s3Key;
+                  }
+                }
+                removeFile(fullName);
+                removeFile(newPath);
               }
             }
-          }
+          } catch (er) {}
+
+          try {
+            if (/nophoto/.test(bookResult.mediumImage)) {
+              let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium cover
+              if (res) {
+                let { fileName, fullName } = res;
+                let newPath = await resizeIfNeeded(fileName, 106);
+
+                if (newPath) {
+                  let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId || "generic"}/converted-cover-${fileName}`);
+                  if (s3Key) {
+                    bookResult.mediumImage = s3Key;
+                  }
+                }
+                removeFile(fullName);
+                removeFile(newPath);
+              }
+            } else if (bookResult.mediumImage) {
+              let res = await downloadBookCover(bookResult.mediumImage, 1200); // < 1200 bytes on a medium cover
+              if (res) {
+                let { fileName, fullName } = res;
+                let newPath = await resizeIfNeeded(fileName, 106);
+
+                if (newPath) {
+                  let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId || "generic"}/converted-cover-${fileName}`);
+                  if (s3Key) {
+                    bookResult.mediumImage = s3Key;
+                  }
+                }
+                removeFile(fullName);
+                removeFile(newPath);
+              }
+            }
+          } catch (er) {}
 
           if (typeof bookResult.pages == null) {
             delete bookResult.pages;
