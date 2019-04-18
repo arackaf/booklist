@@ -101,7 +101,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
 const BookViewingList: SFC<{}> = props => {
   let { tags } = useContext(TagsContext);
   let [appState] = useContext(AppContext);
-  const { books, booksLoading, currentQuery } = useContext(BooksContext);
+  const { books, booksLoading, booksLoaded, currentQuery } = useContext(BooksContext);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
@@ -163,7 +163,7 @@ const BookViewingList: SFC<{}> = props => {
           {...{ booksUiState, setRead }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!books.length && !booksLoading ? (
+          {!books.length && !booksLoading && !booksLoaded ? (
             <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
               No books found
             </div>
