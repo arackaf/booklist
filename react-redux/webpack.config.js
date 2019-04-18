@@ -12,6 +12,9 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
   handler: "cacheFirst",
   options: {
+    matchOptions: {
+      ignoreVary: true
+    },
     cacheName: name,
     expiration: {
       maxEntries: maxEntries || 500,
