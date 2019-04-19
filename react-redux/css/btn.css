@@ -7,7 +7,7 @@
   border-radius: var(--default-border-radius);
   cursor: pointer;
 }
-.btn.no-border {
+.btn.no-border, .btn-light.btn-round-icon {
   border: 0;
 }
 .btn.btn-light {

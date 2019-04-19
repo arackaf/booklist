@@ -56,7 +56,7 @@ class ManualBookEntry extends Component<any, any> {
   }
   editBook(book) {
     this.setState({
-      tab: "basic",
+      tab: "covers",
       bookEditing: { ...book },
       titleMissing: false,
       authorsChanged: false,
@@ -81,7 +81,7 @@ class ManualBookEntry extends Component<any, any> {
   }
   render() {
     let SyncedInput = this.SyncedInput;
-    let { tab } = this.state;
+    let { tab, bookEditing, pendingSmallImage, smallCoverUploadError } = this.state;
 
     //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
     //Modal eventually calls save method passed from above.
@@ -172,34 +172,53 @@ class ManualBookEntry extends Component<any, any> {
             <br />
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
-            <div className="row">
-              <div className="col-xs-6">
-                <Dropzone
-                  acceptStyle={{ border: "3px solid var(--primary-8)" }}
-                  rejectStyle={{ border: "3px solid var(--primary-9)" }}
-                  activeStyle={{ border: "3px solid var(--primary-9)" }}
-                  disabledStyle={{ border: "3px solid var(--primary-9)" }}
-                  style={{ border: "3px solid var(--primary-9)", padding: 30 }}
-                  onDrop={files => this.onDrop(files)}
-                  multiple={false}
-                >
-                  <div>{this.props.dragTitle}</div>
-                </Dropzone>
-              </div>
-              <div className="col-xs-6">
-                {this.state.pendingSmallImage ? (
-                  <div>
-                    <img src={this.state.pendingSmallImage} />
-                    <br />
-                    <br />
-                    <BootstrapAnchorButton preset="danger-xs" onClick={() => this.clearPendingSmallImage()}>
-                      Clear image
-                    </BootstrapAnchorButton>
+            {bookEditing ? (
+              <div style={{ display: "flex" }}>
+                <div className="margin-right">
+                  {bookEditing.smallImage ? (
+                    <img crossOrigin="anonymous" src={bookEditing.smallImage} />
+                  ) : (
+                    <span className="alert alert-warning">No Cover</span>
+                  )}
+                </div>
+                {!pendingSmallImage ? (
+                  <div style={{ maxWidth: "120px" }}>
+                    <Dropzone
+                      acceptStyle={{ border: "3px solid var(--primary-8)" }}
+                      rejectStyle={{ border: "3px solid var(--primary-9)" }}
+                      activeStyle={{ border: "3px solid var(--primary-9)" }}
+                      disabledStyle={{ border: "3px solid var(--primary-9)" }}
+                      style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center" }}
+                      onDrop={files => this.onDrop(files)}
+                      multiple={false}
+                    >
+                      <div>{this.props.dragTitle}</div>
+                    </Dropzone>
+                    {smallCoverUploadError ? <div className="label label-danger">{smallCoverUploadError}</div> : null}
                   </div>
                 ) : null}
-                {this.state.smallCoverUploadError ? <div className="label label-danger">{this.state.smallCoverUploadError}</div> : null}
+                {pendingSmallImage || smallCoverUploadError ? (
+                  <div>
+                    <img src={pendingSmallImage} />
+                    <br />
+                    {!smallCoverUploadError ? (
+                      <div style={{ display: "flex" }}>
+                        <button className="btn btn-xs btn-light btn-round-icon">
+                          <i className="fal fa-check" />
+                        </button>
+                        <button
+                          className="btn btn-xs btn-light btn-round-icon"
+                          style={{ marginLeft: "auto" }}
+                          onClick={() => this.clearPendingSmallImage()}
+                        >
+                          <i className="fal fa-undo" />
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
         <hr style={{ marginTop: 10, marginBottom: 10 }} />
