@@ -1,9 +1,12 @@
 import React, { Component, useState } from "react";
-import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { BootstrapAnchorButton, AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
 import ajaxUtil from "util/ajaxUtil";
 import Modal from "./modal";
+
+import UpdateBook from "graphQL/books/updateBook.graphql";
+import { useMutation, buildMutation } from "micro-graphql-react";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -39,18 +42,32 @@ const RemoteImageUpload = props => {
 };
 
 const ManageBookCover = props => {
-  const { img, url } = props;
+  const { _id, img, endpoint, imgKey } = props;
+  const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
+
+  const { runMutation: updateBook, running: updateRunning } = useMutation(buildMutation(UpdateBook));
+
+  const runSave = () => {
+    if (!uploadState.pendingImg) {
+      return;
+    }
+    let newUrl = uploadState.pendingImg;
+    return updateBook({ _id, book: { [imgKey]: uploadState.pendingImg } }).then(() => {
+      setCurrentUrl(newUrl);
+      setUploadState({ pendingImg: "", uploadError: "" });
+    });
+  };
 
   const onDrop = files => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
 
-    ajaxUtil.postWithFiles(`/react-redux/${url}`, request, res => {
+    ajaxUtil.postWithFiles(`/react-redux/${endpoint}`, request, res => {
       if (res.error) {
         setUploadState({ pendingImg: "", uploadError: res.error });
       } else {
-        setUploadState({ pendingImg: res.smallImagePath, uploadError: "" });
+        setUploadState({ pendingImg: res.url, uploadError: "" });
       }
     });
   };
@@ -58,7 +75,9 @@ const ManageBookCover = props => {
   const { pendingImg, uploadError } = uploadState;
   return (
     <div style={{ display: "flex", flexFlow: "row wrap" }}>
-      <div className="margin-right">{img ? <img crossOrigin="anonymous" src={img} /> : <span className="alert alert-warning">No Cover</span>}</div>
+      <div className="margin-right">
+        {img ? <img crossOrigin="anonymous" src={currentUrl} /> : <span className="alert alert-warning">No Cover</span>}
+      </div>
       {!pendingImg ? (
         <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>
           <Dropzone
@@ -70,7 +89,7 @@ const ManageBookCover = props => {
             onDrop={files => onDrop(files)}
             multiple={false}
           >
-            <div>{props.dragTitle}</div>
+            <div>Click or drag to upload a new cover</div>
           </Dropzone>
           {uploadError ? (
             <div style={{ display: "inline-block", marginBottom: "2px" }} className="label label-danger">
@@ -84,10 +103,14 @@ const ManageBookCover = props => {
           <img src={pendingImg} />
           <br />
           <div style={{ display: "flex" }}>
-            <button className="btn btn-xs btn-light btn-round-icon">
+            <button onClick={runSave} className="btn btn-xs btn-light btn-round-icon">
               <i className="fal fa-check" />
             </button>
-            <button className="btn btn-xs btn-light btn-round-icon" style={{ marginLeft: "auto" }} onClick={() => this.clearPendingSmallImage()}>
+            <button
+              className="btn btn-xs btn-light btn-round-icon"
+              style={{ marginLeft: "auto" }}
+              onClick={() => setUploadState({ pendingImg: "", uploadError: "" })}
+            >
               <i className="fal fa-undo" />
             </button>
           </div>
@@ -165,6 +188,7 @@ class ManualBookEntry extends Component<any, any> {
   render() {
     let SyncedInput = this.SyncedInput;
     let { tab, bookEditing, pendingSmallImage, smallCoverUploadError } = this.state;
+    let book = bookEditing;
 
     //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
     //Modal eventually calls save method passed from above.
@@ -255,7 +279,7 @@ class ManualBookEntry extends Component<any, any> {
             <br />
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
-            {bookEditing ? <ManageBookCover url="upload-small-cover" img={bookEditing.smallImage} /> : null}
+            {book ? <ManageBookCover _id={book._id} imgKey="smallImage" endpoint="upload-small-cover" img={book.smallImage} /> : null}
           </div>
         </div>
         <hr style={{ marginTop: 10, marginBottom: 10 }} />

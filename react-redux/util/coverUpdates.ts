@@ -3,6 +3,10 @@ import { syncUpdates } from "applicationRoot/graphqlHelpers";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 
+export const syncCovers = (_id, img, url) => {
+  syncUpdates(GetBooksQuery, { _id, [img]: url }, "allBooks", "Books", { force: true });
+};
+
 export const updateSmallCover = ({ _id, userId, url }) => {
   return ajaxUtil
     .post("/book/newSmallImage", { _id, userId, url })

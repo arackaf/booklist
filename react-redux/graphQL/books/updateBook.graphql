@@ -5,6 +5,7 @@ mutation updateBook($_id: String, $book: BookMutationInput) {
       title
       isbn
       smallImage
+      mediumImage
       pages
       publisher
       publicationDate
