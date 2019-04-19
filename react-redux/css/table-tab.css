@@ -29,12 +29,10 @@
   display: flex;
   border-bottom: 1px solid var(--primary-9);
 }
-.tab-headers .tab-header:first-child{
+/* .tab-headers .tab-header:first-child{
   margin-left: 6px;
-}
+} */
 .tab-header {
-  margin-left: 3px;
-  margin-right: 3px;
   padding: 5px 10px 5px 10px;
 }
 .tab-header.active {
