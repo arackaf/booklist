@@ -33,6 +33,9 @@ import expressGraphql from "express-graphql";
 import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node-src/util/graphqlUtils";
 
+import uuid from "uuid/v4";
+import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node-src/util/bookCovers/bookCoverHelpers";
+
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
 const PUBLIC_USER = {
@@ -260,66 +263,21 @@ const multerBookCoverUploadStorage = multer.diskStorage({
 const upload = multer({ storage: multerBookCoverUploadStorage });
 
 //TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
-app
-  .post("/react-redux/upload", upload.single("fileUploaded"), function(req, response) {
-    debugger;
+app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
+  if (req.file.size > 900000) {
+    return response.send({ success: false, error: "Max size is 500K" });
+  }
 
-    if (req.file.size > 900000) {
-      return response.send({ success: false, error: "Max size is 500K" });
-    }
+  let ext = path.extname(req.file.originalname);
+  let newFileName = `${uuid()}${ext}`;
+  fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));
 
-    let ext = path.extname(req.file.originalname);
-    let newName =
-      req.file.originalname
-        .replace(new RegExp(ext + "$"), "")
-        .replace(/\./g, "")
-        .replace(/\+/g, "")
-        .replace(/\,/g, "") +
-      ("_" + +new Date()) +
-      ext;
+  let resizedFile = await resizeIfNeeded(newFileName);
+  let s3path = await saveCoverToS3(resizedFile, `bookCovers/userId/${newFileName}`);
+  removeFile(resizedFile);
 
-    let pathResult = path.normalize(req.file.destination).replace(/\\/g, "/");
-    let pathToFileUploaded = `${pathResult}/${req.file.originalname}`;
-
-    try {
-      Jimp.read(pathToFileUploaded, function(err, image) {
-        if (err || !image) {
-          return response.send({ success: false, error: "Could not read image" });
-        }
-
-        try {
-          image.exifRotate();
-          processImageAsNeeded(image);
-        } catch (err) {
-          return response.send({ success: false, error: "Could not read image" });
-        }
-      });
-    } catch (err) {
-      return response.send({ success: false, error: "Could not read image" });
-    }
-
-    function processImageAsNeeded(image) {
-      if (image.bitmap.width > 55) {
-        let width = image.bitmap.width;
-        let height = image.bitmap.height;
-        let newWidth = (height * 50) / width;
-
-        image.resize(50, newWidth);
-        let resizedDestination = `${pathResult}/resized_${newName}`;
-
-        image.write(resizedDestination, err => {
-          response.send({ success: true, smallImagePath: "/" + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-        });
-      } else {
-        image.write(`${pathResult}/${newName}`, err => {
-          response.send({ success: true, smallImagePath: `/${pathResult}/${newName}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-        });
-      }
-    }
-  })
-  .on("error", () => {
-    debugger;
-  });
+  return s3path;
+});
 
 app.post("/react-redux/createUser", function(req, response) {
   let userDao = new UserDao(),

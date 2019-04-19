@@ -68,8 +68,40 @@ class BookController {
       console.log("err", err);
     }
   }
+  async newSmallImage({ _id, userId, url }) {
+    let res = await downloadBookCover(url, 750);
+
+    if (!res) {
+      this.send({ failure: true });
+    }
+
+    let { fileName, fullName } = res;
+    let newPath = await resizeIfNeeded(fileName, 50);
+
+    if (!newPath) {
+      this.send({ failure: true });
+    }
+
+    let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId}/${fileName}`);
+    let { db, client } = await getDbConnection();
+
+    await db.collection("books").updateOne(
+      { _id: ObjectId(_id), userId },
+      {
+        $set: { smallImage: s3Key }
+      }
+    );
+
+    await client.close();
+
+    removeFile(fullName);
+    removeFile(newPath);
+
+    this.send({ url: s3Key });
+  }
+
   async newMediumImage({ _id, userId, url }) {
-    let res = await downloadBookCover(url, 1000);
+    let res = await downloadBookCover(url, 750);
 
     if (!res) {
       this.send({ failure: true });

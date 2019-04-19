@@ -5,7 +5,7 @@ import Dropzone from "react-dropzone";
 import ajaxUtil from "util/ajaxUtil";
 import Modal from "./modal";
 
-const RemoveImageUpload = props => {
+const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -34,6 +34,68 @@ const RemoveImageUpload = props => {
       <button className="btn btn-default" disabled={!url || saving} onClick={doSave}>
         <i className="far fa-cloud-upload-alt" />
       </button>
+    </div>
+  );
+};
+
+const ManageBookCover = props => {
+  const { img, url } = props;
+  const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
+
+  const onDrop = files => {
+    let request = new FormData();
+    request.append("fileUploaded", files[0]);
+
+    ajaxUtil.postWithFiles(`/react-redux/${url}`, request, res => {
+      if (res.error) {
+        setUploadState({ pendingImg: "", uploadError: res.error });
+      } else {
+        setUploadState({ pendingImg: res.smallImagePath, uploadError: "" });
+      }
+    });
+  };
+
+  const { pendingImg, uploadError } = uploadState;
+  return (
+    <div style={{ display: "flex", flexFlow: "row wrap" }}>
+      <div className="margin-right">{img ? <img crossOrigin="anonymous" src={img} /> : <span className="alert alert-warning">No Cover</span>}</div>
+      {!pendingImg ? (
+        <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>
+          <Dropzone
+            acceptStyle={{ border: "3px solid var(--primary-8)" }}
+            rejectStyle={{ border: "3px solid var(--primary-9)" }}
+            activeStyle={{ border: "3px solid var(--primary-9)" }}
+            disabledStyle={{ border: "3px solid var(--primary-9)" }}
+            style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center" }}
+            onDrop={files => onDrop(files)}
+            multiple={false}
+          >
+            <div>{props.dragTitle}</div>
+          </Dropzone>
+          {uploadError ? (
+            <div style={{ display: "inline-block", marginBottom: "2px" }} className="label label-danger">
+              {uploadError}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      {pendingImg ? (
+        <div className="margin-right">
+          <img src={pendingImg} />
+          <br />
+          <div style={{ display: "flex" }}>
+            <button className="btn btn-xs btn-light btn-round-icon">
+              <i className="fal fa-check" />
+            </button>
+            <button className="btn btn-xs btn-light btn-round-icon" style={{ marginLeft: "auto" }} onClick={() => this.clearPendingSmallImage()}>
+              <i className="fal fa-undo" />
+            </button>
+          </div>
+        </div>
+      ) : null}
+      <div>
+        <RemoteImageUpload />
+      </div>
     </div>
   );
 };
@@ -95,18 +157,6 @@ class ManualBookEntry extends Component<any, any> {
       authorsChanged: false,
       pendingSmallImage: "",
       smallCoverUploadError: ""
-    });
-  }
-  onDrop(files) {
-    let request = new FormData();
-    request.append("fileUploaded", files[0]);
-
-    ajaxUtil.postWithFiles("/react-redux/upload", request, res => {
-      if (res.error) {
-        this.setState({ pendingSmallImage: "", smallCoverUploadError: res.error });
-      } else {
-        this.setState({ pendingSmallImage: res.smallImagePath, smallCoverUploadError: "" });
-      }
     });
   }
   clearPendingSmallImage() {
@@ -205,58 +255,7 @@ class ManualBookEntry extends Component<any, any> {
             <br />
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
-            {bookEditing ? (
-              <div style={{ display: "flex", flexFlow: "row wrap" }}>
-                <div className="margin-right">
-                  {bookEditing.smallImage ? (
-                    <img crossOrigin="anonymous" src={bookEditing.smallImage} />
-                  ) : (
-                    <span className="alert alert-warning">No Cover</span>
-                  )}
-                </div>
-                {!pendingSmallImage ? (
-                  <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>
-                    <Dropzone
-                      acceptStyle={{ border: "3px solid var(--primary-8)" }}
-                      rejectStyle={{ border: "3px solid var(--primary-9)" }}
-                      activeStyle={{ border: "3px solid var(--primary-9)" }}
-                      disabledStyle={{ border: "3px solid var(--primary-9)" }}
-                      style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center" }}
-                      onDrop={files => this.onDrop(files)}
-                      multiple={false}
-                    >
-                      <div>{this.props.dragTitle}</div>
-                    </Dropzone>
-                    {smallCoverUploadError ? (
-                      <div style={{ display: "inline-block", marginBottom: "2px" }} className="label label-danger">
-                        {smallCoverUploadError}
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
-                {pendingSmallImage ? (
-                  <div className="margin-right">
-                    <img src={pendingSmallImage} />
-                    <br />
-                    <div style={{ display: "flex" }}>
-                      <button className="btn btn-xs btn-light btn-round-icon">
-                        <i className="fal fa-check" />
-                      </button>
-                      <button
-                        className="btn btn-xs btn-light btn-round-icon"
-                        style={{ marginLeft: "auto" }}
-                        onClick={() => this.clearPendingSmallImage()}
-                      >
-                        <i className="fal fa-undo" />
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
-                <div>
-                  <RemoveImageUpload />
-                </div>
-              </div>
-            ) : null}
+            {bookEditing ? <ManageBookCover url="upload-small-cover" img={bookEditing.smallImage} /> : null}
           </div>
         </div>
         <hr style={{ marginTop: 10, marginBottom: 10 }} />
