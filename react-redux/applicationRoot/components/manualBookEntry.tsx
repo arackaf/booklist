@@ -6,8 +6,7 @@ import ajaxUtil from "util/ajaxUtil";
 import Modal from "./modal";
 
 class ManualBookEntry extends Component<any, any> {
-  revertTo: any;
-  state = { bookEditing: null, pendingSmallImage: "", titleMissing: false, authorsChanged: false, smallCoverUploadError: "" };
+  state = { tab: "basic", bookEditing: null, pendingSmallImage: "", titleMissing: false, authorsChanged: false, smallCoverUploadError: "" };
   syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
   SyncedInput = ({ syncName, onEnter, ...props }) => (
     <input
@@ -56,13 +55,9 @@ class ManualBookEntry extends Component<any, any> {
     }
   }
   editBook(book) {
-    let bookToStart = { ...book };
-    this.revertTo = bookToStart;
-    this.revert();
-  }
-  revert() {
     this.setState({
-      bookEditing: this.revertTo,
+      tab: "basic",
+      bookEditing: { ...book },
       titleMissing: false,
       authorsChanged: false,
       pendingSmallImage: "",
@@ -193,9 +188,6 @@ class ManualBookEntry extends Component<any, any> {
           </div>
         ) : null}
         <hr style={{ marginTop: 10, marginBottom: 10 }} />
-        <BootstrapButton preset="danger-xs" onClick={() => (this.props.isSaved ? this.props.startOver() : this.revert())}>
-          Clear all
-        </BootstrapButton>
         &nbsp;
         <AjaxButton
           className="pull-right"
