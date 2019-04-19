@@ -205,7 +205,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
               {editState.modalEntryLoaded ? (
                 <ManualBookEntry
                   title={"Manually enter a book"}
-                  dragTitle={"Click or drag to upload a cover image. The uploaded image will be scaled down as needed"}
+                  dragTitle={"Click or drag to upload a new cover"}
                   bookToEdit={editState.manualBook}
                   isOpen={editState.inManualEntry}
                   isSaving={running}

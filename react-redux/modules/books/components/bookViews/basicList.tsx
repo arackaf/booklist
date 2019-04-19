@@ -26,12 +26,12 @@ const BookViewListMobileItem = props => {
             <div style={{ marginTop: "auto" }}>
               {!props.viewingPublic && online ? (
                 <>
-                  <button className="btn btn-xs no-border btn-light btn-round-icon" onClick={() => props.editBook(book)}>
+                  <button className="btn btn-xs btn-light btn-round-icon" onClick={() => props.editBook(book)}>
                     <i className="fa fa-fw fa-pencil" />
                   </button>
                   <button
                     style={{ marginLeft: "2px" }}
-                    className="btn btn-xs no-border btn-light btn-round-icon"
+                    className="btn btn-xs btn-light btn-round-icon"
                     onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}
                   >
                     <i className="fa fa-fw fa-trash" />
