@@ -1,9 +1,42 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import BootstrapButton, { BootstrapAnchorButton, AjaxButton } from "applicationRoot/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
 import ajaxUtil from "util/ajaxUtil";
 import Modal from "./modal";
+
+const RemoveImageUpload = props => {
+  const [url, setUrl] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const keyDown = evt => {
+    if (evt.keyCode == 13) {
+      doSave();
+    }
+  };
+
+  const doSave = () => {
+    setSaving(true);
+    Promise.resolve(props.save()).then(() => setSaving(false));
+  };
+
+  return (
+    <div className="btn-group">
+      <input
+        onKeyDown={keyDown}
+        value={url}
+        style={{ minWidth: "200px" }}
+        onChange={e => setUrl(e.target.value)}
+        className="form-control"
+        placeholder="New Cover URL"
+        tabIndex={-1}
+      />
+      <button className="btn btn-default" disabled={!url || saving} onClick={doSave}>
+        <i className="far fa-cloud-upload-alt" />
+      </button>
+    </div>
+  );
+};
 
 class ManualBookEntry extends Component<any, any> {
   state = { tab: "basic", bookEditing: null, pendingSmallImage: "", titleMissing: false, authorsChanged: false, smallCoverUploadError: "" };
@@ -173,7 +206,7 @@ class ManualBookEntry extends Component<any, any> {
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
             {bookEditing ? (
-              <div style={{ display: "flex" }}>
+              <div style={{ display: "flex", flexFlow: "row wrap" }}>
                 <div className="margin-right">
                   {bookEditing.smallImage ? (
                     <img crossOrigin="anonymous" src={bookEditing.smallImage} />
@@ -182,7 +215,7 @@ class ManualBookEntry extends Component<any, any> {
                   )}
                 </div>
                 {!pendingSmallImage ? (
-                  <div style={{ maxWidth: "120px" }}>
+                  <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>
                     <Dropzone
                       acceptStyle={{ border: "3px solid var(--primary-8)" }}
                       rejectStyle={{ border: "3px solid var(--primary-9)" }}
@@ -194,29 +227,34 @@ class ManualBookEntry extends Component<any, any> {
                     >
                       <div>{this.props.dragTitle}</div>
                     </Dropzone>
-                    {smallCoverUploadError ? <div className="label label-danger">{smallCoverUploadError}</div> : null}
-                  </div>
-                ) : null}
-                {pendingSmallImage || smallCoverUploadError ? (
-                  <div>
-                    <img src={pendingSmallImage} />
-                    <br />
-                    {!smallCoverUploadError ? (
-                      <div style={{ display: "flex" }}>
-                        <button className="btn btn-xs btn-light btn-round-icon">
-                          <i className="fal fa-check" />
-                        </button>
-                        <button
-                          className="btn btn-xs btn-light btn-round-icon"
-                          style={{ marginLeft: "auto" }}
-                          onClick={() => this.clearPendingSmallImage()}
-                        >
-                          <i className="fal fa-undo" />
-                        </button>
+                    {smallCoverUploadError ? (
+                      <div style={{ display: "inline-block", marginBottom: "2px" }} className="label label-danger">
+                        {smallCoverUploadError}
                       </div>
                     ) : null}
                   </div>
                 ) : null}
+                {pendingSmallImage ? (
+                  <div className="margin-right">
+                    <img src={pendingSmallImage} />
+                    <br />
+                    <div style={{ display: "flex" }}>
+                      <button className="btn btn-xs btn-light btn-round-icon">
+                        <i className="fal fa-check" />
+                      </button>
+                      <button
+                        className="btn btn-xs btn-light btn-round-icon"
+                        style={{ marginLeft: "auto" }}
+                        onClick={() => this.clearPendingSmallImage()}
+                      >
+                        <i className="fal fa-undo" />
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+                <div>
+                  <RemoveImageUpload />
+                </div>
               </div>
             ) : null}
           </div>
