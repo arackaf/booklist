@@ -62,6 +62,7 @@ const DetailsView = props => {
                 onChange={e => setNewImageUrl(e.target.value)}
                 className="form-control"
                 placeholder="New Cover URL"
+                tabIndex={-1}
               />
               <button className="btn btn-default" disabled={!newImageUrl || savingNewImageUrl} onClick={saveImage}>
                 <i className="far fa-cloud-upload-alt" />
