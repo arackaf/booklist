@@ -12,7 +12,6 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import fs from "fs";
 import mkdirp from "mkdirp";
-import Jimp from "jimp";
 import compression from "compression";
 
 const hour = 3600000;
@@ -273,10 +272,17 @@ app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async
   fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));
 
   let resizedFile = await resizeIfNeeded(newFileName);
-  let s3path = await saveCoverToS3(resizedFile, `bookCovers/userId/${newFileName}`);
+  if (!resizedFile) {
+    return response.send({ success: false, error: "Could not read image" });
+  }
+  let s3path = await saveCoverToS3(resizedFile, `bookCovers/${req.user.id}/${newFileName}`);
+  if (!s3path) {
+    return response.send({ success: false, error: "Error saving image" });
+  }
   removeFile(resizedFile);
+  removeFile(path.join(req.file.destination, req.file.filename));
 
-  return s3path;
+  response.send({ success: true, url: s3path });
 });
 
 app.post("/react-redux/createUser", function(req, response) {

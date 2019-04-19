@@ -144,8 +144,6 @@ const BookViewingList: SFC<{}> = props => {
     deleteBook({ _id });
   };
 
-  let dragTitle = editingBook ? `Click or drag to upload a new cover` : "";
-
   const uiView = useBookSearchUiView();
 
   return (
@@ -191,7 +189,6 @@ const BookViewingList: SFC<{}> = props => {
         {bookEditingModalLoaded ? (
           <ManualBookEntry
             title={editingBook ? `Edit ${editingBook.title}` : ""}
-            dragTitle={dragTitle}
             bookToEdit={editingBook}
             isOpen={!!editingBook}
             isSaving={running}
