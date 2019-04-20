@@ -195,7 +195,7 @@ class ManualBookEntry extends Component<any, any> {
     //Parent component passes in a new book as needed to restart editing
     return (
       <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.props.title}>
-        <div className="tab-headers" style={{ marginBottom: "15px" }}>
+        <div className="tab-headers" style={{ marginBottom: "10px" }}>
           <div className={`tab-header ${tab == "basic" ? "active" : ""}`}>
             <a onClick={() => this.setState({ tab: "basic" })}>Book info</a>
           </div>
@@ -279,7 +279,19 @@ class ManualBookEntry extends Component<any, any> {
             <br />
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
-            {book ? <ManageBookCover _id={book._id} imgKey="smallImage" endpoint="upload-small-cover" img={book.smallImage} /> : null}
+            {book ? (
+              <>
+                <div>
+                  <h6 style={{ marginBottom: "5px" }}>Small Cover Image</h6>
+                  <ManageBookCover _id={book._id} imgKey="smallImage" endpoint="upload-small-cover" img={book.smallImage} />
+                </div>
+                <hr />
+                <div>
+                  <h6 style={{ marginBottom: "5px" }}>Medium Cover Image</h6>
+                  <ManageBookCover _id={book._id} imgKey="smallImage" endpoint="upload-small-cover" img={book.mediumImage} />
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
         <hr style={{ marginTop: 10, marginBottom: 10 }} />
