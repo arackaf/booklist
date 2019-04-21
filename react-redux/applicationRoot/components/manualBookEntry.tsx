@@ -130,11 +130,11 @@ const ManageBookCover = props => {
 };
 
 class ManualBookEntry extends Component<any, any> {
-  state = { tab: "basic", bookEditing: null, pendingSmallImage: "", titleMissing: false, authorsChanged: false, smallCoverUploadError: "" };
+  state = { tab: "basic", bookEditing: null, titleMissing: false, authorsChanged: false };
   syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
   SyncedInput = ({ syncName, onEnter, ...props }) => (
     <input
-      onKeyDown={evt => (evt.keyCode || evt.which) == 13 && props.onEnter()}
+      onKeyDown={evt => (evt.keyCode || evt.which) == 13 && onEnter()}
       onChange={this.syncStateFromInput(syncName)}
       value={this.state.bookEditing[syncName] || ""}
       {...props}
@@ -158,10 +158,9 @@ class ManualBookEntry extends Component<any, any> {
 
       //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
       let bookToSave = { ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a) };
-      if (this.state.pendingSmallImage) {
-        bookToSave.smallImage = this.state.pendingSmallImage; //only send it if there is one
-      }
-      this.props.saveBook(bookToSave);
+      Promise.resolve(this.props.saveBook(bookToSave)).then(book => {
+        book && this.setState(({ bookEditing }) => ({ bookEditing: { ...bookEditing, _id: book._id } }));
+      });
     }
   }
   closeModal() {
@@ -183,17 +182,12 @@ class ManualBookEntry extends Component<any, any> {
       tab: "basic",
       bookEditing: { ...book },
       titleMissing: false,
-      authorsChanged: false,
-      pendingSmallImage: "",
-      smallCoverUploadError: ""
+      authorsChanged: false
     });
-  }
-  clearPendingSmallImage() {
-    this.setState({ pendingSmallImage: "" });
   }
   render() {
     let SyncedInput = this.SyncedInput;
-    let { tab, bookEditing, pendingSmallImage, smallCoverUploadError } = this.state;
+    let { tab, bookEditing } = this.state;
     let book = bookEditing || {};
 
     //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
