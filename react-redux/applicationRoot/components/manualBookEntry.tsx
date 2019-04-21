@@ -7,6 +7,7 @@ import Modal from "./modal";
 
 import UpdateBook from "graphQL/books/updateBook.graphql";
 import { useMutation, buildMutation } from "micro-graphql-react";
+import { updateSmallCover, updateMediumCover } from "util/coverUpdates";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -20,7 +21,7 @@ const RemoteImageUpload = props => {
 
   const doSave = () => {
     setSaving(true);
-    Promise.resolve(props.save()).then(() => setSaving(false));
+    Promise.resolve(props.remoteSave({ _id: props._id, url })).then(() => setSaving(false));
   };
 
   return (
@@ -42,7 +43,7 @@ const RemoteImageUpload = props => {
 };
 
 const ManageBookCover = props => {
-  const { _id, img, endpoint, imgKey } = props;
+  const { _id, img, endpoint, imgKey, remoteSave } = props;
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
@@ -117,7 +118,7 @@ const ManageBookCover = props => {
         </div>
       ) : null}
       <div>
-        <RemoteImageUpload />
+        <RemoteImageUpload _id={_id} remoteSave={remoteSave} />
       </div>
     </div>
   );
@@ -283,12 +284,24 @@ class ManualBookEntry extends Component<any, any> {
               <>
                 <div>
                   <h6 style={{ marginBottom: "5px" }}>Small Cover Image</h6>
-                  <ManageBookCover _id={book._id} imgKey="smallImage" endpoint="upload-small-cover" img={book.smallImage} />
+                  <ManageBookCover
+                    _id={book._id}
+                    remoteSave={updateSmallCover}
+                    imgKey="smallImage"
+                    endpoint="upload-small-cover"
+                    img={book.smallImage}
+                  />
                 </div>
                 <hr />
                 <div>
                   <h6 style={{ marginBottom: "5px" }}>Medium Cover Image</h6>
-                  <ManageBookCover _id={book._id} imgKey="smallImage" endpoint="upload-small-cover" img={book.mediumImage} />
+                  <ManageBookCover
+                    _id={book._id}
+                    remoteSave={updateMediumCover}
+                    imgKey="mediumImage"
+                    endpoint="upload-medium-cover"
+                    img={book.mediumImage}
+                  />
                 </div>
               </>
             ) : null}
