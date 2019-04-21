@@ -21,7 +21,12 @@ const RemoteImageUpload = props => {
 
   const doSave = () => {
     setSaving(true);
-    Promise.resolve(props.remoteSave({ _id: props._id, url })).then(() => setSaving(false));
+    Promise.resolve(props.remoteSave({ _id: props._id, url })).then(({ url, failure }) => {
+      setSaving(false);
+      if (!failure) {
+        props.onUpdate(url);
+      }
+    });
   };
 
   return (
@@ -118,7 +123,7 @@ const ManageBookCover = props => {
         </div>
       ) : null}
       <div>
-        <RemoteImageUpload _id={_id} remoteSave={remoteSave} />
+        <RemoteImageUpload _id={_id} remoteSave={remoteSave} onUpdate={setCurrentUrl} />
       </div>
     </div>
   );

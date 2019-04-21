@@ -19,7 +19,6 @@ import { getDbConnection } from "../util/dbUtils";
 class BookController {
   async saveFromIsbn({ isbn }) {
     const userId = this.request.user.id;
-    this.userId = userId;
 
     try {
       let addingItem = { userId, isbn };
@@ -70,13 +69,13 @@ class BookController {
     }
   }
   async newSmallImage({ _id, url }) {
-    doResize({ _id, userId, url, width: 50, imgKey: "smallImage" });
+    this.doResize({ _id, url, width: 50, imgKey: "smallImage" });
   }
-  async newMediumImage({ _id, url }) {
-    doResize({ _id, userId, url, width: 106, imgKey: "mediumImage" });
+  newMediumImage({ _id, url }) {
+    this.doResize({ _id, url, width: 106, imgKey: "mediumImage" });
   }
-  async doResize({ _id, url, width }) {
-    let userId = this.userId;
+  async doResize({ _id, url, imgKey, width }) {
+    let userId = this.request.user.id;
     let res = await downloadBookCover(url, 750);
 
     if (!res) {
@@ -97,38 +96,6 @@ class BookController {
       { _id: ObjectId(_id), userId },
       {
         $set: { [imgKey]: s3Key }
-      }
-    );
-
-    await client.close();
-
-    removeFile(fullName);
-    removeFile(newPath);
-
-    this.send({ url: s3Key });
-  }
-
-  async newMediumImage({ _id, userId, url }) {
-    let res = await downloadBookCover(url, 750);
-
-    if (!res) {
-      this.send({ failure: true });
-    }
-
-    let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName, 106);
-
-    if (!newPath) {
-      this.send({ failure: true });
-    }
-
-    let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId}/${fileName}`);
-    let { db, client } = await getDbConnection();
-
-    await db.collection("books").updateOne(
-      { _id: ObjectId(_id), userId },
-      {
-        $set: { mediumImage: s3Key }
       }
     );
 
