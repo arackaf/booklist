@@ -91,7 +91,7 @@ const ManageBookCover = props => {
             rejectStyle={{ border: "3px solid var(--primary-9)" }}
             activeStyle={{ border: "3px solid var(--primary-9)" }}
             disabledStyle={{ border: "3px solid var(--primary-9)" }}
-            style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center" }}
+            style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center", cursor: "pointer" }}
             onDrop={files => onDrop(files)}
             multiple={false}
           >
@@ -180,7 +180,7 @@ class ManualBookEntry extends Component<any, any> {
   }
   editBook(book) {
     this.setState({
-      tab: "covers",
+      tab: "basic",
       bookEditing: { ...book },
       titleMissing: false,
       authorsChanged: false,
@@ -194,7 +194,7 @@ class ManualBookEntry extends Component<any, any> {
   render() {
     let SyncedInput = this.SyncedInput;
     let { tab, bookEditing, pendingSmallImage, smallCoverUploadError } = this.state;
-    let book = bookEditing;
+    let book = bookEditing || {};
 
     //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
     //Modal eventually calls save method passed from above.
@@ -205,82 +205,102 @@ class ManualBookEntry extends Component<any, any> {
           <div className={`tab-header ${tab == "basic" ? "active" : ""}`}>
             <a onClick={() => this.setState({ tab: "basic" })}>Book info</a>
           </div>
-          <div className={`tab-header ${tab == "covers" ? "active" : ""}`}>
-            <a onClick={() => this.setState({ tab: "covers" })}>Covers</a>
+          <div className={`tab-header ${tab == "covers" ? "active" : ""} ${!book._id ? "disabled" : ""}`}>
+            <a onClick={book._id ? () => this.setState({ tab: "covers" }) : null}>Covers</a>
           </div>
         </div>
         <div className="tab-content">
           <div className={`tab-pane ${tab == "basic" ? "active" : ""}`}>
             {this.state.bookEditing ? (
-              <form>
-                <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
-                  <label>Title</label>
+              <>
+                <form>
+                  <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
+                    <label>Title</label>
 
-                  <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => this.save()} />
-                </div>
-                <div className="row">
-                  <div className="col-xs-6">
-                    <div className="form-group">
-                      <label>ISBN</label>
-                      <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => this.save()} />
-                    </div>
+                    <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => this.save()} />
                   </div>
-
-                  <div className="col-xs-6">
-                    <div className="form-group">
-                      <label>Pages</label>
-                      <SyncedInput
-                        syncName="pages"
-                        type="number"
-                        className="form-control"
-                        placeholder="Number of pages"
-                        onEnter={() => this.save()}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-xs-6">
-                    <div className="form-group">
-                      <label>Publisher</label>
-                      <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => this.save()} />
-                    </div>
-                  </div>
-
-                  <div className="col-xs-6">
-                    <div className="form-group">
-                      <label>Published</label>
-                      <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => this.save()} />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  {(this.state.bookEditing.authors || []).map((author, $index) => (
-                    <div key={$index} className="col-xs-4">
+                  <div className="row">
+                    <div className="col-xs-6">
                       <div className="form-group">
-                        <label>Author</label>
-                        <input
-                          onKeyDown={evt => (evt.keyCode || evt.which) == 13 && this.save()}
-                          onChange={this.syncAuthor($index)}
-                          value={author}
+                        <label>ISBN</label>
+                        <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => this.save()} />
+                      </div>
+                    </div>
+
+                    <div className="col-xs-6">
+                      <div className="form-group">
+                        <label>Pages</label>
+                        <SyncedInput
+                          syncName="pages"
+                          type="number"
                           className="form-control"
-                          placeholder={`Author ${$index + 1}`}
+                          placeholder="Number of pages"
+                          onEnter={() => this.save()}
                         />
                       </div>
                     </div>
-                  ))}
-                  <div className="col-xs-12">
-                    <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="primary-xs">
-                      <i className="fa fa-fw fa-plus" /> Add author
-                    </BootstrapAnchorButton>
-                    {this.state.authorsChanged ? (
-                      <div style={{ marginLeft: 5 }} className="label label-primary">
-                        Add as many authors as needed. Blanks will be ignored.
-                      </div>
-                    ) : null}
                   </div>
-                </div>
-              </form>
+                  <div className="row">
+                    <div className="col-xs-6">
+                      <div className="form-group">
+                        <label>Publisher</label>
+                        <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => this.save()} />
+                      </div>
+                    </div>
+
+                    <div className="col-xs-6">
+                      <div className="form-group">
+                        <label>Published</label>
+                        <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => this.save()} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    {(this.state.bookEditing.authors || []).map((author, $index) => (
+                      <div key={$index} className="col-xs-4">
+                        <div className="form-group">
+                          <label>Author</label>
+                          <input
+                            onKeyDown={evt => (evt.keyCode || evt.which) == 13 && this.save()}
+                            onChange={this.syncAuthor($index)}
+                            value={author}
+                            className="form-control"
+                            placeholder={`Author ${$index + 1}`}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <div className="col-xs-12">
+                      <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="primary-xs">
+                        <i className="fa fa-fw fa-plus" /> Add author
+                      </BootstrapAnchorButton>
+                      {this.state.authorsChanged ? (
+                        <div style={{ marginLeft: 5 }} className="label label-primary">
+                          Add as many authors as needed. Blanks will be ignored.
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </form>
+                <hr style={{ marginTop: 10, marginBottom: 10 }} />
+
+                <AjaxButton
+                  className="pull-right"
+                  preset="primary"
+                  running={this.props.isSaving}
+                  disabled={this.props.isSaved}
+                  runningText="Saving"
+                  onClick={() => this.save()}
+                >
+                  {!this.props.isSaved ? (
+                    "Save"
+                  ) : (
+                    <span>
+                      Saved <i className="fa fa-fw fa-check" />
+                    </span>
+                  )}
+                </AjaxButton>
+              </>
             ) : null}
             <br />
           </div>
@@ -288,7 +308,7 @@ class ManualBookEntry extends Component<any, any> {
             {book ? (
               <>
                 <div>
-                  <h6 style={{ marginBottom: "5px" }}>Small Cover Image</h6>
+                  <h6 style={{ marginBottom: "5px" }}>Small Cover</h6>
                   <ManageBookCover
                     _id={book._id}
                     remoteSave={updateSmallCover}
@@ -299,7 +319,7 @@ class ManualBookEntry extends Component<any, any> {
                 </div>
                 <hr />
                 <div>
-                  <h6 style={{ marginBottom: "5px" }}>Medium Cover Image</h6>
+                  <h6 style={{ marginBottom: "5px" }}>Medium Cover</h6>
                   <ManageBookCover
                     _id={book._id}
                     remoteSave={updateMediumCover}
@@ -312,24 +332,6 @@ class ManualBookEntry extends Component<any, any> {
             ) : null}
           </div>
         </div>
-        <hr style={{ marginTop: 10, marginBottom: 10 }} />
-        &nbsp;
-        <AjaxButton
-          className="pull-right"
-          preset="primary"
-          running={this.props.isSaving}
-          disabled={this.props.isSaved}
-          runningText="Saving"
-          onClick={() => this.save()}
-        >
-          {!this.props.isSaved ? (
-            "Save"
-          ) : (
-            <span>
-              Saved <i className="fa fa-fw fa-check" />
-            </span>
-          )}
-        </AjaxButton>
       </Modal>
     );
   }
