@@ -144,6 +144,7 @@ h5 {
 h6 {
   margin: 0;
   font-size: 14px;
+  font-weight: normal;
 }
 .form-inline {
   display: flex;
