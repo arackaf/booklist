@@ -7,6 +7,8 @@ import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
 import { BooksSearchContext } from "./components/bookViewList";
 import { TagsContext } from "applicationRoot/tagsState";
 
+import localStorage from "util/localStorage";
+
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
 const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
 const SET_COVERS_LIST_VIEW = "booksSearch.SET_Covers_VIEW";
@@ -17,7 +19,7 @@ const COVERS_LIST = "books covers view";
 const HASH_CHANGED = "books search hash changed";
 
 const initialState = {
-  view: "",
+  view: localStorage.get("book-ui"),
   hashFilters: {} as typeof defaultSearchValuesHash
 };
 export type BookSearchState = typeof initialState;
@@ -25,10 +27,13 @@ export type BookSearchState = typeof initialState;
 export function bookSearchReducer(state = initialState, action): BookSearchState {
   switch (action.type) {
     case SET_BASIC_LIST_VIEW:
+      localStorage.set("book-ui", BASIC_LIST_VIEW);
       return { ...state, view: BASIC_LIST_VIEW };
     case SET_GRID_VIEW:
+      localStorage.set("book-ui", GRID_VIEW);
       return { ...state, view: GRID_VIEW };
     case SET_COVERS_LIST_VIEW:
+      localStorage.set("book-ui", COVERS_LIST);
       return { ...state, view: COVERS_LIST };
     case HASH_CHANGED:
       let { filters } = action;
