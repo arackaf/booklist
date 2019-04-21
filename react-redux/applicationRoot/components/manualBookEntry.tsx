@@ -109,11 +109,11 @@ const ManageBookCover = props => {
           <img src={pendingImg} />
           <br />
           <div style={{ display: "flex" }}>
-            <button onClick={runSave} className="btn btn-xs btn-light btn-round-icon">
+            <button onClick={runSave} className="btn btn-xs btn-light btn-square-icon">
               <i className="fal fa-check" />
             </button>
             <button
-              className="btn btn-xs btn-light btn-round-icon"
+              className="btn btn-xs btn-light btn-square-icon"
               style={{ marginLeft: "auto" }}
               onClick={() => setUploadState({ pendingImg: "", uploadError: "" })}
             >
