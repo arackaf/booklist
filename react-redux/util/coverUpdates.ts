@@ -7,9 +7,9 @@ export const syncCovers = (_id, img, url) => {
   syncUpdates(GetBooksQuery, { _id, [img]: url }, "allBooks", "Books", { force: true });
 };
 
-export const updateSmallCover = ({ _id, userId, url }) => {
+export const updateSmallCover = ({ _id, url }) => {
   return ajaxUtil
-    .post("/book/newSmallImage", { _id, userId, url })
+    .post("/book/newSmallImage", { _id, url })
     .then(({ url, failure }) => {
       if (!failure && url) {
         syncUpdates(GetBooksQuery, { _id, smallImage: url }, "allBooks", "Books", { force: true });
@@ -19,9 +19,9 @@ export const updateSmallCover = ({ _id, userId, url }) => {
     .catch(() => ({ failure: true, url: "" }));
 };
 
-export const updateMediumCover = ({ _id, userId, url }) => {
+export const updateMediumCover = ({ _id, url }) => {
   return ajaxUtil
-    .post("/book/newMediumImage", { _id, userId, url })
+    .post("/book/newMediumImage", { _id, url })
     .then(({ url, failure }) => {
       if (!failure && url) {
         syncUpdates(GetBooksQuery, { _id, mediumImage: url }, "allBooks", "Books", { force: true });

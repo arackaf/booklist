@@ -19,6 +19,7 @@ import { getDbConnection } from "../util/dbUtils";
 class BookController {
   async saveFromIsbn({ isbn }) {
     const userId = this.request.user.id;
+    this.userId = userId;
 
     try {
       let addingItem = { userId, isbn };
@@ -68,7 +69,14 @@ class BookController {
       console.log("err", err);
     }
   }
-  async newSmallImage({ _id, userId, url }) {
+  async newSmallImage({ _id, url }) {
+    doResize({ _id, userId, url, width: 50, imgKey: "smallImage" });
+  }
+  async newMediumImage({ _id, url }) {
+    doResize({ _id, userId, url, width: 106, imgKey: "mediumImage" });
+  }
+  async doResize({ _id, url, width }) {
+    let userId = this.userId;
     let res = await downloadBookCover(url, 750);
 
     if (!res) {
@@ -76,7 +84,7 @@ class BookController {
     }
 
     let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName, 50);
+    let newPath = await resizeIfNeeded(fileName, width);
 
     if (!newPath) {
       this.send({ failure: true });
@@ -88,7 +96,7 @@ class BookController {
     await db.collection("books").updateOne(
       { _id: ObjectId(_id), userId },
       {
-        $set: { smallImage: s3Key }
+        $set: { [imgKey]: s3Key }
       }
     );
 

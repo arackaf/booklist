@@ -261,8 +261,15 @@ const multerBookCoverUploadStorage = multer.diskStorage({
 });
 const upload = multer({ storage: multerBookCoverUploadStorage });
 
-//TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
 app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
+  coverUpload(req, response);
+});
+
+app.post("/react-redux/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
+  coverUpload(req, response, { maxWidth: 106 });
+});
+
+async function coverUpload(req, response, { maxWidth } = {}) {
   if (req.file.size > 900000) {
     return response.send({ success: false, error: "Max size is 500K" });
   }
@@ -271,7 +278,7 @@ app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async
   let newFileName = `${uuid()}${ext}`;
   fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));
 
-  let resizedFile = await resizeIfNeeded(newFileName);
+  let resizedFile = await resizeIfNeeded(newFileName, maxWidth);
   if (!resizedFile) {
     return response.send({ success: false, error: "Could not read image" });
   }
@@ -279,11 +286,12 @@ app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async
   if (!s3path) {
     return response.send({ success: false, error: "Error saving image" });
   }
+  removeFile(path.resolve(`./conversions/${newFileName}`));
   removeFile(resizedFile);
   removeFile(path.join(req.file.destination, req.file.filename));
 
   response.send({ success: true, url: s3path });
-});
+}
 
 app.post("/react-redux/createUser", function(req, response) {
   let userDao = new UserDao(),
