@@ -9,6 +9,11 @@ const DetailsView = props => {
     setUrl(book ? book.mediumImage : null);
   }, [book]);
 
+  const doEdit = () => {
+    props.onClose();
+    props.editBook(book);
+  };
+
   if (!book) return null;
   return (
     <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose}>
@@ -25,6 +30,9 @@ const DetailsView = props => {
             </div>
           ) : null}
           {book.isbn ? <div>{book.isbn}</div> : null}
+          <button className="btn" onClick={doEdit}>
+            Edit book <i className="fal fa-pencil" />
+          </button>
         </div>
       </div>
     </Modal>

@@ -177,7 +177,7 @@ const BookViewingList: SFC<{}> = props => {
             </Suspense>
           ) : uiView.isCoversList ? (
             <Suspense fallback={<Loading />}>
-              <CoversView />
+              <CoversView {...{ saveEditingBook, running }} />
             </Suspense>
           ) : null}
         </div>
