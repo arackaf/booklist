@@ -91,13 +91,15 @@ const BookEntryList: FunctionComponent<{}> = () => {
     let pages = parseInt(book.pages, 10);
     book.pages = isNaN(pages) ? void 0 : pages;
 
-    runMutation({ book }).then(() => {
+    return runMutation({ book }).then(res => {
       setEditState({
         ...editState,
         manualSaved: true,
         manualBook: defaultEmptyBook()
       });
       setTimeout(() => setEditState(editState => ({ ...editState, manualSaved: false })), 2000);
+      let book = res.createBook && res.createBook.Book;
+      return book;
     });
   };
 
@@ -205,7 +207,6 @@ const BookEntryList: FunctionComponent<{}> = () => {
               {editState.modalEntryLoaded ? (
                 <ManualBookEntry
                   title={"Manually enter a book"}
-                  dragTitle={"Click or drag to upload a cover image. The uploaded image will be scaled down as needed"}
                   bookToEdit={editState.manualBook}
                   isOpen={editState.inManualEntry}
                   isSaving={running}

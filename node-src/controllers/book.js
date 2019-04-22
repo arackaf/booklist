@@ -68,15 +68,22 @@ class BookController {
       console.log("err", err);
     }
   }
-  async newMediumImage({ _id, userId, url }) {
-    let res = await downloadBookCover(url, 1000);
+  async newSmallImage({ _id, url }) {
+    this.doResize({ _id, url, width: 50, imgKey: "smallImage" });
+  }
+  async newMediumImage({ _id, url }) {
+    this.doResize({ _id, url, width: 106, imgKey: "mediumImage" });
+  }
+  async doResize({ _id, url, imgKey, width }) {
+    let userId = this.request.user.id;
+    let res = await downloadBookCover(url, 750);
 
     if (!res) {
       this.send({ failure: true });
     }
 
     let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName, 106);
+    let newPath = await resizeIfNeeded(fileName, width);
 
     if (!newPath) {
       this.send({ failure: true });
@@ -88,7 +95,7 @@ class BookController {
     await db.collection("books").updateOne(
       { _id: ObjectId(_id), userId },
       {
-        $set: { mediumImage: s3Key }
+        $set: { [imgKey]: s3Key }
       }
     );
 

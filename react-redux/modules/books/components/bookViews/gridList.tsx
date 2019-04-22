@@ -311,7 +311,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
                   </th>
                 ) : null}
                 <th style={{ ...stickyHeaderStyle }} />
-                <th style={{ ...stickyHeaderStyle }}>
+                <th style={{ ...stickyHeaderStyle, minWidth: "200px" }}>
                   <a className="no-underline" onClick={() => setSort("title")}>
                     Title {sortIconIf("title")}
                   </a>
