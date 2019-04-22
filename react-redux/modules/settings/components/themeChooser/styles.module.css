@@ -6,6 +6,12 @@
   align-items: center;
   border: 1px solid var(--neutral-5);
   padding: 10px;
+  cursor: pointer;
+}
+.themeChooser:global(.active) {
+  border: 2px solid var(--neutral-5);
+  padding: 9px;
+  cursor: default;
 }
 
 .themeChooser > span {
