@@ -1,0 +1,20 @@
+.themeChooser {
+  margin-top: 10px;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid var(--neutral-5);
+  padding: 10px;
+}
+
+.themeChooser > span {
+  margin-right: 20px;
+  width: 115px;
+}
+.themeChooser > div {
+  width: 30px;
+  height: 30px;
+  margin-right: 20px;
+  background-color: red;
+}

@@ -1,4 +1,5 @@
 import { getStatePacket, isLoggedIn } from "./rootReducer";
+import localStorageManager from "util/localStorage";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -26,6 +27,7 @@ const NEW_LOGIN = "root.NEW_LOGIN";
 
 const IS_OFFLINE = "root.IS_OFFLINE";
 const IS_ONLINE = "root.IS_ONLINE";
+export const SET_THEME = "root.SET_THEME";
 
 const initialState = {
   ...uiSettings,
@@ -35,7 +37,8 @@ const initialState = {
   publicBooksHeader: "",
   isPublic: false,
   module: "",
-  online: navigator.onLine
+  online: navigator.onLine,
+  colorTheme: localStorageManager.get("color-theme", "scheme1")
 };
 
 export type AppState = typeof initialState;
@@ -57,8 +60,10 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, isLoggedIn: !!logged_in, userId };
     case IS_OFFLINE:
       return { ...state, online: false };
-    case IS_ONLINE:
-      return { ...state, online: true };
+    case SET_THEME:
+      localStorageManager.set("color-theme", action.theme);
+      document.body.className = action.theme;
+      return { ...state, colorTheme: action.theme };
   }
 
   return state;
