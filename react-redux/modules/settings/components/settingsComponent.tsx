@@ -3,13 +3,12 @@ import classNames from "classnames";
 
 import PublicUserSettings from "./publicUserSettings/main";
 import PasswordReset from "./passwordReset/main";
+import ThemeChooser from "./themeChooser/main";
 
 export default class PublicUserSettingsMain extends Component<any, any> {
   state = { currentTab: "publicSettings" };
   setTab = tab => this.setState({ currentTab: tab });
   render() {
-    let PUS: any = PublicUserSettings;
-    let PR: any = PasswordReset;
     let currentTab = this.state.currentTab;
     return (
       <div style={{ margin: "10px", padding: "10px" }}>
@@ -20,16 +19,22 @@ export default class PublicUserSettingsMain extends Component<any, any> {
           <div onClick={() => this.setTab("passwordReset")} className={classNames("tab-header", { active: currentTab == "passwordReset" })}>
             <a>Reset password</a>
           </div>
+          <div onClick={() => this.setTab("theme")} className={classNames("tab-header", { active: currentTab == "theme" })}>
+            <a>Theme</a>
+          </div>
           <div onClick={() => this.setTab("scanHistory")} className={classNames("tab-header", { active: currentTab == "scanHistory" })}>
             <a>Scan history</a>
           </div>
         </div>
         <div className="tab-content">
           <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "publicSettings" })}>
-            <PUS />
+            <PublicUserSettings />
           </div>
           <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "passwordReset" })}>
-            <PR />
+            <PasswordReset />
+          </div>
+          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "theme" })}>
+            <ThemeChooser />
           </div>
           <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "scanHistory" })}>
             <h1>Coming soon...</h1>
