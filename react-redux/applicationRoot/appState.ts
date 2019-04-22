@@ -1,5 +1,6 @@
 import { getStatePacket, isLoggedIn } from "./rootReducer";
 import localStorageManager from "util/localStorage";
+import { useEffect } from "react";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -61,8 +62,6 @@ function appReducer(state: AppState, action): AppState {
     case IS_OFFLINE:
       return { ...state, online: false };
     case SET_THEME:
-      localStorageManager.set("color-theme", action.theme);
-      document.body.className = action.theme;
       return { ...state, colorTheme: action.theme };
   }
 
@@ -98,5 +97,13 @@ const isOffline = () => ({ type: IS_OFFLINE });
 
 export function useAppState(): [AppState, any, any] {
   let actions = { requestDesktop, requestMobile, setModule, newLogin, isOffline, isOnline, setPublicInfo };
-  return getStatePacket<AppState>(appReducer, initialState, actions);
+  let result = getStatePacket<AppState>(appReducer, initialState, actions);
+
+  let colorTheme = result[0].colorTheme;
+  useEffect(() => {
+    localStorageManager.set("color-theme", colorTheme);
+    document.body.className = colorTheme;
+  }, [colorTheme]);
+
+  return result;
 }
