@@ -4,10 +4,14 @@ import classNames from "classnames";
 import PublicUserSettings from "./publicUserSettings/main";
 import PasswordReset from "./passwordReset/main";
 import ThemeChooser from "./themeChooser/main";
+import localStorageManager from "util/localStorage";
 
 export default class PublicUserSettingsMain extends Component<any, any> {
-  state = { currentTab: "publicSettings" };
-  setTab = tab => this.setState({ currentTab: tab });
+  state = { currentTab: localStorageManager.get("settings-tab", "publicSettings") };
+  setTab = tab => {
+    localStorageManager.set("settings-tab", tab);
+    this.setState({ currentTab: tab });
+  };
   render() {
     let currentTab = this.state.currentTab;
     return (
