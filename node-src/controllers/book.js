@@ -71,7 +71,7 @@ class BookController {
   async newSmallImage({ _id, url }) {
     this.doResize({ _id, url, width: 50, imgKey: "smallImage" });
   }
-  newMediumImage({ _id, url }) {
+  async newMediumImage({ _id, url }) {
     this.doResize({ _id, url, width: 106, imgKey: "mediumImage" });
   }
   async doResize({ _id, url, imgKey, width }) {
