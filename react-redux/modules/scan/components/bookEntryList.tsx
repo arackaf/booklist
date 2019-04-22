@@ -131,7 +131,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
       <GraphQL mutation={{ createBook: buildMutation(createBookMutation) }}>
         {({ createBook: { runMutation, running } }) => (
           <>
-            <div className="row xs-pull-reverse" style={{ padding: "10px" }}>
+            <div className="row xs-pull-reverse" style={{ padding: "10px", marginBottom: "50px" }}>
               <div className="col-sm-6 col-xs-12">
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} </h4>

@@ -265,14 +265,9 @@ class ManualBookEntry extends Component<any, any> {
                       </div>
                     ))}
                     <div className="col-xs-12">
-                      <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="primary-xs">
+                      <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="default-xs">
                         <i className="fa fa-fw fa-plus" /> Add author
                       </BootstrapAnchorButton>
-                      {this.state.authorsChanged ? (
-                        <div style={{ marginLeft: 5 }} className="label label-primary">
-                          Add as many authors as needed. Blanks will be ignored.
-                        </div>
-                      ) : null}
                     </div>
                   </div>
                 </form>
