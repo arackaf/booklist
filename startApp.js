@@ -12,7 +12,6 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import fs from "fs";
 import mkdirp from "mkdirp";
-import Jimp from "jimp";
 import compression from "compression";
 
 const hour = 3600000;
@@ -32,6 +31,9 @@ import expressGraphql from "express-graphql";
 
 import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node-src/util/graphqlUtils";
+
+import uuid from "uuid/v4";
+import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node-src/util/bookCovers/bookCoverHelpers";
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
@@ -259,59 +261,37 @@ const multerBookCoverUploadStorage = multer.diskStorage({
 });
 const upload = multer({ storage: multerBookCoverUploadStorage });
 
-//TODO: refactor to be a controller action - will require middleware in easy-express-controllers which doesn't currently exist
-app.post("/react-redux/upload", upload.single("fileUploaded"), function(req, response) {
-  //req.body.___ still has manual fields sent over
+app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
+  coverUpload(req, response);
+});
 
+app.post("/react-redux/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
+  coverUpload(req, response, { maxWidth: 106 });
+});
+
+async function coverUpload(req, response, { maxWidth } = {}) {
   if (req.file.size > 900000) {
     return response.send({ success: false, error: "Max size is 500K" });
   }
 
   let ext = path.extname(req.file.originalname);
-  let newName =
-    req.file.originalname
-      .replace(new RegExp(ext + "$"), "")
-      .replace(/\./g, "")
-      .replace(/\+/g, "")
-      .replace(/\,/g, "") +
-    ("_" + +new Date()) +
-    ext;
+  let newFileName = `${uuid()}${ext}`;
+  fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));
 
-  let pathResult = path.normalize(req.file.destination).replace(/\\/g, "/");
-  let pathToFileUploaded = `${pathResult}/${req.file.originalname}`;
-
-  try {
-    Jimp.read(pathToFileUploaded, function(err, image) {
-      if (err) {
-        return response.send({ success: false, error: "Error opening file. Is it a valid image?" });
-      }
-      image.exifRotate();
-
-      processImageAsNeeded(image);
-    });
-  } catch (err) {
-    return response.send({ success: false, error: "Error opening file. Is it a valid image?" });
+  let resizedFile = await resizeIfNeeded(newFileName, maxWidth);
+  if (!resizedFile) {
+    return response.send({ success: false, error: "Could not read image" });
   }
-
-  function processImageAsNeeded(image) {
-    if (image.bitmap.width > 55) {
-      let width = image.bitmap.width;
-      let height = image.bitmap.height;
-      let newWidth = (height * 50) / width;
-
-      image.resize(50, newWidth);
-      let resizedDestination = `${pathResult}/resized_${newName}`;
-
-      image.write(resizedDestination, err => {
-        response.send({ success: true, smallImagePath: "/" + resizedDestination }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-      });
-    } else {
-      image.write(`${pathResult}/${newName}`, err => {
-        response.send({ success: true, smallImagePath: `/${pathResult}/${newName}` }); //absolute for client, since it'll be react-redux base (or something else someday, perhaps)
-      });
-    }
+  let s3path = await saveCoverToS3(resizedFile, `bookCovers/${req.user.id}/${newFileName}`);
+  if (!s3path) {
+    return response.send({ success: false, error: "Error saving image" });
   }
-});
+  removeFile(path.resolve(`./conversions/${newFileName}`));
+  removeFile(resizedFile);
+  removeFile(path.join(req.file.destination, req.file.filename));
+
+  response.send({ success: true, url: s3path });
+}
 
 app.post("/react-redux/createUser", function(req, response) {
   let userDao = new UserDao(),

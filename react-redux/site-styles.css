@@ -141,6 +141,11 @@ h5 {
   margin: 0;
   font-size: 16px;
 }
+h6 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: normal;
+}
 .form-inline {
   display: flex;
 }

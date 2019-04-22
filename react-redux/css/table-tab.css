@@ -29,22 +29,23 @@
   display: flex;
   border-bottom: 1px solid var(--primary-9);
 }
-/* .tab-headers .tab-header:first-child{
-  margin-left: 6px;
-} */
 .tab-header {
   padding: 5px 10px 5px 10px;
 }
 .tab-header.active {
   font-weight: bold;
   border-bottom: 1px solid var(--primary-9);
+  background-color: var(--primary-10)
 }
-.tab-header.active a {
+.tab-header.active a, .tab-header.disabled a {
   cursor: default;
 }
-.tab-header:not(.active):hover {
+.tab-header.disabled a {
+  color: var(--neutral-lighter-text);
+}
+.tab-header:not(.active):not(.disabled):hover {
   cursor: pointer;
-  background-color: var(--primary-10);
+  background-color: var(--neutral-10);
 }
 .tab-content .tab-pane:not(.active) {
   display: none;

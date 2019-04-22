@@ -144,10 +144,6 @@ const BookViewingList: SFC<{}> = props => {
     deleteBook({ _id });
   };
 
-  let dragTitle = editingBook
-    ? `Click or drag to upload a ${editingBook.smallImage ? "new" : ""} cover image.  The uploaded image will be scaled down as needed`
-    : "";
-
   const uiView = useBookSearchUiView();
 
   return (
@@ -193,7 +189,6 @@ const BookViewingList: SFC<{}> = props => {
         {bookEditingModalLoaded ? (
           <ManualBookEntry
             title={editingBook ? `Edit ${editingBook.title}` : ""}
-            dragTitle={dragTitle}
             bookToEdit={editingBook}
             isOpen={!!editingBook}
             isSaving={running}
