@@ -13,7 +13,7 @@ import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import setupServiceWorker from "./util/setupServiceWorker";
-import { isLoggedIn } from "app/rootReducer";
+import { isLoggedIn } from "util/loginStatus";
 import { graphqlClient } from "util/graphql";
 import { AppState } from "app/appState";
 
