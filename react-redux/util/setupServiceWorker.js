@@ -1,4 +1,4 @@
-import { isLoggedIn } from "app/rootReducer";
+import { isLoggedIn } from "util/loginStatus";
 
 export default function setupServiceWorker() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
