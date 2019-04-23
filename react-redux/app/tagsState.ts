@@ -1,4 +1,4 @@
-import { graphqlClient } from "./rootReducer";
+import { graphqlClient } from "util/graphql";
 
 import GetTags from "graphQL/tags/getTags.graphql";
 import { useContext, useMemo, createContext } from "react";

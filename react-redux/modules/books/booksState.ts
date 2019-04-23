@@ -1,4 +1,4 @@
-import { graphqlClient } from "app/rootReducer";
+import { graphqlClient } from "util/graphql";
 import update from "immutability-helper";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";

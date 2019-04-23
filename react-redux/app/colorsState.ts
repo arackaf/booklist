@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
-import { graphqlClient } from "./rootReducer";
+import { graphqlClient } from "util/graphql";
 
 export function useColors() {
   let [{ loaded, colors }, update] = useState({ loaded: false, colors: [] });

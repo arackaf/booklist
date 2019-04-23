@@ -8,7 +8,7 @@ import Bar from "./bar";
 import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
-import { graphqlClient } from "app/rootReducer";
+import { graphqlClient } from "util/graphql";
 import { computeSubjectParentId, getChildSubjectsSorted } from "app/subjectsState";
 
 function getSubjectsList(subjectIds) {
