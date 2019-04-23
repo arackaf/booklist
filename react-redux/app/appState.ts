@@ -1,4 +1,5 @@
-import { getStatePacket, isLoggedIn } from "./rootReducer";
+import { isLoggedIn } from "./rootReducer";
+import { getStatePacket } from "util/stateManagementHelpers";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };

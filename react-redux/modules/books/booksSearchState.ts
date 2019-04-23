@@ -1,7 +1,7 @@
 import shallowEqual from "shallow-equal/objects";
 
 import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
-import { getStatePacket } from "app/rootReducer";
+import { getStatePacket } from "util/stateManagementHelpers";
 import { useContext, useMemo, useEffect } from "react";
 import { SubjectsContext, AppContext } from "app/renderUI";
 import { BooksSearchContext } from "./components/bookViewList";
