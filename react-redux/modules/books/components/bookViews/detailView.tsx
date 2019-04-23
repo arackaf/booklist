@@ -19,7 +19,9 @@ const DetailsView = props => {
     <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose}>
       <div style={{ display: "flex", alignItems: "top" }}>
         <div>
-          <img src={url} crossOrigin="anonymous" />
+          <div style={{ width: "106px" }}>
+            <img style={{ maxWidth: "100%" }} src={url} crossOrigin="anonymous" />
+          </div>
         </div>
         <div style={{ paddingLeft: "10px", display: "flex", flexDirection: "column" }}>
           <h3 style={{ marginTop: 0 }}>{book.title}</h3>
@@ -30,9 +32,11 @@ const DetailsView = props => {
             </div>
           ) : null}
           {book.isbn ? <div>{book.isbn}</div> : null}
-          <button className="btn" onClick={doEdit}>
-            Edit book <i className="fal fa-pencil" />
-          </button>
+          <div className="margin-top margin-bottom">
+            <button className="btn btn-xs" onClick={doEdit}>
+              Edit book <i className="fal fa-pencil" />
+            </button>
+          </div>
         </div>
       </div>
     </Modal>
