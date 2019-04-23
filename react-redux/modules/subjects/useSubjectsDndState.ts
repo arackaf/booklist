@@ -17,7 +17,7 @@ export const SET_SUBJECT_DRAGGING = "subjectsModule.SET_SUBJECT_DRAGGING";
 export const SUBJECT_DRAGGING_OVER = "subjectsModule.SUBJECT_DRAGGING_OVER";
 
 import update from "immutability-helper";
-import { getStatePacket } from "app/rootReducer";
+import { getStatePacket } from "util/stateManagementHelpers";
 import { SubjectsContext } from "app/renderUI";
 import { createContext, useContext, useMemo } from "react";
 import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject } from "app/subjectsState";
