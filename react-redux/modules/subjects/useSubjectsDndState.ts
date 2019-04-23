@@ -23,7 +23,7 @@ import { createContext, useContext, useMemo } from "react";
 import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject } from "app/subjectsState";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import { syncUpdates } from "app/graphqlHelpers";
+import { syncUpdates } from "util/graphqlHelpers";
 
 const initialSubjectsState = {
   draggingId: null,
