@@ -3,7 +3,7 @@ import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLay
 import BooksMenuBar from "./booksMenuBar";
 import BooksLoading from "./booksLoading";
 
-import Loading from "applicationRoot/components/loading";
+import Loading from "app/components/loading";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
 
@@ -11,8 +11,8 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
-import { AppContext } from "applicationRoot/renderUI";
-import { useTagsState, TagsContext } from "applicationRoot/tagsState";
+import { AppContext } from "app/renderUI";
+import { useTagsState, TagsContext } from "app/tagsState";
 import { BooksContext, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
 
@@ -20,7 +20,7 @@ import GridView from "./bookViews/gridList";
 const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/basicList"));
 const CoversView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/coversList"));
 
-const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
+const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/manualBookEntry"));
 const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
 const BookTagSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
 const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));

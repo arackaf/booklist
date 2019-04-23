@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import Loading from "applicationRoot/components/loading";
-import { SubjectsContext } from "applicationRoot/renderUI";
+import Loading from "app/components/loading";
+import { SubjectsContext } from "app/renderUI";
 import { BooksContext } from "../booksState";
-import { TagsContext } from "applicationRoot/tagsState";
+import { TagsContext } from "app/tagsState";
 
 const BooksLoading = () => {
   const { booksLoading } = useContext(BooksContext);

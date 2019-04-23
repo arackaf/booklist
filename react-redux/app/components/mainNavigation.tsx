@@ -2,7 +2,7 @@ import React, { Component, FunctionComponent, useContext } from "react";
 
 import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
-import { AppContext } from "applicationRoot/renderUI";
+import { AppContext } from "app/renderUI";
 
 import navClasses from "css/navbar.module.css";
 

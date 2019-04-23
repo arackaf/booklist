@@ -1,18 +1,18 @@
 import React, { FunctionComponent, useState, useContext, useRef } from "react";
 
-import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "applicationRoot/components/bootstrapButton";
-import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import GenericLabelSelect from "applicationRoot/components/genericLabelSelect";
-import ColorsPalette from "applicationRoot/components/colorsPalette";
-import Modal from "applicationRoot/components/modal";
+import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "app/components/bootstrapButton";
+import CustomColorPicker from "app/components/customColorPicker";
+import GenericLabelSelect from "app/components/genericLabelSelect";
+import ColorsPalette from "app/components/colorsPalette";
+import Modal from "app/components/modal";
 
 import UpdateTag from "graphQL/tags/updateTag.graphql";
 import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
-import { ColorsContext } from "applicationRoot/renderUI";
-import { filterTags, TagsContext } from "applicationRoot/tagsState";
+import { ColorsContext } from "app/renderUI";
+import { filterTags, TagsContext } from "app/tagsState";
 
 interface ILocalProps {
   onDone: any;
