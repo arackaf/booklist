@@ -2,7 +2,7 @@ import "./static/fontawesome/css/font-awesome-booklist-build.css";
 import "@reach/dialog/styles.css";
 import "./site-styles.css";
 
-import { renderUI } from "applicationRoot/renderUI";
+import { renderUI } from "app/renderUI";
 import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
@@ -13,8 +13,8 @@ import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import setupServiceWorker from "./util/setupServiceWorker";
-import { isLoggedIn, graphqlClient } from "applicationRoot/rootReducer";
-import { AppState } from "applicationRoot/appState";
+import { isLoggedIn, graphqlClient } from "app/rootReducer";
+import { AppState } from "app/appState";
 
 setupServiceWorker();
 

@@ -1,7 +1,7 @@
 import React, { SFC, useContext, useState } from "react";
 import { BooksContext } from "../../booksState";
 import DetailsView from "./detailView";
-import BookEditModal from "applicationRoot/components/manualBookEntry";
+import BookEditModal from "app/components/manualBookEntry";
 
 import coversClasses from "./coversList.module.css";
 

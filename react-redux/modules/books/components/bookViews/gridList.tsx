@@ -1,9 +1,9 @@
 import React, { SFC, CSSProperties, useContext, useMemo, useState, useLayoutEffect, useCallback, Fragment, memo, useRef } from "react";
 
-import { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import { LabelDisplay } from "applicationRoot/components/labelDisplay";
+import { AjaxButton } from "app/components/bootstrapButton";
+import { LabelDisplay } from "app/components/labelDisplay";
 
-import { AppContext } from "applicationRoot/renderUI";
+import { AppContext } from "app/renderUI";
 import { IBookDisplay, BooksContext } from "../../booksState";
 import { useCurrentSearch, setBooksSort } from "../../booksSearchState";
 

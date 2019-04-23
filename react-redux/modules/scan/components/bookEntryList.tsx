@@ -3,14 +3,14 @@ import BookEntryItem from "./bookEntryItem";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
-import Loading from "applicationRoot/components/loading";
+import Loading from "app/components/loading";
 
 import { GraphQL, buildMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 
 declare var webSocketAddress: any;
 
-const ManualBookEntry = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "applicationRoot/components/manualBookEntry"));
+const ManualBookEntry = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/manualBookEntry"));
 const defaultEmptyBook = () => ({
   title: "",
   isbn: "",

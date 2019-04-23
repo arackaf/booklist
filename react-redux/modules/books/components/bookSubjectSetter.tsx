@@ -3,11 +3,11 @@ import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
-import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
+import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
+import SelectAvailable from "app/components/availableTagsOrSubjects";
 
-import Modal from "applicationRoot/components/modal";
-import { useStackedSubjects, filterSubjects } from "applicationRoot/subjectsState";
+import Modal from "app/components/modal";
+import { useStackedSubjects, filterSubjects } from "app/subjectsState";
 
 interface ILocalProps {
   modifyingBooks: any[];
