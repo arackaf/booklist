@@ -2,12 +2,12 @@ import React, { CSSProperties, FunctionComponent, useLayoutEffect, useEffect, us
 import { useEditingSubjectHash, usePendingSubjects, useDraggingSubject, useSubjectEditInfo, SubjectType } from "modules/subjects/useSubjectsDndState";
 import { DragSource, DragDropContext, DropTarget, DragLayer } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import BootstrapButton from "applicationRoot/components/bootstrapButton";
-import ColorsPalette from "applicationRoot/components/colorsPalette";
-import CustomColorPicker from "applicationRoot/components/customColorPicker";
-import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations } from "applicationRoot/subjectsState";
+import BootstrapButton from "app/components/bootstrapButton";
+import ColorsPalette from "app/components/colorsPalette";
+import CustomColorPicker from "app/components/customColorPicker";
+import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations } from "app/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
-import { ColorsContext, SubjectsContext, AppContext } from "applicationRoot/renderUI";
+import { ColorsContext, SubjectsContext, AppContext } from "app/renderUI";
 
 import subjectsListStyles from "./subjectsList.module.css";
 

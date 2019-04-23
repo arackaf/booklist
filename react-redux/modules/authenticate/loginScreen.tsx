@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useRef, useState, useContext, useEffect } from "react";
 import { loadCurrentModule } from "reactStartup";
-import { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
-import { AppContext } from "applicationRoot/renderUI";
+import { AppContext } from "app/renderUI";
 
 const errorCodes = {
   s1: "This user already exists",

@@ -1,5 +1,5 @@
 import React, { Component, useState, useRef } from "react";
-import { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
 
 const exectueResetPassword = (oldPassword, newPassword) => {

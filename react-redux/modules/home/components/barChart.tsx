@@ -8,8 +8,8 @@ import Bar from "./bar";
 import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
-import { graphqlClient } from "applicationRoot/rootReducer";
-import { computeSubjectParentId, getChildSubjectsSorted } from "applicationRoot/subjectsState";
+import { graphqlClient } from "util/graphql";
+import { computeSubjectParentId, getChildSubjectsSorted } from "app/subjectsState";
 
 function getSubjectsList(subjectIds) {
   return graphqlClient.runQuery(barCharQuery, { subjectIds, searchChildSubjects: true });

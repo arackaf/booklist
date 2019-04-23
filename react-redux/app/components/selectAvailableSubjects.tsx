@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import SelectAvailableItems from "./availableTagsOrSubjects";
-import { filterTags } from "applicationRoot/tagsState";
-import { useStackedSubjects } from "applicationRoot/subjectsState";
+import { filterTags } from "app/tagsState";
+import { useStackedSubjects } from "app/subjectsState";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 

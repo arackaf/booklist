@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useState, useLayoutEffect, useRef } from "react";
 
-import BootstrapButton from "applicationRoot/components/bootstrapButton";
+import BootstrapButton from "app/components/bootstrapButton";
 
-import Modal from "applicationRoot/components/modal";
-import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
-import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
-import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
-import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
+import Modal from "app/components/modal";
+import SelectAvailableTags from "app/components/selectAvailableTags";
+import DisplaySelectedTags from "app/components/displaySelectedTags";
+import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
+import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 import { applyFilters, useCurrentSearch } from "../booksSearchState";
 
 type LocalProps = {
