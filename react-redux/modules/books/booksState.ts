@@ -1,15 +1,15 @@
-import { graphqlClient } from "applicationRoot/rootReducer";
+import { graphqlClient } from "app/rootReducer";
 import update from "immutability-helper";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
-import { SubjectsContext, AppContext } from "applicationRoot/renderUI";
+import { SubjectsContext, AppContext } from "app/renderUI";
 import { useQuery, buildQuery } from "micro-graphql-react";
-import { syncResults, clearCache, syncDeletes } from "applicationRoot/graphqlHelpers";
+import { syncResults, clearCache, syncDeletes } from "app/graphqlHelpers";
 
 import delve from "dlv";
-import { TagsContext } from "applicationRoot/tagsState";
+import { TagsContext } from "app/tagsState";
 
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 

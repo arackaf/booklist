@@ -17,13 +17,13 @@ export const SET_SUBJECT_DRAGGING = "subjectsModule.SET_SUBJECT_DRAGGING";
 export const SUBJECT_DRAGGING_OVER = "subjectsModule.SUBJECT_DRAGGING_OVER";
 
 import update from "immutability-helper";
-import { getStatePacket } from "applicationRoot/rootReducer";
-import { SubjectsContext } from "applicationRoot/renderUI";
+import { getStatePacket } from "app/rootReducer";
+import { SubjectsContext } from "app/renderUI";
 import { createContext, useContext, useMemo } from "react";
-import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject } from "applicationRoot/subjectsState";
+import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject } from "app/subjectsState";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import { syncUpdates } from "applicationRoot/graphqlHelpers";
+import { syncUpdates } from "app/graphqlHelpers";
 
 const initialSubjectsState = {
   draggingId: null,

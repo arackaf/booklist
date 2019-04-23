@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState, useContext, useEffect, useRef } from "react";
 
-import Modal from "applicationRoot/components/modal";
-import SelectAvailableTags from "applicationRoot/components/selectAvailableTags";
-import DisplaySelectedTags from "applicationRoot/components/displaySelectedTags";
-import SelectAvailableSubjects from "applicationRoot/components/selectAvailableSubjects";
-import DisplaySelectedSubjects from "applicationRoot/components/displaySelectedSubjects";
+import Modal from "app/components/modal";
+import SelectAvailableTags from "app/components/selectAvailableTags";
+import DisplaySelectedTags from "app/components/displaySelectedTags";
+import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
+import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { SearchContext, ISearchBookRaw } from "modules/home/searchState";

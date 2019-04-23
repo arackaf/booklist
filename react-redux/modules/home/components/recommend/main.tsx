@@ -2,7 +2,7 @@ import React, { useState, useReducer, useMemo } from "react";
 import SearchModal from "./searchModal";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { TagsContext, useTagsState } from "applicationRoot/tagsState";
+import { TagsContext, useTagsState } from "app/tagsState";
 import BooksQuery from "graphQL/home/searchBooks.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import ajaxUtil from "util/ajaxUtil";

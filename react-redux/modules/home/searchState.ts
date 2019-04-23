@@ -1,4 +1,4 @@
-import { graphqlClient, getStatePacket } from "applicationRoot/rootReducer";
+import { graphqlClient, getStatePacket } from "app/rootReducer";
 import GetBooksQuery from "graphQL/home/searchBooks.graphql";
 import { createContext, useContext } from "react";
 

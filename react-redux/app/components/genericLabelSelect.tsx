@@ -1,5 +1,5 @@
 import Autosuggest from "react-autosuggest";
-import { LabelDisplay } from "applicationRoot/components/labelDisplay";
+import { LabelDisplay } from "app/components/labelDisplay";
 import React, { Component } from "react";
 
 function getSuggestionValue(suggestion) {

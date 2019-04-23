@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
-import { SectionLoading } from "applicationRoot/components/loading";
-import { AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { SectionLoading } from "app/components/loading";
+import { AjaxButton } from "app/components/bootstrapButton";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { AppContext } from "applicationRoot/renderUI";
+import { AppContext } from "app/renderUI";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const { loading, loaded, data } = useQuery(buildQuery(PublicUserSettingsQuery, {}));
@@ -92,7 +92,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               className="form-control"
               id="pName"
               placeholder="Public name"
-              />
+            />
           </div>
           <div className="form-group">
             <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
