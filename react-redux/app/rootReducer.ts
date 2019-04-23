@@ -1,16 +1,3 @@
-import { useMemo, useReducer } from "react";
-
-import { setDefaultClient, Client } from "micro-graphql-react";
-
-export const graphqlClient = new Client({
-  endpoint: "/graphql",
-  fetchOptions: { credentials: "include" }
-});
-
-export const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
-
-setDefaultClient(graphqlClient);
-
 export function isLoggedIn() {
   let logged_in = getCookie("logged_in"),
     userId = getCookie("userId");
