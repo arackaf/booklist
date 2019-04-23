@@ -7,6 +7,8 @@
 .coversList figure {
   width: 120px;
   margin: 10px 15px 0 0;
+  display: flex;
+  flex-direction: column;
 }
 
 @media(max-width: 600px){
@@ -31,4 +33,15 @@
 
 .coversList figure {
   cursor: pointer;
+}
+
+.coversList figcaption {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  background-color: var(--neutral-6);
+  color: var(--neutral-10);
+  margin-top: auto;
+  padding: 2px;
 }
