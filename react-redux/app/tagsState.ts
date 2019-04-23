@@ -6,7 +6,7 @@ import { buildQuery, useQuery } from "micro-graphql-react";
 import { AppContext } from "./renderUI";
 
 import delve from "dlv";
-import { syncUpdates, syncDeletes } from "./graphqlHelpers";
+import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
 
 interface ITag {
   _id: string;

@@ -6,7 +6,7 @@ import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext, AppContext } from "app/renderUI";
 import { useQuery, buildQuery } from "micro-graphql-react";
-import { syncResults, clearCache, syncDeletes } from "app/graphqlHelpers";
+import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
 import { TagsContext } from "app/tagsState";
