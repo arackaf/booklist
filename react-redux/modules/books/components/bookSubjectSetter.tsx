@@ -12,7 +12,6 @@ import { useStackedSubjects, filterSubjects } from "app/subjectsState";
 interface ILocalProps {
   modifyingBooks: any[];
   onDone: any;
-  dispatch: any;
 }
 
 const BookSubjectSetter: SFC<ILocalProps> = props => {

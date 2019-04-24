@@ -10,7 +10,7 @@ import createBookMutation from "graphQL/scan/createBook.graphql";
 
 declare var webSocketAddress: any;
 
-const ManualBookEntry = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/manualBookEntry"));
+const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook"));
 const defaultEmptyBook = () => ({
   title: "",
   isbn: "",
@@ -205,7 +205,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
 
             <Suspense fallback={<Loading />}>
               {editState.modalEntryLoaded ? (
-                <ManualBookEntry
+                <CreateBookModal
                   title={"Manually enter a book"}
                   bookToEdit={editState.manualBook}
                   isOpen={editState.inManualEntry}
