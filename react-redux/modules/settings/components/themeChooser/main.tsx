@@ -6,7 +6,7 @@ import { SET_THEME } from "app/appState";
 
 import DemoStyles from "./demoStyles";
 
-const { themeChooserRoot, themeChooser } = styles;
+const { themeChooserRoot, themeChooserList, themeChooser } = styles;
 
 const numThemes = 17;
 
@@ -17,7 +17,7 @@ const ThemeChooser = props => {
   const [{ colorTheme }, actions, dispatch] = useContext(AppContext);
   return (
     <div className={themeChooserRoot}>
-      <div>
+      <div className={themeChooserList}>
         {themeNames.map((name, index) => (
           <>
             <div
