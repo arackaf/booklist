@@ -271,7 +271,7 @@ class ManualBookEntry extends Component<any, any> {
                     </div>
                   </div>
                 </form>
-                <hr style={{ marginTop: 10, marginBottom: 10 }} />
+                <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
 
                 <AjaxButton
                   className="pull-right"

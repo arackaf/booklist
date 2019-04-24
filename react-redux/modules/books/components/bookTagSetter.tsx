@@ -126,13 +126,14 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
           <br />
         </div>
       </div>
-      <AjaxButton preset="primary" running={running} runningText="Setting" onClick={setBooksTags}>
-        Set
-      </AjaxButton>
-      &nbsp;
-      <BootstrapButton preset="" onClick={props.onDone}>
-        Cancel
-      </BootstrapButton>
+      <div className="standard-modal-footer">
+        <AjaxButton preset="primary" running={running} runningText="Setting" onClick={setBooksTags}>
+          Set
+        </AjaxButton>
+        <BootstrapButton preset="" onClick={props.onDone}>
+          Cancel
+        </BootstrapButton>
+      </div>
     </Modal>
   );
 };

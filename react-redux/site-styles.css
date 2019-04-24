@@ -475,3 +475,10 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
+
+.standard-modal-footer {
+  display: flex;
+}
+.standard-modal-footer > button:not(:first-child) {
+  margin-left: auto;
+}
