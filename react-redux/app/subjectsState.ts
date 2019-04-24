@@ -1,4 +1,4 @@
-import { objectsToHash, graphqlClient } from "./rootReducer";
+import { graphqlClient } from "util/graphql";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
@@ -6,8 +6,10 @@ import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo, useRef } from "react";
 import { SubjectsContext } from "./renderUI";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncUpdates, syncDeletes } from "./graphqlHelpers";
+import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
 import { AppState } from "./appState";
+
+const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
 
 export type SubjectType = {
   _id: string;

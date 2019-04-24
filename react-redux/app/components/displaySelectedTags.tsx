@@ -1,16 +1,16 @@
-import React, { Component, FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { RemovableLabelDisplay } from "./labelDisplay";
-import { SubjectsContext } from "applicationRoot/renderUI";
+import { TagsContext } from "app/tagsState";
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };
 
-const DisplaySelectedSubjects: FunctionComponent<LocalProps> = props => {
-  const { subjectHash } = useContext(SubjectsContext);
+const DisplaySelectedTags: FunctionComponent<LocalProps> = props => {
+  const { tagHash } = useContext(TagsContext);
 
   return (
     <>
       {props.currentlySelected
-        .map(_id => subjectHash[_id])
+        .map(_id => tagHash[_id])
         .map(t => (
           <RemovableLabelDisplay key={t._id} className="margin-right" style={{ marginTop: "5px" }} item={t} doRemove={() => props.onRemove(t)} />
         ))}
@@ -18,4 +18,4 @@ const DisplaySelectedSubjects: FunctionComponent<LocalProps> = props => {
   );
 };
 
-export default DisplaySelectedSubjects;
+export default DisplaySelectedTags;

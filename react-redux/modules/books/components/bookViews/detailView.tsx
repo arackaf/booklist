@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
 
-import Modal from "applicationRoot/components/modal";
+import Modal from "app/components/modal";
 
 const DetailsView = props => {
   const { book } = props;

@@ -3,8 +3,8 @@ import Measure from "react-measure";
 import "d3-transition";
 
 import BarChart from "./components/barChart";
-import { AppContext, SubjectsContext } from "applicationRoot/renderUI";
-import { useStackedSubjects } from "applicationRoot/subjectsState";
+import { AppContext, SubjectsContext } from "app/renderUI";
+import { useStackedSubjects } from "app/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.css";

@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { BootstrapAnchorButton, AjaxButton } from "applicationRoot/components/bootstrapButton";
+import { BootstrapAnchorButton, AjaxButton } from "app/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
 import ajaxUtil from "util/ajaxUtil";

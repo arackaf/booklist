@@ -1,5 +1,5 @@
 import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
-import { RemovableLabelDisplay } from "applicationRoot/components/labelDisplay";
+import { RemovableLabelDisplay } from "app/components/labelDisplay";
 
 import {
   useCurrentSearch,
@@ -14,7 +14,7 @@ import {
 } from "../booksSearchState";
 import { BooksContext } from "../booksState";
 import { BooksSearchContext } from "./bookViewList";
-import { AppContext } from "applicationRoot/renderUI";
+import { AppContext } from "app/renderUI";
 
 interface IAddedMenuProps {
   editTags: any;
