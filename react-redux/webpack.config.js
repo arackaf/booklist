@@ -114,6 +114,14 @@ module.exports = {
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),
   stats: {
+    all: false,
+    assets: true,
+    modules: true,
+    maxModules: 10,
+    errors: true,
+    warnings: true,
+    moduleTrace: true,
+    errorDetails: true,
     warningsFilter: warning => !/mini-css-extract-plugin.*conflicting order between/i.test(warning)
   }
 };
