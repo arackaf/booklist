@@ -1,4 +1,4 @@
-import React, { Component, useState, useMemo } from "react";
+import React, { Component, useState, useMemo, useCallback } from "react";
 import { BootstrapAnchorButton, AjaxButton } from "app/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
@@ -172,7 +172,6 @@ class ManualBookEntry extends Component<any, any> {
         <div className="tab-content">
           <div className={`tab-pane ${tab == "basic" ? "active" : ""}`}>
             {book ? <EditBookInfo {...{ book, isSaved, isSaving, saveBook }} /> : null}
-            <br />
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
             {book ? (
@@ -207,23 +206,18 @@ class ManualBookEntry extends Component<any, any> {
   }
 }
 
+const SyncedInput = ({ value, onChange, ...props }) => (
+  <input className="form-control" onChange={evt => onChange(evt.target.value)} value={value} {...props} />
+);
+
 const EditBookInfo = props => {
   const { book: bookFromProps, saveBook, isSaved, isSaving } = props;
   const [book, setBook] = useState(bookFromProps);
   const [titleMissing, setTitleMissing] = useState(bookFromProps);
 
-  const syncStateFromInput = name => evt => setBook(book => ({ ...book, [name]: evt.target.value }));
+  const syncBookField = name => val => setBook(book => ({ ...book, [name]: val }));
 
-  const SyncedInput = ({ syncName, onEnter, ...props }) => (
-    <input
-      onKeyDown={evt => (evt.keyCode || evt.which) == 13 && onEnter()}
-      onChange={syncStateFromInput(syncName)}
-      value={book[syncName] || ""}
-      {...props}
-    />
-  );
-
-  const save = () => {
+  const save = useCallback(() => {
     if (!book.title) {
       setTitleMissing(true);
     } else {
@@ -232,10 +226,11 @@ const EditBookInfo = props => {
       //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
       let bookToSave = { ...book, authors: book.authors.filter(a => a) };
       Promise.resolve(saveBook(bookToSave)).then(savedBook => {
+        debugger;
         book && setBook(book => ({ ...book, _id: savedBook._id }));
       });
     }
-  };
+  }, [book]);
 
   const syncAuthor = index => evt => {
     let newAuthors = book.authors.concat();
@@ -249,24 +244,24 @@ const EditBookInfo = props => {
 
   return (
     <>
-      <form>
+      <form onSubmit={evt => evt.preventDefault()}>
         <div className={"form-group " + (!book.title && titleMissing ? "has-error" : "")}>
           <label>Title</label>
 
-          <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => save()} />
+          <SyncedInput onChange={syncBookField("title")} value={book.title} placeholder="Title (required)" />
         </div>
         <div className="row">
           <div className="col-xs-6">
             <div className="form-group">
               <label>ISBN</label>
-              <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => save()} />
+              <SyncedInput onChange={syncBookField("isbn")} value={book.isbn} placeholder="ISBN" />
             </div>
           </div>
 
           <div className="col-xs-6">
             <div className="form-group">
               <label>Pages</label>
-              <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" onEnter={() => save()} />
+              <SyncedInput onChange={syncBookField("pages")} value={book.pages} type="number" placeholder="Number of pages" />
             </div>
           </div>
         </div>
@@ -274,14 +269,14 @@ const EditBookInfo = props => {
           <div className="col-xs-6">
             <div className="form-group">
               <label>Publisher</label>
-              <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => save()} />
+              <SyncedInput onChange={syncBookField("publisher")} value={book.publisher} placeholder="Publisher" />
             </div>
           </div>
 
           <div className="col-xs-6">
             <div className="form-group">
               <label>Published</label>
-              <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => save()} />
+              <SyncedInput onChange={syncBookField("publicationDate")} value={book.publicationDate} placeholder="Publication date" />
             </div>
           </div>
         </div>
@@ -306,18 +301,18 @@ const EditBookInfo = props => {
             </BootstrapAnchorButton>
           </div>
         </div>
-      </form>
-      <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
+        <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
 
-      <AjaxButton className="pull-right" preset="primary" running={isSaving} disabled={isSaved} runningText="Saving" onClick={() => save()}>
-        {!isSaved ? (
-          "Save"
-        ) : (
-          <span>
-            Saved <i className="fa fa-fw fa-check" />
-          </span>
-        )}
-      </AjaxButton>
+        <AjaxButton className="pull-right" preset="primary" running={isSaving} disabled={isSaved} runningText="Saving" onClick={() => save()}>
+          {!isSaved ? (
+            "Save"
+          ) : (
+            <span>
+              Saved <i className="fa fa-fw fa-check" />
+            </span>
+          )}
+        </AjaxButton>
+      </form>
     </>
   );
 };
