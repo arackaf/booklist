@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useMemo } from "react";
 import { BootstrapAnchorButton, AjaxButton } from "app/components/bootstrapButton";
 import Dropzone from "react-dropzone";
 
@@ -130,39 +130,8 @@ const ManageBookCover = props => {
 };
 
 class ManualBookEntry extends Component<any, any> {
-  state = { tab: "basic", bookEditing: null, titleMissing: false, authorsChanged: false };
-  syncStateFromInput = name => evt => this.setState({ bookEditing: { ...this.state.bookEditing, [name]: evt.target.value } });
-  SyncedInput = ({ syncName, onEnter, ...props }) => (
-    <input
-      onKeyDown={evt => (evt.keyCode || evt.which) == 13 && onEnter()}
-      onChange={this.syncStateFromInput(syncName)}
-      value={this.state.bookEditing[syncName] || ""}
-      {...props}
-    />
-  );
-  syncAuthor = index => evt => {
-    let newAuthors = this.state.bookEditing.authors.concat();
-    newAuthors[index] = evt.target.value;
-    this.setState({ bookEditing: { ...this.state.bookEditing, authors: newAuthors } });
-  };
-  addAuthor(evt) {
-    evt.preventDefault();
-    let bookEditing = this.state.bookEditing;
-    this.setState({ authorsChanged: true, bookEditing: Object.assign({}, bookEditing, { authors: bookEditing.authors.concat("") }) });
-  }
-  save() {
-    if (!this.state.bookEditing.title) {
-      this.setState({ titleMissing: true });
-    } else {
-      this.setState({ titleMissing: false });
+  state = { tab: "basic", bookEditing: null, titleMissing: false };
 
-      //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
-      let bookToSave = { ...this.state.bookEditing, authors: this.state.bookEditing.authors.filter(a => a) };
-      Promise.resolve(this.props.saveBook(bookToSave)).then(book => {
-        book && this.setState(({ bookEditing }) => ({ bookEditing: { ...bookEditing, _id: book._id } }));
-      });
-    }
-  }
   closeModal() {
     this.props.onClosing();
   }
@@ -181,116 +150,28 @@ class ManualBookEntry extends Component<any, any> {
     this.setState({
       tab: "basic",
       bookEditing: { ...book },
-      titleMissing: false,
-      authorsChanged: false
+      titleMissing: false
     });
   }
   render() {
-    let SyncedInput = this.SyncedInput;
     let { tab, bookEditing } = this.state;
-    let book = bookEditing || {};
+    let { isSaved, isSaving, saveBook } = this.props;
+    let book = bookEditing;
+    let bookSaved = book && book._id;
 
-    //Modal collects an existing book to edit, and spreads into state.  Yes, it's an anti-pattern, but it makes dealing with field changes tolerable
-    //Modal eventually calls save method passed from above.
-    //Parent component passes in a new book as needed to restart editing
     return (
       <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.props.title}>
         <div className="tab-headers" style={{ marginBottom: "10px" }}>
           <div className={`tab-header ${tab == "basic" ? "active" : ""}`}>
             <a onClick={() => this.setState({ tab: "basic" })}>Book info</a>
           </div>
-          <div className={`tab-header ${tab == "covers" ? "active" : ""} ${!book._id ? "disabled" : ""}`}>
-            <a onClick={book._id ? () => this.setState({ tab: "covers" }) : null}>Covers</a>
+          <div className={`tab-header ${tab == "covers" ? "active" : ""} ${!bookSaved ? "disabled" : ""}`}>
+            <a onClick={bookSaved ? () => this.setState({ tab: "covers" }) : null}>Covers</a>
           </div>
         </div>
         <div className="tab-content">
           <div className={`tab-pane ${tab == "basic" ? "active" : ""}`}>
-            {this.state.bookEditing ? (
-              <>
-                <form>
-                  <div className={"form-group " + (!this.state.bookEditing.title && this.state.titleMissing ? "has-error" : "")}>
-                    <label>Title</label>
-
-                    <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => this.save()} />
-                  </div>
-                  <div className="row">
-                    <div className="col-xs-6">
-                      <div className="form-group">
-                        <label>ISBN</label>
-                        <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => this.save()} />
-                      </div>
-                    </div>
-
-                    <div className="col-xs-6">
-                      <div className="form-group">
-                        <label>Pages</label>
-                        <SyncedInput
-                          syncName="pages"
-                          type="number"
-                          className="form-control"
-                          placeholder="Number of pages"
-                          onEnter={() => this.save()}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-xs-6">
-                      <div className="form-group">
-                        <label>Publisher</label>
-                        <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => this.save()} />
-                      </div>
-                    </div>
-
-                    <div className="col-xs-6">
-                      <div className="form-group">
-                        <label>Published</label>
-                        <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => this.save()} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    {(this.state.bookEditing.authors || []).map((author, $index) => (
-                      <div key={$index} className="col-xs-4">
-                        <div className="form-group">
-                          <label>Author</label>
-                          <input
-                            onKeyDown={evt => (evt.keyCode || evt.which) == 13 && this.save()}
-                            onChange={this.syncAuthor($index)}
-                            value={author}
-                            className="form-control"
-                            placeholder={`Author ${$index + 1}`}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                    <div className="col-xs-12">
-                      <BootstrapAnchorButton onClick={evt => this.addAuthor(evt)} preset="default-xs">
-                        <i className="fa fa-fw fa-plus" /> Add author
-                      </BootstrapAnchorButton>
-                    </div>
-                  </div>
-                </form>
-                <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
-
-                <AjaxButton
-                  className="pull-right"
-                  preset="primary"
-                  running={this.props.isSaving}
-                  disabled={this.props.isSaved}
-                  runningText="Saving"
-                  onClick={() => this.save()}
-                >
-                  {!this.props.isSaved ? (
-                    "Save"
-                  ) : (
-                    <span>
-                      Saved <i className="fa fa-fw fa-check" />
-                    </span>
-                  )}
-                </AjaxButton>
-              </>
-            ) : null}
+            {book ? <EditBookInfo {...{ book, isSaved, isSaving, saveBook }} /> : null}
             <br />
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
@@ -325,5 +206,120 @@ class ManualBookEntry extends Component<any, any> {
     );
   }
 }
+
+const EditBookInfo = props => {
+  const { book: bookFromProps, saveBook, isSaved, isSaving } = props;
+  const [book, setBook] = useState(bookFromProps);
+  const [titleMissing, setTitleMissing] = useState(bookFromProps);
+
+  const syncStateFromInput = name => evt => setBook(book => ({ ...book, [name]: evt.target.value }));
+
+  const SyncedInput = ({ syncName, onEnter, ...props }) => (
+    <input
+      onKeyDown={evt => (evt.keyCode || evt.which) == 13 && onEnter()}
+      onChange={syncStateFromInput(syncName)}
+      value={book[syncName] || ""}
+      {...props}
+    />
+  );
+
+  const save = () => {
+    if (!book.title) {
+      setTitleMissing(true);
+    } else {
+      setTitleMissing(false);
+
+      //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
+      let bookToSave = { ...book, authors: book.authors.filter(a => a) };
+      Promise.resolve(saveBook(bookToSave)).then(savedBook => {
+        book && setBook(book => ({ ...book, _id: savedBook._id }));
+      });
+    }
+  };
+
+  const syncAuthor = index => evt => {
+    let newAuthors = book.authors.concat();
+    newAuthors[index] = evt.target.value;
+    setBook(book => ({ ...book, authors: newAuthors }));
+  };
+  const addAuthor = evt => {
+    evt.preventDefault();
+    setBook(book => ({ ...book, authors: book.authors.concat("") }));
+  };
+
+  return (
+    <>
+      <form>
+        <div className={"form-group " + (!book.title && titleMissing ? "has-error" : "")}>
+          <label>Title</label>
+
+          <SyncedInput syncName="title" className="form-control" placeholder="Title (required)" onEnter={() => save()} />
+        </div>
+        <div className="row">
+          <div className="col-xs-6">
+            <div className="form-group">
+              <label>ISBN</label>
+              <SyncedInput syncName="isbn" className="form-control" placeholder="ISBN" onEnter={() => save()} />
+            </div>
+          </div>
+
+          <div className="col-xs-6">
+            <div className="form-group">
+              <label>Pages</label>
+              <SyncedInput syncName="pages" type="number" className="form-control" placeholder="Number of pages" onEnter={() => save()} />
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xs-6">
+            <div className="form-group">
+              <label>Publisher</label>
+              <SyncedInput syncName="publisher" className="form-control" placeholder="Publisher" onEnter={() => save()} />
+            </div>
+          </div>
+
+          <div className="col-xs-6">
+            <div className="form-group">
+              <label>Published</label>
+              <SyncedInput syncName="publicationDate" className="form-control" placeholder="Publication date" onEnter={() => save()} />
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          {(book.authors || []).map((author, $index) => (
+            <div key={$index} className="col-xs-4">
+              <div className="form-group">
+                <label>Author</label>
+                <input
+                  onKeyDown={evt => (evt.keyCode || evt.which) == 13 && save()}
+                  onChange={syncAuthor($index)}
+                  value={author}
+                  className="form-control"
+                  placeholder={`Author ${$index + 1}`}
+                />
+              </div>
+            </div>
+          ))}
+          <div className="col-xs-12">
+            <BootstrapAnchorButton onClick={evt => addAuthor(evt)} preset="default-xs">
+              <i className="fa fa-fw fa-plus" /> Add author
+            </BootstrapAnchorButton>
+          </div>
+        </div>
+      </form>
+      <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
+
+      <AjaxButton className="pull-right" preset="primary" running={isSaving} disabled={isSaved} runningText="Saving" onClick={() => save()}>
+        {!isSaved ? (
+          "Save"
+        ) : (
+          <span>
+            Saved <i className="fa fa-fw fa-check" />
+          </span>
+        )}
+      </AjaxButton>
+    </>
+  );
+};
 
 export default ManualBookEntry;
