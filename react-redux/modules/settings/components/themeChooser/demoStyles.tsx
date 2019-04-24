@@ -5,8 +5,8 @@ const { mockModal } = styles;
 
 export default props => {
   return (
-    <div style={{ padding: "20px" }}>
-      <div className={mockModal}>
+    <div>
+      <div data-reach-dialog-content className={mockModal}>
         <h4>Book Search</h4>
         <hr />
         <div className="row">
@@ -36,8 +36,9 @@ export default props => {
           <div className="col-xs-6">
             <div className="form-group">
               <label>Publisher</label>
-              <input placeholder="Publisher" className="form-control" />
+              <input placeholder="Publisher" className="form-control" value="Basic Books" />
             </div>
+            <div className="alert alert-success margin-bottom">Looks good to me!</div>
           </div>
           <div className="col-xs-6">
             <div className="form-group">

@@ -2,16 +2,33 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  margin-top: 20px;
 }
 
 .themeChooserList {
   height: 500px;
+  margin-right: 15px;
   overflow-y: scroll;
   padding-right: 30px;
 }
 
+@media (max-width: 1200px) {
+  .themeChooserRoot {
+    flex-direction: column-reverse;
+  }
+  .mockModal {
+    width: unset;
+    margin: 0;
+  }
+  .themeChooserList {
+    height: unset;
+    overflow-y: unset;
+    margin-right: unset;
+  }
+}
+
 .themeChooser {
-  margin-top: 10px;
+  margin-bottom: 10px;
   display: inline-flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -27,14 +44,24 @@
 }
 
 .themeChooser > span {
-  margin-right: 20px;
+  margin-right: 0px;
   width: 115px;
 }
 .themeChooser > div {
   width: 30px;
   height: 30px;
-  margin-right: 20px;
-  background-color: red;
+  margin-right: 15px;
+}
+
+@media (max-width: 1400px) {
+  .themeChooser {
+    padding: 5px;
+  }
+  .themeChooser > div {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
 }
 
 .mockModal {
@@ -42,6 +69,7 @@
   border-radius: 10px;
   padding: 20px;
   max-width: 600px;
+  margin: 0;
 }
 
 
