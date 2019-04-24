@@ -482,3 +482,7 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
 .standard-modal-footer > button:not(:first-child) {
   margin-left: auto;
 }
+
+.has-error input {
+  border-color: var(--danger-5);
+}
