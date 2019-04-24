@@ -20,7 +20,7 @@ import GridView from "./bookViews/gridList";
 const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/basicList"));
 const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/coversList"));
 
-const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook"));
+const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
 const BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
 const SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));
