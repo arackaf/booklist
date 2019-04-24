@@ -55,6 +55,9 @@ export default props => {
           </button>
         </div>
       </div>
+      <div className="alert alert-info margin-bottom margin-top" style={{ maxWidth: "550px" }}>
+        Just FYI, but this color theme will be saved locally, and remembered the next time you browse here! (on the same device)
+      </div>
     </div>
   );
 };
