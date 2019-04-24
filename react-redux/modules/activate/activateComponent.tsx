@@ -1,6 +1,6 @@
 import { history, getCurrentHistoryState } from "reactStartup";
 import React, { Component, SFC, useContext } from "react";
-import { AppContext } from "applicationRoot/renderUI";
+import { AppContext } from "app/renderUI";
 
 const MainActivatePane = props => (
   <div className="row" style={{ margin: 0 }}>

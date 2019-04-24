@@ -1,8 +1,8 @@
 import React, { Component, useContext } from "react";
 import classNames from "classnames";
 import styles from "./styles.module.css";
-import { AppContext } from "applicationRoot/renderUI";
-import { SET_THEME } from "applicationRoot/appState";
+import { AppContext } from "app/renderUI";
+import { SET_THEME } from "app/appState";
 const { themeChooser } = styles;
 
 const numThemes = 17;

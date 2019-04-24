@@ -1,6 +1,6 @@
 import React, { SFC, useContext } from "react";
-import { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import { AppContext } from "applicationRoot/renderUI";
+import { AjaxButton } from "app/components/bootstrapButton";
+import { AppContext } from "app/renderUI";
 import { BooksContext } from "../../booksState";
 
 import uiStyles from "./uiStyles.module.css";

@@ -1,13 +1,13 @@
 import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
 
-import BootstrapButton, { AjaxButton } from "applicationRoot/components/bootstrapButton";
-import SelectAvailable from "applicationRoot/components/availableTagsOrSubjects";
+import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
+import SelectAvailable from "app/components/availableTagsOrSubjects";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
-import Modal from "applicationRoot/components/modal";
-import { filterTags, TagsContext } from "applicationRoot/tagsState";
+import Modal from "app/components/modal";
+import { filterTags, TagsContext } from "app/tagsState";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
   const { tagHash, tags } = useContext(TagsContext);

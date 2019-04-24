@@ -1,6 +1,6 @@
 import React, { createContext, useContext, FunctionComponent, useEffect } from "react";
 import { render } from "react-dom";
-import MainNavigationBar from "applicationRoot/components/mainNavigation";
+import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
 import { useColors } from "./colorsState";
 import { SubjectState, useSubjectsState } from "./subjectsState";

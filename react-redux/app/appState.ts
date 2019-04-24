@@ -1,6 +1,8 @@
-import { getStatePacket, isLoggedIn } from "./rootReducer";
-import localStorageManager from "util/localStorage";
 import { useEffect } from "react";
+
+import localStorageManager from "util/localStorage";
+import { isLoggedIn } from "util/loginStatus";
+import { getStatePacket } from "util/stateManagementHelpers";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
