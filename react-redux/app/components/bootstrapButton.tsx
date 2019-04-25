@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 
 const cssPresets = {};
 const buttonTypes = ["default", "primary", "success", "info", "warning", "danger"];
@@ -29,6 +29,10 @@ export const AjaxButton = props => {
   const controlled = props.hasOwnProperty("running");
   const [isRunning, setRunning] = useState(controlled ? props.running : false);
 
+  if (!controlled) {
+    return <AjaxButtonUnControlled {...props} />;
+  }
+
   const onClick = (...args) => {
     if (controlled) {
       props.onClick(...args);
@@ -47,6 +51,42 @@ export const AjaxButton = props => {
     </button>
   ) : (
     <button className={cssFromPreset(props)} disabled={props.disabled || false} onClick={onClick}>
+      {props.children}
+    </button>
+  );
+};
+
+const AjaxButtonUnControlled = props => {
+  const [isRunning, setRunning] = useState(false);
+  const [isFinished, setFinished] = useState(false);
+  const mounted = useRef(true);
+
+  useLayoutEffect(() => () => (mounted.current = false), []);
+
+  const onClick = (...args) => {
+    setRunning(true);
+    Promise.resolve(props.onClick(...args)).then(() => {
+      setFinished(true);
+      setRunning(false);
+      setTimeout(() => mounted.current && setFinished(false), 2000);
+    });
+  };
+
+  const { onClick: unused, className, children, ...allRemainingProps } = props;
+  const { disabled, ...allNonDisabledProps } = allRemainingProps;
+
+  return isRunning ? (
+    <button className={cssFromPreset(props)} disabled={true} {...allNonDisabledProps}>
+      {props.runningText || props.children}
+      <i className="fa fa-fw fa-spin fa-spinner" style={{ marginLeft: "3px" }} />
+    </button>
+  ) : isFinished ? (
+    <button className={cssFromPreset(props)} onClick={onClick} disabled={true} {...allNonDisabledProps}>
+      {props.finishedText || props.children}
+      <i className="fa fa-fw fa-check" style={{ marginLeft: "3px" }} />
+    </button>
+  ) : (
+    <button className={cssFromPreset(props)} onClick={onClick} {...allRemainingProps}>
       {props.children}
     </button>
   );
