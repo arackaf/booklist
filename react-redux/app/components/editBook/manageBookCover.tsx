@@ -23,6 +23,7 @@ const RemoteImageUpload = props => {
       if (!failure) {
         props.onUpdate(url);
       }
+      setUrl("");
     });
   };
 
