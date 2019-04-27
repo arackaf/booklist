@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BootstrapAnchorButton, AjaxButton } from "app/components/bootstrapButton";
 
 const EditBookInfo = props => {
-  const { book, saveBook, updateBook, isSaved, isSaving } = props;
+  const { book, saveBook, updateBook } = props;
   const [titleMissing, setTitleMissing] = useState(false);
 
   const save = () => {
@@ -13,7 +13,7 @@ const EditBookInfo = props => {
 
       //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
       let bookToSave = { ...book, authors: book.authors.filter(a => a) };
-      Promise.resolve(saveBook(bookToSave)).then(savedBook => {
+      return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
         savedBook && updateBook(book => ({ ...book, _id: savedBook._id }));
       });
     }
@@ -86,14 +86,8 @@ const EditBookInfo = props => {
         </div>
         <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
 
-        <AjaxButton className="pull-right" preset="primary" running={isSaving} disabled={isSaved} runningText="Saving" onClick={() => save()}>
-          {!isSaved ? (
-            "Save"
-          ) : (
-            <span>
-              Saved <i className="fa fa-fw fa-check" />
-            </span>
-          )}
+        <AjaxButton className="pull-right" preset="primary" runningText="Saving" finishedText="Saved" onClick={save}>
+          Save
         </AjaxButton>
       </form>
     </>

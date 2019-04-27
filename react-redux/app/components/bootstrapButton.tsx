@@ -72,17 +72,17 @@ const AjaxButtonUnControlled = props => {
     });
   };
 
-  const { onClick: unused, className, children, ...allRemainingProps } = props;
+  const { onClick: unused, className, runningText, finishedText, children, ...allRemainingProps } = props;
   const { disabled, ...allNonDisabledProps } = allRemainingProps;
 
   return isRunning ? (
     <button className={cssFromPreset(props)} disabled={true} {...allNonDisabledProps}>
-      {props.runningText || props.children}
+      {runningText || props.children}
       <i className="fa fa-fw fa-spin fa-spinner" style={{ marginLeft: "3px" }} />
     </button>
   ) : isFinished ? (
     <button className={cssFromPreset(props)} onClick={onClick} disabled={true} {...allNonDisabledProps}>
-      {props.finishedText || props.children}
+      {finishedText || props.children}
       <i className="fa fa-fw fa-check" style={{ marginLeft: "3px" }} />
     </button>
   ) : (
