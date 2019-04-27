@@ -8,7 +8,7 @@ import coversClasses from "./coversList.module.css";
 const { coversList } = coversClasses;
 
 const BookViewCovers: SFC<any> = props => {
-  const { saveEditingBook, running: saving } = props;
+  const { saveEditingBook } = props;
   const { books } = useContext(BooksContext);
   const [displaying, setDisplaying] = useState(null);
   const [editingBook, setEditingBook] = useState(null);
@@ -31,8 +31,6 @@ const BookViewCovers: SFC<any> = props => {
         title={editingBook ? `Edit ${editingBook.title}` : ""}
         bookToEdit={editingBook}
         isOpen={!!editingBook}
-        isSaving={saving}
-        isSaved={false}
         saveBook={doSave}
         saveMessage={"Saved"}
         onClosing={() => setEditingBook(null)}
