@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BootstrapAnchorButton, AjaxButton } from "app/components/bootstrapButton";
+import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
 
 const EditBookInfo = props => {
   const { book, saveBook, updateBook } = props;
@@ -79,9 +79,9 @@ const EditBookInfo = props => {
             </div>
           ))}
           <div className="col-xs-12">
-            <BootstrapAnchorButton onClick={evt => addAuthor(evt)} preset="default-xs">
+            <BootstrapButton onClick={evt => addAuthor(evt)} preset="default-xs">
               <i className="fa fa-fw fa-plus" /> Add author
-            </BootstrapAnchorButton>
+            </BootstrapButton>
           </div>
         </div>
         <hr style={{ marginTop: "20px", marginBottom: "10px" }} />

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext, useMemo, useState, useRef } from "react";
-import BootstrapButton, { AjaxButton, AjaxButtonAnchor } from "app/components/bootstrapButton";
+import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
 import CustomColorPicker from "app/components/customColorPicker";
 import GenericLabelSelect from "app/components/genericLabelSelect";
 import ColorsPalette from "app/components/colorsPalette";
@@ -24,7 +24,7 @@ const SubjectDeletingInfo = props => {
         ) : null}
 
         <div style={{ marginTop: "5px", display: "flex" }}>
-          <AjaxButton running={props.deleting} runningText="Deleting" onClick={() => props.deleteSubject(props._id)} preset="danger-xs">
+          <AjaxButton runningText="Deleting" finishedText="Deleted" onClick={() => props.deleteSubject(props._id)} preset="danger-xs">
             Delete
           </AjaxButton>
           <BootstrapButton onClick={props.cancelDeleteSubject} style={{ marginLeft: "auto" }} preset="default-xs">
@@ -59,7 +59,6 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   const [editingSubjectName, setEditingSubjectName] = useState("");
   const [subjectSearch, setSubjectSearch] = useState("");
   const [deletingId, setDeletingId] = useState("");
-  const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [parentId, setParentId] = useState("");
   const [affectedChildren, setAffectedChildren] = useState(null);
@@ -94,15 +93,12 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   const setNewSubjectTextColor = value => setEditingValue("textColor", value);
   const setEditingValue = (name, value) => setEditingSubject({ ...editingSubject, [name]: value });
 
-  const save = () => {
-    setSaving(true);
+  const save = () =>
     Promise.resolve(updateSubject({ ...editingSubject, parentId: parentId })).then(() => {
       cancelSubjectEdit();
 
       setSubjectSearch("");
-      setSaving(false);
     });
-  };
   const runDelete = () => {
     setDeleting(true);
     Promise.resolve(deleteSubject({ _id: deletingId })).then(() => {
@@ -214,12 +210,12 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
               <br style={{ clear: "both" }} />
 
               <div style={{ display: "flex" }}>
-                <AjaxButtonAnchor className="btn btn-primary" running={saving} onClick={save}>
+                <AjaxButton className="btn btn-primary" runningText="Saving" finishedText="Saved" onClick={save}>
                   Save
-                </AjaxButtonAnchor>
-                <a className="btn btn-default" onClick={cancelSubjectEdit} style={{ marginLeft: "auto" }}>
+                </AjaxButton>
+                <button className="btn btn-default" onClick={cancelSubjectEdit} style={{ marginLeft: "auto" }}>
                   Cancel
-                </a>
+                </button>
               </div>
             </div>
           </div>
