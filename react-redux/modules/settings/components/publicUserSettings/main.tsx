@@ -48,7 +48,10 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
       isPublic: pendingIsPublic,
       publicBooksHeader: pubHeaderEl.current ? pubHeaderEl.current.value : "",
       publicName: pubNameEl.current ? pubNameEl.current.value : ""
-    }).then(() => setIsPublic(isPublic));
+    }).then(() => {
+      setIsPublic(isPublic);
+      setDirtyState(false);
+    });
   };
 
   return (
@@ -106,7 +109,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               placeholder="Book header"
             />
           </div>
-          <AjaxButton disabled={!isDirty} onClick={update} running={saving} runningText="Saving" preset="primary">
+          <AjaxButton disabled={!isDirty} onClick={update} runningText="Saving" finishedText="Saved" preset="primary">
             Save
           </AjaxButton>
         </div>
