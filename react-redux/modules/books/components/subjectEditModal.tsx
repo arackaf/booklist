@@ -96,7 +96,6 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   const save = () =>
     Promise.resolve(updateSubject({ ...editingSubject, parentId: parentId })).then(() => {
       cancelSubjectEdit();
-
       setSubjectSearch("");
     });
   const runDelete = () => {
