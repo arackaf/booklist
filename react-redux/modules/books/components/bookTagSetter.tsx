@@ -24,11 +24,11 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
       resetTags();
     }
   }, [props.modifyingBooks.length]);
-  const { runMutation, running } = useMutation(buildMutation(updateBookSubjects));
+  const { runMutation } = useMutation(buildMutation(updateBookSubjects));
 
   const setBooksTags = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingTags, remove: removingTags };
-    Promise.resolve(runMutation(args)).then(() => {
+    return Promise.resolve(runMutation(args)).then(() => {
       props.onDone();
     });
   };
@@ -127,7 +127,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
         </div>
       </div>
       <div className="standard-modal-footer">
-        <AjaxButton preset="primary" running={running} runningText="Setting" onClick={setBooksTags}>
+        <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={setBooksTags}>
           Set
         </AjaxButton>
         <BootstrapButton preset="" onClick={props.onDone}>

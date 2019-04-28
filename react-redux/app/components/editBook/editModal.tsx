@@ -50,7 +50,7 @@ class ManualBookEntry extends Component<any, any> {
         </div>
         <div className="tab-content">
           <div className={`tab-pane ${tab == "basic" ? "active" : ""}`}>
-            {book ? <EditBookInfo {...{ book, isSaved, isSaving, saveBook }} updateBook={this.updateBook} /> : null}
+            {book ? <EditBookInfo {...{ book, saveBook }} updateBook={this.updateBook} /> : null}
           </div>
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
             {book ? (
