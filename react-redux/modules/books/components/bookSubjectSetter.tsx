@@ -36,7 +36,7 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
 
   const save = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };
-    Promise.resolve(runMutation(args)).then(() => {
+    return Promise.resolve(runMutation(args)).then(() => {
       setBooksSubjects(args);
       props.onDone();
     });
@@ -142,7 +142,7 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
         </div>
       </div>
       <div className="standard-modal-footer">
-        <AjaxButton preset="primary" running={running} runningText="Setting" onClick={save}>
+        <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
           Set
         </AjaxButton>
         <BootstrapButton preset="" onClick={props.onDone}>

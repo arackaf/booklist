@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState, useContext, useRef } from "react";
+import React, { FunctionComponent, useState, useContext } from "react";
 
-import BootstrapButton, { AjaxButton, AjaxButtonAnchor, BootstrapAnchorButton } from "app/components/bootstrapButton";
+import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
 import CustomColorPicker from "app/components/customColorPicker";
 import GenericLabelSelect from "app/components/genericLabelSelect";
 import ColorsPalette from "app/components/colorsPalette";
@@ -24,9 +24,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
     editingTag: null,
     editingTagName: "",
     tagSearch: "",
-    deletingId: "",
-    saving: false,
-    deleting: false
+    deletingId: ""
   } as any);
 
   const setState = newState => {
@@ -71,19 +69,16 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
     });
   };
 
-  const runDelete = () => {
-    setState({ deleting: true });
+  const runDelete = () =>
     Promise.resolve(deleteTag({ _id: state.editingTag._id })).then(() => {
-      setState({ deleting: false });
       cancelTagEdit();
     });
-  };
 
   let { tags } = useContext(TagsContext);
 
   let { colors } = useContext(ColorsContext);
   let { onDone, editModalOpen } = props;
-  let { editingTag, editingTagName, tagSearch, deletingId, deleting } = state;
+  let { editingTag, editingTagName, tagSearch, deletingId } = state;
   let textColors = ["#ffffff", "#000000"];
 
   let deletingTag = deletingId ? tags.find(t => t._id == deletingId) : null;
@@ -133,18 +128,12 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
                     <h4 style={{ marginBottom: "15px", fontSize: "16px" }}>Delete tag {editingTagName}</h4>
 
                     <div style={{ display: "flex" }}>
-                      <AjaxButton running={deleting} runningText="Deleting" onClick={runDelete} preset="danger-xs">
+                      <AjaxButton runningText="Deleting" finishedText="Deleted" onClick={runDelete} preset="danger-xs">
                         Delete
                       </AjaxButton>
-                      <BootstrapAnchorButton
-                        onClick={() => setState({ deletingId: "" })}
-                        deleting={deleting}
-                        runningText="Deleting..."
-                        preset="default-xs"
-                        style={{ marginLeft: "auto" }}
-                      >
+                      <BootstrapButton onClick={() => setState({ deletingId: "" })} preset="default-xs" style={{ marginLeft: "auto" }}>
                         Cancel
-                      </BootstrapAnchorButton>
+                      </BootstrapButton>
                     </div>
                     <hr />
                   </div>
@@ -190,9 +179,9 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
               <br style={{ clear: "both" }} />
 
               <div style={{ display: "flex" }}>
-                <AjaxButtonAnchor className="btn btn-primary" running={state.saving} runningText={"Saving..."} onClick={createOrUpdateTag}>
+                <AjaxButton className="btn btn-primary" running={state.saving} runningText={"Saving..."} onClick={createOrUpdateTag}>
                   Save
-                </AjaxButtonAnchor>
+                </AjaxButton>
                 <a className="btn btn-default" onClick={cancelTagEdit} style={{ marginLeft: "auto" }}>
                   Cancel
                 </a>

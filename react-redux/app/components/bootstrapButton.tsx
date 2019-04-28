@@ -19,12 +19,6 @@ export default props => (
   </button>
 );
 
-export const BootstrapAnchorButton = props => (
-  <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick}>
-    {props.children}
-  </a>
-);
-
 export const AjaxButton = props => {
   const controlled = props.hasOwnProperty("running");
   const [isRunning, setRunning] = useState(controlled ? props.running : false);
@@ -91,15 +85,3 @@ const AjaxButtonUnControlled = props => {
     </button>
   );
 };
-
-export const AjaxButtonAnchor = props =>
-  props.running ? (
-    <a className={cssFromPreset(props)}>
-      <i className="fa fa-fw fa-spin fa-spinner" />
-      {props.runningText || props.text ? " " + props.runningText || props.text : props.children}
-    </a>
-  ) : (
-    <a className={cssFromPreset(props)} onClick={props.onClick}>
-      {props.children}
-    </a>
-  );
