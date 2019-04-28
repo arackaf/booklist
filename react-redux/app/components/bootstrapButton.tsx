@@ -60,6 +60,9 @@ const AjaxButtonUnControlled = props => {
   const onClick = (...args) => {
     setRunning(true);
     Promise.resolve(props.onClick(...args)).then(() => {
+      if (!mounted.current) {
+        return;
+      }
       setFinished(true);
       setRunning(false);
       setTimeout(() => mounted.current && setFinished(false), 2000);
