@@ -6,9 +6,9 @@
 }
 
 .themeChooserList {
-  height: 500px;
+  max-height: calc(100vh - 190px);
   margin-right: 15px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-right: 30px;
 }
 
