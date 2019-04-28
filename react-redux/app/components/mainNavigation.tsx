@@ -57,7 +57,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           </NavBarItem>
         ) : null}
         {isLoggedIn || isPublic ? (
-          <NavBarItem active={isBookList} onClick={() => goto("books")}>
+          <NavBarItem active={isBookList} onClick={() => goto(isPublic ? "view" : "books")}>
             <span className="hidden-xs">Books</span>
             <i className="visible-xs fal fa-books" />
           </NavBarItem>
