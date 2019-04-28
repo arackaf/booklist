@@ -274,6 +274,8 @@ async function coverUpload(req, response, { maxWidth } = {}) {
     return response.send({ success: false, error: "Max size is 500K" });
   }
 
+  mkdirp.sync(path.resolve("./conversions"));
+
   let ext = path.extname(req.file.originalname);
   let newFileName = `${uuid()}${ext}`;
   fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));

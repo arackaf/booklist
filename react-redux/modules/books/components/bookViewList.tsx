@@ -17,15 +17,15 @@ import { BooksContext, useBooks } from "../booksState";
 import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
 
 import GridView from "./bookViews/gridList";
-const BasicListView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/basicList"));
-const CoversView: any = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/coversList"));
+const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/basicList"));
+const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/coversList"));
 
-const ManualBookEntry: any = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/manualBookEntry"));
-const BookSubjectSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
-const BookTagSetter: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
-const SubjectEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));
-const TagEditModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
-const BookSearchModal: any = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
+const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
+const BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
+const BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
+const SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));
+const TagEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
+const BookSearchModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
 
 const useCodeSplitModal = (initialOpenData = false): any => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
@@ -187,7 +187,7 @@ const BookViewingList: SFC<{}> = props => {
 
       <Suspense fallback={<Loading />}>
         {bookEditingModalLoaded ? (
-          <ManualBookEntry
+          <CreateBookModal
             title={editingBook ? `Edit ${editingBook.title}` : ""}
             bookToEdit={editingBook}
             isOpen={!!editingBook}

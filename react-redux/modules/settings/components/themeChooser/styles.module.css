@@ -1,0 +1,79 @@
+.themeChooserRoot {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.themeChooserList {
+  height: 500px;
+  margin-right: 15px;
+  overflow-y: scroll;
+  padding-right: 30px;
+}
+
+@media (max-width: 1200px) {
+  .themeChooserRoot {
+    flex-direction: column-reverse;
+  }
+  .mockModal {
+    width: unset;
+    margin: 0;
+  }
+  .themeChooserList {
+    height: unset;
+    overflow-y: unset;
+    margin-right: unset;
+  }
+}
+
+.themeChooser {
+  margin-bottom: 10px;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid var(--neutral-5);
+  padding: 10px;
+  cursor: pointer;
+}
+.themeChooser:global(.active) {
+  border: 2px solid var(--neutral-5);
+  padding: 9px;
+  cursor: default;
+}
+
+.themeChooser > span {
+  margin-right: 0px;
+  width: 115px;
+}
+.themeChooser > div {
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+}
+
+@media (max-width: 1400px) {
+  .themeChooser {
+    padding: 5px;
+  }
+  .themeChooser > div {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+}
+
+.mockModal {
+  border: 4px solid var(--primary-3);
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0;
+}
+
+
+.mockModal hr {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

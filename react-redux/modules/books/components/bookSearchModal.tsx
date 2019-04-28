@@ -185,13 +185,14 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
         </label>
       </div>
       <hr />
-      <BootstrapButton preset="primary" className="pull-left" onClick={updateFilters}>
-        Filter
-      </BootstrapButton>
-      &nbsp;
-      <BootstrapButton preset="default" onClick={onHide}>
-        Close
-      </BootstrapButton>
+      <div className="standard-modal-footer">
+        <BootstrapButton preset="primary" className="pull-left" onClick={updateFilters}>
+          Filter
+        </BootstrapButton>
+        <BootstrapButton preset="default" onClick={onHide}>
+          Close
+        </BootstrapButton>
+      </div>
     </Modal>
   );
 };

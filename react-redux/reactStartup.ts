@@ -54,7 +54,7 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   let location = history.location;
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
   let moduleToLoad = originalModule || "home";
-  let publicModule = moduleToLoad === "view" || moduleToLoad == "activate";
+  let publicModule = moduleToLoad === "view" || moduleToLoad == "activate" || moduleToLoad == "settings";
 
   let { logged_in, userId: currentUserId } = isLoggedIn();
   let loggedIn = logged_in && currentUserId;
@@ -115,9 +115,11 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
     .catch(() => {});
 }
 
-export function goto(module, search?) {
+export function goto(module) {
+  var userId = getCurrentHistoryState().searchState.userId;
+
   if (currentModule !== module) {
-    history.push({ pathname: `/${module}`, search: search || undefined });
+    history.push({ pathname: `/${module}`, x: "s", search: userId ? `userId=${userId}` : void 0 });
   }
 }
 
