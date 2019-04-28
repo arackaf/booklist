@@ -10,7 +10,7 @@ import createBookMutation from "graphQL/scan/createBook.graphql";
 
 declare var webSocketAddress: any;
 
-const ManualBookEntry = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/manualBookEntry"));
+const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
   title: "",
   isbn: "",
@@ -131,11 +131,11 @@ const BookEntryList: FunctionComponent<{}> = () => {
       <GraphQL mutation={{ createBook: buildMutation(createBookMutation) }}>
         {({ createBook: { runMutation, running } }) => (
           <>
-            <div className="row xs-pull-reverse" style={{ padding: "10px" }}>
+            <div className="row xs-pull-reverse" style={{ padding: "10px", marginBottom: "50px" }}>
               <div className="col-sm-6 col-xs-12">
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} </h4>
-                  <a className="btn btn-xs btn-primary margin-left" onClick={() => manuallyEnterBook()}>
+                  <a className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
                     Manual entry
                   </a>
                 </div>
@@ -205,7 +205,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
 
             <Suspense fallback={<Loading />}>
               {editState.modalEntryLoaded ? (
-                <ManualBookEntry
+                <CreateBookModal
                   title={"Manually enter a book"}
                   bookToEdit={editState.manualBook}
                   isOpen={editState.inManualEntry}

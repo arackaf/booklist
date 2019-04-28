@@ -6,6 +6,7 @@
   font-size: 15px;
   border-radius: var(--default-border-radius);
   cursor: pointer;
+  white-space: nowrap;
 }
 .btn-light.btn-round-icon, .btn-light.btn-square-icon {
   border: 0;

@@ -5,6 +5,9 @@ import { useAppState, AppState } from "./appState";
 import { useColors } from "./colorsState";
 import { SubjectState, useSubjectsState } from "./subjectsState";
 import { history, loadCurrentModule } from "reactStartup";
+import localStorageManager from "util/localStorage";
+
+document.body.className = localStorageManager.get("color-theme", "scheme1");
 
 const MobileMeta = props => {
   const [app] = useContext(AppContext);

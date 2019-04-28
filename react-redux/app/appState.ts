@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+
+import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
 import { getStatePacket } from "util/stateManagementHelpers";
 
@@ -27,6 +30,7 @@ const NEW_LOGIN = "root.NEW_LOGIN";
 
 const IS_OFFLINE = "root.IS_OFFLINE";
 const IS_ONLINE = "root.IS_ONLINE";
+export const SET_THEME = "root.SET_THEME";
 
 const initialState = {
   ...uiSettings,
@@ -36,7 +40,8 @@ const initialState = {
   publicBooksHeader: "",
   isPublic: false,
   module: "",
-  online: navigator.onLine
+  online: navigator.onLine,
+  colorTheme: localStorageManager.get("color-theme", "scheme3")
 };
 
 export type AppState = typeof initialState;
@@ -58,8 +63,8 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, isLoggedIn: !!logged_in, userId };
     case IS_OFFLINE:
       return { ...state, online: false };
-    case IS_ONLINE:
-      return { ...state, online: true };
+    case SET_THEME:
+      return { ...state, colorTheme: action.theme };
   }
 
   return state;
@@ -94,5 +99,13 @@ const isOffline = () => ({ type: IS_OFFLINE });
 
 export function useAppState(): [AppState, any, any] {
   let actions = { requestDesktop, requestMobile, setModule, newLogin, isOffline, isOnline, setPublicInfo };
-  return getStatePacket<AppState>(appReducer, initialState, actions);
+  let result = getStatePacket<AppState>(appReducer, initialState, actions);
+
+  let colorTheme = result[0].colorTheme;
+  useEffect(() => {
+    localStorageManager.set("color-theme", colorTheme);
+    document.body.className = colorTheme;
+  }, [colorTheme]);
+
+  return result;
 }
