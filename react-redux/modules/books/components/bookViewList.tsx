@@ -159,7 +159,7 @@ const BookViewingList: SFC<{}> = props => {
           {...{ booksUiState, setRead }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!books.length && !booksLoading && !booksLoaded ? (
+          {!books.length && !booksLoading && booksLoaded ? (
             <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
               No books found
             </div>

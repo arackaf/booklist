@@ -126,6 +126,14 @@ export default class BarChart extends PureComponent<any, any> {
     let { subjectsLoaded, width, height, drilldown, chartIndex, header } = this.props;
     let { data, excluding } = this.state;
 
+    if (subjectsLoaded && data && !data.length) {
+      return (
+        <div className="alert alert-warning">
+          It looks like you haven't entered any books yet. Once you do, you'll see info about your library here.
+        </div>
+      );
+    }
+
     if (!subjectsLoaded || !data || !data.length) {
       return null;
     }
