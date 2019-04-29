@@ -37,7 +37,6 @@ const TabContent = ({ currentTab }) => {
 
 const TabHeaders = ({ currentTab, setTab }) => {
   const [{ isPublic }] = useContext(AppContext);
-  const disabled = isPublic;
 
   return isPublic ? (
     <div className="tab-headers">
