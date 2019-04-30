@@ -13,7 +13,7 @@ import {
   setPage
 } from "../booksSearchState";
 import { BooksContext } from "../booksState";
-import { BooksSearchContext } from "./bookViewList";
+import { BooksSearchContext } from "../books";
 import { AppContext } from "app/renderUI";
 
 interface IAddedMenuProps {

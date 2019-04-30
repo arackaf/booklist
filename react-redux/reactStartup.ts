@@ -73,7 +73,7 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   }
 
   if (publicModule) {
-    var userId = getCurrentHistoryState().searchState.userId;
+    var userId = getCurrentHistoryState().searchState.userId || "";
 
     //switching to a new public viewing - reload page
     if (!initial && app.publicUserId != userId) {
@@ -102,7 +102,7 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   let modulePromise = getModulePromise(moduleToLoad);
 
   Promise.all([modulePromise, publicUserPromise])
-    .then(([{ default: moduleObject }, publicUserInfo]: [any, any]) => {
+    .then(([{ default: ModuleComponent }, publicUserInfo]: [any, any]) => {
       if (currentModule != moduleToLoad) return;
 
       setModule(currentModule);
@@ -110,7 +110,7 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
       if (publicUserInfo) {
         setPublicInfo({ ...publicUserInfo, userId });
       }
-      renderUI(createElement(moduleObject.component));
+      renderUI(createElement(ModuleComponent));
     })
     .catch(() => {});
 }

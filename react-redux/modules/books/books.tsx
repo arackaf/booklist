@@ -1,7 +1,7 @@
 import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLayoutEffect, useReducer } from "react";
 
-import BooksMenuBar from "./booksMenuBar";
-import BooksLoading from "./booksLoading";
+import BooksMenuBar from "./components/booksMenuBar";
+import BooksLoading from "./components/booksLoading";
 
 import Loading from "app/components/loading";
 
@@ -13,19 +13,19 @@ import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
 import { AppContext } from "app/renderUI";
 import { useTagsState, TagsContext } from "app/tagsState";
-import { BooksContext, useBooks } from "../booksState";
-import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "../booksSearchState";
+import { BooksContext, useBooks } from "./booksState";
+import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "./booksSearchState";
 
-import GridView from "./bookViews/gridList";
-const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/basicList"));
-const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./bookViews/coversList"));
+import GridView from "./components/bookViews/gridList";
+const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/basicList"));
+const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/coversList"));
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
-const BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSubjectSetter"));
-const BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookTagSetter"));
-const SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./subjectEditModal"));
-const TagEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./tagEditModal"));
-const BookSearchModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./bookSearchModal"));
+const BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
+const BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookTagSetter"));
+const SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/subjectEditModal"));
+const TagEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/tagEditModal"));
+const BookSearchModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSearchModal"));
 
 const useCodeSplitModal = (initialOpenData = false): any => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
@@ -42,7 +42,7 @@ const prepBookForSaving = book => {
 
 export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
 
-export const BookModuleRoot = () => {
+export default () => {
   let booksSearchState = useBooksSearchState();
   let tagsState = useTagsState();
 

@@ -1,9 +1,9 @@
 import React, { Component, useContext } from "react";
 import classNames from "classnames";
 
-import PublicUserSettings from "./publicUserSettings/main";
-import PasswordReset from "./passwordReset/main";
-import ThemeChooser from "./themeChooser/main";
+import PublicUserSettings from "./components/publicUserSettings/main";
+import PasswordReset from "./components/passwordReset/main";
+import ThemeChooser from "./components/themeChooser/main";
 import localStorageManager from "util/localStorage";
 import { AppContext } from "app/renderUI";
 
