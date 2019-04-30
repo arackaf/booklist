@@ -6,7 +6,7 @@ import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
 import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations } from "app/subjectsState";
-import { SubjectsDnDContext, useSubjectsDndState } from "../useSubjectsDndState";
+import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 import { ColorsContext, SubjectsContext, AppContext } from "app/renderUI";
 
 import subjectsListStyles from "./subjectsList.module.css";

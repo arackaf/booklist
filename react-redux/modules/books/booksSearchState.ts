@@ -4,7 +4,7 @@ import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
 import { getStatePacket } from "util/stateManagementHelpers";
 import { useContext, useMemo, useEffect } from "react";
 import { SubjectsContext, AppContext } from "app/renderUI";
-import { BooksSearchContext } from "./components/bookViewList";
+import { BooksSearchContext } from "./books";
 import { TagsContext } from "app/tagsState";
 
 import localStorage from "util/localStorage";
