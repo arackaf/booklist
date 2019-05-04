@@ -13,7 +13,7 @@ import "util/ajaxUtil";
 
 import createHistory from "history/createBrowserHistory";
 import setupServiceWorker from "./util/setupServiceWorker";
-import { isLoggedIn } from "util/loginStatus";
+import { isLoggedIn, isAdmin } from "util/loginStatus";
 import { graphqlClient } from "util/graphql";
 import { AppState } from "app/appState";
 
@@ -24,7 +24,7 @@ let publicUserCache = {};
 
 export const history = createHistory();
 
-const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings", "styledemo"]);
+const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings", "styledemo", "admin"]);
 let initial = true;
 
 export const getModulePromise = moduleToLoad => {
@@ -45,6 +45,8 @@ export const getModulePromise = moduleToLoad => {
       return import(/* webpackChunkName: "styledemo-module" */ "./modules/styledemo/styledemo");
     case "settings":
       return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
+    case "admin":
+      return import(/* webpackChunkName: "admin-module" */ "./modules/admin/admin");
   }
 };
 

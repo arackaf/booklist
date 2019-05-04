@@ -130,7 +130,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  return done(undefined, { id: "" + id, _id: "" + id });
+  return done(undefined, { id: "" + id, _id: "" + id, admin: id == process.env.ADMIN_USER });
 });
 
 app.use(compression());
@@ -199,6 +199,7 @@ app.get("/settings", browseToReactRedux);
 app.get("/scan", browseToReactRedux);
 app.get("/home", browseToReactRedux);
 app.get("/view", browseToReactRedux);
+app.get("/admin", browseToReactRedux);
 app.get("/styledemo", browseToReactRedux);
 app.get("/react-redux", browseToReactRedux);
 app.get("/service-worker.js", (request, response) => {
@@ -211,6 +212,7 @@ function browseToReactRedux(request, response) {
     response.clearCookie("logged_in");
     response.clearCookie("remember_me");
     response.clearCookie("userId");
+    response.clearCookie("admin");
   }
   response.sendFile(path.join(__dirname + "/react-redux/dist/index.html"));
 }
@@ -225,6 +227,7 @@ app.post("/react-redux/login", passport.authenticate("local"), function(req, res
 
   response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+  req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
     response.cookie("remember_me", req.user.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
   }
@@ -235,6 +238,7 @@ app.post("/react-redux/logout", function(req, response) {
   response.clearCookie("logged_in");
   response.clearCookie("remember_me");
   response.clearCookie("userId");
+  response.clearCookie("admin");
   req.logout();
   response.send({});
 });
