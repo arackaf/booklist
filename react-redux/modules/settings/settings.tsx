@@ -1,4 +1,4 @@
-import React, { Component, useContext } from "react";
+import React, { useContext, useState } from "react";
 import classNames from "classnames";
 
 import PublicUserSettings from "./components/publicUserSettings/main";
@@ -71,19 +71,17 @@ const TabHeaders = ({ currentTab, setTab }) => {
   );
 };
 
-export default class PublicUserSettingsMain extends Component<any, any> {
-  state = { currentTab: localStorageManager.get("settings-tab", "publicSettings") };
-  setTab = tab => {
+export default props => {
+  const [currentTab, setCurrentTab] = useState(localStorageManager.get("settings-tab", "publicSettings"));
+  const setTab = tab => {
     localStorageManager.set("settings-tab", tab);
-    this.setState({ currentTab: tab });
+    setCurrentTab(tab);
   };
-  render() {
-    let currentTab = this.state.currentTab;
-    return (
-      <div style={{ margin: "10px", padding: "10px" }}>
-        <TabHeaders setTab={this.setTab} currentTab={currentTab} />
-        <TabContent currentTab={currentTab} />
-      </div>
-    );
-  }
-}
+
+  return (
+    <div style={{ margin: "10px", padding: "10px" }}>
+      <TabHeaders setTab={setTab} currentTab={currentTab} />
+      <TabContent currentTab={currentTab} />
+    </div>
+  );
+};
