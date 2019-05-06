@@ -1,0 +1,11 @@
+query GetBookSummaryCoverInfo($smallImage: String) {
+  allBookSummarys(smallImage_contains: $smallImage) {
+    BookSummarys {
+      _id
+      title
+      smallImage
+      mediumImage
+      authors
+    }
+  }
+}
