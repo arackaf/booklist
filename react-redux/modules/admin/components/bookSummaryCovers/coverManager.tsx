@@ -51,11 +51,20 @@ const BookSummaryDisplay = props => {
 };
 
 export default props => {
-  const { data, loaded } = useQuery(buildQuery(SummaryQuery, {}));
+  const [missingCoversFilter, setMissingCoversFilter] = useState(true);
+
+  const imgFilter = missingCoversFilter ? "nophoto" : void 0;
+
+  const { data, loaded } = useQuery(buildQuery(SummaryQuery, { smallImage: imgFilter }));
   const bookSummaries = delve(data, "allBookSummarys.BookSummarys") || [];
 
   return (
     <div className={bookList}>
+      <label>
+        Books missing covers <input type="checkbox" checked={missingCoversFilter} onChange={evt => setMissingCoversFilter(evt.target.checked)} />
+      </label>
+      <br />
+      <br />
       {loaded ? (
         <div>
           {bookSummaries.map(book => (
