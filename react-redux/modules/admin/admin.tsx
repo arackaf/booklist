@@ -4,11 +4,13 @@ import classNames from "classnames";
 import localStorageManager from "util/localStorage";
 import { AppContext } from "app/renderUI";
 
+import CoverManager from "./components/bookSummaryCovers/coverManager";
+
 const TabContent = ({ currentTab }) => {
   return (
     <div className="tab-content">
       <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "covers" })}>
-        <div />
+        <CoverManager />
       </div>
       <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "user-data" })}>
         <div>TODO</div>
