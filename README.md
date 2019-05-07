@@ -11,6 +11,6 @@ I initially made this with the goal of creating iterations of the site with Reac
 ](https://www.npmjs.com/package/mongo-graphql-starter) and [micro-graphql-react
 ](https://www.npmjs.com/package/micro-graphql-react) projects. Data is stored in Mongo, and all book info is looked up with the GoodReads API, subject to an unfortunate one-request-per-second limit imposed by GoodReads.
 
-The current React iteration uses TypeScript and vanilla Hooks, and is in the `react-redux` directory (unfortunately named, for now, from when it used Redux).
+The current React iteration uses TypeScript and vanilla Hooks, and is in the `react` directory.
 
 Future iterations may potentially look at ... whatever is thriving whenever the React version is done, if it ever is...

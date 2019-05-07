@@ -34,7 +34,7 @@ module.exports = {
     filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",
     chunkFilename: isProd ? "[name]-chunk-[contenthash].js" : "[name]-chunk.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/react-redux/dist/"
+    publicPath: "/react/dist/"
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
@@ -98,18 +98,18 @@ module.exports = {
     new GenerateSW({
       ignoreUrlParametersMatching: [/./],
       exclude: [/\.(ttf|eot|svg|woff)$/],
-      navigateFallback: "react-redux/dist/index.html",
+      navigateFallback: "react/dist/index.html",
       navigateFallbackBlacklist: [/\/activate\b/],
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:5/, name: "medium-cache", expires: 60 * 60 * 24 }), //1 day
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:9/, name: "max-cache" }),
-        getCache({ pattern: /react-redux\/static\//, name: "local-static" }),
+        getCache({ pattern: /react\/static\//, name: "local-static" }),
         getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
         getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" })
       ],
-      importScripts: ["react-redux/sw-manual/sw-index-bundle.js"]
+      importScripts: ["react/sw-manual/sw-index-bundle.js"]
     })
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),
