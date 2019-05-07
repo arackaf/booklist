@@ -6,6 +6,7 @@ import TagsMiddleware from "./middleware/tags";
 import TagsDeletedMiddleware from "./middleware/tagsDeleted";
 import UsersMiddleware from "./middleware/users";
 import PublicUsersMiddleware from "./middleware/publicUsers";
+import BookSummaryMiddleware from "./middleware/bookSummary";
 
 export default {
   Root: {
@@ -20,6 +21,7 @@ export default {
     adjustResults(results) {}
   },
   Book: BooksMiddleware,
+  BookSummary: BookSummaryMiddleware,
   BooksDeleted: BooksDeletedMiddleware,
   Subject: SubjectsMiddleware,
   SubjectsDeleted: SubjectsDeletedMiddleware,
