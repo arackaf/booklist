@@ -1,12 +1,14 @@
-import React, { Component, useState, useRef } from "react";
+import React, { Component, useState, useRef, useContext } from "react";
 import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
+import { AppContext } from "app/renderUI";
 
 const exectueResetPassword = (oldPassword, newPassword) => {
   return ajaxUtil.post("/react/resetPassword", { oldPassword, newPassword }, resp => {});
 };
 
 const PublicUserSettings = props => {
+  const [{ online }] = useContext(AppContext);
   const newPasswordEl = useRef(null);
   const confirmPasswordEl = useRef(null);
   const currentPasswordEl = useRef(null);
@@ -35,6 +37,10 @@ const PublicUserSettings = props => {
       setSaving(false);
     });
   };
+
+  if (!online) {
+    return <h1>Offline</h1>;
+  }
 
   return (
     <div className="row" style={{ position: "relative" }}>

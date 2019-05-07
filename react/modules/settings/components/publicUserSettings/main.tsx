@@ -8,7 +8,12 @@ import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-
 import { AppContext } from "app/renderUI";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
-  const { loading, loaded, data } = useQuery(buildQuery(PublicUserSettingsQuery, {}));
+  const [{ online }] = useContext(AppContext);
+  const { loading, loaded, data } = useQuery(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
+
+  if (!online) {
+    return <h1>Offline</h1>;
+  }
 
   return (
     <div>
