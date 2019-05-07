@@ -28,6 +28,10 @@ const validModules = new Set(["books", "scan", "home", "activate", "view", "subj
 let initial = true;
 
 export const getModulePromise = moduleToLoad => {
+  let adminUser = isAdmin();
+  if (moduleToLoad == "admin" && !adminUser) {
+    return goto("home");
+  }
   switch (moduleToLoad.toLowerCase()) {
     case "activate":
       return import(/* webpackChunkName: "small-modules" */ "./modules/activate/activate");
