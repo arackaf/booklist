@@ -1,10 +1,11 @@
-import React, { Component, FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 
 import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 
 import navClasses from "css/navbar.module.css";
+import { isAdmin } from "util/loginStatus";
 
 const { nav, navHeader, navItems, navItemsRight } = navClasses;
 
@@ -29,13 +30,16 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
     ajaxUtil.post("/react-redux/logout", {}, () => window.location.reload());
   };
 
-  let [{ isPublic, publicBooksHeader, publicName, module, isLoggedIn }] = useContext(AppContext);
+  let isAdminUser = isAdmin();
+
+  let [{ isPublic, module, isLoggedIn }] = useContext(AppContext);
   let isHome = module == "home";
   let isBookEntry = module == "scan";
   let isBookList = module == "books";
   let isSubjects = module == "subjects";
   let isLoginModule = module == "authenticate";
   let isSettings = module == "settings";
+  let isSettingsSection = module == "admin";
 
   return (
     <div className={nav} style={{ marginBottom: "5px" }}>
@@ -72,6 +76,12 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           <NavBarItem onClick={() => goto("settings")} active={isSettings}>
             <span className="hidden-xs">Settings</span>
             <i className="visible-xs fal fa-cogs" />
+          </NavBarItem>
+        ) : null}
+        {isLoggedIn && isAdminUser ? (
+          <NavBarItem onClick={() => goto("admin")} active={isSettingsSection}>
+            <span className="hidden-xs">Admin</span>
+            <i className="visible-xs fal fa-users-cog" />
           </NavBarItem>
         ) : null}
       </ul>
