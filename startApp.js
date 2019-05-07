@@ -1,8 +1,8 @@
-import dao from "./node-src/dataAccess/dao";
-import bookEntryQueueManager from "./node-src/app-helpers/bookEntryQueueManager";
-import bookSimilarityQueueManager from "./node-src/app-helpers/bookSimilarityQueueManager";
-import ErrorLoggerDao from "./node-src/dataAccess/errorLoggerDAO";
-import UserDao from "./node-src/dataAccess/userDAO";
+import dao from "./node/dataAccess/dao";
+import bookEntryQueueManager from "./node/app-helpers/bookEntryQueueManager";
+import bookSimilarityQueueManager from "./node/app-helpers/bookSimilarityQueueManager";
+import ErrorLoggerDao from "./node/dataAccess/errorLoggerDAO";
+import UserDao from "./node/dataAccess/userDAO";
 
 import express from "express";
 const app = express();
@@ -30,10 +30,10 @@ import webpush from "web-push";
 import expressGraphql from "express-graphql";
 
 import { middleware } from "generic-persistgraphql";
-import { getPublicGraphqlSchema, getGraphqlSchema } from "./node-src/util/graphqlUtils";
+import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
 import uuid from "uuid/v4";
-import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node-src/util/bookCovers/bookCoverHelpers";
+import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node/util/bookCovers/bookCoverHelpers";
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
@@ -189,7 +189,7 @@ app.ws("/bookEntryWS", function(ws, req) {
   bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 });
 
-easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node-src" });
+easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
 app.get("/", browseToReactRedux);
 app.get("/books", browseToReactRedux);
