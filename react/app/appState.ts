@@ -63,6 +63,8 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, isLoggedIn: !!logged_in, userId };
     case IS_OFFLINE:
       return { ...state, online: false };
+    case IS_ONLINE:
+      return { ...state, online: true };
     case SET_THEME:
       return { ...state, colorTheme: action.theme };
   }
