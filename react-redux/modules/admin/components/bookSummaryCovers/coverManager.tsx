@@ -27,7 +27,7 @@ const BookSummaryDisplay = props => {
 
   const changeImg = evt => {
     evt.preventDefault();
-    updateSmallCover({ _id: book._id, url: newUrl });
+    updateSmallCover({ _id: book._id, url: newUrl }).then(() => setNewUrl(""));
   };
 
   return (
@@ -39,7 +39,7 @@ const BookSummaryDisplay = props => {
         <div>{book.title}</div>
         <form onSubmit={changeImg}>
           <div className="btn-group">
-            <input className="form-control" placeholder="New Cover URL" onChange={evt => setNewUrl(evt.target.value)} />
+            <input className="form-control" placeholder="New Cover URL" value={newUrl} onChange={evt => setNewUrl(evt.target.value)} />
             <button disabled={!newUrl} onClick={changeImg} className="btn btn-default">
               <i className="far fa-cloud-upload-alt" />
             </button>
@@ -68,7 +68,7 @@ export default props => {
       {loaded ? (
         <div>
           {bookSummaries.map(book => (
-            <BookSummaryDisplay book={book} />
+            <BookSummaryDisplay key={book._id} book={book} />
           ))}
         </div>
       ) : (
