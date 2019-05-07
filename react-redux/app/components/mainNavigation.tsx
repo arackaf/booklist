@@ -78,7 +78,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             <i className="visible-xs fal fa-cogs" />
           </NavBarItem>
         ) : null}
-        {isLoggedIn || isAdminUser ? (
+        {isLoggedIn && isAdminUser ? (
           <NavBarItem onClick={() => goto("admin")} active={isSettingsSection}>
             <span className="hidden-xs">Admin</span>
             <i className="visible-xs fal fa-users-cog" />
