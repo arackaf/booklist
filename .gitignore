@@ -1,12 +1,9 @@
-.idea/
 node_modules/
-startMongo.bat
 npm-debug.log
 uploads/*
 .env
-node-dest/
+public.env
 .esm-cache/
-real.env
 react/sw-manual/sw-index-bundle.js
 .DS_Store
 react/.DS_Store
