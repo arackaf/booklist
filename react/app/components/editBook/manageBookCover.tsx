@@ -67,7 +67,7 @@ const ManageBookCover = props => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
 
-    ajaxUtil.postWithFiles(`/react-redux/${endpoint}`, request, res => {
+    ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
       if (res.error) {
         setUploadState({ pendingImg: "", uploadError: res.error });
       } else {

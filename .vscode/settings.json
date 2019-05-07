@@ -2,6 +2,6 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "files.exclude": {
-    "react-redux/dist": true
+    "react/dist": true
   }
 }
