@@ -3,7 +3,7 @@ import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
 
 const exectueResetPassword = (oldPassword, newPassword) => {
-  return ajaxUtil.post("/react-redux/resetPassword", { oldPassword, newPassword }, resp => {});
+  return ajaxUtil.post("/react/resetPassword", { oldPassword, newPassword }, resp => {});
 };
 
 const PublicUserSettings = props => {
