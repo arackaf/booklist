@@ -10,7 +10,9 @@ class BookSummaryController {
     this.sizeAndSetImage({ _id, url, width: 50, imgKey: "smallImage" });
   }
   async sizeAndSetImage({ _id, url, imgKey, width }) {
-    debugger;
+    if (!this.request.user.admin) {
+      return this.send({});
+    }
     let userId = this.request.user.id;
     let res = await downloadBookCover(url, 750);
 
