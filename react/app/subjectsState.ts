@@ -30,7 +30,11 @@ graphqlClient.subscribeMutation([
 export function useSubjectsState(app: AppState) {
   let { userId, publicUserId } = app;
   let { loading, loaded, data } = useQuery(
-    buildQuery(AllSubjectsQuery, { publicUserId, userId }, { onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } })
+    buildQuery(
+      AllSubjectsQuery,
+      { publicUserId, userId },
+      { active: !!userId || !!publicUserId, onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } }
+    )
   );
   const subjects = data && data.allSubjects && data.allSubjects.Subjects;
   const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);

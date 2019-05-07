@@ -52,7 +52,7 @@ const App = ({ component = null } = {}) => {
   let [appState, appActions] = appStatePacket;
 
   let subjectsPacket = useSubjectsState(appState);
-  const colorsPacket = useColors();
+  const colorsPacket = useColors(appStatePacket);
 
   useEffect(() => {
     window.addEventListener("offline", appActions.isOffline);
