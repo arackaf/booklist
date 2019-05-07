@@ -42,7 +42,7 @@ const Login: FunctionComponent<{}> = props => {
 
     setState(state => ({ ...state, running: true }));
     ajaxUtil.post(
-      "/react-redux/login",
+      "/react/login",
       { username, password, rememberme },
       () => appActions.newLogin(),
       () => setState(state => ({ ...state, running: false, errorCode: "c2" }))
@@ -74,7 +74,7 @@ const Login: FunctionComponent<{}> = props => {
     }
 
     setState({ ...state, running: true });
-    ajaxUtil.post("/react-redux/createUser", { username, password, rememberme }, resp => {
+    ajaxUtil.post("/react/createUser", { username, password, rememberme }, resp => {
       if (resp.errorCode) {
         setState(state => ({ ...state, errorCode: resp.errorCode, running: false }));
       } else {

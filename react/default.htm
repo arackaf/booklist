@@ -4,7 +4,7 @@
     <script>
       if (typeof fetch === "undefined") {
         var fetchPolyfill = document.createElement("script");
-        fetchPolyfill.setAttribute("src", "/react-redux/util/unfetch.js");
+        fetchPolyfill.setAttribute("src", "/react/util/unfetch.js");
         document.head.appendChild(fetchPolyfill);
         fetchPolyfill.onload = function() {
           window.fetch = unfetch;

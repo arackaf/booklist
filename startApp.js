@@ -150,7 +150,7 @@ app.use(passport.authenticate("remember-me"));
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
-middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react-redux/extracted_queries.json") });
+middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 app.use(
   "/graphql",
   expressGraphql({
@@ -181,7 +181,7 @@ const expressWs = expressWsImport(app);
 
 app.use("/static/", express.static(__dirname + "/static/"));
 app.use("/node_modules/", express.static(__dirname + "/node_modules/"));
-app.use("/react-redux/", express.static(__dirname + "/react-redux/"));
+app.use("/react/", express.static(__dirname + "/react/"));
 app.use("/utils/", express.static(__dirname + "/utils/"));
 app.use("/uploads/", express.static(__dirname + "/uploads/"));
 
@@ -201,9 +201,9 @@ app.get("/home", browseToReactRedux);
 app.get("/view", browseToReactRedux);
 app.get("/admin", browseToReactRedux);
 app.get("/styledemo", browseToReactRedux);
-app.get("/react-redux", browseToReactRedux);
+app.get("/react", browseToReactRedux);
 app.get("/service-worker.js", (request, response) => {
-  response.sendFile(path.join(__dirname + "/react-redux/dist/service-worker.js"));
+  response.sendFile(path.join(__dirname + "/react/dist/service-worker.js"));
 });
 
 function browseToReactRedux(request, response) {
@@ -214,14 +214,14 @@ function browseToReactRedux(request, response) {
     response.clearCookie("userId");
     response.clearCookie("admin");
   }
-  response.sendFile(path.join(__dirname + "/react-redux/dist/index.html"));
+  response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
 
 app.get("/favicon.ico", function(request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-app.post("/react-redux/login", passport.authenticate("local"), function(req, response) {
+app.post("/react/login", passport.authenticate("local"), function(req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
   let rememberMe = req.body.rememberme == 1;
 
@@ -234,7 +234,7 @@ app.post("/react-redux/login", passport.authenticate("local"), function(req, res
   response.send(req.user);
 });
 
-app.post("/react-redux/logout", function(req, response) {
+app.post("/react/logout", function(req, response) {
   response.clearCookie("logged_in");
   response.clearCookie("remember_me");
   response.clearCookie("userId");
@@ -265,11 +265,11 @@ const multerBookCoverUploadStorage = multer.diskStorage({
 });
 const upload = multer({ storage: multerBookCoverUploadStorage });
 
-app.post("/react-redux/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
+app.post("/react/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
   coverUpload(req, response);
 });
 
-app.post("/react-redux/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
+app.post("/react/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
   coverUpload(req, response, { maxWidth: 106 });
 });
 
@@ -299,7 +299,7 @@ async function coverUpload(req, response, { maxWidth } = {}) {
   response.send({ success: true, url: s3path });
 }
 
-app.post("/react-redux/createUser", function(req, response) {
+app.post("/react/createUser", function(req, response) {
   let userDao = new UserDao(),
     username = req.body.username,
     password = req.body.password,
@@ -317,7 +317,7 @@ app.post("/react-redux/createUser", function(req, response) {
   });
 });
 
-app.post("/react-redux/resetPassword", async function(req, response) {
+app.post("/react/resetPassword", async function(req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
   let result = await new UserDao().resetPassword(userId, oldPassword, newPassword);

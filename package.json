@@ -9,11 +9,11 @@
   "version": "0.1.0",
   "scripts": {
     "deploy": "npm run build && modulus deploy -p my-library",
-    "build": "npm run react-redux-build",
-    "react-redux-build": "cd react-redux && rm -rf dist && set NODE_ENV='production' && webpack && cd sw-manual && rollup -c",
+    "build": "npm run react-build",
+    "react-build": "cd react && rm -rf dist && set NODE_ENV='production' && webpack && cd sw-manual && rollup -c",
     "start": "node app.js",
     "startw": "nodemon app.js",
-    "heroku-postbuild": "cd react-redux && npm i && webpack && cd sw-manual && rollup -c"
+    "heroku-postbuild": "cd react && npm i && webpack && cd sw-manual && rollup -c"
   },
   "dependencies": {
     "apac": "3.0.2",
