@@ -64,8 +64,11 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
 
   let { logged_in, userId: currentUserId } = isLoggedIn();
   let loggedIn = logged_in && currentUserId;
+  let userId = getCurrentHistoryState().searchState.userId || "";
 
-  if (!loggedIn && !publicModule) {
+  if (!loggedIn && !userId && moduleToLoad == "settings") {
+    moduleToLoad = "authenticate";
+  } else if (!loggedIn && !publicModule) {
     if (originalModule && moduleToLoad != "home") {
       moduleToLoad = "authenticate";
     } else {
@@ -79,8 +82,6 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   }
 
   if (publicModule) {
-    var userId = getCurrentHistoryState().searchState.userId || "";
-
     //switching to a new public viewing - reload page
     if (!initial && app.publicUserId != userId) {
       window.location.reload();

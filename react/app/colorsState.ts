@@ -2,16 +2,23 @@ import { useState, useEffect } from "react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import { graphqlClient } from "util/graphql";
+import { AppState } from "./appState";
 
-export function useColors() {
+export function useColors(appPacket: [AppState, any, any]) {
   let [{ loaded, colors }, update] = useState({ loaded: false, colors: [] });
+  let userId = "";
+  if (appPacket && appPacket.length) {
+    userId = appPacket[0].userId;
+  }
 
   useEffect(() => {
-    Promise.resolve(graphqlClient.runQuery(AllLabelColorsQuery, { cache: 9 })).then<any>(({ data: { allLabelColors } }) => {
-      let { LabelColors: labelColors } = allLabelColors;
-      update({ loaded: true, colors: labelColors.map(c => c.backgroundColor) });
-    });
-  }, []);
+    if (userId) {
+      Promise.resolve(graphqlClient.runQuery(AllLabelColorsQuery, { cache: 9 })).then<any>(({ data: { allLabelColors } }) => {
+        let { LabelColors: labelColors } = allLabelColors;
+        update({ loaded: true, colors: labelColors.map(c => c.backgroundColor) });
+      });
+    }
+  }, [userId]);
 
   return { loaded, colors };
 }
