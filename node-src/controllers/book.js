@@ -1,5 +1,4 @@
-import { httpPost, httpGet, route, nonRoutable, controller } from "easy-express-controllers";
-import BookDAO from "../dataAccess/bookDAO";
+import { controller } from "easy-express-controllers";
 import bookEntryQueueManager from "../app-helpers/bookEntryQueueManager";
 
 const { graphql } = require("graphql");
@@ -69,12 +68,12 @@ class BookController {
     }
   }
   async newSmallImage({ _id, url }) {
-    this.doResize({ _id, url, width: 50, imgKey: "smallImage" });
+    this.sizeAndSetImage({ _id, url, width: 50, imgKey: "smallImage" });
   }
   async newMediumImage({ _id, url }) {
-    this.doResize({ _id, url, width: 106, imgKey: "mediumImage" });
+    this.sizeAndSetImage({ _id, url, width: 106, imgKey: "mediumImage" });
   }
-  async doResize({ _id, url, imgKey, width }) {
+  async sizeAndSetImage({ _id, url, imgKey, width }) {
     let userId = this.request.user.id;
     let res = await downloadBookCover(url, 750);
 

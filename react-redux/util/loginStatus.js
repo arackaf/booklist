@@ -1,7 +1,12 @@
 export function isLoggedIn() {
-  let logged_in = getCookie("logged_in"),
-    userId = getCookie("userId");
+  let logged_in = getCookie("logged_in");
+  let userId = getCookie("userId");
   return { logged_in, userId };
+}
+
+export function isAdmin() {
+  let admin = getCookie("admin");
+  return !!admin;
 }
 
 function getCookie(name) {
