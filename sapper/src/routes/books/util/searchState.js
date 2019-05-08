@@ -16,10 +16,9 @@ const currentSearchStateFromHistory = () => {
   return { search: searchState.search || void 0 };
 };
 
-export default () => {
-  const result = writable(currentSearchStateFromHistory());
-  history.listen(() => {
-    result.set(currentSearchStateFromHistory());
-  });
-  return result;
-};
+const result = writable(currentSearchStateFromHistory());
+history.listen(() => {
+  result.set(currentSearchStateFromHistory());
+});
+
+export default result;

@@ -2,18 +2,15 @@
   import BooksMenuBar from "./books/components/BooksMenuBar.svelte";
   import GridView from "./books/components/GridView.svelte";
 
-  import getSearchState from "./books/util/searchState";
+  import bookSearchState from "./books/util/searchState";
   import getGraphQLQuery from "../util/graphqlQuery";
   import delve from "dlv";
 
-  const searchState = getSearchState();
-
   const results = getGraphQLQuery(
     `query getBooks($search:String){allBooks(title_contains:$search){Books{title,authors,smallImage}}}`,
-    searchState
+    bookSearchState
   );
 
-  let books = [];
   $: books = delve($results, "data.allBooks.Books") || [];
 </script>
 
@@ -26,7 +23,10 @@
     <BooksMenuBar />
 
     <hr />
-    {#if !books.length}
+
+    {#if !$results.loaded}
+      <h1>Loading ...</h1>
+    {:else if !books.length}
       <div
         class="alert alert-warning"
         style="marginTop: 20px; marginRight: 5px">
