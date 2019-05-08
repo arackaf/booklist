@@ -1,36 +1,488 @@
+@import url("./css/btn.css");
+@import url("./css/row.css");
+@import url("./css/alert-label.css");
+@import url("./css/table-tab.css");
+@import url("./css/margin-padding.css");
+@import url("./css/responsive-visibility.css");
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --default-border-radius: 5px;
+
+  --neutral-1: hsl(42, 15%, 13%);
+  --neutral-2: hsl(40, 13%, 23%);
+  --neutral-3: hsl(37, 11%, 28%);
+  --neutral-4: hsl(41, 9%, 35%);
+  --neutral-5: hsl(41, 8%, 48%);
+  --neutral-6: hsl(41, 8%, 61%);
+  --neutral-7: hsl(39, 11%, 69%);
+  --neutral-8: hsl(40, 15%, 80%);
+  --neutral-9: hsl(43, 13%, 90%);
+  --neutral-10: hsl(40, 23%, 97%);
+  
+  --success-1: hsl(125, 97%, 14%);
+  --success-2: hsl(125, 86%, 20%);
+  --success-3: hsl(125, 79%, 26%);
+  --success-4: hsl(122, 80%, 29%);
+  --success-5: hsl(122, 73%, 35%);
+  --success-6: hsl(123, 57%, 45%);
+  --success-7: hsl(123, 53%, 55%);
+  --success-8: hsl(124, 63%, 74%);
+  --success-9: hsl(127, 65%, 85%);
+  --success-10: hsl(125, 65%, 93%);
+
+  --warning-1: hsl(43, 86%, 17%);
+  --warning-2: hsl(43, 77%, 27%);
+  --warning-3: hsl(43, 72%, 37%);
+  --warning-4: hsl(42, 63%, 48%);
+  --warning-5: hsl(42, 78%, 60%);
+  --warning-6: hsl(43, 89%, 70%);
+  --warning-7: hsl(43, 90%, 76%);
+  --warning-8: hsl(45, 86%, 81%);
+  --warning-9: hsl(45, 90%, 88%);
+  --warning-10: hsl(45, 100%, 96%);
+
+  --danger-1:hsl(348, 94%, 20%);
+  --danger-2:hsl(350, 94%, 28%);
+  --danger-3:hsl(352, 90%, 35%);
+  --danger-4:hsl(354, 85%, 44%);
+  --danger-5:hsl(356, 75%, 53%);
+  --danger-6:hsl(360, 83%, 62%);
+  --danger-7:hsl(360, 91%, 69%);
+  --danger-8:hsl(360, 100%, 80%);
+  --danger-9:hsl(360, 100%, 87%);
+  --danger-10:hsl(360, 100%, 95%);
+
+  --info-1: hsl(184, 91%, 17%);
+  --info-2: hsl(185, 84%, 25%);
+  --info-3: hsl(185, 81%, 29%);
+  --info-4: hsl(184, 77%, 34%);
+  --info-5: hsl(185, 62%, 45%);
+  --info-6: hsl(185, 57%, 50%);
+  --info-7: hsl(184, 65%, 59%);
+  --info-8: hsl(184, 80%, 74%);
+  --info-9: hsl(185, 94%, 87%);
+  --info-10: hsl(186, 100%, 94%);
+}
+
 body {
-	margin: 0;
-	font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-	font-size: 14px;
-	line-height: 1.5;
-	color: #333;
+  margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-	margin: 0 0 0.5em 0;
-	font-weight: 400;
-	line-height: 1.2;
+* {
+  box-sizing: border-box
 }
 
-h1 {
-	font-size: 2em;
+.scheme1 {
+  --primary-1: hsl(204, 96%, 27%);
+  --primary-2: hsl(203, 87%, 34%);
+  --primary-3: hsl(202, 83%, 41%);
+  --primary-4: hsl(201, 79%, 46%);
+  --primary-5: hsl(199, 84%, 55%);
+  --primary-6: hsl(197, 92%, 61%);
+  --primary-7: hsl(196, 94%, 67%);
+  --primary-8: hsl(195, 97%, 75%);
+  --primary-9: hsl(195, 100%, 85%);
+  --primary-10: hsl(195, 100%, 95%);
+}
+.scheme2 {
+  --primary-1: hsl(200, 82%, 24%);
+  --primary-2: hsl(200, 72%, 31%);
+  --primary-3: hsl(200, 68%, 35%);
+  --primary-4: hsl(200, 59%, 43%);
+  --primary-5: hsl(200, 54%, 49%);
+  --primary-6: hsl(200, 60%, 58%);
+  --primary-7: hsl(200, 66%, 69%);
+  --primary-8: hsl(200, 71%, 80%);
+  --primary-9: hsl(200, 88%, 90%);
+  --primary-10: hsl(201, 100%, 96%);
+}
+.scheme3 {
+  --primary-1: hsl(205, 100%, 21%);
+  --primary-2: hsl(205, 87%, 29%);
+  --primary-3: hsl(205, 82%, 33%);
+  --primary-4: hsl(205, 76%, 39%);
+  --primary-5: hsl(205, 67%, 45%);
+  --primary-6: hsl(205, 65%, 55%);
+  --primary-7: hsl(205, 74%, 65%);
+  --primary-8: hsl(205, 84%, 74%);
+  --primary-9: hsl(205, 97%, 85%);
+  --primary-10: hsl(205, 79%, 92%);
+}
+.scheme4 {
+  --primary-1: hsl(234, 62%, 26%);
+  --primary-2: hsl(232, 51%, 36%);
+  --primary-3: hsl(230, 49%, 41%);
+  --primary-4: hsl(228, 45%, 45%);
+  --primary-5: hsl(227, 42%, 51%);
+  --primary-6: hsl(227, 50%, 59%);
+  --primary-7: hsl(225, 57%, 67%);
+  --primary-8: hsl(224, 67%, 76%);
+  --primary-9: hsl(221, 78%, 86%);
+  --primary-10: hsl(221, 68%, 93%);
+}
+.scheme5 {
+  --primary-1: hsl(218, 100%, 17%);
+  --primary-2: hsl(216, 98%, 25%);
+  --primary-3: hsl(215, 96%, 32%);
+  --primary-4: hsl(214, 95%, 36%);
+  --primary-5: hsl(212, 92%, 43%);
+  --primary-6: hsl(210, 83%, 53%);
+  --primary-7: hsl(208, 88%, 62%);
+  --primary-8: hsl(206, 93%, 73%);
+  --primary-9: hsl(204, 100%, 86%);
+  --primary-10: hsl(202, 100%, 95%);
+}
+.scheme6 {
+  --primary-1: hsl(15, 86%, 30%);
+  --primary-2: hsl(22, 82%, 39%);
+  --primary-3: hsl(29, 80%, 44%);
+  --primary-4: hsl(36, 77%, 49%);
+  --primary-5: hsl(42, 87%, 55%);
+  --primary-6: hsl(44, 92%, 63%);
+  --primary-7: hsl(48, 94%, 68%);
+  --primary-8: hsl(48, 95%, 76%);
+  --primary-9: hsl(48, 100%, 88%);
+  --primary-10: hsl(49, 100%, 96%);
+}
+.scheme7 {
+  --primary-1: hsl(320, 100%, 19%);
+  --primary-2: hsl(322, 93%, 27%);
+  --primary-3: hsl(324, 93%, 33%);
+  --primary-4: hsl(326, 90%, 39%);
+  --primary-5: hsl(328, 85%, 46%);
+  --primary-6: hsl(330, 79%, 56%);
+  --primary-7: hsl(334, 86%, 67%);
+  --primary-8: hsl(336, 100%, 77%);
+  --primary-9: hsl(338, 100%, 86%);
+  --primary-10: hsl(341, 100%, 95%);
+}
+.scheme8 {
+  --primary-1: hsl(295, 85%, 18%);
+  --primary-2: hsl(294, 72%, 25%);
+  --primary-3: hsl(294, 68%, 32%);
+  --primary-4: hsl(294, 60%, 38%);
+  --primary-5: hsl(294, 48%, 46%);
+  --primary-6: hsl(294, 43%, 51%);
+  --primary-7: hsl(293, 48%, 58%);
+  --primary-8: hsl(293, 54%, 68%);
+  --primary-9: hsl(293, 67%, 85%);
+  --primary-10: hsl(295, 58%, 93%);
+}
+.scheme9 {
+  --primary-1: hsl(263, 85%, 18%);
+  --primary-2: hsl(262, 72%, 25%);
+  --primary-3: hsl(262, 69%, 31%);
+  --primary-4: hsl(262, 60%, 38%);
+  --primary-5: hsl(262, 48%, 46%);
+  --primary-6: hsl(262, 43%, 51%);
+  --primary-7: hsl(261, 47%, 58%);
+  --primary-8: hsl(261, 54%, 68%);
+  --primary-9: hsl(261, 68%, 84%);
+  --primary-10: hsl(262, 61%, 93%);
+}
+.scheme10 {
+  --primary-1: hsl(188, 91%, 23%);
+  --primary-2: hsl(186, 91%, 29%);
+  --primary-3: hsl(184, 90%, 34%);
+  --primary-4: hsl(182, 85%, 39%);
+  --primary-5: hsl(180, 77%, 47%);
+  --primary-6: hsl(178, 78%, 57%);
+  --primary-7: hsl(176, 87%, 67%);
+  --primary-8: hsl(174, 96%, 78%);
+  --primary-9: hsl(172, 97%, 88%);
+  --primary-10: hsl(171, 82%, 94%);
+}
+.scheme11 {
+  --primary-1: hsl(176, 100%, 13%);
+  --primary-2: hsl(172, 98%, 20%);
+  --primary-3: hsl(172, 94%, 26%);
+  --primary-4: hsl(170, 91%, 32%);
+  --primary-5: hsl(168, 78%, 41%);
+  --primary-6: hsl(166, 64%, 49%);
+  --primary-7: hsl(164, 70%, 63%);
+  --primary-8: hsl(162, 73%, 74%);
+  --primary-9: hsl(163, 75%, 87%);
+  --primary-10: hsl(165, 67%, 96%);
+}
+.scheme12 {
+  --primary-1: hsl(170, 97%, 15%);
+  --primary-2: hsl(168, 80%, 23%);
+  --primary-3: hsl(166, 72%, 28%);
+  --primary-4: hsl(164, 71%, 34%);
+  --primary-5: hsl(162, 63%, 41%);
+  --primary-6: hsl(160, 51%, 49%);
+  --primary-7: hsl(158, 58%, 62%);
+  --primary-8: hsl(156, 73%, 74%);
+  --primary-9: hsl(154, 75%, 87%);
+  --primary-10: hsl(152, 68%, 96%);
+}
+.scheme13 {
+  --primary-1: hsl(81, 86%, 14%);
+  --primary-2: hsl(81, 78%, 21%);
+  --primary-3: hsl(83, 74%, 27%);
+  --primary-4: hsl(83, 70%, 34%);
+  --primary-5: hsl(83, 64%, 42%);
+  --primary-6: hsl(83, 55%, 52%);
+  --primary-7: hsl(83, 63%, 61%);
+  --primary-8: hsl(83, 68%, 74%);
+  --primary-9: hsl(84, 77%, 86%);
+  --primary-10: hsl(83, 88%, 94%);
+}
+.scheme14 {
+  --primary-1: hsl(125, 86%, 14%);
+  --primary-2: hsl(125, 73%, 20%);
+  --primary-3: hsl(125, 56%, 29%);
+  --primary-4: hsl(122, 47%, 35%);
+  --primary-5: hsl(122, 39%, 41%);
+  --primary-6: hsl(123, 35%, 51%);
+  --primary-7: hsl(123, 38%, 63%);
+  --primary-8: hsl(122, 42%, 75%);
+  --primary-9: hsl(126, 49%, 84%);
+  --primary-10: hsl(125, 65%, 93%);
+}
+.scheme15 {
+  --primary-1: hsl(209, 61%, 16%);
+  --primary-2: hsl(211, 39%, 23%);
+  --primary-3: hsl(209, 34%, 30%);
+  --primary-4: hsl(209, 28%, 39%);
+  --primary-5: hsl(210, 22%, 49%);
+  --primary-6: hsl(209, 23%, 60%);
+  --primary-7: hsl(211, 27%, 70%);
+  --primary-8: hsl(210, 31%, 80%);
+  --primary-9: hsl(212, 33%, 89%);
+  --primary-10: hsl(210, 36%, 96%);
+}
+.scheme16 {
+  --primary-1: hsl(210, 24%, 16%);
+  --primary-2: hsl(209, 20%, 25%);
+  --primary-3: hsl(209, 18%, 30%);
+  --primary-4: hsl(209, 14%, 37%);
+  --primary-5: hsl(211, 12%, 43%);
+  --primary-6: hsl(211, 10%, 53%);
+  --primary-7: hsl(211, 13%, 65%);
+  --primary-8: hsl(210, 16%, 82%);
+  --primary-9: hsl(214, 15%, 91%);
+  --primary-10: hsl(216, 33%, 97%);
+}
+.scheme17 {
+  --primary-1: hsl(0, 0%, 13%);
+  --primary-2: hsl(0, 0%, 23%);
+  --primary-3: hsl(0, 0%, 32%);
+  --primary-4: hsl(0, 0%, 38%);
+  --primary-5: hsl(0, 0%, 49%);
+  --primary-6: hsl(0, 0%, 62%);
+  --primary-7: hsl(0, 0%, 69%);
+  --primary-8: hsl(0, 0%, 81%);
+  --primary-9: hsl(0, 0%, 88%);
+  --primary-10: hsl(0, 0%, 97%);
+}
+
+
+
+
+
+#home, [data-reach-dialog-overlay] {
+  --neutral-text: var(--neutral-3);
+  --neutral-light-text: var(--neutral-5);
+  --neutral-lighter-text: var(--neutral-7);
+  --neutral-border: var(--neutral-6);
+  
+  --neutral-light-background: var(--neutral-10);
+  --neutral-background: var(--neutral-5);
+  --neutral-dark-background: var(--neutral-9);
+  
+  --info-button-color: white;
+}
+
+#main-content {
+  -webkit-overflow-scrolling: touch;
+}
+#main-content, input, select, reach-portal, a {
+  color: var(--neutral-text);
+}
+
+#footer {
+  background-color: var(--primary-9);
+  padding: 9px;
 }
 
 a {
-	color: inherit;
+  cursor: pointer;
+}
+a.no-underline {
+  text-decoration: none;
 }
 
-code {
-	font-family: menlo, inconsolata, monospace;
-	font-size: calc(1em - 2px);
-	color: #555;
-	background-color: #f0f0f0;
-	padding: 0.2em 0.4em;
-	border-radius: 2px;
+button, input, select, a {
+  outline: 0;
 }
 
-@media (min-width: 400px) {
-	body {
-		font-size: 16px;
-	}
+hr {
+  border: 1px solid var(--primary-4);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style-type: none;
+}
+h4 {
+  margin: 0;
+  font-size: 18px;
+}
+h5 {
+  margin: 0;
+  font-size: 16px;
+}
+h6 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: normal;
+}
+.form-inline {
+  display: flex;
+}
+
+label {
+  font-size: 14px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently not supported by any browser */
+  cursor: default;
+}
+
+.wait-for-loading > i {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  opacity: 0.2;
+  z-index: 5000;
+}
+
+.drag-handle {
+  cursor: move;
+}
+
+.toastify {
+  z-index: 10;
+  margin-right: 10px;
+}
+
+.panel {
+  padding: 15px;
+  border: 1px solid var(--neutral-border);
+  border-radius: 3px;
+}
+.panel.panel-info {
+  border-color: var(--primary-10);
+}
+.panel.panel-info .panel-heading {
+  background-color: var(--primary-10);
+  margin-top: -15px;
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+}
+
+.form-group input, input.form-control, select.form-control {
+  border: 1px solid var(--neutral-border);
+  padding: 6px 12px;
+  border-radius: var(--default-border-radius);
+  height: 34px;
+  background-color: white;
+  width: 100%;
+}
+input.form-control, select.form-control {
+  font-size: 14px;
+}
+
+div.responsive-radios {
+  display: flex;
+  align-items: center;
+}
+div.responsive-radios input {
+  margin-right: 5px;
+}
+@media (min-width: 800px) {
+  div.responsive-radios label {
+    padding-right: 10px;
+  }
+}
+@media (max-width: 800px) {
+  div.responsive-radios {
+    flex-direction: column
+  }
+  div.responsive-radios > span {
+    align-self: flex-start;
+  }
+  div.responsive-radios label {
+    padding-right: 0;
+  }
+}
+
+.form-group, .checkbox-group {
+  margin-bottom: 15px;
+}
+.form-group, .form-label {
+  font-size: 14px;
+  font-weight: bold;
+}
+.form-group label, .form-label{
+  display: block;
+  margin-bottom: 5px;
+}
+.form-group input{
+  width: 100%;
+  display: block;
+}
+.checkbox-group {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+}
+
+div.toast-notification {
+  background: var(--primary-4);
+  color: var(--primary-10)
+}
+div.toast-notification a, div.toast-notification span, div.toast-notification h4 {
+  color: var(--primary-10)
+}
+
+.fade-transition-enter {
+  opacity: 0.01;
+}
+.fade-transition-enter.fade-transition-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.fade-transition-exit {
+  opacity: 1;
+}
+.fade-transition-exit.fade-transition-exit-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.standard-modal-footer {
+  display: flex;
+}
+.standard-modal-footer > button:not(:first-child) {
+  margin-left: auto;
+}
+
+.has-error input {
+  border-color: var(--danger-5);
 }
