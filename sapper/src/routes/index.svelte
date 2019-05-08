@@ -14,7 +14,7 @@
   );
 
   let books = [];
-  $: books = delve(results, "data.allBooks.Books") || [];
+  $: books = delve($results, "data.allBooks.Books") || [];
 </script>
 
 <svelte:head>
@@ -25,7 +25,7 @@
   <div style="flex: 1; padding: 0; minHeight: 450">
     <BooksMenuBar />
 
-    <h1>{JSON.stringify(results)}</h1>
+    <hr />
     {#if !books.length}
       <div
         class="alert alert-warning"
