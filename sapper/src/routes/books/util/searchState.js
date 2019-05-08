@@ -11,10 +11,15 @@ export function getCurrentHistoryState() {
   };
 }
 
+const currentSearchStateFromHistory = () => {
+  let { searchState } = getCurrentHistoryState();
+  return { search: searchState.search || void 0 };
+};
+
 export default () => {
-  const result = writable(getCurrentHistoryState());
+  const result = writable(currentSearchStateFromHistory());
   history.listen(() => {
-    result.set(getCurrentHistoryState());
+    result.set(currentSearchStateFromHistory());
   });
   return result;
 };
