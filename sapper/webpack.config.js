@@ -80,6 +80,7 @@ module.exports = {
       ]
     },
     mode: process.env.NODE_ENV,
+    plugins: [new MiniCssExtractPlugin({ filename: dev ? "[name].css" : "[name]-[contenthash].css" })],
     performance: {
       hints: false // it doesn't matter if server.js is large
     }
