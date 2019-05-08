@@ -8,10 +8,12 @@
 </svelte:head>
 
 <div style="marginLeft: 5px; marginTop: 0">
-  <BooksMenuBar />
   <div style="flex: 1; padding: 0; minHeight: 450">
+    <BooksMenuBar />
 
-    <div class="alert alert-warning" style="marginTop: 20px; marginRight: 5px">
+    <div
+      class="alert alert-warning"
+      style="display: none; marginTop: 20px; marginRight: 5px">
       No books found
     </div>
 
