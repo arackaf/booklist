@@ -1,6 +1,14 @@
 <script>
   import BooksMenuBar from "./books/components/BooksMenuBar.svelte";
   import GridView from "./books/components/GridView.svelte";
+
+  import getSearchState from "./books/util/searchState";
+
+  const searchState = getSearchState();
+
+  searchState.subscribe(val => {
+    console.log(val);
+  });
 </script>
 
 <svelte:head>
