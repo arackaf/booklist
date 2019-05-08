@@ -1,6 +1,8 @@
 <script>
   import Nav from "../components/Nav.svelte";
 
+  import "../../static/global.css";
+
   export let segment;
 </script>
 
