@@ -19,7 +19,7 @@
 </svelte:head>
 
 <div style="marginLeft: 5px; marginTop: 0">
-  <div style="flex: 1; padding: 0; minHeight: 450">
+  <div style="padding: 0; minHeight: 450">
     <BooksMenuBar />
 
     <hr />
