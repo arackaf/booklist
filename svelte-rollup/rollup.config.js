@@ -3,6 +3,9 @@ import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
+import replace from "rollup-plugin-replace";
+
+import babel from "rollup-plugin-babel";
 
 const production = true || !process.env.ROLLUP_WATCH;
 
@@ -16,6 +19,15 @@ const plugins = [
     css: css => {
       css.write("public/bundle.css");
     }
+  }),
+
+  babel({
+    exclude: "node_modules/**",
+    presets: ["@babel/preset-react"]
+  }),
+
+  replace({
+    "process.env.NODE_ENV": JSON.stringify("production")
   }),
 
   // If you have external dependencies installed from
@@ -33,7 +45,7 @@ const plugins = [
 
 export default [
   {
-    input: "src/main.js",
+    input: "src/main-react.js",
     output: {
       format: "iife",
       name: "app",
