@@ -10,6 +10,7 @@ import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
 import { TagsContext } from "app/tagsState";
+import eventEmitter from "util/eventEmitter";
 
 const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 
@@ -84,6 +85,7 @@ export function booksReducer(state = {}, action): BooksState {
 }
 
 graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
+eventEmitter.on("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
 
 export const useBooks = () => {
   const [app] = useContext(AppContext);
