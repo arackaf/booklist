@@ -8,6 +8,8 @@ import Loading from "app/components/loading";
 import { GraphQL, buildMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 
+import eventEmitter from "util/eventEmitter";
+
 declare var webSocketAddress: any;
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
@@ -29,6 +31,7 @@ function scanReducer(state, [type, payload]) {
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
     case "bookAdded":
+      eventEmitter.emit("book-scanned", {});
       return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 15) };
     case "bookLookupFailed":
       let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
