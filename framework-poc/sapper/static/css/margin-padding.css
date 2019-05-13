@@ -1,0 +1,22 @@
+.margin-left {
+  margin-left: 10px;
+}
+.margin-right {
+  margin-right: 10px;
+}
+.margin-top {
+  margin-top: 10px;
+}
+.margin-bottom {
+  margin-bottom: 10px;
+}
+
+.padding-top {
+  padding-top: 10px;
+}
+.padding-bottom {
+  padding-bottom: 10px;
+}
+.padding-bottom-small {
+  padding-bottom: 5px;
+}

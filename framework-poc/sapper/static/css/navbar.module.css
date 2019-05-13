@@ -1,0 +1,100 @@
+.nav {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 30px;
+  display: flex;
+  align-items: stretch;
+  color: var(--primary-10);
+  background-color: var(--primary-4);
+  height: 50px;
+  font-size: 16px;
+}
+
+.nav a {
+  color: var(--primary-10) 
+}
+
+.nav li:global(.active), .nav div:global(.active) {
+  background-color: var(--primary-7);
+}
+.nav li:global(.active) a {
+  cursor: default;
+}
+.nav li:global(.disabled), .nav li:global(.disabled) a {
+  color: var(--primary-7);
+  cursor: not-allowed;
+}
+.navHeader {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.nav li a {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.nav a i:global(.visible-xs) {
+  font-size: 20px;
+}
+.navItems {
+  padding-left: 0;
+}
+.navItems > li, .navItemsRight > li {
+  display: flex;
+  align-items: center
+}
+.navItems, .navItemsRight {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: stretch;
+  list-style-type: none;
+}
+.navItemsRight {
+  margin-left: auto;
+}
+
+@media (max-width: 767px){
+  .nav {
+    padding-left: 0px;
+  }
+  :global(.hidden-xs) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px){
+  :global(.visible-xs) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .nav {
+    padding-left: 0;
+  }
+  .nav li a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media (max-width: 350px) {
+  .nav {
+    padding-left: 0;
+  }
+  .nav li a {
+    padding-left: 8px;
+    padding-right: 8px;
+
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+  .nav {
+    min-height: 20px;
+  }
+  .nav li a i {
+    font-size: 13pt !important;
+  }
+}
