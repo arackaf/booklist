@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useLayoutEffect } from "react";
 
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { Transition, config } from "react-spring";
