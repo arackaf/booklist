@@ -61,6 +61,8 @@ window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQue
 
 export const useBooks = () => {
   const [app] = useContext(AppContext);
+  let { subjectsLoaded } = useContext(SubjectsContext);
+  let { tagsLoaded } = useContext(TagsContext);
   const searchState = useCurrentSearch();
 
   const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
@@ -95,7 +97,7 @@ export const useBooks = () => {
     resultsCount,
     totalPages,
     booksLoading: loading,
-    booksLoaded: loaded
+    booksLoaded: loaded && tagsLoaded && subjectsLoaded
   };
 };
 
