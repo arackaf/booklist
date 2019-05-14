@@ -11,7 +11,6 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
-import { AppContext } from "app/renderUI";
 import { useTagsState, TagsContext } from "app/tagsState";
 import { BooksContext, useBooks } from "./booksState";
 import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "./booksSearchState";
@@ -99,8 +98,6 @@ function booksUiStateReducer(state, [action, payload = null]) {
 }
 
 const BookViewingList: SFC<{}> = props => {
-  let { tags } = useContext(TagsContext);
-  let [appState] = useContext(AppContext);
   const { books, booksLoading, booksLoaded, currentQuery } = useContext(BooksContext);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
