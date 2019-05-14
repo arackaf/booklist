@@ -21,19 +21,12 @@ import LazyModal from "app/components/lazyModal";
 const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/basicList"));
 const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/coversList"));
 
-const _CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
-const _BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
-const _BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookTagSetter"));
-const _SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/subjectEditModal"));
-const _TagEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/tagEditModal"));
-const _BookSearchModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSearchModal"));
-
-const CreateBookModal = LazyModal(_CreateBookModal);
-const BookSubjectSetter = LazyModal(_BookSubjectSetter);
-const BookTagSetter = LazyModal(_BookTagSetter);
-const SubjectEditModal = LazyModal(_SubjectEditModal);
-const TagEditModal = LazyModal(_TagEditModal);
-const BookSearchModal = LazyModal(_BookSearchModal);
+const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
+const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
+const BookTagSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookTagSetter"));
+const SubjectEditModal = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/subjectEditModal"));
+const TagEditModal = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/tagEditModal"));
+const BookSearchModal = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSearchModal"));
 
 const useCodeSplitModal = (initialOpenData = false): any => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
