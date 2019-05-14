@@ -16,15 +16,24 @@ import { BooksContext, useBooks } from "./booksState";
 import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "./booksSearchState";
 
 import GridView from "./components/bookViews/gridList";
+import LazyModal from "app/components/lazyModal";
+
 const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/basicList"));
 const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/coversList"));
 
-const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
-const BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
-const BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookTagSetter"));
-const SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/subjectEditModal"));
-const TagEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/tagEditModal"));
-const BookSearchModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSearchModal"));
+const _CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
+const _BookSubjectSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
+const _BookTagSetter = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookTagSetter"));
+const _SubjectEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/subjectEditModal"));
+const _TagEditModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/tagEditModal"));
+const _BookSearchModal = lazy(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSearchModal"));
+
+const CreateBookModal = LazyModal(_CreateBookModal);
+const BookSubjectSetter = LazyModal(_BookSubjectSetter);
+const BookTagSetter = LazyModal(_BookTagSetter);
+const SubjectEditModal = LazyModal(_SubjectEditModal);
+const TagEditModal = LazyModal(_TagEditModal);
+const BookSearchModal = LazyModal(_BookSearchModal);
 
 const useCodeSplitModal = (initialOpenData = false): any => {
   const [[openState, isLoaded], setModalState] = useState([initialOpenData, false]);
@@ -183,22 +192,21 @@ const BookViewingList: SFC<{}> = props => {
       <br />
 
       <Suspense fallback={<Loading />}>
-        {bookEditingModalLoaded ? (
-          <CreateBookModal
-            title={editingBook ? `Edit ${editingBook.title}` : ""}
-            bookToEdit={editingBook}
-            isOpen={!!editingBook}
-            saveBook={saveEditingBook}
-            saveMessage={"Saved"}
-            onClosing={stopEditingBook}
-          />
-        ) : null}
-        {bookSubModalLoaded ? <BookSubjectSetter modifyingBooks={bookSubModifying} onDone={closeBookSubModal} /> : null}
-        {bookTagModalLoaded ? <BookTagSetter modifyingBooks={bookTagModifying} onDone={closeBookTagModal} /> : null}
+        <CreateBookModal
+          title={editingBook ? `Edit ${editingBook.title}` : ""}
+          bookToEdit={editingBook}
+          isOpen={!!editingBook}
+          saveBook={saveEditingBook}
+          saveMessage={"Saved"}
+          onClosing={stopEditingBook}
+        />
 
-        {subjectEditModalLoaded ? <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} /> : null}
-        {tagEditModalLoaded ? <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} /> : null}
-        {editingFiltersLoaded ? <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} /> : null}
+        <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
+        <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+
+        <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+        <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+        <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
       </Suspense>
     </>
   );
