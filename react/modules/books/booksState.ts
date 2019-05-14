@@ -1,5 +1,4 @@
 import { graphqlClient } from "util/graphql";
-import update from "immutability-helper";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
@@ -10,9 +9,6 @@ import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
 import { TagsContext } from "app/tagsState";
-import eventEmitter from "util/eventEmitter";
-
-const SET_BOOKS_TAGS = "SET_BOOKS_TAGS";
 
 interface IEditorialReview {
   content: string;
@@ -59,33 +55,9 @@ export interface IBookDisplay extends IBookRaw {
   dateAddedDisplay: string;
 }
 
-export type BooksState = { booksHash: any };
-
-export function booksReducer(state = {}, action): BooksState {
-  switch (action.type) {
-    case SET_BOOKS_TAGS: {
-      let remove = new Set<string>(action.remove);
-      return update(state, {
-        booksHash: {
-          ...action.books.reduce(
-            (hash, _id) => (
-              (hash[_id] = {
-                tags: { $apply: currentTags => Array.from(new Set(currentTags.filter(t => !remove.has(t)).concat(action.add))) }
-              }),
-              hash
-            ),
-            {}
-          )
-        }
-      });
-    }
-  }
-
-  return state as any;
-}
-
 graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
-eventEmitter.on("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
+
+window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
 
 export const useBooks = () => {
   const [app] = useContext(AppContext);
