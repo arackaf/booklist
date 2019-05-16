@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
+import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { Transition, config } from "react-spring";
 
 import "css/reach-modal-overrides.css";
