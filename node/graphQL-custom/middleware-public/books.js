@@ -4,25 +4,6 @@ import fs from "fs";
 import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
-function saveLocalImageToS3(imgPath, userId) {
-  return new Promise((res, rej) => {
-    fs.readFile("." + imgPath, (err, data) => {
-      if (err) return rej(err);
-
-      let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } }),
-        params = {
-          Key: `bookCovers/${userId || "generic"}/${path.basename(imgPath)}`,
-          Body: data
-        };
-
-      s3bucket.upload(params, function(err) {
-        if (err) rej(err);
-        else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
-      });
-    });
-  });
-}
-
 function clean(book) {
   let propsToTrim = ["title", "isbn", "publisher", "publicationDate"];
   propsToTrim.forEach(prop => {
@@ -82,9 +63,7 @@ export default class BooksMiddleware {
   }
   async beforeInsert(book, { root, args, context, ast }) {
     clean(book);
-    if (book.smallImage && /^\/uploads\//.test(book.smallImage)) {
-      book.smallImage = await saveLocalImageToS3(book.smallImage, "5b57f71b6871ae00145198ff");
-    }
+
     if (!book.subjects) {
       book.subjects = [];
     }
@@ -99,9 +78,6 @@ export default class BooksMiddleware {
       clean(updates.$set);
     }
     match.userId = "5b57f71b6871ae00145198ff";
-    if (updates.$set && updates.$set.smallImage && /^\/uploads\//.test(updates.$set.smallImage)) {
-      updates.$set.smallImage = await saveLocalImageToS3(updates.$set.smallImage, "5b57f71b6871ae00145198ff");
-    }
   }
   afterUpdate(match, updates, { root, args, context, ast }) {}
   beforeDelete(match, { root, args, context, ast }) {
@@ -122,6 +98,11 @@ export default class BooksMiddleware {
         book.smallImage =
           "https://s3.amazonaws.com/my-library-cover-uploads/" +
           book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+      }
+      if (/http:\/\/my-library-cover-uploads/.test(book.mediumImage)) {
+        book.mediumImage =
+          "https://s3.amazonaws.com/my-library-cover-uploads/" +
+          book.mediumImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
       }
 
       if (Array.isArray(book.editorialReviews)) {
