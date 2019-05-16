@@ -126,7 +126,7 @@ export function goto(module) {
   var userId = getCurrentHistoryState().searchState.userId;
 
   if (currentModule !== module) {
-    history.push({ pathname: `/${module}`, x: "s", search: userId ? `userId=${userId}` : void 0 });
+    history.push({ pathname: `/${module}`, search: userId ? `userId=${userId}` : void 0 });
   }
 }
 
