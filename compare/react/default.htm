@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      if (typeof fetch === "undefined") {
+        var fetchPolyfill = document.createElement("script");
+        fetchPolyfill.setAttribute("src", "/react/util/unfetch.js");
+        document.head.appendChild(fetchPolyfill);
+        fetchPolyfill.onload = function() {
+          window.fetch = unfetch;
+        };
+      }
+    </script>
+
+    <meta charset="UTF-8" />
+    <title>Book tracker</title>
+  </head>
+  <body class="scheme1">
+    <span style="visibility: hidden; position: fixed">
+      <i class="fal fa-angle-left"></i> <i class="fal fa-angle-right"></i> <i class="fal fa-angle-double-left"></i> <i class="fal fa-angle-left"></i>
+      <i class="fal fa-angle-right"></i> <i class="fal fa-angle-double-right"></i> <i class="fal fa-filter"></i> <i class="fal fa-sitemap"></i>
+      <i class="fal fa-tags"></i> <i class="fal fa-table"></i> <i class="fal fa-list"></i> <i class="fal fa-sitemap"></i> <i class="fal fa-tags"></i>
+      <i class="fal fa-eye"></i> <i class="fal fa-eye-slash"></i> <i class="far fa-check"></i> <i class="fab fa-amazon"></i>
+      <i class="fal fa-pencil-alt"></i><i class="fal fa-trash-alt"></i> <i class="fa fa-fw fa-spinner fa-spin"></i> <i class="fa fa-fw fa-check"></i>
+      <i class="fa fa-fw fa-arrows"></i> <i class="fa fa-fw fa-pencil"></i> <i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-trash"></i>
+      <i class="fa fa-fw fa-save"></i>
+    </span>
+    <div id="home"></div>
+
+    <script>
+      function webSocketAddress(path) {
+        return "wss://" + window.location.host + (path || "");
+      }
+    </script>
+  </body>
+</html>

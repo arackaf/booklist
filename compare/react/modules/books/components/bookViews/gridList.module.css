@@ -1,0 +1,11 @@
+
+.gridHoverFilter {
+  text-decoration: none;
+  display: none;
+  color: var(--neutral-light-text);
+}
+
+td:hover .gridHoverFilter {
+  display: unset;
+}
+
