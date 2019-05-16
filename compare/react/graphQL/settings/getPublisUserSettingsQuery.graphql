@@ -1,0 +1,9 @@
+query GetUserPublicSettings {
+  getUser {
+    User {
+      isPublic
+      publicName
+      publicBooksHeader
+    }
+  }
+}

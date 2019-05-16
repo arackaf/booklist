@@ -1,0 +1,19 @@
+mutation createBook($book: BookInput) {
+  createBook(Book: $book) {
+    Book {
+      _id
+      title
+      isbn
+      pages
+      smallImage
+      publicationDate
+      subjects
+      authors
+      publisher
+      tags
+      isRead
+      dateAdded
+    }
+    success
+  }
+}

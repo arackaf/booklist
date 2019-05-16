@@ -1,0 +1,45 @@
+.coversList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.coversList figure {
+  width: 120px;
+  margin: 10px 15px 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media(max-width: 600px){
+  .coversList figure {
+    width: 70px;
+    margin: 7px 10px 0 0;
+  }
+}
+
+@media(max-width: 420px){
+  .coversList figure {
+    width: 50px;
+    margin: 5px 5px 0 0;
+  }
+}
+
+.coversList img {
+  max-width: 100%;
+}
+
+.coversList figure {
+  cursor: pointer;
+}
+
+.coversList figcaption {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  background-color: var(--neutral-6);
+  color: var(--neutral-10);
+  margin-top: auto;
+  padding: 2px;
+}

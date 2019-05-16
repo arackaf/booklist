@@ -191,6 +191,11 @@ app.ws("/bookEntryWS", function(ws, req) {
 
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
+app.use("/compare/react/", express.static(__dirname + "/compare/react/"));
+app.get("/compare/react", (req, res) => {
+  res.sendFile(path.join(__dirname + "/compare/react/dist/index.html"));
+});
+
 app.get("/", browseToReactRedux);
 app.get("/books", browseToReactRedux);
 app.get("/login", browseToReactRedux);

@@ -1,0 +1,37 @@
+query HomeModuleBooks(
+  $page: Int
+  $pageSize: Int
+  $sort: BookSort
+  $title: String
+  $isRead: Boolean
+  $isRead_ne: Boolean
+  $subjects: [String]
+  $searchChildSubjects: Boolean
+  $tags: [String]
+) {
+  allBooks(
+    PAGE: $page
+    PAGE_SIZE: $pageSize
+    SORT: $sort
+    title_contains: $title
+    isRead: $isRead
+    isRead_ne: $isRead_ne
+    subjects_containsAny: $subjects
+    searchChildSubjects: $searchChildSubjects
+    tags_containsAny: $tags
+  ) {
+    Books {
+      _id
+      title
+      isbn
+      smallImage
+      subjects
+      authors
+      tags
+      isRead
+    }
+    Meta {
+      count
+    }
+  }
+}
