@@ -6,7 +6,7 @@ const LazyModal = lambda => props => {
   const LazyComponent = useRef(lazy(lambda));
 
   useLayoutEffect(() => {
-    everOpen.current = props.isOpen;
+    everOpen.current = everOpen.current || props.isOpen;
   }, [props.isOpen]);
 
   return everOpen.current || props.isOpen ? <LazyComponent.current {...props} /> : null;
