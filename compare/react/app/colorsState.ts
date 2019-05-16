@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import { graphqlClient } from "util/graphql";
-import { AppState } from "./appState";
 
 export function useColors() {
   let [{ loaded, colors }, update] = useState({ loaded: false, colors: [] });

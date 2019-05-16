@@ -1,9 +1,0 @@
-mutation updateUser($isPublic: Boolean, $publicBooksHeader: String, $publicName: String) {
-  updateUser(Updates: { isPublic: $isPublic, publicBooksHeader: $publicBooksHeader, publicName: $publicName }) {
-    User {
-      isPublic
-      publicBooksHeader
-      publicName
-    }
-  }
-}

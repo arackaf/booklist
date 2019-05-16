@@ -1,5 +1,0 @@
-mutation deleteBook($_id: String) {
-  deleteBook(_id: $_id) {
-    success
-  }
-}

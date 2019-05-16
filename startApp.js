@@ -151,6 +151,7 @@ const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
 middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+middleware(app, { url: "/graphql-public", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 app.use(
   "/graphql",
   expressGraphql({

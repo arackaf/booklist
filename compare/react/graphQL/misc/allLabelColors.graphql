@@ -1,9 +1,0 @@
-query labelColors {
-  allLabelColors(SORT: { order: 1 }) {
-    LabelColors {
-      _id
-      backgroundColor
-      order
-    }
-  }
-}

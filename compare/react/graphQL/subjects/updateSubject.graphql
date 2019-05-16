@@ -1,9 +1,0 @@
-mutation updateSubject($_id: String, $name: String, $backgroundColor: String, $textColor: String, $parentId: String) {
-  updateSubject(_id: $_id, name: $name, backgroundColor: $backgroundColor, textColor: $textColor, parentId: $parentId) {
-    _id
-    name
-    backgroundColor
-    textColor
-    path
-  }
-}
