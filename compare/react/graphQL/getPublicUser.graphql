@@ -1,8 +1,0 @@
-query GetPublicUser($_id: String, $cache: Int) {
-  getPublicUser(_id: $_id, cache: $cache) {
-    PublicUser {
-      publicName
-      publicBooksHeader
-    }
-  }
-}

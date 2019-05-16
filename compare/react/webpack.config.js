@@ -40,7 +40,8 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
       "react-autosuggest$": "app/components/react-autosuggest-styled.tsx",
-      jscolor: "util/jscolor.js"
+      jscolor: "util/jscolor.js",
+      graphQL: path.resolve(__dirname, "../../react/graphQL")
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
   },
