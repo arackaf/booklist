@@ -4,15 +4,27 @@
 
 .bookDisplay {
   display: flex;
+  margin-bottom: 10px;
 }
 .bookDisplay .img {
   flex-basis: 80px;
 }
-.bookDisplay .title {
+.bookDisplay .bookInfo {
   display: flex;
   flex-direction: column;
 }
-.bookDisplay .title :global(.btn-group) {
+.bookDisplay .bookInfo .title {
+  font-size: 14px;
+}
+.bookDisplay .bookInfo .title a {
+  text-decoration: none;
+  cursor: pointer;
+}
+.bookDisplay .bookInfo .author {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.bookDisplay .bookInfo :global(.btn-group) {
   width: 250px;
   margin-top: 5px;
 }

@@ -3,7 +3,7 @@ import { useQuery, buildQuery } from "micro-graphql-react";
 
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
 import styles from "./styles.module.css";
-const { bookList, bookDisplay, img, title } = styles;
+const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
 import delve from "dlv";
 import ajaxUtil from "util/ajaxUtil";
@@ -35,8 +35,13 @@ const BookSummaryDisplay = props => {
       <div className={img}>
         <img src={book.smallImage} />
       </div>
-      <div className={title}>
-        <div>{book.title}</div>
+      <div className={bookInfo}>
+        <div className={title}>
+          <a target="_blank" href={`https://amazon.com/s?k=${book.title.replace(/\s+/g, "+")}`}>
+            {book.title}
+          </a>
+        </div>
+        <div className={author}>{(book.authors || []).join(", ")}</div>
         <form onSubmit={changeImg}>
           <div className="btn-group">
             <input className="form-control" placeholder="New Cover URL" value={newUrl} onChange={evt => setNewUrl(evt.target.value)} />
