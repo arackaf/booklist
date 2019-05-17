@@ -31,7 +31,7 @@ export default function setupServiceWorker() {
             location.reload();
           }
         });
-        import("toastify-js").then(({ default: Toastify }) => {
+        Promise.all([import("toastify-js"), import("toastify-js/src/toastify.css")]).then(([{ default: Toastify }]) => {
           window.addEventListener("click", evt => {
             try {
               if (evt.target.classList.contains("do-sw-update")) {
@@ -41,11 +41,11 @@ export default function setupServiceWorker() {
           });
           Toastify({
             text: `
-              <h4 style='display: inline'>An update is available!</h4>
-              <br><br>
-              <a class='do-sw-update'>Click to update and reload</a>&nbsp;&nbsp;
-            `.trim(),
-            duration: 7000,
+            <h4 style='display: inline'>An update is available!</h4>
+            <br><br>
+            <a class='do-sw-update'>Click to update and reload</a>&nbsp;&nbsp;
+          `.trim(),
+            duration: 700000,
             gravity: "bottom",
             close: true,
             className: "toast-notification"
