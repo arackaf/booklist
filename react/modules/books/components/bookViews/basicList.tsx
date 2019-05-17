@@ -30,7 +30,7 @@ const BookViewListMobileItem = props => {
                     <i className="fa fa-fw fa-pencil" />
                   </button>
                   <button
-                    style={{ marginLeft: "2px" }}
+                    style={{ marginLeft: "5px" }}
                     className="btn btn-xs btn-light btn-round-icon"
                     onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}
                   >
