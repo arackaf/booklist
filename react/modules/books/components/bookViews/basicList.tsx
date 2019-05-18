@@ -14,7 +14,7 @@ const BookViewListMobileItem = props => {
   const { pendingDelete, deleting } = booksUiState;
 
   return (
-    <div className={listGroupItem} style={{ cursor: "pointer" }}>
+    <div className={listGroupItem}>
       <div style={{ display: "flex" }}>
         <div style={{ marginRight: "5px", minWidth: "55px" }}>
           <img src={book.smallImage} crossOrigin="anonymous" />

@@ -14,7 +14,7 @@ import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
 
 const { bookTitle, bookAuthor } = uiStyles;
-const { gridHoverFilter } = gridStyles;
+const { gridHoverFilter, detailsRow } = gridStyles;
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -193,7 +193,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
   return (
     <tr key={"details" + book._id} style={{ backgroundColor }}>
       <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
-        <div className="row">
+        <div className={`row ${detailsRow}`}>
           <div style={{ position: "static" }} className="col-xs-6">
             {!editorialReviews || !editorialReviews.length ? (
               <h4 style={{ marginTop: 0, marginBottom: 0 }}>No editorial reviews for this book</h4>
