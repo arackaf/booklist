@@ -9,3 +9,10 @@ td:hover .gridHoverFilter {
   display: unset;
 }
 
+.detailsRow {
+  padding-right: 10px;
+}
+.detailsRow > div {
+  max-height: 250px;
+  overflow: auto;
+}
