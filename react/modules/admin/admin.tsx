@@ -20,8 +20,6 @@ const TabContent = ({ currentTab }) => {
 };
 
 const TabHeaders = ({ currentTab, setTab }) => {
-  const [{ isPublic }] = useContext(AppContext);
-
   return (
     <div className="tab-headers">
       <div onClick={() => setTab("covers")} className={classNames("tab-header", { active: currentTab == "covers" })}>
@@ -42,7 +40,7 @@ export default props => {
   };
 
   return (
-    <div style={{ margin: "10px", padding: "10px" }}>
+    <div style={{ margin: "5px 10px 10px", padding: "5px 10px 10px" }}>
       <TabHeaders setTab={setTab} currentTab={currentTab} />
       <TabContent currentTab={currentTab} />
     </div>

@@ -73,7 +73,7 @@ const App = ({ component = null } = {}) => {
             <MobileMeta />
             <MainNavigationBar />
 
-            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+            <div id="main-content" style={{ flex: 1, overflowY: "auto", marginTop: "-5px", paddingTop: "5px" }}>
               {component}
               <div style={{ visibility: "hidden" }}>
                 <button>
