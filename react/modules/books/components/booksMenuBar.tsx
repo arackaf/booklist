@@ -16,6 +16,9 @@ import { BooksContext } from "../booksState";
 import { BooksSearchContext } from "../books";
 import { AppContext } from "app/renderUI";
 
+import styles from "./styles.module.css";
+const { searchInput } = styles;
+
 interface IAddedMenuProps {
   editTags: any;
   editSubjects: any;
@@ -126,14 +129,9 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 defaultValue={bookSearchState.search}
                 onBlur={resetSearch}
                 name="search"
-                className="form-control hidden-tiny"
+                className={`form-control hidden-tiny ${searchInput}`}
                 placeholder="Title search"
                 onKeyDown={quickSearchType}
-                style={{
-                  float: "left",
-                  display: "inline-block",
-                  width: "100px"
-                }}
               />
               {!selectedBooksCount ? (
                 <>
