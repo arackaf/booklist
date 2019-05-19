@@ -487,6 +487,10 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
   border-color: var(--danger-5);
 }
 
+.btn-group input:focus, .btn-group button:focus {
+  z-index: 999999999;
+}
+
 .btn-group input {
   -webkit-appearance: none;
   box-shadow: none;
@@ -495,11 +499,17 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
 div.radio input{
   border-radius: 6px;
 }
-input.form-control, select.form-control, div.radio input {
+input.form-control, select.form-control, div.radio input, button {
   transition: box-shadow .15s linear;
 }
-input.form-control:focus, select.form-control:focus {
+input.form-control:focus, select.form-control:focus, button:focus {
   box-shadow: 0 0 6px var(--primary-7);
+}
+button.btn-xs:focus {
+  box-shadow: 0 0 3px var(--primary-7);
+}
+.btn-group button:focus, .btn-group input:focus {
+  box-shadow: 0 0 2px var(--primary-7);
 }
 div.radio input:focus {
   box-shadow: 0 0 8px var(--primary-7);

@@ -136,9 +136,9 @@ const BookEntryList: FunctionComponent<{}> = () => {
               <div className="col-sm-6 col-xs-12">
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} </h4>
-                  <a className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
+                  <button className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
                     Manual entry
-                  </a>
+                  </button>
                 </div>
                 <TransitionGroup>
                   {showScanInstructions ? (
