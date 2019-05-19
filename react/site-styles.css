@@ -486,3 +486,8 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
 .has-error input {
   border-color: var(--danger-5);
 }
+
+.btn-group input {
+  -webkit-appearance: none;
+  box-shadow: none;
+}
