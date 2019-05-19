@@ -491,3 +491,16 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
   -webkit-appearance: none;
   box-shadow: none;
 }
+
+div.radio input{
+  border-radius: 6px;
+}
+input.form-control, select.form-control, div.radio input {
+  transition: box-shadow .15s linear;
+}
+input.form-control:focus, select.form-control:focus {
+  box-shadow: 0 0 6px var(--primary-7);
+}
+div.radio input:focus {
+  box-shadow: 0 0 8px var(--primary-7);
+}
