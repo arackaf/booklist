@@ -50,7 +50,7 @@
     "passport": "0.3.2",
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
-    "request": "2.83.0",
+    "request": "^2.88.0",
     "rollup": "^0.67.3",
     "rollup-plugin-babel-minify": "^6.2.0",
     "rollup-plugin-uglify": "^6.0.0",
