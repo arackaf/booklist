@@ -66,25 +66,6 @@ class BookDAO extends DAO {
       super.dispose(db);
     }
   }
-
-  saveToAws(webPath) {
-    return new Promise((res, rej) => {
-      fs.readFile("." + webPath, (err, data) => {
-        if (err) return rej(err);
-
-        let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } }),
-          params = {
-            Key: `bookCovers/${this.userId}/${path.basename(webPath)}`,
-            Body: data
-          };
-
-        s3bucket.upload(params, function(err) {
-          if (err) rej(err);
-          else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
-        });
-      });
-    });
-  }
 }
 
 function adjustForClient(book) {
