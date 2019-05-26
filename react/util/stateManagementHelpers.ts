@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useCallback } from "react";
 
 export function makeStateBoundHelpers<T>(state, updateState, fns: T, options = {} as any): { [k in keyof T]: any } {
   return useMemo(
@@ -23,8 +23,8 @@ export function makeActionCreators(dispatch, fns) {
 
 export function getStatePacket<T>(reducer, initialState, actions?): [T, any, any] {
   let [state, dispatch] = useReducer(reducer, initialState);
-  let newDispatch = useMemo(
-    () => val => {
+  let newDispatch = useCallback(
+    val => {
       if (typeof val === "object") {
         dispatch(val);
       } else if (typeof val === "function") {
