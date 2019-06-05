@@ -129,8 +129,9 @@ passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
+const jr_admins = new Set(process.env.JELLYROLLS_ADMINS.split(",").filter(id => id));
 passport.deserializeUser(function(id, done) {
-  return done(undefined, { id: "" + id, _id: "" + id, admin: id == process.env.ADMIN_USER });
+  return done(undefined, { id: "" + id, _id: "" + id, admin: id == process.env.ADMIN_USER, jr_admin: jr_admins.has(id) });
 });
 
 app.use(compression());
@@ -209,6 +210,7 @@ app.get("/view", browseToReactRedux);
 app.get("/admin", browseToReactRedux);
 app.get("/styledemo", browseToReactRedux);
 app.get("/react", browseToReactRedux);
+app.get("/jr", browseToReactRedux);
 app.get("/service-worker.js", (request, response) => {
   response.sendFile(path.join(__dirname + "/react/dist/service-worker.js"));
 });

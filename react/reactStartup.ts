@@ -24,7 +24,7 @@ let publicUserCache = {};
 
 export const history = createHistory();
 
-const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings", "styledemo", "admin"]);
+const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings", "styledemo", "admin", "jr"]);
 let initial = true;
 
 export const getModulePromise = moduleToLoad => {
@@ -51,6 +51,8 @@ export const getModulePromise = moduleToLoad => {
       return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
     case "admin":
       return import(/* webpackChunkName: "admin-module" */ "./modules/admin/admin");
+    case "jr":
+      return import(/* webpackChunkName: "jr-module" */ "./modules/jr/songEdit");
   }
 };
 
