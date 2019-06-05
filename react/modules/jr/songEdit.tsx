@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 
 import styles from "./styles.module.css";
 import ajaxUtil from "util/ajaxUtil";
+import { isJrAdmin } from "util/loginStatus";
 
 const SongList = props => {
   const [adding, setAdding] = useState(false);
@@ -44,6 +45,10 @@ const SongList = props => {
       setSearched(true);
     });
   };
+
+  if (!isJrAdmin()) {
+    return null;
+  }
 
   return (
     <div style={{ paddingLeft: "10px" }}>
