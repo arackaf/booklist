@@ -14,6 +14,8 @@ export async function getDbConnection() {
 
 class SongsController {
   async getSongs({ search }) {
+    if (!jr_admin) return this.send({ songs: [] });
+
     try {
       let { client, db } = await getDbConnection();
 
@@ -29,6 +31,7 @@ class SongsController {
     }
   }
   async updateSong({ _id, title, singers, artist, group }) {
+    if (!jr_admin) return;
     try {
       let { client, db } = await getDbConnection();
 
@@ -54,6 +57,8 @@ class SongsController {
     }
   }
   async addSong({ _id, title, artist, singers, group }) {
+    if (!jr_admin) return;
+
     try {
       let { client, db } = await getDbConnection();
 
