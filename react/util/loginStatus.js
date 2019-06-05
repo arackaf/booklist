@@ -9,6 +9,11 @@ export function isAdmin() {
   return !!admin;
 }
 
+export function isJrAdmin() {
+  let admin = getCookie("jr_admin");
+  return !!admin;
+}
+
 function getCookie(name) {
   return document.cookie.split("; ").reduce((r, v) => {
     const parts = v.split("=");
