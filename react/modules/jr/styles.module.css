@@ -1,0 +1,21 @@
+.addForm {
+  display: flex;
+  align-items: center;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: var(--primary-10)
+}
+
+.titleDisplay {
+  display: flex;
+}
+
+.titleEdit {
+  display: flex;
+  align-items: center;
+}
+
+.addNew td, .addNew tr {
+  padding-left: 0;
+}
