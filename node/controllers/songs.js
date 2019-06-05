@@ -28,27 +28,48 @@ class SongsController {
       this.send({ songs: [], err: ex });
     }
   }
-  async updateSong({ _id, title, singers, group }) {
+  async updateSong({ _id, title, singers, artist, group }) {
     try {
       let { client, db } = await getDbConnection();
 
       let $set = {
-        group,
-        title
+        title,
+        artist
       };
       let packet = {
         $set
       };
       if (group) {
         packet.$unset = { singers: "" };
+        $set.group = true;
       } else {
+        packet.$unset = { group: "" };
         $set.singers = singers;
       }
       await db.collection("songs").update({ _id: ObjectId(_id) }, packet);
 
       this.send({ success: true });
     } catch (er) {
-      debugger;
+      this.send({ success: false });
+    }
+  }
+  async addSong({ _id, title, artist, singers, group }) {
+    try {
+      let { client, db } = await getDbConnection();
+
+      let song = {
+        title,
+        artist
+      };
+      if (!group) {
+        song.singers = singers;
+      } else {
+        song.group = true;
+      }
+      await db.collection("songs").insertOne(song);
+
+      this.send({ success: true });
+    } catch (er) {
       this.send({ success: false });
     }
   }

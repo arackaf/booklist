@@ -4,6 +4,8 @@ import styles from "./styles.module.css";
 import ajaxUtil from "util/ajaxUtil";
 
 const SongList = props => {
+  const [adding, setAdding] = useState(false);
+  const [newSong, setNewSong] = useState({ singers: [] });
   const [songs, setSongs] = useState([]);
   const [searched, setSearched] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -14,6 +16,7 @@ const SongList = props => {
     if (!song) return;
 
     song.title = packet.title;
+    song.artist = packet.artist;
     if (packet.group) {
       delete song.singers;
       song.group = true;
@@ -23,6 +26,13 @@ const SongList = props => {
     }
 
     setSongs(songs.concat());
+  };
+
+  const addSong = packet => {
+    ajaxUtil.post("/songs/addSong", packet).then(res => {
+      setNewSong({ singers: [] });
+      setAdding(false);
+    });
   };
 
   const search = evt => {
@@ -44,13 +54,26 @@ const SongList = props => {
           <button disabled={searching} onClick={search} className="btn btn-primary margin-right">
             Go {searching ? <i className="fa fa-fw fa-spin fa-spinner" /> : null}
           </button>
+          <a onClick={() => setAdding(true)} className="btn btn-info margin-left">
+            New Song <i className="fa fa-fw fa-plus" />
+          </a>
         </div>
       </form>
+      {adding ? (
+        <div className={`margin-top margin-bottom ${styles.addNew}`}>
+          <table>
+            <tbody>
+              <SongDisplayEditing save={addSong} cancel={() => setAdding(false)} song={newSong} />
+            </tbody>
+          </table>
+        </div>
+      ) : null}
       {songs.length ? (
         <table className={`table table-condensed margin-top ${styles.table}`} style={{ marginBottom: "20px" }}>
           <thead>
             <tr>
               <th style={{ width: "500px" }}>Title</th>
+              <th style={{ width: "200px" }}>Artist</th>
               <th style={{ width: "150px" }}>Group?</th>
               <th>Singers</th>
             </tr>
@@ -98,6 +121,7 @@ const SongDisplayNoEdit = props => {
           </a>
         </div>
       </td>
+      <td>{song.artist}</td>
       <td>
         {song.group ? (
           <span style={{ color: "green", fontWeight: "bold" }}>
@@ -113,6 +137,7 @@ const SongDisplayNoEdit = props => {
 const SongDisplayEditing = props => {
   const { song, cancel, save } = props;
   const titleRef = useRef(null);
+  const artistRef = useRef(null);
   const [isGroup, setIsGroup] = useState(song.group);
   const [saving, setSaving] = useState(false);
   const singers = ["Jason", "Jordan", "Matt", "Michael", "Ray", "Rob", "Scotty"];
@@ -126,6 +151,7 @@ const SongDisplayEditing = props => {
   const runSave = () => {
     const packet = {
       _id: song._id,
+      artist: artistRef.current.value,
       title: titleRef.current.value,
       group: !!isGroup,
       singers: [...currentSingers]
@@ -137,9 +163,16 @@ const SongDisplayEditing = props => {
 
   return (
     <tr>
-      <td>
+      <td style={{ width: "700px" }} colSpan={2}>
         <div className={styles.titleEdit}>
-          <input ref={titleRef} style={{ width: "250px" }} className="form-control" defaultValue={song.title} />
+          <input placeholder={"Title"} ref={titleRef} style={{ width: "250px" }} className="form-control" defaultValue={song.title} />
+          <input
+            placeholder={"Author"}
+            ref={artistRef}
+            style={{ width: "250px", marginLeft: "30px" }}
+            className="form-control"
+            defaultValue={song.artist}
+          />
           <span style={{ marginLeft: "auto", marginRight: "20px" }}>
             <button disabled={saving} onClick={runSave} className="btn btn-primary btn-xs margin-right">
               <i className="fa fa-fw fa-save" /> {saving ? <i className="fa fa-fw fa-spin fa-spinner" /> : null}
@@ -148,7 +181,7 @@ const SongDisplayEditing = props => {
           </span>
         </div>
       </td>
-      <td style={{ verticalAlign: "middle" }}>
+      <td style={{ verticalAlign: "middle", width: "150px" }}>
         <div style={{ display: "flex", alignItems: "center" }} className="checkbox">
           <label>
             <input onChange={evt => setIsGroup(evt.target.checked)} type="checkbox" checked={isGroup} /> Group?
