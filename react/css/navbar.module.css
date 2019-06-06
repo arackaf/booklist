@@ -17,6 +17,10 @@
 .nav li:global(.active), .nav div:global(.active) {
   background-color: var(--primary-7);
 }
+:global(.scheme5) .nav li:global(.active), :global(.scheme5) .nav div:global(.active) {
+  background-color: var(--primary-6);
+}
+
 .nav li:global(.active) a {
   cursor: default;
 }
