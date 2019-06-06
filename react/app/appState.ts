@@ -41,7 +41,7 @@ const initialState = {
   isPublic: false,
   module: "",
   online: navigator.onLine,
-  colorTheme: localStorageManager.get("color-theme", "scheme3")
+  colorTheme: localStorageManager.get("color-theme", "scheme5")
 };
 
 export type AppState = typeof initialState;
