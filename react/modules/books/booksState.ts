@@ -77,7 +77,12 @@ export const useBooks = () => {
     {
       when: /deleteBook/,
       run: ({ refresh }, res, req) => {
-        syncDeletes(GetBooksQuery, [req._id], "allBooks", "Books");
+        syncDeletes(GetBooksQuery, [req._id], "allBooks", "Books", {
+          onDelete: ({ count, resultSet }) => {
+            let meta = delve(resultSet, "allBooks.Meta");
+            meta && (meta.count -= count);
+          }
+        });
         refresh();
       }
     }
