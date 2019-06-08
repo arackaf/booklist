@@ -68,17 +68,4 @@ class BookDAO extends DAO {
   }
 }
 
-function adjustForClient(book) {
-  book.dateAdded = +book._id.getTimestamp();
-  if (/\d{4}-\d{2}-\d{2}/.test(book.publicationDate)) {
-    book.publicationDate = moment(book.publicationDate).format("MMMM Do YYYY");
-  }
-  if (/http:\/\/my-library-cover-uploads/.test(book.smallImage)) {
-    book.smallImage =
-      "https://s3.amazonaws.com/my-library-cover-uploads/" +
-      book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
-  }
-  return book;
-}
-
 export default BookDAO;
