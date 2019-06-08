@@ -99,8 +99,6 @@ const BookEntryList: FunctionComponent<{}> = () => {
         manualBook: defaultEmptyBook()
       });
       setTimeout(() => setEditState(editState => ({ ...editState, manualSaved: false })), 2000);
-      let book = res.createBook && res.createBook.Book;
-      return book;
     });
   };
 
