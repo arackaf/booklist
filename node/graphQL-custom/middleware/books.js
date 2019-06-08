@@ -95,15 +95,15 @@ export default class BooksMiddleware {
       if (/\d{4}-\d{2}-\d{2}/.test(book.publicationDate)) {
         book.publicationDate = moment(book.publicationDate).format("MMMM Do YYYY");
       }
-      if (/http:\/\/my-library-cover-uploads/.test(book.smallImage)) {
+      if (/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/.test(book.smallImage)) {
         book.smallImage =
-          "https://s3.amazonaws.com/my-library-cover-uploads/" +
-          book.smallImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+          "https://my-library-cover-uploads.s3.amazonaws.com/" +
+          book.smallImage.replace(/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
       }
-      if (/http:\/\/my-library-cover-uploads/.test(book.mediumImage)) {
+      if (/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/.test(book.mediumImage)) {
         book.mediumImage =
-          "https://s3.amazonaws.com/my-library-cover-uploads/" +
-          book.mediumImage.replace(/http:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+          "https://my-library-cover-uploads.s3.amazonaws.com/" +
+          book.mediumImage.replace(/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
       }
 
       if (Array.isArray(book.editorialReviews)) {
