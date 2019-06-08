@@ -81,11 +81,7 @@ const ManageBookCover = props => {
   return (
     <div style={{ display: "flex", flexFlow: "row wrap" }}>
       <div className="margin-right">
-        {img ? (
-          <img key={currentUrl} {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
-        ) : (
-          <span className="alert alert-warning">No Cover</span>
-        )}
+        {img ? <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} /> : <span className="alert alert-warning">No Cover</span>}
       </div>
       {!pendingImg ? (
         <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>
@@ -109,7 +105,7 @@ const ManageBookCover = props => {
       ) : null}
       {pendingImg ? (
         <div className="margin-right">
-          <img src={pendingImg} />
+          <img src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
           <br />
           <div style={{ display: "flex" }}>
             <button onClick={runSave} className="btn btn-xs btn-light btn-square-icon">
