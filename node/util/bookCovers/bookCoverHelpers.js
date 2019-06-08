@@ -111,7 +111,7 @@ export function saveCoverToS3(source, s3Key) {
 
       s3bucket.upload(params, function(err) {
         if (err) res(err);
-        else res(`http://my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/${params.Key}`);
+        else res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
       });
     });
   });
