@@ -6,6 +6,7 @@ import { TagsContext, useTagsState } from "app/tagsState";
 import BooksQuery from "graphQL/home/searchBooks.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import ajaxUtil from "util/ajaxUtil";
+import { getCrossOriginAttribute } from "util/corsHelpers";
 
 const initialState = {
   selectedBooks: [],
@@ -128,7 +129,7 @@ const DisplayBook = props => {
         </button>
       </td>
       <td>
-        <img src={book.smallImage} crossOrigin="anonymous" />
+        <img src={book.smallImage} {...getCrossOriginAttribute(book.smallImage)} />
       </td>
       <td>
         {book.title}
