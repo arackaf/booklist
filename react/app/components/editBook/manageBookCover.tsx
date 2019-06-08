@@ -5,6 +5,7 @@ import ajaxUtil from "util/ajaxUtil";
 
 import UpdateBook from "graphQL/books/updateBook.graphql";
 import { useMutation, buildMutation } from "micro-graphql-react";
+import { getCrossOriginAttribute } from "util/corsHelpers";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -80,7 +81,11 @@ const ManageBookCover = props => {
   return (
     <div style={{ display: "flex", flexFlow: "row wrap" }}>
       <div className="margin-right">
-        {img ? <img crossOrigin="anonymous" src={currentUrl} /> : <span className="alert alert-warning">No Cover</span>}
+        {img ? (
+          <img key={currentUrl} {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+        ) : (
+          <span className="alert alert-warning">No Cover</span>
+        )}
       </div>
       {!pendingImg ? (
         <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>

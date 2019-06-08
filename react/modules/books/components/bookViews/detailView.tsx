@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect } from "react";
 
 import Modal from "app/components/modal";
+import { getCrossOriginAttribute } from "util/corsHelpers";
 
 const DetailsView = props => {
   const { book } = props;
@@ -20,7 +21,7 @@ const DetailsView = props => {
       <div style={{ display: "flex", alignItems: "top" }}>
         <div>
           <div style={{ width: "106px" }}>
-            <img style={{ maxWidth: "100%" }} src={url} crossOrigin="anonymous" />
+            <img style={{ maxWidth: "100%" }} src={url} {...getCrossOriginAttribute(url)} />
           </div>
         </div>
         <div style={{ paddingLeft: "10px", display: "flex", flexDirection: "column" }}>
