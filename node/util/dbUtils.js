@@ -9,3 +9,13 @@ export async function getDbConnection() {
 
   return { client, db };
 }
+
+const jrDbName = "jellyrolls";
+const jrConnString = process.env.JELLYROLLS_CONNECTION;
+
+export async function getJrDbConnection() {
+  let client = await MongoClient.connect(jrConnString, { useNewUrlParser: true });
+  let db = await client.db(jrDbName);
+
+  return { client, db };
+}
