@@ -1,23 +1,14 @@
 import { controller } from "easy-express-controllers";
 
-import { MongoClient, ObjectId } from "mongodb";
-
-const dbName = "jellyrolls";
-const connString = process.env.JELLYROLLS_CONNECTION;
-
-export async function getDbConnection() {
-  let client = await MongoClient.connect(connString, { useNewUrlParser: true });
-  let db = await client.db(dbName);
-
-  return { client, db };
-}
+import { ObjectId } from "mongodb";
+import { JrConn } from "../../startApp";
 
 class SongsController {
   async getSongs({ search }) {
     if (!this.request.user.jr_admin) return this.send({ songs: [] });
 
     try {
-      let { client, db } = await getDbConnection();
+      let { client, db } = await JrConn;
 
       let res = await db
         .collection("songs")
@@ -33,7 +24,7 @@ class SongsController {
   async updateSong({ _id, title, singers, artist, group }) {
     if (!this.request.user.jr_admin) return this.send({ success: false });
     try {
-      let { client, db } = await getDbConnection();
+      let { client, db } = await JrConn;
 
       let $set = {
         title,
@@ -60,7 +51,7 @@ class SongsController {
     if (!this.request.user.jr_admin) return this.send({ success: false });
 
     try {
-      let { client, db } = await getDbConnection();
+      let { client, db } = await JrConn;
 
       let song = {
         title,

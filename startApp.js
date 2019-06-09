@@ -34,6 +34,7 @@ import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUti
 
 import uuid from "uuid/v4";
 import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node/util/bookCovers/bookCoverHelpers";
+import { getJrDbConnection } from "./node/util/dbUtils";
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
@@ -57,6 +58,8 @@ if (!IS_DEV) {
     }
   });
 }
+
+export const JrConn = getJrDbConnection();
 
 // setTimeout(() => {
 //   new UserDao().getSubscription("56f34a2748243210269ecd66").then(sub => {
