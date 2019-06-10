@@ -60,5 +60,8 @@
     "webpack": "4.32.2",
     "webpack-cli": "3.3.2",
     "xml2js": "^0.4.19"
+  },
+  "devDependencies": {
+    "@playlyfe/gql": "^2.6.1"
   }
 }
