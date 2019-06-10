@@ -1,0 +1,13 @@
+{
+  schema: {
+    files: "node/graphQL/masterSchema.gql"
+  },
+  query: {
+    files: [
+      {
+        match: 'react/**/*.graphql',
+        parser: 'QueryParser',
+      },
+    ],
+  }
+}
