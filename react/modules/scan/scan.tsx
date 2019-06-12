@@ -126,12 +126,12 @@ const BookEntryList: FunctionComponent<{}> = () => {
     ) : null;
 
   return (
-    <div>
+    <div className="standard-module-container">
       <GraphQL mutation={{ createBook: buildMutation(createBookMutation) }}>
         {({ createBook: { runMutation, running } }) => (
           <>
-            <div className="row xs-pull-reverse" style={{ padding: "10px", marginBottom: "50px" }}>
-              <div className="col-sm-6 col-xs-12">
+            <div className="row xs-pull-reverse" style={{ marginLeft: 0 }}>
+              <div className="col-sm-6 col-xs-12" style={{ paddingLeft: 0 }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} </h4>
                   <button className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
@@ -219,6 +219,8 @@ const BookEntryList: FunctionComponent<{}> = () => {
           </>
         )}
       </GraphQL>
+      <br />
+      <br />
     </div>
   );
 };

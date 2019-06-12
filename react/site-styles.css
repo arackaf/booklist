@@ -278,10 +278,6 @@ body {
   --primary-10: hsl(0, 0%, 97%);
 }
 
-
-
-
-
 #home, [data-reach-dialog-overlay] {
   --neutral-text: var(--neutral-3);
   --neutral-light-text: var(--neutral-5);
@@ -300,6 +296,12 @@ body {
 }
 #main-content, input, select, reach-portal, a {
   color: var(--neutral-text);
+}
+
+.standard-module-container {
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 #footer {

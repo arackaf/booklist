@@ -10,8 +10,8 @@ import RecommendMain from "./components/recommend/main";
 import "./d3-styles.css";
 
 const MainHomePane = props => (
-  <div style={{ margin: 0 }}>
-    <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px", marginTop: "15px" }}>
+  <div>
+    <div style={{ marginLeft: "auto", marginRight: "auto", maxWidth: "1200px" }}>
       <div className="">
         <div className="panel-body" style={{ position: "relative" }}>
           {props.children}
@@ -135,10 +135,6 @@ const HomeIfNotLoggedIn = () => (
 
 const Home: FunctionComponent<{}> = props => {
   const [{ isLoggedIn }] = useContext(AppContext);
-  return (
-    <div style={{ paddingLeft: 0, paddingRight: 0, marginLeft: "15px", marginRight: "15px" }} className="container-fluid">
-      {isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}
-    </div>
-  );
+  return <div className="container-fluid standard-module-container">{isLoggedIn ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</div>;
 };
 export default Home;

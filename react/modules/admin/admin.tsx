@@ -1,8 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 
 import localStorageManager from "util/localStorage";
-import { AppContext } from "app/renderUI";
 
 import CoverManager from "./components/bookSummaryCovers/coverManager";
 
@@ -40,7 +39,7 @@ export default props => {
   };
 
   return (
-    <div style={{ margin: "5px 10px 10px", padding: "5px 10px 10px" }}>
+    <div className="standard-module-container">
       <TabHeaders setTab={setTab} currentTab={currentTab} />
       <TabContent currentTab={currentTab} />
     </div>

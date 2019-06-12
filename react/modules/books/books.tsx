@@ -148,7 +148,7 @@ const BookViewingList: SFC<{}> = props => {
   return (
     <>
       <BooksLoading />
-      <div style={{ marginLeft: "5px", marginTop: 0 }}>
+      <div className="standard-module-container">
         <BooksMenuBar
           startTagModification={editTagsForSelectedBooks}
           startSubjectModification={editSubjectsForSelectedBooks}
