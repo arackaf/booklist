@@ -79,7 +79,7 @@ export default props => {
   };
 
   return (
-    <div style={{ margin: "10px", padding: "10px" }}>
+    <div className="standard-module-container">
       <TabHeaders setTab={setTab} currentTab={currentTab} />
       <TabContent currentTab={currentTab} />
     </div>
