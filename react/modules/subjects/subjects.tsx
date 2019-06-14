@@ -404,13 +404,15 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
   let SDL: any = SubjectDragLayer;
 
   return (
-    <div className="row subject-row standard-module-container">
-      <div className="col-lg-6 col-md-8 col-xs-12" style={{ paddingLeft: 0 }}>
-        <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
-          New subject
-        </BootstrapButton>
-        <SubjectList subjects={allSubjects} />
-        {isTouch ? <SDL /> : null}
+    <div className="standard-module-container">
+      <div className="subject-row row subject-row">
+        <div className="col-lg-6 col-md-8 col-xs-12">
+          <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
+            New subject
+          </BootstrapButton>
+          <SubjectList subjects={allSubjects} />
+          {isTouch ? <SDL /> : null}
+        </div>
       </div>
     </div>
   );
