@@ -73,7 +73,7 @@ export default class AmazonSearch {
                 removeFile(newPath);
               }
             } else if (bookResult.smallImage) {
-              let res = await downloadBookCover(bookResult.smallImage, 1200); // < 1200 bytes on a small cover
+              let res = await downloadBookCover(bookResult.smallImage, 1000); // < 1000 bytes on a small cover
               if (res) {
                 let { fileName, fullName } = res;
                 let newPath = await resizeIfNeeded(fileName);
@@ -107,7 +107,7 @@ export default class AmazonSearch {
                 removeFile(newPath);
               }
             } else if (bookResult.mediumImage) {
-              let res = await downloadBookCover(bookResult.mediumImage, 1200); // < 1200 bytes on a medium cover
+              let res = await downloadBookCover(bookResult.mediumImage, 1000); // < 1000 bytes on a medium cover
               if (res) {
                 let { fileName, fullName } = res;
                 let newPath = await resizeIfNeeded(fileName, 106);
