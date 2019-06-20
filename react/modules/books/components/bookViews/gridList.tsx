@@ -13,6 +13,7 @@ import { useQuery, buildQuery } from "micro-graphql-react";
 import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
 import { getCrossOriginAttribute } from "util/corsHelpers";
+import { CoverSmall } from "app/components/bookCoverComponent";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -52,7 +53,7 @@ const BookRow: SFC<ILocalProps> = props => {
         ) : null}
         <td>
           <div style={{ minWidth: "75px", minHeight: "75px" }}>
-            <img src={book.smallImage} {...getCrossOriginAttribute(book.smallImage)} />
+            <CoverSmall url={book.smallImage} />
           </div>
         </td>
         <td>
