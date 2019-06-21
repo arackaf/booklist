@@ -116,8 +116,7 @@ function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
       authors_textContains: bookSearchFilters.author || void 0,
       publisher_contains: bookSearchFilters.publisher || void 0,
       publicUserId: publicUserId,
-      subjects_count: bookSearchFilters.noSubjects ? 0 : void 0,
-      cache: online ? 1 : void 0
+      subjects_count: bookSearchFilters.noSubjects ? 0 : void 0
     };
 
     if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {

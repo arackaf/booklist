@@ -73,7 +73,7 @@ const getSearchVariables = search => {
 
 const booksSearch = search => dispatch => {
   dispatch({ type: SET_SEARCH_VALUES, values: { ...search, page: 1 } });
-  let queryVariables = { ...getSearchVariables(search), cache: 1 };
+  let queryVariables = { ...getSearchVariables(search) };
 
   dispatch({ type: SEARCH_BOOKS });
 
