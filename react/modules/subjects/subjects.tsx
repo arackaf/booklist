@@ -28,7 +28,7 @@ type dragLayerType = {
   isDragging: boolean;
 };
 
-const SubjectDragLayer = DragLayer((monitor, x) => {
+const SubjectDragLayer: FunctionComponent<{ currentlyDragging: string } & dragLayerType> = DragLayer((monitor, x) => {
   return {
     item: monitor.getItem(),
     currentOffset: monitor.getSourceClientOffset(),
@@ -215,7 +215,7 @@ const DefaultSubjectDisplay = props => {
   return (noDrop ? c => c : connectDropTarget)(
     <div className={className}>
       <div
-        className={`col-lg-12 ${showOnHoverParent} ${defaultSubjectDisplay}`}
+        className={`col-xs-12 ${showOnHoverParent} ${defaultSubjectDisplay}`}
         style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
       >
         {mainIcon}
@@ -346,7 +346,7 @@ const PendingDeleteSubjectDisplay = props => {
 
   return (
     <div className={className + " delete-pane"}>
-      <div className="col-lg-12">
+      <div className="col-xs-12">
         <div className="label label-default" style={{ display: "inline", color: textColor, backgroundColor }}>
           {name}
         </div>
@@ -365,7 +365,7 @@ const DeletingSubjectDisplay = props => {
   let { name, className } = props;
   return (
     <div className={className}>
-      <div className="col-lg-12">
+      <div className="col-xs-12">
         {name}
         <BootstrapButton preset="danger-xs" disabled={true} style={{ marginLeft: "20px" }}>
           Deleting <i className="fa fa-fw fa-spinner fa-spin" />
@@ -404,13 +404,15 @@ const TopSubjectsList = DragDropContext(HTML5Backend)(props => {
   let SDL: any = SubjectDragLayer;
 
   return (
-    <div className="row subject-row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "50px" }}>
-      <div style={{ marginTop: "10px" }} className="col-lg-6 col-xs-12">
-        <BootstrapButton style={{ marginBottom: "5px" }} disabled={!online} onClick={() => addNewSubject()} preset="primary">
-          New subject
-        </BootstrapButton>
-        <SubjectList subjects={allSubjects} />
-        {isTouch ? <SDL /> : null}
+    <div className="standard-module-container">
+      <div className="subject-row row subject-row">
+        <div className="col-lg-6 col-md-8 col-xs-12">
+          <BootstrapButton disabled={!online} onClick={() => addNewSubject()} preset="primary">
+            New subject
+          </BootstrapButton>
+          <SubjectList subjects={allSubjects} />
+          {isTouch ? <SDL /> : null}
+        </div>
       </div>
     </div>
   );
@@ -422,6 +424,8 @@ export default () => {
   return (
     <SubjectsDnDContext.Provider value={subjectsState}>
       <TopSubjectsList />
+      <br />
+      <br />
     </SubjectsDnDContext.Provider>
   );
 };

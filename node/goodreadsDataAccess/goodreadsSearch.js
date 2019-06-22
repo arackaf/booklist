@@ -58,7 +58,8 @@ export default class AmazonSearch {
 
           try {
             if (/nophoto/.test(bookResult.smallImage)) {
-              let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a small cover
+              let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000); // < 1000 bytes on a small cover
+              bookResult.smallImage = "";
               if (res) {
                 let { fileName, fullName } = res;
                 let newPath = await resizeIfNeeded(fileName);
@@ -73,7 +74,8 @@ export default class AmazonSearch {
                 removeFile(newPath);
               }
             } else if (bookResult.smallImage) {
-              let res = await downloadBookCover(bookResult.smallImage, 1200); // < 1200 bytes on a small cover
+              let res = await downloadBookCover(bookResult.smallImage, 1000); // < 1000 bytes on a small cover
+              bookResult.smallImage = "";
               if (res) {
                 let { fileName, fullName } = res;
                 let newPath = await resizeIfNeeded(fileName);
@@ -93,6 +95,7 @@ export default class AmazonSearch {
           try {
             if (/nophoto/.test(bookResult.mediumImage)) {
               let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1200); // < 1200 bytes on a medium cover
+              bookResult.mediumImage = "";
               if (res) {
                 let { fileName, fullName } = res;
                 let newPath = await resizeIfNeeded(fileName, 106);
@@ -107,7 +110,8 @@ export default class AmazonSearch {
                 removeFile(newPath);
               }
             } else if (bookResult.mediumImage) {
-              let res = await downloadBookCover(bookResult.mediumImage, 1200); // < 1200 bytes on a medium cover
+              let res = await downloadBookCover(bookResult.mediumImage, 1200); // < 1000 bytes on a medium cover
+              bookResult.mediumImage = "";
               if (res) {
                 let { fileName, fullName } = res;
                 let newPath = await resizeIfNeeded(fileName, 106);
