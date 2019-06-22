@@ -5,6 +5,7 @@ import BookEditModal from "app/components/editBook/editModal";
 
 import coversClasses from "./coversList.module.css";
 import { getCrossOriginAttribute } from "util/corsHelpers";
+import { CoverMedium } from "app/components/bookCoverComponent";
 
 const { coversList } = coversClasses;
 
@@ -41,7 +42,7 @@ const BookViewCovers: SFC<any> = props => {
           {books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
               <div>
-                <img src={book.mediumImage} {...getCrossOriginAttribute(book.mediumImage)} />
+                <CoverMedium url={book.mediumImage} />
               </div>
               <figcaption>{book.title}</figcaption>
             </figure>
