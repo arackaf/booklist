@@ -20,12 +20,12 @@ export const type = `
     similarItems: [String]
     similarItemsLastUpdate: Int
     timestamp: Float
-    similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary]
+    similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary!]!
   }
 
   type BookQueryResults {
-    Books: [Book]
-    Meta: QueryResultsMetadata
+    Books: [Book!]!
+    Meta: QueryResultsMetadata!
   }
 
   type BookSingleQueryResult {
@@ -34,19 +34,19 @@ export const type = `
 
   type BookMutationResult {
     Book: Book
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type BookMutationResultMulti {
     Books: [Book]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type BookBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input BookInput {
@@ -69,7 +69,7 @@ export const type = `
     similarItems: [String]
     similarItemsLastUpdate: Int
     timestamp: Float
-    similarBooks: [BookSummaryInput]
+    similarBooks: [BookSummaryInput!]!
   }
 
   input BookMutationInput {
@@ -126,7 +126,7 @@ export const type = `
     timestamp: Float
     timestamp_INC: Int
     timestamp_DEC: Int
-    similarBooks_ADD: [BookSummaryInput]
+    similarBooks_ADD: [BookSummaryInput!]!
   }
 
   input BookSort {
@@ -288,8 +288,7 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
   createBook (
@@ -316,7 +315,6 @@ export const mutation = `
   ): DeletionResultInfo
 
 `;
-
 
 export const query = `
 
@@ -464,7 +462,7 @@ export const query = `
     publicUserId: String,
     ver: String,
     cache: Int
-  ): BookQueryResults
+  ): BookQueryResults!
 
   getBook (
     _id: String,
@@ -472,7 +470,6 @@ export const query = `
     publicUserId: String,
     ver: String,
     cache: Int
-  ): BookSingleQueryResult
+  ): BookSingleQueryResult!
 
 `;
-  

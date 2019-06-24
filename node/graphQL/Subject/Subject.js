@@ -15,7 +15,5 @@ export default {
     schemaSources: ["../../graphQL-custom/extras/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
-  relationships: {
-
-  }
+  relationships: {}
 };

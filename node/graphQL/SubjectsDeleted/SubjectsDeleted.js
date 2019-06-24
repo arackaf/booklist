@@ -6,7 +6,5 @@ export default {
     userId: "String",
     deletedTimestamp: "Float"
   },
-  relationships: {
-
-  }
+  relationships: {}
 };
