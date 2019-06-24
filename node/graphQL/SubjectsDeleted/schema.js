@@ -7,8 +7,8 @@ export const type = `
   }
 
   type SubjectsDeletedQueryResults {
-    SubjectsDeleteds: [SubjectsDeleted]
-    Meta: QueryResultsMetadata
+    SubjectsDeleteds: [SubjectsDeleted!]!
+    Meta: QueryResultsMetadata!
   }
 
   type SubjectsDeletedSingleQueryResult {
@@ -17,19 +17,19 @@ export const type = `
 
   type SubjectsDeletedMutationResult {
     SubjectsDeleted: SubjectsDeleted
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type SubjectsDeletedMutationResultMulti {
     SubjectsDeleteds: [SubjectsDeleted]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type SubjectsDeletedBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input SubjectsDeletedInput {
@@ -73,14 +73,12 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -109,11 +107,10 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int
-  ): SubjectsDeletedQueryResults
+  ): SubjectsDeletedQueryResults!
 
   getSubjectsDeleted (
     _id: String
-  ): SubjectsDeletedSingleQueryResult
+  ): SubjectsDeletedSingleQueryResult!
 
 `;
-  

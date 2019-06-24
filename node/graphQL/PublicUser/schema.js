@@ -8,8 +8,8 @@ export const type = `
   }
 
   type PublicUserQueryResults {
-    PublicUsers: [PublicUser]
-    Meta: QueryResultsMetadata
+    PublicUsers: [PublicUser!]!
+    Meta: QueryResultsMetadata!
   }
 
   type PublicUserSingleQueryResult {
@@ -18,19 +18,19 @@ export const type = `
 
   type PublicUserMutationResult {
     PublicUser: PublicUser
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type PublicUserMutationResultMulti {
     PublicUsers: [PublicUser]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type PublicUserBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input PublicUserInput {
@@ -82,14 +82,12 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -126,12 +124,11 @@ export const query = `
     PAGE: Int,
     PAGE_SIZE: Int,
     cache: Int
-  ): PublicUserQueryResults
+  ): PublicUserQueryResults!
 
   getPublicUser (
     _id: String,
     cache: Int
-  ): PublicUserSingleQueryResult
+  ): PublicUserSingleQueryResult!
 
 `;
-  

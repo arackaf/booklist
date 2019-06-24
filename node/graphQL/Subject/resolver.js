@@ -1,6 +1,14 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
+import {
+  insertUtilities,
+  queryUtilities,
+  projectUtilities,
+  updateUtilities,
+  processHook,
+  dbHelpers,
+  resolverHelpers
+} from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
-const runHook = processHook.bind(this, hooksObj, "Subject")
+const runHook = processHook.bind(this, hooksObj, "Subject");
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -14,10 +22,10 @@ export async function loadSubjects(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
-    { $match }, 
-    $sort ? { $sort } : null, 
+    { $match },
+    $sort ? { $sort } : null,
     { $project },
-    $skip != null ? { $skip } : null, 
+    $skip != null ? { $skip } : null,
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
@@ -25,7 +33,7 @@ export async function loadSubjects(db, queryPacket, root, args, context, ast) {
   let Subjects = await dbHelpers.runQuery(db, "subjects", aggregateItems);
   await processHook(hooksObj, "Subject", "adjustResults", Subjects);
   Subjects.forEach(o => {
-    if (o._id){
+    if (o._id) {
       o._id = "" + o._id;
     }
   });
@@ -34,9 +42,8 @@ export async function loadSubjects(db, queryPacket, root, args, context, ast) {
 }
 
 export const Subject = {
-
-    ...(OtherExtras1 || {})
-}
+  ...(OtherExtras1 || {})
+};
 
 export default {
   Query: {
@@ -68,7 +75,10 @@ export default {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
-          let countResults = await dbHelpers.runQuery(db, "subjects", [{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }]);  
+          let countResults = await dbHelpers.runQuery(db, "subjects", [
+            { $match: queryPacket.$match },
+            { $group: { _id: null, count: { $sum: 1 } } }
+          ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }
@@ -80,20 +90,35 @@ export default {
   Mutation: {
     async createSubject(root, args, context, ast) {
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Subject", SubjectMetadata, { create: true });
-      return await resolverHelpers.runMutation(session, transaction, async() => {
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Subject", SubjectMetadata, {
+        create: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
         let newObject = await newObjectFromArgs(args.Subject, SubjectMetadata, { ...gqlPacket, db, session });
         let requestMap = parseRequestedFields(ast, "Subject");
         let $project = requestMap.size ? getMongoProjection(requestMap, SubjectMetadata, args) : null;
 
-        newObject = await dbHelpers.processInsertion(db, newObject, { ...gqlPacket, typeMetadata: SubjectMetadata, session });
+        newObject = await dbHelpers.processInsertion(db, newObject, {
+          ...gqlPacket,
+          typeMetadata: SubjectMetadata,
+          session
+        });
         if (newObject == null) {
-          return { Subject: null };
+          return { Subject: null, success: false };
         }
         await setUpOneToManyRelationships(newObject, args.Subject, SubjectMetadata, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
 
-        let result = $project ? (await loadSubjects(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
+        let result = $project
+          ? (await loadSubjects(
+              db,
+              { $match: { _id: newObject._id }, $project, $limit: 1 },
+              root,
+              args,
+              context,
+              ast
+            ))[0]
+          : null;
         return resolverHelpers.mutationSuccessResult({ Subject: result, transaction, elapsedTime: 0 });
       });
     },

@@ -1,0 +1,1755 @@
+scalar JSON
+
+type DeletionResultInfo {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type MutationResultInfo {
+  transaction: Boolean!
+  elapsedTime: Int!
+}
+
+type QueryResultsMetadata {
+  count: Int!
+}
+
+input StringArrayUpdate {
+  index: Int!
+  value: String!
+}
+
+input IntArrayUpdate {
+  index: Int!
+  value: Int!
+}
+
+input FloatArrayUpdate {
+  index: Int!
+  value: Float!
+}
+
+type EditorialReview {
+  source: String
+  content: String
+}
+
+input EditorialReviewInput {
+  source: String
+  content: String
+}
+
+input EditorialReviewMutationInput {
+  source: String
+  content: String
+}
+
+input EditorialReviewArrayMutationInput {
+  index: Int
+  Updates: EditorialReviewMutationInput
+}
+
+input EditorialReviewSort {
+  source: Int
+  content: Int
+}
+
+input EditorialReviewFilters {
+  source_contains: String
+  source_startsWith: String
+  source_endsWith: String
+  source_regex: String
+  source: String
+  source_ne: String
+  source_in: [String]
+  content_contains: String
+  content_startsWith: String
+  content_endsWith: String
+  content_regex: String
+  content: String
+  content_ne: String
+  content_in: [String]
+  OR: [EditorialReviewFilters]
+}
+
+type Book {
+  _id: String
+  ean: String
+  isbn: String
+  title: String
+  smallImage: String
+  mediumImage: String
+  userId: String
+  publisher: String
+  publicationDate: String
+  pages: Int
+  authors: [String]
+  subjects: [String]
+  tags: [String]
+  isRead: Boolean
+  dateAdded: String
+  editorialReviews: [EditorialReview]
+  similarItems: [String]
+  similarItemsLastUpdate: Int
+  timestamp: Float
+  similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary!]!
+}
+
+type BookQueryResults {
+  Books: [Book!]!
+  Meta: QueryResultsMetadata!
+}
+
+type BookSingleQueryResult {
+  Book: Book
+}
+
+type BookMutationResult {
+  Book: Book
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type BookMutationResultMulti {
+  Books: [Book]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type BookBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input BookInput {
+  _id: String
+  ean: String
+  isbn: String
+  title: String
+  smallImage: String
+  mediumImage: String
+  userId: String
+  publisher: String
+  publicationDate: String
+  pages: Int
+  authors: [String]
+  subjects: [String]
+  tags: [String]
+  isRead: Boolean
+  dateAdded: String
+  editorialReviews: [EditorialReviewInput]
+  similarItems: [String]
+  similarItemsLastUpdate: Int
+  timestamp: Float
+  similarBooks: [BookSummaryInput!]!
+}
+
+input BookMutationInput {
+  ean: String
+  isbn: String
+  title: String
+  smallImage: String
+  mediumImage: String
+  userId: String
+  publisher: String
+  publicationDate: String
+  pages: Int
+  pages_INC: Int
+  pages_DEC: Int
+  authors: [String]
+  authors_PUSH: String
+  authors_CONCAT: [String]
+  authors_UPDATE: StringArrayUpdate
+  authors_UPDATES: [StringArrayUpdate]
+  authors_PULL: [String]
+  authors_ADDTOSET: [String]
+  subjects: [String]
+  subjects_PUSH: String
+  subjects_CONCAT: [String]
+  subjects_UPDATE: StringArrayUpdate
+  subjects_UPDATES: [StringArrayUpdate]
+  subjects_PULL: [String]
+  subjects_ADDTOSET: [String]
+  tags: [String]
+  tags_PUSH: String
+  tags_CONCAT: [String]
+  tags_UPDATE: StringArrayUpdate
+  tags_UPDATES: [StringArrayUpdate]
+  tags_PULL: [String]
+  tags_ADDTOSET: [String]
+  isRead: Boolean
+  dateAdded: String
+  editorialReviews: [EditorialReviewInput]
+  editorialReviews_PUSH: EditorialReviewInput
+  editorialReviews_CONCAT: [EditorialReviewInput]
+  editorialReviews_UPDATE: EditorialReviewArrayMutationInput
+  editorialReviews_UPDATES: [EditorialReviewArrayMutationInput]
+  editorialReviews_PULL: EditorialReviewFilters
+  similarItems: [String]
+  similarItems_PUSH: String
+  similarItems_CONCAT: [String]
+  similarItems_UPDATE: StringArrayUpdate
+  similarItems_UPDATES: [StringArrayUpdate]
+  similarItems_PULL: [String]
+  similarItems_ADDTOSET: [String]
+  similarItemsLastUpdate: Int
+  similarItemsLastUpdate_INC: Int
+  similarItemsLastUpdate_DEC: Int
+  timestamp: Float
+  timestamp_INC: Int
+  timestamp_DEC: Int
+  similarBooks_ADD: [BookSummaryInput!]!
+}
+
+input BookSort {
+  _id: Int
+  ean: Int
+  isbn: Int
+  title: Int
+  smallImage: Int
+  mediumImage: Int
+  userId: Int
+  publisher: Int
+  publicationDate: Int
+  pages: Int
+  authors: Int
+  subjects: Int
+  tags: Int
+  isRead: Int
+  dateAdded: Int
+  editorialReviews: Int
+  similarItems: Int
+  similarItemsLastUpdate: Int
+  timestamp: Int
+}
+
+input BookFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  ean_contains: String
+  ean_startsWith: String
+  ean_endsWith: String
+  ean_regex: String
+  ean: String
+  ean_ne: String
+  ean_in: [String]
+  isbn_contains: String
+  isbn_startsWith: String
+  isbn_endsWith: String
+  isbn_regex: String
+  isbn: String
+  isbn_ne: String
+  isbn_in: [String]
+  title_contains: String
+  title_startsWith: String
+  title_endsWith: String
+  title_regex: String
+  title: String
+  title_ne: String
+  title_in: [String]
+  smallImage_contains: String
+  smallImage_startsWith: String
+  smallImage_endsWith: String
+  smallImage_regex: String
+  smallImage: String
+  smallImage_ne: String
+  smallImage_in: [String]
+  mediumImage_contains: String
+  mediumImage_startsWith: String
+  mediumImage_endsWith: String
+  mediumImage_regex: String
+  mediumImage: String
+  mediumImage_ne: String
+  mediumImage_in: [String]
+  userId_contains: String
+  userId_startsWith: String
+  userId_endsWith: String
+  userId_regex: String
+  userId: String
+  userId_ne: String
+  userId_in: [String]
+  publisher_contains: String
+  publisher_startsWith: String
+  publisher_endsWith: String
+  publisher_regex: String
+  publisher: String
+  publisher_ne: String
+  publisher_in: [String]
+  publicationDate_contains: String
+  publicationDate_startsWith: String
+  publicationDate_endsWith: String
+  publicationDate_regex: String
+  publicationDate: String
+  publicationDate_ne: String
+  publicationDate_in: [String]
+  pages_lt: Int
+  pages_lte: Int
+  pages_gt: Int
+  pages_gte: Int
+  pages: Int
+  pages_ne: Int
+  pages_in: [Int]
+  authors_count: Int
+  authors_textContains: String
+  authors_startsWith: String
+  authors_endsWith: String
+  authors_regex: String
+  authors: [String]
+  authors_in: [[String]]
+  authors_contains: String
+  authors_containsAny: [String]
+  authors_ne: [String]
+  subjects_count: Int
+  subjects_textContains: String
+  subjects_startsWith: String
+  subjects_endsWith: String
+  subjects_regex: String
+  subjects: [String]
+  subjects_in: [[String]]
+  subjects_contains: String
+  subjects_containsAny: [String]
+  subjects_ne: [String]
+  tags_count: Int
+  tags_textContains: String
+  tags_startsWith: String
+  tags_endsWith: String
+  tags_regex: String
+  tags: [String]
+  tags_in: [[String]]
+  tags_contains: String
+  tags_containsAny: [String]
+  tags_ne: [String]
+  isRead: Boolean
+  isRead_ne: Boolean
+  isRead_in: [Boolean]
+  dateAdded_contains: String
+  dateAdded_startsWith: String
+  dateAdded_endsWith: String
+  dateAdded_regex: String
+  dateAdded: String
+  dateAdded_ne: String
+  dateAdded_in: [String]
+  editorialReviews_count: Int
+  editorialReviews: EditorialReviewFilters
+  similarItems_count: Int
+  similarItems_textContains: String
+  similarItems_startsWith: String
+  similarItems_endsWith: String
+  similarItems_regex: String
+  similarItems: [String]
+  similarItems_in: [[String]]
+  similarItems_contains: String
+  similarItems_containsAny: [String]
+  similarItems_ne: [String]
+  similarItemsLastUpdate_lt: Int
+  similarItemsLastUpdate_lte: Int
+  similarItemsLastUpdate_gt: Int
+  similarItemsLastUpdate_gte: Int
+  similarItemsLastUpdate: Int
+  similarItemsLastUpdate_ne: Int
+  similarItemsLastUpdate_in: [Int]
+  timestamp_lt: Float
+  timestamp_lte: Float
+  timestamp_gt: Float
+  timestamp_gte: Float
+  timestamp: Float
+  timestamp_ne: Float
+  timestamp_in: [Float]
+  OR: [BookFilters]
+}
+
+type BookSummary {
+  _id: String
+  title: String
+  asin: String
+  isbn: String
+  ean: String
+  smallImage: String
+  mediumImage: String
+  authors: [String]
+}
+
+type BookSummaryQueryResults {
+  BookSummarys: [BookSummary!]!
+  Meta: QueryResultsMetadata!
+}
+
+type BookSummarySingleQueryResult {
+  BookSummary: BookSummary
+}
+
+type BookSummaryMutationResult {
+  BookSummary: BookSummary
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type BookSummaryMutationResultMulti {
+  BookSummarys: [BookSummary]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type BookSummaryBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input BookSummaryInput {
+  _id: String
+  title: String
+  asin: String
+  isbn: String
+  ean: String
+  smallImage: String
+  mediumImage: String
+  authors: [String]
+}
+
+input BookSummaryMutationInput {
+  title: String
+  asin: String
+  isbn: String
+  ean: String
+  smallImage: String
+  mediumImage: String
+  authors: [String]
+  authors_PUSH: String
+  authors_CONCAT: [String]
+  authors_UPDATE: StringArrayUpdate
+  authors_UPDATES: [StringArrayUpdate]
+  authors_PULL: [String]
+  authors_ADDTOSET: [String]
+}
+
+input BookSummarySort {
+  _id: Int
+  title: Int
+  asin: Int
+  isbn: Int
+  ean: Int
+  smallImage: Int
+  mediumImage: Int
+  authors: Int
+}
+
+input BookSummaryFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  title_contains: String
+  title_startsWith: String
+  title_endsWith: String
+  title_regex: String
+  title: String
+  title_ne: String
+  title_in: [String]
+  asin_contains: String
+  asin_startsWith: String
+  asin_endsWith: String
+  asin_regex: String
+  asin: String
+  asin_ne: String
+  asin_in: [String]
+  isbn_contains: String
+  isbn_startsWith: String
+  isbn_endsWith: String
+  isbn_regex: String
+  isbn: String
+  isbn_ne: String
+  isbn_in: [String]
+  ean_contains: String
+  ean_startsWith: String
+  ean_endsWith: String
+  ean_regex: String
+  ean: String
+  ean_ne: String
+  ean_in: [String]
+  smallImage_contains: String
+  smallImage_startsWith: String
+  smallImage_endsWith: String
+  smallImage_regex: String
+  smallImage: String
+  smallImage_ne: String
+  smallImage_in: [String]
+  mediumImage_contains: String
+  mediumImage_startsWith: String
+  mediumImage_endsWith: String
+  mediumImage_regex: String
+  mediumImage: String
+  mediumImage_ne: String
+  mediumImage_in: [String]
+  authors_count: Int
+  authors_textContains: String
+  authors_startsWith: String
+  authors_endsWith: String
+  authors_regex: String
+  authors: [String]
+  authors_in: [[String]]
+  authors_contains: String
+  authors_containsAny: [String]
+  authors_ne: [String]
+  OR: [BookSummaryFilters]
+}
+
+type BooksDeleted {
+  _id: String
+  userId: String
+  deletedTimestamp: Float
+}
+
+type BooksDeletedQueryResults {
+  BooksDeleteds: [BooksDeleted!]!
+  Meta: QueryResultsMetadata!
+}
+
+type BooksDeletedSingleQueryResult {
+  BooksDeleted: BooksDeleted
+}
+
+type BooksDeletedMutationResult {
+  BooksDeleted: BooksDeleted
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type BooksDeletedMutationResultMulti {
+  BooksDeleteds: [BooksDeleted]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type BooksDeletedBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input BooksDeletedInput {
+  _id: String
+  userId: String
+  deletedTimestamp: Float
+}
+
+input BooksDeletedMutationInput {
+  userId: String
+  deletedTimestamp: Float
+  deletedTimestamp_INC: Int
+  deletedTimestamp_DEC: Int
+}
+
+input BooksDeletedSort {
+  _id: Int
+  userId: Int
+  deletedTimestamp: Int
+}
+
+input BooksDeletedFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  userId_contains: String
+  userId_startsWith: String
+  userId_endsWith: String
+  userId_regex: String
+  userId: String
+  userId_ne: String
+  userId_in: [String]
+  deletedTimestamp_lt: Float
+  deletedTimestamp_lte: Float
+  deletedTimestamp_gt: Float
+  deletedTimestamp_gte: Float
+  deletedTimestamp: Float
+  deletedTimestamp_ne: Float
+  deletedTimestamp_in: [Float]
+  OR: [BooksDeletedFilters]
+}
+
+type LabelColor {
+  _id: String
+  backgroundColor: String
+  order: Int
+}
+
+type LabelColorQueryResults {
+  LabelColors: [LabelColor!]!
+  Meta: QueryResultsMetadata!
+}
+
+type LabelColorSingleQueryResult {
+  LabelColor: LabelColor
+}
+
+type LabelColorMutationResult {
+  LabelColor: LabelColor
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type LabelColorMutationResultMulti {
+  LabelColors: [LabelColor]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type LabelColorBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input LabelColorInput {
+  _id: String
+  backgroundColor: String
+  order: Int
+}
+
+input LabelColorMutationInput {
+  backgroundColor: String
+  order: Int
+  order_INC: Int
+  order_DEC: Int
+}
+
+input LabelColorSort {
+  _id: Int
+  backgroundColor: Int
+  order: Int
+}
+
+input LabelColorFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  backgroundColor_contains: String
+  backgroundColor_startsWith: String
+  backgroundColor_endsWith: String
+  backgroundColor_regex: String
+  backgroundColor: String
+  backgroundColor_ne: String
+  backgroundColor_in: [String]
+  order_lt: Int
+  order_lte: Int
+  order_gt: Int
+  order_gte: Int
+  order: Int
+  order_ne: Int
+  order_in: [Int]
+  OR: [LabelColorFilters]
+}
+
+type PublicUser {
+  _id: String
+  isPublic: String
+  publicName: String
+  publicBooksHeader: String
+}
+
+type PublicUserQueryResults {
+  PublicUsers: [PublicUser!]!
+  Meta: QueryResultsMetadata!
+}
+
+type PublicUserSingleQueryResult {
+  PublicUser: PublicUser
+}
+
+type PublicUserMutationResult {
+  PublicUser: PublicUser
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type PublicUserMutationResultMulti {
+  PublicUsers: [PublicUser]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type PublicUserBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input PublicUserInput {
+  _id: String
+  isPublic: String
+  publicName: String
+  publicBooksHeader: String
+}
+
+input PublicUserMutationInput {
+  isPublic: String
+  publicName: String
+  publicBooksHeader: String
+}
+
+input PublicUserSort {
+  _id: Int
+  isPublic: Int
+  publicName: Int
+  publicBooksHeader: Int
+}
+
+input PublicUserFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  isPublic_contains: String
+  isPublic_startsWith: String
+  isPublic_endsWith: String
+  isPublic_regex: String
+  isPublic: String
+  isPublic_ne: String
+  isPublic_in: [String]
+  publicName_contains: String
+  publicName_startsWith: String
+  publicName_endsWith: String
+  publicName_regex: String
+  publicName: String
+  publicName_ne: String
+  publicName_in: [String]
+  publicBooksHeader_contains: String
+  publicBooksHeader_startsWith: String
+  publicBooksHeader_endsWith: String
+  publicBooksHeader_regex: String
+  publicBooksHeader: String
+  publicBooksHeader_ne: String
+  publicBooksHeader_in: [String]
+  OR: [PublicUserFilters]
+}
+
+type Subject {
+  _id: String
+  name: String
+  path: String
+  userId: String
+  backgroundColor: String
+  textColor: String
+  timestamp: Float
+}
+
+type SubjectQueryResults {
+  Subjects: [Subject!]!
+  Meta: QueryResultsMetadata!
+}
+
+type SubjectSingleQueryResult {
+  Subject: Subject
+}
+
+type SubjectMutationResult {
+  Subject: Subject
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type SubjectMutationResultMulti {
+  Subjects: [Subject]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type SubjectBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input SubjectInput {
+  _id: String
+  name: String
+  path: String
+  userId: String
+  backgroundColor: String
+  textColor: String
+  timestamp: Float
+}
+
+input SubjectMutationInput {
+  name: String
+  path: String
+  userId: String
+  backgroundColor: String
+  textColor: String
+  timestamp: Float
+  timestamp_INC: Int
+  timestamp_DEC: Int
+}
+
+input SubjectSort {
+  _id: Int
+  name: Int
+  path: Int
+  userId: Int
+  backgroundColor: Int
+  textColor: Int
+  timestamp: Int
+}
+
+input SubjectFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  name_contains: String
+  name_startsWith: String
+  name_endsWith: String
+  name_regex: String
+  name: String
+  name_ne: String
+  name_in: [String]
+  path_contains: String
+  path_startsWith: String
+  path_endsWith: String
+  path_regex: String
+  path: String
+  path_ne: String
+  path_in: [String]
+  userId_contains: String
+  userId_startsWith: String
+  userId_endsWith: String
+  userId_regex: String
+  userId: String
+  userId_ne: String
+  userId_in: [String]
+  backgroundColor_contains: String
+  backgroundColor_startsWith: String
+  backgroundColor_endsWith: String
+  backgroundColor_regex: String
+  backgroundColor: String
+  backgroundColor_ne: String
+  backgroundColor_in: [String]
+  textColor_contains: String
+  textColor_startsWith: String
+  textColor_endsWith: String
+  textColor_regex: String
+  textColor: String
+  textColor_ne: String
+  textColor_in: [String]
+  timestamp_lt: Float
+  timestamp_lte: Float
+  timestamp_gt: Float
+  timestamp_gte: Float
+  timestamp: Float
+  timestamp_ne: Float
+  timestamp_in: [Float]
+  OR: [SubjectFilters]
+}
+
+type SubjectsDeleted {
+  _id: String
+  userId: String
+  deletedTimestamp: Float
+}
+
+type SubjectsDeletedQueryResults {
+  SubjectsDeleteds: [SubjectsDeleted!]!
+  Meta: QueryResultsMetadata!
+}
+
+type SubjectsDeletedSingleQueryResult {
+  SubjectsDeleted: SubjectsDeleted
+}
+
+type SubjectsDeletedMutationResult {
+  SubjectsDeleted: SubjectsDeleted
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type SubjectsDeletedMutationResultMulti {
+  SubjectsDeleteds: [SubjectsDeleted]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type SubjectsDeletedBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input SubjectsDeletedInput {
+  _id: String
+  userId: String
+  deletedTimestamp: Float
+}
+
+input SubjectsDeletedMutationInput {
+  userId: String
+  deletedTimestamp: Float
+  deletedTimestamp_INC: Int
+  deletedTimestamp_DEC: Int
+}
+
+input SubjectsDeletedSort {
+  _id: Int
+  userId: Int
+  deletedTimestamp: Int
+}
+
+input SubjectsDeletedFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  userId_contains: String
+  userId_startsWith: String
+  userId_endsWith: String
+  userId_regex: String
+  userId: String
+  userId_ne: String
+  userId_in: [String]
+  deletedTimestamp_lt: Float
+  deletedTimestamp_lte: Float
+  deletedTimestamp_gt: Float
+  deletedTimestamp_gte: Float
+  deletedTimestamp: Float
+  deletedTimestamp_ne: Float
+  deletedTimestamp_in: [Float]
+  OR: [SubjectsDeletedFilters]
+}
+
+type Tag {
+  _id: String
+  name: String
+  path: String
+  userId: String
+  backgroundColor: String
+  textColor: String
+  timestamp: Float
+}
+
+type TagQueryResults {
+  Tags: [Tag!]!
+  Meta: QueryResultsMetadata!
+}
+
+type TagSingleQueryResult {
+  Tag: Tag
+}
+
+type TagMutationResult {
+  Tag: Tag
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type TagMutationResultMulti {
+  Tags: [Tag]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type TagBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input TagInput {
+  _id: String
+  name: String
+  path: String
+  userId: String
+  backgroundColor: String
+  textColor: String
+  timestamp: Float
+}
+
+input TagMutationInput {
+  name: String
+  path: String
+  userId: String
+  backgroundColor: String
+  textColor: String
+  timestamp: Float
+  timestamp_INC: Int
+  timestamp_DEC: Int
+}
+
+input TagSort {
+  _id: Int
+  name: Int
+  path: Int
+  userId: Int
+  backgroundColor: Int
+  textColor: Int
+  timestamp: Int
+}
+
+input TagFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  name_contains: String
+  name_startsWith: String
+  name_endsWith: String
+  name_regex: String
+  name: String
+  name_ne: String
+  name_in: [String]
+  path_contains: String
+  path_startsWith: String
+  path_endsWith: String
+  path_regex: String
+  path: String
+  path_ne: String
+  path_in: [String]
+  userId_contains: String
+  userId_startsWith: String
+  userId_endsWith: String
+  userId_regex: String
+  userId: String
+  userId_ne: String
+  userId_in: [String]
+  backgroundColor_contains: String
+  backgroundColor_startsWith: String
+  backgroundColor_endsWith: String
+  backgroundColor_regex: String
+  backgroundColor: String
+  backgroundColor_ne: String
+  backgroundColor_in: [String]
+  textColor_contains: String
+  textColor_startsWith: String
+  textColor_endsWith: String
+  textColor_regex: String
+  textColor: String
+  textColor_ne: String
+  textColor_in: [String]
+  timestamp_lt: Float
+  timestamp_lte: Float
+  timestamp_gt: Float
+  timestamp_gte: Float
+  timestamp: Float
+  timestamp_ne: Float
+  timestamp_in: [Float]
+  OR: [TagFilters]
+}
+
+type TagsDeleted {
+  _id: String
+  userId: String
+  deletedTimestamp: Float
+}
+
+type TagsDeletedQueryResults {
+  TagsDeleteds: [TagsDeleted!]!
+  Meta: QueryResultsMetadata!
+}
+
+type TagsDeletedSingleQueryResult {
+  TagsDeleted: TagsDeleted
+}
+
+type TagsDeletedMutationResult {
+  TagsDeleted: TagsDeleted
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type TagsDeletedMutationResultMulti {
+  TagsDeleteds: [TagsDeleted]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type TagsDeletedBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input TagsDeletedInput {
+  _id: String
+  userId: String
+  deletedTimestamp: Float
+}
+
+input TagsDeletedMutationInput {
+  userId: String
+  deletedTimestamp: Float
+  deletedTimestamp_INC: Int
+  deletedTimestamp_DEC: Int
+}
+
+input TagsDeletedSort {
+  _id: Int
+  userId: Int
+  deletedTimestamp: Int
+}
+
+input TagsDeletedFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  userId_contains: String
+  userId_startsWith: String
+  userId_endsWith: String
+  userId_regex: String
+  userId: String
+  userId_ne: String
+  userId_in: [String]
+  deletedTimestamp_lt: Float
+  deletedTimestamp_lte: Float
+  deletedTimestamp_gt: Float
+  deletedTimestamp_gte: Float
+  deletedTimestamp: Float
+  deletedTimestamp_ne: Float
+  deletedTimestamp_in: [Float]
+  OR: [TagsDeletedFilters]
+}
+
+type User {
+  _id: String
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+type UserQueryResults {
+  Users: [User!]!
+  Meta: QueryResultsMetadata!
+}
+
+type UserSingleQueryResult {
+  User: User
+}
+
+type UserMutationResult {
+  User: User
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type UserMutationResultMulti {
+  Users: [User]
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+type UserBulkMutationResult {
+  success: Boolean!
+  Meta: MutationResultInfo!
+}
+
+input UserInput {
+  _id: String
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+input UserMutationInput {
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+input UserSort {
+  _id: Int
+  isPublic: Int
+  publicName: Int
+  publicBooksHeader: Int
+}
+
+input UserFilters {
+  _id: String
+  _id_ne: String
+  _id_in: [String]
+  isPublic: Boolean
+  isPublic_ne: Boolean
+  isPublic_in: [Boolean]
+  publicName_contains: String
+  publicName_startsWith: String
+  publicName_endsWith: String
+  publicName_regex: String
+  publicName: String
+  publicName_ne: String
+  publicName_in: [String]
+  publicBooksHeader_contains: String
+  publicBooksHeader_startsWith: String
+  publicBooksHeader_endsWith: String
+  publicBooksHeader_regex: String
+  publicBooksHeader: String
+  publicBooksHeader_ne: String
+  publicBooksHeader_in: [String]
+  OR: [UserFilters]
+}
+
+type Query {
+  allBooks(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    ean_contains: String
+    ean_startsWith: String
+    ean_endsWith: String
+    ean_regex: String
+    ean: String
+    ean_ne: String
+    ean_in: [String]
+    isbn_contains: String
+    isbn_startsWith: String
+    isbn_endsWith: String
+    isbn_regex: String
+    isbn: String
+    isbn_ne: String
+    isbn_in: [String]
+    title_contains: String
+    title_startsWith: String
+    title_endsWith: String
+    title_regex: String
+    title: String
+    title_ne: String
+    title_in: [String]
+    smallImage_contains: String
+    smallImage_startsWith: String
+    smallImage_endsWith: String
+    smallImage_regex: String
+    smallImage: String
+    smallImage_ne: String
+    smallImage_in: [String]
+    mediumImage_contains: String
+    mediumImage_startsWith: String
+    mediumImage_endsWith: String
+    mediumImage_regex: String
+    mediumImage: String
+    mediumImage_ne: String
+    mediumImage_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
+    publisher_contains: String
+    publisher_startsWith: String
+    publisher_endsWith: String
+    publisher_regex: String
+    publisher: String
+    publisher_ne: String
+    publisher_in: [String]
+    publicationDate_contains: String
+    publicationDate_startsWith: String
+    publicationDate_endsWith: String
+    publicationDate_regex: String
+    publicationDate: String
+    publicationDate_ne: String
+    publicationDate_in: [String]
+    pages_lt: Int
+    pages_lte: Int
+    pages_gt: Int
+    pages_gte: Int
+    pages: Int
+    pages_ne: Int
+    pages_in: [Int]
+    authors_count: Int
+    authors_textContains: String
+    authors_startsWith: String
+    authors_endsWith: String
+    authors_regex: String
+    authors: [String]
+    authors_in: [[String]]
+    authors_contains: String
+    authors_containsAny: [String]
+    authors_ne: [String]
+    subjects_count: Int
+    subjects_textContains: String
+    subjects_startsWith: String
+    subjects_endsWith: String
+    subjects_regex: String
+    subjects: [String]
+    subjects_in: [[String]]
+    subjects_contains: String
+    subjects_containsAny: [String]
+    subjects_ne: [String]
+    tags_count: Int
+    tags_textContains: String
+    tags_startsWith: String
+    tags_endsWith: String
+    tags_regex: String
+    tags: [String]
+    tags_in: [[String]]
+    tags_contains: String
+    tags_containsAny: [String]
+    tags_ne: [String]
+    isRead: Boolean
+    isRead_ne: Boolean
+    isRead_in: [Boolean]
+    dateAdded_contains: String
+    dateAdded_startsWith: String
+    dateAdded_endsWith: String
+    dateAdded_regex: String
+    dateAdded: String
+    dateAdded_ne: String
+    dateAdded_in: [String]
+    editorialReviews_count: Int
+    editorialReviews: EditorialReviewFilters
+    similarItems_count: Int
+    similarItems_textContains: String
+    similarItems_startsWith: String
+    similarItems_endsWith: String
+    similarItems_regex: String
+    similarItems: [String]
+    similarItems_in: [[String]]
+    similarItems_contains: String
+    similarItems_containsAny: [String]
+    similarItems_ne: [String]
+    similarItemsLastUpdate_lt: Int
+    similarItemsLastUpdate_lte: Int
+    similarItemsLastUpdate_gt: Int
+    similarItemsLastUpdate_gte: Int
+    similarItemsLastUpdate: Int
+    similarItemsLastUpdate_ne: Int
+    similarItemsLastUpdate_in: [Int]
+    timestamp_lt: Float
+    timestamp_lte: Float
+    timestamp_gt: Float
+    timestamp_gte: Float
+    timestamp: Float
+    timestamp_ne: Float
+    timestamp_in: [Float]
+    OR: [BookFilters]
+    SORT: BookSort
+    SORTS: [BookSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    searchChildSubjects: Boolean
+    publicUserId: String
+    ver: String
+    cache: Int
+  ): BookQueryResults!
+
+  getBook(
+    _id: String
+    searchChildSubjects: Boolean
+    publicUserId: String
+    ver: String
+    cache: Int
+  ): BookSingleQueryResult!
+
+  allBookSummarys(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    title_contains: String
+    title_startsWith: String
+    title_endsWith: String
+    title_regex: String
+    title: String
+    title_ne: String
+    title_in: [String]
+    asin_contains: String
+    asin_startsWith: String
+    asin_endsWith: String
+    asin_regex: String
+    asin: String
+    asin_ne: String
+    asin_in: [String]
+    isbn_contains: String
+    isbn_startsWith: String
+    isbn_endsWith: String
+    isbn_regex: String
+    isbn: String
+    isbn_ne: String
+    isbn_in: [String]
+    ean_contains: String
+    ean_startsWith: String
+    ean_endsWith: String
+    ean_regex: String
+    ean: String
+    ean_ne: String
+    ean_in: [String]
+    smallImage_contains: String
+    smallImage_startsWith: String
+    smallImage_endsWith: String
+    smallImage_regex: String
+    smallImage: String
+    smallImage_ne: String
+    smallImage_in: [String]
+    mediumImage_contains: String
+    mediumImage_startsWith: String
+    mediumImage_endsWith: String
+    mediumImage_regex: String
+    mediumImage: String
+    mediumImage_ne: String
+    mediumImage_in: [String]
+    authors_count: Int
+    authors_textContains: String
+    authors_startsWith: String
+    authors_endsWith: String
+    authors_regex: String
+    authors: [String]
+    authors_in: [[String]]
+    authors_contains: String
+    authors_containsAny: [String]
+    authors_ne: [String]
+    OR: [BookSummaryFilters]
+    SORT: BookSummarySort
+    SORTS: [BookSummarySort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+  ): BookSummaryQueryResults!
+
+  getBookSummary(_id: String): BookSummarySingleQueryResult!
+
+  allBooksDeleteds(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
+    deletedTimestamp_lt: Float
+    deletedTimestamp_lte: Float
+    deletedTimestamp_gt: Float
+    deletedTimestamp_gte: Float
+    deletedTimestamp: Float
+    deletedTimestamp_ne: Float
+    deletedTimestamp_in: [Float]
+    OR: [BooksDeletedFilters]
+    SORT: BooksDeletedSort
+    SORTS: [BooksDeletedSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+  ): BooksDeletedQueryResults!
+
+  getBooksDeleted(_id: String): BooksDeletedSingleQueryResult!
+
+  allLabelColors(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    backgroundColor_contains: String
+    backgroundColor_startsWith: String
+    backgroundColor_endsWith: String
+    backgroundColor_regex: String
+    backgroundColor: String
+    backgroundColor_ne: String
+    backgroundColor_in: [String]
+    order_lt: Int
+    order_lte: Int
+    order_gt: Int
+    order_gte: Int
+    order: Int
+    order_ne: Int
+    order_in: [Int]
+    OR: [LabelColorFilters]
+    SORT: LabelColorSort
+    SORTS: [LabelColorSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    ver: String
+    cache: Int
+  ): LabelColorQueryResults!
+
+  allPublicUsers(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    isPublic_contains: String
+    isPublic_startsWith: String
+    isPublic_endsWith: String
+    isPublic_regex: String
+    isPublic: String
+    isPublic_ne: String
+    isPublic_in: [String]
+    publicName_contains: String
+    publicName_startsWith: String
+    publicName_endsWith: String
+    publicName_regex: String
+    publicName: String
+    publicName_ne: String
+    publicName_in: [String]
+    publicBooksHeader_contains: String
+    publicBooksHeader_startsWith: String
+    publicBooksHeader_endsWith: String
+    publicBooksHeader_regex: String
+    publicBooksHeader: String
+    publicBooksHeader_ne: String
+    publicBooksHeader_in: [String]
+    OR: [PublicUserFilters]
+    SORT: PublicUserSort
+    SORTS: [PublicUserSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    cache: Int
+  ): PublicUserQueryResults!
+
+  getPublicUser(_id: String, cache: Int): PublicUserSingleQueryResult!
+
+  allSubjects(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    name_contains: String
+    name_startsWith: String
+    name_endsWith: String
+    name_regex: String
+    name: String
+    name_ne: String
+    name_in: [String]
+    path_contains: String
+    path_startsWith: String
+    path_endsWith: String
+    path_regex: String
+    path: String
+    path_ne: String
+    path_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
+    backgroundColor_contains: String
+    backgroundColor_startsWith: String
+    backgroundColor_endsWith: String
+    backgroundColor_regex: String
+    backgroundColor: String
+    backgroundColor_ne: String
+    backgroundColor_in: [String]
+    textColor_contains: String
+    textColor_startsWith: String
+    textColor_endsWith: String
+    textColor_regex: String
+    textColor: String
+    textColor_ne: String
+    textColor_in: [String]
+    timestamp_lt: Float
+    timestamp_lte: Float
+    timestamp_gt: Float
+    timestamp_gte: Float
+    timestamp: Float
+    timestamp_ne: Float
+    timestamp_in: [Float]
+    OR: [SubjectFilters]
+    SORT: SubjectSort
+    SORTS: [SubjectSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    publicUserId: String
+    ver: String
+    cache: Int
+  ): SubjectQueryResults!
+
+  getSubject(
+    _id: String
+    publicUserId: String
+    ver: String
+    cache: Int
+  ): SubjectSingleQueryResult!
+
+  allSubjectsDeleteds(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
+    deletedTimestamp_lt: Float
+    deletedTimestamp_lte: Float
+    deletedTimestamp_gt: Float
+    deletedTimestamp_gte: Float
+    deletedTimestamp: Float
+    deletedTimestamp_ne: Float
+    deletedTimestamp_in: [Float]
+    OR: [SubjectsDeletedFilters]
+    SORT: SubjectsDeletedSort
+    SORTS: [SubjectsDeletedSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+  ): SubjectsDeletedQueryResults!
+
+  getSubjectsDeleted(_id: String): SubjectsDeletedSingleQueryResult!
+
+  allTags(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    name_contains: String
+    name_startsWith: String
+    name_endsWith: String
+    name_regex: String
+    name: String
+    name_ne: String
+    name_in: [String]
+    path_contains: String
+    path_startsWith: String
+    path_endsWith: String
+    path_regex: String
+    path: String
+    path_ne: String
+    path_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
+    backgroundColor_contains: String
+    backgroundColor_startsWith: String
+    backgroundColor_endsWith: String
+    backgroundColor_regex: String
+    backgroundColor: String
+    backgroundColor_ne: String
+    backgroundColor_in: [String]
+    textColor_contains: String
+    textColor_startsWith: String
+    textColor_endsWith: String
+    textColor_regex: String
+    textColor: String
+    textColor_ne: String
+    textColor_in: [String]
+    timestamp_lt: Float
+    timestamp_lte: Float
+    timestamp_gt: Float
+    timestamp_gte: Float
+    timestamp: Float
+    timestamp_ne: Float
+    timestamp_in: [Float]
+    OR: [TagFilters]
+    SORT: TagSort
+    SORTS: [TagSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    publicUserId: String
+    ver: String
+    cache: Int
+  ): TagQueryResults!
+
+  getTag(
+    _id: String
+    publicUserId: String
+    ver: String
+    cache: Int
+  ): TagSingleQueryResult!
+
+  allTagsDeleteds(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    userId_contains: String
+    userId_startsWith: String
+    userId_endsWith: String
+    userId_regex: String
+    userId: String
+    userId_ne: String
+    userId_in: [String]
+    deletedTimestamp_lt: Float
+    deletedTimestamp_lte: Float
+    deletedTimestamp_gt: Float
+    deletedTimestamp_gte: Float
+    deletedTimestamp: Float
+    deletedTimestamp_ne: Float
+    deletedTimestamp_in: [Float]
+    OR: [TagsDeletedFilters]
+    SORT: TagsDeletedSort
+    SORTS: [TagsDeletedSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+  ): TagsDeletedQueryResults!
+
+  getTagsDeleted(_id: String): TagsDeletedSingleQueryResult!
+
+  allUsers(
+    _id: String
+    _id_ne: String
+    _id_in: [String]
+    isPublic: Boolean
+    isPublic_ne: Boolean
+    isPublic_in: [Boolean]
+    publicName_contains: String
+    publicName_startsWith: String
+    publicName_endsWith: String
+    publicName_regex: String
+    publicName: String
+    publicName_ne: String
+    publicName_in: [String]
+    publicBooksHeader_contains: String
+    publicBooksHeader_startsWith: String
+    publicBooksHeader_endsWith: String
+    publicBooksHeader_regex: String
+    publicBooksHeader: String
+    publicBooksHeader_ne: String
+    publicBooksHeader_in: [String]
+    OR: [UserFilters]
+    SORT: UserSort
+    SORTS: [UserSort]
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+  ): UserQueryResults!
+
+  getUser(_id: String): UserSingleQueryResult!
+}
+
+type Mutation {
+  createBook(Book: BookInput): BookMutationResult
+
+  updateBook(_id: String, Updates: BookMutationInput): BookMutationResult
+
+  updateBooks(
+    _ids: [String]
+    Updates: BookMutationInput
+  ): BookMutationResultMulti
+
+  updateBooksBulk(
+    Match: BookFilters
+    Updates: BookMutationInput
+  ): BookBulkMutationResult
+
+  deleteBook(_id: String): DeletionResultInfo
+
+  createSubject(Subject: SubjectInput): SubjectMutationResult
+
+  updateSubject(
+    _id: String
+    name: String
+    backgroundColor: String
+    textColor: String
+    parentId: String
+  ): [Subject]
+
+  deleteSubject(_id: String): [String]
+
+  createTag(Tag: TagInput): TagMutationResult
+
+  updateTag(_id: String, Updates: TagMutationInput): TagMutationResult
+
+  updateTags(_ids: [String], Updates: TagMutationInput): TagMutationResultMulti
+
+  updateTagsBulk(
+    Match: TagFilters
+    Updates: TagMutationInput
+  ): TagBulkMutationResult
+
+  deleteTag(_id: String): DeletionResultInfo
+
+  updateUser(_id: String, Updates: UserMutationInput): UserMutationResult
+}

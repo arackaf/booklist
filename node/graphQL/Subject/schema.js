@@ -13,8 +13,8 @@ export const type = `
   }
 
   type SubjectQueryResults {
-    Subjects: [Subject]
-    Meta: QueryResultsMetadata
+    Subjects: [Subject!]!
+    Meta: QueryResultsMetadata!
   }
 
   type SubjectSingleQueryResult {
@@ -23,19 +23,19 @@ export const type = `
 
   type SubjectMutationResult {
     Subject: Subject
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type SubjectMutationResultMulti {
     Subjects: [Subject]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type SubjectBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input SubjectInput {
@@ -119,8 +119,7 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
   createSubject (
@@ -130,7 +129,6 @@ export const mutation = `
   ${SchemaExtras1.Mutation || ""}
 
 `;
-
 
 export const query = `
 
@@ -190,16 +188,15 @@ export const query = `
     publicUserId: String,
     ver: String,
     cache: Int
-  ): SubjectQueryResults
+  ): SubjectQueryResults!
 
   getSubject (
     _id: String,
     publicUserId: String,
     ver: String,
     cache: Int
-  ): SubjectSingleQueryResult
+  ): SubjectSingleQueryResult!
 
   ${SchemaExtras1.Query || ""}
 
 `;
-  

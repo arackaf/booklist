@@ -7,7 +7,5 @@ export default {
     publicName: "String",
     publicBooksHeader: "String"
   },
-  relationships: {
-
-  }
+  relationships: {}
 };

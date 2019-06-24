@@ -11,7 +11,5 @@ export default {
     mediumImage: "String",
     authors: "StringArray"
   },
-  relationships: {
-
-  }
+  relationships: {}
 };

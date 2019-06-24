@@ -4,7 +4,5 @@ export default {
     source: "String",
     content: "String"
   },
-  relationships: {
-
-  }
+  relationships: {}
 };
