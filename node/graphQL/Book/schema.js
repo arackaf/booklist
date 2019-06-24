@@ -69,7 +69,7 @@ export const type = `
     similarItems: [String]
     similarItemsLastUpdate: Int
     timestamp: Float
-    similarBooks: [BookSummaryInput!]!
+    similarBooks: [BookSummaryInput]
   }
 
   input BookMutationInput {
@@ -126,7 +126,7 @@ export const type = `
     timestamp: Float
     timestamp_INC: Int
     timestamp_DEC: Int
-    similarBooks_ADD: [BookSummaryInput!]!
+    similarBooks_ADD: [BookSummaryInput]
   }
 
   input BookSort {
