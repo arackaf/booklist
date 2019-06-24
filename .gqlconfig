@@ -7,6 +7,10 @@
       {
         match: 'react/**/*.graphql',
         parser: 'QueryParser',
+        validate: {
+          rules: {
+            NoUnusedVariables: 'off',
+          },
       },
     ],
   }
