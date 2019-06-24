@@ -1,6 +1,6 @@
 {
   schema: {
-    files: "node/graphQL/masterSchema.gql"
+    files: "node/graphQL/entireSchema.gql"
   },
   query: {
     files: [

@@ -141,7 +141,7 @@ input BookInput {
   similarItems: [String]
   similarItemsLastUpdate: Int
   timestamp: Float
-  similarBooks: [BookSummaryInput!]!
+  similarBooks: [BookSummaryInput]
 }
 
 input BookMutationInput {
@@ -198,7 +198,7 @@ input BookMutationInput {
   timestamp: Float
   timestamp_INC: Int
   timestamp_DEC: Int
-  similarBooks_ADD: [BookSummaryInput!]!
+  similarBooks_ADD: [BookSummaryInput]
 }
 
 input BookSort {

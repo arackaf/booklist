@@ -199,7 +199,7 @@ export type BookInput = {
   similarItems: Maybe<Array<Maybe<Scalars['String']>>>,
   similarItemsLastUpdate: Maybe<Scalars['Int']>,
   timestamp: Maybe<Scalars['Float']>,
-  similarBooks: Array<BookSummaryInput>,
+  similarBooks: Maybe<Array<Maybe<BookSummaryInput>>>,
 };
 
 export type BookMutationInput = {
@@ -256,7 +256,7 @@ export type BookMutationInput = {
   timestamp: Maybe<Scalars['Float']>,
   timestamp_INC: Maybe<Scalars['Int']>,
   timestamp_DEC: Maybe<Scalars['Int']>,
-  similarBooks_ADD: Array<BookSummaryInput>,
+  similarBooks_ADD: Maybe<Array<Maybe<BookSummaryInput>>>,
 };
 
 export type BookMutationResult = {
