@@ -8,6 +8,7 @@ import SelectAvailable from "app/components/availableTagsOrSubjects";
 
 import Modal from "app/components/modal";
 import { useStackedSubjects, filterSubjects } from "app/subjectsState";
+import { MutationOf, Mutations } from "graphql-typings";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -32,7 +33,7 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
     }
   }, [props.modifyingBooks.length]);
 
-  const { runMutation, running } = useMutation(buildMutation(updateBookSubjects));
+  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(updateBookSubjects));
 
   const save = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };

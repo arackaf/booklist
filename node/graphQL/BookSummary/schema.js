@@ -12,8 +12,8 @@ export const type = `
   }
 
   type BookSummaryQueryResults {
-    BookSummarys: [BookSummary]
-    Meta: QueryResultsMetadata
+    BookSummarys: [BookSummary!]!
+    Meta: QueryResultsMetadata!
   }
 
   type BookSummarySingleQueryResult {
@@ -22,19 +22,19 @@ export const type = `
 
   type BookSummaryMutationResult {
     BookSummary: BookSummary
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type BookSummaryMutationResultMulti {
     BookSummarys: [BookSummary]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type BookSummaryBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input BookSummaryInput {
@@ -135,14 +135,12 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -209,11 +207,10 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int
-  ): BookSummaryQueryResults
+  ): BookSummaryQueryResults!
 
   getBookSummary (
     _id: String
-  ): BookSummarySingleQueryResult
+  ): BookSummarySingleQueryResult!
 
 `;
-  

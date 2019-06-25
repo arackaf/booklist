@@ -1,6 +1,14 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
+import {
+  insertUtilities,
+  queryUtilities,
+  projectUtilities,
+  updateUtilities,
+  processHook,
+  dbHelpers,
+  resolverHelpers
+} from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
-const runHook = processHook.bind(this, hooksObj, "Book")
+const runHook = processHook.bind(this, hooksObj, "Book");
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -16,10 +24,10 @@ export async function loadBooks(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
-    { $match }, 
-    $sort ? { $sort } : null, 
+    { $match },
+    $sort ? { $sort } : null,
     { $project },
-    $skip != null ? { $skip } : null, 
+    $skip != null ? { $skip } : null,
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
@@ -27,7 +35,7 @@ export async function loadBooks(db, queryPacket, root, args, context, ast) {
   let Books = await dbHelpers.runQuery(db, "books", aggregateItems);
   await processHook(hooksObj, "Book", "adjustResults", Books);
   Books.forEach(o => {
-    if (o._id){
+    if (o._id) {
       o._id = "" + o._id;
     }
   });
@@ -43,7 +51,7 @@ export const Book = {
         let $match = { isbn: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
         let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, null, { force: ["isbn"] });
         let { $project, $sort, $limit, $skip } = queryPacket;
-        
+
         let aggregateItems = [{ $match }, $sort ? { $sort } : null, { $project }].filter(item => item);
         let results = await dbHelpers.runQuery(db, "bookSummaries", aggregateItems);
         cleanUpResults(results, BookSummaryMetadata);
@@ -51,9 +59,9 @@ export const Book = {
         let finalResult = keyArrays.map(keyArr => []);
         let keySets = keyArrays.map(keyArr => new Set(keyArr.map(isbn => "" + isbn)));
 
-        for (let result of results){
-          for (let i = 0; i < keyArrays.length; i++){
-            if (keySets[i].has(result.isbn + "")){
+        for (let result of results) {
+          for (let i = 0; i < keyArrays.length; i++) {
+            if (keySets[i].has(result.isbn + "")) {
               finalResult[i].push(result);
             }
           }
@@ -63,8 +71,7 @@ export const Book = {
     }
     return context.__Book_similarBooksDataLoader.load(obj.similarItems || []);
   }
-
-}
+};
 
 export default {
   Query: {
@@ -96,7 +103,10 @@ export default {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
-          let countResults = await dbHelpers.runQuery(db, "books", [{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }]);  
+          let countResults = await dbHelpers.runQuery(db, "books", [
+            { $match: queryPacket.$match },
+            { $group: { _id: null, count: { $sum: 1 } } }
+          ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }
@@ -107,32 +117,42 @@ export default {
   Mutation: {
     async createBook(root, args, context, ast) {
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, { create: true });
-      return await resolverHelpers.runMutation(session, transaction, async() => {
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, {
+        create: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
         let newObject = await newObjectFromArgs(args.Book, BookMetadata, { ...gqlPacket, db, session });
         let requestMap = parseRequestedFields(ast, "Book");
         let $project = requestMap.size ? getMongoProjection(requestMap, BookMetadata, args) : null;
 
-        newObject = await dbHelpers.processInsertion(db, newObject, { ...gqlPacket, typeMetadata: BookMetadata, session });
+        newObject = await dbHelpers.processInsertion(db, newObject, {
+          ...gqlPacket,
+          typeMetadata: BookMetadata,
+          session
+        });
         if (newObject == null) {
-          return { Book: null };
+          return { Book: null, success: false };
         }
         await setUpOneToManyRelationships(newObject, args.Book, BookMetadata, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
 
-        let result = $project ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0] : null;
+        let result = $project
+          ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0]
+          : null;
         return resolverHelpers.mutationSuccessResult({ Book: result, transaction, elapsedTime: 0 });
       });
     },
     async updateBook(root, args, context, ast) {
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, { update: true });
-      return await resolverHelpers.runMutation(session, transaction, async() => {
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
         let { $match, $project } = decontructGraphqlQuery(args._id ? { _id: args._id } : {}, ast, BookMetadata, "Book");
         let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { ...gqlPacket, db, session });
 
-        if (await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session }) === false) {
-          return { Book: null };
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
         }
         if (!$match._id) {
           throw "No _id sent, or inserted in middleware";
@@ -141,39 +161,45 @@ export default {
         await dbHelpers.runUpdate(db, "books", $match, updates, { session });
         await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
-        
-        let result = $project ? (await loadBooks(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0] : null;
+
+        let result = $project
+          ? (await loadBooks(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0]
+          : null;
         return resolverHelpers.mutationSuccessResult({ Book: result, transaction, elapsedTime: 0 });
       });
     },
     async updateBooks(root, args, context, ast) {
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, { update: true });
-      return await resolverHelpers.runMutation(session, transaction, async() => {
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
         let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, BookMetadata, "Books");
         let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { ...gqlPacket, db, session });
 
-        if (await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session }) === false) {
-          return { success: true };
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
         }
         await setUpOneToManyRelationshipsForUpdate(args._ids, args, BookMetadata, { ...gqlPacket, db, session });
         await dbHelpers.runUpdate(db, "books", $match, updates, { session });
         await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
-        
+
         let result = $project ? await loadBooks(db, { $match, $project }, root, args, context, ast) : null;
         return resolverHelpers.mutationSuccessResult({ Books: result, transaction, elapsedTime: 0 });
       });
     },
     async updateBooksBulk(root, args, context, ast) {
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, { update: true });
-      return await resolverHelpers.runMutation(session, transaction, async() => {
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
         let { $match } = decontructGraphqlQuery(args.Match, ast, BookMetadata);
         let updates = await getUpdateObject(args.Updates || {}, BookMetadata, { ...gqlPacket, db, session });
 
-        if (await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session }) === false) {
-          return { success: true };
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
         }
         await dbHelpers.runUpdate(db, "books", $match, updates, { session });
         await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
@@ -186,22 +212,22 @@ export default {
         throw "No _id sent";
       }
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, { delete: true });
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Book", BookMetadata, {
+        delete: true
+      });
       try {
         let $match = { _id: ObjectId(args._id) };
-        
-        if (await runHook("beforeDelete", $match, { ...gqlPacket, db, session }) === false) {
+
+        if ((await runHook("beforeDelete", $match, { ...gqlPacket, db, session })) === false) {
           return { success: false };
         }
         await dbHelpers.runDelete(db, "books", $match);
         await runHook("afterDelete", $match, { ...gqlPacket, db, session });
-        ;
-
         return await resolverHelpers.finishSuccessfulMutation(session, transaction);
       } catch (err) {
         await resolverHelpers.mutationError(err, session, transaction);
         return { success: false };
-      } finally { 
+      } finally {
         resolverHelpers.mutationOver(session);
       }
     }

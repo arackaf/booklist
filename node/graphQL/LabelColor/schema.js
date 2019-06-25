@@ -7,8 +7,8 @@ export const type = `
   }
 
   type LabelColorQueryResults {
-    LabelColors: [LabelColor]
-    Meta: QueryResultsMetadata
+    LabelColors: [LabelColor!]!
+    Meta: QueryResultsMetadata!
   }
 
   type LabelColorSingleQueryResult {
@@ -17,19 +17,19 @@ export const type = `
 
   type LabelColorMutationResult {
     LabelColor: LabelColor
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type LabelColorMutationResultMulti {
     LabelColors: [LabelColor]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type LabelColorBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input LabelColorInput {
@@ -73,14 +73,12 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -111,7 +109,6 @@ export const query = `
     PAGE_SIZE: Int,
     ver: String,
     cache: Int
-  ): LabelColorQueryResults
+  ): LabelColorQueryResults!
 
 `;
-  

@@ -22,7 +22,9 @@ export default {
     dateAdded: "String",
     editorialReviews: {
       __isArray: true,
-      get type(){ return EditorialReview; }
+      get type() {
+        return EditorialReview;
+      }
     },
     similarItems: "StringArray",
     similarItemsLastUpdate: "Int",
@@ -30,7 +32,9 @@ export default {
   },
   relationships: {
     similarBooks: {
-      get type(){ return BookSummary; },
+      get type() {
+        return BookSummary;
+      },
       fkField: "similarItems",
       keyField: "isbn",
       manyToMany: true,

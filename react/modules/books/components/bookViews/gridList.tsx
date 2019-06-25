@@ -14,6 +14,7 @@ import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
+import { QueryOf, Queries } from "graphql-typings";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -180,7 +181,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
 
   let [{ publicUserId }] = useContext(AppContext);
 
-  let { loading, data } = useQuery(buildQuery(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 }));
+  let { loading, data } = useQuery<QueryOf<Queries["getBook"]>>(buildQuery(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 }));
 
   setDetailsLoading(loading);
   if (loading) {
@@ -188,7 +189,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
   }
 
   let editorialReviews, similarBooks;
-  if (data && data.getBook && data.getBook.Book) {
+  if (data) {
     ({ editorialReviews, similarBooks } = data.getBook.Book);
   }
 

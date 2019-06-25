@@ -1,6 +1,14 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
+import {
+  insertUtilities,
+  queryUtilities,
+  projectUtilities,
+  updateUtilities,
+  processHook,
+  dbHelpers,
+  resolverHelpers
+} from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
-const runHook = processHook.bind(this, hooksObj, "User")
+const runHook = processHook.bind(this, hooksObj, "User");
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -12,10 +20,10 @@ export async function loadUsers(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
-    { $match }, 
-    $sort ? { $sort } : null, 
+    { $match },
+    $sort ? { $sort } : null,
     { $project },
-    $skip != null ? { $skip } : null, 
+    $skip != null ? { $skip } : null,
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
@@ -23,7 +31,7 @@ export async function loadUsers(db, queryPacket, root, args, context, ast) {
   let Users = await dbHelpers.runQuery(db, "users", aggregateItems);
   await processHook(hooksObj, "User", "adjustResults", Users);
   Users.forEach(o => {
-    if (o._id){
+    if (o._id) {
       o._id = "" + o._id;
     }
   });
@@ -31,10 +39,7 @@ export async function loadUsers(db, queryPacket, root, args, context, ast) {
   return Users;
 }
 
-export const User = {
-
-
-}
+export const User = {};
 
 export default {
   Query: {
@@ -66,7 +71,10 @@ export default {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
-          let countResults = await dbHelpers.runQuery(db, "users", [{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }]);  
+          let countResults = await dbHelpers.runQuery(db, "users", [
+            { $match: queryPacket.$match },
+            { $group: { _id: null, count: { $sum: 1 } } }
+          ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }
@@ -77,13 +85,15 @@ export default {
   Mutation: {
     async updateUser(root, args, context, ast) {
       let gqlPacket = { root, args, context, ast, hooksObj };
-      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "User", UserMetadata, { update: true });
-      return await resolverHelpers.runMutation(session, transaction, async() => {
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "User", UserMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
         let { $match, $project } = decontructGraphqlQuery(args._id ? { _id: args._id } : {}, ast, UserMetadata, "User");
         let updates = await getUpdateObject(args.Updates || {}, UserMetadata, { ...gqlPacket, db, session });
 
-        if (await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session }) === false) {
-          return { User: null };
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
         }
         if (!$match._id) {
           throw "No _id sent, or inserted in middleware";
@@ -92,8 +102,10 @@ export default {
         await dbHelpers.runUpdate(db, "users", $match, updates, { session });
         await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
-        
-        let result = $project ? (await loadUsers(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0] : null;
+
+        let result = $project
+          ? (await loadUsers(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0]
+          : null;
         return resolverHelpers.mutationSuccessResult({ User: result, transaction, elapsedTime: 0 });
       });
     }

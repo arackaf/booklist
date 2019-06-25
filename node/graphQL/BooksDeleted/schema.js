@@ -7,8 +7,8 @@ export const type = `
   }
 
   type BooksDeletedQueryResults {
-    BooksDeleteds: [BooksDeleted]
-    Meta: QueryResultsMetadata
+    BooksDeleteds: [BooksDeleted!]!
+    Meta: QueryResultsMetadata!
   }
 
   type BooksDeletedSingleQueryResult {
@@ -17,19 +17,19 @@ export const type = `
 
   type BooksDeletedMutationResult {
     BooksDeleted: BooksDeleted
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type BooksDeletedMutationResultMulti {
     BooksDeleteds: [BooksDeleted]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type BooksDeletedBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input BooksDeletedInput {
@@ -73,14 +73,12 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -109,11 +107,10 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int
-  ): BooksDeletedQueryResults
+  ): BooksDeletedQueryResults!
 
   getBooksDeleted (
     _id: String
-  ): BooksDeletedSingleQueryResult
+  ): BooksDeletedSingleQueryResult!
 
 `;
-  

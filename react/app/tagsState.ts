@@ -7,6 +7,7 @@ import { AppContext } from "./renderUI";
 
 import delve from "dlv";
 import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
+import { QueryOf, Queries } from "graphql-typings";
 
 interface ITag {
   _id: string;
@@ -32,9 +33,11 @@ graphqlClient.subscribeMutation([
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
   const req = { publicUserId: publicUserId || void 0 };
-  const { loaded, data } = useQuery(buildQuery(GetTags, req, { onMutation: { when: /(update|delete|create)Tag/, run: ({ refresh }) => refresh() } }));
+  const { loaded, data } = useQuery<QueryOf<Queries["allTags"]>>(
+    buildQuery(GetTags, req, { onMutation: { when: /(update|delete|create)Tag/, run: ({ refresh }) => refresh() } })
+  );
 
-  const tags = delve(data, "allTags.Tags") || [];
+  const tags = data ? data.allTags.Tags : [];
   const tagHash = useMemo(() => (tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);
 
   return { tagsLoaded: loaded, tags, tagHash };
