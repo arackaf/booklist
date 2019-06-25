@@ -8,6 +8,7 @@ import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
 import Modal from "app/components/modal";
 import { filterTags, TagsContext } from "app/tagsState";
+import { MutationOf, Mutations } from "graphql-typings";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
   const { tagHash, tags } = useContext(TagsContext);
@@ -24,7 +25,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
       resetTags();
     }
   }, [props.modifyingBooks.length]);
-  const { runMutation } = useMutation(buildMutation(updateBookSubjects));
+  const { runMutation } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(updateBookSubjects));
 
   const setBooksTags = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingTags, remove: removingTags };

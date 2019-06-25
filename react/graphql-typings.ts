@@ -1,3 +1,21 @@
+export type Queries = { [K in keyof Query]: K };
+export type Mutations = { [K in keyof Mutation]: K };
+
+type EitherType<T, QueryOrMutation> = [T] extends [keyof QueryOrMutation]
+  ? keyof QueryOrMutation
+  : [T] extends [Record<string, keyof QueryOrMutation>]
+  ? Record<string, keyof QueryOrMutation>
+  : never;
+
+type GetType<T, QueryOrMutation> = [T] extends [keyof QueryOrMutation]
+  ? Pick<QueryOrMutation, T>
+  : [T] extends [Record<string, keyof QueryOrMutation>]
+  ? { [k in keyof T]: QueryOrMutation[T[k]] }
+  : never;
+
+export type QueryOf<T extends EitherType<T, Query>, U extends EitherType<U, Query> = never> = GetType<T, Query> & GetType<U, Query>;
+export type MutationOf<T extends EitherType<T, Mutation>, U extends EitherType<U, Mutation> = never> = GetType<T, Mutation> & GetType<U, Mutation>;
+
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
