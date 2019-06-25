@@ -17,6 +17,7 @@ import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "./boo
 
 import GridView from "./components/bookViews/gridList";
 import LazyModal from "app/components/lazyModal";
+import { MutationOf, Mutations } from "graphql-typings";
 
 const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/basicList"));
 const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/coversList"));
@@ -120,9 +121,9 @@ const BookViewingList: SFC<{}> = props => {
   const [editingBook, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
   const editBook = book => openBookEditModal(book);
 
-  const { runMutation, running } = useMutation(buildMutation(UpdateBookMutation));
-  const { runMutation: setReadStatus } = useMutation(buildMutation(UpdateBooksReadMutation));
-  const { runMutation: deleteBook } = useMutation(buildMutation(DeleteBookMutation));
+  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBookMutation));
+  const { runMutation: setReadStatus } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(UpdateBooksReadMutation));
+  const { runMutation: deleteBook } = useMutation<MutationOf<Mutations["deleteBook"]>>(buildMutation(DeleteBookMutation));
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);

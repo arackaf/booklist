@@ -8,6 +8,7 @@ const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 import delve from "dlv";
 import ajaxUtil from "util/ajaxUtil";
 import { syncUpdates } from "util/graphqlHelpers";
+import { QueryOf, Queries } from "graphql-typings";
 
 export const updateSmallCover = ({ _id, url }) => {
   return ajaxUtil
@@ -60,8 +61,8 @@ export default props => {
 
   const imgFilter = missingCoversFilter ? "nophoto" : void 0;
 
-  const { data, loaded } = useQuery(buildQuery(SummaryQuery, { smallImage: imgFilter }));
-  const bookSummaries = delve(data, "allBookSummarys.BookSummarys") || [];
+  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(buildQuery(SummaryQuery, { smallImage: imgFilter }));
+  const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (
     <div className={bookList}>

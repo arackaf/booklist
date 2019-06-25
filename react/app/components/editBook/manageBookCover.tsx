@@ -6,6 +6,7 @@ import ajaxUtil from "util/ajaxUtil";
 import UpdateBook from "graphQL/books/updateBook.graphql";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
+import { MutationOf, Mutations } from "graphql-typings";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -51,7 +52,7 @@ const ManageBookCover = props => {
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
-  const { runMutation: updateBook, running: updateRunning } = useMutation(buildMutation(UpdateBook));
+  const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
 
   const runSave = () => {
     if (!uploadState.pendingImg) {
