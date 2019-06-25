@@ -7,6 +7,7 @@ import BooksQuery from "graphQL/home/searchBooks.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import ajaxUtil from "util/ajaxUtil";
 import { getCrossOriginAttribute } from "util/corsHelpers";
+import { QueryOf, Queries } from "graphql-typings";
 
 const initialState = {
   selectedBooks: [],
@@ -43,7 +44,7 @@ export default props => {
   const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
   const { active, ...searchStateToUse } = searchState;
 
-  const { loading, loaded, data, error } = useQuery(buildQuery(BooksQuery, searchStateToUse, { active }));
+  const { loading, loaded, data, error } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, searchStateToUse, { active }));
   const closeModal = () => setSearchModalOpen(false);
   const openModal = () => setSearchModalOpen(true);
   const setBookSearchState = searchState => {

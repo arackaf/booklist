@@ -10,7 +10,5 @@ export default {
   extras: {
     overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
   },
-  relationships: {
-
-  }
+  relationships: {}
 };

@@ -8,8 +8,8 @@ export const type = `
   }
 
   type UserQueryResults {
-    Users: [User]
-    Meta: QueryResultsMetadata
+    Users: [User!]!
+    Meta: QueryResultsMetadata!
   }
 
   type UserSingleQueryResult {
@@ -18,19 +18,19 @@ export const type = `
 
   type UserMutationResult {
     User: User
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type UserMutationResultMulti {
     Users: [User]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type UserBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input UserInput {
@@ -78,8 +78,7 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
   updateUser (
@@ -88,7 +87,6 @@ export const mutation = `
   ): UserMutationResult
 
 `;
-
 
 export const query = `
 
@@ -120,11 +118,10 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int
-  ): UserQueryResults
+  ): UserQueryResults!
 
   getUser (
     _id: String
-  ): UserSingleQueryResult
+  ): UserSingleQueryResult!
 
 `;
-  

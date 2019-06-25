@@ -1,0 +1,21 @@
+{
+  "schema": {
+    "files": "node/graphQL/entireSchema.gql"
+  },
+  "query": {
+    "files": [
+      {
+        "match": "react/**/*.graphql",
+        "parser": "QueryParser",
+        "validate": {
+          "extends": "gql-rules-query",
+          "rules": {
+            "LoneAnonymousOperation": "off",
+            "NoUnusedVariables": "off",
+            "NoUnusedTypeDefinition": "off",
+          }
+        }
+      }
+    ]
+  }
+}

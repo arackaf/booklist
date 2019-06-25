@@ -1,6 +1,14 @@
-import { insertUtilities, queryUtilities, projectUtilities, updateUtilities, processHook, dbHelpers, resolverHelpers } from "mongo-graphql-starter";
+import {
+  insertUtilities,
+  queryUtilities,
+  projectUtilities,
+  updateUtilities,
+  processHook,
+  dbHelpers,
+  resolverHelpers
+} from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
-const runHook = processHook.bind(this, hooksObj, "PublicUser")
+const runHook = processHook.bind(this, hooksObj, "PublicUser");
 const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
@@ -12,10 +20,10 @@ export async function loadPublicUsers(db, queryPacket, root, args, context, ast)
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
 
   let aggregateItems = [
-    { $match }, 
-    $sort ? { $sort } : null, 
+    { $match },
+    $sort ? { $sort } : null,
     { $project },
-    $skip != null ? { $skip } : null, 
+    $skip != null ? { $skip } : null,
     $limit != null ? { $limit } : null
   ].filter(item => item);
 
@@ -23,7 +31,7 @@ export async function loadPublicUsers(db, queryPacket, root, args, context, ast)
   let PublicUsers = await dbHelpers.runQuery(db, "users", aggregateItems);
   await processHook(hooksObj, "PublicUser", "adjustResults", PublicUsers);
   PublicUsers.forEach(o => {
-    if (o._id){
+    if (o._id) {
       o._id = "" + o._id;
     }
   });
@@ -31,10 +39,7 @@ export async function loadPublicUsers(db, queryPacket, root, args, context, ast)
   return PublicUsers;
 }
 
-export const PublicUser = {
-
-
-}
+export const PublicUser = {};
 
 export default {
   Query: {
@@ -66,7 +71,10 @@ export default {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
-          let countResults = await dbHelpers.runQuery(db, "users", [{ $match: queryPacket.$match }, { $group: { _id: null, count: { $sum: 1 } } }]);  
+          let countResults = await dbHelpers.runQuery(db, "users", [
+            { $match: queryPacket.$match },
+            { $group: { _id: null, count: { $sum: 1 } } }
+          ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
         }
       }
@@ -74,7 +82,5 @@ export default {
       return result;
     }
   },
-  Mutation: {
-
-  }
+  Mutation: {}
 };

@@ -10,7 +10,5 @@ export default {
     textColor: "String",
     timestamp: "Float"
   },
-  relationships: {
-
-  }
+  relationships: {}
 };

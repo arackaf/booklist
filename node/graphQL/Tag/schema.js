@@ -11,8 +11,8 @@ export const type = `
   }
 
   type TagQueryResults {
-    Tags: [Tag]
-    Meta: QueryResultsMetadata
+    Tags: [Tag!]!
+    Meta: QueryResultsMetadata!
   }
 
   type TagSingleQueryResult {
@@ -21,19 +21,19 @@ export const type = `
 
   type TagMutationResult {
     Tag: Tag
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type TagMutationResultMulti {
     Tags: [Tag]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type TagBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input TagInput {
@@ -117,8 +117,7 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
   createTag (
@@ -145,7 +144,6 @@ export const mutation = `
   ): DeletionResultInfo
 
 `;
-
 
 export const query = `
 
@@ -205,14 +203,13 @@ export const query = `
     publicUserId: String,
     ver: String,
     cache: Int
-  ): TagQueryResults
+  ): TagQueryResults!
 
   getTag (
     _id: String,
     publicUserId: String,
     ver: String,
     cache: Int
-  ): TagSingleQueryResult
+  ): TagSingleQueryResult!
 
 `;
-  

@@ -9,6 +9,7 @@ import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
 import { TagsContext } from "app/tagsState";
+import { QueryOf, Queries } from "graphql-typings";
 
 interface IEditorialReview {
   content: string;
@@ -87,9 +88,11 @@ export const useBooks = () => {
       }
     }
   ];
-  const { data, loading, loaded, currentQuery } = useQuery(buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation }));
+  const { data, loading, loaded, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(
+    buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation })
+  );
 
-  const booksRaw = delve(data, "allBooks.Books") || null;
+  const booksRaw = data ? data.allBooks.Books : null;
   const books = adjustBooks(booksRaw);
   const booksCount = loaded ? delve(data, "allBooks.Meta.count") : "";
 

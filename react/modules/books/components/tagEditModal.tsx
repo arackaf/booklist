@@ -13,6 +13,7 @@ import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { ColorsContext } from "app/renderUI";
 import { filterTags, TagsContext } from "app/tagsState";
+import { MutationOf, Mutations } from "graphql-typings";
 
 interface ILocalProps {
   onDone: any;
@@ -50,9 +51,9 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   const setNewTagTextColor = value => setEditingValue("textColor", value);
   const setEditingValue = (name, value) => setState(state => ({ ...state, editingTag: { ...state.editingTag, [name]: value } }));
 
-  const { runMutation: updateTag } = useMutation(buildMutation(UpdateTag));
-  const { runMutation: createTag } = useMutation(buildMutation(CreateTag));
-  const { runMutation: deleteTag } = useMutation(buildMutation(DeleteTagMutation));
+  const { runMutation: updateTag } = useMutation<MutationOf<Mutations["updateTag"]>>(buildMutation(UpdateTag));
+  const { runMutation: createTag } = useMutation<MutationOf<Mutations["createTag"]>>(buildMutation(CreateTag));
+  const { runMutation: deleteTag } = useMutation<MutationOf<Mutations["deleteTag"]>>(buildMutation(DeleteTagMutation));
 
   const createOrUpdateTag = () => {
     const { editingTag } = state;
@@ -62,7 +63,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
     const variables: any = { _id: _id || void 0, name, backgroundColor, textColor };
     const promise = _id ? updateTag(variables) : createTag(variables);
 
-    promise.then(resp => {
+    (promise as any).then((resp: any) => {
       cancelTagEdit();
       setTagSearch("");
       setState({ saving: false });

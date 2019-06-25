@@ -6,10 +6,11 @@ import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { AppContext } from "app/renderUI";
+import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
-  const { loading, loaded, data } = useQuery(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
+  const { loading, loaded, data } = useQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
 
   if (!online) {
     return <h1>Offline</h1>;
@@ -34,7 +35,7 @@ interface UserSettings {
 
 const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = props => {
   const [app] = useContext(AppContext);
-  const { runMutation, running: saving } = useMutation(buildMutation(UpdatePublisUserSettingsMutation));
+  const { runMutation, running: saving } = useMutation<MutationOf<Mutations["updateUser"]>>(buildMutation(UpdatePublisUserSettingsMutation));
   const { settings } = props;
   const { publicBooksHeader, publicName } = settings;
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);

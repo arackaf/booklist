@@ -7,8 +7,8 @@ export const type = `
   }
 
   type TagsDeletedQueryResults {
-    TagsDeleteds: [TagsDeleted]
-    Meta: QueryResultsMetadata
+    TagsDeleteds: [TagsDeleted!]!
+    Meta: QueryResultsMetadata!
   }
 
   type TagsDeletedSingleQueryResult {
@@ -17,19 +17,19 @@ export const type = `
 
   type TagsDeletedMutationResult {
     TagsDeleted: TagsDeleted
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type TagsDeletedMutationResultMulti {
     TagsDeleteds: [TagsDeleted]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type TagsDeletedBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input TagsDeletedInput {
@@ -73,14 +73,12 @@ export const type = `
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -109,11 +107,10 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int
-  ): TagsDeletedQueryResults
+  ): TagsDeletedQueryResults!
 
   getTagsDeleted (
     _id: String
-  ): TagsDeletedSingleQueryResult
+  ): TagsDeletedSingleQueryResult!
 
 `;
-  
