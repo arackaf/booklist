@@ -42,7 +42,7 @@
     "lodash.sortby": "^4.7.0",
     "mkdirp": "0.5.1",
     "moment": "^2.13.0",
-    "mongo-graphql-starter": "^0.10.0-beta2",
+    "mongo-graphql-starter": "^0.10.0-beta3",
     "mongodb": "3.1.13",
     "multer": "1.1.0",
     "nodemailer": "2.3.0",
