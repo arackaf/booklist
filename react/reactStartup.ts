@@ -46,13 +46,13 @@ export const getModulePromise = moduleToLoad => {
     case "subjects":
       return import(/* webpackChunkName: "subject-module" */ "./modules/subjects/subjects");
     case "styledemo":
-      return import(/* webpackChunkName: "styledemo-module" */ "./modules/styledemo/styledemo");
+      return import(/* webpackChunkName: "admin-modules" */ "./modules/styledemo/styledemo");
     case "settings":
       return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
     case "admin":
-      return import(/* webpackChunkName: "admin-module" */ "./modules/admin/admin");
+      return import(/* webpackChunkName: "admin-modules" */ "./modules/admin/admin");
     case "jr":
-      return import(/* webpackChunkName: "jr-module" */ "./modules/jr/songEdit");
+      return import(/* webpackChunkName: "admin-modules" */ "./modules/jr/songEdit");
   }
 };
 
