@@ -36,7 +36,7 @@ const BookViewCovers: SFC<any> = props => {
         saveMessage={"Saved"}
         onClosing={() => setEditingBook(null)}
       />
-      <div style={{ padding: "15px" }}>
+      <div>
         <div style={{ border: 0 }} className={coversList}>
           {books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
