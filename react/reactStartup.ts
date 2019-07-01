@@ -1,6 +1,6 @@
 import "./static/fontawesome/css/font-awesome-booklist-build.css";
 import "@reach/dialog/styles.css";
-import "./site-styles.css";
+import "./site-styles.scss";
 
 import { renderUI } from "app/renderUI";
 import { createElement } from "react";
