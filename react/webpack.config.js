@@ -67,14 +67,14 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         oneOf: [
           {
-            test: /\.module\.css$/,
-            use: [MiniCssExtractPlugin.loader, { loader: "css-loader", options: { modules: true, exportOnlyLocals: false } }]
+            test: /\.module\.s?css$/,
+            use: [MiniCssExtractPlugin.loader, { loader: "css-loader", options: { modules: true, exportOnlyLocals: false } }, "sass-loader"]
           },
           {
-            use: [MiniCssExtractPlugin.loader, "css-loader"]
+            use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
           }
         ]
       },

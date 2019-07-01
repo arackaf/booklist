@@ -1,3 +1,7 @@
+[data-reach-dialog-overlay] {
+  z-index: 2;
+}
+
 @media (max-width: 1000px) {
   div[data-reach-dialog-content] {
     width: 55vw;
@@ -29,22 +33,21 @@
   }
 }
 
-[data-reach-dialog-overlay] {
-  z-index: 2;
-}
 
-[data-reach-dialog-content] hr {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
+
 [data-reach-dialog-content] {
   padding: 20px;
   border-color: var(--primary-3) !important;
-}
-[data-reach-dialog-content] .standard-reach-header {
-  display: flex;
-  align-items: center;
-}
-[data-reach-dialog-content] .standard-reach-header a {
-  font-size: 22px;
+  
+  hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  .standard-reach-header {
+    display: flex;
+    align-items: center;
+  }
+  .standard-reach-header a {
+    font-size: 22px;
+  }
 }

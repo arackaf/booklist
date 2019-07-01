@@ -7,7 +7,7 @@ import { AppContext, SubjectsContext } from "app/renderUI";
 import { useStackedSubjects } from "app/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
-import "./d3-styles.css";
+import "./d3-styles.scss";
 
 const MainHomePane = props => (
   <div>
