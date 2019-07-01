@@ -547,3 +547,15 @@ div.radio input:focus {
 button::-moz-focus-inner {
   border: 0;
 }
+
+@media (max-width: 767px){
+  :global(.hidden-xs) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px){
+  :global(.visible-xs) {
+    display: none !important;
+  }
+}
