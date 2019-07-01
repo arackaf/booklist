@@ -1,0 +1,49 @@
+.coversList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+  figure {
+    width: 120px;
+    margin: 10px 15px 0 0;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    
+    @media(max-width: 600px){
+      width: 70px;
+      margin: 7px 10px 0 0;
+      
+      :global(.no-cover-medium){
+        width: 70px;
+        font-size: var(--no-cover-small-font-size);
+        padding-top: var(--no-cover-small-padding-top);
+        max-height: 90px;
+      }
+    }
+    @media(max-width: 420px){
+      width: 50px;
+      margin: 5px 5px 0 0;
+    
+      :global(.no-cover-medium){
+        width: var(--no-cover-small-width);
+        max-height: var(--no-cover-small-height);
+      }
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+  
+  figcaption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    background-color: var(--neutral-6);
+    color: var(--neutral-10);
+    margin-top: auto;
+    padding: 2px;
+  }
+}

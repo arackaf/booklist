@@ -3,8 +3,7 @@ import { BooksContext } from "../../booksState";
 import DetailsView from "./detailView";
 import BookEditModal from "app/components/editBook/editModal";
 
-import coversClasses from "./coversList.module.css";
-import { getCrossOriginAttribute } from "util/corsHelpers";
+import coversClasses from "./coversList.module.scss";
 import { CoverMedium } from "app/components/bookCoverComponent";
 
 const { coversList } = coversClasses;
