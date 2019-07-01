@@ -90,6 +90,7 @@ export default () => (
       <span className="label label-info margin-right">Info Label</span>
       <span className="label label-success margin-right">Success Label</span>
       <span className="label label-danger margin-right">Danger Label</span>
+      <span className="label label-default margin-right">Default Label</span>
       <span className="label margin-right" style={{ backgroundColor: "rgb(13, 230, 255)" }}>
         Misc Label
       </span>
