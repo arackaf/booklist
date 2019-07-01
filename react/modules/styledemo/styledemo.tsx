@@ -148,7 +148,7 @@ export default () => (
         <div className="tab-header active">
           <a>Section B</a>
         </div>
-        <div className="tab-header">
+        <div className="tab-header disabled">
           <a>Section C</a>
         </div>
         <div className="tab-header">
