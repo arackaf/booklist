@@ -1,3 +1,21 @@
+@media (max-width: 767px){
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px){
+  .visible-xs {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px){
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
 .visible-tiny {
   display: none;
 }
