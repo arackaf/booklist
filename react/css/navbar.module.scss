@@ -8,26 +8,72 @@
   background-color: var(--primary-4);
   height: 50px;
   font-size: 16px;
+  
+  a {
+    color: var(--primary-10);
+
+    i:global(.visible-xs) {
+      font-size: 20px;
+    }
+  }
+  
+  li {
+    &:global(.disabled), &:global(.disabled) a {
+      color: var(--primary-7);
+      cursor: not-allowed;
+    }
+
+    a {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+
+  :global(.active) {
+    background-color: var(--primary-7);
+    
+    a {
+      cursor: default;
+    }
+  }
+
+  @media (max-width: 767px){
+    padding-left: 0px;
+  }
+
+  @media (max-width: 500px) {
+    padding-left: 0;
+    
+    li a {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  @media (max-width: 350px) {
+    padding-left: 0;
+    min-height: 20px;
+    
+    li a {
+      padding-left: 8px;
+      padding-right: 8px;
+  
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+      
+      i {
+        font-size: 13pt !important;
+      }
+    }
+  }
 }
 
-.nav a {
-  color: var(--primary-10) 
-}
 
-.nav li:global(.active), .nav div:global(.active) {
-  background-color: var(--primary-7);
-}
 :global(.scheme5) .nav li:global(.active), :global(.scheme5) .nav div:global(.active) {
   background-color: var(--primary-6);
 }
 
-.nav li:global(.active) a {
-  cursor: default;
-}
-.nav li:global(.disabled), .nav li:global(.disabled) a {
-  color: var(--primary-7);
-  cursor: not-allowed;
-}
+
 .navHeader {
   font-size: 18px;
   display: flex;
@@ -35,13 +81,7 @@
   padding-left: 20px;
   padding-right: 20px;
 }
-.nav li a {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.nav a i:global(.visible-xs) {
-  font-size: 20px;
-}
+
 .navItems {
   padding-left: 0;
 }
@@ -60,45 +100,4 @@
   margin-left: auto;
 }
 
-@media (max-width: 767px){
-  .nav {
-    padding-left: 0px;
-  }
-  :global(.hidden-xs) {
-    display: none !important;
-  }
-}
 
-@media (min-width: 768px){
-  :global(.visible-xs) {
-    display: none !important;
-  }
-}
-
-@media (max-width: 500px) {
-  .nav {
-    padding-left: 0;
-  }
-  .nav li a {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-@media (max-width: 350px) {
-  .nav {
-    padding-left: 0;
-  }
-  .nav li a {
-    padding-left: 8px;
-    padding-right: 8px;
-
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-  }
-  .nav {
-    min-height: 20px;
-  }
-  .nav li a i {
-    font-size: 13pt !important;
-  }
-}
