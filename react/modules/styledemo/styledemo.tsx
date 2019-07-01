@@ -31,41 +31,57 @@ export default () => (
 
       <button className="btn btn-primary margin-right">Primary Button</button>
       <button className="btn btn-primary btn-xs margin-right">Primary Button XS</button>
+      <button className="btn btn-primary btn-xxs margin-right">Primary Button XXS</button>
       <button disabled={true} className="btn btn-primary margin-right">
         Primary Button
       </button>
       <button disabled={true} className="btn btn-primary btn-xs margin-right">
         Primary Button XS
       </button>
+      <button disabled={true} className="btn btn-primary btn-xxs margin-right">
+        Primary Button XXS
+      </button>
       <br />
       <br />
-      <button className="btn btn-info margin-right">Success Button</button>
-      <button className="btn btn-info btn-xs margin-right">Success Button XS</button>
+      <button className="btn btn-info margin-right">Info Button</button>
+      <button className="btn btn-info btn-xs margin-right">Info Button XS</button>
+      <button className="btn btn-info btn-xxs margin-right">Info Button XXS</button>
       <button disabled={true} className="btn btn-info margin-right">
-        Success Button
+        Info Button
       </button>
       <button disabled={true} className="btn btn-info btn-xs margin-right">
-        Success Button XS
+        Info Button XS
+      </button>
+      <button disabled={true} className="btn btn-info btn-Xxs margin-right">
+        Info Button XXS
       </button>
       <br />
       <br />
       <button className="btn btn-success margin-right">Success Button</button>
       <button className="btn btn-success btn-xs margin-right">Success Button XS</button>
+      <button className="btn btn-success btn-xxs margin-right">Success Button XXS</button>
       <button disabled={true} className="btn btn-success margin-right">
         Success Button
       </button>
       <button disabled={true} className="btn btn-success btn-xs margin-right">
         Success Button XS
       </button>
+      <button disabled={true} className="btn btn-success btn-xxs margin-right">
+        Success Button XXS
+      </button>
       <br />
       <br />
       <button className="btn btn-danger margin-right">Danger Button</button>
       <button className="btn btn-danger btn-xs margin-right">Danger Button XS</button>
+      <button className="btn btn-danger btn-xxs margin-right">Danger Button XXS</button>
       <button disabled={true} className="btn btn-danger margin-right">
         Danger Button
       </button>
       <button disabled={true} className="btn btn-danger btn-xs margin-right">
         Danger Button XS
+      </button>
+      <button disabled={true} className="btn btn-danger btn-xxs margin-right">
+        Danger Button XXS
       </button>
 
       <br />
