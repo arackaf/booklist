@@ -4,7 +4,7 @@ import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 
-import navClasses from "css/navbar.module.css";
+import navClasses from "css/navbar.module.scss";
 import { isAdmin } from "util/loginStatus";
 
 const { nav, navHeader, navItems, navItemsRight } = navClasses;

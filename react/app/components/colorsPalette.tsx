@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import colorClasses from "css/color-picker.module.css";
+import colorClasses from "css/color-picker.module.scss";
 
 const { colorChoice, colorChoiceCurrent } = colorClasses;
 

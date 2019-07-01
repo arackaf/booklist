@@ -1,12 +1,12 @@
-@import url("./css/btn.css");
-@import url("./css/row.css");
-@import url("./css/alert-label.css");
-@import url("./css/table-tab.css");
-@import url("./css/margin-padding.css");
-@import url("./css/responsive-visibility.css");
+@import "./css/btn";
+@import "./css/row";
+@import "./css/alert-label";
+@import "./css/table-tab";
+@import "./css/margin-padding";
+@import "./css/responsive-visibility";
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --default-border-radius: 5px;
 
   --neutral-1: hsl(42, 15%, 13%);
@@ -19,7 +19,7 @@
   --neutral-8: hsl(40, 15%, 80%);
   --neutral-9: hsl(43, 13%, 90%);
   --neutral-10: hsl(40, 23%, 97%);
-  
+
   --success-1: hsl(125, 97%, 14%);
   --success-2: hsl(125, 86%, 20%);
   --success-3: hsl(125, 79%, 26%);
@@ -42,16 +42,16 @@
   --warning-9: hsl(45, 90%, 88%);
   --warning-10: hsl(45, 100%, 96%);
 
-  --danger-1:hsl(348, 94%, 20%);
-  --danger-2:hsl(350, 94%, 28%);
-  --danger-3:hsl(352, 90%, 35%);
-  --danger-4:hsl(354, 85%, 44%);
-  --danger-5:hsl(356, 75%, 53%);
-  --danger-6:hsl(360, 83%, 62%);
-  --danger-7:hsl(360, 91%, 69%);
-  --danger-8:hsl(360, 100%, 80%);
-  --danger-9:hsl(360, 100%, 87%);
-  --danger-10:hsl(360, 100%, 95%);
+  --danger-1: hsl(348, 94%, 20%);
+  --danger-2: hsl(350, 94%, 28%);
+  --danger-3: hsl(352, 90%, 35%);
+  --danger-4: hsl(354, 85%, 44%);
+  --danger-5: hsl(356, 75%, 53%);
+  --danger-6: hsl(360, 83%, 62%);
+  --danger-7: hsl(360, 91%, 69%);
+  --danger-8: hsl(360, 100%, 80%);
+  --danger-9: hsl(360, 100%, 87%);
+  --danger-10: hsl(360, 100%, 95%);
 
   --info-1: hsl(184, 91%, 17%);
   --info-2: hsl(185, 84%, 25%);
@@ -70,7 +70,7 @@ body {
 }
 
 * {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 .scheme1 {
@@ -278,23 +278,28 @@ body {
   --primary-10: hsl(0, 0%, 97%);
 }
 
-#home, [data-reach-dialog-overlay] {
+#home,
+[data-reach-dialog-overlay] {
   --neutral-text: var(--neutral-3);
   --neutral-light-text: var(--neutral-5);
   --neutral-lighter-text: var(--neutral-7);
   --neutral-border: var(--neutral-6);
-  
+
   --neutral-light-background: var(--neutral-10);
   --neutral-background: var(--neutral-5);
   --neutral-dark-background: var(--neutral-9);
-  
+
   --info-button-color: white;
 }
 
 #main-content {
   -webkit-overflow-scrolling: touch;
 }
-#main-content, input, select, reach-portal, a {
+#main-content,
+input,
+select,
+reach-portal,
+a {
   color: var(--neutral-text);
 }
 
@@ -308,7 +313,8 @@ body {
   background-color: var(--primary-9);
   padding: 9px;
 }
-.scheme5 #footer, .scheme1 #footer {
+.scheme5 #footer,
+.scheme1 #footer {
   background-color: var(--primary-8);
 }
 
@@ -319,7 +325,10 @@ a.no-underline {
   text-decoration: none;
 }
 
-button, input, select, a {
+button,
+input,
+select,
+a {
   outline: 0;
 }
 
@@ -401,7 +410,9 @@ label {
   display: flex;
 }
 
-.form-group input, input.form-control, select.form-control {
+.form-group input,
+input.form-control,
+select.form-control {
   border: 1px solid var(--neutral-border);
   padding: 6px 12px;
   border-radius: var(--default-border-radius);
@@ -409,7 +420,8 @@ label {
   background-color: white;
   width: 100%;
 }
-input.form-control, select.form-control {
+input.form-control,
+select.form-control {
   font-size: 14px;
 }
 
@@ -427,7 +439,7 @@ div.responsive-radios input {
 }
 @media (max-width: 800px) {
   div.responsive-radios {
-    flex-direction: column
+    flex-direction: column;
   }
   div.responsive-radios > span {
     align-self: flex-start;
@@ -437,18 +449,21 @@ div.responsive-radios input {
   }
 }
 
-.form-group, .checkbox-group {
+.form-group,
+.checkbox-group {
   margin-bottom: 15px;
 }
-.form-group, .form-label {
+.form-group,
+.form-label {
   font-size: 14px;
   font-weight: bold;
 }
-.form-group label, .form-label{
+.form-group label,
+.form-label {
   display: block;
   margin-bottom: 5px;
 }
-.form-group input{
+.form-group input {
   width: 100%;
   display: block;
 }
@@ -460,10 +475,12 @@ div.responsive-radios input {
 
 div.toast-notification {
   background: var(--primary-4);
-  color: var(--primary-10)
+  color: var(--primary-10);
 }
-div.toast-notification a, div.toast-notification span, div.toast-notification h4 {
-  color: var(--primary-10)
+div.toast-notification a,
+div.toast-notification span,
+div.toast-notification h4 {
+  color: var(--primary-10);
 }
 
 .fade-transition-enter {
@@ -492,7 +509,8 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
   border-color: var(--danger-5);
 }
 
-.btn-group input:focus, .btn-group button:focus {
+.btn-group input:focus,
+.btn-group button:focus {
   z-index: 999999999;
 }
 
@@ -501,19 +519,25 @@ div.toast-notification a, div.toast-notification span, div.toast-notification h4
   box-shadow: none;
 }
 
-div.radio input{
+div.radio input {
   border-radius: 6px;
 }
-input.form-control, select.form-control, div.radio input, button {
-  transition: box-shadow .15s linear;
+input.form-control,
+select.form-control,
+div.radio input,
+button {
+  transition: box-shadow 0.15s linear;
 }
-input.form-control:focus, select.form-control:focus, button:focus {
+input.form-control:focus,
+select.form-control:focus,
+button:focus {
   box-shadow: 0 0 6px var(--primary-7);
 }
 button.btn-xs:focus {
   box-shadow: 0 0 3px var(--primary-7);
 }
-.btn-group button:focus, .btn-group input:focus {
+.btn-group button:focus,
+.btn-group input:focus {
   box-shadow: 0 0 2px var(--primary-7);
 }
 div.radio input:focus {
