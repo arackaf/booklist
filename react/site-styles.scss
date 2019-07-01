@@ -555,7 +555,13 @@ button::-moz-focus-inner {
 }
 
 @media (min-width: 768px){
-  :global(.visible-xs) {
+  .visible-xs {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px){
+  .hidden-xs {
     display: none !important;
   }
 }
