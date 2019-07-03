@@ -1,8 +1,6 @@
 import { isLoggedIn } from "util/loginStatus";
 
 export default function setupServiceWorker() {
-  //turn off service worker for now
-  return;
   if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
