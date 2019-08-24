@@ -5,7 +5,7 @@
   "query": {
     "files": [
       {
-        "match": "react/**/*.graphql",
+        "match": "**/*.graphql",
         "parser": "QueryParser",
         "validate": {
           "extends": "gql-rules-query",
