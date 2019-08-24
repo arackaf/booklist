@@ -4,34 +4,31 @@ import Jimp from "jimp";
 import dlv from "dlv";
 import { getDbConnection } from "../dbUtils";
 import { getGraphqlSchema } from "../graphqlUtils";
-import BookSummariesWithBadCovers from "../../graphql-queries/bookSummariesWithBadCovers";
 import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "./bookCoverHelpers";
 
 import { ObjectId } from "mongodb";
+
 const { graphql } = require("graphql");
 
 const dbPromise = getDbConnection();
 
-const delay = () => new Promise(res => setTimeout(res, 200));
 let count = 1;
 
-async function updateBookCovers(query, field) {
+async function updateBookCovers(field, maxWidth) {
   const { db, client } = await dbPromise;
   const { root, executableSchema } = getGraphqlSchema(dbPromise);
-  let resp = await graphql(executableSchema, query, root, {}, { pageSize: 500 });
 
-  let title = "";
+  let res = await (db.collection("books").find({ [field]: RegExp(/amazon\.com/) }).toArray());
 
-  for (let book of resp.data.allBooks.Books) {
+  for (let book of res) {
     let { _id, isbn, title } = book;
 
-    await delay();
     let res = await downloadBookCover(book[field], 1000);
     if (!res) {
       console.log("Oops download failed for small image for", title);
     } else {
       let { fileName, fullName } = res;
-      let newPath = await resizeIfNeeded(fileName);
+      let newPath = await resizeIfNeeded(fileName, maxWidth);
 
       if (newPath) {  
         let s3Key = await saveCoverToS3(newPath, `bookCovers/${book.userId}/${fileName}`);
@@ -49,14 +46,18 @@ async function updateBookCovers(query, field) {
       newPath && removeFile(newPath);
     }
   }
-
-  client.close();
 }
 
 (async function() {
   try {
     console.log("Starting...\n");
-    await updateBookCovers();
+    await updateBookCovers("smallImage");
+    console.log("XXX")
+    await updateBookCovers("mediumImage", 106);
+
+    const { db, client } = await dbPromise;
+    client.close();
+
   } catch (err) {
     console.log("Error caught at the top level: ", err);
   }
