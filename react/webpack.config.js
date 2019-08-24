@@ -104,8 +104,6 @@ module.exports = {
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:5/, name: "medium-cache", expires: 60 * 60 * 24 }), //1 day
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:9/, name: "max-cache" }),
-        getCache({ pattern: /^https:\/\/images-na.ssl-images-amazon.com/, name: "amazon-images1" }),
-        getCache({ pattern: /^https:\/\/ecx.images-amazon.com/, name: "amazon-images2" }),
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
       ],
