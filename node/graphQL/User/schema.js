@@ -5,6 +5,7 @@ export const type = `
     isPublic: Boolean
     publicName: String
     publicBooksHeader: String
+    books(SORT: BookSort, SORTS: [BookSort]): [Book!]!
   }
 
   type UserQueryResults {

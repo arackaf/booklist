@@ -119,6 +119,16 @@ export const User = {
   },
   extras: {
     overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
+  },
+  relationships: {
+    books: {
+      get type() {
+        return Book;
+      },
+      fkField: "_id",
+      keyField: "userId",
+      readonly: true
+    }
   }
 };
 

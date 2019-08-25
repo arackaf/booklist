@@ -1,3 +1,5 @@
+import Book from "../Book/Book";
+
 export default {
   table: "users",
   typeName: "User",
@@ -10,5 +12,16 @@ export default {
   extras: {
     overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
   },
-  relationships: {}
+  relationships: {
+    books: {
+      get type() {
+        return Book;
+      },
+      fkField: "_id",
+      keyField: "userId",
+      oneToMany: true,
+      __isArray: true,
+      __isObject: false
+    }
+  }
 };

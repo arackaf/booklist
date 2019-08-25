@@ -1821,6 +1821,13 @@ export type User = {
   isPublic: Maybe<Scalars['Boolean']>,
   publicName: Maybe<Scalars['String']>,
   publicBooksHeader: Maybe<Scalars['String']>,
+  books: Array<Book>,
+};
+
+
+export type UserBooksArgs = {
+  SORT: Maybe<BookSort>,
+  SORTS: Maybe<Array<Maybe<BookSort>>>
 };
 
 export type UserBulkMutationResult = {
