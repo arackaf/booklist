@@ -15,6 +15,10 @@ const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import UserMetadata from "./User";
+import { loadBooks } from "../Book/resolver";
+import BookMetadata from "../Book/Book";
+import flatMap from "lodash.flatmap";
+import DataLoader from "dataloader";
 
 export async function loadUsers(db, queryPacket, root, args, context, ast) {
   let { $match, $project, $sort, $limit, $skip } = queryPacket;
@@ -39,7 +43,34 @@ export async function loadUsers(db, queryPacket, root, args, context, ast) {
   return Users;
 }
 
-export const User = {};
+export const User = {
+  async books(obj, args, context, ast) {
+    if (context.__User_booksDataLoader == null) {
+      let db = await context.__mongodb;
+      context.__User_booksDataLoader = new DataLoader(async keys => {
+        let $match = { userId: { $in: keys.filter(id => id).map(id => "" + id) } };
+        let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, null, { force: ["userId"] });
+        let { $project, $sort, $limit, $skip } = queryPacket;
+
+        let aggregateItems = [{ $match }, $sort ? { $sort } : null, { $project }].filter(item => item);
+        let results = await dbHelpers.runQuery(db, "books", aggregateItems);
+        cleanUpResults(results, BookMetadata);
+        let finalResult = keys.map(keyArr => []);
+
+        for (let result of results) {
+          let keyLookup = new Set([result.userId + ""]);
+          for (let i = 0; i < keys.length; i++) {
+            if (keyLookup.has("" + keys[i])) {
+              finalResult[i].push(result);
+            }
+          }
+        }
+        return finalResult;
+      });
+    }
+    return context.__User_booksDataLoader.load(obj._id || []);
+  }
+};
 
 export default {
   Query: {
