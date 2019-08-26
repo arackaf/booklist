@@ -79,6 +79,7 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     title_contains: String
     title_startsWith: String
     title_endsWith: String
@@ -86,6 +87,7 @@ export const type = `
     title: String
     title_ne: String
     title_in: [String]
+    title_nin: [String]
     asin_contains: String
     asin_startsWith: String
     asin_endsWith: String
@@ -93,6 +95,7 @@ export const type = `
     asin: String
     asin_ne: String
     asin_in: [String]
+    asin_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -100,6 +103,7 @@ export const type = `
     isbn: String
     isbn_ne: String
     isbn_in: [String]
+    isbn_nin: [String]
     ean_contains: String
     ean_startsWith: String
     ean_endsWith: String
@@ -107,6 +111,7 @@ export const type = `
     ean: String
     ean_ne: String
     ean_in: [String]
+    ean_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -114,6 +119,7 @@ export const type = `
     smallImage: String
     smallImage_ne: String
     smallImage_in: [String]
+    smallImage_nin: [String]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -121,6 +127,7 @@ export const type = `
     mediumImage: String
     mediumImage_ne: String
     mediumImage_in: [String]
+    mediumImage_nin: [String]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -128,6 +135,7 @@ export const type = `
     authors_regex: String
     authors: [String]
     authors_in: [[String]]
+    authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
     authors_ne: [String]
@@ -148,6 +156,7 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
+    _id_nin: [String],
     title_contains: String,
     title_startsWith: String,
     title_endsWith: String,
@@ -155,6 +164,7 @@ export const query = `
     title: String,
     title_ne: String,
     title_in: [String],
+    title_nin: [String],
     asin_contains: String,
     asin_startsWith: String,
     asin_endsWith: String,
@@ -162,6 +172,7 @@ export const query = `
     asin: String,
     asin_ne: String,
     asin_in: [String],
+    asin_nin: [String],
     isbn_contains: String,
     isbn_startsWith: String,
     isbn_endsWith: String,
@@ -169,6 +180,7 @@ export const query = `
     isbn: String,
     isbn_ne: String,
     isbn_in: [String],
+    isbn_nin: [String],
     ean_contains: String,
     ean_startsWith: String,
     ean_endsWith: String,
@@ -176,6 +188,7 @@ export const query = `
     ean: String,
     ean_ne: String,
     ean_in: [String],
+    ean_nin: [String],
     smallImage_contains: String,
     smallImage_startsWith: String,
     smallImage_endsWith: String,
@@ -183,6 +196,7 @@ export const query = `
     smallImage: String,
     smallImage_ne: String,
     smallImage_in: [String],
+    smallImage_nin: [String],
     mediumImage_contains: String,
     mediumImage_startsWith: String,
     mediumImage_endsWith: String,
@@ -190,6 +204,7 @@ export const query = `
     mediumImage: String,
     mediumImage_ne: String,
     mediumImage_in: [String],
+    mediumImage_nin: [String],
     authors_count: Int,
     authors_textContains: String,
     authors_startsWith: String,
@@ -197,6 +212,7 @@ export const query = `
     authors_regex: String,
     authors: [String],
     authors_in: [[String]],
+    authors_nin: [[String]],
     authors_contains: String,
     authors_containsAny: [String],
     authors_ne: [String],

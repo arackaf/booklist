@@ -155,6 +155,7 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     ean_contains: String
     ean_startsWith: String
     ean_endsWith: String
@@ -162,6 +163,7 @@ export const type = `
     ean: String
     ean_ne: String
     ean_in: [String]
+    ean_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -169,6 +171,7 @@ export const type = `
     isbn: String
     isbn_ne: String
     isbn_in: [String]
+    isbn_nin: [String]
     title_contains: String
     title_startsWith: String
     title_endsWith: String
@@ -176,6 +179,7 @@ export const type = `
     title: String
     title_ne: String
     title_in: [String]
+    title_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -183,6 +187,7 @@ export const type = `
     smallImage: String
     smallImage_ne: String
     smallImage_in: [String]
+    smallImage_nin: [String]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -190,6 +195,7 @@ export const type = `
     mediumImage: String
     mediumImage_ne: String
     mediumImage_in: [String]
+    mediumImage_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -197,6 +203,7 @@ export const type = `
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     publisher_contains: String
     publisher_startsWith: String
     publisher_endsWith: String
@@ -204,6 +211,7 @@ export const type = `
     publisher: String
     publisher_ne: String
     publisher_in: [String]
+    publisher_nin: [String]
     publicationDate_contains: String
     publicationDate_startsWith: String
     publicationDate_endsWith: String
@@ -211,6 +219,7 @@ export const type = `
     publicationDate: String
     publicationDate_ne: String
     publicationDate_in: [String]
+    publicationDate_nin: [String]
     pages_lt: Int
     pages_lte: Int
     pages_gt: Int
@@ -218,6 +227,7 @@ export const type = `
     pages: Int
     pages_ne: Int
     pages_in: [Int]
+    pages_nin: [Int]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -225,6 +235,7 @@ export const type = `
     authors_regex: String
     authors: [String]
     authors_in: [[String]]
+    authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
     authors_ne: [String]
@@ -235,6 +246,7 @@ export const type = `
     subjects_regex: String
     subjects: [String]
     subjects_in: [[String]]
+    subjects_nin: [[String]]
     subjects_contains: String
     subjects_containsAny: [String]
     subjects_ne: [String]
@@ -245,12 +257,14 @@ export const type = `
     tags_regex: String
     tags: [String]
     tags_in: [[String]]
+    tags_nin: [[String]]
     tags_contains: String
     tags_containsAny: [String]
     tags_ne: [String]
     isRead: Boolean
     isRead_ne: Boolean
     isRead_in: [Boolean]
+    isRead_nin: [Boolean]
     dateAdded_contains: String
     dateAdded_startsWith: String
     dateAdded_endsWith: String
@@ -258,6 +272,7 @@ export const type = `
     dateAdded: String
     dateAdded_ne: String
     dateAdded_in: [String]
+    dateAdded_nin: [String]
     editorialReviews_count: Int
     editorialReviews: EditorialReviewFilters
     similarItems_count: Int
@@ -267,6 +282,7 @@ export const type = `
     similarItems_regex: String
     similarItems: [String]
     similarItems_in: [[String]]
+    similarItems_nin: [[String]]
     similarItems_contains: String
     similarItems_containsAny: [String]
     similarItems_ne: [String]
@@ -277,6 +293,7 @@ export const type = `
     similarItemsLastUpdate: Int
     similarItemsLastUpdate_ne: Int
     similarItemsLastUpdate_in: [Int]
+    similarItemsLastUpdate_nin: [Int]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -284,6 +301,7 @@ export const type = `
     timestamp: Float
     timestamp_ne: Float
     timestamp_in: [Float]
+    timestamp_nin: [Float]
     OR: [BookFilters]
   }
   
@@ -322,6 +340,7 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
+    _id_nin: [String],
     ean_contains: String,
     ean_startsWith: String,
     ean_endsWith: String,
@@ -329,6 +348,7 @@ export const query = `
     ean: String,
     ean_ne: String,
     ean_in: [String],
+    ean_nin: [String],
     isbn_contains: String,
     isbn_startsWith: String,
     isbn_endsWith: String,
@@ -336,6 +356,7 @@ export const query = `
     isbn: String,
     isbn_ne: String,
     isbn_in: [String],
+    isbn_nin: [String],
     title_contains: String,
     title_startsWith: String,
     title_endsWith: String,
@@ -343,6 +364,7 @@ export const query = `
     title: String,
     title_ne: String,
     title_in: [String],
+    title_nin: [String],
     smallImage_contains: String,
     smallImage_startsWith: String,
     smallImage_endsWith: String,
@@ -350,6 +372,7 @@ export const query = `
     smallImage: String,
     smallImage_ne: String,
     smallImage_in: [String],
+    smallImage_nin: [String],
     mediumImage_contains: String,
     mediumImage_startsWith: String,
     mediumImage_endsWith: String,
@@ -357,6 +380,7 @@ export const query = `
     mediumImage: String,
     mediumImage_ne: String,
     mediumImage_in: [String],
+    mediumImage_nin: [String],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,
@@ -364,6 +388,7 @@ export const query = `
     userId: String,
     userId_ne: String,
     userId_in: [String],
+    userId_nin: [String],
     publisher_contains: String,
     publisher_startsWith: String,
     publisher_endsWith: String,
@@ -371,6 +396,7 @@ export const query = `
     publisher: String,
     publisher_ne: String,
     publisher_in: [String],
+    publisher_nin: [String],
     publicationDate_contains: String,
     publicationDate_startsWith: String,
     publicationDate_endsWith: String,
@@ -378,6 +404,7 @@ export const query = `
     publicationDate: String,
     publicationDate_ne: String,
     publicationDate_in: [String],
+    publicationDate_nin: [String],
     pages_lt: Int,
     pages_lte: Int,
     pages_gt: Int,
@@ -385,6 +412,7 @@ export const query = `
     pages: Int,
     pages_ne: Int,
     pages_in: [Int],
+    pages_nin: [Int],
     authors_count: Int,
     authors_textContains: String,
     authors_startsWith: String,
@@ -392,6 +420,7 @@ export const query = `
     authors_regex: String,
     authors: [String],
     authors_in: [[String]],
+    authors_nin: [[String]],
     authors_contains: String,
     authors_containsAny: [String],
     authors_ne: [String],
@@ -402,6 +431,7 @@ export const query = `
     subjects_regex: String,
     subjects: [String],
     subjects_in: [[String]],
+    subjects_nin: [[String]],
     subjects_contains: String,
     subjects_containsAny: [String],
     subjects_ne: [String],
@@ -412,12 +442,14 @@ export const query = `
     tags_regex: String,
     tags: [String],
     tags_in: [[String]],
+    tags_nin: [[String]],
     tags_contains: String,
     tags_containsAny: [String],
     tags_ne: [String],
     isRead: Boolean,
     isRead_ne: Boolean,
     isRead_in: [Boolean],
+    isRead_nin: [Boolean],
     dateAdded_contains: String,
     dateAdded_startsWith: String,
     dateAdded_endsWith: String,
@@ -425,6 +457,7 @@ export const query = `
     dateAdded: String,
     dateAdded_ne: String,
     dateAdded_in: [String],
+    dateAdded_nin: [String],
     editorialReviews_count: Int,
     editorialReviews: EditorialReviewFilters,
     similarItems_count: Int,
@@ -434,6 +467,7 @@ export const query = `
     similarItems_regex: String,
     similarItems: [String],
     similarItems_in: [[String]],
+    similarItems_nin: [[String]],
     similarItems_contains: String,
     similarItems_containsAny: [String],
     similarItems_ne: [String],
@@ -444,6 +478,7 @@ export const query = `
     similarItemsLastUpdate: Int,
     similarItemsLastUpdate_ne: Int,
     similarItemsLastUpdate_in: [Int],
+    similarItemsLastUpdate_nin: [Int],
     timestamp_lt: Float,
     timestamp_lte: Float,
     timestamp_gt: Float,
@@ -451,6 +486,7 @@ export const query = `
     timestamp: Float,
     timestamp_ne: Float,
     timestamp_in: [Float],
+    timestamp_nin: [Float],
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],

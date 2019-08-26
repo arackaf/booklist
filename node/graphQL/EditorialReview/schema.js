@@ -33,6 +33,7 @@ export const type = `
     source: String
     source_ne: String
     source_in: [String]
+    source_nin: [String]
     content_contains: String
     content_startsWith: String
     content_endsWith: String
@@ -40,6 +41,7 @@ export const type = `
     content: String
     content_ne: String
     content_in: [String]
+    content_nin: [String]
     OR: [EditorialReviewFilters]
   }
   

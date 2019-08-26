@@ -62,6 +62,7 @@ input EditorialReviewFilters {
   source: String
   source_ne: String
   source_in: [String]
+  source_nin: [String]
   content_contains: String
   content_startsWith: String
   content_endsWith: String
@@ -69,6 +70,7 @@ input EditorialReviewFilters {
   content: String
   content_ne: String
   content_in: [String]
+  content_nin: [String]
   OR: [EditorialReviewFilters]
 }
 
@@ -227,6 +229,7 @@ input BookFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   ean_contains: String
   ean_startsWith: String
   ean_endsWith: String
@@ -234,6 +237,7 @@ input BookFilters {
   ean: String
   ean_ne: String
   ean_in: [String]
+  ean_nin: [String]
   isbn_contains: String
   isbn_startsWith: String
   isbn_endsWith: String
@@ -241,6 +245,7 @@ input BookFilters {
   isbn: String
   isbn_ne: String
   isbn_in: [String]
+  isbn_nin: [String]
   title_contains: String
   title_startsWith: String
   title_endsWith: String
@@ -248,6 +253,7 @@ input BookFilters {
   title: String
   title_ne: String
   title_in: [String]
+  title_nin: [String]
   smallImage_contains: String
   smallImage_startsWith: String
   smallImage_endsWith: String
@@ -255,6 +261,7 @@ input BookFilters {
   smallImage: String
   smallImage_ne: String
   smallImage_in: [String]
+  smallImage_nin: [String]
   mediumImage_contains: String
   mediumImage_startsWith: String
   mediumImage_endsWith: String
@@ -262,6 +269,7 @@ input BookFilters {
   mediumImage: String
   mediumImage_ne: String
   mediumImage_in: [String]
+  mediumImage_nin: [String]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -269,6 +277,7 @@ input BookFilters {
   userId: String
   userId_ne: String
   userId_in: [String]
+  userId_nin: [String]
   publisher_contains: String
   publisher_startsWith: String
   publisher_endsWith: String
@@ -276,6 +285,7 @@ input BookFilters {
   publisher: String
   publisher_ne: String
   publisher_in: [String]
+  publisher_nin: [String]
   publicationDate_contains: String
   publicationDate_startsWith: String
   publicationDate_endsWith: String
@@ -283,6 +293,7 @@ input BookFilters {
   publicationDate: String
   publicationDate_ne: String
   publicationDate_in: [String]
+  publicationDate_nin: [String]
   pages_lt: Int
   pages_lte: Int
   pages_gt: Int
@@ -290,6 +301,7 @@ input BookFilters {
   pages: Int
   pages_ne: Int
   pages_in: [Int]
+  pages_nin: [Int]
   authors_count: Int
   authors_textContains: String
   authors_startsWith: String
@@ -297,6 +309,7 @@ input BookFilters {
   authors_regex: String
   authors: [String]
   authors_in: [[String]]
+  authors_nin: [[String]]
   authors_contains: String
   authors_containsAny: [String]
   authors_ne: [String]
@@ -307,6 +320,7 @@ input BookFilters {
   subjects_regex: String
   subjects: [String]
   subjects_in: [[String]]
+  subjects_nin: [[String]]
   subjects_contains: String
   subjects_containsAny: [String]
   subjects_ne: [String]
@@ -317,12 +331,14 @@ input BookFilters {
   tags_regex: String
   tags: [String]
   tags_in: [[String]]
+  tags_nin: [[String]]
   tags_contains: String
   tags_containsAny: [String]
   tags_ne: [String]
   isRead: Boolean
   isRead_ne: Boolean
   isRead_in: [Boolean]
+  isRead_nin: [Boolean]
   dateAdded_contains: String
   dateAdded_startsWith: String
   dateAdded_endsWith: String
@@ -330,6 +346,7 @@ input BookFilters {
   dateAdded: String
   dateAdded_ne: String
   dateAdded_in: [String]
+  dateAdded_nin: [String]
   editorialReviews_count: Int
   editorialReviews: EditorialReviewFilters
   similarItems_count: Int
@@ -339,6 +356,7 @@ input BookFilters {
   similarItems_regex: String
   similarItems: [String]
   similarItems_in: [[String]]
+  similarItems_nin: [[String]]
   similarItems_contains: String
   similarItems_containsAny: [String]
   similarItems_ne: [String]
@@ -349,6 +367,7 @@ input BookFilters {
   similarItemsLastUpdate: Int
   similarItemsLastUpdate_ne: Int
   similarItemsLastUpdate_in: [Int]
+  similarItemsLastUpdate_nin: [Int]
   timestamp_lt: Float
   timestamp_lte: Float
   timestamp_gt: Float
@@ -356,6 +375,7 @@ input BookFilters {
   timestamp: Float
   timestamp_ne: Float
   timestamp_in: [Float]
+  timestamp_nin: [Float]
   OR: [BookFilters]
 }
 
@@ -438,6 +458,7 @@ input BookSummaryFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   title_contains: String
   title_startsWith: String
   title_endsWith: String
@@ -445,6 +466,7 @@ input BookSummaryFilters {
   title: String
   title_ne: String
   title_in: [String]
+  title_nin: [String]
   asin_contains: String
   asin_startsWith: String
   asin_endsWith: String
@@ -452,6 +474,7 @@ input BookSummaryFilters {
   asin: String
   asin_ne: String
   asin_in: [String]
+  asin_nin: [String]
   isbn_contains: String
   isbn_startsWith: String
   isbn_endsWith: String
@@ -459,6 +482,7 @@ input BookSummaryFilters {
   isbn: String
   isbn_ne: String
   isbn_in: [String]
+  isbn_nin: [String]
   ean_contains: String
   ean_startsWith: String
   ean_endsWith: String
@@ -466,6 +490,7 @@ input BookSummaryFilters {
   ean: String
   ean_ne: String
   ean_in: [String]
+  ean_nin: [String]
   smallImage_contains: String
   smallImage_startsWith: String
   smallImage_endsWith: String
@@ -473,6 +498,7 @@ input BookSummaryFilters {
   smallImage: String
   smallImage_ne: String
   smallImage_in: [String]
+  smallImage_nin: [String]
   mediumImage_contains: String
   mediumImage_startsWith: String
   mediumImage_endsWith: String
@@ -480,6 +506,7 @@ input BookSummaryFilters {
   mediumImage: String
   mediumImage_ne: String
   mediumImage_in: [String]
+  mediumImage_nin: [String]
   authors_count: Int
   authors_textContains: String
   authors_startsWith: String
@@ -487,6 +514,7 @@ input BookSummaryFilters {
   authors_regex: String
   authors: [String]
   authors_in: [[String]]
+  authors_nin: [[String]]
   authors_contains: String
   authors_containsAny: [String]
   authors_ne: [String]
@@ -548,6 +576,7 @@ input BooksDeletedFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -555,6 +584,7 @@ input BooksDeletedFilters {
   userId: String
   userId_ne: String
   userId_in: [String]
+  userId_nin: [String]
   deletedTimestamp_lt: Float
   deletedTimestamp_lte: Float
   deletedTimestamp_gt: Float
@@ -562,6 +592,7 @@ input BooksDeletedFilters {
   deletedTimestamp: Float
   deletedTimestamp_ne: Float
   deletedTimestamp_in: [Float]
+  deletedTimestamp_nin: [Float]
   OR: [BooksDeletedFilters]
 }
 
@@ -620,6 +651,7 @@ input LabelColorFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   backgroundColor_contains: String
   backgroundColor_startsWith: String
   backgroundColor_endsWith: String
@@ -627,6 +659,7 @@ input LabelColorFilters {
   backgroundColor: String
   backgroundColor_ne: String
   backgroundColor_in: [String]
+  backgroundColor_nin: [String]
   order_lt: Int
   order_lte: Int
   order_gt: Int
@@ -634,6 +667,7 @@ input LabelColorFilters {
   order: Int
   order_ne: Int
   order_in: [Int]
+  order_nin: [Int]
   OR: [LabelColorFilters]
 }
 
@@ -694,6 +728,7 @@ input PublicUserFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   isPublic_contains: String
   isPublic_startsWith: String
   isPublic_endsWith: String
@@ -701,6 +736,7 @@ input PublicUserFilters {
   isPublic: String
   isPublic_ne: String
   isPublic_in: [String]
+  isPublic_nin: [String]
   publicName_contains: String
   publicName_startsWith: String
   publicName_endsWith: String
@@ -708,6 +744,7 @@ input PublicUserFilters {
   publicName: String
   publicName_ne: String
   publicName_in: [String]
+  publicName_nin: [String]
   publicBooksHeader_contains: String
   publicBooksHeader_startsWith: String
   publicBooksHeader_endsWith: String
@@ -715,6 +752,7 @@ input PublicUserFilters {
   publicBooksHeader: String
   publicBooksHeader_ne: String
   publicBooksHeader_in: [String]
+  publicBooksHeader_nin: [String]
   OR: [PublicUserFilters]
 }
 
@@ -789,6 +827,7 @@ input SubjectFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   name_contains: String
   name_startsWith: String
   name_endsWith: String
@@ -796,6 +835,7 @@ input SubjectFilters {
   name: String
   name_ne: String
   name_in: [String]
+  name_nin: [String]
   path_contains: String
   path_startsWith: String
   path_endsWith: String
@@ -803,6 +843,7 @@ input SubjectFilters {
   path: String
   path_ne: String
   path_in: [String]
+  path_nin: [String]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -810,6 +851,7 @@ input SubjectFilters {
   userId: String
   userId_ne: String
   userId_in: [String]
+  userId_nin: [String]
   backgroundColor_contains: String
   backgroundColor_startsWith: String
   backgroundColor_endsWith: String
@@ -817,6 +859,7 @@ input SubjectFilters {
   backgroundColor: String
   backgroundColor_ne: String
   backgroundColor_in: [String]
+  backgroundColor_nin: [String]
   textColor_contains: String
   textColor_startsWith: String
   textColor_endsWith: String
@@ -824,6 +867,7 @@ input SubjectFilters {
   textColor: String
   textColor_ne: String
   textColor_in: [String]
+  textColor_nin: [String]
   timestamp_lt: Float
   timestamp_lte: Float
   timestamp_gt: Float
@@ -831,6 +875,7 @@ input SubjectFilters {
   timestamp: Float
   timestamp_ne: Float
   timestamp_in: [Float]
+  timestamp_nin: [Float]
   OR: [SubjectFilters]
 }
 
@@ -889,6 +934,7 @@ input SubjectsDeletedFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -896,6 +942,7 @@ input SubjectsDeletedFilters {
   userId: String
   userId_ne: String
   userId_in: [String]
+  userId_nin: [String]
   deletedTimestamp_lt: Float
   deletedTimestamp_lte: Float
   deletedTimestamp_gt: Float
@@ -903,6 +950,7 @@ input SubjectsDeletedFilters {
   deletedTimestamp: Float
   deletedTimestamp_ne: Float
   deletedTimestamp_in: [Float]
+  deletedTimestamp_nin: [Float]
   OR: [SubjectsDeletedFilters]
 }
 
@@ -977,6 +1025,7 @@ input TagFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   name_contains: String
   name_startsWith: String
   name_endsWith: String
@@ -984,6 +1033,7 @@ input TagFilters {
   name: String
   name_ne: String
   name_in: [String]
+  name_nin: [String]
   path_contains: String
   path_startsWith: String
   path_endsWith: String
@@ -991,6 +1041,7 @@ input TagFilters {
   path: String
   path_ne: String
   path_in: [String]
+  path_nin: [String]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -998,6 +1049,7 @@ input TagFilters {
   userId: String
   userId_ne: String
   userId_in: [String]
+  userId_nin: [String]
   backgroundColor_contains: String
   backgroundColor_startsWith: String
   backgroundColor_endsWith: String
@@ -1005,6 +1057,7 @@ input TagFilters {
   backgroundColor: String
   backgroundColor_ne: String
   backgroundColor_in: [String]
+  backgroundColor_nin: [String]
   textColor_contains: String
   textColor_startsWith: String
   textColor_endsWith: String
@@ -1012,6 +1065,7 @@ input TagFilters {
   textColor: String
   textColor_ne: String
   textColor_in: [String]
+  textColor_nin: [String]
   timestamp_lt: Float
   timestamp_lte: Float
   timestamp_gt: Float
@@ -1019,6 +1073,7 @@ input TagFilters {
   timestamp: Float
   timestamp_ne: Float
   timestamp_in: [Float]
+  timestamp_nin: [Float]
   OR: [TagFilters]
 }
 
@@ -1077,6 +1132,7 @@ input TagsDeletedFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -1084,6 +1140,7 @@ input TagsDeletedFilters {
   userId: String
   userId_ne: String
   userId_in: [String]
+  userId_nin: [String]
   deletedTimestamp_lt: Float
   deletedTimestamp_lte: Float
   deletedTimestamp_gt: Float
@@ -1091,6 +1148,7 @@ input TagsDeletedFilters {
   deletedTimestamp: Float
   deletedTimestamp_ne: Float
   deletedTimestamp_in: [Float]
+  deletedTimestamp_nin: [Float]
   OR: [TagsDeletedFilters]
 }
 
@@ -1152,9 +1210,11 @@ input UserFilters {
   _id: String
   _id_ne: String
   _id_in: [String]
+  _id_nin: [String]
   isPublic: Boolean
   isPublic_ne: Boolean
   isPublic_in: [Boolean]
+  isPublic_nin: [Boolean]
   publicName_contains: String
   publicName_startsWith: String
   publicName_endsWith: String
@@ -1162,6 +1222,7 @@ input UserFilters {
   publicName: String
   publicName_ne: String
   publicName_in: [String]
+  publicName_nin: [String]
   publicBooksHeader_contains: String
   publicBooksHeader_startsWith: String
   publicBooksHeader_endsWith: String
@@ -1169,6 +1230,7 @@ input UserFilters {
   publicBooksHeader: String
   publicBooksHeader_ne: String
   publicBooksHeader_in: [String]
+  publicBooksHeader_nin: [String]
   OR: [UserFilters]
 }
 
@@ -1177,6 +1239,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     ean_contains: String
     ean_startsWith: String
     ean_endsWith: String
@@ -1184,6 +1247,7 @@ type Query {
     ean: String
     ean_ne: String
     ean_in: [String]
+    ean_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -1191,6 +1255,7 @@ type Query {
     isbn: String
     isbn_ne: String
     isbn_in: [String]
+    isbn_nin: [String]
     title_contains: String
     title_startsWith: String
     title_endsWith: String
@@ -1198,6 +1263,7 @@ type Query {
     title: String
     title_ne: String
     title_in: [String]
+    title_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -1205,6 +1271,7 @@ type Query {
     smallImage: String
     smallImage_ne: String
     smallImage_in: [String]
+    smallImage_nin: [String]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -1212,6 +1279,7 @@ type Query {
     mediumImage: String
     mediumImage_ne: String
     mediumImage_in: [String]
+    mediumImage_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -1219,6 +1287,7 @@ type Query {
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     publisher_contains: String
     publisher_startsWith: String
     publisher_endsWith: String
@@ -1226,6 +1295,7 @@ type Query {
     publisher: String
     publisher_ne: String
     publisher_in: [String]
+    publisher_nin: [String]
     publicationDate_contains: String
     publicationDate_startsWith: String
     publicationDate_endsWith: String
@@ -1233,6 +1303,7 @@ type Query {
     publicationDate: String
     publicationDate_ne: String
     publicationDate_in: [String]
+    publicationDate_nin: [String]
     pages_lt: Int
     pages_lte: Int
     pages_gt: Int
@@ -1240,6 +1311,7 @@ type Query {
     pages: Int
     pages_ne: Int
     pages_in: [Int]
+    pages_nin: [Int]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -1247,6 +1319,7 @@ type Query {
     authors_regex: String
     authors: [String]
     authors_in: [[String]]
+    authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
     authors_ne: [String]
@@ -1257,6 +1330,7 @@ type Query {
     subjects_regex: String
     subjects: [String]
     subjects_in: [[String]]
+    subjects_nin: [[String]]
     subjects_contains: String
     subjects_containsAny: [String]
     subjects_ne: [String]
@@ -1267,12 +1341,14 @@ type Query {
     tags_regex: String
     tags: [String]
     tags_in: [[String]]
+    tags_nin: [[String]]
     tags_contains: String
     tags_containsAny: [String]
     tags_ne: [String]
     isRead: Boolean
     isRead_ne: Boolean
     isRead_in: [Boolean]
+    isRead_nin: [Boolean]
     dateAdded_contains: String
     dateAdded_startsWith: String
     dateAdded_endsWith: String
@@ -1280,6 +1356,7 @@ type Query {
     dateAdded: String
     dateAdded_ne: String
     dateAdded_in: [String]
+    dateAdded_nin: [String]
     editorialReviews_count: Int
     editorialReviews: EditorialReviewFilters
     similarItems_count: Int
@@ -1289,6 +1366,7 @@ type Query {
     similarItems_regex: String
     similarItems: [String]
     similarItems_in: [[String]]
+    similarItems_nin: [[String]]
     similarItems_contains: String
     similarItems_containsAny: [String]
     similarItems_ne: [String]
@@ -1299,6 +1377,7 @@ type Query {
     similarItemsLastUpdate: Int
     similarItemsLastUpdate_ne: Int
     similarItemsLastUpdate_in: [Int]
+    similarItemsLastUpdate_nin: [Int]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -1306,6 +1385,7 @@ type Query {
     timestamp: Float
     timestamp_ne: Float
     timestamp_in: [Float]
+    timestamp_nin: [Float]
     OR: [BookFilters]
     SORT: BookSort
     SORTS: [BookSort]
@@ -1331,6 +1411,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     title_contains: String
     title_startsWith: String
     title_endsWith: String
@@ -1338,6 +1419,7 @@ type Query {
     title: String
     title_ne: String
     title_in: [String]
+    title_nin: [String]
     asin_contains: String
     asin_startsWith: String
     asin_endsWith: String
@@ -1345,6 +1427,7 @@ type Query {
     asin: String
     asin_ne: String
     asin_in: [String]
+    asin_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -1352,6 +1435,7 @@ type Query {
     isbn: String
     isbn_ne: String
     isbn_in: [String]
+    isbn_nin: [String]
     ean_contains: String
     ean_startsWith: String
     ean_endsWith: String
@@ -1359,6 +1443,7 @@ type Query {
     ean: String
     ean_ne: String
     ean_in: [String]
+    ean_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -1366,6 +1451,7 @@ type Query {
     smallImage: String
     smallImage_ne: String
     smallImage_in: [String]
+    smallImage_nin: [String]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -1373,6 +1459,7 @@ type Query {
     mediumImage: String
     mediumImage_ne: String
     mediumImage_in: [String]
+    mediumImage_nin: [String]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -1380,6 +1467,7 @@ type Query {
     authors_regex: String
     authors: [String]
     authors_in: [[String]]
+    authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
     authors_ne: [String]
@@ -1398,6 +1486,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -1405,6 +1494,7 @@ type Query {
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     deletedTimestamp_lt: Float
     deletedTimestamp_lte: Float
     deletedTimestamp_gt: Float
@@ -1412,6 +1502,7 @@ type Query {
     deletedTimestamp: Float
     deletedTimestamp_ne: Float
     deletedTimestamp_in: [Float]
+    deletedTimestamp_nin: [Float]
     OR: [BooksDeletedFilters]
     SORT: BooksDeletedSort
     SORTS: [BooksDeletedSort]
@@ -1427,6 +1518,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -1434,6 +1526,7 @@ type Query {
     backgroundColor: String
     backgroundColor_ne: String
     backgroundColor_in: [String]
+    backgroundColor_nin: [String]
     order_lt: Int
     order_lte: Int
     order_gt: Int
@@ -1441,6 +1534,7 @@ type Query {
     order: Int
     order_ne: Int
     order_in: [Int]
+    order_nin: [Int]
     OR: [LabelColorFilters]
     SORT: LabelColorSort
     SORTS: [LabelColorSort]
@@ -1456,6 +1550,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     isPublic_contains: String
     isPublic_startsWith: String
     isPublic_endsWith: String
@@ -1463,6 +1558,7 @@ type Query {
     isPublic: String
     isPublic_ne: String
     isPublic_in: [String]
+    isPublic_nin: [String]
     publicName_contains: String
     publicName_startsWith: String
     publicName_endsWith: String
@@ -1470,6 +1566,7 @@ type Query {
     publicName: String
     publicName_ne: String
     publicName_in: [String]
+    publicName_nin: [String]
     publicBooksHeader_contains: String
     publicBooksHeader_startsWith: String
     publicBooksHeader_endsWith: String
@@ -1477,6 +1574,7 @@ type Query {
     publicBooksHeader: String
     publicBooksHeader_ne: String
     publicBooksHeader_in: [String]
+    publicBooksHeader_nin: [String]
     OR: [PublicUserFilters]
     SORT: PublicUserSort
     SORTS: [PublicUserSort]
@@ -1493,6 +1591,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String
@@ -1500,6 +1599,7 @@ type Query {
     name: String
     name_ne: String
     name_in: [String]
+    name_nin: [String]
     path_contains: String
     path_startsWith: String
     path_endsWith: String
@@ -1507,6 +1607,7 @@ type Query {
     path: String
     path_ne: String
     path_in: [String]
+    path_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -1514,6 +1615,7 @@ type Query {
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -1521,6 +1623,7 @@ type Query {
     backgroundColor: String
     backgroundColor_ne: String
     backgroundColor_in: [String]
+    backgroundColor_nin: [String]
     textColor_contains: String
     textColor_startsWith: String
     textColor_endsWith: String
@@ -1528,6 +1631,7 @@ type Query {
     textColor: String
     textColor_ne: String
     textColor_in: [String]
+    textColor_nin: [String]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -1535,6 +1639,7 @@ type Query {
     timestamp: Float
     timestamp_ne: Float
     timestamp_in: [Float]
+    timestamp_nin: [Float]
     OR: [SubjectFilters]
     SORT: SubjectSort
     SORTS: [SubjectSort]
@@ -1558,6 +1663,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -1565,6 +1671,7 @@ type Query {
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     deletedTimestamp_lt: Float
     deletedTimestamp_lte: Float
     deletedTimestamp_gt: Float
@@ -1572,6 +1679,7 @@ type Query {
     deletedTimestamp: Float
     deletedTimestamp_ne: Float
     deletedTimestamp_in: [Float]
+    deletedTimestamp_nin: [Float]
     OR: [SubjectsDeletedFilters]
     SORT: SubjectsDeletedSort
     SORTS: [SubjectsDeletedSort]
@@ -1587,6 +1695,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String
@@ -1594,6 +1703,7 @@ type Query {
     name: String
     name_ne: String
     name_in: [String]
+    name_nin: [String]
     path_contains: String
     path_startsWith: String
     path_endsWith: String
@@ -1601,6 +1711,7 @@ type Query {
     path: String
     path_ne: String
     path_in: [String]
+    path_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -1608,6 +1719,7 @@ type Query {
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -1615,6 +1727,7 @@ type Query {
     backgroundColor: String
     backgroundColor_ne: String
     backgroundColor_in: [String]
+    backgroundColor_nin: [String]
     textColor_contains: String
     textColor_startsWith: String
     textColor_endsWith: String
@@ -1622,6 +1735,7 @@ type Query {
     textColor: String
     textColor_ne: String
     textColor_in: [String]
+    textColor_nin: [String]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -1629,6 +1743,7 @@ type Query {
     timestamp: Float
     timestamp_ne: Float
     timestamp_in: [Float]
+    timestamp_nin: [Float]
     OR: [TagFilters]
     SORT: TagSort
     SORTS: [TagSort]
@@ -1652,6 +1767,7 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -1659,6 +1775,7 @@ type Query {
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     deletedTimestamp_lt: Float
     deletedTimestamp_lte: Float
     deletedTimestamp_gt: Float
@@ -1666,6 +1783,7 @@ type Query {
     deletedTimestamp: Float
     deletedTimestamp_ne: Float
     deletedTimestamp_in: [Float]
+    deletedTimestamp_nin: [Float]
     OR: [TagsDeletedFilters]
     SORT: TagsDeletedSort
     SORTS: [TagsDeletedSort]
@@ -1681,9 +1799,11 @@ type Query {
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     isPublic: Boolean
     isPublic_ne: Boolean
     isPublic_in: [Boolean]
+    isPublic_nin: [Boolean]
     publicName_contains: String
     publicName_startsWith: String
     publicName_endsWith: String
@@ -1691,6 +1811,7 @@ type Query {
     publicName: String
     publicName_ne: String
     publicName_in: [String]
+    publicName_nin: [String]
     publicBooksHeader_contains: String
     publicBooksHeader_startsWith: String
     publicBooksHeader_endsWith: String
@@ -1698,6 +1819,7 @@ type Query {
     publicBooksHeader: String
     publicBooksHeader_ne: String
     publicBooksHeader_in: [String]
+    publicBooksHeader_nin: [String]
     OR: [UserFilters]
     SORT: UserSort
     SORTS: [UserSort]
