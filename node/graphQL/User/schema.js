@@ -58,9 +58,11 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     isPublic: Boolean
     isPublic_ne: Boolean
     isPublic_in: [Boolean]
+    isPublic_nin: [Boolean]
     publicName_contains: String
     publicName_startsWith: String
     publicName_endsWith: String
@@ -68,6 +70,7 @@ export const type = `
     publicName: String
     publicName_ne: String
     publicName_in: [String]
+    publicName_nin: [String]
     publicBooksHeader_contains: String
     publicBooksHeader_startsWith: String
     publicBooksHeader_endsWith: String
@@ -75,6 +78,7 @@ export const type = `
     publicBooksHeader: String
     publicBooksHeader_ne: String
     publicBooksHeader_in: [String]
+    publicBooksHeader_nin: [String]
     OR: [UserFilters]
   }
   
@@ -95,9 +99,11 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
+    _id_nin: [String],
     isPublic: Boolean,
     isPublic_ne: Boolean,
     isPublic_in: [Boolean],
+    isPublic_nin: [Boolean],
     publicName_contains: String,
     publicName_startsWith: String,
     publicName_endsWith: String,
@@ -105,6 +111,7 @@ export const query = `
     publicName: String,
     publicName_ne: String,
     publicName_in: [String],
+    publicName_nin: [String],
     publicBooksHeader_contains: String,
     publicBooksHeader_startsWith: String,
     publicBooksHeader_endsWith: String,
@@ -112,6 +119,7 @@ export const query = `
     publicBooksHeader: String,
     publicBooksHeader_ne: String,
     publicBooksHeader_in: [String],
+    publicBooksHeader_nin: [String],
     OR: [UserFilters],
     SORT: UserSort,
     SORTS: [UserSort],

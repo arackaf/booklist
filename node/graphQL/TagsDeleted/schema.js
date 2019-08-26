@@ -55,6 +55,7 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -62,6 +63,7 @@ export const type = `
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     deletedTimestamp_lt: Float
     deletedTimestamp_lte: Float
     deletedTimestamp_gt: Float
@@ -69,6 +71,7 @@ export const type = `
     deletedTimestamp: Float
     deletedTimestamp_ne: Float
     deletedTimestamp_in: [Float]
+    deletedTimestamp_nin: [Float]
     OR: [TagsDeletedFilters]
   }
   
@@ -86,6 +89,7 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
+    _id_nin: [String],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,
@@ -93,6 +97,7 @@ export const query = `
     userId: String,
     userId_ne: String,
     userId_in: [String],
+    userId_nin: [String],
     deletedTimestamp_lt: Float,
     deletedTimestamp_lte: Float,
     deletedTimestamp_gt: Float,
@@ -100,6 +105,7 @@ export const query = `
     deletedTimestamp: Float,
     deletedTimestamp_ne: Float,
     deletedTimestamp_in: [Float],
+    deletedTimestamp_nin: [Float],
     OR: [TagsDeletedFilters],
     SORT: TagsDeletedSort,
     SORTS: [TagsDeletedSort],
