@@ -1,6 +1,24 @@
 .searchInput { 
-  width: 100px !important;
+  width: 250px !important;
 }
-.searchInput:focus { 
-  width: 101px !important;
+
+@media (max-width: 900px) {
+  .searchInput { 
+    width: 150px !important;
+  }
+}
+@media (max-width: 600px) {
+  .searchInput { 
+    width: 100px !important;
+  }
+}
+@media (max-width: 490px) {
+  .searchInput { 
+    width: 150px !important;
+  }
+}
+@media (max-width: 390px) {
+  .searchInput { 
+    width: 100px !important;
+  }
 }
