@@ -155,7 +155,7 @@
     border-left-width: 0;
   }
   
-  :first-child {
+  :first-child, .first-child {
     border-top-left-radius: var(--default-border-radius);
     border-bottom-left-radius: var(--default-border-radius);
   }
@@ -163,11 +163,16 @@
     border-top-right-radius: var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
   }
-}
-
-@media (max-width: 500px) {
-  .btn-first-tiny {
-    border-top-left-radius: 4px !important;
-    border-bottom-left-radius: 4px !important;
+  @media (max-width: 500px) {
+    .btn-first-tiny {
+      border-top-left-radius: 4px !important;
+      border-bottom-left-radius: 4px !important;
+    }
+    .tiny-orphan {
+      border-top-right-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
+      border-right: 1px solid var(--neutral-border)
+    }
   }
 }
+

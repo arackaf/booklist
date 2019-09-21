@@ -46,7 +46,9 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const bookSearchUiView = useBookSearchUiView();
   const bookSearchState = useCurrentSearch();
 
-  useEffect(() => void (quickSearchEl.current.value = bookSearchState.search), [bookSearchState.search]);
+  useEffect(() => {
+    quickSearchEl.current.value = bookSearchState.search;
+  }, [bookSearchState.search]);
 
   const resetSearch = () => {
     quickSearchEl.current.value = bookSearchState.search;
@@ -67,7 +69,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   let canPageOne = page > 1;
   let canPageLast = page < totalPages;
 
-  let resultsDisplay = resultsCount ? `${resultsCount} book${resultsCount === 1 ? "" : "s"}` : "";
+  let resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
   let removeAllFiltersLabel = {
     backgroundColor: "red",
     textColor: "white",
@@ -84,18 +86,19 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <h4 style={{ marginRight: "5px", marginBottom: 0, alignSelf: "center" }}>{booksHeader}</h4> : null}
           {!selectedBooksCount ? (
-            <div className="visible-tiny" style={{ marginRight: "5px" }}>
-              <div className="btn-group">
+            <div className="visible-xs" style={{ marginRight: "5px" }}>
+              <div>
                 <button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
                   <i className="fal fa-angle-left" />
                 </button>
+                <span style={{paddingLeft: "3px", paddingRight: "3px"}}>{page} of {totalPages}</span>
                 <button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
                   <i className="fal fa-angle-right" />
                 </button>
               </div>
             </div>
           ) : null}
-          <div className="hidden-tiny" style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
+          <div className="hidden-xs" style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
             <div className="btn-group">
               <button onClick={pageOne} disabled={!canPageOne} className="btn btn-default">
                 <i className="fal fa-angle-double-left" />
@@ -107,7 +110,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
             {online && resultsCount ? (
               <span style={{ display: "inline" }}>
                 <span className="hidden-xs">Page</span> {page}
-                <span className="hidden-xs"> of {totalPages}</span>
+                <span> of {totalPages}</span>
               </span>
             ) : null}
             <div className="btn-group">
@@ -129,7 +132,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 defaultValue={bookSearchState.search}
                 onBlur={resetSearch}
                 name="search"
-                className={`form-control hidden-tiny ${searchInput}`}
+                className={`form-control ${searchInput} tiny-orphan`}
                 placeholder="Title search"
                 onKeyDown={quickSearchType}
               />
@@ -141,16 +144,16 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                         title="Filter search"
                         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                         onClick={props.beginEditFilters}
-                        className="btn btn-default btn-first-tiny"
+                        className="btn btn-default hidden-tiny"
                       >
                         <i className="fal fa-filter" />
                       </button>
                       {!isPublic ? (
                         <>
-                          <button title="Edit subjects" onClick={props.editSubjects} className="btn btn-default ">
+                          <button title="Edit subjects" onClick={props.editSubjects} className="btn btn-default hidden-xs">
                             <i className="fal fa-sitemap" />
                           </button>
-                          <button title="Edit tags" onClick={props.editTags} className="btn btn-default ">
+                          <button title="Edit tags" onClick={props.editTags} className="btn btn-default hidden-xs">
                             <i className="fal fa-tags" />
                           </button>
                         </>
@@ -160,37 +163,45 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                   <button
                     style={{ position: "static" }}
                     onClick={setViewDesktop}
-                    className={"btn btn-default " + (bookSearchUiView.isGridView ? "active" : "")}
+                    className={"btn btn-default hidden-tiny " + (bookSearchUiView.isGridView ? "active" : "")}
                   >
                     <i className="fal fa-table" />
                   </button>
                   <button
                     style={{ position: "static" }}
                     onClick={setCoversList}
-                    className={"btn btn-default " + (bookSearchUiView.isCoversList ? "active" : "")}
+                    className={"btn btn-default hidden-tiny " + (bookSearchUiView.isCoversList ? "active" : "")}
                   >
                     <i className="fas fa-th" />
                   </button>
                   <button
                     style={{ position: "static" }}
                     onClick={setViewBasicList}
-                    className={"btn btn-default " + (bookSearchUiView.isBasicList ? "active" : "")}
+                    className={"btn btn-default hidden-tiny " + (bookSearchUiView.isBasicList ? "active" : "")}
                   >
                     <i className="fal fa-list" />
                   </button>
                 </>
               ) : !isPublic ? (
                 <>
-                  <button title="Add/remove subjects" onClick={props.startSubjectModification} className={"btn btn-default btn-first-tiny"}>
+                  <button
+                    title="Add/remove subjects"
+                    onClick={props.startSubjectModification}
+                    className={"btn btn-default hidden-tiny"}
+                  >
                     <i className="fal fa-sitemap" />
                   </button>
-                  <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default">
+                  <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default hidden-tiny">
                     <i className="fal fa-tags" />
                   </button>
-                  <button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default"}>
+                  <button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
                     <i className="fal fa-eye" />
                   </button>
-                  <button title="Set un-read" onClick={() => setRead(selectedBooksIds, false)} className="btn btn-default put-line-through">
+                  <button
+                    title="Set un-read"
+                    onClick={() => setRead(selectedBooksIds, false)}
+                    className="btn btn-default put-line-through hidden-tiny"
+                  >
                     <i className="fal fa-eye-slash" />
                   </button>
                 </>
@@ -201,9 +212,6 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
           <div style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
             {online && resultsCount ? (
               <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
-                <span className="visible-tiny">
-                  Page {page} of {totalPages}&nbsp;&nbsp;—&nbsp;&nbsp;
-                </span>
                 {resultsDisplay}
               </div>
             ) : null}
