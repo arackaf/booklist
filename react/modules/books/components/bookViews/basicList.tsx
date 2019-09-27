@@ -5,7 +5,6 @@ import { BooksContext } from "../../booksState";
 
 import uiStyles from "./uiStyles.module.css";
 import basicListClasses from "./basicList.module.css";
-import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
 
 const { bookTitle, bookAuthor } = uiStyles;
