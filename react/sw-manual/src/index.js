@@ -38,49 +38,49 @@ self.addEventListener("message", evt => {
 
 self.addEventListener("activate", masterSync);
 
-workbox.routing.registerRoute(
-  /graphql/,
-  ({ url, event }) => {
-    return fetch(event.request).catch(err => {
-      let { query, variables } = parseQueryString(url.search);
+// workbox.routing.registerRoute(
+//   /graphql/,
+//   ({ url, event }) => {
+//     return fetch(event.request).catch(err => {
+//       let { query, variables } = parseQueryString(url.search);
 
-      if (query == allLabelColors) {
-        return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
-      } else if (query == allSubjects) {
-        return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
-      } else if (query == allTags) {
-        return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
-      } else if (query == searchBooksQuery) {
-        return readBooks(variables);
-      }
-    });
-  },
-  "GET"
-);
+//       if (query == allLabelColors) {
+//         return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
+//       } else if (query == allSubjects) {
+//         return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
+//       } else if (query == allTags) {
+//         return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
+//       } else if (query == searchBooksQuery) {
+//         return readBooks(variables);
+//       }
+//     });
+//   },
+//   "GET"
+// );
 
-workbox.routing.registerRoute(
-  /graphql$/,
-  ({ url, event }) => {
-    let request = event.request.clone();
+// workbox.routing.registerRoute(
+//   /graphql$/,
+//   ({ url, event }) => {
+//     let request = event.request.clone();
 
-    return fetch(event.request).then(response => {
-      let respClone = response.clone();
-      respClone.json().then(response => {
-        syncResultsFor({ request, response }, "Book", bookSyncTransform);
-        syncResultsFor({ request, response }, "Tag");
-        syncSubjectsResults(response);
-      });
-      return response;
-    });
-  },
-  "POST"
-);
+//     return fetch(event.request).then(response => {
+//       let respClone = response.clone();
+//       respClone.json().then(response => {
+//         syncResultsFor({ request, response }, "Book", bookSyncTransform);
+//         syncResultsFor({ request, response }, "Tag");
+//         syncSubjectsResults(response);
+//       });
+//       return response;
+//     });
+//   },
+//   "POST"
+// );
 
-const syncEvery = 1500 * 10; // 10 seconds
 function masterSync() {
   let open = indexedDB.open("books", 1);
-
+  
   open.onsuccess = async evt => {
+    const syncEvery = 1500 * 10; // 10 seconds
     let db = open.result;
     if (db.objectStoreNames.contains("syncInfo")) {
       let [syncInfo = {}] = await readTable("syncInfo");
