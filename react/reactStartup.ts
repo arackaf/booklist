@@ -61,7 +61,7 @@ renderUI();
 export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   let location = history.location;
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
-  let moduleToLoad = originalModule || "home";
+  let moduleToLoad = originalModule || "books";
   let publicModule = moduleToLoad === "view" || moduleToLoad == "activate" || moduleToLoad == "settings";
 
   let { logged_in, userId: currentUserId } = isLoggedIn();
