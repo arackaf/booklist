@@ -1,10 +1,15 @@
-import React, { SFC, useContext, useState } from "react";
+import React, { SFC, useContext, useState, Suspense } from "react";
 import { BooksContext } from "../../booksState";
-import DetailsView from "./detailView";
-import BookEditModal from "app/components/editBook/editModal";
+import LazyModal from "app/components/lazyModal";
+
+const BookEditModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
+const DetailsView = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "./detailView"));
 
 import coversClasses from "./coversList.module.scss";
 import { CoverMedium } from "app/components/bookCoverComponent";
+import Loading from "app/components/loading";
+import { useCodeSplitModal } from "modules/books/util";
+
 
 const { coversList } = coversClasses;
 
@@ -12,30 +17,37 @@ const BookViewCovers: SFC<any> = props => {
   const { saveEditingBook } = props;
   const { books } = useContext(BooksContext);
   const [displaying, setDisplaying] = useState(null);
-  const [editingBook, setEditingBook] = useState(null);
-  const [detailsViewOpen, setDetailsViewOpen] = useState(false);
+  
+  const [bookPreviewing, openBookPreview, closeBookPreview] = useCodeSplitModal(null);
+  const [bookEditing, openBookEditModalWith, closeBookEdit] = useCodeSplitModal(null);
+  
   const previewBook = book => {
     setDisplaying(book);
-    setDetailsViewOpen(true);
+    openBookPreview();
   };
 
   const doSave = book => {
-    Promise.resolve(saveEditingBook(book)).then(() => setEditingBook(null));
+    Promise.resolve(saveEditingBook(book)).then(() => closeBookEdit());
   };
 
-  const closeModal = () => setDetailsViewOpen(false);
+  const closeModal = () => closeBookPreview(false);
+
+
 
   return (
     <div>
-      <DetailsView book={displaying} isOpen={detailsViewOpen} onClose={closeModal} editBook={setEditingBook} />
-      <BookEditModal
-        title={editingBook ? `Edit ${editingBook.title}` : ""}
-        bookToEdit={editingBook}
-        isOpen={!!editingBook}
-        saveBook={doSave}
-        saveMessage={"Saved"}
-        onClosing={() => setEditingBook(null)}
-      />
+      <Suspense fallback={<Loading />}>
+        <DetailsView book={displaying} isOpen={bookPreviewing} onClose={closeModal} editBook={openBookEditModalWith} />
+
+        <BookEditModal
+          title={bookEditing ? `Edit ${bookEditing.title}` : ""}
+          bookToEdit={bookEditing}
+          isOpen={!!bookEditing}
+          saveBook={doSave}
+          saveMessage={"Saved"}
+          onClosing={() => openBookEditModalWith(null)}
+        />
+      </Suspense>
       <div>
         <div style={{ border: 0 }} className={coversList}>
           {books.map((book, i) => (
