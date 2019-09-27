@@ -19,8 +19,8 @@ import GridView from "./components/bookViews/gridList";
 import LazyModal from "app/components/lazyModal";
 import { MutationOf, Mutations } from "graphql-typings";
 
-const BasicListView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/basicList"));
-const CoversView = lazy(() => import(/* webpackChunkName: "basic-view-list" */ "./components/bookViews/coversList"));
+const BasicListView = lazy(() => import(/* webpackChunkName: "book-views" */ "./components/bookViews/basicList"));
+const CoversView = lazy(() => import(/* webpackChunkName: "book-views" */ "./components/bookViews/coversList"));
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
