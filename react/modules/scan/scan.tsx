@@ -10,7 +10,7 @@ import createBookMutation from "graphQL/scan/createBook.graphql";
 
 declare var webSocketAddress: any;
 
-const CreateBookModal = lazy(() => import(/* webpackChunkName: "manual-book-entry-modal" */ "app/components/editBook/editModal"));
+const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
   title: "",
   isbn: "",
