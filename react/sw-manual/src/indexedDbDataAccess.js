@@ -1,8 +1,10 @@
 import { gqlResponse } from "./util";
+import escapeRegex from "./lib/escape-regex";
 
 export function readBooks(variableString) {
   let variables = JSON.parse(variableString);
   let { page = 1, pageSize = 50, title_contains, sort } = variables;
+  console.log("variables:", variables);
 
   let predicate = null;
   let limit = pageSize;

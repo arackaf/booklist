@@ -1,4 +1,3 @@
-import escapeRegex from "./lib/escape-regex";
 import parseQueryString from "./lib/query-string";
 
 import { doFetch, gqlResponse, bookSyncTransform } from "./util";
@@ -38,47 +37,50 @@ self.addEventListener("message", evt => {
 
 self.addEventListener("activate", masterSync);
 
-// workbox.routing.registerRoute(
-//   /graphql/,
-//   ({ url, event }) => {
-//     return fetch(event.request).catch(err => {
-//       let { query, variables } = parseQueryString(url.search);
+self.addEventListener("fetch", evt => {
+  let req = evt.request.clone();
 
-//       if (query == allLabelColors) {
-//         return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
-//       } else if (query == allSubjects) {
-//         return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
-//       } else if (query == allTags) {
-//         return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
-//       } else if (query == searchBooksQuery) {
-//         return readBooks(variables);
-//       }
-//     });
-//   },
-//   "GET"
-// );
+  if (/\bgraphql\b/.test(req.url)) {
+    if (/get/i.test(req.method)) {
+      return evt.respondWith(handleGraphqlGet(req));
+    } else if (/post/i.test(req.method)) {
+      return evt.respondWith(handleGraphqlPost(req));
+    }
+  }
+});
 
-// workbox.routing.registerRoute(
-//   /graphql$/,
-//   ({ url, event }) => {
-//     let request = event.request.clone();
+function handleGraphqlGet(request) {
+  return fetch(request).catch(err => {
+    let search = request.url.split("?")[1];
+    let { query, variables } = parseQueryString(search);
 
-//     return fetch(event.request).then(response => {
-//       let respClone = response.clone();
-//       respClone.json().then(response => {
-//         syncResultsFor({ request, response }, "Book", bookSyncTransform);
-//         syncResultsFor({ request, response }, "Tag");
-//         syncSubjectsResults(response);
-//       });
-//       return response;
-//     });
-//   },
-//   "POST"
-// );
+    if (query == allLabelColors) {
+      return readTable("labelColors", "order").then(gqlResponse("allLabelColors", "LabelColors"));
+    } else if (query == allSubjects) {
+      return readTable("subjects", "name").then(gqlResponse("allSubjects", "Subjects"));
+    } else if (query == allTags) {
+      return readTable("tags", "name").then(gqlResponse("allTags", "Tags"));
+    } else if (query == searchBooksQuery) {
+      return readBooks(variables);
+    }
+  });
+}
+
+function handleGraphqlPost(request) {
+  return fetch(request).then(response => {
+    let respClone = response.clone();
+    respClone.json().then(response => {
+      syncResultsFor({ request, response }, "Book", bookSyncTransform);
+      syncResultsFor({ request, response }, "Tag");
+      syncSubjectsResults(response);
+    });
+    return response;
+  });
+}
 
 function masterSync() {
   let open = indexedDB.open("books", 1);
-  
+
   open.onsuccess = async evt => {
     const syncEvery = 1500 * 10; // 10 seconds
     let db = open.result;

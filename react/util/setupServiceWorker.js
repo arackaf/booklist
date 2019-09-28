@@ -5,7 +5,7 @@ export default function setupServiceWorker() {
     //} && !/localhost/.test(window.location)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       navigator.serviceWorker.ready.then(reg => {
-        alert("ready " + typeof reg.active.postMessage);
+        //alert("ready " + typeof reg.active.postMessage);
       });
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
