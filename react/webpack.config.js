@@ -99,7 +99,7 @@ module.exports = {
       ignoreURLParametersMatching: [/./],
       exclude: [/\.(ttf|eot|svg|woff)$/],
       navigateFallback: "react/dist/index.html",
-      navigateFallbackBlacklist: [/\/activate\b/],
+      navigateFallbackBlacklist: [/\/(activate|graphql|graphql-public)\b/],
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:5/, name: "medium-cache", expires: 60 * 60 * 24 }), //1 day
