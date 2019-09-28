@@ -1,8 +1,12 @@
 import { isLoggedIn } from "util/loginStatus";
 
 export default function setupServiceWorker() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
+  if ("serviceWorker" in navigator) {
+    //} && !/localhost/.test(window.location)) {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
+      navigator.serviceWorker.ready.then(reg => {
+        alert("ready " + typeof reg.active.postMessage);
+      });
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
       }
