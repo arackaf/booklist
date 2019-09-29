@@ -1,4 +1,5 @@
 import { deleteItem } from "./indexedDbUpdateUtils";
+import { getLibraryDatabase } from "./indexedDbUtil";
 
 export async function syncResultsFor({ request, response }, name, transform = item => item) {
   let createNameSingle = `create${name}`;
@@ -27,11 +28,8 @@ export function syncSubjectsResults(resp) {
 }
 
 export function syncItem(item, table, transform = item => item) {
-  let open = indexedDB.open("books", 1);
-
   return new Promise(res => {
-    open.onsuccess = evt => {
-      let db = open.result;
+    getLibraryDatabase(db => {
       let tran = db.transaction(table, "readwrite");
       let objStore = tran.objectStore(table);
       objStore.get(item._id).onsuccess = ({ target: { result: itemToUpdate } }) => {
@@ -42,6 +40,6 @@ export function syncItem(item, table, transform = item => item) {
           objStore.put(itemToUpdate).onsuccess = res;
         }
       };
-    };
+    });
   });
 }

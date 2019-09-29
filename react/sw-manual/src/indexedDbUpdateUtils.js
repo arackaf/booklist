@@ -1,3 +1,5 @@
+import { getLibraryDatabase } from "./indexedDbUtil";
+
 export function insertItems(db, items, storeName, { transformItem = x => x } = {}) {
   return new Promise(res => {
     if (!items) return res();
@@ -23,21 +25,22 @@ export function updateSyncInfo(db, updates) {
   let req = syncInfoStore.get(1);
   return new Promise(res => {
     req.onsuccess = ({ target: { result } }) => {
-      Object.assign(result, updates);
+      if (typeof updates === "function") {
+        result = updates(result);
+      } else {
+        Object.assign(result, updates);
+      }
       syncInfoStore.put(result).onsuccess = res;
     };
   });
 }
 
 export function deleteItem(_id, table) {
-  let open = indexedDB.open("books", 1);
-
   return new Promise(res => {
-    open.onsuccess = evt => {
-      let db = open.result;
+    getLibraryDatabase(db => {
       let tran = db.transaction(table, "readwrite");
       let objStore = tran.objectStore(table);
       objStore.delete(_id).onsuccess = res;
-    };
+    });
   });
 }

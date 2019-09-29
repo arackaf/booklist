@@ -1,5 +1,11 @@
 import { gqlResponse } from "./util";
 import escapeRegex from "./lib/escape-regex";
+import { getLibraryDatabase } from "./indexedDbUtil";
+
+export async function getSyncInfo() {
+  let [syncInfo = {}] = await readTable("syncInfo");
+  return syncInfo;
+}
 
 export function readBooks(variableString) {
   let variables = JSON.parse(variableString);
@@ -29,15 +35,12 @@ export function readBooks(variableString) {
 }
 
 export function readTable(table, idxName = null, { predicate, idxDir, cursorSkip, skip, limit } = {}) {
-  let open = indexedDB.open("books", 1);
-
   if (!predicate) {
     predicate = () => true;
   }
 
   return new Promise(resolve => {
-    open.onsuccess = evt => {
-      let db = open.result;
+    getLibraryDatabase(db => {
       let tran = db.transaction(table);
       let objStore = tran.objectStore(table);
 
@@ -67,6 +70,6 @@ export function readTable(table, idxName = null, { predicate, idxDir, cursorSkip
         }
         cursor.continue();
       };
-    };
+    });
   });
 }

@@ -6,17 +6,17 @@ import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
 import initialOfflineBookSync from "../../graphQL/books/initialOfflineBookSync.graphql";
+import { getLibraryDatabase } from "./indexedDbUtil";
 
-export function fullSync(page = 1) {
-  let open = indexedDB.open("books", 1);
-
-  // Set up the database schema
-  open.onsuccess = evt => {
-    let db = open.result;
+export function fullSync(userId) {
+  getLibraryDatabase(db => {
     Promise.all([new Promise(res => doBooksSync(db, res)), doSubjectsSync(db), doTagsSync(db), doLabelColorsSync(db)]).then(() => {
-      updateSyncInfo(db, { lastSync: +new Date() });
+      updateSyncInfo(db, syncInfo => {
+        syncInfo.usersSyncd[userId] = Object.assign(syncInfo.usersSyncd[userId] || {}, { lastSync: +new Date() });
+        return syncInfo;
+      });
     });
-  };
+  });
 }
 
 function doBooksSync(db, onFinish, page = 1) {
@@ -34,15 +34,15 @@ function doBooksSync(db, onFinish, page = 1) {
   });
 }
 
-function doSubjectsSync(db, page = 1) {
+function doSubjectsSync(db) {
   return getGraphqlResults(allSubjects, {}, "allSubjects", "Subjects").then(subjects => insertItems(db, subjects, "subjects"));
 }
 
-function doTagsSync(db, page = 1) {
+function doTagsSync(db) {
   return getGraphqlResults(allTags, {}, "allTags", "Tags").then(tags => insertItems(db, tags, "tags"));
 }
 
-function doLabelColorsSync(db, page = 1) {
+function doLabelColorsSync(db) {
   return getGraphqlResults(allLabelColors, {}, "allLabelColors", "LabelColors").then(labelColors => insertItems(db, labelColors, "labelColors"));
 }
 
@@ -63,6 +63,7 @@ async function syncImages(db, onComplete) {
   };
 
   async function runIt() {
+    onComplete();
     return;
     if (!booksToUpdate.length) return;
 

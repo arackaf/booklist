@@ -8,5 +8,5 @@ module.exports = {
     format: "iife",
     file: "./sw-index-bundle.js"
   },
-  plugins: [minify({}), graphqlPlugin({ path: path.resolve(__dirname, "../extracted_queries.json") })]
+  plugins: [/*minify({}),*/ graphqlPlugin({ path: path.resolve(__dirname, "../extracted_queries.json") })]
 };
