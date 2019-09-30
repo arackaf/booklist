@@ -1,20 +1,40 @@
-import { updateSyncInfo, insertItems } from "./indexedDbUpdateUtils";
-
-import { doFetch } from "./util";
+import { doFetch, bookSyncTransform } from "./util";
+import { updateSyncInfo, insertItems, deleteItem } from "./indexedDbUpdateUtils";
+import { getLibraryDatabase } from "./indexedDbUtil";
+import { syncItem } from "./incrementalSync";
 
 import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
+import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
 import initialOfflineBookSync from "../../graphQL/books/initialOfflineBookSync.graphql";
-import { getLibraryDatabase } from "./indexedDbUtil";
+
+export function setUserLastSync(userId, lastSync) {
+  return updateSyncInfo(syncInfo => {
+    syncInfo.usersSyncd[userId] = Object.assign(syncInfo.usersSyncd[userId] || {}, { lastSync });
+    return syncInfo;
+  });
+}
+
+export async function incrementalSync(userId, lastSync) {
+  let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: lastSync })}`;
+  let { data } = await doFetch(syncQuery).then(resp => resp.json());
+
+  for (let b of data.allBooks.Books) await syncItem(b, "books", bookSyncTransform);
+  for (let s of data.allSubjects.Subjects) await syncItem(s, "subjects");
+  for (let t of data.allTags.Tags) await syncItem(t, "tags");
+
+  for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
+  for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
+  for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
+  await setUserLastSync(userId, +new Date());
+  console.log("INCREMENTAL SYNC COMPLETE");
+}
 
 export function fullSync(userId) {
   getLibraryDatabase(db => {
     Promise.all([new Promise(res => doBooksSync(db, res)), doSubjectsSync(db), doTagsSync(db), doLabelColorsSync(db)]).then(() => {
-      updateSyncInfo(db, syncInfo => {
-        syncInfo.usersSyncd[userId] = Object.assign(syncInfo.usersSyncd[userId] || {}, { lastSync: +new Date() });
-        return syncInfo;
-      });
+      return setUserLastSync(userId, +new Date());
     });
   });
 }

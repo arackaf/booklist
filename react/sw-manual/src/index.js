@@ -1,18 +1,15 @@
 import parseQueryString from "./lib/query-string";
 
-import { doFetch, gqlResponse, bookSyncTransform } from "./util";
-import { fullSync } from "./initialSync";
+import { gqlResponse, bookSyncTransform } from "./util";
+import { fullSync, incrementalSync } from "./dataSync";
 import { readTable, readBooks, getSyncInfo } from "./indexedDbDataAccess";
-import { updateSyncInfo, deleteItem } from "./indexedDbUpdateUtils";
-import { syncItem, syncResultsFor, syncSubjectsResults } from "./incrementalSync";
+import { syncResultsFor, syncSubjectsResults } from "./incrementalSync";
+import { getLibraryDatabase } from "./indexedDbUtil";
 
 import searchBooksQuery from "../../graphQL/books/getBooks.graphql";
-
 import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
-import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
-import { getLibraryDatabase } from "./indexedDbUtil";
 
 self.addEventListener("message", event => {
   if (event.data == "sw-update-accepted") {
@@ -81,27 +78,15 @@ function masterSync(userId) {
   const syncEvery = 1500 * 10; // 10 seconds
 
   getLibraryDatabase(async db => {
-    if (db.objectStoreNames.contains("syncInfo")) {
-      let syncInfo = await getSyncInfo();
+    let syncInfo = await getSyncInfo();
+    let syncPacket = syncInfo.usersSyncd[userId];
 
-      if (syncInfo.usersSyncd.userId) {
-        if (!syncInfo.lastSync || Date.now() - syncInfo.lastSync > syncEvery) {
-          let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: syncInfo.lastSync })}`;
-          let { data } = await doFetch(syncQuery).then(resp => resp.json());
-
-          for (let b of data.allBooks.Books) await syncItem(b, "books", bookSyncTransform);
-          for (let s of data.allSubjects.Subjects) await syncItem(s, "subjects");
-          for (let t of data.allTags.Tags) await syncItem(t, "tags");
-
-          for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
-          for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
-          for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
-          await updateSyncInfo(db, { lastSync: +new Date() });
-          console.log("SYNC COMPLETE");
-        }
-      } else {
-        fullSync(userId);
+    if (syncPacket) {
+      if (Date.now() - syncPacket.lastSync > syncEvery) {
+        incrementalSync(userId, syncPacket.lastSync);
       }
+    } else {
+      fullSync(userId);
     }
   });
 }

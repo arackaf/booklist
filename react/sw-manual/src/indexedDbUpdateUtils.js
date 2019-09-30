@@ -1,4 +1,5 @@
 import { getLibraryDatabase } from "./indexedDbUtil";
+import { getSyncInfo } from "./indexedDbDataAccess";
 
 export function insertItems(db, items, storeName, { transformItem = x => x } = {}) {
   return new Promise(res => {
@@ -19,19 +20,20 @@ export function insertItems(db, items, storeName, { transformItem = x => x } = {
   });
 }
 
-export function updateSyncInfo(db, updates) {
-  let transaction = db.transaction("syncInfo", "readwrite");
-  let syncInfoStore = transaction.objectStore("syncInfo");
-  let req = syncInfoStore.get(1);
+export async function updateSyncInfo(updates) {
+  let syncInfo = await getSyncInfo();
   return new Promise(res => {
-    req.onsuccess = ({ target: { result } }) => {
+    getLibraryDatabase(db => {
+      let transaction = db.transaction("syncInfo", "readwrite");
+      let syncInfoStore = transaction.objectStore("syncInfo");
+
       if (typeof updates === "function") {
-        result = updates(result);
+        syncInfo = updates(syncInfo);
       } else {
-        Object.assign(result, updates);
+        Object.assign(syncInfo, updates);
       }
-      syncInfoStore.put(result).onsuccess = res;
-    };
+      syncInfoStore.put(syncInfo).onsuccess = res;
+    });
   });
 }
 

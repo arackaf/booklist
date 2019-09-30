@@ -1,6 +1,6 @@
 import { isLoggedIn } from "util/loginStatus";
 
-console.log("B");
+console.log("F");
 
 export default function setupServiceWorker() {
   if ("serviceWorker" in navigator) {
