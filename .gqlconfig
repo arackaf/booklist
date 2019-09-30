@@ -1,18 +1,26 @@
 {
-  "schema": {
-    "files": "node/graphQL/entireSchema.gql"
+  schema: {
+    files: "node/graphQL/entireSchema.gql",
+    validate: {
+      extends: "gql-rules-schema",
+      rules: {
+        LoneAnonymousOperation: "off",
+        NoUnusedVariables: "off",
+        NoUnusedTypeDefinition: "off"
+      }
+    }
   },
-  "query": {
-    "files": [
+  query: {
+    files: [
       {
-        "match": "**/*.graphql",
-        "parser": "QueryParser",
-        "validate": {
-          "extends": "gql-rules-query",
-          "rules": {
-            "LoneAnonymousOperation": "off",
-            "NoUnusedVariables": "off",
-            "NoUnusedTypeDefinition": "off",
+        match: { include: "**/*.graphql", ignore: "**/node_modules/**" },
+        parser: "QueryParser",
+        validate: {
+          extends: "gql-rules-query",
+          rules: {
+            LoneAnonymousOperation: "off",
+            NoUnusedVariables: "off",
+            NoUnusedTypeDefinition: "off"
           }
         }
       }
