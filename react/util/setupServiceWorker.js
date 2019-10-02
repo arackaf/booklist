@@ -8,11 +8,13 @@ export default function setupServiceWorker() {
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       navigator.serviceWorker.ready.then(reg => {
         let loginInfo = isLoggedIn();
-        if (loginInfo.logged_in) {
-          try {
+        try {
+          if (loginInfo.logged_in) {
             navigator.serviceWorker.controller.postMessage({ command: "do-sync", userId: loginInfo.userId });
-          } catch (er) {}
-        }
+          } else {
+            navigator.serviceWorker.controller.postMessage({ command: "loggeed-out" });
+          }
+        } catch (er) {}
       });
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);

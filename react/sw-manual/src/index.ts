@@ -10,6 +10,7 @@ import searchBooksQuery from "../../graphQL/books/getBooks.graphql";
 import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
+import { updateSyncInfo } from "./indexedDbUpdateUtils";
 
 self.addEventListener("message", event => {
   if (event.data == "sw-update-accepted") {
@@ -27,9 +28,22 @@ self.addEventListener("push", () => {
   self.registration.showNotification("Push notification received!");
 });
 
-self.addEventListener("message", evt => {
+self.addEventListener("message", async evt => {
   if (evt.data && evt.data.command == "do-sync") {
+    await updateSyncInfo({ currentUser: evt.data.userId });
     masterSync(evt.data.userId);
+  }
+});
+
+self.addEventListener("message", async evt => {
+  if (evt.data && evt.data.command == "logged-in") {
+    await updateSyncInfo({ currentUser: evt.data.userId });
+  }
+});
+
+self.addEventListener("message", async evt => {
+  if (evt.data && evt.data.command == "loggeed-out") {
+    await updateSyncInfo({ currentUser: null });
   }
 });
 

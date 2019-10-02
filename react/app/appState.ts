@@ -60,6 +60,11 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, module: action.module };
     case NEW_LOGIN:
       let { logged_in, userId } = isLoggedIn();
+      if (logged_in) {
+        try {
+          navigator.serviceWorker.controller.postMessage({ command: "logged-in", userId: userId });
+        } catch (er) {}
+      }
       return { ...state, isLoggedIn: !!logged_in, userId };
     case IS_OFFLINE:
       return { ...state, online: false };
