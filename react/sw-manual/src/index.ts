@@ -10,7 +10,7 @@ import searchBooksQuery from "../../graphQL/books/getBooks.graphql";
 import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
-import { updateSyncInfo } from "./indexedDbUpdateUtils";
+import { updateSyncInfo, clearUserData } from "./indexedDbUpdateUtils";
 
 self.addEventListener("message", event => {
   if (event.data == "sw-update-accepted") {
@@ -44,6 +44,7 @@ self.addEventListener("message", async evt => {
 self.addEventListener("message", async evt => {
   if (evt.data && evt.data.command == "loggeed-out") {
     await updateSyncInfo({ currentUser: null });
+    await clearUserData();
   }
 });
 
@@ -77,7 +78,9 @@ function handleGraphqlGet(request) {
 }
 
 function handleGraphqlPost(request) {
+  let reqClone = request.clone();
   return fetch(request).then(response => {
+    console.log(reqClone);
     let respClone = response.clone();
     respClone.json().then(response => {
       syncResultsFor({ request, response }, "Book", bookSyncTransform);
@@ -92,6 +95,7 @@ function masterSync(userId) {
   const syncEvery = 1500 * 10; // 10 seconds
 
   getLibraryDatabase(async db => {
+    await updateSyncInfo({ currentUser: userId });
     let syncInfo = await getSyncInfo();
     let syncPacket = syncInfo.usersSyncd[userId];
 

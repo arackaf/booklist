@@ -1,13 +1,13 @@
 const CURRENT_DB_VERSION = 1;
 
-export function getLibraryDatabase(onSuccess) {
+export async function getLibraryDatabase(onSuccess = null) {
   try {
     indexedDB.deleteDatabase("books");
   } catch (er) {}
-  openDb("mylibrary_io", CURRENT_DB_VERSION, onSuccess, (db, trans) => dbPrep(db, trans, onSuccess));
+  openDb("mylibrary_io", CURRENT_DB_VERSION, onSuccess, (db, trans) => ensureCoreDb(db, trans, onSuccess));
 }
 
-function dbPrep(db, trans, onComplete) {
+async function ensureCoreDb(db, trans, onComplete) {
   if (!db.objectStoreNames.contains("books")) {
     let bookStore = db.createObjectStore("books", { keyPath: "_id" });
     bookStore.createIndex("imgSync", "imgSync", { unique: false });

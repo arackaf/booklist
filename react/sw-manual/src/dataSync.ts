@@ -42,15 +42,15 @@ export function fullSync(userId) {
 function doBooksSync(db, onFinish, page = 1) {
   let pageSize = 50;
   getGraphqlResults(initialOfflineBookSync, { page, pageSize }, "allBooks", "Books").then(books => {
-    insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0, title_ci: (book.title || "").toLowerCase() }) }).then(
-      () => {
-        if (books.length == pageSize) {
-          doBooksSync(db, onFinish, page + 1);
-        } else {
-          syncImages(db, onFinish);
-        }
+    insertItems(db, books, "books", {
+      transformItem: book => Object.assign(book, { imgSync: 0, title_ci: (book.title || "").toLowerCase() })
+    }).then(() => {
+      if (books.length == pageSize) {
+        doBooksSync(db, onFinish, page + 1);
+      } else {
+        syncImages(db, onFinish);
       }
-    );
+    });
   });
 }
 

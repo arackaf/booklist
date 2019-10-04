@@ -20,6 +20,21 @@ export function insertItems(db, items, storeName, { transformItem = x => x } = {
   });
 }
 
+export async function clearUserData() {
+  for (let table of ["books", "subjects", "tags"]) {
+    await clearTable(table);
+  }
+}
+
+export async function clearTable(table) {
+  return new Promise(res => {
+    getLibraryDatabase(async db => {
+      let tran = db.transaction(table, "readwrite");
+      tran.objectStore(table).clear().onsuccess = res;
+    });
+  });
+}
+
 export async function updateSyncInfo(updates) {
   let syncInfo = await getSyncInfo();
   return new Promise(res => {
