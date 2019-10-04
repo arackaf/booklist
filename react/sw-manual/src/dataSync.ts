@@ -8,6 +8,7 @@ import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
 import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
 import initialOfflineBookSync from "../../graphQL/books/initialOfflineBookSync.graphql";
+import { readTableCount } from "./indexedDbDataAccess";
 
 export function setUserLastSync(userId, lastSync) {
   return updateSyncInfo(syncInfo => {
@@ -62,7 +63,8 @@ function doTagsSync(db) {
   return getGraphqlResults(allTags, {}, "allTags", "Tags").then(tags => insertItems(db, tags, "tags"));
 }
 
-function doLabelColorsSync(db) {
+async function doLabelColorsSync(db) {
+  if ((await readTableCount("labelColors")) > 0) return;
   return getGraphqlResults(allLabelColors, {}, "allLabelColors", "LabelColors").then(labelColors => insertItems(db, labelColors, "labelColors"));
 }
 

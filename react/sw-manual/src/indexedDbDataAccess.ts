@@ -7,10 +7,21 @@ export async function getSyncInfo() {
   return syncInfo;
 }
 
+export function readTableCount(table) {
+  return new Promise(res => {
+    getLibraryDatabase(db => {
+      let transaction = db.transaction([table], "readonly");
+      let store = transaction.objectStore(table);
+
+      let countRequest = store.count();
+      countRequest.onsuccess = () => res(countRequest.result);
+    });
+  });
+}
+
 export function readBooks(variableString) {
   let variables = JSON.parse(variableString);
   let { page = 1, pageSize = 50, title_contains, sort } = variables;
-  console.log("variables:", variables);
 
   let predicate = null;
   let limit = pageSize;
