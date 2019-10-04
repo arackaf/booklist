@@ -62,7 +62,7 @@ function appReducer(state: AppState, action): AppState {
       let { logged_in, userId } = isLoggedIn();
       if (logged_in) {
         try {
-          navigator.serviceWorker.controller.postMessage({ command: "logged-in", userId: userId });
+          navigator.serviceWorker.controller.postMessage({ command: "login", userId: userId });
         } catch (er) {}
       }
       return { ...state, isLoggedIn: !!logged_in, userId };

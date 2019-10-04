@@ -36,8 +36,9 @@ self.addEventListener("message", async evt => {
 });
 
 self.addEventListener("message", async evt => {
-  if (evt.data && evt.data.command == "logged-in") {
+  if (evt.data && evt.data.command == "login") {
     await updateSyncInfo({ currentUser: evt.data.userId });
+    masterSync(evt.data.userId);
   }
 });
 
