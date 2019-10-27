@@ -9,34 +9,29 @@ import {
 } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
 const runHook = processHook.bind(this, hooksObj, "BooksDeleted");
-const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
+const { decontructGraphqlQuery, cleanUpResults, dataLoaderId } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import BooksDeletedMetadata from "./BooksDeleted";
 
-export async function loadBooksDeleteds(db, queryPacket, root, args, context, ast) {
-  let { $match, $project, $sort, $limit, $skip } = queryPacket;
-
-  let aggregateItems = [
-    { $match },
-    $sort ? { $sort } : null,
-    { $project },
-    $skip != null ? { $skip } : null,
-    $limit != null ? { $limit } : null
-  ].filter(item => item);
-
-  await processHook(hooksObj, "BooksDeleted", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
-  let BooksDeleteds = await dbHelpers.runQuery(db, "booksDeleted", aggregateItems);
+async function loadBooksDeleteds(db, aggregationPipeline, root, args, context, ast) {
+  await processHook(hooksObj, "BooksDeleted", "queryPreAggregate", aggregationPipeline, {
+    db,
+    root,
+    args,
+    context,
+    ast
+  });
+  let BooksDeleteds = await dbHelpers.runQuery(db, "booksDeleted", aggregationPipeline);
   await processHook(hooksObj, "BooksDeleted", "adjustResults", BooksDeleteds);
   BooksDeleteds.forEach(o => {
     if (o._id) {
       o._id = "" + o._id;
     }
   });
-  cleanUpResults(BooksDeleteds, BooksDeletedMetadata);
-  return BooksDeleteds;
+  return cleanUpResults(BooksDeleteds, BooksDeletedMetadata);
 }
 
 export const BooksDeleted = {};
@@ -48,8 +43,9 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BooksDeletedMetadata, "BooksDeleted");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
-      let results = await loadBooksDeleteds(db, queryPacket, root, args, context, ast);
+      let results = await loadBooksDeleteds(db, aggregationPipeline, root, args, context, ast, "BooksDeleted");
 
       return {
         BooksDeleted: results[0] || null
@@ -60,19 +56,21 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BooksDeletedMetadata, "BooksDeleteds");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {
-        result.BooksDeleteds = await loadBooksDeleteds(db, queryPacket, root, args, context, ast);
+        result.BooksDeleteds = await loadBooksDeleteds(db, aggregationPipeline, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
+          let $match = aggregationPipeline.find(item => item.$match);
           let countResults = await dbHelpers.runQuery(db, "booksDeleted", [
-            { $match: queryPacket.$match },
+            $match,
             { $group: { _id: null, count: { $sum: 1 } } }
           ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;

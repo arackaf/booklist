@@ -9,34 +9,23 @@ import {
 } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
 const runHook = processHook.bind(this, hooksObj, "Tag");
-const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
+const { decontructGraphqlQuery, cleanUpResults, dataLoaderId } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import TagMetadata from "./Tag";
 
-export async function loadTags(db, queryPacket, root, args, context, ast) {
-  let { $match, $project, $sort, $limit, $skip } = queryPacket;
-
-  let aggregateItems = [
-    { $match },
-    $sort ? { $sort } : null,
-    { $project },
-    $skip != null ? { $skip } : null,
-    $limit != null ? { $limit } : null
-  ].filter(item => item);
-
-  await processHook(hooksObj, "Tag", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
-  let Tags = await dbHelpers.runQuery(db, "tags", aggregateItems);
+async function loadTags(db, aggregationPipeline, root, args, context, ast) {
+  await processHook(hooksObj, "Tag", "queryPreAggregate", aggregationPipeline, { db, root, args, context, ast });
+  let Tags = await dbHelpers.runQuery(db, "tags", aggregationPipeline);
   await processHook(hooksObj, "Tag", "adjustResults", Tags);
   Tags.forEach(o => {
     if (o._id) {
       o._id = "" + o._id;
     }
   });
-  cleanUpResults(Tags, TagMetadata);
-  return Tags;
+  return cleanUpResults(Tags, TagMetadata);
 }
 
 export const Tag = {};
@@ -48,8 +37,9 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagMetadata, "Tag");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
-      let results = await loadTags(db, queryPacket, root, args, context, ast);
+      let results = await loadTags(db, aggregationPipeline, root, args, context, ast, "Tag");
 
       return {
         Tag: results[0] || null
@@ -60,19 +50,21 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, TagMetadata, "Tags");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {
-        result.Tags = await loadTags(db, queryPacket, root, args, context, ast);
+        result.Tags = await loadTags(db, aggregationPipeline, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
+          let $match = aggregationPipeline.find(item => item.$match);
           let countResults = await dbHelpers.runQuery(db, "tags", [
-            { $match: queryPacket.$match },
+            $match,
             { $group: { _id: null, count: { $sum: 1 } } }
           ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
@@ -105,7 +97,14 @@ export default {
         await resolverHelpers.mutationComplete(session, transaction);
 
         let result = $project
-          ? (await loadTags(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0]
+          ? (await loadTags(
+              db,
+              [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
+              root,
+              args,
+              context,
+              ast
+            ))[0]
           : null;
         return resolverHelpers.mutationSuccessResult({ Tag: result, transaction, elapsedTime: 0 });
       });
@@ -131,7 +130,7 @@ export default {
         await resolverHelpers.mutationComplete(session, transaction);
 
         let result = $project
-          ? (await loadTags(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0]
+          ? (await loadTags(db, [{ $match }, { $project }, { $limit: 1 }], root, args, context, ast))[0]
           : null;
         return resolverHelpers.mutationSuccessResult({ Tag: result, transaction, elapsedTime: 0 });
       });
@@ -153,7 +152,7 @@ export default {
         await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
 
-        let result = $project ? await loadTags(db, { $match, $project }, root, args, context, ast) : null;
+        let result = $project ? await loadTags(db, [{ $match }, { $project }], root, args, context, ast) : null;
         return resolverHelpers.mutationSuccessResult({ Tags: result, transaction, elapsedTime: 0 });
       });
     },

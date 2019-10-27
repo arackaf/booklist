@@ -14,6 +14,10 @@ type QueryResultsMetadata {
   count: Int!
 }
 
+type QueryRelationshipResultsMetadata {
+  count: Int!
+}
+
 input StringArrayUpdate {
   index: Int!
   value: String!
@@ -94,7 +98,18 @@ type Book {
   similarItems: [String]
   similarItemsLastUpdate: Int
   timestamp: Float
-  similarBooks(SORT: BookSummarySort, SORTS: [BookSummarySort]): [BookSummary!]!
+  similarBooks(
+    FILTER: BookSummaryFilters
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    SORT: BookSummarySort
+    SORTS: [BookSummarySort]
+    PREFER_LOOKUP: Boolean
+    DONT_PREFER_LOOKUP: Boolean
+  ): [BookSummary!]!
+  similarBooksMeta(FILTER: BookSummaryFilters): QueryRelationshipResultsMetadata
 }
 
 type BookQueryResults {
@@ -1157,7 +1172,18 @@ type User {
   isPublic: Boolean
   publicName: String
   publicBooksHeader: String
-  books(SORT: BookSort, SORTS: [BookSort]): [Book!]!
+  books(
+    FILTER: BookFilters
+    LIMIT: Int
+    SKIP: Int
+    PAGE: Int
+    PAGE_SIZE: Int
+    SORT: BookSort
+    SORTS: [BookSort]
+    PREFER_LOOKUP: Boolean
+    DONT_PREFER_LOOKUP: Boolean
+  ): [Book!]!
+  booksMeta(FILTER: BookFilters): QueryRelationshipResultsMetadata
 }
 
 type UserQueryResults {

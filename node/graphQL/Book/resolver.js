@@ -9,51 +9,44 @@ import {
 } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
 const runHook = processHook.bind(this, hooksObj, "Book");
-const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
+const { decontructGraphqlQuery, cleanUpResults, dataLoaderId } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import BookMetadata from "./Book";
-import { loadBookSummarys } from "../BookSummary/resolver";
 import BookSummaryMetadata from "../BookSummary/BookSummary";
 import flatMap from "lodash.flatmap";
 import DataLoader from "dataloader";
 
-export async function loadBooks(db, queryPacket, root, args, context, ast) {
-  let { $match, $project, $sort, $limit, $skip } = queryPacket;
-
-  let aggregateItems = [
-    { $match },
-    $sort ? { $sort } : null,
-    { $project },
-    $skip != null ? { $skip } : null,
-    $limit != null ? { $limit } : null
-  ].filter(item => item);
-
-  await processHook(hooksObj, "Book", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
-  let Books = await dbHelpers.runQuery(db, "books", aggregateItems);
+async function loadBooks(db, aggregationPipeline, root, args, context, ast) {
+  await processHook(hooksObj, "Book", "queryPreAggregate", aggregationPipeline, { db, root, args, context, ast });
+  let Books = await dbHelpers.runQuery(db, "books", aggregationPipeline);
   await processHook(hooksObj, "Book", "adjustResults", Books);
   Books.forEach(o => {
     if (o._id) {
       o._id = "" + o._id;
     }
   });
-  cleanUpResults(Books, BookMetadata);
-  return Books;
+  return cleanUpResults(Books, BookMetadata);
 }
 
 export const Book = {
   async similarBooks(obj, args, context, ast) {
-    if (context.__Book_similarBooksDataLoader == null) {
-      let db = await context.__mongodb;
-      context.__Book_similarBooksDataLoader = new DataLoader(async keyArrays => {
+    if (obj.similarBooks) {
+      await processHook(hooksObj, "BookSummary", "adjustResults", obj.similarBooks);
+      return cleanUpResults(obj.similarBooks, BookSummaryMetadata);
+    }
+
+    let dataLoaderName = dataLoaderId(ast);
+    if (context[dataLoaderName] == null) {
+      context[dataLoaderName] = new DataLoader(async keyArrays => {
+        let db = await context.__mongodb;
         let $match = { isbn: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
         let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, null, { force: ["isbn"] });
-        let { $project, $sort, $limit, $skip } = queryPacket;
+        let { aggregationPipeline } = queryPacket;
 
-        let aggregateItems = [{ $match }, $sort ? { $sort } : null, { $project }].filter(item => item);
-        let results = await dbHelpers.runQuery(db, "bookSummaries", aggregateItems);
+        let results = await dbHelpers.runQuery(db, "bookSummaries", aggregationPipeline);
         cleanUpResults(results, BookSummaryMetadata);
 
         let finalResult = keyArrays.map(keyArr => []);
@@ -66,10 +59,13 @@ export const Book = {
             }
           }
         }
+        for (let items of finalResult) {
+          await processHook(hooksObj, "BookSummary", "adjustResults", items);
+        }
         return finalResult;
       });
     }
-    return context.__Book_similarBooksDataLoader.load(obj.similarItems || []);
+    return context[dataLoaderName].load(obj.similarItems || []);
   }
 };
 
@@ -80,8 +76,9 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Book");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
-      let results = await loadBooks(db, queryPacket, root, args, context, ast);
+      let results = await loadBooks(db, aggregationPipeline, root, args, context, ast, "Book");
 
       return {
         Book: results[0] || null
@@ -92,19 +89,21 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, BookMetadata, "Books");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {
-        result.Books = await loadBooks(db, queryPacket, root, args, context, ast);
+        result.Books = await loadBooks(db, aggregationPipeline, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
+          let $match = aggregationPipeline.find(item => item.$match);
           let countResults = await dbHelpers.runQuery(db, "books", [
-            { $match: queryPacket.$match },
+            $match,
             { $group: { _id: null, count: { $sum: 1 } } }
           ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
@@ -137,7 +136,14 @@ export default {
         await resolverHelpers.mutationComplete(session, transaction);
 
         let result = $project
-          ? (await loadBooks(db, { $match: { _id: newObject._id }, $project, $limit: 1 }, root, args, context, ast))[0]
+          ? (await loadBooks(
+              db,
+              [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
+              root,
+              args,
+              context,
+              ast
+            ))[0]
           : null;
         return resolverHelpers.mutationSuccessResult({ Book: result, transaction, elapsedTime: 0 });
       });
@@ -163,7 +169,7 @@ export default {
         await resolverHelpers.mutationComplete(session, transaction);
 
         let result = $project
-          ? (await loadBooks(db, { $match, $project, $limit: 1 }, root, args, context, ast))[0]
+          ? (await loadBooks(db, [{ $match }, { $project }, { $limit: 1 }], root, args, context, ast))[0]
           : null;
         return resolverHelpers.mutationSuccessResult({ Book: result, transaction, elapsedTime: 0 });
       });
@@ -185,7 +191,7 @@ export default {
         await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
         await resolverHelpers.mutationComplete(session, transaction);
 
-        let result = $project ? await loadBooks(db, { $match, $project }, root, args, context, ast) : null;
+        let result = $project ? await loadBooks(db, [{ $match }, { $project }], root, args, context, ast) : null;
         return resolverHelpers.mutationSuccessResult({ Books: result, transaction, elapsedTime: 0 });
       });
     },

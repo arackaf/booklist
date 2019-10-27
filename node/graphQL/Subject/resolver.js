@@ -9,7 +9,7 @@ import {
 } from "mongo-graphql-starter";
 import hooksObj from "../../graphQL-custom/hooks.js";
 const runHook = processHook.bind(this, hooksObj, "Subject");
-const { decontructGraphqlQuery, cleanUpResults } = queryUtilities;
+const { decontructGraphqlQuery, cleanUpResults, dataLoaderId } = queryUtilities;
 const { setUpOneToManyRelationships, newObjectFromArgs } = insertUtilities;
 const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
@@ -18,27 +18,16 @@ import SubjectMetadata from "./Subject";
 import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
 const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 
-export async function loadSubjects(db, queryPacket, root, args, context, ast) {
-  let { $match, $project, $sort, $limit, $skip } = queryPacket;
-
-  let aggregateItems = [
-    { $match },
-    $sort ? { $sort } : null,
-    { $project },
-    $skip != null ? { $skip } : null,
-    $limit != null ? { $limit } : null
-  ].filter(item => item);
-
-  await processHook(hooksObj, "Subject", "queryPreAggregate", aggregateItems, { db, root, args, context, ast });
-  let Subjects = await dbHelpers.runQuery(db, "subjects", aggregateItems);
+async function loadSubjects(db, aggregationPipeline, root, args, context, ast) {
+  await processHook(hooksObj, "Subject", "queryPreAggregate", aggregationPipeline, { db, root, args, context, ast });
+  let Subjects = await dbHelpers.runQuery(db, "subjects", aggregationPipeline);
   await processHook(hooksObj, "Subject", "adjustResults", Subjects);
   Subjects.forEach(o => {
     if (o._id) {
       o._id = "" + o._id;
     }
   });
-  cleanUpResults(Subjects, SubjectMetadata);
-  return Subjects;
+  return cleanUpResults(Subjects, SubjectMetadata);
 }
 
 export const Subject = {
@@ -52,8 +41,9 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subject");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
-      let results = await loadSubjects(db, queryPacket, root, args, context, ast);
+      let results = await loadSubjects(db, aggregationPipeline, root, args, context, ast, "Subject");
 
       return {
         Subject: results[0] || null
@@ -64,19 +54,21 @@ export default {
       await runHook("queryPreprocess", { db, root, args, context, ast });
       context.__mongodb = db;
       let queryPacket = decontructGraphqlQuery(args, ast, SubjectMetadata, "Subjects");
+      let { aggregationPipeline } = queryPacket;
       await runHook("queryMiddleware", queryPacket, { db, root, args, context, ast });
       let result = {};
 
       if (queryPacket.$project) {
-        result.Subjects = await loadSubjects(db, queryPacket, root, args, context, ast);
+        result.Subjects = await loadSubjects(db, aggregationPipeline, root, args, context, ast);
       }
 
       if (queryPacket.metadataRequested.size) {
         result.Meta = {};
 
         if (queryPacket.metadataRequested.get("count")) {
+          let $match = aggregationPipeline.find(item => item.$match);
           let countResults = await dbHelpers.runQuery(db, "subjects", [
-            { $match: queryPacket.$match },
+            $match,
             { $group: { _id: null, count: { $sum: 1 } } }
           ]);
           result.Meta.count = countResults.length ? countResults[0].count : 0;
@@ -112,7 +104,7 @@ export default {
         let result = $project
           ? (await loadSubjects(
               db,
-              { $match: { _id: newObject._id }, $project, $limit: 1 },
+              [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
               root,
               args,
               context,
