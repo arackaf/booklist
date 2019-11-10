@@ -21,6 +21,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@reach/dialog": "^0.2.1",
     "@types/react": "^16.8.2",
+    "@types/react-dnd": "^3.0.2",
     "@types/react-dom": "^16.8.0",
     "@types/zen-observable": "^0.8.0",
     "babel-loader": "^8.0.5",
