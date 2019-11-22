@@ -7,6 +7,8 @@ import { createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
 
+import booksPreload from "./modules/books/booksPreload";
+
 export type MutationType = { runMutation: any; dispatch: any; running: any };
 
 import "util/ajaxUtil";
@@ -38,6 +40,7 @@ export const getModulePromise = moduleToLoad => {
     case "authenticate":
       return import(/* webpackChunkName: "small-modules" */ "./modules/authenticate/authenticate");
     case "books":
+      booksPreload();
       return import(/* webpackChunkName: "books-module" */ "./modules/books/books");
     case "home":
       return import(/* webpackChunkName: "home-module" */ "./modules/home/home");
