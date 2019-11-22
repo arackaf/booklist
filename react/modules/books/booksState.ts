@@ -1,7 +1,7 @@
 import { graphqlClient } from "util/graphql";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
-import { useCurrentSearch, filtersFromUrl } from "./booksSearchState";
+import { useCurrentSearch } from "./booksSearchState";
 import { useMemo, useContext, createContext } from "react";
 import { SubjectsContext } from "app/renderUI";
 import { useQuery, buildQuery } from "micro-graphql-react";
@@ -10,7 +10,7 @@ import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 import delve from "dlv";
 import { TagsContext } from "app/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
-import { getCurrentHistoryState } from "reactStartup";
+import { computeBookSearchVariables } from "./booksLoadingUtils";
 
 interface IEditorialReview {
   content: string;
@@ -107,36 +107,6 @@ export const useBooks = () => {
     booksLoaded: loaded && tagsLoaded && subjectsLoaded
   };
 };
-
-export function bookSearchVariablesFromCurrentUrl() {
-  return computeBookSearchVariables(filtersFromUrl(getCurrentHistoryState().searchState));
-}
-
-export function computeBookSearchVariables(bookSearchFilters) {
-  let getBooksVariables: any = {
-    page: +bookSearchFilters.page,
-    pageSize: bookSearchFilters.pageSize,
-    sort: {
-      [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1
-    },
-    title_contains: bookSearchFilters.search || void 0,
-    isRead: bookSearchFilters.isRead === "1" ? true : void 0,
-    isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
-    subjects_containsAny: bookSearchFilters.subjectIds.length ? bookSearchFilters.subjectIds : void 0,
-    searchChildSubjects: bookSearchFilters.searchChildSubjects == "true" ? true : void 0,
-    tags_containsAny: bookSearchFilters.tagIds.length ? bookSearchFilters.tagIds : void 0,
-    authors_textContains: bookSearchFilters.author || void 0,
-    publisher_contains: bookSearchFilters.publisher || void 0,
-    publicUserId: bookSearchFilters.userId || void 0,
-    subjects_count: bookSearchFilters.noSubjects ? 0 : void 0
-  };
-
-  if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {
-    getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
-  }
-
-  return getBooksVariables;
-}
 
 export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
 
