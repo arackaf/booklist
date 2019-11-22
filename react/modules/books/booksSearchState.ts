@@ -8,6 +8,7 @@ import { BooksSearchContext } from "./books";
 import { TagsContext } from "app/tagsState";
 
 import localStorage from "util/localStorage";
+import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
 
 const SET_GRID_VIEW = "booksSearch.SET_GRID_VIEW";
 const SET_BASIC_LIST_VIEW = "booksSearch.SET_BasicList_VIEW";
@@ -53,24 +54,6 @@ export type LookupHashType = {
   [str: string]: TagOrSubject;
 };
 
-export const defaultSearchValuesHash = {
-  search: "",
-  subjects: "",
-  tags: "",
-  searchChildSubjects: "",
-  author: "",
-  publisher: "",
-  pages: "",
-  pagesOperator: "",
-  page: 1,
-  pageSize: 50,
-  isRead: "",
-  noSubjects: "",
-  sort: "_id",
-  sortDirection: "desc",
-  userId: ""
-};
-
 export function useBooksSearchState(): [BookSearchState, any, any] {
   let actions = { setViewDesktop, setViewBasicList, setCoversList, hashChanged };
   let initialSearchState = useMemo(() => ({ ...initialState, hashFilters: getCurrentHistoryState().searchState }), []);
@@ -85,14 +68,6 @@ export function useBooksSearchState(): [BookSearchState, any, any] {
   }, []);
 
   return result;
-}
-
-export function filtersFromUrl(filters) {
-  const { subjects: subjectsHashValue, tags: tagsHashValue } = filters;
-  return Object.assign({}, defaultSearchValuesHash, filters, {
-    tagIds: tagsHashValue ? tagsHashValue.split("-") : [],
-    subjectIds: subjectsHashValue ? subjectsHashValue.split("-") : []
-  });
 }
 
 export const useSelectedSubjects = () => {
