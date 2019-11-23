@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useContext } from "react";
 import { RemovableLabelDisplay } from "./labelDisplay";
-import { TagsContext } from "app/tagsState";
+import { useTagsState } from "app/tagsState";
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };
 
 const DisplaySelectedTags: FunctionComponent<LocalProps> = props => {
-  const { tagHash } = useContext(TagsContext);
+  const { tagHash } = useTagsState();
 
   return (
     <>
