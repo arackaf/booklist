@@ -3,8 +3,8 @@ import Measure from "react-measure";
 import "d3-transition";
 
 import BarChart from "./components/barChart";
-import { AppContext, SubjectsContext } from "app/renderUI";
-import { useStackedSubjects } from "app/subjectsState";
+import { AppContext } from "app/renderUI";
+import { useStackedSubjects, useSubjectsState } from "app/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
@@ -25,7 +25,7 @@ const MAX_CHART_WIDTH = 1100;
 
 const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   const [state, setState] = useState({ chartPackets: [], chartWidth: MAX_CHART_WIDTH });
-  const { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
+  const { subjectHash, subjectsLoaded } = useSubjectsState();
   const { subjects } = useStackedSubjects();
 
   useEffect(() => {

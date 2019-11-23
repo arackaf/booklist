@@ -11,9 +11,9 @@ import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
-import { ColorsContext } from "app/renderUI";
 import { filterTags, useTagsState } from "app/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
+import { useColors } from "app/colorsState";
 
 interface ILocalProps {
   onDone: any;
@@ -77,7 +77,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
   let { tags } = useTagsState();
 
-  let { colors } = useContext(ColorsContext);
+  let { colors } = useColors();
   let { onDone, editModalOpen } = props;
   let { editingTag, editingTagName, tagSearch, deletingId } = state;
   let textColors = ["#ffffff", "#000000"];

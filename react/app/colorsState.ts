@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import { graphqlClient } from "util/graphql";
 import { AppState } from "./appState";
+import { AppContext } from "./renderUI";
 
-export function useColors(appPacket: [AppState, any, any]) {
+export function useColors() {
+  let appPacket = useContext(AppContext);
   let [{ loaded, colors }, update] = useState({ loaded: false, colors: [] });
   let userId = "";
   if (appPacket && appPacket.length) {

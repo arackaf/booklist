@@ -3,11 +3,10 @@ import { graphqlClient } from "util/graphql";
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
-import { useContext, useMemo, useRef } from "react";
-import { SubjectsContext } from "./renderUI";
+import { useContext, useMemo } from "react";
+import { AppContext } from "./renderUI";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
-import { AppState } from "./appState";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
@@ -28,9 +27,10 @@ graphqlClient.subscribeMutation([
   { when: /deleteSubject/, run: (op, res) => syncDeletes(AllSubjectsQuery, res.deleteSubject, "allSubjects", "Subjects") }
 ]);
 
-export function useSubjectsState(app: AppState) {
+export function useSubjectsState() {
+  let [app] = useContext(AppContext);
   let { userId, publicUserId } = app;
-  let { loading, loaded, data } = useQuery<QueryOf<Queries["allSubjects"]>>(
+  let { loaded, data } = useQuery<QueryOf<Queries["allSubjects"]>>(
     buildQuery(
       AllSubjectsQuery,
       { publicUserId, userId },
@@ -56,7 +56,7 @@ function allSubjectsSorted(subjectsHash): SubjectType[] {
 }
 
 export const useStackedSubjects = () => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
 
   return useMemo(() => {
     const mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
@@ -131,7 +131,7 @@ export const computeSubjectParentId = path => {
 };
 
 export const useLevelSubjectsSortedSelector = () => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
 
   return useMemo(
     () =>
@@ -152,7 +152,7 @@ export const getChildSubjectsSorted = (_id, subjectHash) => {
 };
 
 export const useChildMapSelector = () => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
 
   return useMemo(
     () =>
