@@ -1,5 +1,5 @@
-import React, { SFC, useContext, useState, Suspense } from "react";
-import { BooksContext } from "../../booksState";
+import React, { SFC, useState, Suspense } from "react";
+import { useBooks } from "../../booksState";
 import LazyModal from "app/components/lazyModal";
 
 const BookEditModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
@@ -10,17 +10,16 @@ import { CoverMedium } from "app/components/bookCoverComponent";
 import Loading from "app/components/loading";
 import { useCodeSplitModal } from "modules/books/util";
 
-
 const { coversList } = coversClasses;
 
 const BookViewCovers: SFC<any> = props => {
   const { saveEditingBook } = props;
-  const { books } = useContext(BooksContext);
+  const { books } = useBooks();
   const [displaying, setDisplaying] = useState(null);
-  
+
   const [bookPreviewing, openBookPreview, closeBookPreview] = useCodeSplitModal(null);
   const [bookEditing, openBookEditModalWith, closeBookEdit] = useCodeSplitModal(null);
-  
+
   const previewBook = book => {
     setDisplaying(book);
     openBookPreview();
@@ -31,8 +30,6 @@ const BookViewCovers: SFC<any> = props => {
   };
 
   const closeModal = () => closeBookPreview(false);
-
-
 
   return (
     <div>
