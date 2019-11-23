@@ -103,7 +103,7 @@ export const useBooks = () => {
     books,
     resultsCount,
     totalPages,
-    booksLoading: loading,
+    booksLoading: loading || !tagsLoaded || !subjectsLoaded,
     booksLoaded: loaded && tagsLoaded && subjectsLoaded
   };
 };
