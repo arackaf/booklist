@@ -36,8 +36,6 @@ const prepBookForSaving = book => {
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
 
-export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
-
 export default () => {
   let booksSearchState = useBooksSearchState();
   let tagsState = useTagsState();
@@ -45,11 +43,9 @@ export default () => {
   return (
     <div style={{}}>
       <Suspense fallback={<Loading />}>
-        <BooksSearchContext.Provider value={booksSearchState}>
-          <TagsContext.Provider value={tagsState}>
-            <BooksContexHolder />
-          </TagsContext.Provider>
-        </BooksSearchContext.Provider>
+        <TagsContext.Provider value={tagsState}>
+          <BooksContexHolder />
+        </TagsContext.Provider>
       </Suspense>
     </div>
   );
@@ -139,6 +135,7 @@ const BookViewingList: SFC<{}> = props => {
   };
 
   const uiView = useBookSearchUiView();
+  const { dispatch: uiDispatch } = uiView;
 
   return (
     <>
@@ -150,7 +147,7 @@ const BookViewingList: SFC<{}> = props => {
           editTags={editTags}
           editSubjects={editSubjects}
           beginEditFilters={beginEditFilters}
-          {...{ booksUiState, setRead }}
+          {...{ booksUiState, setRead, uiDispatch, uiView }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!books.length && !booksLoading && booksLoaded ? (
