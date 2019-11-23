@@ -108,8 +108,6 @@ export const useBooks = () => {
   };
 };
 
-export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
-
 const adjustBooks = books => {
   let { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
   let { tagHash, tagsLoaded } = useContext(TagsContext);

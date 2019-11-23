@@ -4,7 +4,7 @@ import { AjaxButton } from "app/components/bootstrapButton";
 import { LabelDisplay } from "app/components/labelDisplay";
 
 import { AppContext } from "app/renderUI";
-import { IBookDisplay, BooksContext } from "../../booksState";
+import { IBookDisplay, useBooks } from "../../booksState";
 import { useCurrentSearch } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
@@ -277,7 +277,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { selectedBooks } = booksUiState;
 
-  const { books } = useContext(BooksContext);
+  const { books } = useBooks();
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();

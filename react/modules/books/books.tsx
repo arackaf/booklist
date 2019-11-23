@@ -9,7 +9,7 @@ import LazyModal from "app/components/lazyModal";
 import BasicListView from "./components/bookViews/basicList";
 import CoversView from "./components/bookViews/coversList";
 
-import { BooksContext, useBooks } from "./booksState";
+import { useBooks } from "./booksState";
 import { useTagsState, TagsContext } from "app/tagsState";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { useCodeSplitModal } from "./util";
@@ -37,27 +37,16 @@ const prepBookForSaving = book => {
 };
 
 export default () => {
-  let booksSearchState = useBooksSearchState();
   let tagsState = useTagsState();
 
   return (
     <div style={{}}>
       <Suspense fallback={<Loading />}>
         <TagsContext.Provider value={tagsState}>
-          <BooksContexHolder />
+          <BookViewingList />
         </TagsContext.Provider>
       </Suspense>
     </div>
-  );
-};
-
-const BooksContexHolder = () => {
-  let booksState = useBooks();
-
-  return (
-    <BooksContext.Provider value={booksState}>
-      <BookViewingList />
-    </BooksContext.Provider>
   );
 };
 
@@ -91,7 +80,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
 }
 
 const BookViewingList: SFC<{}> = props => {
-  const { books, booksLoading, booksLoaded, currentQuery } = useContext(BooksContext);
+  const { books, booksLoading, booksLoaded, currentQuery } = useBooks();
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);

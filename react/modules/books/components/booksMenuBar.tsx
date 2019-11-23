@@ -2,7 +2,7 @@ import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
 import { RemovableLabelDisplay } from "app/components/labelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
-import { BooksContext } from "../booksState";
+import { useBooks } from "../booksState";
 import { AppContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
@@ -27,7 +27,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
 
   const [appState] = useContext(AppContext);
-  const { totalPages, resultsCount } = useContext(BooksContext);
+  const { totalPages, resultsCount } = useBooks();
 
   const { booksUiState, setRead, uiView, uiDispatch } = props;
   const { selectedBooks } = booksUiState;
