@@ -7,7 +7,8 @@ import SelectAvailableTags from "app/components/selectAvailableTags";
 import DisplaySelectedTags from "app/components/displaySelectedTags";
 import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
-import { applyFilters, useCurrentSearch } from "../booksSearchState";
+import { useCurrentSearch } from "../booksSearchState";
+import { applyFilters } from "../setBookFilters";
 
 type LocalProps = {
   isOpen: boolean;

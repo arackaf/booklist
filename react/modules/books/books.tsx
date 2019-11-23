@@ -14,12 +14,13 @@ import { BooksContext, useBooks } from "./booksState";
 import { useTagsState, TagsContext } from "app/tagsState";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { useCodeSplitModal } from "./util";
-import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "./booksSearchState";
+import { BookSearchState, useBooksSearchState } from "./booksSearchState";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import { MutationOf, Mutations } from "graphql-typings";
+import { useBookSearchUiView } from "./booksUiState";
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
