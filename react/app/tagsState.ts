@@ -20,8 +20,6 @@ export interface TagsState {
   tagHash: any;
 }
 
-export const TagsContext = createContext<TagsState>(null);
-
 graphqlClient.subscribeMutation([
   {
     when: /(update|create)Tag/,

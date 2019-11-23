@@ -2,7 +2,6 @@ import React, { useState, useReducer, useMemo } from "react";
 import SearchModal from "./searchModal";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { TagsContext, useTagsState } from "app/tagsState";
 import BooksQuery from "graphQL/home/searchBooks.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import ajaxUtil from "util/ajaxUtil";
@@ -39,7 +38,6 @@ function reducer(state, [type, payload = null]) {
 }
 
 export default props => {
-  const tagsState = useTagsState();
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
   const { active, ...searchStateToUse } = searchState;
@@ -61,62 +59,60 @@ export default props => {
   };
 
   return (
-    <TagsContext.Provider value={tagsState}>
-      <div>
-        <div className="row margin-top">
-          <div className="col-xs-6">
-            <div style={{ marginTop: "5px" }}>
-              <div className="margin-top" style={{ fontWeight: "bold", marginBottom: "5px" }}>
-                Find some books, and get recommendations based on what's similar
-              </div>
-              <div className="margin-top" style={{ display: "flex" }}>
-                <button className="btn btn-default" onClick={openModal}>
-                  <i className="fal fa-search" /> Search your books
-                </button>
-                {selectedBooks.length ? (
-                  <button onClick={getRecommendations} disabled={recommendationsLoading} style={{ marginLeft: "auto" }} className="btn btn-primary">
-                    {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
-                  </button>
-                ) : null}
-              </div>
+    <div>
+      <div className="row margin-top">
+        <div className="col-xs-6">
+          <div style={{ marginTop: "5px" }}>
+            <div className="margin-top" style={{ fontWeight: "bold", marginBottom: "5px" }}>
+              Find some books, and get recommendations based on what's similar
             </div>
-            <br />
-            <br />
-            <table className="table table-condensed table-striped">
-              <TransitionGroup component="tbody">
-                {selectedBooks.map(book => (
-                  <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
-                    <DisplayBook key={book._id} book={book} dispatch={dispatch} />
-                  </CSSTransition>
-                ))}
-              </TransitionGroup>
-            </table>
-          </div>
-          <div className="col-xs-6">
-            <div style={{ marginTop: "5px" }}>
-              {recommendations.length ? (
-                <>
-                  <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
-                  <table className="table table-condensed table-striped">
-                    <tbody>
-                      {recommendations.map(book => (
-                        <DisplayRecommendation key={book._id} book={book} />
-                      ))}
-                    </tbody>
-                  </table>
-                </>
+            <div className="margin-top" style={{ display: "flex" }}>
+              <button className="btn btn-default" onClick={openModal}>
+                <i className="fal fa-search" /> Search your books
+              </button>
+              {selectedBooks.length ? (
+                <button onClick={getRecommendations} disabled={recommendationsLoading} style={{ marginLeft: "auto" }} className="btn btn-primary">
+                  {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
+                </button>
               ) : null}
             </div>
           </div>
+          <br />
+          <br />
+          <table className="table table-condensed table-striped">
+            <TransitionGroup component="tbody">
+              {selectedBooks.map(book => (
+                <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
+                  <DisplayBook key={book._id} book={book} dispatch={dispatch} />
+                </CSSTransition>
+              ))}
+            </TransitionGroup>
+          </table>
         </div>
-        <SearchModal
-          isOpen={searchModalOpen}
-          onHide={closeModal}
-          searchResults={{ loading, loaded, data, error }}
-          {...{ setBookSearchState, searchState, dispatch, selectedBooksSet }}
-        />
+        <div className="col-xs-6">
+          <div style={{ marginTop: "5px" }}>
+            {recommendations.length ? (
+              <>
+                <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
+                <table className="table table-condensed table-striped">
+                  <tbody>
+                    {recommendations.map(book => (
+                      <DisplayRecommendation key={book._id} book={book} />
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            ) : null}
+          </div>
+        </div>
       </div>
-    </TagsContext.Provider>
+      <SearchModal
+        isOpen={searchModalOpen}
+        onHide={closeModal}
+        searchResults={{ loading, loaded, data, error }}
+        {...{ setBookSearchState, searchState, dispatch, selectedBooksSet }}
+      />
+    </div>
   );
 };
 

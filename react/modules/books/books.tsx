@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLayoutEffect, useReducer } from "react";
+import React, { SFC, Suspense, useLayoutEffect, useReducer } from "react";
 
 import BooksMenuBar from "./components/booksMenuBar";
 import Loading from "app/components/loading";
@@ -10,10 +10,8 @@ import BasicListView from "./components/bookViews/basicList";
 import CoversView from "./components/bookViews/coversList";
 
 import { useBooks } from "./booksState";
-import { useTagsState, TagsContext } from "app/tagsState";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { useCodeSplitModal } from "./util";
-import { useBooksSearchState } from "./booksSearchState";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
@@ -37,14 +35,10 @@ const prepBookForSaving = book => {
 };
 
 export default () => {
-  let tagsState = useTagsState();
-
   return (
     <div style={{}}>
       <Suspense fallback={<Loading />}>
-        <TagsContext.Provider value={tagsState}>
-          <BookViewingList />
-        </TagsContext.Provider>
+        <BookViewingList />
       </Suspense>
     </div>
   );

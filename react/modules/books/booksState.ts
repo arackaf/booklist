@@ -2,13 +2,13 @@ import { graphqlClient } from "util/graphql";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useContext, createContext } from "react";
+import { useMemo, useContext } from "react";
 import { SubjectsContext } from "app/renderUI";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
-import { TagsContext } from "app/tagsState";
+import { useTagsState } from "app/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
 
@@ -63,7 +63,7 @@ window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQue
 
 export const useBooks = () => {
   let { subjectsLoaded } = useContext(SubjectsContext);
-  let { tagsLoaded } = useContext(TagsContext);
+  let { tagsLoaded } = useTagsState();
   const searchState = useCurrentSearch();
   const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
   const onBooksMutation = [
@@ -110,7 +110,7 @@ export const useBooks = () => {
 
 const adjustBooks = books => {
   let { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
-  let { tagHash, tagsLoaded } = useContext(TagsContext);
+  let { tagHash, tagsLoaded } = useTagsState();
 
   return useMemo(() => {
     if (!subjectsLoaded || !tagsLoaded || !books) return [];

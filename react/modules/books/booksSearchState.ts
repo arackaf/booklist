@@ -1,9 +1,9 @@
 import shallowEqual from "shallow-equal/objects";
 
-import { setSearchValues, getCurrentHistoryState, history } from "reactStartup";
+import { getCurrentHistoryState, history } from "reactStartup";
 import { useContext, useMemo, useEffect, useReducer } from "react";
-import { SubjectsContext, AppContext } from "app/renderUI";
-import { TagsContext } from "app/tagsState";
+import { SubjectsContext } from "app/renderUI";
+import { useTagsState } from "app/tagsState";
 
 import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
 
@@ -57,7 +57,7 @@ export const useSelectedSubjects = () => {
 export const useSelectedTags = () => {
   const [{ hashFilters }] = useBooksSearchState();
   const { tags } = hashFilters;
-  const { tagHash } = useContext(TagsContext);
+  const { tagHash } = useTagsState();
 
   return useMemo(() => projectSelectedItems(tags, tagHash), [tags, tagHash]);
 };
