@@ -16,8 +16,6 @@ interface ILocalProps {
 }
 
 const BookSubjectSetter: SFC<ILocalProps> = props => {
-  let setBooksSubjects = x => {};
-  //const [booksState, { setBooksSubjects }] = useContext(BooksContext);
   const { subjectHash, subjectsUnwound } = useStackedSubjects();
   const [currentTab, setTab] = useState("subjects");
   const [addingSubjects, setAddingSubjects] = useState([]);
@@ -38,7 +36,6 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
   const save = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };
     return Promise.resolve(runMutation(args)).then(() => {
-      setBooksSubjects(args);
       props.onDone();
     });
   };

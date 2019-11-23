@@ -1,21 +1,12 @@
 import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
 import { RemovableLabelDisplay } from "app/components/labelDisplay";
 
-import {
-  useCurrentSearch,
-  useBookSearchUiView,
-  removeFilters,
-  removeFilterSubject,
-  removeFilterTag,
-  pageOne,
-  clearAllFilters,
-  quickSearch as quickTitleSearch,
-  setPage
-} from "../booksSearchState";
+import { useCurrentSearch } from "../booksSearchState";
 import { BooksContext } from "../booksState";
 import { AppContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
+import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
 const { searchInput } = styles;
 
 interface IAddedMenuProps {
@@ -55,7 +46,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchType = evt => {
     if (evt.keyCode == 13) {
       evt.preventDefault();
-      quickTitleSearch(evt.currentTarget.value);
+      quickSearch(evt.currentTarget.value);
     }
   };
 

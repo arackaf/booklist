@@ -5,7 +5,7 @@ import { LabelDisplay } from "app/components/labelDisplay";
 
 import { AppContext } from "app/renderUI";
 import { IBookDisplay, BooksContext } from "../../booksState";
-import { useCurrentSearch, setBooksSort } from "../../booksSearchState";
+import { useCurrentSearch } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
@@ -15,6 +15,7 @@ import gridStyles from "./gridList.module.css";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
+import { setBooksSort } from "modules/books/setBookFilters";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
