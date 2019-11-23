@@ -1,11 +1,18 @@
-import React, { FunctionComponent, useContext, useMemo, useState, useRef } from "react";
+import React, { FunctionComponent, useMemo, useState } from "react";
 import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
 import CustomColorPicker from "app/components/customColorPicker";
 import GenericLabelSelect from "app/components/genericLabelSelect";
 import ColorsPalette from "app/components/colorsPalette";
 import Modal from "app/components/modal";
-import { filterSubjects, getEligibleParents, useStackedSubjects, computeSubjectParentId, useSubjectMutations } from "app/subjectsState";
-import { SubjectsContext, ColorsContext } from "app/renderUI";
+import {
+  filterSubjects,
+  getEligibleParents,
+  useStackedSubjects,
+  computeSubjectParentId,
+  useSubjectMutations,
+  useSubjectsState
+} from "app/subjectsState";
+import { useColors } from "app/colorsState";
 
 const SubjectDeletingInfo = props => {
   let deleteWarning = `${props.subjectName} has ${props.affectedChildren} ${
@@ -43,17 +50,17 @@ interface ILocalProps {
 }
 
 const useEligibleParents = editingSubject => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
 
   return useMemo(() => (editingSubject ? getEligibleParents(subjectHash, editingSubject._id) : []), [subjectHash, editingSubject]);
 };
 
 const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const { updateSubject, deleteSubject } = useSubjectMutations();
 
   const { subjectsUnwound } = useStackedSubjects();
-  const { colors } = useContext(ColorsContext);
+  const { colors } = useColors();
   const [editingSubject, setEditingSubject] = useState(null);
 
   const [editingSubjectName, setEditingSubjectName] = useState("");

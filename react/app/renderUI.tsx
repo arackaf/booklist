@@ -44,15 +44,10 @@ export function renderUI(component = null) {
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
-export const ColorsContext = createContext<any>(null);
-export const SubjectsContext = createContext<SubjectState>(null);
 
 const App = ({ component = null } = {}) => {
   let appStatePacket = useAppState();
   let [appState, appActions] = appStatePacket;
-
-  let subjectsPacket = useSubjectsState(appState);
-  const colorsPacket = useColors(appStatePacket);
 
   useEffect(() => {
     window.addEventListener("offline", appActions.isOffline);
@@ -67,24 +62,20 @@ const App = ({ component = null } = {}) => {
 
   return (
     <AppContext.Provider value={appStatePacket}>
-      <SubjectsContext.Provider value={subjectsPacket}>
-        <ColorsContext.Provider value={colorsPacket}>
-          <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-            <MobileMeta />
-            <MainNavigationBar />
+      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+        <MobileMeta />
+        <MainNavigationBar />
 
-            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-              {component}
-              <div style={{ visibility: "hidden" }}>
-                <button>
-                  <i className="fa fa-fw fa-spin fa-spinner" />
-                </button>
-              </div>
-            </div>
-            <WellUiSwitcher />
+        <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+          {component}
+          <div style={{ visibility: "hidden" }}>
+            <button>
+              <i className="fa fa-fw fa-spin fa-spinner" />
+            </button>
           </div>
-        </ColorsContext.Provider>
-      </SubjectsContext.Provider>
+        </div>
+        <WellUiSwitcher />
+      </div>
     </AppContext.Provider>
   );
 };

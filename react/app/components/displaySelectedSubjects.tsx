@@ -1,11 +1,11 @@
-import React, { Component, FunctionComponent, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { RemovableLabelDisplay } from "./labelDisplay";
-import { SubjectsContext } from "app/renderUI";
+import { useSubjectsState } from "app/subjectsState";
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };
 
 const DisplaySelectedSubjects: FunctionComponent<LocalProps> = props => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
 
   return (
     <>
