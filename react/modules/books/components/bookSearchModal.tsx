@@ -39,8 +39,8 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
 
   useLayoutEffect(() => {
     if (props.isOpen) {
-      setSubjects(filters.selectedSubjects.map(s => s._id));
-      setTags(filters.selectedTags.map(t => t._id));
+      setSubjects(filters.subjectIds);
+      setTags(filters.tagIds);
     }
   }, [props.isOpen]);
 
