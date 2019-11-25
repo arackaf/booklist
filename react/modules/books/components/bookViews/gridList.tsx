@@ -116,11 +116,13 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          {book.subjectObjects.map((s, i) => (
-            <div key={i} style={{ marginBottom: "4px" }}>
-              <LabelDisplay item={s} />
-            </div>
-          ))}
+          <div style={{ marginTop: "3px" }}>
+            {book.subjectObjects.map((s, i) => (
+              <div key={i} style={{ marginBottom: "4px" }}>
+                <LabelDisplay item={s} />
+              </div>
+            ))}
+          </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
@@ -130,11 +132,13 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          {book.tagObjects.map((s, i) => (
-            <div key={i} style={{ marginBottom: "4px" }}>
-              <LabelDisplay item={s} />
-            </div>
-          ))}
+          <div style={{ marginTop: "3px" }}>
+            {book.tagObjects.map((s, i) => (
+              <div key={i} style={{ marginBottom: "4px" }}>
+                <LabelDisplay item={s} />
+              </div>
+            ))}
+          </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
@@ -144,7 +148,7 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
+          <div style={{ marginTop: !viewingPublic ? "3px" : 0 }}>
             {!viewingPublic ? (
               !!book.isRead ? (
                 <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="success-xs">
