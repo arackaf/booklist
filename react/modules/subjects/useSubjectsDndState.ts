@@ -18,9 +18,8 @@ export const SUBJECT_DRAGGING_OVER = "subjectsModule.SUBJECT_DRAGGING_OVER";
 
 import update from "immutability-helper";
 import { getStatePacket } from "util/stateManagementHelpers";
-import { SubjectsContext } from "app/renderUI";
 import { createContext, useContext, useMemo } from "react";
-import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject } from "app/subjectsState";
+import { getEligibleParents, computeSubjectParentId, unwindSubjects, getAllDescendantsOfSubject, useSubjectsState } from "app/subjectsState";
 
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import { syncUpdates } from "util/graphqlHelpers";
@@ -119,7 +118,7 @@ export function useSubjectsDndState(): [SubjectsDndType, any, any] {
 export const SubjectsDnDContext = createContext<[SubjectsDndType, any, any]>(null);
 
 export const useEditingSubjectHash = () => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const [{ editingSubjectsHash }] = useContext(SubjectsDnDContext);
 
   return useMemo(() => {
@@ -132,7 +131,7 @@ export const useEditingSubjectHash = () => {
 };
 
 export const useDraggingSubject = () => {
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const [{ draggingId }] = useContext(SubjectsDnDContext);
 
   return useMemo(() => (draggingId ? { ...subjectHash[draggingId], _id: draggingId + "_dragging", candidateMove: true } : null), [

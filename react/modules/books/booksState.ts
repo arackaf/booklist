@@ -2,15 +2,15 @@ import { graphqlClient } from "util/graphql";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useContext, createContext } from "react";
-import { SubjectsContext } from "app/renderUI";
+import { useMemo } from "react";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
-import { TagsContext } from "app/tagsState";
+import { useTagsState } from "app/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
+import { useSubjectsState } from "app/subjectsState";
 
 interface IEditorialReview {
   content: string;
@@ -62,8 +62,8 @@ graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetB
 window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
 
 export const useBooks = () => {
-  let { subjectsLoaded } = useContext(SubjectsContext);
-  let { tagsLoaded } = useContext(TagsContext);
+  let { subjectsLoaded } = useSubjectsState();
+  let { tagsLoaded } = useTagsState();
   const searchState = useCurrentSearch();
   const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
   const onBooksMutation = [
@@ -103,16 +103,14 @@ export const useBooks = () => {
     books,
     resultsCount,
     totalPages,
-    booksLoading: loading,
+    booksLoading: loading || !tagsLoaded || !subjectsLoaded,
     booksLoaded: loaded && tagsLoaded && subjectsLoaded
   };
 };
 
-export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
-
 const adjustBooks = books => {
-  let { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
-  let { tagHash, tagsLoaded } = useContext(TagsContext);
+  let { subjectHash, subjectsLoaded } = useSubjectsState();
+  let { tagHash, tagsLoaded } = useTagsState();
 
   return useMemo(() => {
     if (!subjectsLoaded || !tagsLoaded || !books) return [];

@@ -1,11 +1,11 @@
 import React, { SFC, useContext } from "react";
 import { AjaxButton } from "app/components/bootstrapButton";
 import { AppContext } from "app/renderUI";
-import { BooksContext } from "../../booksState";
 
 import uiStyles from "./uiStyles.module.css";
 import basicListClasses from "./basicList.module.css";
 import { CoverSmall } from "app/components/bookCoverComponent";
+import { useBooks } from "modules/books/booksState";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { dockedToPanel, listGroup, listGroupItem, listGroupItemHeading, listGroupItemText } = basicListClasses;
@@ -63,7 +63,7 @@ const BookViewListMobileItem = props => {
 };
 
 const BookViewListMobile: SFC<{ editBook: any; booksUiState: any; dispatchBooksUiState: any; runDelete: any }> = props => {
-  const { books } = useContext(BooksContext);
+  const { books } = useBooks();
   const [{ online, isPublic }] = useContext(AppContext);
   const { booksUiState, dispatchBooksUiState, editBook, runDelete } = props;
 

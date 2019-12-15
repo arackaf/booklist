@@ -7,7 +7,8 @@ import SelectAvailableTags from "app/components/selectAvailableTags";
 import DisplaySelectedTags from "app/components/displaySelectedTags";
 import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
-import { applyFilters, useCurrentSearch } from "../booksSearchState";
+import { useCurrentSearch } from "../booksSearchState";
+import { applyFilters } from "../setBookFilters";
 
 type LocalProps = {
   isOpen: boolean;
@@ -38,8 +39,8 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
 
   useLayoutEffect(() => {
     if (props.isOpen) {
-      setSubjects(filters.selectedSubjects.map(s => s._id));
-      setTags(filters.selectedTags.map(t => t._id));
+      setSubjects(filters.subjectIds);
+      setTags(filters.tagIds);
     }
   }, [props.isOpen]);
 
