@@ -14,7 +14,7 @@ const newUsersSubjects = [
   { name: "Technology", path: null }
 ];
 
-const siteRoot = process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://localhost:8080";
+const siteRoot = process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://localhost:3000";
 
 class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
