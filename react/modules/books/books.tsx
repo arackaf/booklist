@@ -1,7 +1,6 @@
-import React, { SFC, Suspense, lazy, useContext, createContext, useState, useLayoutEffect, useReducer } from "react";
+import React, { SFC, Suspense, useLayoutEffect, useReducer } from "react";
 
 import BooksMenuBar from "./components/booksMenuBar";
-import BooksLoading from "./components/booksLoading";
 import Loading from "app/components/loading";
 
 import GridView from "./components/bookViews/gridList";
@@ -10,16 +9,15 @@ import LazyModal from "app/components/lazyModal";
 import BasicListView from "./components/bookViews/basicList";
 import CoversView from "./components/bookViews/coversList";
 
-import { BooksContext, useBooks } from "./booksState";
-import { useTagsState, TagsContext } from "app/tagsState";
+import { useBooks } from "./booksState";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { useCodeSplitModal } from "./util";
-import { BookSearchState, useBooksSearchState, useBookSearchUiView } from "./booksSearchState";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import { MutationOf, Mutations } from "graphql-typings";
+import { useBookSearchUiView } from "./booksUiState";
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
@@ -36,32 +34,13 @@ const prepBookForSaving = book => {
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
 
-export const BooksSearchContext = createContext<[BookSearchState, any, any]>(null);
-
 export default () => {
-  let booksSearchState = useBooksSearchState();
-  let tagsState = useTagsState();
-
   return (
     <div style={{}}>
       <Suspense fallback={<Loading />}>
-        <BooksSearchContext.Provider value={booksSearchState}>
-          <TagsContext.Provider value={tagsState}>
-            <BooksContexHolder />
-          </TagsContext.Provider>
-        </BooksSearchContext.Provider>
+        <BookViewingList />
       </Suspense>
     </div>
-  );
-};
-
-const BooksContexHolder = () => {
-  let booksState = useBooks();
-
-  return (
-    <BooksContext.Provider value={booksState}>
-      <BookViewingList />
-    </BooksContext.Provider>
   );
 };
 
@@ -95,7 +74,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
 }
 
 const BookViewingList: SFC<{}> = props => {
-  const { books, booksLoading, booksLoaded, currentQuery } = useContext(BooksContext);
+  const { books, booksLoading, booksLoaded, currentQuery } = useBooks();
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
@@ -139,10 +118,11 @@ const BookViewingList: SFC<{}> = props => {
   };
 
   const uiView = useBookSearchUiView();
+  const { dispatch: uiDispatch } = uiView;
 
   return (
     <>
-      <BooksLoading />
+      {booksLoading ? <Loading /> : null}
       <div className="standard-module-container">
         <BooksMenuBar
           startTagModification={editTagsForSelectedBooks}
@@ -150,7 +130,7 @@ const BookViewingList: SFC<{}> = props => {
           editTags={editTags}
           editSubjects={editSubjects}
           beginEditFilters={beginEditFilters}
-          {...{ booksUiState, setRead }}
+          {...{ booksUiState, setRead, uiDispatch, uiView }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!books.length && !booksLoading && booksLoaded ? (

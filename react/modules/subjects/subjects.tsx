@@ -5,11 +5,12 @@ import HTML5Backend from "react-dnd-html5-backend";
 import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
-import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations } from "app/subjectsState";
+import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
-import { ColorsContext, SubjectsContext, AppContext } from "app/renderUI";
 
 import subjectsListStyles from "./subjectsList.module.css";
+import { useColors } from "app/colorsState";
+import { AppContext } from "app/renderUI";
 
 const {
   listGroup,
@@ -141,7 +142,7 @@ const SubjectDisplayContent = DragSource(
 )(props => {
   const { subject, connectDragSource, connectDragPreview, noDrop, connectDropTarget } = props;
 
-  const { colors } = useContext(ColorsContext);
+  const { colors } = useColors();
 
   const { _id } = subject;
   const [{ currentDropCandidateId }] = useContext(SubjectsDnDContext);
@@ -209,7 +210,7 @@ const DefaultSubjectDisplay = props => {
     connectDragSource(<i className="fa fa-fw fa-arrows drag-handle" />)
   );
 
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const [{}, { beginSubjectEdit, addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
 
   return (noDrop ? c => c : connectDropTarget)(
@@ -244,7 +245,7 @@ const DefaultSubjectDisplay = props => {
 const EditingSubjectDisplay = props => {
   const inputEl = useRef(null);
   useEffect(() => inputEl.current.focus(), []);
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const { updateSubject } = useSubjectMutations();
   const [{}, { cancelSubjectEdit, setEditingSubjectField, saveChanges }] = useContext(SubjectsDnDContext);
 
@@ -340,7 +341,7 @@ const EditingSubjectDisplay = props => {
 const PendingDeleteSubjectDisplay = props => {
   const { className, deleteMessage, subject } = props;
   const { name, _id, backgroundColor, textColor } = subject;
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const { deleteSubject: runDelete } = useSubjectMutations();
   const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
 
@@ -380,7 +381,7 @@ const SubjectList = props => {
 
   const SD: any = SubjectDisplay;
 
-  const { subjectHash } = useContext(SubjectsContext);
+  const { subjectHash } = useSubjectsState();
   const { updateSubject: runInsert } = useSubjectMutations();
   const [{}, { setNewParent }] = useContext(SubjectsDnDContext);
 
