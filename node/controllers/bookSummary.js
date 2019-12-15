@@ -17,14 +17,14 @@ class BookSummaryController {
     let res = await downloadBookCover(url, 750);
 
     if (!res) {
-      this.send({ failure: true });
+      this.send({ failure: true, msg: "failure during download" });
     }
 
     let { fileName, fullName } = res;
     let newPath = await resizeIfNeeded(fileName, width);
 
     if (!newPath) {
-      this.send({ failure: true });
+      this.send({ failure: true, msg: "failure during resize" });
     }
 
     let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);

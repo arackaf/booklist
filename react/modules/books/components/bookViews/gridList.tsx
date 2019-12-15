@@ -4,8 +4,8 @@ import { AjaxButton } from "app/components/bootstrapButton";
 import { LabelDisplay } from "app/components/labelDisplay";
 
 import { AppContext } from "app/renderUI";
-import { IBookDisplay, BooksContext } from "../../booksState";
-import { useCurrentSearch, setBooksSort } from "../../booksSearchState";
+import { IBookDisplay, useBooks } from "../../booksState";
+import { useCurrentSearch } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery, buildQuery } from "micro-graphql-react";
@@ -15,6 +15,7 @@ import gridStyles from "./gridList.module.css";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
+import { setBooksSort } from "modules/books/setBookFilters";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -115,11 +116,13 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          {book.subjectObjects.map((s, i) => (
-            <div key={i} style={{ marginBottom: "4px" }}>
-              <LabelDisplay item={s} />
-            </div>
-          ))}
+          <div style={{ marginTop: "3px" }}>
+            {book.subjectObjects.map((s, i) => (
+              <div key={i} style={{ marginBottom: "4px" }}>
+                <LabelDisplay item={s} />
+              </div>
+            ))}
+          </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
@@ -129,11 +132,13 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          {book.tagObjects.map((s, i) => (
-            <div key={i} style={{ marginBottom: "4px" }}>
-              <LabelDisplay item={s} />
-            </div>
-          ))}
+          <div style={{ marginTop: "3px" }}>
+            {book.tagObjects.map((s, i) => (
+              <div key={i} style={{ marginBottom: "4px" }}>
+                <LabelDisplay item={s} />
+              </div>
+            ))}
+          </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
@@ -143,7 +148,7 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          <div style={{ marginTop: !viewingPublic ? 5 : 0 }}>
+          <div style={{ marginTop: !viewingPublic ? "3px" : 0 }}>
             {!viewingPublic ? (
               !!book.isRead ? (
                 <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="success-xs">
@@ -276,7 +281,7 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { selectedBooks } = booksUiState;
 
-  const { books } = useContext(BooksContext);
+  const { books } = useBooks();
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();

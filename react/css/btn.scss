@@ -119,8 +119,12 @@
 }
 
 
-.btn-group{
+.btn-group {
   display: flex;
+
+  input.form-control:focus, button:focus, button.btn:focus, button.btn-xs:focus {
+    box-shadow: none;
+  }
 
   .btn:hover:not([disabled]) {
     background-color: var(--primary-10)
@@ -147,12 +151,6 @@
     border-right-width: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-  }
-  :focus { 
-    border-right-width: 1px !important;
-  }
-  :focus + * { 
-    border-left-width: 0;
   }
   
   :first-child, .first-child {

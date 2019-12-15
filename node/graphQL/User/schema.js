@@ -5,7 +5,8 @@ export const type = `
     isPublic: Boolean
     publicName: String
     publicBooksHeader: String
-    books(SORT: BookSort, SORTS: [BookSort]): [Book!]!
+    books(FILTER: BookFilters, LIMIT: Int, SKIP: Int, PAGE: Int, PAGE_SIZE: Int, SORT: BookSort, SORTS: [BookSort], PREFER_LOOKUP: Boolean, DONT_PREFER_LOOKUP: Boolean): [Book!]!
+    booksMeta(FILTER: BookFilters): QueryRelationshipResultsMetadata
   }
 
   type UserQueryResults {

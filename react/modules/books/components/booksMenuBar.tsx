@@ -1,22 +1,12 @@
 import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
 import { RemovableLabelDisplay } from "app/components/labelDisplay";
 
-import {
-  useCurrentSearch,
-  useBookSearchUiView,
-  removeFilters,
-  removeFilterSubject,
-  removeFilterTag,
-  pageOne,
-  clearAllFilters,
-  quickSearch as quickTitleSearch,
-  setPage
-} from "../booksSearchState";
-import { BooksContext } from "../booksState";
-import { BooksSearchContext } from "../books";
+import { useCurrentSearch } from "../booksSearchState";
+import { useBooks } from "../booksState";
 import { AppContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
+import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
 const { searchInput } = styles;
 
 interface IAddedMenuProps {
@@ -27,6 +17,8 @@ interface IAddedMenuProps {
   beginEditFilters: any;
   booksUiState: any;
   setRead: any;
+  uiView: any;
+  uiDispatch: any;
 }
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
@@ -35,15 +27,13 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
 
   const [appState] = useContext(AppContext);
-  const { totalPages, resultsCount } = useContext(BooksContext);
-  const [{}, { setViewDesktop, setViewBasicList, setCoversList }] = useContext(BooksSearchContext);
+  const { totalPages, resultsCount } = useBooks();
 
-  const { booksUiState, setRead } = props;
+  const { booksUiState, setRead, uiView, uiDispatch } = props;
   const { selectedBooks } = booksUiState;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
   const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
 
-  const bookSearchUiView = useBookSearchUiView();
   const bookSearchState = useCurrentSearch();
 
   useEffect(() => {
@@ -56,7 +46,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchType = evt => {
     if (evt.keyCode == 13) {
       evt.preventDefault();
-      quickTitleSearch(evt.currentTarget.value);
+      quickSearch(evt.currentTarget.value);
     }
   };
 
@@ -91,7 +81,9 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 <button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
                   <i className="fal fa-angle-left" />
                 </button>
-                <span style={{paddingLeft: "3px", paddingRight: "3px"}}>{page} of {totalPages}</span>
+                <span style={{ paddingLeft: "3px", paddingRight: "3px" }}>
+                  {page} of {totalPages}
+                </span>
                 <button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
                   <i className="fal fa-angle-right" />
                 </button>
@@ -162,33 +154,29 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                   ) : null}
                   <button
                     style={{ position: "static" }}
-                    onClick={setViewDesktop}
-                    className={"btn btn-default hidden-tiny " + (bookSearchUiView.isGridView ? "active" : "")}
+                    onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })}
+                    className={"btn btn-default hidden-tiny " + (uiView.isGridView ? "active" : "")}
                   >
                     <i className="fal fa-table" />
                   </button>
                   <button
                     style={{ position: "static" }}
-                    onClick={setCoversList}
-                    className={"btn btn-default hidden-tiny " + (bookSearchUiView.isCoversList ? "active" : "")}
+                    onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })}
+                    className={"btn btn-default hidden-tiny " + (uiView.isCoversList ? "active" : "")}
                   >
                     <i className="fas fa-th" />
                   </button>
                   <button
                     style={{ position: "static" }}
-                    onClick={setViewBasicList}
-                    className={"btn btn-default hidden-tiny " + (bookSearchUiView.isBasicList ? "active" : "")}
+                    onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })}
+                    className={"btn btn-default hidden-tiny " + (uiView.isBasicList ? "active" : "")}
                   >
                     <i className="fal fa-list" />
                   </button>
                 </>
               ) : !isPublic ? (
                 <>
-                  <button
-                    title="Add/remove subjects"
-                    onClick={props.startSubjectModification}
-                    className={"btn btn-default hidden-tiny"}
-                  >
+                  <button title="Add/remove subjects" onClick={props.startSubjectModification} className={"btn btn-default hidden-tiny"}>
                     <i className="fal fa-sitemap" />
                   </button>
                   <button title="Add/remove tags" onClick={props.startTagModification} className="btn btn-default hidden-tiny">
@@ -210,11 +198,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
           </div>
 
           <div style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
-            {online && resultsCount ? (
-              <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>
-                {resultsDisplay}
-              </div>
-            ) : null}
+            {online && resultsCount ? <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>{resultsDisplay}</div> : null}
 
             {bookSearchState.search ? (
               <RemovableLabelDisplay

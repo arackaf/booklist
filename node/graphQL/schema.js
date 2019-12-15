@@ -44,6 +44,10 @@ export default `
     count: Int!
   }
 
+  type QueryRelationshipResultsMetadata {
+    count: Int!
+  }
+
   input StringArrayUpdate {
     index: Int!,
     value: String!
@@ -107,21 +111,9 @@ export default `
   type Mutation {
     ${BookMutation}
 
-    ${BookSummaryMutation}
-
-    ${BooksDeletedMutation}
-
-    ${LabelColorMutation}
-
-    ${PublicUserMutation}
-
     ${SubjectMutation}
 
-    ${SubjectsDeletedMutation}
-
     ${TagMutation}
-
-    ${TagsDeletedMutation}
 
     ${UserMutation}
   }

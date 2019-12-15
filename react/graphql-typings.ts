@@ -48,12 +48,25 @@ export type Book = {
   similarItemsLastUpdate: Maybe<Scalars['Int']>,
   timestamp: Maybe<Scalars['Float']>,
   similarBooks: Array<BookSummary>,
+  similarBooksMeta: Maybe<QueryRelationshipResultsMetadata>,
 };
 
 
 export type BookSimilarBooksArgs = {
+  FILTER: Maybe<BookSummaryFilters>,
+  LIMIT: Maybe<Scalars['Int']>,
+  SKIP: Maybe<Scalars['Int']>,
+  PAGE: Maybe<Scalars['Int']>,
+  PAGE_SIZE: Maybe<Scalars['Int']>,
   SORT: Maybe<BookSummarySort>,
-  SORTS: Maybe<Array<Maybe<BookSummarySort>>>
+  SORTS: Maybe<Array<Maybe<BookSummarySort>>>,
+  PREFER_LOOKUP: Maybe<Scalars['Boolean']>,
+  DONT_PREFER_LOOKUP: Maybe<Scalars['Boolean']>
+};
+
+
+export type BookSimilarBooksMetaArgs = {
+  FILTER: Maybe<BookSummaryFilters>
 };
 
 export type BookBulkMutationResult = {
@@ -1529,6 +1542,10 @@ export type QueryGetUserArgs = {
   _id: Maybe<Scalars['String']>
 };
 
+export type QueryRelationshipResultsMetadata = {
+  count: Scalars['Int'],
+};
+
 export type QueryResultsMetadata = {
   count: Scalars['Int'],
 };
@@ -1940,12 +1957,25 @@ export type User = {
   publicName: Maybe<Scalars['String']>,
   publicBooksHeader: Maybe<Scalars['String']>,
   books: Array<Book>,
+  booksMeta: Maybe<QueryRelationshipResultsMetadata>,
 };
 
 
 export type UserBooksArgs = {
+  FILTER: Maybe<BookFilters>,
+  LIMIT: Maybe<Scalars['Int']>,
+  SKIP: Maybe<Scalars['Int']>,
+  PAGE: Maybe<Scalars['Int']>,
+  PAGE_SIZE: Maybe<Scalars['Int']>,
   SORT: Maybe<BookSort>,
-  SORTS: Maybe<Array<Maybe<BookSort>>>
+  SORTS: Maybe<Array<Maybe<BookSort>>>,
+  PREFER_LOOKUP: Maybe<Scalars['Boolean']>,
+  DONT_PREFER_LOOKUP: Maybe<Scalars['Boolean']>
+};
+
+
+export type UserBooksMetaArgs = {
+  FILTER: Maybe<BookFilters>
 };
 
 export type UserBulkMutationResult = {
@@ -2021,3 +2051,4 @@ export type UserSort = {
   publicName: Maybe<Scalars['Int']>,
   publicBooksHeader: Maybe<Scalars['Int']>,
 };
+

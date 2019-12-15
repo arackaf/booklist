@@ -2,14 +2,15 @@ import { graphqlClient } from "util/graphql";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useContext, createContext } from "react";
-import { SubjectsContext, AppContext } from "app/renderUI";
+import { useMemo } from "react";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
 
 import delve from "dlv";
-import { TagsContext } from "app/tagsState";
+import { useTagsState } from "app/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
+import { computeBookSearchVariables } from "./booksLoadingUtils";
+import { useSubjectsState } from "app/subjectsState";
 
 interface IEditorialReview {
   content: string;
@@ -61,12 +62,10 @@ graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetB
 window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
 
 export const useBooks = () => {
-  const [app] = useContext(AppContext);
-  let { subjectsLoaded } = useContext(SubjectsContext);
-  let { tagsLoaded } = useContext(TagsContext);
+  let { subjectsLoaded } = useSubjectsState();
+  let { tagsLoaded } = useTagsState();
   const searchState = useCurrentSearch();
-
-  const variables = getBookSearchVariables(searchState, app.publicUserId, app.online);
+  const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
   const onBooksMutation = [
     {
       when: /updateBooks?/,
@@ -104,42 +103,14 @@ export const useBooks = () => {
     books,
     resultsCount,
     totalPages,
-    booksLoading: loading,
+    booksLoading: loading || !tagsLoaded || !subjectsLoaded,
     booksLoaded: loaded && tagsLoaded && subjectsLoaded
   };
 };
 
-function getBookSearchVariables(bookSearchFilters, publicUserId, online) {
-  return useMemo(() => {
-    let getBooksVariables: any = {
-      page: +bookSearchFilters.page,
-      pageSize: bookSearchFilters.pageSize,
-      sort: { [bookSearchFilters.sort]: bookSearchFilters.sortDirection == "asc" ? 1 : -1 },
-      title_contains: bookSearchFilters.search || void 0,
-      isRead: bookSearchFilters.isRead === "1" ? true : void 0,
-      isRead_ne: bookSearchFilters.isRead === "0" ? true : void 0,
-      subjects_containsAny: bookSearchFilters.subjectIds.length ? bookSearchFilters.subjectIds : void 0,
-      searchChildSubjects: bookSearchFilters.searchChildSubjects == "true" ? true : void 0,
-      tags_containsAny: bookSearchFilters.tagIds.length ? bookSearchFilters.tagIds : void 0,
-      authors_textContains: bookSearchFilters.author || void 0,
-      publisher_contains: bookSearchFilters.publisher || void 0,
-      publicUserId: publicUserId,
-      subjects_count: bookSearchFilters.noSubjects ? 0 : void 0
-    };
-
-    if (bookSearchFilters.pages != "" && bookSearchFilters.pages != null) {
-      getBooksVariables[bookSearchFilters.pagesOperator == "lt" ? "pages_lt" : "pages_gt"] = +bookSearchFilters.pages;
-    }
-
-    return getBooksVariables;
-  }, [bookSearchFilters, publicUserId]);
-}
-
-export const BooksContext = createContext<ReturnType<typeof useBooks>>(null);
-
 const adjustBooks = books => {
-  let { subjectHash, subjectsLoaded } = useContext(SubjectsContext);
-  let { tagHash, tagsLoaded } = useContext(TagsContext);
+  let { subjectHash, subjectsLoaded } = useSubjectsState();
+  let { tagHash, tagsLoaded } = useTagsState();
 
   return useMemo(() => {
     if (!subjectsLoaded || !tagsLoaded || !books) return [];
