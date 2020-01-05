@@ -136,14 +136,16 @@ export default {
         await resolverHelpers.mutationComplete(session, transaction);
 
         let result = $project
-          ? (await loadBooks(
-              db,
-              [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
-              root,
-              args,
-              context,
-              ast
-            ))[0]
+          ? (
+              await loadBooks(
+                db,
+                [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
+                root,
+                args,
+                context,
+                ast
+              )
+            )[0]
           : null;
         return resolverHelpers.mutationSuccessResult({ Book: result, transaction, elapsedTime: 0 });
       });
