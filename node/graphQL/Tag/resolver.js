@@ -97,14 +97,16 @@ export default {
         await resolverHelpers.mutationComplete(session, transaction);
 
         let result = $project
-          ? (await loadTags(
-              db,
-              [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
-              root,
-              args,
-              context,
-              ast
-            ))[0]
+          ? (
+              await loadTags(
+                db,
+                [{ $match: { _id: newObject._id } }, { $project }, { $limit: 1 }],
+                root,
+                args,
+                context,
+                ast
+              )
+            )[0]
           : null;
         return resolverHelpers.mutationSuccessResult({ Tag: result, transaction, elapsedTime: 0 });
       });
