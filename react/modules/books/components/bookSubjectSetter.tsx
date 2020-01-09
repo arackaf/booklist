@@ -51,7 +51,16 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
   const selectRef = useRef(null);
 
   return (
-    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Subjects:" focusRef={selectRef}>
+    <Modal
+      className="fade"
+      isOpen={!!modifyingBooks.length}
+      onHide={() => {
+        props.onDone();
+        setTab("subjects");
+      }}
+      headerCaption="Add / Remove Subjects:"
+      focusRef={selectRef}
+    >
       <div className="tab-headers">
         <div className={"tab-header " + (currentTab == "subjects" ? "active" : "")}>
           <a ref={selectRef} onClick={() => setTab("subjects")}>
