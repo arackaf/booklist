@@ -45,7 +45,16 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
   const selectRef = useRef(null);
 
   return (
-    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:" focusRef={selectRef}>
+    <Modal
+      className="fade"
+      isOpen={!!modifyingBooks.length}
+      onHide={() => {
+        props.onDone();
+        setTab("tags");
+      }}
+      headerCaption="Add / Remove Tags:"
+      focusRef={selectRef}
+    >
       <div className="tab-headers">
         <div className={"tab-header " + (currentTab == "tags" ? "active" : "")}>
           <a ref={selectRef} onClick={() => setTab("tags")}>
