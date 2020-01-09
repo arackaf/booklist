@@ -27,7 +27,7 @@ const TagEditModal = LazyModal(() => import(/* webpackChunkName: "book-list-moda
 const BookSearchModal = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSearchModal"));
 
 const prepBookForSaving = book => {
-  let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors"];
+  let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
   let pages = parseInt(book.pages, 10);
   book.pages = isNaN(pages) ? void 0 : pages;
 

@@ -1,9 +1,26 @@
 import React, { useState } from "react";
 import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
 
+import SelectAvailableTags from "app/components/selectAvailableTags";
+import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
+
+import DisplaySelectedTags from "app/components/displaySelectedTags";
+import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+
+const useSubjectsOrTags = startingItems => {
+  const [items, setItems] = useState(startingItems);
+  const addItem = item => setItems(items.concat(item._id));
+  const removeItem = item => setItems(items.filter(_id => _id != item._id));
+
+  return [items, addItem, removeItem];
+};
+
 const EditBookInfo = props => {
   const { book, saveBook, updateBook } = props;
   const [titleMissing, setTitleMissing] = useState(false);
+
+  const [subjects, selectSubject, removeSubject] = useSubjectsOrTags(book.subjects);
+  const [tags, selectTag, removeTag] = useSubjectsOrTags(book.tags);
 
   const save = () => {
     if (!book.title) {
@@ -12,7 +29,7 @@ const EditBookInfo = props => {
       setTitleMissing(false);
 
       //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
-      let bookToSave = { ...book, authors: book.authors.filter(a => a) };
+      let bookToSave = { ...book, authors: book.authors.filter(a => a), subjects, tags };
       return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
         savedBook && updateBook(book => ({ ...book, _id: savedBook._id }));
       });
@@ -69,6 +86,25 @@ const EditBookInfo = props => {
             </div>
           </div>
         </div>
+        <div className="row" style={{ position: "relative" }}>
+          <div className="col-sm-3 col-xs-12">
+            <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
+          </div>
+          <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
+            <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
+          </div>
+        </div>
+        <br />
+        <div className="row" style={{ position: "relative" }}>
+          <div className="col-sm-3 col-xs-12">
+            <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
+          </div>
+          <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
+            <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
+          </div>
+        </div>
+        <br />
+
         <div className="row">
           {(book.authors || []).map((author, $index) => (
             <div key={$index} className="col-xs-4">

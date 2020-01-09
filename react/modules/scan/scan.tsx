@@ -17,7 +17,9 @@ const defaultEmptyBook = () => ({
   pages: "",
   publisher: "",
   publicationDate: "",
-  authors: [""]
+  authors: [""],
+  tags: [],
+  subjects: []
 });
 
 const entryList = Array.from({ length: 10 });
