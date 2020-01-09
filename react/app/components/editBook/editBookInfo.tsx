@@ -8,7 +8,7 @@ import DisplaySelectedTags from "app/components/displaySelectedTags";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 
 const useSubjectsOrTags = startingItems => {
-  const [items, setItems] = useState(startingItems);
+  const [items, setItems] = useState(startingItems || []);
   const addItem = item => setItems(items.concat(item._id));
   const removeItem = item => setItems(items.filter(_id => _id != item._id));
 
