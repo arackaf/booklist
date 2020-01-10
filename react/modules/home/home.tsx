@@ -25,8 +25,7 @@ const MAX_CHART_WIDTH = 1100;
 
 const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   const [state, setState] = useState({ chartPackets: [], chartWidth: MAX_CHART_WIDTH });
-  const { subjectHash, subjectsLoaded } = useSubjectsState();
-  const { subjects } = useStackedSubjects();
+  const { subjects, subjectHash, subjectsLoaded } = useStackedSubjects();
 
   useEffect(() => {
     if (subjectsLoaded) {

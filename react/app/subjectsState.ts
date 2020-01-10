@@ -56,7 +56,7 @@ function allSubjectsSorted(subjectsHash): SubjectType[] {
 }
 
 export const useStackedSubjects = () => {
-  const { subjectHash } = useSubjectsState();
+  const { subjectHash, subjectsLoaded } = useSubjectsState();
 
   return useMemo(() => {
     const mainSubjectsCollection = stackAndGetTopLevelSubjects(subjectHash);
@@ -65,7 +65,8 @@ export const useStackedSubjects = () => {
       subjects: mainSubjectsCollection,
       allSubjectsSorted: allSubjectsSorted(subjectHash),
       subjectsUnwound: subjectsUnwound,
-      subjectHash
+      subjectHash,
+      subjectsLoaded
     };
   }, [subjectHash]);
 };
