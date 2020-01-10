@@ -38,8 +38,10 @@ export function useBooksSearchState(): [BookSearchState, any] {
 
   useEffect(() => {
     return history.listen(() => {
-      const { searchState } = getCurrentHistoryState();
-      dispatch({ type: "HASH_CHANGED", filters: searchState });
+      const { searchState, pathname } = getCurrentHistoryState();
+      if (pathname == "/" || pathname == "/books") {
+        dispatch({ type: "HASH_CHANGED", filters: searchState });
+      }
     });
   }, [dispatch]);
 
