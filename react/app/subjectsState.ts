@@ -33,7 +33,7 @@ export function useSubjectsState() {
   let { loaded, data } = useQuery<QueryOf<Queries["allSubjects"]>>(
     buildQuery(
       AllSubjectsQuery,
-      { publicUserId, userId },
+      { publicUserId },
       { active: !!userId || !!publicUserId, onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } }
     )
   );

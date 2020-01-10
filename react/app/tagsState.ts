@@ -30,7 +30,7 @@ graphqlClient.subscribeMutation([
 
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
-  const req = { publicUserId: publicUserId || void 0 };
+  const req = { publicUserId };
   const { loaded, data } = useQuery<QueryOf<Queries["allTags"]>>(
     buildQuery(GetTags, req, { onMutation: { when: /(update|delete|create)Tag/, run: ({ refresh }) => refresh() } })
   );

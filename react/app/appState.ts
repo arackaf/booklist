@@ -35,7 +35,7 @@ export const SET_THEME = "root.SET_THEME";
 const initialState = {
   ...uiSettings,
   ...authSettings,
-  publicUserId: "",
+  publicUserId: void 0,
   publicName: "",
   publicBooksHeader: "",
   isPublic: false,
@@ -51,7 +51,7 @@ function appReducer(state: AppState, action): AppState {
     case SET_PUBLIC_INFO:
       return { ...state, isPublic: true, publicName: action.publicName, publicBooksHeader: action.publicBooksHeader, publicUserId: action.userId };
     case RESET_PUBLIC_INFO:
-      return { ...state, isPublic: false, publicName: "", publicBooksHeader: "", publicUserId: "" };
+      return { ...state, isPublic: false, publicName: "", publicBooksHeader: "", publicUserId: void 0 };
     case REQUEST_DESKTOP:
       return { ...state, showingDesktop: true, showingMobile: false };
     case REQUEST_MOBILE:
