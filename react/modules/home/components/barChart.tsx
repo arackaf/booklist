@@ -16,17 +16,11 @@ function getSubjectsList(subjectIds) {
 }
 
 export default class BarChart extends PureComponent<any, any> {
-  constructor(props) {
-    super(props);
-    this.state = { left: 0, excluding: {}, data: null, initialWidth: props.width };
-  }
+  state = { left: 0, excluding: {}, data: null, initialWidth: this.props.width };
+
   el: any;
   barMap = new Map();
-  sized = ({ bounds }) => {
-    if (bounds.left != this.state.left) {
-      this.setState({ left: bounds.left });
-    }
-  };
+
   removeBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: true } }));
   restoreBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: false } }));
 
@@ -37,6 +31,7 @@ export default class BarChart extends PureComponent<any, any> {
       }
     });
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.subjects != this.props.subjects) {
       this.getChart();
@@ -118,8 +113,6 @@ export default class BarChart extends PureComponent<any, any> {
       }
     }
   };
-
-  clearAllTooltips = () => {};
 
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 };
