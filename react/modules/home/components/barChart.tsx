@@ -68,7 +68,6 @@ const stackGraphData = (subjectHash, subjectIds, data) => {
 };
 
 const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown, header }) => {
-  const [left, setLeft] = useState(0);
   const [excluding, setExcluding] = useState({});
 
   const elRef = useRef<any>();
@@ -172,7 +171,6 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   width={scaleX.bandwidth()}
                   height={dataScale(d.count)}
                   graphWidth={width}
-                  adjustTooltip={left}
                 />
               ))}
           </g>
