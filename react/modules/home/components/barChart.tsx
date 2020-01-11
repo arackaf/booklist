@@ -9,7 +9,7 @@ import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
 import { graphqlClient } from "util/graphql";
-import { computeSubjectParentId, getChildSubjectsSorted } from "app/subjectsState";
+import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from "app/subjectsState";
 
 function getSubjectsList(subjectIds) {
   return graphqlClient.runQuery(barCharQuery, { subjectIds, searchChildSubjects: true });
@@ -123,18 +123,10 @@ export default class BarChart extends PureComponent<any, any> {
 
   render() {
     let margin = { top: 20, right: 10, bottom: 180, left: 0 };
-    let { subjectsLoaded, width, height, drilldown, chartIndex, header } = this.props;
+    let { width, height, drilldown, chartIndex, header } = this.props;
     let { data, excluding } = this.state;
 
-    if (subjectsLoaded && data && !data.length) {
-      return (
-        <div className="alert alert-warning">
-          It looks like you haven't entered any books yet. Once you do, you'll see info about your library here.
-        </div>
-      );
-    }
-
-    if (!subjectsLoaded || !data || !data.length) {
+    if (!data || !data.length) {
       return null;
     }
     let fullData = data;
