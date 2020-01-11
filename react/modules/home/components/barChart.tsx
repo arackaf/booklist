@@ -16,7 +16,7 @@ function getSubjectsList(subjectIds) {
 }
 
 export default class BarChart extends PureComponent<any, any> {
-  state = { left: 0, excluding: {}, data: null, initialWidth: this.props.width };
+  state = { left: 0, excluding: {}, data: null };
 
   el: any;
   barMap = new Map();
@@ -34,7 +34,11 @@ export default class BarChart extends PureComponent<any, any> {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.subjects != this.props.subjects) {
-      this.getChart();
+      this.getChart(() => {
+        if (this.props.chartIndex > 0) {
+          this.el.scrollIntoView({ behavior: "smooth" });
+        }
+      });
     }
   }
 
