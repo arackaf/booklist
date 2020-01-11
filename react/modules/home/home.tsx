@@ -1,14 +1,13 @@
-import React, { FunctionComponent, useContext, useState, useEffect, FC } from "react";
+import React, { FunctionComponent, useContext, useState, FC } from "react";
 import Measure from "react-measure";
 import "d3-transition";
 
 import BarChart from "./components/barChart";
 import { AppContext } from "app/renderUI";
-import { useStackedSubjects, useSubjectsState, SubjectType } from "app/subjectsState";
+import { useStackedSubjects } from "app/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
-import { Subject } from "graphql-typings";
 import { SectionLoading } from "app/components/loading";
 
 const MainHomePane = props => (

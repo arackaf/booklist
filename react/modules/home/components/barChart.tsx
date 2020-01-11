@@ -1,4 +1,4 @@
-import React, { PureComponent, FC, memo, useRef, useState, useEffect, DOMElement, useMemo } from "react";
+import React, { FC, memo, useRef, useState, useEffect } from "react";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -13,7 +13,7 @@ import { useQuery, buildQuery } from "micro-graphql-react";
 
 const stackGraphData = (subjectHash, subjectIds, data) => {
   if (!data) return null;
-  
+
   let targetSubjectsLookup = new Set(subjectIds);
 
   let subjectResultsMap = new Map<string, number>([]);
