@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, FC, memo, useRef, useState, useEffect, DOMElement, useMemo } from "react";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -8,201 +8,182 @@ import Bar from "./bar";
 import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
-import { graphqlClient } from "util/graphql";
 import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from "app/subjectsState";
+import { useQuery, buildQuery } from "micro-graphql-react";
 
-function getSubjectsList(subjectIds) {
-  return graphqlClient.runQuery(barCharQuery, { subjectIds, searchChildSubjects: true });
-}
+const stackGraphData = (subjectHash, subjectIds, data) => {
+  if (!data) return null;
+  
+  let targetSubjectsLookup = new Set(subjectIds);
 
-export default class BarChart extends PureComponent<any, any> {
-  state = { left: 0, excluding: {}, data: null };
+  let subjectResultsMap = new Map<string, number>([]);
 
-  el: any;
-  barMap = new Map();
+  data.allBooks.Books.forEach(item => {
+    let subjectsHeld = item.subjects
+      .filter(_id => subjectHash[_id])
+      .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
 
-  removeBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: true } }));
-  restoreBar = id => this.setState((state, props) => ({ excluding: { ...state.excluding, [id]: false } }));
+    let uniqueSubjects = Array.from(new Set(subjectsHeld));
+    let uniqueSubjectString = uniqueSubjects.sort().join(",");
 
-  componentDidMount() {
-    this.getChart(() => {
-      if (this.props.chartIndex > 0) {
-        this.el.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.subjects != this.props.subjects) {
-      this.getChart(() => {
-        if (this.props.chartIndex > 0) {
-          this.el.scrollIntoView({ behavior: "smooth" });
-        }
-      });
+    if (!subjectResultsMap.has(uniqueSubjectString)) {
+      subjectResultsMap.set(uniqueSubjectString, 0);
     }
-  }
+    subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
+  });
 
-  getChart = (cb?: any) => {
-    let { subjects, subjectHash } = this.props;
-    let subjectIds = subjects.map(s => s._id);
-    let targetSubjectsLookup = new Set(subjectIds);
+  return Array.from(subjectResultsMap).map(([name, count], i) => {
+    let _ids = name.split(",").filter(s => s);
+    let names = _ids
+      .map(_id => subjectHash[_id].name)
+      .sort()
+      .join(",");
 
-    let subjectResultsMap = new Map<string, number>([]);
-
-    function getApplicableRootSubject(subject) {
-      let parentId = computeSubjectParentId(subject.path);
-
-      if (!parentId) {
-        return subject;
-      } else if (targetSubjectsLookup.has(parentId)) {
-        return subjectHash[parentId];
-      } else {
-        return getApplicableRootSubject(subjectHash[parentId]);
-      }
-    }
-
-    return getSubjectsList(subjectIds).then(resp => {
-      resp.data.allBooks.Books.forEach(item => {
-        let subjectsHeld = item.subjects
-          .filter(_id => subjectHash[_id])
-          .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
-
-        let uniqueSubjects = Array.from(new Set(subjectsHeld));
-        let uniqueSubjectString = uniqueSubjects.sort().join(",");
-
-        if (!subjectResultsMap.has(uniqueSubjectString)) {
-          subjectResultsMap.set(uniqueSubjectString, 0);
-        }
-        subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
-      });
-
-      let data = Array.from(subjectResultsMap).map(([name, count], i) => {
-        let _ids = name.split(",").filter(s => s);
-        let names = _ids
-          .map(_id => subjectHash[_id].name)
-          .sort()
-          .join(",");
-
+    return {
+      groupId: name,
+      count,
+      display: names,
+      entries: _ids.map(_id => {
+        let subject = subjectHash[_id];
         return {
-          groupId: name,
-          count,
-          display: names,
-          entries: _ids.map(_id => {
-            let subject = subjectHash[_id];
-            return {
-              name: subject.name,
-              color: subject.backgroundColor,
-              children: getChildSubjectsSorted(_id, subjectHash)
-            };
-          })
+          name: subject.name,
+          color: subject.backgroundColor,
+          children: getChildSubjectsSorted(_id, subjectHash)
         };
-      });
+      })
+    };
+  });
 
-      this.setState({ data }, cb);
-    });
-  };
+  function getApplicableRootSubject(subject) {
+    let parentId = computeSubjectParentId(subject.path);
 
-  topRef = el => {
+    if (!parentId) {
+      return subject;
+    } else if (targetSubjectsLookup.has(parentId)) {
+      return subjectHash[parentId];
+    } else {
+      return getApplicableRootSubject(subjectHash[parentId]);
+    }
+  }
+};
+
+const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown, header }) => {
+  const [left, setLeft] = useState(0);
+  const [excluding, setExcluding] = useState({});
+
+  const elRef = useRef<any>();
+  const barMap = new Map();
+
+  const removeBar = id => setExcluding(excluding => ({ ...excluding, [id]: true }));
+  const restoreBar = id => setExcluding(excluding => ({ ...excluding, [id]: false }));
+
+  const { subjectHash } = useSubjectsState();
+  const subjectIds = subjects.map(s => s._id);
+  const { data: newRespData } = useQuery(buildQuery(barCharQuery, { subjectIds, searchChildSubjects: true }));
+  const graphData = stackGraphData(subjectHash, subjectIds, newRespData);
+
+  useEffect(() => {
+    if (elRef.current && graphData && chartIndex > 0) {
+      elRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [graphData]);
+
+  const topRef = el => {
     if (!el) return;
-    el.addEventListener("touchstart", this.svgTouch);
+    if (el != elRef.current) {
+      elRef.current = el;
+      el.addEventListener("touchstart", svgTouch);
+    }
   };
-  clearOnTouch = new Set(["text", "h4", "div", "svg"]);
-  svgTouch = evt => {
-    if (this.clearOnTouch.has(evt.target.tagName.toLowerCase())) {
-      if (Array.isArray(this.state.data)) {
-        this.state.data.forEach(d => {
-          let componentMaybe = this.barMap.get(d.groupId);
+  const clearOnTouch = new Set(["text", "h4", "div", "svg"]);
+  const svgTouch = evt => {
+    if (clearOnTouch.has(evt.target.tagName.toLowerCase())) {
+      if (graphData) {
+        graphData.forEach(d => {
+          let componentMaybe = barMap.get(d.groupId);
           componentMaybe && componentMaybe.hideTooltip();
         });
       }
     }
   };
 
-  render() {
-    let margin = { top: 20, right: 10, bottom: 180, left: 0 };
-    let { width, height, drilldown, chartIndex, header } = this.props;
-    let { data, excluding } = this.state;
+  const margin = { top: 20, right: 10, bottom: 180, left: 0 };
 
-    if (!data || !data.length) {
-      return null;
-    }
-    let fullData = data;
-
-    data = data.filter(d => !excluding[d.groupId]);
-    width = Math.min(width, data.length * 110 + 60);
-
-    let dataValues = data.map(({ count }) => count);
-    let displayValues = data.map(({ display }) => display);
-    let chartHeight = height - margin.top - margin.bottom;
-    let dataMax = max(dataValues);
-    let dataScale = scaleLinear()
-      .domain([0, dataMax])
-      .range([0, chartHeight]);
-    let scaleX = scaleBand()
-      .domain(displayValues)
-      .range([0, width])
-      .paddingInner([0.1])
-      .paddingOuter([0.3])
-      .align([0.5]);
-    let svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
-
-    let excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
-    return (
-      <div
-        ref={el => {
-          this.topRef(el);
-          this.el = el;
-        }}
-      >
-        <div style={{ ...width, height }}>
-          <div>
-            <h4 style={{ display: "inline" }}>{header}</h4>
-            {excludedCount ? (
-              <span style={{ marginLeft: "10px" }}>
-                Excluding:{" "}
-                {fullData
-                  .filter(d => excluding[d.groupId])
-                  .map((d, i, arr) => (
-                    <span style={{ marginLeft: "10px" }}>
-                      {d.display}{" "}
-                      <a style={{ color: "black" }} onClick={() => this.restoreBar(d.groupId)}>
-                        <i className="far fa-redo" />
-                      </a>
-                    </span>
-                  ))}
-              </span>
-            ) : null}
-          </div>
-          <svg style={svgStyle} width={width} height={height}>
-            <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
-              {data
-                .filter(d => !this.state.excluding[d.groupId])
-                .map((d, i) => (
-                  <Bar
-                    ref={el => this.barMap.set(d.groupId, el)}
-                    drilldown={drilldown}
-                    chartIndex={chartIndex}
-                    removeBar={this.removeBar}
-                    key={d.groupId}
-                    index={i}
-                    data={d}
-                    count={data.length}
-                    x={scaleX(d.display)}
-                    y={0}
-                    width={scaleX.bandwidth()}
-                    height={dataScale(d.count)}
-                    graphWidth={width}
-                    adjustTooltip={this.state.left}
-                  />
-                ))}
-            </g>
-            <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
-              <Axis scale={scaleX} transform={`translate(0, ${height})`} />
-            </g>
-          </svg>
-        </div>
-        <hr />
-      </div>
-    );
+  if (!graphData || !graphData.length) {
+    return null;
   }
-}
+
+  const showingData = graphData.filter(d => !excluding[d.groupId]);
+  width = Math.min(width, showingData.length * 110 + 60);
+
+  const dataValues = showingData.map(({ count }) => count);
+  const displayValues = showingData.map(({ display }) => display);
+  const chartHeight = height - margin.top - margin.bottom;
+  const dataMax = max(dataValues);
+  const dataScale = scaleLinear()
+    .domain([0, dataMax])
+    .range([0, chartHeight]);
+  const scaleX = scaleBand()
+    .domain(displayValues)
+    .range([0, width])
+    .paddingInner([0.1])
+    .paddingOuter([0.3])
+    .align([0.5]);
+  const svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
+
+  const excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
+  return (
+    <div ref={topRef}>
+      <div style={{ ...width, height }}>
+        <div>
+          <h4 style={{ display: "inline" }}>{header}</h4>
+          {excludedCount ? (
+            <span style={{ marginLeft: "10px" }}>
+              Excluding:&nbsp;
+              {graphData
+                .filter(d => excluding[d.groupId])
+                .map(d => (
+                  <span style={{ marginLeft: "10px" }}>
+                    {d.display}{" "}
+                    <a style={{ color: "black" }} onClick={() => restoreBar(d.groupId)}>
+                      <i className="far fa-redo" />
+                    </a>
+                  </span>
+                ))}
+            </span>
+          ) : null}
+        </div>
+        <svg style={svgStyle} width={width} height={height}>
+          <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
+            {showingData
+              .filter(d => !excluding[d.groupId])
+              .map((d, i) => (
+                <Bar
+                  ref={el => barMap.set(d.groupId, el)}
+                  drilldown={drilldown}
+                  chartIndex={chartIndex}
+                  removeBar={removeBar}
+                  key={d.groupId}
+                  index={i}
+                  data={d}
+                  count={showingData.length}
+                  x={scaleX(d.display)}
+                  y={0}
+                  width={scaleX.bandwidth()}
+                  height={dataScale(d.count)}
+                  graphWidth={width}
+                  adjustTooltip={left}
+                />
+              ))}
+          </g>
+          <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+            <Axis scale={scaleX} transform={`translate(0, ${height})`} />
+          </g>
+        </svg>
+      </div>
+      <hr />
+    </div>
+  );
+});
+
+export default BarChart;

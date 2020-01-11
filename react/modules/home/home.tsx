@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useState, useEffect } from "react";
+import React, { FunctionComponent, useContext, useState, useEffect, FC } from "react";
 import Measure from "react-measure";
 import "d3-transition";
 
@@ -70,7 +70,7 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   );
 };
 
-const ChartHolder: FunctionComponent<{}> = props => {
+const ChartHolder: FC<{}> = props => {
   const { subjects, subjectHash } = useStackedSubjects();
   const [chartPackets, setChartPackets] = useState([{ subjects, header: "All books" }]);
   const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
