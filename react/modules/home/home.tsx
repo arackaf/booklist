@@ -9,6 +9,7 @@ import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
 import { Subject } from "graphql-typings";
+import { SectionLoading } from "app/components/loading";
 
 const MainHomePane = props => (
   <div>
@@ -25,15 +26,9 @@ const MainHomePane = props => (
 const MAX_CHART_WIDTH = 1100;
 
 const HomeIfLoggedIn: FunctionComponent<{}> = props => {
-  const [state, setState] = useState({ chartPackets: [], chartWidth: MAX_CHART_WIDTH });
   const { subjectsLoaded, subjects } = useStackedSubjects();
-
-  const getDrilldownChart = (index, subjects, header) => {
-    setState({ ...state, chartPackets: [...state.chartPackets.slice(0, index + 1), { subjects, header }] });
-  };
   const [tab, setTab] = useState("vis");
 
-  const { chartPackets } = state;
   return (
     <MainHomePane>
       <div className="tab-headers">
@@ -62,17 +57,15 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
                   It looks like you haven't entered any books yet. Once you do, you'll see info about your library here.
                 </div>
               )
-            ) : null //loading
+            ) : (
+              <SectionLoading style={{ position: "fixed" }} />
+            )
           ) : null /* tab not active - render nothing */}
         </div>
         <div className={"tab-pane " + (tab == "rec" ? "active" : "")}>
           <RecommendMain />
         </div>
       </div>
-
-      {/* <Tab name="search" caption="Discover books">
-        </Tab>
-      </Tabs> */}
     </MainHomePane>
   );
 };
@@ -81,6 +74,10 @@ const ChartHolder: FunctionComponent<{}> = props => {
   const { subjects, subjectHash } = useStackedSubjects();
   const [chartPackets, setChartPackets] = useState([{ subjects, header: "All books" }]);
   const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
+
+  const getDrilldownChart = (index, subjects, header) => {
+    setChartPackets(charts => [...charts.slice(0, index + 1), { subjects, header }]);
+  };
 
   return (
     <Measure
@@ -94,14 +91,7 @@ const ChartHolder: FunctionComponent<{}> = props => {
       {({ measureRef }) => (
         <div ref={measureRef}>
           {chartPackets.map((packet, i) => (
-            <BarChart
-              key={i}
-              subjectHash={subjectHash}
-              {...packet}
-              chartIndex={i}
-              width={chartWidth}
-              height={600}
-            />
+            <BarChart key={i} drilldown={getDrilldownChart} subjectHash={subjectHash} {...packet} chartIndex={i} width={chartWidth} height={600} />
           ))}
         </div>
       )}
