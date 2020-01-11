@@ -3,7 +3,7 @@ import { graphqlClient } from "util/graphql";
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useMemo } from "react";
 import { SubjectsContext } from "./renderUI";
 import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
@@ -28,7 +28,7 @@ graphqlClient.subscribeMutation([
 ]);
 
 export function useSubjectsState(app: AppState) {
-  let { loading, loaded, data } = useQuery(
+  let { loaded, data } = useQuery(
     buildQuery(AllSubjectsQuery, {}, { onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } })
   );
   const subjects = data && data.allSubjects && data.allSubjects.Subjects;

@@ -54,7 +54,7 @@
     "react-dnd-html5-backend": "^5.0.1",
     "react-dom": "16.9.0",
     "react-dropzone": "4.2.5",
-    "react-measure": "2.0.2",
+    "react-measure": "2.3.0",
     "react-motion": "0.5.2",
     "react-spring": "5.7.1",
     "react-transition-group": "2.3.1",

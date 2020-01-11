@@ -1,13 +1,14 @@
-import React, { FunctionComponent, useContext, useState, useEffect } from "react";
+import React, { FunctionComponent, useContext, useState, FC } from "react";
 import Measure from "react-measure";
 import "d3-transition";
 
 import BarChart from "./components/barChart";
 import { AppContext } from "app/renderUI";
-import { useStackedSubjects, useSubjectsState } from "app/subjectsState";
+import { useStackedSubjects } from "app/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
+import { SectionLoading } from "app/components/loading";
 
 const MainHomePane = props => (
   <div>
@@ -24,24 +25,9 @@ const MainHomePane = props => (
 const MAX_CHART_WIDTH = 1100;
 
 const HomeIfLoggedIn: FunctionComponent<{}> = props => {
-  const [state, setState] = useState({ chartPackets: [], chartWidth: MAX_CHART_WIDTH });
-  const { subjects, subjectHash, subjectsLoaded } = useStackedSubjects();
-
-  useEffect(() => {
-    if (subjectsLoaded) {
-      getTopChart();
-    }
-  }, [subjectsLoaded]);
-
-  const getTopChart = () => {
-    setState({ ...state, chartPackets: [{ subjects: subjects, header: "All books" }] });
-  };
-  const getDrilldownChart = (index, subjects, header) => {
-    setState({ ...state, chartPackets: [...state.chartPackets.slice(0, index + 1), { subjects, header }] });
-  };
+  const { subjectsLoaded, subjects } = useStackedSubjects();
   const [tab, setTab] = useState("vis");
 
-  const { chartPackets } = state;
   return (
     <MainHomePane>
       <div className="tab-headers">
@@ -62,43 +48,53 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
         <div className={"tab-pane " + (tab == "vis" ? "active" : "")}>
           <br />
           {tab == "vis" ? (
-            <Measure
-              client
-              onResize={({ client }) => {
-                if (client.width != state.chartWidth && client.width <= MAX_CHART_WIDTH) {
-                  setState({ ...state, chartWidth: client.width });
-                }
-              }}
-            >
-              {({ measureRef }) => (
-                <div ref={measureRef}>
-                  {subjectsLoaded
-                    ? chartPackets.map((packet, i) => (
-                        <BarChart
-                          key={i}
-                          {...packet}
-                          {...{ subjectHash, subjectsLoaded }}
-                          drilldown={getDrilldownChart}
-                          chartIndex={i}
-                          width={state.chartWidth}
-                          height={600}
-                        />
-                      ))
-                    : null}
+            subjectsLoaded ? (
+              subjects.length ? (
+                <ChartHolder />
+              ) : (
+                <div className="alert alert-warning">
+                  It looks like you haven't entered any books yet. Once you do, you'll see info about your library here.
                 </div>
-              )}
-            </Measure>
-          ) : null}
+              )
+            ) : (
+              <SectionLoading style={{ position: "fixed" }} />
+            )
+          ) : null /* tab not active - render nothing */}
         </div>
         <div className={"tab-pane " + (tab == "rec" ? "active" : "")}>
           <RecommendMain />
         </div>
       </div>
-
-      {/* <Tab name="search" caption="Discover books">
-        </Tab>
-      </Tabs> */}
     </MainHomePane>
+  );
+};
+
+const ChartHolder: FC<{}> = props => {
+  const { subjects, subjectHash } = useStackedSubjects();
+  const [chartPackets, setChartPackets] = useState([{ subjects, header: "All books" }]);
+  const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
+
+  const getDrilldownChart = (index, subjects, header) => {
+    setChartPackets(charts => [...charts.slice(0, index + 1), { subjects, header }]);
+  };
+
+  return (
+    <Measure
+      client
+      onResize={({ client }) => {
+        if (client.width != chartWidth && client.width <= MAX_CHART_WIDTH) {
+          setChartWidth(client.width);
+        }
+      }}
+    >
+      {({ measureRef }) => (
+        <div ref={measureRef}>
+          {chartPackets.map((packet, i) => (
+            <BarChart key={i} drilldown={getDrilldownChart} subjectHash={subjectHash} {...packet} chartIndex={i} width={chartWidth} height={600} />
+          ))}
+        </div>
+      )}
+    </Measure>
   );
 };
 
