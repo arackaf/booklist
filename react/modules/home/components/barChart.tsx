@@ -10,6 +10,10 @@ import Axis from "./axis";
 import barCharQuery from "graphQL/home/barChart.graphql";
 import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from "app/subjectsState";
 import { useQuery, buildQuery } from "micro-graphql-react";
+import { graphqlClient } from "util/graphql";
+import { clearCache } from "util/graphqlHelpers";
+
+graphqlClient.subscribeMutation([/(update|delete)Subjects?/, /(update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) })));
 
 const stackGraphData = (subjectHash, subjectIds, data) => {
   if (!data) return null;
