@@ -76,14 +76,14 @@ export const useBooks = () => {
     },
     {
       when: /deleteBook/,
-      run: ({ refresh }, res, req) => {
-        syncDeletes(GetBooksQuery, [req._id], "allBooks", "Books", {
-          onDelete: ({ count, resultSet }) => {
-            let meta = delve(resultSet, "allBooks.Meta");
-            meta && (meta.count -= count);
-          }
-        });
-        refresh();
+      run: ({ softReset, currentResults, refresh }, res, req) => {
+        let toRemove = currentResults.allBooks.Books.find(b => b._id == req._id);
+        if (toRemove){
+          currentResults.allBooks.Books = currentResults.allBooks.Books.filter(b => b != toRemove);
+          currentResults.allBooks.Meta.count--;
+        }
+
+        softReset(currentResults);
       }
     }
   ];
