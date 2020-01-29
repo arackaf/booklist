@@ -30,7 +30,7 @@ const SongList = props => {
   };
 
   const addSong = packet => {
-    ajaxUtil.post("/songs/addSong", packet).then(res => {
+    return ajaxUtil.post("/songs/addSong", packet).then(res => {
       setNewSong({ singers: [] });
       setAdding(false);
     });
