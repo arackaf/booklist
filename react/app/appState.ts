@@ -42,7 +42,7 @@ const initialState = {
   publicUserId: initialSearchState.userId,
   publicName: "",
   publicBooksHeader: "",
-  isPublic: false,
+  isPublic: !!initialSearchState.userId,
   module: "",
   online: navigator.onLine,
   colorTheme: localStorageManager.get("color-theme", "scheme5")

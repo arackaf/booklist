@@ -9,7 +9,7 @@ export function getCurrentHistoryState() {
   let parsed = queryString.parse(location.search);
 
   if ("userId" in parsed && !parsed.userId) {
-    parsed.userId = -1; //make it truthy so we know it's there
+    parsed.userId = "-1"; //make it truthy so we know it's there
   }
 
   return {
