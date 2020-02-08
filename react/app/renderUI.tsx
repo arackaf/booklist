@@ -1,4 +1,4 @@
-import React, { createContext, useContext, FunctionComponent, useEffect } from "react";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense } from "react";
 import { render } from "react-dom";
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
@@ -6,6 +6,7 @@ import { useColors } from "./colorsState";
 import { SubjectState, useSubjectsState } from "./subjectsState";
 import { history, loadCurrentModule } from "reactStartup";
 import localStorageManager from "util/localStorage";
+import Loading from "./components/loading";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
@@ -39,13 +40,13 @@ export function clearUI() {
   render(<div />, document.getElementById("home"));
 }
 
-export function renderUI(component = null) {
-  render(<App component={component} />, document.getElementById("home"));
+export function renderUI(Component = null) {
+  render(<App Component={Component} />, document.getElementById("home"));
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 
-const App = ({ component = null } = {}) => {
+const App = ({ Component = null } = {}) => {
   let appStatePacket = useAppState();
   let [appState, appActions] = appStatePacket;
 
@@ -67,12 +68,7 @@ const App = ({ component = null } = {}) => {
         <MainNavigationBar />
 
         <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-          {component}
-          <div style={{ visibility: "hidden" }}>
-            <button>
-              <i className="fa fa-fw fa-spin fa-spinner" />
-            </button>
-          </div>
+          <Suspense fallback={<Loading />}>{Component ? <Component /> : null}</Suspense>
         </div>
         <WellUiSwitcher />
       </div>
