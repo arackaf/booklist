@@ -2,9 +2,8 @@ import React, { createContext, useContext, FunctionComponent, useEffect, Suspens
 import { render } from "react-dom";
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
-import { useColors } from "./colorsState";
-import { SubjectState, useSubjectsState } from "./subjectsState";
-import { history, loadCurrentModule } from "reactStartup";
+import { history } from "util/urlHelpers";
+import { loadCurrentModule } from "reactStartup";
 import localStorageManager from "util/localStorage";
 import Loading from "./components/loading";
 

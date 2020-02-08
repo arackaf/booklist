@@ -1,4 +1,4 @@
-import { setSearchValues, getCurrentHistoryState } from "reactStartup";
+import { setSearchValues, getCurrentHistoryState } from "util/urlHelpers";
 
 export const applyFilters = (nextState: any) => {
   let filterSubjectsVal = nextState.subjects.join("-");

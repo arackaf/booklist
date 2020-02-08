@@ -27,7 +27,7 @@ const NavBarItem = props => {
 const MainNavigationBar: FunctionComponent<{}> = props => {
   const logout = () => {
     localStorage.setItem("reduxState", "");
-    ajaxUtil.post("/react/logout", {}, () => window.location.reload());
+    ajaxUtil.post("/react/logout", {}, () => (window as any).location = "/");
   };
 
   let isAdminUser = isAdmin();

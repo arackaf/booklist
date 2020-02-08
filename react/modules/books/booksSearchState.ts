@@ -1,6 +1,6 @@
 import shallowEqual from "shallow-equal/objects";
 
-import { getCurrentHistoryState, history } from "reactStartup";
+import { getCurrentHistoryState, history } from "util/urlHelpers";
 import { useMemo, useEffect, useReducer } from "react";
 import { useTagsState } from "app/tagsState";
 

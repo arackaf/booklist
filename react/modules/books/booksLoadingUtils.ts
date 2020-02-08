@@ -1,4 +1,4 @@
-import { getCurrentHistoryState } from "reactStartup";
+import { getCurrentHistoryState } from "util/urlHelpers";
 
 export const defaultSearchValuesHash = {
   search: "",

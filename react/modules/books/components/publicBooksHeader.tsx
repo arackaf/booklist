@@ -15,7 +15,7 @@ export default () => {
 };
 
 const HeaderContent = ({ publicBooksHeader, publicName }: any) => {
-  let booksHeader = publicBooksHeader || `${publicName}'s Books`;
+  let booksHeader = !publicBooksHeader && !publicName ? "User Not Found" : publicBooksHeader || `${publicName}'s Books`;
 
   return <h4 style={{ marginRight: "5px", marginBottom: 0, alignSelf: "center" }}>{booksHeader}</h4>;
 };
