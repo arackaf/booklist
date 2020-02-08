@@ -3,7 +3,7 @@ import "@reach/dialog/styles.css";
 import "./site-styles.scss";
 
 import { renderUI } from "app/renderUI";
-import { createElement } from "react";
+import { lazy, createElement } from "react";
 import queryString from "query-string";
 import getPublicUser from "graphQL/getPublicUser.graphql";
 
@@ -29,33 +29,44 @@ export const history = createHistory();
 const validModules = new Set(["books", "scan", "home", "activate", "view", "subjects", "settings", "styledemo", "admin", "jr"]);
 let initial = true;
 
-export const getModulePromise = moduleToLoad => {
+const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "./modules/activate/activate"));
+const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "./modules/authenticate/authenticate"));
+const BooksComponent = lazy(() => import(/* webpackChunkName: "books-module" */ "./modules/books/books"));
+const HomeComponent = lazy(() => import(/* webpackChunkName: "home-module" */ "./modules/home/home"));
+const ScanComponent = lazy(() => import(/* webpackChunkName: "scan-module" */ "./modules/scan/scan"));
+const SubjectsComponent = lazy(() => import(/* webpackChunkName: "subject-module" */ "./modules/subjects/subjects"));
+const StyleDemoComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "./modules/styledemo/styledemo"));
+const SettingsComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings"));
+const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "./modules/admin/admin"));
+const JrComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "./modules/jr/songEdit"));
+
+const getModuleComponent = moduleToLoad => {
   let adminUser = isAdmin();
   if (moduleToLoad == "admin" && !adminUser) {
-    return goto("home");
+    return HomeComponent;
   }
   switch (moduleToLoad.toLowerCase()) {
     case "activate":
-      return import(/* webpackChunkName: "small-modules" */ "./modules/activate/activate");
+      return ActivateComponent;
     case "authenticate":
-      return import(/* webpackChunkName: "small-modules" */ "./modules/authenticate/authenticate");
+      return AuthenticateComponent;
     case "books":
       booksPreload();
-      return import(/* webpackChunkName: "books-module" */ "./modules/books/books");
+      return BooksComponent;
     case "home":
-      return import(/* webpackChunkName: "home-module" */ "./modules/home/home");
+      return HomeComponent;
     case "scan":
-      return import(/* webpackChunkName: "scan-module" */ "./modules/scan/scan");
+      return ScanComponent;
     case "subjects":
-      return import(/* webpackChunkName: "subject-module" */ "./modules/subjects/subjects");
+      return SubjectsComponent;
     case "styledemo":
-      return import(/* webpackChunkName: "admin-modules" */ "./modules/styledemo/styledemo");
+      return StyleDemoComponent;
     case "settings":
-      return import(/* webpackChunkName: "small-modules" */ "./modules/settings/settings");
+      return SettingsComponent;
     case "admin":
-      return import(/* webpackChunkName: "admin-modules" */ "./modules/admin/admin");
+      return AdminComponent;
     case "jr":
-      return import(/* webpackChunkName: "admin-modules" */ "./modules/jr/songEdit");
+      return JrComponent;
   }
 };
 
@@ -111,10 +122,10 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
   }
   currentModule = moduleToLoad;
 
-  let modulePromise = getModulePromise(moduleToLoad);
+  let ModuleComponent = getModuleComponent(moduleToLoad);
 
-  Promise.all([modulePromise, publicUserPromise])
-    .then(([{ default: ModuleComponent }, publicUserInfo]: [any, any]) => {
+  Promise.all([publicUserPromise])
+    .then(([publicUserInfo]: [any, any]) => {
       if (currentModule != moduleToLoad) return;
 
       setModule(currentModule);
@@ -122,7 +133,7 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
       if (publicUserInfo) {
         setPublicInfo({ ...publicUserInfo, userId });
       }
-      renderUI(createElement(ModuleComponent));
+      renderUI(ModuleComponent);
     })
     .catch(() => {});
 }
