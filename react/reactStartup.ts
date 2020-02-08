@@ -3,9 +3,8 @@ import "@reach/dialog/styles.css";
 import "./site-styles.scss";
 
 import { renderUI } from "app/renderUI";
-import { lazy, createElement } from "react";
+import { lazy } from "react";
 import queryString from "query-string";
-import getPublicUser from "graphQL/getPublicUser.graphql";
 
 import booksPreload from "./modules/books/booksPreload";
 
@@ -22,7 +21,6 @@ import { AppState } from "app/appState";
 setupServiceWorker();
 
 let currentModule;
-let publicUserCache = {};
 
 export const history = createHistory();
 
@@ -68,11 +66,13 @@ const getModuleComponent = moduleToLoad => {
     case "jr":
       return JrComponent;
   }
+
+  return HomeComponent;
 };
 
 renderUI();
 
-export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
+export function loadCurrentModule(app: AppState, { setModule, setPublicId }) {
   let location = history.location;
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
   let moduleToLoad = originalModule || "books";
@@ -104,7 +104,9 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
       return;
     }
 
-    var publicUserPromise = userId ? publicUserCache[userId] || (publicUserCache[userId] = fetchPublicUserInfo(userId)) : null;
+    if (userId) {
+      setPublicId(userId);
+    }
 
     if (moduleToLoad === "view") {
       moduleToLoad = "books";
@@ -124,18 +126,10 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicInfo }) {
 
   let ModuleComponent = getModuleComponent(moduleToLoad);
 
-  Promise.all([publicUserPromise])
-    .then(([publicUserInfo]: [any, any]) => {
-      if (currentModule != moduleToLoad) return;
+  if (currentModule != moduleToLoad) return;
 
-      setModule(currentModule);
-
-      if (publicUserInfo) {
-        setPublicInfo({ ...publicUserInfo, userId });
-      }
-      renderUI(ModuleComponent);
-    })
-    .catch(() => {});
+  setModule(currentModule);
+  renderUI(ModuleComponent);
 }
 
 export function goto(module) {
@@ -164,14 +158,5 @@ export function setSearchValues(state) {
   history.push({
     pathname: history.location.pathname,
     search: queryString.stringify(newState)
-  });
-}
-
-function fetchPublicUserInfo(userId) {
-  return new Promise((res, rej) => {
-    graphqlClient.runQuery(getPublicUser, { _id: userId, cache: 5 }).then(resp => {
-      let publicUser = resp.data && resp.data.getPublicUser && resp.data.getPublicUser.PublicUser;
-      publicUser ? res(publicUser) : rej();
-    });
   });
 }
