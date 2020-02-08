@@ -39,7 +39,7 @@ export function useBooksSearchState(): [BookSearchState, any] {
   useEffect(() => {
     return history.listen(() => {
       const { searchState, pathname } = getCurrentHistoryState();
-      if (pathname == "/" || pathname == "/books") {
+      if (pathname == "/" || pathname == "/books" || pathname == "/view") {
         dispatch({ type: "HASH_CHANGED", filters: searchState });
       }
     });

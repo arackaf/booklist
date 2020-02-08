@@ -35,7 +35,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let [{ isPublic, module, isLoggedIn }] = useContext(AppContext);
   let isHome = module == "home";
   let isBookEntry = module == "scan";
-  let isBookList = module == "books";
+  let isBookList = module == "books" || module == "view";
   let isSubjects = module == "subjects";
   let isLoginModule = module == "authenticate";
   let isSettings = module == "settings";
