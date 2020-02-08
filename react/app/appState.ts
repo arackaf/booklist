@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
 import { getStatePacket } from "util/stateManagementHelpers";
+import { getCurrentHistoryState } from "util/urlHelpers";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -33,10 +34,12 @@ const IS_OFFLINE = "root.IS_OFFLINE";
 const IS_ONLINE = "root.IS_ONLINE";
 export const SET_THEME = "root.SET_THEME";
 
+let initialSearchState = getCurrentHistoryState().searchState;
+
 const initialState = {
   ...uiSettings,
   ...authSettings,
-  publicUserId: void 0,
+  publicUserId: initialSearchState.userId,
   publicName: "",
   publicBooksHeader: "",
   isPublic: false,
