@@ -8,8 +8,6 @@ import { lazy } from "react";
 import { history } from "util/urlHelpers";
 import booksPreload from "./modules/books/booksPreload";
 
-export type MutationType = { runMutation: any; dispatch: any; running: any };
-
 import "util/ajaxUtil";
 
 import setupServiceWorker from "./util/setupServiceWorker";
@@ -82,17 +80,15 @@ export function loadCurrentModule(app: AppState, { setModule, setPublicId }) {
   }
 
   //changing public viewing status - reload page
-  if (app.publicUserId != userId) {
+  if (userId != app.publicUserId) {
     window.location.reload();
     return;
   }
 
   if (moduleToLoad !== currentModule) {
-    currentModule = moduleToLoad;
-
-    if (currentModule != moduleToLoad) return;
-    setModule(currentModule);
+    setModule(moduleToLoad);
     renderUI(getModuleComponent(moduleToLoad));
+    currentModule = moduleToLoad;
   }
 }
 
