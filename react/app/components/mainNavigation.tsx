@@ -27,7 +27,7 @@ const NavBarItem = props => {
 const MainNavigationBar: FunctionComponent<{}> = props => {
   const logout = () => {
     localStorage.setItem("reduxState", "");
-    ajaxUtil.post("/react/logout", {}, () => window.location.reload());
+    ajaxUtil.post("/react/logout", {}, () => (window as any).location = "/");
   };
 
   let isAdminUser = isAdmin();
@@ -35,7 +35,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let [{ isPublic, module, isLoggedIn }] = useContext(AppContext);
   let isHome = module == "home";
   let isBookEntry = module == "scan";
-  let isBookList = module == "books";
+  let isBookList = module == "books" || module == "view";
   let isSubjects = module == "subjects";
   let isLoginModule = module == "authenticate";
   let isSettings = module == "settings";

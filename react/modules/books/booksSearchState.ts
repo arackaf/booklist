@@ -1,6 +1,6 @@
 import shallowEqual from "shallow-equal/objects";
 
-import { getCurrentHistoryState, history } from "reactStartup";
+import { getCurrentHistoryState, history } from "util/urlHelpers";
 import { useMemo, useEffect, useReducer } from "react";
 import { useTagsState } from "app/tagsState";
 
@@ -39,7 +39,7 @@ export function useBooksSearchState(): [BookSearchState, any] {
   useEffect(() => {
     return history.listen(() => {
       const { searchState, pathname } = getCurrentHistoryState();
-      if (pathname == "/" || pathname == "/books") {
+      if (pathname == "/" || pathname == "/books" || pathname == "/view") {
         dispatch({ type: "HASH_CHANGED", filters: searchState });
       }
     });

@@ -1,4 +1,4 @@
-import { history, getCurrentHistoryState } from "reactStartup";
+import { history, getCurrentHistoryState } from "util/urlHelpers";
 import React, { Component, SFC, useContext } from "react";
 import { AppContext } from "app/renderUI";
 
