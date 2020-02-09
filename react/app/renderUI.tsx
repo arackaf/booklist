@@ -1,15 +1,15 @@
-import React, { createContext, useContext, FunctionComponent, useEffect } from "react";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState } from "react";
 import { render } from "react-dom";
 import MainNavigationBar from "app/components/mainNavigation";
-import { useAppState, AppState } from "./appState";
-import { useColors } from "./colorsState";
-import { SubjectState, useSubjectsState } from "./subjectsState";
-import { history, loadCurrentModule } from "reactStartup";
+import { useAppState, AppState, getCurrentModule } from "./appState";
 import localStorageManager from "util/localStorage";
+import Loading from "./components/loading";
+import { getModuleComponent } from "../routing";
+import { history, getCurrentHistoryState } from "util/urlHelpers";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
-const MobileMeta = props => {
+const MobileMeta = () => {
   const [app] = useContext(AppContext);
   return (
     <meta
@@ -19,7 +19,7 @@ const MobileMeta = props => {
   );
 };
 
-const WellUiSwitcher: FunctionComponent<{}> = props => {
+const WellUiSwitcher: FunctionComponent<{}> = () => {
   const [app, { requestDesktop, requestMobile }] = useContext(AppContext);
 
   const showChooseDesktop = app.isMobile && app.showingMobile;
@@ -39,26 +39,35 @@ export function clearUI() {
   render(<div />, document.getElementById("home"));
 }
 
-export function renderUI(component = null) {
-  render(<App component={component} />, document.getElementById("home"));
+export function renderUI(Component = null) {
+  render(<App />, document.getElementById("home"));
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 
-const App = ({ component = null } = {}) => {
+const App = () => {
   let appStatePacket = useAppState();
   let [appState, appActions] = appStatePacket;
+
+  let Component = getModuleComponent(appState.module);
+
+  useEffect(() => {
+    history.listen(location => {
+      let publicUserId = getCurrentHistoryState().searchState.userId;
+
+      //changing public viewing status - reload page
+      if (publicUserId != appState.publicUserId) {
+        return location.reload();
+      }
+
+      appActions.setModule(getCurrentModule());
+    });
+  }, []);
 
   useEffect(() => {
     window.addEventListener("offline", appActions.isOffline);
     window.addEventListener("online", appActions.isOnline);
-    loadCurrentModule(appState, appActions);
   }, []);
-
-  useEffect(() => {
-    let unlisten = history.listen(location => loadCurrentModule(appState, appActions));
-    return () => unlisten();
-  }, [appState]);
 
   return (
     <AppContext.Provider value={appStatePacket}>
@@ -67,17 +76,10 @@ const App = ({ component = null } = {}) => {
         <MainNavigationBar />
 
         <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-          {component}
-          <div style={{ visibility: "hidden" }}>
-            <button>
-              <i className="fa fa-fw fa-spin fa-spinner" />
-            </button>
-          </div>
+          <Suspense fallback={<Loading />}>{Component ? <Component /> : null}</Suspense>
         </div>
         <WellUiSwitcher />
       </div>
     </AppContext.Provider>
   );
 };
-
-const LoggedInApp = ({ component }) => {};

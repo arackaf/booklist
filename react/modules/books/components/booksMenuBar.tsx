@@ -9,6 +9,8 @@ import styles from "./styles.module.css";
 import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
 const { searchInput } = styles;
 
+import PublicBooksHeader from "./publicBooksHeader";
+
 interface IAddedMenuProps {
   editTags: any;
   editSubjects: any;
@@ -51,8 +53,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   };
 
   let { page, pageSize, activeFilterCount } = bookSearchState;
-  let { isPublic, publicBooksHeader, publicName, online } = appState;
-  let booksHeader = isPublic ? publicBooksHeader || `${publicName}'s Books` : "Your Books";
+  let { isPublic, online } = appState;
 
   let canPageUp = online ? page < totalPages : resultsCount == pageSize;
   let canPageDown = page > 1;
@@ -74,7 +75,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
     <div>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
-          {isPublic ? <h4 style={{ marginRight: "5px", marginBottom: 0, alignSelf: "center" }}>{booksHeader}</h4> : null}
+          {isPublic ? <PublicBooksHeader /> : null}
           {!selectedBooksCount ? (
             <div className="visible-xs" style={{ marginRight: "5px" }}>
               <div>

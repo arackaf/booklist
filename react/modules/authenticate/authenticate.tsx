@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useRef, useState, useContext, useEffect } from "react";
-import { loadCurrentModule } from "reactStartup";
 import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
@@ -20,10 +19,6 @@ const Login: FunctionComponent<{}> = props => {
   const confirmPasswordEl = useRef(null);
 
   const [state, setState] = useState({ newUser: false, errorCode: null, pendingActivation: false, invalidEmail: false, running: false });
-  const [app, actions] = useContext(AppContext);
-  useEffect(() => {
-    loadCurrentModule(app, appActions);
-  }, [app.userId]);
 
   const login = evt => {
     evt.preventDefault();
