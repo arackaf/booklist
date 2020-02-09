@@ -1,5 +1,8 @@
-import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState } from "react";
-import { render } from "react-dom";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState, lazy } from "react";
+const { useTransition } = React as any;
+
+import ReactDOM from "react-dom";
+const { createRoot } = ReactDOM as any;
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, getCurrentModule } from "./appState";
 import localStorageManager from "util/localStorage";
@@ -35,19 +38,16 @@ const WellUiSwitcher: FunctionComponent<{}> = () => {
   );
 };
 
-export function clearUI() {
-  render(<div />, document.getElementById("home"));
-}
-
-export function renderUI(Component = null) {
-  render(<App />, document.getElementById("home"));
+export function renderUI() {
+  createRoot(document.getElementById("home")).render(<App />);
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 
 const App = () => {
+  const [startTransition, isPending] = useTransition({ timeoutMs: 4000 });
   let appStatePacket = useAppState();
-  let [appState, appActions] = appStatePacket;
+  let [appState, appActions, dispatch] = appStatePacket;
 
   let Component = getModuleComponent(appState.module);
 
@@ -60,7 +60,9 @@ const App = () => {
         return location.reload();
       }
 
-      appActions.setModule(getCurrentModule());
+      startTransition(() => {
+        dispatch({ type: "root.SET_MODULE", module: getCurrentModule() });
+      });
     });
   }, []);
 
@@ -75,11 +77,21 @@ const App = () => {
         <MobileMeta />
         <MainNavigationBar />
 
-        <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-          <Suspense fallback={<Loading />}>{Component ? <Component /> : null}</Suspense>
-        </div>
+        {isPending ? <Loading /> : null}
+        <Suspense fallback={<Loading />}>
+          <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+            {Component ? <Component /> : null}
+          </div>
+        </Suspense>
+
         <WellUiSwitcher />
       </div>
     </AppContext.Provider>
   );
 };
+
+const MainContent = ({ Component }) => (
+  <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+    {Component ? <Component /> : null}
+  </div>
+);
