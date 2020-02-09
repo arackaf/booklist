@@ -140,18 +140,5 @@ export function useAppState(): [AppState, any, any] {
     document.body.className = colorTheme;
   }, [colorTheme]);
 
-  useEffect(() => {
-    history.listen(location => {
-      let publicUserId = getCurrentHistoryState().searchState.userId;
-
-      //changing public viewing status - reload page
-      if (publicUserId != result[0].publicUserId) {
-        return window.location.reload();
-      }
-
-      result[2]({ type: SET_MODULE, module: getCurrentModule() });
-    });
-  }, []);
-
   return result;
 }
