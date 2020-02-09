@@ -112,8 +112,14 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
 
   const margin = { top: 20, right: 10, bottom: 180, left: 0 };
 
-  if (!graphData || !graphData.length) {
+  if (!graphData) {
     return null;
+  } else if (!graphData.length) {
+    return (
+      <div className="alert alert-warning">
+        It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
+      </div>
+    );
   }
 
   const showingData = graphData.filter(d => !excluding[d.groupId]);
@@ -135,6 +141,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
 
   const excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
+
   return (
     <div ref={topRef}>
       <div style={{ ...width, height }}>
