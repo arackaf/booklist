@@ -2,7 +2,7 @@ import {lazy} from "react";
 
 import booksPreload from "./modules/books/booksPreload";
 
-import { isLoggedIn, isAdmin } from "util/loginStatus";
+import { isAdmin } from "util/loginStatus";
 
 const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "./modules/activate/activate"));
 const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "./modules/authenticate/authenticate"));
