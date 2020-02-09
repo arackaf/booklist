@@ -53,7 +53,7 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
                 <ChartHolder />
               ) : (
                 <div className="alert alert-warning">
-                  It looks like you haven't entered any books yet. Once you do, you'll see info about your library here.
+                  It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
                 </div>
               )
             ) : (
