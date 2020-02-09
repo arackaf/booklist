@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
 import { getStatePacket } from "util/stateManagementHelpers";
-import { getCurrentHistoryState } from "util/urlHelpers";
+import { getCurrentHistoryState, history } from "util/urlHelpers";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -36,6 +36,22 @@ export const SET_THEME = "root.SET_THEME";
 
 let initialSearchState = getCurrentHistoryState().searchState;
 
+export function getCurrentModule() {
+  let location = history.location;
+  let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
+  let { logged_in, userId: currentUserId } = isLoggedIn();
+  let moduleToLoad = originalModule || (logged_in ? "books" : "home");
+  let publicModule = moduleToLoad == "home" || moduleToLoad == "view" || moduleToLoad == "activate" || moduleToLoad == "settings";
+
+  let loggedIn = logged_in && currentUserId;
+
+  if (!loggedIn && !publicModule) {
+    moduleToLoad = "authenticate";
+  }
+
+  return moduleToLoad;
+}
+
 const initialState = {
   ...uiSettings,
   ...authSettings,
@@ -43,7 +59,7 @@ const initialState = {
   publicName: "",
   publicBooksHeader: "",
   isPublic: !!initialSearchState.userId,
-  module: "",
+  module: getCurrentModule(),
   online: navigator.onLine,
   colorTheme: localStorageManager.get("color-theme", "scheme5")
 };
@@ -101,7 +117,15 @@ const requestMobile = () => dispatch => {
 const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 const setPublicId = userId => ({ type: SET_PUBLIC_ID, userId: userId });
 
-const newLogin = () => ({ type: NEW_LOGIN });
+const newLogin = () => dispatch => { 
+  dispatch({ type: NEW_LOGIN });
+  
+  if (getCurrentModule() == "login") {
+    history.push({ pathname: "/" });
+  } else {
+    dispatch({ type: SET_MODULE, module: getCurrentModule() })
+  }
+};
 const setModule = module => ({ type: SET_MODULE, module });
 const isOnline = () => ({ type: IS_ONLINE });
 const isOffline = () => ({ type: IS_OFFLINE });
@@ -115,6 +139,19 @@ export function useAppState(): [AppState, any, any] {
     localStorageManager.set("color-theme", colorTheme);
     document.body.className = colorTheme;
   }, [colorTheme]);
+
+  useEffect(() => {
+    history.listen(location => {
+      let publicUserId = getCurrentHistoryState().searchState.userId;
+
+      //changing public viewing status - reload page
+      if (publicUserId != result[0].publicUserId) {
+        return window.location.reload();
+      }
+
+      result[2]({ type: SET_MODULE, module: getCurrentModule() });
+    });
+  }, []);
 
   return result;
 }

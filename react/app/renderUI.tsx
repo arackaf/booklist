@@ -1,11 +1,12 @@
-import React, { createContext, useContext, FunctionComponent, useEffect, Suspense } from "react";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState } from "react";
 import { render } from "react-dom";
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState } from "./appState";
-import { history } from "util/urlHelpers";
-import { loadCurrentModule } from "reactStartup";
+import { history, getCurrentHistoryState } from "util/urlHelpers";
 import localStorageManager from "util/localStorage";
 import Loading from "./components/loading";
+import { isLoggedIn } from "util/loginStatus";
+import { getModuleComponent } from "../routing";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
@@ -40,25 +41,21 @@ export function clearUI() {
 }
 
 export function renderUI(Component = null) {
-  render(<App Component={Component} />, document.getElementById("home"));
+  render(<App />, document.getElementById("home"));
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
 
-const App = ({ Component = null } = {}) => {
+const App = () => {
   let appStatePacket = useAppState();
   let [appState, appActions] = appStatePacket;
+
+  let Component = getModuleComponent(appState.module);
 
   useEffect(() => {
     window.addEventListener("offline", appActions.isOffline);
     window.addEventListener("online", appActions.isOnline);
-    loadCurrentModule(appState, appActions);
   }, []);
-
-  useEffect(() => {
-    let unlisten = history.listen(location => loadCurrentModule(appState, appActions));
-    return () => unlisten();
-  }, [appState]);
 
   return (
     <AppContext.Provider value={appStatePacket}>
