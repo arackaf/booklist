@@ -62,7 +62,7 @@ const App = () => {
       }
 
       startTransition(() => {
-        dispatch({ type: "root.SET_MODULE", module: getCurrentModule() });
+        appActions.setModule(getCurrentModule());
       });
     });
   }, []);
