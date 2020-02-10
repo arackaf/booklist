@@ -5,7 +5,7 @@ import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "./renderUI";
-import { useQuery, useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 
