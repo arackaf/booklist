@@ -3,6 +3,7 @@ const { useTransition } = React as any;
 
 import ReactDOM from "react-dom";
 const { createRoot } = ReactDOM as any;
+
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, getCurrentModule } from "./appState";
 import localStorageManager from "util/localStorage";
