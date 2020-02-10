@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, useLayoutEffect, useReducer } from "react";
+import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer } from "react";
 
 import BooksMenuBar from "./components/booksMenuBar";
 import Loading from "app/components/loading";
@@ -77,7 +77,9 @@ const BookViewingList: SFC<{}> = props => {
   const { books, booksLoading, booksLoaded, currentQuery } = useBooks();
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
-  useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
+  useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
+  // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
+  //useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
 
   const [bookSubModifying, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
