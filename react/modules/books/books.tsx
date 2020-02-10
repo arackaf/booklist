@@ -37,9 +37,7 @@ const prepBookForSaving = book => {
 export default () => {
   return (
     <div style={{}}>
-      <Suspense fallback={<Loading />}>
-        <BookViewingList />
-      </Suspense>
+      <BookViewingList />
     </div>
   );
 };
@@ -77,9 +75,9 @@ const BookViewingList: SFC<{}> = props => {
   const { books, booksLoading, booksLoaded, currentQuery } = useBooks();
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
-  useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
   //useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
+  useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
 
   const [bookSubModifying, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const editSubjectsForBook = book => openBookSubModal([book]);
