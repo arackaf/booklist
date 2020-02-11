@@ -4,7 +4,7 @@ export const history = createHistory();
 
 import queryString from "query-string";
 
-export function getCurrentHistoryState() {
+export function getCurrentUrlState() {
   let location = history.location;
   let parsed = queryString.parse(location.search);
 
@@ -19,7 +19,7 @@ export function getCurrentHistoryState() {
 }
 
 export function setSearchValues(state) {
-  let { pathname, searchState: existingSearchState } = getCurrentHistoryState();
+  let { pathname, searchState: existingSearchState } = getCurrentUrlState();
   let newState = { ...existingSearchState, ...state };
   newState = Object.keys(newState)
     .filter(k => newState[k])

@@ -27,7 +27,7 @@ export const getModuleComponent = moduleToLoad => {
       return AuthenticateComponent;
     case "books":
     case "view":
-      booksPreload();
+      //booksPreload();
       return BooksComponent;
     case "home":
       return HomeComponent;

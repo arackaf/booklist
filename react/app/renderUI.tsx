@@ -1,15 +1,15 @@
-import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState, lazy } from "react";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState, lazy, useRef } from "react";
 const { useTransition } = React as any;
 
 import ReactDOM from "react-dom";
 const { createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
-import { useAppState, AppState, getCurrentModule } from "./appState";
+import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./appState";
 import localStorageManager from "util/localStorage";
 import Loading from "./components/loading";
 import { getModuleComponent } from "../routing";
-import { history, getCurrentHistoryState } from "util/urlHelpers";
+import { history, getCurrentUrlState } from "util/urlHelpers";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
@@ -44,28 +44,37 @@ export function renderUI() {
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
+export const ModuleUpdateContext = createContext<boolean>(false);
 
 const App = () => {
-  const [startTransition, isPending] = useTransition({ timeoutMs: 4000 });
+  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 4000 });
+  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 4000 });
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
 
   let Component = getModuleComponent(appState.module);
 
   useEffect(() => {
-    history.listen(location => {
-      let publicUserId = getCurrentHistoryState().searchState.userId;
+    return history.listen(location => {
+      let urlState = getCurrentUrlState();
+      let publicUserId = urlState.searchState.userId;
 
       //changing public viewing status - reload page
       if (publicUserId != appState.publicUserId) {
         return location.reload();
       }
 
-      startTransition(() => {
-        appActions.setModule(getCurrentModule());
-      });
+      if (appState.module != getCurrentModuleFromUrl()) {
+        startTransitionNewModule(() => {
+          dispatch({ type: URL_SYNC });
+        });
+      } else {
+        startTransitionModuleUpdate(() => {
+          dispatch({ type: URL_SYNC });
+        });
+      }
     });
-  }, []);
+  }, [appState.module]);
 
   useEffect(() => {
     window.addEventListener("offline", appActions.isOffline);
@@ -74,19 +83,31 @@ const App = () => {
 
   return (
     <AppContext.Provider value={appStatePacket}>
-      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-        <MobileMeta />
-        <MainNavigationBar />
+      <ModuleUpdateContext.Provider value={moduleUpdatePending}>
+        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+          <MobileMeta />
+          <MainNavigationBar />
 
-        {isPending ? <Loading /> : null}
-        <Suspense fallback={<Loading />}>
-          <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-            {Component ? <Component /> : null}
-          </div>
-        </Suspense>
+          {isNewModulePending ? (
+            <div style={{ color: "red" }}>
+              <Loading />
+            </div>
+          ) : null}
+          <Suspense
+            fallback={
+              <div style={{ color: "blue" }}>
+                <Loading />
+              </div>
+            }
+          >
+            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+              {Component ? <Component /> : null}
+            </div>
+          </Suspense>
 
-        <WellUiSwitcher />
-      </div>
+          <WellUiSwitcher />
+        </div>
+      </ModuleUpdateContext.Provider>
     </AppContext.Provider>
   );
 };

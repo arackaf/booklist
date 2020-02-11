@@ -1,4 +1,4 @@
-import { getCurrentHistoryState } from "util/urlHelpers";
+import { getCurrentUrlState } from "util/urlHelpers";
 
 export const defaultSearchValuesHash = {
   search: "",
@@ -27,7 +27,7 @@ export function filtersFromUrl(filters) {
 }
 
 export function bookSearchVariablesFromCurrentUrl() {
-  return computeBookSearchVariables(filtersFromUrl(getCurrentHistoryState().searchState));
+  return computeBookSearchVariables(filtersFromUrl(getCurrentUrlState().searchState));
 }
 
 export function computeBookSearchVariables(bookSearchFilters) {

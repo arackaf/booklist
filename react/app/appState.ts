@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
 import { getStatePacket } from "util/stateManagementHelpers";
-import { getCurrentHistoryState, history } from "util/urlHelpers";
+import { getCurrentUrlState, history } from "util/urlHelpers";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -27,16 +27,17 @@ const REQUEST_MOBILE = "root.REQUEST_MOBILE";
 const SET_PUBLIC_ID = "root.SET_PUBLIC_ID";
 const SET_PUBLIC_INFO = "root.SET_PUBLIC_INFO";
 const RESET_PUBLIC_INFO = "root.RESET_PUBLIC_INFO";
-const SET_MODULE = "root.SET_MODULE";
+export const URL_SYNC = "root.URL_SYNC";
 const NEW_LOGIN = "root.NEW_LOGIN";
 
 const IS_OFFLINE = "root.IS_OFFLINE";
 const IS_ONLINE = "root.IS_ONLINE";
 export const SET_THEME = "root.SET_THEME";
 
-let initialSearchState = getCurrentHistoryState().searchState;
+let initialUrlState = getCurrentUrlState();
+let initialSearchState = initialUrlState.searchState;
 
-export function getCurrentModule() {
+export function getCurrentModuleFromUrl() {
   let location = history.location;
   let originalModule = location.pathname.replace(/\//g, "").toLowerCase();
   let { logged_in, userId: currentUserId } = isLoggedIn();
@@ -59,7 +60,8 @@ const initialState = {
   publicName: "",
   publicBooksHeader: "",
   isPublic: !!initialSearchState.userId,
-  module: getCurrentModule(),
+  module: getCurrentModuleFromUrl(),
+  urlState: initialUrlState,
   online: navigator.onLine,
   colorTheme: localStorageManager.get("color-theme", "scheme5")
 };
@@ -78,8 +80,8 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, showingDesktop: true, showingMobile: false };
     case REQUEST_MOBILE:
       return { ...state, showingDesktop: false, showingMobile: true };
-    case SET_MODULE:
-      return { ...state, module: action.module };
+    case URL_SYNC:
+      return { ...state, module: getCurrentModuleFromUrl(), urlState: getCurrentUrlState() };
     case NEW_LOGIN:
       let { logged_in, userId } = isLoggedIn();
       return { ...state, isLoggedIn: !!logged_in, userId };
@@ -120,18 +122,18 @@ const setPublicId = userId => ({ type: SET_PUBLIC_ID, userId: userId });
 const newLogin = () => dispatch => { 
   dispatch({ type: NEW_LOGIN });
   
-  if (getCurrentModule() == "login") {
+  if (getCurrentModuleFromUrl() == "login") {
     history.push({ pathname: "/" });
   } else {
-    dispatch({ type: SET_MODULE, module: getCurrentModule() })
+    dispatch({ type: URL_SYNC })
   }
 };
-const setModule = module => ({ type: SET_MODULE, module });
+
 const isOnline = () => ({ type: IS_ONLINE });
 const isOffline = () => ({ type: IS_OFFLINE });
 
 export function useAppState(): [AppState, any, any] {
-  let actions = { requestDesktop, requestMobile, setModule, newLogin, isOffline, isOnline, setPublicInfo, setPublicId };
+  let actions = { requestDesktop, requestMobile, newLogin, isOffline, isOnline, setPublicInfo, setPublicId };
   let result = getStatePacket<AppState>(appReducer, initialState, actions);
 
   let colorTheme = result[0].colorTheme;
