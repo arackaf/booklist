@@ -1,11 +1,11 @@
 import shallowEqual from "shallow-equal/objects";
 
-import { getCurrentHistoryState, history } from "util/urlHelpers";
-import { useMemo, useEffect, useReducer } from "react";
+import { useMemo, useReducer, useContext } from "react";
 import { useTagsState } from "app/tagsState";
 
 import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
 import { useSubjectsState } from "app/subjectsState";
+import { AppContext } from "app/renderUI";
 
 const bookSearchInitialState = {
   hashFilters: {} as typeof defaultSearchValuesHash
@@ -14,12 +14,12 @@ export type BookSearchState = typeof bookSearchInitialState;
 
 export function bookSearchReducer(state = bookSearchInitialState, action): BookSearchState {
   switch (action.type) {
-    case "HASH_CHANGED":
+    case "SYNC_HASH":
       let { filters } = action;
       if (!shallowEqual(filters, state.hashFilters)) {
         return { ...state, hashFilters: filters };
       }
-      return { ...state };
+      return state;
   }
   return state;
 }
@@ -33,17 +33,13 @@ export type LookupHashType = {
 };
 
 export function useBooksSearchState(): [BookSearchState, any] {
-  let initialSearchState = useMemo(() => ({ ...bookSearchInitialState, hashFilters: getCurrentHistoryState().searchState }), []);
+  let [appState] = useContext(AppContext);
+  let initialSearchState = useMemo(() => ({ ...bookSearchInitialState, hashFilters: appState.urlState.searchState }), []);
   let [result, dispatch] = useReducer(bookSearchReducer, initialSearchState);
 
-  useEffect(() => {
-    return history.listen(() => {
-      const { searchState, pathname } = getCurrentHistoryState();
-      if (pathname == "/" || pathname == "/books" || pathname == "/view") {
-        dispatch({ type: "HASH_CHANGED", filters: searchState });
-      }
-    });
-  }, [dispatch]);
+  if (appState.urlState.searchState != result.hashFilters && (appState.module == "books" || appState.module == "view")) {
+    dispatch({ type: "SYNC_HASH", filters: appState.urlState.searchState });
+  }
 
   return [result, dispatch];
 }

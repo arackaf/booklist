@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer } from "react";
+import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext } from "react";
 
 import BooksMenuBar from "./components/booksMenuBar";
 import Loading from "app/components/loading";
@@ -18,6 +18,7 @@ import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import { MutationOf, Mutations } from "graphql-typings";
 import { useBookSearchUiView } from "./booksUiState";
+import { ModuleUpdateContext } from "app/renderUI";
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
@@ -72,7 +73,7 @@ function booksUiStateReducer(state, [action, payload = null]) {
 }
 
 const BookViewingList: SFC<{}> = props => {
-  const { books, booksLoading, booksLoaded, currentQuery } = useBooks();
+  const { books, booksLoaded, currentQuery } = useBooks();
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
@@ -120,9 +121,15 @@ const BookViewingList: SFC<{}> = props => {
   const uiView = useBookSearchUiView();
   const { dispatch: uiDispatch } = uiView;
 
+  const isUpdating = useContext(ModuleUpdateContext);
+
   return (
     <>
-      {booksLoading ? <Loading /> : null}
+      {isUpdating ? (
+        <div style={{ color: "green" }}>
+          <Loading />
+        </div>
+      ) : null}
       <div className="standard-module-container">
         <BooksMenuBar
           startTagModification={editTagsForSelectedBooks}
@@ -133,7 +140,7 @@ const BookViewingList: SFC<{}> = props => {
           {...{ booksUiState, setRead, uiDispatch, uiView }}
         />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!books.length && !booksLoading && booksLoaded ? (
+          {!books.length && booksLoaded ? (
             <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
               No books found
             </div>
