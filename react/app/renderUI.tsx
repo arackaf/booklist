@@ -48,12 +48,13 @@ export const ModuleUpdateContext = createContext<boolean>(false);
 
 const App = () => {
   const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 4000 });
-  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 4000 });
+  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 1000 });
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
 
   let Component = getModuleComponent(appState.module);
 
+  (window as any).U = startTransitionModuleUpdate;
   useEffect(() => {
     return history.listen(location => {
       let urlState = getCurrentUrlState();
@@ -65,10 +66,12 @@ const App = () => {
       }
 
       if (appState.module != getCurrentModuleFromUrl()) {
+        console.log("START NEW NAV");
         startTransitionNewModule(() => {
           dispatch({ type: URL_SYNC });
         });
       } else {
+        console.log("START UPDATE");
         startTransitionModuleUpdate(() => {
           dispatch({ type: URL_SYNC });
         });
@@ -83,31 +86,29 @@ const App = () => {
 
   return (
     <AppContext.Provider value={appStatePacket}>
-      <ModuleUpdateContext.Provider value={moduleUpdatePending}>
-        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-          <MobileMeta />
-          <MainNavigationBar />
+      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+        <MobileMeta />
+        <MainNavigationBar />
 
-          {isNewModulePending ? (
-            <div style={{ color: "red" }}>
+        {isNewModulePending ? (
+          <div style={{ color: "red" }}>
+            <Loading />
+          </div>
+        ) : null}
+        <Suspense
+          fallback={
+            <div style={{ color: "blue" }}>
               <Loading />
             </div>
-          ) : null}
-          <Suspense
-            fallback={
-              <div style={{ color: "blue" }}>
-                <Loading />
-              </div>
-            }
-          >
-            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-              {Component ? <Component /> : null}
-            </div>
-          </Suspense>
+          }
+        >
+          <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+            {Component ? <Component updating={moduleUpdatePending} /> : null}
+          </div>
+        </Suspense>
 
-          <WellUiSwitcher />
-        </div>
-      </ModuleUpdateContext.Provider>
+        <WellUiSwitcher />
+      </div>
     </AppContext.Provider>
   );
 };
