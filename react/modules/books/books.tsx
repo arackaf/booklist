@@ -38,7 +38,15 @@ const prepBookForSaving = book => {
 export default () => {
   return (
     <div style={{}}>
-      <BookViewingList />
+      <Suspense
+        fallback={
+          <div style={{ color: "orange" }}>
+            <Loading />
+          </div>
+        }
+      >
+        <BookViewingList />
+      </Suspense>
     </div>
   );
 };
