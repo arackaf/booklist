@@ -28,7 +28,6 @@ const SET_PUBLIC_ID = "root.SET_PUBLIC_ID";
 const SET_PUBLIC_INFO = "root.SET_PUBLIC_INFO";
 const RESET_PUBLIC_INFO = "root.RESET_PUBLIC_INFO";
 export const URL_SYNC = "root.URL_SYNC";
-const NEW_LOGIN = "root.NEW_LOGIN";
 
 const IS_OFFLINE = "root.IS_OFFLINE";
 const IS_ONLINE = "root.IS_ONLINE";
@@ -82,9 +81,6 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, showingDesktop: false, showingMobile: true };
     case URL_SYNC:
       return { ...state, module: getCurrentModuleFromUrl(), urlState: getCurrentUrlState() };
-    case NEW_LOGIN:
-      let { logged_in, userId } = isLoggedIn();
-      return { ...state, isLoggedIn: !!logged_in, userId };
     case IS_OFFLINE:
       return { ...state, online: false };
     case IS_ONLINE:
@@ -119,21 +115,11 @@ const requestMobile = () => dispatch => {
 const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
 const setPublicId = userId => ({ type: SET_PUBLIC_ID, userId: userId });
 
-const newLogin = () => dispatch => { 
-  dispatch({ type: NEW_LOGIN });
-  
-  if (getCurrentModuleFromUrl() == "login") {
-    history.push({ pathname: "/" });
-  } else {
-    dispatch({ type: URL_SYNC })
-  }
-};
-
 const isOnline = () => ({ type: IS_ONLINE });
 const isOffline = () => ({ type: IS_OFFLINE });
 
 export function useAppState(): [AppState, any, any] {
-  let actions = { requestDesktop, requestMobile, newLogin, isOffline, isOnline, setPublicInfo, setPublicId };
+  let actions = { requestDesktop, requestMobile, isOffline, isOnline, setPublicInfo, setPublicId };
   let result = getStatePacket<AppState>(appReducer, initialState, actions);
 
   let colorTheme = result[0].colorTheme;
