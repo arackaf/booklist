@@ -54,7 +54,6 @@ const App = () => {
 
   let Component = getModuleComponent(appState.module);
 
-  (window as any).U = startTransitionModuleUpdate;
   useEffect(() => {
     return history.listen(location => {
       let urlState = getCurrentUrlState();
@@ -86,29 +85,31 @@ const App = () => {
 
   return (
     <AppContext.Provider value={appStatePacket}>
-      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-        <MobileMeta />
-        <MainNavigationBar />
+      <ModuleUpdateContext.Provider value={moduleUpdatePending}>
+        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+          <MobileMeta />
+          <MainNavigationBar />
 
-        {isNewModulePending ? (
-          <div style={{ color: "red" }}>
-            <Loading />
-          </div>
-        ) : null}
-        <Suspense
-          fallback={
-            <div style={{ color: "blue" }}>
+          {isNewModulePending ? (
+            <div style={{ color: "red" }}>
               <Loading />
             </div>
-          }
-        >
-          <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-            {Component ? <Component updating={moduleUpdatePending} /> : null}
-          </div>
-        </Suspense>
+          ) : null}
+          <Suspense
+            fallback={
+              <div style={{ color: "blue" }}>
+                <Loading />
+              </div>
+            }
+          >
+            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+              {Component ? <Component updating={moduleUpdatePending} /> : null}
+            </div>
+          </Suspense>
 
-        <WellUiSwitcher />
-      </div>
+          <WellUiSwitcher />
+        </div>
+      </ModuleUpdateContext.Provider>
     </AppContext.Provider>
   );
 };

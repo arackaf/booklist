@@ -47,7 +47,6 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   };
   const quickSearchType = evt => {
     if (evt.keyCode == 13) {
-      evt.preventDefault();
       quickSearch(evt.currentTarget.value);
     }
   };
