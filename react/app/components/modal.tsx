@@ -28,30 +28,29 @@ export default class Modal extends Component<ModalTypes, any> {
     let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = this.props;
     return (
       <Transition
-        items={isOpen}
+        items={!!isOpen}
         config={isOpen ? { mass: 1, tension: 350, friction: 30 } : { duration: 150 }}
         from={{ opacity: 0, y: -10 }}
         enter={{ opacity: 1, y: 0 }}
         leave={{ opacity: 0, y: 10 }}
       >
         {isOpen =>
-          isOpen
-            ? (styles: any) => (
-                <DialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
-                  <DialogContent
-                    style={{
-                      transform: `translate3d(0px, ${styles.y}px, 0px)`,
-                      border: "4px solid hsla(0, 0%, 0%, 0.5)",
-                      borderRadius: 10,
-                      ...style
-                    }}
-                  >
-                    {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
-                    {children}
-                  </DialogContent>
-                </DialogOverlay>
-              )
-            : null
+          isOpen &&
+          ((styles: any) => (
+            <DialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
+              <DialogContent
+                style={{
+                  transform: `translate3d(0px, ${styles.y}px, 0px)`,
+                  border: "4px solid hsla(0, 0%, 0%, 0.5)",
+                  borderRadius: 10,
+                  ...style
+                }}
+              >
+                {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
+                {children}
+              </DialogContent>
+            </DialogOverlay>
+          ))
         }
       </Transition>
     );
