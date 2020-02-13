@@ -36,6 +36,15 @@ const prepBookForSaving = book => {
 };
 
 export default () => {
+  const [tagEditModalOpen, editTags, stopEditingTags] = useCodeSplitModal();
+  const [subjectEditModalOpen, editSubjects, stopEditingSubjects] = useCodeSplitModal();
+  const [editingFilters, beginEditFilters, endEditFilters] = useCodeSplitModal();
+
+  const [bookSubModifying, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
+  const [bookTagModifying, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
+
+  const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal };
+
   return (
     <div style={{}}>
       <Suspense
@@ -45,7 +54,16 @@ export default () => {
           </div>
         }
       >
-        <BookViewingList />
+        <BookViewingList actions={actions} />
+
+        <Suspense fallback={<Loading />}>
+          <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+          <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+          <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
+
+          <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
+          <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+        </Suspense>
       </Suspense>
     </div>
   );
@@ -80,25 +98,13 @@ function booksUiStateReducer(state, [action, payload = null]) {
   }
 }
 
-const BookViewingList: SFC<{}> = props => {
-  const { books, booksLoaded, currentQuery } = useBooks();
+const BookViewingList: SFC<{ actions: any }> = ({ actions }) => {
+  const { books, currentQuery } = useBooks();
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
   //useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
   useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
-
-  const [bookSubModifying, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
-  const editSubjectsForBook = book => openBookSubModal([book]);
-  const editSubjectsForSelectedBooks = () => openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
-
-  const [bookTagModifying, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
-  const editTagsForBook = book => openBookTagModal([book]);
-  const editTagsForSelectedBooks = () => openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
-
-  const [tagEditModalOpen, editTags, stopEditingTags] = useCodeSplitModal();
-  const [subjectEditModalOpen, editSubjects, stopEditingSubjects] = useCodeSplitModal();
-  const [editingFilters, beginEditFilters, endEditFilters] = useCodeSplitModal();
 
   const [editingBook, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
   const editBook = book => openBookEditModal(book);
@@ -139,27 +145,16 @@ const BookViewingList: SFC<{}> = props => {
         </div>
       ) : null}
       <div className="standard-module-container">
-        <BooksMenuBar
-          startTagModification={editTagsForSelectedBooks}
-          startSubjectModification={editSubjectsForSelectedBooks}
-          editTags={editTags}
-          editSubjects={editSubjects}
-          beginEditFilters={beginEditFilters}
-          {...{ booksUiState, setRead, uiDispatch, uiView }}
-        />
+        <BooksMenuBar actions={actions} {...{ booksUiState, setRead, uiDispatch, uiView }} />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!books.length && booksLoaded ? (
+          {!books.length ? (
             <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
               No books found
             </div>
           ) : null}
 
           {uiView.isGridView ? (
-            <GridView
-              {...{ editBook, setRead, booksUiState, dispatchBooksUiState, runDelete }}
-              editBooksTags={editTagsForBook}
-              editBooksSubjects={editSubjectsForBook}
-            />
+            <GridView {...{ editBook, setRead, booksUiState, dispatchBooksUiState, runDelete, actions }} />
           ) : uiView.isBasicList ? (
             <BasicListView {...{ booksUiState, dispatchBooksUiState, editBook, runDelete }} />
           ) : uiView.isCoversList ? (
@@ -179,13 +174,6 @@ const BookViewingList: SFC<{}> = props => {
           saveMessage={"Saved"}
           onClosing={stopEditingBook}
         />
-
-        <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
-        <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
-
-        <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
-        <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
-        <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
       </Suspense>
     </>
   );

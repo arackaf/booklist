@@ -62,8 +62,6 @@ graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetB
 window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
 
 export const useBooks = () => {
-  let { subjectsLoaded } = useSubjectsState();
-  let { tagsLoaded } = useTagsState();
   const searchState = useCurrentSearch();
   const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
   const onBooksMutation = [
@@ -102,8 +100,7 @@ export const useBooks = () => {
     currentQuery,
     books,
     resultsCount,
-    totalPages,
-    booksLoaded: loaded && tagsLoaded && subjectsLoaded
+    totalPages
   };
 };
 
