@@ -257,13 +257,15 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
 };
 
 type BookViewListGridTypes = {
-  editBooksSubjects: any;
-  editBooksTags: any;
   editBook: any;
   setRead: any;
   runDelete: any;
   booksUiState: any;
   dispatchBooksUiState: any;
+  actions: {
+    openBookSubModal: any;
+    openBookTagModal: any;
+  };
 };
 
 const useBookSelection = (books, selectedBooks) => {
@@ -278,13 +280,16 @@ const useBookSelection = (books, selectedBooks) => {
 };
 
 const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
+  const { actions, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { selectedBooks } = booksUiState;
 
   const { books } = useBooks();
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
+
+  const editSubjectsForBook = book => props.actions.openBookSubModal([book]);
+  const editTagsForBook = book => props.actions.openBookTagModal([book]);
 
   const toggleCheckAll = () => {
     dispatchBooksUiState([allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
@@ -344,8 +349,8 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
               {books.map((book, index) => (
                 <BookRow
                   key={book._id}
-                  editBooksSubjects={editBooksSubjects}
-                  editBooksTags={editBooksTags}
+                  editBooksSubjects={editSubjectsForBook}
+                  editBooksTags={editTagsForBook}
                   {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
                 />
               ))}
