@@ -43,7 +43,6 @@ export type BooksModuleActions = {
   editTags: any;
   editSubjects: any;
   beginEditFilters: any;
-  startSubjectModification: any;
   setRead: any;
   runDelete: any;
 };
@@ -56,7 +55,7 @@ export type BooksModuleData = {
   dispatchBooksUiState: any;
 };
 
-export const BooksModuleContext = createContext(null);
+export const BooksModuleContext = createContext<BooksModuleData>(null);
 
 export default () => {
   const [tagEditModalOpen, editTags, stopEditingTags] = useCodeSplitModal();
@@ -107,7 +106,7 @@ export default () => {
             </div>
           }
         >
-          <BookViewingList />
+          <MainContent />
 
           <Suspense fallback={<Loading />}>
             <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
@@ -159,8 +158,8 @@ function booksUiStateReducer(state, [action, payload = null]) {
   }
 }
 
-const BookViewingList: SFC<{}> = ({}) => {
-  const { books, currentQuery } = useBooks();
+const MainContent: SFC<{}> = ({}) => {
+  const { books, totalPages, resultsCount, currentQuery } = useBooks();
   const { dispatchBooksUiState } = useContext(BooksModuleContext);
 
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
@@ -170,29 +169,40 @@ const BookViewingList: SFC<{}> = ({}) => {
   const uiView = useBookSearchUiView();
   const { dispatch: uiDispatch } = uiView;
 
+  return (
+    <div className="standard-module-container" style={{ marginBottom: "80px" }}>
+      <BooksMenuBar uiDispatch={uiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
+      <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
+        <BookResults {...{ books, uiView }} />
+      </div>
+    </div>
+  );
+};
+
+const BookResults: SFC<{ books: any; uiView: any }> = ({ books, uiView }) => {
   const isUpdating = useContext(ModuleUpdateContext);
 
   return (
     <>
+      {!books.length ? (
+        <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
+          No books found
+        </div>
+      ) : null}
+
       {isUpdating ? (
         <div style={{ color: "green" }}>
           <Loading />
         </div>
       ) : null}
-      <div className="standard-module-container">
-        <BooksMenuBar {...{ uiDispatch, uiView }} />
-        <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-          {!books.length ? (
-            <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
-              No books found
-            </div>
-          ) : null}
 
-          {uiView.isGridView ? <GridView /> : uiView.isBasicList ? <BasicListView /> : uiView.isCoversList ? <CoversView /> : null}
-        </div>
-      </div>
-      <br />
-      <br />
+      {uiView.isGridView ? (
+        <GridView books={books} />
+      ) : uiView.isBasicList ? (
+        <BasicListView books={books} />
+      ) : uiView.isCoversList ? (
+        <CoversView books={books} />
+      ) : null}
     </>
   );
 };

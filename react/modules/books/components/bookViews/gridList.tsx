@@ -12,11 +12,10 @@ import { useQuery, buildQuery } from "micro-graphql-react";
 
 import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
-import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort } from "modules/books/setBookFilters";
-import { BooksModuleActions, BooksModuleContext } from "modules/books/books";
+import { BooksModuleContext } from "modules/books/books";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -268,14 +267,13 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-const BookViewListGrid: SFC<{}> = props => {
+const BookViewListGrid: SFC<{ books: any }> = ({ books }) => {
   const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
   const { setRead, runDelete } = actions;
 
   const { editBook, openBookSubModal, openBookTagModal } = actions;
   const { selectedBooks } = booksUiState;
 
-  const { books } = useBooks();
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();

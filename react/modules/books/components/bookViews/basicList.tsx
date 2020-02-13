@@ -63,18 +63,17 @@ const BookViewListMobileItem = props => {
   );
 };
 
-const BookViewListMobile: SFC<{}> = props => {
+const BookViewListMobile: SFC<{ books: any }> = props => {
   const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
   const { runDelete, editBook } = actions;
 
-  const { books } = useBooks();
   const [{ online, isPublic }] = useContext(AppContext);
 
   return (
     <div>
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className={`${listGroup} ${dockedToPanel}`}>
-          {books.map((book, i) => (
+          {props.books.map((book, i) => (
             <BookViewListMobileItem
               key={book._id}
               {...{ book, editBook, booksUiState, dispatchBooksUiState, online, runDelete }}

@@ -15,12 +15,17 @@ import { BooksModuleActions, BooksModuleContext } from "../books";
 interface IAddedMenuProps {
   uiView: any;
   uiDispatch: any;
+  bookResultsPacket: {
+    books: any;
+    totalPages: any;
+    resultsCount: any;
+  };
 }
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
 const BooksMenuBar: SFC<IAddedMenuProps> = props => {
-  const { books, totalPages, resultsCount } = useBooks();
+  const { books = [], totalPages = null, resultsCount = null } = props.bookResultsPacket || {};
   const quickSearchEl = useRef(null);
   const [appState] = useContext(AppContext);
 
