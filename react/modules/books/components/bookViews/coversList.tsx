@@ -13,11 +13,10 @@ import { BooksModuleContext } from "modules/books/books";
 
 const { coversList } = coversClasses;
 
-const BookViewCovers: SFC<any> = props => {
+const BookViewCovers: SFC<{ books: any }> = props => {
   const { actions } = useContext(BooksModuleContext);
   const { saveEditingBook } = actions;
-  
-  const { books } = useBooks();
+
   const [displaying, setDisplaying] = useState(null);
 
   const [bookPreviewing, openBookPreview, closeBookPreview] = useCodeSplitModal(null);
@@ -50,7 +49,7 @@ const BookViewCovers: SFC<any> = props => {
       </Suspense>
       <div>
         <div style={{ border: 0 }} className={coversList}>
-          {books.map((book, i) => (
+          {props.books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
               <div>
                 <CoverMedium url={book.mediumImage} />
