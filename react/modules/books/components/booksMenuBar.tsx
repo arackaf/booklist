@@ -2,7 +2,6 @@ import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
 import { RemovableLabelDisplay } from "app/components/labelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
-import { useBooks } from "../booksState";
 import { AppContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
@@ -10,9 +9,10 @@ import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, remo
 const { searchInput } = styles;
 
 import PublicBooksHeader from "./publicBooksHeader";
-import { BooksModuleActions, BooksModuleContext } from "../books";
+import { BooksModuleContext } from "../books";
 
 interface IAddedMenuProps {
+  disabled?: boolean;
   uiView: any;
   uiDispatch: any;
   bookResultsPacket: {
@@ -143,7 +143,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
             </div>
           </div>
 
-          <BookSearchFilters />
+          <BookSearchFilters resultsCount={resultsCount} />
         </div>
       </div>
     </div>
@@ -220,12 +220,10 @@ type BookSearchFilters = {
   resultsCount: number;
 };
 
-const BookSearchFilters: SFC<{}> = props => {
+const BookSearchFilters: SFC<{ resultsCount: number }> = ({ resultsCount }) => {
   const [appState] = useContext(AppContext);
   const { online } = appState;
   const bookSearchState = useCurrentSearch();
-
-  const { resultsCount } = useBooks();
 
   let resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
   let removeAllFiltersLabel = {
