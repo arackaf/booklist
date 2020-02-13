@@ -10,18 +10,9 @@ import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, remo
 const { searchInput } = styles;
 
 import PublicBooksHeader from "./publicBooksHeader";
+import { BooksModuleActions, BooksModuleContext } from "../books";
 
 interface IAddedMenuProps {
-  actions: {
-    editTags: any;
-    editSubjects: any;
-    beginEditFilters: any;
-    startSubjectModification: any;
-    openBookTagModal: any;
-    openBookSubModal: any;
-  };
-  booksUiState: any;
-  setRead: any;
   uiView: any;
   uiDispatch: any;
 }
@@ -33,7 +24,10 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const quickSearchEl = useRef(null);
   const [appState] = useContext(AppContext);
 
-  const { booksUiState, setRead, uiView, uiDispatch, actions } = props;
+  const { actions, booksUiState } = useContext(BooksModuleContext);
+  const { setRead } = actions;
+
+  const { uiView, uiDispatch } = props;
   const { selectedBooks } = booksUiState;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
   const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);

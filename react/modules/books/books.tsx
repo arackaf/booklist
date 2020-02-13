@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext } from "react";
+import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext } from "react";
 
 import BooksMenuBar from "./components/booksMenuBar";
 import Loading from "app/components/loading";
@@ -35,6 +35,29 @@ const prepBookForSaving = book => {
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
 
+export type BooksModuleActions = {
+  editBook: any;
+  saveEditingBook: any;
+  openBookSubModal: any;
+  openBookTagModal: any;
+  editTags: any;
+  editSubjects: any;
+  beginEditFilters: any;
+  startSubjectModification: any;
+  setRead: any;
+  runDelete: any;
+};
+
+const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {}, deleting: {} };
+
+export type BooksModuleData = {
+  actions: BooksModuleActions;
+  booksUiState: typeof initialBooksState;
+  dispatchBooksUiState: any;
+};
+
+export const BooksModuleContext = createContext(null);
+
 export default () => {
   const [tagEditModalOpen, editTags, stopEditingTags] = useCodeSplitModal();
   const [subjectEditModalOpen, editSubjects, stopEditingSubjects] = useCodeSplitModal();
@@ -43,33 +66,71 @@ export default () => {
   const [bookSubModifying, openBookSubModal, closeBookSubModal] = useCodeSplitModal(null);
   const [bookTagModifying, openBookTagModal, closeBookTagModal] = useCodeSplitModal(null);
 
-  const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal };
+  const [editingBook, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
+  const editBook = book => openBookEditModal(book);
+
+  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBookMutation));
+
+  const saveEditingBook = book => {
+    let bookToUse = prepBookForSaving(book);
+    Promise.resolve(runMutation({ _id: book._id, book: bookToUse })).then(resp => {
+      stopEditingBook();
+    });
+  };
+
+  const { runMutation: setReadStatus } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(UpdateBooksReadMutation));
+  const { runMutation: deleteBook } = useMutation<MutationOf<Mutations["deleteBook"]>>(buildMutation(DeleteBookMutation));
+
+  const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
+
+  const setRead = (_ids, isRead) => {
+    dispatchBooksUiState(["read-saving", _ids]);
+    Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
+      dispatchBooksUiState(["read-saved", _ids]);
+    });
+  };
+
+  const runDelete = _id => {
+    dispatchBooksUiState(["delete", _id]);
+    deleteBook({ _id });
+  };
+
+  const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal, saveEditingBook, editBook, setRead, runDelete };
 
   return (
     <div style={{}}>
-      <Suspense
-        fallback={
-          <div style={{ color: "orange" }}>
-            <Loading />
-          </div>
-        }
-      >
-        <BookViewingList actions={actions} />
+      <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
+        <Suspense
+          fallback={
+            <div style={{ color: "orange" }}>
+              <Loading />
+            </div>
+          }
+        >
+          <BookViewingList />
 
-        <Suspense fallback={<Loading />}>
-          <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
-          <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
-          <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
+          <Suspense fallback={<Loading />}>
+            <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+            <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+            <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
 
-          <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
-          <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+            <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
+            <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+
+            <CreateBookModal
+              title={editingBook ? `Edit ${editingBook.title}` : ""}
+              bookToEdit={editingBook}
+              isOpen={!!editingBook}
+              saveBook={saveEditingBook}
+              saveMessage={"Saved"}
+              onClosing={stopEditingBook}
+            />
+          </Suspense>
         </Suspense>
-      </Suspense>
+      </BooksModuleContext.Provider>
     </div>
   );
 };
-
-const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {}, deleting: {} };
 
 const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
 
@@ -98,39 +159,13 @@ function booksUiStateReducer(state, [action, payload = null]) {
   }
 }
 
-const BookViewingList: SFC<{ actions: any }> = ({ actions }) => {
+const BookViewingList: SFC<{}> = ({}) => {
   const { books, currentQuery } = useBooks();
+  const { dispatchBooksUiState } = useContext(BooksModuleContext);
 
-  const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
   //useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
   useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
-
-  const [editingBook, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
-  const editBook = book => openBookEditModal(book);
-
-  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBookMutation));
-  const { runMutation: setReadStatus } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(UpdateBooksReadMutation));
-  const { runMutation: deleteBook } = useMutation<MutationOf<Mutations["deleteBook"]>>(buildMutation(DeleteBookMutation));
-
-  const saveEditingBook = book => {
-    let bookToUse = prepBookForSaving(book);
-    Promise.resolve(runMutation({ _id: book._id, book: bookToUse })).then(resp => {
-      stopEditingBook();
-    });
-  };
-
-  const setRead = (_ids, isRead) => {
-    dispatchBooksUiState(["read-saving", _ids]);
-    Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
-      dispatchBooksUiState(["read-saved", _ids]);
-    });
-  };
-
-  const runDelete = _id => {
-    dispatchBooksUiState(["delete", _id]);
-    deleteBook({ _id });
-  };
 
   const uiView = useBookSearchUiView();
   const { dispatch: uiDispatch } = uiView;
@@ -145,7 +180,7 @@ const BookViewingList: SFC<{ actions: any }> = ({ actions }) => {
         </div>
       ) : null}
       <div className="standard-module-container">
-        <BooksMenuBar actions={actions} {...{ booksUiState, setRead, uiDispatch, uiView }} />
+        <BooksMenuBar {...{ uiDispatch, uiView }} />
         <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
           {!books.length ? (
             <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
@@ -153,28 +188,11 @@ const BookViewingList: SFC<{ actions: any }> = ({ actions }) => {
             </div>
           ) : null}
 
-          {uiView.isGridView ? (
-            <GridView {...{ editBook, setRead, booksUiState, dispatchBooksUiState, runDelete, actions }} />
-          ) : uiView.isBasicList ? (
-            <BasicListView {...{ booksUiState, dispatchBooksUiState, editBook, runDelete }} />
-          ) : uiView.isCoversList ? (
-            <CoversView {...{ saveEditingBook }} />
-          ) : null}
+          {uiView.isGridView ? <GridView /> : uiView.isBasicList ? <BasicListView /> : uiView.isCoversList ? <CoversView /> : null}
         </div>
       </div>
       <br />
       <br />
-
-      <Suspense fallback={<Loading />}>
-        <CreateBookModal
-          title={editingBook ? `Edit ${editingBook.title}` : ""}
-          bookToEdit={editingBook}
-          isOpen={!!editingBook}
-          saveBook={saveEditingBook}
-          saveMessage={"Saved"}
-          onClosing={stopEditingBook}
-        />
-      </Suspense>
     </>
   );
 };

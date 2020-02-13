@@ -16,6 +16,7 @@ import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort } from "modules/books/setBookFilters";
+import { BooksModuleActions, BooksModuleContext } from "modules/books/books";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -256,18 +257,6 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
   );
 };
 
-type BookViewListGridTypes = {
-  editBook: any;
-  setRead: any;
-  runDelete: any;
-  booksUiState: any;
-  dispatchBooksUiState: any;
-  actions: {
-    openBookSubModal: any;
-    openBookTagModal: any;
-  };
-};
-
 const useBookSelection = (books, selectedBooks) => {
   return useMemo(() => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
@@ -279,8 +268,11 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  const { actions, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
+const BookViewListGrid: SFC<{}> = props => {
+  const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
+  const { setRead, runDelete } = actions;
+
+  const { editBook, openBookSubModal, openBookTagModal } = actions;
   const { selectedBooks } = booksUiState;
 
   const { books } = useBooks();
@@ -288,8 +280,8 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
 
-  const editSubjectsForBook = book => props.actions.openBookSubModal([book]);
-  const editTagsForBook = book => props.actions.openBookTagModal([book]);
+  const editSubjectsForBook = book => openBookSubModal([book]);
+  const editTagsForBook = book => openBookTagModal([book]);
 
   const toggleCheckAll = () => {
     dispatchBooksUiState([allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
