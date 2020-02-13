@@ -29,7 +29,7 @@ export default class Modal extends Component<ModalTypes, any> {
     return (
       <Transition
         items={isOpen}
-        config={{ mass: 1, tension: 350, friction: 30 }}
+        config={isOpen ? { mass: 1, tension: 350, friction: 30 } : { duration: 150 }}
         from={{ opacity: 0, y: -10 }}
         enter={{ opacity: 1, y: 0 }}
         leave={{ opacity: 0, y: 10 }}
