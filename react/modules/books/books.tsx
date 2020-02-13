@@ -170,7 +170,7 @@ const MainContent: SFC<{}> = ({}) => {
   const { dispatch: uiDispatch } = uiView;
 
   return (
-    <div className="standard-module-container" style={{ marginBottom: "80px" }}>
+    <div className="standard-module-container margin-bottom-lg">
       <BooksMenuBar uiDispatch={uiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
       <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
         <BookResults {...{ books, uiView }} />
