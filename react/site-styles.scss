@@ -344,6 +344,10 @@ a {
   outline: 0;
 }
 
+input[disabled]{
+  opacity: 0.6;
+}
+
 hr {
   border: 1px solid var(--primary-4);
 }
