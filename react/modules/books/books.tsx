@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext } from "react";
+import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext, useState } from "react";
 
 import BooksMenuBar, { BooksMenuBarDisabled } from "./components/booksMenuBar";
 import Loading from "app/components/loading";
@@ -150,10 +150,10 @@ export default () => {
   );
 };
 
-const Fallback: SFC<{ uiView: BookSearchUiView }> = ({ uiView }) => {
+const Fallback: SFC<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({ uiView, totalPages, resultsCount }) => {
   return (
     <>
-      <BooksMenuBarDisabled />
+      <BooksMenuBarDisabled totalPages={totalPages} resultsCount={resultsCount} />
       {uiView.isGridView ? (
         <GridViewShell />
       ) : (
@@ -167,23 +167,28 @@ const Fallback: SFC<{ uiView: BookSearchUiView }> = ({ uiView }) => {
 
 const RenderModule: SFC<{}> = ({}) => {
   const uiView = useBookSearchUiView();
+  const [lastBookResults, setLastBookResults] = useState({ totalPages: 0, resultsCount: 0 });
 
   return (
     <div className="standard-module-container margin-bottom-lg">
-      <Suspense fallback={<Fallback uiView={uiView} />}>
-        <MainContent uiView={uiView}></MainContent>
+      <Suspense fallback={<Fallback uiView={uiView} {...lastBookResults} />}>
+        <MainContent uiView={uiView} setLastBookResults={setLastBookResults}></MainContent>
       </Suspense>
     </div>
   );
 };
 
-const MainContent: SFC<{ uiView: BookSearchUiView }> = ({ uiView }) => {
+const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = ({ uiView, setLastBookResults }) => {
   const { books, totalPages, resultsCount, currentQuery } = useBooks();
   const { dispatchBooksUiState } = useContext(BooksModuleContext);
 
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
   //useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
   useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
+
+  useEffect(() => {
+    setLastBookResults({ resultsCount, totalPages });
+  }, [resultsCount, totalPages]);
 
   const { dispatch: uiDispatch } = uiView;
 

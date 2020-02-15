@@ -11,6 +11,8 @@ const { searchInput } = styles;
 import PublicBooksHeader from "./publicBooksHeader";
 import { BooksModuleContext } from "../books";
 
+import cn from "classnames";
+
 interface IAddedMenuProps {
   disabled?: boolean;
   uiView: any;
@@ -24,11 +26,11 @@ interface IAddedMenuProps {
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
-export const BooksMenuBarDisabled: SFC<{}> = () => {
+export const BooksMenuBarDisabled: SFC<{ totalPages: number; resultsCount: number }> = ({ totalPages, resultsCount }) => {
   const bookResultsPacket = {
     books: [],
-    totalPages: 0,
-    resultsCount: 0
+    totalPages,
+    resultsCount
   };
   return <BooksMenuBar disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
 };
@@ -79,7 +81,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <PublicBooksHeader /> : null}
-          <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, Button }} />
+          <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>
             <div className="btn-group">
               <input
@@ -161,15 +163,15 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
             </div>
           </div>
 
-          <BookSearchFilters resultsCount={resultsCount} />
+          <BookSearchFilters resultsCount={resultsCount} disabled={disabled} />
         </div>
       </div>
     </div>
   );
 };
 
-const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resultsCount: number; Button: any }> = props => {
-  const { selectedBooksCount, totalPages, resultsCount, Button } = props;
+const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resultsCount: number; Button: any; disabled: boolean }> = props => {
+  const { selectedBooksCount, totalPages, resultsCount, Button, disabled } = props;
 
   const [appState] = useContext(AppContext);
   const { online } = appState;
@@ -194,7 +196,7 @@ const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resul
             <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
               <i className="fal fa-angle-left" />
             </Button>
-            <span style={{ paddingLeft: "3px", paddingRight: "3px" }}>
+            <span className={cn({ disabled })} style={{ paddingLeft: "3px", paddingRight: "3px" }}>
               {page} of {totalPages}
             </span>
             <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
@@ -213,7 +215,7 @@ const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resul
           </Button>
         </div>
         {online && resultsCount ? (
-          <span style={{ display: "inline" }}>
+          <span className={cn({ disabled })} style={{ display: "inline" }}>
             <span className="hidden-xs">Page</span> {page}
             <span> of {totalPages}</span>
           </span>
@@ -238,7 +240,7 @@ type BookSearchFilters = {
   resultsCount: number;
 };
 
-const BookSearchFilters: SFC<{ resultsCount: number }> = ({ resultsCount }) => {
+const BookSearchFilters: SFC<{ resultsCount: number; disabled: boolean }> = ({ resultsCount, disabled }) => {
   const [appState] = useContext(AppContext);
   const { online } = appState;
   const bookSearchState = useCurrentSearch();
@@ -251,7 +253,7 @@ const BookSearchFilters: SFC<{ resultsCount: number }> = ({ resultsCount }) => {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
+    <div className={cn({ disabled })} style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
       {online && resultsCount ? <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>{resultsDisplay}</div> : null}
 
       {bookSearchState.search ? (

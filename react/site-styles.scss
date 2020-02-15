@@ -441,6 +441,12 @@ select.form-control {
   font-size: 14px;
 }
 
+div, span {
+  &.disabled { 
+    opacity: 0.6;
+  }
+}
+
 div.responsive-radios {
   display: flex;
   align-items: center;
