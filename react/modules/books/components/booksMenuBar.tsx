@@ -1,4 +1,4 @@
-import React, { SFC, useContext, useRef, useEffect, useMemo } from "react";
+import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback } from "react";
 import { RemovableLabelDisplay } from "app/components/labelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
@@ -24,6 +24,14 @@ interface IAddedMenuProps {
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
+export const BooksMenuBarDisabled: SFC<{}> = () => {
+  const bookResultsPacket = {
+    books: [],
+    totalPages: 0,
+    resultsCount: 0
+  };
+  return <BooksMenuBar disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
+};
 const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const { books = [], totalPages = null, resultsCount = null } = props.bookResultsPacket || {};
   const quickSearchEl = useRef(null);
@@ -32,7 +40,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const { actions, booksUiState } = useContext(BooksModuleContext);
   const { setRead } = actions;
 
-  const { uiView, uiDispatch } = props;
+  const { uiView, uiDispatch, disabled } = props;
   const { selectedBooks } = booksUiState;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
   const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
@@ -57,12 +65,21 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
 
   let { isPublic, online } = appState;
 
+  const Button = useCallback(
+    ({ children, ...rest }) => (
+      <button {...rest} disabled={disabled || rest.disabled}>
+        {children}
+      </button>
+    ),
+    [disabled]
+  );
+
   return (
     <div>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <PublicBooksHeader /> : null}
-          <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount }} />
+          <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, Button }} />
           <div style={{ marginRight: "5px" }}>
             <div className="btn-group">
               <input
@@ -73,71 +90,72 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                 className={`form-control ${searchInput} tiny-orphan`}
                 placeholder="Title search"
                 onKeyDown={quickSearchType}
+                disabled={disabled}
               />
               {!selectedBooksCount ? (
                 <>
                   {online ? (
                     <>
-                      <button
+                      <Button
                         title="Filter search"
                         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                         onClick={actions.beginEditFilters}
                         className="btn btn-default hidden-tiny"
                       >
                         <i className="fal fa-filter" />
-                      </button>
+                      </Button>
                       {!isPublic ? (
                         <>
-                          <button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default hidden-xs">
+                          <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default hidden-xs">
                             <i className="fal fa-sitemap" />
-                          </button>
-                          <button title="Edit tags" onClick={actions.editTags} className="btn btn-default hidden-xs">
+                          </Button>
+                          <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default hidden-xs">
                             <i className="fal fa-tags" />
-                          </button>
+                          </Button>
                         </>
                       ) : null}
                     </>
                   ) : null}
-                  <button
+                  <Button
                     style={{ position: "static" }}
                     onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })}
                     className={"btn btn-default hidden-tiny " + (uiView.isGridView ? "active" : "")}
                   >
                     <i className="fal fa-table" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     style={{ position: "static" }}
                     onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })}
                     className={"btn btn-default hidden-tiny " + (uiView.isCoversList ? "active" : "")}
                   >
                     <i className="fas fa-th" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     style={{ position: "static" }}
                     onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })}
                     className={"btn btn-default hidden-tiny " + (uiView.isBasicList ? "active" : "")}
                   >
                     <i className="fal fa-list" />
-                  </button>
+                  </Button>
                 </>
               ) : !isPublic ? (
                 <>
-                  <button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
+                  <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
                     <i className="fal fa-sitemap" />
-                  </button>
-                  <button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default hidden-tiny">
+                  </Button>
+                  <Button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default hidden-tiny">
                     <i className="fal fa-tags" />
-                  </button>
-                  <button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
+                  </Button>
+                  <Button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
                     <i className="fal fa-eye" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     title="Set un-read"
                     onClick={() => setRead(selectedBooksIds, false)}
                     className="btn btn-default put-line-through hidden-tiny"
                   >
                     <i className="fal fa-eye-slash" />
-                  </button>
+                  </Button>
                 </>
               ) : null}
             </div>
@@ -150,8 +168,8 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   );
 };
 
-const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resultsCount: number }> = props => {
-  const { selectedBooksCount, totalPages, resultsCount } = props;
+const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resultsCount: number; Button: any }> = props => {
+  const { selectedBooksCount, totalPages, resultsCount, Button } = props;
 
   const [appState] = useContext(AppContext);
   const { online } = appState;
@@ -173,26 +191,26 @@ const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resul
       {!selectedBooksCount ? (
         <div className="visible-xs" style={{ marginRight: "5px" }}>
           <div>
-            <button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
+            <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
               <i className="fal fa-angle-left" />
-            </button>
+            </Button>
             <span style={{ paddingLeft: "3px", paddingRight: "3px" }}>
               {page} of {totalPages}
             </span>
-            <button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
+            <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
               <i className="fal fa-angle-right" />
-            </button>
+            </Button>
           </div>
         </div>
       ) : null}
       <div className="hidden-xs" style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
         <div className="btn-group">
-          <button onClick={pageOne} disabled={!canPageOne} className="btn btn-default">
+          <Button onClick={pageOne} disabled={!canPageOne} className="btn btn-default">
             <i className="fal fa-angle-double-left" />
-          </button>
-          <button onClick={pageDown} disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
+          </Button>
+          <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
             <i className="fal fa-angle-left" />
-          </button>
+          </Button>
         </div>
         {online && resultsCount ? (
           <span style={{ display: "inline" }}>
@@ -201,14 +219,14 @@ const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resul
           </span>
         ) : null}
         <div className="btn-group">
-          <button onClick={pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
+          <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
             <i className="fal fa-angle-right" />
-          </button>
+          </Button>
           {/* TODO: pageLast */}
           {online ? (
-            <button onClick={pageLast} disabled={!canPageLast} className="btn btn-default">
+            <Button onClick={pageLast} disabled={!canPageLast} className="btn btn-default">
               <i className="fal fa-angle-double-right" />
-            </button>
+            </Button>
           ) : null}
         </div>
       </div>

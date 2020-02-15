@@ -1,9 +1,9 @@
 import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext } from "react";
 
-import BooksMenuBar from "./components/booksMenuBar";
+import BooksMenuBar, { BooksMenuBarDisabled } from "./components/booksMenuBar";
 import Loading from "app/components/loading";
 
-import GridView from "./components/bookViews/gridList";
+import GridView, { GridViewShell } from "./components/bookViews/gridList";
 import LazyModal from "app/components/lazyModal";
 
 import BasicListView from "./components/bookViews/basicList";
@@ -17,7 +17,7 @@ import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import { MutationOf, Mutations } from "graphql-typings";
-import { useBookSearchUiView } from "./booksUiState";
+import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
 import { ModuleUpdateContext } from "app/renderUI";
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
@@ -56,6 +56,33 @@ export type BooksModuleData = {
 };
 
 export const BooksModuleContext = createContext<BooksModuleData>(null);
+
+const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
+
+function booksUiStateReducer(state, [action, payload = null]) {
+  switch (action) {
+    case "select":
+      return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, true) } };
+    case "de-select":
+      return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, false) } };
+    case "toggle-select":
+      return { ...state, selectedBooks: { ...state.selectedBooks, [payload]: !state.selectedBooks[payload] } };
+    case "read-saving":
+      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, true) } };
+    case "read-saved":
+      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, false) } };
+    case "start-delete":
+      return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
+    case "cancel-delete":
+      return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, false) } };
+    case "delete":
+      return { ...state, deleting: { ...state.deleting, [payload]: true } };
+    case "reset":
+      return { ...initialBooksState };
+    default:
+      throw "Invalid key";
+  }
+}
 
 export default () => {
   const [tagEditModalOpen, editTags, stopEditingTags] = useCodeSplitModal();
@@ -99,66 +126,58 @@ export default () => {
   return (
     <div style={{}}>
       <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
-        <Suspense
-          fallback={
-            <div style={{ color: "orange" }}>
-              <Loading />
-            </div>
-          }
-        >
-          <MainContent />
+        <RenderModule />
 
-          <Suspense fallback={<Loading />}>
-            <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
-            <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
-            <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
+        <Suspense fallback={<Loading />}>
+          <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+          <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+          <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
 
-            <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
-            <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+          <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
+          <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
 
-            <CreateBookModal
-              title={editingBook ? `Edit ${editingBook.title}` : ""}
-              bookToEdit={editingBook}
-              isOpen={!!editingBook}
-              saveBook={saveEditingBook}
-              saveMessage={"Saved"}
-              onClosing={stopEditingBook}
-            />
-          </Suspense>
+          <CreateBookModal
+            title={editingBook ? `Edit ${editingBook.title}` : ""}
+            bookToEdit={editingBook}
+            isOpen={!!editingBook}
+            saveBook={saveEditingBook}
+            saveMessage={"Saved"}
+            onClosing={stopEditingBook}
+          />
         </Suspense>
       </BooksModuleContext.Provider>
     </div>
   );
 };
 
-const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
+const Fallback: SFC<{ uiView: BookSearchUiView }> = ({ uiView }) => {
+  return (
+    <>
+      <BooksMenuBarDisabled />
+      {uiView.isGridView ? (
+        <GridViewShell />
+      ) : (
+        <h1>
+          Books are loading <i className="fas fa-cog fa-spin"></i>
+        </h1>
+      )}
+    </>
+  );
+};
 
-function booksUiStateReducer(state, [action, payload = null]) {
-  switch (action) {
-    case "select":
-      return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, true) } };
-    case "de-select":
-      return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, false) } };
-    case "toggle-select":
-      return { ...state, selectedBooks: { ...state.selectedBooks, [payload]: !state.selectedBooks[payload] } };
-    case "read-saving":
-      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, true) } };
-    case "read-saved":
-      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, false) } };
-    case "start-delete":
-      return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
-    case "cancel-delete":
-      return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, false) } };
-    case "delete":
-      return { ...state, deleting: { ...state.deleting, [payload]: true } };
-    case "reset":
-      return { ...initialBooksState };
-    default:
-      throw "Invalid key";
-  }
-}
+const RenderModule: SFC<{}> = ({}) => {
+  const uiView = useBookSearchUiView();
 
-const MainContent: SFC<{}> = ({}) => {
+  return (
+    <div className="standard-module-container margin-bottom-lg">
+      <Suspense fallback={<Fallback uiView={uiView} />}>
+        <MainContent uiView={uiView}></MainContent>
+      </Suspense>
+    </div>
+  );
+};
+
+const MainContent: SFC<{ uiView: BookSearchUiView }> = ({ uiView }) => {
   const { books, totalPages, resultsCount, currentQuery } = useBooks();
   const { dispatchBooksUiState } = useContext(BooksModuleContext);
 
@@ -166,16 +185,15 @@ const MainContent: SFC<{}> = ({}) => {
   //useLayoutEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
   useEffect(() => dispatchBooksUiState(["reset"]), [currentQuery]);
 
-  const uiView = useBookSearchUiView();
   const { dispatch: uiDispatch } = uiView;
 
   return (
-    <div className="standard-module-container margin-bottom-lg">
+    <>
       <BooksMenuBar uiDispatch={uiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
       <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
         <BookResults {...{ books, uiView }} />
       </div>
-    </div>
+    </>
   );
 };
 
