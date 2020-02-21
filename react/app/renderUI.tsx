@@ -65,12 +65,10 @@ const App = () => {
       }
 
       if (appState.module != getCurrentModuleFromUrl()) {
-        console.log("START NEW NAV");
         startTransitionNewModule(() => {
           dispatch({ type: URL_SYNC });
         });
       } else {
-        console.log("START UPDATE");
         startTransitionModuleUpdate(() => {
           dispatch({ type: URL_SYNC });
         });
