@@ -7,7 +7,7 @@ const { createRoot } = ReactDOM as any;
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./appState";
 import localStorageManager from "util/localStorage";
-import Loading from "./components/loading";
+import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "../routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
@@ -47,13 +47,18 @@ export const AppContext = createContext<[AppState, any, any]>(null);
 export const ModuleUpdateContext = createContext<boolean>(false);
 
 const App = () => {
-  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 4000 });
+  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 1000 });
   const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 1000 });
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
 
   let Component = getModuleComponent(appState.module);
 
+  useEffect(() => {
+    startTransitionNewModule(() => {
+      dispatch({ type: URL_SYNC });
+    });
+  }, []);
   useEffect(() => {
     return history.listen(location => {
       let urlState = getCurrentUrlState();
@@ -88,18 +93,8 @@ const App = () => {
           <MobileMeta />
           <MainNavigationBar />
 
-          {isNewModulePending ? (
-            <div style={{ color: "red" }}>
-              <Loading />
-            </div>
-          ) : null}
-          <Suspense
-            fallback={
-              <div style={{ color: "blue" }}>
-                <Loading />
-              </div>
-            }
-          >
+          {isNewModulePending ? <Loading /> : null}
+          <Suspense fallback={<LongLoading />}>
             <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
               {Component ? <Component updating={moduleUpdatePending} /> : null}
             </div>

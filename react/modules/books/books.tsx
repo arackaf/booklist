@@ -172,7 +172,7 @@ const RenderModule: SFC<{}> = ({}) => {
   return (
     <div className="standard-module-container margin-bottom-lg">
       <Suspense fallback={<Fallback uiView={uiView} {...lastBookResults} />}>
-        <MainContent uiView={uiView} setLastBookResults={setLastBookResults}></MainContent>
+        <MainContent uiView={uiView} setLastBookResults={setLastBookResults} />
       </Suspense>
     </div>
   );
@@ -213,11 +213,7 @@ const BookResults: SFC<{ books: any; uiView: any }> = ({ books, uiView }) => {
         </div>
       ) : null}
 
-      {isUpdating ? (
-        <div style={{ color: "green" }}>
-          <Loading />
-        </div>
-      ) : null}
+      {isUpdating ? <Loading /> : null}
 
       {uiView.isGridView ? (
         <GridView books={books} />
