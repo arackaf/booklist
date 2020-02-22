@@ -47,8 +47,8 @@ export const AppContext = createContext<[AppState, any, any]>(null);
 export const ModuleUpdateContext = createContext<boolean>(false);
 
 const App = () => {
-  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 1000 });
-  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 1000 });
+  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 3000 });
+  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 3000 });
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
 
