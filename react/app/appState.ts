@@ -59,7 +59,7 @@ const initialState = {
   publicName: "",
   publicBooksHeader: "",
   isPublic: !!initialSearchState.userId,
-  module: getCurrentModuleFromUrl(),
+  module: null,
   urlState: initialUrlState,
   online: navigator.onLine,
   colorTheme: localStorageManager.get("color-theme", "scheme5")

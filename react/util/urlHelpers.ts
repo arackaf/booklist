@@ -1,8 +1,7 @@
 import createHistory from "history/createBrowserHistory";
+import queryString from "query-string";
 
 export const history = createHistory();
-
-import queryString from "query-string";
 
 export function getCurrentUrlState() {
   let location = history.location;
