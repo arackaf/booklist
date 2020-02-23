@@ -6,19 +6,11 @@ import CustomColorPicker from "app/components/customColorPicker";
 import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 
-import subjectsListStyles from "./subjectsList.module.css";
+import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/colorsState";
+import { LabelDisplay } from "app/components/labelDisplay";
 
-const {
-  listGroup,
-  editPane,
-  defaultSubjectDisplay,
-  subjectPreview,
-  textColorSaveBox,
-  subjectRow,
-  showOnHoverParent,
-  showOnHoverInline
-} = subjectsListStyles;
+const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow, showOnHoverParent } = subjectsListStyles;
 
 type subjectDisplayProps = {
   subject: SubjectType & { candidateMove: boolean };
@@ -94,28 +86,29 @@ const DefaultSubjectDisplay = props => {
 
   return (
     <div className={className}>
+      {mainIcon}
+      {!isSubjectSaving ? (
+        <a onClick={() => beginSubjectEdit(_id, subjectHash)}>
+          <i className="fa fa-fw fa-pencil" />
+        </a>
+      ) : null}
+      {!isSubjectSaving ? (
+        <a onClick={() => addNewSubject(_id)}>
+          <i className="fa fa-fw fa-plus" />
+        </a>
+      ) : null}
+      {!isSubjectSaving ? (
+        <a onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
+          <i className="fa fa-fw fa-trash" />
+        </a>
+      ) : null}
+      <LabelDisplay item={subject} />
       <div
-        className={`col-xs-12 ${showOnHoverParent} ${defaultSubjectDisplay}`}
+        className={`${showOnHoverParent} ${defaultSubjectDisplay}`}
         style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
       >
-        {mainIcon}
         &nbsp;
         <div className={subjectPreview}>{name || "<label preview>"}</div>
-        {!isSubjectSaving ? (
-          <a className={showOnHoverInline} onClick={() => beginSubjectEdit(_id, subjectHash)}>
-            <i className="fa fa-fw fa-pencil" />
-          </a>
-        ) : null}
-        {!isSubjectSaving ? (
-          <a className={showOnHoverInline} onClick={() => addNewSubject(_id)}>
-            <i className="fa fa-fw fa-plus" />
-          </a>
-        ) : null}
-        {!isSubjectSaving ? (
-          <a className={showOnHoverInline} onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
-            <i className="fa fa-fw fa-trash" />
-          </a>
-        ) : null}
       </div>
     </div>
   );
