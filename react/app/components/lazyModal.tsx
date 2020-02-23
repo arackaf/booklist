@@ -1,11 +1,11 @@
 import React, { lazy } from "react";
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useEffect } from "react";
 
 const LazyModal = lambda => props => {
   const everOpen = useRef(props.isOpen);
   const LazyComponent = useRef(lazy(lambda));
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     everOpen.current = everOpen.current || props.isOpen;
   }, [props.isOpen]);
 
