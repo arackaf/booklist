@@ -13,17 +13,7 @@ ul.listGroup ul.listGroup {
 }
 
 .defaultSubjectDisplay {
-  display: flex;
   align-items: center;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 5px;
-}
-.defaultSubjectDisplay > a {
-  font-size: 12px;
-}
-.defaultSubjectDisplay a {
-  color: inherit;
 }
 
 .subjectPreview {
@@ -42,9 +32,11 @@ ul.listGroup ul.listGroup {
 }
 
 div:global(.row).subjectRow {
-  align-items: center;
   padding-left: 0;
   margin-left: 0;
+  & > a {
+    font-size: 12px;
+  }
 }
 div:global(.row).subjectRow.editPane > div, div:global(.row).subjectRow.delete-pane > div {
   padding-left: 0;
