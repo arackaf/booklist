@@ -27,6 +27,8 @@ export function bookUiReducer(state = bookUiInitialState, action: { type: UI_ACT
   }
 }
 
+export type BookSearchUiView = ReturnType<typeof useBookSearchUiView>;
+
 export const useBookSearchUiView = () => {
   let [app] = useContext(AppContext);
   let [{ view }, dispatch] = useReducer(bookUiReducer, bookUiInitialState);

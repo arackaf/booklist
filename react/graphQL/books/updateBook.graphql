@@ -10,6 +10,8 @@ mutation updateBook($_id: String, $book: BookMutationInput) {
       publisher
       publicationDate
       authors
+      subjects
+      tags
     }
   }
 }

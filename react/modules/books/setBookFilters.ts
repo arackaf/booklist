@@ -1,4 +1,4 @@
-import { setSearchValues, getCurrentHistoryState } from "reactStartup";
+import { setSearchValues, getCurrentUrlState } from "util/urlHelpers";
 
 export const applyFilters = (nextState: any) => {
   let filterSubjectsVal = nextState.subjects.join("-");
@@ -57,7 +57,7 @@ export const removeFilters = (...names) => {
 };
 
 export const removeFilterSubject = _id => {
-  let hashFilters = getCurrentHistoryState().searchState;
+  let hashFilters = getCurrentUrlState().searchState;
   let existingSubjects = hashFilters.subjects.split("-").filter(s => s);
   let newSubjects = existingSubjects.filter(sId => sId != _id);
   let newFilters: any = {
@@ -71,7 +71,7 @@ export const removeFilterSubject = _id => {
 };
 
 export const removeFilterTag = _id => {
-  let hashFilters = getCurrentHistoryState().searchState;
+  let hashFilters = getCurrentUrlState().searchState;
   let existingTags = hashFilters.tags.split("-").filter(t => t);
 
   let newTags = existingTags.filter(tId => tId != _id);

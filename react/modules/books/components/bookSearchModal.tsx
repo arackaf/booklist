@@ -4,8 +4,8 @@ import BootstrapButton from "app/components/bootstrapButton";
 
 import Modal from "app/components/modal";
 import SelectAvailableTags from "app/components/selectAvailableTags";
-import DisplaySelectedTags from "app/components/displaySelectedTags";
 import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
+import DisplaySelectedTags from "app/components/displaySelectedTags";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
@@ -151,13 +151,13 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           </div>
         </div>
         <button style={{ display: "none" }} />
-        <input type="submit" style={{ display: "inline", visibility: "hidden" }} />
+        <input type="submit" style={{ display: "none" }} />
       </form>
       <div className="row" style={{ position: "relative" }}>
         <div className="col-sm-3 col-xs-12">
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
-        <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+        <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
           <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
         </div>
       </div>
@@ -168,7 +168,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             <div className="col-sm-3 col-xs-12">
               <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
             </div>
-            <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+            <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
               <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
             </div>
           </div>

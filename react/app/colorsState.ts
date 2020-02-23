@@ -1,26 +1,15 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
-import { graphqlClient } from "util/graphql";
-import { AppState } from "./appState";
 import { AppContext } from "./renderUI";
+import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
+import { QueryOf, Queries } from "graphql-typings";
 
 export function useColors() {
   let appPacket = useContext(AppContext);
-  let [{ loaded, colors }, update] = useState({ loaded: false, colors: [] });
-  let userId = "";
-  if (appPacket && appPacket.length) {
-    userId = appPacket[0].userId;
-  }
 
-  useEffect(() => {
-    if (userId) {
-      Promise.resolve(graphqlClient.runQuery(AllLabelColorsQuery, { cache: 9 })).then<any>(({ data: { allLabelColors } }) => {
-        let { LabelColors: labelColors } = allLabelColors;
-        update({ loaded: true, colors: labelColors.map(c => c.backgroundColor) });
-      });
-    }
-  }, [userId]);
+  let userId = appPacket && appPacket.length ? appPacket[0].userId : "";
 
-  return { loaded, colors };
+  let { data } = useSuspenseQuery<QueryOf<Queries["allLabelColors"]>>(buildQuery(AllLabelColorsQuery, { cache: 9 }, { active: !!userId }));
+  return { loaded: !!data, colors: data ? data.allLabelColors.LabelColors.map(c => c.backgroundColor) : null };
 }

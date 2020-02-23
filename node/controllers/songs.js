@@ -62,7 +62,7 @@ class SongsController {
       } else {
         song.group = true;
       }
-      await db.collection("songs").insertOne(song);
+      await db.collection("songs").insert(song);
 
       this.send({ success: true });
     } catch (er) {

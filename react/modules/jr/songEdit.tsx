@@ -30,7 +30,7 @@ const SongList = props => {
   };
 
   const addSong = packet => {
-    ajaxUtil.post("/songs/addSong", packet).then(res => {
+    return ajaxUtil.post("/songs/addSong", packet).then(res => {
       setNewSong({ singers: [] });
       setAdding(false);
     });
@@ -145,7 +145,7 @@ const SongDisplayEditing = props => {
   const artistRef = useRef(null);
   const [isGroup, setIsGroup] = useState(song.group);
   const [saving, setSaving] = useState(false);
-  const singers = ["Jason", "Jordan", "Matt", "Michael", "Ray", "Rob", "Scotty"];
+  const singers = ["Jason", "Jordan", "Matt", "Michael", "Ray", "Rob", "Scotty", "Sunshine", "Ingrid"];
   const [currentSingers, setCurrentSingers] = useState(new Set(song.singers || []));
 
   const toggleSinger = singer => {

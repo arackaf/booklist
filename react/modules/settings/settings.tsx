@@ -8,14 +8,14 @@ import localStorageManager from "util/localStorage";
 import { AppContext } from "app/renderUI";
 
 const TabContent = ({ currentTab }) => {
-  const [{ isPublic }] = useContext(AppContext);
+  const [{ isPublic, isLoggedIn }] = useContext(AppContext);
   if (isPublic) {
     currentTab = "theme";
   }
 
   return (
     <div className="tab-content">
-      {!isPublic ? (
+      {!isPublic && isLoggedIn ? (
         <>
           <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "publicSettings" })}>
             <PublicUserSettings />
@@ -36,9 +36,9 @@ const TabContent = ({ currentTab }) => {
 };
 
 const TabHeaders = ({ currentTab, setTab }) => {
-  const [{ isPublic }] = useContext(AppContext);
+  const [{ isPublic, isLoggedIn }] = useContext(AppContext);
 
-  return isPublic ? (
+  return isPublic || !isLoggedIn ? (
     <div className="tab-headers">
       <div className="tab-header disabled">
         <a>Public settings</a>

@@ -4,13 +4,13 @@ import { AjaxButton } from "app/components/bootstrapButton";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
-import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { AppContext } from "app/renderUI";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
-  const { loading, loaded, data } = useQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
+  const { loading, loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
 
   if (!online) {
     return <h1>Offline</h1>;

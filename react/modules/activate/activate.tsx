@@ -1,4 +1,4 @@
-import { history, getCurrentHistoryState } from "reactStartup";
+import { history } from "util/urlHelpers";
 import React, { Component, SFC, useContext } from "react";
 import { AppContext } from "app/renderUI";
 
@@ -34,7 +34,8 @@ class ActivateIfLoggedIn extends Component<any, any> {
 }
 
 const ActivateIfNotLoggedIn = props => {
-  let alreadyActivated = !!getCurrentHistoryState().searchState.alreadyActivated;
+  let [appState] = useContext(AppContext);
+  let alreadyActivated = !!appState.urlState.searchState.alreadyActivated;
   return (
     <div>
       <MainActivatePane>
