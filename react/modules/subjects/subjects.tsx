@@ -48,6 +48,7 @@ const SubjectDisplayContent = props => {
   let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
 
   let classToPass = `row padding-top padding-bottom ${subjectRow}`;
+  let defaultDisplayClass = `${classToPass} ${defaultSubjectDisplay}`;
   return (
     <div>
       {isEditingSubject ? (
@@ -63,7 +64,7 @@ const SubjectDisplayContent = props => {
       ) : isPendingDelete ? (
         <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} />
       ) : (
-        <DefaultSubjectDisplay className={classToPass} subject={subject} isSubjectSaving={isSubjectSaving} isSubjectSaved={isSubjectSaved} />
+        <DefaultSubjectDisplay className={defaultDisplayClass} subject={subject} isSubjectSaving={isSubjectSaving} isSubjectSaved={isSubjectSaved} />
       )}
 
       {effectiveChildren.length ? <SubjectList style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
@@ -104,8 +105,8 @@ const DefaultSubjectDisplay = props => {
       ) : null}
       <LabelDisplay item={subject} />
       <div
-        className={`${showOnHoverParent} ${defaultSubjectDisplay}`}
-        style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
+        className={`${showOnHoverParent}`}
+        style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white", display: "none" }}
       >
         &nbsp;
         <div className={subjectPreview}>{name || "<label preview>"}</div>
