@@ -42,16 +42,10 @@ ul.listGroup ul.listGroup {
 }
 
 div:global(.row).subjectRow {
+  align-items: center;
   padding-left: 0;
   margin-left: 0;
 }
 div:global(.row).subjectRow.editPane > div, div:global(.row).subjectRow.delete-pane > div {
   padding-left: 0;
-}
-
-.showOnHoverParent:hover > .showOnHoverInline {
-  display: inline;
-}
-.showOnHoverInline {
-  display: none;
 }
