@@ -1,56 +1,61 @@
-import React, { Component } from "react";
+import React, { Component, SFC } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
-import { Transition, config } from "react-spring";
+import { Transition } from "react-spring/renderprops";
+import { useTransition, animated } from "react-spring";
 
 import "css/reach-modal-overrides.scss";
 
-export class StandardModalHeader extends Component<{ onHide: any; caption: any }, any> {
-  render() {
-    let { onHide, caption } = this.props;
-    return (
-      <>
-        <div className="standard-reach-header">
-          <h4 className="modal-title">{caption}</h4>
-          <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
-            <span>&times;</span>
-          </a>
-        </div>
-        <hr />
-      </>
-    );
-  }
-}
+export const StandardModalHeader: SFC<{ onHide: any; caption: any }> = props => {
+  let { onHide, caption } = props;
+  return (
+    <>
+      <div className="standard-reach-header">
+        <h4 className="modal-title">{caption}</h4>
+        <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
+          <span>&times;</span>
+        </a>
+      </div>
+      <hr />
+    </>
+  );
+};
+
+const AnimatedDialogOverlay = animated(DialogOverlay);
+const AnimatedDialogContent = animated(DialogContent);
 
 type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
-export default class Modal extends Component<ModalTypes, any> {
-  render() {
-    let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = this.props;
+const Modal: SFC<ModalTypes> = props => {
+  let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
+
+  const modalMaybe = useTransition(!!isOpen, null, {
+    config: isOpen ? { mass: 1, tension: 350, friction: 30 } : { duration: 150 },
+    from: { opacity: 0, transform: `translate3d(0px, -10px, 0px)` },
+    enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
+    leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
+  });
+
+  let results = modalMaybe.map(({ item: isOpen, props: styles }: any) => {
+    if (isOpen) console.log(isOpen, "---", styles);
     return (
-      <Transition
-        config={{ ...config.gentle, overshootClamping: true }}
-        from={{ opacity: 0, y: -10 }}
-        enter={{ opacity: 1, y: 0 }}
-        leave={{ opacity: 0, y: 10 }}
-      >
-        {isOpen
-          ? (styles: any) => (
-              <DialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
-                <DialogContent
-                  style={{
-                    transform: `translate3d(0px, ${styles.y}px, 0px)`,
-                    border: "4px solid hsla(0, 0%, 0%, 0.5)",
-                    borderRadius: 10,
-                    ...style
-                  }}
-                >
-                  {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
-                  {children}
-                </DialogContent>
-              </DialogOverlay>
-            )
-          : null}
-      </Transition>
+      isOpen && (
+        <AnimatedDialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
+          <AnimatedDialogContent
+            style={{
+              transform: styles.transform,
+              border: "4px solid hsla(0, 0%, 0%, 0.5)",
+              borderRadius: 10,
+              ...style
+            }}
+          >
+            {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
+            {children}
+          </AnimatedDialogContent>
+        </AnimatedDialogOverlay>
+      )
     );
-  }
-}
+  });
+  return results.find(item => item) || null;
+};
+
+export default Modal;

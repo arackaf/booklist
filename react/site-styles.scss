@@ -344,6 +344,10 @@ a {
   outline: 0;
 }
 
+input[disabled]{
+  opacity: 0.6;
+}
+
 hr {
   border: 1px solid var(--primary-4);
 }
@@ -394,6 +398,21 @@ label {
   z-index: 5000;
 }
 
+.wait-for-long-loading {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  opacity: 0.2;
+  z-index: 5000;
+  display: flex;
+  justify-content: center;
+
+  & > div {
+    display: flex;
+  }
+}
+
 .drag-handle {
   cursor: move;
 }
@@ -435,6 +454,12 @@ select.form-control {
 input.form-control,
 select.form-control {
   font-size: 14px;
+}
+
+div, span {
+  &.disabled { 
+    opacity: 0.6;
+  }
 }
 
 div.responsive-radios {

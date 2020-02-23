@@ -1,11 +1,15 @@
-import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState } from "react";
-import { render } from "react-dom";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useState, lazy, useRef } from "react";
+const { useTransition } = React as any;
+
+import ReactDOM from "react-dom";
+const { createRoot } = ReactDOM as any;
+
 import MainNavigationBar from "app/components/mainNavigation";
-import { useAppState, AppState, getCurrentModule } from "./appState";
+import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./appState";
 import localStorageManager from "util/localStorage";
-import Loading from "./components/loading";
+import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "../routing";
-import { history, getCurrentHistoryState } from "util/urlHelpers";
+import { history, getCurrentUrlState } from "util/urlHelpers";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
@@ -35,34 +39,47 @@ const WellUiSwitcher: FunctionComponent<{}> = () => {
   );
 };
 
-export function clearUI() {
-  render(<div />, document.getElementById("home"));
-}
-
-export function renderUI(Component = null) {
-  render(<App />, document.getElementById("home"));
+export function renderUI() {
+  createRoot(document.getElementById("home")).render(<App />);
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
+export const ModuleUpdateContext = createContext<boolean>(false);
 
 const App = () => {
+  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 3000 });
+  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 3000 });
   let appStatePacket = useAppState();
-  let [appState, appActions] = appStatePacket;
+  let [appState, appActions, dispatch] = appStatePacket;
 
   let Component = getModuleComponent(appState.module);
 
   useEffect(() => {
-    history.listen(location => {
-      let publicUserId = getCurrentHistoryState().searchState.userId;
+    startTransitionNewModule(() => {
+      dispatch({ type: URL_SYNC });
+    });
+  }, []);
+  useEffect(() => {
+    return history.listen(location => {
+      let urlState = getCurrentUrlState();
+      let publicUserId = urlState.searchState.userId;
 
       //changing public viewing status - reload page
       if (publicUserId != appState.publicUserId) {
         return location.reload();
       }
 
-      appActions.setModule(getCurrentModule());
+      if (appState.module != getCurrentModuleFromUrl()) {
+        startTransitionNewModule(() => {
+          dispatch({ type: URL_SYNC });
+        });
+      } else {
+        startTransitionModuleUpdate(() => {
+          dispatch({ type: URL_SYNC });
+        });
+      }
     });
-  }, []);
+  }, [appState.module]);
 
   useEffect(() => {
     window.addEventListener("offline", appActions.isOffline);
@@ -71,15 +88,27 @@ const App = () => {
 
   return (
     <AppContext.Provider value={appStatePacket}>
-      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-        <MobileMeta />
-        <MainNavigationBar />
+      <ModuleUpdateContext.Provider value={moduleUpdatePending}>
+        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
+          <MobileMeta />
+          <MainNavigationBar />
 
-        <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-          <Suspense fallback={<Loading />}>{Component ? <Component /> : null}</Suspense>
+          {isNewModulePending ? <Loading /> : null}
+          <Suspense fallback={<LongLoading />}>
+            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+              {Component ? <Component updating={moduleUpdatePending} /> : null}
+            </div>
+          </Suspense>
+
+          <WellUiSwitcher />
         </div>
-        <WellUiSwitcher />
-      </div>
+      </ModuleUpdateContext.Provider>
     </AppContext.Provider>
   );
 };
+
+const MainContent = ({ Component }) => (
+  <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
+    {Component ? <Component /> : null}
+  </div>
+);

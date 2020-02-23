@@ -6,6 +6,7 @@ import uiStyles from "./uiStyles.module.css";
 import basicListClasses from "./basicList.module.css";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { useBooks } from "modules/books/booksState";
+import { BooksModuleContext } from "modules/books/books";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { dockedToPanel, listGroup, listGroupItem, listGroupItemHeading, listGroupItemText } = basicListClasses;
@@ -62,16 +63,17 @@ const BookViewListMobileItem = props => {
   );
 };
 
-const BookViewListMobile: SFC<{ editBook: any; booksUiState: any; dispatchBooksUiState: any; runDelete: any }> = props => {
-  const { books } = useBooks();
+const BookViewListMobile: SFC<{ books: any }> = props => {
+  const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
+  const { runDelete, editBook } = actions;
+
   const [{ online, isPublic }] = useContext(AppContext);
-  const { booksUiState, dispatchBooksUiState, editBook, runDelete } = props;
 
   return (
     <div>
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className={`${listGroup} ${dockedToPanel}`}>
-          {books.map((book, i) => (
+          {props.books.map((book, i) => (
             <BookViewListMobileItem
               key={book._id}
               {...{ book, editBook, booksUiState, dispatchBooksUiState, online, runDelete }}

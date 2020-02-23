@@ -7,7 +7,7 @@ import EditBookInfo from "./editBookInfo";
 import { updateSmallCover, updateMediumCover } from "util/coverUpdates";
 
 class ManualBookEntry extends Component<any, any> {
-  state = { tab: "basic", bookEditing: null };
+  state = { tab: "basic", bookEditing: null, title: "" };
 
   closeModal() {
     this.props.onClosing();
@@ -18,9 +18,9 @@ class ManualBookEntry extends Component<any, any> {
       this.editBook(this.props.bookToEdit);
     }
   }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.bookToEdit !== nextProps.bookToEdit) {
-      this.editBook(nextProps.bookToEdit);
+  componentDidUpdate(prevProps) {
+    if (this.props.bookToEdit !== prevProps.bookToEdit && this.props.bookToEdit) {
+      this.editBook(this.props.bookToEdit);
     }
   }
   updateBook = updateFn => {
@@ -29,6 +29,7 @@ class ManualBookEntry extends Component<any, any> {
   editBook(book) {
     this.setState({
       tab: "basic",
+      title: this.props.title,
       bookEditing: { ...book }
     });
   }
@@ -39,7 +40,7 @@ class ManualBookEntry extends Component<any, any> {
     let bookSaved = book && book._id;
 
     return (
-      <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.props.title}>
+      <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.state.title}>
         <div className="tab-headers" style={{ marginBottom: "10px" }}>
           <div className={`tab-header ${tab == "basic" ? "active" : ""}`}>
             <a onClick={() => this.setState({ tab: "basic" })}>Book info</a>

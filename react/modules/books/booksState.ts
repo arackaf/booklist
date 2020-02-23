@@ -3,8 +3,8 @@ import { graphqlClient } from "util/graphql";
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo } from "react";
-import { useQuery, buildQuery } from "micro-graphql-react";
-import { syncResults, clearCache, syncDeletes } from "util/graphqlHelpers";
+import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
+import { syncResults, clearCache } from "util/graphqlHelpers";
 
 import delve from "dlv";
 import { useTagsState } from "app/tagsState";
@@ -62,8 +62,6 @@ graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetB
 window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
 
 export const useBooks = () => {
-  let { subjectsLoaded } = useSubjectsState();
-  let { tagsLoaded } = useTagsState();
   const searchState = useCurrentSearch();
   const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
   const onBooksMutation = [
@@ -87,7 +85,7 @@ export const useBooks = () => {
       }
     }
   ];
-  const { data, loading, loaded, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(
+  const { data, loaded, currentQuery } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(
     buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation })
   );
 
@@ -102,9 +100,7 @@ export const useBooks = () => {
     currentQuery,
     books,
     resultsCount,
-    totalPages,
-    booksLoading: loading || !tagsLoaded || !subjectsLoaded,
-    booksLoaded: loaded && tagsLoaded && subjectsLoaded
+    totalPages
   };
 };
 
