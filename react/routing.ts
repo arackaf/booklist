@@ -16,6 +16,9 @@ const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */
 const JrComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "./modules/jr/songEdit"));
 
 export const getModuleComponent = moduleToLoad => {
+  if (moduleToLoad === null) {
+    return null;
+  }
   let adminUser = isAdmin();
   if (moduleToLoad == "admin" && !adminUser) {
     return HomeComponent;
@@ -27,7 +30,7 @@ export const getModuleComponent = moduleToLoad => {
       return AuthenticateComponent;
     case "books":
     case "view":
-      booksPreload();
+      //booksPreload();
       return BooksComponent;
     case "home":
       return HomeComponent;

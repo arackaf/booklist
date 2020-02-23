@@ -1,8 +1,8 @@
 import { graphqlClient } from "util/graphql";
 
 import GetTags from "graphQL/tags/getTags.graphql";
-import { useContext, useMemo, createContext, useState } from "react";
-import { buildQuery, useQuery } from "micro-graphql-react";
+import { useContext, useMemo } from "react";
+import { buildQuery, useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "./renderUI";
 
 import delve from "dlv";
@@ -31,7 +31,7 @@ graphqlClient.subscribeMutation([
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
   const req = { publicUserId };
-  const { loaded, data } = useQuery<QueryOf<Queries["allTags"]>>(
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(
     buildQuery(GetTags, req, { onMutation: { when: /(update|delete|create)Tag/, run: ({ refresh }) => refresh() } })
   );
 

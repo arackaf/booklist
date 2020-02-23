@@ -39,7 +39,7 @@ const Login: FunctionComponent<{}> = props => {
     ajaxUtil.post(
       "/react/login",
       { username, password, rememberme },
-      () => appActions.newLogin(),
+      () => window.location.reload(),
       () => setState(state => ({ ...state, running: false, errorCode: "c2" }))
     );
   };

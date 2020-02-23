@@ -1,4 +1,4 @@
-import React, { SFC, CSSProperties, useContext, useMemo, useState, useLayoutEffect, useCallback, Fragment, memo, useRef } from "react";
+import React, { SFC, CSSProperties, useContext, useMemo, useState } from "react";
 
 import { AjaxButton } from "app/components/bootstrapButton";
 import { LabelDisplay } from "app/components/labelDisplay";
@@ -12,10 +12,10 @@ import { useQuery, buildQuery } from "micro-graphql-react";
 
 import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
-import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort } from "modules/books/setBookFilters";
+import { BooksModuleContext } from "modules/books/books";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -256,16 +256,6 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
   );
 };
 
-type BookViewListGridTypes = {
-  editBooksSubjects: any;
-  editBooksTags: any;
-  editBook: any;
-  setRead: any;
-  runDelete: any;
-  booksUiState: any;
-  dispatchBooksUiState: any;
-};
-
 const useBookSelection = (books, selectedBooks) => {
   return useMemo(() => {
     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
@@ -277,14 +267,68 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
-  const { editBooksSubjects, editBooksTags, editBook, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
+const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
+
+export const GridViewShell: SFC<{}> = ({}) => {
+  const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
+
+  return (
+    <div style={{ minHeight: 400 }}>
+      <div>
+        <table style={{ position: "relative" }} className="table no-padding-top">
+          <thead>
+            <tr>
+              {!viewingPublic && online ? (
+                <th style={{ ...stickyHeaderStyle, textAlign: "center" }}>
+                  <a style={{ fontSize: "12pt" }}>
+                    <i className={"fal fa-square"} />
+                  </a>
+                </th>
+              ) : null}
+              <th style={{ ...stickyHeaderStyle }} />
+              <th style={{ ...stickyHeaderStyle, minWidth: "200px" }}>
+                <a className="no-underline">Title</a>
+              </th>
+              <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Subjects</th>
+              <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Tags</th>
+              <th style={{ minWidth: "90px", ...stickyHeaderStyle }} />
+              <th style={{ ...stickyHeaderStyle }} />
+              <th style={{ minWidth: "85px", ...stickyHeaderStyle }}>
+                <a className="no-underline">Pages</a>
+              </th>
+              <th style={{ ...stickyHeaderStyle }}>
+                <a className="no-underline">Added</a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={8}>
+                <h1>
+                  Books are loading <i className="fas fa-cog fa-spin"></i>
+                </h1>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const BookViewListGrid: SFC<{ books: any }> = ({ books }) => {
+  const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
+  const { setRead, runDelete } = actions;
+
+  const { editBook, openBookSubModal, openBookTagModal } = actions;
   const { selectedBooks } = booksUiState;
 
-  const { books } = useBooks();
   const { allAreChecked } = useBookSelection(books, selectedBooks);
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { sort: currentSort, sortDirection } = useCurrentSearch();
+
+  const editSubjectsForBook = book => openBookSubModal([book]);
+  const editTagsForBook = book => openBookTagModal([book]);
 
   const toggleCheckAll = () => {
     dispatchBooksUiState([allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
@@ -301,8 +345,6 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
 
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
-
-  const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
 
   return (
     <div style={{ minHeight: 400 }}>
@@ -344,8 +386,8 @@ const BookViewListGrid: SFC<BookViewListGridTypes> = props => {
               {books.map((book, index) => (
                 <BookRow
                   key={book._id}
-                  editBooksSubjects={editBooksSubjects}
-                  editBooksTags={editBooksTags}
+                  editBooksSubjects={editSubjectsForBook}
+                  editBooksTags={editTagsForBook}
                   {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
                 />
               ))}

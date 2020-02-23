@@ -26,7 +26,7 @@ export function getStatePacket<T>(reducer, initialState, actions?): [T, any, any
   let newDispatch = useCallback(
     val => {
       if (typeof val === "object") {
-        dispatch(val);
+        (dispatch as any)(val);
       } else if (typeof val === "function") {
         val(dispatch, () => state);
       } else throw "Fuck off";

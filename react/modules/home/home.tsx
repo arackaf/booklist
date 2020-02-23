@@ -9,6 +9,7 @@ import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
 import { SectionLoading } from "app/components/loading";
+import { goto } from "reactStartup";
 
 const MainHomePane = props => (
   <div>
@@ -121,7 +122,7 @@ const HomeIfNotLoggedIn = () => (
       </a>
       <br />
       <br />
-      <a style={{ textDecoration: "none" }} className="btn btn-primary" href="/login">
+      <a style={{ textDecoration: "none" }} className="btn btn-primary" onClick={() => goto("login")}>
         Login or create an account
       </a>
     </MainHomePane>

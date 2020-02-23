@@ -1,4 +1,4 @@
-import React, { SFC, useState, Suspense } from "react";
+import React, { SFC, useState, Suspense, useContext } from "react";
 import { useBooks } from "../../booksState";
 import LazyModal from "app/components/lazyModal";
 
@@ -9,12 +9,14 @@ import coversClasses from "./coversList.module.scss";
 import { CoverMedium } from "app/components/bookCoverComponent";
 import Loading from "app/components/loading";
 import { useCodeSplitModal } from "modules/books/util";
+import { BooksModuleContext } from "modules/books/books";
 
 const { coversList } = coversClasses;
 
-const BookViewCovers: SFC<any> = props => {
-  const { saveEditingBook } = props;
-  const { books } = useBooks();
+const BookViewCovers: SFC<{ books: any }> = props => {
+  const { actions } = useContext(BooksModuleContext);
+  const { saveEditingBook } = actions;
+
   const [displaying, setDisplaying] = useState(null);
 
   const [bookPreviewing, openBookPreview, closeBookPreview] = useCodeSplitModal(null);
@@ -47,7 +49,7 @@ const BookViewCovers: SFC<any> = props => {
       </Suspense>
       <div>
         <div style={{ border: 0 }} className={coversList}>
-          {books.map((book, i) => (
+          {props.books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
               <div>
                 <CoverMedium url={book.mediumImage} />

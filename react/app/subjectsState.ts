@@ -5,7 +5,7 @@ import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "./renderUI";
-import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 
@@ -30,7 +30,7 @@ graphqlClient.subscribeMutation([
 export function useSubjectsState() {
   let [app] = useContext(AppContext);
   let { userId, publicUserId } = app;
-  let { loaded, data } = useQuery<QueryOf<Queries["allSubjects"]>>(
+  let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(
     buildQuery(
       AllSubjectsQuery,
       { publicUserId },

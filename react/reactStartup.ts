@@ -7,15 +7,16 @@ import { renderUI } from "app/renderUI";
 import { history } from "util/urlHelpers";
 
 import "util/ajaxUtil";
+import "util/graphql";
 
 import setupServiceWorker from "./util/setupServiceWorker";
-import { getCurrentHistoryState } from "util/urlHelpers";
+import { getCurrentUrlState } from "util/urlHelpers";
 
 setupServiceWorker();
 renderUI();
 
 export function goto(module) {
-  var userId = getCurrentHistoryState().searchState.userId;
+  var userId = getCurrentUrlState().searchState.userId;
   let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
 
   if (currentModule !== module) {
