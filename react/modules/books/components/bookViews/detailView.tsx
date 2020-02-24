@@ -35,7 +35,7 @@ const DetailsView = props => {
           {book.isbn ? <div>{book.isbn}</div> : null}
           <div className="margin-top margin-bottom">
             <button className="btn btn-xs" onClick={doEdit}>
-              Edit book <i className="fal fa-pencil" />
+              Edit book <i className="fal fa-pencil-alt"></i>
             </button>
           </div>
         </div>

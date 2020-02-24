@@ -29,7 +29,7 @@ const BookViewListMobileItem = props => {
               {!props.viewingPublic && online ? (
                 <>
                   <button className="btn btn-xs btn-light btn-round-icon" onClick={() => props.editBook(book)}>
-                    <i className="fa fa-fw fa-pencil" />
+                    <i className="fal fa-pencil-alt"></i>
                   </button>
                   <button
                     style={{ marginLeft: "5px" }}
