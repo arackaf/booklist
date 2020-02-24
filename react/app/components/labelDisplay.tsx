@@ -16,7 +16,7 @@ export const LabelDisplay = props => {
 };
 
 export const EditableExpandableLabelDisplay = props => {
-  let { item, expanded } = props;
+  let { item, expanded, onEdit } = props;
   let extraStyles = props.style || {};
   let extraClasses = props.className || "";
 
@@ -37,7 +37,7 @@ export const EditableExpandableLabelDisplay = props => {
       <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: "1px solid white" }}>{props.name}</span>
 
       {props.children || item.name}
-      <a onClick={props.doRemove} style={{ color: item.textColor || "white", cursor: "pointer", marginLeft: "5px" }}>
+      <a onClick={onEdit} style={{ color: item.textColor || "white", cursor: "pointer", marginLeft: "5px" }}>
         <i className="fal fa-pencil-alt"></i>
       </a>
     </span>
