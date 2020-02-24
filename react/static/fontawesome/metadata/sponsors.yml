@@ -53,6 +53,11 @@ apper-systems-ab:
     - asymmetrik
   label: 'Asymmetrik, Ltd.'
   url: 'http://asymmetrik.com'
+ausmed-education:
+  icons:
+    - user-nurse
+  label: Ausmed Education
+  url: 'https://www.ausmed.com.au'
 avianex:
   icons:
     - avianex
@@ -123,6 +128,11 @@ cuttlefish:
     - cuttlefish
   label: Cuttlefish
   url: 'http://wearecuttlefish.com'
+cymedica:
+  icons:
+    - wave-square
+  label: CyMedica
+  url: 'https://www.cymedicaortho.com'
 darren-wiebe:
   icons:
     - church
@@ -157,6 +167,11 @@ dyalog-apl:
     - dyalog
   label: Dyalog APL
   url: 'http://www.dyalog.com'
+econopublish:
+  icons:
+    - hat-cowboy-side
+  label: EconoPublish
+  url: 'https://www.econopublish.com'
 firstdraft:
   icons:
     - firstdraft
@@ -291,6 +306,15 @@ in-site-systems:
     - toolbox
   label: InSite Systems
   url: 'https://www.insitesystems.com'
+inspira-bvba:
+  icons:
+    - chess-knight
+  label: Inspira bvba
+  url: 'https://www.inspira.be'
+joe-emison:
+  icons:
+    - blender-phone
+  label: Joe Emison
 joget:
   icons:
     - joget
@@ -323,6 +347,31 @@ med-apps:
     - medapps
   label: MedApps
   url: 'http://medapps.com.au'
+medapps:
+  icons:
+    - book-medical
+    - book-user
+    - books-medical
+    - clinic-medical
+    - clipboard-user
+    - comment-alt-medical
+    - comment-medical
+    - crutch
+    - crutches
+    - disease
+    - files-medical
+    - head-side-brain
+    - head-side-medical
+    - hospital-user
+    - hospitals
+    - laptop-medical
+    - pager
+    - stretcher
+    - user-md-chat
+    - users-medical
+    - walker
+  label: MedApps
+  url: 'https://medapps.com.au'
 megaport:
   icons:
     - megaport
@@ -384,11 +433,26 @@ pal-fed:
     - palfed
   label: PalFed
   url: 'https://www.palfed.com'
+pcsg:
+  icons:
+    - horse-head
+  label: PCSG
+  url: 'https://www.pcsg.de'
 phabricator:
   icons:
     - phabricator
   label: Phabricator
   url: 'http://phacility.com'
+promo-wizard:
+  icons:
+    - hat-wizard
+  label: Promo Wizard
+  url: 'https://promowizard.co.uk'
+pulse-eight:
+  icons:
+    - volume-mute
+  label: Pulse-Eight
+  url: 'https://pulse-eight.com'
 purely-interactive:
   icons:
     - kiwi-bird
@@ -404,6 +468,11 @@ quin-scape:
     - quinscape
   label: QuinScape
   url: 'https://www.quinscape.de'
+reacteurope:
+  icons:
+    - reacteurope
+  label: ReactEurope
+  url: 'https://www.react-europe.org'
 readme-io:
   icons:
     - readme
@@ -414,11 +483,6 @@ red-river:
     - red-river
   label: red river
   url: 'https://river.red'
-rendact:
-  icons:
-    - rendact
-  label: Rendact
-  url: 'https://rendact.com'
 replyd:
   icons:
     - replyd
@@ -472,6 +536,7 @@ rocket-chat:
     - poo
     - quote-left
     - quote-right
+    - rocketchat
     - smile
     - smile-plus
     - video
@@ -656,6 +721,11 @@ themeco:
     - themeco
   label: Themeco
   url: 'https://theme.co'
+think-peaks:
+  icons:
+    - think-peaks
+  label: Think Peaks
+  url: 'https://thinkpeaks.com/'
 typo3:
   icons:
     - typo3
@@ -682,11 +752,18 @@ via:
     - draw-circle
     - draw-polygon
     - draw-square
+    - house-damage
     - layer-group
     - layer-minus
     - layer-plus
+    - skull-crossbones
+    - user-injured
   label: VIA Traffic Software Solutions
   url: 'https://www.via.software'
+victor-costan:
+  icons:
+    - otter
+  label: Staphany Park and Victor Costan
 vnv:
   icons:
     - vnv
@@ -696,6 +773,7 @@ weedable:
   icons:
     - bong
     - cannabis
+    - hippo
     - joint
     - mortar-pestle
     - prescription
@@ -706,3 +784,13 @@ whmcs:
     - whmcs
   label: WHMCS
   url: 'https://www.whmcs.com'
+workrails:
+  icons:
+    - briefcase
+  label: WorkRails
+  url: 'https://www.workrails.com'
+wpressr:
+  icons:
+    - wpressr
+  label: wpressr
+  url: 'https://wpressr.com'

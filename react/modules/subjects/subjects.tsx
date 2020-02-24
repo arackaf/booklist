@@ -8,7 +8,7 @@ import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/colorsState";
-import { LabelDisplay } from "app/components/labelDisplay";
+import { LabelDisplay, EditableExpandableLabelDisplay } from "app/components/labelDisplay";
 
 const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow, showOnHoverParent } = subjectsListStyles;
 
@@ -90,7 +90,7 @@ const DefaultSubjectDisplay = props => {
       {mainIcon}
       {!isSubjectSaving ? (
         <a onClick={() => beginSubjectEdit(_id, subjectHash)}>
-          <i className="fa fa-fw fa-pencil" />
+          <i className="fal fa-pencil-alt"></i>
         </a>
       ) : null}
       {!isSubjectSaving ? (
@@ -103,7 +103,7 @@ const DefaultSubjectDisplay = props => {
           <i className="fa fa-fw fa-trash" />
         </a>
       ) : null}
-      <LabelDisplay item={subject} />
+      <EditableExpandableLabelDisplay item={subject} />
       <div
         className={`${showOnHoverParent}`}
         style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white", display: "none" }}
