@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useEffect, useRef, useContext } from "react";
+import React, { FunctionComponent, useEffect, useRef, useContext, useState, useMemo, useCallback } from "react";
 import { useEditingSubjectHash, usePendingSubjects, useSubjectEditInfo, SubjectType } from "modules/subjects/useSubjectsDndState";
 import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
-import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
+import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations, useSubjectsState, getEligibleParents } from "app/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
@@ -51,15 +51,7 @@ const SubjectDisplayContent = props => {
   let defaultDisplayClass = `${classToPass} ${defaultSubjectDisplay}`;
   return (
     <div>
-      {isEditingSubject ? (
-        <EditingSubjectDisplay
-          className={classToPass}
-          subject={subject}
-          isSubjectSaving={isSubjectSaving}
-          editingSubject={editingSubject}
-          colors={colors}
-        />
-      ) : isDeleting ? (
+      {isEditingSubject ? null : isDeleting ? ( // <EditingSubjectDisplay subject={subject} isSubjectSaving={isSubjectSaving} editingSubject={editingSubject} colors={colors} />
         <DeletingSubjectDisplay className={classToPass} name={subject.name} />
       ) : isPendingDelete ? (
         <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} />
@@ -67,7 +59,7 @@ const SubjectDisplayContent = props => {
         <DefaultSubjectDisplay className={defaultDisplayClass} subject={subject} isSubjectSaving={isSubjectSaving} isSubjectSaved={isSubjectSaved} />
       )}
 
-      {effectiveChildren.length ? <SubjectList style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
+      {null && effectiveChildren.length ? <SubjectList style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
     </div>
   );
 };
@@ -75,7 +67,15 @@ const SubjectDisplayContent = props => {
 const DefaultSubjectDisplay = props => {
   const { isSubjectSaving, isSubjectSaved, className, subject } = props;
 
+  const childSubjectsMap = useChildMapSelector();
+
+  const childSubjects = childSubjectsMap[subject._id] || [];
+
+  const { colors } = useColors();
+
   const { _id, name, backgroundColor, textColor } = subject;
+  const [editing, setEditing] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const mainIcon = isSubjectSaving ? (
     <i className="fa fa-fw fa-spinner fa-spin" />
   ) : isSubjectSaved ? (
@@ -86,32 +86,28 @@ const DefaultSubjectDisplay = props => {
   const [{}, { beginSubjectEdit, addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
 
   return (
-    <div className={className}>
-      {mainIcon}
-      {!isSubjectSaving ? (
-        <a onClick={() => beginSubjectEdit(_id, subjectHash)}>
-          <i className="fal fa-pencil-alt"></i>
-        </a>
-      ) : null}
-      {!isSubjectSaving ? (
-        <a onClick={() => addNewSubject(_id)}>
-          <i className="fa fa-fw fa-plus" />
-        </a>
-      ) : null}
-      {!isSubjectSaving ? (
-        <a onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
-          <i className="fa fa-fw fa-trash" />
-        </a>
-      ) : null}
-      <EditableExpandableLabelDisplay item={subject} />
-      <div
-        className={`${showOnHoverParent}`}
-        style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white", display: "none" }}
-      >
-        &nbsp;
-        <div className={subjectPreview}>{name || "<label preview>"}</div>
+    <>
+      <div className={className}>
+        {null && !isSubjectSaving ? (
+          <a>
+            <i className="fal fa-pencil-alt"></i>
+          </a>
+        ) : null}
+        {null && !isSubjectSaving ? (
+          <a onClick={() => addNewSubject(_id)}>
+            <i className="fa fa-fw fa-plus" />
+          </a>
+        ) : null}
+        {null && !isSubjectSaving ? (
+          <a onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
+            <i className="fa fa-fw fa-trash" />
+          </a>
+        ) : null}
+        <EditableExpandableLabelDisplay onEdit={() => setEditing(true)} item={subject} />
       </div>
-    </div>
+      {editing ? <EditingSubjectDisplay subject={subject} isSubjectSaving={isSubjectSaving} colors={colors} /> : null}
+      {expanded ? <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} /> : null}
+    </>
   );
 };
 
@@ -119,29 +115,36 @@ const EditingSubjectDisplay = props => {
   const inputEl = useRef(null);
   useEffect(() => inputEl.current.focus(), []);
   const { subjectHash } = useSubjectsState();
+
   const { updateSubject } = useSubjectMutations();
-  const [{}, { cancelSubjectEdit, setEditingSubjectField, saveChanges }] = useContext(SubjectsDnDContext);
+  const [{}, { cancelSubjectEdit, saveChanges }] = useContext(SubjectsDnDContext);
+
+  const { isSubjectSaving, subject, colors } = props;
+  const { _id, name } = subject;
+
+  const [editingSubject, setEditingSubject] = useState(() => ({ ...subject }));
+  const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id), [_id, subjectHash]);
+
+  const setEditingSubjectField = (prop, value) => setEditingSubject(sub => ({ ...sub, [prop]: value }));
 
   const subjectEditingKeyDown = evt => {
     let key = evt.keyCode || evt.which;
     if (key == 13) {
-      let { subject, editingSubject } = props;
+      let { subject } = props;
       saveChanges(editingSubject, subject, subjectHash, updateSubject);
     }
   };
 
-  const { isSubjectSaving, className, subject, editingSubject, colors } = props;
-  const { _id, name } = subject;
   const textColors = ["#ffffff", "#000000"];
   const { validationError } = editingSubject;
 
   return (
-    <div className={className + ` ${editPane}`}>
+    <div className={`row padding-top padding-bottom ${subjectRow} ${editPane}`}>
       <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
         <input
           ref={inputEl}
           onKeyDown={subjectEditingKeyDown}
-          onChange={(evt: any) => setEditingSubjectField(_id, "name", evt.target.value)}
+          onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
           value={editingSubject.name}
           className="form-control"
         />
@@ -174,7 +177,7 @@ const EditingSubjectDisplay = props => {
           className="form-control"
         >
           <option value={""}>No Parent</option>
-          {editingSubject.eligibleParents.map(s => (
+          {eligibleParents.map(s => (
             <option key={s._id} value={s._id}>
               {s.name}
             </option>
