@@ -16,7 +16,7 @@ export const LabelDisplay = props => {
 };
 
 export const EditableExpandableLabelDisplay = props => {
-  let { item, expanded, onEdit } = props;
+  let { item, onEdit, expanded, setExpanded } = props;
   let extraStyles = props.style || {};
   let extraClasses = props.className || "";
 
@@ -25,15 +25,13 @@ export const EditableExpandableLabelDisplay = props => {
       style={{ backgroundColor: item.backgroundColor, color: item.textColor || "white", ...extraStyles }}
       className={"label label-default noselect " + extraClasses}
     >
-      {expanded ? (
-        <a onClick={props.doRemove} style={{ color: item.textColor || "white", cursor: "pointer" }}>
-          <i className="fad fa-chevron-down"></i>
-        </a>
-      ) : (
-        <a onClick={props.doRemove} style={{ color: item.textColor || "white", cursor: "pointer" }}>
-          <i className="fad fa-chevron-right"></i>
-        </a>
-      )}
+      <a
+        onClick={() => setExpanded(val => !val)}
+        style={{ color: item.textColor || "white", cursor: "pointer", width: "10px", display: "inline-block" }}
+      >
+        <i className={`fad fa-chevron-${expanded ? "down" : "right"}`}></i>
+      </a>
+
       <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: "1px solid white" }}>{props.name}</span>
 
       {props.children || item.name}
