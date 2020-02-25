@@ -105,13 +105,13 @@ const DefaultSubjectDisplay = props => {
             <i className="fa fa-fw fa-trash" />
           </a>
         ) : null}
-        <EditableExpandableLabelDisplay onEdit={() => setEditing(true)} item={subject} />
+        <EditableExpandableLabelDisplay expanded={expanded} setExpanded={setExpanded} onEdit={() => setEditing(true)} item={subject} />
       </div>
       {editing ? (
         <EditingSubjectDisplay subject={subject} onCancelEdit={() => setEditing(false)} />
-      ) : (
+      ) : expanded ? (
         <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} />
-      )}
+      ) : null}
     </>
   );
 };
