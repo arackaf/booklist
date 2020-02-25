@@ -23,12 +23,9 @@ export const EditableExpandableLabelDisplay = props => {
   return (
     <span
       style={{ backgroundColor: item.backgroundColor, color: item.textColor || "white", ...extraStyles }}
-      className={"label label-default noselect " + extraClasses}
+      className={"label label-default label-editable-expandable noselect " + extraClasses}
     >
-      <a
-        onClick={() => setExpanded(val => !val)}
-        style={{ color: item.textColor || "white", cursor: "pointer", width: "10px", display: "inline-block" }}
-      >
+      <a className="toggle" onClick={() => setExpanded(val => !val)} style={{ color: item.textColor || "white" }}>
         <i className={`fad fa-chevron-${expanded ? "down" : "right"}`}></i>
       </a>
 

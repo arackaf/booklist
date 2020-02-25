@@ -10,6 +10,18 @@
     background-color: var(--neutral-background);
     color: white
   }
+
+  &.label-editable-expandable {
+    a.toggle {
+      cursor: pointer;
+      width: 10px;
+      display: inline-block;
+
+      i.fa-chevron-right {
+        margin-left: 2px;
+      }
+    }
+  }
   
   &.label-info {
     background-color: var(--info-5);
