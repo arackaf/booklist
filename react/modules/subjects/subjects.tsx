@@ -225,7 +225,7 @@ const EditingSubjectDisplay = props => {
               <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
             </div>
           </div>
-          <div className="col-xs-12" style={{ display: "flex", flexDirection: "row-reverse" }}>
+          <div className="col-xs-12" style={{ display: "flex" }}>
             <BootstrapButton style={{ marginTop: "20px" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
               Delete {name}
               <i className="fa fa-fw fa-trash" />
@@ -233,7 +233,7 @@ const EditingSubjectDisplay = props => {
           </div>
         </>
       ) : (
-        <div className="col-xs-12" style={{ display: "flex", flexDirection: "row-reverse" }}>
+        <div className="col-xs-12" style={{ display: "flex" }}>
           <PendingDeleteSubjectDisplay subject={subject} cancel={() => setDeleteShowing(false)} />
         </div>
       )}
