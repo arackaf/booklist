@@ -71,8 +71,6 @@ const DefaultSubjectDisplay = props => {
 
   const childSubjects = childSubjectsMap[subject._id] || [];
 
-  const { colors } = useColors();
-
   const { _id, name, backgroundColor, textColor } = subject;
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(true);
@@ -105,8 +103,11 @@ const DefaultSubjectDisplay = props => {
         ) : null}
         <EditableExpandableLabelDisplay onEdit={() => setEditing(true)} item={subject} />
       </div>
-      {editing ? <EditingSubjectDisplay subject={subject} isSubjectSaving={isSubjectSaving} colors={colors} /> : null}
-      {expanded ? <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} /> : null}
+      {editing ? (
+        <EditingSubjectDisplay subject={subject} onCancelEdit={() => setEditing(false)} />
+      ) : (
+        <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} />
+      )}
     </>
   );
 };
@@ -119,8 +120,10 @@ const EditingSubjectDisplay = props => {
   const { updateSubject } = useSubjectMutations();
   const [{}, { cancelSubjectEdit, saveChanges }] = useContext(SubjectsDnDContext);
 
-  const { isSubjectSaving, subject, colors } = props;
-  const { _id, name } = subject;
+  let isSubjectSaving = false;
+  const { colors } = useColors();
+  const { subject, onCancelEdit } = props;
+  const { _id } = subject;
 
   const [editingSubject, setEditingSubject] = useState(() => ({ ...subject }));
   const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id), [_id, subjectHash]);
@@ -172,7 +175,7 @@ const EditingSubjectDisplay = props => {
       </div>
       <div className="col-xs-12 col-lg-6 padding-bottom-small">
         <select
-          onChange={(evt: any) => setEditingSubjectField(_id, "parentId", evt.target.value)}
+          onChange={(evt: any) => setEditingSubjectField("parentId", evt.target.value)}
           value={editingSubject.parentId || ""}
           className="form-control"
         >
@@ -188,17 +191,17 @@ const EditingSubjectDisplay = props => {
         <ColorsPalette
           currentColor={editingSubject.backgroundColor}
           colors={colors}
-          onColorChosen={color => setEditingSubjectField(_id, "backgroundColor", color)}
+          onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
         />
         <CustomColorPicker
           labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
-          onColorChosen={color => setEditingSubjectField(_id, "backgroundColor", color)}
+          onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
           currentColor={editingSubject.backgroundColor}
         />
       </div>
       <div className="col-xs-12 col-lg-6">
         <div className={textColorSaveBox}>
-          <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
+          <a onClick={onCancelEdit}>Cancel</a>
           <BootstrapButton
             disabled={isSubjectSaving}
             style={{ marginRight: "5px", marginLeft: "10px" }}
@@ -207,7 +210,7 @@ const EditingSubjectDisplay = props => {
           >
             <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
           </BootstrapButton>
-          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, "textColor", color)} />
+          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
         </div>
       </div>
     </div>
