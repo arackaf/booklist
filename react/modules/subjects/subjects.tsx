@@ -9,6 +9,11 @@ import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/colorsState";
 import { LabelDisplay, EditableExpandableLabelDisplay } from "app/components/labelDisplay";
+import { useMutation, buildMutation } from "micro-graphql-react";
+import { MutationOf, Mutations } from "graphql-typings";
+
+import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
+import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 
 const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow, showOnHoverParent } = subjectsListStyles;
 
@@ -116,7 +121,11 @@ const EditingSubjectDisplay = props => {
   useEffect(() => inputEl.current.focus(), []);
   const { subjectHash } = useSubjectsState();
 
-  const { updateSubject } = useSubjectMutations();
+  const { runMutation: updateSubject, running: subjectUpdating } = useMutation<MutationOf<Mutations["updateSubject"]>>(
+    buildMutation(UpdateSubjectMutation)
+  );
+  const [deleteShowing, setDeleteShowing] = useState(false);
+
   const [{}, { cancelSubjectEdit, saveChanges }] = useContext(SubjectsDnDContext);
 
   let isSubjectSaving = false;
@@ -144,103 +153,117 @@ const EditingSubjectDisplay = props => {
 
   return (
     <div className={`row padding-top padding-bottom ${subjectRow} ${editPane}`}>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
-        <input
-          ref={inputEl}
-          onKeyDown={subjectEditingKeyDown}
-          onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
-          value={editingSubject.name}
-          className="form-control"
-        />
-        <div
-          className="label label-default"
-          style={{
-            backgroundColor: editingSubject.backgroundColor,
-            color: editingSubject.textColor,
-            maxWidth: "100%",
-            display: "inline-block",
-            overflow: "hidden",
-            marginTop: "5px"
-          }}
-        >
-          {editingSubject.name || "<label preview>"}
+      {!deleteShowing ? (
+        <>
+          <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
+            <input
+              ref={inputEl}
+              onKeyDown={subjectEditingKeyDown}
+              onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
+              value={editingSubject.name}
+              className="form-control"
+            />
+            <div
+              className="label label-default"
+              style={{
+                backgroundColor: editingSubject.backgroundColor,
+                color: editingSubject.textColor,
+                maxWidth: "100%",
+                display: "inline-block",
+                overflow: "hidden",
+                marginTop: "5px"
+              }}
+            >
+              {editingSubject.name || "<label preview>"}
+            </div>
+            {subject.pending ? <br /> : null}
+            {subject.pending ? (
+              <span className="label label-warning" style={{ marginTop: "5px", display: "inline-block" }}>
+                This subject is not saved
+              </span>
+            ) : null}
+            {validationError ? <br /> : null}
+            {validationError ? <span className="label label-danger">{validationError}</span> : null}
+          </div>
+          <div className="col-xs-12 col-lg-6 padding-bottom-small">
+            <select
+              onChange={(evt: any) => setEditingSubjectField("parentId", evt.target.value)}
+              value={editingSubject.parentId || ""}
+              className="form-control"
+            >
+              <option value={""}>No Parent</option>
+              {eligibleParents.map(s => (
+                <option key={s._id} value={s._id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-xs-12 col-lg-6">
+            <ColorsPalette
+              currentColor={editingSubject.backgroundColor}
+              colors={colors}
+              onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
+            />
+            <CustomColorPicker
+              labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
+              onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
+              currentColor={editingSubject.backgroundColor}
+            />
+          </div>
+          <div className="col-xs-12 col-lg-6">
+            <div className={textColorSaveBox}>
+              <a onClick={onCancelEdit}>Cancel</a>
+              <BootstrapButton
+                disabled={isSubjectSaving}
+                style={{ marginRight: "5px", marginLeft: "10px" }}
+                preset="primary-xs"
+                onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
+              >
+                <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
+              </BootstrapButton>
+              <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
+            </div>
+          </div>
+          <div className="col-xs-12" style={{ display: "flex", flexDirection: "row-reverse" }}>
+            <BootstrapButton style={{ marginTop: "20px" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
+              Delete {name}
+              <i className="fa fa-fw fa-trash" />
+            </BootstrapButton>
+          </div>
+        </>
+      ) : (
+        <div className="col-xs-12" style={{ display: "flex", flexDirection: "row-reverse" }}>
+          <PendingDeleteSubjectDisplay subject={subject} cancel={() => setDeleteShowing(false)} />
         </div>
-        {subject.pending ? <br /> : null}
-        {subject.pending ? (
-          <span className="label label-warning" style={{ marginTop: "5px", display: "inline-block" }}>
-            This subject is not saved
-          </span>
-        ) : null}
-        {validationError ? <br /> : null}
-        {validationError ? <span className="label label-danger">{validationError}</span> : null}
-      </div>
-      <div className="col-xs-12 col-lg-6 padding-bottom-small">
-        <select
-          onChange={(evt: any) => setEditingSubjectField("parentId", evt.target.value)}
-          value={editingSubject.parentId || ""}
-          className="form-control"
-        >
-          <option value={""}>No Parent</option>
-          {eligibleParents.map(s => (
-            <option key={s._id} value={s._id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="col-xs-12 col-lg-6">
-        <ColorsPalette
-          currentColor={editingSubject.backgroundColor}
-          colors={colors}
-          onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
-        />
-        <CustomColorPicker
-          labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
-          onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
-          currentColor={editingSubject.backgroundColor}
-        />
-      </div>
-      <div className="col-xs-12 col-lg-6">
-        <div className={textColorSaveBox}>
-          <a onClick={onCancelEdit}>Cancel</a>
-          <BootstrapButton
-            disabled={isSubjectSaving}
-            style={{ marginRight: "5px", marginLeft: "10px" }}
-            preset="primary-xs"
-            onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
-          >
-            <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-          </BootstrapButton>
-          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
-        </div>
-      </div>
-      <div className="col-xs-12" style={{ display: "flex" }}>
-        <BootstrapButton style={{ marginLeft: "auto", marginTop: "20px" }} preset="danger-xs" onClick={() => onStartDelete()}>
-          Delete {name}
-          <i className="fa fa-fw fa-trash" />
-        </BootstrapButton>
-      </div>
+      )}
     </div>
   );
 };
 
 const PendingDeleteSubjectDisplay = props => {
-  const { className, deleteMessage, subject } = props;
+  const { className = "", subject, cancel } = props;
   const { name, _id, backgroundColor, textColor } = subject;
-  const { subjectHash } = useSubjectsState();
-  const { deleteSubject: runDelete } = useSubjectMutations();
-  const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
+
+  const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
+  const deleteIt = () => runMutation({ _id });
 
   return (
     <div className={className + " delete-pane"}>
       <div className="col-xs-12">
         <div className="label label-default" style={{ display: "inline", color: textColor, backgroundColor }}>
-          {name}
+          Delete subject {name}?
         </div>
-        <BootstrapButton onClick={() => deleteSubject(_id, subjectHash, runDelete)} style={{ marginLeft: "20px" }} preset="danger-xs">
-          {deleteMessage}
+        <BootstrapButton disabled={running} onClick={deleteIt} style={{ marginLeft: "20px" }} preset="danger-xs">
+          {running ? (
+            <span>
+              Deleting <i className="fa fa-spinner fa-spin"></i>
+            </span>
+          ) : (
+            "Delete it!"
+          )}
         </BootstrapButton>
-        <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} className="btn btn-xs">
+        <BootstrapButton disabled={running} onClick={cancel} style={{ marginLeft: "20px" }} className="btn btn-xs">
           Cancel
         </BootstrapButton>
       </div>
