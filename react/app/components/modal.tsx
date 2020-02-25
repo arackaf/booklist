@@ -36,7 +36,6 @@ const Modal: SFC<ModalTypes> = props => {
   });
 
   let results = modalMaybe.map(({ item: isOpen, props: styles }: any) => {
-    if (isOpen) console.log(isOpen, "---", styles);
     return (
       isOpen && (
         <AnimatedDialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
