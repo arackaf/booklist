@@ -80,8 +80,7 @@ const DefaultSubjectDisplay = props => {
     <i style={{ color: "green" }} className="fa fa-fw fa-check" />
   ) : null;
 
-  const { subjectHash } = useSubjectsState();
-  const [{}, { beginSubjectEdit, addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
+  const [{}, { addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
 
   return (
     <>
@@ -123,7 +122,7 @@ const EditingSubjectDisplay = props => {
   let isSubjectSaving = false;
   const { colors } = useColors();
   const { subject, onCancelEdit } = props;
-  const { _id } = subject;
+  const { _id, name } = subject;
 
   const [editingSubject, setEditingSubject] = useState(() => ({ ...subject }));
   const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id), [_id, subjectHash]);
@@ -137,6 +136,8 @@ const EditingSubjectDisplay = props => {
       saveChanges(editingSubject, subject, subjectHash, updateSubject);
     }
   };
+
+  const onStartDelete = () => {};
 
   const textColors = ["#ffffff", "#000000"];
   const { validationError } = editingSubject;
@@ -212,6 +213,12 @@ const EditingSubjectDisplay = props => {
           </BootstrapButton>
           <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
         </div>
+      </div>
+      <div className="col-xs-12" style={{ display: "flex" }}>
+        <BootstrapButton style={{ marginLeft: "auto", marginTop: "20px" }} preset="danger-xs" onClick={() => onStartDelete()}>
+          Delete {name}
+          <i className="fa fa-fw fa-trash" />
+        </BootstrapButton>
       </div>
     </div>
   );
