@@ -231,6 +231,8 @@ const EditingSubjectDisplay = props => {
               <i className="fa fa-fw fa-trash" />
             </BootstrapButton>
           </div>
+
+          <hr style={{ flex: 1 }} />
         </>
       ) : (
         <div className="col-xs-12" style={{ display: "flex" }}>
@@ -267,6 +269,7 @@ const PendingDeleteSubjectDisplay = props => {
           Cancel
         </BootstrapButton>
       </div>
+      <hr style={{ flex: 1, borderColor: "var(--danger-4)", marginBottom: 0 }} className="margin-top-med" />
     </div>
   );
 };
