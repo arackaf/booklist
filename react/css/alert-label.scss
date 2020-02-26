@@ -14,11 +14,13 @@
   &.label-editable-expandable {
     a.toggle {
       cursor: pointer;
-      width: 10px;
-      display: inline-block;
+      margin-right: 5px;
+      padding-right: 5px;
 
-      i.fa-chevron-right {
-        margin-left: 2px;
+      &.expanded {
+        i {
+          transform: rotate(90deg);
+        }
       }
     }
   }
