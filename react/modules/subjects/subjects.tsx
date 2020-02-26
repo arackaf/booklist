@@ -105,11 +105,11 @@ const DefaultSubjectDisplay = props => {
             <i className="fa fa-fw fa-trash" />
           </a>
         ) : null}
-        <EditableExpandableLabelDisplay expanded={expanded} setExpanded={setExpanded} onEdit={() => setEditing(true)} item={subject} />
+        <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => setEditing(true)} item={subject} />
       </div>
       {editing ? (
-        <EditingSubjectDisplay subject={subject} onCancelEdit={() => setEditing(false)} />
-      ) : expanded ? (
+        <EditingSubjectDisplay childSubjects={childSubjects} subject={subject} onCancelEdit={() => setEditing(false)} />
+      ) : expanded && childSubjects?.length ? (
         <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} />
       ) : null}
     </>
@@ -130,7 +130,7 @@ const EditingSubjectDisplay = props => {
 
   let isSubjectSaving = false;
   const { colors } = useColors();
-  const { subject, onCancelEdit } = props;
+  const { subject, onCancelEdit, childSubjects } = props;
   const { _id, name } = subject;
 
   const [editingSubject, setEditingSubject] = useState(() => ({ ...subject }));
@@ -213,21 +213,25 @@ const EditingSubjectDisplay = props => {
           </div>
           <div className="col-xs-12 col-lg-6">
             <div className={textColorSaveBox}>
-              <a onClick={onCancelEdit}>Cancel</a>
-              <BootstrapButton
-                disabled={isSubjectSaving}
-                style={{ marginRight: "5px", marginLeft: "10px" }}
-                preset="primary-xs"
-                onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
-              >
-                <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-              </BootstrapButton>
               <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
             </div>
           </div>
-          <div className="col-xs-12" style={{ display: "flex" }}>
-            <BootstrapButton style={{ marginTop: "20px" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
-              Delete {name}
+          <div className="col-xs-12" style={{ display: "flex", marginTop: "20px" }}>
+            <div>
+              <BootstrapButton
+                disabled={isSubjectSaving}
+                style={{ marginRight: "10px" }}
+                preset="primary-xs"
+                onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
+              >
+                Save <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
+              </BootstrapButton>
+              <BootstrapButton disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
+                Cancel
+              </BootstrapButton>
+            </div>
+            <BootstrapButton disabled={isSubjectSaving} style={{ marginLeft: "auto" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
+              Delete {name}&nbsp;
               <i className="fa fa-fw fa-trash" />
             </BootstrapButton>
           </div>
@@ -236,7 +240,7 @@ const EditingSubjectDisplay = props => {
         </>
       ) : (
         <div className="col-xs-12" style={{ display: "flex" }}>
-          <PendingDeleteSubjectDisplay subject={subject} cancel={() => setDeleteShowing(false)} />
+          <PendingDeleteSubjectDisplay childSubjects={childSubjects} subject={subject} cancel={() => setDeleteShowing(false)} />
         </div>
       )}
     </div>
@@ -244,30 +248,32 @@ const EditingSubjectDisplay = props => {
 };
 
 const PendingDeleteSubjectDisplay = props => {
-  const { className = "", subject, cancel } = props;
+  const { subject, cancel, childSubjects } = props;
   const { name, _id, backgroundColor, textColor } = subject;
 
   const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
   const deleteIt = () => runMutation({ _id });
 
   return (
-    <div className={className + " delete-pane"}>
-      <div className="col-xs-12">
-        <div className="label label-default" style={{ display: "inline", color: textColor, backgroundColor }}>
-          Delete subject {name}?
+    <div style={{ flex: 1 }}>
+      <div>
+        <div className="alert alert-danger" style={{ display: "inline-block" }}>
+          Delete {name}?{childSubjects?.length ? <strong style={{ marginLeft: "10px" }}>Child subjects will also be deleted!</strong> : null}
         </div>
-        <BootstrapButton disabled={running} onClick={deleteIt} style={{ marginLeft: "20px" }} preset="danger-xs">
-          {running ? (
-            <span>
-              Deleting <i className="fa fa-spinner fa-spin"></i>
-            </span>
-          ) : (
-            "Delete it!"
-          )}
-        </BootstrapButton>
-        <BootstrapButton disabled={running} onClick={cancel} style={{ marginLeft: "20px" }} className="btn btn-xs">
-          Cancel
-        </BootstrapButton>
+        <div style={{ marginTop: "20px" }}>
+          <BootstrapButton disabled={running} onClick={deleteIt} preset="danger-xs">
+            {running ? (
+              <span>
+                Deleting <i className="fa fa-spinner fa-spin"></i>
+              </span>
+            ) : (
+              "Delete it!"
+            )}
+          </BootstrapButton>
+          <BootstrapButton disabled={running} onClick={cancel} style={{ marginLeft: "20px" }} className="btn btn-xs">
+            Cancel
+          </BootstrapButton>
+        </div>
       </div>
       <hr style={{ flex: 1, borderColor: "var(--danger-4)", marginBottom: 0 }} className="margin-top-med" />
     </div>
