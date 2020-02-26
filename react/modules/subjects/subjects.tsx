@@ -3,7 +3,14 @@ import { useEditingSubjectHash, usePendingSubjects, useSubjectEditInfo, SubjectT
 import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
-import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations, useSubjectsState, getEligibleParents } from "app/subjectsState";
+import {
+  useLevelSubjectsSortedSelector,
+  useChildMapSelector,
+  useSubjectMutations,
+  useSubjectsState,
+  getEligibleParents,
+  computeSubjectParentId
+} from "app/subjectsState";
 import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
@@ -123,19 +130,18 @@ const EditingSubjectDisplay = props => {
   useEffect(() => inputEl.current.focus(), []);
   const { subjectHash } = useSubjectsState();
 
-  const { runMutation: updateSubject, running: subjectUpdating } = useMutation<MutationOf<Mutations["updateSubject"]>>(
+  const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(
     buildMutation(UpdateSubjectMutation)
   );
   const [deleteShowing, setDeleteShowing] = useState(false);
 
   const [{}, { cancelSubjectEdit, saveChanges }] = useContext(SubjectsDnDContext);
 
-  let isSubjectSaving = false;
   const { colors } = useColors();
   const { subject, onCancelEdit, childSubjects } = props;
   const { _id, name } = subject;
 
-  const [editingSubject, setEditingSubject] = useState(() => ({ ...subject }));
+  const [editingSubject, setEditingSubject] = useState(() => ({ ...subject, parentId: computeSubjectParentId(subject.path) }));
   const [missingName, setMissingName] = useState(false);
   const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id), [_id, subjectHash]);
 
@@ -148,8 +154,13 @@ const EditingSubjectDisplay = props => {
 
   const runSave = () => {
     if (!editingSubject.name.trim()) {
-      setMissingName(true);
+      return setMissingName(true);
     }
+
+    let { _id, name, parentId, backgroundColor, textColor } = editingSubject;
+    let request = { _id, name, parentId, backgroundColor, textColor };
+
+    Promise.resolve(updateSubject(request)).then(onCancelEdit);
   };
 
   const subjectEditingKeyDown = evt => {
@@ -236,12 +247,7 @@ const EditingSubjectDisplay = props => {
           </div>
           <div className="col-xs-12" style={{ display: "flex", marginTop: "20px" }}>
             <div>
-              <BootstrapButton
-                disabled={isSubjectSaving}
-                style={{ marginRight: "10px" }}
-                preset="primary-xs"
-                onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
-              >
+              <BootstrapButton disabled={isSubjectSaving} style={{ marginRight: "10px" }} preset="primary-xs" onClick={runSave}>
                 Save <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
               </BootstrapButton>
               <BootstrapButton disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
