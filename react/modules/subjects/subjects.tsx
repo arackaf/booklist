@@ -15,6 +15,8 @@ import { MutationOf, Mutations } from "graphql-typings";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 
+import cn from "classnames";
+
 const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow, showOnHoverParent } = subjectsListStyles;
 
 type subjectDisplayProps = {
@@ -109,7 +111,7 @@ const DefaultSubjectDisplay = props => {
       </div>
       {editing ? (
         <EditingSubjectDisplay childSubjects={childSubjects} subject={subject} onCancelEdit={() => setEditing(false)} />
-      ) : expanded && childSubjects?.length ? (
+      ) : expanded && childSubjects?.length ? (
         <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} />
       ) : null}
     </>
@@ -134,15 +136,31 @@ const EditingSubjectDisplay = props => {
   const { _id, name } = subject;
 
   const [editingSubject, setEditingSubject] = useState(() => ({ ...subject }));
+  const [missingName, setMissingName] = useState(false);
   const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id), [_id, subjectHash]);
 
-  const setEditingSubjectField = (prop, value) => setEditingSubject(sub => ({ ...sub, [prop]: value }));
+  const setEditingSubjectField = (prop, value) => {
+    if (prop == "name" && value.trim()) {
+      setMissingName(false);
+    }
+    setEditingSubject(sub => ({ ...sub, [prop]: value }));
+  };
+
+  const runSave = () => {
+    if (!editingSubject.name.trim()) {
+      setMissingName(true);
+    }
+  };
 
   const subjectEditingKeyDown = evt => {
     let key = evt.keyCode || evt.which;
     if (key == 13) {
-      let { subject } = props;
-      saveChanges(editingSubject, subject, subjectHash, updateSubject);
+      if (!evt.target.value.trim()) {
+        setMissingName(true);
+      } else {
+        let { subject } = props;
+        runSave();
+      }
     }
   };
 
@@ -161,8 +179,16 @@ const EditingSubjectDisplay = props => {
               onKeyDown={subjectEditingKeyDown}
               onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
               value={editingSubject.name}
-              className="form-control"
+              className={cn("form-control", { ["has-error"]: missingName })}
             />
+            {missingName ? (
+              <>
+                <span style={{ marginTop: "5px", display: "inline-block" }} className="label label-danger">
+                  Subjects need names!
+                </span>
+                <br />
+              </>
+            ) : null}
             <div
               className="label label-default"
               style={{
@@ -174,16 +200,8 @@ const EditingSubjectDisplay = props => {
                 marginTop: "5px"
               }}
             >
-              {editingSubject.name || "<label preview>"}
+              {editingSubject.name.trim() || "<label preview>"}
             </div>
-            {subject.pending ? <br /> : null}
-            {subject.pending ? (
-              <span className="label label-warning" style={{ marginTop: "5px", display: "inline-block" }}>
-                This subject is not saved
-              </span>
-            ) : null}
-            {validationError ? <br /> : null}
-            {validationError ? <span className="label label-danger">{validationError}</span> : null}
           </div>
           <div className="col-xs-12 col-lg-6 padding-bottom-small">
             <select
@@ -191,7 +209,7 @@ const EditingSubjectDisplay = props => {
               value={editingSubject.parentId || ""}
               className="form-control"
             >
-              <option value={""}>No Parent</option>
+              <option value="">No Parent</option>
               {eligibleParents.map(s => (
                 <option key={s._id} value={s._id}>
                   {s.name}

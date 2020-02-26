@@ -542,7 +542,7 @@ div.toast-notification h4 {
   margin-left: auto;
 }
 
-.has-error input {
+.has-error input, input.form-control.has-error {
   border-color: var(--danger-5);
 }
 
