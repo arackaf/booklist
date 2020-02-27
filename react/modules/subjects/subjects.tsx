@@ -1,5 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef, useContext, useState, useMemo, useCallback } from "react";
-import { useEditingSubjectHash, usePendingSubjects, useSubjectEditInfo, SubjectType } from "modules/subjects/useSubjectsDndState";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
@@ -11,11 +10,10 @@ import {
   getEligibleParents,
   computeSubjectParentId
 } from "app/subjectsState";
-import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/colorsState";
-import { LabelDisplay, EditableExpandableLabelDisplay } from "app/components/labelDisplay";
+import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { MutationOf, Mutations } from "graphql-typings";
 
@@ -24,15 +22,11 @@ import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 
 import cn from "classnames";
 
-const { listGroup, editPane, defaultSubjectDisplay, subjectPreview, textColorSaveBox, subjectRow, showOnHoverParent } = subjectsListStyles;
+const { listGroup, editPane, defaultSubjectDisplay, textColorSaveBox, subjectRow } = subjectsListStyles;
 
-type subjectDisplayProps = {
-  subject: SubjectType & { candidateMove: boolean };
-};
-
-const SubjectDisplay = (props => {
+const SubjectDisplay = props => {
   const { subject } = props;
-  const { _id, candidateMove } = subject;
+  const { _id } = subject;
   const style: any = {};
 
   return (
@@ -40,80 +34,33 @@ const SubjectDisplay = (props => {
       <SubjectDisplayContent {...{ subject }} />
     </li>
   );
-}) as FunctionComponent<subjectDisplayProps>;
+};
 
 const SubjectDisplayContent = props => {
   const { subject } = props;
-
-  const { colors } = useColors();
-
-  const { _id } = subject;
-  const { isEditingSubject, isPendingDelete, isDeleting, isSubjectSaving, isSubjectSaved } = useSubjectEditInfo(subject);
-
-  const pendingSubjectsLookup = usePendingSubjects();
-  const pendingChildren = pendingSubjectsLookup[subject._id] || [];
-
-  const { editingSubjectsHash: shapedEditingSubjectHash } = useEditingSubjectHash();
-  const editingSubject = shapedEditingSubjectHash[_id];
-
-  let childSubjectsMap = useChildMapSelector();
-  let childSubjects = childSubjectsMap[subject._id] || [];
-  let effectiveChildren = pendingChildren.concat(childSubjects);
-  let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
 
   let classToPass = `row padding-top padding-bottom ${subjectRow}`;
   let defaultDisplayClass = `${classToPass} ${defaultSubjectDisplay}`;
   return (
     <div>
-      {isEditingSubject ? null : isDeleting ? ( // <EditingSubjectDisplay subject={subject} isSubjectSaving={isSubjectSaving} editingSubject={editingSubject} colors={colors} />
-        <DeletingSubjectDisplay className={classToPass} name={subject.name} />
-      ) : isPendingDelete ? (
-        <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} />
-      ) : (
-        <DefaultSubjectDisplay className={defaultDisplayClass} subject={subject} isSubjectSaving={isSubjectSaving} isSubjectSaved={isSubjectSaved} />
-      )}
-
-      {null && effectiveChildren.length ? <SubjectList style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
+      <DefaultSubjectDisplay className={defaultDisplayClass} subject={subject} />
     </div>
   );
 };
 
 const DefaultSubjectDisplay = props => {
-  const { isSubjectSaving, isSubjectSaved, className, subject } = props;
+  const { className, subject } = props;
 
   const childSubjectsMap = useChildMapSelector();
 
   const childSubjects = childSubjectsMap[subject._id] || [];
 
-  const { _id, name, backgroundColor, textColor } = subject;
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(true);
-  const mainIcon = isSubjectSaving ? (
-    <i className="fa fa-fw fa-spinner fa-spin" />
-  ) : isSubjectSaved ? (
-    <i style={{ color: "green" }} className="fa fa-fw fa-check" />
-  ) : null;
-
-  const [{}, { addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
 
   return (
     <>
       <div className={className}>
-        {null && !isSubjectSaving ? (
-          <a>
-            <i className="fal fa-pencil-alt"></i>
-          </a>
-        ) : null}
-        {null && !isSubjectSaving ? (
-          <a onClick={() => addNewSubject(_id)}>
-            <i className="fa fa-fw fa-plus" />
-          </a>
-        ) : null}
-        {null && !isSubjectSaving ? (
-          <a onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
-            <i className="fa fa-fw fa-trash" />
-          </a>
-        ) : null}
         <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => setEditing(true)} item={subject} />
       </div>
       {editing ? (
@@ -134,8 +81,6 @@ const EditingSubjectDisplay = props => {
     buildMutation(UpdateSubjectMutation)
   );
   const [deleteShowing, setDeleteShowing] = useState(false);
-
-  const [{}, { cancelSubjectEdit, saveChanges }] = useContext(SubjectsDnDContext);
 
   const { colors } = useColors();
   const { subject, onCancelEdit, childSubjects } = props;
@@ -175,10 +120,7 @@ const EditingSubjectDisplay = props => {
     }
   };
 
-  const onStartDelete = () => {};
-
   const textColors = ["#ffffff", "#000000"];
-  const { validationError } = editingSubject;
 
   return (
     <div className={`row padding-top padding-bottom ${subjectRow} ${editPane}`}>
@@ -273,7 +215,7 @@ const EditingSubjectDisplay = props => {
 
 const PendingDeleteSubjectDisplay = props => {
   const { subject, cancel, childSubjects } = props;
-  const { name, _id, backgroundColor, textColor } = subject;
+  const { name, _id } = subject;
 
   const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
   const deleteIt = () => runMutation({ _id });
@@ -323,22 +265,19 @@ const SubjectList = props => {
 
   const { subjectHash } = useSubjectsState();
   const { updateSubject: runInsert } = useSubjectMutations();
-  const [{}, { setNewParent }] = useContext(SubjectsDnDContext);
 
   return (
     <ul className={listGroup} style={{ marginBottom: "5px", ...style }}>
       {props.subjects.map(subject => (
-        <SubjectDisplay key={subject._id} {...{ setNewParent, subject, subjectHash, runInsert }} />
+        <SubjectDisplay key={subject._id} {...{ subject, subjectHash, runInsert }} />
       ))}
     </ul>
   );
 };
 
 const TopSubjectsList = () => {
-  const pendingSubjectsLookup = usePendingSubjects();
-  let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
   let topLevelSubjects = useLevelSubjectsSortedSelector();
-  let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
+  let allSubjects = [...topLevelSubjects];
 
   return (
     <div className="standard-module-container">
@@ -352,13 +291,9 @@ const TopSubjectsList = () => {
 };
 
 export default () => {
-  let subjectsState = useSubjectsDndState();
-
   return (
-    <SubjectsDnDContext.Provider value={subjectsState}>
+    <div style={{ marginBottom: "20px" }}>
       <TopSubjectsList />
-      <br />
-      <br />
-    </SubjectsDnDContext.Provider>
+    </div>
   );
 };
