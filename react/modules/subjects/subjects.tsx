@@ -22,7 +22,7 @@ import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 
 import cn from "classnames";
 
-const { listGroup, editPane, defaultSubjectDisplay, textColorSaveBox, subjectRow } = subjectsListStyles;
+const { listGroup, textColorSaveBox, subjectRow } = subjectsListStyles;
 
 const SubjectDisplay = props => {
   const { subject } = props;
@@ -39,17 +39,15 @@ const SubjectDisplay = props => {
 const SubjectDisplayContent = props => {
   const { subject } = props;
 
-  let classToPass = `row padding-top padding-bottom ${subjectRow}`;
-  let defaultDisplayClass = `${classToPass} ${defaultSubjectDisplay}`;
   return (
     <div>
-      <DefaultSubjectDisplay className={defaultDisplayClass} subject={subject} />
+      <DefaultSubjectDisplay subject={subject} />
     </div>
   );
 };
 
 const DefaultSubjectDisplay = props => {
-  const { className, subject } = props;
+  const { subject } = props;
 
   const childSubjectsMap = useChildMapSelector();
 
@@ -58,15 +56,17 @@ const DefaultSubjectDisplay = props => {
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(true);
 
+  let classes = `row padding-top padding-bottom ${subjectRow}`;
+
   return (
     <>
-      <div className={className}>
+      <div className={classes}>
         <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => setEditing(true)} item={subject} />
       </div>
       {editing ? (
         <EditingSubjectDisplay childSubjects={childSubjects} subject={subject} onCancelEdit={() => setEditing(false)} />
       ) : expanded && childSubjects?.length ? (
-        <SubjectList style={{ marginTop: 0 }} subjects={childSubjects} />
+        <SubjectList subjects={childSubjects} />
       ) : null}
     </>
   );
@@ -123,7 +123,7 @@ const EditingSubjectDisplay = props => {
   const textColors = ["#ffffff", "#000000"];
 
   return (
-    <div className={`row padding-top padding-bottom ${subjectRow} ${editPane}`}>
+    <div className={`row padding-top padding-bottom ${subjectRow}`}>
       {!deleteShowing ? (
         <>
           <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
@@ -246,28 +246,12 @@ const PendingDeleteSubjectDisplay = props => {
   );
 };
 
-const DeletingSubjectDisplay = props => {
-  let { name, className } = props;
-  return (
-    <div className={className}>
-      <div className="col-xs-12">
-        {name}
-        <BootstrapButton preset="danger-xs" disabled={true} style={{ marginLeft: "20px" }}>
-          Deleting <i className="fa fa-fw fa-spinner fa-spin" />
-        </BootstrapButton>
-      </div>
-    </div>
-  );
-};
-
 const SubjectList = props => {
-  const { style = {} } = props;
-
   const { subjectHash } = useSubjectsState();
   const { updateSubject: runInsert } = useSubjectMutations();
 
   return (
-    <ul className={listGroup} style={{ marginBottom: "5px", ...style }}>
+    <ul className={listGroup}>
       {props.subjects.map(subject => (
         <SubjectDisplay key={subject._id} {...{ subject, subjectHash, runInsert }} />
       ))}

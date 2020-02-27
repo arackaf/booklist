@@ -12,10 +12,6 @@ ul.listGroup ul.listGroup {
   padding-bottom: 10px;
 }
 
-.defaultSubjectDisplay {
-  align-items: center;
-}
-
 .subjectPreview {
   margin-right: 10px;
 
@@ -38,6 +34,6 @@ div:global(.row).subjectRow {
     font-size: 12px;
   }
 }
-div:global(.row).subjectRow.editPane > div, div:global(.row).subjectRow.delete-pane > div {
+div:global(.row).subjectRow > div {
   padding-left: 0;
 }
