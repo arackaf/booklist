@@ -1,11 +1,15 @@
-ul.listGroup {
-  margin-left: 0;
-  padding-left: 0;
-}
+.subjectsRoot {
+  margin-left: 20px;
+  margin-bottom: 20px;
 
-ul.listGroup ul.listGroup {
-  margin-left: 10px;
-  padding-left: 20px;
+  ul {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  ul ul {
+    margin-left: 20px;
+  }
 }
 
 .editPane > div {
