@@ -22,7 +22,7 @@ import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 
 import cn from "classnames";
 
-const { listGroup, textColorSaveBox, subjectRow } = subjectsListStyles;
+const { subjectsRoot, textColorSaveBox, subjectRow } = subjectsListStyles;
 
 const SubjectDisplay = props => {
   const { subject } = props;
@@ -251,7 +251,7 @@ const SubjectList = props => {
   const { updateSubject: runInsert } = useSubjectMutations();
 
   return (
-    <ul className={listGroup}>
+    <ul>
       {props.subjects.map(subject => (
         <SubjectDisplay key={subject._id} {...{ subject, subjectHash, runInsert }} />
       ))}
@@ -263,21 +263,17 @@ const TopSubjectsList = () => {
   let topLevelSubjects = useLevelSubjectsSortedSelector();
   let allSubjects = [...topLevelSubjects];
 
-  return (
-    <div className="standard-module-container">
-      <div className="subject-row row subject-row">
-        <div className="col-lg-6 col-md-8 col-xs-12">
-          <SubjectList subjects={allSubjects} />
-        </div>
-      </div>
-    </div>
-  );
+  return <SubjectList subjects={allSubjects} />;
 };
 
 export default () => {
   return (
-    <div style={{ marginBottom: "20px" }}>
-      <TopSubjectsList />
+    <div className={subjectsRoot}>
+      <div className="subject-row row subject-row">
+        <div className="col-lg-6 col-md-8 col-xs-12">
+          <TopSubjectsList />
+        </div>
+      </div>
     </div>
   );
 };
