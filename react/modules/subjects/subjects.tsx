@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { createContext, useEffect, useRef, useState, useMemo, useCallback, useContext } from "react";
 import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
@@ -21,6 +21,9 @@ import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 
 import cn from "classnames";
+import Modal from "app/components/modal";
+
+const EditContext = createContext(null);
 
 const { subjectsRoot, textColorSaveBox, subjectRow } = subjectsListStyles;
 
@@ -58,10 +61,16 @@ const DefaultSubjectDisplay = props => {
 
   let classes = `row padding-top padding-bottom ${subjectRow}`;
 
+  const openEditModal = useContext(EditContext);
+
   return (
     <>
       <div className={classes}>
-        <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => setEditing(true)} item={subject} />
+        <EditableExpandableLabelDisplay
+          {...{ childSubjects, expanded, setExpanded }}
+          onEdit={() => openEditModal(subject, childSubjects)}
+          item={subject}
+        />
       </div>
       {editing ? (
         <EditingSubjectDisplay childSubjects={childSubjects} subject={subject} onCancelEdit={() => setEditing(false)} />
@@ -88,7 +97,7 @@ const EditingSubjectDisplay = props => {
 
   const [editingSubject, setEditingSubject] = useState(() => ({ ...subject, parentId: computeSubjectParentId(subject.path) }));
   const [missingName, setMissingName] = useState(false);
-  const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id), [_id, subjectHash]);
+  const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id) || [], [_id, subjectHash]);
 
   const setEditingSubjectField = (prop, value) => {
     if (prop == "name" && value.trim()) {
@@ -266,14 +275,37 @@ const TopSubjectsList = () => {
   return <SubjectList subjects={allSubjects} />;
 };
 
+const defaultEditState = {
+  editingSubject: { name: "" },
+  editingChildSubjects: []
+};
+
 export default () => {
+  const [subjectEditState, setSubjectEditState] = useState(defaultEditState);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const { editingSubject, editingChildSubjects } = subjectEditState;
+
+  useColors();
+
+  const openEditModal = useCallback((editingSubject, editingChildSubjects) => {
+    setSubjectEditState({ editingSubject, editingChildSubjects });
+    setEditModalOpen(true);
+  }, []);
+  const closeEditModal = useCallback(() => setEditModalOpen(false), []);
+
   return (
     <div className={subjectsRoot}>
       <div className="subject-row row subject-row">
         <div className="col-lg-6 col-md-8 col-xs-12">
-          <TopSubjectsList />
+          <EditContext.Provider value={openEditModal}>
+            <TopSubjectsList />
+          </EditContext.Provider>
         </div>
       </div>
+
+      <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
+        <EditingSubjectDisplay childSubjects={editingChildSubjects} subject={editingSubject} onCancelEdit={closeEditModal} />
+      </Modal>
     </div>
   );
 };
