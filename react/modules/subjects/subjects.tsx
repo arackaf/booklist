@@ -132,7 +132,7 @@ const EditingSubjectDisplay = props => {
   const textColors = ["#ffffff", "#000000"];
 
   return (
-    <div className={`row padding-top padding-bottom ${subjectRow}`}>
+    <div className={`row padding-bottom ${subjectRow}`}>
       {!deleteShowing ? (
         <>
           <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
@@ -215,7 +215,12 @@ const EditingSubjectDisplay = props => {
         </>
       ) : (
         <div className="col-xs-12" style={{ display: "flex" }}>
-          <PendingDeleteSubjectDisplay childSubjects={childSubjects} subject={subject} cancel={() => setDeleteShowing(false)} />
+          <PendingDeleteSubjectDisplay
+            childSubjects={childSubjects}
+            subject={subject}
+            onDelete={onCancelEdit}
+            cancel={() => setDeleteShowing(false)}
+          />
         </div>
       )}
     </div>
@@ -223,16 +228,16 @@ const EditingSubjectDisplay = props => {
 };
 
 const PendingDeleteSubjectDisplay = props => {
-  const { subject, cancel, childSubjects } = props;
+  const { subject, cancel, childSubjects, onDelete } = props;
   const { name, _id } = subject;
 
   const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
-  const deleteIt = () => runMutation({ _id });
+  const deleteIt = () => runMutation({ _id }).then(onDelete);
 
   return (
     <div style={{ flex: 1 }}>
       <div>
-        <div className="alert alert-danger" style={{ display: "inline-block" }}>
+        <div className="alert alert-danger alert-slim" style={{ display: "inline-block" }}>
           Delete {name}?{childSubjects?.length ? <strong style={{ marginLeft: "10px" }}>Child subjects will also be deleted!</strong> : null}
         </div>
         <div style={{ marginTop: "20px" }}>
