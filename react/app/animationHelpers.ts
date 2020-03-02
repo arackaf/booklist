@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useLayoutEffect } from "react";
 
 export function usePrevious(value) {
   const ref = useRef();
@@ -8,11 +8,18 @@ export function usePrevious(value) {
 
 export function useMeasure() {
   const ref = useRef<any>();
-  const [bounds, set] = useState({ left: 0, top: 0, width: 0, height: 0 });
-  const [ro] = useState(() => new MutationObserver(() => ref.current && set(ref.current.contentRect)));
+  const [bounds, set] = useState({ height: 0 });
+  const [ro] = useState(() => new MutationObserver(() => ref.current && set({ height: ref.current.offsetHeight })));
+  useLayoutEffect(() => {
+    if (ref.current) {
+      set({ height: ref.current.offsetHeight });
+    }
+  }, []);
   useEffect(() => {
-    if (ref.current) ro.observe(ref.current, { attributes: true, childList: true, subtree: true });
+    if (ref.current) {
+      ro.observe(ref.current, { childList: true, subtree: true });
+    }
     return () => ro.disconnect();
   }, []);
-  return [{ ref }, bounds];
+  return [ref, bounds as any];
 }

@@ -9,6 +9,7 @@ import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
 
 import EditSubject from "app/components/editSubject";
 import Modal from "app/components/modal";
+import { useMeasure } from "app/animationHelpers";
 
 const AnimationContext = createContext(null);
 const EditContext = createContext(null);
@@ -24,6 +25,7 @@ const SubjectDisplay = props => {
 
   const [expanded, setExpanded] = useState(true);
 
+  const [ref, { height: viewHeight }] = useMeasure();
   const { height, opacity, transform } = useSpring({
     config: { ...config.molasses },
     from: { height: 0, opacity: 0, transform: "translate3d(40px,0,0)" },
@@ -37,9 +39,10 @@ const SubjectDisplay = props => {
   let classes = `row padding-top padding-bottom ${subjectRow}`;
 
   const openEditModal = useContext(EditContext);
+  console.log(subject.name, viewHeight);
 
   return (
-    <li key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
+    <li ref={ref} key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
       <div>
         <div className={classes}>
           <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => openEditModal(subject)} item={subject} />
