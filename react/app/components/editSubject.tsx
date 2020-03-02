@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
-import { useSubjectsState, getEligibleParents, computeSubjectParentId } from "app/subjectsState";
+import { useSubjectsState, getEligibleParents, computeSubjectParentId, useChildMapSelector } from "app/subjectsState";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { MutationOf, Mutations } from "graphql-typings";
 
@@ -28,8 +28,11 @@ const EditingSubjectDisplay = props => {
   );
   const [deleteShowing, setDeleteShowing] = useState(false);
 
+  const childSubjectsMap = useChildMapSelector();
+
   const { colors } = useColors();
-  const { subject, onCancelEdit, childSubjects, className = "" } = props;
+  const { subject, onCancelEdit, className = "" } = props;
+  const childSubjects = childSubjectsMap[subject._id] || [];
   const { _id, name } = subject;
 
   const [editingSubject, setEditingSubject] = useState(() => ({ ...subject, parentId: computeSubjectParentId(subject.path) }));
@@ -148,8 +151,6 @@ const EditingSubjectDisplay = props => {
               </BootstrapButton>
             ) : null}
           </div>
-
-          <hr style={{ flex: 1 }} />
         </>
       ) : (
         <div className="col-xs-12" style={{ display: "flex" }}>
@@ -193,7 +194,6 @@ const PendingDeleteSubjectDisplay = props => {
           </BootstrapButton>
         </div>
       </div>
-      <hr style={{ flex: 1, borderColor: "var(--danger-4)", marginBottom: 0 }} className="margin-top-med" />
     </div>
   );
 };
