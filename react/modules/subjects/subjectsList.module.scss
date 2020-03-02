@@ -12,25 +12,6 @@
   }
 }
 
-.editPane > div {
-  padding-bottom: 10px;
-}
-
-.subjectPreview {
-  margin-right: 10px;
-
-  max-width: 300px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.textColorSaveBox {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-}
-
 div:global(.row).subjectRow {
   padding-left: 0;
   margin-left: 0;
