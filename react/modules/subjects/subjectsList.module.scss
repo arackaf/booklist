@@ -10,12 +10,24 @@
   ul ul {
     margin-left: 20px;
   }
-}
 
-div:global(.row).subjectRow {
-  padding-left: 0;
-  margin-left: 0;
-}
-div:global(.row).subjectRow > div {
-  padding-left: 0;
+  .contentRoot { 
+    margin-left: 30px;
+    padding-left: 30px;
+    border-left: 2px solid var(--primary-4);
+    
+    @media (max-width: 1000px) {
+      margin-left: 10px;
+      padding-left: 10px;
+    }
+  }
+
+  .subjectRow {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  .subjectRow > div {
+    padding-left: 0;
+  }
 }
