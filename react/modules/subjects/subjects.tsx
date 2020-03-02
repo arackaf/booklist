@@ -1,4 +1,5 @@
 import React, { createContext, useState, useCallback, useContext } from "react";
+import { useSpring, animated, config } from "react-spring";
 import BootstrapButton from "app/components/bootstrapButton";
 import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
 
@@ -74,6 +75,20 @@ export default () => {
   }, []);
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
 
+  const { opacity } = useSpring({
+    config: config.gentle,
+    from: { opacity: 0 },
+    to: {
+      opacity: 1
+    },
+    onFrame: ({ opacity }) => {
+      console.log(opacity);
+    },
+    onRest() {
+      console.log("REST");
+    }
+  }) as any;
+
   return (
     <div className={subjectsRoot}>
       <div className="subject-row row subject-row padding-top" style={{ marginBottom: "60px" }}>
@@ -83,9 +98,9 @@ export default () => {
           </BootstrapButton>
 
           <EditContext.Provider value={openEditModal}>
-            <div className={contentRoot}>
+            <animated.div style={{ opacity }} className={contentRoot}>
               <SubjectList subjects={topLevelSubjects} />
-            </div>
+            </animated.div>
           </EditContext.Provider>
         </div>
       </div>
