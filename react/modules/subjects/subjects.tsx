@@ -11,7 +11,7 @@ import Modal from "app/components/modal";
 
 const EditContext = createContext(null);
 
-const { subjectsRoot, subjectRow } = subjectsListStyles;
+const { subjectsRoot, subjectRow, contentRoot } = subjectsListStyles;
 
 const SubjectDisplay = props => {
   const { subject } = props;
@@ -89,7 +89,9 @@ export default () => {
           </BootstrapButton>
 
           <EditContext.Provider value={openEditModal}>
-            <TopSubjectsList />
+            <div className={contentRoot}>
+              <TopSubjectsList />
+            </div>
           </EditContext.Provider>
         </div>
       </div>
