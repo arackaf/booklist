@@ -10,6 +10,7 @@ import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
 import EditSubject from "app/components/editSubject";
 import Modal from "app/components/modal";
 
+const AnimationContext = createContext(null);
 const EditContext = createContext(null);
 
 const { subjectsRoot, subjectRow, contentRoot } = subjectsListStyles;
@@ -21,8 +22,17 @@ const SubjectDisplay = props => {
   const childSubjectsMap = useChildMapSelector();
   const childSubjects = childSubjectsMap[subject._id] || [];
 
-  const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(true);
+
+  const { height, opacity, transform } = useSpring({
+    config: { ...config.molasses },
+    from: { height: 0, opacity: 0, transform: "translate3d(40px,0,0)" },
+    to: {
+      height: expanded ? 100 /*viewHeight*/ : 0,
+      opacity: expanded ? 1 : 0,
+      transform: `translate3d(${expanded ? 0 : 40}px,0,0)`
+    }
+  }) as any;
 
   let classes = `row padding-top padding-bottom ${subjectRow}`;
 
@@ -34,26 +44,24 @@ const SubjectDisplay = props => {
         <div className={classes}>
           <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => openEditModal(subject)} item={subject} />
         </div>
-        {editing ? (
-          <EditSubject subject={subject} onCancelEdit={() => setEditing(false)} />
-        ) : expanded && childSubjects?.length ? (
-          <SubjectList subjects={childSubjects} />
-        ) : null}
+        <SubjectList animatedProps={{ opacity, transform }} subjects={childSubjects} />
       </div>
     </li>
   );
 };
 
 const SubjectList = props => {
+  const { animatedProps = {} } = props;
   const { subjectHash } = useSubjectsState();
   const { updateSubject: runInsert } = useSubjectMutations();
+  const uiReady = useContext(AnimationContext);
 
   return (
-    <ul>
+    <animated.ul style={uiReady ? { ...animatedProps } : {}}>
       {props.subjects.map(subject => (
         <SubjectDisplay key={subject._id} {...{ subject, subjectHash, runInsert }} />
       ))}
-    </ul>
+    </animated.ul>
   );
 };
 
@@ -64,6 +72,7 @@ const defaultEditState = {
 export default () => {
   const [subjectEditState, setSubjectEditState] = useState(defaultEditState);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [uiReady, setUiReady] = useState(false);
   const { editingSubject } = subjectEditState;
 
   useColors();
@@ -76,17 +85,12 @@ export default () => {
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
 
   const { opacity } = useSpring({
-    config: config.gentle,
+    config: { ...config.slow, clamp: true },
     from: { opacity: 0 },
     to: {
       opacity: 1
     },
-    onFrame: ({ opacity }) => {
-      console.log(opacity);
-    },
-    onRest() {
-      console.log("REST");
-    }
+    onRest: () => setUiReady(true)
   }) as any;
 
   return (
@@ -97,11 +101,13 @@ export default () => {
             New Subject
           </BootstrapButton>
 
-          <EditContext.Provider value={openEditModal}>
-            <animated.div style={{ opacity }} className={contentRoot}>
-              <SubjectList subjects={topLevelSubjects} />
-            </animated.div>
-          </EditContext.Provider>
+          <AnimationContext.Provider value={uiReady}>
+            <EditContext.Provider value={openEditModal}>
+              <animated.div style={{ opacity }} className={contentRoot}>
+                <SubjectList subjects={topLevelSubjects} />
+              </animated.div>
+            </EditContext.Provider>
+          </AnimationContext.Provider>
         </div>
       </div>
 
