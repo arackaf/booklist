@@ -18,7 +18,6 @@ const SubjectDisplay = props => {
   const { _id } = subject;
 
   const childSubjectsMap = useChildMapSelector();
-
   const childSubjects = childSubjectsMap[subject._id] || [];
 
   const [editing, setEditing] = useState(false);
@@ -32,14 +31,10 @@ const SubjectDisplay = props => {
     <li key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
       <div>
         <div className={classes}>
-          <EditableExpandableLabelDisplay
-            {...{ childSubjects, expanded, setExpanded }}
-            onEdit={() => openEditModal(subject, childSubjects)}
-            item={subject}
-          />
+          <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => openEditModal(subject)} item={subject} />
         </div>
         {editing ? (
-          <EditSubject subject={subject} childSubjects={childSubjects} onCancelEdit={() => setEditing(false)} />
+          <EditSubject subject={subject} onCancelEdit={() => setEditing(false)} />
         ) : expanded && childSubjects?.length ? (
           <SubjectList subjects={childSubjects} />
         ) : null}
@@ -69,19 +64,18 @@ const TopSubjectsList = () => {
 };
 
 const defaultEditState = {
-  editingSubject: { name: "" },
-  editingChildSubjects: []
+  editingSubject: { name: "" }
 };
 
 export default () => {
   const [subjectEditState, setSubjectEditState] = useState(defaultEditState);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const { editingSubject, editingChildSubjects } = subjectEditState;
+  const { editingSubject } = subjectEditState;
 
   useColors();
 
-  const openEditModal = useCallback((editingSubject, editingChildSubjects) => {
-    setSubjectEditState({ editingSubject, editingChildSubjects });
+  const openEditModal = useCallback(editingSubject => {
+    setSubjectEditState({ editingSubject });
     setEditModalOpen(true);
   }, []);
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
@@ -90,7 +84,7 @@ export default () => {
     <div className={subjectsRoot}>
       <div className="subject-row row subject-row padding-top" style={{ marginBottom: "60px" }}>
         <div className="col-lg-6 col-md-8 col-xs-12">
-          <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" }, [])}>
+          <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
             New Subject
           </BootstrapButton>
 
@@ -101,7 +95,9 @@ export default () => {
       </div>
 
       <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
-        <EditSubject childSubjects={editingChildSubjects} subject={editingSubject} onCancelEdit={closeEditModal} />
+        <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
+        <hr />
+        <BootstrapButton onClick={closeEditModal}>Close</BootstrapButton>
       </Modal>
     </div>
   );
