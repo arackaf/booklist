@@ -2,7 +2,7 @@ import React, { Component, SFC } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { Transition } from "react-spring/renderprops";
-import { useTransition, animated } from "react-spring";
+import { useTransition, animated, config } from "react-spring";
 
 import "css/reach-modal-overrides.scss";
 
@@ -29,7 +29,7 @@ const Modal: SFC<ModalTypes> = props => {
   let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
 
   const modalMaybe = useTransition(!!isOpen, null, {
-    config: isOpen ? { mass: 1, tension: 350, friction: 30 } : { duration: 150 },
+    config: isOpen ? { ...config.stiff } : { duration: 150 },
     from: { opacity: 0, transform: `translate3d(0px, -10px, 0px)` },
     enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
     leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
