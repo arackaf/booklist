@@ -30,27 +30,6 @@ const { subjectsRoot, textColorSaveBox, subjectRow } = subjectsListStyles;
 const SubjectDisplay = props => {
   const { subject } = props;
   const { _id } = subject;
-  const style: any = {};
-
-  return (
-    <li key={_id} style={{ ...style, paddingTop: 0, paddingBottom: 0 }}>
-      <SubjectDisplayContent {...{ subject }} />
-    </li>
-  );
-};
-
-const SubjectDisplayContent = props => {
-  const { subject } = props;
-
-  return (
-    <div>
-      <DefaultSubjectDisplay subject={subject} />
-    </div>
-  );
-};
-
-const DefaultSubjectDisplay = props => {
-  const { subject } = props;
 
   const childSubjectsMap = useChildMapSelector();
 
@@ -64,20 +43,22 @@ const DefaultSubjectDisplay = props => {
   const openEditModal = useContext(EditContext);
 
   return (
-    <>
-      <div className={classes}>
-        <EditableExpandableLabelDisplay
-          {...{ childSubjects, expanded, setExpanded }}
-          onEdit={() => openEditModal(subject, childSubjects)}
-          item={subject}
-        />
+    <li key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
+      <div>
+        <div className={classes}>
+          <EditableExpandableLabelDisplay
+            {...{ childSubjects, expanded, setExpanded }}
+            onEdit={() => openEditModal(subject, childSubjects)}
+            item={subject}
+          />
+        </div>
+        {editing ? (
+          <EditingSubjectDisplay childSubjects={childSubjects} subject={subject} onCancelEdit={() => setEditing(false)} />
+        ) : expanded && childSubjects?.length ? (
+          <SubjectList subjects={childSubjects} />
+        ) : null}
       </div>
-      {editing ? (
-        <EditingSubjectDisplay childSubjects={childSubjects} subject={subject} onCancelEdit={() => setEditing(false)} />
-      ) : expanded && childSubjects?.length ? (
-        <SubjectList subjects={childSubjects} />
-      ) : null}
-    </>
+    </li>
   );
 };
 
