@@ -56,13 +56,6 @@ const SubjectList = props => {
   );
 };
 
-const TopSubjectsList = () => {
-  let topLevelSubjects = useRootSubjects();
-  let allSubjects = [...topLevelSubjects];
-
-  return <SubjectList subjects={allSubjects} />;
-};
-
 const defaultEditState = {
   editingSubject: { name: "" }
 };
@@ -73,6 +66,7 @@ export default () => {
   const { editingSubject } = subjectEditState;
 
   useColors();
+  const topLevelSubjects = useRootSubjects();
 
   const openEditModal = useCallback(editingSubject => {
     setSubjectEditState({ editingSubject });
@@ -90,7 +84,7 @@ export default () => {
 
           <EditContext.Provider value={openEditModal}>
             <div className={contentRoot}>
-              <TopSubjectsList />
+              <SubjectList subjects={topLevelSubjects} />
             </div>
           </EditContext.Provider>
         </div>
