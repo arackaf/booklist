@@ -3,12 +3,13 @@ import BootstrapButton from "app/components/bootstrapButton";
 import ColorsPalette from "app/components/colorsPalette";
 import CustomColorPicker from "app/components/customColorPicker";
 import {
-  useLevelSubjectsSortedSelector,
+  useRootSubjects,
   useChildMapSelector,
   useSubjectMutations,
   useSubjectsState,
   getEligibleParents,
-  computeSubjectParentId
+  computeSubjectParentId,
+  useAllSubjects
 } from "app/subjectsState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
@@ -104,7 +105,6 @@ const EditingSubjectDisplay = props => {
       if (!evt.target.value.trim()) {
         setMissingName(true);
       } else {
-        let { subject } = props;
         runSave();
       }
     }
@@ -186,10 +186,12 @@ const EditingSubjectDisplay = props => {
                 Cancel
               </BootstrapButton>
             </div>
-            <BootstrapButton disabled={isSubjectSaving} style={{ marginLeft: "auto" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
-              Delete {name}&nbsp;
-              <i className="fa fa-fw fa-trash" />
-            </BootstrapButton>
+            {_id ? (
+              <BootstrapButton disabled={isSubjectSaving} style={{ marginLeft: "auto" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
+                Delete {name}&nbsp;
+                <i className="fa fa-fw fa-trash" />
+              </BootstrapButton>
+            ) : null}
           </div>
 
           <hr style={{ flex: 1 }} />
@@ -255,7 +257,7 @@ const SubjectList = props => {
 };
 
 const TopSubjectsList = () => {
-  let topLevelSubjects = useLevelSubjectsSortedSelector();
+  let topLevelSubjects = useRootSubjects();
   let allSubjects = [...topLevelSubjects];
 
   return <SubjectList subjects={allSubjects} />;
@@ -281,8 +283,12 @@ export default () => {
 
   return (
     <div className={subjectsRoot}>
-      <div className="subject-row row subject-row">
+      <div className="subject-row row subject-row padding-top" style={{ marginBottom: "60px" }}>
         <div className="col-lg-6 col-md-8 col-xs-12">
+          <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" }, [])}>
+            New Subject
+          </BootstrapButton>
+
           <EditContext.Provider value={openEditModal}>
             <TopSubjectsList />
           </EditContext.Provider>
