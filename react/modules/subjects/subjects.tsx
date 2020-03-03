@@ -20,7 +20,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
   const { _id } = subject;
 
-  const [uiReady, setUiReady] = useState(false);
+  const uiReady = useRef(false);
 
   const childSubjectsMap = useChildMapSelector();
   const childSubjects = childSubjectsMap[subject._id] || [];
@@ -30,14 +30,15 @@ const SubjectDisplay: FC<any> = memo(props => {
 
   const [resizeRef, viewHeight] = useHeight();
   const { height, opacity, transform } = useSpring({
-    config: !uiReady ? { duration: 1 } : expanded ? { ...config.stiff } : { duration: 150 },
+    immediate: !uiReady.current,
+    config: expanded ? { ...config.stiff } : { duration: 150 },
     from: { height: 0, opacity: 0, transform: "translate3d(20px,-20px,0)" },
     to: {
       height: expanded ? viewHeight : 0,
       opacity: expanded ? 1 : 0,
       transform: `translate3d(${expanded ? 0 : 20}px,${expanded ? 0 : -20}px,0)`
     },
-    onRest: () => setUiReady(true)
+    onRest: () => (uiReady.current = true)
   }) as any;
 
   let classes = `row padding-top padding-bottom ${subjectRow}`;
