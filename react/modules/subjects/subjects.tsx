@@ -20,7 +20,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
   const { _id } = subject;
 
-  const uiReady = useContext(AnimationContext);
+  const [uiReady, setUiReady] = useState(false);
 
   const childSubjectsMap = useChildMapSelector();
   const childSubjects = childSubjectsMap[subject._id] || [];
@@ -36,7 +36,8 @@ const SubjectDisplay: FC<any> = memo(props => {
       height: expanded ? viewHeight : 0,
       opacity: expanded ? 1 : 0,
       transform: `translate3d(${expanded ? 0 : 20}px,${expanded ? 0 : -20}px,0)`
-    }
+    },
+    onRest: () => setUiReady(true)
   }) as any;
 
   let classes = `row padding-top padding-bottom ${subjectRow}`;
@@ -49,8 +50,8 @@ const SubjectDisplay: FC<any> = memo(props => {
         <div className={classes}>
           <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => openEditModal(subject)} item={subject} />
         </div>
-        <animated.div style={uiReady ? { height: expanded && previous ? "auto" : height } : {}}>
-          <animated.div ref={resizeRef} style={uiReady ? { opacity, transform } : {}}>
+        <animated.div style={{ height: expanded && previous ? "auto" : height }}>
+          <animated.div ref={resizeRef} style={{ opacity, transform }}>
             <SubjectList subjects={childSubjects} />
           </animated.div>
         </animated.div>
@@ -79,7 +80,6 @@ const defaultEditState = {
 export default () => {
   const [subjectEditState, setSubjectEditState] = useState(defaultEditState);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [uiReady, setUiReady] = useState(false);
   const { editingSubject } = subjectEditState;
 
   useColors();
@@ -92,13 +92,10 @@ export default () => {
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
 
   const { opacity } = useSpring({
-    config: { mass: 1, tension: 350, friction: 30, clamp: true },
+    config: { ...config.slow },
     from: { opacity: 0 },
     to: {
       opacity: 1
-    },
-    onRest: () => {
-      setUiReady(true);
     }
   }) as any;
 
@@ -110,13 +107,11 @@ export default () => {
             New Subject
           </BootstrapButton>
 
-          <AnimationContext.Provider value={uiReady}>
-            <EditContext.Provider value={openEditModal}>
-              <animated.div style={{ opacity }} className={contentRoot}>
-                <SubjectList subjects={topLevelSubjects} />
-              </animated.div>
-            </EditContext.Provider>
-          </AnimationContext.Provider>
+          <EditContext.Provider value={openEditModal}>
+            <animated.div style={{ opacity }} className={contentRoot}>
+              <SubjectList subjects={topLevelSubjects} />
+            </animated.div>
+          </EditContext.Provider>
         </div>
       </div>
 
