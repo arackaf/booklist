@@ -1,4 +1,4 @@
-import React, { memo, createContext, useState, useCallback, useContext, FC } from "react";
+import React, { memo, createContext, useState, useCallback, useContext, FC, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
 import BootstrapButton from "app/components/bootstrapButton";
 import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
@@ -20,6 +20,8 @@ const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
   const { _id } = subject;
 
+  const uiReady = useContext(AnimationContext);
+
   const childSubjectsMap = useChildMapSelector();
   const childSubjects = childSubjectsMap[subject._id] || [];
 
@@ -28,7 +30,7 @@ const SubjectDisplay: FC<any> = memo(props => {
 
   const [resizeRef, viewHeight] = useHeight();
   const { height, opacity, transform } = useSpring({
-    config: expanded ? { ...config.stiff } : { duration: 150 },
+    config: !uiReady ? { duration: 1 } : expanded ? { ...config.stiff } : { duration: 150 },
     from: { height: 0, opacity: 0, transform: "translate3d(20px,-20px,0)" },
     to: {
       height: expanded ? viewHeight : 0,
@@ -40,8 +42,6 @@ const SubjectDisplay: FC<any> = memo(props => {
   let classes = `row padding-top padding-bottom ${subjectRow}`;
 
   const openEditModal = useContext(EditContext);
-
-  const uiReady = useContext(AnimationContext);
 
   return (
     <animated.li key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
@@ -92,12 +92,14 @@ export default () => {
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
 
   const { opacity } = useSpring({
-    config: { ...config.slow, clamp: true },
+    config: { mass: 1, tension: 350, friction: 30, clamp: true },
     from: { opacity: 0 },
     to: {
       opacity: 1
     },
-    onRest: () => setUiReady(true)
+    onRest: () => {
+      setUiReady(true);
+    }
   }) as any;
 
   return (
