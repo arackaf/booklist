@@ -6,20 +6,17 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export function useMeasure() {
+export function useHeight() {
   const ref = useRef<any>();
-  const [bounds, set] = useState({ height: 0 });
-  const [ro] = useState(() => new MutationObserver(() => ref.current && set({ height: ref.current.offsetHeight })));
+  const [height, set] = useState(0);
+  const [ro] = useState(() => new MutationObserver(() => ref.current && height != ref.current.offsetHeight && set(ref.current.offsetHeight)));
   useLayoutEffect(() => {
     if (ref.current) {
-      set({ height: ref.current.offsetHeight });
-    }
-  }, []);
-  useEffect(() => {
-    if (ref.current) {
-      ro.observe(ref.current, { childList: true, subtree: true });
+      set(ref.current.offsetHeight);
+      ro.observe(ref.current, { attributes: true, childList: true, subtree: true });
     }
     return () => ro.disconnect();
   }, []);
-  return [ref, bounds as any];
+
+  return [ref, height as any];
 }
