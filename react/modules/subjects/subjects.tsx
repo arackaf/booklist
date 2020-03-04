@@ -41,7 +41,7 @@ const SubjectDisplay: FC<any> = memo(props => {
     onRest: () => (uiReady.current = true)
   }) as any;
 
-  let classes = `row padding-top padding-bottom ${subjectRow}`;
+  let classes = `row padding-bottom-med ${subjectRow}`;
 
   const openEditModal = useContext(EditContext);
 
