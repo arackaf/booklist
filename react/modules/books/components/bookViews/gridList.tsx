@@ -91,7 +91,7 @@ const BookRow: SFC<ILocalProps> = props => {
             {!viewingPublic && online ? (
               <>
                 <a style={hoverOverride} className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBook(book)}>
-                  <i className={`fal fa-pencil-alt`} />
+                  <i className="fal fa-pencil-alt"></i>
                 </a>
                 <a style={hoverOverride} className={`margin-right ${gridHoverFilter}`} onClick={() => dispatchBooksUiState(["start-delete", _id])}>
                   <i className={`fal fa-trash-alt`} />
@@ -126,7 +126,7 @@ const BookRow: SFC<ILocalProps> = props => {
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
-                <i className={`fal fa-pencil-alt`} />
+                <i className="fal fa-pencil-alt"></i>
               </a>
             ) : null}
           </div>
@@ -142,7 +142,7 @@ const BookRow: SFC<ILocalProps> = props => {
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
               <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
-                <i className={`fal fa-pencil-alt`} />
+                <i className="fal fa-pencil-alt"></i>
               </a>
             ) : null}
           </div>
