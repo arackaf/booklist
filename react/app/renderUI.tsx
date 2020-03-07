@@ -52,7 +52,7 @@ const App = () => {
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
 
-  let Component = getModuleComponent(appState.module);
+  let Component = getModuleComponent(appState.module) as any;
 
   useEffect(() => {
     startTransitionNewModule(() => {
