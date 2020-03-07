@@ -1,301 +1,126 @@
-import React, { FunctionComponent, useEffect, useRef, useContext } from "react";
-import { useEditingSubjectHash, usePendingSubjects, useSubjectEditInfo, SubjectType } from "modules/subjects/useSubjectsDndState";
+import React, { memo, createContext, useState, useCallback, useContext, FC, useRef } from "react";
+import { useSpring, animated, config } from "react-spring";
 import BootstrapButton from "app/components/bootstrapButton";
-import ColorsPalette from "app/components/colorsPalette";
-import CustomColorPicker from "app/components/customColorPicker";
-import { useLevelSubjectsSortedSelector, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
-import { SubjectsDnDContext, useSubjectsDndState } from "./useSubjectsDndState";
+import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
 
-import subjectsListStyles from "./subjectsList.module.css";
+import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/colorsState";
+import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
 
-const {
-  listGroup,
-  editPane,
-  defaultSubjectDisplay,
-  subjectPreview,
-  textColorSaveBox,
-  subjectRow,
-  showOnHoverParent,
-  showOnHoverInline
-} = subjectsListStyles;
+import EditSubject from "app/components/editSubject";
+import Modal from "app/components/modal";
+import { useHeight, usePrevious } from "app/animationHelpers";
 
-type subjectDisplayProps = {
-  subject: SubjectType & { candidateMove: boolean };
-};
+const AnimationContext = createContext(null);
+const EditContext = createContext(null);
 
-const SubjectDisplay = (props => {
+const { subjectsRoot, subjectRow, contentRoot } = subjectsListStyles;
+
+const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
-  const { _id, candidateMove } = subject;
-  const style: any = {};
-
-  return (
-    <li key={_id} style={{ ...style, paddingTop: 0, paddingBottom: 0 }}>
-      <SubjectDisplayContent {...{ subject }} />
-    </li>
-  );
-}) as FunctionComponent<subjectDisplayProps>;
-
-const SubjectDisplayContent = props => {
-  const { subject } = props;
-
-  const { colors } = useColors();
-
   const { _id } = subject;
-  const { isEditingSubject, isPendingDelete, isDeleting, isSubjectSaving, isSubjectSaved } = useSubjectEditInfo(subject);
 
-  const pendingSubjectsLookup = usePendingSubjects();
-  const pendingChildren = pendingSubjectsLookup[subject._id] || [];
+  const uiReady = useRef(false);
 
-  const { editingSubjectsHash: shapedEditingSubjectHash } = useEditingSubjectHash();
-  const editingSubject = shapedEditingSubjectHash[_id];
+  const childSubjectsMap = useChildMapSelector();
+  const childSubjects = childSubjectsMap[subject._id] || [];
 
-  let childSubjectsMap = useChildMapSelector();
-  let childSubjects = childSubjectsMap[subject._id] || [];
-  let effectiveChildren = pendingChildren.concat(childSubjects);
-  let deleteMessage = childSubjects.length ? "Confirm - child subjects will also be deleted" : "Confirm Delete";
+  const [expanded, setExpanded] = useState(true);
+  const previous = usePrevious(expanded);
 
-  let classToPass = `row padding-top padding-bottom ${subjectRow}`;
-  return (
-    <div>
-      {isEditingSubject ? (
-        <EditingSubjectDisplay
-          className={classToPass}
-          subject={subject}
-          isSubjectSaving={isSubjectSaving}
-          editingSubject={editingSubject}
-          colors={colors}
-        />
-      ) : isDeleting ? (
-        <DeletingSubjectDisplay className={classToPass} name={subject.name} />
-      ) : isPendingDelete ? (
-        <PendingDeleteSubjectDisplay className={classToPass} subject={subject} deleteMessage={deleteMessage} />
-      ) : (
-        <DefaultSubjectDisplay className={classToPass} subject={subject} isSubjectSaving={isSubjectSaving} isSubjectSaved={isSubjectSaved} />
-      )}
+  const [resizeRef, viewHeight] = useHeight();
+  const { height, opacity, transform } = useSpring({
+    immediate: !uiReady.current,
+    config: expanded ? { ...config.stiff } : { duration: 150 },
+    from: { height: 0, opacity: 0, transform: "translate3d(20px,-20px,0)" },
+    to: {
+      height: expanded ? viewHeight : 0,
+      opacity: expanded ? 1 : 0,
+      transform: `translate3d(${expanded ? 0 : 20}px,${expanded ? 0 : -20}px,0)`
+    },
+    onRest: () => (uiReady.current = true)
+  }) as any;
 
-      {effectiveChildren.length ? <SubjectList style={{ marginTop: 0 }} subjects={effectiveChildren} /> : null}
-    </div>
-  );
-};
+  let classes = `row padding-bottom-med ${subjectRow}`;
 
-const DefaultSubjectDisplay = props => {
-  const { isSubjectSaving, isSubjectSaved, className, subject } = props;
-
-  const { _id, name, backgroundColor, textColor } = subject;
-  const mainIcon = isSubjectSaving ? (
-    <i className="fa fa-fw fa-spinner fa-spin" />
-  ) : isSubjectSaved ? (
-    <i style={{ color: "green" }} className="fa fa-fw fa-check" />
-  ) : null;
-
-  const { subjectHash } = useSubjectsState();
-  const [{}, { beginSubjectEdit, addNewSubject, beginSubjectDelete }] = useContext(SubjectsDnDContext);
+  const openEditModal = useContext(EditContext);
 
   return (
-    <div className={className}>
-      <div
-        className={`col-xs-12 ${showOnHoverParent} ${defaultSubjectDisplay}`}
-        style={{ backgroundColor: backgroundColor || "var(--neutral-text)", color: textColor || "white" }}
-      >
-        {mainIcon}
-        &nbsp;
-        <div className={subjectPreview}>{name || "<label preview>"}</div>
-        {!isSubjectSaving ? (
-          <a className={showOnHoverInline} onClick={() => beginSubjectEdit(_id, subjectHash)}>
-            <i className="fa fa-fw fa-pencil" />
-          </a>
-        ) : null}
-        {!isSubjectSaving ? (
-          <a className={showOnHoverInline} onClick={() => addNewSubject(_id)}>
-            <i className="fa fa-fw fa-plus" />
-          </a>
-        ) : null}
-        {!isSubjectSaving ? (
-          <a className={showOnHoverInline} onClick={() => beginSubjectDelete(_id)} style={{ marginLeft: "20px" }}>
-            <i className="fa fa-fw fa-trash" />
-          </a>
-        ) : null}
-      </div>
-    </div>
-  );
-};
-
-const EditingSubjectDisplay = props => {
-  const inputEl = useRef(null);
-  useEffect(() => inputEl.current.focus(), []);
-  const { subjectHash } = useSubjectsState();
-  const { updateSubject } = useSubjectMutations();
-  const [{}, { cancelSubjectEdit, setEditingSubjectField, saveChanges }] = useContext(SubjectsDnDContext);
-
-  const subjectEditingKeyDown = evt => {
-    let key = evt.keyCode || evt.which;
-    if (key == 13) {
-      let { subject, editingSubject } = props;
-      saveChanges(editingSubject, subject, subjectHash, updateSubject);
-    }
-  };
-
-  const { isSubjectSaving, className, subject, editingSubject, colors } = props;
-  const { _id, name } = subject;
-  const textColors = ["#ffffff", "#000000"];
-  const { validationError } = editingSubject;
-
-  return (
-    <div className={className + ` ${editPane}`}>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
-        <input
-          ref={inputEl}
-          onKeyDown={subjectEditingKeyDown}
-          onChange={(evt: any) => setEditingSubjectField(_id, "name", evt.target.value)}
-          value={editingSubject.name}
-          className="form-control"
-        />
-        <div
-          className="label label-default"
-          style={{
-            backgroundColor: editingSubject.backgroundColor,
-            color: editingSubject.textColor,
-            maxWidth: "100%",
-            display: "inline-block",
-            overflow: "hidden",
-            marginTop: "5px"
-          }}
-        >
-          {editingSubject.name || "<label preview>"}
+    <animated.li key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
+      <div>
+        <div className={classes}>
+          <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => openEditModal(subject)} item={subject} />
         </div>
-        {subject.pending ? <br /> : null}
-        {subject.pending ? (
-          <span className="label label-warning" style={{ marginTop: "5px", display: "inline-block" }}>
-            This subject is not saved
-          </span>
-        ) : null}
-        {validationError ? <br /> : null}
-        {validationError ? <span className="label label-danger">{validationError}</span> : null}
+        <animated.div style={{ height: expanded && previous ? "auto" : height }}>
+          <animated.div ref={resizeRef} style={{ opacity, transform }}>
+            <SubjectList subjects={childSubjects} />
+          </animated.div>
+        </animated.div>
       </div>
-      <div className="col-xs-12 col-lg-6 padding-bottom-small">
-        <select
-          onChange={(evt: any) => setEditingSubjectField(_id, "parentId", evt.target.value)}
-          value={editingSubject.parentId || ""}
-          className="form-control"
-        >
-          <option value={""}>No Parent</option>
-          {editingSubject.eligibleParents.map(s => (
-            <option key={s._id} value={s._id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="col-xs-12 col-lg-6">
-        <ColorsPalette
-          currentColor={editingSubject.backgroundColor}
-          colors={colors}
-          onColorChosen={color => setEditingSubjectField(_id, "backgroundColor", color)}
-        />
-        <CustomColorPicker
-          labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
-          onColorChosen={color => setEditingSubjectField(_id, "backgroundColor", color)}
-          currentColor={editingSubject.backgroundColor}
-        />
-      </div>
-      <div className="col-xs-12 col-lg-6">
-        <div className={textColorSaveBox}>
-          <a onClick={() => cancelSubjectEdit(_id)}>Cancel</a>
-          <BootstrapButton
-            disabled={isSubjectSaving}
-            style={{ marginRight: "5px", marginLeft: "10px" }}
-            preset="primary-xs"
-            onClick={() => saveChanges(editingSubject, subject, subjectHash, updateSubject)}
-          >
-            <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-          </BootstrapButton>
-          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField(_id, "textColor", color)} />
-        </div>
-      </div>
-    </div>
+    </animated.li>
   );
-};
-
-const PendingDeleteSubjectDisplay = props => {
-  const { className, deleteMessage, subject } = props;
-  const { name, _id, backgroundColor, textColor } = subject;
-  const { subjectHash } = useSubjectsState();
-  const { deleteSubject: runDelete } = useSubjectMutations();
-  const [{}, { cancelSubjectDelete, deleteSubject }] = useContext(SubjectsDnDContext);
-
-  return (
-    <div className={className + " delete-pane"}>
-      <div className="col-xs-12">
-        <div className="label label-default" style={{ display: "inline", color: textColor, backgroundColor }}>
-          {name}
-        </div>
-        <BootstrapButton onClick={() => deleteSubject(_id, subjectHash, runDelete)} style={{ marginLeft: "20px" }} preset="danger-xs">
-          {deleteMessage}
-        </BootstrapButton>
-        <BootstrapButton onClick={() => cancelSubjectDelete(_id)} style={{ marginLeft: "20px" }} className="btn btn-xs">
-          Cancel
-        </BootstrapButton>
-      </div>
-    </div>
-  );
-};
-
-const DeletingSubjectDisplay = props => {
-  let { name, className } = props;
-  return (
-    <div className={className}>
-      <div className="col-xs-12">
-        {name}
-        <BootstrapButton preset="danger-xs" disabled={true} style={{ marginLeft: "20px" }}>
-          Deleting <i className="fa fa-fw fa-spinner fa-spin" />
-        </BootstrapButton>
-      </div>
-    </div>
-  );
-};
+});
 
 const SubjectList = props => {
-  const { style = {} } = props;
-
   const { subjectHash } = useSubjectsState();
   const { updateSubject: runInsert } = useSubjectMutations();
-  const [{}, { setNewParent }] = useContext(SubjectsDnDContext);
 
   return (
-    <ul className={listGroup} style={{ marginBottom: "5px", ...style }}>
+    <ul>
       {props.subjects.map(subject => (
-        <SubjectDisplay key={subject._id} {...{ setNewParent, subject, subjectHash, runInsert }} />
+        <SubjectDisplay key={subject._id} {...{ subject, subjectHash, runInsert }} />
       ))}
     </ul>
   );
 };
 
-const TopSubjectsList = () => {
-  const pendingSubjectsLookup = usePendingSubjects();
-  let rootPendingSubjects = pendingSubjectsLookup["root"] || [];
-  let topLevelSubjects = useLevelSubjectsSortedSelector();
-  let allSubjects = [...rootPendingSubjects, ...topLevelSubjects];
-
-  return (
-    <div className="standard-module-container">
-      <div className="subject-row row subject-row">
-        <div className="col-lg-6 col-md-8 col-xs-12">
-          <SubjectList subjects={allSubjects} />
-        </div>
-      </div>
-    </div>
-  );
+const defaultEditState = {
+  editingSubject: { name: "" }
 };
 
 export default () => {
-  let subjectsState = useSubjectsDndState();
+  const [subjectEditState, setSubjectEditState] = useState(defaultEditState);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const { editingSubject } = subjectEditState;
+
+  useColors();
+  const topLevelSubjects = useRootSubjects();
+
+  const openEditModal = useCallback(editingSubject => {
+    setSubjectEditState({ editingSubject });
+    setEditModalOpen(true);
+  }, []);
+  const closeEditModal = useCallback(() => setEditModalOpen(false), []);
+
+  const { opacity } = useSpring({
+    config: { ...config.slow },
+    from: { opacity: 0 },
+    to: {
+      opacity: 1
+    }
+  }) as any;
 
   return (
-    <SubjectsDnDContext.Provider value={subjectsState}>
-      <TopSubjectsList />
-      <br />
-      <br />
-    </SubjectsDnDContext.Provider>
+    <div className={subjectsRoot}>
+      <div className="subject-row row subject-row padding-top" style={{ marginBottom: "60px" }}>
+        <div className="col-lg-6 col-md-8 col-xs-12">
+          <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+            New Subject
+          </BootstrapButton>
+
+          <EditContext.Provider value={openEditModal}>
+            <animated.div style={{ opacity }} className={contentRoot}>
+              <SubjectList subjects={topLevelSubjects} />
+            </animated.div>
+          </EditContext.Provider>
+        </div>
+      </div>
+
+      <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
+        <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
+        <hr />
+        <BootstrapButton onClick={closeEditModal}>Close</BootstrapButton>
+      </Modal>
+    </div>
   );
 };

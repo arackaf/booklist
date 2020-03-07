@@ -50,6 +50,11 @@ export function useSubjectMutations() {
   return { updateSubject, deleteSubject };
 }
 
+export const useAllSubjects = () => {
+  const { subjectHash, subjectsLoaded } = useSubjectsState();
+  return useMemo(() => (subjectsLoaded ? allSubjectsSorted(subjectHash) : []), [subjectHash, subjectsLoaded]);
+};
+
 function allSubjectsSorted(subjectsHash): SubjectType[] {
   let subjects = Object.keys(subjectsHash).map(_id => subjectsHash[_id]);
   return subjects.sort(subjectSortCompare);
@@ -107,17 +112,11 @@ export const filterSubjects = (subjects, search) => {
 };
 
 export const getEligibleParents = (subjectHash, _id) => {
-  let eligibleParents = null;
-  if (!_id && _id != null) {
-    eligibleParents = flattenSubjects(subjectHash);
-  } else if (_id) {
-    eligibleParents = flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path));
-  }
-  if (eligibleParents) {
-    eligibleParents.sort(subjectSortCompare);
-  }
+  let eligibleParents = _id
+    ? flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path))
+    : flattenSubjects(subjectHash);
 
-  return eligibleParents;
+  return eligibleParents.sort(subjectSortCompare);
 };
 
 export const flattenSubjects = subjects => Object.keys(subjects).map(k => subjects[k]);
@@ -131,7 +130,7 @@ export const computeSubjectParentId = path => {
   }
 };
 
-export const useLevelSubjectsSortedSelector = () => {
+export const useRootSubjects = () => {
   const { subjectHash } = useSubjectsState();
 
   return useMemo(
