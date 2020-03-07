@@ -5,7 +5,6 @@ import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
 import styles from "./styles.module.css";
 const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
-import delve from "dlv";
 import ajaxUtil from "util/ajaxUtil";
 import { syncUpdates } from "util/graphqlHelpers";
 import { QueryOf, Queries } from "graphql-typings";

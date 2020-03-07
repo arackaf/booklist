@@ -6,7 +6,6 @@ import { useMemo } from "react";
 import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache } from "util/graphqlHelpers";
 
-import delve from "dlv";
 import { useTagsState } from "app/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
@@ -76,7 +75,7 @@ export const useBooks = () => {
       when: /deleteBook/,
       run: ({ softReset, currentResults, refresh }, res, req) => {
         let toRemove = currentResults.allBooks.Books.find(b => b._id == req._id);
-        if (toRemove){
+        if (toRemove) {
           currentResults.allBooks.Books = currentResults.allBooks.Books.filter(b => b != toRemove);
           currentResults.allBooks.Meta.count--;
         }
@@ -91,7 +90,7 @@ export const useBooks = () => {
 
   const booksRaw = data ? data.allBooks.Books : null;
   const books = adjustBooks(booksRaw);
-  const booksCount = loaded ? delve(data, "allBooks.Meta.count") : "";
+  const booksCount = loaded ? data?.allBooks?.Meta?.count ?? "" : "";
 
   const resultsCount = booksCount != null ? booksCount : -1;
   const totalPages = useMemo(() => (resultsCount && resultsCount > 0 ? Math.ceil(resultsCount / searchState.pageSize) : 0), [resultsCount]);
