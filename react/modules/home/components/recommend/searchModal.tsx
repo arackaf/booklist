@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 
 import Modal from "app/components/modal";
 import SelectAvailableTags from "app/components/selectAvailableTags";
@@ -7,7 +7,6 @@ import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { SearchContext, ISearchBookRaw } from "modules/home/searchState";
 
 interface LocalProps {
   isOpen: boolean;
