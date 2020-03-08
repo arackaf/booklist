@@ -10,6 +10,7 @@ import RecommendMain from "./components/recommend/main";
 import "./d3-styles.scss";
 import { SectionLoading } from "app/components/loading";
 import { goto } from "reactStartup";
+import { useTagsState } from "app/tagsState";
 
 const MainHomePane = props => (
   <div>
@@ -28,6 +29,7 @@ const MAX_CHART_WIDTH = 1100;
 const HomeIfLoggedIn: FunctionComponent<{}> = props => {
   const { subjectsLoaded, subjects } = useStackedSubjects();
   const [tab, setTab] = useState("vis");
+  useTagsState();
 
   return (
     <MainHomePane>
