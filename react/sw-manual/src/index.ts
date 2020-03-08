@@ -84,8 +84,8 @@ function handleGraphqlPost(request) {
     console.log(reqClone);
     let respClone = response.clone();
     respClone.json().then(response => {
-      syncResultsFor({ request, response }, "Book", bookSyncTransform);
-      syncResultsFor({ request, response }, "Tag");
+      syncResultsFor({ request: reqClone, response }, "Book", bookSyncTransform);
+      syncResultsFor({ request: reqClone, response }, "Tag");
       syncSubjectsResults(response);
     });
     return response;
