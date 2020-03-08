@@ -122,7 +122,7 @@ const SongDisplayNoEdit = props => {
         <div className={styles.titleEdit}>
           {song.title}
           <a onClick={edit} style={{ marginLeft: "auto", marginRight: "20px" }}>
-            <i className="fa fa-fw fa-pencil" />
+            <i className="fal fa-pencil-alt"></i>
           </a>
         </div>
       </td>

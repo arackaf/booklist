@@ -1,11 +1,9 @@
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { GenerateSW } = require("workbox-webpack-plugin");
-const MinifyPlugin = require("babel-minify-webpack-plugin");
 const path = require("path");
 const isProd = process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 const TerserPlugin = require("terser-webpack-plugin");
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
@@ -104,7 +102,7 @@ module.exports = {
       ignoreURLParametersMatching: [/./],
       exclude: [/\.(ttf|eot|svg|woff)$/],
       navigateFallback: "react/dist/index.html",
-      navigateFallbackBlacklist: [/\/(activate|graphql|graphql-public)\b/],
+      navigateFallbackDenylist: [/\/(activate|graphql|graphql-public)\b/],
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:5/, name: "medium-cache", expires: 60 * 60 * 24 }), //1 day

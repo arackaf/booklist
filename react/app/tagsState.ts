@@ -5,7 +5,6 @@ import { useContext, useMemo } from "react";
 import { buildQuery, useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "./renderUI";
 
-import delve from "dlv";
 import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
 import { QueryOf, Queries } from "graphql-typings";
 

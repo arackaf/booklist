@@ -1,6 +1,7 @@
 import {lazy} from "react";
 
 import booksPreload from "./modules/books/booksPreload";
+import subjectsPreload from "./modules/subjects/subjectsPreload";
 
 import { isAdmin } from "util/loginStatus";
 
@@ -30,13 +31,14 @@ export const getModuleComponent = moduleToLoad => {
       return AuthenticateComponent;
     case "books":
     case "view":
-      //booksPreload();
+      booksPreload();
       return BooksComponent;
     case "home":
       return HomeComponent;
     case "scan":
       return ScanComponent;
     case "subjects":
+      subjectsPreload();
       return SubjectsComponent;
     case "styledemo":
       return StyleDemoComponent;

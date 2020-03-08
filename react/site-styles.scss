@@ -392,7 +392,7 @@ label {
 
 .wait-for-loading > i {
   position: fixed;
-  top: 50%;
+  top: 40%;
   left: 50%;
   opacity: 0.2;
   z-index: 5000;
@@ -400,7 +400,7 @@ label {
 
 .wait-for-long-loading {
   position: fixed;
-  top: 50%;
+  top: 40%;
   left: 0;
   right: 0;
   opacity: 0.2;
@@ -542,7 +542,7 @@ div.toast-notification h4 {
   margin-left: auto;
 }
 
-.has-error input {
+.has-error input, input.form-control.has-error {
   border-color: var(--danger-5);
 }
 
