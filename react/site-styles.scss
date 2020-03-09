@@ -520,19 +520,22 @@ div.toast-notification h4 {
   color: var(--primary-10);
 }
 
-.fade-transition-enter {
+.fade-transition-enter, .fade-transition-overlay-enter {
   opacity: 0.01;
 }
-.fade-transition-enter.fade-transition-enter-active {
+.fade-transition-enter.fade-transition-enter-active, .fade-transition-overlay-enter.fade-transition-overlay-enter-active {
   opacity: 1;
-  transition: opacity 500ms ease-in;
+  transition: opacity 300ms ease-in;
 }
-.fade-transition-exit {
+.fade-transition-exit, .fade-transition-exit {
   opacity: 1;
 }
-.fade-transition-exit.fade-transition-exit-active {
+.fade-transition-exit.fade-transition-exit-active, .fade-transition-overlay-exit.fade-transition-overlay-exit-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
+}
+.fade-transition-overlay-exit {
+  position: absolute;
 }
 
 .standard-modal-footer {

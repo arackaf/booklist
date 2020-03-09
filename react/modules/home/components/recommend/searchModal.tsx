@@ -142,7 +142,7 @@ const SearchResults = props => {
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
         {books.length ? (
-          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition" timeout={120000}>
+          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition-overlay" timeout={350}>
             <table className="table table-condensed table-striped" style={{  }}>
               <thead>
                 <tr>
@@ -183,13 +183,13 @@ const SearchResult = props => {
   let { book } = props;
   return (
     <tr>
-      <td>
+      <td className="min-wdith">
         <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer", whiteSpace: "nowrap" }} className="btn btn-primary btn-xs">
           Add to list&nbsp;
           <i className="fal fa-plus" />
         </button>
       </td>
-      <td>
+      <td className="min-wdith">
         <img src={book.smallImage} />
       </td>
       <td>
