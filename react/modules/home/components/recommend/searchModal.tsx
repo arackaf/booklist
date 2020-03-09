@@ -23,7 +23,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
-  const { loading, loaded, data, error } = searchResults;
+  const { loading, loaded, data, error, currentQuery } = searchResults;
 
   useEffect(() => {
     if (props.isOpen) {
@@ -127,7 +127,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
         </div>
       </>
-      {loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet }} /> : null}
+      {loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet, currentQuery }} /> : null}
     </Modal>
   );
 };
@@ -136,32 +136,38 @@ export default SearchModal;
 
 const SearchResults = props => {
   const books = props.data.allBooks.Books;
-  const { loading, selectedBooksSet } = props;
+  const { loading, selectedBooksSet, currentQuery } = props;
 
   return (
-    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
-      {books.length ? (
-        <table className="table table-condensed table-striped">
-          <thead>
-            <tr>
-              <th />
-              <th />
-              <th />
-            </tr>
-          </thead>
-          <TransitionGroup component="tbody">
-            {books
-              .filter(b => !selectedBooksSet.has(b._id))
-              .map(book => (
-                <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
-                  <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                </CSSTransition>
-              ))}
-          </TransitionGroup>
-        </table>
-      ) : (
-        <div className="alert alert-warning">No results</div>
-      )}
+    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
+      <TransitionGroup component={null}>
+        {books.length ? (
+          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition" timeout={120000}>
+            <table className="table table-condensed table-striped" style={{  }}>
+              <thead>
+                <tr>
+                  <th />
+                  <th />
+                  <th />
+                </tr>
+              </thead>
+              <TransitionGroup component="tbody">
+                {books
+                  .filter(b => !selectedBooksSet.has(b._id))
+                  .map(book => (
+                    <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
+                      <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                    </CSSTransition>
+                  ))}
+              </TransitionGroup>
+            </table>
+          </CSSTransition>
+        ) : (
+          <CSSTransition key={2} classNames="fade-transition" timeout={300}>
+            <div className="alert alert-warning">No results</div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     </div>
   );
 };

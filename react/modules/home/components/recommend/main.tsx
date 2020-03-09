@@ -42,7 +42,7 @@ export default props => {
   const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
   const { active, ...searchStateToUse } = searchState;
 
-  const { loading, loaded, data, error } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, searchStateToUse, { active }));
+  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, searchStateToUse, { active }));
   const closeModal = () => setSearchModalOpen(false);
   const openModal = () => setSearchModalOpen(true);
   const setBookSearchState = searchState => {
@@ -109,7 +109,7 @@ export default props => {
       <SearchModal
         isOpen={searchModalOpen}
         onHide={closeModal}
-        searchResults={{ loading, loaded, data, error }}
+        searchResults={{ loading, loaded, data, error, currentQuery }}
         {...{ setBookSearchState, searchState, dispatch, selectedBooksSet }}
       />
     </div>
