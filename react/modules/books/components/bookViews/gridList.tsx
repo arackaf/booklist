@@ -24,7 +24,6 @@ interface ILocalProps {
   book: IBookDisplay;
   editBooksSubjects: any;
   editBooksTags: any;
-  index: number;
   editBook: any;
   setRead: any;
   booksUiState: any;
@@ -34,7 +33,7 @@ interface ILocalProps {
 
 const BookRow: SFC<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
-  const { book, index, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
+  const { book, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { _id } = book;
   const { selectedBooks, savingReadForBooks: savingRead, pendingDelete, deleting } = booksUiState;
 
@@ -174,15 +173,14 @@ const BookRow: SFC<ILocalProps> = props => {
         <td>{book.pages}</td>
         <td>{book.dateAddedDisplay}</td>
       </tr>
-      {expanded ? <BookRowDetails {...{ book, index, setDetailsLoading }} /> : null}
+      {expanded ? <BookRowDetails {...{ book, setDetailsLoading }} /> : null}
     </>
   );
 };
 
-const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoading: any }> = props => {
+const BookRowDetails: SFC<{ book?: IBookDisplay; setDetailsLoading: any }> = props => {
   let [{ isPublic: viewingPublic }] = useContext(AppContext);
-  let { book, index, setDetailsLoading } = props;
-  let backgroundColor = index % 2 ? "white" : "#f9f9f9";
+  let { book, setDetailsLoading } = props;
 
   let [{ publicUserId }] = useContext(AppContext);
 
@@ -199,7 +197,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; index?: number; setDetailsLoadi
   }
 
   return (
-    <tr key={"details" + book._id} style={{ backgroundColor }}>
+    <tr key={"details" + book._id}>
       <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
         <div className={`row ${detailsRow}`}>
           <div style={{ position: "static" }} className="col-xs-6">
@@ -383,12 +381,12 @@ const BookViewListGrid: SFC<{ books: any }> = ({ books }) => {
               </tr>
             </thead>
             <tbody>
-              {books.map((book, index) => (
+              {books.map(book => (
                 <BookRow
                   key={book._id}
                   editBooksSubjects={editSubjectsForBook}
                   editBooksTags={editTagsForBook}
-                  {...{ book, editBook, index, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
+                  {...{ book, editBook, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
                 />
               ))}
             </tbody>
