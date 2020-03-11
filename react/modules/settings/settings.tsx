@@ -24,7 +24,7 @@ const TabContent = ({ currentTab }) => {
           <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "passwordReset" })}>
             <PasswordReset />
           </div>
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "scanHistory" })}>
+          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "miscSettings" })}>
             <MiscSettings />
           </div>
         </>
@@ -47,10 +47,10 @@ const TabHeaders = ({ currentTab, setTab }) => {
       <div className="tab-header disabled">
         <a>Reset password</a>
       </div>
-      <div className="tab-header active">
+      <div onClick={() => setTab("theme")} className={classNames("tab-header", { active: currentTab == "theme" })}>
         <a>Theme</a>
       </div>
-      <div className="tab-header">
+      <div onClick={() => setTab("miscSettings")} className={classNames("tab-header", { active: currentTab == "miscSettings" })}>
         <a>Misc</a>
       </div>
     </div>
@@ -65,7 +65,7 @@ const TabHeaders = ({ currentTab, setTab }) => {
       <div onClick={() => setTab("theme")} className={classNames("tab-header", { active: currentTab == "theme" })}>
         <a>Theme</a>
       </div>
-      <div onClick={() => setTab("scanHistory")} className={classNames("tab-header", { active: currentTab == "scanHistory" })}>
+      <div onClick={() => setTab("miscSettings")} className={classNames("tab-header", { active: currentTab == "miscSettings" })}>
         <a>Misc</a>
       </div>
     </div>
