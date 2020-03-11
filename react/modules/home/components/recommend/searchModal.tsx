@@ -143,7 +143,7 @@ const SearchResults = props => {
       <TransitionGroup component={null}>
         {books.length ? (
           <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition-overlay" timeout={350}>
-            <table className="table table-condensed table-striped" style={{  }}>
+            <table className="table table-condensed table-striped" style={{}}>
               <thead>
                 <tr>
                   <th />
@@ -182,25 +182,27 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <tr>
-      <td className="min-wdith">
-        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer", whiteSpace: "nowrap" }} className="btn btn-primary btn-xs">
-          Add to list&nbsp;
-          <i className="fal fa-plus" />
-        </button>
-      </td>
-      <td className="min-wdith">
-        <img src={book.smallImage} />
-      </td>
-      <td>
-        {book.title}
-        {book.authors && book.authors.length ? (
-          <>
-            <br />
-            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-          </>
-        ) : null}
-      </td>
-    </tr>
+    // <tbody>
+      <tr>
+        <td className="min-wdith">
+          <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer", whiteSpace: "nowrap" }} className="btn btn-primary btn-xs">
+            Add to list&nbsp;
+            <i className="fal fa-plus" />
+          </button>
+        </td>
+        <td className="min-wdith">
+          <img src={book.smallImage} />
+        </td>
+        <td>
+          {book.title}
+          {book.authors && book.authors.length ? (
+            <>
+              <br />
+              <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+            </>
+          ) : null}
+        </td>
+      </tr>
+    // </tbody>
   );
 };
