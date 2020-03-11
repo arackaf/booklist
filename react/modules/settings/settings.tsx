@@ -10,7 +10,7 @@ import BootstrapButton from "app/components/bootstrapButton";
 
 const TabContent = ({ currentTab }) => {
   const [{ isPublic, isLoggedIn }] = useContext(AppContext);
-  if (isPublic) {
+  if (isPublic && currentTab != "theme" && currentTab != "miscSettings") {
     currentTab = "theme";
   }
 
@@ -24,14 +24,16 @@ const TabContent = ({ currentTab }) => {
           <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "passwordReset" })}>
             <PasswordReset />
           </div>
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "miscSettings" })}>
-            <MiscSettings />
-          </div>
         </>
       ) : null}
-      <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "theme" })}>
-        <ThemeChooser />
-      </div>
+      <>
+        <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "miscSettings" })}>
+          <MiscSettings />
+        </div>
+        <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "theme" })}>
+          <ThemeChooser />
+        </div>
+      </>
     </div>
   );
 };
