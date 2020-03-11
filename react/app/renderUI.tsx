@@ -47,8 +47,10 @@ export const AppContext = createContext<[AppState, any, any]>(null);
 export const ModuleUpdateContext = createContext<boolean>(false);
 
 const App = () => {
-  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs: 3000 });
-  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs: 3000 });
+  const suspenseTimeoutValue = parseInt(localStorage.getItem("suspense-timeout"));
+  const timeoutMs = isNaN(suspenseTimeoutValue) ? 3000 : suspenseTimeoutValue;
+  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs });
+  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs });
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
 
