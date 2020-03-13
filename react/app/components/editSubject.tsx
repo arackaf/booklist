@@ -137,7 +137,7 @@ const EditSubjectFields = props => {
 
   return (
     <>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
+      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
         <input
           ref={inputEl}
           onKeyDown={subjectEditingKeyDown}
@@ -188,7 +188,7 @@ const EditSubjectFields = props => {
           onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
         />
         <CustomColorPicker
-          labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
+          labelStyle={{ marginTop: "3px", display: "inline-block" }}
           onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
           currentColor={editingSubject.backgroundColor}
         />
