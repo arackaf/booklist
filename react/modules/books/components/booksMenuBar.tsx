@@ -253,64 +253,65 @@ const BookSearchFilters: SFC<{ resultsCount: number; disabled: boolean }> = ({ r
   };
 
   return (
-    <div className={cn({ disabled })} style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
+    <>
       {online && resultsCount ? <div style={{ flex: "0 0 auto", marginRight: "5px", alignSelf: "center" }}>{resultsDisplay}</div> : null}
+      <div className={cn({ disabled })} style={{ display: "flex", alignItems: "flex-start", alignContent: "center", flexWrap: "wrap" }}>
+        {bookSearchState.search ? (
+          <RemovableLabelDisplay
+            style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
+            item={{ name: `"${bookSearchState.search}"` }}
+            doRemove={() => removeFilters("search")}
+          />
+        ) : null}
+        {bookSearchState.isRead == "1" || bookSearchState.isRead == "0" ? (
+          <RemovableLabelDisplay
+            style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
+            item={{ backgroundColor: `${bookSearchState.isRead == "1" ? "green" : "red"}` }}
+            doRemove={() => removeFilters("isRead")}
+          >
+            <span>
+              {bookSearchState.isRead == "1" ? "Is Read" : "Not Read"}
+              &nbsp;
+              {bookSearchState.isRead == "1" ? <i className="far fa-check" /> : null}
+            </span>
+          </RemovableLabelDisplay>
+        ) : null}
+        {bookSearchState.publisher ? (
+          <RemovableLabelDisplay
+            style={filterDisplayStyles}
+            item={{ name: `publisher: "${bookSearchState.publisher}"` }}
+            doRemove={() => removeFilters("publisher")}
+          />
+        ) : null}
+        {bookSearchState.author ? (
+          <RemovableLabelDisplay
+            style={filterDisplayStyles}
+            item={{ name: `author: "${bookSearchState.author}"` }}
+            doRemove={() => removeFilters("author")}
+          />
+        ) : null}
+        {bookSearchState.pages || bookSearchState.pages == "0" ? (
+          <RemovableLabelDisplay
+            style={filterDisplayStyles}
+            item={{ name: `pages: ${bookSearchState.pagesOperator == "lt" ? "<" : ">"} ${bookSearchState.pages}` }}
+            doRemove={() => removeFilters("pages", "pagesOperator")}
+          />
+        ) : null}
+        {bookSearchState.noSubjects ? (
+          <RemovableLabelDisplay style={filterDisplayStyles} item={{ name: `No subjects` }} doRemove={() => removeFilters("noSubjects")} />
+        ) : null}
 
-      {bookSearchState.search ? (
-        <RemovableLabelDisplay
-          style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-          item={{ name: `"${bookSearchState.search}"` }}
-          doRemove={() => removeFilters("search")}
-        />
-      ) : null}
-      {bookSearchState.isRead == "1" || bookSearchState.isRead == "0" ? (
-        <RemovableLabelDisplay
-          style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-          item={{ backgroundColor: `${bookSearchState.isRead == "1" ? "green" : "red"}` }}
-          doRemove={() => removeFilters("isRead")}
-        >
-          <span>
-            {bookSearchState.isRead == "1" ? "Is Read" : "Not Read"}
-            &nbsp;
-            {bookSearchState.isRead == "1" ? <i className="far fa-check" /> : null}
-          </span>
-        </RemovableLabelDisplay>
-      ) : null}
-      {bookSearchState.publisher ? (
-        <RemovableLabelDisplay
-          style={filterDisplayStyles}
-          item={{ name: `publisher: "${bookSearchState.publisher}"` }}
-          doRemove={() => removeFilters("publisher")}
-        />
-      ) : null}
-      {bookSearchState.author ? (
-        <RemovableLabelDisplay
-          style={filterDisplayStyles}
-          item={{ name: `author: "${bookSearchState.author}"` }}
-          doRemove={() => removeFilters("author")}
-        />
-      ) : null}
-      {bookSearchState.pages || bookSearchState.pages == "0" ? (
-        <RemovableLabelDisplay
-          style={filterDisplayStyles}
-          item={{ name: `pages: ${bookSearchState.pagesOperator == "lt" ? "<" : ">"} ${bookSearchState.pages}` }}
-          doRemove={() => removeFilters("pages", "pagesOperator")}
-        />
-      ) : null}
-      {bookSearchState.noSubjects ? (
-        <RemovableLabelDisplay style={filterDisplayStyles} item={{ name: `No subjects` }} doRemove={() => removeFilters("noSubjects")} />
-      ) : null}
-
-      {bookSearchState.selectedSubjects.map(s => (
-        <RemovableLabelDisplay style={filterDisplayStyles} item={s} doRemove={() => removeFilterSubject(s._id)} />
-      ))}
-      {bookSearchState.selectedTags.map(t => (
-        <RemovableLabelDisplay style={filterDisplayStyles} item={t} doRemove={() => removeFilterTag(t._id)} />
-      ))}
-      {bookSearchState.activeFilterCount > 1 ? (
-        <RemovableLabelDisplay style={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />
-      ) : null}
-    </div>
+        {bookSearchState.selectedSubjects.map(s => (
+          <RemovableLabelDisplay style={filterDisplayStyles} item={s} doRemove={() => removeFilterSubject(s._id)} />
+        ))}
+        {bookSearchState.selectedTags.map(t => (
+          <RemovableLabelDisplay style={filterDisplayStyles} item={t} doRemove={() => removeFilterTag(t._id)} />
+        ))}
+        {bookSearchState.activeFilterCount > 1 ? (
+          <RemovableLabelDisplay style={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />
+        ) : null}
+      </div>
+    </>
   );
 };
 
