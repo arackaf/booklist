@@ -111,6 +111,39 @@ export default () => (
 
       <br />
 
+      <div className="flex-row" style={{border: "1px solid red"}}>
+        <div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+        </div>
+      </div>
+
+      <br />
+      <hr />
+      <br />
+
       <div className="row">
         <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
         <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
