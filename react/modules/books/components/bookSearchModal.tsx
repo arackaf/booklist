@@ -157,7 +157,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
         <div className="col-sm-3 col-xs-12">
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
-        <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
+        <div className="col-sm-9 col-xs-12">
           <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
         </div>
       </div>
@@ -168,7 +168,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             <div className="col-sm-3 col-xs-12">
               <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
             </div>
-            <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
+            <div className="col-sm-9 col-xs-12">
               <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
             </div>
           </div>

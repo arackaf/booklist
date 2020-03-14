@@ -88,9 +88,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
         <div className="col-xs-9">
-          <div>
-            <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
-          </div>
+          <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
         </div>
       </div>
       <br />
@@ -100,9 +98,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
           </div>
           <div className="col-xs-9">
-            <div>
-              <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
-            </div>
+            <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
           </div>
         </div>
         <br />

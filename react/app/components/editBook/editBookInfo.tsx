@@ -90,7 +90,7 @@ const EditBookInfo = props => {
           <div className="col-sm-3 col-xs-12">
             <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
           </div>
-          <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
+          <div className="col-sm-9 col-xs-12">
             <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
           </div>
         </div>
