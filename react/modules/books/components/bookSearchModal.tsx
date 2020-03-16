@@ -9,6 +9,8 @@ import DisplaySelectedTags from "app/components/displaySelectedTags";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
 
 type LocalProps = {
   isOpen: boolean;
@@ -75,7 +77,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Full search" }}>
       <form onSubmit={updateFilters}>
-        <div className="row">
+        <FlexRow>
           <div className="col-sm-6 col-xs-12">
             <div className="form-group">
               <label>Title</label>
@@ -149,29 +151,29 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
               </select>
             </div>
           </div>
-        </div>
+        </FlexRow>
         <button style={{ display: "none" }} />
         <input type="submit" style={{ display: "none" }} />
       </form>
-      <div className="row" style={{ position: "relative" }}>
+      <FlexRow >
         <div className="col-sm-3 col-xs-12">
           <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
         </div>
         <div className="col-sm-9 col-xs-12">
           <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
         </div>
-      </div>
+      </FlexRow>
       <br />
       {!noSubjectsFilter ? (
         <>
-          <div className="row" style={{ position: "relative" }}>
+          <FlexRow>
             <div className="col-sm-3 col-xs-12">
               <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
             </div>
             <div className="col-sm-9 col-xs-12">
               <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
             </div>
-          </div>
+          </FlexRow>
           <div className="checkbox" style={{ marginTop: "20px" }}>
             <label>
               <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
