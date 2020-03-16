@@ -141,7 +141,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-xs-6">
             <div className="form-group">
               <label>Sort</label>
-              <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={filters.bindableSortValue} className="form-control margin-bottom">
+              <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={filters.bindableSortValue} className="form-control">
                 <option value="title|asc">Title A-Z</option>
                 <option value="title|desc">Title Z-A</option>
                 <option value="pages|asc">Pages, Low</option>
@@ -150,38 +150,34 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                 <option value="_id|desc">Created, Latest</option>
               </select>
             </div>
+            <button style={{ display: "none" }} />
+            <input type="submit" style={{ display: "none" }} />
           </div>
+
+          <div className="col-sm-3 col-xs-12">
+            <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
+          </div>
+          <div className="col-sm-9 col-xs-12">
+            <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
+          </div>
+          {!noSubjectsFilter ? (
+            <>
+              <div className="col-sm-3 col-xs-12">
+                <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
+              </div>
+              <div className="col-sm-9 col-xs-12">
+                <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
+              </div>
+              <div className="checkbox">
+                <label>
+                  <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
+                </label>
+              </div>
+            </>
+          ) : null}
         </FlexRow>
-        <button style={{ display: "none" }} />
-        <input type="submit" style={{ display: "none" }} />
       </form>
-      <FlexRow >
-        <div className="col-sm-3 col-xs-12">
-          <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
-        </div>
-        <div className="col-sm-9 col-xs-12">
-          <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
-        </div>
-      </FlexRow>
-      <br />
-      {!noSubjectsFilter ? (
-        <>
-          <FlexRow>
-            <div className="col-sm-3 col-xs-12">
-              <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
-            </div>
-            <div className="col-sm-9 col-xs-12">
-              <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
-            </div>
-          </FlexRow>
-          <div className="checkbox" style={{ marginTop: "20px" }}>
-            <label>
-              <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
-            </label>
-          </div>
-        </>
-      ) : null}
-      <div className="checkbox" style={{ marginTop: "5px" }}>
+      <div className="checkbox">
         <label>
           <input type="checkbox" checked={!!noSubjectsFilter} onChange={el => setNoSubjectsFilter(!!el.target.checked)} /> Search books with no
           subjects set
