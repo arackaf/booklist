@@ -279,21 +279,21 @@ const BookSearchFilters: SFC<{ resultsCount: number; disabled: boolean }> = ({ r
         {bookSearchState.publisher ? (
           <RemovableLabelDisplay
             style={filterDisplayStyles}
-            item={{ name: `publisher: "${bookSearchState.publisher}"` }}
+            item={{ name: `Publisher: "${bookSearchState.publisher}"` }}
             doRemove={() => removeFilters("publisher")}
           />
         ) : null}
         {bookSearchState.author ? (
           <RemovableLabelDisplay
             style={filterDisplayStyles}
-            item={{ name: `author: "${bookSearchState.author}"` }}
+            item={{ name: `Author: "${bookSearchState.author}"` }}
             doRemove={() => removeFilters("author")}
           />
         ) : null}
         {bookSearchState.pages || bookSearchState.pages == "0" ? (
           <RemovableLabelDisplay
             style={filterDisplayStyles}
-            item={{ name: `pages: ${bookSearchState.pagesOperator == "lt" ? "<" : ">"} ${bookSearchState.pages}` }}
+            item={{ name: `Pages: ${bookSearchState.pagesOperator == "lt" ? "<" : ">"} ${bookSearchState.pages}` }}
             doRemove={() => removeFilters("pages", "pagesOperator")}
           />
         ) : null}

@@ -111,7 +111,7 @@ export default () => (
 
       <br />
 
-      <div className="flow-items" style={{  border: "1px solid purple"}}>
+      <div className="flow-items" style={{ border: "1px solid purple" }}>
         <div>
           <div>This is my padding values padding values padding values first item</div>
           <div>This is padding values the next item</div>
@@ -125,7 +125,7 @@ export default () => (
 
       <br />
 
-      <div className="flow-items tighter" style={{  border: "1px solid purple"}}>
+      <div className="flow-items tighter" style={{ border: "1px solid purple" }}>
         <div>
           <div>This is my padding values padding values padding values first item</div>
           <div>This is padding values the next item</div>
@@ -139,7 +139,7 @@ export default () => (
 
       <br />
 
-      <div className="flex-row" style={{border: "1px solid red"}}>
+      <div className="flex-row" style={{ border: "1px solid red" }}>
         <div>
           <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
           <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
@@ -172,31 +172,33 @@ export default () => (
       <hr />
       <br />
 
-      <div className="row">
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
-        <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+      <div style={{ margin: "15px" }}>
+        <div className="row" style={{ border: "1px solid pink" }}>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+          <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
+        </div>
       </div>
 
       <br />
