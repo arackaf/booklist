@@ -1,6 +1,7 @@
 @import "./css/btn";
 @import "./css/row";
 @import "./css/flex-row";
+@import "./css/stack";
 @import "./css/alert-label";
 @import "./css/table-tab";
 @import "./css/margin-padding";
@@ -467,14 +468,6 @@ div.responsive-radios {
   display: flex;
   align-items: center;
 }
-div.responsive-radios input {
-  margin-right: 5px;
-}
-@media (min-width: 800px) {
-  div.responsive-radios label {
-    padding-right: 10px;
-  }
-}
 @media (max-width: 800px) {
   div.responsive-radios {
     flex-direction: column;
@@ -482,15 +475,8 @@ div.responsive-radios input {
   div.responsive-radios > span {
     align-self: flex-start;
   }
-  div.responsive-radios label {
-    padding-right: 0;
-  }
 }
 
-.form-group,
-.checkbox-group {
-  margin-bottom: 15px;
-}
 .form-group,
 .form-label {
   font-size: 14px;
@@ -499,7 +485,6 @@ div.responsive-radios input {
 .form-group label,
 .form-label {
   display: block;
-  margin-bottom: 5px;
 }
 .form-group input {
   width: 100%;

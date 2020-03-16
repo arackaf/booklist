@@ -1,0 +1,19 @@
+.stack {
+  --spacing: 10px;
+}
+.form-group {
+  --spacing: 5px;
+}
+
+.stack, .form-group {
+  &.tighter {
+    --spacing: 5px;
+  }
+  &.tightest {
+    --spacing: 3px;
+  }
+
+  & > * + * {
+    margin-top: var(--spacing);
+  }
+}
