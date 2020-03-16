@@ -11,6 +11,7 @@ import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
+import FlowItems from "app/components/layout/FlowItems";
 
 type LocalProps = {
   isOpen: boolean;
@@ -87,24 +88,21 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-sm-6 col-xs-12">
             <div className="form-group">
               <label>Pages</label>
-              <div className="form-inline">
-                <div style={{ marginRight: 5, display: "inline-block" }} className="form-group">
-                  <select ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
-                    <option value="lt">{"<"}</option>
-                    <option value="gt">{">"}</option>
-                  </select>
-                </div>
-                <div className="form-group" style={{ display: "inline-block" }}>
-                  <input
-                    defaultValue={filters.pages}
-                    ref={pagesEl}
-                    style={{ width: "100px" }}
-                    type="number"
-                    placeholder="Pages"
-                    className="form-control"
-                  />
-                </div>
-              </div>
+              <FlowItems>
+                <select style={{ width: "50px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
+                  <option value="lt">{"<"}</option>
+                  <option value="gt">{">"}</option>
+                </select>
+
+                <input
+                  defaultValue={filters.pages}
+                  ref={pagesEl}
+                  style={{ width: "100px" }}
+                  type="number"
+                  placeholder="Pages"
+                  className="form-control"
+                />
+              </FlowItems>
             </div>
           </div>
           <div className="col-xs-6">
