@@ -3,33 +3,31 @@
   flex-direction: column;
 }
 
-@mixin stack-layout($var, $default: 10px){
+@mixin stack-layout($val){
   @extend %stack-layout;
-
-  #{$var}: $default;
   
   & > * + * {
-    margin-top: var(#{$var});
+    margin-top: $val;
   }
 }
 
 .stack {
-  @include stack-layout(--st-spacing, 10px);
+  @include stack-layout(10px);
 }
 .stack.tighter {
-  @include stack-layout(--st-t-spacing, 5px);
+  @include stack-layout(5px);
 }
 .stack.tightest {
-  @include stack-layout(--st-tt-spacing, 3px);
+  @include stack-layout(3px);
 }
 
 .form-group {
-  @include stack-layout(--fg-spacing, 5px);
+  @include stack-layout(5px);
 }
 .form-group.tighter {
-  @include stack-layout(--fg-t-spacing, 3px);
+  @include stack-layout(3px);
 }
 .form-group.tightest {
-  @include stack-layout(--fg-tt-spacing, 2px);
+  @include stack-layout(2px);
 }
 
