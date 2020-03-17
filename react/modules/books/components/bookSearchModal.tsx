@@ -120,19 +120,19 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-xs-6">
             <div className="stack tighter">
               <label className="form-label">Is read?</label>
-              <FlowItems className="radio" tightest={true}>
-                <span>
+              <FlowItems  className="radio">
+                <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
                   <label htmlFor="isReadE">Either</label>
-                </span>
-                <span>
+                </FlowItems>
+                <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" id="isReadY" />
                   <label htmlFor="isReadY">Yes</label>
-                </span>
-                <span>
+                </FlowItems>
+                <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
                   <label htmlFor="isReadN">No</label>
-                </span>
+                </FlowItems>
               </FlowItems>
             </div>
           </div>
