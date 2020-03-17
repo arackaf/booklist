@@ -1,19 +1,28 @@
 .stack {
-  --spacing: 10px;
-}
-.form-group {
-  --spacing: 5px;
-}
-
-.stack, .form-group {
+  --st-spacing: 10px;
   &.tighter {
-    --spacing: 5px;
+    --st-spacing: 5px;
   }
   &.tightest {
-    --spacing: 3px;
+    --st-spacing: 3px;
   }
-
+  
   & > * + * {
-    margin-top: var(--spacing);
+    margin-top: var(--st-spacing);
   }
 }
+
+.form-group {
+  --fg-spacing: 5px;
+  &.tighter {
+    --fg-spacing: 5px;
+  }
+  &.tightest {
+    --fg-spacing: 3px;
+  }
+  
+  & > * + * {
+    margin-top: var(--fg-spacing);
+  }
+}
+
