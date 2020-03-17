@@ -1,33 +1,24 @@
-.form-group, .stack {
+@mixin stack-layout($var, $default: 10px){
   display: flex;
   flex-direction: column;
+
+  #{$var}: $default;
+  
+  &.tighter {
+    #{$var}: 5px;
+  }
+  &.tightest {
+    #{$var}: 3px;
+  }
+  
+  & > * + * {
+    margin-top: var(#{$var});
+  }
 }
 
 .stack {
-  --st-spacing: 10px;
-  &.tighter {
-    --st-spacing: 5px;
-  }
-  &.tightest {
-    --st-spacing: 3px;
-  }
-  
-  & > * + * {
-    margin-top: var(--st-spacing);
-  }
+  @include stack-layout(--st-spacing, 10px);
 }
-
 .form-group {
-  --fg-spacing: 5px;
-  &.tighter {
-    --fg-spacing: 5px;
-  }
-  &.tightest {
-    --fg-spacing: 3px;
-  }
-  
-  & > * + * {
-    margin-top: var(--fg-spacing);
-  }
+  @include stack-layout(--fg-spacing, 5px);
 }
-
