@@ -1,4 +1,9 @@
-.flex-row, .flow-items {
+%flow-layout-base {
+  &.v-center {
+    & > * {
+      align-items: center;
+    }
+  }
   & > * {
     display: flex;
     flex-flow: row wrap;
@@ -11,41 +16,40 @@
   }
 }
 
-.flex-row {
-  --fr-spacing: 10px;
-  
-  &.tighter {
-    --fr-spacing: 5px;
-  }
-  &.tightest {
-    --fr-spacing: 3px;
-  }
+@mixin flow-layout($var, $val){
+  @extend %flow-layout-base;
+
+  #{$var}: $val;
   
   & > * {
-    margin: calc(-1 * var(--fr-spacing));
+    margin: calc(-1 * var(#{$var}));
   }
 
   & > * > * {    
-    margin: var(--fr-spacing);
-  }  
+    margin: var(#{$var});
+  }
 }
 
-.flow-items {  
-  --fi-spacing: 10px;
-  
-  &.tighter {
-    --fi-spacing: 5px;
-  }
-  &.tightest {
-    --fi-spacing: 3px;
-  }
-  
-  & > * {
-    margin: calc(-1 * var(--fi-spacing));
-  }  
-  & > * > * {    
-    margin: var(--fi-spacing);
-  }
+//-------------------------------------------------------------------------------------------------------------------------
+//cannot nest flex-rows yet - doing so would require re-defining all those sizing xs/sm/md/lg columns below for each size *_*
+.flex-row {
+  @include flow-layout(--fr-spacing, 10px);
+}
+.flex-row.tighter {
+  @include flow-layout(--fr-spacing, 5px);
+}
+.flex-row.tightest {
+  @include flow-layout(--fr-spacing, 2px);
+}
+//-------------------------------------------------------------------------------------------------------------------------
+.flow-items {
+  @include flow-layout(--fi-spacing, 10px);
+}
+.flow-items.tighter {
+  @include flow-layout(--fi-t-spacing, 5px);
+}
+.flow-items.tightest {
+  @include flow-layout(--fi-tt-spacing, 2px);
 }
 
 .flex-row {
