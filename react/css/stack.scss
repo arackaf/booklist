@@ -1,15 +1,12 @@
-@mixin stack-layout($var, $default: 10px){
+%stack-layout {
   display: flex;
   flex-direction: column;
+}
+
+@mixin stack-layout($var, $default: 10px){
+  @extend %stack-layout;
 
   #{$var}: $default;
-  
-  &.tighter {
-    #{$var}: 5px;
-  }
-  &.tightest {
-    #{$var}: 3px;
-  }
   
   & > * + * {
     margin-top: var(#{$var});
@@ -19,6 +16,20 @@
 .stack {
   @include stack-layout(--st-spacing, 10px);
 }
+.stack.tighter {
+  @include stack-layout(--st-t-spacing, 5px);
+}
+.stack.tightest {
+  @include stack-layout(--st-tt-spacing, 3px);
+}
+
 .form-group {
   @include stack-layout(--fg-spacing, 5px);
 }
+.form-group.tighter {
+  @include stack-layout(--fg-t-spacing, 3px);
+}
+.form-group.tightest {
+  @include stack-layout(--fg-tt-spacing, 2px);
+}
+

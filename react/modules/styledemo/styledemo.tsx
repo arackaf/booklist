@@ -172,6 +172,20 @@ export default () => (
       <hr />
       <br />
 
+      
+      <div className="stack" style={{ border: "1px solid orange" }}>
+        <button>A</button>
+        <button>B</button>
+        <div className="stack tighter">
+          <button>B i</button>
+          <button>B ii</button>
+          <button>B iii</button>
+        </div>
+        <button>C</button>
+        <button>D</button>
+        <button>E</button>
+      </div>
+
       <div style={{ margin: "15px" }}>
         <div className="row" style={{ border: "1px solid pink" }}>
           <div className="col-lg-1 col-md-3 col-sm-6 col-xs-12">l1 m3 s6 x12</div>
