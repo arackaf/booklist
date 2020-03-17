@@ -1,3 +1,8 @@
+.form-group, .stack {
+  display: flex;
+  flex-direction: column;
+}
+
 .stack {
   --st-spacing: 10px;
   &.tighter {
