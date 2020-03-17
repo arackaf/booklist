@@ -118,9 +118,9 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </div>
           </div>
           <div className="col-xs-6">
-            <div>
+            <div className="stack tighter">
               <label className="form-label">Is read?</label>
-              <div className="radio responsive-radios">
+              <FlowItems className="radio" tightest={true}>
                 <span>
                   <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
                   <label htmlFor="isReadE">Either</label>
@@ -133,7 +133,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                   <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
                   <label htmlFor="isReadN">No</label>
                 </span>
-              </div>
+              </FlowItems>
             </div>
           </div>
           <div className="col-xs-6">
