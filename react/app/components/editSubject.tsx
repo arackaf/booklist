@@ -13,12 +13,7 @@ import BootstrapButton from "app/components/bootstrapButton";
 import cn from "classnames";
 import FlexRow from "./layout/FlexRow";
 import FlowItems from "./layout/FlowItems";
-
-const textColorSaveBoxStyles = {
-  display: "flex",
-  flexDirection: "row-reverse",
-  alignItems: "center"
-} as any;
+import Stack from "./layout/Stack";
 
 const EditSubject = props => {
   const [deleteShowing, setDeleteShowing] = useState(false);
@@ -65,7 +60,7 @@ const PendingDeleteSubjectDisplay = props => {
   const deleteIt = () => runMutation({ _id }).then(onDelete);
 
   return (
-    <div className="stack">
+    <Stack>
       <div className="alert alert-danger alert-slim" style={{ alignSelf: "flex-start" }}>
         <FlowItems tighter={true}>
           <span>Delete {name}?</span>
@@ -86,7 +81,7 @@ const PendingDeleteSubjectDisplay = props => {
           Cancel
         </BootstrapButton>
       </FlowItems>
-    </div>
+    </Stack>
   );
 };
 

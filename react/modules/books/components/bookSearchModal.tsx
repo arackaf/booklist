@@ -118,7 +118,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </div>
           </div>
           <div className="col-xs-6">
-            <div className="stack tighter">
+            <Stack tighter={true}>
               <label className="form-label">Is Read?</label>
               <FlowItems className="radio">
                 <FlowItems tightest={true} vCenter={true}>
@@ -134,7 +134,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                   <label htmlFor="isReadN">No</label>
                 </FlowItems>
               </FlowItems>
-            </div>
+            </Stack>
           </div>
           <div className="col-xs-6">
             <div className="form-group">

@@ -7,8 +7,8 @@ import Modal from "app/components/modal";
 import { filterSubjects, useStackedSubjects } from "app/subjectsState";
 
 import EditSubject from "app/components/editSubject";
-import FlexRow from "app/components/layout/FlexRow";
 import FlowItems from "app/components/layout/FlowItems";
+import Stack from "app/components/layout/Stack";
 
 interface ILocalProps {
   editModalOpen: boolean;
@@ -32,7 +32,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
 
   return (
     <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects">
-      <div className="stack">
+      <Stack>
         <FlowItems pushLast={true} xsFlowReverse={true}>
           <GenericLabelSelect
             inputProps={{ tabIndex: "-1", placeholder: "Edit subject", value: subjectSearch, onChange: evt => setSubjectSearch(evt.target.value) }}
@@ -48,7 +48,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
 
         {editingSubject ? <EditSubject subject={editingSubject} onCancelEdit={cancelEdit} /> : null}
         <hr />
-      </div>
+      </Stack>
       <BootstrapButton onClick={props.stopEditing}>Close</BootstrapButton>
     </Modal>
   );
