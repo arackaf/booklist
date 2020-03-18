@@ -187,6 +187,11 @@
 }
 
 .flow-items {
+  &.push-last > * > *:not(:first-child) {
+    margin-left: auto;
+  }
+}
+.flow-items {
   @include flow-layout(10px);
 }
 .flow-items.tighter {

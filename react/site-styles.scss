@@ -529,13 +529,6 @@ div.toast-notification h4 {
   transition: opacity 300ms ease-in;
 }
 
-.push-last {
-  display: flex;
-}
-.push-last > *:not(:first-child) {
-  margin-left: auto;
-}
-
 .has-error input, input.form-control.has-error {
   border-color: var(--danger-5);
 }

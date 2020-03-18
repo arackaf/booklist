@@ -183,14 +183,14 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
       </form>
 
       <hr />
-      <div className="push-last">
+      <FlowItems pushLast={true}>
         <BootstrapButton preset="primary" onClick={updateFilters}>
           Filter
         </BootstrapButton>
         <BootstrapButton preset="default" onClick={onHide}>
           Close
         </BootstrapButton>
-      </div>
+      </FlowItems>
     </Modal>
   );
 };
