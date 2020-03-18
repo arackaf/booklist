@@ -194,7 +194,7 @@ const EditSubjectFields = props => {
             onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
           />
           <CustomColorPicker
-            labelStyle={{ marginLeft: "3px"}}
+            labelStyle={{ marginLeft: "3px" }}
             onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
             currentColor={editingSubject.backgroundColor}
           />
@@ -221,8 +221,7 @@ const EditSubjectFields = props => {
           </BootstrapButton>
           {_id ? (
             <BootstrapButton disabled={isSubjectSaving} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
-              Delete {name}&nbsp;
-              <i className="fa fa-fw fa-trash" />
+              Delete {name} <i className="fa fa-fw fa-trash" />
             </BootstrapButton>
           ) : null}
         </FlowItems>
