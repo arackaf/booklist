@@ -8,8 +8,10 @@
     display: flex;
     flex-flow: row wrap;
 
-    @media (max-width: 768px) {
-      &.xs-pull-reverse {
+  }
+  &.xs-pull-reverse {
+    @media (max-width: 767px) {
+      & > * {
         flex-direction: column-reverse;
       }
     }
@@ -187,8 +189,13 @@
 }
 
 .flow-items {
-  &.push-last > * > *:not(:first-child) {
+  &.push-last:not(.xs-pull-reverse) > * > *:last-child {
     margin-left: auto;
+  }
+  &.push-last.xs-pull-reverse > * > *:last-child {
+    @media (min-width: 768px) {
+      margin-left: auto;
+    }
   }
 }
 .flow-items {
