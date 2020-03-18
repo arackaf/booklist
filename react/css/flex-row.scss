@@ -189,12 +189,12 @@
 }
 
 .flow-items {
-  &.push-last:not(.xs-pull-reverse) > * > *:last-child {
-    margin-left: auto;
+  &.push-last:not(.xs-pull-reverse) > * > *:nth-last-child(2) {
+    margin-right: auto;
   }
-  &.push-last.xs-pull-reverse > * > *:last-child {
+  &.push-last.xs-pull-reverse > * > *:nth-last-child(2) {
     @media (min-width: 768px) {
-      margin-left: auto;
+      margin-right: auto;
     }
   }
 }
