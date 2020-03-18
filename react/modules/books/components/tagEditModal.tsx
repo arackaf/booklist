@@ -43,8 +43,8 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
     startEditing(tag);
     setTagSearch("");
   };
-  const startEditing = tag => setState({ editingTag: tag, editingTagName: tag.name });
-  const cancelTagEdit = () => setState({ editingTag: null });
+  const startEditing = tag => setState({ editingTag: tag, editingTagName: tag.name, deletingId: "" });
+  const cancelTagEdit = () => setState({ editingTag: null, deletingId: "" });
 
   const setNewTagName = value => setEditingValue("name", value);
   const setNewTagBackgroundColor = value => setEditingValue("backgroundColor", value);
