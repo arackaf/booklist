@@ -56,7 +56,6 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
   const { runMutation: updateTag } = useMutation<MutationOf<Mutations["updateTag"]>>(buildMutation(UpdateTag));
   const { runMutation: createTag } = useMutation<MutationOf<Mutations["createTag"]>>(buildMutation(CreateTag));
-  const { runMutation: deleteTag } = useMutation<MutationOf<Mutations["deleteTag"]>>(buildMutation(DeleteTagMutation));
 
   const createOrUpdateTag = () => {
     const { editingTag } = state;
@@ -73,11 +72,6 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
     });
   };
 
-  const runDelete = () =>
-    Promise.resolve(deleteTag({ _id: state.editingTag._id })).then(() => {
-      cancelTagEdit();
-    });
-
   let { tags } = useTagsState();
 
   let { colors } = useColors();
@@ -90,7 +84,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   let searchedTags = filterTags(tags, tagSearch);
 
   return (
-    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit tags">
+    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit Tags">
       <Stack>
         <FlowItems pushLast={true} xsFlowReverse={true}>
           <GenericLabelSelect
@@ -123,63 +117,96 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
                 </div>
               </div>
             ) : null*/}
-            <FlexRow>
-              <div className="col-xs-12 col-sm-6">
-                <div className="form-group">
-                  <label>Tag name</label>
-                  <input className="form-control" value={editingTag.name} onChange={evt => setNewTagName(evt.target.value)} />
-                  <div
-                    className="label label-default"
-                    style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor, alignSelf: "flex-start" }}
-                  >
-                    {editingTag.name.trim() || "<label preview>"}
+            {deleteInfo ? (
+              <PendingDeleteTagInfo tag={editingTag} onDelete={cancelTagEdit} onCancel={() => setState({ deletingId: "" })} />
+            ) : (
+              <FlexRow>
+                <div className="col-xs-12 col-sm-6">
+                  <div className="form-group">
+                    <label>Tag name</label>
+                    <input className="form-control" value={editingTag.name} onChange={evt => setNewTagName(evt.target.value)} />
+                    <div
+                      className="label label-default"
+                      style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor, alignSelf: "flex-start" }}
+                    >
+                      {editingTag.name.trim() || "<label preview>"}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-xs-6 hidden-xs"></div>
-              <div className="col-xs-12 col-sm-6">
-                <div className="form-group">
-                  <label>Label color</label>
-                  <ColorsPalette currentColor={editingTag.backgroundColor} colors={colors} onColorChosen={setNewTagBackgroundColor} />
-                  <CustomColorPicker
-                    labelStyle={{ marginLeft: "3px" }}
-                    onColorChosen={setNewTagBackgroundColor}
-                    currentColor={editingTag.backgroundColor}
-                  />
+                <div className="col-xs-6 hidden-xs"></div>
+                <div className="col-xs-12 col-sm-6">
+                  <div className="form-group">
+                    <label>Label color</label>
+                    <ColorsPalette currentColor={editingTag.backgroundColor} colors={colors} onColorChosen={setNewTagBackgroundColor} />
+                    <CustomColorPicker
+                      labelStyle={{ marginLeft: "3px" }}
+                      onColorChosen={setNewTagBackgroundColor}
+                      currentColor={editingTag.backgroundColor}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="col-xs-12 col-sm-6">
-                <div className="form-group">
-                  <label>Text color</label>
-                  <ColorsPalette colors={textColors} onColorChosen={setNewTagTextColor} />
-                  <CustomColorPicker
-                    labelStyle={{ marginLeft: "3px" }}
-                    onColorChosen={setNewTagTextColor}
-                    currentColor={editingTag.backgroundColor}
-                  />
+                <div className="col-xs-12 col-sm-6">
+                  <div className="form-group">
+                    <label>Text color</label>
+                    <ColorsPalette colors={textColors} onColorChosen={setNewTagTextColor} />
+                    <CustomColorPicker
+                      labelStyle={{ marginLeft: "3px" }}
+                      onColorChosen={setNewTagTextColor}
+                      currentColor={editingTag.backgroundColor}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="col-xs-12">
-                <FlowItems pushLast={true}>
-                  <BootstrapButton disabled={state.saving} preset="primary-xs" onClick={createOrUpdateTag}>
-                    Save <i className={`fa fa-fw ${state.saving ? "fa-spinner fa-spin" : "fa-save"}`} />
-                  </BootstrapButton>
-                  <BootstrapButton disabled={state.saving} preset="default-xs" onClick={cancelTagEdit}>
-                    Cancel
-                  </BootstrapButton>
-                  <BootstrapButton disabled={state.saving} onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs">
-                    <i className="fa fa-fw fa-trash" />
-                  </BootstrapButton>
-                </FlowItems>
-              </div>
-            </FlexRow>
+                <div className="col-xs-12">
+                  <FlowItems pushLast={true}>
+                    <BootstrapButton disabled={state.saving} preset="primary-xs" onClick={createOrUpdateTag}>
+                      Save <i className={`fa fa-fw ${state.saving ? "fa-spinner fa-spin" : "fa-save"}`} />
+                    </BootstrapButton>
+                    <BootstrapButton disabled={state.saving} preset="default-xs" onClick={cancelTagEdit}>
+                      Cancel
+                    </BootstrapButton>
+                    <BootstrapButton disabled={state.saving} onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs">
+                      Delete {editingTagName} <i className="fa fa-fw fa-trash" />
+                    </BootstrapButton>
+                  </FlowItems>
+                </div>
+              </FlexRow>
+            )}
           </div>
         ) : null}
         <hr />
       </Stack>
       <BootstrapButton onClick={onDone}>Close</BootstrapButton>
     </Modal>
+  );
+};
+
+const PendingDeleteTagInfo = ({ tag, onDelete, onCancel }) => {
+  const { runMutation: deleteTag, running } = useMutation<MutationOf<Mutations["deleteTag"]>>(buildMutation(DeleteTagMutation));
+  const runDelete = () => Promise.resolve(deleteTag({ _id: tag._id })).then(onDelete);
+
+  return (
+    <Stack>
+      <div className="alert alert-danger alert-slimmer" style={{ alignSelf: "flex-start" }}>
+        <FlowItems tighter={true}>
+          <span>Delete {tag.name}?</span>
+        </FlowItems>
+      </div>
+      <FlowItems>
+        <BootstrapButton disabled={running} onClick={runDelete} preset="danger-xs">
+          {running ? (
+            <span>
+              Deleting <i className="fa fa-spinner fa-spin"></i>
+            </span>
+          ) : (
+            "Delete it!"
+          )}
+        </BootstrapButton>
+        <BootstrapButton disabled={running} onClick={onCancel} className="btn btn-xs">
+          Cancel
+        </BootstrapButton>
+      </FlowItems>
+    </Stack>
   );
 };
 

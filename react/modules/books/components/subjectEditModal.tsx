@@ -31,7 +31,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   let searchedSubjects = filterSubjects(subjectsUnwound, subjectSearch);
 
   return (
-    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects">
+    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit Subjects">
       <Stack>
         <FlowItems pushLast={true} xsFlowReverse={true}>
           <GenericLabelSelect
