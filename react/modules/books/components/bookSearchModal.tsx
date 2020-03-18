@@ -76,7 +76,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
   let { isOpen, onHide } = props;
 
   return (
-    <Modal {...{ isOpen, onHide, headerCaption: "Full search" }}>
+    <Modal {...{ isOpen, onHide, headerCaption: "Full Search" }}>
       <form onSubmit={updateFilters}>
         <FlexRow>
           <div className="col-sm-6 col-xs-12">
@@ -120,7 +120,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-xs-6">
             <div className="stack tighter">
               <label className="form-label">Is read?</label>
-              <FlowItems  className="radio">
+              <FlowItems className="radio">
                 <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
                   <label htmlFor="isReadE">Either</label>
@@ -166,24 +166,25 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
               <div className="col-sm-9 col-xs-12">
                 <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
               </div>
-              <div className="checkbox">
-                <label>
+              <div className="col-xs-12">
+                <label className="checkbox">
                   <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
                 </label>
               </div>
             </>
           ) : null}
+          <div className="col-xs-12">
+            <label className="checkbox">
+              <input type="checkbox" checked={!!noSubjectsFilter} onChange={el => setNoSubjectsFilter(!!el.target.checked)} /> Search books with no
+              subjects set
+            </label>
+          </div>
         </FlexRow>
       </form>
-      <div className="checkbox">
-        <label>
-          <input type="checkbox" checked={!!noSubjectsFilter} onChange={el => setNoSubjectsFilter(!!el.target.checked)} /> Search books with no
-          subjects set
-        </label>
-      </div>
+
       <hr />
-      <div className="standard-modal-footer">
-        <BootstrapButton preset="primary" className="pull-left" onClick={updateFilters}>
+      <div className="push-last">
+        <BootstrapButton preset="primary" onClick={updateFilters}>
           Filter
         </BootstrapButton>
         <BootstrapButton preset="default" onClick={onHide}>

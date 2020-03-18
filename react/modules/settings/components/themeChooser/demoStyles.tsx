@@ -50,7 +50,7 @@ export default props => {
         </div>
         <hr />
         <div style={{ display: "flex" }}>
-          <button className="btn btn-primary pull-left">Filter</button>
+          <button className="btn btn-primary">Filter</button>
           <button className="btn" style={{ marginLeft: "auto" }}>
             Close
           </button>
