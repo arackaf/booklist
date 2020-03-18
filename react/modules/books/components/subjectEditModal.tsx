@@ -7,6 +7,8 @@ import Modal from "app/components/modal";
 import { filterSubjects, useStackedSubjects } from "app/subjectsState";
 
 import EditSubject from "app/components/editSubject";
+import FlexRow from "app/components/layout/FlexRow";
+import FlowItems from "app/components/layout/FlowItems";
 
 interface ILocalProps {
   editModalOpen: boolean;
@@ -30,32 +32,23 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
 
   return (
     <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit subjects">
-      <div className="visible-xs">
-        <BootstrapButton onClick={newSubject} preset="info-xs">
-          Add new subject <i className="fa fa-fw fa-plus" />
-        </BootstrapButton>
-        <br />
-        <br />
-      </div>
-      <div className="row">
-        <div className="col-xs-11">
+      <div className="stack">
+        <FlowItems pushLast={true} xsFlowReverse={true}>
           <GenericLabelSelect
             inputProps={{ tabIndex: "-1", placeholder: "Edit subject", value: subjectSearch, onChange: evt => setSubjectSearch(evt.target.value) }}
             suggestions={searchedSubjects}
             onSuggestionSelected={item => editSubject(item)}
           />
-        </div>
-        <div className="col-xs-1" style={{ padding: 0 }}>
-          <BootstrapButton className="hidden-xs" onClick={newSubject} preset="info-xs">
+
+          <BootstrapButton onClick={newSubject} style={{ alignSelf: "flex-start" }} preset="info-xs">
+            <span className="visible-xs">Add new subject </span>
             <i className="fa fa-fw fa-plus-square" />
           </BootstrapButton>
-        </div>
+        </FlowItems>
+
+        {editingSubject ? <EditSubject subject={editingSubject} onCancelEdit={cancelEdit} /> : null}
+        <hr />
       </div>
-
-      <br />
-
-      {editingSubject ? <EditSubject subject={editingSubject} onCancelEdit={cancelEdit} /> : null}
-      <hr />
       <BootstrapButton onClick={props.stopEditing}>Close</BootstrapButton>
     </Modal>
   );

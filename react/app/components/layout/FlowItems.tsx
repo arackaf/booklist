@@ -1,8 +1,29 @@
-import React from "react";
+import React, { SFC, FC } from "react";
 import cn from "classnames";
 
-export default ({ className = "", tighter = false, tightest = false, vCenter = false, pushLast = false, children }) => (
-  <div className={cn("flow-items", className, { tighter, tightest, ["v-center"]: vCenter, ["push-last"]: pushLast })}>
-    <div>{children}</div>
-  </div>
-);
+type Props = {
+  className?: string;
+  xsFlowReverse?: boolean;
+  tighter?: boolean;
+  tightest?: boolean;
+  vCenter?: boolean;
+  pushLast?: boolean;
+};
+
+const FlowItems: FC<Props> = ({ className = "", xsFlowReverse, tighter, tightest, vCenter, pushLast, children }) => {
+  const cssClasses = {
+    tighter,
+    tightest,
+    ["v-center"]: vCenter,
+    ["push-last"]: pushLast,
+    ["xs-pull-reverse"]: xsFlowReverse
+  };
+
+  return (
+    <div className={cn("flow-items", className, cssClasses)}>
+      <div>{children}</div>
+    </div>
+  );
+};
+
+export default FlowItems;
