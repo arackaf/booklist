@@ -1,4 +1,4 @@
-import React, { Component, SFC } from "react";
+import React, { SFC } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { Transition } from "react-spring/renderprops";
@@ -38,7 +38,7 @@ const Modal: SFC<ModalTypes> = props => {
   let results = modalMaybe.map(({ item: isOpen, props: styles }: any) => {
     return (
       isOpen && (
-        <AnimatedDialogOverlay initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
+        <AnimatedDialogOverlay allowPinchZoom={true} initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
           <AnimatedDialogContent
             style={{
               transform: styles.transform,
