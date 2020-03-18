@@ -135,7 +135,7 @@ const EditSubjectFields = props => {
   };
 
   return (
-    <>
+    <FlexRow>
       <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
         <div className="form-group">
           <label>Name</label>
@@ -168,7 +168,7 @@ const EditSubjectFields = props => {
           </div>
         </div>
       </div>
-      <div className="col-xs-12 col-lg-6 padding-bottom-small">
+      <div className="col-xs-12 col-lg-6">
         <div className="form-group">
           <label>Parent</label>
           <select
@@ -185,7 +185,7 @@ const EditSubjectFields = props => {
           </select>
         </div>
       </div>
-      <div className="col-xs-6">
+      <div className="col-xs-12 col-sm-6">
         <div className="form-group">
           <label>Label Color</label>
           <ColorsPalette
@@ -194,18 +194,18 @@ const EditSubjectFields = props => {
             onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
           />
           <CustomColorPicker
-            labelStyle={{ display: "inline-block" }}
+            labelStyle={{ marginLeft: "3px"}}
             onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
             currentColor={editingSubject.backgroundColor}
           />
         </div>
       </div>
-      <div className="col-xs-6">
+      <div className="col-xs-12 col-sm-6">
         <div className="form-group">
           <label>Text Color</label>
           <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
           <CustomColorPicker
-            labelStyle={{ display: "inline-block" }}
+            labelStyle={{ marginLeft: "3px" }}
             onColorChosen={color => setEditingSubjectField("textColor", color)}
             currentColor={editingSubject.backgroundColor}
           />
@@ -227,7 +227,7 @@ const EditSubjectFields = props => {
           ) : null}
         </FlowItems>
       </div>
-    </>
+    </FlexRow>
   );
 };
 
