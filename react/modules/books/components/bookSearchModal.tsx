@@ -88,7 +88,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-sm-6 col-xs-12">
             <div className="form-group">
               <label>Pages</label>
-              <FlowItems>
+              <FlowItems tighter={true}>
                 <select style={{ width: "50px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
                   <option value="lt">{"<"}</option>
                   <option value="gt">{">"}</option>
@@ -119,7 +119,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           </div>
           <div className="col-xs-6">
             <div className="stack tighter">
-              <label className="form-label">Is read?</label>
+              <label className="form-label">Is Read?</label>
               <FlowItems className="radio">
                 <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
