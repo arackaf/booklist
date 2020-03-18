@@ -496,6 +496,14 @@ div.responsive-radios {
   display: flex;
 }
 
+label.checkbox {
+  display: flex;
+
+  & > input {
+    margin-right: 5px;
+  }
+}
+
 div.toast-notification {
   background: var(--primary-4);
   color: var(--primary-10);
@@ -521,10 +529,10 @@ div.toast-notification h4 {
   transition: opacity 300ms ease-in;
 }
 
-.standard-modal-footer {
+.push-last {
   display: flex;
 }
-.standard-modal-footer > button:not(:first-child) {
+.push-last > *:not(:first-child) {
   margin-left: auto;
 }
 
