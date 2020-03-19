@@ -37,7 +37,7 @@ export function useBooksSearchState(): [BookSearchState, any] {
   let initialSearchState = useMemo(() => ({ ...bookSearchInitialState, hashFilters: appState.urlState.searchState }), []);
   let [result, dispatch] = useReducer(bookSearchReducer, initialSearchState);
 
-  if (appState.urlState.searchState != result.hashFilters && (appState.module == "books" || appState.module == "view")) {
+  if (!shallowEqual(appState.urlState.searchState, result.hashFilters) && (appState.module == "books" || appState.module == "view")) {
     dispatch({ type: "SYNC_HASH", filters: appState.urlState.searchState });
   }
 

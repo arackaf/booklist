@@ -6,6 +6,7 @@ import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
 
 import DisplaySelectedTags from "app/components/displaySelectedTags";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import FlexRow from "../layout/FlexRow";
 
 const useSubjectsOrTags = startingItems => {
   const [items, setItems] = useState(startingItems || []);
@@ -51,12 +52,15 @@ const EditBookInfo = props => {
   return (
     <>
       <form onSubmit={evt => evt.preventDefault()}>
-        <div className={"form-group " + (!book.title && titleMissing ? "has-error" : "")}>
-          <label>Title</label>
+        <FlexRow>
+          <div className="col-xs-6">
+            <div className={"form-group " + (!book.title && titleMissing ? "has-error" : "")}>
+              <label>Title</label>
 
-          <input onChange={syncField("title")} className="form-control" value={book.title} placeholder="Title (required)" />
-        </div>
-        <div className="row">
+              <input onChange={syncField("title")} className="form-control" value={book.title} placeholder="Title (required)" />
+            </div>
+          </div>
+
           <div className="col-xs-6">
             <div className="form-group">
               <label>ISBN</label>
@@ -70,8 +74,7 @@ const EditBookInfo = props => {
               <input onChange={syncField("pages")} className="form-control" value={book.pages} type="number" placeholder="Number of pages" />
             </div>
           </div>
-        </div>
-        <div className="row">
+
           <div className="col-xs-6">
             <div className="form-group">
               <label>Publisher</label>
@@ -85,27 +88,29 @@ const EditBookInfo = props => {
               <input onChange={syncField("publicationDate")} className="form-control" value={book.publicationDate} placeholder="Publication date" />
             </div>
           </div>
-        </div>
-        <div className="row" style={{ position: "relative" }}>
-          <div className="col-sm-3 col-xs-12">
-            <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
-          </div>
-          <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
-            <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
-          </div>
-        </div>
-        <br />
-        <div className="row" style={{ position: "relative" }}>
-          <div className="col-sm-3 col-xs-12">
-            <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
-          </div>
-          <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
-            <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
-          </div>
-        </div>
-        <br />
 
-        <div className="row">
+          <div className="col-xs-12">
+            <FlexRow>
+              <div className="col-sm-3 col-xs-12">
+                <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
+              </div>
+              <div style={{ display: tags.length ? "" : "none" }} className="col-sm-9 col-xs-12">
+                <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
+              </div>
+            </FlexRow>
+          </div>
+
+          <div className="col-xs-12">
+            <FlexRow>
+              <div className="col-sm-3 col-xs-12">
+                <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
+              </div>
+              <div style={{ display: subjects.length ? "" : "none" }} className="col-sm-9 col-xs-12">
+                <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
+              </div>
+            </FlexRow>
+          </div>
+
           {(book.authors || []).map((author, $index) => (
             <div key={$index} className="col-xs-4">
               <div className="form-group">
@@ -119,8 +124,8 @@ const EditBookInfo = props => {
               <i className="fa fa-fw fa-plus" /> Add author
             </BootstrapButton>
           </div>
-        </div>
-        <hr style={{ marginTop: "20px", marginBottom: "10px" }} />
+        </FlexRow>
+        <hr />
 
         <AjaxButton className="pull-right" preset="primary" runningText="Saving" finishedText="Saved" onClick={save}>
           Save

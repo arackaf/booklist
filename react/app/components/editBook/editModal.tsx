@@ -5,6 +5,7 @@ import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
 
 import { updateSmallCover, updateMediumCover } from "util/coverUpdates";
+import Stack from "../layout/Stack";
 
 class ManualBookEntry extends Component<any, any> {
   state = { tab: "basic", bookEditing: null, title: "" };
@@ -56,8 +57,8 @@ class ManualBookEntry extends Component<any, any> {
           <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
             {book ? (
               <>
-                <div>
-                  <h6 style={{ marginBottom: "5px" }}>Small Cover</h6>
+                <div className="form-group">
+                  <label>Small Cover</label>
                   <ManageBookCover
                     _id={book._id}
                     remoteSave={updateSmallCover}
@@ -67,8 +68,8 @@ class ManualBookEntry extends Component<any, any> {
                   />
                 </div>
                 <hr />
-                <div>
-                  <h6 style={{ marginBottom: "5px" }}>Medium Cover</h6>
+                <div className="form-group">
+                  <label>Medium Cover</label>
                   <ManageBookCover
                     _id={book._id}
                     remoteSave={updateMediumCover}
