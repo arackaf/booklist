@@ -2,6 +2,8 @@ import React, { SFC, FC } from "react";
 import cn from "classnames";
 
 type Props = {
+  style?: any;
+  containerStyle?: any;
   className?: string;
   xsFlowReverse?: boolean;
   tighter?: boolean;
@@ -10,7 +12,7 @@ type Props = {
   pushLast?: boolean;
 };
 
-const FlowItems: FC<Props> = ({ className = "", xsFlowReverse, tighter, tightest, vCenter, pushLast, children }) => {
+const FlowItems: FC<Props> = ({ className = "", style = {}, containerStyle = {}, xsFlowReverse, tighter, tightest, vCenter, pushLast, children }) => {
   const cssClasses = {
     tighter,
     tightest,
@@ -20,8 +22,8 @@ const FlowItems: FC<Props> = ({ className = "", xsFlowReverse, tighter, tightest
   };
 
   return (
-    <div className={cn("flow-items", className, cssClasses)}>
-      <div>{children}</div>
+    <div className={cn("flow-items", className, cssClasses)} style={style}>
+      <div style={containerStyle}>{children}</div>
     </div>
   );
 };
