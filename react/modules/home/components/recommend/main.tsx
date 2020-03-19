@@ -7,6 +7,9 @@ import { useQuery, buildQuery } from "micro-graphql-react";
 import ajaxUtil from "util/ajaxUtil";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 import { QueryOf, Queries } from "graphql-typings";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
+import FlowItems from "app/components/layout/FlowItems";
 
 const initialState = {
   selectedBooks: [],
@@ -59,38 +62,37 @@ export default props => {
   };
 
   return (
-    <div>
-      <div className="row margin-top">
+    <div className="margin-top">
+      <FlexRow>
         <div className="col-xs-6">
-          <div style={{ marginTop: "5px" }}>
-            <div className="margin-top" style={{ fontWeight: "bold", marginBottom: "5px" }}>
-              Find some books, and get recommendations based on what's similar
-            </div>
-            <div className="margin-top" style={{ display: "flex" }}>
+          <Stack>
+            <div style={{ fontWeight: "bold" }}>Find some books, and get recommendations based on what's similar</div>
+
+            <FlowItems pushLast={true}>
               <button className="btn btn-default" onClick={openModal}>
                 <i className="fal fa-search" /> Search your books
               </button>
+
               {selectedBooks.length ? (
                 <button onClick={getRecommendations} disabled={recommendationsLoading} style={{ marginLeft: "auto" }} className="btn btn-primary">
                   {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
                 </button>
               ) : null}
-            </div>
-          </div>
-          <br />
-          <br />
-          <table className="table table-condensed table-striped">
-            <TransitionGroup component="tbody">
-              {selectedBooks.map(book => (
-                <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
-                  <DisplayBook key={book._id} book={book} dispatch={dispatch} />
-                </CSSTransition>
-              ))}
-            </TransitionGroup>
-          </table>
+            </FlowItems>
+
+            <table className="table table-condensed table-striped">
+              <TransitionGroup component="tbody">
+                {selectedBooks.map(book => (
+                  <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
+                    <DisplayBook key={book._id} book={book} dispatch={dispatch} />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
+            </table>
+          </Stack>
         </div>
         <div className="col-xs-6">
-          <div style={{ marginTop: "5px" }}>
+          <div>
             {recommendations.length ? (
               <>
                 <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
@@ -105,7 +107,7 @@ export default props => {
             ) : null}
           </div>
         </div>
-      </div>
+      </FlexRow>
       <SearchModal
         isOpen={searchModalOpen}
         onHide={closeModal}

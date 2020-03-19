@@ -7,6 +7,9 @@ import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
+import FlowItems from "app/components/layout/FlowItems";
 
 interface LocalProps {
   isOpen: boolean;
@@ -56,7 +59,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
       <form onSubmit={applyFilters}>
-        <div className="row">
+        <FlexRow>
           <div className="col-xs-6">
             <div className="form-group">
               <label>Title</label>
@@ -65,48 +68,39 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-6">
-            <label className="form-label">Is read?</label>
-            <div className="radio responsive-radios">
-              <span>
-                <input type="radio" defaultChecked={searchState.isRead == null} ref={isReadE} name="isRead" id="isReadE" />
-                <label htmlFor="isReadE">Either</label>
-              </span>
-              <span>
-                <input type="radio" defaultChecked={searchState.isRead == "1"} ref={isRead1} name="isRead" id="isReadY" />
-                <label htmlFor="isReadY">Yes</label>
-              </span>
-              <span>
-                <input type="radio" defaultChecked={searchState.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
-                <label htmlFor="isReadN">No</label>
-              </span>
-            </div>
+            <Stack>
+              <label className="form-label">Is read?</label>
+              <FlowItems className="radio">
+                <FlowItems tightest={true} vCenter={true}>
+                  <input type="radio" defaultChecked={searchState.isRead == null} ref={isReadE} name="isRead" id="isReadE" />
+                  <label htmlFor="isReadE">Either</label>
+                </FlowItems>
+                <FlowItems tightest={true} vCenter={true}>
+                  <input type="radio" defaultChecked={searchState.isRead == "1"} ref={isRead1} name="isRead" id="isReadY" />
+                  <label htmlFor="isReadY">Yes</label>
+                </FlowItems>
+                <FlowItems tightest={true} vCenter={true}>
+                  <input type="radio" defaultChecked={searchState.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
+                  <label htmlFor="isReadN">No</label>
+                </FlowItems>
+              </FlowItems>
+            </Stack>
           </div>
-        </div>
-      </form>
-      <div className="row" style={{ position: "relative" }}>
-        <div className="col-xs-3">
-          <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
-        </div>
-        <div className="col-xs-9">
-          <div>
+
+          <div className="col-xs-3">
+            <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
+          </div>
+          <div className="col-xs-9">
             <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
           </div>
-        </div>
-      </div>
-      <br />
-      <>
-        <div className="row" style={{ position: "relative" }}>
+
           <div className="col-xs-3">
             <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
           </div>
           <div className="col-xs-9">
-            <div>
-              <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
-            </div>
+            <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
           </div>
-        </div>
-        <br />
-        <div className="row" style={{ position: "relative" }}>
+
           <div className="col-xs-6">
             <div className="checkbox">
               <label>
@@ -114,7 +108,8 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
               </label>
             </div>
           </div>
-          <div className="col-xs-12 margin-top">
+
+          <div className="col-xs-12">
             {loading ? (
               <button disabled={true} className="btn btn-default">
                 <i className="fa fa-fw fa-spin fa-spinner" />
@@ -125,9 +120,10 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
               </button>
             )}
           </div>
-        </div>
-      </>
-      {loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet, currentQuery }} /> : null}
+
+          <div className="col-xs-12">{loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet }} /> : null}</div>
+        </FlexRow>
+      </form>
     </Modal>
   );
 };
