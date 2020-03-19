@@ -7,6 +7,7 @@ import Loading from "app/components/loading";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
+import FlexRow from "app/components/layout/FlexRow";
 
 declare var webSocketAddress: any;
 
@@ -131,7 +132,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
 
   return (
     <div className="standard-module-container">
-      <div className="row xs-pull-reverse">
+      <FlexRow xsFlowReverse={true}>
         <div className="col-sm-6 col-xs-12">
           <div style={{ display: "flex", alignItems: "center" }}>
             <h4 style={{ marginTop: 0, marginBottom: 0 }}>Enter your books here {toggleInstructions} </h4>
