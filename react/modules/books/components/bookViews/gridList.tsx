@@ -85,7 +85,7 @@ const BookRow: SFC<ILocalProps> = props => {
               ) : null}
               {book.isbn && online ? (
                 <a
-                  style={hoverOverride}
+                  style={{ ...hoverOverride, paddingTop: "1px" }}
                   target="_new"
                   className={`${gridHoverFilter}`}
                   href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
@@ -104,13 +104,8 @@ const BookRow: SFC<ILocalProps> = props => {
                 </>
               ) : null}
               {pendingDelete[_id] ? (
-                <AjaxButton
-                  running={deleting[_id]}
-                  runningText="Deleting"
-                  onClick={() => runDelete(_id)}
-                  className="btn btn-xs btn-danger"
-                >
-                  Confirm delete
+                <AjaxButton running={deleting[_id]} runningText="Deleting" onClick={() => runDelete(_id)} className="btn btn-xs btn-danger">
+                  Confirm Delete
                 </AjaxButton>
               ) : null}
               {pendingDelete[_id] ? (
