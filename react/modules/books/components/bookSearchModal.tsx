@@ -79,17 +79,17 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
     <Modal {...{ isOpen, onHide, headerCaption: "Full Search" }}>
       <form onSubmit={updateFilters}>
         <FlexRow>
-          <div className="col-sm-6 col-xs-12">
+          <div className="col-xs-6">
             <div className="form-group">
               <label>Title</label>
               <input defaultValue={filters.search} ref={searchEl} placeholder="Search title" className="form-control" />
             </div>
           </div>
-          <div className="col-sm-6 col-xs-12">
+          <div className="col-xs-6">
             <div className="form-group">
               <label>Pages</label>
-              <FlowItems tighter={true}>
-                <select style={{ width: "50px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
+              <FlowItems tightest={true}>
+                <select style={{ width: "40px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
                   <option value="lt">{"<"}</option>
                   <option value="gt">{">"}</option>
                 </select>
@@ -97,7 +97,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                 <input
                   defaultValue={filters.pages}
                   ref={pagesEl}
-                  style={{ width: "100px" }}
+                  style={{ width: "80px" }}
                   type="number"
                   placeholder="Pages"
                   className="form-control"
@@ -155,7 +155,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-sm-3 col-xs-12">
             <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
           </div>
-          <div className="col-sm-9 col-xs-12">
+          <div style={{ display: tags.length ? "" : "none" }} className="col-sm-9 col-xs-12">
             <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
           </div>
           {!noSubjectsFilter ? (
@@ -163,7 +163,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
               <div className="col-sm-3 col-xs-12">
                 <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
               </div>
-              <div className="col-sm-9 col-xs-12">
+              <div style={{ display: subjects.length ? "" : "none" }} className="col-sm-9 col-xs-12">
                 <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
               </div>
               <div className="col-xs-12">
