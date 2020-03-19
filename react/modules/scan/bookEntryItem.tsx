@@ -31,15 +31,13 @@ const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
     }
   };
   return (
-    <div className="row" style={{ marginBottom: "10px", alignItems: "center" }}>
-      <div className="col-xs-12" style={{ display: "flex", alignItems: "center" }}>
-        <label className="control-label" style={{ marginRight: "5px" }}>
-          ISBN
-        </label>
-        <input style={{ maxWidth: "250px" }} className="form-control" ref={inputEl} onKeyDown={keyDown} disabled={props.disable} />
-        {queuing ? <span className="label label-default margin-left">Queuing</span> : null}
-        {queued ? <span className="label label-success margin-left">Queued</span> : null}
-      </div>
+    <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+      <label className="control-label" style={{ marginRight: "5px" }}>
+        ISBN
+      </label>
+      <input style={{ maxWidth: "250px" }} className="form-control" ref={inputEl} onKeyDown={keyDown} disabled={props.disable} />
+      {queuing ? <span className="label label-default margin-left">Queuing</span> : null}
+      {queued ? <span className="label label-success margin-left">Queued</span> : null}
     </div>
   );
 });
