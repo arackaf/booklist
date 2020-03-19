@@ -100,23 +100,6 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
         {editingTag ? (
           <div>
-            {/*deleteInfo ? (
-              <div className="row">
-                <div className="col-xs-12">
-                  <h4 style={{ marginBottom: "15px", fontSize: "16px" }}>Delete tag {editingTagName}</h4>
-
-                  <div style={{ display: "flex" }}>
-                    <AjaxButton runningText="Deleting" finishedText="Deleted" onClick={runDelete} preset="danger-xs">
-                      Delete
-                    </AjaxButton>
-                    <BootstrapButton onClick={() => setState({ deletingId: "" })} preset="default-xs" style={{ marginLeft: "auto" }}>
-                      Cancel
-                    </BootstrapButton>
-                  </div>
-                  <hr />
-                </div>
-              </div>
-            ) : null*/}
             {deleteInfo ? (
               <PendingDeleteTagInfo tag={editingTag} onDelete={cancelTagEdit} onCancel={() => setState({ deletingId: "" })} />
             ) : (
