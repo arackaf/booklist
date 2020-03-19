@@ -7,6 +7,8 @@ import UpdateBook from "graphQL/books/updateBook.graphql";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 import { MutationOf, Mutations } from "graphql-typings";
+import FlowItems from "../layout/FlowItems";
+import Stack from "../layout/Stack";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -80,12 +82,17 @@ const ManageBookCover = props => {
 
   const { pendingImg, uploadError } = uploadState;
   return (
-    <div style={{ display: "flex", flexFlow: "row wrap" }}>
-      <div className="margin-right">
-        {currentUrl ? <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} /> : <span className="alert alert-warning">No Cover</span>}
-      </div>
+    <FlowItems>
+      {currentUrl ? (
+        <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+      ) : (
+        <span style={{ alignSelf: "flex-start" }} className="alert alert-warning">
+          No Cover
+        </span>
+      )}
+
       {!pendingImg ? (
-        <div className="margin-right" style={{ minWidth: "100px", maxWidth: "140px" }}>
+        <div style={{ minWidth: "100px", maxWidth: "140px" }}>
           <Dropzone
             acceptStyle={{ border: "3px solid var(--primary-8)" }}
             rejectStyle={{ border: "3px solid var(--primary-9)" }}
@@ -105,27 +112,22 @@ const ManageBookCover = props => {
         </div>
       ) : null}
       {pendingImg ? (
-        <div className="margin-right">
+        <Stack>
           <img src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
-          <br />
-          <div style={{ display: "flex" }}>
+          <FlowItems pushLast={true}>
             <button onClick={runSave} className="btn btn-xs btn-light btn-square-icon">
               <i className="fal fa-check" />
             </button>
-            <button
-              className="btn btn-xs btn-light btn-square-icon"
-              style={{ marginLeft: "auto" }}
-              onClick={() => setUploadState({ pendingImg: "", uploadError: "" })}
-            >
+            <button className="btn btn-xs btn-light btn-square-icon" onClick={() => setUploadState({ pendingImg: "", uploadError: "" })}>
               <i className="fal fa-undo" />
             </button>
-          </div>
-        </div>
+          </FlowItems>
+        </Stack>
       ) : null}
       <div>
         <RemoteImageUpload _id={_id} remoteSave={remoteSave} onUpdate={setCurrentUrl} />
       </div>
-    </div>
+    </FlowItems>
   );
 };
 
