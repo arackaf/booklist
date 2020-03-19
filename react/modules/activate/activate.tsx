@@ -1,17 +1,16 @@
 import { history } from "util/urlHelpers";
 import React, { Component, SFC, useContext } from "react";
 import { AppContext } from "app/renderUI";
+import FlexRow from "app/components/layout/FlexRow";
 
 const MainActivatePane = props => (
-  <div className="row" style={{ margin: 0 }}>
-    <div className="hidden-xs hidden-sm col-md-1 col-lg-3" />
-    <div style={{ marginLeft: 10, marginRight: 10, marginTop: "20px" }} className="col-md-10 col-lg-6">
+  <FlexRow>
+    <div style={{ marginLeft: "auto", marginRight: "auto", marginTop: "40px" }} className="col-xs-11 col-md-10 col-lg-6">
       <div>
         <div>{props.children}</div>
       </div>
     </div>
-    <div className="hidden-xs hidden-sm col-md-1 col-lg-3" />
-  </div>
+  </FlexRow>
 );
 
 class ActivateIfLoggedIn extends Component<any, any> {
