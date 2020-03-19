@@ -49,20 +49,22 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
       </div>
       <div className="tab-content">
         <div className={"tab-pane " + (tab == "vis" ? "active" : "")}>
-          <br />
-          {tab == "vis" ? (
-            subjectsLoaded ? (
-              subjects.length ? (
-                <ChartHolder />
+          <div className="margin-top">
+            {tab == "vis" ? (
+              subjectsLoaded ? (
+                subjects.length ? (
+                  <ChartHolder />
+                ) : (
+                  <div className="alert alert-warning">
+                    It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up
+                    here.
+                  </div>
+                )
               ) : (
-                <div className="alert alert-warning">
-                  It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
-                </div>
+                <SectionLoading style={{ position: "fixed" }} />
               )
-            ) : (
-              <SectionLoading style={{ position: "fixed" }} />
-            )
-          ) : null /* tab not active - render nothing */}
+            ) : null /* tab not active - render nothing */}
+          </div>
         </div>
         <div className={"tab-pane " + (tab == "rec" ? "active" : "")}>
           <RecommendMain />
