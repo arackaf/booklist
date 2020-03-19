@@ -20,6 +20,12 @@
 .stack.tightest {
   @include stack-layout(3px);
 }
+.stack.looser {
+  @include stack-layout(15px);
+}
+.stack.loosest {
+  @include stack-layout(20px);
+}
 
 .form-group {
   @include stack-layout(5px);

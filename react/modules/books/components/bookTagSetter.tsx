@@ -9,6 +9,8 @@ import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 import Modal from "app/components/modal";
 import { filterTags, useTagsState } from "app/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
+import FlexRow from "app/components/layout/FlexRow";
+import FlowItems from "app/components/layout/FlowItems";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
   const { tagHash, tags } = useTagsState();
@@ -66,9 +68,8 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
         </div>
       </div>
       <div className="tab-content">
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "tags" ? "active" : "")}>
-          <br />
-          <div style={{ position: "relative" }} className="row">
+        <div style={{ minHeight: "100px" }} className={"margin-top tab-pane " + (currentTab == "tags" ? "active" : "")}>
+          <FlexRow>
             <div className="col-xs-3">
               <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
             </div>
@@ -88,11 +89,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                   </span>
                 ))}
             </div>
-          </div>
 
-          <br />
-
-          <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Removing"
@@ -118,31 +115,30 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                   </span>
                 ))}
             </div>
-          </div>
 
-          <br />
-          <BootstrapButton onClick={resetTags} className="pull-right" preset="default-xs">
-            Reset tags
-          </BootstrapButton>
-          <br />
+            <BootstrapButton onClick={resetTags} preset="default-xs">
+              Reset tags
+            </BootstrapButton>
+          </FlexRow>
         </div>
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
-          <br />
-          <ul style={{ fontSize: "14px", marginLeft: "10px" }}>
+        <div style={{ minHeight: "100px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
+          <ul style={{ fontSize: "14px" }}>
             {modifyingBooks.map(book => (
               <li key={book._id}>{book.title}</li>
             ))}
           </ul>
-          <br />
         </div>
       </div>
+      <hr />
       <div className="standard-modal-footer">
-        <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={setBooksTags}>
-          Set
-        </AjaxButton>
-        <BootstrapButton preset="" onClick={props.onDone}>
-          Cancel
-        </BootstrapButton>
+        <FlowItems>
+          <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={setBooksTags}>
+            Set
+          </AjaxButton>
+          <BootstrapButton preset="" onClick={props.onDone}>
+            Cancel
+          </BootstrapButton>
+        </FlowItems>
       </div>
     </Modal>
   );
