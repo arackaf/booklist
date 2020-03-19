@@ -2,6 +2,8 @@ import React, { Component, useState, useRef, useContext } from "react";
 import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
 
 const exectueResetPassword = (oldPassword, newPassword) => {
   return ajaxUtil.post("/react/resetPassword", { oldPassword, newPassword }, resp => {});
@@ -43,10 +45,10 @@ const PublicUserSettings = props => {
   }
 
   return (
-    <div className="row" style={{ position: "relative" }}>
-      <div className="col-md-6 col-sm-12">
-        <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
-          <div>
+    <div className="margin-top">
+      <FlexRow>
+        <div className="col-md-6 col-sm-12">
+          <Stack>
             <div className="form-group">
               <label htmlFor="existingPasswordInput">Current password</label>
               <input ref={currentPasswordEl} type="password" className="form-control" id="existingPasswordInput" />
@@ -59,30 +61,37 @@ const PublicUserSettings = props => {
               <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
               <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
             </div>
-          </div>
-          <AjaxButton onClick={resetPassword} disabled={saved} running={saving} runningText="Saving" preset="primary">
-            Save
-          </AjaxButton>
-          {mismatch ? (
-            <div>
-              <br />
-              <div className="alert alert-danger">Passwords must match</div>
-            </div>
-          ) : null}
-          {wrongPassword ? (
-            <div>
-              <br />
-              <div className="alert alert-danger">Your existing password does not match</div>
-            </div>
-          ) : null}
-          {saved ? (
-            <div>
-              <br />
-              <div className="alert alert-success">Your password has been updated</div>
-            </div>
-          ) : null}
+            <AjaxButton
+              style={{ alignSelf: "flex-start" }}
+              onClick={resetPassword}
+              disabled={saved}
+              running={saving}
+              runningText="Saving"
+              preset="primary"
+            >
+              Save
+            </AjaxButton>
+            {mismatch ? (
+              <div>
+                <br />
+                <div className="alert alert-danger">Passwords must match</div>
+              </div>
+            ) : null}
+            {wrongPassword ? (
+              <div>
+                <br />
+                <div className="alert alert-danger">Your existing password does not match</div>
+              </div>
+            ) : null}
+            {saved ? (
+              <div>
+                <br />
+                <div className="alert alert-success">Your password has been updated</div>
+              </div>
+            ) : null}
+          </Stack>
         </div>
-      </div>
+      </FlexRow>
     </div>
   );
 };

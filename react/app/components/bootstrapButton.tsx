@@ -22,6 +22,7 @@ export default props => (
 export const AjaxButton = props => {
   const controlled = props.hasOwnProperty("running");
   const [isRunning, setRunning] = useState(controlled ? props.running : false);
+  const {style = {}} = props;
 
   if (!controlled) {
     return <AjaxButtonUnControlled {...props} />;
@@ -39,12 +40,12 @@ export const AjaxButton = props => {
   let isRunningAdjusted = controlled ? props.running : isRunning;
 
   return isRunningAdjusted ? (
-    <button className={cssFromPreset(props)} disabled={true}>
+    <button style={style} className={cssFromPreset(props)} disabled={true}>
       <i className="fa fa-fw fa-spin fa-spinner" />
       {props.runningText || props.text ? " " + props.runningText || props.text : props.children}
     </button>
   ) : (
-    <button className={cssFromPreset(props)} disabled={props.disabled || false} onClick={onClick}>
+    <button style={style} className={cssFromPreset(props)} disabled={props.disabled || false} onClick={onClick}>
       {props.children}
     </button>
   );

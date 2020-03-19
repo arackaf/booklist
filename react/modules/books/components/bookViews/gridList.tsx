@@ -16,6 +16,9 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort } from "modules/books/setBookFilters";
 import { BooksModuleContext } from "modules/books/books";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
+import FlowItems from "app/components/layout/FlowItems";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -58,61 +61,60 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
         </td>
         <td>
-          <div className={bookTitle}>{book.title}</div>
-          {book.authors ? <div className={bookAuthor}>{book.authors.join(", ")}</div> : null}
+          <Stack>
+            <Stack tightest={true}>
+              <div className={bookTitle}>{book.title}</div>
+              {book.authors ? <div className={bookAuthor}>{book.authors.join(", ")}</div> : null}
+            </Stack>
 
-          <div style={{ display: "flex", flexDirection: "row", marginTop: "3px", alignItems: "center", minHeight: "25px" }}>
-            {online ? (
-              detailsLoading ? (
-                <a style={hoverOverride} target="_new" className={`margin-right ${gridHoverFilter}`}>
-                  <i className="fa fa-fw fa-spin fa-spinner" />
+            <FlowItems vCenter={true} tighter={true} containerStyle={{ minHeight: "35px" }}>
+              {online ? (
+                detailsLoading ? (
+                  <a style={hoverOverride} target="_new" className={`${gridHoverFilter}`}>
+                    <i className="fa fa-fw fa-spin fa-spinner" />
+                  </a>
+                ) : expanded ? (
+                  <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} className={`${gridHoverFilter}`}>
+                    <i className={`far fa-minus`} />
+                  </a>
+                ) : (
+                  <a style={hoverOverride} target="_new" onClick={() => setExpanded(true)} className={`${gridHoverFilter}`}>
+                    <i className={`far fa-plus`} />
+                  </a>
+                )
+              ) : null}
+              {book.isbn && online ? (
+                <a
+                  style={{ ...hoverOverride, paddingTop: "1px" }}
+                  target="_new"
+                  className={`${gridHoverFilter}`}
+                  href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
+                >
+                  <i className={`fab fa-amazon`} />
                 </a>
-              ) : expanded ? (
-                <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} className={`margin-right ${gridHoverFilter}`}>
-                  <i className={`far fa-minus`} />
-                </a>
-              ) : (
-                <a style={hoverOverride} target="_new" onClick={() => setExpanded(true)} className={`margin-right ${gridHoverFilter}`}>
-                  <i className={`far fa-plus`} />
-                </a>
-              )
-            ) : null}
-            {book.isbn && online ? (
-              <a
-                style={hoverOverride}
-                target="_new"
-                className={`margin-right ${gridHoverFilter}`}
-                href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
-              >
-                <i className={`fab fa-amazon`} />
-              </a>
-            ) : null}
-            {!viewingPublic && online ? (
-              <>
-                <a style={hoverOverride} className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBook(book)}>
-                  <i className="fal fa-pencil-alt"></i>
-                </a>
-                <a style={hoverOverride} className={`margin-right ${gridHoverFilter}`} onClick={() => dispatchBooksUiState(["start-delete", _id])}>
-                  <i className={`fal fa-trash-alt`} />
-                </a>
-              </>
-            ) : null}
-            {pendingDelete[_id] ? (
-              <AjaxButton
-                running={deleting[_id]}
-                runningText="Deleting"
-                onClick={() => runDelete(_id)}
-                className="btn btn-xs btn-danger margin-right"
-              >
-                Confirm delete
-              </AjaxButton>
-            ) : null}
-            {pendingDelete[_id] ? (
-              <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs">
-                Cancel
-              </button>
-            ) : null}
-          </div>
+              ) : null}
+              {!viewingPublic && online ? (
+                <>
+                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => props.editBook(book)}>
+                    <i className="fal fa-pencil-alt"></i>
+                  </a>
+                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => dispatchBooksUiState(["start-delete", _id])}>
+                    <i className={`fal fa-trash-alt`} />
+                  </a>
+                </>
+              ) : null}
+              {pendingDelete[_id] ? (
+                <AjaxButton running={deleting[_id]} runningText="Deleting" onClick={() => runDelete(_id)} className="btn btn-xs btn-danger">
+                  Confirm Delete
+                </AjaxButton>
+              ) : null}
+              {pendingDelete[_id] ? (
+                <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs">
+                  Cancel
+                </button>
+              ) : null}
+            </FlowItems>
+          </Stack>
         </td>
         <td>
           <div style={{ marginTop: "3px" }}>
@@ -124,7 +126,7 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
-              <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
+              <a className={`${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
                 <i className="fal fa-pencil-alt"></i>
               </a>
             ) : null}
@@ -140,7 +142,7 @@ const BookRow: SFC<ILocalProps> = props => {
           </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
-              <a className={`margin-right ${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
+              <a className={`${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
                 <i className="fal fa-pencil-alt"></i>
               </a>
             ) : null}
@@ -199,17 +201,19 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; setDetailsLoading: any }> = pro
   return (
     <tr key={"details" + book._id}>
       <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
-        <div className={`row ${detailsRow}`}>
-          <div style={{ position: "static" }} className="col-xs-6">
+        <FlexRow className={`${detailsRow}`}>
+          <div className="col-xs-6">
             {!editorialReviews || !editorialReviews.length ? (
-              <h4 style={{ marginTop: 0, marginBottom: 0 }}>No editorial reviews for this book</h4>
+              <h4>No editorial reviews for this book</h4>
             ) : (
               <div>
                 {editorialReviews.map((review, index) => (
                   <div key={index}>
                     {index > 0 ? <hr style={{ border: "2px solid #eee" }} /> : null}
-                    <h4>{review.source || "<unknown source>"}</h4>
-                    <div dangerouslySetInnerHTML={{ __html: review.content }} />
+                    <Stack>
+                      <h4>{review.source || "<unknown source>"}</h4>
+                      <div dangerouslySetInnerHTML={{ __html: review.content }} />
+                    </Stack>
                   </div>
                 ))}
                 <br />
@@ -217,38 +221,40 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; setDetailsLoading: any }> = pro
             )}
           </div>
 
-          <div style={{ position: "static" }} className="col-xs-6">
+          <div className="col-xs-6">
             {!similarBooks || !similarBooks.length ? (
-              <h4 style={{ marginTop: 0, marginBottom: 0 }}>No similar items found for this book</h4>
+              <h4>No similar items found for this book</h4>
             ) : (
               <div>
-                <h4>Similar Books</h4>
-                <table className="table table-condensed" style={{ backgroundColor: "transparent" }}>
-                  <tbody>
-                    {similarBooks.map((book, i) => (
-                      <tr key={i}>
-                        <td>{book.smallImage ? <img src={book.smallImage} /> : null}</td>
-                        <td>
-                          <span style={{ fontWeight: "bold" }}>{book.title}</span>
-                          <br />
-                          {book.authors.length ? (
-                            <>
-                              <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-                              <br />
-                            </>
-                          ) : null}
-                          <a target="_new" style={{ color: "black" }} href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
-                            <i className="fab fa-amazon" />
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <Stack>
+                  <h4>Similar Books</h4>
+                  <table className="table table-condensed" style={{ backgroundColor: "transparent" }}>
+                    <tbody>
+                      {similarBooks.map((book, i) => (
+                        <tr key={i}>
+                          <td>{book.smallImage ? <img src={book.smallImage} /> : null}</td>
+                          <td>
+                            <span style={{ fontWeight: "bold" }}>{book.title}</span>
+                            <br />
+                            {book.authors.length ? (
+                              <>
+                                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+                                <br />
+                              </>
+                            ) : null}
+                            <a target="_new" style={{ color: "black" }} href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
+                              <i className="fab fa-amazon" />
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Stack>
               </div>
             )}
           </div>
-        </div>
+        </FlexRow>
       </td>
     </tr>
   );
