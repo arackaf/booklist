@@ -155,7 +155,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
           <div className="col-sm-3 col-xs-12">
             <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
           </div>
-          <div style={{ display: tags.length ? "" : "none" }} className="col-sm-9 col-xs-12">
+          <div className="col-sm-9 col-xs-12">
             <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
           </div>
           {!noSubjectsFilter ? (
@@ -163,7 +163,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
               <div className="col-sm-3 col-xs-12">
                 <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
               </div>
-              <div style={{ display: subjects.length ? "" : "none" }} className="col-sm-9 col-xs-12">
+              <div className="col-sm-9 col-xs-12">
                 <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
               </div>
               <div className="col-xs-12">
