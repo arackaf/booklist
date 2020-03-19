@@ -121,7 +121,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             )}
           </div>
 
-          <div className="col-xs-12">{loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet }} /> : null}</div>
+          <div className="col-xs-12">{loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} /> : null}</div>
         </FlexRow>
       </form>
     </Modal>
