@@ -12,7 +12,7 @@ td:hover .gridHoverFilter {
 .detailsRow {
   padding-right: 10px;
 }
-.detailsRow > div {
+.detailsRow > * > div {
   padding-top: 10px;
   max-height: 250px;
   overflow: auto;

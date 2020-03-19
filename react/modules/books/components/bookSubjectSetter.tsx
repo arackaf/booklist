@@ -9,6 +9,9 @@ import SelectAvailable from "app/components/availableTagsOrSubjects";
 import Modal from "app/components/modal";
 import { useStackedSubjects, filterSubjects } from "app/subjectsState";
 import { MutationOf, Mutations } from "graphql-typings";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
+import FlowItems from "app/components/layout/FlowItems";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -72,9 +75,8 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
         </div>
       </div>
       <div className="tab-content">
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "subjects" ? "active" : "")}>
-          <br />
-          <div style={{ position: "relative" }} className="row">
+        <div style={{ minHeight: "100px" }} className={"margin-top tab-pane " + (currentTab == "subjects" ? "active" : "")}>
+          <FlexRow>
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Adding"
@@ -84,27 +86,23 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
                 filter={filterSubjects}
               />
             </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
               {addingSubjects
                 .map(_id => subjectHash[_id])
                 .map((s: any, i) => (
                   <span
                     key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, marginTop: "5px" }}
+                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
                     className="label label-default margin-left"
                   >
-                    <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                    <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white" }}>
                       X
                     </a>
                     {s.name}
                   </span>
                 ))}
             </div>
-          </div>
 
-          <br />
-
-          <div style={{ position: "relative" }} className="row">
             <div className="col-xs-3">
               <SelectAvailable
                 placeholder="Removing"
@@ -114,47 +112,48 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
                 filter={filterSubjects}
               />
             </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
+            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
               {removingSubjects
                 .map(_id => subjectHash[_id])
                 .map((s: any, i) => (
                   <span
                     key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, marginTop: "5px" }}
+                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
                     className="label label-default margin-left"
                   >
-                    <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
+                    <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white" }}>
                       X
                     </a>
                     {s.name}
                   </span>
                 ))}
             </div>
-          </div>
 
-          <br />
-          <BootstrapButton onClick={resetSubjects} className="pull-right" preset="default-xs">
-            Reset subjects
-          </BootstrapButton>
-          <br style={{ clear: "both" }} />
+            <div className="col-xs-12">
+              <BootstrapButton onClick={resetSubjects} preset="default-xs">
+                Reset subjects
+              </BootstrapButton>
+            </div>
+          </FlexRow>
         </div>
-        <div style={{ minHeight: "150px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
-          <br />
-          <ul style={{ fontSize: "14px", marginLeft: "10px" }}>
+        <div style={{ minHeight: "100px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
+          <ul className="margin-top" style={{ fontSize: "14px" }}>
             {modifyingBooks.map(book => (
               <li key={book._id}>{book.title}</li>
             ))}
           </ul>
-          <br />
         </div>
       </div>
+      <hr />
       <div className="standard-modal-footer">
-        <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
-          Set
-        </AjaxButton>
-        <BootstrapButton preset="" onClick={props.onDone}>
-          Cancel
-        </BootstrapButton>
+        <FlowItems>
+          <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
+            Set
+          </AjaxButton>
+          <BootstrapButton preset="" onClick={props.onDone}>
+            Cancel
+          </BootstrapButton>
+        </FlowItems>
       </div>
     </Modal>
   );

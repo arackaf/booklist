@@ -7,6 +7,7 @@ import ThemeChooser from "./components/themeChooser/main";
 import localStorageManager from "util/localStorage";
 import { AppContext } from "app/renderUI";
 import BootstrapButton from "app/components/bootstrapButton";
+import FlexRow from "app/components/layout/FlexRow";
 
 const TabContent = ({ currentTab }) => {
   const [{ isPublic, isLoggedIn }] = useContext(AppContext);
@@ -97,7 +98,7 @@ const MiscSettings = props => {
   };
 
   return (
-    <div className="row">
+    <FlexRow>
       <div className="col-md-6 col-sm-12">
         <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
           <div className="form-group">
@@ -118,7 +119,7 @@ const MiscSettings = props => {
           </div>
         </div>
       </div>
-    </div>
+    </FlexRow>
   );
 };
 

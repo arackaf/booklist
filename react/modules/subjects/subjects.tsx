@@ -10,6 +10,7 @@ import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
 import EditSubject from "app/components/editSubject";
 import Modal from "app/components/modal";
 import { useHeight, usePrevious } from "app/animationHelpers";
+import FlexRow from "app/components/layout/FlexRow";
 
 const AnimationContext = createContext(null);
 const EditContext = createContext(null);
@@ -41,7 +42,7 @@ const SubjectDisplay: FC<any> = memo(props => {
     onRest: () => (uiReady.current = true)
   }) as any;
 
-  let classes = `row padding-bottom-med ${subjectRow}`;
+  let classes = `padding-bottom-med ${subjectRow}`;
 
   const openEditModal = useContext(EditContext);
 
@@ -102,18 +103,20 @@ export default () => {
 
   return (
     <div className={subjectsRoot}>
-      <div className="subject-row row subject-row padding-top" style={{ marginBottom: "60px" }}>
-        <div className="col-lg-6 col-md-8 col-xs-12">
-          <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
-            New Subject
-          </BootstrapButton>
+      <div className="padding-top" style={{ marginBottom: "60px" }}>
+        <FlexRow>
+          <div className="col-lg-6 col-md-8 col-xs-12">
+            <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+              New Subject
+            </BootstrapButton>
 
-          <EditContext.Provider value={openEditModal}>
-            <animated.div style={{ opacity }} className={contentRoot}>
-              <SubjectList subjects={topLevelSubjects} />
-            </animated.div>
-          </EditContext.Provider>
-        </div>
+            <EditContext.Provider value={openEditModal}>
+              <animated.div style={{ opacity }} className={contentRoot}>
+                <SubjectList subjects={topLevelSubjects} />
+              </animated.div>
+            </EditContext.Provider>
+          </div>
+        </FlexRow>
       </div>
 
       <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
