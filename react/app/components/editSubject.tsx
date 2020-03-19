@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState, useMemo, useLayoutEffect } from "react";
 import { useSubjectsState, getEligibleParents, computeSubjectParentId, useChildMapSelector } from "app/subjectsState";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import { MutationOf, Mutations } from "graphql-typings";
@@ -11,34 +11,100 @@ import ColorsPalette from "./colorsPalette";
 
 import BootstrapButton from "app/components/bootstrapButton";
 import cn from "classnames";
+import FlexRow from "./layout/FlexRow";
+import FlowItems from "./layout/FlowItems";
+import Stack from "./layout/Stack";
 
-const textColorSaveBoxStyles = {
-  display: "flex",
-  flexDirection: "row-reverse",
-  alignItems: "center"
-} as any;
-
-const EditingSubjectDisplay = props => {
-  const inputEl = useRef(null);
-  useEffect(() => inputEl.current.focus(), []);
-  const { subjectHash } = useSubjectsState();
-
-  const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(
-    buildMutation(UpdateSubjectMutation)
-  );
+const EditSubject = props => {
   const [deleteShowing, setDeleteShowing] = useState(false);
 
   const childSubjectsMap = useChildMapSelector();
 
-  const { colors } = useColors();
-  const { subject, onCancelEdit, className = "" } = props;
+  const { subject, onCancelEdit } = props;
   const childSubjects = childSubjectsMap[subject._id] || [];
-  const { _id, name } = subject;
 
-  const [editingSubject, setEditingSubject] = useState(() => ({ ...subject, parentId: computeSubjectParentId(subject.path) }));
-  const [missingName, setMissingName] = useState(false);
+  const [editingSubject, setEditingSubject] = useState(null);
+
+  useLayoutEffect(() => {
+    setEditingSubject({ ...subject, parentId: computeSubjectParentId(subject.path) });
+    setDeleteShowing(false);
+  }, [subject]);
+
+  if (!editingSubject) {
+    return <div></div>;
+  }
+
+  return (
+    <FlexRow>
+      {!deleteShowing ? (
+        <EditSubjectFields {...{ editingSubject, setEditingSubject, onCancelEdit, setDeleteShowing }} />
+      ) : (
+        <div className="col-xs-12">
+          <PendingDeleteSubjectDisplay
+            childSubjects={childSubjects}
+            subject={subject}
+            onDelete={onCancelEdit}
+            cancel={() => setDeleteShowing(false)}
+          />
+        </div>
+      )}
+    </FlexRow>
+  );
+};
+
+const PendingDeleteSubjectDisplay = props => {
+  const { subject, cancel, childSubjects, onDelete } = props;
+  const { name, _id } = subject;
+
+  const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
+  const deleteIt = () => runMutation({ _id }).then(onDelete);
+
+  return (
+    <Stack>
+      <div className="alert alert-danger alert-slim" style={{ alignSelf: "flex-start" }}>
+        <FlowItems tighter={true}>
+          <span>Delete {name}?</span>
+          {childSubjects?.length ? <strong>Child subjects will also be deleted!</strong> : null}
+        </FlowItems>
+      </div>
+      <FlowItems>
+        <BootstrapButton disabled={running} onClick={deleteIt} preset="danger-xs">
+          {running ? (
+            <span>
+              Deleting <i className="fa fa-spinner fa-spin"></i>
+            </span>
+          ) : (
+            "Delete it!"
+          )}
+        </BootstrapButton>
+        <BootstrapButton disabled={running} onClick={cancel} className="btn btn-xs">
+          Cancel
+        </BootstrapButton>
+      </FlowItems>
+    </Stack>
+  );
+};
+
+const EditSubjectFields = props => {
+  const { editingSubject, setEditingSubject, onCancelEdit, setDeleteShowing } = props;
+
+  const { subjectHash } = useSubjectsState();
+  const { colors } = useColors();
+
+  const { _id, name } = editingSubject;
+
+  const inputEl = useRef(null);
+  useEffect(() => inputEl.current.focus(), []);
+
+  const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(
+    buildMutation(UpdateSubjectMutation)
+  );
+
+  const textColors = ["#ffffff", "#000000"];
+
   const eligibleParents = useMemo(() => getEligibleParents(subjectHash, _id) || [], [_id, subjectHash]);
 
+  const [missingName, setMissingName] = useState(false);
   const setEditingSubjectField = (prop, value) => {
     if (prop == "name" && value.trim()) {
       setMissingName(false);
@@ -68,134 +134,100 @@ const EditingSubjectDisplay = props => {
     }
   };
 
-  const textColors = ["#ffffff", "#000000"];
-
   return (
-    <div className={`row padding-bottom ${className}`}>
-      {!deleteShowing ? (
-        <>
-          <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden", paddingRight: "10px" }}>
-            <input
-              ref={inputEl}
-              onKeyDown={subjectEditingKeyDown}
-              onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
-              value={editingSubject.name}
-              className={cn("form-control", { ["has-error"]: missingName })}
-            />
-            {missingName ? (
-              <>
-                <span style={{ marginTop: "5px", display: "inline-block" }} className="label label-danger">
-                  Subjects need names!
-                </span>
-                <br />
-              </>
-            ) : null}
-            <div
-              className="label label-default"
-              style={{
-                backgroundColor: editingSubject.backgroundColor,
-                color: editingSubject.textColor,
-                maxWidth: "100%",
-                display: "inline-block",
-                overflow: "hidden",
-                marginTop: "5px"
-              }}
-            >
-              {editingSubject.name.trim() || "<label preview>"}
-            </div>
-          </div>
-          <div className="col-xs-12 col-lg-6 padding-bottom-small">
-            <select
-              onChange={(evt: any) => setEditingSubjectField("parentId", evt.target.value)}
-              value={editingSubject.parentId || ""}
-              className="form-control"
-            >
-              <option value="">No Parent</option>
-              {eligibleParents.map(s => (
-                <option key={s._id} value={s._id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-xs-12 col-lg-6">
-            <ColorsPalette
-              currentColor={editingSubject.backgroundColor}
-              colors={colors}
-              onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
-            />
-            <CustomColorPicker
-              labelStyle={{ marginLeft: "5px", marginTop: "3px", display: "inline-block" }}
-              onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
-              currentColor={editingSubject.backgroundColor}
-            />
-          </div>
-          <div className="col-xs-12 col-lg-6">
-            <div style={textColorSaveBoxStyles}>
-              <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
-            </div>
-          </div>
-          <div className="col-xs-12" style={{ display: "flex", marginTop: "20px" }}>
-            <div>
-              <BootstrapButton disabled={isSubjectSaving} style={{ marginRight: "10px" }} preset="primary-xs" onClick={runSave}>
-                Save <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-              </BootstrapButton>
-              <BootstrapButton disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
-                Cancel
-              </BootstrapButton>
-            </div>
-            {_id ? (
-              <BootstrapButton disabled={isSubjectSaving} style={{ marginLeft: "auto" }} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
-                Delete {name}&nbsp;
-                <i className="fa fa-fw fa-trash" />
-              </BootstrapButton>
-            ) : null}
-          </div>
-        </>
-      ) : (
-        <div className="col-xs-12" style={{ display: "flex" }}>
-          <PendingDeleteSubjectDisplay
-            childSubjects={childSubjects}
-            subject={subject}
-            onDelete={onCancelEdit}
-            cancel={() => setDeleteShowing(false)}
+    <FlexRow>
+      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
+        <div className="form-group">
+          <label>Name</label>
+          <input
+            ref={inputEl}
+            onKeyDown={subjectEditingKeyDown}
+            onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
+            value={editingSubject.name}
+            className={cn("form-control", { ["has-error"]: missingName })}
           />
-        </div>
-      )}
-    </div>
-  );
-};
-
-const PendingDeleteSubjectDisplay = props => {
-  const { subject, cancel, childSubjects, onDelete } = props;
-  const { name, _id } = subject;
-
-  const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
-  const deleteIt = () => runMutation({ _id }).then(onDelete);
-
-  return (
-    <div style={{ flex: 1 }}>
-      <div>
-        <div className="alert alert-danger alert-slim" style={{ display: "inline-block" }}>
-          Delete {name}?{childSubjects?.length ? <strong style={{ marginLeft: "10px" }}>Child subjects will also be deleted!</strong> : null}
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <BootstrapButton disabled={running} onClick={deleteIt} preset="danger-xs">
-            {running ? (
-              <span>
-                Deleting <i className="fa fa-spinner fa-spin"></i>
+          {missingName ? (
+            <>
+              <span style={{ marginTop: "5px", display: "inline-block" }} className="label label-danger">
+                Subjects need names!
               </span>
-            ) : (
-              "Delete it!"
-            )}
-          </BootstrapButton>
-          <BootstrapButton disabled={running} onClick={cancel} style={{ marginLeft: "20px" }} className="btn btn-xs">
-            Cancel
-          </BootstrapButton>
+              <br />
+            </>
+          ) : null}
+          <div
+            className="label label-default"
+            style={{
+              backgroundColor: editingSubject.backgroundColor,
+              color: editingSubject.textColor,
+              maxWidth: "100%",
+              overflow: "hidden",
+              alignSelf: "flex-start"
+            }}
+          >
+            {editingSubject.name.trim() || "<label preview>"}
+          </div>
         </div>
       </div>
-    </div>
+      <div className="col-xs-12 col-lg-6">
+        <div className="form-group">
+          <label>Parent</label>
+          <select
+            onChange={(evt: any) => setEditingSubjectField("parentId", evt.target.value)}
+            value={editingSubject.parentId || ""}
+            className="form-control"
+          >
+            <option value="">No Parent</option>
+            {eligibleParents.map(s => (
+              <option key={s._id} value={s._id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="col-xs-12 col-sm-6">
+        <div className="form-group">
+          <label>Label Color</label>
+          <ColorsPalette
+            currentColor={editingSubject.backgroundColor}
+            colors={colors}
+            onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
+          />
+          <CustomColorPicker
+            labelStyle={{ marginLeft: "3px" }}
+            onColorChosen={color => setEditingSubjectField("backgroundColor", color)}
+            currentColor={editingSubject.backgroundColor}
+          />
+        </div>
+      </div>
+      <div className="col-xs-12 col-sm-6">
+        <div className="form-group">
+          <label>Text Color</label>
+          <ColorsPalette colors={textColors} onColorChosen={color => setEditingSubjectField("textColor", color)} />
+          <CustomColorPicker
+            labelStyle={{ marginLeft: "3px" }}
+            onColorChosen={color => setEditingSubjectField("textColor", color)}
+            currentColor={editingSubject.backgroundColor}
+          />
+        </div>
+      </div>
+      <div className="col-xs-12">
+        <FlowItems pushLast={true}>
+          <BootstrapButton disabled={isSubjectSaving} preset="primary-xs" onClick={runSave}>
+            Save <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
+          </BootstrapButton>
+          <BootstrapButton disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
+            Cancel
+          </BootstrapButton>
+          {_id ? (
+            <BootstrapButton disabled={isSubjectSaving} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
+              Delete {name} <i className="fa fa-fw fa-trash" />
+            </BootstrapButton>
+          ) : null}
+        </FlowItems>
+      </div>
+    </FlexRow>
   );
 };
 
-export default EditingSubjectDisplay;
+export default EditSubject;

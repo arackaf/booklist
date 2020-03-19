@@ -7,6 +7,8 @@ import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserS
 import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 import { AppContext } from "app/renderUI";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
@@ -18,11 +20,11 @@ const PublicUserSettings: FunctionComponent<{}> = props => {
 
   return (
     <div>
-      <div className="row">
+      <FlexRow>
         <div className="col-md-6 col-sm-12" style={{ position: "relative", minHeight: "200px" }}>
           {!loaded ? <SectionLoading style={{ left: "20%" }} /> : <EditPublicUserSettings settings={data.getUser.User} />}
         </div>
-      </div>
+      </FlexRow>
     </div>
   );
 };
@@ -61,65 +63,74 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   };
 
   return (
-    <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
-      {publicLink ? (
-        <div style={{ marginBottom: "20px" }}>
-          Your collection is currently public, viewable at <br />
-          <br />
-          <a target="_blank" href={publicLink}>
-            {publicLink}
-          </a>
-        </div>
-      ) : null}
-
-      <hr />
-
-      <div className="checkbox-group" style={{ marginTop: "15px" }}>
-        <label className="checkbox">
-          Allow your book collection to be viewed publicly?
-          <input
-            onChange={evt => {
-              setDirty();
-              setPendingIsPublic(evt.target.checked);
-            }}
-            defaultChecked={pendingIsPublic}
-            disabled={saving}
-            style={{ marginLeft: "5px" }}
-            type="checkbox"
-          />
-        </label>
-      </div>
-      {pendingIsPublic ? (
-        <div style={{ marginLeft: "20px" }}>
-          <div className="form-group">
-            <label htmlFor="pName">Publicly display your name as</label>
-            <input
-              ref={pubNameEl}
-              onChange={setDirty}
-              defaultValue={publicName}
-              disabled={saving}
-              className="form-control"
-              id="pName"
-              placeholder="Public name"
-            />
+    <div className="margin-top">
+      <Stack looser={true}>
+        {publicLink ? (
+          <div>
+            Your collection is currently public, viewable{" "}
+            <a target="_blank" href={publicLink}>
+              here
+            </a>
           </div>
-          <div className="form-group">
-            <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
+        ) : null}
+
+        <hr style={{ width: "100%" }} />
+
+        <div className="checkbox-group">
+          <label className="checkbox">
+            Allow your book collection to be viewed publicly?
             <input
-              ref={pubHeaderEl}
-              onChange={setDirty}
-              defaultValue={publicBooksHeader}
+              onChange={evt => {
+                setDirty();
+                setPendingIsPublic(evt.target.checked);
+              }}
+              defaultChecked={pendingIsPublic}
               disabled={saving}
-              className="form-control"
-              id="publicBooksHeader"
-              placeholder="Book header"
+              style={{ marginLeft: "5px" }}
+              type="checkbox"
             />
-          </div>
-          <AjaxButton disabled={!isDirty} onClick={update} runningText="Saving" finishedText="Saved" preset="primary">
-            Save
-          </AjaxButton>
+          </label>
         </div>
-      ) : null}
+        {pendingIsPublic ? (
+          <div style={{ marginLeft: "20px" }}>
+            <FlexRow>
+              <div className="col-xs-12">
+                <div className="form-group">
+                  <label htmlFor="pName">Publicly display your name as</label>
+                  <input
+                    ref={pubNameEl}
+                    onChange={setDirty}
+                    defaultValue={publicName}
+                    disabled={saving}
+                    className="form-control"
+                    id="pName"
+                    placeholder="Public name"
+                  />
+                </div>
+              </div>
+              <div className="col-xs-12">
+                <div className="form-group">
+                  <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
+                  <input
+                    ref={pubHeaderEl}
+                    onChange={setDirty}
+                    defaultValue={publicBooksHeader}
+                    disabled={saving}
+                    className="form-control"
+                    id="publicBooksHeader"
+                    placeholder="Book header"
+                  />
+                </div>
+              </div>
+              <div className="col-xs-12">
+                <AjaxButton disabled={!isDirty} onClick={update} runningText="Saving" finishedText="Saved" preset="primary">
+                  Save
+                </AjaxButton>
+              </div>
+            </FlexRow>
+          </div>
+        ) : null}
+      </Stack>
     </div>
   );
 };

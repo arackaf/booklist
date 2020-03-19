@@ -9,6 +9,9 @@ import DisplaySelectedTags from "app/components/displaySelectedTags";
 import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
+import FlexRow from "app/components/layout/FlexRow";
+import Stack from "app/components/layout/Stack";
+import FlowItems from "app/components/layout/FlowItems";
 
 type LocalProps = {
   isOpen: boolean;
@@ -73,36 +76,33 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
   let { isOpen, onHide } = props;
 
   return (
-    <Modal {...{ isOpen, onHide, headerCaption: "Full search" }}>
+    <Modal {...{ isOpen, onHide, headerCaption: "Full Search" }}>
       <form onSubmit={updateFilters}>
-        <div className="row">
-          <div className="col-sm-6 col-xs-12">
+        <FlexRow>
+          <div className="col-xs-6">
             <div className="form-group">
               <label>Title</label>
               <input defaultValue={filters.search} ref={searchEl} placeholder="Search title" className="form-control" />
             </div>
           </div>
-          <div className="col-sm-6 col-xs-12">
+          <div className="col-xs-6">
             <div className="form-group">
               <label>Pages</label>
-              <div className="form-inline">
-                <div style={{ marginRight: 5, display: "inline-block" }} className="form-group">
-                  <select ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
-                    <option value="lt">{"<"}</option>
-                    <option value="gt">{">"}</option>
-                  </select>
-                </div>
-                <div className="form-group" style={{ display: "inline-block" }}>
-                  <input
-                    defaultValue={filters.pages}
-                    ref={pagesEl}
-                    style={{ width: "100px" }}
-                    type="number"
-                    placeholder="Pages"
-                    className="form-control"
-                  />
-                </div>
-              </div>
+              <FlowItems tightest={true}>
+                <select style={{ width: "40px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
+                  <option value="lt">{"<"}</option>
+                  <option value="gt">{">"}</option>
+                </select>
+
+                <input
+                  defaultValue={filters.pages}
+                  ref={pagesEl}
+                  style={{ width: "80px" }}
+                  type="number"
+                  placeholder="Pages"
+                  className="form-control"
+                />
+              </FlowItems>
             </div>
           </div>
           <div className="col-xs-6">
@@ -118,28 +118,28 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </div>
           </div>
           <div className="col-xs-6">
-            <div>
-              <label className="form-label">Is read?</label>
-              <div className="radio responsive-radios">
-                <span>
+            <Stack tighter={true}>
+              <label className="form-label">Is Read?</label>
+              <FlowItems className="radio">
+                <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == ""} ref={isReadE} name="isRead" id="isReadE" />
                   <label htmlFor="isReadE">Either</label>
-                </span>
-                <span>
+                </FlowItems>
+                <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == "1"} name="isRead" id="isReadY" />
                   <label htmlFor="isReadY">Yes</label>
-                </span>
-                <span>
+                </FlowItems>
+                <FlowItems tightest={true} vCenter={true}>
                   <input type="radio" defaultChecked={filters.isRead == "0"} ref={isRead0} name="isRead" id="isReadN" />
                   <label htmlFor="isReadN">No</label>
-                </span>
-              </div>
-            </div>
+                </FlowItems>
+              </FlowItems>
+            </Stack>
           </div>
           <div className="col-xs-6">
             <div className="form-group">
               <label>Sort</label>
-              <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={filters.bindableSortValue} className="form-control margin-bottom">
+              <select ref={sortSelectEl} style={{ marginBottom: 0 }} defaultValue={filters.bindableSortValue} className="form-control">
                 <option value="title|asc">Title A-Z</option>
                 <option value="title|desc">Title Z-A</option>
                 <option value="pages|asc">Pages, Low</option>
@@ -148,52 +148,49 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                 <option value="_id|desc">Created, Latest</option>
               </select>
             </div>
+            <button style={{ display: "none" }} />
+            <input type="submit" style={{ display: "none" }} />
           </div>
-        </div>
-        <button style={{ display: "none" }} />
-        <input type="submit" style={{ display: "none" }} />
-      </form>
-      <div className="row" style={{ position: "relative" }}>
-        <div className="col-sm-3 col-xs-12">
-          <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
-        </div>
-        <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
-          <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
-        </div>
-      </div>
-      <br />
-      {!noSubjectsFilter ? (
-        <>
-          <div className="row" style={{ position: "relative" }}>
-            <div className="col-sm-3 col-xs-12">
-              <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
-            </div>
-            <div className="col-sm-9 col-xs-12" style={{ display: "flex", flexWrap: "wrap" }}>
-              <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
-            </div>
+
+          <div className="col-sm-3 col-xs-12">
+            <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
           </div>
-          <div className="checkbox" style={{ marginTop: "20px" }}>
-            <label>
-              <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
+          <div className="col-sm-9 col-xs-12">
+            <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
+          </div>
+          {!noSubjectsFilter ? (
+            <>
+              <div className="col-sm-3 col-xs-12">
+                <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
+              </div>
+              <div className="col-sm-9 col-xs-12">
+                <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
+              </div>
+              <div className="col-xs-12">
+                <label className="checkbox">
+                  <input type="checkbox" ref={childSubEl} defaultChecked={!!filters.searchChildSubjects} /> Also search child subjects
+                </label>
+              </div>
+            </>
+          ) : null}
+          <div className="col-xs-12">
+            <label className="checkbox">
+              <input type="checkbox" checked={!!noSubjectsFilter} onChange={el => setNoSubjectsFilter(!!el.target.checked)} /> Search books with no
+              subjects set
             </label>
           </div>
-        </>
-      ) : null}
-      <div className="checkbox" style={{ marginTop: "5px" }}>
-        <label>
-          <input type="checkbox" checked={!!noSubjectsFilter} onChange={el => setNoSubjectsFilter(!!el.target.checked)} /> Search books with no
-          subjects set
-        </label>
-      </div>
+        </FlexRow>
+      </form>
+
       <hr />
-      <div className="standard-modal-footer">
-        <BootstrapButton preset="primary" className="pull-left" onClick={updateFilters}>
+      <FlowItems pushLast={true}>
+        <BootstrapButton preset="primary" onClick={updateFilters}>
           Filter
         </BootstrapButton>
         <BootstrapButton preset="default" onClick={onHide}>
           Close
         </BootstrapButton>
-      </div>
+      </FlowItems>
     </Modal>
   );
 };
