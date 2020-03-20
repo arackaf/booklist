@@ -135,11 +135,12 @@ export default SearchModal;
 const SearchResults = props => {
   const books = props?.data?.allBooks?.Books;
   const { loading, selectedBooksSet, currentQuery } = props;
+  const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
 
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
-        {books == null ? null : books?.length ? (
+        {availableBooks == null ? null : availableBooks?.length ? (
           <CSSTransition
             key={currentQuery}
             appear={true}
@@ -150,8 +151,7 @@ const SearchResults = props => {
           >
             <ul className="overlay animate-fast">
               <TransitionGroup component={null}>
-                {books
-                  .filter(b => !selectedBooksSet.has(b._id))
+                {availableBooks
                   .map(book => (
                     <CSSTransition
                       appear={false}
@@ -167,8 +167,12 @@ const SearchResults = props => {
               </TransitionGroup>
             </ul>
           </CSSTransition>
-        ) : (
+        ) : books?.length ? (
           <CSSTransition key={2} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
+            <div className="alert alert-info">You've added all of the books from these results</div>
+          </CSSTransition>
+        ) : (
+          <CSSTransition key={3} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
             <div className="alert alert-warning">No results</div>
           </CSSTransition>
         )}
