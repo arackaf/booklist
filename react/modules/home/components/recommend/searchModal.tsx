@@ -121,7 +121,9 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             )}
           </div>
 
-          <div className="col-xs-12">{loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} /> : null}</div>
+          <div className="col-xs-12">
+            {loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} /> : null}
+          </div>
         </FlexRow>
       </form>
     </Modal>
@@ -138,16 +140,9 @@ const SearchResults = props => {
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
         {books.length ? (
-          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition-overlay" timeout={350}>
-            <table className="table table-condensed table-striped" style={{}}>
-              <thead>
-                <tr>
-                  <th />
-                  <th />
-                  <th />
-                </tr>
-              </thead>
-              <TransitionGroup component="tbody">
+          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition" timeout={350}>
+            <ul className="overlay animate-fast">
+              <TransitionGroup component={null}>
                 {books
                   .filter(b => !selectedBooksSet.has(b._id))
                   .map(book => (
@@ -156,7 +151,7 @@ const SearchResults = props => {
                     </CSSTransition>
                   ))}
               </TransitionGroup>
-            </table>
+            </ul>
           </CSSTransition>
         ) : (
           <CSSTransition key={2} classNames="fade-transition" timeout={300}>
@@ -178,25 +173,29 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <tr>
-      <td className="min-wdith">
-        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer", whiteSpace: "nowrap" }} className="btn btn-primary btn-xs">
-          Add to list&nbsp;
-          <i className="fal fa-plus" />
-        </button>
-      </td>
-      <td className="min-wdith">
-        <img src={book.smallImage} />
-      </td>
-      <td>
-        {book.title}
-        {book.authors && book.authors.length ? (
-          <>
-            <br />
-            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-          </>
-        ) : null}
-      </td>
-    </tr>
+    <li className="animate-fast">
+      <Stack>
+        <FlowItems>
+          <div style={{ minWidth: "70px" }}>
+            <img src={book.smallImage} />
+          </div>
+
+          <Stack style={{flex: 1}}>
+            {book.title}
+            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+            <button
+              disabled={adding}
+              onClick={selectBook}
+              style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
+              className="btn btn-primary btn-xs"
+            >
+              Add to list&nbsp;
+              <i className="fal fa-plus" />
+            </button>
+          </Stack>
+        </FlowItems>
+        <hr />
+      </Stack>
+    </li>
   );
 };
