@@ -122,7 +122,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-12">
-            {loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} /> : null}
+            <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} />
           </div>
         </FlexRow>
       </form>
@@ -133,20 +133,34 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 export default SearchModal;
 
 const SearchResults = props => {
-  const books = props.data.allBooks.Books;
+  const books = props?.data?.allBooks?.Books;
   const { loading, selectedBooksSet, currentQuery } = props;
 
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
-        {books.length ? (
-          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="fade-transition" timeout={350}>
+        {books == null ? null : books?.length ? (
+          <CSSTransition
+            key={currentQuery}
+            appear={true}
+            enter={true}
+            exit={true}
+            classNames="animate-fast bl-overlay bl-fade bl-animate"
+            timeout={3500}
+          >
             <ul className="overlay animate-fast">
               <TransitionGroup component={null}>
                 {books
                   .filter(b => !selectedBooksSet.has(b._id))
                   .map(book => (
-                    <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
+                    <CSSTransition
+                      appear={false}
+                      enter={false}
+                      exit={!loading}
+                      classNames="animate-fast-s bl-fade bl-slide-out bl-animate"
+                      timeout={300}
+                      key={book._id}
+                    >
                       <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
                     </CSSTransition>
                   ))}
@@ -154,7 +168,7 @@ const SearchResults = props => {
             </ul>
           </CSSTransition>
         ) : (
-          <CSSTransition key={2} classNames="fade-transition" timeout={300}>
+          <CSSTransition key={2} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
             <div className="alert alert-warning">No results</div>
           </CSSTransition>
         )}
@@ -173,14 +187,14 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast">
+    <li>
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>
             <img src={book.smallImage} />
           </div>
 
-          <Stack style={{flex: 1}}>
+          <Stack style={{ flex: 1 }}>
             {book.title}
             {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
             <button
