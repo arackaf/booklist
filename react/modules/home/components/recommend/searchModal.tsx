@@ -146,10 +146,10 @@ const SearchResults = props => {
             appear={true}
             enter={true}
             exit={true}
-            classNames="animate-fast bl-overlay bl-fade bl-animate"
+            classNames="bl-animate"
             timeout={3500}
           >
-            <ul className="overlay animate-fast">
+            <ul className="animate-fast bl-overlay bl-fade">
               <TransitionGroup component={null}>
                 {availableBooks
                   .map(book => (
@@ -157,7 +157,7 @@ const SearchResults = props => {
                       appear={false}
                       enter={false}
                       exit={!loading}
-                      classNames="animate-fast-s bl-fade bl-slide-out bl-animate"
+                      classNames="bl-animate"
                       timeout={300}
                       key={book._id}
                     >
@@ -168,12 +168,12 @@ const SearchResults = props => {
             </ul>
           </CSSTransition>
         ) : books?.length ? (
-          <CSSTransition key={2} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
-            <div className="alert alert-info">You've added all of the books from these results</div>
+          <CSSTransition key={2} classNames="bl-animate" timeout={300}>
+            <div className="animate-fast bl-overlay bl-fade alert alert-info">You've added all of the books from these results</div>
           </CSSTransition>
         ) : (
-          <CSSTransition key={3} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
-            <div className="alert alert-warning">No results</div>
+          <CSSTransition key={3} classNames="bl-animate" timeout={300}>
+            <div className="animate-fast bl-overlay bl-fade alert alert-warning">No results</div>
           </CSSTransition>
         )}
       </TransitionGroup>
@@ -191,7 +191,7 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li>
+    <li className="animate-fast-s bl-fade bl-slide-out">
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>
