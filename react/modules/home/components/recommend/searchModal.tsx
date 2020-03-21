@@ -26,7 +26,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
-  const { loading, loaded, data, error } = searchResults;
+  const { loading, loaded, data, error, currentQuery } = searchResults;
 
   useEffect(() => {
     if (props.isOpen) {
@@ -121,7 +121,9 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             )}
           </div>
 
-          <div className="col-xs-12">{loaded ? <SearchResults {...{ dispatch, loaded, loading, data, error, selectedBooksSet }} /> : null}</div>
+          <div className="col-xs-12">
+            <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} />
+          </div>
         </FlexRow>
       </form>
     </Modal>
@@ -131,33 +133,50 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 export default SearchModal;
 
 const SearchResults = props => {
-  const books = props.data.allBooks.Books;
-  const { loading, selectedBooksSet } = props;
+  const books = props?.data?.allBooks?.Books;
+  const { loading, selectedBooksSet, currentQuery } = props;
+  const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
 
   return (
-    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px" }}>
-      {books.length ? (
-        <table className="table table-condensed table-striped">
-          <thead>
-            <tr>
-              <th />
-              <th />
-              <th />
-            </tr>
-          </thead>
-          <TransitionGroup component="tbody">
-            {books
-              .filter(b => !selectedBooksSet.has(b._id))
-              .map(book => (
-                <CSSTransition appear={false} enter={false} exit={!loading} classNames="fade-transition" timeout={300} key={book._id}>
-                  <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                </CSSTransition>
-              ))}
-          </TransitionGroup>
-        </table>
-      ) : (
-        <div className="alert alert-warning">No results</div>
-      )}
+    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
+      <TransitionGroup component={null}>
+        {availableBooks == null ? null : availableBooks?.length ? (
+          <CSSTransition
+            key={currentQuery}
+            appear={true}
+            enter={true}
+            exit={true}
+            classNames="animate-fast bl-overlay bl-fade bl-animate"
+            timeout={3500}
+          >
+            <ul className="overlay animate-fast">
+              <TransitionGroup component={null}>
+                {availableBooks
+                  .map(book => (
+                    <CSSTransition
+                      appear={false}
+                      enter={false}
+                      exit={!loading}
+                      classNames="animate-fast-s bl-fade bl-slide-out bl-animate"
+                      timeout={300}
+                      key={book._id}
+                    >
+                      <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                    </CSSTransition>
+                  ))}
+              </TransitionGroup>
+            </ul>
+          </CSSTransition>
+        ) : books?.length ? (
+          <CSSTransition key={2} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
+            <div className="alert alert-info">You've added all of the books from these results</div>
+          </CSSTransition>
+        ) : (
+          <CSSTransition key={3} classNames="animate-fast bl-overlay bl-fade bl-animate" timeout={300}>
+            <div className="alert alert-warning">No results</div>
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     </div>
   );
 };
@@ -172,25 +191,29 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <tr>
-      <td>
-        <button disabled={adding} onClick={selectBook} style={{ cursor: "pointer", whiteSpace: "nowrap" }} className="btn btn-primary btn-xs">
-          Add to list&nbsp;
-          <i className="fal fa-plus" />
-        </button>
-      </td>
-      <td>
-        <img src={book.smallImage} />
-      </td>
-      <td>
-        {book.title}
-        {book.authors && book.authors.length ? (
-          <>
-            <br />
-            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-          </>
-        ) : null}
-      </td>
-    </tr>
+    <li>
+      <Stack>
+        <FlowItems>
+          <div style={{ minWidth: "70px" }}>
+            <img src={book.smallImage} />
+          </div>
+
+          <Stack style={{ flex: 1 }}>
+            {book.title}
+            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+            <button
+              disabled={adding}
+              onClick={selectBook}
+              style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
+              className="btn btn-primary btn-xs"
+            >
+              Add to list&nbsp;
+              <i className="fal fa-plus" />
+            </button>
+          </Stack>
+        </FlowItems>
+        <hr />
+      </Stack>
+    </li>
   );
 };
