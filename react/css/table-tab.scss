@@ -14,6 +14,11 @@
     text-align: left;
     border-bottom: 2px solid var(--primary-9);
   }
+
+  td.min-wdith {
+    width: 1px;
+    white-space: nowrap;
+  } 
 }
 .table.no-padding-top > thead > tr > th {
   padding-top: 0;
