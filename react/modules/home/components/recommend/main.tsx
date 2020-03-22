@@ -65,7 +65,7 @@ export default props => {
     <div className="margin-top">
       <FlexRow>
         <div className="col-xs-6">
-          <Stack>
+          <Stack loosest={true}>
             <div style={{ fontWeight: "bold" }}>Find some books, and get recommendations based on what's similar</div>
 
             <FlowItems pushLast={true}>
