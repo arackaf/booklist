@@ -12,6 +12,7 @@ import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -64,86 +65,87 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
       headerCaption="Add / Remove Subjects:"
       focusRef={selectRef}
     >
-      <div className="tab-headers">
-        <div className={"tab-header " + (currentTab == "subjects" ? "active" : "")}>
-          <a ref={selectRef} onClick={() => setTab("subjects")}>
-            Choose subjects
-          </a>
-        </div>
-        <div className={"tab-header " + (currentTab == "books" ? "active" : "")}>
-          <a onClick={() => setTab("books")}>For books</a>
-        </div>
-      </div>
-      <div className="tab-content">
-        <div style={{ minHeight: "100px" }} className={"margin-top tab-pane " + (currentTab == "subjects" ? "active" : "")}>
-          <FlexRow>
-            <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Adding"
-                items={subjectsUnwound}
-                currentlySelected={addingSubjects}
-                onSelect={subjectSelectedToAdd}
-                filter={filterSubjects}
-              />
-            </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
-              {addingSubjects
-                .map(_id => subjectHash[_id])
-                .map((s: any, i) => (
-                  <span
-                    key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
-                    className="label label-default margin-left"
-                  >
-                    <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white" }}>
-                      X
-                    </a>
-                    {s.name}
-                  </span>
-                ))}
-            </div>
+      <Tabs defaultTab="subjects">
+        <TabHeaders>
+          <TabHeader tabName="subjects">
+            <a ref={selectRef}>Choose subjects</a>
+          </TabHeader>
 
-            <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Removing"
-                items={subjectsUnwound}
-                currentlySelected={removingSubjects}
-                onSelect={subjectSelectedToRemove}
-                filter={filterSubjects}
-              />
-            </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
-              {removingSubjects
-                .map(_id => subjectHash[_id])
-                .map((s: any, i) => (
-                  <span
-                    key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
-                    className="label label-default margin-left"
-                  >
-                    <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white" }}>
-                      X
-                    </a>
-                    {s.name}
-                  </span>
-                ))}
-            </div>
+          <TabHeader tabName="books">
+            <a>For books</a>
+          </TabHeader>
+        </TabHeaders>
+        <TabContents>
+          <TabContent tabName="subjects">
+            <FlexRow>
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Adding"
+                  items={subjectsUnwound}
+                  currentlySelected={addingSubjects}
+                  onSelect={subjectSelectedToAdd}
+                  filter={filterSubjects}
+                />
+              </div>
+              <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
+                {addingSubjects
+                  .map(_id => subjectHash[_id])
+                  .map((s: any, i) => (
+                    <span
+                      key={i}
+                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
+                      className="label label-default margin-left"
+                    >
+                      <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white" }}>
+                        X
+                      </a>
+                      {s.name}
+                    </span>
+                  ))}
+              </div>
 
-            <div className="col-xs-12">
-              <BootstrapButton onClick={resetSubjects} preset="default-xs">
-                Reset subjects
-              </BootstrapButton>
-            </div>
-          </FlexRow>
-        </div>
-        <div style={{ minHeight: "100px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
-          <ul className="margin-top" style={{ fontSize: "14px" }}>
-            {modifyingBooks.map(book => (
-              <li key={book._id}>{book.title}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Removing"
+                  items={subjectsUnwound}
+                  currentlySelected={removingSubjects}
+                  onSelect={subjectSelectedToRemove}
+                  filter={filterSubjects}
+                />
+              </div>
+              <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
+                {removingSubjects
+                  .map(_id => subjectHash[_id])
+                  .map((s: any, i) => (
+                    <span
+                      key={i}
+                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
+                      className="label label-default margin-left"
+                    >
+                      <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white" }}>
+                        X
+                      </a>
+                      {s.name}
+                    </span>
+                  ))}
+              </div>
+
+              <div className="col-xs-12">
+                <BootstrapButton onClick={resetSubjects} preset="default-xs">
+                  Reset subjects
+                </BootstrapButton>
+              </div>
+            </FlexRow>
+          </TabContent>
+          <TabContent tabName="books">
+            <ul style={{ fontSize: "14px" }}>
+              {modifyingBooks.map(book => (
+                <li key={book._id}>{book.title}</li>
+              ))}
+            </ul>
+          </TabContent>
+        </TabContents>
+      </Tabs>
       <hr />
       <div className="standard-modal-footer">
         <FlowItems>
