@@ -24,9 +24,6 @@ if (!!localStorage.getItem("useDesktop")) {
 const REQUEST_DESKTOP = "root.REQUEST_DESKTOP";
 const REQUEST_MOBILE = "root.REQUEST_MOBILE";
 
-const SET_PUBLIC_ID = "root.SET_PUBLIC_ID";
-const SET_PUBLIC_INFO = "root.SET_PUBLIC_INFO";
-const RESET_PUBLIC_INFO = "root.RESET_PUBLIC_INFO";
 export const URL_SYNC = "root.URL_SYNC";
 
 const IS_OFFLINE = "root.IS_OFFLINE";
@@ -69,12 +66,6 @@ export type AppState = typeof initialState;
 
 function appReducer(state: AppState, action): AppState {
   switch (action.type) {
-    case SET_PUBLIC_ID:
-      return { ...state, isPublic: true, publicUserId: action.userId };
-    case SET_PUBLIC_INFO:
-      return { ...state, isPublic: true, publicName: action.publicName, publicBooksHeader: action.publicBooksHeader, publicUserId: action.userId };
-    case RESET_PUBLIC_INFO:
-      return { ...state, isPublic: false, publicName: "", publicBooksHeader: "", publicUserId: void 0 };
     case REQUEST_DESKTOP:
       return { ...state, showingDesktop: true, showingMobile: false };
     case REQUEST_MOBILE:
@@ -112,14 +103,11 @@ const requestMobile = () => dispatch => {
   dispatch({ type: REQUEST_MOBILE });
 };
 
-const setPublicInfo = publicInfo => ({ type: SET_PUBLIC_INFO, ...publicInfo });
-const setPublicId = userId => ({ type: SET_PUBLIC_ID, userId: userId });
-
 const isOnline = () => ({ type: IS_ONLINE });
 const isOffline = () => ({ type: IS_OFFLINE });
 
 export function useAppState(): [AppState, any, any] {
-  let actions = { requestDesktop, requestMobile, isOffline, isOnline, setPublicInfo, setPublicId };
+  let actions = { requestDesktop, requestMobile, isOffline, isOnline };
   let result = getStatePacket<AppState>(appReducer, initialState, actions);
 
   let colorTheme = result[0].colorTheme;

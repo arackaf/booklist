@@ -110,7 +110,7 @@ const MiscSettings = props => {
               placeholder="Suspense timeout"
               className="form-control"
             />
-            <BootstrapButton style={{ margin: "10px 0" }} preset="primary" onClick={save}>
+            <BootstrapButton style={{ margin: "10px 0", alignSelf: "flex-start" }} preset="primary" onClick={save}>
               Save
             </BootstrapButton>
 

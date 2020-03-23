@@ -2,6 +2,7 @@ import React, { FunctionComponent, useRef, useState, useContext, useEffect } fro
 import { AjaxButton } from "app/components/bootstrapButton";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
+import Stack from "app/components/layout/Stack";
 
 const errorCodes = {
   s1: "This user already exists",
@@ -102,48 +103,50 @@ const Login: FunctionComponent<{}> = props => {
               </div>
             ) : (
               <form>
-                <div className="form-group">
-                  <label htmlFor="username">Email address</label>
-                  <input className="form-control" ref={usernameEl} id="username" />
+                <Stack>
+                  <div className="form-group">
+                    <label htmlFor="username">Email address</label>
+                    <input className="form-control" ref={usernameEl} id="username" />
+
+                    {state.newUser ? (
+                      <div className="alert alert-info margin-top">
+                        Your email address will never ever be sold, given away, etc. I will not send you anything, ever. I'm collecting it only so I
+                        have a place to send a password reset to.
+                      </div>
+                    ) : null}
+
+                    {state.invalidEmail ? <div className="alert alert-danger margin-top">Invalid email</div> : null}
+                    {emailError ? <div className="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div> : null}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input className="form-control" ref={passwordEl} id="password" type="password" />
+                  </div>
 
                   {state.newUser ? (
-                    <div className="alert alert-info margin-top">
-                      Your email address will never ever be sold, given away, etc. I will not send you anything, ever. I'm collecting it only so I
-                      have a place to send a password reset to.
+                    <div className="form-group">
+                      <label htmlFor="password">Confirm password</label>
+                      <input className="form-control" ref={confirmPasswordEl} type="password" />
                     </div>
                   ) : null}
 
-                  {state.invalidEmail ? <div className="alert alert-danger margin-top">Invalid email</div> : null}
-                  {emailError ? <div className="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div> : null}
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <input className="form-control" ref={passwordEl} id="password" type="password" />
-                </div>
+                  {pwdError ? <div className="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div> : null}
 
-                {state.newUser ? (
-                  <div className="form-group">
-                    <label htmlFor="password">Confirm password</label>
-                    <input className="form-control" ref={confirmPasswordEl} type="password" />
+                  <div className="checkbox">
+                    <label>
+                      <input type="checkbox" ref={rememberMeEl} /> Remember me
+                    </label>
                   </div>
-                ) : null}
-
-                {pwdError ? <div className="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div> : null}
-
-                <div className="checkbox">
-                  <label>
-                    <input type="checkbox" ref={rememberMeEl} /> Remember me
-                  </label>
-                </div>
-                {state.newUser ? (
-                  <AjaxButton onClick={evt => createUser(evt)} running={state.running} preset="primary" className="margin-top margin-bottom">
-                    Create user
-                  </AjaxButton>
-                ) : (
-                  <AjaxButton onClick={evt => login(evt)} running={state.running} preset="primary" className="margin-top margin-bottom">
-                    Login
-                  </AjaxButton>
-                )}
+                  {state.newUser ? (
+                    <AjaxButton onClick={evt => createUser(evt)} running={state.running} preset="primary" className="margin-top margin-bottom">
+                      Create user
+                    </AjaxButton>
+                  ) : (
+                    <AjaxButton onClick={evt => login(evt)} running={state.running} preset="primary" className="margin-top margin-bottom">
+                      Login
+                    </AjaxButton>
+                  )}
+                </Stack>
 
                 {miscError ? <div className="alert alert-danger margin-bottom">{errorCodes[state.errorCode]}</div> : null}
                 <hr />
