@@ -38,10 +38,11 @@ export const TabContents = ({ children }) => <div className="tab-content">{child
 
 export const TabContent = ({ children, tabName = "", className = "", ...rest }) => {
   const { currentTab } = useContext(TabsContext);
+  const isActive = currentTab === tabName;
 
   return (
     <div {...rest} className={cn("tab-pane", className, { active: currentTab == tabName })}>
-      {children}
+      {typeof children === "function" ? children(isActive) : children}
     </div>
   );
 };
