@@ -11,10 +11,12 @@ import { filterTags, useTagsState } from "app/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import FlowItems from "app/components/layout/FlowItems";
+import { TabHeaders, Tabs, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
+import Stack from "app/components/layout/Stack";
+import DisplaySelectedTags from "app/components/displaySelectedTags";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
-  const { tagHash, tags } = useTagsState();
-  const [currentTab, setTab] = useState("tags");
+  const { tags } = useTagsState();
   const [addingTags, setAddingTags] = useState([]);
   const [removingTags, setRemovingTags] = useState([]);
   const resetTags = () => {
@@ -50,85 +52,57 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
     <Modal
       className="fade"
       isOpen={!!modifyingBooks.length}
-      onHide={() => {
-        props.onDone();
-        setTab("tags");
-      }}
+      onHide={props.onDone}
       headerCaption="Add / Remove Tags:"
       focusRef={selectRef}
     >
-      <div className="tab-headers">
-        <div className={"tab-header " + (currentTab == "tags" ? "active" : "")}>
-          <a ref={selectRef} onClick={() => setTab("tags")}>
-            Choose tags
-          </a>
-        </div>
-        <div className={"tab-header " + (currentTab == "books" ? "active" : "")}>
-          <a onClick={() => setTab("books")}>For books</a>
-        </div>
-      </div>
-      <div className="tab-content">
-        <div style={{ minHeight: "100px" }} className={"margin-top tab-pane " + (currentTab == "tags" ? "active" : "")}>
-          <FlexRow>
-            <div className="col-xs-3">
-              <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
-            </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
-              {addingTags
-                .map(_id => tagHash[_id])
-                .map((s: any, i) => (
-                  <span
-                    key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, marginTop: "5px" }}
-                    className="label label-default margin-left"
-                  >
-                    <a onClick={() => dontAddTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                      X
-                    </a>
-                    {s.name}
-                  </span>
-                ))}
-            </div>
+      <Tabs defaultTab="tags">
+        <TabHeaders>
+          <TabHeader tabName="tags">
+            <a ref={selectRef}>Choose tags</a>
+          </TabHeader>
+          <TabHeader tabName="books">
+            <a>For books</a>
+          </TabHeader>
+        </TabHeaders>
+        <TabContents>
+          <TabContent tabName="tags">
+            <FlexRow>
+              <div className="col-xs-3">
+                <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
+              </div>
+              <div className="col-xs-9">
+                <DisplaySelectedTags currentlySelected={addingTags} onRemove={t => dontAddTag(t)} />
+              </div>
 
-            <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Removing"
-                items={tags}
-                currentlySelected={removingTags}
-                onSelect={tagSelectedToRemove}
-                filter={filterTags}
-              />
-            </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap", marginBottom: "-5px" }}>
-              {removingTags
-                .map(_id => tagHash[_id])
-                .map((s: any, i) => (
-                  <span
-                    key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor, marginTop: "5px" }}
-                    className="label label-default margin-left"
-                  >
-                    <a onClick={() => dontRemoveTag(s)} style={{ color: s.textColor || "white", paddingRight: "5px", marginRight: "5px" }}>
-                      X
-                    </a>
-                    {s.name}
-                  </span>
-                ))}
-            </div>
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Removing"
+                  items={tags}
+                  currentlySelected={removingTags}
+                  onSelect={tagSelectedToRemove}
+                  filter={filterTags}
+                />
+              </div>
+              <div className="col-xs-9">
+                <DisplaySelectedTags currentlySelected={removingTags} onRemove={t => dontRemoveTag(t)} />
+              </div>
 
-            <BootstrapButton onClick={resetTags} preset="default-xs">
-              Reset tags
-            </BootstrapButton>
-          </FlexRow>
-        </div>
-        <div style={{ minHeight: "100px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
-          <ul style={{ fontSize: "14px" }}>
-            {modifyingBooks.map(book => (
-              <li key={book._id}>{book.title}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+              <BootstrapButton onClick={resetTags} preset="default-xs">
+                Reset tags
+              </BootstrapButton>
+            </FlexRow>
+          </TabContent>
+          <TabContent tabName="books">
+            <Stack style={{ fontSize: "14px" }}>
+              {modifyingBooks.map(book => (
+                <div key={book._id}>{book.title}</div>
+              ))}
+            </Stack>
+          </TabContent>
+        </TabContents>
+      </Tabs>
+
       <hr />
       <div className="standard-modal-footer">
         <FlowItems>

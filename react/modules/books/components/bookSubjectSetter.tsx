@@ -138,11 +138,11 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
             </FlexRow>
           </TabContent>
           <TabContent tabName="books">
-            <ul style={{ fontSize: "14px" }}>
+            <Stack style={{ fontSize: "14px" }}>
               {modifyingBooks.map(book => (
-                <li key={book._id}>{book.title}</li>
+                <div key={book._id}>{book.title}</div>
               ))}
-            </ul>
+            </Stack>
           </TabContent>
         </TabContents>
       </Tabs>

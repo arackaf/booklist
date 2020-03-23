@@ -34,7 +34,11 @@ export const TabHeader = ({ children, tabName = "", disabled = false }) => {
   );
 };
 
-export const TabContents = ({ children }) => <div className="tab-content">{children}</div>;
+export const TabContents = ({ children, className = "", ...rest }) => (
+  <div className={cn("tab-content", className)} {...rest}>
+    {children}
+  </div>
+);
 
 export const TabContent = ({ children, tabName = "", className = "", ...rest }) => {
   const { currentTab } = useContext(TabsContext);
