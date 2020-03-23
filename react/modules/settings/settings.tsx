@@ -96,23 +96,21 @@ const MiscSettings = props => {
   return (
     <FlexRow>
       <div className="col-md-6 col-sm-12">
-        <div style={{ paddingLeft: "10px", paddingTop: "20px" }}>
-          <div className="form-group">
-            <label>Suspense timeout</label>
-            <input
-              style={{ maxWidth: "150px" }}
-              defaultValue={suspenseTimeout}
-              ref={suspenseTimeoutEl}
-              placeholder="Suspense timeout"
-              className="form-control"
-            />
-            <BootstrapButton style={{ margin: "10px 0", alignSelf: "flex-start" }} preset="primary" onClick={save}>
-              Save
-            </BootstrapButton>
+        <div className="form-group">
+          <label>Suspense timeout</label>
+          <input
+            style={{ maxWidth: "150px" }}
+            defaultValue={suspenseTimeout}
+            ref={suspenseTimeoutEl}
+            placeholder="Suspense timeout"
+            className="form-control"
+          />
+          <BootstrapButton style={{ margin: "10px 0", alignSelf: "flex-start" }} preset="primary" onClick={save}>
+            Save
+          </BootstrapButton>
 
-            {saved ? <div className="alert alert-success">Saved. Refresh the page to see the new timeout value in action</div> : null}
-            {error ? <div className="alert alert-danger">{error}</div> : null}
-          </div>
+          {saved ? <div className="alert alert-success">Saved. Refresh the page to see the new timeout value in action</div> : null}
+          {error ? <div className="alert alert-danger">{error}</div> : null}
         </div>
       </div>
     </FlexRow>

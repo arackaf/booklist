@@ -53,3 +53,12 @@
 .tab-content .tab-pane:not(.active) {
   display: none;
 }
+
+.tab-content .tab-pane > * {
+  margin-top: 10px;
+  margin-left: 5px;
+
+  @media (max-width: 800px) {
+    margin-left: 0;
+  }
+}
