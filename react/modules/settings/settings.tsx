@@ -124,7 +124,8 @@ const MiscSettings = props => {
 };
 
 export default props => {
-  const [currentTab, setCurrentTab] = useState(localStorageManager.get("settings-tab", "publicSettings"));
+  const [{ isPublic }] = useContext(AppContext);
+  const [currentTab, setCurrentTab] = useState(localStorageManager.get("settings-tab", isPublic ? "theme" : "publicSettings"));
   const setTab = tab => {
     localStorageManager.set("settings-tab", tab);
     setCurrentTab(tab);
