@@ -45,54 +45,52 @@ const PublicUserSettings = props => {
   }
 
   return (
-    <div className="margin-top">
-      <FlexRow>
-        <div className="col-md-6 col-sm-12">
-          <Stack>
-            <div className="form-group">
-              <label htmlFor="existingPasswordInput">Current password</label>
-              <input ref={currentPasswordEl} type="password" className="form-control" id="existingPasswordInput" />
+    <FlexRow>
+      <div className="col-md-6 col-sm-12">
+        <Stack>
+          <div className="form-group">
+            <label htmlFor="existingPasswordInput">Current password</label>
+            <input ref={currentPasswordEl} type="password" className="form-control" id="existingPasswordInput" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="newPasswordInput">New password</label>
+            <input ref={newPasswordEl} type="password" className="form-control" id="newPasswordInput" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
+            <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
+          </div>
+          <AjaxButton
+            style={{ alignSelf: "flex-start" }}
+            onClick={resetPassword}
+            disabled={saved}
+            running={saving}
+            runningText="Saving"
+            preset="primary"
+          >
+            Save
+          </AjaxButton>
+          {mismatch ? (
+            <div>
+              <br />
+              <div className="alert alert-danger">Passwords must match</div>
             </div>
-            <div className="form-group">
-              <label htmlFor="newPasswordInput">New password</label>
-              <input ref={newPasswordEl} type="password" className="form-control" id="newPasswordInput" />
+          ) : null}
+          {wrongPassword ? (
+            <div>
+              <br />
+              <div className="alert alert-danger">Your existing password does not match</div>
             </div>
-            <div className="form-group">
-              <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
-              <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
+          ) : null}
+          {saved ? (
+            <div>
+              <br />
+              <div className="alert alert-success">Your password has been updated</div>
             </div>
-            <AjaxButton
-              style={{ alignSelf: "flex-start" }}
-              onClick={resetPassword}
-              disabled={saved}
-              running={saving}
-              runningText="Saving"
-              preset="primary"
-            >
-              Save
-            </AjaxButton>
-            {mismatch ? (
-              <div>
-                <br />
-                <div className="alert alert-danger">Passwords must match</div>
-              </div>
-            ) : null}
-            {wrongPassword ? (
-              <div>
-                <br />
-                <div className="alert alert-danger">Your existing password does not match</div>
-              </div>
-            ) : null}
-            {saved ? (
-              <div>
-                <br />
-                <div className="alert alert-success">Your password has been updated</div>
-              </div>
-            ) : null}
-          </Stack>
-        </div>
-      </FlexRow>
-    </div>
+          ) : null}
+        </Stack>
+      </div>
+    </FlexRow>
   );
 };
 

@@ -11,6 +11,7 @@ import "./d3-styles.scss";
 import { SectionLoading } from "app/components/loading";
 import { goto } from "reactStartup";
 import { useTagsState } from "app/tagsState";
+import { Tabs, TabHeader, TabHeaders, TabContents, TabContent } from "app/components/layout/Tabs";
 
 const MainHomePane = props => (
   <div>
@@ -33,24 +34,22 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
 
   return (
     <MainHomePane>
-      <div className="tab-headers">
-        <div className={"tab-header " + (tab == "vis" ? "active" : "")}>
-          <a onClick={() => setTab("vis")}>
-            <span>
+      <Tabs defaultTab="vis" localStorageName="home-tabs">
+        <TabHeaders>
+          <TabHeader tabName="vis">
+            <a>
               <i className="far fa-chart-bar" /> View
-            </span>
-          </a>
-        </div>
-        <div className={"tab-header " + (tab == "rec" ? "active" : "")}>
-          <a onClick={() => setTab("rec")}>
-            <span>Discover books</span>
-          </a>
-        </div>
-      </div>
-      <div className="tab-content">
-        <div className={"tab-pane " + (tab == "vis" ? "active" : "")}>
-          <div className="margin-top">
-            {tab == "vis" ? (
+            </a>
+          </TabHeader>
+          <TabHeader tabName="rec">
+            <a>
+              <span>Discover books</span>
+            </a>
+          </TabHeader>
+        </TabHeaders>
+        <TabContents>
+          <TabContent tabName="vis">
+            {active => active ? (
               subjectsLoaded ? (
                 subjects.length ? (
                   <ChartHolder />
@@ -64,12 +63,13 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
                 <SectionLoading style={{ position: "fixed" }} />
               )
             ) : null /* tab not active - render nothing */}
-          </div>
-        </div>
-        <div className={"tab-pane " + (tab == "rec" ? "active" : "")}>
-          <RecommendMain />
-        </div>
-      </div>
+          </TabContent>
+
+          <TabContent tabName="rec">
+            <RecommendMain />
+          </TabContent>
+        </TabContents>
+      </Tabs>
     </MainHomePane>
   );
 };
