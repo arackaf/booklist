@@ -1,77 +1,73 @@
 import React, { useContext, useState, useRef } from "react";
-import classNames from "classnames";
 
 import PublicUserSettings from "./components/publicUserSettings/main";
 import PasswordReset from "./components/passwordReset/main";
 import ThemeChooser from "./components/themeChooser/main";
-import localStorageManager from "util/localStorage";
 import { AppContext } from "app/renderUI";
 import BootstrapButton from "app/components/bootstrapButton";
 import FlexRow from "app/components/layout/FlexRow";
+import { TabHeader, TabHeaders, Tabs, TabContents, TabContent } from "app/components/layout/Tabs";
 
-const TabContent = ({ currentTab }) => {
+const SettingsTabContent = ({}) => {
   const [{ isPublic, isLoggedIn }] = useContext(AppContext);
-  if (isPublic && currentTab != "theme" && currentTab != "miscSettings") {
-    currentTab = "theme";
-  }
 
   return (
-    <div className="tab-content">
+    <TabContents>
       {!isPublic && isLoggedIn ? (
         <>
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "publicSettings" })}>
+          <TabContent style={{ minHeight: "150px" }} tabName="publicSettings">
             <PublicUserSettings />
-          </div>
-          <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "passwordReset" })}>
+          </TabContent>
+          <TabContent style={{ minHeight: "150px" }} tabName="passwordReset">
             <PasswordReset />
-          </div>
+          </TabContent>
         </>
       ) : null}
       <>
-        <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "miscSettings" })}>
+        <TabContent style={{ minHeight: "150px" }} tabName="miscSettings">
           <MiscSettings />
-        </div>
-        <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "theme" })}>
+        </TabContent>
+        <TabContent style={{ minHeight: "150px" }} tabName="theme">
           <ThemeChooser />
-        </div>
+        </TabContent>
       </>
-    </div>
+    </TabContents>
   );
 };
 
-const TabHeaders = ({ currentTab, setTab }) => {
+const SettingsTabHeaders = ({}) => {
   const [{ isPublic, isLoggedIn }] = useContext(AppContext);
 
   return isPublic || !isLoggedIn ? (
-    <div className="tab-headers">
-      <div className="tab-header disabled">
+    <TabHeaders>
+      <TabHeader disabled={true}>
         <a>Public sharing</a>
-      </div>
-      <div className="tab-header disabled">
+      </TabHeader>
+      <TabHeader disabled={true}>
         <a>Reset password</a>
-      </div>
-      <div onClick={() => setTab("theme")} className={classNames("tab-header", { active: currentTab == "theme" })}>
+      </TabHeader>
+      <TabHeader tabName="theme">
         <a>Theme</a>
-      </div>
-      <div onClick={() => setTab("miscSettings")} className={classNames("tab-header", { active: currentTab == "miscSettings" })}>
+      </TabHeader>
+      <TabHeader tabName="miscSettings">
         <a>Misc</a>
-      </div>
-    </div>
+      </TabHeader>
+    </TabHeaders>
   ) : (
-    <div className="tab-headers">
-      <div onClick={() => setTab("publicSettings")} className={classNames("tab-header", { active: currentTab == "publicSettings" })}>
+    <TabHeaders>
+      <TabHeader tabName="publicSettings">
         <a>Public sharing</a>
-      </div>
-      <div onClick={() => setTab("passwordReset")} className={classNames("tab-header", { active: currentTab == "passwordReset" })}>
+      </TabHeader>
+      <TabHeader tabName="passwordReset">
         <a>Reset password</a>
-      </div>
-      <div onClick={() => setTab("theme")} className={classNames("tab-header", { active: currentTab == "theme" })}>
+      </TabHeader>
+      <TabHeader tabName="theme">
         <a>Theme</a>
-      </div>
-      <div onClick={() => setTab("miscSettings")} className={classNames("tab-header", { active: currentTab == "miscSettings" })}>
+      </TabHeader>
+      <TabHeader tabName="miscSettings">
         <a>Misc</a>
-      </div>
-    </div>
+      </TabHeader>
+    </TabHeaders>
   );
 };
 
@@ -125,16 +121,13 @@ const MiscSettings = props => {
 
 export default props => {
   const [{ isPublic }] = useContext(AppContext);
-  const [currentTab, setCurrentTab] = useState(localStorageManager.get("settings-tab", isPublic ? "theme" : "publicSettings"));
-  const setTab = tab => {
-    localStorageManager.set("settings-tab", tab);
-    setCurrentTab(tab);
-  };
 
   return (
     <div className="standard-module-container">
-      <TabHeaders setTab={setTab} currentTab={currentTab} />
-      <TabContent currentTab={currentTab} />
+      <Tabs defaultTab={isPublic ? "theme" : "publicSettings"} localStorageName="settings-tab">
+        <SettingsTabHeaders />
+        <SettingsTabContent />
+      </Tabs>
     </div>
   );
 };
