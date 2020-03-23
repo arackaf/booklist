@@ -5,7 +5,7 @@ import cn from "classnames";
 
 const TabsContext = createContext({ currentTab: "", setTab: val => {}, localStorageName: "" });
 
-export const Tabs = ({ defaultTab, localStorageName, children }) => {
+export const Tabs = ({ defaultTab, localStorageName = "", children }) => {
   const [currentTab, setTab] = useState(localStorageManager.get(localStorageName) || defaultTab);
   const packet = useMemo(() => ({ localStorageName, currentTab, setTab }), [currentTab, localStorageName]);
 
