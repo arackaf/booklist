@@ -1,47 +1,40 @@
 import React, { useState } from "react";
-import classNames from "classnames";
-
-import localStorageManager from "util/localStorage";
 
 import CoverManager from "./components/bookSummaryCovers/coverManager";
+import { TabContents, TabContent, TabHeaders, TabHeader } from "app/components/layout/Tabs";
 
-const TabContent = ({ currentTab }) => {
+const AdminTabContent = ({}) => {
   return (
-    <div className="tab-content">
-      <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "covers" })}>
+    <TabContents>
+      <TabContent style={{ minHeight: "150px" }} tabName="covers">
         <CoverManager />
-      </div>
-      <div style={{ minHeight: "150px" }} className={classNames("tab-pane", { active: currentTab == "user-data" })}>
+      </TabContent>
+
+      <TabContent style={{ minHeight: "150px" }} tabName="user-data">
         <div>TODO</div>
-      </div>
-    </div>
+      </TabContent>
+    </TabContents>
   );
 };
 
-const TabHeaders = ({ currentTab, setTab }) => {
+const AdminTabHeaders = ({}) => {
   return (
-    <div className="tab-headers">
-      <div onClick={() => setTab("covers")} className={classNames("tab-header", { active: currentTab == "covers" })}>
+    <TabHeaders>
+      <TabHeader tabName="covers">
         <a>Recommendation Covers</a>
-      </div>
-      <div onClick={() => setTab("user-data")} className={classNames("tab-header", { active: currentTab == "user-data" })}>
+      </TabHeader>
+      <TabHeader tabName="user-data">
         <a>User Data</a>
-      </div>
-    </div>
+      </TabHeader>
+    </TabHeaders>
   );
 };
 
-export default props => {
-  const [currentTab, setCurrentTab] = useState(localStorageManager.get("admin-tab", "covers"));
-  const setTab = tab => {
-    localStorageManager.set("admin-tab", tab);
-    setCurrentTab(tab);
-  };
-
+export default ({}) => {
   return (
     <div className="standard-module-container">
-      <TabHeaders setTab={setTab} currentTab={currentTab} />
-      <TabContent currentTab={currentTab} />
+      <AdminTabHeaders />
+      <AdminTabContent />
     </div>
   );
 };
