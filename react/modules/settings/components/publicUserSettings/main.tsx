@@ -63,75 +63,73 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   };
 
   return (
-    <div className="margin-top">
-      <Stack looser={true}>
-        {publicLink ? (
-          <div>
-            Your collection is currently public, viewable{" "}
-            <a target="_blank" href={publicLink}>
-              here
-            </a>
-          </div>
-        ) : null}
-
-        <hr style={{ width: "100%" }} />
-
-        <div className="checkbox-group">
-          <label className="checkbox">
-            Allow your book collection to be viewed publicly?
-            <input
-              onChange={evt => {
-                setDirty();
-                setPendingIsPublic(evt.target.checked);
-              }}
-              defaultChecked={pendingIsPublic}
-              disabled={saving}
-              style={{ marginLeft: "5px" }}
-              type="checkbox"
-            />
-          </label>
+    <Stack looser={true}>
+      {publicLink ? (
+        <div>
+          Your collection is currently public, viewable{" "}
+          <a target="_blank" href={publicLink}>
+            here
+          </a>
         </div>
-        {pendingIsPublic ? (
-          <div style={{ marginLeft: "20px" }}>
-            <FlexRow>
-              <div className="col-xs-12">
-                <div className="form-group">
-                  <label htmlFor="pName">Publicly display your name as</label>
-                  <input
-                    ref={pubNameEl}
-                    onChange={setDirty}
-                    defaultValue={publicName}
-                    disabled={saving}
-                    className="form-control"
-                    id="pName"
-                    placeholder="Public name"
-                  />
-                </div>
+      ) : null}
+
+      <hr style={{ width: "100%" }} />
+
+      <div className="checkbox-group">
+        <label className="checkbox">
+          Allow your book collection to be viewed publicly?
+          <input
+            onChange={evt => {
+              setDirty();
+              setPendingIsPublic(evt.target.checked);
+            }}
+            defaultChecked={pendingIsPublic}
+            disabled={saving}
+            style={{ marginLeft: "5px" }}
+            type="checkbox"
+          />
+        </label>
+      </div>
+      {pendingIsPublic ? (
+        <div style={{ marginLeft: "20px" }}>
+          <FlexRow>
+            <div className="col-xs-12">
+              <div className="form-group">
+                <label htmlFor="pName">Publicly display your name as</label>
+                <input
+                  ref={pubNameEl}
+                  onChange={setDirty}
+                  defaultValue={publicName}
+                  disabled={saving}
+                  className="form-control"
+                  id="pName"
+                  placeholder="Public name"
+                />
               </div>
-              <div className="col-xs-12">
-                <div className="form-group">
-                  <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
-                  <input
-                    ref={pubHeaderEl}
-                    onChange={setDirty}
-                    defaultValue={publicBooksHeader}
-                    disabled={saving}
-                    className="form-control"
-                    id="publicBooksHeader"
-                    placeholder="Book header"
-                  />
-                </div>
+            </div>
+            <div className="col-xs-12">
+              <div className="form-group">
+                <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
+                <input
+                  ref={pubHeaderEl}
+                  onChange={setDirty}
+                  defaultValue={publicBooksHeader}
+                  disabled={saving}
+                  className="form-control"
+                  id="publicBooksHeader"
+                  placeholder="Book header"
+                />
               </div>
-              <div className="col-xs-12">
-                <AjaxButton disabled={!isDirty} onClick={update} runningText="Saving" finishedText="Saved" preset="primary">
-                  Save
-                </AjaxButton>
-              </div>
-            </FlexRow>
-          </div>
-        ) : null}
-      </Stack>
-    </div>
+            </div>
+            <div className="col-xs-12">
+              <AjaxButton disabled={!isDirty} onClick={update} runningText="Saving" finishedText="Saved" preset="primary">
+                Save
+              </AjaxButton>
+            </div>
+          </FlexRow>
+        </div>
+      ) : null}
+    </Stack>
   );
 };
 
