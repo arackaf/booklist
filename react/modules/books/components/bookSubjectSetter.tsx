@@ -13,6 +13,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
+import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -70,7 +71,6 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
           <TabHeader tabName="subjects">
             <a ref={selectRef}>Choose subjects</a>
           </TabHeader>
-
           <TabHeader tabName="books">
             <a>For books</a>
           </TabHeader>
@@ -88,20 +88,7 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
                 />
               </div>
               <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
-                {addingSubjects
-                  .map(_id => subjectHash[_id])
-                  .map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
+                <DisplaySelectedSubjects currentlySelected={addingSubjects} onRemove={dontAddSubject} />
               </div>
 
               <div className="col-xs-3">
@@ -114,20 +101,7 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
                 />
               </div>
               <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
-                {removingSubjects
-                  .map(_id => subjectHash[_id])
-                  .map((s: any, i) => (
-                    <span
-                      key={i}
-                      style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
-                      className="label label-default margin-left"
-                    >
-                      <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white" }}>
-                        X
-                      </a>
-                      {s.name}
-                    </span>
-                  ))}
+                <DisplaySelectedSubjects currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
               </div>
 
               <div className="col-xs-12">

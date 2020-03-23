@@ -72,7 +72,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                 <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
               </div>
               <div className="col-xs-9">
-                <DisplaySelectedTags currentlySelected={addingTags} onRemove={t => dontAddTag(t)} />
+                <DisplaySelectedTags currentlySelected={addingTags} onRemove={dontAddTag} />
               </div>
 
               <div className="col-xs-3">
@@ -85,7 +85,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                 />
               </div>
               <div className="col-xs-9">
-                <DisplaySelectedTags currentlySelected={removingTags} onRemove={t => dontRemoveTag(t)} />
+                <DisplaySelectedTags currentlySelected={removingTags} onRemove={dontRemoveTag} />
               </div>
 
               <BootstrapButton onClick={resetTags} preset="default-xs">
