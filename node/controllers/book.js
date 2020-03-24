@@ -30,7 +30,9 @@ class BookController {
   }
   async getRecommendations(params) {
     try {
-      let resp = await graphql(executableSchema, findBooksQuery, root, this.request, { ids: params.bookIds });
+      let userId = params.publicUserId || this.request.user.id;
+
+      let resp = await graphql(executableSchema, findBooksQuery, root, this.request, { ids: params.bookIds, publicUserId: params.publicUserId });
       let books = resp.data.allBooks.Books;
       let isbnMap = new Map([]);
       books.forEach(book => {
@@ -53,7 +55,7 @@ class BookController {
       let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
 
       let matches = (await graphql(executableSchema, findRecommendationMatches, root, this.request, {
-        userId: this.request.user.id,
+        userId,
         isbns: potentialIsbns
       })).data.allBooks.Books;
 

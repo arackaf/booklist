@@ -46,7 +46,7 @@ export default props => {
   const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
   const [{ publicUserId }] = useContext(AppContext);
   const { active, ...searchStateToUse } = searchState;
-  const variables = { ...searchStateToUse, publicUserId }
+  const variables = { ...searchStateToUse, publicUserId };
 
   const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, variables, { active }));
   const closeModal = () => setSearchModalOpen(false);
@@ -57,9 +57,9 @@ export default props => {
 
   const selectedBooksSet = useMemo(() => new Set(selectedBooks.map(b => b._id)), [selectedBooks]);
 
-  const getRecommendations = () => {
+  const getRecommendations = publicUserId => {
     dispatch(["startRecommendationsFetch"]);
-    ajaxUtil.post("/book/getRecommendations", { bookIds: [...selectedBooksSet] }).then(resp => {
+    ajaxUtil.post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
       dispatch(["setRecommendations", resp.results]);
     });
   };
@@ -77,7 +77,12 @@ export default props => {
               </button>
 
               {selectedBooks.length ? (
-                <button onClick={getRecommendations} disabled={recommendationsLoading} style={{ marginLeft: "auto" }} className="btn btn-primary">
+                <button
+                  onClick={() => getRecommendations(publicUserId)}
+                  disabled={recommendationsLoading}
+                  style={{ marginLeft: "auto" }}
+                  className="btn btn-primary"
+                >
                   {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
                 </button>
               ) : null}
