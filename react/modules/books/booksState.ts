@@ -6,10 +6,10 @@ import { useMemo } from "react";
 import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
 import { syncResults, clearCache } from "util/graphqlHelpers";
 
-import { useTagsState } from "app/tagsState";
+import { useTagsState } from "app/state/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
-import { useSubjectsState } from "app/subjectsState";
+import { useSubjectsState } from "app/state/subjectsState";
 
 interface IEditorialReview {
   content: string;

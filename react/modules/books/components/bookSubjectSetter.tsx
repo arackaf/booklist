@@ -7,7 +7,7 @@ import { Button, AjaxButton } from "app/components/ui/Button";
 import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
 import Modal from "app/components/ui/modal";
-import { useStackedSubjects, filterSubjects } from "app/subjectsState";
+import { useStackedSubjects, filterSubjects } from "app/state/subjectsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";

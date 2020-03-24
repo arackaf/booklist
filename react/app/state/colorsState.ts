@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
-import { AppContext } from "./renderUI";
+import { AppContext } from "../renderUI";
 import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
 

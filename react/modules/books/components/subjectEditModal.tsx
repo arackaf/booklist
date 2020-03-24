@@ -4,7 +4,7 @@ import {Button} from "app/components/ui/Button";
 import GenericLabelSelect from "app/components/subjectsAndTags/genericLabelSelect";
 
 import Modal from "app/components/ui/modal";
-import { filterSubjects, useStackedSubjects } from "app/subjectsState";
+import { filterSubjects, useStackedSubjects } from "app/state/subjectsState";
 
 import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
 import FlowItems from "app/components/layout/FlowItems";

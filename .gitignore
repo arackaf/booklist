@@ -7,3 +7,5 @@ public.env
 react/sw-manual/sw-index-bundle.js
 .DS_Store
 react/.DS_Store
+react/dist/*
+react/dist-css/*

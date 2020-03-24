@@ -4,9 +4,9 @@ import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
-import { AppContext } from "./renderUI";
+import { AppContext } from "../renderUI";
 import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncUpdates, syncDeletes } from "../util/graphqlHelpers";
+import { syncUpdates, syncDeletes } from "../../util/graphqlHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});

@@ -7,7 +7,7 @@ import { useMutation, buildMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
 import Modal from "app/components/ui/modal";
-import { filterTags, useTagsState } from "app/tagsState";
+import { filterTags, useTagsState } from "app/state/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import FlowItems from "app/components/layout/FlowItems";

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext } from "react";
 import { RemovableLabelDisplay } from "../LabelDisplay";
-import { useSubjectsState } from "app/subjectsState";
+import { useSubjectsState } from "app/state/subjectsState";
 import FlowItems from "../../layout/FlowItems";
 
 type LocalProps = { currentlySelected: string[]; onRemove: any };

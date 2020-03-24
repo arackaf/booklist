@@ -5,10 +5,10 @@ import ReactDOM from "react-dom";
 const { createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
-import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./appState";
+import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./state/appState";
 import localStorageManager from "util/localStorage";
 import Loading, { LongLoading } from "./components/loading";
-import { getModuleComponent } from "../routing";
+import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");

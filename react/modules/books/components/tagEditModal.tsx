@@ -11,9 +11,9 @@ import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
-import { filterTags, useTagsState } from "app/tagsState";
+import { filterTags, useTagsState } from "app/state/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
-import { useColors } from "app/colorsState";
+import { useColors } from "app/state/colorsState";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import FlexRow from "app/components/layout/FlexRow";

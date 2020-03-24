@@ -1,10 +1,10 @@
 import React, { memo, createContext, useState, useCallback, useContext, FC, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
 import {Button} from "app/components/ui/Button";
-import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
+import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/state/subjectsState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
-import { useColors } from "app/colorsState";
+import { useColors } from "app/state/colorsState";
 import { EditableExpandableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
