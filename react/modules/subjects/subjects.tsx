@@ -5,10 +5,10 @@ import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsS
 
 import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/colorsState";
-import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
+import { EditableExpandableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
-import EditSubject from "app/components/editSubject";
-import Modal from "app/components/modal";
+import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
+import Modal from "app/components/ui/modal";
 import { useHeight, usePrevious } from "app/animationHelpers";
 import FlexRow from "app/components/layout/FlexRow";
 

@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useState } from "react";
 import {Button} from "app/components/ui/Button";
 
-import GenericLabelSelect from "app/components/genericLabelSelect";
+import GenericLabelSelect from "app/components/subjectsAndTags/genericLabelSelect";
 
-import Modal from "app/components/modal";
+import Modal from "app/components/ui/modal";
 import { filterSubjects, useStackedSubjects } from "app/subjectsState";
 
-import EditSubject from "app/components/editSubject";
+import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
 import FlowItems from "app/components/layout/FlowItems";
 import Stack from "app/components/layout/Stack";
 

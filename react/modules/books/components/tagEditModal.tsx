@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState, useContext } from "react";
 
 import { Button } from "app/components/ui/Button";
-import CustomColorPicker from "app/components/customColorPicker";
-import GenericLabelSelect from "app/components/genericLabelSelect";
-import ColorsPalette from "app/components/colorsPalette";
-import Modal from "app/components/modal";
+import CustomColorPicker from "app/components/ui/CustomColorPicker";
+import GenericLabelSelect from "app/components/subjectsAndTags/genericLabelSelect";
+import ColorsPalette from "app/components/ui/ColorsPalette";
+import Modal from "app/components/ui/modal";
 
 import UpdateTag from "graphQL/tags/updateTag.graphql";
 import CreateTag from "graphQL/tags/createTag.graphql";

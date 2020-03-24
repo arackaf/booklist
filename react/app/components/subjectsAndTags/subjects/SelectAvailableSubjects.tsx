@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import SelectAvailableItems from "./availableTagsOrSubjects";
+import SelectAvailableItems from "../AvailableTagsOrSubjects";
 import { filterTags } from "app/tagsState";
 import { useStackedSubjects } from "app/subjectsState";
 

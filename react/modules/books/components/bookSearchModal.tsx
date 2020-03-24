@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState, useLayoutEffect, useRef } from "react";
 
-import Modal from "app/components/modal";
-import SelectAvailableTags from "app/components/selectAvailableTags";
-import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
-import DisplaySelectedTags from "app/components/displaySelectedTags";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import Modal from "app/components/ui/modal";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
 import FlexRow from "app/components/layout/FlexRow";

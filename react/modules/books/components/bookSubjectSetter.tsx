@@ -4,16 +4,16 @@ import { buildMutation, useMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
 import { Button, AjaxButton } from "app/components/ui/Button";
-import SelectAvailable from "app/components/availableTagsOrSubjects";
+import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
-import Modal from "app/components/modal";
+import Modal from "app/components/ui/modal";
 import { useStackedSubjects, filterSubjects } from "app/subjectsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 
 interface ILocalProps {
   modifyingBooks: any[];

@@ -6,14 +6,14 @@ import { MutationOf, Mutations } from "graphql-typings";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useColors } from "app/colorsState";
-import CustomColorPicker from "./customColorPicker";
-import ColorsPalette from "./colorsPalette";
+import CustomColorPicker from "../../ui/CustomColorPicker";
+import ColorsPalette from "../../ui/ColorsPalette";
 
 import cn from "classnames";
-import FlexRow from "./layout/FlexRow";
-import FlowItems from "./layout/FlowItems";
-import Stack from "./layout/Stack";
-import { Button } from "./ui/Button";
+import FlexRow from "../../layout/FlexRow";
+import FlowItems from "../../layout/FlowItems";
+import Stack from "../../layout/Stack";
+import { Button } from "../../ui/Button";
 
 const EditSubject = props => {
   const [deleteShowing, setDeleteShowing] = useState(false);

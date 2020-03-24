@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { AjaxButton, AnchorButton } from "app/components/ui/Button";
 
-import SelectAvailableTags from "app/components/selectAvailableTags";
-import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
 
-import DisplaySelectedTags from "app/components/displaySelectedTags";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import FlexRow from "../layout/FlexRow";
 
 const useSubjectsOrTags = startingItems => {
