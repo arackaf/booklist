@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from "react";
-import BootstrapButton from "app/components/bootstrapButton";
+import {Button} from "app/components/ui/Button";
 
 import GenericLabelSelect from "app/components/genericLabelSelect";
 
@@ -40,16 +40,16 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
             onSuggestionSelected={item => editSubject(item)}
           />
 
-          <BootstrapButton onClick={newSubject} style={{ alignSelf: "flex-start" }} preset="info-xs">
+          <Button onClick={newSubject} style={{ alignSelf: "flex-start" }} preset="info-xs">
             <span className="visible-xs">Add new subject </span>
             <i className="fa fa-fw fa-plus-square" />
-          </BootstrapButton>
+          </Button>
         </FlowItems>
 
         {editingSubject ? <EditSubject subject={editingSubject} onCancelEdit={cancelEdit} /> : null}
         <hr />
       </Stack>
-      <BootstrapButton onClick={props.stopEditing}>Close</BootstrapButton>
+      <Button onClick={props.stopEditing}>Close</Button>
     </Modal>
   );
 };

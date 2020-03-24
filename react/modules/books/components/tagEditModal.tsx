@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useContext } from "react";
 
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
+import { Button } from "app/components/ui/Button";
 import CustomColorPicker from "app/components/customColorPicker";
 import GenericLabelSelect from "app/components/genericLabelSelect";
 import ColorsPalette from "app/components/colorsPalette";
@@ -92,10 +92,10 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
             suggestions={searchedTags}
             onSuggestionSelected={item => editTag(item)}
           />
-          <BootstrapButton onClick={newTag} preset="info-xs">
+          <Button onClick={newTag} preset="info-xs">
             <span className="visible-xs">Add new tag </span>
             <i className="fa fa-fw fa-plus-square" />
-          </BootstrapButton>
+          </Button>
         </FlowItems>
 
         {editingTag ? (
@@ -142,15 +142,15 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
                 <div className="col-xs-12">
                   <FlowItems pushLast={true}>
-                    <BootstrapButton disabled={state.saving} preset="primary-xs" onClick={createOrUpdateTag}>
+                    <Button disabled={state.saving} preset="primary-xs" onClick={createOrUpdateTag}>
                       Save <i className={`fa fa-fw ${state.saving ? "fa-spinner fa-spin" : "fa-save"}`} />
-                    </BootstrapButton>
-                    <BootstrapButton disabled={state.saving} preset="default-xs" onClick={cancelTagEdit}>
+                    </Button>
+                    <Button disabled={state.saving} preset="default-xs" onClick={cancelTagEdit}>
                       Cancel
-                    </BootstrapButton>
-                    <BootstrapButton disabled={state.saving} onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs">
+                    </Button>
+                    <Button disabled={state.saving} onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs">
                       Delete {editingTagName} <i className="fa fa-fw fa-trash" />
-                    </BootstrapButton>
+                    </Button>
                   </FlowItems>
                 </div>
               </FlexRow>
@@ -159,7 +159,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
         ) : null}
         <hr />
       </Stack>
-      <BootstrapButton onClick={onDone}>Close</BootstrapButton>
+      <Button onClick={onDone}>Close</Button>
     </Modal>
   );
 };
@@ -176,7 +176,7 @@ const PendingDeleteTagInfo = ({ tag, onDelete, onCancel }) => {
         </FlowItems>
       </div>
       <FlowItems>
-        <BootstrapButton disabled={running} onClick={runDelete} preset="danger-xs">
+        <Button disabled={running} onClick={runDelete} preset="danger-xs">
           {running ? (
             <span>
               Deleting <i className="fa fa-spinner fa-spin"></i>
@@ -184,10 +184,10 @@ const PendingDeleteTagInfo = ({ tag, onDelete, onCancel }) => {
           ) : (
             "Delete it!"
           )}
-        </BootstrapButton>
-        <BootstrapButton disabled={running} onClick={onCancel} className="btn btn-xs">
+        </Button>
+        <Button disabled={running} onClick={onCancel} className="btn btn-xs">
           Cancel
-        </BootstrapButton>
+        </Button>
       </FlowItems>
     </Stack>
   );

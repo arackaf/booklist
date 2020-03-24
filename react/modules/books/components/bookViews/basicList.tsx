@@ -1,5 +1,5 @@
 import React, { SFC, useContext } from "react";
-import { AjaxButton } from "app/components/bootstrapButton";
+import { AjaxButton } from "app/components/ui/Button";
 import { AppContext } from "app/renderUI";
 
 import uiStyles from "./uiStyles.module.css";

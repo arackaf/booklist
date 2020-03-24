@@ -1,6 +1,6 @@
 import React, { memo, createContext, useState, useCallback, useContext, FC, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
-import BootstrapButton from "app/components/bootstrapButton";
+import {Button} from "app/components/ui/Button";
 import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
@@ -106,9 +106,9 @@ export default () => {
       <div className="padding-top" style={{ marginBottom: "60px" }}>
         <FlexRow>
           <div className="col-lg-6 col-md-8 col-xs-12">
-            <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+            <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
               New Subject
-            </BootstrapButton>
+            </Button>
 
             <EditContext.Provider value={openEditModal}>
               <animated.div style={{ opacity }} className={contentRoot}>
@@ -122,7 +122,7 @@ export default () => {
       <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
         <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
         <hr />
-        <BootstrapButton onClick={closeEditModal}>Close</BootstrapButton>
+        <Button onClick={closeEditModal}>Close</Button>
       </Modal>
     </div>
   );

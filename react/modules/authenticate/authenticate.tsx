@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useRef, useState, useContext, useEffect } from "react";
-import { AjaxButton } from "app/components/bootstrapButton";
+import { AjaxButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 import Stack from "app/components/layout/Stack";

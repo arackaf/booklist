@@ -9,11 +9,11 @@ import { useColors } from "app/colorsState";
 import CustomColorPicker from "./customColorPicker";
 import ColorsPalette from "./colorsPalette";
 
-import BootstrapButton from "app/components/bootstrapButton";
 import cn from "classnames";
 import FlexRow from "./layout/FlexRow";
 import FlowItems from "./layout/FlowItems";
 import Stack from "./layout/Stack";
+import { Button } from "./ui/Button";
 
 const EditSubject = props => {
   const [deleteShowing, setDeleteShowing] = useState(false);
@@ -68,7 +68,7 @@ const PendingDeleteSubjectDisplay = props => {
         </FlowItems>
       </div>
       <FlowItems>
-        <BootstrapButton disabled={running} onClick={deleteIt} preset="danger-xs">
+        <Button disabled={running} onClick={deleteIt} preset="danger-xs">
           {running ? (
             <span>
               Deleting <i className="fa fa-spinner fa-spin"></i>
@@ -76,10 +76,10 @@ const PendingDeleteSubjectDisplay = props => {
           ) : (
             "Delete it!"
           )}
-        </BootstrapButton>
-        <BootstrapButton disabled={running} onClick={cancel} className="btn btn-xs">
+        </Button>
+        <Button disabled={running} onClick={cancel} className="btn btn-xs">
           Cancel
-        </BootstrapButton>
+        </Button>
       </FlowItems>
     </Stack>
   );
@@ -213,16 +213,16 @@ const EditSubjectFields = props => {
       </div>
       <div className="col-xs-12">
         <FlowItems pushLast={true}>
-          <BootstrapButton disabled={isSubjectSaving} preset="primary-xs" onClick={runSave}>
+          <Button disabled={isSubjectSaving} preset="primary-xs" onClick={runSave}>
             Save <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
-          </BootstrapButton>
-          <BootstrapButton disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
+          </Button>
+          <Button disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
             Cancel
-          </BootstrapButton>
+          </Button>
           {_id ? (
-            <BootstrapButton disabled={isSubjectSaving} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
+            <Button disabled={isSubjectSaving} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
               Delete {name} <i className="fa fa-fw fa-trash" />
-            </BootstrapButton>
+            </Button>
           ) : null}
         </FlowItems>
       </div>

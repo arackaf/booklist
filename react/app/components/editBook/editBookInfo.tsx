@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BootstrapButton, { AjaxButton, AnchorButton } from "app/components/bootstrapButton";
+import { AjaxButton, AnchorButton } from "app/components/ui/Button";
 
 import SelectAvailableTags from "app/components/selectAvailableTags";
 import SelectAvailableSubjects from "app/components/selectAvailableSubjects";

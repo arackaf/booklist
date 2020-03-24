@@ -13,7 +13,7 @@ buttonTypes.forEach(t => {
 
 const cssFromPreset = props => (props.className || "") + " btn " + (cssPresets[props.preset] || props.css || "");
 
-export default props => (
+export const Button = props => (
   <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>
     {props.children}
   </button>

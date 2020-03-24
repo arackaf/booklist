@@ -3,7 +3,7 @@ import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
+import { Button, AjaxButton } from "app/components/ui/Button";
 import SelectAvailable from "app/components/availableTagsOrSubjects";
 
 import Modal from "app/components/modal";
@@ -105,9 +105,9 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
               </div>
 
               <div className="col-xs-12">
-                <BootstrapButton onClick={resetSubjects} preset="default-xs">
+                <Button onClick={resetSubjects} preset="default-xs">
                   Reset subjects
-                </BootstrapButton>
+                </Button>
               </div>
             </FlexRow>
           </TabContent>
@@ -126,9 +126,9 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
           <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
             Set
           </AjaxButton>
-          <BootstrapButton preset="" onClick={props.onDone}>
+          <Button preset="" onClick={props.onDone}>
             Cancel
-          </BootstrapButton>
+          </Button>
         </FlowItems>
       </div>
     </Modal>
