@@ -4,7 +4,7 @@ import PublicUserSettings from "./components/publicUserSettings/main";
 import PasswordReset from "./components/passwordReset/main";
 import ThemeChooser from "./components/themeChooser/main";
 import { AppContext } from "app/renderUI";
-import BootstrapButton from "app/components/bootstrapButton";
+import {Button} from "app/components/ui/Button";
 import FlexRow from "app/components/layout/FlexRow";
 import { TabHeader, TabHeaders, Tabs, TabContents, TabContent } from "app/components/layout/Tabs";
 
@@ -105,9 +105,9 @@ const MiscSettings = props => {
             placeholder="Suspense timeout"
             className="form-control"
           />
-          <BootstrapButton style={{ margin: "10px 0", alignSelf: "flex-start" }} preset="primary" onClick={save}>
+          <Button style={{ margin: "10px 0", alignSelf: "flex-start" }} preset="primary" onClick={save}>
             Save
-          </BootstrapButton>
+          </Button>
 
           {saved ? <div className="alert alert-success">Saved. Refresh the page to see the new timeout value in action</div> : null}
           {error ? <div className="alert alert-danger">{error}</div> : null}

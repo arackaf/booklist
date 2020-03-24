@@ -13,16 +13,22 @@ buttonTypes.forEach(t => {
 
 const cssFromPreset = props => (props.className || "") + " btn " + (cssPresets[props.preset] || props.css || "");
 
-export default props => (
+export const Button = props => (
   <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>
     {props.children}
   </button>
 );
 
+export const AnchorButton = props => (
+  <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick}>
+    {props.children}
+  </a>
+);
+
 export const AjaxButton = props => {
   const controlled = props.hasOwnProperty("running");
   const [isRunning, setRunning] = useState(controlled ? props.running : false);
-  const {style = {}} = props;
+  const { style = {} } = props;
 
   if (!controlled) {
     return <AjaxButtonUnControlled {...props} />;

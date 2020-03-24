@@ -8,7 +8,7 @@ import Bar from "./bar";
 import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
-import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from "app/subjectsState";
+import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from "app/state/subjectsState";
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { graphqlClient } from "util/graphql";
 import { clearCache } from "util/graphqlHelpers";

@@ -1,10 +1,10 @@
 import shallowEqual from "shallow-equal/objects";
 
 import { useMemo, useReducer, useContext } from "react";
-import { useTagsState } from "app/tagsState";
+import { useTagsState } from "app/state/tagsState";
 
 import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
-import { useSubjectsState } from "app/subjectsState";
+import { useSubjectsState } from "app/state/subjectsState";
 import { AppContext } from "app/renderUI";
 
 const bookSearchInitialState = {

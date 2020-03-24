@@ -4,6 +4,8 @@ uploads/*
 .env
 public.env
 .esm-cache/
-react/sw-manual/sw-index-bundle.js
+react/service-worker/sw-index-bundle.js
 .DS_Store
 react/.DS_Store
+react/dist/*
+react/dist-css/*

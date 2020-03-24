@@ -1,17 +1,16 @@
 import React, { FunctionComponent, useState, useLayoutEffect, useRef } from "react";
 
-import BootstrapButton from "app/components/bootstrapButton";
-
-import Modal from "app/components/modal";
-import SelectAvailableTags from "app/components/selectAvailableTags";
-import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
-import DisplaySelectedTags from "app/components/displaySelectedTags";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import Modal from "app/components/ui/Modal";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import { Button } from "app/components/ui/Button";
 
 type LocalProps = {
   isOpen: boolean;
@@ -184,12 +183,12 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
 
       <hr />
       <FlowItems pushLast={true}>
-        <BootstrapButton preset="primary" onClick={updateFilters}>
+        <Button preset="primary" onClick={updateFilters}>
           Filter
-        </BootstrapButton>
-        <BootstrapButton preset="default" onClick={onHide}>
+        </Button>
+        <Button preset="default" onClick={onHide}>
           Close
-        </BootstrapButton>
+        </Button>
       </FlowItems>
     </Modal>
   );

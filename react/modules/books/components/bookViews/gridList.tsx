@@ -1,7 +1,7 @@
 import React, { SFC, CSSProperties, useContext, useMemo, useState } from "react";
 
-import { AjaxButton } from "app/components/bootstrapButton";
-import { LabelDisplay } from "app/components/labelDisplay";
+import { AjaxButton } from "app/components/ui/Button";
+import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { AppContext } from "app/renderUI";
 import { IBookDisplay, useBooks } from "../../booksState";

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
 import { SectionLoading } from "app/components/loading";
-import { AjaxButton } from "app/components/bootstrapButton";
+import { AjaxButton } from "app/components/ui/Button";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";

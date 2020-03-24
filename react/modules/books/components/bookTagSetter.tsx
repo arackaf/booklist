@@ -1,19 +1,19 @@
 import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
 
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
-import SelectAvailable from "app/components/availableTagsOrSubjects";
+import { Button, AjaxButton } from "app/components/ui/Button";
+import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
-import Modal from "app/components/modal";
-import { filterTags, useTagsState } from "app/tagsState";
+import Modal from "app/components/ui/Modal";
+import { filterTags, useTagsState } from "app/state/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import FlowItems from "app/components/layout/FlowItems";
 import { TabHeaders, Tabs, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
 import Stack from "app/components/layout/Stack";
-import DisplaySelectedTags from "app/components/displaySelectedTags";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
   const { tags } = useTagsState();
@@ -88,9 +88,9 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
                 <DisplaySelectedTags currentlySelected={removingTags} onRemove={dontRemoveTag} />
               </div>
 
-              <BootstrapButton onClick={resetTags} preset="default-xs">
+              <Button onClick={resetTags} preset="default-xs">
                 Reset tags
-              </BootstrapButton>
+              </Button>
             </FlexRow>
           </TabContent>
           <TabContent tabName="books">
@@ -109,9 +109,9 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
           <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={setBooksTags}>
             Set
           </AjaxButton>
-          <BootstrapButton preset="" onClick={props.onDone}>
+          <Button preset="" onClick={props.onDone}>
             Cancel
-          </BootstrapButton>
+          </Button>
         </FlowItems>
       </div>
     </Modal>

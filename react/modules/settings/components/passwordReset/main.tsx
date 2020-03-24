@@ -1,5 +1,5 @@
 import React, { Component, useState, useRef, useContext } from "react";
-import { AjaxButton } from "app/components/bootstrapButton";
+import { AjaxButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 import FlexRow from "app/components/layout/FlexRow";

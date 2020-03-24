@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
 
-import Modal from "app/components/modal";
+import Modal from "app/components/ui/Modal";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 
 const DetailsView = props => {

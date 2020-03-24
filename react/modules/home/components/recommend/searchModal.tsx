@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 
-import Modal from "app/components/modal";
-import SelectAvailableTags from "app/components/selectAvailableTags";
-import DisplaySelectedTags from "app/components/displaySelectedTags";
-import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import Modal from "app/components/ui/Modal";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import FlexRow from "app/components/layout/FlexRow";

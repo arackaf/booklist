@@ -37,7 +37,7 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
-      "react-autosuggest$": "app/components/react-autosuggest-styled.tsx",
+      "react-autosuggest$": "app/components/ui/react-autosuggest-styled.tsx",
       jscolor: "util/jscolor.js"
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
@@ -110,7 +110,7 @@ module.exports = {
         getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
         getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
       ],
-      importScripts: ["/react/sw-manual/sw-index-bundle.js"]
+      importScripts: ["/react/service-worker/sw-index-bundle.js"]
     })
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
+import { AjaxButton, AnchorButton } from "app/components/ui/Button";
 
-import SelectAvailableTags from "app/components/selectAvailableTags";
-import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
 
-import DisplaySelectedTags from "app/components/displaySelectedTags";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import FlexRow from "../layout/FlexRow";
 
 const useSubjectsOrTags = startingItems => {
@@ -120,9 +120,9 @@ const EditBookInfo = props => {
             </div>
           ))}
           <div className="col-xs-12">
-            <BootstrapButton onClick={evt => addAuthor(evt)} preset="default-xs">
+            <AnchorButton onClick={evt => addAuthor(evt)} preset="default-xs">
               <i className="fa fa-fw fa-plus" /> Add author
-            </BootstrapButton>
+            </AnchorButton>
           </div>
         </FlexRow>
         <hr />

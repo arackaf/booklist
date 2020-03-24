@@ -3,17 +3,17 @@ import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
-import SelectAvailable from "app/components/availableTagsOrSubjects";
+import { Button, AjaxButton } from "app/components/ui/Button";
+import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
-import Modal from "app/components/modal";
-import { useStackedSubjects, filterSubjects } from "app/subjectsState";
+import Modal from "app/components/ui/Modal";
+import { useStackedSubjects, filterSubjects } from "app/state/subjectsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -105,9 +105,9 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
               </div>
 
               <div className="col-xs-12">
-                <BootstrapButton onClick={resetSubjects} preset="default-xs">
+                <Button onClick={resetSubjects} preset="default-xs">
                   Reset subjects
-                </BootstrapButton>
+                </Button>
               </div>
             </FlexRow>
           </TabContent>
@@ -126,9 +126,9 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
           <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
             Set
           </AjaxButton>
-          <BootstrapButton preset="" onClick={props.onDone}>
+          <Button preset="" onClick={props.onDone}>
             Cancel
-          </BootstrapButton>
+          </Button>
         </FlowItems>
       </div>
     </Modal>

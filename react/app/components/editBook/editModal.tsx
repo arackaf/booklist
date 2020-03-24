@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Modal from "../modal";
+import Modal from "../ui/Modal";
 import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
 

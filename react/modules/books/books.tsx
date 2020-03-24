@@ -4,7 +4,7 @@ import BooksMenuBar, { BooksMenuBarDisabled } from "./components/booksMenuBar";
 import Loading from "app/components/loading";
 
 import GridView, { GridViewShell } from "./components/bookViews/gridList";
-import LazyModal from "app/components/lazyModal";
+import LazyModal from "app/components/ui/LazyModal";
 
 import BasicListView from "./components/bookViews/basicList";
 import CoversView from "./components/bookViews/coversList";

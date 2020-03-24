@@ -4,13 +4,13 @@ import "d3-transition";
 
 import BarChart from "./components/barChart";
 import { AppContext } from "app/renderUI";
-import { useStackedSubjects } from "app/subjectsState";
+import { useStackedSubjects } from "app/state/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
 import { SectionLoading } from "app/components/loading";
 import { goto } from "reactStartup";
-import { useTagsState } from "app/tagsState";
+import { useTagsState } from "app/state/tagsState";
 import { Tabs, TabHeader, TabHeaders, TabContents, TabContent } from "app/components/layout/Tabs";
 
 const MainHomePane = props => (
