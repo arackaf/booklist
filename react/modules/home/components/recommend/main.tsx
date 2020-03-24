@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useMemo } from "react";
+import React, { useState, useReducer, useMemo, useContext } from "react";
 import SearchModal from "./searchModal";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -10,6 +10,7 @@ import { QueryOf, Queries } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import { AppContext } from "app/renderUI";
 
 const initialState = {
   selectedBooks: [],
@@ -43,9 +44,11 @@ function reducer(state, [type, payload = null]) {
 export default props => {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
+  const [{ publicUserId }] = useContext(AppContext);
   const { active, ...searchStateToUse } = searchState;
+  const variables = { ...searchStateToUse, publicUserId }
 
-  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, searchStateToUse, { active }));
+  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, variables, { active }));
   const closeModal = () => setSearchModalOpen(false);
   const openModal = () => setSearchModalOpen(true);
   const setBookSearchState = searchState => {

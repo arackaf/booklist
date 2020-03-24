@@ -1,4 +1,4 @@
-import React, { FC, memo, useRef, useState, useEffect } from "react";
+import React, { FC, memo, useRef, useState, useEffect, useContext } from "react";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -12,6 +12,7 @@ import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from
 import { useQuery, buildQuery } from "micro-graphql-react";
 import { graphqlClient } from "util/graphql";
 import { clearCache } from "util/graphqlHelpers";
+import { AppContext } from "app/renderUI";
 
 graphqlClient.subscribeMutation([/(update|delete)Subjects?/, /(update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) })));
 
@@ -73,6 +74,7 @@ const stackGraphData = (subjectHash, subjectIds, data) => {
 
 const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown, header }) => {
   const [excluding, setExcluding] = useState({});
+  const [{ publicUserId }] = useContext(AppContext);
 
   const elRef = useRef<any>();
   const barMap = new Map();
@@ -82,7 +84,8 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
 
   const { subjectHash } = useSubjectsState();
   const subjectIds = subjects.map(s => s._id);
-  const { data: newRespData } = useQuery(buildQuery(barCharQuery, { subjectIds, searchChildSubjects: true }));
+
+  const { data: newRespData } = useQuery(buildQuery(barCharQuery, { subjectIds, searchChildSubjects: true, publicUserId }));
   const graphData = stackGraphData(subjectHash, subjectIds, newRespData);
 
   useEffect(() => {
