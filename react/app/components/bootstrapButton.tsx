@@ -19,10 +19,16 @@ export default props => (
   </button>
 );
 
+export const AnchorButton = props => (
+  <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick}>
+    {props.children}
+  </a>
+);
+
 export const AjaxButton = props => {
   const controlled = props.hasOwnProperty("running");
   const [isRunning, setRunning] = useState(controlled ? props.running : false);
-  const {style = {}} = props;
+  const { style = {} } = props;
 
   if (!controlled) {
     return <AjaxButtonUnControlled {...props} />;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
+import BootstrapButton, { AjaxButton, AnchorButton } from "app/components/bootstrapButton";
 
 import SelectAvailableTags from "app/components/selectAvailableTags";
 import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
@@ -120,9 +120,9 @@ const EditBookInfo = props => {
             </div>
           ))}
           <div className="col-xs-12">
-            <BootstrapButton onClick={evt => addAuthor(evt)} preset="default-xs">
+            <AnchorButton onClick={evt => addAuthor(evt)} preset="default-xs">
               <i className="fa fa-fw fa-plus" /> Add author
-            </BootstrapButton>
+            </AnchorButton>
           </div>
         </FlexRow>
         <hr />
