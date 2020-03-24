@@ -1,5 +1,5 @@
-export default `query findBooks($ids: [String]) {
-  allBooks(_id_in: $ids) {
+export default `query findBooks($ids: [String], $publicUserId: String) {
+  allBooks(_id_in: $ids, publicUserId: $publicUserId) {
     Books {
       _id
       title
