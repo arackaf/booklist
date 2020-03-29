@@ -19,7 +19,7 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
       maxAgeSeconds: expires || 60 * 60 * 24 * 365 * 2 //2 years
     },
     cacheableResponse: {
-      statuses: [0, 200]
+      statuses: [200]
     }
   }
 });
