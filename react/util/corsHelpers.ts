@@ -1,3 +1,3 @@
-export const getCrossOriginAttribute: any = url => {
+export const getCrossOriginAttribute: any = () => {
   return { crossOrigin: "anonymous" };
 };

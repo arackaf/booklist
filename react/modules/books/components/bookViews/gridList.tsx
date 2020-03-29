@@ -232,7 +232,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; setDetailsLoading: any }> = pro
                     <tbody>
                       {similarBooks.map((book, i) => (
                         <tr key={i}>
-                          <td>{book.smallImage ? <img src={book.smallImage} /> : null}</td>
+                          <td>{book.smallImage ? <CoverSmall url={book.smallImage} /> : null}</td>
                           <td>
                             <span style={{ fontWeight: "bold" }}>{book.title}</span>
                             <br />
