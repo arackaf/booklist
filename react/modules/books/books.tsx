@@ -111,14 +111,14 @@ export default () => {
 
   const setRead = (_ids, isRead) => {
     dispatchBooksUiState(["read-saving", _ids]);
-    Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
+    return Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
       dispatchBooksUiState(["read-saved", _ids]);
     });
   };
 
   const runDelete = _id => {
     dispatchBooksUiState(["delete", _id]);
-    deleteBook({ _id });
+    return deleteBook({ _id });
   };
 
   const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal, saveEditingBook, editBook, setRead, runDelete };

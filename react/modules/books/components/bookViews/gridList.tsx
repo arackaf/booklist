@@ -1,6 +1,6 @@
 import React, { SFC, CSSProperties, useContext, useMemo, useState } from "react";
 
-import { AjaxButton } from "app/components/ui/Button";
+import { AjaxButton, ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { AppContext } from "app/renderUI";
@@ -44,6 +44,8 @@ const BookRow: SFC<ILocalProps> = props => {
   const [detailsLoading, setDetailsLoading] = useState(false);
 
   const hoverOverride = { display: pendingDelete[_id] ? "inline" : "" };
+
+  const readBtnStyle = { minWidth: "10ch" };
 
   return (
     <>
@@ -152,13 +154,16 @@ const BookRow: SFC<ILocalProps> = props => {
           <div style={{ marginTop: !viewingPublic ? "3px" : 0 }}>
             {!viewingPublic ? (
               !!book.isRead ? (
-                <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="success-xs">
-                  Read <i className="fa fa-fw fa-check" />
-                </AjaxButton>
+                <ActionButton
+                  style={readBtnStyle}
+                  text="Read"
+                  runningText="Saving"
+                  icon="fa fa-fw fa-check"
+                  onClick={() => setRead([_id], !book.isRead)}
+                  preset="success-xs"
+                />
               ) : (
-                <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="default-xs">
-                  Set read
-                </AjaxButton>
+                <ActionButton runningText="Saving" style={readBtnStyle} text="Set read" onClick={() => setRead([_id], !book.isRead)} preset="default-xs" />
               )
             ) : !!book.isRead ? (
               <span className="label label-success">

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React, { useState, useRef, useLayoutEffect, FC, Children } from "react";
 
 const cssPresets = {};
 const buttonTypes = ["default", "primary", "success", "info", "warning", "danger"];
@@ -92,6 +92,44 @@ const AjaxButtonUnControlled = props => {
   ) : (
     <button className={cssFromPreset(props)} onClick={onClick} {...allRemainingProps}>
       {props.children}
+    </button>
+  );
+};
+
+type ActionButtonType = {
+  style?: any;
+  onClick: any;
+  text: any;
+  disabled?: boolean;
+  preset?: string;
+  runningText?: string;
+  icon?: string;
+};
+
+export const ActionButton: FC<ActionButtonType> = props => {
+  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon } = props;
+  const [isRunning, setRunning] = useState(false);
+
+  const style = {
+    minWidth: `${text.length + 2}ch`,
+    ...originalStyle
+  };
+
+  const iconStyles = {
+    marginLeft: text.length ? "3px" : void 0
+  };
+
+  const runningText = props.hasOwnProperty("runningText") ? props.runningText : props.text;
+
+  const onClick = (...args) => {
+    setRunning(true);
+    Promise.resolve(clickFn(...args)).then(() => setRunning(false));
+  };
+
+  return (
+    <button onClick={onClick} style={style} disabled={isRunning || props.disabled || false} className={cssFromPreset(props) + " bl-action-button"}>
+      {isRunning ? runningText || props.text : props.text}
+      {isRunning ? <i style={iconStyles} className="fa fa-fw fa-spin fa-spinner" /> : icon ? <i style={iconStyles} className={icon} /> : null}
     </button>
   );
 };
