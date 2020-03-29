@@ -10,6 +10,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import { CoverSmall } from "app/components/bookCoverComponent";
 
 interface LocalProps {
   isOpen: boolean;
@@ -195,7 +196,7 @@ const SearchResult = props => {
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>
-            <img src={book.smallImage} />
+            <CoverSmall url={book.smallImage} />
           </div>
 
           <Stack style={{ flex: 1 }}>

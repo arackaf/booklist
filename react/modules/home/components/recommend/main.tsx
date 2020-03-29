@@ -11,6 +11,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { AppContext } from "app/renderUI";
+import { CoverSmall } from "app/components/bookCoverComponent";
 
 const initialState = {
   selectedBooks: [],
@@ -136,7 +137,7 @@ const DisplayBook = props => {
         </button>
       </td>
       <td>
-        <img src={book.smallImage} {...getCrossOriginAttribute(book.smallImage)} />
+        <CoverSmall url={book.smallImage} />
       </td>
       <td>
         {book.title}
@@ -156,7 +157,7 @@ const DisplayRecommendation = props => {
   return (
     <tr>
       <td>
-        <img src={book.smallImage} />
+        <CoverSmall url={book.smallImage} />
       </td>
       <td>
         {book.title}

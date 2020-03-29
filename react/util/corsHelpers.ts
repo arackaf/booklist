@@ -1,3 +1,6 @@
 export const getCrossOriginAttribute: any = url => {
-  return { crossOrigin: "anonymous" };
+  if (/https:\/\/my-library-cover-uploads\.s3\.amazonaws\.com/.test(url)) {
+    return { crossOrigin: "anonymous" };
+  }
+  return {};
 };
