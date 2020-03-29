@@ -67,10 +67,6 @@ function booksUiStateReducer(state, [action, payload = null]) {
       return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, false) } };
     case "toggle-select":
       return { ...state, selectedBooks: { ...state.selectedBooks, [payload]: !state.selectedBooks[payload] } };
-    case "read-saving":
-      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, true) } };
-    case "read-saved":
-      return { ...state, savingReadForBooks: { ...state.savingReadForBooks, ...keysToHash(payload, false) } };
     case "start-delete":
       return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
     case "cancel-delete":
@@ -109,12 +105,7 @@ export default () => {
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
 
-  const setRead = (_ids, isRead) => {
-    dispatchBooksUiState(["read-saving", _ids]);
-    return Promise.resolve(setReadStatus({ _ids, isRead })).then(() => {
-      dispatchBooksUiState(["read-saved", _ids]);
-    });
-  };
+  const setRead = (_ids, isRead) => Promise.resolve(setReadStatus({ _ids, isRead }));
 
   const runDelete = _id => {
     dispatchBooksUiState(["delete", _id]);

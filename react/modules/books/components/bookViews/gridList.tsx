@@ -38,12 +38,19 @@ const BookRow: SFC<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { book, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { _id } = book;
-  const { selectedBooks, savingReadForBooks: savingRead, pendingDelete, deleting } = booksUiState;
+  const { selectedBooks } = booksUiState;
 
   const [expanded, setExpanded] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
 
-  const hoverOverride = { display: pendingDelete[_id] ? "inline" : "" };
+  const [pendingDelete, setPendingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const doDelete = () => {
+    setDeleting(true);
+    return Promise.resolve(runDelete(_id)).then(() => setDeleting(false));
+  };
+
+  const hoverOverride = { display: pendingDelete ? "inline" : "" };
 
   return (
     <>
@@ -98,18 +105,18 @@ const BookRow: SFC<ILocalProps> = props => {
                   <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => props.editBook(book)}>
                     <i className="fal fa-pencil-alt"></i>
                   </a>
-                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => dispatchBooksUiState(["start-delete", _id])}>
+                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => setPendingDelete(true)}>
                     <i className={`fal fa-trash-alt`} />
                   </a>
                 </>
               ) : null}
-              {pendingDelete[_id] ? (
-                <ActionButton text="Confirm Delete" runningText="Deleting" onClick={() => runDelete(_id)} preset="danger-xs">
+              {pendingDelete ? (
+                <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} preset="danger-xs">
                   Confirm Delete
                 </ActionButton>
               ) : null}
-              {pendingDelete[_id] ? (
-                <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs">
+              {pendingDelete ? (
+                <button disabled={deleting} onClick={() => setPendingDelete(false)} className="btn btn-xs">
                   Cancel
                 </button>
               ) : null}
