@@ -19,6 +19,7 @@ import { BooksModuleContext } from "modules/books/books";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import useDelete from "app/helpers/useDelete";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -43,12 +44,7 @@ const BookRow: SFC<ILocalProps> = props => {
   const [expanded, setExpanded] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
 
-  const [pendingDelete, setPendingDelete] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const doDelete = () => {
-    setDeleting(true);
-    return Promise.resolve(runDelete(_id)).then(() => setDeleting(false));
-  };
+  const [startDelete, cancelDelete, doDelete, pendingDelete, deleting] = useDelete(() => runDelete(_id));
 
   const hoverOverride = { display: pendingDelete ? "inline" : "" };
 
@@ -105,7 +101,7 @@ const BookRow: SFC<ILocalProps> = props => {
                   <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => props.editBook(book)}>
                     <i className="fal fa-pencil-alt"></i>
                   </a>
-                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => setPendingDelete(true)}>
+                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={startDelete}>
                     <i className={`fal fa-trash-alt`} />
                   </a>
                 </>
@@ -116,7 +112,7 @@ const BookRow: SFC<ILocalProps> = props => {
                 </ActionButton>
               ) : null}
               {pendingDelete ? (
-                <button disabled={deleting} onClick={() => setPendingDelete(false)} className="btn btn-xs">
+                <button disabled={deleting} onClick={cancelDelete} className="btn btn-xs">
                   Cancel
                 </button>
               ) : null}
