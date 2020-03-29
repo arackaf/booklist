@@ -97,6 +97,7 @@ const AjaxButtonUnControlled = props => {
 };
 
 type ActionButtonType = {
+  className?: any;
   style?: any;
   baseWidth?: any;
   onClick: any;
@@ -108,7 +109,7 @@ type ActionButtonType = {
 };
 
 export const ActionButton: FC<ActionButtonType> = props => {
-  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth } = props;
+  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth, className = "" } = props;
   const [isRunning, setRunning] = useState(false);
 
   const style = {
