@@ -45,8 +45,6 @@ const BookRow: SFC<ILocalProps> = props => {
 
   const hoverOverride = { display: pendingDelete[_id] ? "inline" : "" };
 
-  const readBtnStyle = { minWidth: "10ch" };
-
   return (
     <>
       <tr>
@@ -155,7 +153,7 @@ const BookRow: SFC<ILocalProps> = props => {
             {!viewingPublic ? (
               !!book.isRead ? (
                 <ActionButton
-                  style={readBtnStyle}
+                  baseWidth="10ch"
                   text="Read"
                   runningText="Saving"
                   icon="fa fa-fw fa-check"
@@ -163,7 +161,13 @@ const BookRow: SFC<ILocalProps> = props => {
                   preset="success-xs"
                 />
               ) : (
-                <ActionButton runningText="Saving" style={readBtnStyle} text="Set read" onClick={() => setRead([_id], !book.isRead)} preset="default-xs" />
+                <ActionButton
+                  baseWidth="10ch"
+                  text="Set read"
+                  runningText="Saving"
+                  onClick={() => setRead([_id], !book.isRead)}
+                  preset="default-xs"
+                />
               )
             ) : !!book.isRead ? (
               <span className="label label-success">

@@ -98,6 +98,7 @@ const AjaxButtonUnControlled = props => {
 
 type ActionButtonType = {
   style?: any;
+  baseWidth: any;
   onClick: any;
   text: any;
   disabled?: boolean;
@@ -107,11 +108,11 @@ type ActionButtonType = {
 };
 
 export const ActionButton: FC<ActionButtonType> = props => {
-  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon } = props;
+  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth } = props;
   const [isRunning, setRunning] = useState(false);
 
   const style = {
-    minWidth: `${text.length + 2}ch`,
+    minWidth: baseWidth || `${text.length + 2}ch`,
     ...originalStyle
   };
 
@@ -127,8 +128,8 @@ export const ActionButton: FC<ActionButtonType> = props => {
   };
 
   return (
-    <button onClick={onClick} style={style} disabled={isRunning || props.disabled || false} className={cssFromPreset(props) + " bl-action-button"}>
-      {isRunning ? runningText || props.text : props.text}
+    <button onClick={onClick} style={style} disabled={isRunning || disabled || false} className={cssFromPreset(props) + " bl-action-button"}>
+      {isRunning ? runningText || text : text}
       {isRunning ? <i style={iconStyles} className="fa fa-fw fa-spin fa-spinner" /> : icon ? <i style={iconStyles} className={icon} /> : null}
     </button>
   );
