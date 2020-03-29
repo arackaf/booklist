@@ -1,6 +1,6 @@
 import React, { SFC, CSSProperties, useContext, useMemo, useState } from "react";
 
-import { AjaxButton, ActionButton } from "app/components/ui/Button";
+import { ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { AppContext } from "app/renderUI";
@@ -104,9 +104,9 @@ const BookRow: SFC<ILocalProps> = props => {
                 </>
               ) : null}
               {pendingDelete[_id] ? (
-                <AjaxButton running={deleting[_id]} runningText="Deleting" onClick={() => runDelete(_id)} className="btn btn-xs btn-danger">
+                <ActionButton text="Confirm Delete" runningText="Deleting" onClick={() => runDelete(_id)} preset="danger-xs">
                   Confirm Delete
-                </AjaxButton>
+                </ActionButton>
               ) : null}
               {pendingDelete[_id] ? (
                 <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs">

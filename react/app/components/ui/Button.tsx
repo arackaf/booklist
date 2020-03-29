@@ -98,7 +98,7 @@ const AjaxButtonUnControlled = props => {
 
 type ActionButtonType = {
   style?: any;
-  baseWidth: any;
+  baseWidth?: any;
   onClick: any;
   text: any;
   disabled?: boolean;
