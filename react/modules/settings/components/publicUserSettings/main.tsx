@@ -10,6 +10,8 @@ import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
+import cn from "classnames";
+
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
   const { loading, loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
@@ -43,12 +45,20 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);
   const [isPublic, setIsPublic] = useState(settings.isPublic);
 
+  const [nameMissing, setNameMissing] = useState(false);
+
   const publicLink = isPublic ? `http://${window.location.host}/view?userId=${app.userId}` : "";
 
   const pubNameEl = useRef(null);
   const pubHeaderEl = useRef(null);
 
   const update = () => {
+    if (!pubNameEl.current.value) {
+      return setNameMissing(true);
+    } else {
+      setNameMissing(false);
+    }
+
     let isPublic = pendingIsPublic;
     runMutation({
       isPublic: pendingIsPublic,
@@ -87,34 +97,41 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
         </label>
       </div>
       <div style={{ marginLeft: "20px" }}>
-        <FlexRow>
-          {pendingIsPublic ? (
-            <>
-              <div className="col-xs-12">
-                <div className="form-group">
-                  <label htmlFor="pName">Publicly display your name as</label>
-                  <input ref={pubNameEl} defaultValue={publicName} disabled={saving} className="form-control" id="pName" placeholder="Public name" />
+        <form
+          onSubmit={evt => {
+            evt.preventDefault();
+            update();
+          }}
+        >
+          <FlexRow>
+            {pendingIsPublic ? (
+              <>
+                <div className="col-xs-12">
+                  <div className="form-group">
+                    <label>Publicly display your name as</label>
+                    <input
+                      ref={pubNameEl}
+                      onChange={() => setNameMissing(false)}
+                      defaultValue={publicName}
+                      disabled={saving}
+                      className={cn("form-control", { error: nameMissing })}
+                      placeholder="Public name"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="col-xs-12">
-                <div className="form-group">
-                  <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
-                  <input
-                    ref={pubHeaderEl}
-                    defaultValue={publicBooksHeader}
-                    disabled={saving}
-                    className="form-control"
-                    id="publicBooksHeader"
-                    placeholder="Book header"
-                  />
+                <div className="col-xs-12">
+                  <div className="form-group">
+                    <label>Publicly display your collection as</label>
+                    <input ref={pubHeaderEl} defaultValue={publicBooksHeader} disabled={saving} className="form-control" placeholder="Book header" />
+                  </div>
                 </div>
-              </div>
-            </>
-          ) : null}
-          <div className="col-xs-12">
-            <ActionButton style={{ minWidth: "10ch" }} onClick={update} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
-          </div>
-        </FlexRow>
+              </>
+            ) : null}
+            <div className="col-xs-12">
+              <ActionButton style={{ minWidth: "10ch" }} onClick={update} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
+            </div>
+          </FlexRow>
+        </form>
       </div>
     </Stack>
   );
