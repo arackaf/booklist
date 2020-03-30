@@ -33,6 +33,9 @@ const PublicUserSettings = props => {
       if (res.error == 1) {
         setWrongPassword(true);
       } else if (res.success) {
+        currentPasswordEl.current.value = "";
+        newPasswordEl.current.value = "";
+        confirmPasswordEl.current.value = "";
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       }
@@ -45,51 +48,58 @@ const PublicUserSettings = props => {
   }
 
   return (
-    <FlexRow>
-      <div className="col-md-6 col-sm-12">
-        <Stack>
-          <div className="form-group">
-            <label htmlFor="existingPasswordInput">Current password</label>
-            <input ref={currentPasswordEl} type="password" className="form-control" id="existingPasswordInput" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="newPasswordInput">New password</label>
-            <input ref={newPasswordEl} type="password" className="form-control" id="newPasswordInput" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
-            <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
-          </div>
-          <ActionButton
-            style={{ alignSelf: "flex-start", minWidth: "10ch" }}
-            onClick={resetPassword}
-            text="Save"
-            disabled={saved}
-            runningText="Saving"
-            preset="primary"
-          />
+    <form
+      onSubmit={evt => {
+        evt.preventDefault();
+        resetPassword();
+      }}
+    >
+      <FlexRow>
+        <div className="col-md-6 col-sm-12">
+          <Stack>
+            <div className="form-group">
+              <label htmlFor="existingPasswordInput">Current password</label>
+              <input ref={currentPasswordEl} type="password" className="form-control" id="existingPasswordInput" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="newPasswordInput">New password</label>
+              <input ref={newPasswordEl} type="password" className="form-control" id="newPasswordInput" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
+              <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
+            </div>
+            <ActionButton
+              style={{ alignSelf: "flex-start", minWidth: "10ch" }}
+              onClick={resetPassword}
+              text="Save"
+              disabled={saved}
+              runningText="Saving"
+              preset="primary"
+            />
 
-          {mismatch ? (
-            <div>
-              <br />
-              <div className="alert alert-danger">Passwords must match</div>
-            </div>
-          ) : null}
-          {wrongPassword ? (
-            <div>
-              <br />
-              <div className="alert alert-danger">Your existing password does not match</div>
-            </div>
-          ) : null}
-          {saved ? (
-            <div>
-              <br />
-              <div className="alert alert-success">Your password has been updated</div>
-            </div>
-          ) : null}
-        </Stack>
-      </div>
-    </FlexRow>
+            {mismatch ? (
+              <div>
+                <br />
+                <div className="alert alert-danger">Passwords must match</div>
+              </div>
+            ) : null}
+            {wrongPassword ? (
+              <div>
+                <br />
+                <div className="alert alert-danger">Your existing password does not match</div>
+              </div>
+            ) : null}
+            {saved ? (
+              <div>
+                <br />
+                <div className="alert alert-success">Your password has been updated</div>
+              </div>
+            ) : null}
+          </Stack>
+        </div>
+      </FlexRow>
+    </form>
   );
 };
 
