@@ -1,5 +1,5 @@
-import React, { Component, useState, useRef, useContext } from "react";
-import { AjaxButton } from "app/components/ui/Button";
+import React, { useState, useRef, useContext } from "react";
+import { ActionButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 import FlexRow from "app/components/layout/FlexRow";
@@ -29,7 +29,7 @@ const PublicUserSettings = props => {
     setSaving(true);
     setWrongPassword(false);
 
-    Promise.resolve(exectueResetPassword(currentPasswordEl.current.value, newPasswordEl.current.value)).then((res: any) => {
+    return Promise.resolve(exectueResetPassword(currentPasswordEl.current.value, newPasswordEl.current.value)).then((res: any) => {
       if (res.error == 1) {
         setWrongPassword(true);
       } else if (res.success) {
@@ -60,16 +60,15 @@ const PublicUserSettings = props => {
             <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
             <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
           </div>
-          <AjaxButton
-            style={{ alignSelf: "flex-start" }}
+          <ActionButton
+            style={{ alignSelf: "flex-start", minWidth: "10ch" }}
             onClick={resetPassword}
+            text="Save"
             disabled={saved}
-            running={saving}
             runningText="Saving"
             preset="primary"
-          >
-            Save
-          </AjaxButton>
+          />
+
           {mismatch ? (
             <div>
               <br />

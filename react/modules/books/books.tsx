@@ -95,7 +95,7 @@ export default () => {
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
-    Promise.resolve(runMutation({ _id: book._id, book: bookToUse })).then(resp => {
+    return Promise.resolve(runMutation({ _id: book._id, book: bookToUse })).then(resp => {
       stopEditingBook();
     });
   };

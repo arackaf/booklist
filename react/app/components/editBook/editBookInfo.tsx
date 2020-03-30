@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AjaxButton, AnchorButton } from "app/components/ui/Button";
+import { AnchorButton, ActionButton } from "app/components/ui/Button";
 
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
 import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
@@ -127,9 +127,15 @@ const EditBookInfo = props => {
         </FlexRow>
         <hr />
 
-        <AjaxButton className="pull-right" preset="primary" runningText="Saving" finishedText="Saved" onClick={save}>
-          Save
-        </AjaxButton>
+        <ActionButton
+          style={{ minWidth: "10ch" }}
+          finishedText="Saved"
+          text="Save"
+          className="pull-right"
+          preset="primary"
+          runningText="Saving"
+          onClick={save}
+        />
       </form>
     </>
   );
