@@ -1,6 +1,6 @@
-import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
+import React, { SFC, useState, useLayoutEffect, useRef } from "react";
 
-import { Button, AjaxButton } from "app/components/ui/Button";
+import { Button, ActionButton } from "app/components/ui/Button";
 import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
 import { useMutation, buildMutation } from "micro-graphql-react";
@@ -49,13 +49,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
   const selectRef = useRef(null);
 
   return (
-    <Modal
-      className="fade"
-      isOpen={!!modifyingBooks.length}
-      onHide={props.onDone}
-      headerCaption="Add / Remove Tags:"
-      focusRef={selectRef}
-    >
+    <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:" focusRef={selectRef}>
       <Tabs defaultTab="tags">
         <TabHeaders>
           <TabHeader tabName="tags">
@@ -106,10 +100,9 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
       <hr />
       <div className="standard-modal-footer">
         <FlowItems>
-          <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={setBooksTags}>
-            Set
-          </AjaxButton>
-          <Button preset="" onClick={props.onDone}>
+          <ActionButton preset="primary" style={{ minWidth: "10ch" }} text="Save" runningText="Saving" finishedText="Saved" onClick={setBooksTags} />
+
+          <Button preset="" style={{ minWidth: "10ch" }} onClick={props.onDone}>
             Cancel
           </Button>
         </FlowItems>
