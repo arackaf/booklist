@@ -453,6 +453,10 @@ select.form-control {
   height: 34px;
   background-color: white;
   width: 100%;
+
+  &.error {
+    border-color: red;
+  }
 }
 input.form-control,
 select.form-control {

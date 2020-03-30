@@ -1,6 +1,6 @@
 import React, { SFC, CSSProperties, useContext, useMemo, useState } from "react";
 
-import { AjaxButton } from "app/components/ui/Button";
+import { ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { AppContext } from "app/renderUI";
@@ -19,6 +19,7 @@ import { BooksModuleContext } from "modules/books/books";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import useDelete from "app/helpers/useDelete";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { gridHoverFilter, detailsRow } = gridStyles;
@@ -38,12 +39,14 @@ const BookRow: SFC<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { book, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { _id } = book;
-  const { selectedBooks, savingReadForBooks: savingRead, pendingDelete, deleting } = booksUiState;
+  const { selectedBooks } = booksUiState;
 
   const [expanded, setExpanded] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
 
-  const hoverOverride = { display: pendingDelete[_id] ? "inline" : "" };
+  const [startDelete, cancelDelete, doDelete, pendingDelete, deleting] = useDelete(() => runDelete(_id));
+
+  const hoverOverride = { display: pendingDelete ? "inline" : "" };
 
   return (
     <>
@@ -98,18 +101,18 @@ const BookRow: SFC<ILocalProps> = props => {
                   <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => props.editBook(book)}>
                     <i className="fal fa-pencil-alt"></i>
                   </a>
-                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => dispatchBooksUiState(["start-delete", _id])}>
+                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={startDelete}>
                     <i className={`fal fa-trash-alt`} />
                   </a>
                 </>
               ) : null}
-              {pendingDelete[_id] ? (
-                <AjaxButton running={deleting[_id]} runningText="Deleting" onClick={() => runDelete(_id)} className="btn btn-xs btn-danger">
+              {pendingDelete ? (
+                <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} preset="danger-xs">
                   Confirm Delete
-                </AjaxButton>
+                </ActionButton>
               ) : null}
-              {pendingDelete[_id] ? (
-                <button onClick={() => dispatchBooksUiState(["cancel-delete", _id])} className="btn btn-xs">
+              {pendingDelete ? (
+                <button disabled={deleting} onClick={cancelDelete} className="btn btn-xs">
                   Cancel
                 </button>
               ) : null}
@@ -152,13 +155,22 @@ const BookRow: SFC<ILocalProps> = props => {
           <div style={{ marginTop: !viewingPublic ? "3px" : 0 }}>
             {!viewingPublic ? (
               !!book.isRead ? (
-                <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="success-xs">
-                  Read <i className="fa fa-fw fa-check" />
-                </AjaxButton>
+                <ActionButton
+                  baseWidth="10ch"
+                  text="Read"
+                  runningText="Saving"
+                  icon="fa fa-fw fa-check"
+                  onClick={() => setRead([_id], !book.isRead)}
+                  preset="success-xs"
+                />
               ) : (
-                <AjaxButton runningText=" " running={!!savingRead[_id]} onClick={() => setRead([_id], !book.isRead)} preset="default-xs">
-                  Set read
-                </AjaxButton>
+                <ActionButton
+                  baseWidth="10ch"
+                  text="Set read"
+                  runningText="Saving"
+                  onClick={() => setRead([_id], !book.isRead)}
+                  preset="default-xs"
+                />
               )
             ) : !!book.isRead ? (
               <span className="label label-success">

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
 import { SectionLoading } from "app/components/loading";
-import { AjaxButton } from "app/components/ui/Button";
+import { ActionButton } from "app/components/ui/Button";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
@@ -9,6 +9,8 @@ import { AppContext } from "app/renderUI";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
+
+import cn from "classnames";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
@@ -42,8 +44,8 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const { publicBooksHeader, publicName } = settings;
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);
   const [isPublic, setIsPublic] = useState(settings.isPublic);
-  const [isDirty, setDirtyState] = useState(false);
-  const setDirty = () => setDirtyState(true);
+
+  const [nameMissing, setNameMissing] = useState(false);
 
   const publicLink = isPublic ? `http://${window.location.host}/view?userId=${app.userId}` : "";
 
@@ -51,14 +53,19 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const pubHeaderEl = useRef(null);
 
   const update = () => {
+    if (!pubNameEl.current.value.trim()) {
+      return setNameMissing(true);
+    } else {
+      setNameMissing(false);
+    }
+
     let isPublic = pendingIsPublic;
-    runMutation({
+    return runMutation({
       isPublic: pendingIsPublic,
       publicBooksHeader: pubHeaderEl.current ? pubHeaderEl.current.value : "",
       publicName: pubNameEl.current ? pubNameEl.current.value : ""
     }).then(() => {
       setIsPublic(isPublic);
-      setDirtyState(false);
     });
   };
 
@@ -80,7 +87,6 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
           Allow your book collection to be viewed publicly?
           <input
             onChange={evt => {
-              setDirty();
               setPendingIsPublic(evt.target.checked);
             }}
             defaultChecked={pendingIsPublic}
@@ -90,45 +96,43 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
           />
         </label>
       </div>
-      {pendingIsPublic ? (
-        <div style={{ marginLeft: "20px" }}>
+      <div style={{ marginLeft: "20px" }}>
+        <form
+          onSubmit={evt => {
+            evt.preventDefault();
+            update();
+          }}
+        >
           <FlexRow>
+            {pendingIsPublic ? (
+              <>
+                <div className="col-xs-12">
+                  <div className="form-group">
+                    <label>Publicly display your name as</label>
+                    <input
+                      ref={pubNameEl}
+                      onChange={() => setNameMissing(false)}
+                      defaultValue={publicName}
+                      disabled={saving}
+                      className={cn("form-control", { error: nameMissing })}
+                      placeholder="Public name"
+                    />
+                  </div>
+                </div>
+                <div className="col-xs-12">
+                  <div className="form-group">
+                    <label>Publicly display your collection as</label>
+                    <input ref={pubHeaderEl} defaultValue={publicBooksHeader} disabled={saving} className="form-control" placeholder="Book header" />
+                  </div>
+                </div>
+              </>
+            ) : null}
             <div className="col-xs-12">
-              <div className="form-group">
-                <label htmlFor="pName">Publicly display your name as</label>
-                <input
-                  ref={pubNameEl}
-                  onChange={setDirty}
-                  defaultValue={publicName}
-                  disabled={saving}
-                  className="form-control"
-                  id="pName"
-                  placeholder="Public name"
-                />
-              </div>
-            </div>
-            <div className="col-xs-12">
-              <div className="form-group">
-                <label htmlFor="publicBooksHeader">Publicly display your collection as</label>
-                <input
-                  ref={pubHeaderEl}
-                  onChange={setDirty}
-                  defaultValue={publicBooksHeader}
-                  disabled={saving}
-                  className="form-control"
-                  id="publicBooksHeader"
-                  placeholder="Book header"
-                />
-              </div>
-            </div>
-            <div className="col-xs-12">
-              <AjaxButton disabled={!isDirty} onClick={update} runningText="Saving" finishedText="Saved" preset="primary">
-                Save
-              </AjaxButton>
+              <ActionButton style={{ minWidth: "10ch" }} onClick={update} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
             </div>
           </FlexRow>
-        </div>
-      ) : null}
+        </form>
+      </div>
     </Stack>
   );
 };

@@ -3,7 +3,7 @@ import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
-import { Button, AjaxButton } from "app/components/ui/Button";
+import { Button, ActionButton } from "app/components/ui/Button";
 import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
 import Modal from "app/components/ui/Modal";
@@ -123,10 +123,9 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
       <hr />
       <div className="standard-modal-footer">
         <FlowItems>
-          <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
-            Set
-          </AjaxButton>
-          <Button preset="" onClick={props.onDone}>
+          <ActionButton style={{ minWidth: "10ch" }} preset="primary" text="Save" runningText="Saving" finishedText="Saved" onClick={save} />
+
+          <Button style={{ minWidth: "10ch" }} preset="" onClick={props.onDone}>
             Cancel
           </Button>
         </FlowItems>

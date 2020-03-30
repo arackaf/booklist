@@ -1,19 +1,20 @@
 import React, { SFC, useContext } from "react";
-import { AjaxButton } from "app/components/ui/Button";
+import { ActionButton } from "app/components/ui/Button";
 import { AppContext } from "app/renderUI";
 
 import uiStyles from "./uiStyles.module.css";
 import basicListClasses from "./basicList.module.css";
 import { CoverSmall } from "app/components/bookCoverComponent";
-import { useBooks } from "modules/books/booksState";
 import { BooksModuleContext } from "modules/books/books";
+import useDelete from "app/helpers/useDelete";
 
 const { bookTitle, bookAuthor } = uiStyles;
 const { dockedToPanel, listGroup, listGroupItem, listGroupItemHeading, listGroupItemText } = basicListClasses;
 
 const BookViewListMobileItem = props => {
-  const { book, online, booksUiState, dispatchBooksUiState } = props;
-  const { pendingDelete, deleting } = booksUiState;
+  const { book, online, runDelete } = props;
+
+  const [startDelete, cancelDelete, doDelete, pendingDelete, deleting] = useDelete(() => runDelete(book._id));
 
   return (
     <div className={listGroupItem}>
@@ -31,27 +32,18 @@ const BookViewListMobileItem = props => {
                   <button className="btn btn-xs btn-light btn-round-icon" onClick={() => props.editBook(book)}>
                     <i className="fal fa-pencil-alt"></i>
                   </button>
-                  <button
-                    style={{ marginLeft: "5px" }}
-                    className="btn btn-xs btn-light btn-round-icon"
-                    onClick={() => dispatchBooksUiState(["start-delete", [book._id]])}
-                  >
+                  <button style={{ marginLeft: "5px" }} className="btn btn-xs btn-light btn-round-icon" onClick={startDelete}>
                     <i className="fa fa-fw fa-trash" />
                   </button>
                 </>
               ) : null}
-              {pendingDelete[book._id] ? (
-                <AjaxButton
-                  running={deleting[book._id]}
-                  runningText="Deleting"
-                  onClick={() => props.runDelete(book._id)}
-                  className="margin-left btn btn-xxs btn-danger"
-                >
+              {pendingDelete ? (
+                <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} className="margin-left btn btn-xxs btn-danger">
                   Confirm Delete
-                </AjaxButton>
+                </ActionButton>
               ) : null}
-              {pendingDelete[book._id] ? (
-                <button onClick={() => dispatchBooksUiState(["cancel-delete", [book._id]])} className="margin-left btn btn-xxs">
+              {pendingDelete ? (
+                <button onClick={cancelDelete} disabled={deleting} className="margin-left btn btn-xxs">
                   Cancel
                 </button>
               ) : null}
@@ -64,7 +56,7 @@ const BookViewListMobileItem = props => {
 };
 
 const BookViewListMobile: SFC<{ books: any }> = props => {
-  const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
+  const { actions, booksUiState } = useContext(BooksModuleContext);
   const { runDelete, editBook } = actions;
 
   const [{ online, isPublic }] = useContext(AppContext);
@@ -74,11 +66,7 @@ const BookViewListMobile: SFC<{ books: any }> = props => {
       <div style={{ paddingBottom: 15 }}>
         <div style={{ border: 0 }} className={`${listGroup} ${dockedToPanel}`}>
           {props.books.map((book, i) => (
-            <BookViewListMobileItem
-              key={book._id}
-              {...{ book, editBook, booksUiState, dispatchBooksUiState, online, runDelete }}
-              viewingPublic={isPublic}
-            />
+            <BookViewListMobileItem key={book._id} {...{ book, editBook, booksUiState, online, runDelete }} viewingPublic={isPublic} />
           ))}
         </div>
       </div>
