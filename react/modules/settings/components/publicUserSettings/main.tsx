@@ -53,14 +53,14 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const pubHeaderEl = useRef(null);
 
   const update = () => {
-    if (!pubNameEl.current.value) {
+    if (!pubNameEl.current.value.trim()) {
       return setNameMissing(true);
     } else {
       setNameMissing(false);
     }
 
     let isPublic = pendingIsPublic;
-    runMutation({
+    return runMutation({
       isPublic: pendingIsPublic,
       publicBooksHeader: pubHeaderEl.current ? pubHeaderEl.current.value : "",
       publicName: pubNameEl.current ? pubNameEl.current.value : ""

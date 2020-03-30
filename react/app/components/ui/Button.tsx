@@ -136,8 +136,14 @@ export const ActionButton: FC<ActionButtonType> = props => {
   const runningText = props.hasOwnProperty("runningText") ? props.runningText : props.text;
 
   const onClick = (...args) => {
+    let result = clickFn(...args);
+    
+    if (!result.then){
+      return;
+    }
+    
     setRunning(true);
-    Promise.resolve(clickFn(...args)).then(() => {
+    Promise.resolve(result).then(() => {
       if (!active.current) {
         return;
       }
