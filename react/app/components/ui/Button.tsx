@@ -14,10 +14,10 @@ buttonTypes.forEach(t => {
 const cssFromPreset = props => (props.className || "") + " btn " + (cssPresets[props.preset] || props.css || "");
 
 export const Button = props => {
-  const { style, className, disabled, onClick, preset, css, ...rest } = props;
+  const { style, className, disabled, onClick, preset, css, children, ...rest } = props;
   return (
-    <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled} {...rest}>
-      {props.children}
+    <button className={cssFromPreset(props)} style={style} onClick={onClick} disabled={disabled} {...rest}>
+      {children}
     </button>
   );
 };
