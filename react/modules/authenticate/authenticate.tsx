@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useRef, useState, useContext, useEffect } from "react";
-import { AjaxButton } from "app/components/ui/Button";
+import { ActionButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 import Stack from "app/components/layout/Stack";
@@ -37,7 +37,7 @@ const Login: FunctionComponent<{}> = props => {
     }
 
     setState(state => ({ ...state, running: true }));
-    ajaxUtil.post(
+    return ajaxUtil.post(
       "/react/login",
       { username, password, rememberme },
       () => window.location.reload(),
@@ -70,7 +70,7 @@ const Login: FunctionComponent<{}> = props => {
     }
 
     setState({ ...state, running: true });
-    ajaxUtil.post("/react/createUser", { username, password, rememberme }, resp => {
+    return ajaxUtil.post("/react/createUser", { username, password, rememberme }, resp => {
       if (resp.errorCode) {
         setState(state => ({ ...state, errorCode: resp.errorCode, running: false }));
       } else {
@@ -138,13 +138,9 @@ const Login: FunctionComponent<{}> = props => {
                     </label>
                   </div>
                   {state.newUser ? (
-                    <AjaxButton onClick={evt => createUser(evt)} running={state.running} preset="primary" className="margin-top margin-bottom">
-                      Create user
-                    </AjaxButton>
+                    <ActionButton text="Create user" onClick={evt => createUser(evt)} preset="primary" className="margin-top margin-bottom" />
                   ) : (
-                    <AjaxButton onClick={evt => login(evt)} running={state.running} preset="primary" className="margin-top margin-bottom">
-                      Login
-                    </AjaxButton>
+                    <ActionButton text="Login" onClick={evt => login(evt)} preset="primary" className="margin-top margin-bottom" />
                   )}
                 </Stack>
 
