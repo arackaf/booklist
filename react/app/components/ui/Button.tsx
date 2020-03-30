@@ -13,17 +13,14 @@ buttonTypes.forEach(t => {
 
 const cssFromPreset = props => (props.className || "") + " btn " + (cssPresets[props.preset] || props.css || "");
 
-export const Button = props => (
-  <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled}>
-    {props.children}
-  </button>
-);
-
-export const AnchorButton = props => (
-  <a className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick}>
-    {props.children}
-  </a>
-);
+export const Button = props => {
+  const { style, className, disabled, onClick, preset, css, ...rest } = props;
+  return (
+    <button className={cssFromPreset(props)} style={{ ...props.style }} onClick={props.onClick} disabled={props.disabled} {...rest}>
+      {props.children}
+    </button>
+  );
+};
 
 type ActionButtonType = {
   className?: any;
@@ -66,11 +63,11 @@ export const ActionButton: FC<ActionButtonType> = props => {
 
   const onClick = (...args) => {
     let result = clickFn(...args);
-    
-    if (!result.then){
+
+    if (!result.then) {
       return;
     }
-    
+
     setRunning(true);
     Promise.resolve(result).then(() => {
       if (!active.current) {
