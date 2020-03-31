@@ -144,7 +144,7 @@ const EditSubjectFields = props => {
             onKeyDown={subjectEditingKeyDown}
             onChange={(evt: any) => setEditingSubjectField("name", evt.target.value)}
             value={editingSubject.name}
-            className={cn("form-control", { ["has-error"]: missingName })}
+            className={cn("form-control", { error: missingName })}
           />
           {missingName ? (
             <>

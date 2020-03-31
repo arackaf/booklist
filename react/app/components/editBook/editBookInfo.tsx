@@ -8,6 +8,8 @@ import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySele
 import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import FlexRow from "../layout/FlexRow";
 
+import cn from "classnames";
+
 const useSubjectsOrTags = startingItems => {
   const [items, setItems] = useState(startingItems || []);
   const addItem = item => setItems(items.concat(item._id));
@@ -54,10 +56,15 @@ const EditBookInfo = props => {
       <form onSubmit={evt => evt.preventDefault()}>
         <FlexRow>
           <div className="col-xs-6">
-            <div className={"form-group " + (!book.title && titleMissing ? "has-error" : "")}>
+            <div className={"form-group"}>
               <label>Title</label>
 
-              <input onChange={syncField("title")} className="form-control" value={book.title} placeholder="Title (required)" />
+              <input
+                onChange={syncField("title")}
+                className={cn("form-control", { error: !book.title && titleMissing })}
+                value={book.title}
+                placeholder="Title (required)"
+              />
             </div>
           </div>
 
