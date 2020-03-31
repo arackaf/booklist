@@ -11,6 +11,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
 import cn from "classnames";
+import { Form, Input } from "app/components/ui/Form";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
@@ -97,19 +98,14 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
         </label>
       </div>
       <div style={{ marginLeft: "20px" }}>
-        <form
-          onSubmit={evt => {
-            evt.preventDefault();
-            update();
-          }}
-        >
+        <Form submit={update}>
           <FlexRow>
             {pendingIsPublic ? (
               <>
                 <div className="col-xs-12">
                   <div className="form-group">
                     <label>Publicly display your name as</label>
-                    <input
+                    <Input
                       ref={pubNameEl}
                       onChange={() => setNameMissing(false)}
                       defaultValue={publicName}
@@ -131,7 +127,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               <ActionButton style={{ minWidth: "10ch" }} onClick={update} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
             </div>
           </FlexRow>
-        </form>
+        </Form>
       </div>
     </Stack>
   );
