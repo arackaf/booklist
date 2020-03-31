@@ -1,5 +1,7 @@
 import React, { useState, useRef, useLayoutEffect, FC, Children, useEffect } from "react";
 
+import cn from "classnames";
+
 const cssPresets = {};
 const buttonTypes = ["default", "primary", "success", "info", "warning", "danger"];
 const buttonSizes = ["lg", "sm", "xs"];
@@ -38,7 +40,7 @@ type ActionButtonType = {
 
 export const ActionButton: FC<ActionButtonType> = props => {
   const active = useRef(true);
-  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth, finishedText, ...rest } = props;
+  const { style: originalStyle = {}, className = "", onClick: clickFn, text, disabled, icon, baseWidth, finishedText, ...rest } = props;
   const [isRunning, setRunning] = useState(false);
   const [isFinished, setFinished] = useState(false);
 
@@ -93,7 +95,7 @@ export const ActionButton: FC<ActionButtonType> = props => {
       onClick={onClick}
       style={style}
       disabled={isRunning || isFinished || disabled || false}
-      className={cssFromPreset(props) + " bl-action-button"}
+      className={cn(cssFromPreset(props), className, "bl-action-button")}
       {...rest}
     >
       {isFinished ? finishedText : isRunning ? runningText || text : text}
