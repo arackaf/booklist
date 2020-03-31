@@ -46,20 +46,12 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);
   const [isPublic, setIsPublic] = useState(settings.isPublic);
 
-  const [nameMissing, setNameMissing] = useState(false);
-
   const publicLink = isPublic ? `http://${window.location.host}/view?userId=${app.userId}` : "";
 
   const pubNameEl = useRef(null);
   const pubHeaderEl = useRef(null);
 
   const update = () => {
-    if (!pubNameEl.current.value.trim()) {
-      return setNameMissing(true);
-    } else {
-      setNameMissing(false);
-    }
-
     let isPublic = pendingIsPublic;
     return runMutation({
       isPublic: pendingIsPublic,
@@ -106,11 +98,12 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
                   <div className="form-group">
                     <label>Publicly display your name as</label>
                     <Input
+                      name="displayName"
+                      validate={val => !!val.trim()}
                       ref={pubNameEl}
-                      onChange={() => setNameMissing(false)}
                       defaultValue={publicName}
                       disabled={saving}
-                      className={cn("form-control", { error: nameMissing })}
+                      className="form-control"
                       placeholder="Public name"
                     />
                   </div>
@@ -124,7 +117,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               </>
             ) : null}
             <div className="col-xs-12">
-              <ActionButton style={{ minWidth: "10ch" }} onClick={update} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
+              <ActionButton type="submit" style={{ minWidth: "10ch" }} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
             </div>
           </FlexRow>
         </Form>

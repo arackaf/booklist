@@ -28,6 +28,7 @@ type ActionButtonType = {
   baseWidth?: any;
   onClick: any;
   text: any;
+  type?: any;
   disabled?: boolean;
   preset?: string;
   runningText?: string;
@@ -37,7 +38,7 @@ type ActionButtonType = {
 
 export const ActionButton: FC<ActionButtonType> = props => {
   const active = useRef(true);
-  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth, finishedText } = props;
+  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth, finishedText, ...rest } = props;
   const [isRunning, setRunning] = useState(false);
   const [isFinished, setFinished] = useState(false);
 
@@ -93,6 +94,7 @@ export const ActionButton: FC<ActionButtonType> = props => {
       style={style}
       disabled={isRunning || isFinished || disabled || false}
       className={cssFromPreset(props) + " bl-action-button"}
+      {...rest}
     >
       {isFinished ? finishedText : isRunning ? runningText || text : text}
       {isFinished ? (
