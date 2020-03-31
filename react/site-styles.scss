@@ -456,6 +456,9 @@ select.form-control {
 
   &.error {
     border-color: var(--danger-5);
+    &:focus {
+      box-shadow: 0 0 6px var(--danger-7);
+    }
   }
 }
 input.form-control,
