@@ -11,7 +11,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
 import cn from "classnames";
-import { Form, Input } from "app/components/ui/Form";
+import { Form, Input, SubmitButton, required, Errors, Error, minLength, validateAll } from "app/components/ui/Form";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
@@ -99,11 +99,10 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
                     <label>Publicly display your name as</label>
                     <Input
                       name="displayName"
-                      validate={val => !!val.trim()}
+                      validate={validateAll(required, minLength(3))}
                       ref={pubNameEl}
                       defaultValue={publicName}
                       disabled={saving}
-                      className="form-control"
                       placeholder="Public name"
                     />
                   </div>
@@ -117,7 +116,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               </>
             ) : null}
             <div className="col-xs-12">
-              <ActionButton type="submit" style={{ minWidth: "10ch" }} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
+              <SubmitButton style={{ minWidth: "10ch" }} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
             </div>
           </FlexRow>
         </Form>

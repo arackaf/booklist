@@ -1,4 +1,7 @@
 import React, { forwardRef, useRef, FC, createContext, useState, useCallback, useMemo, useContext, useLayoutEffect } from "react";
+import { ActionButton } from "./Button";
+
+import cn from "classnames";
 
 const FormContext = createContext<any>({});
 
@@ -7,32 +10,47 @@ export const Form = ({ submit, children }) => {
 
   const [errors, setErrors] = useState({});
   const isError = useCallback(name => errors[name], [errors]);
-  const addError = useCallback((name, val) => setErrors({ ...errors, [name]: val }), [errors]);
-  const removeError = useCallback((name, val) => setErrors({ ...errors, [name]: false }), [errors]);
+  const addError = useCallback(
+    (name, errorKey) =>
+      setErrors(errors => {
+        const newErrors = errors[name] || {};
+        newErrors[errorKey] = true;
+        return { ...errors, [name]: newErrors };
+      }),
+    []
+  );
+  const clearErrors = useCallback(() => setErrors({}), []);
+  const removeError = useCallback(name => setErrors(errors => ({ ...errors, [name]: null })), []);
   const registerValidator = useCallback((name, val, valueLambda, testFn) => {
+    validators.current = validators.current.filter(([existingName]) => name != existingName);
     validators.current.push([name, val, valueLambda, testFn]);
   }, []);
 
-  const doSubmit = evt => {
+  const formSubmit = evt => {
     evt.preventDefault();
-
+  };
+  const doSubmit = useCallback(() => {
+    clearErrors();
     let invalid = false;
-    for (let [name, val, valueLambda, testFn] of validators.current) {
-      if (!testFn(valueLambda())) {
-        addError(name, val);
-        invalid = true;
-      }
+    for (let [name, val, valueLambda, testFns] of validators.current) {
+      testFns.forEach(testFn => {
+        const result = testFn(valueLambda());
+        if (!result.valid) {
+          addError(name, result.errorKey);
+          invalid = true;
+        }
+      });
     }
 
     if (!invalid) {
-      submit();
+      return submit();
     }
-  };
+  }, [addError, clearErrors]);
 
-  const formPacket = useMemo(() => ({ isError, addError, removeError, registerValidator }), [isError, addError, removeError]);
+  const formPacket = useMemo(() => ({ errors, isError, removeError, registerValidator, doSubmit }), [errors, isError, removeError, doSubmit]);
 
   return (
-    <form onSubmit={doSubmit}>
+    <form onSubmit={formSubmit}>
       <FormContext.Provider value={formPacket}> {children}</FormContext.Provider>
     </form>
   );
@@ -40,8 +58,10 @@ export const Form = ({ submit, children }) => {
 
 export const Input: FC<any> = forwardRef((props, ref) => {
   const _ref = useRef(null);
-  const { name, className = "", onChange, validate, ...rest } = props;
-  const { isError, addError, removeError, registerValidator } = useContext(FormContext);
+  const { name, className = "", onChange, validate: validateOriginal, ...rest } = props;
+  const { isError, removeError, registerValidator } = useContext(FormContext);
+
+  const validationFunctions: any[] = useMemo(() => validateOriginal, [validateOriginal]);
 
   const inputRef: any = ref || _ref;
   const onChangeFn = evt => {
@@ -50,17 +70,44 @@ export const Input: FC<any> = forwardRef((props, ref) => {
     }
 
     if (isError(name)) {
-      if (validate(evt.target.value)) {
+      if (validationFunctions.every(f => f(evt.target.value).valid)) {
         removeError(name);
       }
     }
   };
 
   useLayoutEffect(() => {
-    registerValidator(name, true, () => inputRef.current.value, validate)
-  }, []);
+    registerValidator(name, true, () => inputRef.current.value, validationFunctions);
+  }, [validationFunctions]);
 
-  const classes = className + " " + (isError(name) ? "error" : "");
-
-  return <input className={classes} onChange={onChangeFn} ref={inputRef} {...rest} />;
+  return <input className={cn(className, "form-control", { error: isError(name) })} onChange={onChangeFn} ref={inputRef} {...rest} />;
 });
+
+export const validateAll = (...rules) => rules.reduce(([rule], rules) => (rules.push(rule), rules), []);
+
+export const required = [val => ({ errorKey: "required", valid: !!val.trim() })];
+export const minLength = len => [val => ({ errorKey: "minLength", valid: !val.trim() || val.trim().length >= len })];
+
+export const Error: FC<any> = ({ name, errorKey, children }) => {
+  const { errors } = useContext(FormContext);
+
+  if (errors[name]) {
+    if (errorKey == null || errors[name][errorKey]) {
+      return children;
+    }
+  }
+
+  return null;
+};
+
+export const Errors = ({ children }) => {
+  const { errors } = useContext(FormContext);
+
+  return children(errors);
+};
+
+export const SubmitButton: FC<any> = props => {
+  const { doSubmit } = useContext(FormContext);
+
+  return <ActionButton {...props} onClick={doSubmit} />;
+};

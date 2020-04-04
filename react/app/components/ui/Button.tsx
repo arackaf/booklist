@@ -40,7 +40,18 @@ type ActionButtonType = {
 
 export const ActionButton: FC<ActionButtonType> = props => {
   const active = useRef(true);
-  const { style: originalStyle = {}, className = "", onClick: clickFn, text, disabled, icon, baseWidth, finishedText, ...rest } = props;
+  const {
+    style: originalStyle = {},
+    className = "",
+    onClick: clickFn,
+    text,
+    disabled,
+    icon,
+    baseWidth,
+    runningText: _,
+    finishedText,
+    ...rest
+  } = props;
   const [isRunning, setRunning] = useState(false);
   const [isFinished, setFinished] = useState(false);
 
@@ -52,14 +63,14 @@ export const ActionButton: FC<ActionButtonType> = props => {
 
   const style = {
     minWidth: baseWidth || `${text.length + 2}ch`,
-    ...originalStyle
+    ...originalStyle,
   };
 
   const iconStyles = {
-    marginLeft: text.length ? "3px" : void 0
+    marginLeft: text.length ? "3px" : void 0,
   };
   const finishedIconStyles = {
-    marginLeft: text.length ? "5px" : void 0
+    marginLeft: text.length ? "5px" : void 0,
   };
 
   const runningText = props.hasOwnProperty("runningText") ? props.runningText : props.text;
@@ -67,7 +78,7 @@ export const ActionButton: FC<ActionButtonType> = props => {
   const onClick = (...args) => {
     let result = clickFn(...args);
 
-    if (!result.then) {
+    if (!result?.then) {
       return;
     }
 
