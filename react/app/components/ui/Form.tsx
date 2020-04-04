@@ -20,7 +20,18 @@ export const Form = ({ submit, children }) => {
     []
   );
   const clearErrors = useCallback(() => setErrors({}), []);
-  const removeError = useCallback(name => setErrors(errors => ({ ...errors, [name]: null })), []);
+  const removeError = useCallback(
+    (name, errorKey) =>
+      setErrors(errors => {
+        let current = errors[name];
+        if (!current) return errors;
+
+        current = { ...current };
+        delete current[errorKey];
+        return { ...errors, [name]: Object.keys(current).length ? current : null };
+      }),
+    []
+  );
   const registerValidator = useCallback((name, val, valueLambda, testFn) => {
     validators.current = validators.current.filter(([existingName]) => name != existingName);
     validators.current.push([name, val, valueLambda, testFn]);
@@ -70,8 +81,11 @@ export const Input: FC<any> = forwardRef((props, ref) => {
     }
 
     if (isError(name)) {
-      if (validationFunctions.every(f => f(evt.target.value).valid)) {
-        removeError(name);
+      for (let fn of validationFunctions) {
+        let result = fn(evt.target.value);
+        if (result.valid) {
+          removeError(name, result.errorKey);
+        }
       }
     }
   };
