@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
 import { SectionLoading } from "app/components/loading";
-import { ActionButton } from "app/components/ui/Button";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
@@ -11,10 +10,11 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
 import cn from "classnames";
+import { Form, Input, SubmitButton, required } from "app/components/ui/Form";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
-  const { loading, loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
 
   if (!online) {
     return <h1>Offline</h1>;
@@ -45,20 +45,12 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);
   const [isPublic, setIsPublic] = useState(settings.isPublic);
 
-  const [nameMissing, setNameMissing] = useState(false);
-
   const publicLink = isPublic ? `http://${window.location.host}/view?userId=${app.userId}` : "";
 
   const pubNameEl = useRef(null);
   const pubHeaderEl = useRef(null);
 
   const update = () => {
-    if (!pubNameEl.current.value.trim()) {
-      return setNameMissing(true);
-    } else {
-      setNameMissing(false);
-    }
-
     let isPublic = pendingIsPublic;
     return runMutation({
       isPublic: pendingIsPublic,
@@ -97,24 +89,19 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
         </label>
       </div>
       <div style={{ marginLeft: "20px" }}>
-        <form
-          onSubmit={evt => {
-            evt.preventDefault();
-            update();
-          }}
-        >
+        <Form submit={update}>
           <FlexRow>
             {pendingIsPublic ? (
               <>
                 <div className="col-xs-12">
                   <div className="form-group">
                     <label>Publicly display your name as</label>
-                    <input
+                    <Input
+                      name="displayName"
+                      validate={required}
                       ref={pubNameEl}
-                      onChange={() => setNameMissing(false)}
                       defaultValue={publicName}
                       disabled={saving}
-                      className={cn("form-control", { error: nameMissing })}
                       placeholder="Public name"
                     />
                   </div>
@@ -128,10 +115,10 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
               </>
             ) : null}
             <div className="col-xs-12">
-              <ActionButton style={{ minWidth: "10ch" }} onClick={update} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
+              <SubmitButton style={{ minWidth: "10ch" }} text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
             </div>
           </FlexRow>
-        </form>
+        </Form>
       </div>
     </Stack>
   );

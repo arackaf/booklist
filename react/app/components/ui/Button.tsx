@@ -1,4 +1,6 @@
-import React, { useState, useRef, useLayoutEffect, FC, Children, useEffect } from "react";
+import React, { useState, useRef, FC, useEffect } from "react";
+
+import cn from "classnames";
 
 const cssPresets = {};
 const buttonTypes = ["default", "primary", "success", "info", "warning", "danger"];
@@ -28,6 +30,7 @@ type ActionButtonType = {
   baseWidth?: any;
   onClick: any;
   text: any;
+  type?: any;
   disabled?: boolean;
   preset?: string;
   runningText?: string;
@@ -37,7 +40,18 @@ type ActionButtonType = {
 
 export const ActionButton: FC<ActionButtonType> = props => {
   const active = useRef(true);
-  const { style: originalStyle = {}, onClick: clickFn, text, disabled, icon, baseWidth, finishedText } = props;
+  const {
+    style: originalStyle = {},
+    className = "",
+    onClick: clickFn,
+    text,
+    disabled,
+    icon,
+    baseWidth,
+    runningText: _,
+    finishedText,
+    ...rest
+  } = props;
   const [isRunning, setRunning] = useState(false);
   const [isFinished, setFinished] = useState(false);
 
@@ -64,7 +78,7 @@ export const ActionButton: FC<ActionButtonType> = props => {
   const onClick = (...args) => {
     let result = clickFn(...args);
 
-    if (!result.then) {
+    if (!result?.then) {
       return;
     }
 
@@ -92,7 +106,8 @@ export const ActionButton: FC<ActionButtonType> = props => {
       onClick={onClick}
       style={style}
       disabled={isRunning || isFinished || disabled || false}
-      className={cssFromPreset(props) + " bl-action-button"}
+      className={cn(cssFromPreset(props), className, "bl-action-button")}
+      {...rest}
     >
       {isFinished ? finishedText : isRunning ? runningText || text : text}
       {isFinished ? (
@@ -102,6 +117,70 @@ export const ActionButton: FC<ActionButtonType> = props => {
       ) : icon ? (
         <i style={iconStyles} className={icon} />
       ) : null}
+    </button>
+  );
+};
+
+export const ActionIconButton: FC<ActionButtonType> = props => {
+  const active = useRef(true);
+  const {
+    style: originalStyle = {},
+    className = "",
+    onClick: clickFn,
+    text,
+    disabled,
+    icon,
+    baseWidth,
+    runningText: _,
+    finishedText,
+    ...rest
+  } = props;
+  const [isRunning, setRunning] = useState(false);
+  const [isFinished, setFinished] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      active.current = false;
+    };
+  }, []);
+
+  const style = {
+    minWidth: `5ch`,
+    ...originalStyle
+  };
+
+  const onClick = (...args) => {
+    let result = clickFn(...args);
+
+    if (!result?.then) {
+      return;
+    }
+
+    setRunning(true);
+    Promise.resolve(result).then(() => {
+      if (!active.current) {
+        return;
+      }
+
+      setFinished(true);
+      setTimeout(() => {
+        if (active.current) {
+          setFinished(false);
+          setRunning(false);
+        }
+      }, 2000);
+    });
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      style={style}
+      disabled={isRunning || isFinished || disabled || false}
+      className={cn(cssFromPreset(props), className, "bl-action-button")}
+      {...rest}
+    >
+      {isFinished ? <i className="fal fa-check" /> : isRunning ? <i className="fa fa-fw fa-spin fa-spinner" /> : props.children}
     </button>
   );
 };

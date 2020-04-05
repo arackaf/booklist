@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActionButton, Button } from "app/components/ui/Button";
+import { Button } from "app/components/ui/Button";
 
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
 import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
@@ -7,6 +7,8 @@ import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/Sel
 import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
 import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import FlexRow from "../layout/FlexRow";
+
+import { Form, required, Input, SubmitButton } from "../ui/Form";
 
 const useSubjectsOrTags = startingItems => {
   const [items, setItems] = useState(startingItems || []);
@@ -18,23 +20,16 @@ const useSubjectsOrTags = startingItems => {
 
 const EditBookInfo = props => {
   const { book, saveBook, updateBook } = props;
-  const [titleMissing, setTitleMissing] = useState(false);
 
   const [subjects, selectSubject, removeSubject] = useSubjectsOrTags(book.subjects);
   const [tags, selectTag, removeTag] = useSubjectsOrTags(book.tags);
 
   const save = () => {
-    if (!book.title) {
-      setTitleMissing(true);
-    } else {
-      setTitleMissing(false);
-
-      //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
-      let bookToSave = { ...book, authors: book.authors.filter(a => a), subjects, tags };
-      return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
-        savedBook && updateBook(book => ({ ...book, _id: savedBook._id }));
-      });
-    }
+    //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
+    let bookToSave = { ...book, authors: book.authors.filter(a => a), subjects, tags };
+    return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
+      savedBook && updateBook(book => ({ ...book, _id: savedBook._id }));
+    });
   };
 
   const syncAuthor = index => evt => {
@@ -51,13 +46,13 @@ const EditBookInfo = props => {
 
   return (
     <>
-      <form onSubmit={evt => evt.preventDefault()}>
+      <Form submit={save}>
         <FlexRow>
           <div className="col-xs-6">
-            <div className={"form-group " + (!book.title && titleMissing ? "has-error" : "")}>
+            <div className={"form-group"}>
               <label>Title</label>
 
-              <input onChange={syncField("title")} className="form-control" value={book.title} placeholder="Title (required)" />
+              <Input name="title" validate={required} onChange={syncField("title")} value={book.title} placeholder="Title (required)" />
             </div>
           </div>
 
@@ -127,16 +122,8 @@ const EditBookInfo = props => {
         </FlexRow>
         <hr />
 
-        <ActionButton
-          style={{ minWidth: "10ch" }}
-          finishedText="Saved"
-          text="Save"
-          className="pull-right"
-          preset="primary"
-          runningText="Saving"
-          onClick={save}
-        />
-      </form>
+        <SubmitButton style={{ minWidth: "10ch" }} finishedText="Saved" text="Save" className="pull-right" preset="primary" runningText="Saving" />
+      </Form>
     </>
   );
 };

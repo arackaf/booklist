@@ -8,6 +8,7 @@ const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 import ajaxUtil from "util/ajaxUtil";
 import { syncUpdates } from "util/graphqlHelpers";
 import { QueryOf, Queries } from "graphql-typings";
+import { Form, SubmitIconButton } from "app/components/ui/Form";
 
 export const updateSmallCover = ({ _id, url }) => {
   return ajaxUtil
@@ -25,9 +26,8 @@ const BookSummaryDisplay = props => {
   const { book } = props;
   const [newUrl, setNewUrl] = useState("");
 
-  const changeImg = evt => {
-    evt.preventDefault();
-    updateSmallCover({ _id: book._id, url: newUrl }).then(() => setNewUrl(""));
+  const changeImg = () => {
+    return updateSmallCover({ _id: book._id, url: newUrl }).then(() => setNewUrl(""));
   };
 
   return (
@@ -42,14 +42,14 @@ const BookSummaryDisplay = props => {
           </a>
         </div>
         <div className={author}>{(book.authors || []).join(", ")}</div>
-        <form onSubmit={changeImg}>
+        <Form submit={changeImg}>
           <div className="btn-group">
             <input className="form-control" placeholder="New Cover URL" value={newUrl} onChange={evt => setNewUrl(evt.target.value)} />
-            <button disabled={!newUrl} onClick={changeImg} className="btn btn-default">
+            <SubmitIconButton disabled={!newUrl} className="btn btn-default">
               <i className="far fa-cloud-upload-alt" />
-            </button>
+            </SubmitIconButton>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );

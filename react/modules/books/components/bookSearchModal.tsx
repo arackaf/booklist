@@ -11,6 +11,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { Button } from "app/components/ui/Button";
+import { Form, SubmitButton } from "app/components/ui/Form";
 
 type LocalProps = {
   isOpen: boolean;
@@ -46,7 +47,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
     }
   }, [props.isOpen]);
 
-  const updateFilters = evt => {
+  const updateFilters = () => {
     let sort = "";
     let sortDirection = "";
     let sortValue = sortSelectEl.current.value;
@@ -54,7 +55,6 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
       [sort, sortDirection] = sortValue.split("|");
     }
 
-    evt.preventDefault();
     applyFilters({
       subjects: noSubjectsFilter ? [] : subjects,
       tags,
@@ -76,7 +76,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
 
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Full Search" }}>
-      <form onSubmit={updateFilters}>
+      <Form submit={updateFilters}>
         <FlexRow>
           <div className="col-xs-6">
             <div className="form-group">
@@ -147,8 +147,6 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                 <option value="_id|desc">Created, Latest</option>
               </select>
             </div>
-            <button style={{ display: "none" }} />
-            <input type="submit" style={{ display: "none" }} />
           </div>
 
           <div className="col-sm-3 col-xs-12">
@@ -179,17 +177,16 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </label>
           </div>
         </FlexRow>
-      </form>
 
       <hr />
       <FlowItems pushLast={true}>
-        <Button preset="primary" onClick={updateFilters}>
-          Filter
-        </Button>
-        <Button preset="default" onClick={onHide}>
+        <SubmitButton text="Filter" preset="primary" onClick={updateFilters} />
+
+        {/* <Button preset="default" onClick={onHide}>
           Close
-        </Button>
+        </Button> */}
       </FlowItems>
+      </Form>
     </Modal>
   );
 };

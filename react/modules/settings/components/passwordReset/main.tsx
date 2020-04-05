@@ -5,6 +5,8 @@ import { AppContext } from "app/renderUI";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
+import { Form } from "app/components/ui/Form";
+
 const exectueResetPassword = (oldPassword, newPassword) => {
   return ajaxUtil.post("/react/resetPassword", { oldPassword, newPassword }, resp => {});
 };
@@ -48,12 +50,7 @@ const PublicUserSettings = props => {
   }
 
   return (
-    <form
-      onSubmit={evt => {
-        evt.preventDefault();
-        resetPassword();
-      }}
-    >
+    <Form submit={resetPassword}>
       <FlexRow>
         <div className="col-md-6 col-sm-12">
           <Stack>
@@ -99,7 +96,7 @@ const PublicUserSettings = props => {
           </Stack>
         </div>
       </FlexRow>
-    </form>
+    </Form>
   );
 };
 
