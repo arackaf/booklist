@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, FC, createContext, useState, useCallback, useMemo, useContext, useLayoutEffect } from "react";
+import React, { forwardRef, useRef, FC, createContext, useState, useCallback, useMemo, useContext } from "react";
 import { ActionButton, ActionIconButton } from "./Button";
 
 import cn from "classnames";
@@ -90,7 +90,7 @@ export const Input: FC<any> = forwardRef((props, ref) => {
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     validateOriginal && registerValidator(name, true, () => inputRef.current.value, validationFunctions);
   }, [validationFunctions]);
 

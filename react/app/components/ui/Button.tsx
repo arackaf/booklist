@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect, FC, Children, useEffect } from "react";
+import React, { useState, useRef, FC, useEffect } from "react";
 
 import cn from "classnames";
 
