@@ -56,7 +56,7 @@ export const Form = ({ submit, children }) => {
     if (!invalid) {
       return submit();
     }
-  }, [addError, clearErrors]);
+  }, [submit, addError, clearErrors]);
 
   const formPacket = useMemo(() => ({ errors, isError, removeError, registerValidator, doSubmit }), [errors, isError, removeError, doSubmit]);
 

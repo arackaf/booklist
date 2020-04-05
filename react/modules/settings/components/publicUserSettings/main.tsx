@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
 import { SectionLoading } from "app/components/loading";
-import { ActionButton } from "app/components/ui/Button";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
@@ -11,11 +10,11 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
 import cn from "classnames";
-import { Form, Input, SubmitButton, required, Errors, Error, minLength, validateAll } from "app/components/ui/Form";
+import { Form, Input, SubmitButton, required } from "app/components/ui/Form";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
-  const { loading, loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
 
   if (!online) {
     return <h1>Offline</h1>;
@@ -99,7 +98,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
                     <label>Publicly display your name as</label>
                     <Input
                       name="displayName"
-                      validate={validateAll(required, minLength(3))}
+                      validate={required}
                       ref={pubNameEl}
                       defaultValue={publicName}
                       disabled={saving}
