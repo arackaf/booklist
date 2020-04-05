@@ -63,14 +63,14 @@ export const ActionButton: FC<ActionButtonType> = props => {
 
   const style = {
     minWidth: baseWidth || `${text.length + 2}ch`,
-    ...originalStyle,
+    ...originalStyle
   };
 
   const iconStyles = {
-    marginLeft: text.length ? "3px" : void 0,
+    marginLeft: text.length ? "3px" : void 0
   };
   const finishedIconStyles = {
-    marginLeft: text.length ? "5px" : void 0,
+    marginLeft: text.length ? "5px" : void 0
   };
 
   const runningText = props.hasOwnProperty("runningText") ? props.runningText : props.text;
@@ -117,6 +117,70 @@ export const ActionButton: FC<ActionButtonType> = props => {
       ) : icon ? (
         <i style={iconStyles} className={icon} />
       ) : null}
+    </button>
+  );
+};
+
+export const ActionIconButton: FC<ActionButtonType> = props => {
+  const active = useRef(true);
+  const {
+    style: originalStyle = {},
+    className = "",
+    onClick: clickFn,
+    text,
+    disabled,
+    icon,
+    baseWidth,
+    runningText: _,
+    finishedText,
+    ...rest
+  } = props;
+  const [isRunning, setRunning] = useState(false);
+  const [isFinished, setFinished] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      active.current = false;
+    };
+  }, []);
+
+  const style = {
+    minWidth: `5ch`,
+    ...originalStyle
+  };
+
+  const onClick = (...args) => {
+    let result = clickFn(...args);
+
+    if (!result?.then) {
+      return;
+    }
+
+    setRunning(true);
+    Promise.resolve(result).then(() => {
+      if (!active.current) {
+        return;
+      }
+
+      setFinished(true);
+      setTimeout(() => {
+        if (active.current) {
+          setFinished(false);
+          setRunning(false);
+        }
+      }, 2000);
+    });
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      style={style}
+      disabled={isRunning || isFinished || disabled || false}
+      className={cn(cssFromPreset(props), className, "bl-action-button")}
+      {...rest}
+    >
+      {isFinished ? <i className="fal fa-check" /> : isRunning ? <i className="fa fa-fw fa-spin fa-spinner" /> : props.children}
     </button>
   );
 };

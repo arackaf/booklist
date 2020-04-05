@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef, FC, createContext, useState, useCallback, useMemo, useContext, useLayoutEffect } from "react";
-import { ActionButton } from "./Button";
+import { ActionButton, ActionIconButton } from "./Button";
 
 import cn from "classnames";
 
@@ -80,7 +80,7 @@ export const Input: FC<any> = forwardRef((props, ref) => {
       onChange(evt);
     }
 
-    if (isError(name)) {
+    if (validateOriginal && isError(name)) {
       for (let fn of validationFunctions) {
         let result = fn(evt.target.value);
         if (result.valid) {
@@ -91,7 +91,7 @@ export const Input: FC<any> = forwardRef((props, ref) => {
   };
 
   useLayoutEffect(() => {
-    registerValidator(name, true, () => inputRef.current.value, validationFunctions);
+    validateOriginal && registerValidator(name, true, () => inputRef.current.value, validationFunctions);
   }, [validationFunctions]);
 
   return <input className={cn(className, "form-control", { error: isError(name) })} onChange={onChangeFn} ref={inputRef} {...rest} />;
@@ -124,4 +124,10 @@ export const SubmitButton: FC<any> = props => {
   const { doSubmit } = useContext(FormContext);
 
   return <ActionButton {...props} onClick={doSubmit} />;
+};
+
+export const SubmitIconButton: FC<any> = props => {
+  const { doSubmit } = useContext(FormContext);
+
+  return <ActionIconButton {...props} onClick={doSubmit} />
 };
