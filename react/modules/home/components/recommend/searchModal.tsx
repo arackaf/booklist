@@ -11,6 +11,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
+import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
 
 interface LocalProps {
   isOpen: boolean;
@@ -47,8 +48,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const isRead0 = useRef(null);
   const isRead1 = useRef(null);
 
-  const applyFilters = evt => {
-    evt.preventDefault();
+  const applyFilters = () => {
     setBookSearchState({
       title: searchEl.current.value || "",
       isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
@@ -59,7 +59,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   };
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
-      <form onSubmit={applyFilters}>
+      <Form submit={applyFilters}>
         <FlexRow>
           <div className="col-xs-6">
             <div className="form-group">
@@ -112,13 +112,13 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 
           <div className="col-xs-12">
             {loading ? (
-              <button disabled={true} className="btn btn-default">
+              <button style={{minWidth: "5ch"}} disabled={true} className="btn btn-default">
                 <i className="fa fa-fw fa-spin fa-spinner" />
               </button>
             ) : (
-              <button onClick={applyFilters} className="btn btn-default">
+              <SubmitIconButton className="btn btn-default">
                 <i className="fal fa-search" />
-              </button>
+              </SubmitIconButton>
             )}
           </div>
 
@@ -126,7 +126,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
             <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} />
           </div>
         </FlexRow>
-      </form>
+      </Form>
     </Modal>
   );
 };
@@ -142,29 +142,14 @@ const SearchResults = props => {
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
         {availableBooks == null ? null : availableBooks?.length ? (
-          <CSSTransition
-            key={currentQuery}
-            appear={true}
-            enter={true}
-            exit={true}
-            classNames="bl-animate"
-            timeout={3500}
-          >
+          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="bl-animate" timeout={3500}>
             <ul className="animate-fast bl-overlay bl-fade">
               <TransitionGroup component={null}>
-                {availableBooks
-                  .map(book => (
-                    <CSSTransition
-                      appear={false}
-                      enter={false}
-                      exit={!loading}
-                      classNames="bl-animate"
-                      timeout={300}
-                      key={book._id}
-                    >
-                      <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                    </CSSTransition>
-                  ))}
+                {availableBooks.map(book => (
+                  <CSSTransition appear={false} enter={false} exit={!loading} classNames="bl-animate" timeout={300} key={book._id}>
+                    <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                  </CSSTransition>
+                ))}
               </TransitionGroup>
             </ul>
           </CSSTransition>
