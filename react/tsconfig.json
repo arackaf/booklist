@@ -16,5 +16,5 @@
     "target": "esnext"
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["./node_modules", "./dist", "./sw-manual"]
+  "exclude": ["./node_modules", "./dist", "./service-worker"]
 }
