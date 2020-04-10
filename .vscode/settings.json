@@ -1,3 +1,9 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "files.exclude": {
+        "react/package-lock.json": true,
+        "package-lock.json": true,
+        "favicon.ico": true,
+        ".gitattributes": true
+    }
 }
