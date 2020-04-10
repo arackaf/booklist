@@ -1,5 +1,5 @@
 import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback } from "react";
-import { RemovableLabelDisplay } from "app/components/labelDisplay";
+import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
 import { AppContext } from "app/renderUI";

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 
-import Modal from "../modal";
+import Modal from "../ui/Modal";
 import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
 
 import { updateSmallCover, updateMediumCover } from "util/coverUpdates";
 import Stack from "../layout/Stack";
+import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/Tabs";
 
 class ManualBookEntry extends Component<any, any> {
   state = { tab: "basic", bookEditing: null, title: "" };
@@ -42,46 +43,46 @@ class ManualBookEntry extends Component<any, any> {
 
     return (
       <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.state.title}>
-        <div className="tab-headers" style={{ marginBottom: "10px" }}>
-          <div className={`tab-header ${tab == "basic" ? "active" : ""}`}>
-            <a onClick={() => this.setState({ tab: "basic" })}>Book info</a>
-          </div>
-          <div className={`tab-header ${tab == "covers" ? "active" : ""} ${!bookSaved ? "disabled" : ""}`}>
-            <a onClick={bookSaved ? () => this.setState({ tab: "covers" }) : null}>Covers</a>
-          </div>
-        </div>
-        <div className="tab-content">
-          <div className={`tab-pane ${tab == "basic" ? "active" : ""}`}>
-            {book ? <EditBookInfo {...{ book, saveBook }} updateBook={this.updateBook} /> : null}
-          </div>
-          <div className={`tab-pane ${tab == "covers" ? "active" : ""}`}>
-            {book ? (
-              <>
-                <div className="form-group">
-                  <label>Small Cover</label>
-                  <ManageBookCover
-                    _id={book._id}
-                    remoteSave={updateSmallCover}
-                    imgKey="smallImage"
-                    endpoint="upload-small-cover"
-                    img={book.smallImage}
-                  />
-                </div>
-                <hr />
-                <div className="form-group">
-                  <label>Medium Cover</label>
-                  <ManageBookCover
-                    _id={book._id}
-                    remoteSave={updateMediumCover}
-                    imgKey="mediumImage"
-                    endpoint="upload-medium-cover"
-                    img={book.mediumImage}
-                  />
-                </div>
-              </>
-            ) : null}
-          </div>
-        </div>
+        <Tabs defaultTab="basic">
+          <TabHeaders>
+            <TabHeader tabName="basic">
+              <a>Book info</a>
+            </TabHeader>
+            <TabHeader tabName="covers">
+              <a>Covers</a>
+            </TabHeader>
+          </TabHeaders>
+          <TabContents>
+            <TabContent tabName="basic">{book ? <EditBookInfo {...{ book, saveBook }} updateBook={this.updateBook} /> : null}</TabContent>
+            <TabContent tabName="covers">
+              {book ? (
+                <>
+                  <div className="form-group">
+                    <label>Small Cover</label>
+                    <ManageBookCover
+                      _id={book._id}
+                      remoteSave={updateSmallCover}
+                      imgKey="smallImage"
+                      endpoint="upload-small-cover"
+                      img={book.smallImage}
+                    />
+                  </div>
+                  <hr />
+                  <div className="form-group">
+                    <label>Medium Cover</label>
+                    <ManageBookCover
+                      _id={book._id}
+                      remoteSave={updateMediumCover}
+                      imgKey="mediumImage"
+                      endpoint="upload-medium-cover"
+                      img={book.mediumImage}
+                    />
+                  </div>
+                </>
+              ) : null}
+            </TabContent>
+          </TabContents>
+        </Tabs>
       </Modal>
     );
   }

@@ -1,17 +1,17 @@
 import React, { FunctionComponent, useState, useLayoutEffect, useRef } from "react";
 
-import BootstrapButton from "app/components/bootstrapButton";
-
-import Modal from "app/components/modal";
-import SelectAvailableTags from "app/components/selectAvailableTags";
-import SelectAvailableSubjects from "app/components/selectAvailableSubjects";
-import DisplaySelectedTags from "app/components/displaySelectedTags";
-import DisplaySelectedSubjects from "app/components/displaySelectedSubjects";
+import Modal from "app/components/ui/Modal";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
+import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 import { useCurrentSearch } from "../booksSearchState";
 import { applyFilters } from "../setBookFilters";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import { Button } from "app/components/ui/Button";
+import { Form, SubmitButton } from "app/components/ui/Form";
 
 type LocalProps = {
   isOpen: boolean;
@@ -47,7 +47,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
     }
   }, [props.isOpen]);
 
-  const updateFilters = evt => {
+  const updateFilters = () => {
     let sort = "";
     let sortDirection = "";
     let sortValue = sortSelectEl.current.value;
@@ -55,7 +55,6 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
       [sort, sortDirection] = sortValue.split("|");
     }
 
-    evt.preventDefault();
     applyFilters({
       subjects: noSubjectsFilter ? [] : subjects,
       tags,
@@ -77,7 +76,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
 
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Full Search" }}>
-      <form onSubmit={updateFilters}>
+      <Form submit={updateFilters}>
         <FlexRow>
           <div className="col-xs-6">
             <div className="form-group">
@@ -148,8 +147,6 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
                 <option value="_id|desc">Created, Latest</option>
               </select>
             </div>
-            <button style={{ display: "none" }} />
-            <input type="submit" style={{ display: "none" }} />
           </div>
 
           <div className="col-sm-3 col-xs-12">
@@ -180,17 +177,16 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             </label>
           </div>
         </FlexRow>
-      </form>
 
       <hr />
       <FlowItems pushLast={true}>
-        <BootstrapButton preset="primary" onClick={updateFilters}>
-          Filter
-        </BootstrapButton>
-        <BootstrapButton preset="default" onClick={onHide}>
+        <SubmitButton text="Filter" preset="primary" onClick={updateFilters} />
+
+        {/* <Button preset="default" onClick={onHide}>
           Close
-        </BootstrapButton>
+        </Button> */}
       </FlowItems>
+      </Form>
     </Modal>
   );
 };

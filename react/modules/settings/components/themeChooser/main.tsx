@@ -2,7 +2,7 @@ import React, { Component, useContext } from "react";
 import classNames from "classnames";
 import styles from "./styles.module.css";
 import { AppContext } from "app/renderUI";
-import { SET_THEME } from "app/appState";
+import { SET_THEME } from "app/state/appState";
 
 import DemoStyles from "./demoStyles";
 

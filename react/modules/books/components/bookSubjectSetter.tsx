@@ -3,15 +3,17 @@ import { buildMutation, useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
-import BootstrapButton, { AjaxButton } from "app/components/bootstrapButton";
-import SelectAvailable from "app/components/availableTagsOrSubjects";
+import { Button, ActionButton } from "app/components/ui/Button";
+import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
-import Modal from "app/components/modal";
-import { useStackedSubjects, filterSubjects } from "app/subjectsState";
+import Modal from "app/components/ui/Modal";
+import { useStackedSubjects, filterSubjects } from "app/state/subjectsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
+import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
+import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -64,95 +66,68 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
       headerCaption="Add / Remove Subjects:"
       focusRef={selectRef}
     >
-      <div className="tab-headers">
-        <div className={"tab-header " + (currentTab == "subjects" ? "active" : "")}>
-          <a ref={selectRef} onClick={() => setTab("subjects")}>
-            Choose subjects
-          </a>
-        </div>
-        <div className={"tab-header " + (currentTab == "books" ? "active" : "")}>
-          <a onClick={() => setTab("books")}>For books</a>
-        </div>
-      </div>
-      <div className="tab-content">
-        <div style={{ minHeight: "100px" }} className={"margin-top tab-pane " + (currentTab == "subjects" ? "active" : "")}>
-          <FlexRow>
-            <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Adding"
-                items={subjectsUnwound}
-                currentlySelected={addingSubjects}
-                onSelect={subjectSelectedToAdd}
-                filter={filterSubjects}
-              />
-            </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
-              {addingSubjects
-                .map(_id => subjectHash[_id])
-                .map((s: any, i) => (
-                  <span
-                    key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
-                    className="label label-default margin-left"
-                  >
-                    <a onClick={() => dontAddSubject(s)} style={{ color: s.textColor || "white" }}>
-                      X
-                    </a>
-                    {s.name}
-                  </span>
-                ))}
-            </div>
+      <Tabs defaultTab="subjects">
+        <TabHeaders>
+          <TabHeader tabName="subjects">
+            <a ref={selectRef}>Choose subjects</a>
+          </TabHeader>
+          <TabHeader tabName="books">
+            <a>For books</a>
+          </TabHeader>
+        </TabHeaders>
+        <TabContents>
+          <TabContent tabName="subjects">
+            <FlexRow>
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Adding"
+                  items={subjectsUnwound}
+                  currentlySelected={addingSubjects}
+                  onSelect={subjectSelectedToAdd}
+                  filter={filterSubjects}
+                />
+              </div>
+              <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
+                <DisplaySelectedSubjects currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+              </div>
 
-            <div className="col-xs-3">
-              <SelectAvailable
-                placeholder="Removing"
-                items={subjectsUnwound}
-                currentlySelected={removingSubjects}
-                onSelect={subjectSelectedToRemove}
-                filter={filterSubjects}
-              />
-            </div>
-            <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
-              {removingSubjects
-                .map(_id => subjectHash[_id])
-                .map((s: any, i) => (
-                  <span
-                    key={i}
-                    style={{ color: s.textColor || "white", backgroundColor: s.backgroundColor }}
-                    className="label label-default margin-left"
-                  >
-                    <a onClick={() => dontRemoveSubject(s)} style={{ color: s.textColor || "white" }}>
-                      X
-                    </a>
-                    {s.name}
-                  </span>
-                ))}
-            </div>
+              <div className="col-xs-3">
+                <SelectAvailable
+                  placeholder="Removing"
+                  items={subjectsUnwound}
+                  currentlySelected={removingSubjects}
+                  onSelect={subjectSelectedToRemove}
+                  filter={filterSubjects}
+                />
+              </div>
+              <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
+                <DisplaySelectedSubjects currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+              </div>
 
-            <div className="col-xs-12">
-              <BootstrapButton onClick={resetSubjects} preset="default-xs">
-                Reset subjects
-              </BootstrapButton>
-            </div>
-          </FlexRow>
-        </div>
-        <div style={{ minHeight: "100px" }} className={"tab-pane " + (currentTab == "books" ? "active" : "")}>
-          <ul className="margin-top" style={{ fontSize: "14px" }}>
-            {modifyingBooks.map(book => (
-              <li key={book._id}>{book.title}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+              <div className="col-xs-12">
+                <Button onClick={resetSubjects} preset="default-xs">
+                  Reset subjects
+                </Button>
+              </div>
+            </FlexRow>
+          </TabContent>
+          <TabContent tabName="books">
+            <Stack style={{ fontSize: "14px" }}>
+              {modifyingBooks.map(book => (
+                <div key={book._id}>{book.title}</div>
+              ))}
+            </Stack>
+          </TabContent>
+        </TabContents>
+      </Tabs>
       <hr />
       <div className="standard-modal-footer">
         <FlowItems>
-          <AjaxButton preset="primary" runningText="Setting" finishedText="Saved" onClick={save}>
-            Set
-          </AjaxButton>
-          <BootstrapButton preset="" onClick={props.onDone}>
+          <ActionButton style={{ minWidth: "10ch" }} preset="primary" text="Save" runningText="Saving" finishedText="Saved" onClick={save} />
+
+          <Button style={{ minWidth: "10ch" }} preset="" onClick={props.onDone}>
             Cancel
-          </BootstrapButton>
+          </Button>
         </FlowItems>
       </div>
     </Modal>

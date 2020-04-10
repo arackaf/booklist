@@ -1,9 +1,11 @@
-import React, { Component, useState, useRef, useContext } from "react";
-import { AjaxButton } from "app/components/bootstrapButton";
+import React, { useState, useRef, useContext } from "react";
+import { ActionButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
+
+import { Form } from "app/components/ui/Form";
 
 const exectueResetPassword = (oldPassword, newPassword) => {
   return ajaxUtil.post("/react/resetPassword", { oldPassword, newPassword }, resp => {});
@@ -29,10 +31,13 @@ const PublicUserSettings = props => {
     setSaving(true);
     setWrongPassword(false);
 
-    Promise.resolve(exectueResetPassword(currentPasswordEl.current.value, newPasswordEl.current.value)).then((res: any) => {
+    return Promise.resolve(exectueResetPassword(currentPasswordEl.current.value, newPasswordEl.current.value)).then((res: any) => {
       if (res.error == 1) {
         setWrongPassword(true);
       } else if (res.success) {
+        currentPasswordEl.current.value = "";
+        newPasswordEl.current.value = "";
+        confirmPasswordEl.current.value = "";
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       }
@@ -45,7 +50,7 @@ const PublicUserSettings = props => {
   }
 
   return (
-    <div className="margin-top">
+    <Form submit={resetPassword}>
       <FlexRow>
         <div className="col-md-6 col-sm-12">
           <Stack>
@@ -61,16 +66,15 @@ const PublicUserSettings = props => {
               <label htmlFor="confirmNewPasswordInput">Confirm new password</label>
               <input ref={confirmPasswordEl} type="password" className="form-control" id="confirmNewPasswordInput" />
             </div>
-            <AjaxButton
-              style={{ alignSelf: "flex-start" }}
+            <ActionButton
+              style={{ alignSelf: "flex-start", minWidth: "10ch" }}
               onClick={resetPassword}
+              text="Save"
               disabled={saved}
-              running={saving}
               runningText="Saving"
               preset="primary"
-            >
-              Save
-            </AjaxButton>
+            />
+
             {mismatch ? (
               <div>
                 <br />
@@ -92,7 +96,7 @@ const PublicUserSettings = props => {
           </Stack>
         </div>
       </FlexRow>
-    </div>
+    </Form>
   );
 };
 

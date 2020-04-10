@@ -14,7 +14,7 @@ export default props => {
           <div className="col-sm-6 col-xs-12">
             <div className="form-group">
               <label>Title</label>
-              <input placeholder="Search title" className="form-control" value={"The Slefish Gene"} />
+              <input placeholder="Search title" className="form-control" defaultValue={"The Slefish Gene"} />
               <div className="alert alert-warning margin-bottom">Did you spell this right?</div>
             </div>
           </div>
@@ -37,7 +37,7 @@ export default props => {
           <div className="col-xs-6">
             <div className="form-group">
               <label>Publisher</label>
-              <input placeholder="Publisher" className="form-control" value="Basic Books" />
+              <input placeholder="Publisher" className="form-control" defaultValue="Basic Books" />
               <div className="alert alert-success margin-bottom">Looks good to me!</div>
             </div>
           </div>
@@ -45,7 +45,7 @@ export default props => {
             <div className="form-group">
               <label>Author</label>
               <input placeholder="Author" className="form-control" />
-              <div className="alert alert-danger margin-bottom">Author is required! (but only for this style demo)</div>
+              <div className="alert alert-danger margin-bottom">Author is required!</div>
             </div>
           </div>
         </FlexRow>

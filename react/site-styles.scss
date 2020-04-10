@@ -453,6 +453,13 @@ select.form-control {
   height: 34px;
   background-color: white;
   width: 100%;
+
+  &.error {
+    border-color: var(--danger-5);
+    &:focus {
+      box-shadow: 0 0 6px var(--danger-7);
+    }
+  }
 }
 input.form-control,
 select.form-control {
@@ -582,10 +589,6 @@ div.toast-notification h4 {
 
 // ------------------------------------------------------
 
-
-.has-error input, input.form-control.has-error {
-  border-color: var(--danger-5);
-}
 
 .btn-group input:focus,
 .btn-group button:focus {

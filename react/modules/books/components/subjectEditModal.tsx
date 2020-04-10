@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useState } from "react";
-import BootstrapButton from "app/components/bootstrapButton";
+import {Button} from "app/components/ui/Button";
 
-import GenericLabelSelect from "app/components/genericLabelSelect";
+import GenericLabelSelect from "app/components/subjectsAndTags/genericLabelSelect";
 
-import Modal from "app/components/modal";
-import { filterSubjects, useStackedSubjects } from "app/subjectsState";
+import Modal from "app/components/ui/Modal";
+import { filterSubjects, useStackedSubjects } from "app/state/subjectsState";
 
-import EditSubject from "app/components/editSubject";
+import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
 import FlowItems from "app/components/layout/FlowItems";
 import Stack from "app/components/layout/Stack";
 
@@ -40,16 +40,16 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
             onSuggestionSelected={item => editSubject(item)}
           />
 
-          <BootstrapButton onClick={newSubject} style={{ alignSelf: "flex-start" }} preset="info-xs">
+          <Button onClick={newSubject} style={{ alignSelf: "flex-start" }} preset="info-xs">
             <span className="visible-xs">Add new subject </span>
             <i className="fa fa-fw fa-plus-square" />
-          </BootstrapButton>
+          </Button>
         </FlowItems>
 
         {editingSubject ? <EditSubject subject={editingSubject} onCancelEdit={cancelEdit} /> : null}
         <hr />
       </Stack>
-      <BootstrapButton onClick={props.stopEditing}>Close</BootstrapButton>
+      <Button onClick={props.stopEditing}>Close</Button>
     </Modal>
   );
 };

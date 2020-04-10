@@ -1,14 +1,14 @@
 import React, { memo, createContext, useState, useCallback, useContext, FC, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
-import BootstrapButton from "app/components/bootstrapButton";
-import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/subjectsState";
+import {Button} from "app/components/ui/Button";
+import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/state/subjectsState";
 
 import subjectsListStyles from "./subjectsList.module.scss";
-import { useColors } from "app/colorsState";
-import { EditableExpandableLabelDisplay } from "app/components/labelDisplay";
+import { useColors } from "app/state/colorsState";
+import { EditableExpandableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
-import EditSubject from "app/components/editSubject";
-import Modal from "app/components/modal";
+import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
+import Modal from "app/components/ui/Modal";
 import { useHeight, usePrevious } from "app/animationHelpers";
 import FlexRow from "app/components/layout/FlexRow";
 
@@ -106,9 +106,9 @@ export default () => {
       <div className="padding-top" style={{ marginBottom: "60px" }}>
         <FlexRow>
           <div className="col-lg-6 col-md-8 col-xs-12">
-            <BootstrapButton className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+            <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
               New Subject
-            </BootstrapButton>
+            </Button>
 
             <EditContext.Provider value={openEditModal}>
               <animated.div style={{ opacity }} className={contentRoot}>
@@ -122,7 +122,7 @@ export default () => {
       <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
         <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
         <hr />
-        <BootstrapButton onClick={closeEditModal}>Close</BootstrapButton>
+        <Button onClick={closeEditModal}>Close</Button>
       </Modal>
     </div>
   );
