@@ -36,6 +36,26 @@ import uuid from "uuid/v4";
 import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node/util/bookCovers/bookCoverHelpers";
 import { getJrDbConnection } from "./node/util/dbUtils";
 
+import multerS3 from "multer-s3";
+
+import AWS from "aws-sdk";
+AWS.config.region = "us-east-1";
+
+const s3StagingBucket = new AWS.S3({ params: { Bucket: "my-library-cover-upload-staging" } });
+
+const s3StagingUpload = multer({
+  storage: multerS3({
+    s3: s3StagingBucket,
+    bucket: "my-library-cover-upload-staging",
+    metadata: function(req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function(req, file, cb) {
+      cb(null, Date.now().toString());
+    }
+  })
+});
+
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
 const PUBLIC_USER = {
@@ -279,8 +299,9 @@ const multerBookCoverUploadStorage = multer.diskStorage({
 });
 const upload = multer({ storage: multerBookCoverUploadStorage });
 
-app.post("/react/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
-  coverUpload(req, response);
+app.post("/react/upload-small-cover", s3StagingUpload.single("fileUploaded"), async function(req, response) {
+  response.json({ Y: req.file.key });
+  //coverUpload(req, response);
 });
 
 app.post("/react/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
