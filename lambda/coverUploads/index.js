@@ -3,13 +3,7 @@ import Jimp from "jimp";
 
 exports.handler = async req => {
   try {
-    //return "a";
-    //if (req.queryStringParameters && req.queryStringParameters.key) {
-
-    const s3 = new S3({
-      accessKeyId: process.env.S3_AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.S3_AWS_SECRET_ACCESS_KEY
-    });
+    const s3 = new S3({});
     return new Promise(res => {
       var sourceParams = { Bucket: "my-library-cover-upload-staging", Key: "big-image.jpg" };
       s3.getObject(sourceParams, (err, data) => {
@@ -17,22 +11,22 @@ exports.handler = async req => {
           return res(err);
         }
         const originalImg = data.Body; //.toString('base64');
-        
+
         Jimp.read(originalImg, function(err, image) {
           if (err || !image) {
             return res(err);
           }
-          
+
           try {
             if (image.bitmap.width > 100) {
               image.resize(100, Jimp.AUTO);
-              
+
               image.getBuffer(image.getMIME(), (err, body) => {
-                if (err){
+                if (err) {
                   return res(err);
                 }
                 var params = { Bucket: "my-library-cover-upload-staging", Key: "resized.jpg", Body: body };
-                
+
                 s3.upload(params, function(err, data) {
                   res(err || "success");
                 });

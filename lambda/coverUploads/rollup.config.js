@@ -28,7 +28,9 @@ module.exports = {
     "querystring",
     "child_process",
     "timers",
-    "string_decoder"
+    "string_decoder",
+    "zlib",
+    "assert"
   ],
 
   plugins: [commonjs(), resolve({ preferBuiltins: true }), terser({}), json()]
