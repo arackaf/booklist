@@ -51,7 +51,7 @@ const s3StagingUpload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function(req, file, cb) {
-      cb(null, Date.now().toString());
+      cb(null, "big-image.jpg");
     }
   })
 });

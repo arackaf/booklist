@@ -9,3 +9,4 @@ react/service-worker/sw-index-bundle.js
 react/.DS_Store
 react/dist/*
 react/dist-css/*
+index-bundle.js
