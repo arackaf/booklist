@@ -3,12 +3,13 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    main: "./index.js"
+    handler: "./handler-dev.js"
   },
   target: "node",
   output: {
-    filename: "index-bundle.js",
-    path: path.resolve(__dirname, "xxx")
+    filename: "./handler.js",
+    path: __dirname,
+    libraryTarget: "commonjs2" 
   },
   resolve: {
     modules: [path.resolve("./"), path.resolve("./node_modules")]
@@ -18,5 +19,4 @@ module.exports = {
     rules: []
   },
   externals: ["aws-sdk"],
-  //output: { libraryTarget: "commonjs2" }
 };

@@ -1,0 +1,19 @@
+{
+  "name": "book-covers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "start": "webpack -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jimp": "^0.10.1"
+  },
+  "devDependencies": {
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}
