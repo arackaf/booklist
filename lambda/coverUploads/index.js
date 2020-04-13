@@ -1,4 +1,7 @@
-import S3 from "aws-sdk/clients/s3";
+
+const AWS = require('aws-sdk');
+const { S3 } = AWS;
+
 import Jimp from "jimp";
 
 exports.handler = async req => {

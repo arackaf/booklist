@@ -30,7 +30,8 @@ module.exports = {
     "timers",
     "string_decoder",
     "zlib",
-    "assert"
+    "assert",
+    "aws-sdk"
   ],
 
   plugins: [commonjs(), resolve({ preferBuiltins: true }), terser({}), json()]

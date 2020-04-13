@@ -17,6 +17,8 @@ module.exports = {
   module: {
     rules: []
   },
+  externals: ["aws-sdk"],
+  output: { libraryTarget: "commonjs2" },
   plugins: [
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),
