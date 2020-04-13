@@ -52,48 +52,26 @@ module.exports.uploadCover = async (event, context, c) => {
 
     //var contentType = event.headers["Content-Type"] || event.headers["content-type"];
     try {
-      let result = lambda_multipart.parse(event, true);
-      res(CorsResponse(Object.assign({}, { result, event, parts })));
+      //return res(CorsResponse(event)); // err || "Success!!! :-D "));
+      var event2 = event;
+      if (event.isBase64Encoded) {
+        event2.body = Buffer.from(event.body, "base64").toString("binary");
+      }
 
-      // var bb = new busboy({ headers: event.headers });
+      let result = lambda_multipart.parse(event2, true);
 
-      // bb.on("file", function(fieldname, file, filename, encoding, mimetype) {
-      //   allFiles += JSON.stringify({ fieldname, filename, encoding, mimetype });
+      //return res(CorsResponse(Object.assign({}, { result, event, parts })));
 
-      //   file.on("end", () => (allFiles += "File Finished"));
-      // })
-      //   .on("field", (fieldname, val) => (allFields += "Field [%s]: value: %j" + fieldname + val))
-      //   .on("finish", () => {
-      //     res(CorsResponse(Object.assign({}, event, { allFields, allFiles, parts, body, boundary })));
-      //     //context.succeed({ statusCode: 200, body: "all done", headers });
-      //   })
-      //   .on("error", err => {
-      //     res(CorsResponse(Object.assign({}, { err1: err })));
-      //     console.log("failed", err);
-      //   });
-
-      // bb.end(body);
+      var params = { Bucket: "my-library-cover-upload-staging", Key: "Ayyyyyyy.jpg", Body: result.fileUploaded.content };
+      s3.upload(params, function(err, data) {
+        res(CorsResponse(err || "Success!!! :-D "));
+      });
     } catch (er) {
       res(CorsResponse({ er2a: er }));
     }
-
-    // res(
-    //   CorsResponse(
-    //     Object.assign({}, event, {
-    //       boundary,
-    //       body,
-    //       //body2,
-    //       parts
-    //       //err,
-    //       //fields,
-    //       //files
-    //     })
-    //   )
-    // );
-    //});
   });
 
-  context.succeed(CorsResponse(event));
+  //context.succeed(CorsResponse(event));
   return;
   //return CorsResponse(event);
 
@@ -120,6 +98,7 @@ module.exports.uploadCover = async (event, context, c) => {
               }
               var params = { Bucket: "my-library-cover-upload-staging", Key: "resized-YEAH.jpg", Body: body };
 
+              console.log(body);
               s3.upload(params, function(err, data) {
                 res(err || "Success!!! O/ ");
               });
