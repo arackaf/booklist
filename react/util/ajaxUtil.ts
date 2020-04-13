@@ -28,8 +28,10 @@ const ajaxUtil = {
   },
   postWithFilesCors(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
     return fetch(url, {
-      method: "post",
+      method: "POST",
       mode: "cors",
+      //headers: new Headers({ "Content-Type": "application/json" }),
+      //headers: new Headers({ "Content-Type": "multipart/form-data" }),
       body: data
     })
       .then(resp => resp.json())

@@ -69,8 +69,26 @@ const ManageBookCover = props => {
 
   const onDrop = files => {
     let request = new FormData();
+    
     request.append("fileUploaded", files[0]);
 
+    //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
+
+    //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
+
+    ajaxUtil.postWithFilesCors(
+      `https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod/`,
+      request,
+      // {x: 13, message: "Hello Worldddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      res => {
+        debugger;
+      },
+      err => {
+        debugger;
+      }
+    );
+
+    return;
     ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
       if (res.error) {
         setUploadState({ pendingImg: "", uploadError: res.error });
