@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
-  "scripts": {
-    "start": "webpack -w"
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {

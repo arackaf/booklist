@@ -11,3 +11,5 @@ react/dist/*
 react/dist-css/*
 index-bundle.js
 lambda/coverUploads/dist
+lambda/book-covers/.webpack
+lambda/book-covers/.serverless

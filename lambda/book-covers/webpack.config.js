@@ -1,22 +1,16 @@
-const isProd = true;
 const path = require("path");
 
 module.exports = {
-  entry: {
-    handler: "./handler-dev.js"
+  entry: "./handler.js",
+  output: {
+    libraryTarget: 'commonjs2',
+    path: path.join(__dirname, '.webpack'),
+    filename: 'handler.js',
   },
   target: "node",
-  output: {
-    filename: "./handler.js",
-    path: __dirname,
-    libraryTarget: "commonjs2" 
-  },
-  resolve: {
-    modules: [path.resolve("./"), path.resolve("./node_modules")]
-  },
-  mode: isProd ? "production" : "development",
-  module: {
-    rules: []
+  mode: "production",
+  optimization: {
+    //minimize: false,
   },
   externals: ["aws-sdk"],
 };
