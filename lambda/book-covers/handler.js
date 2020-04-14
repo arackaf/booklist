@@ -21,6 +21,8 @@ const CorsResponse = obj => ({
   body: JSON.stringify(obj)
 });
 
+const awsMultiPartParser = require('lambda-multipart-parser');
+
 module.exports.uploadCover = async (event, context, c) => {
   const s3 = new S3({});
 
@@ -38,11 +40,7 @@ module.exports.uploadCover = async (event, context, c) => {
   //let buff = new Buffer(body, "base64");
   //let body2 = buff.toString("ascii");
 
-  try {
-    parts = multipart.Parse(body, boundary);
-  } catch (e) {
-    parts = e;
-  }
+  const busBoyResults = await awsMultiPartParser.parse(event);
 
   var allFiles = "";
   var allFields = "";
@@ -57,15 +55,46 @@ module.exports.uploadCover = async (event, context, c) => {
       if (event.isBase64Encoded) {
         event2.body = Buffer.from(event.body, "base64").toString("binary");
       }
+      try {
+        parts = multipart.Parse(event2.body, boundary);
+      } catch (e) {
+        parts = e;
+      }
 
       let result = lambda_multipart.parse(event2, true);
 
-      //return res(CorsResponse(Object.assign({}, { result, event, parts })));
+      Jimp.read(busBoyResults.files[0].content, function(err, image) {
+        if (err || !image) {
+          return res(err);
+        }
 
-      var params = { Bucket: "my-library-cover-upload-staging", Key: "Ayyyyyyy.jpg", Body: result.fileUploaded.content };
-      s3.upload(params, function(err, data) {
-        res(CorsResponse(err || "Success!!! :-D "));
+        try {
+          if (image.bitmap.width > 100) {
+            image.resize(100, Jimp.AUTO);
+
+            image.getBuffer(image.getMIME(), (err, body) => {
+              if (err) {
+                return res(err);
+              }
+              var params = { Bucket: "my-library-cover-upload-staging", Key: "Yoooo-resized-YEAH-F_I_N_A_L.jpg", Body: body };
+
+              console.log(body);
+              s3.upload(params, function(err, data) {
+                res(CorsResponse(err || "Success!!! O/ "));
+              });
+            });
+          } else {
+            return res("No upload");
+          }
+        } catch (err) {
+          return res(null);
+        }
       });
+
+      // var params = { Bucket: "my-library-cover-upload-staging", Key: "Yoooooo.jpg", Body: busBoyResults.files[0].content };
+      // s3.upload(params, function(err, data) {
+      //   res(CorsResponse({ err, parts, result, busBoyResults }));
+      // });
     } catch (er) {
       res(CorsResponse({ er2a: er }));
     }
