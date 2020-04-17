@@ -104,13 +104,13 @@ const ManageBookCover = props => {
   return (
     <FlowItems>
       {currentUrl ? (
-        <div>
+        <div style={{ minWidth: "110px" }}>
           <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
         </div>
       ) : (
-        <span style={{ alignSelf: "flex-start" }} className="alert alert-warning">
-          No Cover
-        </span>
+        <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
+          <span style={{  }}>No Cover</span>
+        </div>
       )}
 
       {!pendingImg ? (
