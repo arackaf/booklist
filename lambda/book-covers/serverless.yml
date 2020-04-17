@@ -33,7 +33,7 @@ provider:
    - Effect: "Allow"
      Action:
        - "s3:*"
-     Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*"]
+     Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
     #  Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "my-library-cover-upload-staging" } ] ]  }
   #  - Effect: "Allow"
   #    Action:

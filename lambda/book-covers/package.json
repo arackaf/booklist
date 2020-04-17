@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
-  "scripts": {},
+  "scripts": {
+    "deploy": "serverless deploy -v"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

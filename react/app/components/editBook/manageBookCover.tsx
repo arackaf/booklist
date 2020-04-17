@@ -69,7 +69,7 @@ const ManageBookCover = props => {
 
   const onDrop = files => {
     let request = new FormData();
-    
+
     request.append("fileUploaded", files[0]);
 
     //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
@@ -77,14 +77,16 @@ const ManageBookCover = props => {
     //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
 
     ajaxUtil.postWithFilesCors(
-      `https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod/`,
+      "https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod",
+      //process.env.COVER_UPLOAD_URL,
       request,
       // {x: 13, message: "Hello Worldddddddddddddddddddddddddddddddddddddddddddddddddd"},
       res => {
-        debugger;
-      },
-      err => {
-        debugger;
+        if (res.error) {
+          setUploadState({ pendingImg: "", uploadError: res.error });
+        } else {
+          setUploadState({ pendingImg: res.url, uploadError: "" });
+        }
       }
     );
 
@@ -102,7 +104,9 @@ const ManageBookCover = props => {
   return (
     <FlowItems>
       {currentUrl ? (
-        <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+        <div>
+          <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+        </div>
       ) : (
         <span style={{ alignSelf: "flex-start" }} className="alert alert-warning">
           No Cover
