@@ -243,6 +243,7 @@ function browseToReactRedux(request, response) {
     response.clearCookie("logged_in");
     response.clearCookie("remember_me");
     response.clearCookie("userId");
+    response.clearCookie("loginToken");
     response.clearCookie("admin");
     response.clearCookie("jr_admin");
   }
@@ -259,6 +260,7 @@ app.post("/react/login", passport.authenticate("local"), function(req, response)
 
   response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+  response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
@@ -268,9 +270,13 @@ app.post("/react/login", passport.authenticate("local"), function(req, response)
 });
 
 app.post("/react/logout", function(req, response) {
+  let userDao = new UserDao();
+  userDao.logout(req.user.id);
+
   response.clearCookie("logged_in");
   response.clearCookie("remember_me");
   response.clearCookie("userId");
+  response.clearCookie("loginToken");
   response.clearCookie("admin");
   response.clearCookie("jr_admin");
   req.logout();
@@ -373,6 +379,7 @@ app.get("/activate/:code", function(req, response) {
         req.login(result, function() {
           response.cookie("logged_in", "true", { maxAge: 900000 });
           response.cookie("userId", result._id, { maxAge: 900000 });
+          response.cookie("loginToken", result.loginToken, { maxAge: 900000 });
           if (result.rememberMe) {
             response.cookie("remember_me", result.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
           }

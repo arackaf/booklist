@@ -3,6 +3,8 @@ import md5 from "blueimp-md5";
 import { ObjectID } from "mongodb";
 import sendEmail from "../app-helpers/sendEmail";
 
+import uuid from "uuid/v4";
+
 var salt = process.env.SALT;
 
 const newUsersSubjects = [
@@ -15,6 +17,15 @@ const newUsersSubjects = [
 ];
 
 const siteRoot = process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://localhost:3000";
+
+async function wrapWithLoginToken(db, user) {
+  if (user && !user.loginToken) {
+    user.loginToken = uuid();
+    await db.collection("users").updateOne({ _id: user._id }, { $set: { loginToken: user.loginToken } });
+  }
+
+  return user;
+}
 
 class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
@@ -38,7 +49,7 @@ class UserDAO extends DAO {
     email = email.toLowerCase();
     let db = await super.open();
     try {
-      return await db.collection("users").findOne({ activated: true, email, password: this.saltAndHashPassword(password) });
+      return wrapWithLoginToken(db, await db.collection("users").findOne({ activated: true, email, password: this.saltAndHashPassword(password) }));
     } finally {
       super.dispose(db);
     }
@@ -55,7 +66,7 @@ class UserDAO extends DAO {
   async lookupUserByToken(token) {
     let db = await super.open();
     try {
-      return await db.collection("users").findOne({ token });
+      return wrapWithLoginToken(db, await db.collection("users").findOne({ token }));
     } finally {
       super.dispose(db);
     }
@@ -117,6 +128,10 @@ class UserDAO extends DAO {
       subject: "Activate your My Library account",
       html: `To activate your account, simply click <a href="${url}">here</a>.\n\n\nOr paste this url into a browser ${url}`
     });
+  }
+  async logout(_id) {
+    let db = await super.open();
+    await db.collection("users").updateOne({ _id: ObjectID(_id) }, { $set: { loginToken: "" } });
   }
   saltAndHashPassword(password) {
     return md5(`${salt}${password}${salt}`);
