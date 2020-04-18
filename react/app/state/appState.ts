@@ -20,6 +20,10 @@ if (logged_in && (window as any).location.pathname == "/login"){
   window.location.replace("/");
 }
 
+if (logged_in && (window as any).location.pathname == "/login"){
+  window.location.replace("/");
+}
+
 if (window.screen.width < 700) {
   Object.assign(uiSettings, { isDesktop: false, showingDesktop: false, isMobile: true, showingMobile: true });
 } else {
