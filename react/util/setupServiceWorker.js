@@ -1,7 +1,20 @@
 import { isLoggedIn } from "util/loginStatus";
 
+console.log("F");
+
 export default function setupServiceWorker() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
+  if ("serviceWorker" in navigator) {
+    //} && !/localhost/.test(window.location)) {
+    navigator.serviceWorker.ready.then(reg => {
+      let loginInfo = isLoggedIn();
+      try {
+        if (loginInfo.logged_in) {
+          navigator.serviceWorker.controller.postMessage({ command: "do-sync", userId: loginInfo.userId });
+        } else {
+          navigator.serviceWorker.controller.postMessage({ command: "logged-out" });
+        }
+      } catch (er) {}
+    });
     navigator.serviceWorker.register("/service-worker.js").then(registration => {
       if (registration.waiting && registration.active) {
         newerSwAvailable(registration.waiting);
@@ -16,12 +29,6 @@ export default function setupServiceWorker() {
           }
         };
       };
-
-      if (isLoggedIn().logged_in) {
-        try {
-          navigator.serviceWorker.controller.postMessage({ command: "do-sync" });
-        } catch (er) {}
-      }
     });
 
     function newerSwAvailable(sw) {
