@@ -1,48 +1,70 @@
-import { updateSyncInfo, insertItems } from "./indexedDbUpdateUtils";
-
-import { doFetch } from "./util";
+import { doFetch, bookSyncTransform } from "./util";
+import { updateSyncInfo, insertItems, deleteItem } from "./indexedDbUpdateUtils";
+import { getLibraryDatabase } from "./indexedDbUtil";
+import { syncItem } from "./incrementalSync";
 
 import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
 import allTags from "../../graphQL/tags/getTags.graphql";
 import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
+import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
 import initialOfflineBookSync from "../../graphQL/books/initialOfflineBookSync.graphql";
+import { readTableCount } from "./indexedDbDataAccess";
 
-export function fullSync(page = 1) {
-  let open = indexedDB.open("books", 1);
+export function setUserLastSync(userId, lastSync) {
+  return updateSyncInfo(syncInfo => {
+    syncInfo.usersSyncd[userId] = Object.assign(syncInfo.usersSyncd[userId] || {}, { lastSync });
+    return syncInfo;
+  });
+}
 
-  // Set up the database schema
-  open.onsuccess = evt => {
-    let db = open.result;
+export async function incrementalSync(userId, lastSync) {
+  let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: lastSync })}`;
+  let { data } = await doFetch(syncQuery).then(resp => resp.json());
+
+  for (let b of data.allBooks.Books) await syncItem(b, "books", bookSyncTransform);
+  for (let s of data.allSubjects.Subjects) await syncItem(s, "subjects");
+  for (let t of data.allTags.Tags) await syncItem(t, "tags");
+
+  for (let { _id } of data.deletedBooks._ids) await deleteItem(_id, "books");
+  for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
+  for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
+  await setUserLastSync(userId, +new Date());
+  console.log("INCREMENTAL SYNC COMPLETE");
+}
+
+export function fullSync(userId) {
+  getLibraryDatabase(db => {
     Promise.all([new Promise(res => doBooksSync(db, res)), doSubjectsSync(db), doTagsSync(db), doLabelColorsSync(db)]).then(() => {
-      updateSyncInfo(db, { lastSync: +new Date() });
+      return setUserLastSync(userId, +new Date());
     });
-  };
+  });
 }
 
 function doBooksSync(db, onFinish, page = 1) {
   let pageSize = 50;
   getGraphqlResults(initialOfflineBookSync, { page, pageSize }, "allBooks", "Books").then(books => {
-    insertItems(db, books, "books", { transformItem: book => Object.assign(book, { imgSync: 0, title_ci: (book.title || "").toLowerCase() }) }).then(
-      () => {
-        if (books.length == pageSize) {
-          doBooksSync(db, onFinish, page + 1);
-        } else {
-          syncImages(db, onFinish);
-        }
+    insertItems(db, books, "books", {
+      transformItem: book => Object.assign(book, { imgSync: 0, title_ci: (book.title || "").toLowerCase() })
+    }).then(() => {
+      if (books.length == pageSize) {
+        doBooksSync(db, onFinish, page + 1);
+      } else {
+        syncImages(db, onFinish);
       }
-    );
+    });
   });
 }
 
-function doSubjectsSync(db, page = 1) {
+function doSubjectsSync(db) {
   return getGraphqlResults(allSubjects, {}, "allSubjects", "Subjects").then(subjects => insertItems(db, subjects, "subjects"));
 }
 
-function doTagsSync(db, page = 1) {
+function doTagsSync(db) {
   return getGraphqlResults(allTags, {}, "allTags", "Tags").then(tags => insertItems(db, tags, "tags"));
 }
 
-function doLabelColorsSync(db, page = 1) {
+async function doLabelColorsSync(db) {
+  if ((await readTableCount("labelColors")) > 0) return;
   return getGraphqlResults(allLabelColors, {}, "allLabelColors", "LabelColors").then(labelColors => insertItems(db, labelColors, "labelColors"));
 }
 
@@ -63,6 +85,7 @@ async function syncImages(db, onComplete) {
   };
 
   async function runIt() {
+    onComplete();
     return;
     if (!booksToUpdate.length) return;
 

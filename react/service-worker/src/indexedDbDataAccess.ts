@@ -1,4 +1,23 @@
 import { gqlResponse } from "./util";
+import escapeRegex from "./lib/escape-regex";
+import { getLibraryDatabase } from "./indexedDbUtil";
+
+export async function getSyncInfo() {
+  let [syncInfo = {}] = await readTable("syncInfo");
+  return syncInfo;
+}
+
+export function readTableCount(table) {
+  return new Promise(res => {
+    getLibraryDatabase(db => {
+      let transaction = db.transaction([table], "readonly");
+      let store = transaction.objectStore(table);
+
+      let countRequest = store.count();
+      countRequest.onsuccess = () => res(countRequest.result);
+    });
+  });
+}
 
 export function readBooks(variableString) {
   let variables = JSON.parse(variableString);
@@ -23,19 +42,16 @@ export function readBooks(variableString) {
   let idx = !sort || sortField == "_id" ? "dateAdded" : sortField == "pages" ? "pages" : "title_ci";
   let idxDir = sortField && sort[sortField] == -1 ? "prev" : void 0;
 
-  return readTable("books", idx, { predicate, skip, cursorSkip, limit, idxDir }).then(gqlResponse("allBooks", "Books", { Meta: { count: 12 } }));
+  return readTable("books", idx, { predicate, skip, cursorSkip, limit, idxDir }).then(gqlResponse("allBooks", "Books"));
 }
 
-export function readTable(table, idxName = null, { predicate, idxDir, cursorSkip, skip, limit } = {}) {
-  let open = indexedDB.open("books", 1);
-
+export function readTable(table, idxName = null, { predicate, idxDir, cursorSkip, skip, limit } = {} as any): any {
   if (!predicate) {
     predicate = () => true;
   }
 
   return new Promise(resolve => {
-    open.onsuccess = evt => {
-      let db = open.result;
+    getLibraryDatabase(db => {
       let tran = db.transaction(table);
       let objStore = tran.objectStore(table);
 
@@ -65,6 +81,6 @@ export function readTable(table, idxName = null, { predicate, idxDir, cursorSkip
         }
         cursor.continue();
       };
-    };
+    });
   });
 }
