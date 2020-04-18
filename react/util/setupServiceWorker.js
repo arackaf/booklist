@@ -11,7 +11,7 @@ export default function setupServiceWorker() {
         if (loginInfo.logged_in) {
           navigator.serviceWorker.controller.postMessage({ command: "do-sync", userId: loginInfo.userId });
         } else {
-          navigator.serviceWorker.controller.postMessage({ command: "loggeed-out" });
+          navigator.serviceWorker.controller.postMessage({ command: "logged-out" });
         }
       } catch (er) {}
     });

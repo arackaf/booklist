@@ -43,7 +43,7 @@ self.addEventListener("message", async evt => {
 });
 
 self.addEventListener("message", async evt => {
-  if (evt.data && evt.data.command == "loggeed-out") {
+  if (evt.data && evt.data.command == "logged-out") {
     await updateSyncInfo({ currentUser: null, usersSyncd: {} });
     await clearUserData();
   }
