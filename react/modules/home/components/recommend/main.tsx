@@ -92,8 +92,8 @@ export default props => {
             <table className="table table-condensed table-striped">
               <TransitionGroup component="tbody">
                 {selectedBooks.map(book => (
-                  <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
-                    <DisplayBook key={book._id} book={book} dispatch={dispatch} />
+                  <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
+                    <DisplayBook className="bl-fade" key={book._id} book={book} dispatch={dispatch} />
                   </CSSTransition>
                 ))}
               </TransitionGroup>
@@ -130,7 +130,7 @@ export default props => {
 const DisplayBook = props => {
   const { book } = props;
   return (
-    <tr>
+    <tr className={props.className}>
       <td>
         <button onClick={() => props.dispatch(["deSelectBook", book])} style={{ cursor: "pointer" }} className="btn btn-xs btn-danger">
           Remove
