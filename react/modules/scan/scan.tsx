@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState, useReducer } from "react";
+import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState, useReducer, useLayoutEffect } from "react";
 import BookEntryItem from "./bookEntryItem";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -130,6 +130,17 @@ const BookEntryList: FunctionComponent<{}> = () => {
 
   const { runMutation, running } = useMutation(buildMutation(createBookMutation));
 
+  const ref = useRef<any>();
+  const [height, set] = useState(0);
+  const [ro] = useState(() => new MutationObserver(() => ref.current && height != ref.current.offsetHeight && set(ref.current.offsetHeight)));
+  useLayoutEffect(() => {
+    if (showScanInstructions && ref.current) {
+      set(ref.current.offsetHeight);
+      ro.observe(ref.current, { attributes: true, childList: true, subtree: true });
+    }
+    return () => ro && ro.disconnect();
+  }, [showScanInstructions]);
+
   return (
     <div className="standard-module-container">
       <FlexRow xsFlowReverse={true}>
@@ -142,9 +153,17 @@ const BookEntryList: FunctionComponent<{}> = () => {
           </div>
           <TransitionGroup>
             {showScanInstructions ? (
-              <CSSTransition classNames="bl-animate" timeout={300} key={1}>
-                <div className="bl-fade" style={{ width: "80%" }}>
-                  <div>
+              <CSSTransition
+                classNames="bl-animate"
+                onEntering={node => {
+                  // debugger;
+                  node.style.height = `${height}px`;
+                }}
+                timeout={300}
+                key={1}
+              >
+                <div className="bl-slide-down" style={{ width: "80%" }}>
+                  <div ref={ref}>
                     <div style={{ height: 10 }} />
                     <div style={{ margin: 0 }} className="alert alert-info alert-slim">
                       Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search
@@ -191,7 +210,9 @@ const BookEntryList: FunctionComponent<{}> = () => {
                     <TransitionGroup>
                       {booksJustSaved.map(book => (
                         <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
-                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
+                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>
+                            {book.title}
+                          </li>
                         </CSSTransition>
                       ))}
                     </TransitionGroup>

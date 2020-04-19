@@ -528,6 +528,12 @@ div.toast-notification h4 {
 
 // ------------------------------------------------------
 
+.bl-slide-down {
+  height: 0;
+  transition: height var(--animation-duration) ease-in;
+  overflow: hidden;
+}
+
 .bl-animate-enter {
   &.bl-fade {
     opacity: 0.01;
@@ -552,10 +558,14 @@ div.toast-notification h4 {
   }
 }
 .bl-animate-exit.bl-animate-exit-active {
+  //TODO: remove
   transition: all var(--animation-duration) ease-in;
   &.bl-fade {
     opacity: 0.01;
     transition-property: opacity;
+  }
+  &.bl-slide-down {
+    height: 0 !important;
   }
   &.bl-slide-out {
     transform: translate3d(100%,0,0);
