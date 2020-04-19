@@ -528,27 +528,6 @@ div.toast-notification h4 {
 
 // ------------------------------------------------------
 
-.fade-transition-enter {
-  opacity: 0.01;
-}
-.fade-transition-enter.fade-transition-enter-active {
-  opacity: 1;
-  transition: opacity var(--animation-duration) ease-in;
-}
-.fade-transition-exit {
-  opacity: 1;
-  
-  &.overlay {
-    position: absolute;
-  }
-}
-.fade-transition-exit.fade-transition-exit-active {
-  opacity: 0.01;
-  transition: opacity var(--animation-duration) ease-in;
-}
-
-// ------------------------------------------------------
-
 .bl-animate-enter {
   &.bl-fade {
     opacity: 0.01;

@@ -142,8 +142,8 @@ const BookEntryList: FunctionComponent<{}> = () => {
           </div>
           <TransitionGroup>
             {showScanInstructions ? (
-              <CSSTransition classNames="fade-transition" timeout={300} key={1}>
-                <div style={{ width: "80%" }}>
+              <CSSTransition classNames="bl-animate" timeout={300} key={1}>
+                <div className="bl-fade" style={{ width: "80%" }}>
                   <div>
                     <div style={{ height: 10 }} />
                     <div style={{ margin: 0 }} className="alert alert-info alert-slim">
@@ -179,8 +179,8 @@ const BookEntryList: FunctionComponent<{}> = () => {
 
           <TransitionGroup>
             {showIncomingQueue ? (
-              <CSSTransition classNames="fade-transition" timeout={300} key={1}>
-                <div>
+              <CSSTransition classNames="bl-animate" timeout={300} key={1}>
+                <div className="bl-fade">
                   <br />
                   <div className="alert alert-info alert-slim" style={{ marginBottom: "15px" }}>
                     Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated
@@ -190,8 +190,8 @@ const BookEntryList: FunctionComponent<{}> = () => {
                   <ul style={{ marginBottom: 0 }}>
                     <TransitionGroup>
                       {booksJustSaved.map(book => (
-                        <CSSTransition classNames="fade-transition" timeout={300} key={book._id}>
-                          <li style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
+                        <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
+                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
                         </CSSTransition>
                       ))}
                     </TransitionGroup>
