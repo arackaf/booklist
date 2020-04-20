@@ -75,11 +75,14 @@ const ManageBookCover = props => {
     //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
 
     //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
-
+//  https://kiwjiy8921.execute-api.us-east-1.amazonaws.com/dev/
     ajaxUtil.postWithFilesCors(
-      "https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod",
+      // "https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod",
+      //"https://kiwjiy8921.execute-api.us-east-1.amazonaws.com/dev/",
+      "https://2bqxn2n1yd.execute-api.us-east-1.amazonaws.com/dev/",
       //process.env.COVER_UPLOAD_URL,
       request,
+      //JSON.stringify("{}"),
       // {x: 13, message: "Hello Worldddddddddddddddddddddddddddddddddddddddddddddddddd"},
       res => {
         if (res.error) {
