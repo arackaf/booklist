@@ -112,7 +112,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 
           <div className="col-xs-12">
             {loading ? (
-              <button style={{minWidth: "5ch"}} disabled={true} className="btn btn-default">
+              <button style={{ minWidth: "5ch" }} disabled={true} className="btn btn-default">
                 <i className="fa fa-fw fa-spin fa-spinner" />
               </button>
             ) : (
@@ -137,16 +137,36 @@ const SearchResults = props => {
   const books = props?.data?.allBooks?.Books;
   const { loading, selectedBooksSet, currentQuery } = props;
   const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
+  const currentBooksRef = useRef<any>();
+  currentBooksRef.current = availableBooks;
+
+  const [holdForItems, setHoldForItems] = useState(false);
 
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
-        {availableBooks == null ? null : availableBooks?.length ? (
-          <CSSTransition key={currentQuery} appear={true} enter={true} exit={true} classNames="bl-animate" timeout={3500}>
+        {availableBooks == null ? null : availableBooks?.length || holdForItems ? (
+          <CSSTransition
+            onEnter={() => setHoldForItems(true)}
+            key={currentQuery}
+            appear={true}
+            enter={true}
+            exit={true}
+            classNames="bl-animate"
+            timeout={3500}
+          >
             <ul className="animate-fast bl-overlay bl-fade">
               <TransitionGroup component={null}>
                 {availableBooks.map(book => (
-                  <CSSTransition appear={false} enter={false} exit={!loading} classNames="bl-animate" timeout={300} key={book._id}>
+                  <CSSTransition
+                    onExited={() => !currentBooksRef.current.length && setHoldForItems(false)}
+                    appear={false}
+                    enter={false}
+                    exit={!loading}
+                    classNames="bl-animate"
+                    timeout={300}
+                    key={book._id}
+                  >
                     <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
                   </CSSTransition>
                 ))}
