@@ -51,7 +51,6 @@ async function updateBookCovers(field, maxWidth) {
   try {
     console.log("Starting...\n");
     await updateBookCovers("smallImage");
-    console.log("XXX")
     await updateBookCovers("mediumImage", 106);
 
     const { db, client } = await dbPromise;

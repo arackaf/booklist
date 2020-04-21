@@ -320,7 +320,7 @@ export const GridViewShell: SFC<{}> = ({}) => {
           <tbody>
             <tr>
               <td colSpan={8}>
-                <h1>
+                <h1 style={{ color: "var(--neutral-5)" }}>
                   Books are loading <i className="fas fa-cog fa-spin"></i>
                 </h1>
               </td>
