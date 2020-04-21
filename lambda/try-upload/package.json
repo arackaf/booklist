@@ -13,6 +13,7 @@
     "busboy": "^0.3.1",
     "jimp": "^0.10.1",
     "lambda-multipart-parser": "0.0.2",
+    "mongodb": "^3.5.6",
     "multiparty": "^4.2.1",
     "parse-multipart": "^1.0.4"
   },

@@ -3,6 +3,7 @@
 const AWS = require("aws-sdk");
 const { S3 } = AWS;
 
+const { MongoClient } = require("mongodb");
 const Jimp = require("jimp");
 const awsMultiPartParser = require("lambda-multipart-parser");
 
@@ -16,7 +17,29 @@ const CorsResponse = obj => ({
   body: JSON.stringify(obj)
 });
 
+const getConnection = () => {
+  let connString = process.env.Mongo_Conn;
+  let dbName = process.env.DB_Name;
+
+  return MongoClient.connect(connString, { useNewUrlParser: true }).then(client => client.db(dbName));
+};
+
 module.exports.hello = async (event, context, c) => {
+  try {
+    const db = await getConnection();
+    console.log("X");
+    
+    let books = await db
+      .collection("books")
+      .find({})
+      .toArray();
+
+    return CorsResponse({ msg: "ayyyyyyy", x: 1, count: books.length });
+  } catch (er) {
+    throw er;
+    return CorsResponse({ er, msg: JSON.stringify(er) });
+  }
+
   const s3 = new S3({});
 
   const body = event.body;

@@ -67,6 +67,9 @@ provider:
 
 functions:
   hello:
+    environment:
+      Mongo_Conn: ${file(../config.js):mongoConnection}
+      DB_Name: ${file(../config.js):dbName}
     handler: handler.hello
     events:
       - http:
