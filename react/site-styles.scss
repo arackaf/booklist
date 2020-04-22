@@ -576,7 +576,7 @@ div.toast-notification h4 {
 
 .bl-animate-exit.bl-animate-exit-active {
   &.bl-fade {
-    opacity: 0.01;
+    opacity: 0;
   }
   &.bl-slide-down {
     height: 0 !important;

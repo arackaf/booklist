@@ -28,22 +28,21 @@ export const SlideInContents = ({ fast = false, children }) => {
   const allChildren = Children.toArray(children);
   const Child = allChildren[0];
   const on = Child != null;
-  
+
   const [ref, height] = useHeight({ on });
+  const [showing, setShowing] = useState(false);
 
   return (
     <TransitionGroup>
       {on ? (
         <CSSTransition
           classNames="bl-animate"
-          onEntering={node => {
-            // debugger;
-            node.style.height = `${height}px`;
-          }}
+          onEntering={() => setShowing(true)}
+          onExiting={() => setShowing(false)}
           timeout={fast ? 150 : 300}
           key={1}
         >
-          <div className="bl-slide-down" style={{ overflow: "hidden" }}>
+          <div className="bl-slide-down" style={{ height: showing ? `${height}px` : 0 }}>
             <div ref={ref}>{Child}</div>
           </div>
         </CSSTransition>
