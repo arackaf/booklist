@@ -13,6 +13,8 @@ import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
 
+import { useSimpleFlip, useFlipGroup } from "react-easy-flip";
+
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
@@ -140,12 +142,15 @@ const SearchResults = props => {
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
+  const [id, setId] = useState(0);
   const [holdForItems, setHoldForItems] = useState(false);
+
+  useFlipGroup({ flipId: "yo", deps: [] /*opts: { easing: "ease-in" }*/ });
 
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
-        {availableBooks == null ? null : availableBooks?.length || holdForItems ? (
+        {availableBooks == null ? null : availableBooks?.length ? (
           <CSSTransition
             onEnter={() => setHoldForItems(true)}
             key={currentQuery}
@@ -155,11 +160,11 @@ const SearchResults = props => {
             classNames="bl-animate"
             timeout={3500}
           >
-            <ul className="animate-fast bl-overlay bl-fade">
+            <ul id="yo" className="animate-fast bl-overlay bl-fade">
               <TransitionGroup component={null}>
                 {availableBooks.map(book => (
                   <CSSTransition
-                    onExited={() => !currentBooksRef.current.length && setHoldForItems(false)}
+                    onExited={() => { setId(id => id + 1); !currentBooksRef.current.length && setHoldForItems(false) }}
                     appear={false}
                     enter={false}
                     exit={!loading}
@@ -167,7 +172,7 @@ const SearchResults = props => {
                     timeout={300}
                     key={book._id}
                   >
-                    <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                    <SearchResult id={book._id} key={book._id} book={book} dispatch={props.dispatch} />
                   </CSSTransition>
                 ))}
               </TransitionGroup>
@@ -197,7 +202,7 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast-s bl-fade bl-slide-out">
+    <li data-id={props.id} className="animate-fast-s bl-fade bl-slide-out">
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>
