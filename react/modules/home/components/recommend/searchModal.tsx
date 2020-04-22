@@ -142,11 +142,19 @@ const SearchResults = props => {
 
   const [holdForItems, setHoldForItems] = useState(false);
 
+  const allSiblings = (node, updater) => {
+    var next = node;
+    while ((next = next.nextSibling)) {
+      updater(next);
+    }
+  };
+
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
         {availableBooks == null ? null : availableBooks?.length || holdForItems ? (
           <CSSTransition
+            unmountOnExit={true}
             onEnter={() => setHoldForItems(true)}
             key={currentQuery}
             appear={true}
@@ -159,7 +167,25 @@ const SearchResults = props => {
               <TransitionGroup component={null}>
                 {availableBooks.map(book => (
                   <CSSTransition
-                    onExited={() => !currentBooksRef.current.length && setHoldForItems(false)}
+                    onExit={node => {
+                      node.style.transitionProperty = "";
+                      allSiblings(node, n => {
+                        let oldTransProperty = n.style.transitionProperty.trim().replace(/none/, "");
+                        n.style.transitionProperty = oldTransProperty + (oldTransProperty ? "," : "") + "transform";
+                        n.style.transform += ` translateY(-${node.offsetHeight}px) `;
+                      });
+                    }}
+                    onExited={node => {
+                      allSiblings(node, n => {
+                        n.style.transform = n.style.transform.replace(`translateY(-${node.offsetHeight}px)`, "");
+                        n.style.transitionProperty = n.style.transitionProperty.replace(/,?transform/, "");
+                        if (!n.style.transitionProperty.trim()) {
+                          n.style.transitionProperty = "none";
+                        }
+                      });
+
+                      !currentBooksRef.current.length && setHoldForItems(false);
+                    }}
                     appear={false}
                     enter={false}
                     exit={!loading}
@@ -197,7 +223,7 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast-s bl-fade bl-slide-out">
+    <li className="animate-fast-s bl-fade bl-slide-adjust bl-slide-out">
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>

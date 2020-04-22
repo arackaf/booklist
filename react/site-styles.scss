@@ -530,6 +530,12 @@ div.toast-notification h4 {
   --animation-duration: 150ms;
 }
 
+.bl-slide-adjust {
+  transition-duration: var(--animation-duration);
+  //transition-property: transform;
+  transition-timing-function: ease-in;
+}
+
 // animation rules
 .bl-animate-enter.bl-animate-enter-active, .bl-animate-exit.bl-animate-exit-active {
   transition-duration: var(--animation-duration);
@@ -537,6 +543,10 @@ div.toast-notification h4 {
   
   &.bl-fade {
     transition-property: opacity;
+
+    &.bl-slide-adjust {
+      transition-property: opacity,transform
+    }
   }
 }
 
