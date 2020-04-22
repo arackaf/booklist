@@ -210,9 +210,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
                     <TransitionGroup>
                       {booksJustSaved.map(book => (
                         <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
-                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>
-                            {book.title}
-                          </li>
+                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
                         </CSSTransition>
                       ))}
                     </TransitionGroup>

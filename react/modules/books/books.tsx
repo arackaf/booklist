@@ -148,7 +148,7 @@ const Fallback: SFC<{ uiView: BookSearchUiView; totalPages: number; resultsCount
       {uiView.isGridView ? (
         <GridViewShell />
       ) : (
-        <h1>
+        <h1 style={{ color: "var(--neutral-5)" }}>
           Books are loading <i className="fas fa-cog fa-spin"></i>
         </h1>
       )}

@@ -29,7 +29,6 @@ export async function incrementalSync(userId, lastSync) {
   for (let { _id } of data.deletedSubjects._ids) await deleteItem(_id, "subjects");
   for (let { _id } of data.deletedTags._ids) await deleteItem(_id, "tags");
   await setUserLastSync(userId, +new Date());
-  console.log("INCREMENTAL SYNC COMPLETE");
 }
 
 export function fullSync(userId) {

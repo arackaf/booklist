@@ -522,6 +522,10 @@ div.toast-notification h4 {
   color: var(--primary-10);
 }
 
+// ------------------------------------------------------------------------------------
+// ------------------------------- Animation ------------------------------------------
+// ------------------------------------------------------------------------------------
+
 .animate-fast {
   --animation-duration: 150ms;
 }
@@ -534,17 +538,29 @@ div.toast-notification h4 {
   overflow: hidden;
 }
 
+// animation rules
+.bl-animate-enter.bl-animate-enter-active, .bl-animate-exit.bl-animate-exit-active {
+  transition-duration: var(--animation-duration);
+  transition-timing-function: ease-in;
+  
+  &.bl-fade {
+    transition-property: opacity;
+  }
+}
+
+// Enter
 .bl-animate-enter {
   &.bl-fade {
-    opacity: 0.01;
+    opacity: 0;
   }
 }
 .bl-animate-enter.bl-animate-enter-active {
   &.bl-fade {
     opacity: 1;
-    transition: opacity var(--animation-duration) ease-in;
   }
 }
+
+// Exit
 .bl-animate-exit {
   &.bl-fade {
     opacity: 1;
@@ -557,12 +573,10 @@ div.toast-notification h4 {
     position: absolute;
   }
 }
+
 .bl-animate-exit.bl-animate-exit-active {
-  //TODO: remove
-  transition: all var(--animation-duration) ease-in;
   &.bl-fade {
     opacity: 0.01;
-    transition-property: opacity;
   }
   &.bl-slide-down {
     height: 0 !important;

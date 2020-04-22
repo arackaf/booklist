@@ -1,7 +1,5 @@
 import { isLoggedIn } from "util/loginStatus";
 
-console.log("F");
-
 export default function setupServiceWorker() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
     navigator.serviceWorker.ready.then(reg => {
