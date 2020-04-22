@@ -24,13 +24,14 @@ export function useHeight({ on } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ fast = false, children }) => {
+export const SlideInContents = ({ className = "", style = {}, fast = false, children }) => {
   const allChildren = Children.toArray(children);
   const Child = allChildren[0];
   const on = Child != null;
 
-  const [ref, height] = useHeight({ on });
+  const [ref, currentHeight] = useHeight({ on });
   const [showing, setShowing] = useState(false);
+  const height = showing ? `${currentHeight}px` : 0;
 
   return (
     <TransitionGroup>
@@ -42,8 +43,10 @@ export const SlideInContents = ({ fast = false, children }) => {
           timeout={fast ? 150 : 300}
           key={1}
         >
-          <div className="bl-slide-down" style={{ height: showing ? `${height}px` : 0 }}>
-            <div ref={ref}>{Child}</div>
+          <div className={"bl-slide-down"} style={{ height }}>
+            <div className={className} style={style} ref={ref}>
+              {Child}
+            </div>
           </div>
         </CSSTransition>
       ) : null}
