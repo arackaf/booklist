@@ -8,6 +8,7 @@ import Loading from "app/components/loading";
 import { useMutation, buildMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import FlexRow from "app/components/layout/FlexRow";
+import { SlideInContents } from "app/animationHelpers";
 
 declare var webSocketAddress: any;
 
@@ -151,33 +152,21 @@ const BookEntryList: FunctionComponent<{}> = () => {
               Manual entry
             </button>
           </div>
-          <TransitionGroup>
+          <SlideInContents>
             {showScanInstructions ? (
-              <CSSTransition
-                classNames="bl-animate"
-                onEntering={node => {
-                  // debugger;
-                  node.style.height = `${height}px`;
-                }}
-                timeout={300}
-                key={1}
-              >
-                <div className="bl-slide-down" style={{ width: "80%" }}>
-                  <div ref={ref}>
-                    <div style={{ height: 10 }} />
-                    <div style={{ margin: 0 }} className="alert alert-info alert-slim">
-                      Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search
-                      for each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
-                      <br /> <br />
-                      After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of
-                      books with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else
-                      they may get overridden.
-                    </div>
-                  </div>
+              <div style={{ width: "80%" }}>
+                <div style={{ height: 10 }} />
+                <div style={{ margin: 0 }} className="alert alert-info alert-slim">
+                  Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for
+                  each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                  <br /> <br />
+                  After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books
+                  with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
+                  overridden.
                 </div>
-              </CSSTransition>
+              </div>
             ) : null}
-          </TransitionGroup>
+          </SlideInContents>
           <br />
           {entryList.map((entry, i) => (
             <div key={i}>
@@ -210,7 +199,9 @@ const BookEntryList: FunctionComponent<{}> = () => {
                     <TransitionGroup>
                       {booksJustSaved.map(book => (
                         <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
-                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
+                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>
+                            {book.title}
+                          </li>
                         </CSSTransition>
                       ))}
                     </TransitionGroup>
