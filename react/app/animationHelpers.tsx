@@ -43,10 +43,8 @@ export const SlideInContents = ({ className = "", style = {}, fast = false, chil
           timeout={fast ? 150 : 300}
           key={1}
         >
-          <div className={"bl-slide-down"} style={{ height }}>
-            <div className={className} style={style} ref={ref}>
-              {Child}
-            </div>
+          <div className={"bl-slide-down " + className} style={{ ...style, height }}>
+            <div ref={ref}>{Child}</div>
           </div>
         </CSSTransition>
       ) : null}
