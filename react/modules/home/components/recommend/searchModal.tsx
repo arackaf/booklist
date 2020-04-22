@@ -178,10 +178,14 @@ const SearchResults = props => {
                     onExited={node => {
                       allSiblings(node, n => {
                         n.style.transform = n.style.transform.replace(`translateY(-${node.offsetHeight}px)`, "");
-                        n.style.transitionProperty = n.style.transitionProperty.replace(/,?transform/, "");
-                        if (!n.style.transitionProperty.trim()) {
-                          n.style.transitionProperty = "none";
+                        
+                        const allTransitions = n.style.transitionProperty.split(",").map(p => p.trim()).filter(p => p);
+                        const index = allTransitions.indexOf("transform");
+                        if (index >= 0){
+                          allTransitions.splice(index, 1);
                         }
+
+                        n.style.transitionProperty = allTransitions.length ? allTransitions.join(",") : "";
                       });
 
                       !currentBooksRef.current.length && setHoldForItems(false);
@@ -190,7 +194,7 @@ const SearchResults = props => {
                     enter={false}
                     exit={!loading}
                     classNames="bl-animate"
-                    timeout={300}
+                    timeout={150}
                     key={book._id}
                   >
                     <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
