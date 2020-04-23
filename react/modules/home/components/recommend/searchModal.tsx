@@ -192,7 +192,7 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast-s bl-fade bl-slide-out">
+    <li className="animate-fast-s bl-fade-out bl-slide-out">
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>

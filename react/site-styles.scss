@@ -530,7 +530,7 @@ div.toast-notification h4 {
   --animation-duration: 150ms;
 }
 
-.bl-fade, .bl-slide-out, .bl-slide-down {
+.bl-fade, .bl-fade-out .bl-slide-out, .bl-slide-down {
   transition-duration: var(--animation-duration);
   transition-timing-function: ease-in;
 }
@@ -575,7 +575,7 @@ div.toast-notification h4 {
 
 // Exit
 .bl-animate-exit {
-  &.bl-fade {
+  &.bl-fade, &.bl-fade-out {
     opacity: 1;
   }
   &.bl-slide-out {
@@ -588,7 +588,7 @@ div.toast-notification h4 {
 }
 
 .bl-animate-exit.bl-animate-exit-active {
-  &.bl-fade {
+  &.bl-fade, &.bl-fade-out {
     opacity: 0;
   }
   &.bl-slide-down {
