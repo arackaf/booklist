@@ -547,14 +547,15 @@ div.toast-notification h4 {
   overflow: hidden;
 }
 
-.bl-fade.bl-slide-out {
-  transition-property: opacity,transform;
-}
 .bl-fade.bl-slide-down {
   transition-property: opacity,height;
 }
-
-
+.bl-fade.bl-slide-out {
+  transition-property: opacity,transform;
+}
+.bl-slide-down.bl-slide-out {
+  transition-property: height,transform;
+}
 
 // Enter
 .bl-animate-enter {
@@ -591,9 +592,6 @@ div.toast-notification h4 {
   }
   &.bl-slide-out {
     transform: translate3d(100%,0,0);
-  }
-  &.bl-slide-down.bl-slide-out {
-    transition-property: transform,height;
   }
 }
 
