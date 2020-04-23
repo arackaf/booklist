@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useEffect, useRef, useMemo } from "react";
 
 import Modal from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
@@ -30,6 +30,12 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const [tags, setTags] = useState([]);
   const { loading, loaded, data, error, currentQuery } = searchResults;
 
+  const noAvailableBooks = useMemo(() => {
+    const allBooks = data?.allBooks?.Books;
+
+    return allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
+  }, [selectedBooksSet, searchResults.data]);
+
   useEffect(() => {
     if (props.isOpen) {
       setSubjects(searchState.subjects || []);
@@ -57,6 +63,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
       searchChildSubjects: childSubEl.current.checked
     });
   };
+
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
       <Form submit={applyFilters}>
@@ -111,15 +118,25 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-12">
-            {loading ? (
-              <button style={{ minWidth: "5ch" }} disabled={true} className="btn btn-default">
-                <i className="fa fa-fw fa-spin fa-spinner" />
-              </button>
-            ) : (
-              <SubmitIconButton className="btn btn-default">
-                <i className="fal fa-search" />
-              </SubmitIconButton>
-            )}
+            <FlexRow>
+              {loading ? (
+                <button style={{ minWidth: "5ch" }} disabled={true} className="btn btn-default">
+                  <i className="fa fa-fw fa-spin fa-spinner" />
+                </button>
+              ) : (
+                <SubmitIconButton key={1} className="btn btn-default">
+                  <i className="fal fa-search" />
+                </SubmitIconButton>
+              )}
+
+              <TransitionGroup component={null}>
+                {noAvailableBooks ? (
+                  <CSSTransition key={2} classNames="bl-animate" timeout={300}>
+                    <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from these results</div>
+                  </CSSTransition>
+                ) : null}
+              </TransitionGroup>
+            </FlexRow>
           </div>
 
           <div className="col-xs-12">
@@ -140,47 +157,24 @@ const SearchResults = props => {
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
-  const [holdForItems, setHoldForItems] = useState(false);
-
   return (
     <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <TransitionGroup component={null}>
-        {availableBooks == null ? null : availableBooks?.length || holdForItems ? (
-          <CSSTransition
-            onEnter={() => setHoldForItems(true)}
-            onExit={() => setHoldForItems(false)}
-            key={currentQuery}
-            appear={true}
-            enter={true}
-            exit={true}
-            classNames="bl-animate"
-            timeout={3500}
-          >
-            <ul className="animate-fast bl-overlay bl-fade">
+        {books == null ? null : books?.length ? (
+          <CSSTransition key={currentQuery} classNames="bl-animate" timeout={300}>
+            <ul className="animate-fast bl-overlay-exit bl-fade">
               <TransitionGroup component={null}>
                 {availableBooks.map(book => (
-                  <CSSTransition
-                    onExited={() => !currentBooksRef.current.length && setHoldForItems(false)}
-                    appear={false}
-                    enter={false}
-                    exit={!loading}
-                    classNames="bl-animate"
-                    timeout={300}
-                    key={book._id}
-                  >
+                  <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
                     <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
                   </CSSTransition>
                 ))}
               </TransitionGroup>
             </ul>
           </CSSTransition>
-        ) : books?.length ? (
-          <CSSTransition key={2} classNames="bl-animate" timeout={300}>
-            <div className="animate-fast bl-overlay bl-fade alert alert-info">You've added all of the books from these results</div>
-          </CSSTransition>
         ) : (
           <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-            <div className="animate-fast bl-overlay bl-fade alert alert-warning">No results</div>
+            <div className="animate-fast bl-overlay-exit bl-fade alert alert-warning">No results</div>
           </CSSTransition>
         )}
       </TransitionGroup>
