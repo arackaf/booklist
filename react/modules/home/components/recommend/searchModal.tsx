@@ -148,6 +148,7 @@ const SearchResults = props => {
         {availableBooks == null ? null : availableBooks?.length || holdForItems ? (
           <CSSTransition
             onEnter={() => setHoldForItems(true)}
+            onExit={() => setHoldForItems(false)}
             key={currentQuery}
             appear={true}
             enter={true}
