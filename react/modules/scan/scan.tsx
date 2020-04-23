@@ -159,7 +159,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
           <div style={{ marginTop: "10px" }}>
             <SlideInContents className="bl-fade card card-info card-slim slidable" style={{ width: "80%" }}>
               {showScanInstructions ? (
-                <div>
+                <>
                   Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for
                   each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
                   <br /> <br />
@@ -191,7 +191,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
                       Ultrices neque ornare aenean euismod elementum nisi quis eleifend quam."
                     </>
                   ) : null}
-                </div>
+                </>
               ) : null}
             </SlideInContents>
           </div>

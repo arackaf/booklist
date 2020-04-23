@@ -54,17 +54,19 @@
 }
 
 .alert, .card {
+
   &.slidable {
     padding: 0 !important;
-  }
-  & > * {
-    padding: 15px;
+  
+    & > * {
+      padding: 15px;
 
-    &.card-slim, &.alert-slim {
-      padding: 10px;
-    }
-    &.card-slimmer, &.alert-slimmer {
-      padding: 5px;
+      &.card-slim, &.alert-slim {
+        padding: 10px;
+      }
+      &.card-slimmer, &.alert-slimmer {
+        padding: 5px;
+      }
     }
   }
   &.alert-warning, &.card-warning { 
