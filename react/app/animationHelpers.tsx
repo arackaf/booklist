@@ -27,7 +27,7 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
 export const SlideInContents = ({ className = "", style = {} as any, fast = false, children }) => {
   const allChildren = Children.toArray(children);
   const Child = allChildren[0];
-  const on = Child != null;
+  const on = allChildren.length;
 
   const [ref, currentHeight] = useHeight({ on });
   const [showing, setShowing] = useState(false);
@@ -45,7 +45,7 @@ export const SlideInContents = ({ className = "", style = {} as any, fast = fals
         >
           <div className={"bl-slide-down " + className} style={{ height, ...style }}>
             <div ref={ref}>
-              {Child}
+              {children}
             </div>
           </div>
         </CSSTransition>
