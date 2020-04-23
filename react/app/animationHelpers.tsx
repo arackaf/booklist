@@ -9,7 +9,7 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export function useHeight({ on } = {} as any) {
+export function useHeight({ on = true /* no value means on */ } = {} as any) {
   const ref = useRef<any>();
   const [height, set] = useState(0);
   const [ro] = useState(() => new MutationObserver(() => ref.current && height != ref.current.offsetHeight && set(ref.current.offsetHeight)));
@@ -24,7 +24,7 @@ export function useHeight({ on } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ className = "", style = {}, fast = false, children }) => {
+export const SlideInContents = ({ className = "", wrapperStyles = {}, style = {} as any, fast = false, children }) => {
   const allChildren = Children.toArray(children);
   const Child = allChildren[0];
   const on = Child != null;
@@ -43,8 +43,10 @@ export const SlideInContents = ({ className = "", style = {}, fast = false, chil
           timeout={fast ? 150 : 300}
           key={1}
         >
-          <div className={"bl-slide-down " + className} style={{ ...style, height }}>
-            <div ref={ref}>{Child}</div>
+          <div className="bl-slide-down" style={{ height }}>
+            <div ref={ref} style={style} className={className}>
+              {Child}
+            </div>
           </div>
         </CSSTransition>
       ) : null}
