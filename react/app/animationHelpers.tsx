@@ -24,7 +24,7 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ className = "", wrapperStyles = {}, style = {} as any, fast = false, children }) => {
+export const SlideInContents = ({ className = "", style = {} as any, fast = false, children }) => {
   const allChildren = Children.toArray(children);
   const Child = allChildren[0];
   const on = Child != null;
@@ -43,8 +43,8 @@ export const SlideInContents = ({ className = "", wrapperStyles = {}, style = {}
           timeout={fast ? 150 : 300}
           key={1}
         >
-          <div className="bl-slide-down" style={{ height }}>
-            <div ref={ref} style={style} className={className}>
+          <div className={"bl-slide-down " + className} style={{ height, ...style }}>
+            <div ref={ref}>
               {Child}
             </div>
           </div>
