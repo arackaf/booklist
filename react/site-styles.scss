@@ -546,6 +546,9 @@ div.toast-notification h4 {
   &.bl-fade {
     transition-property: opacity;
   }
+  &.bl-fade.bl-slide-down {
+    transition-property: opacity,height;
+  }
 }
 
 // Enter
@@ -587,6 +590,9 @@ div.toast-notification h4 {
   }
   &.bl-fade.bl-slide-out {
     transition-property: transform,opacity;
+  }
+  &.bl-slide-down.bl-slide-out {
+    transition-property: transform,height;
   }
 }
 

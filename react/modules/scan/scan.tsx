@@ -156,9 +156,9 @@ const BookEntryList: FunctionComponent<{}> = () => {
           </div>
           <button onClick={() => setVal(x => x + 1)}>Add More</button>
           <button onClick={() => setVal(x => x - 1)}>Less</button>
-          <SlideInContents className="card card-info card-slim" style={{  marginTop: "10px", width: "80%" }}>
+          <SlideInContents className="card card-info card-slim bl-fade" style={{ padding: 0, marginTop: "10px", width: "80%" }}>
             {showScanInstructions ? (
-              <div>
+              <div style={{padding: "10px"}}>
                 <div style={{ padding: "0" }}>
                   Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for
                   each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
