@@ -530,33 +530,35 @@ div.toast-notification h4 {
   --animation-duration: 150ms;
 }
 
-.bl-animate-enter-active, .bl-animate-enter-done, .bl-animate-exit, .bl-animate-exit-active {
-  &.bl-fade, &.bl-slide-out, &.bl-slide-down {
-    transition-duration: var(--animation-duration);
-    transition-timing-function: ease-in;
-  }
-
-  &.bl-fade {
-    transition-property: opacity;
-  }
-  &.bl-slide-out {
-    transition-property: transform;
-  }
-  &.bl-fade.bl-slide-down {
-    transition-property: opacity,height;
-  }
-  &.bl-fade.bl-slide-out {
-    transition-property: opacity,transform;
-  }
-  &.bl-slide-down.bl-slide-out {
-    transition-property: height,transform;
-  }
+.bl-fade, .bl-slide-out, .bl-slide-down {
+  transition-duration: var(--animation-duration);
+  transition-timing-function: ease-in;
 }
 
+.bl-fade {
+  opacity: 0;
+}
+
+.bl-fade {
+  transition-property: opacity;
+}
+.bl-slide-out {
+  transition-property: transform;
+}
 .bl-slide-down {
   height: 0;
   transition-property: height;
   overflow: hidden;
+}
+
+.bl-fade.bl-slide-down {
+  transition-property: opacity,height;
+}
+.bl-fade.bl-slide-out {
+  transition-property: opacity,transform;
+}
+.bl-slide-down.bl-slide-out {
+  transition-property: height,transform;
 }
 
 // Enter
@@ -565,7 +567,7 @@ div.toast-notification h4 {
     opacity: 0;
   }
 }
-.bl-animate-enter.bl-animate-enter-active {
+.bl-animate-enter.bl-animate-enter-active, .bl-animate-enter-done {
   &.bl-fade {
     opacity: 1;
   }
@@ -580,7 +582,7 @@ div.toast-notification h4 {
     transform: translate3d(0,0,0);
   }
   
-  &.bl-overlay-exit {
+  &.bl-overlay {
     position: absolute;
   }
 }
