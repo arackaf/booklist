@@ -5,7 +5,7 @@ const { S3 } = AWS;
 
 const path = require("path");
 
-const Jimp = require("jimp");
+const Jimp = require("jimp").default;
 const uuid = require("uuid/v4");
 const awsMultiPartParser = require("lambda-multipart-parser");
 
