@@ -79,6 +79,8 @@ const ManageBookCover = props => {
     ajaxUtil.postWithFilesCors(
       // "https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod",
       //"https://kiwjiy8921.execute-api.us-east-1.amazonaws.com/dev/",
+
+
       "https://2bqxn2n1yd.execute-api.us-east-1.amazonaws.com/dev/",
       //process.env.COVER_UPLOAD_URL,
       request,

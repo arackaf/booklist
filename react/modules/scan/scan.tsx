@@ -11,6 +11,15 @@ import FlexRow from "app/components/layout/FlexRow";
 
 declare var webSocketAddress: any;
 
+setTimeout(() => {
+
+  fetch("https://6xpmc3g0ch.execute-api.us-east-1.amazonaws.com/dev/msg")
+  .then(resp => resp.json())
+  .then(resp => {
+    console.log(resp);
+  });
+}, 4000)
+
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
   title: "",
@@ -191,7 +200,9 @@ const BookEntryList: FunctionComponent<{}> = () => {
                     <TransitionGroup>
                       {booksJustSaved.map(book => (
                         <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
-                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>{book.title}</li>
+                          <li className="bl-fade" style={{ color: book.success ? "green" : "red" }}>
+                            {book.title}
+                          </li>
                         </CSSTransition>
                       ))}
                     </TransitionGroup>

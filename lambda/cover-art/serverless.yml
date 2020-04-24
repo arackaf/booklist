@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: try-upload
+service: cover-art
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -23,20 +23,12 @@ service: try-upload
 provider:
   name: aws
   runtime: nodejs12.x
-  apiGateway:
-    binaryMediaTypes:
-      - 'multipart/form-data'  
 
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
-  iamRoleStatements:
-   - Effect: "Allow"
-     Action:
-       - "s3:*"
-     Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
 #  iamRoleStatements:
 #    - Effect: "Allow"
 #      Action:
@@ -67,22 +59,15 @@ provider:
 
 functions:
   hello:
-#    environment:
-#      Mongo_Conn: ${file(../config.js):mongoConnection}
-#      DB_Name: ${file(../config.js):dbName}
-    handler: handler.hello
-    events:
-      - http:
-          path: /
-          method: post
-          cors: true    
+    handler: handler.upload
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
-#    events:
-#      - http:
-#          path: users/create
-#          method: get
+   events:
+     - http:
+         path: upload
+         method: post
+         cors: true
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

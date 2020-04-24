@@ -3,8 +3,10 @@
 const AWS = require("aws-sdk");
 const { S3 } = AWS;
 
-const { MongoClient } = require("mongodb");
+const path = require("path");
+
 const Jimp = require("jimp");
+const uuid = require("uuid/v4");
 const awsMultiPartParser = require("lambda-multipart-parser");
 
 const CorsResponse = obj => ({
@@ -17,82 +19,51 @@ const CorsResponse = obj => ({
   body: JSON.stringify(obj)
 });
 
-const getConnection = () => {
-  let connString = process.env.Mongo_Conn;
-  let dbName = process.env.DB_Name;
+const uploadToS3 = (fileName, body) => {
+  const s3 = new S3({});
+  var params = { Bucket: "my-library-cover-uploads", Key: `__junk__/${fileName}`, Body: body };
 
-  return MongoClient.connect(connString, { useNewUrlParser: true }).then(client => client.db(dbName));
+  return new Promise(res => {
+    s3.upload(params, function(err, data) {
+      if (err) {
+        return res(CorsResponse({ error: true, message: err }));
+      }
+      res(CorsResponse({ success: true, url: `https://${params.Bucket}.s3.amazonaws.com/${params.Key}` }));
+    });
+  });
 };
 
-module.exports.hello = async (event, context, c) => {
-  try {
-    const db = await getConnection();
-    console.log("X");
-    
-    let books = await db
-      .collection("books")
-      .find({})
-      .toArray();
-
-    return CorsResponse({ msg: "ayyyyyyy", x: 1, count: books.length });
-  } catch (er) {
-    throw er;
-    return CorsResponse({ er, msg: JSON.stringify(er) });
-  }
-
-  const s3 = new S3({});
-
-  const body = event.body;
-  const busBoyResults = await awsMultiPartParser.parse(event);
+module.exports.hello = async (event, context) => {
+  const filesSent = await awsMultiPartParser.parse(event);
   const MAX_WIDTH = 50;
 
   return new Promise(res => {
-    try {
-      // return res(CorsResponse({ error: true, slug: "xxx", message: `${typeof Jimp} ${typeof busBoyResults}` }));
+    Jimp.read(filesSent.files[0].content, function(err, image) {
+      if (err || !image) {
+        return res(CorsResponse({ error: true, message: err }));
+      }
 
-      Jimp.read(busBoyResults.files[0].content, function(err, image) {
-        if (err || !image) {
-          return res(CorsResponse({ error: true, slug: "a", message: err }));
-        }
+      const newName = `${uuid()}${path.extname(filesSent.files[0].filename)}`;
 
-        try {
-          if (image.bitmap.width > MAX_WIDTH) {
-            image.resize(MAX_WIDTH, Jimp.AUTO);
+      if (image.bitmap.width > MAX_WIDTH) {
+        image.resize(MAX_WIDTH, Jimp.AUTO);
 
-            image.getBuffer(image.getMIME(), (err, body) => {
-              if (err) {
-                return res(CorsResponse({ error: true, slug: "b", message: err }));
-              }
-
-              var params = { Bucket: "my-library-cover-uploads", Key: "temp/Yoooo-resized-YEAH-HAPPY.jpg", Body: body };
-              s3.upload(params, function(err, data) {
-                if (err) {
-                  return res(CorsResponse({ error: true, slug: "c", message: err }));
-                }
-                res(CorsResponse({ success: true, url: `https://${params.Bucket}.s3.amazonaws.com/${params.Key}` }));
-              });
-            });
-          } else {
-            image.getBuffer(image.getMIME(), (err, body) => {
-              if (err) {
-                return res(CorsResponse({ error: true, slug: "d", message: err }));
-              }
-
-              var params = { Bucket: "my-library-cover-uploads", Key: "temp/Yoooo-NOT-resized-BUT-STILL-HAPPY.jpg", Body: body };
-              s3.upload(params, function(err, data) {
-                if (err) {
-                  return res(CorsResponse({ error: true, slug: "e", message: err }));
-                }
-                res(CorsResponse({ success: true, url: `https://${params.Bucket}.s3.amazonaws.com/${params.Key}` }));
-              });
-            });
+        image.getBuffer(image.getMIME(), (err, body) => {
+          if (err) {
+            return res(CorsResponse({ error: true, message: err }));
           }
-        } catch (err) {
-          return res(CorsResponse({ error: true, slug: "f", message: "No file" }));
-        }
-      });
-    } catch (err) {
-      res(CorsResponse({ error: true, slug: "g", message: err }));
-    }
+
+          return res(uploadToS3(newName, body));
+        });
+      } else {
+        image.getBuffer(image.getMIME(), (err, body) => {
+          if (err) {
+            return res(CorsResponse({ error: true, message: err }));
+          }
+
+          return res(uploadToS3(newName, body));
+        });
+      }
+    });
   });
 };
