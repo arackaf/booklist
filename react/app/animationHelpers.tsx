@@ -24,19 +24,14 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ className = "", style = {} as any, fast = false, children }) => {
-  const allChildren = Children.toArray(children);
-  const Child = allChildren[0];
-  const on = allChildren.length;
-
-  const [ref, currentHeight] = useHeight({ on });
-  const [showing, setShowing] = useState(false);
+export const SlideInContents = ({ in: inProp, className = "", style = {} as any, fast = false, children }) => {
+  const [ref, currentHeight] = useHeight({ inProp });
+  const [showing, setShowing] = useState(inProp);
   const height = showing ? `${currentHeight}px` : 0;
 
   return (
-    <TransitionGroup>
-      {on ? (
         <CSSTransition
+          in={inProp}
           classNames="bl-animate"
           onEntering={() => setShowing(true)}
           onExiting={() => setShowing(false)}
@@ -49,7 +44,5 @@ export const SlideInContents = ({ className = "", style = {} as any, fast = fals
             </div>
           </div>
         </CSSTransition>
-      ) : null}
-    </TransitionGroup>
   );
 };

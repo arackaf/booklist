@@ -130,18 +130,6 @@ const BookEntryList: FunctionComponent<{}> = () => {
     ) : null;
 
   const { runMutation, running } = useMutation(buildMutation(createBookMutation));
-
-  const ref = useRef<any>();
-  const [height, set] = useState(0);
-  const [ro] = useState(() => new MutationObserver(() => ref.current && height != ref.current.offsetHeight && set(ref.current.offsetHeight)));
-  useLayoutEffect(() => {
-    if (showScanInstructions && ref.current) {
-      set(ref.current.offsetHeight);
-      ro.observe(ref.current, { attributes: true, childList: true, subtree: true });
-    }
-    return () => ro && ro.disconnect();
-  }, [showScanInstructions]);
-
   const [val, setVal] = useState(0);
 
   return (
@@ -154,45 +142,41 @@ const BookEntryList: FunctionComponent<{}> = () => {
               Manual entry
             </button>
           </div>
-          <button onClick={() => setVal(x => x + 1)}>Add More</button>
-          <button onClick={() => setVal(x => x - 1)}>Less</button>
           <div style={{ marginTop: "10px" }}>
-            <SlideInContents className="bl-fade card card-info card-slim slidable" style={{ width: "80%" }}>
-              {showScanInstructions ? (
-                <>
-                  Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for
-                  each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
-                  <br /> <br />
-                  After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books
-                  with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
-                  overridden.
-                  {val > 0 ? (
-                    <>
-                      <br />
-                      <br /> "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Sit amet purus gravida quis. Lacus vel facilisis volutpat est velit egestas. Elementum nisi quis eleifend quam
-                      adipiscing. Nibh sed pulvinar proin gravida hendrerit lectus a. Vitae justo eget magna fermentum iaculis. Pellentesque elit
-                      ullamcorper dignissim cras tincidunt lobortis feugiat. Cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo.
-                      Tortor posuere ac ut consequat semper. Urna duis convallis convallis tellus id interdum velit laoreet id. Ut pharetra sit amet
-                      aliquam id diam. Aliquet risus feugiat in ante metus dictum at tempor. Viverra accumsan in nisl nisi scelerisque. Enim nunc
-                      faucibus a pellentesque sit amet. Urna condimentum mattis pellentesque id nibh."
-                    </>
-                  ) : null}
-                  <br />
-                  {val > 1 ? (
-                    <>
-                      <br />
-                      <br /> "Non enim praesent elementum facilisis. Tempus imperdiet nulla malesuada pellentesque elit eget gravida. Neque viverra
-                      justo nec ultrices dui sapien eget mi proin. Viverra ipsum nunc aliquet bibendum enim facilisis gravida. Integer eget aliquet
-                      nibh praesent tristique magna sit amet. Ante metus dictum at tempor commodo ullamcorper a. Cras fermentum odio eu feugiat
-                      pretium. Placerat duis ultricies lacus sed turpis tincidunt id aliquet. Odio facilisis mauris sit amet. Ac feugiat sed lectus
-                      vestibulum mattis ullamcorper velit sed ullamcorper. Ac auctor augue mauris augue neque. Amet consectetur adipiscing elit
-                      pellentesque habitant morbi tristique. Viverra justo nec ultrices dui sapien eget mi. Massa eget egestas purus viverra accumsan.
-                      Ultrices neque ornare aenean euismod elementum nisi quis eleifend quam."
-                    </>
-                  ) : null}
-                </>
-              ) : null}
+            <SlideInContents in={showScanInstructions} className="bl-fade card card-info card-slim slidable" style={{ width: "80%" }}>
+              <>
+                Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
+                book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                <br /> <br />
+                After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books with
+                a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
+                overridden.
+                {val > 0 ? (
+                  <>
+                    <br />
+                    <br /> "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Sit amet purus gravida quis. Lacus vel facilisis volutpat est velit egestas. Elementum nisi quis eleifend quam adipiscing.
+                    Nibh sed pulvinar proin gravida hendrerit lectus a. Vitae justo eget magna fermentum iaculis. Pellentesque elit ullamcorper
+                    dignissim cras tincidunt lobortis feugiat. Cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo. Tortor
+                    posuere ac ut consequat semper. Urna duis convallis convallis tellus id interdum velit laoreet id. Ut pharetra sit amet aliquam id
+                    diam. Aliquet risus feugiat in ante metus dictum at tempor. Viverra accumsan in nisl nisi scelerisque. Enim nunc faucibus a
+                    pellentesque sit amet. Urna condimentum mattis pellentesque id nibh."
+                  </>
+                ) : null}
+                <br />
+                {val > 1 ? (
+                  <>
+                    <br />
+                    <br /> "Non enim praesent elementum facilisis. Tempus imperdiet nulla malesuada pellentesque elit eget gravida. Neque viverra
+                    justo nec ultrices dui sapien eget mi proin. Viverra ipsum nunc aliquet bibendum enim facilisis gravida. Integer eget aliquet nibh
+                    praesent tristique magna sit amet. Ante metus dictum at tempor commodo ullamcorper a. Cras fermentum odio eu feugiat pretium.
+                    Placerat duis ultricies lacus sed turpis tincidunt id aliquet. Odio facilisis mauris sit amet. Ac feugiat sed lectus vestibulum
+                    mattis ullamcorper velit sed ullamcorper. Ac auctor augue mauris augue neque. Amet consectetur adipiscing elit pellentesque
+                    habitant morbi tristique. Viverra justo nec ultrices dui sapien eget mi. Massa eget egestas purus viverra accumsan. Ultrices neque
+                    ornare aenean euismod elementum nisi quis eleifend quam."
+                  </>
+                ) : null}
+              </>
             </SlideInContents>
           </div>
           <br />
