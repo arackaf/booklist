@@ -28,22 +28,24 @@ const uploadToS3 = (fileName, body) => {
       if (err) {
         return res(CorsResponse({ error: true, message: err }));
       }
-      res(CorsResponse({ success: true, url: `https://${params.Bucket}.s3.amazonaws.com/${params.Key}` }));
+      res(CorsResponse({ success: true, event, url: `https://${params.Bucket}.s3.amazonaws.com/${params.Key}` }));
     });
   });
 };
 
 module.exports.upload = async event => {
-  const filesSent = await awsMultiPartParser.parse(event);
+  const formPayload = await awsMultiPartParser.parse(event);
   const MAX_WIDTH = 50;
 
+  const { files, ...allFields } = formPayload;
+
   return new Promise(res => {
-    Jimp.read(filesSent.files[0].content, function(err, image) {
+    Jimp.read(formPayload.files[0].content, function(err, image) {
       if (err || !image) {
         return res(CorsResponse({ error: true, message: err }));
       }
 
-      const newName = `${uuid()}${path.extname(filesSent.files[0].filename)}`;
+      const newName = `${uuid()}${path.extname(formPayload.files[0].filename)}`;
 
       if (image.bitmap.width > MAX_WIDTH) {
         image.resize(MAX_WIDTH, Jimp.AUTO);
