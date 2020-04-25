@@ -12,5 +12,8 @@
     "jimp": "^0.10.3",
     "lambda-multipart-parser": "0.0.2",
     "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "serverless-webpack": "^5.3.1"
   }
 }

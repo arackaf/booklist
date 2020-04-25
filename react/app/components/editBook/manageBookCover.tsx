@@ -69,32 +69,23 @@ const ManageBookCover = props => {
 
   const onDrop = files => {
     let request = new FormData();
-
     request.append("fileUploaded", files[0]);
 
-    //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
-
-    //https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod
-//  https://kiwjiy8921.execute-api.us-east-1.amazonaws.com/dev/
-    ajaxUtil.postWithFilesCors(
-      // "https://oa3cpf0x2f.execute-api.us-east-1.amazonaws.com/prod",
-      //"https://kiwjiy8921.execute-api.us-east-1.amazonaws.com/dev/",
-
-
-      //"https://2bqxn2n1yd.execute-api.us-east-1.amazonaws.com/dev/",
-      "https://sb1ijnzpy2.execute-api.us-east-1.amazonaws.com/dev/upload",
-      //process.env.COVER_UPLOAD_URL,
-      request,
-      //JSON.stringify("{}"),
-      // {x: 13, message: "Hello Worldddddddddddddddddddddddddddddddddddddddddddddddddd"},
-      res => {
+    fetch("https://sb1ijnzpy2.execute-api.us-east-1.amazonaws.com/dev/upload", {
+      method: "POST",
+      mode: "cors",
+      body: request
+    })
+      .then(resp => resp.json())
+      .then(res => {
         if (res.error) {
           setUploadState({ pendingImg: "", uploadError: res.error });
         } else {
+          console.log("woo hoo", res);
           setUploadState({ pendingImg: res.url, uploadError: "" });
         }
-      }
-    );
+      });
+    //};
 
     return;
     ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
@@ -115,7 +106,7 @@ const ManageBookCover = props => {
         </div>
       ) : (
         <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
-          <span style={{  }}>No Cover</span>
+          <span style={{}}>No Cover</span>
         </div>
       )}
 
