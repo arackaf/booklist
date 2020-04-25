@@ -23,12 +23,20 @@ service: cover-art
 provider:
   name: aws
   runtime: nodejs12.x
+  apiGateway:
+    binaryMediaTypes:
+      - 'multipart/form-data'
 
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+   - Effect: "Allow"
+     Action:
+       - "s3:*"
+     Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
 #  iamRoleStatements:
 #    - Effect: "Allow"
 #      Action:

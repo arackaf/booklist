@@ -25,7 +25,7 @@ provider:
   runtime: nodejs12.x
   apiGateway:
     binaryMediaTypes:
-      - 'multipart/form-data'  
+      - 'multipart/form-data'
 
 # you can overwrite defaults here
 #  stage: dev
