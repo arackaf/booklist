@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React, { Children, createElement } from "react";
 import { useRef, useEffect, useState, useLayoutEffect } from "react";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -24,7 +24,16 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ in: inProp, className = "", style = {} as any, fast = false, key = 1, children, ...rest }) => {
+export const SlideInContents = ({
+  in: inProp = void 0,
+  component = "div",
+  className = "",
+  style = {} as any,
+  fast = false,
+  key = 1,
+  children,
+  ...rest
+}) => {
   const [ref, currentHeight] = useHeight({ inProp });
   const [showing, setShowing] = useState(inProp);
   const height = showing ? `${currentHeight}px` : 0;
@@ -39,9 +48,7 @@ export const SlideInContents = ({ in: inProp, className = "", style = {} as any,
       key={key}
       {...rest}
     >
-      <div className={"bl-slide-down " + className} style={{ height, ...style }}>
-        <div ref={ref}>{children}</div>
-      </div>
+      {createElement(component, { className: "bl-slide-down " + className, style: { height, ...style } }, <div ref={ref}>{children}</div>)}
     </CSSTransition>
   );
 };

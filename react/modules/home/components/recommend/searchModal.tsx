@@ -12,6 +12,7 @@ import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
+import { SlideInContents } from "app/animationHelpers";
 
 interface LocalProps {
   isOpen: boolean;
@@ -161,9 +162,9 @@ const SearchResults = props => {
             <ul className="animate-fast bl-overlay-exit bl-fade">
               <TransitionGroup component={null}>
                 {availableBooks.map(book => (
-                  <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
+                  <SlideInContents key={book._id} component="li" className="animate-fast bl-fade-out bl-slide-out">
                     <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                  </CSSTransition>
+                  </SlideInContents>
                 ))}
               </TransitionGroup>
             </ul>
@@ -188,29 +189,27 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast bl-fade-out bl-slide-out">
-      <Stack>
-        <FlowItems>
-          <div style={{ minWidth: "70px" }}>
-            <CoverSmall url={book.smallImage} />
-          </div>
+    <Stack className={props.className}>
+      <FlowItems>
+        <div style={{ minWidth: "70px" }}>
+          <CoverSmall url={book.smallImage} />
+        </div>
 
-          <Stack style={{ flex: 1 }}>
-            {book.title}
-            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
-            <button
-              disabled={adding}
-              onClick={selectBook}
-              style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
-              className="btn btn-primary btn-xs"
-            >
-              Add to list&nbsp;
-              <i className="fal fa-plus" />
-            </button>
-          </Stack>
-        </FlowItems>
-        <hr />
-      </Stack>
-    </li>
+        <Stack style={{ flex: 1 }}>
+          {book.title}
+          {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+          <button
+            disabled={adding}
+            onClick={selectBook}
+            style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
+            className="btn btn-primary btn-xs"
+          >
+            Add to list&nbsp;
+            <i className="fal fa-plus" />
+          </button>
+        </Stack>
+      </FlowItems>
+      <hr />
+    </Stack>
   );
 };
