@@ -81,7 +81,8 @@ const ManageBookCover = props => {
       //"https://kiwjiy8921.execute-api.us-east-1.amazonaws.com/dev/",
 
 
-      "https://2bqxn2n1yd.execute-api.us-east-1.amazonaws.com/dev/",
+      //"https://2bqxn2n1yd.execute-api.us-east-1.amazonaws.com/dev/",
+      "https://sb1ijnzpy2.execute-api.us-east-1.amazonaws.com/dev/upload",
       //process.env.COVER_UPLOAD_URL,
       request,
       //JSON.stringify("{}"),

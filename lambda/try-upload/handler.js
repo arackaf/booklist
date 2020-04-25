@@ -21,7 +21,7 @@ const CorsResponse = obj => ({
 
 const uploadToS3 = (fileName, body) => {
   const s3 = new S3({});
-  var params = { Bucket: "my-library-cover-uploads", Key: `__junk__/${fileName}`, Body: body };
+  const params = { Bucket: "my-library-cover-uploads", Key: `__junk__/${fileName}`, Body: body };
 
   return new Promise(res => {
     s3.upload(params, function(err, data) {
@@ -33,7 +33,7 @@ const uploadToS3 = (fileName, body) => {
   });
 };
 
-module.exports.hello = async (event, context) => {
+module.exports.hello = async event => {
   const filesSent = await awsMultiPartParser.parse(event);
   const MAX_WIDTH = 50;
 
