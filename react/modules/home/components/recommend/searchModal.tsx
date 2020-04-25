@@ -129,13 +129,9 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
                 </SubmitIconButton>
               )}
 
-              <TransitionGroup component={null}>
-                {noAvailableBooks ? (
-                  <CSSTransition key={2} classNames="bl-animate" timeout={300}>
-                    <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from these results</div>
-                  </CSSTransition>
-                ) : null}
-              </TransitionGroup>
+              <CSSTransition in={noAvailableBooks} key={2} classNames="bl-animate" timeout={300}>
+                <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from these results</div>
+              </CSSTransition>
             </FlexRow>
           </div>
 
@@ -192,7 +188,7 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast-s bl-fade-out bl-slide-out">
+    <li className="animate-fast bl-fade-out bl-slide-out">
       <Stack>
         <FlowItems>
           <div style={{ minWidth: "70px" }}>

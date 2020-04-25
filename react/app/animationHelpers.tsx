@@ -24,25 +24,24 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ in: inProp, className = "", style = {} as any, fast = false, children }) => {
+export const SlideInContents = ({ in: inProp, className = "", style = {} as any, fast = false, key = 1, children, ...rest }) => {
   const [ref, currentHeight] = useHeight({ inProp });
   const [showing, setShowing] = useState(inProp);
   const height = showing ? `${currentHeight}px` : 0;
 
   return (
-        <CSSTransition
-          in={inProp}
-          classNames="bl-animate"
-          onEntering={() => setShowing(true)}
-          onExiting={() => setShowing(false)}
-          timeout={fast ? 150 : 300}
-          key={1}
-        >
-          <div className={"bl-slide-down " + className} style={{ height, ...style }}>
-            <div ref={ref}>
-              {children}
-            </div>
-          </div>
-        </CSSTransition>
+    <CSSTransition
+      in={inProp}
+      classNames="bl-animate"
+      onEntering={() => setShowing(true)}
+      onExiting={() => setShowing(false)}
+      timeout={fast ? 150 : 300}
+      key={key}
+      {...rest}
+    >
+      <div className={"bl-slide-down " + className} style={{ height, ...style }}>
+        <div ref={ref}>{children}</div>
+      </div>
+    </CSSTransition>
   );
 };
