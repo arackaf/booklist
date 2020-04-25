@@ -12,7 +12,7 @@ import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
-import { SlideInContents } from "app/animationHelpers";
+import { SlideInContents, useHeight } from "app/animationHelpers";
 
 interface LocalProps {
   isOpen: boolean;
@@ -154,27 +154,33 @@ const SearchResults = props => {
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
+  const [ref, _height] = useHeight();
+
+  const height = Math.min(_height, 300);
+
   return (
-    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
-      <TransitionGroup component={null}>
-        {books == null ? null : books?.length ? (
-          <CSSTransition key={currentQuery} classNames="bl-animate" timeout={300}>
-            <ul className="animate-fast bl-overlay-exit bl-fade">
-              <TransitionGroup component={null}>
-                {availableBooks.map(book => (
-                  <SlideInContents key={book._id} component="li" className="animate-fast bl-fade-out bl-slide-out">
-                    <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                  </SlideInContents>
-                ))}
-              </TransitionGroup>
-            </ul>
-          </CSSTransition>
-        ) : (
-          <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-            <div className="animate-fast bl-overlay-exit bl-fade alert alert-warning">No results</div>
-          </CSSTransition>
-        )}
-      </TransitionGroup>
+    <div className="animate-height animate-fast" style={{ height, maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
+      <div ref={ref}>
+        <TransitionGroup component={null}>
+          {books == null ? null : books?.length ? (
+            <CSSTransition key={currentQuery} classNames="bl-animate" timeout={300}>
+              <ul className="animate-fast bl-overlay-exit bl-fade">
+                <TransitionGroup component={null}>
+                  {availableBooks.map(book => (
+                    <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
+                      <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                    </SlideInContents>
+                  ))}
+                </TransitionGroup>
+              </ul>
+            </CSSTransition>
+          ) : (
+            <CSSTransition key={3} classNames="bl-animate" timeout={300}>
+              <div className="animate-fast bl-overlay-exit bl-fade alert alert-warning">No results</div>
+            </CSSTransition>
+          )}
+        </TransitionGroup>
+      </div>
     </div>
   );
 };

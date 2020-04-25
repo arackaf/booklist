@@ -526,6 +526,10 @@ div.toast-notification h4 {
 // ------------------------------- Animation ------------------------------------------
 // ------------------------------------------------------------------------------------
 
+.animate-height {
+  transition: height var(--animation-duration) linear;
+}
+
 .animate-fast {
   --animation-duration: 150ms;
 }
@@ -564,6 +568,11 @@ div.toast-notification h4 {
   transition-property: opacity,height,transform;
 }
 
+.bl-no-animate-in:not([class*="bl-animate-enter"]):not([class*="bl-animate-exit"]) {
+  transition-property: none !important;
+}
+
+
 // Enter
 .bl-animate-enter {
   &.bl-fade {
@@ -585,7 +594,7 @@ div.toast-notification h4 {
     transform: translate3d(0,0,0);
   }
   
-  &.bl-overlay {
+  &.bl-overlay-exit {
     position: absolute;
   }
 }
