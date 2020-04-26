@@ -17,7 +17,7 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   const heightRef = useRef(height);
   const [ro] = useState(
     () =>
-      new ResizeObserver(() => {
+      new MutationObserver((packet) => {
         if (ref.current && heightRef.current != ref.current.scrollHeight) {
           heightRef.current = ref.current.scrollHeight;
           set(ref.current.scrollHeight);
