@@ -3,6 +3,8 @@ import { useRef, useEffect, useState, useLayoutEffect } from "react";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
+declare var ResizeObserver;
+
 export function usePrevious(value) {
   const ref = useRef();
   useEffect(() => void (ref.current = value), [value]);
@@ -12,14 +14,23 @@ export function usePrevious(value) {
 export function useHeight({ on = true /* no value means on */ } = {} as any) {
   const ref = useRef<any>();
   const [height, set] = useState(0);
-  const [ro] = useState(() => new MutationObserver(() => ref.current && height != ref.current.offsetHeight && set(ref.current.offsetHeight)));
+  const heightRef = useRef(height);
+  const [ro] = useState(
+    () =>
+      new ResizeObserver(() => {
+        if (ref.current && heightRef.current != ref.current.scrollHeight) {
+          heightRef.current = ref.current.scrollHeight;
+          set(ref.current.scrollHeight);
+        }
+      })
+  );
   useLayoutEffect(() => {
     if (on && ref.current) {
-      set(ref.current.offsetHeight);
+      set(ref.current.scrollHeight);
       ro.observe(ref.current, { attributes: true, childList: true, subtree: true });
     }
     return () => ro.disconnect();
-  }, [on]);
+  }, [on, ref.current]);
 
   return [ref, height as any];
 }
