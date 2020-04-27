@@ -1,6 +1,6 @@
 import React, { Children, createElement } from "react";
 import { useRef, useEffect, useState, useLayoutEffect } from "react";
-
+import cn from "classnames";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 declare var ResizeObserver;
@@ -17,7 +17,7 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   const heightRef = useRef(height);
   const [ro] = useState(
     () =>
-      new MutationObserver((packet) => {
+      new MutationObserver(packet => {
         if (ref.current && heightRef.current != ref.current.scrollHeight) {
           heightRef.current = ref.current.scrollHeight;
           set(ref.current.scrollHeight);
@@ -43,6 +43,7 @@ export const SlideInContents = ({
   fast = false,
   key = 1,
   children,
+  animateMountingOnly = false,
   ...rest
 }) => {
   const [ref, currentHeight] = useHeight({ inProp });
@@ -55,11 +56,15 @@ export const SlideInContents = ({
       classNames="bl-animate"
       onEntering={() => setShowing(true)}
       onExiting={() => setShowing(false)}
-      timeout={fast ? 150 : 300}
+      timeout={fast ? 1500 : 3000}
       key={key}
       {...rest}
     >
-      {createElement(component, { className: "bl-slide-down " + className, style: { height, ...style } }, <div ref={ref}>{children}</div>)}
+      {createElement(
+        component,
+        { className: cn("bl-slide-down", className, { ["height-auto-when-active"]: animateMountingOnly }), style: { height, ...style } },
+        <div ref={ref}>{children}</div>
+      )}
     </CSSTransition>
   );
 };

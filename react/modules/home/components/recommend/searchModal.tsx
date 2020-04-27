@@ -154,17 +154,13 @@ const SearchResults = props => {
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
-  const [ref, _height] = useHeight();
-
-  const height = Math.min(_height, 300);
-
   return (
-    <div className="animate-height animate-fast" style={{ height, maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
-      <div ref={ref}>
+    <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
+      <div>
         <TransitionGroup component={null}>
           {books == null ? null : books?.length ? (
-            <CSSTransition key={currentQuery} classNames="bl-animate" timeout={300}>
-              <ul className="animate-fast bl-overlay-exit bl-fade">
+            <SlideInContents className="animate-fast bl-overlay-exit bl-fade" animateMountingOnly={true} key={currentQuery}>
+              <ul>
                 <TransitionGroup component={null}>
                   {availableBooks.map(book => (
                     <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
@@ -173,7 +169,7 @@ const SearchResults = props => {
                   ))}
                 </TransitionGroup>
               </ul>
-            </CSSTransition>
+            </SlideInContents>
           ) : (
             <CSSTransition key={3} classNames="bl-animate" timeout={300}>
               <div className="animate-fast bl-overlay-exit bl-fade alert alert-warning">No results</div>

@@ -579,11 +579,17 @@ div.toast-notification h4 {
     opacity: 0;
   }
 }
+.bl-animate-enter-done {
+  &.height-auto-when-active {
+    height: auto !important;
+  }
+}
 .bl-animate-enter.bl-animate-enter-active, .bl-animate-enter-done {
   &.bl-fade {
     opacity: 1;
   }
 }
+
 
 // Exit
 .bl-animate-exit {
