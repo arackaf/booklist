@@ -529,7 +529,7 @@ div.toast-notification h4 {
 .overlay-holder {
   display: grid;
   grid-template-columns: 1fr;
-  grid-auto-columns: 1fr;
+  grid-template-rows: 1fr;
 
   > * {
     grid-row-start: 1;

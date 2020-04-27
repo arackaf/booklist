@@ -14,7 +14,7 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
 import { SlideInContents, useHeight } from "app/animationHelpers";
 
-import "./recommend.scss"
+import "./recommend.scss";
 
 interface LocalProps {
   isOpen: boolean;
@@ -174,7 +174,9 @@ const SearchResults = props => {
             </SlideInContents>
           ) : (
             <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-              <div className="animate-fast bl-fade alert alert-warning">No results</div>
+              <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
+                No results
+              </div>
             </CSSTransition>
           )}
         </TransitionGroup>
