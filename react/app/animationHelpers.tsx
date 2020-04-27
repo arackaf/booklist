@@ -44,6 +44,7 @@ export const SlideInContents = ({
   key = 1,
   children,
   animateMountingOnly = false,
+  timeout = null,
   ...rest
 }) => {
   const [ref, currentHeight] = useHeight({ inProp });
@@ -56,7 +57,7 @@ export const SlideInContents = ({
       classNames="bl-animate"
       onEntering={() => setShowing(true)}
       onExiting={() => setShowing(false)}
-      timeout={fast ? 1500 : 3000}
+      timeout={timeout || (fast ? 150 : 300)}
       key={key}
       {...rest}
     >
