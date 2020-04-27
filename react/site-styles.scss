@@ -526,6 +526,19 @@ div.toast-notification h4 {
 // ------------------------------- Animation ------------------------------------------
 // ------------------------------------------------------------------------------------
 
+.overlay-holder {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-columns: 1fr;
+
+  > * {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+}
+
 .animate-height {
   transition: height var(--animation-duration) linear;
 }
@@ -536,7 +549,7 @@ div.toast-notification h4 {
 
 .bl-fade, .bl-fade-out, .bl-slide-out, .bl-slide-down {
   transition-duration: var(--animation-duration);
-  transition-timing-function: ease-in;
+  transition-timing-function: linear;
 }
 
 .bl-fade {
@@ -599,10 +612,6 @@ div.toast-notification h4 {
   &.bl-slide-out {
     transform: translate3d(0,0,0);
   }
-  
-  &.bl-overlay-exit {
-    position: absolute;
-  }
 }
 
 .bl-animate-exit.bl-animate-exit-active {
@@ -611,6 +620,9 @@ div.toast-notification h4 {
   }
   &.bl-slide-down {
     height: 0 !important;
+    &.delay-leave {
+      transition-delay: 500ms;
+    }
   }
   &.bl-slide-out {
     transform: translate3d(100%,0,0);

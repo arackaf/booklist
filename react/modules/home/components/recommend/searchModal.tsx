@@ -14,6 +14,8 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
 import { SlideInContents, useHeight } from "app/animationHelpers";
 
+import "./recommend.scss"
+
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
@@ -156,10 +158,10 @@ const SearchResults = props => {
 
   return (
     <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
-      <div>
+      <div className="overlay-holder">
         <TransitionGroup component={null}>
           {books == null ? null : books?.length ? (
-            <SlideInContents className="animate-fast bl-overlay-exit bl-fade" animateMountingOnly={true} key={currentQuery}>
+            <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
               <ul>
                 <TransitionGroup component={null}>
                   {availableBooks.map(book => (
@@ -172,7 +174,7 @@ const SearchResults = props => {
             </SlideInContents>
           ) : (
             <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-              <div className="animate-fast bl-overlay-exit bl-fade alert alert-warning">No results</div>
+              <div className="animate-fast bl-fade alert alert-warning">No results</div>
             </CSSTransition>
           )}
         </TransitionGroup>
