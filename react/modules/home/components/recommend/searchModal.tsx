@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect, useRef, useMemo } from "react";
+import React, { FunctionComponent, useState, useEffect, useRef, useMemo, useContext, useReducer } from "react";
 
 import Modal from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
@@ -15,29 +15,40 @@ import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
 import { SlideInContents, useHeight } from "app/animationHelpers";
 
 import "./recommend.scss";
+import { AppContext } from "app/renderUI";
+import { useQuery, buildQuery } from "micro-graphql-react";
+import { QueryOf, Queries } from "graphql-typings";
+
+import BooksQuery from "graphQL/home/searchBooks.graphql";
 
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
   setBookSearchState: any;
-  searchState: any;
-  searchResults: any;
   dispatch: any;
   selectedBooksSet: any;
 }
 
+const initialState = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
+const searchStateReducer = (_oldState, payload) => ({ active: true, page: 1, ...payload });
+
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
-  const { isOpen, onHide, setBookSearchState, searchState, searchResults, dispatch, selectedBooksSet } = props;
+  const [{ publicUserId }] = useContext(AppContext);
+  const [{ active, ...searchState }, searchDispatch] = useReducer(searchStateReducer, initialState);
+
+  const variables = { ...searchState, publicUserId };
+
+  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, variables, { active }));
+  const { isOpen, onHide, dispatch, selectedBooksSet } = props;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
-  const { loading, loaded, data, error, currentQuery } = searchResults;
 
   const noAvailableBooks = useMemo(() => {
     const allBooks = data?.allBooks?.Books;
 
     return allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
-  }, [selectedBooksSet, searchResults.data]);
+  }, [selectedBooksSet, data]);
 
   useEffect(() => {
     if (props.isOpen) {
@@ -58,7 +69,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const isRead1 = useRef(null);
 
   const applyFilters = () => {
-    setBookSearchState({
+    searchDispatch({
       title: searchEl.current.value || "",
       isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
       subjects: subjects.length ? subjects : null,
