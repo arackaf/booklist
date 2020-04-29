@@ -32,7 +32,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   const [resizeRef, viewHeight] = useHeight();
   const { height, opacity, transform } = useSpring({
     immediate: !uiReady.current,
-    config: expanded ? { ...config.stiff } : { duration: 150 },
+    config: expanded ? { ...config.stiff } : { mass: 1, tension: 300, friction: 30 },
     from: { height: 0, opacity: 0, transform: "translate3d(20px,-20px,0)" },
     to: {
       height: expanded ? viewHeight : 0,
