@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect, useRef, useMemo, useContext, useReducer } from "react";
+import React, { FunctionComponent, useState, useRef, useMemo, useContext, useReducer, useLayoutEffect } from "react";
 
 import Modal from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
@@ -30,7 +30,7 @@ interface LocalProps {
 }
 
 const initialState = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
-const searchStateReducer = (_oldState, payload) => ({ active: true, page: 1, ...payload });
+const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, ...payload } : initialState);
 
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const [{ publicUserId }] = useContext(AppContext);
@@ -50,10 +50,11 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
     return allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
   }, [selectedBooksSet, data]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (props.isOpen) {
       setSubjects(searchState.subjects || []);
       setTags(searchState.tags || []);
+      searchDispatch(null);
     }
   }, [props.isOpen]);
 
@@ -150,7 +151,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-12">
-            <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} />
+            <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet, active }} />
           </div>
         </FlexRow>
       </Form>
@@ -162,7 +163,7 @@ export default SearchModal;
 
 const SearchResults = props => {
   const books = props?.data?.allBooks?.Books;
-  const { loading, selectedBooksSet, currentQuery } = props;
+  const { loading, selectedBooksSet, currentQuery, active } = props;
   const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
@@ -171,7 +172,7 @@ const SearchResults = props => {
     <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <div className="overlay-holder">
         <TransitionGroup component={null}>
-          {books == null ? null : books?.length ? (
+          {books == null || !active ? null : books?.length ? (
             <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
               <ul>
                 <TransitionGroup component={null}>
