@@ -2,11 +2,7 @@ import React, { useState, useReducer, useMemo, useContext } from "react";
 import SearchModal from "./searchModal";
 
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import BooksQuery from "graphQL/home/searchBooks.graphql";
-import { useQuery, buildQuery } from "micro-graphql-react";
 import ajaxUtil from "util/ajaxUtil";
-import { getCrossOriginAttribute } from "util/corsHelpers";
-import { QueryOf, Queries } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
@@ -16,15 +12,7 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 const initialState = {
   selectedBooks: [],
   recommendationsLoading: false,
-  recommendations: [],
-  searchState: {
-    active: false,
-    page: 1,
-    pageSize: 50,
-    sort: { title: 1 },
-    tags: [],
-    subjects: []
-  }
+  recommendations: []
 };
 function reducer(state, [type, payload = null]) {
   switch (type) {
@@ -32,8 +20,6 @@ function reducer(state, [type, payload = null]) {
       return { ...state, selectedBooks: [...state.selectedBooks, payload] };
     case "deSelectBook":
       return { ...state, selectedBooks: state.selectedBooks.filter(b => b != payload) };
-    case "setSearchState":
-      return { ...state, searchState: { active: true, page: 1, ...payload } };
     case "startRecommendationsFetch":
       return { ...state, recommendationsLoading: true };
     case "setRecommendations":
@@ -44,17 +30,13 @@ function reducer(state, [type, payload = null]) {
 
 export default props => {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
-  const [{ selectedBooks, recommendations, recommendationsLoading, searchState }, dispatch] = useReducer(reducer, initialState);
+  const [{ selectedBooks, recommendations, recommendationsLoading }, dispatch] = useReducer(reducer, initialState);
   const [{ publicUserId }] = useContext(AppContext);
-  const { active, ...searchStateToUse } = searchState;
-  const variables = { ...searchStateToUse, publicUserId };
 
-  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, variables, { active }));
-  const closeModal = () => setSearchModalOpen(false);
-  const openModal = () => setSearchModalOpen(true);
-  const setBookSearchState = searchState => {
-    dispatch(["setSearchState", searchState]);
+  const closeModal = () => {
+    setSearchModalOpen(false);
   };
+  const openModal = () => setSearchModalOpen(true);
 
   const selectedBooksSet = useMemo(() => new Set(selectedBooks.map(b => b._id)), [selectedBooks]);
 
@@ -117,12 +99,7 @@ export default props => {
           </div>
         </div>
       </FlexRow>
-      <SearchModal
-        isOpen={searchModalOpen}
-        onHide={closeModal}
-        searchResults={{ loading, loaded, data, error, currentQuery }}
-        {...{ setBookSearchState, searchState, dispatch, selectedBooksSet }}
-      />
+      <SearchModal isOpen={searchModalOpen} onHide={closeModal} {...{ dispatch, selectedBooksSet }} />
     </div>
   );
 };

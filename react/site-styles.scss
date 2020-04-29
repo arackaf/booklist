@@ -526,13 +526,34 @@ div.toast-notification h4 {
 // ------------------------------- Animation ------------------------------------------
 // ------------------------------------------------------------------------------------
 
+.overlay-holder {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+
+  > * {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+}
+
+.animate-height {
+  transition: height var(--animation-duration) linear;
+}
+
 .animate-fast {
   --animation-duration: 150ms;
 }
 
-.bl-fade, .bl-slide-out {
+.bl-fade, .bl-fade-out, .bl-slide-out, .bl-slide-down {
   transition-duration: var(--animation-duration);
-  transition-timing-function: ease-in;
+  transition-timing-function: linear;
+}
+
+.bl-fade {
+  opacity: 0;
 }
 
 .bl-fade {
@@ -541,9 +562,29 @@ div.toast-notification h4 {
 .bl-slide-out {
   transition-property: transform;
 }
-.bl-fade.bl-slide-out {
+.bl-slide-down {
+  height: 0;
+  transition-property: height;
+  overflow: hidden;
+}
+
+.bl-fade.bl-slide-down {
+  transition-property: opacity,height;
+}
+.bl-fade.bl-slide-out, .bl-fade-out.bl-slide-out {
   transition-property: opacity,transform;
 }
+.bl-slide-down.bl-slide-out {
+  transition-property: height,transform;
+}
+.bl-fade.bl-slide-down.bl-slide-out, .bl-fade-out.bl-slide-down.bl-slide-out {
+  transition-property: opacity,height,transform;
+}
+
+.bl-no-animate-in:not([class*="bl-animate-enter"]):not([class*="bl-animate-exit"]) {
+  transition-property: none !important;
+}
+
 
 // Enter
 .bl-animate-enter {
@@ -551,29 +592,37 @@ div.toast-notification h4 {
     opacity: 0;
   }
 }
-.bl-animate-enter.bl-animate-enter-active {
+.bl-animate-enter-done {
+  &.height-auto-when-active {
+    height: auto !important;
+  }
+}
+.bl-animate-enter.bl-animate-enter-active, .bl-animate-enter-done {
   &.bl-fade {
     opacity: 1;
   }
 }
 
+
 // Exit
 .bl-animate-exit {
-  &.bl-fade {
+  &.bl-fade, &.bl-fade-out {
     opacity: 1;
   }
   &.bl-slide-out {
     transform: translate3d(0,0,0);
   }
-  
-  &.bl-overlay {
-    position: absolute;
-  }
 }
 
 .bl-animate-exit.bl-animate-exit-active {
-  &.bl-fade {
+  &.bl-fade, &.bl-fade-out {
     opacity: 0;
+  }
+  &.bl-slide-down {
+    height: 0 !important;
+    &.delay-leave {
+      transition-delay: 500ms;
+    }
   }
   &.bl-slide-out {
     transform: translate3d(100%,0,0);
