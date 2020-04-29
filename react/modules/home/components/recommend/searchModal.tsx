@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useRef, useMemo, useContext, useReducer, useLayoutEffect } from "react";
 
 import Modal from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
@@ -12,28 +12,49 @@ import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
+import { SlideInContents, useHeight } from "app/animationHelpers";
+
+import "./recommend.scss";
+import { AppContext } from "app/renderUI";
+import { useQuery, buildQuery } from "micro-graphql-react";
+import { QueryOf, Queries } from "graphql-typings";
+
+import BooksQuery from "graphQL/home/searchBooks.graphql";
 
 interface LocalProps {
   isOpen: boolean;
   onHide: any;
   setBookSearchState: any;
-  searchState: any;
-  searchResults: any;
   dispatch: any;
   selectedBooksSet: any;
 }
 
+const initialState = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
+const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, ...payload } : initialState);
+
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
-  const { isOpen, onHide, setBookSearchState, searchState, searchResults, dispatch, selectedBooksSet } = props;
+  const [{ publicUserId }] = useContext(AppContext);
+  const [{ active, ...searchState }, searchDispatch] = useReducer(searchStateReducer, initialState);
+
+  const variables = { ...searchState, publicUserId };
+
+  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, variables, { active }));
+  const { isOpen, onHide, dispatch, selectedBooksSet } = props;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
-  const { loading, loaded, data, error, currentQuery } = searchResults;
 
-  useEffect(() => {
+  const noAvailableBooks = useMemo(() => {
+    const allBooks = data?.allBooks?.Books;
+
+    return allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
+  }, [selectedBooksSet, data]);
+
+  useLayoutEffect(() => {
     if (props.isOpen) {
       setSubjects(searchState.subjects || []);
       setTags(searchState.tags || []);
+      searchDispatch(null);
     }
   }, [props.isOpen]);
 
@@ -49,7 +70,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const isRead1 = useRef(null);
 
   const applyFilters = () => {
-    setBookSearchState({
+    searchDispatch({
       title: searchEl.current.value || "",
       isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
       subjects: subjects.length ? subjects : null,
@@ -57,6 +78,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
       searchChildSubjects: childSubEl.current.checked
     });
   };
+
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
       <Form submit={applyFilters}>
@@ -111,19 +133,25 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-12">
-            {loading ? (
-              <button style={{ minWidth: "5ch" }} disabled={true} className="btn btn-default">
-                <i className="fa fa-fw fa-spin fa-spinner" />
-              </button>
-            ) : (
-              <SubmitIconButton className="btn btn-default">
-                <i className="fal fa-search" />
-              </SubmitIconButton>
-            )}
+            <FlexRow>
+              {loading ? (
+                <button style={{ minWidth: "5ch" }} disabled={true} className="btn btn-default">
+                  <i className="fa fa-fw fa-spin fa-spinner" />
+                </button>
+              ) : (
+                <SubmitIconButton key={1} className="btn btn-default">
+                  <i className="fal fa-search" />
+                </SubmitIconButton>
+              )}
+
+              <CSSTransition in={noAvailableBooks} key={2} classNames="bl-animate" timeout={300}>
+                <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from these results</div>
+              </CSSTransition>
+            </FlexRow>
           </div>
 
           <div className="col-xs-12">
-            <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet }} />
+            <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet, active }} />
           </div>
         </FlexRow>
       </Form>
@@ -135,55 +163,36 @@ export default SearchModal;
 
 const SearchResults = props => {
   const books = props?.data?.allBooks?.Books;
-  const { loading, selectedBooksSet, currentQuery } = props;
+  const { loading, selectedBooksSet, currentQuery, active } = props;
   const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
-  const [holdForItems, setHoldForItems] = useState(false);
-
   return (
-    <div style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
-      <TransitionGroup component={null}>
-        {availableBooks == null ? null : availableBooks?.length || holdForItems ? (
-          <CSSTransition
-            onEnter={() => setHoldForItems(true)}
-            onExit={() => setHoldForItems(false)}
-            key={currentQuery}
-            appear={true}
-            enter={true}
-            exit={true}
-            classNames="bl-animate"
-            timeout={3500}
-          >
-            <ul className="animate-fast bl-overlay bl-fade">
-              <TransitionGroup component={null}>
-                {availableBooks.map(book => (
-                  <CSSTransition
-                    onExited={() => !currentBooksRef.current.length && setHoldForItems(false)}
-                    appear={false}
-                    enter={false}
-                    exit={!loading}
-                    classNames="bl-animate"
-                    timeout={300}
-                    key={book._id}
-                  >
-                    <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                  </CSSTransition>
-                ))}
-              </TransitionGroup>
-            </ul>
-          </CSSTransition>
-        ) : books?.length ? (
-          <CSSTransition key={2} classNames="bl-animate" timeout={300}>
-            <div className="animate-fast bl-overlay bl-fade alert alert-info">You've added all of the books from these results</div>
-          </CSSTransition>
-        ) : (
-          <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-            <div className="animate-fast bl-overlay bl-fade alert alert-warning">No results</div>
-          </CSSTransition>
-        )}
-      </TransitionGroup>
+    <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
+      <div className="overlay-holder">
+        <TransitionGroup component={null}>
+          {books == null || !active ? null : books?.length ? (
+            <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
+              <ul>
+                <TransitionGroup component={null}>
+                  {availableBooks.map(book => (
+                    <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
+                      <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
+                    </SlideInContents>
+                  ))}
+                </TransitionGroup>
+              </ul>
+            </SlideInContents>
+          ) : (
+            <CSSTransition key={3} classNames="bl-animate" timeout={300}>
+              <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
+                No results
+              </div>
+            </CSSTransition>
+          )}
+        </TransitionGroup>
+      </div>
     </div>
   );
 };
@@ -198,29 +207,27 @@ const SearchResult = props => {
 
   let { book } = props;
   return (
-    <li className="animate-fast-s bl-fade bl-slide-out">
-      <Stack>
-        <FlowItems>
-          <div style={{ minWidth: "70px" }}>
-            <CoverSmall url={book.smallImage} />
-          </div>
+    <Stack className={props.className}>
+      <FlowItems>
+        <div style={{ minWidth: "70px" }}>
+          <CoverSmall url={book.smallImage} />
+        </div>
 
-          <Stack style={{ flex: 1 }}>
-            {book.title}
-            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
-            <button
-              disabled={adding}
-              onClick={selectBook}
-              style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
-              className="btn btn-primary btn-xs"
-            >
-              Add to list&nbsp;
-              <i className="fal fa-plus" />
-            </button>
-          </Stack>
-        </FlowItems>
-        <hr />
-      </Stack>
-    </li>
+        <Stack style={{ flex: 1 }}>
+          {book.title}
+          {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+          <button
+            disabled={adding}
+            onClick={selectBook}
+            style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
+            className="btn btn-primary btn-xs"
+          >
+            Add to list&nbsp;
+            <i className="fal fa-plus" />
+          </button>
+        </Stack>
+      </FlowItems>
+      <hr />
+    </Stack>
   );
 };
