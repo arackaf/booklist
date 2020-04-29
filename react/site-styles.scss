@@ -612,6 +612,10 @@ div.toast-notification h4 {
   &.bl-slide-out {
     transform: translate3d(0,0,0);
   }
+
+  &.bl-overlay-exit {
+    position: absolute;
+  }
 }
 
 .bl-animate-exit.bl-animate-exit-active {

@@ -168,22 +168,36 @@ const SearchResults = props => {
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
+  const [ref, _height] = useHeight();
+  const height = _height == "auto" ? "audo" : (Math.min(_height, 300) as any);
+
+  const [animating, setAnimating] = useState(false);
+
   return (
-    <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
-      <div className="overlay-holder">
+    <div
+      className="animate-height animate-fast"
+      style={{ height: animating ? "auto" : height, maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}
+    >
+      <div className="overlay-holder" ref={ref}>
         <TransitionGroup component={null}>
           {books == null || !active ? null : books?.length ? (
-            <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
-              <ul>
+            <CSSTransition classNames="bl-animate" timeout={300} key={currentQuery}>
+              <ul className="animate-fast bl-fade bl-overlay-exit">
                 <TransitionGroup component={null}>
                   {availableBooks.map(book => (
-                    <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
+                    <SlideInContents
+                      key={book._id}
+                      component="li"
+                      className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out"
+                      onExit={() => setAnimating(true)}
+                      onExited={() => setAnimating(false)}
+                    >
                       <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
                     </SlideInContents>
                   ))}
                 </TransitionGroup>
               </ul>
-            </SlideInContents>
+            </CSSTransition>
           ) : (
             <CSSTransition key={3} classNames="bl-animate" timeout={300}>
               <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
