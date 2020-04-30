@@ -17,7 +17,7 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   const heightRef = useRef(height);
   const [ro] = useState(
     () =>
-      new MutationObserver(packet => {
+      new ResizeObserver(packet => {
         if (ref.current && heightRef.current != ref.current.offsetHeight) {
           heightRef.current = ref.current.offsetHeight;
           set(ref.current.offsetHeight);
