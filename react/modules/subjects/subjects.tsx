@@ -29,7 +29,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   const [expanded, setExpanded] = useState(true);
   const previous = usePrevious(expanded);
 
-  const [resizeRef, viewHeight] = useHeight({ on: !(expanded && previous && !uiReady.current) });
+  const [resizeRef, viewHeight] = useHeight();
   const { height, opacity, transform } = useSpring({
     immediate: !uiReady.current,
     config: expanded ? { ...config.stiff } : { mass: 1, tension: 300, friction: 30, clamp: true },
