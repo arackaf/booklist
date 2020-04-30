@@ -4,11 +4,37 @@ import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsS
 
 import "./subjectsList.scss";
 import { useColors } from "app/state/colorsState";
-import { EditableExpandableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { useHeight, usePrevious } from "app/animationHelpers";
 
-const EditContext = createContext(null);
+import cn from "classnames";
+
+const EditableExpandableLabelDisplay = props => {
+  let { item, expanded, setExpanded, childSubjects } = props;
+  let extraStyles = props.style || {};
+  let extraClasses = props.className || "";
+
+  return (
+    <span
+      style={{ backgroundColor: item.backgroundColor, color: item.textColor || "white", ...extraStyles }}
+      className={"label label-default label-editable-expandable noselect " + extraClasses}
+    >
+      {childSubjects?.length ? (
+        <a
+          className={cn("toggle", { expanded })}
+          onClick={() => setExpanded(val => !val)}
+          style={{ color: item.textColor || "white", borderRight: `1px solid ${item.textColor || "white"}` }}
+        >
+          <i className="fad fa-chevron-right"></i>
+        </a>
+      ) : null}
+
+
+
+      {props.children || item.name}
+    </span>
+  );
+};
 
 const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
@@ -37,13 +63,11 @@ const SubjectDisplay: FC<any> = memo(props => {
 
   let classes = `padding-bottom-med subjectRow`;
 
-  const openEditModal = useContext(EditContext);
-
   return (
     <animated.li key={_id} style={{ paddingTop: 0, paddingBottom: 0 }}>
       <div>
         <div className={classes}>
-          <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} onEdit={() => openEditModal(subject)} item={subject} />
+          <EditableExpandableLabelDisplay {...{ childSubjects, expanded, setExpanded }} item={subject} />
         </div>
         <animated.div style={{ height: expanded && previous ? "auto" : height }}>
           <animated.div ref={resizeRef} style={{ opacity, transform }}>
