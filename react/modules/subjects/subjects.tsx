@@ -1,6 +1,5 @@
-import React, { memo, createContext, useState, useContext, FC, useRef } from "react";
+import React, { memo, useState, FC, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
-import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/state/subjectsState";
 
 import "./subjectsList.scss";
 import { useColors } from "app/state/colorsState";
@@ -10,7 +9,7 @@ import { useHeight, usePrevious } from "app/animationHelpers";
 import cn from "classnames";
 
 const EditableExpandableLabelDisplay = props => {
-  let { item, expanded, setExpanded, childSubjects } = props;
+  let { item, expanded, setExpanded, childSubjects = [] } = props;
   let extraStyles = props.style || {};
   let extraClasses = props.className || "";
 
@@ -29,8 +28,6 @@ const EditableExpandableLabelDisplay = props => {
         </a>
       ) : null}
 
-
-
       {props.children || item.name}
     </span>
   );
@@ -38,12 +35,9 @@ const EditableExpandableLabelDisplay = props => {
 
 const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
-  const { _id } = subject;
+  const { _id, childSubjects = [] } = subject;
 
   const uiReady = useRef(false);
-
-  const childSubjectsMap = useChildMapSelector();
-  const childSubjects = childSubjectsMap[subject._id] || [];
 
   const [expanded, setExpanded] = useState(true);
   const previous = usePrevious(expanded);
@@ -80,13 +74,10 @@ const SubjectDisplay: FC<any> = memo(props => {
 });
 
 const SubjectList = props => {
-  const { subjectHash } = useSubjectsState();
-  const { updateSubject: runInsert } = useSubjectMutations();
-
   return (
     <ul>
       {props.subjects.map(subject => (
-        <SubjectDisplay key={subject._id} {...{ subject, subjectHash, runInsert }} />
+        <SubjectDisplay key={subject._id} subject={subject} />
       ))}
     </ul>
   );
@@ -94,7 +85,66 @@ const SubjectList = props => {
 
 export default () => {
   useColors();
-  const topLevelSubjects = useRootSubjects();
+  const topLevelSubjects = [
+    {
+      _id: 1,
+      name: "Documents",
+      backgroundColor: "gray",
+      textColor: "white",
+      childSubjects: [
+        { _id: "1a", name: "financial planning", backgroundColor: "aquamarine", textColor: "black" },
+        { _id: "1b", name: "taxes", backgroundColor: "beige", textColor: "black" },
+        { _id: "1c", name: "definitely not porn", backgroundColor: "red", textColor: "white" },
+        {
+          _id: "1d",
+          name: "images",
+          backgroundColor: "green",
+          textColor: "white",
+          childSubjects: [
+            { _id: "1d i", name: "katie", backgroundColor: "black", textColor: "white" },
+            { _id: "1d ii", name: "disney", backgroundColor: "magenta", textColor: "white" },
+            { _id: "1d iii", name: "key west", backgroundColor: "pink", textColor: "black" }
+          ]
+        }
+      ]
+    },
+    {
+      _id: 2,
+      name: "git",
+      backgroundColor: "purple",
+      textColor: "white",
+      childSubjects: [
+        {
+          _id: "2a",
+          name: "micro-graphql-react",
+          backgroundColor: "blueViolet",
+          textColor: "white",
+          childSubjects: [
+            { _id: "2a i", name: "src", backgroundColor: "burlywood", textColor: "black" },
+            { _id: "2a ii", name: "dist", backgroundColor: "coral", textColor: "black" },
+            { _id: "2a iii", name: "docs", backgroundColor: "pudarkcyan", textColor: "white" }
+          ]
+        },
+        {
+          _id: "2b",
+          name: "mongo-graphql-starter",
+          backgroundColor: "cadetblue",
+          textColor: "white",
+          childSubjects: [
+            { _id: "2b i", name: "src", backgroundColor: "cornsilk", textColor: "black" },
+            { _id: "2b ii", name: "dist", backgroundColor: "darkkhaki", textColor: "black" },
+            { _id: "2b iii", name: "docs", backgroundColor: "darkorange", textColor: "white" }
+          ]
+        }
+      ]
+    },
+    {
+      _id: 3,
+      name: "Dropbox",
+      backgroundColor: "gold",
+      textColor: "black"
+    }
+  ];
 
   const { opacity } = useSpring({
     config: { ...config.slow },
