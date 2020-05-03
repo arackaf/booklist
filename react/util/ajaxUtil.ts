@@ -30,7 +30,6 @@ const ajaxUtil = {
     return fetch(url, {
       method: "POST",
       mode: "cors",
-      //headers: new Headers({ "Content-Type": "multipart/form-data" }),
       body: data
     })
       .then(resp => resp.json())
