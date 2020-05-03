@@ -5,7 +5,7 @@ const { S3 } = AWS;
 
 const path = require("path");
 
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectID } = require("mongodb");
 const Jimp = require("jimp").default;
 const uuid = require("uuid/v4");
 const awsMultiPartParser = require("lambda-multipart-parser");
@@ -50,7 +50,7 @@ module.exports.upload = async event => {
 
   try {
     const db = await getConnection();
-    const loggedInUser = await db.collection("users").findOne({ loginToken });
+    const loggedInUser = await db.collection("users").findOne({ _id: ObjectID(userId), loginToken });
 
     if (!loggedInUser) {
       return CorsResponse({});
