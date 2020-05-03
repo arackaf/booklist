@@ -17,8 +17,6 @@ import compression from "compression";
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
 
-import multer from "multer";
-
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
@@ -33,28 +31,10 @@ import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
 import uuid from "uuid/v4";
-import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node/util/bookCovers/bookCoverHelpers";
 import { getJrDbConnection } from "./node/util/dbUtils";
-
-import multerS3 from "multer-s3";
 
 import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
-
-const s3StagingBucket = new AWS.S3({ params: { Bucket: "my-library-cover-upload-staging" } });
-
-const s3StagingUpload = multer({
-  storage: multerS3({
-    s3: s3StagingBucket,
-    bucket: "my-library-cover-upload-staging",
-    metadata: function(req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function(req, file, cb) {
-      cb(null, "big-image.jpg");
-    }
-  })
-});
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
@@ -282,63 +262,6 @@ app.post("/react/logout", function(req, response) {
   req.logout();
   response.send({});
 });
-
-const multerBookCoverUploadStorage = multer.diskStorage({
-  destination(req, file, cb) {
-    if (!req.user.id) {
-      cb("Not logged in");
-    } else {
-      let path = `./uploads/${req.user.id}/coverUpload`;
-
-      fs.stat(path, function(err) {
-        if (err) {
-          mkdirp(path, (err, res) => cb(err, path));
-        } else {
-          cb(null, path);
-        }
-      });
-    }
-  },
-  filename(req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-const upload = multer({ storage: multerBookCoverUploadStorage });
-
-app.post("/react/upload-small-cover", s3StagingUpload.single("fileUploaded"), async function(req, response) {
-  response.json({ Y: req.file.key });
-  //coverUpload(req, response);
-});
-
-app.post("/react/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
-  coverUpload(req, response, { maxWidth: 106 });
-});
-
-async function coverUpload(req, response, { maxWidth } = {}) {
-  if (req.file.size > 900000) {
-    return response.send({ success: false, error: "Max size is 500K" });
-  }
-
-  mkdirp.sync(path.resolve("./conversions"));
-
-  let ext = path.extname(req.file.originalname);
-  let newFileName = `${uuid()}${ext}`;
-  fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));
-
-  let resizedFile = await resizeIfNeeded(newFileName, maxWidth);
-  if (!resizedFile) {
-    return response.send({ success: false, error: "Could not read image" });
-  }
-  let s3path = await saveCoverToS3(resizedFile, `bookCovers/${req.user.id}/${newFileName}`);
-  if (!s3path) {
-    return response.send({ success: false, error: "Error saving image" });
-  }
-  removeFile(path.resolve(`./conversions/${newFileName}`));
-  removeFile(resizedFile);
-  removeFile(path.join(req.file.destination, req.file.filename));
-
-  response.send({ success: true, url: s3path });
-}
 
 app.post("/react/createUser", function(req, response) {
   let userDao = new UserDao(),
