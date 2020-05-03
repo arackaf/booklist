@@ -29,7 +29,7 @@ const getConnection = () => {
 
 const uploadToS3 = (fileName, body) => {
   const s3 = new S3({});
-  var params = { Bucket: "my-library-cover-uploads", Key: `__last__test__/${fileName}`, Body: body };
+  var params = { Bucket: "my-library-cover-uploads", Key: `${fileName}`, Body: body };
 
   return new Promise(res => {
     s3.upload(params, function(err, data) {
@@ -45,6 +45,7 @@ module.exports.upload = async event => {
   const formPayload = await awsMultiPartParser.parse(event);
   const size = formPayload.size;
   const loginToken = formPayload.loginToken;
+  const userId = formPayload.userId;
   const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
   try {
@@ -64,7 +65,7 @@ module.exports.upload = async event => {
         return res(CorsResponse({ error: true, message: err }));
       }
 
-      const newName = `${uuid()}${path.extname(formPayload.files[0].filename)}`;
+      const newName = `bookCovers/${userId}/${uuid()}${path.extname(formPayload.files[0].filename)}`;
 
       if (image.bitmap.width > MAX_WIDTH) {
         image.resize(MAX_WIDTH, Jimp.AUTO);
