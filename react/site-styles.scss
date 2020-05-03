@@ -540,7 +540,7 @@ div.toast-notification h4 {
 }
 
 .animate-height {
-  transition: height var(--animation-duration) linear;
+  transition: height var(--animation-duration) ease-in;
 }
 
 .animate-fast {
@@ -549,7 +549,7 @@ div.toast-notification h4 {
 
 .bl-fade, .bl-fade-out, .bl-slide-out, .bl-slide-down {
   transition-duration: var(--animation-duration);
-  transition-timing-function: linear;
+  transition-timing-function: ease-in;
 }
 
 .bl-fade {
