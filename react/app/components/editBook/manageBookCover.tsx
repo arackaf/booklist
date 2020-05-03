@@ -9,6 +9,7 @@ import { getCrossOriginAttribute } from "util/corsHelpers";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlowItems from "../layout/FlowItems";
 import Stack from "../layout/Stack";
+import { useAppState } from "app/state/appState";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -50,11 +51,13 @@ const RemoteImageUpload = props => {
 };
 
 const ManageBookCover = props => {
-  const { _id, img, endpoint, imgKey, remoteSave } = props;
+  const { _id, img, size, imgKey, remoteSave } = props;
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
   const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
+
+  const [{ loginToken }] = useAppState();
 
   const runSave = () => {
     if (!uploadState.pendingImg) {
@@ -70,6 +73,8 @@ const ManageBookCover = props => {
   const onDrop = files => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
+    request.append("loginToken", loginToken);
+    request.append("size", size);
 
     fetch("https://ve7aw8r6u5.execute-api.us-east-1.amazonaws.com/dev/upload", {
       method: "POST",
@@ -85,16 +90,14 @@ const ManageBookCover = props => {
           setUploadState({ pendingImg: res.url, uploadError: "" });
         }
       });
-    //};
 
-    return;
-    ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
-      if (res.error) {
-        setUploadState({ pendingImg: "", uploadError: res.error });
-      } else {
-        setUploadState({ pendingImg: res.url, uploadError: "" });
-      }
-    });
+    // ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
+    //   if (res.error) {
+    //     setUploadState({ pendingImg: "", uploadError: res.error });
+    //   } else {
+    //     setUploadState({ pendingImg: res.url, uploadError: "" });
+    //   }
+    // });
   };
 
   const { pendingImg, uploadError } = uploadState;
