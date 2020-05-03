@@ -12,15 +12,6 @@ import { SlideInContents } from "app/animationHelpers";
 
 declare var webSocketAddress: any;
 
-setTimeout(() => {
-
-  fetch("https://6xpmc3g0ch.execute-api.us-east-1.amazonaws.com/dev/msg")
-  .then(resp => resp.json())
-  .then(resp => {
-    console.log(resp);
-  });
-}, 4000)
-
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
   title: "",

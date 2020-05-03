@@ -57,7 +57,7 @@ const ManageBookCover = props => {
 
   const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
 
-  const [{ loginToken }] = useAppState();
+  const [{ loginToken, userId }] = useAppState();
 
   const runSave = () => {
     if (!uploadState.pendingImg) {
@@ -74,30 +74,17 @@ const ManageBookCover = props => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
     request.append("loginToken", loginToken);
+    request.append("userId", userId);
     request.append("size", size);
 
-    fetch("https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload", {
-      method: "POST",
-      mode: "cors",
-      body: request
-    })
-      .then(resp => resp.json())
-      .then(res => {
-        if (res.error) {
-          setUploadState({ pendingImg: "", uploadError: res.error });
-        } else {
-          console.log("woo hoo", res);
-          setUploadState({ pendingImg: res.url, uploadError: "" });
-        }
-      });
-
-    // ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
-    //   if (res.error) {
-    //     setUploadState({ pendingImg: "", uploadError: res.error });
-    //   } else {
-    //     setUploadState({ pendingImg: res.url, uploadError: "" });
-    //   }
-    // });
+    ajaxUtil.postWithFilesCors("https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload", request, res => {
+      if (res.error) {
+        setUploadState({ pendingImg: "", uploadError: res.error });
+      } else {
+        console.log("woo hoo", res);
+        setUploadState({ pendingImg: res.url, uploadError: "" });
+      }
+    });
   };
 
   const { pendingImg, uploadError } = uploadState;

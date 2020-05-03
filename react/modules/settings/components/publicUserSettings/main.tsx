@@ -9,9 +9,7 @@ import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
-import cn from "classnames";
 import { Form, Input, SubmitButton, required } from "app/components/ui/Form";
-import ajaxUtil from "util/ajaxUtil";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
@@ -52,18 +50,6 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const pubHeaderEl = useRef(null);
 
   const update = () => {
-    // fetch("https://12hx7flfpi.execute-api.us-east-1.amazonaws.com/", {
-    //   method: "post",
-    //   mode: "cors",
-    //   body: JSON.stringify({ a: 12, b: "Hello" }),
-    //   //credentials: "include"
-    // })
-    //   .then(resp => {
-    //     // debugger;
-    //   })
-    //   .catch(err => {
-    //     // debugger;
-    //   });
     let isPublic = pendingIsPublic;
     return runMutation({
       isPublic: pendingIsPublic,
