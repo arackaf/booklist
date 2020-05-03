@@ -266,10 +266,12 @@ app.get("/activate/:code", function(req, response) {
     result => {
       if (result.success) {
         req.login(result, function() {
-          response.cookie("logged_in", "true", { maxAge: 900000 });
-          response.cookie("userId", result._id, { maxAge: 900000 });
-          response.cookie("loginToken", result.loginToken, { maxAge: 900000 });
-          if (result.rememberMe) {
+          const rememberMe = result.rememberMe;
+
+          response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          response.cookie("userId", result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          if (rememberMe) {
             response.cookie("remember_me", result.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
           }
           response.redirect("/activate");
