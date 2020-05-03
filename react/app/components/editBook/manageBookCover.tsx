@@ -71,7 +71,7 @@ const ManageBookCover = props => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
 
-    fetch("https://sb1ijnzpy2.execute-api.us-east-1.amazonaws.com/dev/upload", {
+    fetch("https://ve7aw8r6u5.execute-api.us-east-1.amazonaws.com/dev/upload", {
       method: "POST",
       mode: "cors",
       body: request

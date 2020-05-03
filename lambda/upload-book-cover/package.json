@@ -1,0 +1,19 @@
+{
+  "name": "upload-book-cover",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jimp": "^0.10.3",
+    "lambda-multipart-parser": "0.0.2",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "serverless-webpack": "^5.3.1"
+  }
+}
