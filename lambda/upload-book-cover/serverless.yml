@@ -23,12 +23,13 @@ service: upload-book-cover
 provider:
   name: aws
   runtime: nodejs12.x
+  timeout: 30
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
 
 # you can overwrite defaults here
-#  stage: dev
+  stage: live
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here

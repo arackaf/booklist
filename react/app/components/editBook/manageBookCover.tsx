@@ -76,7 +76,7 @@ const ManageBookCover = props => {
     request.append("loginToken", loginToken);
     request.append("size", size);
 
-    fetch("https://ve7aw8r6u5.execute-api.us-east-1.amazonaws.com/dev/upload", {
+    fetch("https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload", {
       method: "POST",
       mode: "cors",
       body: request
