@@ -109,7 +109,7 @@ const ManageBookCover = props => {
         </div>
       ) : (
         <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
-          <span style={{}}>No Cover</span>
+          <span>No Cover</span>
         </div>
       )}
 
