@@ -4,14 +4,12 @@ import bookSimilarityQueueManager from "./node/app-helpers/bookSimilarityQueueMa
 import ErrorLoggerDao from "./node/dataAccess/errorLoggerDAO";
 import UserDao from "./node/dataAccess/userDAO";
 
-import express from "express";
+import express, { response } from "express";
 const app = express();
 import path from "path";
 import bodyParser from "body-parser";
 import session from "express-session";
 import cookieParser from "cookie-parser";
-import fs from "fs";
-import mkdirp from "mkdirp";
 import compression from "compression";
 
 const hour = 3600000;
@@ -60,24 +58,6 @@ if (!IS_DEV) {
 }
 
 export const JrConn = getJrDbConnection();
-
-// setTimeout(() => {
-//   new UserDao().getSubscription("56f34a2748243210269ecd66").then(sub => {
-//     try {
-//       webpush.setVapidDetails(process.env.PUSH_SUBJECT, process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
-//       webpush
-//         .sendNotification(sub, "hello")
-//         .then(() => {
-//           console.log("SENT for real");
-//         })
-//         .catch(err => {
-//           console.log(err);
-//         });
-//     } catch (er) {
-//       console.log(er);
-//     }
-//   });
-// }, 5000);
 
 passport.use(
   new LocalStrategy(function(email, password, done) {
@@ -186,11 +166,8 @@ app.use(
 
 const expressWs = expressWsImport(app);
 
-app.use("/static/", express.static(__dirname + "/static/"));
-app.use("/node_modules/", express.static(__dirname + "/node_modules/"));
-app.use("/react/", express.static(__dirname + "/react/"));
-app.use("/utils/", express.static(__dirname + "/utils/"));
-app.use("/uploads/", express.static(__dirname + "/uploads/"));
+const statics = ["/static/", "/node_modules/", "/react/", "/utils/"];
+statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
 
 app.ws("/bookEntryWS", function(ws, req) {
   bookEntryQueueManager.subscriberAdded(req.user.id, ws);
@@ -203,29 +180,14 @@ app.get("/compare/react", (req, res) => {
   res.sendFile(path.join(__dirname + "/compare/react/dist/index.html"));
 });
 
-app.get("/", browseToReactRedux);
-app.get("/books", browseToReactRedux);
-app.get("/login", browseToReactRedux);
-app.get("/subjects", browseToReactRedux);
-app.get("/settings", browseToReactRedux);
-app.get("/scan", browseToReactRedux);
-app.get("/home", browseToReactRedux);
-app.get("/view", browseToReactRedux);
-app.get("/admin", browseToReactRedux);
-app.get("/styledemo", browseToReactRedux);
-app.get("/react", browseToReactRedux);
-app.get("/jr", browseToReactRedux);
+const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
+modules.forEach(name => app.get("/" + name, browseToReact));
+
 app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
-function browseToReactRedux(request, response) {
-  if (!!request.user) {
-  } else {
-    response.clearCookie("logged_in");
-    response.clearCookie("remember_me");
-    response.clearCookie("userId");
-    response.clearCookie("loginToken");
-    response.clearCookie("admin");
-    response.clearCookie("jr_admin");
+function browseToReact(request, response) {
+  if (!request.user) {
+    clearAllCookies(response);
   }
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
@@ -253,15 +215,19 @@ app.post("/react/logout", function(req, response) {
   let userDao = new UserDao();
   userDao.logout(req.user.id);
 
+  clearAllCookies(response);
+  req.logout();
+  response.send({});
+});
+
+const clearAllCookies = response => {
   response.clearCookie("logged_in");
   response.clearCookie("remember_me");
   response.clearCookie("userId");
   response.clearCookie("loginToken");
   response.clearCookie("admin");
   response.clearCookie("jr_admin");
-  req.logout();
-  response.send({});
-});
+};
 
 app.post("/react/createUser", function(req, response) {
   let userDao = new UserDao(),
@@ -288,7 +254,7 @@ app.post("/react/resetPassword", async function(req, response) {
   response.send({ ...result });
 });
 
-app.get("/activate", browseToReactRedux);
+app.get("/activate", browseToReact);
 app.get("/activate/:code", function(req, response) {
   let userDao = new UserDao(),
     code = req.params.code;
