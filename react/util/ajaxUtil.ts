@@ -26,6 +26,16 @@ const ajaxUtil = {
       .then(callback)
       .catch(errorCallback);
   },
+  postWithFilesCors(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
+    return fetch(url, {
+      method: "POST",
+      mode: "cors",
+      body: data
+    })
+      .then(resp => resp.json())
+      .then(callback)
+      .catch(errorCallback);
+  },
   ["get"](url, data): any {
     let queryString = Object.keys(data)
       .map(p => (Array.isArray(data[p]) ? data[p].map(val => `${p}[]=${val}`).join("&") : `${p}=${data[p]}`))

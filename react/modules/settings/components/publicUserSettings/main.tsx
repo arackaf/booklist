@@ -9,7 +9,6 @@ import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
-import cn from "classnames";
 import { Form, Input, SubmitButton, required } from "app/components/ui/Form";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {

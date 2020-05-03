@@ -9,6 +9,7 @@ import { getCrossOriginAttribute } from "util/corsHelpers";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlowItems from "../layout/FlowItems";
 import Stack from "../layout/Stack";
+import { useAppState } from "app/state/appState";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -50,11 +51,13 @@ const RemoteImageUpload = props => {
 };
 
 const ManageBookCover = props => {
-  const { _id, img, endpoint, imgKey, remoteSave } = props;
+  const { _id, img, size, imgKey, remoteSave } = props;
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
   const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
+
+  const [{ loginToken, userId }] = useAppState();
 
   const runSave = () => {
     if (!uploadState.pendingImg) {
@@ -70,11 +73,15 @@ const ManageBookCover = props => {
   const onDrop = files => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
+    request.append("loginToken", loginToken);
+    request.append("userId", userId);
+    request.append("size", size);
 
-    ajaxUtil.postWithFiles(`/react/${endpoint}`, request, res => {
+    ajaxUtil.postWithFilesCors("https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload", request, res => {
       if (res.error) {
         setUploadState({ pendingImg: "", uploadError: res.error });
       } else {
+        console.log("woo hoo", res);
         setUploadState({ pendingImg: res.url, uploadError: "" });
       }
     });
@@ -84,11 +91,13 @@ const ManageBookCover = props => {
   return (
     <FlowItems>
       {currentUrl ? (
-        <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+        <div style={{ minWidth: "110px" }}>
+          <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+        </div>
       ) : (
-        <span style={{ alignSelf: "flex-start" }} className="alert alert-warning">
-          No Cover
-        </span>
+        <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
+          <span>No Cover</span>
+        </div>
       )}
 
       {!pendingImg ? (

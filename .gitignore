@@ -9,3 +9,9 @@ react/service-worker/sw-index-bundle.js
 react/.DS_Store
 react/dist/*
 react/dist-css/*
+index-bundle.js
+lambda/coverUploads/dist
+lambda/book-covers/.webpack
+lambda/book-covers/.serverless
+lambda/try-upload/.serverless
+config.js

@@ -17,8 +17,6 @@ import compression from "compression";
 const hour = 3600000;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
 
-import multer from "multer";
-
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
@@ -33,8 +31,10 @@ import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
 import uuid from "uuid/v4";
-import { resizeIfNeeded, saveCoverToS3, removeFile } from "./node/util/bookCovers/bookCoverHelpers";
 import { getJrDbConnection } from "./node/util/dbUtils";
+
+import AWS from "aws-sdk";
+AWS.config.region = "us-east-1";
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
@@ -223,6 +223,7 @@ function browseToReactRedux(request, response) {
     response.clearCookie("logged_in");
     response.clearCookie("remember_me");
     response.clearCookie("userId");
+    response.clearCookie("loginToken");
     response.clearCookie("admin");
     response.clearCookie("jr_admin");
   }
@@ -239,6 +240,7 @@ app.post("/react/login", passport.authenticate("local"), function(req, response)
 
   response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+  response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
@@ -248,70 +250,18 @@ app.post("/react/login", passport.authenticate("local"), function(req, response)
 });
 
 app.post("/react/logout", function(req, response) {
+  let userDao = new UserDao();
+  userDao.logout(req.user.id);
+
   response.clearCookie("logged_in");
   response.clearCookie("remember_me");
   response.clearCookie("userId");
+  response.clearCookie("loginToken");
   response.clearCookie("admin");
   response.clearCookie("jr_admin");
   req.logout();
   response.send({});
 });
-
-const multerBookCoverUploadStorage = multer.diskStorage({
-  destination(req, file, cb) {
-    if (!req.user.id) {
-      cb("Not logged in");
-    } else {
-      let path = `./uploads/${req.user.id}/coverUpload`;
-
-      fs.stat(path, function(err) {
-        if (err) {
-          mkdirp(path, (err, res) => cb(err, path));
-        } else {
-          cb(null, path);
-        }
-      });
-    }
-  },
-  filename(req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-const upload = multer({ storage: multerBookCoverUploadStorage });
-
-app.post("/react/upload-small-cover", upload.single("fileUploaded"), async function(req, response) {
-  coverUpload(req, response);
-});
-
-app.post("/react/upload-medium-cover", upload.single("fileUploaded"), async function(req, response) {
-  coverUpload(req, response, { maxWidth: 106 });
-});
-
-async function coverUpload(req, response, { maxWidth } = {}) {
-  if (req.file.size > 900000) {
-    return response.send({ success: false, error: "Max size is 500K" });
-  }
-
-  mkdirp.sync(path.resolve("./conversions"));
-
-  let ext = path.extname(req.file.originalname);
-  let newFileName = `${uuid()}${ext}`;
-  fs.copyFileSync(path.join(req.file.destination, req.file.filename), path.resolve(`./conversions/${newFileName}`));
-
-  let resizedFile = await resizeIfNeeded(newFileName, maxWidth);
-  if (!resizedFile) {
-    return response.send({ success: false, error: "Could not read image" });
-  }
-  let s3path = await saveCoverToS3(resizedFile, `bookCovers/${req.user.id}/${newFileName}`);
-  if (!s3path) {
-    return response.send({ success: false, error: "Error saving image" });
-  }
-  removeFile(path.resolve(`./conversions/${newFileName}`));
-  removeFile(resizedFile);
-  removeFile(path.join(req.file.destination, req.file.filename));
-
-  response.send({ success: true, url: s3path });
-}
 
 app.post("/react/createUser", function(req, response) {
   let userDao = new UserDao(),
@@ -352,6 +302,7 @@ app.get("/activate/:code", function(req, response) {
         req.login(result, function() {
           response.cookie("logged_in", "true", { maxAge: 900000 });
           response.cookie("userId", result._id, { maxAge: 900000 });
+          response.cookie("loginToken", result.loginToken, { maxAge: 900000 });
           if (result.rememberMe) {
             response.cookie("remember_me", result.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
           }

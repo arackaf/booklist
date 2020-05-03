@@ -4,12 +4,21 @@ import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
 import { getStatePacket } from "util/stateManagementHelpers";
 import { getCurrentUrlState, history } from "util/urlHelpers";
+import ajaxUtil from "util/ajaxUtil";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
 
-const { logged_in, userId } = isLoggedIn();
-const authSettings = logged_in && userId ? { isLoggedIn: true, userId } : { isLoggedIn: false, userId: "" };
+const { logged_in, userId, loginToken } = isLoggedIn();
+const authSettings = logged_in && userId ? { isLoggedIn: true, userId, loginToken } : { isLoggedIn: false, userId: "", loginToken: "" };
+
+if (logged_in && !loginToken){
+  ajaxUtil.post("/react/logout", {}, () => (window as any).location = "/");
+}
+
+if (logged_in && (window as any).location.pathname == "/login"){
+  window.location.replace("/");
+}
 
 if (logged_in && (window as any).location.pathname == "/login"){
   window.location.replace("/");

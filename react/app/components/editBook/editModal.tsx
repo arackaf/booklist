@@ -63,7 +63,7 @@ class ManualBookEntry extends Component<any, any> {
                       _id={book._id}
                       remoteSave={updateSmallCover}
                       imgKey="smallImage"
-                      endpoint="upload-small-cover"
+                      size="small"
                       img={book.smallImage}
                     />
                   </div>
@@ -74,7 +74,7 @@ class ManualBookEntry extends Component<any, any> {
                       _id={book._id}
                       remoteSave={updateMediumCover}
                       imgKey="mediumImage"
-                      endpoint="upload-medium-cover"
+                      size="medium"
                       img={book.mediumImage}
                     />
                   </div>
