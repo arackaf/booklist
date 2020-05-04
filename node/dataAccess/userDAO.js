@@ -83,14 +83,24 @@ class UserDAO extends DAO {
         return { alreadyActivated: true };
       }
 
+      user.loginToken = uuid();
+
       await db.collection("users").update(
         { _id: user._id },
         {
-          $set: { activated: true },
+          $set: { activated: true, loginToken: user.loginToken },
           $unset: { rememberMe: "" }
         }
       );
-      return { success: true, rememberMe: user.rememberMe, username: user.email, _id: user._id, id: user._id, token: user.token };
+      return {
+        success: true,
+        rememberMe: user.rememberMe,
+        username: user.email,
+        _id: user._id,
+        id: user._id,
+        loginToken: user.loginToken,
+        token: user.token
+      };
     } catch (err) {
       console.log("oops", err);
     } finally {
