@@ -269,7 +269,7 @@ app.get("/activate/:code", function(req, response) {
           const rememberMe = result.rememberMe;
 
           response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("userId", result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           if (rememberMe) {
             response.cookie("remember_me", result.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
