@@ -36,10 +36,9 @@ class ManualBookEntry extends Component<any, any> {
     });
   }
   render() {
-    let { tab, bookEditing } = this.state;
-    let { isSaved, isSaving, saveBook } = this.props;
+    let { bookEditing } = this.state;
+    let { saveBook } = this.props;
     let book = bookEditing;
-    let bookSaved = book && book._id;
 
     return (
       <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.state.title}>
@@ -48,7 +47,7 @@ class ManualBookEntry extends Component<any, any> {
             <TabHeader tabName="basic">
               <a>Book info</a>
             </TabHeader>
-            <TabHeader tabName="covers">
+            <TabHeader disabled={!book?._id} tabName="covers">
               <a>Covers</a>
             </TabHeader>
           </TabHeaders>
