@@ -37,12 +37,17 @@ const Login: FunctionComponent<{}> = props => {
     }
 
     setState(state => ({ ...state, running: true }));
-    return ajaxUtil.post(
-      "/react/login",
-      { username, password, rememberme },
-      () => window.location.replace("/"),
-      () => setState(state => ({ ...state, running: false, errorCode: "c2" }))
-    );
+    return new Promise(res => {
+      ajaxUtil.post(
+        "/react/login",
+        { username, password, rememberme },
+        () => window.location.replace("/"),
+        () => {
+          setState(state => ({ ...state, running: false, errorCode: "c2" }));
+          res(true);
+        }
+      );
+    });
   };
   const createUser = evt => {
     evt.preventDefault();
