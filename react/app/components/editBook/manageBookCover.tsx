@@ -10,6 +10,7 @@ import { MutationOf, Mutations } from "graphql-typings";
 import FlowItems from "../layout/FlowItems";
 import Stack from "../layout/Stack";
 import { useAppState } from "app/state/appState";
+import { SectionLoading } from "../loading";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -70,6 +71,8 @@ const ManageBookCover = props => {
     });
   };
 
+  const [uploading, setUploading] = useState(false);
+
   const onDrop = files => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
@@ -77,14 +80,25 @@ const ManageBookCover = props => {
     request.append("userId", userId);
     request.append("size", size);
 
-    ajaxUtil.postWithFilesCors("https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload", request, res => {
-      if (res.error) {
-        setUploadState({ pendingImg: "", uploadError: res.error });
-      } else {
-        console.log("woo hoo", res);
-        setUploadState({ pendingImg: res.url, uploadError: "" });
+    setUploading(true);
+    ajaxUtil.postWithFilesCors(
+      "https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload",
+      request,
+      res => {
+        if (res.error) {
+          setUploadState({ pendingImg: "", uploadError: res.error });
+        } else if (!res.url) {
+          setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+        } else {
+          setUploadState({ pendingImg: res.url, uploadError: "" });
+        }
+        setUploading(false);
+      },
+      err => {
+        setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+        setUploading(false);
       }
-    });
+    );
   };
 
   const { pendingImg, uploadError } = uploadState;
@@ -101,12 +115,13 @@ const ManageBookCover = props => {
       )}
 
       {!pendingImg ? (
-        <div style={{ minWidth: "100px", maxWidth: "140px" }}>
+        <div style={{ minWidth: "100px", maxWidth: "140px", position: "relative" }}>
           <Dropzone
             acceptStyle={{ border: "3px solid var(--primary-8)" }}
             rejectStyle={{ border: "3px solid var(--primary-9)" }}
             activeStyle={{ border: "3px solid var(--primary-9)" }}
-            disabledStyle={{ border: "3px solid var(--primary-9)" }}
+            disabledStyle={{ border: "3px solid var(--neutral-6)", color: "var(--neutral-6)", cursor: "wait" }}
+            disabled={uploading}
             style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center", cursor: "pointer" }}
             onDrop={files => onDrop(files)}
             multiple={false}
@@ -114,7 +129,7 @@ const ManageBookCover = props => {
             <div>Click or drag to upload a new cover</div>
           </Dropzone>
           {uploadError ? (
-            <div style={{ display: "inline-block", marginBottom: "2px" }} className="label label-danger">
+            <div style={{ display: "inline-block", marginTop: "2px", marginBottom: "2px" }} className="label label-danger">
               {uploadError}
             </div>
           ) : null}
