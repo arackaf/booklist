@@ -10,7 +10,6 @@ import { MutationOf, Mutations } from "graphql-typings";
 import FlowItems from "../layout/FlowItems";
 import Stack from "../layout/Stack";
 import { useAppState } from "app/state/appState";
-import { SectionLoading } from "../loading";
 
 const RemoteImageUpload = props => {
   const [url, setUrl] = useState("");
@@ -52,7 +51,7 @@ const RemoteImageUpload = props => {
 };
 
 const ManageBookCover = props => {
-  const { _id, img, size, imgKey, remoteSave } = props;
+  const { _id, img, size, imgKey, remoteSave, updateBook: updateExistingBook } = props;
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
@@ -61,14 +60,15 @@ const ManageBookCover = props => {
   const [{ loginToken, userId }] = useAppState();
 
   const runSave = () => {
-    if (!uploadState.pendingImg) {
-      return;
-    }
     let newUrl = uploadState.pendingImg;
-    return updateBook({ _id, book: { [imgKey]: uploadState.pendingImg } }).then(() => {
-      setCurrentUrl(newUrl);
-      setUploadState({ pendingImg: "", uploadError: "" });
-    });
+    if (_id) {
+      return updateBook({ _id, book: { [imgKey]: newUrl } }).then(() => {
+        setCurrentUrl(newUrl);
+        setUploadState({ pendingImg: "", uploadError: "" });
+      });
+    } else {
+      updateExistingBook(book => ({ ...book, [imgKey]: newUrl }));
+    }
   };
 
   const [uploading, setUploading] = useState(false);
