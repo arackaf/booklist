@@ -91,16 +91,6 @@ class BookController {
     }
 
     let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId}/${fileName}`);
-    let { db, client } = await getDbConnection();
-
-    await db.collection("books").updateOne(
-      { _id: ObjectId(_id), userId },
-      {
-        $set: { [imgKey]: s3Key }
-      }
-    );
-
-    await client.close();
 
     removeFile(fullName);
     removeFile(newPath);
