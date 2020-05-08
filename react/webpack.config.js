@@ -5,6 +5,7 @@ const isProd = process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
@@ -111,7 +112,8 @@ module.exports = {
         getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
       ],
       importScripts: ["/react/service-worker/sw-index-bundle.js"]
-    })
+    }),
+    new Dotenv()
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),
   stats: {

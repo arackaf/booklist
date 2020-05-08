@@ -96,7 +96,7 @@ const ManageBookCover = props => {
 
     setUploading(true);
     ajaxUtil.postWithFilesCors(
-      "https://qfj7tbd4wb.execute-api.us-east-1.amazonaws.com/live/upload",
+      process.env.UPLOAD_BOOK_COVER_DEV,
       request,
       res => {
         if (res.error) {

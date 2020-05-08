@@ -29,7 +29,7 @@ provider:
       - 'multipart/form-data'
 
 # you can overwrite defaults here
-  stage: live
+  stage: dev
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here

@@ -64,5 +64,8 @@
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "3.3.2",
     "workbox-webpack-plugin": "^5.0.0-beta.0"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^1.7.0"
   }
 }

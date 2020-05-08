@@ -5,10 +5,11 @@ const { S3 } = AWS;
 
 const path = require("path");
 
-const { MongoClient, ObjectID } = require("mongodb");
 const Jimp = require("jimp").default;
 const uuid = require("uuid/v4");
 const awsMultiPartParser = require("lambda-multipart-parser");
+
+const checkLogin = require("../util/checkLoginToken");
 
 const CorsResponse = obj => ({
   statusCode: 200,
@@ -19,13 +20,6 @@ const CorsResponse = obj => ({
   },
   body: JSON.stringify(obj)
 });
-
-const getConnection = () => {
-  let connString = process.env.Mongo_Conn;
-  let dbName = process.env.DB_Name;
-
-  return MongoClient.connect(connString, { useNewUrlParser: true }).then(client => client.db(dbName));
-};
 
 const uploadToS3 = (fileName, body) => {
   const s3 = new S3({});
@@ -46,18 +40,12 @@ module.exports.upload = async event => {
   const size = formPayload.size;
   const loginToken = formPayload.loginToken;
   const userId = formPayload.userId;
-  const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
-  try {
-    const db = await getConnection();
-    const loggedInUser = await db.collection("users").findOne({ _id: ObjectID(userId), loginToken });
-
-    if (!loggedInUser) {
-      return CorsResponse({});
-    }
-  } catch (er) {
-    return CorsResponse({ er, msg: JSON.stringify(er) });
+  if (!checkLogin(userId, loginToken)) {
+    return CorsResponse({});
   }
+
+  const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
   return new Promise(res => {
     Jimp.read(formPayload.files[0].content, function(err, image) {
