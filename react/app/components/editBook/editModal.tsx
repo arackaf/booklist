@@ -5,7 +5,6 @@ import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
 
 import { updateSmallCover, updateMediumCover } from "util/coverUpdates";
-import Stack from "../layout/Stack";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/Tabs";
 
 class ManualBookEntry extends Component<any, any> {
@@ -37,7 +36,7 @@ class ManualBookEntry extends Component<any, any> {
   }
   render() {
     let { bookEditing } = this.state;
-    let { saveBook } = this.props;
+    let { saveBook, applyNewImage } = this.props;
     let book = bookEditing;
 
     return (
@@ -47,7 +46,7 @@ class ManualBookEntry extends Component<any, any> {
             <TabHeader tabName="basic">
               <a>Book info</a>
             </TabHeader>
-            <TabHeader disabled={!book?._id} tabName="covers">
+            <TabHeader tabName="covers">
               <a>Covers</a>
             </TabHeader>
           </TabHeaders>
@@ -64,6 +63,7 @@ class ManualBookEntry extends Component<any, any> {
                       imgKey="smallImage"
                       size="small"
                       img={book.smallImage}
+                      updateBook={this.updateBook}
                     />
                   </div>
                   <hr />
@@ -75,6 +75,7 @@ class ManualBookEntry extends Component<any, any> {
                       imgKey="mediumImage"
                       size="medium"
                       img={book.mediumImage}
+                      updateBook={this.updateBook}
                     />
                   </div>
                 </>
