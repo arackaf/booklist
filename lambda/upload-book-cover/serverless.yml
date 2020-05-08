@@ -72,6 +72,7 @@ functions:
     environment:
       Mongo_Conn: ${file(~/Dropbox/dev/booklist/lambda-config.js):mongoConnection}
       DB_Name: ${file(~/Dropbox/dev/booklist/lambda-config.js):dbName}
+      STAGE: ${self:provider.stage}
     handler: handler.upload
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
