@@ -8,7 +8,7 @@ const getConnection = () => {
 };
 
 module.exports = async function checkLogin(userId, loginToken) {
-  if (process.env.STAGE == "dev"){
+  if (process.env.STAGE == "dev") {
     return true;
   }
 

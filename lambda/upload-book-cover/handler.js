@@ -41,7 +41,7 @@ module.exports.upload = async event => {
   const loginToken = formPayload.loginToken;
   const userId = formPayload.userId;
 
-  if (!checkLogin(userId, loginToken)) {
+  if (!(await checkLogin(userId, loginToken))) {
     return CorsResponse({});
   }
 
