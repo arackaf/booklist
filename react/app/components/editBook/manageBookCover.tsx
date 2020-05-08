@@ -12,7 +12,7 @@ import Stack from "../layout/Stack";
 import { useAppState } from "app/state/appState";
 
 const RemoteImageUpload = props => {
-  const { imgKey, remoteSave, onUpdate, _id } = props;
+  const { imgKey, remoteSave, onUpdate, _id, updateExistingBook } = props;
   const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
 
   const [url, setUrl] = useState("");
@@ -30,6 +30,9 @@ const RemoteImageUpload = props => {
       .then(({ url, failure }) => {
         if (url && _id) {
           return updateBook({ _id, book: { [imgKey]: url } }).then(() => ({ url, failure }));
+        } else if (url && !_id) {
+          updateExistingBook(book => ({ ...book, [imgKey]: url }));
+          return { url, failure };
         } else {
           return { url, failure };
         }
@@ -160,7 +163,7 @@ const ManageBookCover = props => {
         </Stack>
       ) : null}
       <div>
-        <RemoteImageUpload _id={_id} imgKey={imgKey} remoteSave={remoteSave} onUpdate={setCurrentUrl} />
+        <RemoteImageUpload _id={_id} imgKey={imgKey} updateExistingBook={updateExistingBook} remoteSave={remoteSave} onUpdate={setCurrentUrl} />
       </div>
     </FlowItems>
   );
