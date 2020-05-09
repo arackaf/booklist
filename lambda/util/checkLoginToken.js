@@ -7,7 +7,7 @@ const getConnection = () => {
   return MongoClient.connect(connString, { useNewUrlParser: true }).then(client => client.db(dbName));
 };
 
-module.exports = async function checkLogin(userId, loginToken) {
+module.exports = async (userId, loginToken) => {
   if (process.env.STAGE == "dev") {
     return true;
   }
@@ -20,4 +20,4 @@ module.exports = async function checkLogin(userId, loginToken) {
   } catch (er) {
     return false;
   }
-}
+};

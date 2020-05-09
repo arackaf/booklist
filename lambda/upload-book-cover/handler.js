@@ -1,5 +1,3 @@
-"use strict";
-
 const path = require("path");
 const uuid = require("uuid/v4");
 const awsMultiPartParser = require("lambda-multipart-parser");
@@ -24,9 +22,9 @@ module.exports.upload = async event => {
   if (imageResult.error || !imageResult.body) {
     return corsResponse({ error: true });
   }
-  const newName = `bookCovers/${userId}/${uuid()}${path.extname(file.filename)}`;
+  const newName = `bookCovers/${userId}/${uuid()}${path.extname(file.filename) || ".jpg"}`;
   const { body } = imageResult;
-
+  
   const s3Result = await uploadToS3(newName, body);
   return corsResponse(s3Result);
 };

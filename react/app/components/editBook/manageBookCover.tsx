@@ -15,6 +15,8 @@ const RemoteImageUpload = props => {
   const { imgKey, remoteSave, onUpdate, _id, updateExistingBook } = props;
   const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
 
+  const [{ userId, loginToken }] = useAppState();
+
   const [url, setUrl] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -26,6 +28,28 @@ const RemoteImageUpload = props => {
 
   const doSave = () => {
     setSaving(true);
+
+    const request = { userId, loginToken, url, size: "small" };
+    ajaxUtil.postWithCors(
+      process.env.UPLOAD_BOOK_COVER_FROM_URL,
+      request,
+      res => {
+        // if (res.error) {
+        //   setUploadState({ pendingImg: "", uploadError: res.error });
+        // } else if (!res.url) {
+        //   setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+        // } else {
+        //   setUploadState({ pendingImg: res.url, uploadError: "" });
+        // }
+        // setUploading(false);
+      },
+      err => {
+        // setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+        // setUploading(false);
+      }
+    );
+    
+    return;
     Promise.resolve(remoteSave({ _id: props._id, url }))
       .then(({ url, failure }) => {
         if (url && _id) {
