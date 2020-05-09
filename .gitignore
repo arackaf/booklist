@@ -15,3 +15,4 @@ lambda/book-covers/.webpack
 lambda/book-covers/.serverless
 lambda/try-upload/.serverless
 config.js
+.env.dev
