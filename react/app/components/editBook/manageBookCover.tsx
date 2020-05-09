@@ -96,7 +96,7 @@ const ManageBookCover = props => {
 
     setUploading(true);
     ajaxUtil.postWithFilesCors(
-      process.env.UPLOAD_BOOK_COVER_DEV,
+      process.env.UPLOAD_BOOK_COVER,
       request,
       res => {
         if (res.error) {
