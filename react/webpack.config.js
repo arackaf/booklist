@@ -113,9 +113,7 @@ module.exports = {
       ],
       importScripts: ["/react/service-worker/sw-index-bundle.js"]
     }),
-    new Dotenv({
-      path: isProd ? "./.env" : "./.env.dev"
-    })
+    new Dotenv(isProd ? { systemvars: true } : { path: "./.env.dev" })
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),
   stats: {
