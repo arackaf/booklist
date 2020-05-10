@@ -9,17 +9,19 @@ const downloadFromUrl = require("../util/downloadFromUrl");
 
 module.exports.uploadFromUrl = async event => {
   const { userId, loginToken, size, url } = JSON.parse(event.body);
+  const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
   }
-  const newName = `___ppp__/bookCovers/__temppp/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
-  try {
-    const { body, error } = await downloadFromUrl(url);
+  const { body, error } = await downloadFromUrl(url);
 
-    const s3Result = await uploadToS3(newName, body);
-    return corsResponse(s3Result);
-  } catch (er) {
-    return corsResponse({ er, url, x: typeof body, error });
+  const imageResult = await resizeImage(body, MAX_WIDTH);
+  if (imageResult.error || !imageResult.body) {
+    return corsResponse({ error: true });
   }
+
+  const newName = `___xyzabc__/bookCovers/__temppp/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
+  const s3Result = await uploadToS3(newName, imageResult.body);
+  return corsResponse(s3Result);
 };

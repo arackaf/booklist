@@ -1,4 +1,4 @@
-const Jimp = require("jimp").default;
+const Jimp = require("jimp");
 
 module.exports = (src, MAX_WIDTH) => {
   return new Promise(res => {

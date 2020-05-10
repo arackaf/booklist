@@ -23,8 +23,6 @@ module.exports.upload = async event => {
     return corsResponse({ error: true });
   }
   const newName = `bookCovers/${userId}/${uuid()}${path.extname(file.filename) || ".jpg"}`;
-  const { body } = imageResult;
-  
-  const s3Result = await uploadToS3(newName, body);
+  const s3Result = await uploadToS3(newName, imageResult.body);
   return corsResponse(s3Result);
 };

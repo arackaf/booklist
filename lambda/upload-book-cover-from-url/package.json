@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "jimp": "^0.10.3",
     "mongodb": "^3.5.7",
     "request": "^2.88.2",
     "uuid": "^7.0.3"
