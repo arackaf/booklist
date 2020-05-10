@@ -10,7 +10,7 @@ import { syncUpdates } from "util/graphqlHelpers";
 import { QueryOf, Queries } from "graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 
-export const updateSmallCover = ({ _id, url }) => {
+const updateSmallCover = ({ _id, url }) => {
   return ajaxUtil
     .post("/bookSummary/newSmallImage", { _id, url })
     .then(({ url, failure }) => {

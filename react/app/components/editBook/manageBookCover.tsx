@@ -101,7 +101,7 @@ const ManageBookCover = props => {
 
   const { pendingImg, uploadError } = uploadState;
   return (
-    <FlowItems>
+    <FlowItems pushLast={true}>
       {currentUrl ? (
         <div style={{ minWidth: "110px" }}>
           <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
