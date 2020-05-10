@@ -21,7 +21,7 @@ module.exports.uploadFromUrl = async event => {
     return corsResponse({ error: true });
   }
 
-  const newName = `___xyzabc__/bookCovers/__temppp/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
+  const newName = `bookCovers/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
   const s3Result = await uploadToS3(newName, imageResult.body);
   return corsResponse(s3Result);
 };
