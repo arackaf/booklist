@@ -12,8 +12,8 @@ import Stack from "../layout/Stack";
 import { useAppState } from "app/state/appState";
 
 const RemoteImageUpload = props => {
-  const { imgKey, remoteSave, onUpdate, _id, updateExistingBook } = props;
-  const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
+  const [{ userId, loginToken }] = useAppState();
+  const { size, processUrlResponse, processUrlError } = props;
 
   const [url, setUrl] = useState("");
   const [saving, setSaving] = useState(false);
@@ -26,24 +26,9 @@ const RemoteImageUpload = props => {
 
   const doSave = () => {
     setSaving(true);
-    Promise.resolve(remoteSave({ _id: props._id, url }))
-      .then(({ url, failure }) => {
-        if (url && _id) {
-          return updateBook({ _id, book: { [imgKey]: url } }).then(() => ({ url, failure }));
-        } else if (url && !_id) {
-          updateExistingBook(book => ({ ...book, [imgKey]: url }));
-          return { url, failure };
-        } else {
-          return { url, failure };
-        }
-      })
-      .then(({ url, failure }) => {
-        setSaving(false);
-        if (!failure) {
-          onUpdate(url);
-        }
-        setUrl("");
-      });
+
+    const request = { userId, loginToken, url, size };
+    ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, request, processUrlResponse, processUrlError).then(() => setSaving(false));
   };
 
   return (
@@ -65,7 +50,7 @@ const RemoteImageUpload = props => {
 };
 
 const ManageBookCover = props => {
-  const { _id, img, size, imgKey, remoteSave, updateBook: updateExistingBook } = props;
+  const { _id, img, size, imgKey, updateBook: updateExistingBook } = props;
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
@@ -88,6 +73,22 @@ const ManageBookCover = props => {
 
   const [uploading, setUploading] = useState(false);
 
+  const processUrlResponse = res => {
+    if (res.error) {
+      setUploadState({ pendingImg: "", uploadError: res.error });
+    } else if (!res.url) {
+      setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+    } else {
+      setUploadState({ pendingImg: res.url, uploadError: "" });
+    }
+    setUploading(false);
+  };
+
+  const processUrlError = res => {
+    setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+    setUploading(false);
+  };
+
   const onDrop = files => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
@@ -96,29 +97,12 @@ const ManageBookCover = props => {
     request.append("size", size);
 
     setUploading(true);
-    ajaxUtil.postWithFilesCors(
-      process.env.UPLOAD_BOOK_COVER,
-      request,
-      res => {
-        if (res.error) {
-          setUploadState({ pendingImg: "", uploadError: res.error });
-        } else if (!res.url) {
-          setUploadState({ pendingImg: "", uploadError: "Error uploading" });
-        } else {
-          setUploadState({ pendingImg: res.url, uploadError: "" });
-        }
-        setUploading(false);
-      },
-      err => {
-        setUploadState({ pendingImg: "", uploadError: "Error uploading" });
-        setUploading(false);
-      }
-    );
+    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processUrlResponse, processUrlError);
   };
 
   const { pendingImg, uploadError } = uploadState;
   return (
-    <FlowItems>
+    <FlowItems pushLast={true}>
       {currentUrl ? (
         <div style={{ minWidth: "110px" }}>
           <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
@@ -164,7 +148,7 @@ const ManageBookCover = props => {
         </Stack>
       ) : null}
       <div>
-        <RemoteImageUpload _id={_id} imgKey={imgKey} updateExistingBook={updateExistingBook} remoteSave={remoteSave} onUpdate={setCurrentUrl} />
+        <RemoteImageUpload {...{ processUrlResponse, processUrlError, size }} />
       </div>
     </FlowItems>
   );

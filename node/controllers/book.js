@@ -4,13 +4,17 @@ import bookEntryQueueManager from "../app-helpers/bookEntryQueueManager";
 const { graphql } = require("graphql");
 import { executableSchema, root } from "../../startApp";
 
+import AWS from "aws-sdk";
+AWS.config.region = "us-east-1";
+
 import orderBy from "lodash.orderby";
+import request from "request";
+import path from "path";
+import uuid from "uuid/v4";
 
 import findBooksQuery from "../graphql-queries/findBooks";
 import findRecommendationQuery from "../graphql-queries/findRecommendations";
 import findRecommendationMatches from "../graphql-queries/findRecommendationMatches";
-
-import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3 } from "../util/bookCovers/bookCoverHelpers";
 
 import { ObjectId } from "mongodb";
 import { getDbConnection } from "../util/dbUtils";
@@ -49,15 +53,21 @@ class BookController {
       let results = await graphql(executableSchema, findRecommendationQuery, root, this.request, { isbns });
       let resultRecommendations = results.data.allBookSummarys.BookSummarys;
       let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
-      let isbnsOrdered = orderBy([...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })), ["count"], ["desc"]);
+      let isbnsOrdered = orderBy(
+        [...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })),
+        ["count"],
+        ["desc"]
+      );
       let potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
 
       let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
 
-      let matches = (await graphql(executableSchema, findRecommendationMatches, root, this.request, {
-        userId,
-        isbns: potentialIsbns
-      })).data.allBooks.Books;
+      let matches = (
+        await graphql(executableSchema, findRecommendationMatches, root, this.request, {
+          userId,
+          isbns: potentialIsbns
+        })
+      ).data.allBooks.Books;
 
       let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
       let matchingEans = new Set(matches.map(m => m.ean).filter(x => x));
@@ -69,36 +79,7 @@ class BookController {
       console.log("err", err);
     }
   }
-  async newSmallImage({ _id, url }) {
-    this.sizeAndSetImage({ _id, url, width: 50, imgKey: "smallImage" });
-  }
-  async newMediumImage({ _id, url }) {
-    this.sizeAndSetImage({ _id, url, width: 106, imgKey: "mediumImage" });
-  }
-  async sizeAndSetImage({ _id, url, imgKey, width }) {
-    let userId = this.request.user.id;
-    let res = await downloadBookCover(url, 750);
-
-    if (!res) {
-      this.send({ failure: true, msg: "failure during download" });
-    }
-
-    let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName, width);
-
-    if (!newPath) {
-      this.send({ failure: true, msg: "failure during resize" });
-    }
-
-    let s3Key = await saveCoverToS3(newPath, `bookCovers/${userId}/${fileName}`);
-
-    removeFile(fullName);
-    removeFile(newPath);
-
-    this.send({ url: s3Key });
-  }
 }
-
 controller({ defaultVerb: "post" })(BookController);
 
 export default BookController;

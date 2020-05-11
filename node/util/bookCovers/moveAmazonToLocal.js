@@ -1,6 +1,5 @@
 import request from "request";
 import uuid from "uuid/v4";
-import Jimp from "jimp";
 import { getDbConnection } from "../dbUtils";
 import { getGraphqlSchema } from "../graphqlUtils";
 import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "./bookCoverHelpers";

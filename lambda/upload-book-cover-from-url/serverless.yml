@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: upload-book-cover
+service: upload-book-cover-from-url
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -24,21 +24,18 @@ provider:
   name: aws
   runtime: nodejs12.x
   timeout: 30
-  apiGateway:
-    binaryMediaTypes:
-      - 'multipart/form-data'
 
 # you can overwrite defaults here
   stage: live
 #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
    - Effect: "Allow"
      Action:
        - "s3:*"
      Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
 
+# you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
 #      Action:
@@ -68,18 +65,24 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  upload:
+  uploadFromUrl:
     environment:
       Mongo_Conn: ${file(~/Dropbox/dev/booklist/lambda-config.js):mongoConnection}
       DB_Name: ${file(~/Dropbox/dev/booklist/lambda-config.js):dbName}
       STAGE: ${self:provider.stage}
-    handler: handler.upload
+    handler: handler.uploadFromUrl
     events:
      - http:
-         path: upload
+         path: uploadFromUrl
          method: post
          cors: true
-
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - http:
+#          path: users/create
+#          method: get
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

@@ -4,7 +4,6 @@ import Modal from "../ui/Modal";
 import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
 
-import { updateSmallCover, updateMediumCover } from "util/coverUpdates";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/Tabs";
 
 class ManualBookEntry extends Component<any, any> {
@@ -59,7 +58,6 @@ class ManualBookEntry extends Component<any, any> {
                     <label>Small Cover</label>
                     <ManageBookCover
                       _id={book._id}
-                      remoteSave={updateSmallCover}
                       imgKey="smallImage"
                       size="small"
                       img={book.smallImage}
@@ -71,7 +69,6 @@ class ManualBookEntry extends Component<any, any> {
                     <label>Medium Cover</label>
                     <ManageBookCover
                       _id={book._id}
-                      remoteSave={updateMediumCover}
                       imgKey="mediumImage"
                       size="medium"
                       img={book.mediumImage}

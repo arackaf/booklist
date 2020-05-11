@@ -1,6 +1,6 @@
-const Jimp = require("jimp").default;
+const Jimp = require("jimp");
 
-module.exports = function resizeImage(src, MAX_WIDTH) {
+module.exports = (src, MAX_WIDTH) => {
   return new Promise(res => {
     Jimp.read(src, function(err, image) {
       if (err || !image) {
