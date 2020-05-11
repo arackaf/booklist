@@ -16,12 +16,8 @@ import findBooksQuery from "../graphql-queries/findBooks";
 import findRecommendationQuery from "../graphql-queries/findRecommendations";
 import findRecommendationMatches from "../graphql-queries/findRecommendationMatches";
 
-import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3 } from "../util/bookCovers/bookCoverHelpers";
-
 import { ObjectId } from "mongodb";
 import { getDbConnection } from "../util/dbUtils";
-
-import Jimp from "jimp";
 
 class BookController {
   async saveFromIsbn({ isbn }) {

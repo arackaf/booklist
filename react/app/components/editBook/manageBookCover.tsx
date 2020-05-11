@@ -66,6 +66,7 @@ const ManageBookCover = props => {
         setUploadState({ pendingImg: "", uploadError: "" });
       });
     } else {
+      setCurrentUrl(newUrl);
       updateExistingBook(book => ({ ...book, [imgKey]: newUrl }));
     }
   };
