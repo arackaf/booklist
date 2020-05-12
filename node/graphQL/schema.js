@@ -111,6 +111,8 @@ export default `
   type Mutation {
     ${BookMutation}
 
+    ${BookSummaryMutation}
+
     ${SubjectMutation}
 
     ${TagMutation}

@@ -1875,6 +1875,11 @@ type Mutation {
 
   deleteBook(_id: String): DeletionResultInfo
 
+  updateBookSummary(
+    _id: String
+    Updates: BookSummaryMutationInput
+  ): BookSummaryMutationResult
+
   createSubject(Subject: SubjectInput): SubjectMutationResult
 
   updateSubject(

@@ -146,7 +146,10 @@ export const type = `
 
 export const mutation = `
 
-
+  updateBookSummary (
+    _id: String,
+    Updates: BookSummaryMutationInput
+  ): BookSummaryMutationResult
 
 `;
 

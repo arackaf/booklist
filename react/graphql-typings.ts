@@ -710,6 +710,7 @@ export type Mutation = {
   updateBooks: Maybe<BookMutationResultMulti>,
   updateBooksBulk: Maybe<BookBulkMutationResult>,
   deleteBook: Maybe<DeletionResultInfo>,
+  updateBookSummary: Maybe<BookSummaryMutationResult>,
   createSubject: Maybe<SubjectMutationResult>,
   updateSubject: Maybe<Array<Maybe<Subject>>>,
   deleteSubject: Maybe<Array<Maybe<Scalars['String']>>>,
@@ -747,6 +748,12 @@ export type MutationUpdateBooksBulkArgs = {
 
 export type MutationDeleteBookArgs = {
   _id: Maybe<Scalars['String']>
+};
+
+
+export type MutationUpdateBookSummaryArgs = {
+  _id: Maybe<Scalars['String']>,
+  Updates: Maybe<BookSummaryMutationInput>
 };
 
 
