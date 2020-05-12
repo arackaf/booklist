@@ -11,5 +11,8 @@ export default {
     mediumImage: "String",
     authors: "StringArray"
   },
+  extras: {
+    overrides: ["createBookSummary", "updateBookSummarys", "updateBookSummarysBulk", "deleteBookSummary"]
+  },
   relationships: {}
 };

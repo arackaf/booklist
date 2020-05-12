@@ -20,7 +20,9 @@ export const BookSummary = {
     mediumImage: StringType,
     authors: StringArrayType
   },
-  readonly: true
+  extras: {
+    overrides: ["createBookSummary", "updateBookSummarys", "updateBookSummarysBulk", "deleteBookSummary"]
+  }
 };
 
 export const Book = {

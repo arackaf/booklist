@@ -5,6 +5,9 @@ import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
 export default class BooksMiddleware {
+  async beforeUpdate(match, updates, { root, args, context, ast }) {
+    return !!context.user.admin;
+  }
   adjustResults(results) {
     results.forEach(book => {
       if (/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com/.test(book.smallImage)) {

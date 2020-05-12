@@ -80,5 +80,44 @@ export default {
       return result;
     }
   },
-  Mutation: {}
+  Mutation: {
+    async updateBookSummary(root, args, context, ast) {
+      let gqlPacket = { root, args, context, ast, hooksObj };
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(
+        gqlPacket,
+        "BookSummary",
+        BookSummaryMetadata,
+        { update: true }
+      );
+      return await resolverHelpers.runMutation(session, transaction, async () => {
+        let { $match, $project } = decontructGraphqlQuery(
+          args._id ? { _id: args._id } : {},
+          ast,
+          BookSummaryMetadata,
+          "BookSummary"
+        );
+        let updates = await getUpdateObject(args.Updates || {}, BookSummaryMetadata, { ...gqlPacket, db, session });
+
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
+        }
+        if (!$match._id) {
+          throw "No _id sent, or inserted in middleware";
+        }
+        await setUpOneToManyRelationshipsForUpdate([args._id], args, BookSummaryMetadata, {
+          ...gqlPacket,
+          db,
+          session
+        });
+        await dbHelpers.runUpdate(db, "bookSummaries", $match, updates, { session });
+        await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
+        await resolverHelpers.mutationComplete(session, transaction);
+
+        let result = $project
+          ? (await loadBookSummarys(db, [{ $match }, { $project }, { $limit: 1 }], root, args, context, ast))[0]
+          : null;
+        return resolverHelpers.mutationSuccessResult({ BookSummary: result, transaction, elapsedTime: 0 });
+      });
+    }
+  }
 };

@@ -37,7 +37,7 @@ export default {
     TagsDeletedQuery,
     UserQuery
   ),
-  Mutation: Object.assign({}, BookMutation, SubjectMutation, TagMutation, UserMutation),
+  Mutation: Object.assign({}, BookMutation, BookSummaryMutation, SubjectMutation, TagMutation, UserMutation),
   Book: { ...BookRest },
   BookSummary: { ...BookSummaryRest },
   BooksDeleted: { ...BooksDeletedRest },
