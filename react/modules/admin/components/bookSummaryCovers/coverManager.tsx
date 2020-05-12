@@ -1,16 +1,33 @@
 import React, { useState } from "react";
-import { useQuery, buildQuery } from "micro-graphql-react";
+import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
 
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
+import UpdateBookSummary from "graphQL/bookSummary/updateBookSummary.graphql";
 import styles from "./styles.module.css";
 const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
 import ajaxUtil from "util/ajaxUtil";
 import { syncUpdates } from "util/graphqlHelpers";
-import { QueryOf, Queries } from "graphql-typings";
+import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
+import { useAppState } from "app/state/appState";
+import { graphqlClient } from "util/graphql";
 
-const updateSmallCover = ({ _id, url }) => {
+const updateSmallCover = ({ _id, url, userId, loginToken }) => {
+  const request = { userId, loginToken, url, size: "small" };
+  return ajaxUtil.postWithCors(
+    process.env.UPLOAD_BOOK_COVER_FROM_URL,
+    request,
+    res => {
+      if (res.url && !res.error) {
+        return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: res.url } });
+      }
+    },
+    err => {
+      return { failure: true, url: "" };
+    }
+  );
+
   return ajaxUtil
     .post("/bookSummary/newSmallImage", { _id, url })
     .then(({ url, failure }) => {
@@ -24,10 +41,12 @@ const updateSmallCover = ({ _id, url }) => {
 
 const BookSummaryDisplay = props => {
   const { book } = props;
+  const [{ userId, loginToken }] = useAppState();
   const [newUrl, setNewUrl] = useState("");
+  const { runMutation: updateBookSummary } = useMutation<BookSummaryBulkMutationResult>(buildMutation(UpdateBookSummary));
 
   const changeImg = () => {
-    return updateSmallCover({ _id: book._id, url: newUrl }).then(() => setNewUrl(""));
+    return updateSmallCover({ _id: book._id, url: newUrl, userId, loginToken }).then(() => setNewUrl(""));
   };
 
   return (
@@ -60,7 +79,13 @@ export default props => {
 
   const imgFilter = missingCoversFilter ? "nophoto" : void 0;
 
-  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(buildQuery(SummaryQuery, { smallImage: imgFilter }));
+  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(
+    buildQuery(
+      SummaryQuery,
+      { smallImage: imgFilter },
+      { onMutation: { when: /(update|delete|create)BookSummary/, run: ({ refresh }) => refresh() } }
+    )
+  );
   const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (
