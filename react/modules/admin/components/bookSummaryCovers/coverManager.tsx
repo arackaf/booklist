@@ -27,16 +27,6 @@ const updateSmallCover = ({ _id, url, userId, loginToken }) => {
       return { failure: true, url: "" };
     }
   );
-
-  return ajaxUtil
-    .post("/bookSummary/newSmallImage", { _id, url })
-    .then(({ url, failure }) => {
-      if (!failure && url) {
-        syncUpdates(SummaryQuery, { _id, smallImage: url }, "allBookSummarys", "BookSummarys", { force: true });
-      }
-      return { url, failure };
-    })
-    .catch(() => ({ failure: true, url: "" }));
 };
 
 const BookSummaryDisplay = props => {
