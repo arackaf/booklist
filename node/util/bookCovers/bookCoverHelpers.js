@@ -116,3 +116,19 @@ export function saveCoverToS3(source, s3Key) {
     });
   });
 }
+
+export function saveContentToS3(content, s3Key) {
+  return new Promise(res => {
+    let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
+
+    let params = {
+      Key: s3Key,
+      Body: content
+    };
+
+    s3bucket.upload(params, function(err) {
+      if (err) res(err);
+      else res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
+    });
+  });
+}

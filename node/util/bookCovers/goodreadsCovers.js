@@ -4,10 +4,20 @@ import dlv from "dlv";
 import { getDbConnection } from "../dbUtils";
 import { getGraphqlSchema } from "../graphqlUtils";
 import BookSummariesWithBadCovers from "../../graphql-queries/bookSummariesWithBadCovers";
-import { downloadBookCover, removeFile, resizeIfNeeded, saveCoverToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "./bookCoverHelpers";
+import {
+  downloadBookCover,
+  removeFile,
+  resizeIfNeeded,
+  saveCoverToS3,
+  saveContentToS3,
+  getOpenLibraryCoverUri,
+  getGoogleLibraryUri
+} from "./bookCoverHelpers";
 
 import { ObjectId } from "mongodb";
 const { graphql } = require("graphql");
+
+import moment from "moment";
 
 const dbPromise = getDbConnection();
 
@@ -22,15 +32,21 @@ export async function updateBookSummaryCovers() {
   let title = "";
   let testIsbns = ["081664733X", "0801878918", "0525951040", "0199596654"];
 
+  let _logs = [];
+  const log = (...args) => {
+    console.log(...args);
+    _logs.push(args.join(" "));
+  };
+
   for (let bookSummary of resp.data.allBookSummarys.BookSummarys) {
     let { _id, isbn, title } = bookSummary;
 
     await delay();
     let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000);
     if (!res) {
-      console.log("No cover found on OpenLibrary for", title);
+      log("No cover found on OpenLibrary for", title);
 
-      console.log("\nTrying Google...\n");
+      log("\nTrying Google...\n");
 
       let cover = await getGoogleCoverUrl(isbn);
       if (!cover) {
@@ -39,7 +55,7 @@ export async function updateBookSummaryCovers() {
       res = await downloadBookCover(cover, 1000);
 
       if (!res) {
-        console.log(`${title} not found on Google, either`);
+        log(`${title} not found on Google, either`);
 
         continue;
       }
@@ -51,7 +67,7 @@ export async function updateBookSummaryCovers() {
     if (newPath) {
       let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);
 
-      console.log("#", count++, title, s3Key, "\n");
+      log("#", count++, title, s3Key, "\n");
       await db.collection("bookSummaries").updateOne(
         { _id: ObjectId(_id) },
         {
@@ -64,6 +80,7 @@ export async function updateBookSummaryCovers() {
     newPath && removeFile(newPath);
   }
 
+  saveContentToS3(_logs.join("\n"), `bookCoverSyncingLogs/${moment().format("YYYY-MM-DD--HH_mm")}.txt`);
   client.close();
 }
 
