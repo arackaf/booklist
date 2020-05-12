@@ -33,7 +33,6 @@ const BookSummaryDisplay = props => {
   const { book } = props;
   const [{ userId, loginToken }] = useAppState();
   const [newUrl, setNewUrl] = useState("");
-  const { runMutation: updateBookSummary } = useMutation<BookSummaryBulkMutationResult>(buildMutation(UpdateBookSummary));
 
   const changeImg = () => {
     return updateSmallCover({ _id: book._id, url: newUrl, userId, loginToken }).then(() => setNewUrl(""));
