@@ -23,6 +23,7 @@
     "colors": "1.1.2",
     "compression": "^1.7.4",
     "cookie-parser": "1.4.0",
+    "cors": "^2.8.5",
     "del": "^3.0.0",
     "dlv": "^1.1.2",
     "dotenv": "^4.0.0",
