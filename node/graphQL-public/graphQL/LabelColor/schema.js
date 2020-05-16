@@ -7,8 +7,8 @@ export const type = `
   }
 
   type LabelColorQueryResults {
-    LabelColors: [LabelColor]
-    Meta: QueryResultsMetadata
+    LabelColors: [LabelColor!]!
+    Meta: QueryResultsMetadata!
   }
 
   type LabelColorSingleQueryResult {
@@ -17,19 +17,19 @@ export const type = `
 
   type LabelColorMutationResult {
     LabelColor: LabelColor
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type LabelColorMutationResultMulti {
     LabelColors: [LabelColor]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type LabelColorBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input LabelColorInput {
@@ -55,6 +55,7 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -62,6 +63,7 @@ export const type = `
     backgroundColor: String
     backgroundColor_ne: String
     backgroundColor_in: [String]
+    backgroundColor_nin: [String]
     order_lt: Int
     order_lte: Int
     order_gt: Int
@@ -69,18 +71,17 @@ export const type = `
     order: Int
     order_ne: Int
     order_in: [Int]
+    order_nin: [Int]
     OR: [LabelColorFilters]
   }
   
 `;
-  
-  
+
 export const mutation = `
 
 
 
 `;
-
 
 export const query = `
 
@@ -88,6 +89,7 @@ export const query = `
     _id: String,
     _id_ne: String,
     _id_in: [String],
+    _id_nin: [String],
     backgroundColor_contains: String,
     backgroundColor_startsWith: String,
     backgroundColor_endsWith: String,
@@ -95,6 +97,7 @@ export const query = `
     backgroundColor: String,
     backgroundColor_ne: String,
     backgroundColor_in: [String],
+    backgroundColor_nin: [String],
     order_lt: Int,
     order_lte: Int,
     order_gt: Int,
@@ -102,6 +105,7 @@ export const query = `
     order: Int,
     order_ne: Int,
     order_in: [Int],
+    order_nin: [Int],
     OR: [LabelColorFilters],
     SORT: LabelColorSort,
     SORTS: [LabelColorSort],
@@ -109,7 +113,6 @@ export const query = `
     SKIP: Int,
     PAGE: Int,
     PAGE_SIZE: Int
-  ): LabelColorQueryResults
+  ): LabelColorQueryResults!
 
 `;
-  

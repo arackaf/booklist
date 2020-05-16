@@ -9,7 +9,5 @@ export default {
   extras: {
     overrides: ["getLabelColor"]
   },
-  relationships: {
-
-  }
+  relationships: {}
 };

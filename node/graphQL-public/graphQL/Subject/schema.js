@@ -12,8 +12,8 @@ export const type = `
   }
 
   type SubjectQueryResults {
-    Subjects: [Subject]
-    Meta: QueryResultsMetadata
+    Subjects: [Subject!]!
+    Meta: QueryResultsMetadata!
   }
 
   type SubjectSingleQueryResult {
@@ -22,19 +22,19 @@ export const type = `
 
   type SubjectMutationResult {
     Subject: Subject
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type SubjectMutationResultMulti {
     Subjects: [Subject]
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   type SubjectBulkMutationResult {
-    success: Boolean
-    Meta: MutationResultInfo
+    success: Boolean!
+    Meta: MutationResultInfo!
   }
 
   input SubjectInput {
@@ -67,6 +67,7 @@ export const type = `
     _id: String
     _id_ne: String
     _id_in: [String]
+    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String
@@ -74,6 +75,7 @@ export const type = `
     name: String
     name_ne: String
     name_in: [String]
+    name_nin: [String]
     path_contains: String
     path_startsWith: String
     path_endsWith: String
@@ -81,6 +83,7 @@ export const type = `
     path: String
     path_ne: String
     path_in: [String]
+    path_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -88,6 +91,7 @@ export const type = `
     userId: String
     userId_ne: String
     userId_in: [String]
+    userId_nin: [String]
     backgroundColor_contains: String
     backgroundColor_startsWith: String
     backgroundColor_endsWith: String
@@ -95,6 +99,7 @@ export const type = `
     backgroundColor: String
     backgroundColor_ne: String
     backgroundColor_in: [String]
+    backgroundColor_nin: [String]
     textColor_contains: String
     textColor_startsWith: String
     textColor_endsWith: String
@@ -102,12 +107,12 @@ export const type = `
     textColor: String
     textColor_ne: String
     textColor_in: [String]
+    textColor_nin: [String]
     OR: [SubjectFilters]
   }
   
 `;
-  
-  
+
 export const mutation = `
 
   createSubject (
@@ -118,13 +123,13 @@ export const mutation = `
 
 `;
 
-
 export const query = `
 
   allSubjects (
     _id: String,
     _id_ne: String,
     _id_in: [String],
+    _id_nin: [String],
     name_contains: String,
     name_startsWith: String,
     name_endsWith: String,
@@ -132,6 +137,7 @@ export const query = `
     name: String,
     name_ne: String,
     name_in: [String],
+    name_nin: [String],
     path_contains: String,
     path_startsWith: String,
     path_endsWith: String,
@@ -139,6 +145,7 @@ export const query = `
     path: String,
     path_ne: String,
     path_in: [String],
+    path_nin: [String],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,
@@ -146,6 +153,7 @@ export const query = `
     userId: String,
     userId_ne: String,
     userId_in: [String],
+    userId_nin: [String],
     backgroundColor_contains: String,
     backgroundColor_startsWith: String,
     backgroundColor_endsWith: String,
@@ -153,6 +161,7 @@ export const query = `
     backgroundColor: String,
     backgroundColor_ne: String,
     backgroundColor_in: [String],
+    backgroundColor_nin: [String],
     textColor_contains: String,
     textColor_startsWith: String,
     textColor_endsWith: String,
@@ -160,6 +169,7 @@ export const query = `
     textColor: String,
     textColor_ne: String,
     textColor_in: [String],
+    textColor_nin: [String],
     OR: [SubjectFilters],
     SORT: SubjectSort,
     SORTS: [SubjectSort],
@@ -170,16 +180,15 @@ export const query = `
     publicUserId: String,
     ver: String,
     cache: Int
-  ): SubjectQueryResults
+  ): SubjectQueryResults!
 
   getSubject (
     _id: String,
     publicUserId: String,
     ver: String,
     cache: Int
-  ): SubjectSingleQueryResult
+  ): SubjectSingleQueryResult!
 
   ${SchemaExtras1.Query || ""}
 
 `;
-  

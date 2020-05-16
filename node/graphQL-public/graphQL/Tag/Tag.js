@@ -9,7 +9,5 @@ export default {
     backgroundColor: "String",
     textColor: "String"
   },
-  relationships: {
-
-  }
+  relationships: {}
 };
