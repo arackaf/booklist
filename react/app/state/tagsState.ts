@@ -22,20 +22,27 @@ export interface TagsState {
 graphqlClient.subscribeMutation([
   {
     when: /(update|create)Tag/,
-    run: (op, res) => syncUpdates(GetTags, [(res.updateTag || res.createTag).Tag], "allTags", "Tags", { sort: tagsSort })
+    run: ({ refreshActiveQueries }, res) => {
+      syncUpdates(GetTags, [(res.updateTag || res.createTag).Tag], "allTags", "Tags", { sort: tagsSort });
+      refreshActiveQueries(GetTags);
+    }
   },
-  { when: /deleteTag/, run: (op, res, req) => syncDeletes(GetTags, [req._id], "allTags", "Tags", { sort: tagsSort }) }
+  {
+    when: /deleteTag/,
+    run: ({ refreshActiveQueries }, res, req) => {
+      syncDeletes(GetTags, [req._id], "allTags", "Tags", { sort: tagsSort });
+      refreshActiveQueries(GetTags);
+    }
+  }
 ]);
 
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
   const req = { publicUserId };
-  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(
-    buildQuery(GetTags, req, { onMutation: { when: /(update|delete|create)Tag/, run: ({ refresh }) => refresh() } })
-  );
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(buildQuery(GetTags, req));
 
   const tags = data ? data.allTags.Tags : [];
-  const tagHash = useMemo(() => (tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);
+  const tagHash = useMemo(() => tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}, [tags]);
 
   return { tagsLoaded: loaded, tags, tagHash };
 }

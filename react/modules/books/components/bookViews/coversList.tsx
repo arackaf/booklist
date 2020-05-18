@@ -1,5 +1,4 @@
 import React, { SFC, useState, Suspense, useContext } from "react";
-import { useBooks } from "../../booksState";
 import LazyModal from "app/components/ui/LazyModal";
 
 const BookEditModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));

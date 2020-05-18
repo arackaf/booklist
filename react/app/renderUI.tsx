@@ -1,8 +1,8 @@
 import React, { createContext, useContext, FunctionComponent, useEffect, Suspense } from "react";
-const { useTransition } = React as any;
+const { unstable_useTransition: useTransition } = React as any;
 
 import ReactDOM from "react-dom";
-const { createRoot } = ReactDOM as any;
+const { unstable_createRoot: createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./state/appState";

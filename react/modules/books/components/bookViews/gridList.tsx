@@ -4,7 +4,7 @@ import { ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { AppContext } from "app/renderUI";
-import { IBookDisplay, useBooks } from "../../booksState";
+import { IBookDisplay } from "../../booksState";
 import { useCurrentSearch } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
