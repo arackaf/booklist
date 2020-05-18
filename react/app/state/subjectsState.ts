@@ -23,7 +23,7 @@ export interface SubjectState {
 }
 
 graphqlClient.subscribeMutation([
-  { when: /updateSubject/, run: (op, res) => syncUpdates(AllSubjectsQuery, res.updateSubject, "allSubjects", "Subjects") },
+  { when: /updateSubject/, run: (op, res) => syncUpdates(AllSubjectsQuery, res.updateSubject.Subjects, "allSubjects", "Subjects") },
   { when: /deleteSubject/, run: (op, res) => syncDeletes(AllSubjectsQuery, res.deleteSubject, "allSubjects", "Subjects") }
 ]);
 
