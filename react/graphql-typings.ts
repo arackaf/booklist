@@ -712,7 +712,7 @@ export type Mutation = {
   deleteBook: Maybe<DeletionResultInfo>,
   updateBookSummary: Maybe<BookSummaryMutationResult>,
   createSubject: Maybe<SubjectMutationResult>,
-  updateSubject: Maybe<Array<Maybe<Subject>>>,
+  updateSubject: Maybe<SubjectMutationResultMulti>,
   deleteSubject: Maybe<Array<Maybe<Scalars['String']>>>,
   createTag: Maybe<TagMutationResult>,
   updateTag: Maybe<TagMutationResult>,

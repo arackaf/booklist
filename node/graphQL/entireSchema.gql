@@ -1888,7 +1888,7 @@ type Mutation {
     backgroundColor: String
     textColor: String
     parentId: String
-  ): [Subject]
+  ): SubjectMutationResultMulti
 
   deleteSubject(_id: String): [String]
 
