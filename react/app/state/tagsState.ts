@@ -5,7 +5,7 @@ import { useContext, useMemo } from "react";
 import { buildQuery, useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "../renderUI";
 
-import { syncUpdates, syncDeletes } from "../../util/graphqlHelpers";
+import { syncUpdates, syncDeletes } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries } from "graphql-typings";
 
 interface ITag {

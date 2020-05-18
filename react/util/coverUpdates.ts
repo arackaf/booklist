@@ -1,5 +1,5 @@
 import ajaxUtil from "./ajaxUtil";
-import { syncUpdates } from "util/graphqlHelpers";
+import { syncUpdates } from "util/graphqlCacheHelpers";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 

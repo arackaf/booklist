@@ -4,7 +4,7 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo } from "react";
 import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
-import { syncResults, clearCache } from "util/graphqlHelpers";
+import { syncResults, clearCache } from "util/graphqlCacheHelpers";
 
 import { useTagsState } from "app/state/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
