@@ -6,8 +6,9 @@ import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "../renderUI";
 import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncUpdates, syncDeletes } from "../../util/graphqlCacheHelpers";
+import { syncUpdates, syncDeletes, standardDelete } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
+import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
 
@@ -22,20 +23,15 @@ export interface SubjectState {
   subjectsLoaded: boolean;
 }
 
-graphqlClient.subscribeMutation([
-  { when: /updateSubject/, run: (op, res) => syncUpdates(AllSubjectsQuery, res.updateSubject.Subjects, "allSubjects", "Subjects") },
-  { when: /deleteSubject/, run: (op, res) => syncDeletes(AllSubjectsQuery, res.deleteSubject, "allSubjects", "Subjects") }
-]);
+graphqlSyncAndRefresh("Subject", AllSubjectsQuery, {
+  onDelete: resp => standardDelete("Subject", AllSubjectsQuery, resp.deleteSubject)
+});
 
 export function useSubjectsState() {
   let [app] = useContext(AppContext);
   let { userId, publicUserId } = app;
   let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(
-    buildQuery(
-      AllSubjectsQuery,
-      { publicUserId },
-      { active: !!userId || !!publicUserId, onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } }
-    )
+    buildQuery(AllSubjectsQuery, { publicUserId }, { active: !!userId || !!publicUserId })
   );
   const subjects = data ? data.allSubjects.Subjects : null;
   const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);

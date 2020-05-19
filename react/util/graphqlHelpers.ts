@@ -4,7 +4,7 @@ import { syncUpdates, syncDeletes } from "./graphqlCacheHelpers";
 
 const getUpdateConst = (type, resp) => {
   const singleResult = resp[`update${type}`] || resp[`create${type}`];
-  return singleResult ? singleResult[type] : resp[`update${type}s`][`${type}s`];
+  return singleResult ? singleResult[type] || singleResult[`${type}s`] : resp[`update${type}s`][`${type}s`];
 };
 
 export const graphqlSyncAndRefresh = (type, queries, { sort, onUpdate, onDelete } = {} as any) => {
@@ -18,7 +18,7 @@ export const graphqlSyncAndRefresh = (type, queries, { sort, onUpdate, onDelete 
       run: ({ refreshActiveQueries }, resp, variables) => {
         queries.forEach(query => {
           if (onUpdate) {
-            onUpdate(resp, refreshActiveQueries, variables);
+            onUpdate(resp, variables, refreshActiveQueries);
           } else {
             syncUpdates(query, getUpdateConst(type, resp), `all${type}s`, `${type}s`, { sort });
           }
@@ -31,7 +31,7 @@ export const graphqlSyncAndRefresh = (type, queries, { sort, onUpdate, onDelete 
       run: ({ refreshActiveQueries }, resp, variables) => {
         queries.forEach(query => {
           if (onDelete) {
-            onDelete(resp, refreshActiveQueries, variables);
+            onDelete(resp, variables, refreshActiveQueries);
           } else {
             syncDeletes(query, [variables._id], `all${type}s`, `${type}s`, { sort });
           }

@@ -28,6 +28,10 @@ export const syncResults = (resultSet, arrName, newResults, { sort } = {} as any
   return sort ? resultSet[arrName].sort(sort) : resultSet[arrName];
 };
 
+export const standardDelete = (type, cacheName, _ids, options = {} as any) => {
+  syncDeletes(cacheName, _ids, `all${type}s`, `${type}s`, options);
+};
+
 export const syncDeletes = (cacheName, _ids, resultSet, arrName, { sort, onDelete } = {} as any) => {
   const cache = graphqlClient.getCache(cacheName);
   const deletedMap = new Set(_ids);
