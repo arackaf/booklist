@@ -68,13 +68,7 @@ export default props => {
 
   const imgFilter = missingCoversFilter ? "nophoto" : void 0;
 
-  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(
-    buildQuery(
-      SummaryQuery,
-      { smallImage: imgFilter },
-      { onMutation: { when: /(update|delete|create)BookSummary/, run: ({ refresh }) => refresh() } }
-    )
-  );
+  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(buildQuery(SummaryQuery, { smallImage: imgFilter }));
   const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (
