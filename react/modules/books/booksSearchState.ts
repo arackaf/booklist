@@ -12,18 +12,6 @@ const bookSearchInitialState = {
 };
 export type BookSearchState = typeof bookSearchInitialState;
 
-export function bookSearchReducer(state = bookSearchInitialState, action): BookSearchState {
-  switch (action.type) {
-    case "SYNC_HASH":
-      let { filters } = action;
-      if (!shallowEqual(filters, state.hashFilters)) {
-        return { ...state, hashFilters: filters };
-      }
-      return state;
-  }
-  return state;
-}
-
 export type TagOrSubject = {
   _id: string;
   name: string;
@@ -32,16 +20,15 @@ export type LookupHashType = {
   [str: string]: TagOrSubject;
 };
 
-export function useBooksSearchState(): [BookSearchState, any] {
+export function useBooksSearchState(): [BookSearchState] {
   let [appState] = useContext(AppContext);
-  let initialSearchState = useMemo(() => ({ ...bookSearchInitialState, hashFilters: appState.urlState.searchState }), []);
-  let [result, dispatch] = useReducer(bookSearchReducer, initialSearchState);
+  let [result, dispatch] = useReducer((_, newFilters) => ({ hashFilters: newFilters }), { hashFilters: appState.urlState.searchState });
 
   if (!shallowEqual(appState.urlState.searchState, result.hashFilters) && (appState.module == "books" || appState.module == "view")) {
-    dispatch({ type: "SYNC_HASH", filters: appState.urlState.searchState });
+    dispatch(appState.urlState.searchState);
   }
 
-  return [result, dispatch];
+  return [result];
 }
 
 export const useSelectedSubjects = () => {
