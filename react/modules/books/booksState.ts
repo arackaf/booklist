@@ -4,7 +4,7 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo } from "react";
 import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
-import { syncResults, clearCache } from "util/graphqlCacheHelpers";
+import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
 import { useTagsState } from "app/state/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
@@ -66,9 +66,9 @@ export const useBooks = () => {
   const onBooksMutation = [
     {
       when: /updateBooks?/,
-      run: ({ currentResults, softReset }, resp) => {
-        syncResults(currentResults.allBooks, "Books", resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
-        softReset(currentResults);
+      run: ({ currentResults: current, softReset }, resp) => {
+        current.allBooks.Books = syncCollection(current.allBooks.Books, resp.updateBooks ? resp.updateBooks.Books : [resp.updateBook.Book]);
+        softReset(current);
       }
     },
     {

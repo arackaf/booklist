@@ -11,21 +11,25 @@ export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: 
   }
 };
 
-export const syncResults = (resultSet, arrName, newResults, { sort } = {} as any) => {
+export const syncResults = (resultSet, arrName, newResults, options = {}) => {
   if (!Array.isArray(newResults)) {
     newResults = [newResults];
   }
-  const lookupNew = new Map(newResults.map(o => [o._id, o]));
 
-  resultSet[arrName] = resultSet[arrName].concat();
-  resultSet[arrName].forEach((o, index) => {
+  resultSet[arrName] = syncCollection(resultSet[arrName], newResults, options);
+};
+
+export const syncCollection = (results, newResults, { sort } = {} as any) => {
+  results = results.concat();
+  const lookupNew = new Map(newResults.map(o => [o._id, o]));
+  results.forEach((o, index) => {
     if (lookupNew.has(o._id)) {
-      resultSet[arrName][index] = Object.assign({}, o, lookupNew.get(o._id));
+      results[index] = Object.assign({}, o, lookupNew.get(o._id));
     }
   });
-  const existingLookup = new Set(resultSet[arrName].map(o => o._id));
-  resultSet[arrName].push(...newResults.filter(o => !existingLookup.has(o._id)));
-  return sort ? resultSet[arrName].sort(sort) : resultSet[arrName];
+  const existingLookup = new Set(results.map(o => o._id));
+  results.push(...newResults.filter(o => !existingLookup.has(o._id)));
+  return sort ? results.sort(sort) : results;
 };
 
 export const standardDelete = (type, cacheName, _ids, options = {} as any) => {
