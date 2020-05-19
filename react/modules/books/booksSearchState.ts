@@ -28,6 +28,11 @@ export function useBooksSearchState(): [BookSearchState] {
     dispatch(appState.urlState.searchState);
   }
 
+  //uncommenting this line creates weird behavior: a parent component and its child get out of sync. I can log a parent's props being *different* than
+  //the child it immediately renders (and the final state is visually incorrect). But how could it? It's literally the same return value either way, isn't it?
+  //how could laundering appState.urlState.searchState through a reducer function possibly make any difference?
+
+  //return [{ hashFilters: appState.urlState.searchState }];
   return [result];
 }
 
