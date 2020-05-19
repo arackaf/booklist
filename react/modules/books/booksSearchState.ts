@@ -36,22 +36,6 @@ export function useBooksSearchState(): [BookSearchState] {
   return [result];
 }
 
-export const useSelectedSubjects = () => {
-  const [{ hashFilters }] = useBooksSearchState();
-  const { subjects } = hashFilters;
-  const { subjectHash } = useSubjectsState();
-
-  return useMemo(() => projectSelectedItems(subjects, subjectHash), [subjects, subjectHash]);
-};
-
-export const useSelectedTags = () => {
-  const [{ hashFilters }] = useBooksSearchState();
-  const { tags } = hashFilters;
-  const { tagHash } = useTagsState();
-
-  return useMemo(() => projectSelectedItems(tags, tagHash), [tags, tagHash]);
-};
-
 function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
   return ids
     .split("-")
@@ -63,15 +47,13 @@ const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection" && k
 
 export const useCurrentSearch = () => {
   const [{ hashFilters: filters }] = useBooksSearchState();
-  const { subjects: subjectsHashValue, tags: tagsHashValue } = filters;
-
-  const subjects = useSelectedSubjects();
-  const tags = useSelectedTags();
+  const { subjectHash } = useSubjectsState();
+  const { tagHash } = useTagsState();
 
   return useMemo(() => {
     let result = Object.assign({}, filtersFromUrl(filters), {
-      selectedSubjects: subjects,
-      selectedTags: tags
+      selectedSubjects: projectSelectedItems(filters.subjects, subjectHash),
+      selectedTags: projectSelectedItems(filters.tags, tagHash)
     });
 
     return Object.assign({}, result, {
@@ -79,5 +61,5 @@ export const useCurrentSearch = () => {
       activeFilterCount: Object.keys(filters).filter(keyIsFilter).length,
       bindableSortValue: `${result.sort}|${result.sortDirection}`
     });
-  }, [filters, subjects, tags, subjectsHashValue, tagsHashValue]);
+  }, [filters, subjectHash, tagHash]);
 };
