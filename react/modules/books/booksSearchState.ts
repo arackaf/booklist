@@ -24,7 +24,7 @@ export function useBooksSearchState(): [BookSearchState] {
   let [appState] = useContext(AppContext);
   let [result, dispatch] = useReducer((_, newFilters) => ({ hashFilters: newFilters }), { hashFilters: appState.urlState.searchState });
 
-  if (!shallowEqual(appState.urlState.searchState, result.hashFilters) && (appState.module == "books" || appState.module == "view")) {
+  if (appState.urlState.searchState != result.hashFilters && (appState.module == "books" || appState.module == "view")) {
     dispatch(appState.urlState.searchState);
   }
 
