@@ -17,12 +17,14 @@ export function getCurrentUrlState() {
   };
 }
 
-export function setSearchValues(state) {
+export function setSearchValues(state, preChange = null) {
   let { pathname, searchState: existingSearchState } = getCurrentUrlState();
   let newState = { ...existingSearchState, ...state };
   newState = Object.keys(newState)
     .filter(k => newState[k])
     .reduce((hash, prop) => ((hash[prop] = newState[prop]), hash), {});
+
+  preChange && preChange(newState);
 
   history.push({
     pathname: history.location.pathname,

@@ -1,4 +1,13 @@
-import { setSearchValues, getCurrentUrlState } from "util/urlHelpers";
+import { setSearchValues as rootSetSearchValues, getCurrentUrlState } from "util/urlHelpers";
+import { graphqlClient } from "util/graphql";
+import GetBooksQuery from "graphQL/books/getBooks.graphql";
+import { bookQueryVariables, filtersFromUrl } from "./booksLoadingUtils";
+
+const setSearchValues = filters => {
+  rootSetSearchValues(filters, newState => {
+    graphqlClient.preload(GetBooksQuery, bookQueryVariables(filtersFromUrl(newState)));
+  });
+}
 
 export const applyFilters = (nextState: any) => {
   let filterSubjectsVal = nextState.subjects.join("-");

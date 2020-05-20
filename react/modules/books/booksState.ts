@@ -8,7 +8,7 @@ import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
 import { useTagsState } from "app/state/tagsState";
 import { QueryOf, Queries } from "graphql-typings";
-import { computeBookSearchVariables } from "./booksLoadingUtils";
+import { bookQueryVariables } from "./booksLoadingUtils";
 import { useSubjectsState } from "app/state/subjectsState";
 
 interface IEditorialReview {
@@ -62,7 +62,7 @@ window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQue
 
 export const useBooks = () => {
   const searchState = useCurrentSearch();
-  const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
+  const variables = useMemo(() => bookQueryVariables(searchState), [searchState]);
   const onBooksMutation = [
     {
       when: /updateBooks?/,

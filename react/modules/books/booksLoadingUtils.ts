@@ -27,10 +27,10 @@ export function filtersFromUrl(filters) {
 }
 
 export function bookSearchVariablesFromCurrentUrl() {
-  return computeBookSearchVariables(filtersFromUrl(getCurrentUrlState().searchState));
+  return bookQueryVariables(filtersFromUrl(getCurrentUrlState().searchState));
 }
 
-export function computeBookSearchVariables(bookSearchFilters) {
+export function bookQueryVariables(bookSearchFilters) {
   let getBooksVariables: any = {
     page: +bookSearchFilters.page,
     pageSize: bookSearchFilters.pageSize,

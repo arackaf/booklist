@@ -3,12 +3,13 @@ import shallowEqual from "shallow-equal/objects";
 import { useMemo, useReducer, useContext } from "react";
 import { useTagsState } from "app/state/tagsState";
 
-import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
+import { defaultSearchValuesHash, filtersFromUrl, bookQueryVariables } from "./booksLoadingUtils";
 import { useSubjectsState } from "app/state/subjectsState";
 import { AppContext } from "app/renderUI";
+import { graphqlClient } from "util/graphql";
 
 const bookSearchInitialState = {
-  hashFilters: {} as typeof defaultSearchValuesHash
+  hashFilters: {} as typeof defaultSearchValuesHash,
 };
 export type BookSearchState = typeof bookSearchInitialState;
 
@@ -22,10 +23,14 @@ export type LookupHashType = {
 
 export function useBooksSearchState(): [BookSearchState] {
   let [appState] = useContext(AppContext);
-  let [result, dispatch] = useReducer((_, newFilters) => ({ hashFilters: newFilters }), { hashFilters: appState.urlState.searchState });
+  const currentSearchState = appState.urlState.searchState;
+
+  let [result, dispatch] = useReducer((_, { hashFilters }) => ({ hashFilters }), {
+    hashFilters: appState.urlState.searchState
+  });
 
   if (appState.urlState.searchState != result.hashFilters && (appState.module == "books" || appState.module == "view")) {
-    dispatch(appState.urlState.searchState);
+    dispatch({ hashFilters: appState.urlState.searchState });
   }
 
   //uncommenting this line creates weird behavior: a parent component and its child get out of sync. I can log a parent's props being *different* than
@@ -47,6 +52,7 @@ const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection" && k
 
 export const useCurrentSearch = () => {
   const [{ hashFilters: filters }] = useBooksSearchState();
+
   const { subjectHash } = useSubjectsState();
   const { tagHash } = useTagsState();
 
@@ -59,7 +65,7 @@ export const useCurrentSearch = () => {
     return Object.assign({}, result, {
       anyActiveFilters: !!Object.keys(filters).filter(keyIsFilter).length,
       activeFilterCount: Object.keys(filters).filter(keyIsFilter).length,
-      bindableSortValue: `${result.sort}|${result.sortDirection}`
+      bindableSortValue: `${result.sort}|${result.sortDirection}`,
     });
   }, [filters, subjectHash, tagHash]);
 };
