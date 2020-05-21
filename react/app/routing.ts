@@ -40,7 +40,7 @@ const resolveModule = (moduleToLoad, priorModule) => {
       return AuthenticateComponent;
     case "books":
     case "view":
-      isNew && booksPreload();
+      booksPreload();
       return BooksComponent;
     case "home":
       return HomeComponent;
