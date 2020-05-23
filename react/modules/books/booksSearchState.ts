@@ -22,18 +22,7 @@ export type LookupHashType = {
 
 export function useBooksSearchState(): [BookSearchState] {
   let [appState] = useContext(AppContext);
-  let [result, dispatch] = useReducer((_, newFilters) => ({ hashFilters: newFilters }), { hashFilters: appState.urlState.searchState });
-
-  if (appState.urlState.searchState != result.hashFilters && (appState.module == "books" || appState.module == "view")) {
-    dispatch(appState.urlState.searchState);
-  }
-
-  //uncommenting this line creates weird behavior: a parent component and its child get out of sync. I can log a parent's props being *different* than
-  //the child it immediately renders (and the final state is visually incorrect). But how could it? It's literally the same return value either way, isn't it?
-  //how could laundering appState.urlState.searchState through a reducer function possibly make any difference?
-
-  //return [{ hashFilters: appState.urlState.searchState }];
-  return [result];
+  return [{ hashFilters: appState.urlState.searchState }];
 }
 
 function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {

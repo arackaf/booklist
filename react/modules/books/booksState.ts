@@ -85,7 +85,7 @@ export const useBooks = () => {
     }
   ];
   const { data, loaded, currentQuery } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(
-    buildQuery(GetBooksQuery, variables, { onMutation: onBooksMutation })
+    buildQuery(GetBooksQuery, variables, { preloadOnly: true, onMutation: onBooksMutation })
   );
 
   const booksRaw = data ? data.allBooks.Books : null;
