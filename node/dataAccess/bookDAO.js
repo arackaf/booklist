@@ -28,10 +28,16 @@ class BookDAO extends DAO {
   async booksWithoutSimilarity() {
     let db = await super.open();
     try {
-      let query = { similarItems: { $exists: false } };
-      let project = { _id: 1, isbn: 1 };
-
       try {
+        let dateReference = +new Date() - 1000 * 60 * 60 * 24 * 60;
+        let query = {
+          $and: [
+            { userId: { $ne: "5b57f71b6871ae00145198ff" } },
+            { $or: [{ similarItems: { $exists: false } }, { similarItemsLastUpdate: { $lt: dateReference } }] }
+          ]
+        };
+        let project = { _id: 1, isbn: 1 };
+
         let books = await db
           .collection("books")
           .aggregate([{ $match: query }, { $project: project }, { $limit: 10 }])
