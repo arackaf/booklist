@@ -2,9 +2,6 @@ import React, { useState } from "react";
 
 import CoverManager from "./components/bookSummaryCovers/coverManager";
 import { TabContents, TabContent, TabHeaders, TabHeader, Tabs } from "app/components/layout/Tabs";
-import { graphqlClient } from "util/graphql";
-import { syncUpdates } from "util/graphqlCacheHelpers";
-
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 

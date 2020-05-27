@@ -4,19 +4,9 @@ let graphqlClient = getDefaultClient();
 export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: any = {}) => {
   const cache = graphqlClient.getCache(cacheName);
 
-  [...cache.entries].forEach(([uri, currentResults]) => syncResults(currentResults.data[resultSet], arrName, newResults, options));
-
-  if (options.force) {
-    graphqlClient.forceUpdate(cacheName);
-  }
-};
-
-export const syncResults = (resultSet, arrName, newResults, options = {}) => {
-  if (!Array.isArray(newResults)) {
-    newResults = [newResults];
-  }
-
-  resultSet[arrName] = syncCollection(resultSet[arrName], newResults, options);
+  [...cache.entries].forEach(([uri, currentResults]) => {
+    currentResults.data[resultSet][arrName] = syncCollection(currentResults.data[resultSet][arrName], newResults, options);
+  });
 };
 
 export const syncCollection = (results, newResults, { sort } = {} as any) => {

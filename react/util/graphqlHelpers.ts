@@ -1,10 +1,9 @@
 import { graphqlClient } from "util/graphql";
-
 import { syncUpdates, syncDeletes } from "./graphqlCacheHelpers";
 
-const getUpdateConst = (type, resp) => {
+const getUpdateContent = (type, resp) => {
   const singleResult = resp[`update${type}`] || resp[`create${type}`];
-  return singleResult ? singleResult[type] || singleResult[`${type}s`] : resp[`update${type}s`][`${type}s`];
+  return singleResult ? [singleResult[type] || singleResult[`${type}s`]] : resp[`update${type}s`][`${type}s`];
 };
 
 export const graphqlSyncAndRefresh = (type, queries, { sort, onUpdate, onDelete } = {} as any) => {
@@ -20,7 +19,7 @@ export const graphqlSyncAndRefresh = (type, queries, { sort, onUpdate, onDelete 
           if (onUpdate) {
             onUpdate(resp, variables, refreshActiveQueries);
           } else {
-            syncUpdates(query, getUpdateConst(type, resp), `all${type}s`, `${type}s`, { sort });
+            syncUpdates(query, getUpdateContent(type, resp), `all${type}s`, `${type}s`, { sort });
           }
         });
         queries.forEach(q => refreshActiveQueries(q));

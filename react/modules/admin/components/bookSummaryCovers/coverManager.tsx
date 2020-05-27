@@ -7,7 +7,6 @@ import styles from "./styles.module.css";
 const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
 import ajaxUtil from "util/ajaxUtil";
-import { syncUpdates } from "util/graphqlCacheHelpers";
 import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
