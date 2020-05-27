@@ -15,8 +15,6 @@ const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import SubjectMetadata from "./Subject";
-import ResolverExtras1 from "../../../graphQL-custom/extras/subject/resolver-public";
-const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 
 async function loadSubjects(db, aggregationPipeline, root, args, context, ast) {
   await processHook(hooksObj, "Subject", "queryPreAggregate", aggregationPipeline, { db, root, args, context, ast });
@@ -30,9 +28,7 @@ async function loadSubjects(db, aggregationPipeline, root, args, context, ast) {
   return cleanUpResults(Subjects, SubjectMetadata);
 }
 
-export const Subject = {
-  ...(OtherExtras1 || {})
-};
+export const Subject = {};
 
 export default {
   Query: {
@@ -76,8 +72,7 @@ export default {
       }
 
       return result;
-    },
-    ...(QueryExtras1 || {})
+    }
   },
   Mutation: {
     async createSubject(root, args, context, ast) {
@@ -116,6 +111,99 @@ export default {
         return resolverHelpers.mutationSuccessResult({ Subject: result, transaction, elapsedTime: 0 });
       });
     },
-    ...(MutationExtras1 || {})
+    async updateSubject(root, args, context, ast) {
+      let gqlPacket = { root, args, context, ast, hooksObj };
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Subject", SubjectMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
+        let { $match, $project } = decontructGraphqlQuery(
+          args._id ? { _id: args._id } : {},
+          ast,
+          SubjectMetadata,
+          "Subject"
+        );
+        let updates = await getUpdateObject(args.Updates || {}, SubjectMetadata, { ...gqlPacket, db, session });
+
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
+        }
+        if (!$match._id) {
+          throw "No _id sent, or inserted in middleware";
+        }
+        await setUpOneToManyRelationshipsForUpdate([args._id], args, SubjectMetadata, { ...gqlPacket, db, session });
+        await dbHelpers.runUpdate(db, "subjects", $match, updates, { session });
+        await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
+        await resolverHelpers.mutationComplete(session, transaction);
+
+        let result = $project
+          ? (await loadSubjects(db, [{ $match }, { $project }, { $limit: 1 }], root, args, context, ast))[0]
+          : null;
+        return resolverHelpers.mutationSuccessResult({ Subject: result, transaction, elapsedTime: 0 });
+      });
+    },
+    async updateSubjects(root, args, context, ast) {
+      let gqlPacket = { root, args, context, ast, hooksObj };
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Subject", SubjectMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
+        let { $match, $project } = decontructGraphqlQuery({ _id_in: args._ids }, ast, SubjectMetadata, "Subjects");
+        let updates = await getUpdateObject(args.Updates || {}, SubjectMetadata, { ...gqlPacket, db, session });
+
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
+        }
+        await setUpOneToManyRelationshipsForUpdate(args._ids, args, SubjectMetadata, { ...gqlPacket, db, session });
+        await dbHelpers.runUpdate(db, "subjects", $match, updates, { session });
+        await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
+        await resolverHelpers.mutationComplete(session, transaction);
+
+        let result = $project ? await loadSubjects(db, [{ $match }, { $project }], root, args, context, ast) : null;
+        return resolverHelpers.mutationSuccessResult({ Subjects: result, transaction, elapsedTime: 0 });
+      });
+    },
+    async updateSubjectsBulk(root, args, context, ast) {
+      let gqlPacket = { root, args, context, ast, hooksObj };
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Subject", SubjectMetadata, {
+        update: true
+      });
+      return await resolverHelpers.runMutation(session, transaction, async () => {
+        let { $match } = decontructGraphqlQuery(args.Match, ast, SubjectMetadata);
+        let updates = await getUpdateObject(args.Updates || {}, SubjectMetadata, { ...gqlPacket, db, session });
+
+        if ((await runHook("beforeUpdate", $match, updates, { ...gqlPacket, db, session })) === false) {
+          return resolverHelpers.mutationCancelled({ transaction });
+        }
+        await dbHelpers.runUpdate(db, "subjects", $match, updates, { session });
+        await runHook("afterUpdate", $match, updates, { ...gqlPacket, db, session });
+
+        return await resolverHelpers.finishSuccessfulMutation(session, transaction);
+      });
+    },
+    async deleteSubject(root, args, context, ast) {
+      if (!args._id) {
+        throw "No _id sent";
+      }
+      let gqlPacket = { root, args, context, ast, hooksObj };
+      let { db, session, transaction } = await resolverHelpers.startDbMutation(gqlPacket, "Subject", SubjectMetadata, {
+        delete: true
+      });
+      try {
+        let $match = { _id: ObjectId(args._id) };
+
+        if ((await runHook("beforeDelete", $match, { ...gqlPacket, db, session })) === false) {
+          return { success: false };
+        }
+        await dbHelpers.runDelete(db, "subjects", $match);
+        await runHook("afterDelete", $match, { ...gqlPacket, db, session });
+        return await resolverHelpers.finishSuccessfulMutation(session, transaction);
+      } catch (err) {
+        await resolverHelpers.mutationError(err, session, transaction);
+        return { success: false };
+      } finally {
+        resolverHelpers.mutationOver(session);
+      }
+    }
   }
 };

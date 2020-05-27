@@ -47,11 +47,6 @@ export const Subject = {
     backgroundColor: StringType,
     textColor: StringType
   },
-  extras: {
-    resolverSources: ["../../../graphQL-custom/extras/subject/resolver-public"],
-    schemaSources: ["../../../graphQL-custom/extras/subject/schema"],
-    overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
-  },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
 };
 
