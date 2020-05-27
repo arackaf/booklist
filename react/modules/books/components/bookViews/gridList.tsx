@@ -8,7 +8,7 @@ import { IBookDisplay } from "../../booksState";
 import { useCurrentSearch } from "../../booksSearchState";
 
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
-import { useQuery, buildQuery } from "micro-graphql-react";
+import { useQuery } from "micro-graphql-react";
 
 import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
@@ -198,7 +198,7 @@ const BookRowDetails: SFC<{ book?: IBookDisplay; setDetailsLoading: any }> = pro
 
   let [{ publicUserId }] = useContext(AppContext);
 
-  let { loading, data } = useQuery<QueryOf<Queries["getBook"]>>(buildQuery(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 }));
+  let { loading, data } = useQuery<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 });
 
   setDetailsLoading(loading);
   if (loading) {

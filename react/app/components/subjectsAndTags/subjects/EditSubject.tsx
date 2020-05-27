@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useLayoutEffect } from "react";
 import { useSubjectsState, getEligibleParents, computeSubjectParentId, useChildMapSelector } from "app/state/subjectsState";
-import { useMutation, buildMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 import { MutationOf, Mutations } from "graphql-typings";
 
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
@@ -56,7 +56,7 @@ const PendingDeleteSubjectDisplay = props => {
   const { subject, cancel, childSubjects, onDelete } = props;
   const { name, _id } = subject;
 
-  const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
+  const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(DeleteSubjectMutation);
   const deleteIt = () => runMutation({ _id }).then(onDelete);
 
   return (
@@ -96,9 +96,7 @@ const EditSubjectFields = props => {
   const inputEl = useRef(null);
   useEffect(() => inputEl.current.focus(), []);
 
-  const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(
-    buildMutation(UpdateSubjectMutation)
-  );
+  const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
 
   const textColors = ["#ffffff", "#000000"];
 

@@ -2,7 +2,7 @@ import { graphqlClient } from "util/graphql";
 
 import GetTags from "graphQL/tags/getTags.graphql";
 import { useContext, useMemo } from "react";
-import { buildQuery, useSuspenseQuery } from "micro-graphql-react";
+import { useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "../renderUI";
 import { QueryOf, Queries } from "graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
@@ -23,7 +23,7 @@ graphqlSyncAndRefresh("Tag", GetTags, { sort: tagsSort });
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
   const req = { publicUserId };
-  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(buildQuery(GetTags, req));
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(GetTags, req);
 
   const tags = data ? data.allTags.Tags : [];
   const tagHash = useMemo(() => (tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);

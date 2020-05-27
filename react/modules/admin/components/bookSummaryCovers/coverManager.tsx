@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useQuery } from "micro-graphql-react";
 
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
 import UpdateBookSummary from "graphQL/bookSummary/updateBookSummary.graphql";
@@ -67,7 +67,7 @@ export default props => {
 
   const imgFilter = missingCoversFilter ? "nophoto" : void 0;
 
-  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(buildQuery(SummaryQuery, { smallImage: imgFilter }));
+  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(SummaryQuery, { smallImage: imgFilter });
   const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (

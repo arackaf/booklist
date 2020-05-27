@@ -2,13 +2,13 @@ import React, { useContext } from "react";
 import { AppContext } from "app/renderUI";
 
 import getPublicUser from "graphQL/getPublicUser.graphql";
-import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
+import { useSuspenseQuery } from "micro-graphql-react";
 
 export default () => {
   let [appState] = useContext(AppContext);
 
   let { isPublic, publicUserId } = appState;
-  let { data, loaded } = useSuspenseQuery(buildQuery(getPublicUser, { _id: publicUserId }));
+  let { data, loaded } = useSuspenseQuery(getPublicUser, { _id: publicUserId });
   let publicUserInfo = data?.getPublicUser?.PublicUser;
 
   return loaded ? <HeaderContent {...publicUserInfo} /> : <i className="fa fa-fw fa-spin fa-spinner"></i>;

@@ -10,7 +10,7 @@ import UpdateTag from "graphQL/tags/updateTag.graphql";
 import CreateTag from "graphQL/tags/createTag.graphql";
 import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
 
-import { useMutation, buildMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 import { filterTags, useTagsState } from "app/state/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import { useColors } from "app/state/colorsState";
@@ -54,8 +54,8 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   const setNewTagTextColor = value => setEditingValue("textColor", value);
   const setEditingValue = (name, value) => setState(state => ({ ...state, editingTag: { ...state.editingTag, [name]: value } }));
 
-  const { runMutation: updateTag } = useMutation<MutationOf<Mutations["updateTag"]>>(buildMutation(UpdateTag));
-  const { runMutation: createTag } = useMutation<MutationOf<Mutations["createTag"]>>(buildMutation(CreateTag));
+  const { runMutation: updateTag } = useMutation<MutationOf<Mutations["updateTag"]>>(UpdateTag);
+  const { runMutation: createTag } = useMutation<MutationOf<Mutations["createTag"]>>(CreateTag);
 
   const createOrUpdateTag = () => {
     const { editingTag } = state;
@@ -165,7 +165,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 };
 
 const PendingDeleteTagInfo = ({ tag, onDelete, onCancel }) => {
-  const { runMutation: deleteTag, running } = useMutation<MutationOf<Mutations["deleteTag"]>>(buildMutation(DeleteTagMutation));
+  const { runMutation: deleteTag, running } = useMutation<MutationOf<Mutations["deleteTag"]>>(DeleteTagMutation);
   const runDelete = () => Promise.resolve(deleteTag({ _id: tag._id })).then(onDelete);
 
   return (

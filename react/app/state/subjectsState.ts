@@ -3,7 +3,7 @@ import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "../renderUI";
-import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useSuspenseQuery, useMutation } from "micro-graphql-react";
 import { standardDelete } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
@@ -29,7 +29,9 @@ export function useSubjectsState() {
   let [app] = useContext(AppContext);
   let { userId, publicUserId } = app;
   let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(
-    buildQuery(AllSubjectsQuery, { publicUserId }, { active: !!userId || !!publicUserId })
+    AllSubjectsQuery,
+    { publicUserId },
+    { active: !!userId || !!publicUserId }
   );
   const subjects = data ? data.allSubjects.Subjects : null;
   const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);
@@ -38,8 +40,8 @@ export function useSubjectsState() {
 }
 
 export function useSubjectMutations() {
-  let { runMutation: updateSubject } = useMutation<MutationOf<Mutations["updateSubject"]>>(buildMutation(UpdateSubjectMutation));
-  let { runMutation: deleteSubject } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
+  let { runMutation: updateSubject } = useMutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
+  let { runMutation: deleteSubject } = useMutation<MutationOf<Mutations["deleteSubject"]>>(DeleteSubjectMutation);
 
   return { updateSubject, deleteSubject };
 }

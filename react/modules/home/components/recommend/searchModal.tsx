@@ -16,7 +16,7 @@ import { SlideInContents, useHeight } from "app/animationHelpers";
 
 import "./recommend.scss";
 import { AppContext } from "app/renderUI";
-import { useQuery, buildQuery } from "micro-graphql-react";
+import { useQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
 
 import BooksQuery from "graphQL/home/searchBooks.graphql";
@@ -38,7 +38,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 
   const variables = { ...searchState, publicUserId };
 
-  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(buildQuery(BooksQuery, variables, { active }));
+  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(BooksQuery, variables, { active });
   const { isOpen, onHide, dispatch, selectedBooksSet } = props;
 
   const [subjects, setSubjects] = useState([]);

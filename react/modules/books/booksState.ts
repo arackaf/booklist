@@ -3,7 +3,7 @@ import { graphqlClient } from "util/graphql";
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useMemo } from "react";
-import { useSuspenseQuery, buildQuery } from "micro-graphql-react";
+import { useSuspenseQuery } from "micro-graphql-react";
 import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
 import { useTagsState } from "app/state/tagsState";
@@ -84,9 +84,10 @@ export const useBooks = () => {
       }
     }
   ];
-  const { data, loaded, currentQuery } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(
-    buildQuery(GetBooksQuery, variables, { preloadOnly: true, onMutation: onBooksMutation })
-  );
+  const { data, loaded, currentQuery } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(GetBooksQuery, variables, {
+    preloadOnly: true,
+    onMutation: onBooksMutation
+  });
 
   const booksRaw = data ? data.allBooks.Books : null;
   const books = adjustBooks(booksRaw);
