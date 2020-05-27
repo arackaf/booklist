@@ -26,19 +26,13 @@ export const standardDelete = (type, cacheName, _ids, options = {} as any) => {
   syncDeletes(cacheName, _ids, `all${type}s`, `${type}s`, options);
 };
 
-export const syncDeletes = (cacheName, _ids, resultSet, arrName, { sort, onDelete } = {} as any) => {
+export const syncDeletes = (cacheName, _ids, resultSet, arrName, { sort } = {} as any) => {
   const cache = graphqlClient.getCache(cacheName);
   const deletedMap = new Set(_ids);
 
   [...cache.entries].forEach(([uri, currentResults]) => {
     let res = currentResults.data[resultSet];
-    let oldCount = res[arrName].length;
     res[arrName] = res[arrName].filter(o => !deletedMap.has(o._id));
-    let deletedCount = oldCount - res[arrName].length;
-    if (deletedCount && onDelete) {
-      onDelete({ count: deletedCount, resultSet: currentResults.data });
-    }
-
     sort && res[arrName].sort(sort);
   });
 };
