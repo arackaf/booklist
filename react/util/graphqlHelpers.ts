@@ -3,7 +3,8 @@ import { syncUpdates, syncDeletes } from "./graphqlCacheHelpers";
 
 const getUpdateContent = (type, resp) => {
   const singleResult = resp[`update${type}`] || resp[`create${type}`];
-  return singleResult ? [singleResult[type] || singleResult[`${type}s`]] : resp[`update${type}s`][`${type}s`];
+  const result = singleResult ? singleResult[type] || singleResult[`${type}s`] : resp[`update${type}s`][`${type}s`];
+  return Array.isArray(result) ? result : [result];
 };
 
 export const graphqlSyncAndRefresh = (type, queries, { sort, onUpdate, onDelete } = {} as any) => {
