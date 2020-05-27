@@ -1,12 +1,10 @@
-import { graphqlClient } from "util/graphql";
-
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "../renderUI";
 import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncUpdates, syncDeletes, standardDelete } from "../../util/graphqlCacheHelpers";
+import { standardDelete } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
