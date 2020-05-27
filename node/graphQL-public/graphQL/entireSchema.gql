@@ -982,13 +982,20 @@ type Mutation {
 
   updateSubject(
     _id: String
-    name: String
-    backgroundColor: String
-    textColor: String
-    parentId: String
+    Updates: SubjectMutationInput
+  ): SubjectMutationResult
+
+  updateSubjects(
+    _ids: [String]
+    Updates: SubjectMutationInput
   ): SubjectMutationResultMulti
 
-  deleteSubject(_id: String): [String]
+  updateSubjectsBulk(
+    Match: SubjectFilters
+    Updates: SubjectMutationInput
+  ): SubjectBulkMutationResult
+
+  deleteSubject(_id: String): DeletionResultInfo
 
   createTag(Tag: TagInput): TagMutationResult
 
