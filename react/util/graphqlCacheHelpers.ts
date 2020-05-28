@@ -10,7 +10,6 @@ export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: 
 };
 
 export const syncCollection = (results, newResults, { sort } = {} as any) => {
-  results = results.concat();
   const lookupNew = new Map(newResults.map(o => [o._id, o]));
   results.forEach((o, index) => {
     if (lookupNew.has(o._id)) {
