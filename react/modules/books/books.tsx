@@ -10,7 +10,7 @@ import BasicListView from "./components/bookViews/basicList";
 import CoversView from "./components/bookViews/coversList";
 
 import { useBooks } from "./booksState";
-import { useMutation, buildMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 import { useCodeSplitModal } from "./util";
 
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
@@ -91,7 +91,7 @@ export default () => {
   const [editingBook, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
   const editBook = book => openBookEditModal(book);
 
-  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBookMutation));
+  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBookMutation);
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
@@ -100,8 +100,8 @@ export default () => {
     });
   };
 
-  const { runMutation: setReadStatus } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(UpdateBooksReadMutation));
-  const { runMutation: deleteBook } = useMutation<MutationOf<Mutations["deleteBook"]>>(buildMutation(DeleteBookMutation));
+  const { runMutation: setReadStatus } = useMutation<MutationOf<Mutations["updateBooks"]>>(UpdateBooksReadMutation);
+  const { runMutation: deleteBook } = useMutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
 

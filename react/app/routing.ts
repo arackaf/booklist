@@ -16,11 +16,20 @@ const SettingsComponent = lazy(() => import(/* webpackChunkName: "small-modules"
 const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/admin/admin"));
 const JrComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/jr/songEdit"));
 
+let priorModule = "";
+
 export const getModuleComponent = moduleToLoad => {
   if (moduleToLoad === null) {
     return null;
   }
+  let result = resolveModule(moduleToLoad, priorModule);
+  priorModule = moduleToLoad;
+  return result;
+}
+const resolveModule = (moduleToLoad, priorModule) => {
   let adminUser = isAdmin();
+  let isNew = moduleToLoad != priorModule;
+
   if (moduleToLoad == "admin" && !adminUser) {
     return HomeComponent;
   }
@@ -38,7 +47,7 @@ export const getModuleComponent = moduleToLoad => {
     case "scan":
       return ScanComponent;
     case "subjects":
-      subjectsPreload();
+      isNew && subjectsPreload();
       return SubjectsComponent;
     case "styledemo":
       return StyleDemoComponent;

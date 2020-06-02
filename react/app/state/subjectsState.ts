@@ -1,13 +1,12 @@
-import { graphqlClient } from "util/graphql";
-
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "../renderUI";
-import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
-import { syncUpdates, syncDeletes } from "../../util/graphqlCacheHelpers";
+import { useSuspenseQuery, useMutation } from "micro-graphql-react";
+import { standardDelete } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
+import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
 
@@ -22,20 +21,17 @@ export interface SubjectState {
   subjectsLoaded: boolean;
 }
 
-graphqlClient.subscribeMutation([
-  { when: /updateSubject/, run: (op, res) => syncUpdates(AllSubjectsQuery, res.updateSubject.Subjects, "allSubjects", "Subjects") },
-  { when: /deleteSubject/, run: (op, res) => syncDeletes(AllSubjectsQuery, res.deleteSubject, "allSubjects", "Subjects") }
-]);
+graphqlSyncAndRefresh("Subject", AllSubjectsQuery, {
+  onDelete: resp => standardDelete("Subject", AllSubjectsQuery, resp.deleteSubject)
+});
 
 export function useSubjectsState() {
   let [app] = useContext(AppContext);
   let { userId, publicUserId } = app;
   let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(
-    buildQuery(
-      AllSubjectsQuery,
-      { publicUserId },
-      { active: !!userId || !!publicUserId, onMutation: { when: /(update|delete)Subject/, run: ({ refresh }) => refresh() } }
-    )
+    AllSubjectsQuery,
+    { publicUserId },
+    { active: !!userId || !!publicUserId }
   );
   const subjects = data ? data.allSubjects.Subjects : null;
   const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);
@@ -44,8 +40,8 @@ export function useSubjectsState() {
 }
 
 export function useSubjectMutations() {
-  let { runMutation: updateSubject } = useMutation<MutationOf<Mutations["updateSubject"]>>(buildMutation(UpdateSubjectMutation));
-  let { runMutation: deleteSubject } = useMutation<MutationOf<Mutations["deleteSubject"]>>(buildMutation(DeleteSubjectMutation));
+  let { runMutation: updateSubject } = useMutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
+  let { runMutation: deleteSubject } = useMutation<MutationOf<Mutations["deleteSubject"]>>(DeleteSubjectMutation);
 
   return { updateSubject, deleteSubject };
 }

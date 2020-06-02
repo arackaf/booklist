@@ -5,7 +5,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import Loading from "app/components/loading";
 
-import { useMutation, buildMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import FlexRow from "app/components/layout/FlexRow";
 import { SlideInContents } from "app/animationHelpers";
@@ -129,7 +129,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
       </a>
     ) : null;
 
-  const { runMutation, running } = useMutation(buildMutation(createBookMutation));
+  const { runMutation, running } = useMutation(createBookMutation);
   const [val, setVal] = useState(0);
 
   return (

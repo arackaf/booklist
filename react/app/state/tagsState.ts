@@ -2,11 +2,10 @@ import { graphqlClient } from "util/graphql";
 
 import GetTags from "graphQL/tags/getTags.graphql";
 import { useContext, useMemo } from "react";
-import { buildQuery, useSuspenseQuery } from "micro-graphql-react";
+import { useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "../renderUI";
-
-import { syncUpdates, syncDeletes } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries } from "graphql-typings";
+import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 interface ITag {
   _id: string;
@@ -19,39 +18,24 @@ export interface TagsState {
   tagHash: any;
 }
 
-graphqlClient.subscribeMutation([
-  {
-    when: /(update|create)Tag/,
-    run: ({ refreshActiveQueries }, res) => {
-      syncUpdates(GetTags, [(res.updateTag || res.createTag).Tag], "allTags", "Tags", { sort: tagsSort });
-      refreshActiveQueries(GetTags);
-    }
-  },
-  {
-    when: /deleteTag/,
-    run: ({ refreshActiveQueries }, res, req) => {
-      syncDeletes(GetTags, [req._id], "allTags", "Tags", { sort: tagsSort });
-      refreshActiveQueries(GetTags);
-    }
-  }
-]);
+graphqlSyncAndRefresh("Tag", GetTags, { sort: tagsSort });
 
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
   const req = { publicUserId };
-  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(buildQuery(GetTags, req));
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(GetTags, req);
 
   const tags = data ? data.allTags.Tags : [];
-  const tagHash = useMemo(() => tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}, [tags]);
+  const tagHash = useMemo(() => (tags && tags.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);
 
   return { tagsLoaded: loaded, tags, tagHash };
 }
 
-const tagsSort = ({ name: name1 }, { name: name2 }) => {
+function tagsSort({ name: name1 }, { name: name2 }) {
   let name1After = name1.toLowerCase() > name2.toLowerCase();
   let bothEqual = name1.toLowerCase() === name2.toLowerCase();
   return bothEqual ? 0 : name1After ? 1 : -1;
-};
+}
 
 export const filterTags = (tags, search) => {
   if (!search) {

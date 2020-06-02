@@ -3,7 +3,7 @@ import { SectionLoading } from "app/components/loading";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
-import { useSuspenseQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useSuspenseQuery, useMutation } from "micro-graphql-react";
 import { AppContext } from "app/renderUI";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
@@ -13,7 +13,7 @@ import { Form, Input, SubmitButton, required } from "app/components/ui/Form";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
-  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(buildQuery(PublicUserSettingsQuery, {}, { active: online }));
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["getUser"]>>(PublicUserSettingsQuery, {}, { active: online });
 
   if (!online) {
     return <h1>Offline</h1>;
@@ -38,7 +38,7 @@ interface UserSettings {
 
 const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = props => {
   const [app] = useContext(AppContext);
-  const { runMutation, running: saving } = useMutation<MutationOf<Mutations["updateUser"]>>(buildMutation(UpdatePublisUserSettingsMutation));
+  const { runMutation, running: saving } = useMutation<MutationOf<Mutations["updateUser"]>>(UpdatePublisUserSettingsMutation);
   const { settings } = props;
   const { publicBooksHeader, publicName } = settings;
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);

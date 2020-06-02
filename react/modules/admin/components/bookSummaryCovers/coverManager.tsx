@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, buildQuery, useMutation, buildMutation } from "micro-graphql-react";
+import { useQuery } from "micro-graphql-react";
 
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
 import UpdateBookSummary from "graphQL/bookSummary/updateBookSummary.graphql";
@@ -7,7 +7,6 @@ import styles from "./styles.module.css";
 const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
 import ajaxUtil from "util/ajaxUtil";
-import { syncUpdates } from "util/graphqlCacheHelpers";
 import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
@@ -68,13 +67,7 @@ export default props => {
 
   const imgFilter = missingCoversFilter ? "nophoto" : void 0;
 
-  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(
-    buildQuery(
-      SummaryQuery,
-      { smallImage: imgFilter },
-      { onMutation: { when: /(update|delete|create)BookSummary/, run: ({ refresh }) => refresh() } }
-    )
-  );
+  const { data, loaded } = useQuery<QueryOf<Queries["allBookSummarys"]>>(SummaryQuery, { smallImage: imgFilter });
   const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (

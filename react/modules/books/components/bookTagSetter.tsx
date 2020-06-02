@@ -3,7 +3,7 @@ import React, { SFC, useState, useLayoutEffect, useRef } from "react";
 import { Button, ActionButton } from "app/components/ui/Button";
 import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
-import { useMutation, buildMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
 import Modal from "app/components/ui/Modal";
@@ -29,7 +29,7 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
       resetTags();
     }
   }, [props.modifyingBooks.length]);
-  const { runMutation } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(updateBookSubjects));
+  const { runMutation } = useMutation<MutationOf<Mutations["updateBooks"]>>(updateBookSubjects);
 
   const setBooksTags = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingTags, remove: removingTags };

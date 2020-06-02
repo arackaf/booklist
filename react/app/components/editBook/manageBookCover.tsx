@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 import ajaxUtil from "util/ajaxUtil";
 
 import UpdateBook from "graphQL/books/updateBook.graphql";
-import { useMutation, buildMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlowItems from "../layout/FlowItems";
@@ -54,7 +54,7 @@ const ManageBookCover = props => {
   const [currentUrl, setCurrentUrl] = useState(img);
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
-  const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(buildMutation(UpdateBook));
+  const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
 
   const [{ loginToken, userId }] = useAppState();
 

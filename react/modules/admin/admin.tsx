@@ -2,19 +2,10 @@ import React, { useState } from "react";
 
 import CoverManager from "./components/bookSummaryCovers/coverManager";
 import { TabContents, TabContent, TabHeaders, TabHeader, Tabs } from "app/components/layout/Tabs";
-import { graphqlClient } from "util/graphql";
-import { syncUpdates } from "util/graphqlCacheHelpers";
-
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
+import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
-graphqlClient.subscribeMutation([
-  {
-    when: /(update|create)BookSummary/,
-    run: (op, res) => {
-      syncUpdates(SummaryQuery, [(res.updateBookSummary || res.createBookSummary).BookSummary], "allBookSummarys", "BookSummarys");
-    }
-  }
-]);
+graphqlSyncAndRefresh("BookSummary", SummaryQuery);
 
 const AdminTabContent = ({}) => {
   return (

@@ -9,7 +9,7 @@ import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
 import { computeSubjectParentId, getChildSubjectsSorted, useSubjectsState } from "app/state/subjectsState";
-import { useQuery, buildQuery } from "micro-graphql-react";
+import { useQuery } from "micro-graphql-react";
 import { graphqlClient } from "util/graphql";
 import { clearCache } from "util/graphqlCacheHelpers";
 import { AppContext } from "app/renderUI";
@@ -85,7 +85,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const { subjectHash } = useSubjectsState();
   const subjectIds = subjects.map(s => s._id);
 
-  const { data: newRespData } = useQuery(buildQuery(barCharQuery, { subjectIds, searchChildSubjects: true, publicUserId }));
+  const { data: newRespData } = useQuery(barCharQuery, { subjectIds, searchChildSubjects: true, publicUserId });
   const graphData = stackGraphData(subjectHash, subjectIds, newRespData);
 
   useEffect(() => {

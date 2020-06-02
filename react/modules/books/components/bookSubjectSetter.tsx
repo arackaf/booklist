@@ -1,5 +1,5 @@
 import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
-import { buildMutation, useMutation } from "micro-graphql-react";
+import { useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
@@ -36,7 +36,7 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
     }
   }, [props.modifyingBooks.length]);
 
-  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBooks"]>>(buildMutation(updateBookSubjects));
+  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBooks"]>>(updateBookSubjects);
 
   const save = () => {
     let args = { books: props.modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };
