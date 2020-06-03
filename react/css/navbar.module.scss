@@ -26,6 +26,11 @@
     a {
       padding-left: 15px;
       padding-right: 15px;
+
+      display: flex;
+      align-items: center;
+
+      touch-action: manipulation;
     }
   }
 
@@ -87,7 +92,7 @@
 }
 .navItems > li, .navItemsRight > li {
   display: flex;
-  align-items: center
+  align-items: stretch;
 }
 .navItems, .navItemsRight {
   margin-top: 0;
