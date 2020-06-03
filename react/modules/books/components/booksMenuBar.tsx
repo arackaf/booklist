@@ -22,17 +22,22 @@ interface IAddedMenuProps {
     totalPages: any;
     resultsCount: any;
   };
+  measureRef?: any;
 }
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
-export const BooksMenuBarDisabled: SFC<{ totalPages: number; resultsCount: number }> = ({ totalPages, resultsCount }) => {
+export const BooksMenuBarDisabled: SFC<{ totalPages: number; resultsCount: number; measureRef: any }> = ({
+  totalPages,
+  resultsCount,
+  measureRef
+}) => {
   const bookResultsPacket = {
     books: [],
     totalPages,
     resultsCount
   };
-  return <BooksMenuBar disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
+  return <BooksMenuBar measureRef={measureRef} disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
 };
 const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const { books = [], totalPages = null, resultsCount = null } = props.bookResultsPacket || {};
@@ -42,7 +47,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   const { actions, booksUiState } = useContext(BooksModuleContext);
   const { setRead } = actions;
 
-  const { uiView, uiDispatch, disabled } = props;
+  const { uiView, uiDispatch, disabled, measureRef } = props;
   const { selectedBooks } = booksUiState;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
   const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
@@ -77,7 +82,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   );
 
   return (
-    <div style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 9999 }}>
+    <div ref={measureRef} style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <PublicBooksHeader /> : null}

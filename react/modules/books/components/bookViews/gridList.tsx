@@ -283,11 +283,11 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-const stickyHeaderStyle: CSSProperties = { position: "sticky", top: "40px", backgroundColor: "white" };
-
-export const GridViewShell: SFC<{}> = ({}) => {
+export const GridViewShell: SFC<{ menuBarHeight: any }> = ({ menuBarHeight }) => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
 
+  const stickyHeaderStyle: CSSProperties = { position: "sticky", top: `${menuBarHeight}px`, backgroundColor: "white" };
+  
   return (
     <div style={{ minHeight: 400 }}>
       <div>
@@ -332,7 +332,7 @@ export const GridViewShell: SFC<{}> = ({}) => {
   );
 };
 
-const BookViewListGrid: SFC<{ books: any }> = ({ books }) => {
+const BookViewListGrid: SFC<{ books: any; menuBarHeight: any }> = ({ books, menuBarHeight }) => {
   const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
   const { setRead, runDelete } = actions;
 
@@ -361,6 +361,8 @@ const BookViewListGrid: SFC<{ books: any }> = ({ books }) => {
 
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
+
+  const stickyHeaderStyle: CSSProperties = { position: "sticky", top: `${menuBarHeight}px`, backgroundColor: "white" };
 
   return (
     <div style={{ minHeight: 400 }}>

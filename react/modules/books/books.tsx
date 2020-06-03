@@ -19,6 +19,7 @@ import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import { MutationOf, Mutations } from "graphql-typings";
 import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
 import { ModuleUpdateContext } from "app/renderUI";
+import { useHeight } from "app/animationHelpers";
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
@@ -142,11 +143,13 @@ export default () => {
 };
 
 const Fallback: SFC<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({ uiView, totalPages, resultsCount }) => {
+  const [measureRef, menuBarHeight] = useHeight();
+
   return (
     <>
-      <BooksMenuBarDisabled totalPages={totalPages} resultsCount={resultsCount} />
+      <BooksMenuBarDisabled measureRef={measureRef} totalPages={totalPages} resultsCount={resultsCount} />
       {uiView.isGridView ? (
-        <GridViewShell />
+        <GridViewShell menuBarHeight={menuBarHeight} />
       ) : (
         <h1 style={{ color: "var(--neutral-5)" }}>
           Books are loading <i className="fas fa-cog fa-spin"></i>
@@ -182,18 +185,19 @@ const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = 
   }, [resultsCount, totalPages]);
 
   const { dispatch: uiDispatch } = uiView;
+  const [measureRef, menuBarHeight] = useHeight();
 
   return (
     <>
-      <BooksMenuBar uiDispatch={uiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
+      <BooksMenuBar measureRef={measureRef} uiDispatch={uiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
       <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-        <BookResults {...{ books, uiView }} />
+        <BookResults menuBarHeight={menuBarHeight} {...{ books, uiView }} />
       </div>
     </>
   );
 };
 
-const BookResults: SFC<{ books: any; uiView: any }> = ({ books, uiView }) => {
+const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any; }> = ({ books, uiView, menuBarHeight }) => {
   const isUpdating = useContext(ModuleUpdateContext);
 
   return (
@@ -207,7 +211,7 @@ const BookResults: SFC<{ books: any; uiView: any }> = ({ books, uiView }) => {
       {isUpdating ? <Loading /> : null}
 
       {uiView.isGridView ? (
-        <GridView books={books} />
+        <GridView menuBarHeight={menuBarHeight} books={books} />
       ) : uiView.isBasicList ? (
         <BasicListView books={books} />
       ) : uiView.isCoversList ? (
