@@ -283,7 +283,7 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-const stickyHeaderStyle: CSSProperties = { position: "sticky", top: 0, backgroundColor: "white" };
+const stickyHeaderStyle: CSSProperties = { position: "sticky", top: "40px", backgroundColor: "white" };
 
 export const GridViewShell: SFC<{}> = ({}) => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);

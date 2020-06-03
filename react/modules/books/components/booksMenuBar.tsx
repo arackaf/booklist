@@ -77,8 +77,8 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   );
 
   return (
-    <div>
-      <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px" }}>
+    <div style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 9999 }}>
+      <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <PublicBooksHeader /> : null}
           <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, Button, disabled }} />
