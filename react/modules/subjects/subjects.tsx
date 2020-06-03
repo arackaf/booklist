@@ -102,8 +102,8 @@ export default () => {
   }) as any;
 
   return (
-    <div className={subjectsRoot}>
-      <div className="padding-top" style={{ marginBottom: "60px" }}>
+    <div className={`standard-module-container ${subjectsRoot}`}>
+      <div style={{ marginBottom: "60px" }}>
         <FlexRow>
           <div className="col-lg-6 col-md-8 col-xs-12">
             <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>

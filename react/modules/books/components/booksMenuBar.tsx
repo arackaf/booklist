@@ -82,7 +82,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   );
 
   return (
-    <div ref={measureRef} style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 1 }}>
+    <div ref={measureRef} style={{ position: "sticky", top: 0, marginTop: "-2px", paddingTop: "2px", backgroundColor: "white", zIndex: 1 }}>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <PublicBooksHeader /> : null}

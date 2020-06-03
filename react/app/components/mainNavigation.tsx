@@ -41,7 +41,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettingsSection = module == "admin";
 
   return (
-    <div className={nav} style={{ marginBottom: "5px" }}>
+    <div className={nav}>
       <div className={`${navHeader} hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
         <a onClick={() => goto("home")}>
           <i className="fal fa-book" style={{ marginRight: "5px" }} />
