@@ -9,6 +9,15 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
+    border: 1px solid var(--primary-8);
+    border-radius: 5px;
+    padding: 5px;
+    transition: transform 100ms ease-in, box-shadow 100ms ease-in;
+
+    &:hover {
+      transform: scale(1.08);
+      box-shadow: 2px 2px 5px var(--primary-8);
+    }
     
     @media(max-width: 600px){
       width: 70px;
@@ -41,8 +50,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 12px;
-    background-color: var(--neutral-6);
-    color: var(--neutral-10);
+    color: var(--neutral-2);
     margin-top: auto;
     padding: 2px;
   }
