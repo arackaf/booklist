@@ -676,3 +676,7 @@ ul.striped {
     background-color: var(--neutral-8);
   }
 }
+
+a, button, input, select {
+  touch-action: manipulation;
+}
