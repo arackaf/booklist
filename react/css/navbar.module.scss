@@ -89,6 +89,7 @@
   a { 
     display: flex;
     align-items: center;
+    touch-action: manipulation;
   }
 }
 
