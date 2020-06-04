@@ -92,7 +92,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     if (elRef.current && graphData && chartIndex > 0) {
       elRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [graphData]);
+  }, [newRespData, subjects]);
 
   const topRef = el => {
     if (!el) return;
