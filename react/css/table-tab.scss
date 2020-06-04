@@ -2,6 +2,15 @@
   width: 100%;
   max-width: 100%;
   border-collapse: collapse;
+
+  &.striped {
+    tr:nth-child(even) {
+      background-color: var(--primary-10);
+    }
+  }
+  tr:hover {
+    background-color: var(--primary-9);
+  }
   
   td {
     font-size: 14px;
@@ -12,7 +21,7 @@
   th {
     font-size: 16px;
     text-align: left;
-    border-bottom: 2px solid var(--primary-9);
+    border-bottom: 2px solid var(--primary-8);
   }
 
   td.min-wdith {

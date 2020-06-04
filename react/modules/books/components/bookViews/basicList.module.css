@@ -9,7 +9,10 @@
 }
 
 .listGroup > .listGroupItem:first-of-type {
-  border-top: 2px solid var(--primary-9);
+  border-top: 2px solid var(--primary-8);
+}
+.listGroup > .listGroupItem:hover {
+  background-color: var(--primary-9);
 }
 
 .listGroupItemHeading, .listGroupItemText {
