@@ -32,7 +32,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   const [resizeRef, viewHeight] = useHeight();
   const { height, opacity, transform } = useSpring({
     immediate: !uiReady.current,
-    config: expanded ? { ...config.stiff } : { mass: 1, tension: 300, friction: 30, clamp: true },
+    config: expanded ? { ...config.stiff, clamp: false } : { mass: 1, tension: 300, friction: 30, clamp: true },
     from: { height: 0, opacity: 0, transform: "translate3d(20px,-20px,0)" },
     to: {
       height: expanded ? viewHeight : 0,
@@ -40,7 +40,7 @@ const SubjectDisplay: FC<any> = memo(props => {
       transform: `translate3d(${expanded ? 0 : 20}px,${expanded ? 0 : -20}px,0)`
     },
     onRest: () => (uiReady.current = true)
-  }) as any;
+  }) || {} as any;
 
   let classes = `padding-bottom-med ${subjectRow}`;
 
@@ -93,7 +93,7 @@ export default () => {
   }, []);
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
 
-  const { opacity } = useSpring({
+  const styles = useSpring({
     config: { ...config.slow },
     from: { opacity: 0 },
     to: {
@@ -111,7 +111,7 @@ export default () => {
             </Button>
 
             <EditContext.Provider value={openEditModal}>
-              <animated.div style={{ opacity }} className={contentRoot}>
+              <animated.div style={styles} className={contentRoot}>
                 <SubjectList subjects={topLevelSubjects} />
               </animated.div>
             </EditContext.Provider>

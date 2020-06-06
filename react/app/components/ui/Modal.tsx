@@ -1,7 +1,6 @@
 import React, { SFC } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
-import { Transition } from "react-spring/renderprops";
 import { useTransition, animated, config } from "react-spring";
 
 import "css/reach-modal-overrides.scss";
@@ -28,14 +27,14 @@ type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: a
 const Modal: SFC<ModalTypes> = props => {
   let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
 
-  const modalMaybe = useTransition(!!isOpen, null, {
+  const transition = useTransition(!!isOpen, {
     config: isOpen ? { ...config.stiff } : { duration: 150 },
     from: { opacity: 0, transform: `translate3d(0px, -10px, 0px)` },
     enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
     leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
   });
 
-  let results = modalMaybe.map(({ item: isOpen, props: styles }: any) => {
+  return transition((styles, isOpen) => {
     return (
       isOpen && (
         <AnimatedDialogOverlay allowPinchZoom={true} initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
@@ -53,8 +52,7 @@ const Modal: SFC<ModalTypes> = props => {
         </AnimatedDialogOverlay>
       )
     );
-  });
-  return results.find(item => item) || null;
+  })
 };
 
 export default Modal;

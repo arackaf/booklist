@@ -49,7 +49,7 @@
     "react-dom": "0.0.0-experimental-33c3af284",
     "react-dropzone": "4.2.5",
     "react-measure": "2.3.0",
-    "react-spring": "^8.0.27",
+    "react-spring": "^9.0.0-rc.3",
     "react-transition-group": "^4.3.0",
     "rollup": "^0.67.3",
     "rollup-plugin-babel-minify": "^6.2.0",
