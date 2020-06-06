@@ -161,7 +161,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
               )}
 
               <CSSTransition in={noAvailableBooks} key={2} classNames="bl-animate" timeout={300}>
-                <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from these results</div>
+                <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from this page</div>
               </CSSTransition>
             </FlexRow>
           </div>
@@ -203,7 +203,7 @@ export default SearchModal;
 
 const SearchResults = props => {
   const books = props?.data?.allBooks?.Books;
-  const { loading, selectedBooksSet, currentQuery, active } = props;
+  const { selectedBooksSet, currentQuery, active } = props;
   const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
