@@ -30,7 +30,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   const previous = usePrevious(expanded);
 
   const [resizeRef, viewHeight] = useHeight();
-  const { height, opacity, transform } = useSpring({
+  const styles = useSpring({
     immediate: !uiReady.current,
     config: expanded ? { ...config.stiff, clamp: false } : { mass: 1, tension: 300, friction: 30, clamp: true },
     from: { height: 0, opacity: 0, transform: "translate3d(20px,-20px,0)" },
@@ -40,7 +40,8 @@ const SubjectDisplay: FC<any> = memo(props => {
       transform: `translate3d(${expanded ? 0 : 20}px,${expanded ? 0 : -20}px,0)`
     },
     onRest: () => (uiReady.current = true)
-  }) || {} as any;
+  }) as any;
+  const { height, opacity, transform } = styles || {};
 
   let classes = `padding-bottom-med ${subjectRow}`;
 

@@ -21,6 +21,8 @@ import { QueryOf, Queries } from "graphql-typings";
 
 import BooksQuery from "graphQL/home/searchBooks.graphql";
 
+import { useSpring, useTransition, animated, config } from "react-spring";
+
 const PAGE_SIZE = 4;
 
 interface LocalProps {
@@ -208,30 +210,32 @@ const SearchResults = props => {
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
+  console.log({ selectedBooksSet });
+
   return (
     <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <div className="overlay-holder">
-        <TransitionGroup component={null}>
-          {books == null || !active ? null : books?.length ? (
-            <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
-              <ul>
-                <TransitionGroup component={null}>
-                  {availableBooks.map(book => (
-                    <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
-                      <SearchResult key={book._id} book={book} dispatch={props.dispatch} />
-                    </SlideInContents>
-                  ))}
-                </TransitionGroup>
-              </ul>
-            </SlideInContents>
-          ) : (
-            <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-              <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
-                No results
-              </div>
-            </CSSTransition>
-          )}
-        </TransitionGroup>
+        {/* <TransitionGroup component={null}> */}
+        {books == null || !active ? null : books?.length ? (
+          // <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
+          <ul>
+            {/* <TransitionGroup component={null}> */}
+            {books.map(book => (
+              // <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
+              <SearchResult key={book._id} book={book} selected={selectedBooksSet.has(book._id)} dispatch={props.dispatch} />
+              // </SlideInContents>
+            ))}
+            {/* </TransitionGroup> */}
+          </ul>
+        ) : (
+          // </SlideInContents>
+          <CSSTransition key={3} classNames="bl-animate" timeout={300}>
+            <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
+              No results
+            </div>
+          </CSSTransition>
+        )}
+        {/* </TransitionGroup> */}
       </div>
     </div>
   );
@@ -245,29 +249,40 @@ const SearchResult = props => {
     props.dispatch(["selectBook", props.book]);
   };
 
-  let { book } = props;
-  return (
-    <Stack className={props.className}>
-      <FlowItems>
-        <div style={{ minWidth: "70px" }}>
-          <CoverSmall url={book.smallImage} />
-        </div>
+  let { book, selected } = props;
+  console.log({ selected });
 
-        <Stack style={{ flex: 1 }}>
-          {book.title}
-          {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
-          <button
-            disabled={adding}
-            onClick={selectBook}
-            style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
-            className="btn btn-primary btn-xs"
-          >
-            Add to list&nbsp;
-            <i className="fal fa-plus" />
-          </button>
-        </Stack>
-      </FlowItems>
-      <hr />
-    </Stack>
+  const styles = useSpring({
+    config: { ...config.stiff, clamp: true },
+    // from: { opacity: 0 /*transform: `translate3d(0px, -10px, 0px)`*/ },
+    from: { opacity: 1 /*transform: `translate3d(0px, 0px, 0px)`*/ },
+    to: { opacity: selected ? 0 : 1 /*transform: `translate3d(0px, 10px, 0px)`*/ }
+  });
+
+  return (
+    <animated.li style={styles}>
+      <Stack className={props.className}>
+        <FlowItems>
+          <div style={{ minWidth: "70px" }}>
+            <CoverSmall url={book.smallImage} />
+          </div>
+
+          <Stack style={{ flex: 1 }}>
+            {book.title}
+            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+            <button
+              disabled={adding}
+              onClick={selectBook}
+              style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
+              className="btn btn-primary btn-xs"
+            >
+              Add to list&nbsp;
+              <i className="fal fa-plus" />
+            </button>
+          </Stack>
+        </FlowItems>
+        <hr />
+      </Stack>
+    </animated.li>
   );
 };
