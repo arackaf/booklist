@@ -11,8 +11,8 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
-import { Form, SubmitButton, SubmitIconButton } from "app/components/ui/Form";
-import { SlideInContents, useHeight } from "app/animationHelpers";
+import { Form, SubmitIconButton } from "app/components/ui/Form";
+import { SlideInContents } from "app/animationHelpers";
 
 import "./recommend.scss";
 import { AppContext } from "app/renderUI";
@@ -20,6 +20,8 @@ import { useQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
 
 import BooksQuery from "graphQL/home/searchBooks.graphql";
+
+const PAGE_SIZE = 4;
 
 interface LocalProps {
   isOpen: boolean;
@@ -30,16 +32,30 @@ interface LocalProps {
 }
 
 const initialState = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
-const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, ...payload } : initialState);
+const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialState);
 
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const [{ publicUserId }] = useContext(AppContext);
   const [{ active, ...searchState }, searchDispatch] = useReducer(searchStateReducer, initialState);
 
   const variables = { ...searchState, publicUserId };
+  const { page } = variables;
 
   const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(BooksQuery, variables, { active });
+  const resultCount = data?.allBooks?.Meta?.count ?? 0;
+  const totalPages = Math.ceil(resultCount / PAGE_SIZE);
+
   const { isOpen, onHide, dispatch, selectedBooksSet } = props;
+
+  const pageUp = () => searchDispatch({ page: page + 1 });
+  const pageDown = () => searchDispatch({ page: page - 1 });
+  const pageOne = () => searchDispatch({ page: 1 });
+  const pageLast = () => searchDispatch({ page: totalPages });
+
+  let canPageUp = page < totalPages;
+  let canPageDown = page > 1;
+  let canPageOne = page > 1;
+  let canPageLast = page < totalPages;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
@@ -151,6 +167,30 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
           </div>
 
           <div className="col-xs-12">
+            <div>
+              {resultCount ? (
+                <>
+                  <FlowItems tightest={true} containerStyle={{ alignItems: "center", fontSize: "14px" }}>
+                    <button onClick={pageOne} disabled={!canPageDown} className="btn btn-default">
+                      <i className="fal fa-angle-double-left" />
+                    </button>
+                    <button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
+                      <i className="fal fa-angle-left" />
+                    </button>
+                    <span style={{ paddingLeft: "3px", paddingRight: "3px" }}>
+                      {page} of {totalPages}
+                    </span>
+                    <button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
+                      <i className="fal fa-angle-right" />
+                    </button>
+                    <button onClick={pageLast} disabled={!canPageUp} className="btn btn-default">
+                      <i className="fal fa-angle-double-right" />
+                    </button>
+                  </FlowItems>
+                  <hr />
+                </>
+              ) : null}
+            </div>
             <SearchResults {...{ dispatch, loaded, loading, data, error, currentQuery, selectedBooksSet, active }} />
           </div>
         </FlexRow>
