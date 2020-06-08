@@ -54,10 +54,8 @@ const Modal: SFC<ModalTypes> = props => {
       onRest: () => (uiReady.current = true)
     }) || {};
 
-  console.log({ heightStyles });
-
-  return transition((styles, isOpen) => {
-    return (
+  return transition(
+    (styles, isOpen) =>
       isOpen && (
         <AnimatedDialogOverlay
           allowPinchZoom={true}
@@ -83,8 +81,7 @@ const Modal: SFC<ModalTypes> = props => {
           </AnimatedDialogContent>
         </AnimatedDialogOverlay>
       )
-    );
-  });
+  );
 };
 
 export default Modal;
