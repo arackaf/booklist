@@ -1,9 +1,10 @@
-import React, { SFC } from "react";
+import React, { SFC, useRef, useLayoutEffect } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
-import { useTransition, animated, config } from "react-spring";
+import { useTransition, animated, config, useSpring } from "react-spring";
 
 import "css/reach-modal-overrides.scss";
+import { useHeight } from "app/animationHelpers";
 
 export const StandardModalHeader: SFC<{ onHide: any; caption: any }> = props => {
   let { onHide, caption } = props;
@@ -34,10 +35,33 @@ const Modal: SFC<ModalTypes> = props => {
     leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
   });
 
+  const uiReady = useRef(false);
+  useLayoutEffect(() => {
+    uiReady.current = true;
+  }, []);
+
+  const [sizingRef, contentHeight] = useHeight();
+
+  const heightStyles =
+    useSpring({
+      immediate: !uiReady.current,
+      config: { /*...config.stiff,*/ duration: 3000, clamp: true },
+      from: { height: 0 },
+      to: { height: 145 }
+    }) || {};
+
+  console.log({ heightStyles });
+
   return transition((styles, isOpen) => {
     return (
       isOpen && (
-        <AnimatedDialogOverlay allowPinchZoom={true} initialFocusRef={focusRef} onDismiss={onHide} isOpen={isOpen} style={{ opacity: styles.opacity }}>
+        <AnimatedDialogOverlay
+          allowPinchZoom={true}
+          initialFocusRef={focusRef}
+          onDismiss={onHide}
+          isOpen={isOpen}
+          style={{ opacity: styles.opacity }}
+        >
           <AnimatedDialogContent
             style={{
               transform: styles.transform,
@@ -46,13 +70,17 @@ const Modal: SFC<ModalTypes> = props => {
               ...style
             }}
           >
-            {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
-            {children}
+            <animated.div style={{ overflow: "hidden", height: 145 /*...heightStyles*/ }}>
+              <div ref={sizingRef}>
+                {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
+                {children}
+              </div>
+            </animated.div>
           </AnimatedDialogContent>
         </AnimatedDialogOverlay>
       )
     );
-  })
+  });
 };
 
 export default Modal;

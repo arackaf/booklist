@@ -12,7 +12,7 @@ import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
-import { SlideInContents } from "app/animationHelpers";
+import { SlideInContents, useHeight } from "app/animationHelpers";
 
 import "./recommend.scss";
 import { AppContext } from "app/renderUI";
@@ -250,39 +250,46 @@ const SearchResult = props => {
   };
 
   let { book, selected } = props;
-  console.log({ selected });
+  const initiallySelected = useRef(selected);
+
+  const [sizingRef, currentHeight] = useHeight();
 
   const styles = useSpring({
     config: { ...config.stiff, clamp: true },
     // from: { opacity: 0 /*transform: `translate3d(0px, -10px, 0px)`*/ },
-    from: { opacity: 1 /*transform: `translate3d(0px, 0px, 0px)`*/ },
-    to: { opacity: selected ? 0 : 1 /*transform: `translate3d(0px, 10px, 0px)`*/ }
-  });
+    from: {
+      opacity: initiallySelected.current ? 0 : 1,
+      height: initiallySelected.current ? 0 : currentHeight /*transform: `translate3d(0px, 0px, 0px)`*/
+    },
+    to: { opacity: selected ? 0 : 1, height: selected ? 0 : currentHeight /*transform: `translate3d(0px, 10px, 0px)`*/ }
+  }) || {};
 
   return (
-    <animated.li style={styles}>
-      <Stack className={props.className}>
-        <FlowItems>
-          <div style={{ minWidth: "70px" }}>
-            <CoverSmall url={book.smallImage} />
-          </div>
+    <animated.li style={{ overflow: "hidden", ...styles }}>
+      <div ref={sizingRef}>
+        <Stack className={props.className}>
+          <FlowItems>
+            <div style={{ minWidth: "70px" }}>
+              <CoverSmall url={book.smallImage} />
+            </div>
 
-          <Stack style={{ flex: 1 }}>
-            {book.title}
-            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
-            <button
-              disabled={adding}
-              onClick={selectBook}
-              style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
-              className="btn btn-primary btn-xs"
-            >
-              Add to list&nbsp;
-              <i className="fal fa-plus" />
-            </button>
-          </Stack>
-        </FlowItems>
-        <hr />
-      </Stack>
+            <Stack style={{ flex: 1 }}>
+              {book.title}
+              {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+              <button
+                disabled={adding}
+                onClick={selectBook}
+                style={{ cursor: "pointer", marginTop: "auto", alignSelf: "flex-start" }}
+                className="btn btn-primary btn-xs"
+              >
+                Add to list&nbsp;
+                <i className="fal fa-plus" />
+              </button>
+            </Stack>
+          </FlowItems>
+          <hr />
+        </Stack>
+      </div>
     </animated.li>
   );
 };
