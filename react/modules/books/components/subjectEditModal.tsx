@@ -39,8 +39,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
             suggestions={searchedSubjects}
             onSuggestionSelected={item => editSubject(item)}
           />
-
-          <Button onClick={newSubject} style={{ alignSelf: "flex-start" }} preset="info-xs">
+          <Button onClick={newSubject} preset="info-xs">
             <span className="visible-xs">Add new subject </span>
             <i className="fa fa-fw fa-plus-square" />
           </Button>
