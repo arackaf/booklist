@@ -35,10 +35,16 @@ const Modal: SFC<ModalTypes> = props => {
     leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
   });
 
-  const [heightOn, setHeightOn] = useState(isOpen);
+  const [heightOn, setHeightOn] = useState(false);
   const [sizingRef, contentHeight] = useHeight({ on: heightOn });
   const uiReady = useRef(false);
 
+  const activateRef = ref => {
+    sizingRef.current = ref;
+    if (!heightOn) {
+      setHeightOn(true);
+    }
+  };
   useLayoutEffect(() => {
     if (isOpen) {
       setHeightOn(true);
@@ -73,7 +79,7 @@ const Modal: SFC<ModalTypes> = props => {
             }}
           >
             <animated.div style={{ overflow: "hidden", ...heightStyles }}>
-              <div ref={sizingRef}>
+              <div ref={activateRef}>
                 {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
                 {children}
               </div>

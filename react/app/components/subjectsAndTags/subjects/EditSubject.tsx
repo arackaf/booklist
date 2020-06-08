@@ -94,7 +94,7 @@ const EditSubjectFields = props => {
   const { _id, name } = editingSubject;
 
   const inputEl = useRef(null);
-  useEffect(() => inputEl.current.focus(), []);
+  useEffect(() => inputEl.current.focus({ preventScroll: true }), []);
 
   const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
 
