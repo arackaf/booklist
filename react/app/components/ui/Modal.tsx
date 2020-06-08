@@ -1,4 +1,4 @@
-import React, { SFC, useRef, useLayoutEffect } from "react";
+import React, { SFC, useRef, useLayoutEffect, useState } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { useTransition, animated, config, useSpring } from "react-spring";
@@ -35,19 +35,23 @@ const Modal: SFC<ModalTypes> = props => {
     leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
   });
 
+  const [heightOn, setHeightOn] = useState(isOpen);
+  const [sizingRef, contentHeight] = useHeight({ on: heightOn });
   const uiReady = useRef(false);
-  useLayoutEffect(() => {
-    uiReady.current = true;
-  }, []);
 
-  const [sizingRef, contentHeight] = useHeight();
+  useLayoutEffect(() => {
+    if (isOpen) {
+      setHeightOn(true);
+    }
+  }, [isOpen]);
 
   const heightStyles =
     useSpring({
       immediate: !uiReady.current,
-      config: { /*...config.stiff,*/ duration: 3000, clamp: true },
+      config: { ...config.stiff, clamp: true },
       from: { height: 0 },
-      to: { height: 145 }
+      to: { height: contentHeight },
+      onRest: () => (uiReady.current = true)
     }) || {};
 
   console.log({ heightStyles });
@@ -70,7 +74,7 @@ const Modal: SFC<ModalTypes> = props => {
               ...style
             }}
           >
-            <animated.div style={{ overflow: "hidden", height: 145 /*...heightStyles*/ }}>
+            <animated.div style={{ overflow: "hidden", ...heightStyles }}>
               <div ref={sizingRef}>
                 {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
                 {children}
