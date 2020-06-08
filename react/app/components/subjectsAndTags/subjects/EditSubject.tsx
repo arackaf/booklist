@@ -134,7 +134,7 @@ const EditSubjectFields = props => {
 
   return (
     <FlexRow>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
+      <div className="col-xs-12 col-lg-6">
         <div className="form-group">
           <label>Name</label>
           <input
