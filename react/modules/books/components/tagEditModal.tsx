@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, { FunctionComponent, useState, useContext, useRef, useEffect } from "react";
 
 import { Button } from "app/components/ui/Button";
 import CustomColorPicker from "app/components/ui/CustomColorPicker";
@@ -22,6 +22,66 @@ interface ILocalProps {
   onDone: any;
   editModalOpen: boolean;
 }
+
+type EditTagProps = { doSave: any; onCancel: any; onDelete: any; editingTag: any; saving: any; setNewTagName: any; setEditingValue: any };
+
+const EditTag: FunctionComponent<EditTagProps> = props => {
+  let { colors } = useColors();
+  let textColors = ["#ffffff", "#000000"];
+
+  const { editingTag, saving, setNewTagName, setEditingValue, doSave, onCancel, onDelete } = props;
+  const setNewTagBackgroundColor = value => setEditingValue("backgroundColor", value);
+  const setNewTagTextColor = value => setEditingValue("textColor", value);
+
+  const inputEl = useRef(null);
+  useEffect(() => inputEl.current.focus({ preventScroll: true }), []);
+
+  return (
+    <FlexRow>
+      <div className="col-xs-12 col-sm-6">
+        <div className="form-group">
+          <label>Tag name</label>
+          <input ref={inputEl} className="form-control" value={editingTag.name} onChange={evt => setNewTagName(evt.target.value)} />
+          <div
+            className="label label-default"
+            style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor, alignSelf: "flex-start" }}
+          >
+            {editingTag.name.trim() || "<label preview>"}
+          </div>
+        </div>
+      </div>
+      <div className="col-xs-6 hidden-xs"></div>
+      <div className="col-xs-12 col-sm-6">
+        <div className="form-group">
+          <label>Label color</label>
+          <ColorsPalette currentColor={editingTag.backgroundColor} colors={colors} onColorChosen={setNewTagBackgroundColor} />
+          <CustomColorPicker labelStyle={{ marginLeft: "3px" }} onColorChosen={setNewTagBackgroundColor} currentColor={editingTag.backgroundColor} />
+        </div>
+      </div>
+      <div className="col-xs-12 col-sm-6">
+        <div className="form-group">
+          <label>Text color</label>
+          <ColorsPalette colors={textColors} onColorChosen={setNewTagTextColor} />
+          <CustomColorPicker labelStyle={{ marginLeft: "3px" }} onColorChosen={setNewTagTextColor} currentColor={editingTag.backgroundColor} />
+        </div>
+      </div>
+
+      <div className="col-xs-12">
+        <FlowItems pushLast={true}>
+          <Button disabled={saving} preset="primary-xs" onClick={doSave}>
+            Save <i className={`fa fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
+          </Button>
+          <Button disabled={saving} preset="default-xs" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button disabled={saving} onClick={onDelete} preset="danger-xs">
+            Delete <i className="fa fa-fw fa-trash" />
+          </Button>
+        </FlowItems>
+      </div>
+    </FlexRow>
+  );
+};
 
 const TagEditModal: FunctionComponent<ILocalProps> = props => {
   const [state, setStateRaw] = useState({
@@ -50,8 +110,6 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   const cancelTagEdit = () => setState({ editingTag: null, deletingId: "" });
 
   const setNewTagName = value => setEditingValue("name", value);
-  const setNewTagBackgroundColor = value => setEditingValue("backgroundColor", value);
-  const setNewTagTextColor = value => setEditingValue("textColor", value);
   const setEditingValue = (name, value) => setState(state => ({ ...state, editingTag: { ...state.editingTag, [name]: value } }));
 
   const { runMutation: updateTag } = useMutation<MutationOf<Mutations["updateTag"]>>(UpdateTag);
@@ -74,14 +132,14 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
 
   let { tags } = useTagsState();
 
-  let { colors } = useColors();
   let { onDone, editModalOpen } = props;
   let { editingTag, editingTagName, tagSearch, deletingId } = state;
-  let textColors = ["#ffffff", "#000000"];
 
   let deletingTag = deletingId ? tags.find(t => t._id == deletingId) : null;
   let deleteInfo = deletingTag ? { _id: deletingTag._id, name: deletingTag.name } : null;
   let searchedTags = filterTags(tags, tagSearch);
+
+  let onDelete = e => setState({ deletingId: editingTag._id });
 
   return (
     <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit Tags">
@@ -103,57 +161,12 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
             {deleteInfo ? (
               <PendingDeleteTagInfo tag={editingTag} onDelete={cancelTagEdit} onCancel={() => setState({ deletingId: "" })} />
             ) : (
-              <FlexRow>
-                <div className="col-xs-12 col-sm-6">
-                  <div className="form-group">
-                    <label>Tag name</label>
-                    <input className="form-control" value={editingTag.name} onChange={evt => setNewTagName(evt.target.value)} />
-                    <div
-                      className="label label-default"
-                      style={{ backgroundColor: editingTag.backgroundColor, color: editingTag.textColor, alignSelf: "flex-start" }}
-                    >
-                      {editingTag.name.trim() || "<label preview>"}
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xs-6 hidden-xs"></div>
-                <div className="col-xs-12 col-sm-6">
-                  <div className="form-group">
-                    <label>Label color</label>
-                    <ColorsPalette currentColor={editingTag.backgroundColor} colors={colors} onColorChosen={setNewTagBackgroundColor} />
-                    <CustomColorPicker
-                      labelStyle={{ marginLeft: "3px" }}
-                      onColorChosen={setNewTagBackgroundColor}
-                      currentColor={editingTag.backgroundColor}
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-12 col-sm-6">
-                  <div className="form-group">
-                    <label>Text color</label>
-                    <ColorsPalette colors={textColors} onColorChosen={setNewTagTextColor} />
-                    <CustomColorPicker
-                      labelStyle={{ marginLeft: "3px" }}
-                      onColorChosen={setNewTagTextColor}
-                      currentColor={editingTag.backgroundColor}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-xs-12">
-                  <FlowItems pushLast={true}>
-                    <Button disabled={state.saving} preset="primary-xs" onClick={createOrUpdateTag}>
-                      Save <i className={`fa fa-fw ${state.saving ? "fa-spinner fa-spin" : "fa-save"}`} />
-                    </Button>
-                    <Button disabled={state.saving} preset="default-xs" onClick={cancelTagEdit}>
-                      Cancel
-                    </Button>
-                    <Button disabled={state.saving} onClick={e => setState({ deletingId: editingTag._id })} preset="danger-xs">
-                      Delete {editingTagName} <i className="fa fa-fw fa-trash" />
-                    </Button>
-                  </FlowItems>
-                </div>
-              </FlexRow>
+              <EditTag
+                doSave={createOrUpdateTag}
+                onCancel={cancelTagEdit}
+                saving={state.saving}
+                {...{ editingTag, setNewTagName, setEditingValue, onDelete }}
+              />
             )}
           </div>
         ) : null}
