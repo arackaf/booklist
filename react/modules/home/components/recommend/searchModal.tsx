@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useRef, useMemo, useContext, useReducer, useLayoutEffect } from "react";
 
-import Modal from "app/components/ui/Modal";
+import Modal, { ModalSizingContext } from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
 import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
 import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
@@ -242,6 +242,8 @@ const SearchResults = props => {
 };
 
 const SearchResult = props => {
+  const { enable: enableModalSizing, disable: disableModalSizing } = useContext(ModalSizingContext);
+
   const [adding, setAdding] = useState(false);
 
   const selectBook = () => {
@@ -253,16 +255,29 @@ const SearchResult = props => {
   const initiallySelected = useRef(selected);
 
   const [sizingRef, currentHeight] = useHeight();
+  const uiReady = useRef(false);
 
-  const styles = useSpring({
-    config: { ...config.stiff, clamp: true },
-    // from: { opacity: 0 /*transform: `translate3d(0px, -10px, 0px)`*/ },
-    from: {
-      opacity: initiallySelected.current ? 0 : 1,
-      height: initiallySelected.current ? 0 : currentHeight /*transform: `translate3d(0px, 0px, 0px)`*/
-    },
-    to: { opacity: selected ? 0 : 1, height: selected ? 0 : currentHeight /*transform: `translate3d(0px, 10px, 0px)`*/ }
-  }) || {};
+  const styles =
+    useSpring({
+      config: { ...config.stiff, clamp: true },
+      from: {
+        opacity: initiallySelected.current ? 0 : 1,
+        height: initiallySelected.current ? 0 : currentHeight,
+        transform: "translate3d(0%, 0px, 0px)"
+      },
+      to: { opacity: selected ? 0 : 1, height: selected ? 0 : currentHeight, transform: `translate3d(${selected ? "25%" : "0%"},0px,0px)` },
+      onStart() {
+        if (uiReady.current) {
+          disableModalSizing();
+        }
+      },
+      onRest() {
+        uiReady.current = true;
+        setTimeout(() => {
+          enableModalSizing();
+        });
+      }
+    }) || {};
 
   return (
     <animated.li style={{ overflow: "hidden", ...styles }}>

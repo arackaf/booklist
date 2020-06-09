@@ -1,4 +1,4 @@
-import React, { SFC, useRef, useLayoutEffect, useState } from "react";
+import React, { SFC, useRef, useLayoutEffect, useState, useContext, useCallback, createContext, useMemo } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { useTransition, animated, config, useSpring } from "react-spring";
@@ -24,6 +24,8 @@ export const StandardModalHeader: SFC<{ onHide: any; caption: any }> = props => 
 const AnimatedDialogOverlay = animated(DialogOverlay);
 const AnimatedDialogContent = animated(DialogContent);
 
+export const ModalSizingContext = createContext(null);
+
 type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
 const Modal: SFC<ModalTypes> = props => {
   let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
@@ -34,6 +36,18 @@ const Modal: SFC<ModalTypes> = props => {
     enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
     leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
   });
+
+  const animatModalSizing = useRef(true);
+  const modalSizingPacket = useMemo(() => {
+    return {
+      disable() {
+        animatModalSizing.current = false;
+      },
+      enable() {
+        animatModalSizing.current = true;
+      }
+    };
+  }, []);
 
   const [heightOn, setHeightOn] = useState(false);
   const [sizingRef, contentHeight] = useHeight({ on: heightOn });
@@ -53,40 +67,44 @@ const Modal: SFC<ModalTypes> = props => {
 
   const heightStyles =
     useSpring({
-      immediate: !uiReady.current,
-      config: { ...config.stiff, clamp: true },
+      immediate: !uiReady.current || !animatModalSizing.current,
+      config: { ...config.stiff },
       from: { height: 0 },
       to: { height: contentHeight },
       onRest: () => (uiReady.current = true)
     }) || {};
 
-  return transition(
-    (styles, isOpen) =>
-      isOpen && (
-        <AnimatedDialogOverlay
-          allowPinchZoom={true}
-          initialFocusRef={focusRef}
-          onDismiss={onHide}
-          isOpen={isOpen}
-          style={{ opacity: styles.opacity }}
-        >
-          <AnimatedDialogContent
-            style={{
-              transform: styles.transform,
-              border: "4px solid hsla(0, 0%, 0%, 0.5)",
-              borderRadius: 10,
-              ...style
-            }}
-          >
-            <animated.div style={{ overflow: "hidden", ...heightStyles }}>
-              <div ref={activateRef}>
-                {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
-                {children}
-              </div>
-            </animated.div>
-          </AnimatedDialogContent>
-        </AnimatedDialogOverlay>
-      )
+  return (
+    <ModalSizingContext.Provider value={modalSizingPacket}>
+      {transition(
+        (styles, isOpen) =>
+          isOpen && (
+            <AnimatedDialogOverlay
+              allowPinchZoom={true}
+              initialFocusRef={focusRef}
+              onDismiss={onHide}
+              isOpen={isOpen}
+              style={{ opacity: styles.opacity }}
+            >
+              <AnimatedDialogContent
+                style={{
+                  transform: styles.transform,
+                  border: "4px solid hsla(0, 0%, 0%, 0.5)",
+                  borderRadius: 10,
+                  ...style
+                }}
+              >
+                <animated.div style={{ overflow: "hidden", ...heightStyles }}>
+                  <div ref={activateRef}>
+                    {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
+                    {children}
+                  </div>
+                </animated.div>
+              </AnimatedDialogContent>
+            </AnimatedDialogOverlay>
+          )
+      )}
+    </ModalSizingContext.Provider>
   );
 };
 
