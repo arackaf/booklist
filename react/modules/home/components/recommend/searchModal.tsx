@@ -204,30 +204,38 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
 export default SearchModal;
 
 const SearchResults = props => {
+  const booksObj = props?.data?.allBooks;
   const books = props?.data?.allBooks?.Books;
   const { selectedBooksSet, currentQuery, active } = props;
   const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
   const currentBooksRef = useRef<any>();
   currentBooksRef.current = availableBooks;
 
-  console.log({ selectedBooksSet });
+  const transition = useTransition(booksObj, {
+    config: { ...config.default }, //config.molasses,
+    from: { opacity: 0, position: "static", transform: "translate3d(-25%, 0px, 0px)" },
+    enter: { opacity: 1, position: "static", transform: "translate3d(0%, 0px, 0px)" },
+    leave: { opacity: 0, position: "absolute", transform: "translate3d(25%, 0px, 0px)" }
+  });
 
   return (
     <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <div className="overlay-holder">
         {/* <TransitionGroup component={null}> */}
-        {books == null || !active ? null : books?.length ? (
-          // <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
-          <ul>
-            {/* <TransitionGroup component={null}> */}
-            {books.map(book => (
-              // <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
-              <SearchResult key={book._id} book={book} selected={selectedBooksSet.has(book._id)} dispatch={props.dispatch} />
-              // </SlideInContents>
-            ))}
-            {/* </TransitionGroup> */}
-          </ul>
-        ) : (
+        {transition((styles, booksObj) =>
+          booksObj?.Books?.length ? (
+            <animated.ul style={styles}>
+              {/* <TransitionGroup component={null}> */}
+              {booksObj.Books.map(book => (
+                // <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
+                <SearchResult key={book._id} book={book} selected={selectedBooksSet.has(book._id)} dispatch={props.dispatch} />
+                // </SlideInContents>
+              ))}
+              {/* </TransitionGroup> */}
+            </animated.ul>
+          ) : null
+        )}
+        {books == null || !active ? null : books?.length ? null : ( // <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
           // </SlideInContents>
           <CSSTransition key={3} classNames="bl-animate" timeout={300}>
             <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
