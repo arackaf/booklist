@@ -58,7 +58,7 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
 
   const { isOpen, onHide, dispatch, selectedBooksSet } = props;
 
-  const [startTransition, loading] = useReactTransition({ timeoutMs: 5000 });
+  const [startTransition, loading] = useReactTransition({ timeoutMs: 10000 });
 
   const beginSearchDispatch = packet => {
     startTransition(() => searchDispatch(packet));
@@ -232,7 +232,7 @@ const SearchResults = props => {
   });
 
   return (
-    <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
+    <div style={{ maxHeight: "300px", marginTop: "5px", position: "relative" }}>
       <div className="overlay-holder">
         {/* <TransitionGroup component={null}> */}
         {transition((styles: any, booksObj) =>
@@ -333,19 +333,22 @@ const SearchResult = props => {
 const imgCache = {
   __cache: {},
   getImg(src) {
-    //return 0;
-    if (!src) { return 0; }
+    if (!src) {
+      return 0;
+    }
     if (!this.__cache[src]) {
       this.__cache[src] = new Promise(resolve => {
         const img = new Image();
         img.onload = () => {
-          resolve(img.height);
+          setTimeout(() => {
+            resolve(img.height);
+          }, 2000);
         };
         img.crossOrigin = "anonymous";
         img.src = src;
         setTimeout(() => {
-          resolve(-1);
-        }, 10000);
+          //resolve(-1);
+        }, 2000);
       }).then(img => {
         this.__cache[src] = img;
       });
@@ -360,9 +363,9 @@ const imgCache = {
 
 const Img = ({ src, ...rest }) => {
   const height = imgCache.getImg(src) as any;
-  if (typeof height.then === "function"){
+  if (typeof height.then === "function") {
     throw height;
   }
-  //return <img src={src} />;
-  return <img src={src} height={height > 0 ? height : null} crossOrigin="anonymous" />;
+
+  return <img crossOrigin="anonymous" src={src} />;
 };
