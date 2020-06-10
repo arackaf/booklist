@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useState, useRef, useMemo, useContext, useReducer, useLayoutEffect } from "react";
+import React, { FunctionComponent, Suspense, useState, useRef, useMemo, useContext, useReducer, useLayoutEffect } from "react";
+const { unstable_useTransition: useReactTransition } = React as any;
 
 import Modal, { ModalSizingContext } from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
@@ -16,12 +17,13 @@ import { SlideInContents, useHeight } from "app/animationHelpers";
 
 import "./recommend.scss";
 import { AppContext } from "app/renderUI";
-import { useQuery } from "micro-graphql-react";
+import { useQuery, useSuspenseQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
 
 import BooksQuery from "graphQL/home/searchBooks.graphql";
 
 import { useSpring, useTransition, animated, config } from "react-spring";
+import Loading from "app/components/loading";
 
 const PAGE_SIZE = 4;
 
@@ -37,27 +39,38 @@ const initialState = { active: false, page: 1, pageSize: 50, sort: { title: 1 },
 const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialState);
 
 const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <SearchModalContent {...props} />
+    </Suspense>
+  );
+};
+const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
   const [{ publicUserId }] = useContext(AppContext);
   const [{ active, ...searchState }, searchDispatch] = useReducer(searchStateReducer, initialState);
 
   const variables = { ...searchState, publicUserId };
   const { page } = variables;
 
-  const { loading, loaded, data, error, currentQuery } = useQuery<QueryOf<Queries["allBooks"]>>(BooksQuery, variables, { active });
+  const { loaded, data, error, currentQuery } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(BooksQuery, variables, { active });
   const resultCount = data?.allBooks?.Meta?.count ?? 0;
   const totalPages = Math.ceil(resultCount / PAGE_SIZE);
 
   const { isOpen, onHide, dispatch, selectedBooksSet } = props;
 
-  const pageUp = () => searchDispatch({ page: page + 1 });
-  const pageDown = () => searchDispatch({ page: page - 1 });
-  const pageOne = () => searchDispatch({ page: 1 });
-  const pageLast = () => searchDispatch({ page: totalPages });
+  const [startTransition, loading] = useReactTransition({ timeoutMs: 5000 });
+
+  const beginSearchDispatch = packet => {
+    startTransition(() => searchDispatch(packet));
+  };
+
+  const pageUp = () => beginSearchDispatch({ page: page + 1 });
+  const pageDown = () => beginSearchDispatch({ page: page - 1 });
+  const pageOne = () => beginSearchDispatch({ page: 1 });
+  const pageLast = () => beginSearchDispatch({ page: totalPages });
 
   let canPageUp = page < totalPages;
   let canPageDown = page > 1;
-  let canPageOne = page > 1;
-  let canPageLast = page < totalPages;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
@@ -88,7 +101,7 @@ const SearchModal: FunctionComponent<Partial<LocalProps>> = props => {
   const isRead1 = useRef(null);
 
   const applyFilters = () => {
-    searchDispatch({
+    beginSearchDispatch({
       title: searchEl.current.value || "",
       isRead: isReadE.current.checked ? void 0 : isRead0.current.checked ? false : true,
       subjects: subjects.length ? subjects : null,
@@ -213,16 +226,16 @@ const SearchResults = props => {
 
   const transition = useTransition(booksObj, {
     config: { ...config.default }, //config.molasses,
-    from: { opacity: 0, position: "static", transform: "translate3d(-25%, 0px, 0px)" },
+    from: { opacity: 0, position: "static", transform: "translate3d(0%, 0px, 0px)" },
     enter: { opacity: 1, position: "static", transform: "translate3d(0%, 0px, 0px)" },
-    leave: { opacity: 0, position: "absolute", transform: "translate3d(25%, 0px, 0px)" }
+    leave: { opacity: 0, position: "absolute", transform: "translate3d(90%, 0px, 0px)" }
   });
 
   return (
     <div className="animate-height animate-fast" style={{ maxHeight: "300px", overflowY: "auto", marginTop: "5px", position: "relative" }}>
       <div className="overlay-holder">
         {/* <TransitionGroup component={null}> */}
-        {transition((styles, booksObj) =>
+        {transition((styles: any, booksObj) =>
           booksObj?.Books?.length ? (
             <animated.ul style={styles}>
               {/* <TransitionGroup component={null}> */}
@@ -293,7 +306,7 @@ const SearchResult = props => {
         <Stack className={props.className}>
           <FlowItems>
             <div style={{ minWidth: "70px" }}>
-              <CoverSmall url={book.smallImage} />
+              <Img src={book.smallImage} />
             </div>
 
             <Stack style={{ flex: 1 }}>
@@ -315,4 +328,29 @@ const SearchResult = props => {
       </div>
     </animated.li>
   );
+};
+
+const imgCache = {
+  __cache: {},
+  getImg(src) {
+    if (!this.__cache[src]) {
+      this.__cache[src] = new Promise(resolve => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve(img);
+      }).then(img => {
+        this.__cache[src] = img;
+      });
+    }
+
+    return this.__cache[src];
+  },
+  clearImg: src => {
+    delete this.__cache;
+  }
+};
+
+const Img = ({ src, ...rest }) => {
+  const img = imgCache.getImg(src) as any;
+  return <img src={src} />;
 };
