@@ -333,16 +333,19 @@ const SearchResult = props => {
 const imgCache = {
   __cache: {},
   getImg(src) {
+    //return 0;
+    if (!src) { return 0; }
     if (!this.__cache[src]) {
       this.__cache[src] = new Promise(resolve => {
         const img = new Image();
-        img.src = src;
         img.onload = () => {
           resolve(img.height);
         };
+        img.crossOrigin = "anonymous";
+        img.src = src;
         setTimeout(() => {
           resolve(-1);
-        }, 1000);
+        }, 10000);
       }).then(img => {
         this.__cache[src] = img;
       });
@@ -360,5 +363,6 @@ const Img = ({ src, ...rest }) => {
   if (typeof height.then === "function"){
     throw height;
   }
-  return <img height={height > 0 ? height : null} src={src} />;
+  //return <img src={src} />;
+  return <img src={src} height={height > 0 ? height : null} crossOrigin="anonymous" />;
 };
