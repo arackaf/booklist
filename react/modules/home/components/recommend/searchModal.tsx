@@ -337,7 +337,12 @@ const imgCache = {
       this.__cache[src] = new Promise(resolve => {
         const img = new Image();
         img.src = src;
-        img.onload = () => resolve(img);
+        img.onload = () => {
+          resolve(img.height);
+        };
+        setTimeout(() => {
+          resolve(-1);
+        }, 1000);
       }).then(img => {
         this.__cache[src] = img;
       });
@@ -351,6 +356,9 @@ const imgCache = {
 };
 
 const Img = ({ src, ...rest }) => {
-  const img = imgCache.getImg(src) as any;
-  return <img src={src} />;
+  const height = imgCache.getImg(src) as any;
+  if (typeof height.then === "function"){
+    throw height;
+  }
+  return <img height={height > 0 ? height : null} src={src} />;
 };
