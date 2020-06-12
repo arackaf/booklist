@@ -7,7 +7,6 @@ import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySele
 import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
 import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 
-import { CSSTransition } from "react-transition-group";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
@@ -226,16 +225,21 @@ export default SearchModal;
 const SearchResults = props => {
   const booksObj = props?.data?.allBooks;
   const books = props?.data?.allBooks?.Books;
-  const { selectedBooksSet, currentQuery, active } = props;
-  const availableBooks = books?.filter(b => !selectedBooksSet.has(b._id));
-  const currentBooksRef = useRef<any>();
-  currentBooksRef.current = availableBooks;
+  const { selectedBooksSet, active } = props;
 
   const transition = useTransition(booksObj, {
     config: { ...config.default },
     from: { opacity: 0, position: "static", transform: "translate3d(0%, 0px, 0px)" },
     enter: { opacity: 1, position: "static", transform: "translate3d(0%, 0px, 0px)" },
     leave: { opacity: 0, position: "absolute", transform: "translate3d(90%, 0px, 0px)" }
+  });
+
+  const noResults = !!(books == null || !active || books?.length);
+  const noResultsTransition = useTransition(noResults, {
+    config: { ...config.default },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
   });
 
   return (
@@ -250,12 +254,12 @@ const SearchResults = props => {
             </animated.ul>
           ) : null
         )}
-        {books == null || !active ? null : books?.length ? null : (
-          <CSSTransition key={3} classNames="bl-animate" timeout={300}>
-            <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
-              No results
-            </div>
-          </CSSTransition>
+        {noResultsTransition((styles: any, noResults) =>
+          noResults ? null : (
+            <animated.div style={{ ...styles, alignSelf: "start" }}>
+              <div className="alert alert-warning">No results</div>
+            </animated.div>
+          )
         )}
       </div>
     </div>

@@ -1,7 +1,7 @@
-import React, { Children, createElement } from "react";
+import React, { createElement } from "react";
 import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import cn from "classnames";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 
 declare var ResizeObserver;
 
