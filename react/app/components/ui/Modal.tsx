@@ -68,7 +68,7 @@ const Modal: SFC<ModalTypes> = props => {
   const heightStyles =
     useSpring({
       immediate: !uiReady.current || !animatModalSizing.current,
-      config: { ...config.stiff, clamp: true },
+      config: { ...config.stiff },
       from: { height: 0 },
       to: { height: contentHeight },
       onRest: () => (uiReady.current = true)
