@@ -10,14 +10,14 @@ const imgCache = {
       this.__cache[src] = new Promise(resolve => {
         const img = new Image();
         img.onload = () => {
-          this.__cache[src] = img.height;
-          resolve(img.height);
+          this.__cache[src] = { height: img.height, width: img.width };
+          resolve(this.__cache[src]);
         };
         if (cors) {
           img.crossOrigin = "anonymous";
         }
         img.src = src;
-        setTimeout(() => resolve(-1), 2000);
+        setTimeout(() => resolve({}), 2000);
       }).then(img => {
         this.__cache[src] = img;
       });
@@ -34,7 +34,7 @@ const imgCache = {
 };
 
 export const SuspenseImg = ({ src, crossOrigin, ...rest }) => {
-  const height = imgCache.getImg(src, crossOrigin == "anonymous") as any;
+  const attrs = imgCache.getImg(src, crossOrigin == "anonymous") as any;
 
-  return <img crossOrigin="anonymous" src={src} height={height > 0 ? height : null} {...{ crossOrigin, ...rest }} />;
+  return <img crossOrigin="anonymous" src={src} {...{ ...attrs, crossOrigin, ...rest }} />;
 };
