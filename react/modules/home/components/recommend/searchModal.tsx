@@ -7,17 +7,17 @@ import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySele
 import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
 import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
 
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
-import { SlideInContents, useHeight } from "app/animationHelpers";
+import { useHeight } from "app/animationHelpers";
 
 import "./recommend.scss";
 import { AppContext } from "app/renderUI";
-import { useQuery, useSuspenseQuery } from "micro-graphql-react";
+import { useSuspenseQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
 
 import BooksQuery from "graphQL/home/searchBooks.graphql";
@@ -110,6 +110,13 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
     });
   };
 
+  const noAvailableBooksStyles =
+    useSpring({
+      config: { ...config.stiff },
+      from: { opacity: 0, transform: "translate3d(-20px, 0px, 0px)" },
+      to: { opacity: noAvailableBooks ? 1 : 0, transform: `translate3d(${noAvailableBooks ? "0px" : "20px"},0px,0px)` }
+    }) || {};
+
   return (
     <Modal {...{ isOpen, onHide, headerCaption: "Search your books" }}>
       <Form submit={applyFilters}>
@@ -166,18 +173,18 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
           <div className="col-xs-12">
             <FlexRow>
               {loading ? (
-                <button style={{ minWidth: "5ch" }} disabled={true} className="btn btn-default">
+                <button style={{ width: "6ch" }} disabled={true} className="btn btn-default">
                   <i className="fa fa-fw fa-spin fa-spinner" />
                 </button>
               ) : (
-                <SubmitIconButton key={1} className="btn btn-default">
+                <SubmitIconButton style={{ width: "6ch" }} key={1} className="btn btn-default">
                   <i className="fal fa-search" />
                 </SubmitIconButton>
               )}
 
-              <CSSTransition in={noAvailableBooks} key={2} classNames="bl-animate" timeout={300}>
-                <div className="bl-fade alert alert-info alert-slimmer">You've added all of the books from this page</div>
-              </CSSTransition>
+              <animated.div style={noAvailableBooksStyles} className="bl-fade alert alert-info alert-slimmer">
+                You've added all of the books from this page
+              </animated.div>
             </FlexRow>
           </div>
 
