@@ -164,7 +164,7 @@ const RenderModule: SFC<{}> = ({}) => {
   const [lastBookResults, setLastBookResults] = useState({ totalPages: 0, resultsCount: 0 });
 
   return (
-    <div className="standard-module-container margin-bottom-lg" style={{backgroundColor: "white"}}>
+    <div className="standard-module-container margin-bottom-lg" style={{ backgroundColor: "white" }}>
       <Suspense fallback={<Fallback uiView={uiView} {...lastBookResults} />}>
         <MainContent uiView={uiView} setLastBookResults={setLastBookResults} />
       </Suspense>
@@ -187,9 +187,17 @@ const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = 
   const { dispatch: uiDispatch } = uiView;
   const [measureRef, menuBarHeight] = useHeight();
 
+  const { startTransition } = useContext(ModuleUpdateContext);
+
+  const deferredUiDispatch = arg => {
+    startTransition(() => {
+      uiDispatch(arg);
+    });
+  };
+
   return (
     <>
-      <BooksMenuBar measureRef={measureRef} uiDispatch={uiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
+      <BooksMenuBar measureRef={measureRef} uiDispatch={deferredUiDispatch} uiView={uiView} bookResultsPacket={{ books, totalPages, resultsCount }} />
       <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
         <BookResults menuBarHeight={menuBarHeight} {...{ books, uiView }} />
       </div>
@@ -197,8 +205,8 @@ const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = 
   );
 };
 
-const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any; }> = ({ books, uiView, menuBarHeight }) => {
-  const isUpdating = useContext(ModuleUpdateContext);
+const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any }> = ({ books, uiView, menuBarHeight }) => {
+  const { isPending } = useContext(ModuleUpdateContext);
 
   return (
     <>
@@ -208,7 +216,7 @@ const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any; }> = ({ bo
         </div>
       ) : null}
 
-      {isUpdating ? <Loading /> : null}
+      {isPending ? <Loading /> : null}
 
       {uiView.isGridView ? (
         <GridView menuBarHeight={menuBarHeight} books={books} />

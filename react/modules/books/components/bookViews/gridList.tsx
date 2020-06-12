@@ -287,7 +287,7 @@ export const GridViewShell: SFC<{ menuBarHeight: any }> = ({ menuBarHeight }) =>
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
 
   const stickyHeaderStyle: CSSProperties = { position: "sticky", top: `${menuBarHeight}px`, backgroundColor: "white" };
-  
+
   return (
     <div style={{ minHeight: 400 }}>
       <div>
@@ -318,7 +318,7 @@ export const GridViewShell: SFC<{ menuBarHeight: any }> = ({ menuBarHeight }) =>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr style={{ backgroundColor: "white" }}>
               <td colSpan={8}>
                 <h1 style={{ color: "var(--neutral-5)" }}>
                   Books are loading <i className="fas fa-cog fa-spin"></i>
