@@ -69,8 +69,8 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
   const pageOne = () => beginSearchDispatch({ page: 1 });
   const pageLast = () => beginSearchDispatch({ page: totalPages });
 
-  let canPageUp = page < totalPages;
-  let canPageDown = page > 1;
+  let canPageUp = !loading && page < totalPages;
+  let canPageDown = !loading && page > 1;
 
   const [subjects, setSubjects] = useState([]);
   const [tags, setTags] = useState([]);
