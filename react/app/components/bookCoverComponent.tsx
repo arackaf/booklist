@@ -2,6 +2,7 @@ import React from "react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 
 import "./bookCoverComponentStyles.css";
+import { SuspenseImg } from "./suspenseImage";
 
 export const NoCoverSmall = () => (
   <div className="no-cover-small">
@@ -15,6 +16,6 @@ export const NoCoverMedium = () => (
   </div>
 );
 
-export const CoverSmall = ({ url }) => (url ? <img src={url} {...getCrossOriginAttribute(url)} /> : <NoCoverSmall />);
+export const CoverSmall = ({ url }) => (url ? <SuspenseImg {...getCrossOriginAttribute(url)} src={url} /> : <NoCoverSmall />);
 
-export const CoverMedium = ({ url }) => (url ? <img src={url} {...getCrossOriginAttribute(url)} /> : <NoCoverMedium />);
+export const CoverMedium = ({ url }) => (url ? <SuspenseImg {...getCrossOriginAttribute(url)} src={url} /> : <NoCoverMedium />);
