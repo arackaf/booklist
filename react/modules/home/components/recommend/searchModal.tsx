@@ -225,38 +225,31 @@ const SearchResults = props => {
   currentBooksRef.current = availableBooks;
 
   const transition = useTransition(booksObj, {
-    config: { ...config.default }, //config.molasses,
+    config: { ...config.default },
     from: { opacity: 0, position: "static", transform: "translate3d(0%, 0px, 0px)" },
     enter: { opacity: 1, position: "static", transform: "translate3d(0%, 0px, 0px)" },
     leave: { opacity: 0, position: "absolute", transform: "translate3d(90%, 0px, 0px)" }
   });
 
   return (
-    <div style={{ maxHeight: "300px", marginTop: "5px", position: "relative" }}>
+    <div style={{ overflowY: "auto", overflowX: "hidden", maxHeight: "300px", marginTop: "5px", position: "relative" }}>
       <div className="overlay-holder">
-        {/* <TransitionGroup component={null}> */}
         {transition((styles: any, booksObj) =>
           booksObj?.Books?.length ? (
             <animated.ul style={styles}>
-              {/* <TransitionGroup component={null}> */}
               {booksObj.Books.map(book => (
-                // <SlideInContents key={book._id} component="li" className="bl-no-animate-in animate-fast bl-fade-out bl-slide-out">
                 <SearchResult key={book._id} book={book} selected={selectedBooksSet.has(book._id)} dispatch={props.dispatch} />
-                // </SlideInContents>
               ))}
-              {/* </TransitionGroup> */}
             </animated.ul>
           ) : null
         )}
-        {books == null || !active ? null : books?.length ? null : ( // <SlideInContents className="search-modal-result-set" animateMountingOnly={true} key={currentQuery}>
-          // </SlideInContents>
+        {books == null || !active ? null : books?.length ? null : (
           <CSSTransition key={3} classNames="bl-animate" timeout={300}>
             <div style={{ alignSelf: "start" }} className="animate-fast bl-fade alert alert-warning">
               No results
             </div>
           </CSSTransition>
         )}
-        {/* </TransitionGroup> */}
       </div>
     </div>
   );
