@@ -1,13 +1,14 @@
-import React, { useState, useReducer, useMemo, useContext } from "react";
+import React, { useState, useReducer, useMemo, useContext, useLayoutEffect, useCallback, useRef } from "react";
 import SearchModal from "./searchModal";
 
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ajaxUtil from "util/ajaxUtil";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { AppContext } from "app/renderUI";
 import { CoverSmall } from "app/components/bookCoverComponent";
+
+import { useTransition, config, animated } from "react-spring";
 
 const initialState = {
   selectedBooks: [],
@@ -47,6 +48,29 @@ export default props => {
     });
   };
 
+  const [displaySizes, setDisplaySizes] = useState({});
+  const setDisplaySize = useCallback(
+    (_id, height) => {
+      console.log("SETTING HEIGHT", _id, height);
+      setDisplaySizes(displaySizes => ({ ...displaySizes, [_id]: height }));
+    },
+    [setDisplaySizes]
+  );
+
+  console.log(displaySizes);
+
+  const selectedBookTransitions = useTransition(selectedBooks, {
+    config: { ...config.stiff },
+    keys: book => book._id,
+    from: { opacity: 0, transform: "translate3d(-25%, 0px, 0px)" },
+    enter: { opacity: 1, height: "auto", transform: "translate3d(0%, 0px, 0px)" },
+    update: book => {
+      console.log("UPDATE", book._id, displaySizes[book._id]);
+      return { height: displaySizes[book._id] };
+    },
+    leave: { opacity: 0, height: 0, transform: "translate3d(25%, 0px, 0px)" }
+  });
+
   return (
     <div className="margin-top">
       <FlexRow>
@@ -72,13 +96,11 @@ export default props => {
             </FlowItems>
 
             <table className="table table-condensed table-striped">
-              <TransitionGroup component="tbody">
-                {selectedBooks.map(book => (
-                  <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
-                    <DisplayBook className="bl-fade" key={book._id} book={book} dispatch={dispatch} />
-                  </CSSTransition>
+              <tbody>
+                {selectedBookTransitions((styles, book) => (
+                  <DisplayBook setDisplaySize={setDisplaySize} styles={styles} key={book._id} book={book} dispatch={dispatch} />
                 ))}
-              </TransitionGroup>
+              </tbody>
             </table>
           </Stack>
         </div>
@@ -105,9 +127,16 @@ export default props => {
 };
 
 const DisplayBook = props => {
-  const { book } = props;
+  const { book, styles, setDisplaySize } = props;
+  const ref = useRef(null);
+
+  useLayoutEffect(() => {
+    console.log("Display Book layout effect", book._id);
+    setDisplaySize(book._id, ref.current.offsetHeight);
+  }, []);
+
   return (
-    <tr className={props.className}>
+    <animated.tr ref={ref} style={styles}>
       <td>
         <button onClick={() => props.dispatch(["deSelectBook", book])} style={{ cursor: "pointer" }} className="btn btn-xs btn-danger">
           Remove
@@ -125,7 +154,7 @@ const DisplayBook = props => {
           </>
         ) : null}
       </td>
-    </tr>
+    </animated.tr>
   );
 };
 
