@@ -51,23 +51,17 @@ export default props => {
   const [displaySizes, setDisplaySizes] = useState({});
   const setDisplaySize = useCallback(
     (_id, height) => {
-      console.log("SETTING HEIGHT", _id, height);
       setDisplaySizes(displaySizes => ({ ...displaySizes, [_id]: height }));
     },
     [setDisplaySizes]
   );
 
-  console.log(displaySizes);
-
   const selectedBookTransitions = useTransition(selectedBooks, {
-    config: { ...config.stiff },
+    config: book => ({ ...config.stiff, clamp: !selectedBooksSet.has(book._id) }),
     keys: book => book._id,
     from: { opacity: 0, transform: "translate3d(-25%, 0px, 0px)" },
     enter: { opacity: 1, height: "auto", transform: "translate3d(0%, 0px, 0px)" },
-    update: book => {
-      console.log("UPDATE", book._id, displaySizes[book._id]);
-      return { height: displaySizes[book._id] };
-    },
+    update: book => ({ height: displaySizes[book._id] }),
     leave: { opacity: 0, height: 0, transform: "translate3d(25%, 0px, 0px)" }
   });
 
@@ -131,30 +125,34 @@ const DisplayBook = props => {
   const ref = useRef(null);
 
   useLayoutEffect(() => {
-    console.log("Display Book layout effect", book._id);
     setDisplaySize(book._id, ref.current.offsetHeight);
   }, []);
 
   return (
-    <animated.tr ref={ref} style={styles}>
-      <td>
-        <button onClick={() => props.dispatch(["deSelectBook", book])} style={{ cursor: "pointer" }} className="btn btn-xs btn-danger">
-          Remove
-        </button>
-      </td>
-      <td>
-        <CoverSmall url={book.smallImage} />
-      </td>
-      <td>
-        {book.title}
-        {book.authors && book.authors.length ? (
-          <>
-            <br />
-            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-          </>
-        ) : null}
-      </td>
-    </animated.tr>
+    <animated.div style={{ ...styles, overflow: "hidden" }}>
+      <div ref={ref}>
+        <FlowItems>
+          <div>
+            <button onClick={() => props.dispatch(["deSelectBook", book])} style={{ cursor: "pointer" }} className="btn btn-xs btn-danger">
+              Remove
+            </button>
+          </div>
+          <div style={{ minWidth: "70px" }}>
+            <CoverSmall url={book.smallImage} />
+          </div>
+          <div>
+            {book.title}
+            {book.authors && book.authors.length ? (
+              <>
+                <br />
+                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
+              </>
+            ) : null}
+          </div>
+        </FlowItems>
+        <hr />
+      </div>
+    </animated.div>
   );
 };
 
