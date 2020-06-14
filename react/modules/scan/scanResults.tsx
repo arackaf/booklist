@@ -42,16 +42,6 @@ const ScanResults: FunctionComponent<{}> = props => {
     leave: { opacity: 0 }
   });
 
-  //TODO:
-  useEffect(() => {
-    dispatch(["initial", { pending: 0 }]);
-    dispatch(["pendingBookAdded", {}]);
-    dispatch(["pendingBookAdded", {}]);
-    setTimeout(() => {
-      dispatch(["bookAdded", { title: "Title", isbn: "123" }]);
-    }, 3000);
-  }, []);
-
   let ws: any = null;
 
   useEffect(() => {
