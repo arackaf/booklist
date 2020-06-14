@@ -35,15 +35,24 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   return [ref, height as any];
 }
 
-export const SlideInContents = ({ in: inProp = void 0, component = "div", style = {} as any, children, ...rest }) => {
+export const SlideInContents = ({ in: inProp = void 0, opacity = false, component = "div", style = {} as any, children, ...rest }) => {
   const [ref, currentHeight] = useHeight({ inProp });
   const initialHeight = useRef(inProp ? "auto" : 0);
+  const initialOpacity = useRef(inProp ? 1 : 0);
+
+  const additionalFrom = {} as any;
+  const additionalTo = {} as any;
+
+  if (opacity) {
+    additionalFrom.opacity = initialOpacity.current;
+    additionalTo.opacity = inProp ? 1 : 0;
+  }
 
   const scanInfoStyles =
     useSpring({
       config: { ...config.stiff, clamp: !inProp },
-      from: { height: initialHeight },
-      to: { height: inProp ? currentHeight : 0 }
+      from: { height: initialHeight, ...additionalFrom },
+      to: { height: inProp ? currentHeight : 0, ...additionalTo }
     }) || {};
 
   const componentType = animated[component];

@@ -1,7 +1,7 @@
-import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState, useReducer } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState, useReducer } from "react";
 
 import { useSpring, useTransition, config, animated } from "react-spring";
-import { SlideInContents, useHeight } from "app/animationHelpers";
+import { SlideInContents } from "app/animationHelpers";
 
 declare var webSocketAddress: any;
 
@@ -36,14 +36,6 @@ const ScanResults: FunctionComponent<{}> = props => {
       </a>
     ) : null;
 
-  const [instructionsRef, instructionsHeight] = useHeight();
-  const scanInfoStyles =
-    useSpring({
-      config: { ...config.stiff, clamp: !showIncomingQueue },
-      from: { opacity: 0, height: 0 },
-      to: { opacity: showIncomingQueue ? 1 : 0, height: showIncomingQueue ? instructionsHeight : 0 }
-    }) || {};
-
   const booksJustSavedTransition = useTransition(booksJustSaved, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -75,7 +67,7 @@ const ScanResults: FunctionComponent<{}> = props => {
         ws.close();
       } catch (e) {}
     };
-  }, []);  
+  }, []);
 
   return (
     <div className="col-sm-6 col-xs-12">
@@ -89,21 +81,18 @@ const ScanResults: FunctionComponent<{}> = props => {
         )}
       </div>
 
-      <animated.div style={{ ...scanInfoStyles, overflow: "hidden" }}>
-        <div ref={instructionsRef}>
-          <br />
-          <div className="alert alert-info alert-slim" style={{ marginBottom: "15px" }}>
-            Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated place to
-            see what's been saved, and what failed to be found.
-          </div>
-
-          <ul style={{ marginBottom: 0 }}>
-            {booksJustSavedTransition((styles, book) => (
-              <animated.li style={{ color: book.success ? "green" : "red", ...styles }}>{book.title}</animated.li>
-            ))}
-          </ul>
+      <SlideInContents in={showIncomingQueue} opacity={true} style={{ marginTop: "10px" }}>
+        <div className="alert alert-info alert-slim" style={{ marginBottom: "15px" }}>
+          Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated place to
+          see what's been saved, and what failed to be found.
         </div>
-      </animated.div>
+
+        <ul style={{ marginBottom: 0 }}>
+          {booksJustSavedTransition((styles, book) => (
+            <animated.li style={{ color: book.success ? "green" : "red", ...styles }}>{book.title}</animated.li>
+          ))}
+        </ul>
+      </SlideInContents>
     </div>
   );
 };
