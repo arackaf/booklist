@@ -30,7 +30,7 @@ type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: a
 const Modal: SFC<ModalTypes> = props => {
   let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
 
-  const transition = useTransition(!!isOpen, {
+  const modalTransition = useTransition(!!isOpen, {
     config: isOpen ? { ...config.stiff } : { duration: 150 },
     from: { opacity: 0, transform: `translate3d(0px, -10px, 0px)` },
     enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
@@ -76,7 +76,7 @@ const Modal: SFC<ModalTypes> = props => {
 
   return (
     <ModalSizingContext.Provider value={modalSizingPacket}>
-      {transition(
+      {modalTransition(
         (styles, isOpen) =>
           isOpen && (
             <AnimatedDialogOverlay
