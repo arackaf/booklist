@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useMemo, useContext, useLayoutEffect, useCallback, useRef } from "react";
+import React, { Suspense, useState, useReducer, useMemo, useContext, useLayoutEffect, useCallback, useRef } from "react";
 import SearchModal from "./searchModal";
 
 import ajaxUtil from "util/ajaxUtil";
@@ -9,6 +9,7 @@ import { AppContext } from "app/renderUI";
 import { CoverSmall } from "app/components/bookCoverComponent";
 
 import { useTransition, config, animated } from "react-spring";
+import { LocalLoading } from "app/components/loading";
 
 const initialState = {
   selectedBooks: [],
@@ -58,7 +59,6 @@ export default props => {
 
   const selectedBookTransitions = useTransition(selectedBooks, {
     config: book => ({ ...config.stiff, clamp: !selectedBooksSet.has(book._id) }),
-    keys: book => book._id,
     from: { opacity: 0, transform: "translate3d(-25%, 0px, 0px)" },
     enter: { opacity: 1, height: "auto", transform: "translate3d(0%, 0px, 0px)" },
     update: book => ({ height: displaySizes[book._id] }),
@@ -98,18 +98,20 @@ export default props => {
         </div>
         <div className="col-xs-6">
           <div>
-            {recommendations.length ? (
-              <>
-                <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
-                <table className="table table-condensed table-striped">
-                  <tbody>
-                    {recommendations.map(book => (
-                      <DisplayRecommendation key={book._id} book={book} />
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            ) : null}
+            <Suspense fallback={<LocalLoading style={{ marginTop: "25px" }} />}>
+              {recommendations.length ? (
+                <>
+                  <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
+                  <table className="table table-condensed table-striped">
+                    <tbody>
+                      {recommendations.map(book => (
+                        <DisplayRecommendation key={book._id} book={book} />
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              ) : null}
+            </Suspense>
           </div>
         </div>
       </FlexRow>
@@ -138,14 +140,9 @@ const DisplayBook = props => {
           <div style={{ minWidth: "70px" }}>
             <CoverSmall url={book.smallImage} />
           </div>
-          <div>
-            {book.title}
-            {book.authors && book.authors.length ? (
-              <>
-                <br />
-                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-              </>
-            ) : null}
+          <div style={{ flex: 1 }}>
+            <div>{book.title}</div>
+            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span> : null}
           </div>
         </FlowItems>
         <hr />

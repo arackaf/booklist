@@ -24,7 +24,7 @@ import BooksQuery from "graphQL/home/searchBooks.graphql";
 import { useSpring, useTransition, animated, config } from "react-spring";
 import Loading from "app/components/loading";
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 20;
 
 interface LocalProps {
   isOpen: boolean;
