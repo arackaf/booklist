@@ -7,9 +7,7 @@ import Loading from "app/components/loading";
 import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import FlexRow from "app/components/layout/FlexRow";
-import { SlideInContents, useHeight } from "app/animationHelpers";
-
-import { useSpring, useTransition, config, animated } from "react-spring";
+import { SlideInContents } from "app/animationHelpers";
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
@@ -102,15 +100,15 @@ const BookEntryList: FunctionComponent<{}> = () => {
             </button>
           </div>
           <div style={{ marginTop: "10px" }}>
-            <SlideInContents in={showScanInstructions} className="bl-fade card card-info card-slim slidable animate-fast" style={{ width: "80%" }}>
-              <>
+            <SlideInContents in={showScanInstructions} style={{ width: "80%" }}>
+              <div className="card card-info card-slim">
                 Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
                 book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
                 <br /> <br />
                 After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books with
                 a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
                 overridden.
-              </>
+              </div>
             </SlideInContents>
           </div>
           <br />
