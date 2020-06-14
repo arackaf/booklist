@@ -48,7 +48,7 @@ export const SlideInContents = ({ in: inProp = void 0, opacity = false, componen
     additionalTo.opacity = inProp ? 1 : 0;
   }
 
-  const scanInfoStyles =
+  const animatingStyles =
     useSpring({
       config: { ...config.stiff, clamp: !inProp },
       from: { height: initialHeight, ...additionalFrom },
@@ -56,5 +56,5 @@ export const SlideInContents = ({ in: inProp = void 0, opacity = false, componen
     }) || {};
 
   const componentType = animated[component];
-  return createElement(componentType, { style: { overflow: "hidden", ...style, ...scanInfoStyles }, ...rest }, <div ref={ref}>{children}</div>);
+  return createElement(componentType, { style: { overflow: "hidden", ...style, ...animatingStyles }, ...rest }, <div ref={ref}>{children}</div>);
 };

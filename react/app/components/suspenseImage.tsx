@@ -36,5 +36,5 @@ const imgCache = {
 export const SuspenseImg = ({ src, crossOrigin, ...rest }) => {
   const attrs = imgCache.getImg(src, crossOrigin == "anonymous") as any;
 
-  return <img crossOrigin="anonymous" src={src} {...{ ...attrs, crossOrigin, ...rest }} />;
+  return <img crossOrigin={crossOrigin || null} src={src} {...{ ...attrs, ...rest }} />;
 };

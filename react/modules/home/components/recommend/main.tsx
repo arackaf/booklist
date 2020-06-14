@@ -89,13 +89,11 @@ export default props => {
               ) : null}
             </FlowItems>
 
-            <table className="table table-condensed table-striped">
-              <tbody>
-                {selectedBookTransitions((styles, book) => (
-                  <DisplayBook setDisplaySize={setDisplaySize} styles={styles} key={book._id} book={book} dispatch={dispatch} />
-                ))}
-              </tbody>
-            </table>
+            <div>
+              {selectedBookTransitions((styles, book) => (
+                <DisplayBook setDisplaySize={setDisplaySize} styles={styles} key={book._id} book={book} dispatch={dispatch} />
+              ))}
+            </div>
           </Stack>
         </div>
         <div className="col-xs-6">
