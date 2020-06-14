@@ -20,3 +20,11 @@ export const SectionLoading = ({ style = {}, ...rest }) => (
     className="fa fa-5x fa-spin fa-spinner"
   />
 );
+
+export const LocalLoading = ({ style = {}, ...rest }) => (
+  <div style={{ display: "flex", justifyContent: "center" }}>
+    <div {...rest} style={{ opacity: 0.2, ...style }}>
+      <i className="fa fa-5x fa-spin fa-spinner" />
+    </div>
+  </div>
+);

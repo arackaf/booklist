@@ -1,13 +1,15 @@
-import React, { useState, useReducer, useMemo, useContext } from "react";
+import React, { Suspense, useState, useReducer, useMemo, useContext, useLayoutEffect, useCallback, useRef } from "react";
 import SearchModal from "./searchModal";
 
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ajaxUtil from "util/ajaxUtil";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { AppContext } from "app/renderUI";
 import { CoverSmall } from "app/components/bookCoverComponent";
+
+import { useTransition, config, animated } from "react-spring";
+import { LocalLoading } from "app/components/loading";
 
 const initialState = {
   selectedBooks: [],
@@ -47,6 +49,22 @@ export default props => {
     });
   };
 
+  const [displaySizes, setDisplaySizes] = useState({});
+  const setDisplaySize = useCallback(
+    (_id, height) => {
+      setDisplaySizes(displaySizes => ({ ...displaySizes, [_id]: height }));
+    },
+    [setDisplaySizes]
+  );
+
+  const selectedBookTransitions = useTransition(selectedBooks, {
+    config: book => ({ ...config.stiff, clamp: !selectedBooksSet.has(book._id) }),
+    from: { opacity: 0, transform: "translate3d(-25%, 0px, 0px)" },
+    enter: { opacity: 1, height: "auto", transform: "translate3d(0%, 0px, 0px)" },
+    update: book => ({ height: displaySizes[book._id] }),
+    leave: { opacity: 0, height: 0, transform: "translate3d(25%, 0px, 0px)" }
+  });
+
   return (
     <div className="margin-top">
       <FlexRow>
@@ -71,31 +89,29 @@ export default props => {
               ) : null}
             </FlowItems>
 
-            <table className="table table-condensed table-striped">
-              <TransitionGroup component="tbody">
-                {selectedBooks.map(book => (
-                  <CSSTransition classNames="bl-animate" timeout={300} key={book._id}>
-                    <DisplayBook className="bl-fade" key={book._id} book={book} dispatch={dispatch} />
-                  </CSSTransition>
-                ))}
-              </TransitionGroup>
-            </table>
+            <div>
+              {selectedBookTransitions((styles, book) => (
+                <DisplayBook setDisplaySize={setDisplaySize} styles={styles} key={book._id} book={book} dispatch={dispatch} />
+              ))}
+            </div>
           </Stack>
         </div>
         <div className="col-xs-6">
           <div>
-            {recommendations.length ? (
-              <>
-                <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
-                <table className="table table-condensed table-striped">
-                  <tbody>
-                    {recommendations.map(book => (
-                      <DisplayRecommendation key={book._id} book={book} />
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            ) : null}
+            <Suspense fallback={<LocalLoading style={{ marginTop: "25px" }} />}>
+              {recommendations.length ? (
+                <>
+                  <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Similar books found</div>
+                  <table className="table table-condensed table-striped">
+                    <tbody>
+                      {recommendations.map(book => (
+                        <DisplayRecommendation key={book._id} book={book} />
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              ) : null}
+            </Suspense>
           </div>
         </div>
       </FlexRow>
@@ -105,27 +121,33 @@ export default props => {
 };
 
 const DisplayBook = props => {
-  const { book } = props;
+  const { book, styles, setDisplaySize } = props;
+  const ref = useRef(null);
+
+  useLayoutEffect(() => {
+    setDisplaySize(book._id, ref.current.offsetHeight);
+  }, []);
+
   return (
-    <tr className={props.className}>
-      <td>
-        <button onClick={() => props.dispatch(["deSelectBook", book])} style={{ cursor: "pointer" }} className="btn btn-xs btn-danger">
-          Remove
-        </button>
-      </td>
-      <td>
-        <CoverSmall url={book.smallImage} />
-      </td>
-      <td>
-        {book.title}
-        {book.authors && book.authors.length ? (
-          <>
-            <br />
-            <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-          </>
-        ) : null}
-      </td>
-    </tr>
+    <animated.div style={{ ...styles, overflow: "hidden" }}>
+      <div ref={ref}>
+        <FlowItems>
+          <div>
+            <button onClick={() => props.dispatch(["deSelectBook", book])} style={{ cursor: "pointer" }} className="btn btn-xs btn-danger">
+              Remove
+            </button>
+          </div>
+          <div style={{ minWidth: "70px" }}>
+            <CoverSmall url={book.smallImage} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div>{book.title}</div>
+            {book.authors && book.authors.length ? <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span> : null}
+          </div>
+        </FlowItems>
+        <hr />
+      </div>
+    </animated.div>
   );
 };
 

@@ -94,7 +94,7 @@ const EditSubjectFields = props => {
   const { _id, name } = editingSubject;
 
   const inputEl = useRef(null);
-  useEffect(() => inputEl.current.focus(), []);
+  useEffect(() => inputEl.current.focus({ preventScroll: true }), []);
 
   const { runMutation: updateSubject, running: isSubjectSaving } = useMutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
 
@@ -134,7 +134,7 @@ const EditSubjectFields = props => {
 
   return (
     <FlexRow>
-      <div className="col-xs-12 col-lg-6" style={{ overflow: "hidden" }}>
+      <div className="col-xs-12 col-lg-6">
         <div className="form-group">
           <label>Name</label>
           <input
