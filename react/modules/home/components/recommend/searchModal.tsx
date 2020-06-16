@@ -14,7 +14,6 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useHeight } from "app/animationHelpers";
 
-import "./recommend.scss";
 import { AppContext } from "app/renderUI";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
@@ -181,7 +180,7 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
                 </SubmitIconButton>
               )}
 
-              <animated.div style={noAvailableBooksStyles} className="bl-fade alert alert-info alert-slimmer">
+              <animated.div style={noAvailableBooksStyles} className="alert alert-info alert-slimmer">
                 You've added all of the books from this page
               </animated.div>
             </FlexRow>

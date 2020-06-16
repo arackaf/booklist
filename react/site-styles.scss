@@ -522,10 +522,6 @@ div.toast-notification h4 {
   color: var(--primary-10);
 }
 
-// ------------------------------------------------------------------------------------
-// ------------------------------- Animation ------------------------------------------
-// ------------------------------------------------------------------------------------
-
 .overlay-holder {
   display: grid;
   grid-template-columns: 1fr;
@@ -538,98 +534,6 @@ div.toast-notification h4 {
     grid-column-end: 2;
   }
 }
-
-.animate-height {
-  transition: height var(--animation-duration) ease-in;
-}
-
-.animate-fast {
-  --animation-duration: 150ms;
-}
-
-.bl-fade, .bl-fade-out, .bl-slide-out, .bl-slide-down {
-  transition-duration: var(--animation-duration);
-  transition-timing-function: ease-in;
-}
-
-.bl-fade {
-  opacity: 0;
-}
-
-.bl-fade {
-  transition-property: opacity;
-}
-.bl-slide-out {
-  transition-property: transform;
-}
-.bl-slide-down {
-  height: 0;
-  transition-property: height;
-  overflow: hidden;
-}
-
-.bl-fade.bl-slide-down {
-  transition-property: opacity,height;
-}
-.bl-fade.bl-slide-out, .bl-fade-out.bl-slide-out {
-  transition-property: opacity,transform;
-}
-.bl-slide-down.bl-slide-out {
-  transition-property: height,transform;
-}
-.bl-fade.bl-slide-down.bl-slide-out, .bl-fade-out.bl-slide-down.bl-slide-out {
-  transition-property: opacity,height,transform;
-}
-
-.bl-no-animate-in:not([class*="bl-animate-enter"]):not([class*="bl-animate-exit"]) {
-  transition-property: none !important;
-}
-
-
-// Enter
-.bl-animate-enter {
-  &.bl-fade {
-    opacity: 0;
-  }
-}
-.bl-animate-enter-done {
-  &.height-auto-when-active {
-    height: auto !important;
-  }
-}
-.bl-animate-enter.bl-animate-enter-active, .bl-animate-enter-done {
-  &.bl-fade {
-    opacity: 1;
-  }
-}
-
-
-// Exit
-.bl-animate-exit {
-  &.bl-fade, &.bl-fade-out {
-    opacity: 1;
-  }
-  &.bl-slide-out {
-    transform: translate3d(0,0,0);
-  }
-}
-
-.bl-animate-exit.bl-animate-exit-active {
-  &.bl-fade, &.bl-fade-out {
-    opacity: 0;
-  }
-  &.bl-slide-down {
-    height: 0 !important;
-    &.delay-leave {
-      transition-delay: 500ms;
-    }
-  }
-  &.bl-slide-out {
-    transform: translate3d(100%,0,0);
-  }
-}
-
-// ------------------------------------------------------
 
 
 .btn-group input:focus,
