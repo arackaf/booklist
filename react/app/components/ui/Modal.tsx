@@ -95,7 +95,7 @@ const Modal: SFC<ModalTypes> = props => {
                 }}
               >
                 <animated.div style={{ overflow: "hidden", ...heightStyles }}>
-                  <div ref={activateRef}>
+                  <div style={{ padding: "10px" }} ref={activateRef}>
                     {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
                     {children}
                   </div>
