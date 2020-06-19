@@ -313,8 +313,8 @@ const SearchResult = props => {
             </div>
 
             <Stack style={{ flex: 1 }}>
-              {book.title}
-              {book.authors && book.authors.length ? <span style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</span> : null}
+              <div>{book.title}</div>
+              {book.authors && book.authors.length ? <div style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</div> : null}
               <button
                 disabled={adding}
                 onClick={selectBook}

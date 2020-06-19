@@ -27,7 +27,7 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   useLayoutEffect(() => {
     if (on && ref.current) {
       set(ref.current.offsetHeight);
-      ro.observe(ref.current, { attributes: true, childList: true, subtree: true });
+      ro.observe(ref.current, { });
     }
     return () => ro.disconnect();
   }, [on, ref.current]);
