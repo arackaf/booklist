@@ -312,9 +312,11 @@ const SearchResult = props => {
               <CoverSmall url={book.smallImage} />
             </div>
 
-            <Stack style={{ flex: 1 }}>
-              <div>{book.title}</div>
-              {book.authors && book.authors.length ? <div style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</div> : null}
+            <Stack style={{ flex: 1, justifyContent: "space-between" }}>
+              <div>
+                <div>{book.title}</div>
+                {book.authors && book.authors.length ? <div style={{ fontStyle: "italic", fontSize: "14px" }}>{book.authors.join(", ")}</div> : null}
+              </div>
               <button
                 disabled={adding}
                 onClick={selectBook}
