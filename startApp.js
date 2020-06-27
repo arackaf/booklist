@@ -168,6 +168,8 @@ app.ws("/bookEntryWS", function(ws, req) {
   bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 });
 
+app.use("/book/getRecommendations", cors(), (req, res, next) => next());
+
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
 app.use("/compare/react/", express.static(__dirname + "/compare/react/"));
