@@ -50,7 +50,7 @@ class BookController {
 
       let isbns = [...isbnMap.keys()];
 
-      let results = await graphql(executableSchema, findRecommendationQuery, root, this.request, { isbns });
+      let results = await graphql(executableSchema, findRecommendationQuery, root, this.request, { isbns, publicUserId: params.publicUserId });
       let resultRecommendations = results.data.allBookSummarys.BookSummarys;
       let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
       let isbnsOrdered = orderBy(
@@ -64,8 +64,8 @@ class BookController {
 
       let matches = (
         await graphql(executableSchema, findRecommendationMatches, root, this.request, {
-          userId,
-          isbns: potentialIsbns
+          isbns: potentialIsbns,
+          publicUserId: params.publicUserId
         })
       ).data.allBooks.Books;
 
