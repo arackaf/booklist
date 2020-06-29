@@ -30,7 +30,7 @@
     "easy-express-controllers": "1.0.3",
     "esm": "3.2.25",
     "express": "4.x",
-    "express-graphql": "^0.8.0",
+    "express-graphql": "^0.9.0",
     "express-session": "^1.16.1",
     "express-ws": "^4.0.0",
     "generic-persistgraphql": "0.1.3",
