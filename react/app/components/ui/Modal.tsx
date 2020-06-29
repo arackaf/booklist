@@ -59,11 +59,6 @@ const Modal: SFC<ModalTypes> = props => {
       setHeightOn(true);
     }
   };
-  useLayoutEffect(() => {
-    if (isOpen) {
-      setHeightOn(true);
-    }
-  }, [isOpen]);
 
   const heightStyles =
     useSpring({
