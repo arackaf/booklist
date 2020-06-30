@@ -24,16 +24,18 @@ export default class BooksMiddleware {
     if (args.searchChildSubjects && subjects.length) {
       let db = await root.db;
       let allPaths = subjects.map(s => `,${s},`).join("|");
-      let childIds = (await db
-        .collection("subjects")
-        .find({ path: { $regex: allPaths }, userId: args.userId }, { _id: 1 })
-        .toArray()).map(o => "" + o._id);
+      let childIds = (
+        await db
+          .collection("subjects")
+          .find({ path: { $regex: allPaths }, userId: args.userId }, { _id: 1 })
+          .toArray()
+      ).map(o => "" + o._id);
 
       subjects.push(...childIds);
     }
   }
   queryMiddleware(queryPacket, { root, args, context, ast }) {
-    let { $project, $sort } = queryPacket;
+    let { $project, $sort, aggregationPipeline } = queryPacket;
     if ($project.editorialReviews) {
       $project.editorialReviews = 1;
     }
@@ -41,6 +43,13 @@ export default class BooksMiddleware {
     if ($sort && typeof $sort.title !== "undefined") {
       $sort.titleLower = $sort.title;
       delete $sort.title;
+    }
+
+    if (queryPacket.$limit == null || queryPacket.$limit > 50) {
+      queryPacket.$limit = 50;
+      if (!aggregationPipeline.find(packet => packet.hasOwnProperty("$limit"))) {
+        aggregationPipeline.push({ $limit: queryPacket.$limit })
+      }
     }
   }
   queryPreAggregate(aggregateItems, { root, args, context, ast }) {
