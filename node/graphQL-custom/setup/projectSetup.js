@@ -77,8 +77,8 @@ export const Subject = {
     timestamp: FloatType
   },
   extras: {
-    resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
-    schemaSources: ["../../graphQL-custom/extras/subject/schema"],
+    resolverSources: ["../../graphQL-custom/custom-content/subject/resolver"],
+    schemaSources: ["../../graphQL-custom/custom-content/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
   manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]

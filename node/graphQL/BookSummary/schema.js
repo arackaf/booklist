@@ -138,6 +138,7 @@ export const type = `
     authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
+    authors_containsAll: [String]
     authors_ne: [String]
     OR: [BookSummaryFilters]
   }
@@ -218,6 +219,7 @@ export const query = `
     authors_nin: [[String]],
     authors_contains: String,
     authors_containsAny: [String],
+    authors_containsAll: [String],
     authors_ne: [String],
     OR: [BookSummaryFilters],
     SORT: BookSummarySort,

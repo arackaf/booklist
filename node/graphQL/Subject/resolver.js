@@ -15,7 +15,7 @@ const { getMongoProjection, parseRequestedFields } = projectUtilities;
 const { getUpdateObject, setUpOneToManyRelationshipsForUpdate } = updateUtilities;
 import { ObjectId } from "mongodb";
 import SubjectMetadata from "./Subject";
-import ResolverExtras1 from "../../graphQL-custom/extras/subject/resolver";
+import ResolverExtras1 from "../../graphQL-custom/custom-content/subject/resolver";
 const { Query: QueryExtras1, Mutation: MutationExtras1, ...OtherExtras1 } = ResolverExtras1;
 
 async function loadSubjects(db, aggregationPipeline, root, args, context, ast) {

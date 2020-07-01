@@ -11,8 +11,8 @@ export default {
     timestamp: "Float"
   },
   extras: {
-    resolverSources: ["../../graphQL-custom/extras/subject/resolver"],
-    schemaSources: ["../../graphQL-custom/extras/subject/schema"],
+    resolverSources: ["../../graphQL-custom/custom-content/subject/resolver"],
+    schemaSources: ["../../graphQL-custom/custom-content/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
   relationships: {}
