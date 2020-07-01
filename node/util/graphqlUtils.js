@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from "graphql-tools";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import schema from "../graphQL/schema";
 import resolvers from "../graphQL/resolver";
 
