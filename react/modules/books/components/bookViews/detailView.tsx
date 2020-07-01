@@ -16,7 +16,7 @@ const DetailsView = props => {
     props.editBook(book);
   };
 
-  if (!book) return null;
+  if (!book || !props.isOpen) return null;
   return (
     <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose}>
       <div style={{ display: "flex", alignItems: "top" }}>
