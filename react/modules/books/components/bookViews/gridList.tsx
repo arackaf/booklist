@@ -362,7 +362,7 @@ const BookViewListGrid: SFC<{ books: any; menuBarHeight: any }> = ({ books, menu
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
-  const stickyHeaderStyle: CSSProperties = { position: "sticky", top: `${menuBarHeight}px`, backgroundColor: "white" };
+  const stickyHeaderStyle: CSSProperties = { position: "sticky", top: `${menuBarHeight - 8}px`, backgroundColor: "white", zIndex: 2 };
 
   return (
     <div style={{ minHeight: 400 }}>
