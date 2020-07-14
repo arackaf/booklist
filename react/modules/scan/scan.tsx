@@ -8,6 +8,7 @@ import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import FlexRow from "app/components/layout/FlexRow";
 import { SlideInContents } from "app/animationHelpers";
+import FlowItems from "app/components/layout/FlowItems";
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
@@ -90,55 +91,54 @@ const BookEntryList: FunctionComponent<{}> = () => {
   const { runMutation, running } = useMutation(createBookMutation);
 
   return (
-    <div>
-      <FlexRow xsFlowReverse={true}>
-        <div className="col-sm-6 col-xs-12">
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <h4 style={{ marginTop: 0, marginBottom: 0, fontSize: "16px" }}>Enter your books here {toggleInstructions} </h4>
-            <button className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
-              Manual entry
-            </button>
-          </div>
-          <div style={{ marginTop: "10px" }}>
-            <SlideInContents opacity={true} in={showScanInstructions} style={{ width: "80%" }}>
-              <div className="card card-info card-slim">
-                Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
-                book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
-                <br /> <br />
-                After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books with
-                a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
-                overridden.
-              </div>
-            </SlideInContents>
-          </div>
-          <br />
-          {entryList.map((entry, i) => (
-            <div key={i}>
-              <BookEntryItem ref={inputRefs[i]} entryFinished={() => entryFinished(i)} />
+    <main>
+      <section>
+        <FlowItems pushLast={true} xsFlowReverse={true}>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h4 style={{ marginTop: 0, marginBottom: 0, fontSize: "16px" }}>Enter your books here {toggleInstructions} </h4>
+              <button className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
+                Manual entry
+              </button>
             </div>
-          ))}
-        </div>
-        <ScanResults />
-      </FlexRow>
+            <div style={{ marginTop: "10px" }}>
+              <SlideInContents opacity={true} in={showScanInstructions} style={{ width: "80%" }}>
+                <div className="card card-info card-slim">
+                  Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for
+                  each book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
+                  <br /> <br />
+                  After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books
+                  with a barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
+                  overridden.
+                </div>
+              </SlideInContents>
+            </div>
+            <br />
+            {entryList.map((entry, i) => (
+              <div key={i}>
+                <BookEntryItem ref={inputRefs[i]} entryFinished={() => entryFinished(i)} />
+              </div>
+            ))}
+          </div>
+          <ScanResults />
+        </FlowItems>
 
-      <Suspense fallback={<Loading />}>
-        {editState.modalEntryLoaded ? (
-          <CreateBookModal
-            title={"Manually enter a book"}
-            bookToEdit={editState.manualBook}
-            isOpen={editState.inManualEntry}
-            isSaving={running}
-            isSaved={editState.manualSaved}
-            saveBook={book => saveNewBook(book, runMutation)}
-            startOver={() => manuallyEnterBook()}
-            onClosing={() => manualEntryEnding()}
-          />
-        ) : null}
-      </Suspense>
-
-      <br />
-      <br />
-    </div>
+        <Suspense fallback={<Loading />}>
+          {editState.modalEntryLoaded ? (
+            <CreateBookModal
+              title={"Manually enter a book"}
+              bookToEdit={editState.manualBook}
+              isOpen={editState.inManualEntry}
+              isSaving={running}
+              isSaved={editState.manualSaved}
+              saveBook={book => saveNewBook(book, runMutation)}
+              startOver={() => manuallyEnterBook()}
+              onClosing={() => manualEntryEnding()}
+            />
+          ) : null}
+        </Suspense>
+      </section>
+    </main>
   );
 };
 

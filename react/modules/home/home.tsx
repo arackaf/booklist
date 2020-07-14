@@ -49,20 +49,23 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
         </TabHeaders>
         <TabContents>
           <TabContent tabName="vis">
-            {active => active ? (
-              subjectsLoaded ? (
-                subjects.length ? (
-                  <ChartHolder />
-                ) : (
-                  <div className="alert alert-warning">
-                    It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up
-                    here.
-                  </div>
-                )
-              ) : (
-                <SectionLoading style={{ position: "fixed" }} />
-              )
-            ) : null /* tab not active - render nothing */}
+            {
+              active =>
+                active ? (
+                  subjectsLoaded ? (
+                    subjects.length ? (
+                      <ChartHolder />
+                    ) : (
+                      <div className="alert alert-warning">
+                        It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up
+                        here.
+                      </div>
+                    )
+                  ) : (
+                    <SectionLoading style={{ position: "fixed" }} />
+                  )
+                ) : null /* tab not active - render nothing */
+            }
           </TabContent>
 
           <TabContent tabName="rec">
@@ -135,6 +138,10 @@ const HomeIfNotLoggedIn = () => (
 
 const Home: FunctionComponent<{}> = props => {
   const [{ isLoggedIn, isPublic }] = useContext(AppContext);
-  return <div className="container-fluid">{isLoggedIn || isPublic ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</div>;
+  return (
+    <main>
+      <section>{isLoggedIn || isPublic ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</section>
+    </main>
+  );
 };
 export default Home;

@@ -60,7 +60,7 @@ const ScanResults: FunctionComponent<{}> = props => {
   }, []);
 
   return (
-    <div className="col-sm-6 col-xs-12">
+    <div style={{ flex: 1 }}>
       <div>
         {pending == null ? null : pending ? (
           <span className="label label-info">

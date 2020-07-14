@@ -97,9 +97,7 @@ export default () => {
   const styles = useSpring({
     config: { ...config.slow },
     from: { opacity: 0 },
-    to: {
-      opacity: 1
-    }
+    to: { opacity: 1 }
   }) as any;
 
   return (
