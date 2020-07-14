@@ -104,7 +104,7 @@ export default () => {
 
   return (
     <main className="small flush-bottom">
-      <div className={`${subjectsRoot}`}>
+      <section className={`${subjectsRoot}`}>
         <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
           New Subject
         </Button>
@@ -120,7 +120,7 @@ export default () => {
           <hr />
           <Button onClick={closeEditModal}>Close</Button>
         </Modal>
-      </div>
+      </section>
     </main>
   );
 };

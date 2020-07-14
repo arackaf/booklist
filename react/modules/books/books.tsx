@@ -117,7 +117,7 @@ export default () => {
 
   return (
     <main className="full flush-bottom">
-      <div>
+      <section>
         <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
           <RenderModule />
 
@@ -139,7 +139,7 @@ export default () => {
             />
           </Suspense>
         </BooksModuleContext.Provider>
-      </div>
+      </section>
     </main>
   );
 };
