@@ -90,7 +90,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
   const { runMutation, running } = useMutation(createBookMutation);
 
   return (
-    <div className="standard-module-container">
+    <div>
       <FlexRow xsFlowReverse={true}>
         <div className="col-sm-6 col-xs-12">
           <div style={{ display: "flex", alignItems: "center" }}>

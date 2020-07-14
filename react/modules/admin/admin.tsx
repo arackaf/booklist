@@ -36,7 +36,7 @@ const AdminTabHeaders = ({}) => {
 
 export default ({}) => {
   return (
-    <div className="standard-module-container">
+    <div>
       <Tabs defaultTab="covers" localStorageName="admin-tabs">
         <AdminTabHeaders />
         <AdminTabContent />

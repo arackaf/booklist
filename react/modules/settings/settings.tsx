@@ -121,7 +121,7 @@ export default props => {
   const [{ isPublic }] = useContext(AppContext);
 
   return (
-    <div className="standard-module-container">
+    <div>
       <Tabs defaultTab={isPublic ? "theme" : "publicSettings"} localStorageName="settings-tab">
         <SettingsTabHeaders />
         <SettingsTabContent />

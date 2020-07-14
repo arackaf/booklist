@@ -135,6 +135,6 @@ const HomeIfNotLoggedIn = () => (
 
 const Home: FunctionComponent<{}> = props => {
   const [{ isLoggedIn, isPublic }] = useContext(AppContext);
-  return <div className="container-fluid standard-module-container">{isLoggedIn || isPublic ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</div>;
+  return <div className="container-fluid">{isLoggedIn || isPublic ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</div>;
 };
 export default Home;

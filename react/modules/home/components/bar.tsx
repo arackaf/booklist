@@ -60,6 +60,7 @@ export default class Bar extends PureComponent<any, any> {
     this._manageTooltip(false);
   };
   componentDidMount() {
+    //TODO:
     document.getElementById("main-content").addEventListener("scroll", this.hideTooltipImmediate);
     let { data, count, drilldown, chartIndex } = this.props;
     this.manageTooltip = debounce(this._manageTooltip, 50);
@@ -91,6 +92,7 @@ export default class Bar extends PureComponent<any, any> {
     document.body.appendChild(tooltip);
   }
   componentWillUnmount() {
+    //TODO
     document.getElementById("main-content").removeEventListener("scroll", this.hideTooltipImmediate);
   }
   showTooltip = () => {

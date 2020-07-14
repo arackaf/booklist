@@ -103,28 +103,24 @@ export default () => {
   }) as any;
 
   return (
-    <div className={`standard-module-container ${subjectsRoot}`}>
-      <div style={{ marginBottom: "60px" }}>
-        <FlexRow>
-          <div className="col-lg-6 col-md-8 col-xs-12">
-            <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
-              New Subject
-            </Button>
+    <main className="small flush-bottom">
+      <div className={`${subjectsRoot}`}>
+        <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+          New Subject
+        </Button>
 
-            <EditContext.Provider value={openEditModal}>
-              <animated.div style={styles} className={contentRoot}>
-                <SubjectList subjects={topLevelSubjects} />
-              </animated.div>
-            </EditContext.Provider>
-          </div>
-        </FlexRow>
+        <EditContext.Provider value={openEditModal}>
+          <animated.div style={styles} className={contentRoot}>
+            <SubjectList subjects={topLevelSubjects} />
+          </animated.div>
+        </EditContext.Provider>
+
+        <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
+          <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
+          <hr />
+          <Button onClick={closeEditModal}>Close</Button>
+        </Modal>
       </div>
-
-      <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
-        <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
-        <hr />
-        <Button onClick={closeEditModal}>Close</Button>
-      </Modal>
-    </div>
+    </main>
   );
 };
