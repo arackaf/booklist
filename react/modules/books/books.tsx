@@ -116,29 +116,31 @@ export default () => {
   const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal, saveEditingBook, editBook, setRead, runDelete };
 
   return (
-    <div style={{}}>
-      <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
-        <RenderModule />
+    <main className="full flush-bottom">
+      <div>
+        <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
+          <RenderModule />
 
-        <Suspense fallback={<Loading />}>
-          <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
-          <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
-          <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
+          <Suspense fallback={<Loading />}>
+            <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+            <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+            <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
 
-          <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
-          <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+            <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
+            <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
 
-          <CreateBookModal
-            title={editingBook ? `Edit ${editingBook.title}` : ""}
-            bookToEdit={editingBook}
-            isOpen={!!editingBook}
-            saveBook={saveEditingBook}
-            saveMessage={"Saved"}
-            onClosing={stopEditingBook}
-          />
-        </Suspense>
-      </BooksModuleContext.Provider>
-    </div>
+            <CreateBookModal
+              title={editingBook ? `Edit ${editingBook.title}` : ""}
+              bookToEdit={editingBook}
+              isOpen={!!editingBook}
+              saveBook={saveEditingBook}
+              saveMessage={"Saved"}
+              onClosing={stopEditingBook}
+            />
+          </Suspense>
+        </BooksModuleContext.Provider>
+      </div>
+    </main>
   );
 };
 
