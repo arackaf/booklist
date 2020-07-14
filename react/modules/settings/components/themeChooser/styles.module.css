@@ -34,7 +34,7 @@
   padding: 7px;
 }
 .themeChooserItem:global(.active) {
-  border: 2px solid var(--neutral-5);
+  border: 4px solid var(--primary-5);
   padding: 9px;
   cursor: default;
 }

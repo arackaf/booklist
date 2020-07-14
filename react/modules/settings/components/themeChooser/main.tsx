@@ -22,10 +22,6 @@ const ThemeChooser = props => {
         {themeNames.map((name, index) => (
           <>
             <Stack onClick={() => dispatch({ type: SET_THEME, theme: name })} className={classNames(themeChooserItem, { active: colorTheme == name })} tightest={true}>
-              <span>
-                {"Theme " + (index + 1)}
-                {colorTheme == name ? <i className="far fa-check margin-left" /> : null}
-              </span>
               <div className={classNames(name, themeChooser)}>
                 {arrayOfTen.map(val => (
                   <div style={{ backgroundColor: `var(--primary-${val})` }} />
