@@ -4,7 +4,7 @@ import PublicUserSettings from "./components/publicUserSettings/main";
 import PasswordReset from "./components/passwordReset/main";
 import ThemeChooser from "./components/themeChooser/main";
 import { AppContext } from "app/renderUI";
-import {Button} from "app/components/ui/Button";
+import { Button } from "app/components/ui/Button";
 import FlexRow from "app/components/layout/FlexRow";
 import { TabHeader, TabHeaders, Tabs, TabContents, TabContent } from "app/components/layout/Tabs";
 
@@ -121,11 +121,13 @@ export default props => {
   const [{ isPublic }] = useContext(AppContext);
 
   return (
-    <div>
-      <Tabs defaultTab={isPublic ? "theme" : "publicSettings"} localStorageName="settings-tab">
-        <SettingsTabHeaders />
-        <SettingsTabContent />
-      </Tabs>
-    </div>
+    <main>
+      <section>
+        <Tabs defaultTab={isPublic ? "theme" : "publicSettings"} localStorageName="settings-tab">
+          <SettingsTabHeaders />
+          <SettingsTabContent />
+        </Tabs>
+      </section>
+    </main>
   );
 };
