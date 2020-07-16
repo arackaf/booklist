@@ -36,13 +36,11 @@ const AdminTabHeaders = ({}) => {
 
 export default ({}) => {
   return (
-    <main>
-      <section>
-        <Tabs defaultTab="covers" localStorageName="admin-tabs">
-          <AdminTabHeaders />
-          <AdminTabContent />
-        </Tabs>
-      </section>
-    </main>
+    <section>
+      <Tabs defaultTab="covers" localStorageName="admin-tabs">
+        <AdminTabHeaders />
+        <AdminTabContent />
+      </Tabs>
+    </section>
   );
 };

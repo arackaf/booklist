@@ -121,13 +121,11 @@ export default props => {
   const [{ isPublic }] = useContext(AppContext);
 
   return (
-    <main>
-      <section>
-        <Tabs defaultTab={isPublic ? "theme" : "publicSettings"} localStorageName="settings-tab">
-          <SettingsTabHeaders />
-          <SettingsTabContent />
-        </Tabs>
-      </section>
-    </main>
+    <section>
+      <Tabs defaultTab={isPublic ? "theme" : "publicSettings"} localStorageName="settings-tab">
+        <SettingsTabHeaders />
+        <SettingsTabContent />
+      </Tabs>
+    </section>
   );
 };

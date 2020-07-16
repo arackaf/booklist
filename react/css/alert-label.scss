@@ -51,6 +51,10 @@
   border-radius: 3px;
   display: flex;
   align-items: center;
+
+  &.inline-flex {
+    display: inline-flex;
+  }
 }
 
 .alert, .card {

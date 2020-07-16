@@ -97,7 +97,7 @@ const Login: FunctionComponent<{}> = props => {
   const miscError = state.errorCode && !emailError && !pwdError;
 
   return (
-    <div>
+    <section>
       <div style={{ padding: 50, maxWidth: 700, marginRight: "auto", marginLeft: "auto" }}>
         <div>
           <div>
@@ -172,7 +172,7 @@ const Login: FunctionComponent<{}> = props => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

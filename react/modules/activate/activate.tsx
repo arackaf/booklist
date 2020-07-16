@@ -50,7 +50,7 @@ const ActivateIfNotLoggedIn = props => {
 
 const ActivationComponent: SFC<{}> = props => {
   const [{ isLoggedIn }] = useContext(AppContext);
-  return <div>{isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</div>;
+  return <section>{isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</section>;
 };
 
 export default ActivationComponent;

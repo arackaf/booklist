@@ -103,7 +103,13 @@ const App = () => {
           <div id="app">
             <MainNavigationBar />
 
-            <Suspense fallback={<LongLoading />}>{Component ? <Component updating={moduleUpdatePending} /> : null}</Suspense>
+            <Suspense fallback={<LongLoading />}>
+              {Component ? (
+                <main>
+                  <Component updating={moduleUpdatePending} />
+                </main>
+              ) : null}
+            </Suspense>
 
             <WellUiSwitcher />
           </div>

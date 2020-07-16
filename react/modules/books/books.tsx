@@ -116,31 +116,29 @@ export default () => {
   const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal, saveEditingBook, editBook, setRead, runDelete };
 
   return (
-    <main>
-      <section className="full flush-bottom">
-        <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
-          <RenderModule />
+    <section className="full flush-bottom">
+      <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
+        <RenderModule />
 
-          <Suspense fallback={<Loading />}>
-            <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
-            <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
-            <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
+        <Suspense fallback={<Loading />}>
+          <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+          <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+          <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
 
-            <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
-            <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
+          <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying} onDone={closeBookSubModal} />
+          <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying} onDone={closeBookTagModal} />
 
-            <CreateBookModal
-              title={editingBook ? `Edit ${editingBook.title}` : ""}
-              bookToEdit={editingBook}
-              isOpen={!!editingBook}
-              saveBook={saveEditingBook}
-              saveMessage={"Saved"}
-              onClosing={stopEditingBook}
-            />
-          </Suspense>
-        </BooksModuleContext.Provider>
-      </section>
-    </main>
+          <CreateBookModal
+            title={editingBook ? `Edit ${editingBook.title}` : ""}
+            bookToEdit={editingBook}
+            isOpen={!!editingBook}
+            saveBook={saveEditingBook}
+            saveMessage={"Saved"}
+            onClosing={stopEditingBook}
+          />
+        </Suspense>
+      </BooksModuleContext.Provider>
+    </section>
   );
 };
 
@@ -213,7 +211,7 @@ const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any }> = ({ boo
   return (
     <>
       {!books.length ? (
-        <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
+        <div className="alert alert-warning" style={{ marginTop: "20px" }}>
           No books found
         </div>
       ) : null}

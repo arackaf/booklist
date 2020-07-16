@@ -101,26 +101,24 @@ export default () => {
   }) as any;
 
   return (
-    <main>
-      <section className={`flush-bottom ${subjectsRoot}`}>
-        <div>
-          <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
-            New Subject
-          </Button>
-        </div>
+    <section className={`flush-bottom ${subjectsRoot}`}>
+      <div>
+        <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+          New Subject
+        </Button>
+      </div>
 
-        <EditContext.Provider value={openEditModal}>
-          <animated.div style={styles} className={contentRoot}>
-            <SubjectList subjects={topLevelSubjects} />
-          </animated.div>
-        </EditContext.Provider>
+      <EditContext.Provider value={openEditModal}>
+        <animated.div style={styles} className={contentRoot}>
+          <SubjectList subjects={topLevelSubjects} />
+        </animated.div>
+      </EditContext.Provider>
 
-        <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
-          <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
-          <hr />
-          <Button onClick={closeEditModal}>Close</Button>
-        </Modal>
-      </section>
-    </main>
+      <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
+        <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
+        <hr />
+        <Button onClick={closeEditModal}>Close</Button>
+      </Modal>
+    </section>
   );
 };

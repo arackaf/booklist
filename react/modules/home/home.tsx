@@ -56,7 +56,7 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
                     subjects.length ? (
                       <ChartHolder />
                     ) : (
-                      <div className="alert alert-warning">
+                      <div className="alert alert-warning inline-flex">
                         It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up
                         here.
                       </div>
@@ -138,10 +138,6 @@ const HomeIfNotLoggedIn = () => (
 
 const Home: FunctionComponent<{}> = props => {
   const [{ isLoggedIn, isPublic }] = useContext(AppContext);
-  return (
-    <main>
-      <section>{isLoggedIn || isPublic ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</section>
-    </main>
-  );
+  return <section>{isLoggedIn || isPublic ? <HomeIfLoggedIn /> : <HomeIfNotLoggedIn />}</section>;
 };
 export default Home;
