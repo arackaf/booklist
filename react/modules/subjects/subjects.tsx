@@ -101,11 +101,13 @@ export default () => {
   }) as any;
 
   return (
-    <main className="small flush-bottom">
-      <section className={`${subjectsRoot}`}>
-        <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
-          New Subject
-        </Button>
+    <main>
+      <section className={`flush-bottom ${subjectsRoot}`}>
+        <div>
+          <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
+            New Subject
+          </Button>
+        </div>
 
         <EditContext.Provider value={openEditModal}>
           <animated.div style={styles} className={contentRoot}>

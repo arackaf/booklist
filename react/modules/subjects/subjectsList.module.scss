@@ -1,4 +1,7 @@
 .subjectsRoot {
+  display: grid;
+  grid-template-rows: auto 1fr;
+
   ul {
     margin-left: 0;
     padding-left: 0;

@@ -116,8 +116,8 @@ export default () => {
   const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal, saveEditingBook, editBook, setRead, runDelete };
 
   return (
-    <main className="full flush-bottom">
-      <section>
+    <main>
+      <section className="full flush-bottom">
         <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
           <RenderModule />
 
