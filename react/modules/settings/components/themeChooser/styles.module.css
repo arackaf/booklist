@@ -20,6 +20,7 @@
     margin: 0;
   }
   .themeChooserList {
+    margin-top: 5px;
     height: unset;
     overflow-y: unset;
     margin-right: unset;
@@ -59,9 +60,6 @@
 }
 
 @media (max-width: 1400px) {
-  .themeChooser {
-    padding: 5px;
-  }
   .themeChooser > div {
     width: 20px;
     height: 20px;
@@ -69,7 +67,7 @@
 }
 
 .demoRoot {
-  max-width: 500px;
+  max-width: 550px;
 }
 
 .mockModal {
