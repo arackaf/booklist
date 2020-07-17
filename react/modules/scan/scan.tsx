@@ -8,6 +8,7 @@ import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import FlexRow from "app/components/layout/FlexRow";
 import { SlideInContents } from "app/animationHelpers";
+import FlowItems from "app/components/layout/FlowItems";
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
@@ -90,9 +91,9 @@ const BookEntryList: FunctionComponent<{}> = () => {
   const { runMutation, running } = useMutation(createBookMutation);
 
   return (
-    <div className="standard-module-container">
-      <FlexRow xsFlowReverse={true}>
-        <div className="col-sm-6 col-xs-12">
+    <section>
+      <FlowItems pushLast={true} xsFlowReverse={true}>
+        <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center" }}>
             <h4 style={{ marginTop: 0, marginBottom: 0, fontSize: "16px" }}>Enter your books here {toggleInstructions} </h4>
             <button className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
@@ -119,7 +120,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
           ))}
         </div>
         <ScanResults />
-      </FlexRow>
+      </FlowItems>
 
       <Suspense fallback={<Loading />}>
         {editState.modalEntryLoaded ? (
@@ -135,10 +136,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
           />
         ) : null}
       </Suspense>
-
-      <br />
-      <br />
-    </div>
+    </section>
   );
 };
 

@@ -5,8 +5,9 @@ import { AppContext } from "app/renderUI";
 import { SET_THEME } from "app/state/appState";
 
 import DemoStyles from "./demoStyles";
+import Stack from "app/components/layout/Stack";
 
-const { themeChooserRoot, themeChooserList, themeChooser } = styles;
+const { themeChooserRoot, themeChooserList, themeChooserItem, themeChooser } = styles;
 
 const numThemes = 17;
 
@@ -20,19 +21,13 @@ const ThemeChooser = props => {
       <div className={themeChooserList}>
         {themeNames.map((name, index) => (
           <>
-            <div
-              onClick={() => dispatch({ type: SET_THEME, theme: name })}
-              className={classNames(name, themeChooser, { active: colorTheme == name })}
-            >
-              <span>
-                {"Theme " + (index + 1)}
-                {colorTheme == name ? <i className="far fa-check margin-left" /> : null}
-              </span>
-              {arrayOfTen.map(val => (
-                <div style={{ backgroundColor: `var(--primary-${val})` }} />
-              ))}
-            </div>
-            <br />
+            <Stack onClick={() => dispatch({ type: SET_THEME, theme: name })} className={classNames(themeChooserItem, { active: colorTheme == name })} tightest={true}>
+              <div className={classNames(name, themeChooser)}>
+                {arrayOfTen.map(val => (
+                  <div style={{ backgroundColor: `var(--primary-${val})` }} />
+                ))}
+              </div>
+            </Stack>
           </>
         ))}
       </div>

@@ -116,7 +116,7 @@ export default () => {
   const actions = { editTags, editSubjects, beginEditFilters, openBookSubModal, openBookTagModal, saveEditingBook, editBook, setRead, runDelete };
 
   return (
-    <div style={{}}>
+    <section className="full flush-bottom">
       <BooksModuleContext.Provider value={{ actions, booksUiState, dispatchBooksUiState }}>
         <RenderModule />
 
@@ -138,7 +138,7 @@ export default () => {
           />
         </Suspense>
       </BooksModuleContext.Provider>
-    </div>
+    </section>
   );
 };
 
@@ -164,7 +164,7 @@ const RenderModule: SFC<{}> = ({}) => {
   const [lastBookResults, setLastBookResults] = useState({ totalPages: 0, resultsCount: 0 });
 
   return (
-    <div className="standard-module-container margin-bottom-lg" style={{ backgroundColor: "white" }}>
+    <div style={{ backgroundColor: "white" }}>
       <Suspense fallback={<Fallback uiView={uiView} {...lastBookResults} />}>
         <MainContent uiView={uiView} setLastBookResults={setLastBookResults} />
       </Suspense>
@@ -211,7 +211,7 @@ const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any }> = ({ boo
   return (
     <>
       {!books.length ? (
-        <div className="alert alert-warning" style={{ marginTop: "20px", marginRight: "5px" }}>
+        <div className="alert alert-warning" style={{ marginTop: "20px" }}>
           No books found
         </div>
       ) : null}

@@ -119,7 +119,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     return null;
   } else if (!graphData.length) {
     return (
-      <div className="alert alert-warning">
+      <div className="alert alert-warning inline-flex">
         It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
       </div>
     );

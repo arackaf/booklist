@@ -30,12 +30,12 @@ const WellUiSwitcher: FunctionComponent<{}> = () => {
   const showSwitchBackMobile = app.isMobile && app.showingDesktop;
 
   return (
-    <div id="footer" style={{ position: "fixed", bottom: 0, left: 0, right: 0, marginBottom: 0 }}>
+    <footer>
       <i className="fal fa-book" />
       <span style={{ marginLeft: "5px", marginRight: "5px" }}>My Library</span>
       {showChooseDesktop ? <a onClick={requestDesktop}>Use desktop version</a> : null}
       {showSwitchBackMobile ? <a onClick={requestMobile}>Use mobile version</a> : null}
-    </div>
+    </footer>
   );
 };
 
@@ -97,26 +97,24 @@ const App = () => {
   return (
     <AppContext.Provider value={appStatePacket}>
       <ModuleUpdateContext.Provider value={suspensePacket}>
-        <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100vh", margin: "auto" }}>
-          <MobileMeta />
-          <MainNavigationBar />
+        <MobileMeta />
+        {isNewModulePending ? <Loading /> : null}
+        <div style={{ overflow: "hidden", height: "100vh", width: "100vw" }}>
+          <div id="app">
+            <MainNavigationBar />
 
-          {isNewModulePending ? <Loading /> : null}
-          <Suspense fallback={<LongLoading />}>
-            <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-              {Component ? <Component updating={moduleUpdatePending} /> : null}
-            </div>
-          </Suspense>
+            <Suspense fallback={<LongLoading />}>
+              {Component ? (
+                <main>
+                  <Component updating={moduleUpdatePending} />
+                </main>
+              ) : null}
+            </Suspense>
 
-          <WellUiSwitcher />
+            <WellUiSwitcher />
+          </div>
         </div>
       </ModuleUpdateContext.Provider>
     </AppContext.Provider>
   );
 };
-
-const MainContent = ({ Component }) => (
-  <div id="main-content" style={{ flex: 1, overflowY: "auto" }}>
-    {Component ? <Component /> : null}
-  </div>
-);

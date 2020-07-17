@@ -1,3 +1,4 @@
+@import "./css/main-layout";
 @import "./css/btn";
 @import "./css/flex-row";
 @import "./css/stack";
@@ -11,6 +12,8 @@
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --default-border-radius: 5px;
+
+  --content-background: hsl(40, 23%, 98%);
 
   --neutral-1: hsl(42, 15%, 13%);
   --neutral-2: hsl(40, 13%, 23%);
@@ -66,10 +69,6 @@
   --info-8: hsl(184, 80%, 74%);
   --info-9: hsl(185, 94%, 87%);
   --info-10: hsl(186, 100%, 94%);
-}
-
-body {
-  margin: 0;
 }
 
 * {
@@ -295,10 +294,10 @@ body {
   --info-button-color: white;
 }
 
-#main-content {
+#app {
   -webkit-overflow-scrolling: touch;
 }
-#main-content,
+#app,
 input,
 select,
 reach-portal,
@@ -306,30 +305,13 @@ a {
   color: var(--neutral-text);
 }
 
-.standard-module-container {
-  margin-top: 15px;
-  margin-left: 20px;
-  margin-right: 20px;
-  
-  @media (max-width: 1000px) {
-    margin-top: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  
-  @media (max-width: 500px) {
-    margin-top: 0;
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-}
 
-#footer {
+footer {
   background-color: var(--primary-9);
   padding: 9px;
 }
-.scheme5 #footer,
-.scheme1 #footer {
+.scheme5 footer,
+.scheme1 footer {
   background-color: var(--primary-8);
 }
 
@@ -453,6 +435,7 @@ select.form-control {
   height: 34px;
   background-color: white;
   width: 100%;
+  // width: calc(100% - 24px);
 
   &.error {
     border-color: var(--danger-5);
