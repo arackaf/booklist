@@ -1,13 +1,13 @@
 import React, { Component, useContext } from "react";
 import classNames from "classnames";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import { AppContext } from "app/renderUI";
 import { SET_THEME } from "app/state/appState";
 
 import DemoStyles from "./demoStyles";
 import Stack from "app/components/layout/Stack";
 
-const { themeChooserRoot, themeChooserList, themeChooserItem, themeChooser } = styles;
+const { themeChooserRoot, demoContainer, themeChooserList, themeChooserItem, themeChooser } = styles;
 
 const numThemes = 17;
 
@@ -31,7 +31,7 @@ const ThemeChooser = props => {
           </>
         ))}
       </div>
-      <div>
+      <div className={demoContainer}>
         <DemoStyles />
       </div>
     </div>

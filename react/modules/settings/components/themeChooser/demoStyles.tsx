@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import FlexRow from "app/components/layout/FlexRow";
 const { mockModal, demoRoot } = styles;
 
@@ -58,7 +58,7 @@ export default props => {
         </div>
       </div>
       <div className="alert alert-info margin-top" style={{ maxWidth: "550px" }}>
-        Just FYI, but this color theme will be saved locally, and remembered the next time you browse here! (on the same device)
+        This color theme will be saved locally, and remembered the next time you browse here (on the same device)
       </div>
     </div>
   );
