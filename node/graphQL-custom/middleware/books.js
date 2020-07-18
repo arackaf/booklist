@@ -44,13 +44,6 @@ export default class BooksMiddleware {
       $sort.titleLower = $sort.title;
       delete $sort.title;
     }
-
-    if (queryPacket.$limit == null || queryPacket.$limit > 50) {
-      queryPacket.$limit = 50;
-      if (!aggregationPipeline.find(packet => packet.hasOwnProperty("$limit"))) {
-        aggregationPipeline.push({ $limit: queryPacket.$limit })
-      }
-    }
   }
   queryPreAggregate(aggregateItems, { root, args, context, ast }) {
     let project = aggregateItems.find(item => item.$project);
