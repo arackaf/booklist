@@ -203,16 +203,16 @@ const SvgTooltip = props => {
 
   return (
     <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0)`}>
-      <text style={{ fontSize: "26px" }} x={TEXT_OFFSET} y={-1 * textAnchorY}>
+      <text style={{ fontSize: "26px" }} dominantBaseline="hanging" x={TEXT_OFFSET} y={-1 * textAnchorY}>
         {display}
       </text>
-      <GraphSvg />
+      <GraphSvg y={-1 * textAnchorY} />
     </g>
   );
 };
 
-const GraphSvg = () => (
-  <svg preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg" x="5" y="-370" viewBox="0 0 640 512" width="40">
+const GraphSvg = ({ y }) => (
+  <svg preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg" x="5" y={y + 30} viewBox="0 0 640 512" width="40">
     <path d="M208 288h-32c-4.42 0-8 3.58-8 8v208c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V296c0-4.42-3.58-8-8-8zM80 384H48c-4.42 0-8 3.58-8 8v112c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V392c0-4.42-3.58-8-8-8zm256-192h-32c-4.42 0-8 3.58-8 8v304c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V200c0-4.42-3.58-8-8-8z" />
   </svg>
 );
