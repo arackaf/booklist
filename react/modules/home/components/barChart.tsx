@@ -144,6 +144,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
 
   const excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
+  const offsetY = margin.bottom - height;
 
   return (
     <div ref={topRef}>
@@ -167,7 +168,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
           ) : null}
         </div>
         <svg style={svgStyle} width={width} height={height}>
-          <g transform={`scale(1, -1) translate(${margin.left}, ${margin.bottom - height})`}>
+          <g transform={`scale(1, -1) translate(${margin.left}, ${offsetY})`}>
             {showingData
               .filter(d => !excluding[d.groupId])
               .map((d, i) => (
@@ -185,6 +186,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   width={scaleX.bandwidth()}
                   height={dataScale(d.count)}
                   graphWidth={width}
+                  offsetY={offsetY}
                 />
               ))}
           </g>
