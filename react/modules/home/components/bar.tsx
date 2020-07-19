@@ -202,14 +202,12 @@ const SvgTooltip = props => {
   }, []);
 
   return (
-    <>
-      <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0)`}>
-        <text style={{ fontSize: "26px" }} x={TEXT_OFFSET} y={-1 * textAnchorY}>
-          {display}
-        </text>
-        <GraphSvg />
-      </g>
-    </>
+    <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0)`}>
+      <text style={{ fontSize: "26px" }} x={TEXT_OFFSET} y={-1 * textAnchorY}>
+        {display}
+      </text>
+      <GraphSvg />
+    </g>
   );
 };
 
