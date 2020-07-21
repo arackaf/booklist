@@ -1,10 +1,7 @@
 import React, { PureComponent, useLayoutEffect, useRef, useState, useMemo } from "react";
-import { findDOMNode, render } from "react-dom";
 
 import select from "d3-selection/src/select";
 import debounce from "lodash.debounce";
-
-import Tooltip from "./tooltip";
 
 export default class Bar extends PureComponent<any, any> {
   el: any;
@@ -15,122 +12,23 @@ export default class Bar extends PureComponent<any, any> {
 
   manageTooltip: any;
 
-  _manageTooltip(show) {
-    if (show && this.tooltipShown) {
-      return;
-    }
-    if (show) {
-      this.tooltipShown = true;
-
-      this.tooltip.style.display = "block";
-      this.tooltip.style.visibility = "hidden";
-
-      let { count, index } = this.props;
-      let tBox = this.tooltip.getBoundingClientRect();
-      let element = findDOMNode(this.el);
-      let box = (element as any).getBoundingClientRect();
-      let left = box.left + document.documentElement.scrollLeft + 2;
-      let top = box.top + window.scrollY + 2;
-
-      if (tBox.width > box.width && index / count > 0.5) {
-        left -= tBox.width - box.width + 4;
-      }
-
-      if (tBox.height > box.height && box.top >= 54 + 7) {
-        top -= tBox.height - box.height + 4;
-      }
-
-      if (box.top < 54) {
-        top += 51 - box.top;
-      }
-
-      this.tooltip.style.left = left + "px";
-      this.tooltip.style.top = top + "px";
-
-      this.tooltip.style.visibility = "";
-      this.tooltip.style.display = "block";
-    } else {
-      this.tooltipShown = false;
-      this.tooltip.style.display = "none";
-    }
-  }
-
   removeBar = () => {
     this.props.removeBar(this.props.data.groupId);
-    this._manageTooltip(false);
   };
-  componentDidMount() {
-    document.getElementsByTagName("main")[0].addEventListener("scroll", this.hideTooltipImmediate);
-    let { data, count, drilldown, chartIndex } = this.props;
-    this.manageTooltip = debounce(this._manageTooltip, 50);
 
-    let tooltip = document.createElement("div");
-    let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
-    render(<Tooltip {...{ data, count, childSubjects, drilldown, chartIndex }} removeBar={this.removeBar} />, tooltip);
-    tooltip.setAttribute("class", "d3-tooltip");
-    tooltip.style.display = "none";
-
-    tooltip.onmouseenter = () => {
-      this.manageTooltip(true);
-    };
-
-    tooltip.onmouseleave = e => {
-      let el = document.elementFromPoint(e.clientX, e.clientY);
-
-      do {
-        if (tooltip === el) {
-          //false positive
-          return;
-        }
-      } while ((el = el.parentNode as any));
-
-      this.manageTooltip(false);
-    };
-
-    this.tooltip = tooltip;
-    document.body.appendChild(tooltip);
-  }
-  componentWillUnmount() {
-    document.getElementsByTagName("main")[0].removeEventListener("scroll", this.hideTooltipImmediate);
-  }
-  showTooltip = () => {
-    this.manageTooltip(true);
-  };
-  hideTooltip = () => {
-    this.manageTooltip(false);
-  };
-  hideTooltipImmediate = () => {
-    this._manageTooltip(false);
-  };
-  showTooltipImmediate = () => {
-    this._manageTooltip(true);
-  };
-  _toggleTooltip = () => {
-    this._manageTooltip(!this.tooltipShown);
-  };
   render() {
-    let { x, data, height, width, graphWidth, offsetY, count, index } = this.props;
+    let { x, data, height, width, graphWidth, offsetY, count, index, drilldown } = this.props;
+
+    let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
 
     return data.entries.length == 1 ? (
       <SingleBar
-        showTooltip={this.showTooltip}
-        showTooltipImmediate={this.showTooltipImmediate}
-        hideTooltip={this.hideTooltip}
-        toggleTooltip={this._toggleTooltip}
-        ref={el => (this.el = el)}
         color={data.entries[0].color}
         children={data.entries[0].children}
-        {...{ data, count, index, height, width, x, graphWidth, offsetY }}
+        {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects }}
       />
     ) : (
-      <MultiBar
-        showTooltip={this.showTooltip}
-        showTooltipImmediate={this.showTooltipImmediate}
-        hideTooltip={this.hideTooltip}
-        toggleTooltip={this._toggleTooltip}
-        ref={el => (this.el = el)}
-        {...{ height, width, x, graphWidth, data, offsetY }}
-      />
+      <MultiBar {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects }} />
     );
   }
 }
@@ -151,7 +49,7 @@ class SingleBar extends PureComponent<any, any> {
     select(this.el).transition().duration(300).attr("height", this.props.height).attr("width", this.props.width).attr("x", this.props.x);
   }
   render() {
-    let { x, height, width, color, data, offsetY, count, index } = this.props;
+    let { x, height, width, color, data, offsetY, count, index, drilldown, chartIndex, childSubjects } = this.props;
     let { initialWidth } = this.state;
 
     return (
@@ -159,15 +57,15 @@ class SingleBar extends PureComponent<any, any> {
         <g>
           <rect ref={el => (this.el = el)} x={initialWidth} y={0} height={0} width={0} fill={color} />
         </g>
-        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} offsetY={offsetY} count={count} index={index} />
+        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} {...{ offsetY, count, index, drilldown, chartIndex, childSubjects }} />
       </>
     );
   }
 }
 
 const SvgTooltip = props => {
-  const { srcHeight, srcWidth, srcX, data, offsetY, count, index } = props;
-  const OFFSET_LEFT = 5;
+  const { srcHeight, srcWidth, srcX, data, drilldown, chartIndex, childSubjects, count, index } = props;
+  const OFFSET_LEFT = 10;
   const CONTENT_X_START = 5;
   const CONTAINER_PADDING = 5;
 
@@ -204,8 +102,8 @@ const SvgTooltip = props => {
       newY = -1 * (tooltipContainer.height - -1 * tooltipContainer.y) - 2;
     }
 
-    if (((index / count) > 0.5) && tooltipContainer.width > srcWidth) {
-      newX = -1 * (tooltipContainer.width - srcWidth + (2 * CONTAINER_PADDING));
+    if (index / count > 0.5 && tooltipContainer.width > srcWidth) {
+      newX = -1 * (tooltipContainer.width - srcWidth + 2 * CONTAINER_PADDING);
     }
 
     setAdjust({ x: newX, y: newY });
@@ -213,20 +111,40 @@ const SvgTooltip = props => {
 
   return (
     <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}>
-      <rect rx="5" {...tooltipContainer} fill="green"></rect>
-      <g ref={contentEl}>
-        <text style={{ fontSize: "26px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
-          {display}
+      <rect rx="5" {...tooltipContainer} fill="black"></rect>
+      <g style={{ fill: "white" }} ref={contentEl}>
+        <text style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
+          {display}: {data.count}
         </text>
-        <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 40} width="25" />
+        {childSubjects.length ? (
+          <>
+            <rect
+              onClick={() => drilldown(chartIndex, childSubjects, display)}
+              style={{ cursor: "pointer" }}
+              x={CONTENT_X_START - 5}
+              y={-1 * textAnchorY + 30}
+              width="30"
+              height="20"
+              fill="black"
+            ></rect>
+            <GraphSvg className="svgPointer" x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
+          </>
+        ) : null}
+        <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
       </g>
     </g>
   );
 };
 
-const GraphSvg = ({ ...props }) => (
+const GraphSvg = props => (
   <svg preserveAspectRatio="xMinYMin" {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <path d="M396.8 352h22.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-192 0h22.4c6.4 0 12.8-6.4 12.8-12.8V140.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h22.4c6.4 0 12.8-6.4 12.8-12.8V204.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zM496 400H48V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zm-387.2-48h22.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8z" />
+  </svg>
+);
+
+const RemoveSvg = props => (
+  <svg preserveAspectRatio="xMinYMin" {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z" />
   </svg>
 );
 
@@ -259,16 +177,20 @@ class MultiBar extends PureComponent<any, any> {
     });
   }
   render() {
-    let { data, showTooltip, hideTooltip, toggleTooltip, showTooltipImmediate } = this.props;
+    let { data, height, count, index, width, x, offsetY, drilldown, chartIndex, childSubjects } = this.props;
     let { initialWidth } = this.state;
     let colors = data.entries.map(e => e.color);
 
     return (
-      <g onTouchStart={toggleTooltip} onMouseOver={showTooltip} onMouseMove={showTooltipImmediate} onMouseOut={hideTooltip}>
-        {colors.map((color, i) => (
-          <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} key={i} />
-        ))}
-      </g>
+      <>
+        <g>
+          {colors.map((color, i) => (
+            <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} key={i} />
+          ))}
+        </g>
+
+        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} {...{ offsetY, count, index, drilldown, chartIndex, childSubjects }} />
+      </>
     );
   }
 }
