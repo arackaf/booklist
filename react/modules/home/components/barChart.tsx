@@ -1,4 +1,4 @@
-import React, { FC, memo, useRef, useState, useEffect, useContext } from "react";
+import React, { FC, memo, useRef, useState, useEffect, useContext, useMemo } from "react";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -13,6 +13,7 @@ import { useQuery } from "micro-graphql-react";
 import { graphqlClient } from "util/graphql";
 import { clearCache } from "util/graphqlCacheHelpers";
 import { AppContext } from "app/renderUI";
+import SvgTooltip from "./SvgTooltip";
 
 graphqlClient.subscribeMutation([/(update|delete)Subjects?/, /(update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) })));
 
@@ -119,6 +120,14 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   };
 
   const margin = { top: 20, right: 10, bottom: 180, left: 0 };
+  const showingDataRaw = graphData?.filter(d => !excluding[d.groupId]);
+  
+  const showingData = useMemo(() => {
+    showingDataRaw?.forEach((data: any) => {
+      data.childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
+    });
+    return showingDataRaw as any;
+  }, [showingDataRaw]);
 
   if (!graphData) {
     return null;
@@ -134,7 +143,6 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     );
   }
 
-  const showingData = graphData.filter(d => !excluding[d.groupId]);
   width = Math.min(width, showingData.length * 110 + 60);
 
   const dataValues = showingData.map(({ count }) => count);
@@ -197,6 +205,23 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   height={dataScale(d.count)}
                   graphWidth={graphWidth}
                   offsetY={offsetY}
+                  childSubjects={d.childSubjects}
+                />
+              ))}
+          </g>
+          <g transform={`scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`}>
+            {showingData
+              .filter(d => !excluding[d.groupId])
+              .map((d, i) => (
+                <SvgTooltip
+                  data={d}
+                  srcHeight={dataScale(d.count)}
+                  srcWidth={scaleX.bandwidth()}
+                  srcX={scaleX(d.display)}
+                  count={showingData.length}
+                  index={i}
+                  childSubjects={d.childSubjects}
+                  {...{ offsetY, drilldown, chartIndex, removeBar }}
                 />
               ))}
           </g>
