@@ -1,4 +1,4 @@
-import React, { PureComponent, useLayoutEffect, useRef, useState } from "react";
+import React, { PureComponent, useLayoutEffect, useRef, useState, useMemo } from "react";
 import { findDOMNode, render } from "react-dom";
 
 import select from "d3-selection/src/select";
@@ -109,7 +109,7 @@ export default class Bar extends PureComponent<any, any> {
     this._manageTooltip(!this.tooltipShown);
   };
   render() {
-    let { x, data, height, width, graphWidth, offsetY } = this.props;
+    let { x, data, height, width, graphWidth, offsetY, count, index } = this.props;
 
     return data.entries.length == 1 ? (
       <SingleBar
@@ -120,7 +120,7 @@ export default class Bar extends PureComponent<any, any> {
         ref={el => (this.el = el)}
         color={data.entries[0].color}
         children={data.entries[0].children}
-        {...{ data, height, width, x, graphWidth, offsetY }}
+        {...{ data, count, index, height, width, x, graphWidth, offsetY }}
       />
     ) : (
       <MultiBar
@@ -151,35 +151,25 @@ class SingleBar extends PureComponent<any, any> {
     select(this.el).transition().duration(300).attr("height", this.props.height).attr("width", this.props.width).attr("x", this.props.x);
   }
   render() {
-    let { x, height, width, color, data, showTooltip, hideTooltip, toggleTooltip, showTooltipImmediate, offsetY } = this.props;
+    let { x, height, width, color, data, offsetY, count, index } = this.props;
     let { initialWidth } = this.state;
 
     return (
       <>
         <g>
-          <rect
-            onTouchStart={toggleTooltip}
-            onMouseMove={showTooltipImmediate}
-            onMouseOver={showTooltip}
-            onMouseOut={hideTooltip}
-            ref={el => (this.el = el)}
-            x={initialWidth}
-            y={0}
-            height={0}
-            width={0}
-            fill={color}
-          />
+          <rect ref={el => (this.el = el)} x={initialWidth} y={0} height={0} width={0} fill={color} />
         </g>
-        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} offsetY={offsetY} />
+        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} offsetY={offsetY} count={count} index={index} />
       </>
     );
   }
 }
 
 const SvgTooltip = props => {
-  const { srcHeight, srcWidth, srcX, data, offsetY } = props;
+  const { srcHeight, srcWidth, srcX, data, offsetY, count, index } = props;
   const OFFSET_LEFT = 5;
-  const TEXT_OFFSET = 5;
+  const CONTENT_X_START = 5;
+  const CONTAINER_PADDING = 5;
 
   const display = data?.entries
     .map(e => e.name)
@@ -187,44 +177,57 @@ const SvgTooltip = props => {
     .join(",");
 
   const rootEl = useRef(null);
+  const contentEl = useRef(null);
 
-  const [textOffset, setTextOffset] = useState(0);
-  let textAnchorY = srcHeight - textOffset - 30;
+  const [adjust, setAdjust] = useState({ x: 0, y: 0 });
+  const [tooltipContentsBox, setTooltipContentsBox] = useState({ width: 0, height: 0, x: 0, y: 0 });
+  let textAnchorY = srcHeight - CONTAINER_PADDING * 3;
 
-  if (textOffset > 0 && textAnchorY < textOffset) {
-    textAnchorY = textOffset;
-  }
+  const tooltipContainer = useMemo(() => {
+    return {
+      x: tooltipContentsBox.x - CONTAINER_PADDING,
+      y: tooltipContentsBox.y - CONTAINER_PADDING,
+      width: tooltipContentsBox.width + CONTAINER_PADDING * 4,
+      height: tooltipContentsBox.height + CONTAINER_PADDING * 3
+    };
+  }, [tooltipContentsBox]);
 
   useLayoutEffect(() => {
     const textEl = rootEl.current.getElementsByTagName("text")[0];
-    const box = textEl.getBBox();
-    setTextOffset(textEl.getElementsByTagName("tspan")?.[1]?.getBBox()?.height ?? 0);
+    setTooltipContentsBox(contentEl.current.getBBox());
   }, []);
 
+  useLayoutEffect(() => {
+    let newX = 0;
+    let newY = 0;
+    if (tooltipContainer.y + tooltipContainer.height > 0) {
+      newY = -1 * (tooltipContainer.height - -1 * tooltipContainer.y) - 2;
+    }
+
+    if (((index / count) > 0.5) && tooltipContainer.width > srcWidth) {
+      newX = -1 * (tooltipContainer.width - srcWidth + (2 * CONTAINER_PADDING));
+    }
+
+    setAdjust({ x: newX, y: newY });
+  }, [tooltipContainer]);
+
   return (
-    <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0)`}>
-      <text style={{ fontSize: "26px" }} dominantBaseline="hanging" x={TEXT_OFFSET} y={-1 * textAnchorY}>
-        {display}
-      </text>
-      <GraphSvg y={-1 * textAnchorY} />
+    <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}>
+      <rect rx="5" {...tooltipContainer} fill="green"></rect>
+      <g ref={contentEl}>
+        <text style={{ fontSize: "26px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
+          {display}
+        </text>
+        <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 40} width="25" />
+      </g>
     </g>
   );
 };
 
-const GraphSvg = ({ y }) => (
-  <svg preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg" x="5" y={y + 30} viewBox="0 0 640 512" width="40">
-    <path d="M208 288h-32c-4.42 0-8 3.58-8 8v208c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V296c0-4.42-3.58-8-8-8zM80 384H48c-4.42 0-8 3.58-8 8v112c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V392c0-4.42-3.58-8-8-8zm256-192h-32c-4.42 0-8 3.58-8 8v304c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V200c0-4.42-3.58-8-8-8z" />
+const GraphSvg = ({ ...props }) => (
+  <svg preserveAspectRatio="xMinYMin" {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <path d="M396.8 352h22.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-192 0h22.4c6.4 0 12.8-6.4 12.8-12.8V140.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h22.4c6.4 0 12.8-6.4 12.8-12.8V204.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zM496 400H48V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zm-387.2-48h22.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8z" />
   </svg>
-);
-
-const GraphSvg2 = () => (
-  <g transform="translate(200 200)">
-    <path d="M208 288h-32c-4.42 0-8 3.58-8 8v208c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V296c0-4.42-3.58-8-8-8zM80 384H48c-4.42 0-8 3.58-8 8v112c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V392c0-4.42-3.58-8-8-8zm256-192h-32c-4.42 0-8 3.58-8 8v304c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V200c0-4.42-3.58-8-8-8z" />
-  </g>
-);
-
-const GraphSvg3 = () => (
-  <path d="M208 288h-32c-4.42 0-8 3.58-8 8v208c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V296c0-4.42-3.58-8-8-8zM80 384H48c-4.42 0-8 3.58-8 8v112c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V392c0-4.42-3.58-8-8-8zm256-192h-32c-4.42 0-8 3.58-8 8v304c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V200c0-4.42-3.58-8-8-8z" />
 );
 
 class MultiBar extends PureComponent<any, any> {
