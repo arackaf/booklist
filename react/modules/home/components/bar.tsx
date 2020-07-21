@@ -18,6 +18,7 @@ export default class Bar extends PureComponent<any, any> {
 
   render() {
     let { x, data, height, width, graphWidth, offsetY, chartIndex, count, index, drilldown } = this.props;
+    let removeBar = this.removeBar;
 
     let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
 
@@ -25,10 +26,10 @@ export default class Bar extends PureComponent<any, any> {
       <SingleBar
         color={data.entries[0].color}
         children={data.entries[0].children}
-        {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex }}
+        {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex, removeBar }}
       />
     ) : (
-      <MultiBar {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex }} />
+      <MultiBar {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex, removeBar }} />
     );
   }
 }
@@ -49,7 +50,7 @@ class SingleBar extends PureComponent<any, any> {
     select(this.el).transition().duration(300).attr("height", this.props.height).attr("width", this.props.width).attr("x", this.props.x);
   }
   render() {
-    let { x, height, width, color, data, offsetY, count, index, drilldown, chartIndex, childSubjects } = this.props;
+    let { x, height, width, color, data, offsetY, count, index, drilldown, chartIndex, childSubjects, removeBar } = this.props;
     let { initialWidth } = this.state;
 
     return (
@@ -57,14 +58,20 @@ class SingleBar extends PureComponent<any, any> {
         <g>
           <rect ref={el => (this.el = el)} x={initialWidth} y={0} height={0} width={0} fill={color} />
         </g>
-        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} {...{ offsetY, count, index, drilldown, chartIndex, childSubjects }} />
+        <SvgTooltip
+          data={data}
+          srcHeight={height}
+          srcWidth={width}
+          srcX={x}
+          {...{ offsetY, count, index, drilldown, chartIndex, childSubjects, removeBar }}
+        />
       </>
     );
   }
 }
 
 const SvgTooltip = props => {
-  const { srcHeight, srcWidth, srcX, data, drilldown, chartIndex, childSubjects, count, index } = props;
+  const { srcHeight, srcWidth, srcX, data, drilldown, chartIndex, childSubjects, count, index, removeBar } = props;
   const OFFSET_LEFT = 10;
   const CONTENT_X_START = 5;
   const CONTAINER_PADDING = 5;
@@ -93,7 +100,7 @@ const SvgTooltip = props => {
   useLayoutEffect(() => {
     const textEl = rootEl.current.getElementsByTagName("text")[0];
     setTooltipContentsBox(contentEl.current.getBBox());
-  }, []);
+  }, [srcX, display, srcWidth, srcHeight]);
 
   useLayoutEffect(() => {
     let newX = 0;
@@ -119,10 +126,15 @@ const SvgTooltip = props => {
         {childSubjects.length ? (
           <g onClick={() => drilldown(chartIndex, childSubjects, display)} className="svgPointer">
             <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black"></rect>
-            <GraphSvg className="svgPointer" x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
+            <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
           </g>
         ) : null}
-        <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
+
+        <g onClick={() => removeBar()} className="svgPointer">
+          <rect x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" height="20" fill="black"></rect>
+
+          <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
+        </g>
       </g>
     </g>
   );
@@ -169,7 +181,7 @@ class MultiBar extends PureComponent<any, any> {
     });
   }
   render() {
-    let { data, height, count, index, width, x, offsetY, drilldown, chartIndex, childSubjects } = this.props;
+    let { data, height, count, index, width, x, offsetY, drilldown, chartIndex, childSubjects, removeBar } = this.props;
     let { initialWidth } = this.state;
     let colors = data.entries.map(e => e.color);
 
@@ -181,7 +193,13 @@ class MultiBar extends PureComponent<any, any> {
           ))}
         </g>
 
-        <SvgTooltip data={data} srcHeight={height} srcWidth={width} srcX={x} {...{ offsetY, count, index, drilldown, chartIndex, childSubjects }} />
+        <SvgTooltip
+          data={data}
+          srcHeight={height}
+          srcWidth={width}
+          srcX={x}
+          {...{ offsetY, count, index, drilldown, chartIndex, childSubjects, removeBar }}
+        />
       </>
     );
   }
