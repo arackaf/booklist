@@ -151,7 +151,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   let graphWidth = width;
   const delta = maxWidth - graphWidth;
   let extraOffsetX = 0;
-  if (1 && delta > 0) {
+  if (graphWidth < maxWidth) {
     graphWidth = maxWidth;
     extraOffsetX = delta / 2;
   }
