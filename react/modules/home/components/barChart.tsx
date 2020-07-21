@@ -72,7 +72,7 @@ const stackGraphData = (subjectHash, subjectIds, data) => {
   }
 };
 
-const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown, header }) => {
+const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown, maxWidth, header }) => {
   const [excluding, setExcluding] = useState({});
   const [{ publicUserId }] = useContext(AppContext);
 
@@ -101,6 +101,11 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
       el.addEventListener("touchstart", svgTouch);
     }
   };
+
+  const noResultsRef = el => {
+    el && el.scrollIntoView({ behavior: "smooth" });
+  };
+
   const clearOnTouch = new Set(["text", "h4", "div", "svg"]);
   const svgTouch = evt => {
     if (clearOnTouch.has(evt.target.tagName.toLowerCase())) {
@@ -118,9 +123,13 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   if (!graphData) {
     return null;
   } else if (!graphData.length) {
-    return (
-      <div className="alert alert-warning inline-flex">
+    return chartIndex == 0 ? (
+      <div className="alert alert-warning inline-flex" style={{ marginBottom: "75px" }}>
         It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
+      </div>
+    ) : (
+      <div ref={noResultsRef} className="alert alert-warning" style={{ margin: "0 auto 75px auto" }}>
+        It looks like the child subjects under {header} currently have no books assigned
       </div>
     );
   }
@@ -132,19 +141,20 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const displayValues = showingData.map(({ display }) => display);
   const chartHeight = height - margin.top - margin.bottom;
   const dataMax = max(dataValues);
-  const dataScale = scaleLinear()
-    .domain([0, dataMax])
-    .range([0, chartHeight]);
-  const scaleX = scaleBand()
-    .domain(displayValues)
-    .range([0, width])
-    .paddingInner([0.1])
-    .paddingOuter([0.3])
-    .align([0.5]);
+  const dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]);
+  const scaleX = scaleBand().domain(displayValues).range([0, width]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
   const svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
 
   const excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   const offsetY = margin.bottom - height;
+
+  let graphWidth = width;
+  const delta = maxWidth - graphWidth;
+  let extraOffsetX = 0;
+  if (1 && delta > 0) {
+    graphWidth = maxWidth;
+    extraOffsetX = delta / 2;
+  }
 
   return (
     <div ref={topRef}>
@@ -167,8 +177,8 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
             </span>
           ) : null}
         </div>
-        <svg style={svgStyle} width={width} height={height}>
-          <g transform={`scale(1, -1) translate(${margin.left}, ${offsetY})`}>
+        <svg style={svgStyle} width={graphWidth} height={height}>
+          <g transform={`scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`}>
             {showingData
               .filter(d => !excluding[d.groupId])
               .map((d, i) => (
@@ -185,12 +195,12 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   y={0}
                   width={scaleX.bandwidth()}
                   height={dataScale(d.count)}
-                  graphWidth={width}
+                  graphWidth={graphWidth}
                   offsetY={offsetY}
                 />
               ))}
           </g>
-          <g transform={`translate(${margin.left}, ${-1 * margin.bottom})`}>
+          <g transform={`translate(${margin.left + extraOffsetX}, ${-1 * margin.bottom})`}>
             <Axis scale={scaleX} transform={`translate(0, ${height})`} />
           </g>
         </svg>

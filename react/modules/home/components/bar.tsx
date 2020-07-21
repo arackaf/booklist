@@ -17,7 +17,7 @@ export default class Bar extends PureComponent<any, any> {
   };
 
   render() {
-    let { x, data, height, width, graphWidth, offsetY, count, index, drilldown } = this.props;
+    let { x, data, height, width, graphWidth, offsetY, chartIndex, count, index, drilldown } = this.props;
 
     let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
 
@@ -25,10 +25,10 @@ export default class Bar extends PureComponent<any, any> {
       <SingleBar
         color={data.entries[0].color}
         children={data.entries[0].children}
-        {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects }}
+        {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex }}
       />
     ) : (
-      <MultiBar {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects }} />
+      <MultiBar {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex }} />
     );
   }
 }
@@ -117,18 +117,10 @@ const SvgTooltip = props => {
           {display}: {data.count}
         </text>
         {childSubjects.length ? (
-          <>
-            <rect
-              onClick={() => drilldown(chartIndex, childSubjects, display)}
-              style={{ cursor: "pointer" }}
-              x={CONTENT_X_START - 5}
-              y={-1 * textAnchorY + 30}
-              width="30"
-              height="20"
-              fill="black"
-            ></rect>
+          <g onClick={() => drilldown(chartIndex, childSubjects, display)} className="svgPointer">
+            <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black"></rect>
             <GraphSvg className="svgPointer" x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
-          </>
+          </g>
         ) : null}
         <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
       </g>
