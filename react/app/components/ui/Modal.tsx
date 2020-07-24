@@ -49,26 +49,6 @@ const Modal: SFC<ModalTypes> = props => {
     };
   }, []);
 
-  const [heightOn, setHeightOn] = useState(false);
-  const [sizingRef, contentHeight] = useHeight({ on: heightOn });
-  const uiReady = useRef(false);
-
-  const activateRef = ref => {
-    sizingRef.current = ref;
-    if (!heightOn) {
-      setHeightOn(true);
-    }
-  };
-
-  const heightStyles =
-    useSpring({
-      immediate: !uiReady.current || !animatModalSizing.current,
-      config: { ...config.stiff },
-      from: { height: 0 },
-      to: { height: contentHeight },
-      onRest: () => (uiReady.current = true)
-    }) || {};
-
   return (
     <ModalSizingContext.Provider value={modalSizingPacket}>
       {modalTransition(
@@ -89,17 +69,44 @@ const Modal: SFC<ModalTypes> = props => {
                   ...style
                 }}
               >
-                <animated.div style={{ overflow: "hidden", ...heightStyles }}>
-                  <div style={{ padding: "10px" }} ref={activateRef}>
-                    {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
-                    {children}
-                  </div>
-                </animated.div>
+                <ModalContents content={children} {...{ animatModalSizing, headerCaption, onHide }} />
               </AnimatedDialogContent>
             </AnimatedDialogOverlay>
           )
       )}
     </ModalSizingContext.Provider>
+  );
+};
+
+const ModalContents = ({ animatModalSizing, headerCaption, content, onHide }) => {
+  const uiReady = useRef(false);
+
+  const [heightOn, setHeightOn] = useState(false);
+  const [sizingRef, contentHeight] = useHeight({ on: heightOn });
+
+  const activateRef = ref => {
+    sizingRef.current = ref;
+    if (!heightOn) {
+      setHeightOn(true);
+    }
+  };
+
+  const heightStyles =
+    useSpring({
+      immediate: !uiReady.current || !animatModalSizing.current,
+      config: { ...config.stiff },
+      from: { height: 0 },
+      to: { height: contentHeight },
+      onRest: () => (uiReady.current = true)
+    }) || {};
+
+  return (
+    <animated.div style={{ overflow: "hidden", ...heightStyles }}>
+      <div style={{ padding: "10px" }} ref={activateRef}>
+        {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
+        {content}
+      </div>
+    </animated.div>
   );
 };
 
