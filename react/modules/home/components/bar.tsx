@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import { useSpring, config, animated } from "react-spring";
 
 import select from "d3-selection/src/select";
 
@@ -26,32 +27,21 @@ export default class Bar extends PureComponent<any, any> {
   }
 }
 
-class SingleBar extends PureComponent<any, any> {
-  el: any;
-  constructor(props) {
-    super(props);
-    this.state = { initialWidth: this.props.graphWidth };
-  }
-  componentDidMount() {
-    this.drawBar();
-  }
-  componentDidUpdate(prevProps, prevState) {
-    this.drawBar();
-  }
-  drawBar() {
-    select(this.el).transition().duration(300).attr("height", this.props.height).attr("width", this.props.width).attr("x", this.props.x);
-  }
-  render() {
-    let { color, hoverBar, unHoverBar, data } = this.props;
-    let { initialWidth } = this.state;
+const SingleBar = props => {
+  let { color, hoverBar, unHoverBar, data } = props;
 
-    return (
-      <g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
-        <rect ref={el => (this.el = el)} x={initialWidth} y={0} height={0} width={0} fill={color} />
-      </g>
-    );
-  }
-}
+  let animatedValues = useSpring({
+    config: config.stiff,
+    from: { height: 0, width: 0, x: props.graphWidth },
+    to: { height: props.height, width: props.width, x: props.x }
+  });
+
+  return (
+    <g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
+      <animated.rect {...animatedValues} y={0} fill={color} />
+    </g>
+  );
+};
 
 class MultiBar extends PureComponent<any, any> {
   el: any;
