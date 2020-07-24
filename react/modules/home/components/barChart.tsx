@@ -1,4 +1,4 @@
-import React, { FC, memo, useRef, useState, useEffect, useContext, useMemo } from "react";
+import React, { FC, memo, useRef, useState, useEffect, useContext, useMemo, useCallback } from "react";
 
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
@@ -109,6 +109,10 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     return showingDataRaw as any;
   }, [showingDataRaw]);
 
+  const [hoveredMap, setHoveredMap] = useState({});
+  const hoverBar = useCallback(groupId => setHoveredMap(prior => ({ ...prior, [groupId]: true })), []);
+  const unHoverBar = useCallback(groupId => setTimeout(() => setHoveredMap(prior => ({ ...prior, [groupId]: false })), 1), []);
+
   if (!graphData) {
     return null;
   } else if (!graphData.length) {
@@ -180,6 +184,8 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   width={scaleX.bandwidth()}
                   height={dataScale(d.count)}
                   graphWidth={graphWidth}
+                  hoverBar={hoverBar}
+                  unHoverBar={unHoverBar}
                 />
               ))}
           </g>
@@ -195,6 +201,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   count={showingData.length}
                   index={i}
                   childSubjects={d.childSubjects}
+                  hovered={hoveredMap[d.groupId]}
                   {...{ offsetY, drilldown, chartIndex, removeBar }}
                 />
               ))}

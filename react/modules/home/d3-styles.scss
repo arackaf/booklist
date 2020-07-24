@@ -34,3 +34,9 @@
     cursor: pointer;
   }
 }
+
+.svg-tooltip {
+  * {
+    pointer-events: none;
+  }
+}

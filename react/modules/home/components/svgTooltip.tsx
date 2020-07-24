@@ -1,7 +1,11 @@
 import React, { useRef, useState, useMemo, useLayoutEffect } from "react";
 
 const SvgTooltip = props => {
-  const { srcHeight, srcWidth, srcX, data, drilldown, chartIndex, childSubjects, count, index } = props;
+  const { srcHeight, srcWidth, srcX, data, drilldown, chartIndex, childSubjects, count, index, hovered } = props;
+
+  const [tooltipHovered, setTooltipHovered] = useState(false);
+
+  const isShowing = hovered || tooltipHovered;
   const OFFSET_LEFT = 10;
   const CONTENT_X_START = 5;
   const CONTAINER_PADDING = 5;
@@ -28,8 +32,8 @@ const SvgTooltip = props => {
   }, [tooltipContentsBox]);
 
   useLayoutEffect(() => {
-    setTooltipContentsBox(contentEl.current.getBBox());
-  }, [srcX, display, srcWidth, srcHeight]);
+    isShowing && setTooltipContentsBox(contentEl.current.getBBox());
+  }, [isShowing, srcX, display, srcWidth, srcHeight]);
 
   useLayoutEffect(() => {
     let newX = 0;
@@ -47,8 +51,14 @@ const SvgTooltip = props => {
 
   const removeBar = () => props.removeBar(props.data.groupId);
 
-  return (
-    <g ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}>
+  return hovered ? (
+    <g
+      className="svg-tooltip"
+      ref={rootEl}
+      onMouseOver={() => setTooltipHovered(true)}
+      onMouseOut={() => setTooltipHovered(false)}
+      transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}
+    >
       <rect rx="5" {...tooltipContainer} fill="black"></rect>
       <g style={{ fill: "white" }} ref={contentEl}>
         <text style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
@@ -68,7 +78,7 @@ const SvgTooltip = props => {
         </g>
       </g>
     </g>
-  );
+  ) : null;
 };
 
 const GraphSvg = props => (
