@@ -1,4 +1,5 @@
 import React, { useRef, useState, useMemo, useLayoutEffect } from "react";
+import { useTransition, config, animated } from "react-spring";
 
 const SvgTooltip = props => {
   const { srcHeight, srcWidth, srcX, data, drilldown, chartIndex, childSubjects, count, index, hovered } = props;
@@ -51,34 +52,45 @@ const SvgTooltip = props => {
 
   const removeBar = () => props.removeBar(props.data.groupId);
 
-  return isShowing ? (
-    <g
-      onMouseOver={() => setTooltipHovered(true)}
-      onMouseLeave={() => setTooltipHovered(false)}
-      className="svg-tooltip"
-      ref={rootEl}
-      transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}
-    >
-      <rect className="content" rx="5" {...tooltipContainer} fill="black"></rect>
-      <g style={{ fill: "white" }} ref={contentEl}>
-        <text style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
-          {display}: {data.count}
-        </text>
-        {childSubjects.length ? (
-          <g onClick={() => drilldown(chartIndex, childSubjects, display)} className="svgPointer">
-            <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black"></rect>
-            <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
+  const tooltipTransition = useTransition(!!isShowing, {
+    config: config.stiff,
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  });
+
+  return tooltipTransition(
+    (styles, isShowing) =>
+      isShowing && (
+        <animated.g
+          onMouseOver={() => setTooltipHovered(true)}
+          onMouseLeave={() => setTooltipHovered(false)}
+          className="svg-tooltip"
+          ref={rootEl}
+          transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}
+          style={styles}
+        >
+          <rect className="content" rx="5" {...tooltipContainer} fill="black"></rect>
+          <g style={{ fill: "white" }} ref={contentEl}>
+            <text style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
+              {display}: {data.count}
+            </text>
+            {childSubjects.length ? (
+              <g onClick={() => drilldown(chartIndex, childSubjects, display)} className="svgPointer">
+                <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black"></rect>
+                <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
+              </g>
+            ) : null}
+
+            <g onClick={removeBar} className="svgPointer">
+              <rect x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" height="20" fill="black"></rect>
+
+              <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
+            </g>
           </g>
-        ) : null}
-
-        <g onClick={removeBar} className="svgPointer">
-          <rect x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" height="20" fill="black"></rect>
-
-          <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
-        </g>
-      </g>
-    </g>
-  ) : null;
+        </animated.g>
+      )
+  );
 };
 
 const GraphSvg = props => (
