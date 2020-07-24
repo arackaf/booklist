@@ -51,24 +51,15 @@ const SvgTooltip = props => {
 
   const removeBar = () => props.removeBar(props.data.groupId);
 
-  const onMouseOut = event => {
-    //this is the original element the event handler was assigned to
-    var target = event.toElement || event.relatedTarget;
-
-    while (target.parentNode) {
-      if (target.parentNode == rootEl.current || target == rootEl.current) {
-        return;
-      }
-      target = target.parentNode;
-    }
-
-    setTooltipHovered(false);
-    // handle mouse event here!
-  };
-
   return isShowing ? (
-    <g className="svg-tooltip" ref={rootEl} transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}>
-      <rect onMouseOver={() => setTooltipHovered(true)} onMouseOut={onMouseOut} className="content" rx="5" {...tooltipContainer} fill="black"></rect>
+    <g
+      onMouseOver={() => setTooltipHovered(true)}
+      onMouseLeave={() => setTooltipHovered(false)}
+      className="svg-tooltip"
+      ref={rootEl}
+      transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}
+    >
+      <rect className="content" rx="5" {...tooltipContainer} fill="black"></rect>
       <g style={{ fill: "white" }} ref={contentEl}>
         <text style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
           {display}: {data.count}
