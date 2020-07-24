@@ -95,33 +95,13 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     }
   }, [newRespData, subjects]);
 
-  const topRef = el => {
-    if (!el) return;
-    if (el != elRef.current) {
-      elRef.current = el;
-      el.addEventListener("touchstart", svgTouch);
-    }
-  };
-
   const noResultsRef = el => {
     el && el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const clearOnTouch = new Set(["text", "h4", "div", "svg"]);
-  const svgTouch = evt => {
-    if (clearOnTouch.has(evt.target.tagName.toLowerCase())) {
-      if (graphData) {
-        graphData.forEach(d => {
-          let componentMaybe = barMap.get(d.groupId);
-          componentMaybe && componentMaybe.hideTooltip();
-        });
-      }
-    }
-  };
-
   const margin = { top: 20, right: 10, bottom: 180, left: 0 };
   const showingDataRaw = graphData?.filter(d => !excluding[d.groupId]);
-  
+
   const showingData = useMemo(() => {
     showingDataRaw?.forEach((data: any) => {
       data.childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
@@ -165,7 +145,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   }
 
   return (
-    <div ref={topRef}>
+    <div>
       <div style={{ ...width, height }}>
         <div>
           <h4 style={{ display: "inline" }}>{header}</h4>
@@ -192,11 +172,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
               .map((d, i) => (
                 <Bar
                   ref={el => barMap.set(d.groupId, el)}
-                  drilldown={drilldown}
-                  chartIndex={chartIndex}
-                  removeBar={removeBar}
                   key={d.groupId}
-                  index={i}
                   data={d}
                   count={showingData.length}
                   x={scaleX(d.display)}
@@ -204,8 +180,6 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
                   width={scaleX.bandwidth()}
                   height={dataScale(d.count)}
                   graphWidth={graphWidth}
-                  offsetY={offsetY}
-                  childSubjects={d.childSubjects}
                 />
               ))}
           </g>

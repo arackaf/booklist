@@ -12,18 +12,12 @@ export default class Bar extends PureComponent<any, any> {
   manageTooltip: any;
 
   render() {
-    let { x, data, height, width, graphWidth, offsetY, chartIndex, count, index, drilldown } = this.props;
-
-    let childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
+    let { x, data, height, width, graphWidth, count } = this.props;
 
     return data.entries.length == 1 ? (
-      <SingleBar
-        color={data.entries[0].color}
-        children={data.entries[0].children}
-        {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex }}
-      />
+      <SingleBar color={data.entries[0].color} children={data.entries[0].children} {...{ data, count, height, width, x, graphWidth }} />
     ) : (
-      <MultiBar {...{ data, count, index, height, width, x, graphWidth, offsetY, drilldown, childSubjects, chartIndex }} />
+      <MultiBar {...{ data, count, height, width, x, graphWidth }} />
     );
   }
 }
