@@ -194,6 +194,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
               .filter(d => !excluding[d.groupId])
               .map((d, i) => (
                 <SvgTooltip
+                  key={d.groupId}
                   data={d}
                   srcHeight={dataScale(d.count)}
                   srcWidth={scaleX.bandwidth()}
