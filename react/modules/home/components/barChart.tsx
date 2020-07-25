@@ -195,7 +195,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
               ))}
           </g>
           <g transform={`translate(${margin.left + extraOffsetX}, ${-1 * margin.bottom})`}>
-            <Axis graphWidth={width} scale={scaleX} transform={`translate(0, ${height})`} />
+            <Axis data={showingData} scaleX={scaleX} graphWidth={width} scale={scaleX} transform={`translate(0, ${height})`} />
           </g>
         </svg>
       </div>
