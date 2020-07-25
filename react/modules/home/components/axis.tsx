@@ -18,7 +18,7 @@ export default class Axis extends Component<any, any> {
 
     select(this.el)
       .transition()
-      .duration(300)
+      .duration(200)
       .call(xAxis)
       .selectAll("text")
       .attr("transform", "rotate(290) translate(-10, -10)")
