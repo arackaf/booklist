@@ -1,5 +1,7 @@
 import React, { FC, memo, useRef, useState, useEffect, useContext, useMemo, useCallback } from "react";
 
+import { useSpring, config, animated } from "react-spring";
+
 import scaleLinear from "d3-scale/src/linear";
 import scaleBand from "d3-scale/src/band";
 import max from "d3-array/src/max";
@@ -148,6 +150,8 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     extraOffsetX = delta / 2;
   }
 
+  const transform = `scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`;
+
   return (
     <div>
       <div style={{ ...width, height }}>
@@ -170,26 +174,8 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
           ) : null}
         </div>
         <svg style={svgStyle} width={graphWidth} height={height}>
-          <g transform={`scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`}>
-            {showingData
-              .filter(d => !excluding[d.groupId])
-              .map((d, i) => (
-                <Bar
-                  ref={el => barMap.set(d.groupId, el)}
-                  key={d.groupId}
-                  data={d}
-                  count={showingData.length}
-                  x={scaleX(d.display)}
-                  y={0}
-                  width={scaleX.bandwidth()}
-                  height={dataScale(d.count)}
-                  graphWidth={graphWidth}
-                  hoverBar={hoverBar}
-                  unHoverBar={unHoverBar}
-                />
-              ))}
-          </g>
-          <g transform={`scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`}>
+          <RenderBarChart {...{ showingData, excluding, barMap, scaleX, dataScale, graphWidth, hoverBar, unHoverBar, transform }} />
+          <g transform={transform}>
             {showingData
               .filter(d => !excluding[d.groupId])
               .map((d, i) => (
@@ -216,5 +202,34 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     </div>
   );
 });
+
+const RenderBarChart = ({ showingData, excluding, barMap, scaleX, dataScale, graphWidth, hoverBar, unHoverBar, transform }) => {
+  let animatedGOffsetValues = useSpring({
+    config: config.stiff,
+    to: { transform }
+  });
+
+  return (
+    <animated.g {...animatedGOffsetValues}>
+      {showingData
+        .filter(d => !excluding[d.groupId])
+        .map((d, i) => (
+          <Bar
+            ref={el => barMap.set(d.groupId, el)}
+            key={d.groupId}
+            data={d}
+            count={showingData.length}
+            x={scaleX(d.display)}
+            y={0}
+            width={scaleX.bandwidth()}
+            height={dataScale(d.count)}
+            graphWidth={graphWidth}
+            hoverBar={hoverBar}
+            unHoverBar={unHoverBar}
+          />
+        ))}
+    </animated.g>
+  );
+};
 
 export default BarChart;

@@ -1,7 +1,5 @@
 import React, { PureComponent } from "react";
-import { useSpring, config, animated } from "react-spring";
-
-import select from "d3-selection/src/select";
+import { useSpring, useSprings, config, animated } from "react-spring";
 
 export default class Bar extends PureComponent<any, any> {
   el: any;
@@ -43,45 +41,36 @@ const SingleBar = props => {
   );
 };
 
-class MultiBar extends PureComponent<any, any> {
-  el: any;
-  constructor(props) {
-    super(props);
-    this.state = { initialWidth: this.props.graphWidth };
-  }
-  componentDidMount() {
-    this.drawBar();
-  }
-  componentDidUpdate(prevProps, prevState) {
-    this.drawBar();
-  }
-  drawBar() {
-    let { height, width, x, data } = this.props,
-      count = data.entries.length,
-      colors = data.entries.map(e => e.color),
-      sectionHeight = ~~(height / count),
-      heightUsed = 0;
+const MultiBar = props => {
+  let { height, data, hoverBar, unHoverBar } = props;
+  let count = data.entries.length;
+  let colors = data.entries.map(e => e.color);
 
-    colors.forEach((color, i) => {
-      let isLast = i + 1 == count,
-        barHeight = isLast ? height - heightUsed : sectionHeight;
+  let heightUsed = 0;
+  const springs = useSprings(
+    count,
+    colors.map((color, i) => {
+      let isLast = i + 1 == count;
+      let sectionHeight = ~~(height / count);
+      let barHeight = isLast ? height - heightUsed : sectionHeight;
 
-      select(this[`el${i}`]).transition().duration(300).attr("height", barHeight).attr("width", width).attr("x", x).attr("y", heightUsed);
-
+      const heightToUse = heightUsed;
       heightUsed += barHeight;
-    });
-  }
-  render() {
-    let { data, hoverBar, unHoverBar } = this.props;
-    let { initialWidth } = this.state;
-    let colors = data.entries.map(e => e.color);
 
-    return (
-      <g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
-        {colors.map((color, i) => (
-          <rect ref={el => (this[`el${i}`] = el)} x={initialWidth} y={0} height={0} fill={color} width={0} key={i} />
-        ))}
-      </g>
-    );
-  }
-}
+      return {
+        config: config.stiff,
+        from: { x: props.graphWidth, y: 0, height: 0, width: 0, fill: color },
+        to: { x: props.x, y: heightToUse, height: barHeight, width: props.width, fill: color }
+      };
+    })
+  );
+
+  return (
+    <g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
+      {springs.map((props: any) => {
+        debugger;
+        return <animated.rect {...props} />;
+      })}
+    </g>
+  );
+};
