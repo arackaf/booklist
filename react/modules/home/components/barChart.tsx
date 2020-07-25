@@ -142,11 +142,12 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   const offsetY = margin.bottom - height;
 
-  let graphWidth = width;
-  const delta = maxWidth - graphWidth;
+  let totalSvgWidth = width;
+  console.log({ graphWidth: totalSvgWidth, width });
+  const delta = maxWidth - totalSvgWidth;
   let extraOffsetX = 0;
-  if (graphWidth < maxWidth) {
-    graphWidth = maxWidth;
+  if (totalSvgWidth < maxWidth) {
+    totalSvgWidth = maxWidth;
     extraOffsetX = delta / 2;
   }
 
@@ -173,8 +174,8 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
             </span>
           ) : null}
         </div>
-        <svg style={svgStyle} width={graphWidth} height={height}>
-          <RenderBarChart {...{ showingData, excluding, barMap, scaleX, dataScale, graphWidth, hoverBar, unHoverBar, transform }} />
+        <svg style={svgStyle} width={totalSvgWidth} height={height}>
+          <RenderBarChart {...{ showingData, excluding, barMap, scaleX, dataScale, totalSvgWidth, hoverBar, unHoverBar, transform }} />
           <g transform={transform}>
             {showingData
               .filter(d => !excluding[d.groupId])
@@ -194,7 +195,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
               ))}
           </g>
           <g transform={`translate(${margin.left + extraOffsetX}, ${-1 * margin.bottom})`}>
-            <Axis scale={scaleX} transform={`translate(0, ${height})`} />
+            <Axis graphWidth={width} scale={scaleX} transform={`translate(0, ${height})`} />
           </g>
         </svg>
       </div>
@@ -203,7 +204,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   );
 });
 
-const RenderBarChart = ({ showingData, excluding, barMap, scaleX, dataScale, graphWidth, hoverBar, unHoverBar, transform }) => {
+const RenderBarChart = ({ showingData, excluding, barMap, scaleX, dataScale, totalSvgWidth, hoverBar, unHoverBar, transform }) => {
   let animatedGOffsetValues = useSpring({
     config: config.stiff,
     to: { transform }
@@ -223,7 +224,7 @@ const RenderBarChart = ({ showingData, excluding, barMap, scaleX, dataScale, gra
             y={0}
             width={scaleX.bandwidth()}
             height={dataScale(d.count)}
-            graphWidth={graphWidth}
+            totalSvgWidth={totalSvgWidth}
             hoverBar={hoverBar}
             unHoverBar={unHoverBar}
           />

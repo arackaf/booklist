@@ -11,16 +11,16 @@ export default class Bar extends PureComponent<any, any> {
   manageTooltip: any;
 
   render() {
-    let { x, data, height, width, graphWidth, count, hoverBar, unHoverBar } = this.props;
+    let { x, data, height, width, totalSvgWidth, count, hoverBar, unHoverBar } = this.props;
 
     return data.entries.length == 1 ? (
       <SingleBar
         color={data.entries[0].color}
         children={data.entries[0].children}
-        {...{ data, count, height, width, x, graphWidth, hoverBar, unHoverBar }}
+        {...{ data, count, height, width, x, totalSvgWidth, hoverBar, unHoverBar }}
       />
     ) : (
-      <MultiBar {...{ data, count, height, width, x, graphWidth, hoverBar, unHoverBar }} />
+      <MultiBar {...{ data, count, height, width, x, totalSvgWidth, hoverBar, unHoverBar }} />
     );
   }
 }
@@ -30,7 +30,7 @@ const SingleBar = props => {
 
   let animatedValues = useSpring({
     config: config.stiff,
-    from: { height: 0, width: 0, x: props.graphWidth },
+    from: { height: 0, width: 0, x: props.totalSvgWidth },
     to: { height: props.height, width: props.width, x: props.x }
   });
 
@@ -59,7 +59,7 @@ const MultiBar = props => {
 
       return {
         config: config.stiff,
-        from: { x: props.graphWidth, y: 0, height: 0, width: 0, fill: color },
+        from: { x: props.totalSvgWidth, y: 0, height: 0, width: 0, fill: color },
         to: { x: props.x, y: heightToUse, height: barHeight, width: props.width, fill: color }
       };
     })
@@ -67,10 +67,9 @@ const MultiBar = props => {
 
   return (
     <g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
-      {springs.map((props: any) => {
-        debugger;
-        return <animated.rect {...props} />;
-      })}
+      {springs.map((props: any) => (
+        <animated.rect {...props} />
+      ))}
     </g>
   );
 };
