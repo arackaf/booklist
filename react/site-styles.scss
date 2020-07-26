@@ -13,8 +13,6 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --default-border-radius: 5px;
 
-  --content-background: hsl(40, 23%, 98%);
-
   --neutral-1: hsl(42, 15%, 13%);
   --neutral-2: hsl(40, 13%, 23%);
   --neutral-3: hsl(37, 11%, 28%);
@@ -151,7 +149,7 @@
   --primary-8: hsl(48, 95%, 76%);
   --primary-9: hsl(48, 100%, 88%);
   --primary-10: hsl(49, 100%, 96%);
-  --primary-11: hsl(49, 30%, 99%);
+  --primary-11: hsl(49, 42%, 99%);
 }
 .scheme7 {
   --primary-1: hsl(320, 100%, 19%);
@@ -177,7 +175,7 @@
   --primary-8: hsl(293, 54%, 68%);
   --primary-9: hsl(293, 67%, 85%);
   --primary-10: hsl(295, 58%, 93%);
-  --primary-10: hsl(295, 30%, 99%);
+  --primary-11: hsl(295, 30%, 99%);
 }
 .scheme9 {
   --primary-1: hsl(263, 85%, 18%);
@@ -295,6 +293,14 @@
   --primary-9: hsl(0, 0%, 88%);
   --primary-10: hsl(0, 0%, 97%);
   --primary-11: hsl(0, 0%, 99%);
+}
+
+body {
+  --content-background: var(--primary-11);
+  
+  &.white-bg {
+    --content-background: #FFF;
+  }
 }
 
 #home,
