@@ -42,6 +42,7 @@ export const URL_SYNC = "root.URL_SYNC";
 const IS_OFFLINE = "root.IS_OFFLINE";
 const IS_ONLINE = "root.IS_ONLINE";
 export const SET_THEME = "root.SET_THEME";
+export const SET_WHITE_BG = "root.SET_WHITE_BG";
 
 let initialUrlState = getCurrentUrlState();
 let initialSearchState = initialUrlState.searchState;
@@ -72,7 +73,8 @@ const initialState = {
   module: null,
   urlState: initialUrlState,
   online: navigator.onLine,
-  colorTheme: localStorageManager.get("color-theme", "scheme5")
+  colorTheme: localStorageManager.get("color-theme", "scheme5"),
+  whiteBackground: localStorageManager.get("white-bg", "0")
 };
 
 export type AppState = typeof initialState;
@@ -91,6 +93,8 @@ function appReducer(state: AppState, action): AppState {
       return { ...state, online: true };
     case SET_THEME:
       return { ...state, colorTheme: action.theme };
+    case SET_WHITE_BG:
+      return { ...state, whiteBackground: action.value ? "1" : "0" };
   }
 
   return state;
@@ -124,10 +128,13 @@ export function useAppState(): [AppState, any, any] {
   let result = getStatePacket<AppState>(appReducer, initialState, actions);
 
   let colorTheme = result[0].colorTheme;
+  let whiteBg = result[0].whiteBackground;
   useEffect(() => {
     localStorageManager.set("color-theme", colorTheme);
-    document.body.className = colorTheme;
-  }, [colorTheme]);
+    localStorageManager.set("white-bg", whiteBg);
+    document.body.className = `${colorTheme} ${whiteBg == "1" ? "white-bg" : ""}`;
+  }, [colorTheme, whiteBg]);
+  
 
   return result;
 }
