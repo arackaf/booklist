@@ -83,7 +83,10 @@ const ChartHolder: FC<{}> = props => {
   const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
 
   const getDrilldownChart = (index, subjects, header) => {
-    setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
+    setChartPackets(charts => [
+      ...charts.slice(0, index + 1),
+      { subjects: subjects.concat(), header }
+    ]);
   };
 
   return (
@@ -98,7 +101,7 @@ const ChartHolder: FC<{}> = props => {
       {({ measureRef }) => (
         <div ref={measureRef}>
           {chartPackets.map((packet, i) => (
-            <BarChart key={i} drilldown={getDrilldownChart} subjectHash={subjectHash} {...packet} chartIndex={i} width={chartWidth} height={600} />
+            <BarChart key={i} drilldown={getDrilldownChart} subjectHash={subjectHash} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={chartWidth} height={600} />
           ))}
         </div>
       )}

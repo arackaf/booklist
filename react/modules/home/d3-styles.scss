@@ -26,3 +26,11 @@
     text-decoration: none;
   }
 }
+
+.svgPointer {
+  cursor: pointer;
+  
+  * {
+    cursor: pointer;
+  }
+}
