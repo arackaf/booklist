@@ -15,7 +15,7 @@ import { useQuery } from "micro-graphql-react";
 import { graphqlClient } from "util/graphql";
 import { clearCache } from "util/graphqlCacheHelpers";
 import { AppContext } from "app/renderUI";
-import SvgTooltip from "./SvgTooltip";
+import SvgTooltip from "./svgTooltip";
 
 graphqlClient.subscribeMutation([/(update|delete)Subjects?/, /(update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) })));
 
