@@ -11,6 +11,8 @@ const SvgTooltip = props => {
   const CONTENT_X_START = 5;
   const CONTAINER_PADDING = 5;
 
+  const [removeSvgStart, setRemoveSvgStart] = useState(0);
+
   const display = data?.entries
     .map(e => e.name)
     .sort()
@@ -18,6 +20,7 @@ const SvgTooltip = props => {
 
   const rootEl = useRef(null);
   const contentEl = useRef(null);
+  const textEl = useRef(null);
 
   const [adjust, setAdjust] = useState({ x: 0, y: 0 });
   const [tooltipContentsBox, setTooltipContentsBox] = useState({ width: 0, height: 0, x: 0, y: 0 });
@@ -33,8 +36,13 @@ const SvgTooltip = props => {
   }, [tooltipContentsBox]);
 
   useLayoutEffect(() => {
+    const textBBox = textEl.current?.getBBox();
+    if (textBBox && textBBox.width + 30 != removeSvgStart) {
+      setRemoveSvgStart(textBBox.width + 30);
+    }
+
     isShowing && setTooltipContentsBox(contentEl.current.getBBox());
-  }, [isShowing, srcX, display, srcWidth, srcHeight]);
+  }, [isShowing, srcX, display, srcWidth, srcHeight, removeSvgStart]);
 
   useLayoutEffect(() => {
     let newX = 0;
@@ -72,21 +80,22 @@ const SvgTooltip = props => {
         >
           <rect className="content" rx="5" {...tooltipContainer} fill="black"></rect>
           <g style={{ fill: "white" }} ref={contentEl}>
-            <text style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
+            <text ref={textEl} style={{ fontSize: "20px" }} dominantBaseline="hanging" x={CONTENT_X_START} y={-1 * textAnchorY}>
               {display}: {data.count}
             </text>
+            <g onClick={removeBar} className="svgPointer">
+              <rect x={CONTENT_X_START + removeSvgStart} y={-1 * textAnchorY - 5} width="20" height="20" fill="black"></rect>
+
+              <RemoveSvg x={CONTENT_X_START + removeSvgStart} y={-1 * textAnchorY - 5} width="20" />
+            </g>
             {childSubjects.length ? (
               <g onClick={() => drilldown(chartIndex, childSubjects, display)} className="svgPointer">
                 <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black"></rect>
                 <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
               </g>
-            ) : null}
-
-            <g onClick={removeBar} className="svgPointer">
-              <rect x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" height="20" fill="black"></rect>
-
-              <RemoveSvg x={CONTENT_X_START + 40} y={-1 * textAnchorY + 30} width="20" />
-            </g>
+            ) : (
+              <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="1" height="5" fill="black"></rect>
+            )}
           </g>
         </animated.g>
       )
