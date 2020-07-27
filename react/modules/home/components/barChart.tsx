@@ -143,7 +143,6 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const offsetY = margin.bottom - height;
 
   let totalSvgWidth = width;
-  console.log({ graphWidth: totalSvgWidth, width });
   const delta = maxWidth - totalSvgWidth;
   let extraOffsetX = 0;
   if (totalSvgWidth < maxWidth) {
@@ -154,7 +153,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const transform = `scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`;
 
   return (
-    <div>
+    <div ref={elRef}>
       <div style={{ ...width, height }}>
         <div>
           <h4 style={{ display: "inline" }}>{header}</h4>
