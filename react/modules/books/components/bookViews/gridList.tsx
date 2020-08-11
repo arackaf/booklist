@@ -320,7 +320,7 @@ export const GridViewShell: SFC<{ menuBarHeight: any }> = ({ menuBarHeight }) =>
           <tbody>
             <tr style={{ backgroundColor: "white" }}>
               <td colSpan={8}>
-                <h1 style={{ color: "var(--neutral-5)" }}>
+                <h1 style={{ color: "var(--neutral-5)", fontSize: "2em", marginTop: "5px" }}>
                   Books are loading <i className="fas fa-cog fa-spin"></i>
                 </h1>
               </td>
