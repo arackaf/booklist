@@ -62,7 +62,7 @@ const ScanResults: FunctionComponent<{}> = props => {
         )}
       </div>
 
-      <SlideInContents clamp={true} in={showIncomingQueue} opacity={true} style={{ marginTop: "10px" }}>
+      <SlideInContents clamp={true} in={showIncomingQueue} immediateChanges={true} opacity={true} style={{ marginTop: "10px" }}>
         <div className="alert alert-info alert-slim" style={{ marginBottom: "15px" }}>
           Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated place to
           see what's been saved, and what failed to be found.

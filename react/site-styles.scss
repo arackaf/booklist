@@ -542,7 +542,7 @@ div.toast-notification h4 {
 }
 
 .auto-fade-in {
-  animation: fadein 2s ease-in;
+  animation: fadein 0.5s ease-in;
 }
 @keyframes fadein {
   from { opacity: 0; }
