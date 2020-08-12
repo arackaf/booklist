@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useEffect, useRef, useState, useReducer } from "react";
+import React, { FunctionComponent, useEffect, useState, useReducer, Suspense } from "react";
 
-import { useSpring, useTransition, config, animated } from "react-spring";
+import { useTransition, config, animated } from "react-spring";
 import { SlideInContents } from "app/animationHelpers";
 import FlowItems from "app/components/layout/FlowItems";
+import { CoverSmall } from "app/components/bookCoverComponent";
 
 function scanReducer(state, [type, payload]) {
   switch (type) {
@@ -11,7 +12,7 @@ function scanReducer(state, [type, payload]) {
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
     case "bookAdded":
-      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 15) };
+      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 3) };
     case "bookLookupFailed":
       let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
       return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
@@ -35,7 +36,6 @@ const ScanResults: FunctionComponent<{}> = props => {
     ) : null;
 
   const booksJustSavedTransition = useTransition(booksJustSaved, {
-    from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   });
@@ -62,7 +62,7 @@ const ScanResults: FunctionComponent<{}> = props => {
         )}
       </div>
 
-      <SlideInContents in={showIncomingQueue} opacity={true} style={{ marginTop: "10px" }}>
+      <SlideInContents clamp={true} in={showIncomingQueue} opacity={true} style={{ marginTop: "10px" }}>
         <div className="alert alert-info alert-slim" style={{ marginBottom: "15px" }}>
           Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated place to
           see what's been saved, and what failed to be found.
@@ -70,12 +70,19 @@ const ScanResults: FunctionComponent<{}> = props => {
 
         <div style={{ marginBottom: 0 }}>
           {booksJustSavedTransition((styles, book) => (
-            <animated.div style={{ display: "flex", flexDirection: "row", color: book.success ? "var(--neutral-text)" : "red", ...styles }}>
-              <div style={{ minWidth: "90px" }}>
-                <img src={book.smallImage} />
+            <Suspense fallback={null}>
+              <div className="auto-fade-in margin-bottom">
+                <animated.div
+                  className="border-bottom padding-bottom"
+                  style={{ display: "flex", flexDirection: "row", color: book.success ? "var(--neutral-text)" : "red", ...styles }}
+                >
+                  <div style={{ minWidth: "90px" }}>
+                    <CoverSmall url={book.smallImage} />
+                  </div>
+                  <span>{book.title}</span>
+                </animated.div>
               </div>
-              <span>{book.title}</span>
-            </animated.div>
+            </Suspense>
           ))}
         </div>
       </SlideInContents>
