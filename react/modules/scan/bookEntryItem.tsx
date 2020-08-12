@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useImperativeHandle, forwardRef, useState } from "react";
+import React, { FunctionComponent, useRef, useImperativeHandle, forwardRef, useState, useLayoutEffect } from "react";
 import ajaxUtil from "util/ajaxUtil";
 
 const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
@@ -15,6 +15,13 @@ const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
   const [queuing, setQueuing] = useState(false);
   const [queued, setQueued] = useState(false);
 
+  const mounted = useRef(true);
+
+  //TODO: fix this crap
+  useLayoutEffect(() => {
+    mounted.current = false;
+  }, []);
+
   const keyDown = evt => {
     if (evt.keyCode == 13) {
       props.entryFinished(inputEl.current.value);
@@ -25,7 +32,7 @@ const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
         Promise.resolve(ajaxUtil.post("/book/saveFromIsbn", { isbn })).then(() => {
           setQueuing(false);
           setQueued(true);
-          setTimeout(() => setQueued(false), 1500);
+          setTimeout(() => mounted.current && setQueued(false), 1500);
         });
       }
     }

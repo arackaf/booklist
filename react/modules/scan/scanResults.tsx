@@ -3,8 +3,6 @@ import React, { FunctionComponent, useEffect, useRef, useState, useReducer } fro
 import { useSpring, useTransition, config, animated } from "react-spring";
 import { SlideInContents } from "app/animationHelpers";
 
-declare var webSocketAddress: any;
-
 function scanReducer(state, [type, payload]) {
   switch (type) {
     case "initial":
@@ -12,7 +10,6 @@ function scanReducer(state, [type, payload]) {
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
     case "bookAdded":
-      window.dispatchEvent(new Event("book-scanned"));
       return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 15) };
     case "bookLookupFailed":
       let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
@@ -42,21 +39,13 @@ const ScanResults: FunctionComponent<{}> = props => {
     leave: { opacity: 0 }
   });
 
-  let ws: any = null;
-
   useEffect(() => {
-    ws = new WebSocket(webSocketAddress("/bookEntryWS"));
+    function sendIt({ detail }: any) {
+      dispatch([detail.type, detail.packet]);
+    }
 
-    ws.onmessage = ({ data }) => {
-      let packet = JSON.parse(data);
-      dispatch([packet._messageType, packet]);
-    };
-
-    return () => {
-      try {
-        ws.close();
-      } catch (e) {}
-    };
+    window.addEventListener("ws-info", sendIt);
+    return () => window.removeEventListener("ws-info", sendIt);
   }, []);
 
   return (
