@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useRef, useState, useReducer } fro
 
 import { useSpring, useTransition, config, animated } from "react-spring";
 import { SlideInContents } from "app/animationHelpers";
+import FlowItems from "app/components/layout/FlowItems";
 
 function scanReducer(state, [type, payload]) {
   switch (type) {
@@ -67,11 +68,16 @@ const ScanResults: FunctionComponent<{}> = props => {
           see what's been saved, and what failed to be found.
         </div>
 
-        <ul style={{ marginBottom: 0 }}>
+        <div style={{ marginBottom: 0 }}>
           {booksJustSavedTransition((styles, book) => (
-            <animated.li style={{ color: book.success ? "green" : "red", ...styles }}>{book.title}</animated.li>
+            <animated.div style={{ display: "flex", flexDirection: "row", color: book.success ? "var(--neutral-text)" : "red", ...styles }}>
+              <div style={{ minWidth: "90px" }}>
+                <img src={book.smallImage} />
+              </div>
+              <span>{book.title}</span>
+            </animated.div>
           ))}
-        </ul>
+        </div>
       </SlideInContents>
     </div>
   );
