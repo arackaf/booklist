@@ -164,7 +164,11 @@ const expressWs = expressWsImport(app);
 const statics = ["/static/", "/node_modules/", "/react/", "/utils/"];
 statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
 
-app.ws("/bookEntryWS", function(ws, req) {
+app.ws("/bookEntryWS", function(ws, req) {  
+  ws.on('message', function(msg) {
+    bookEntryQueueManager.sync(req.user.id, ws);
+  });
+
   bookEntryQueueManager.subscriberAdded(req.user.id, ws);
 });
 

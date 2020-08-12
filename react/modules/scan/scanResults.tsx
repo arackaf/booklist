@@ -45,6 +45,7 @@ const ScanResults: FunctionComponent<{}> = props => {
     }
 
     window.addEventListener("ws-info", sendIt);
+    window.dispatchEvent(new CustomEvent("sync-ws"));
     return () => window.removeEventListener("ws-info", sendIt);
   }, []);
 
