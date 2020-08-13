@@ -2,7 +2,7 @@ import { graphqlClient } from "util/graphql";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo } from "react";
+import { useMemo, useLayoutEffect } from "react";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
@@ -56,14 +56,35 @@ export interface IBookDisplay extends IBookRaw {
   dateAddedDisplay: string;
 }
 
-graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
+let createSubscription;
 
-window.addEventListener("book-scanned", () => graphqlClient.getCache(GetBooksQuery).clearCache());
+function booksActive() {
+  createSubscription?.();
+  createSubscription = null;
+
+  window.removeEventListener("ws-info", handleWs);
+}
+
+function booksInactive() {
+  createSubscription = graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
+
+  window.addEventListener("ws-info", handleWs);
+}
+
+function handleWs(evt) {
+  if (evt?.detail?.type == "bookAdded") {
+    clearCache(GetBooksQuery);
+  }
+}
 
 export const useBooks = () => {
   const searchState = useCurrentSearch();
   const variables = useMemo(() => computeBookSearchVariables(searchState), [searchState]);
   const onBooksMutation = [
+    {
+      when: /createBook/,
+      run: ({ softReset }) => softReset()
+    },
     {
       when: /updateBooks?/,
       run: ({ currentResults: current, softReset }, resp) => {
@@ -84,10 +105,24 @@ export const useBooks = () => {
       }
     }
   ];
-  const { data, loaded, currentQuery } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(GetBooksQuery, variables, {
+  const { data, loaded, currentQuery, softReset } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(GetBooksQuery, variables, {
     preloadOnly: true,
     onMutation: onBooksMutation
   });
+
+  useLayoutEffect(() => {
+    function handleWs(evt) {
+      if (evt?.detail?.type == "bookAdded") {
+        softReset();
+      }
+    }
+    window.addEventListener("ws-info", handleWs);
+    booksActive();
+    return () => {
+      booksInactive();
+      window.removeEventListener("ws-info", handleWs);
+    };
+  }, []);
 
   const booksRaw = data ? data.allBooks.Books : null;
   const books = adjustBooks(booksRaw);

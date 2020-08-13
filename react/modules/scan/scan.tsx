@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState, useReducer } from "react";
+import React, { Suspense, lazy, FunctionComponent, useEffect, useRef, useState } from "react";
 import BookEntryItem from "./bookEntryItem";
 import ScanResults from "./scanResults";
 
@@ -6,7 +6,6 @@ import Loading from "app/components/loading";
 
 import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
-import FlexRow from "app/components/layout/FlexRow";
 import { SlideInContents } from "app/animationHelpers";
 import FlowItems from "app/components/layout/FlowItems";
 

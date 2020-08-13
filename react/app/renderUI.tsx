@@ -13,6 +13,23 @@ import { history, getCurrentUrlState } from "util/urlHelpers";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
+declare var webSocketAddress: any;
+let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
+
+ws.onmessage = ({ data }) => {
+  let packet = JSON.parse(data);
+  window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
+};
+
+window.addEventListener("sync-ws", () => {
+  ws.send(`SYNC`);
+});
+
+window.onbeforeunload = function () {
+  ws.onclose = function () {}; // disable onclose handler first
+  ws.close();
+};
+
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
   return (
