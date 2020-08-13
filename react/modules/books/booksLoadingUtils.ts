@@ -10,7 +10,7 @@ export const defaultSearchValuesHash = {
   pages: "",
   pagesOperator: "",
   page: 1,
-  pageSize: 50,
+  pageSize: 3,
   isRead: "",
   noSubjects: "",
   sort: "_id",
