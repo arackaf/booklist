@@ -21,9 +21,12 @@ ws.onmessage = ({ data }) => {
   window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
 };
 
-window.addEventListener("sync-ws", () => {
+ws.onopen = () => {
   ws.send(`SYNC`);
-});
+  window.addEventListener("sync-ws", () => {
+    ws.send(`SYNC`);
+  });
+};
 
 window.onbeforeunload = function () {
   ws.onclose = function () {}; // disable onclose handler first
