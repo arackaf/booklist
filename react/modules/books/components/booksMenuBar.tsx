@@ -2,7 +2,7 @@ import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback } from 
 import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
-import { AppContext } from "app/renderUI";
+import { AppContext, ModuleUpdateContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
 import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
@@ -21,6 +21,7 @@ interface IAddedMenuProps {
     books: any;
     totalPages: any;
     resultsCount: any;
+    reload?: any;
   };
   measureRef?: any;
 }
@@ -40,9 +41,14 @@ export const BooksMenuBarDisabled: SFC<{ totalPages: number; resultsCount: numbe
   return <BooksMenuBar measureRef={measureRef} disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
 };
 const BooksMenuBar: SFC<IAddedMenuProps> = props => {
-  const { books = [], totalPages = null, resultsCount = null } = props.bookResultsPacket || {};
+  const { books = [], totalPages = null, resultsCount = null, reload } = props.bookResultsPacket || {};
   const quickSearchEl = useRef(null);
   const [appState] = useContext(AppContext);
+
+  const { isPending: booksLoading, startTransition } = useContext(ModuleUpdateContext);
+  const reloadBooks = () => {
+    startTransition(reload);
+  };
 
   const { actions, booksUiState } = useContext(BooksModuleContext);
   const { setRead } = actions;
@@ -123,22 +129,22 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
                       ) : null}
                     </>
                   ) : null}
+                  <Button className="btn btn-default hidden-tiny" onClick={reloadBooks} disabled={booksLoading}>
+                    <i className="fal fa-sync"></i>
+                  </Button>
                   <Button
-                    style={{ position: "static" }}
                     onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })}
                     className={"btn btn-default hidden-tiny " + (uiView.isGridView ? "active" : "")}
                   >
                     <i className="fal fa-table" />
                   </Button>
                   <Button
-                    style={{ position: "static" }}
                     onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })}
                     className={"btn btn-default hidden-tiny " + (uiView.isCoversList ? "active" : "")}
                   >
                     <i className="fas fa-th" />
                   </Button>
                   <Button
-                    style={{ position: "static" }}
                     onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })}
                     className={"btn btn-default hidden-tiny " + (uiView.isBasicList ? "active" : "")}
                   >

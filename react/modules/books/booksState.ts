@@ -105,7 +105,7 @@ export const useBooks = () => {
       }
     }
   ];
-  const { data, loaded, currentQuery, softReset } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(GetBooksQuery, variables, {
+  const { data, loaded, currentQuery, reload, softReset } = useSuspenseQuery<QueryOf<Queries["allBooks"]>>(GetBooksQuery, variables, {
     preloadOnly: true,
     onMutation: onBooksMutation
   });
@@ -135,7 +135,8 @@ export const useBooks = () => {
     currentQuery,
     books,
     resultsCount,
-    totalPages
+    totalPages,
+    reload
   };
 };
 
