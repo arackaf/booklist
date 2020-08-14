@@ -204,13 +204,13 @@ const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resul
       {!selectedBooksCount ? (
         <div className="visible-xs" style={{ marginRight: "5px" }}>
           <div>
-            <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default">
+            <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default btn-group-size">
               <i className="fal fa-angle-left" />
             </Button>
             <span className={cn({ disabled })} style={{ paddingLeft: "3px", paddingRight: "3px" }}>
               {page} of {totalPages}
             </span>
-            <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default">
+            <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default btn-group-size">
               <i className="fal fa-angle-right" />
             </Button>
           </div>
