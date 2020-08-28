@@ -7,8 +7,19 @@ function getSuggestionValue(suggestion) {
   return suggestion.name;
 }
 
-function renderSuggestion(s) {
-  return <LabelDisplay item={s} style={{ marginLeft: s.childLevel * 15 + "px" }} />;
+function renderSuggestion(item) {
+  let effectiveChildLevel = item.childLevel - (item.prepend || []).length;
+  return (
+    <span style={{ marginLeft: `${effectiveChildLevel * 15}px` }}>
+      {(item.prepend || []).map(s => (
+        <>
+          <LabelDisplay style={{ marginRight: "5px", cursor: "pointer" }} item={s} disabled={true} />
+          <i className="fal fa-level-up" style={{ transform: `rotate(90deg) translateX(2px)`, margin: `0 7px 0 3px` }}></i>
+        </>
+      ))}
+      <LabelDisplay style={{ cursor: "pointer" }} item={item} />
+    </span>
+  );
 }
 
 interface ILabelShape {

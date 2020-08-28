@@ -98,13 +98,44 @@ export const unwindSubjects = (subjects): SubjectType[] => {
 };
 
 export const filterSubjects = (subjects, search) => {
+  let searchFn;
+  let lookupMap = subjects.reduce((map, s) => ((map[s._id] = s), map), {});
   if (!search) {
-    search = () => true;
+    searchFn = () => true;
   } else {
     let regex = new RegExp(search, "i");
-    search = txt => regex.test(txt);
+    searchFn = txt => regex.test(txt);
   }
-  return subjects.filter(s => search(s.name));
+  return subjects.reduce((result, s) => {
+    if (searchFn(s.name)) {
+      const entry = { ...s, prepend: [] };
+
+      let currentSubject = s;
+      let parentId;
+      let ancestorsInactive = 0;
+      while ((parentId = computeSubjectParentId(currentSubject.path))) {
+        if (!parentId) {
+          break;
+        }
+        let parent = lookupMap[parentId];
+        if (!parent) { 
+          break;
+        }
+        if (!searchFn(parent.name)) {
+          ancestorsInactive++;
+        }
+        entry.prepend.unshift(parent);
+        currentSubject = parent;
+      }
+
+      if (!ancestorsInactive){
+        entry.prepend = [];
+      }
+
+      result.push(entry);
+    } 
+    return result;
+  }, []);
 };
 
 export const getEligibleParents = (subjectHash, _id) => {

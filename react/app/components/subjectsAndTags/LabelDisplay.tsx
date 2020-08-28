@@ -2,9 +2,16 @@ import React from "react";
 import cn from "classnames";
 
 export const LabelDisplay = props => {
-  let item = props.item,
-    extraStyles = props.style || {},
-    extraClasses = props.className || "";
+  let item = props.item;
+  let extraStyles = props.style || {};
+  let extraClasses = props.className || "";
+  let disabledStyles = {
+    opacity: 0.4
+  };
+
+  if (props.disabled) {
+    Object.assign(extraStyles, disabledStyles, extraStyles);
+  }
 
   return (
     <span

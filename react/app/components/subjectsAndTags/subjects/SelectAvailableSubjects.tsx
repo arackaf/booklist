@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import SelectAvailableItems from "../AvailableTagsOrSubjects";
-import { filterTags } from "app/state/tagsState";
-import { useStackedSubjects } from "app/state/subjectsState";
+import { useStackedSubjects, filterSubjects } from "app/state/subjectsState";
 
 type LocalProps = { currentlySelected: string[]; onSelect: any };
 
@@ -13,7 +12,7 @@ const SelectAvailableSubjects: FunctionComponent<LocalProps> = props => {
       items={subjectsUnwound}
       currentlySelected={props.currentlySelected}
       onSelect={props.onSelect}
-      filter={filterTags}
+      filter={filterSubjects}
     />
   );
 };
