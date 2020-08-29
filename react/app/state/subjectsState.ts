@@ -97,17 +97,16 @@ export const unwindSubjects = (subjects): SubjectType[] => {
   return result;
 };
 
-export const filterSubjects = (subjects, search) => {
+export const filterSubjects = (subjects, search, lookupMap = {}, alreadySelected = {}) => {
   let searchFn;
-  let lookupMap = subjects.reduce((map, s) => ((map[s._id] = s), map), {});
   if (!search) {
-    searchFn = () => true;
+    searchFn = s => !alreadySelected[s._id];
   } else {
     let regex = new RegExp(search, "i");
-    searchFn = txt => regex.test(txt);
+    searchFn = s => regex.test(s.name) && !alreadySelected[s._id];
   }
   return subjects.reduce((result, s) => {
-    if (searchFn(s.name)) {
+    if (searchFn(s)) {
       const entry = { ...s, prepend: [] };
 
       let currentSubject = s;
@@ -118,22 +117,24 @@ export const filterSubjects = (subjects, search) => {
           break;
         }
         let parent = lookupMap[parentId];
-        if (!parent) { 
+        if (!parent) {
           break;
         }
-        if (!searchFn(parent.name)) {
+
+        if (alreadySelected[parent._id] || !searchFn(parent)) {
           ancestorsInactive++;
         }
+
         entry.prepend.unshift(parent);
         currentSubject = parent;
       }
 
-      if (!ancestorsInactive){
+      if (!ancestorsInactive) {
         entry.prepend = [];
       }
 
       result.push(entry);
-    } 
+    }
     return result;
   }, []);
 };
