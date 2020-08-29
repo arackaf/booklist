@@ -1,22 +1,20 @@
 import React, { SFC, useState, useLayoutEffect, useRef } from "react";
 
 import { Button, ActionButton } from "app/components/ui/Button";
-import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
 import { useMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookTags.graphql";
 
 import Modal from "app/components/ui/Modal";
-import { filterTags, useTagsState } from "app/state/tagsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import FlowItems from "app/components/layout/FlowItems";
 import { TabHeaders, Tabs, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
 import Stack from "app/components/layout/Stack";
 import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
+import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
 
 const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
-  const { tags } = useTagsState();
   const [addingTags, setAddingTags] = useState([]);
   const [removingTags, setRemovingTags] = useState([]);
   const resetTags = () => {
@@ -63,20 +61,14 @@ const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props 
           <TabContent tabName="tags">
             <FlexRow>
               <div className="col-xs-3">
-                <SelectAvailable placeholder="Adding" items={tags} currentlySelected={addingTags} onSelect={tagSelectedToAdd} filter={filterTags} />
+                <SelectAvailableTags currentlySelected={addingTags} onSelect={tagSelectedToAdd} placeholder="Adding" />
               </div>
               <div className="col-xs-9">
                 <DisplaySelectedTags currentlySelected={addingTags} onRemove={dontAddTag} />
               </div>
 
               <div className="col-xs-3">
-                <SelectAvailable
-                  placeholder="Removing"
-                  items={tags}
-                  currentlySelected={removingTags}
-                  onSelect={tagSelectedToRemove}
-                  filter={filterTags}
-                />
+                <SelectAvailableTags currentlySelected={removingTags} onSelect={tagSelectedToRemove} placeholder="Removing" />
               </div>
               <div className="col-xs-9">
                 <DisplaySelectedTags currentlySelected={removingTags} onRemove={dontRemoveTag} />
