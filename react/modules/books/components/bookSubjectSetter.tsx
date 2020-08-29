@@ -4,16 +4,16 @@ import { useMutation } from "micro-graphql-react";
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
 import { Button, ActionButton } from "app/components/ui/Button";
-import SelectAvailable from "app/components/subjectsAndTags/AvailableTagsOrSubjects";
 
 import Modal from "app/components/ui/Modal";
-import { useStackedSubjects, filterSubjects } from "app/state/subjectsState";
+import { useStackedSubjects } from "app/state/subjectsState";
 import { MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";
 import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects";
+import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects";
 
 interface ILocalProps {
   modifyingBooks: any[];
@@ -21,8 +21,6 @@ interface ILocalProps {
 }
 
 const BookSubjectSetter: SFC<ILocalProps> = props => {
-  const { subjectHash, subjectsUnwound } = useStackedSubjects();
-  const [currentTab, setTab] = useState("subjects");
   const [addingSubjects, setAddingSubjects] = useState([]);
   const [removingSubjects, setRemovingSubjects] = useState([]);
   const resetSubjects = () => {
@@ -61,7 +59,6 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
       isOpen={!!modifyingBooks.length}
       onHide={() => {
         props.onDone();
-        setTab("subjects");
       }}
       headerCaption="Add / Remove Subjects:"
       focusRef={selectRef}
@@ -79,26 +76,14 @@ const BookSubjectSetter: SFC<ILocalProps> = props => {
           <TabContent tabName="subjects">
             <FlexRow>
               <div className="col-xs-3">
-                <SelectAvailable
-                  placeholder="Adding"
-                  items={subjectsUnwound}
-                  currentlySelected={addingSubjects}
-                  onSelect={subjectSelectedToAdd}
-                  filter={filterSubjects}
-                />
+                <SelectAvailableSubjects placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
               </div>
               <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
                 <DisplaySelectedSubjects currentlySelected={addingSubjects} onRemove={dontAddSubject} />
               </div>
 
               <div className="col-xs-3">
-                <SelectAvailable
-                  placeholder="Removing"
-                  items={subjectsUnwound}
-                  currentlySelected={removingSubjects}
-                  onSelect={subjectSelectedToRemove}
-                  filter={filterSubjects}
-                />
+                <SelectAvailableSubjects placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
               </div>
               <div className="col-xs-9" style={{ display: "flex", flexWrap: "wrap" }}>
                 <DisplaySelectedSubjects currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />

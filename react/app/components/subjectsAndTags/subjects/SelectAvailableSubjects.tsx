@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from "react";
 import { useStackedSubjects, filterSubjects, useSubjectsState } from "app/state/subjectsState";
 import GenericLabelSelect from "../genericLabelSelect";
 
-type LocalProps = { currentlySelected: string[]; onSelect: any };
+type LocalProps = { currentlySelected: string[]; onSelect: any; placeholder?: string };
 
 const SelectAvailableSubjects: FunctionComponent<LocalProps> = props => {
   const { subjectsUnwound } = useStackedSubjects();
@@ -18,16 +18,11 @@ const SelectAvailableSubjects: FunctionComponent<LocalProps> = props => {
 
   let itemHash = props.currentlySelected.reduce((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
 
-  const eligible = filterSubjects(
-    subjectsUnwound,
-    search,
-    subjectHash,
-    itemHash,
-  );
+  const eligible = filterSubjects(subjectsUnwound, search, subjectHash, itemHash);
 
   return (
     <GenericLabelSelect
-      inputProps={{ tabIndex: -1, placeholder: "Subjects", value: search, onChange: setSearch }}
+      inputProps={{ tabIndex: -1, placeholder: props.placeholder || "Subjects", value: search, onChange: setSearch }}
       suggestions={eligible}
       onSuggestionSelected={onSelect}
     />
