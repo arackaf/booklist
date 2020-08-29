@@ -258,8 +258,7 @@ const BookSearchFilters: SFC<{ resultsCount: number; disabled: boolean }> = ({ r
 
   let resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
   let removeAllFiltersLabel = {
-    backgroundColor: "red",
-    textColor: "white",
+    backgroundColor: "var(--danger-7)",
     name: "Remove all filters"
   };
 
@@ -277,7 +276,6 @@ const BookSearchFilters: SFC<{ resultsCount: number; disabled: boolean }> = ({ r
         {bookSearchState.isRead == "1" || bookSearchState.isRead == "0" ? (
           <RemovableLabelDisplay
             style={{ flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" }}
-            item={{ backgroundColor: `${bookSearchState.isRead == "1" ? "green" : "red"}` }}
             doRemove={() => removeFilters("isRead")}
           >
             <span>

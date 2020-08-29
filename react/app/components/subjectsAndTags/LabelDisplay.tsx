@@ -54,7 +54,7 @@ export const EditableExpandableLabelDisplay = props => {
 };
 
 export const RemovableLabelDisplay = props => {
-  let item = props.item;
+  let item = props.item || {};
   let extraStyles = props.style || {};
   let extraClasses = props.className || "";
 
