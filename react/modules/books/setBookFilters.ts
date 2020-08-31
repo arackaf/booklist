@@ -56,6 +56,16 @@ export const removeFilters = (...names) => {
   setSearchValues(names.concat("page").reduce((hash, item) => ((hash[item] = ""), hash), {}));
 };
 
+export const addFilterSubject = _id => {
+  let hashFilters = getCurrentUrlState().searchState;
+  let subjects = (hashFilters.subjects || "").split("-").filter(s => s);
+  if (subjects.find(s => s == _id)) {
+    return;
+  }
+
+  setSearchValues({ subjects: subjects.concat(_id).join("-") });
+};
+
 export const removeFilterSubject = _id => {
   let hashFilters = getCurrentUrlState().searchState;
   let existingSubjects = hashFilters.subjects.split("-").filter(s => s);
