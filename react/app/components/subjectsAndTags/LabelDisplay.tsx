@@ -8,6 +8,7 @@ export const LabelDisplay = props => {
   let disabledStyles = {
     opacity: 0.4
   };
+  let onClick = props.onClick;
 
   if (props.disabled) {
     Object.assign(extraStyles, disabledStyles, extraStyles);
@@ -15,7 +16,8 @@ export const LabelDisplay = props => {
 
   return (
     <span
-      style={{ backgroundColor: item.backgroundColor, color: item.textColor || "white", ...extraStyles }}
+      onClick={onClick ? () => onClick(item) : void 0}
+      style={{ cursor: onClick ? "pointer" : "default", backgroundColor: item.backgroundColor, color: item.textColor || "white", ...extraStyles }}
       className={"label label-default noselect " + extraClasses}
     >
       {props.children || item.name}

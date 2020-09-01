@@ -14,7 +14,7 @@ import uiStyles from "./uiStyles.module.css";
 import gridStyles from "./gridList.module.css";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
-import { setBooksSort } from "modules/books/setBookFilters";
+import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
 import { BooksModuleContext } from "modules/books/books";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
@@ -123,7 +123,7 @@ const BookRow: SFC<ILocalProps> = props => {
           <div style={{ marginTop: "3px" }}>
             {book.subjectObjects.map((s, i) => (
               <div key={i} style={{ marginBottom: "4px" }}>
-                <LabelDisplay item={s} />
+                <LabelDisplay onClick={() => addFilterSubject(s._id)} item={s} />
               </div>
             ))}
           </div>
@@ -139,7 +139,7 @@ const BookRow: SFC<ILocalProps> = props => {
           <div style={{ marginTop: "3px" }}>
             {book.tagObjects.map((s, i) => (
               <div key={i} style={{ marginBottom: "4px" }}>
-                <LabelDisplay item={s} />
+                <LabelDisplay onClick={t => addFilterTag(t._id)} item={s} />
               </div>
             ))}
           </div>
