@@ -80,6 +80,16 @@ export const removeFilterSubject = _id => {
   setSearchValues(newFilters);
 };
 
+export const addFilterTag = _id => {
+  let hashFilters = getCurrentUrlState().searchState;
+  let tags = (hashFilters.tags || "").split("-").filter(s => s);
+  if (tags.find(s => s == _id)) {
+    return;
+  }
+
+  setSearchValues({ tags: tags.concat(_id).join("-") });
+};
+
 export const removeFilterTag = _id => {
   let hashFilters = getCurrentUrlState().searchState;
   let existingTags = hashFilters.tags.split("-").filter(t => t);
