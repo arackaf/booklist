@@ -225,10 +225,13 @@ const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resul
             <i className="fal fa-angle-left" />
           </Button>
         </div>
-        {online && resultsCount ? (
-          <span className={cn({ disabled })} style={{ display: "inline" }}>
-            <span className="hidden-xs">Page</span> {page}
-            <span> of {totalPages}</span>
+        {online ? (
+          <span className={cn({ disabled })} style={{ display: "inline", minWidth: "7ch" }}>
+            {resultsCount ? (
+              <span>
+                Page {page} of {totalPages}
+              </span>
+            ) : <span>Loading...</span>}
           </span>
         ) : null}
         <div className="btn-group">
