@@ -59,7 +59,7 @@ const BookRow: SFC<ILocalProps> = props => {
           </td>
         ) : null}
         <td>
-          <div style={{ minWidth: "75px", minHeight: "75px" }}>
+          <div style={{ width: "60px", minHeight: "75px" }}>
             <CoverSmall url={book.smallImage} />
           </div>
         </td>
@@ -372,13 +372,13 @@ const BookViewListGrid: SFC<{ books: any; menuBarHeight: any }> = ({ books, menu
             <thead>
               <tr>
                 {!viewingPublic && online ? (
-                  <th style={{ ...stickyHeaderStyle, textAlign: "center" }}>
+                  <th style={{ ...stickyHeaderStyle, textAlign: "center", width: "25px" }}>
                     <a style={{ fontSize: "12pt" }} onClick={toggleCheckAll}>
                       <i className={"fal " + (!!allAreChecked ? "fa-check-square" : "fa-square")} />
                     </a>
                   </th>
                 ) : null}
-                <th style={{ ...stickyHeaderStyle }} />
+                <th style={{ ...stickyHeaderStyle, width: "60px" }} />
                 <th style={{ ...stickyHeaderStyle, minWidth: "200px" }}>
                   <a className="no-underline" onClick={() => setSort("title")}>
                     Title {sortIconIf("title")}

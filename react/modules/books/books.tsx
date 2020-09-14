@@ -20,6 +20,7 @@ import { MutationOf, Mutations } from "graphql-typings";
 import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
 import { ModuleUpdateContext } from "app/renderUI";
 import { useHeight } from "app/animationHelpers";
+import { useTransition, config, animated } from "react-spring";
 
 const CreateBookModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const BookSubjectSetter = LazyModal(() => import(/* webpackChunkName: "book-list-modals" */ "./components/bookSubjectSetter"));
@@ -203,9 +204,8 @@ const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = 
         uiView={uiView}
         bookResultsPacket={{ books, totalPages, resultsCount, reload }}
       />
-      <div style={{ flex: 1, padding: 0, minHeight: 450 }}>
-        <BookResults menuBarHeight={menuBarHeight} {...{ books, uiView }} />
-      </div>
+
+      <BookResults menuBarHeight={menuBarHeight} {...{ books, uiView }} />
     </>
   );
 };
@@ -213,23 +213,32 @@ const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = 
 const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any }> = ({ books, uiView, menuBarHeight }) => {
   const { isPending } = useContext(ModuleUpdateContext);
 
-  return (
-    <>
-      {!books.length ? (
-        <div className="alert alert-warning" style={{ marginTop: "20px" }}>
-          No books found
-        </div>
-      ) : null}
+  const resultsTransition = useTransition([books], {
+    config: config.stiff,
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0, position: "absolute" }
+  });
 
-      {isPending ? <Loading /> : null}
+  return resultsTransition((styles: any, books) => (
+    <div className="overlay-holder">
+      <animated.div style={{ flex: 1, padding: 0, minHeight: 450, ...styles }}>
+        {!books.length ? (
+          <div className="alert alert-warning" style={{ marginTop: "20px" }}>
+            No books found
+          </div>
+        ) : null}
 
-      {uiView.isGridView ? (
-        <GridView menuBarHeight={menuBarHeight} books={books} />
-      ) : uiView.isBasicList ? (
-        <BasicListView books={books} />
-      ) : uiView.isCoversList ? (
-        <CoversView books={books} />
-      ) : null}
-    </>
-  );
+        {isPending ? <Loading /> : null}
+
+        {uiView.isGridView ? (
+          <GridView menuBarHeight={menuBarHeight} books={books} />
+        ) : uiView.isBasicList ? (
+          <BasicListView books={books} />
+        ) : uiView.isCoversList ? (
+          <CoversView books={books} />
+        ) : null}
+      </animated.div>
+    </div>
+  ));
 };
