@@ -3,7 +3,12 @@ import queryString from "query-string";
 
 export const history = createHistory();
 
-export function getCurrentUrlState() {
+type ParsedQuery = {
+  pathname: any;
+  searchState: any;
+}
+
+export function getCurrentUrlState(): ParsedQuery {
   let location = history.location;
   let parsed = queryString.parse(location.search);
 
