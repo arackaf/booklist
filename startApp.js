@@ -5,8 +5,10 @@ import ErrorLoggerDao from "./node/dataAccess/errorLoggerDAO";
 import UserDao from "./node/dataAccess/userDAO";
 
 import express, { response } from "express";
+import subdomain from "express-subdomain";
 import cors from "cors";
 const app = express();
+
 import path from "path";
 import bodyParser from "body-parser";
 import session from "express-session";
@@ -57,6 +59,23 @@ if (!IS_DEV) {
     }
   });
 }
+
+/* --------------- SVELTE --------------- */
+
+
+const svelteRouter = express.Router();
+const svelteModules = ["", "books", "s"] // "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
+svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte));
+
+function browseToSvelte(request, response) {
+  if (!request.user) {
+    clearAllCookies(response);
+  }
+  response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
+}
+app.use(subdomain('svelte', svelteRouter));
+
+/* --------------- SVELTE --------------- */
 
 export const JrConn = getJrDbConnection();
 
@@ -161,7 +180,7 @@ app.use(
 
 const expressWs = expressWsImport(app);
 
-const statics = ["/static/", "/node_modules/", "/react/", "/utils/"];
+const statics = ["/static/", "/node_modules/", "/react/", "/svelte", "/utils/"];
 statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
 
 app.ws("/bookEntryWS", function(ws, req) {  
@@ -176,15 +195,8 @@ app.use("/book/getRecommendations", cors(), (req, res, next) => next());
 
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
-app.use("/compare/react/", express.static(__dirname + "/compare/react/"));
-app.get("/compare/react", (req, res) => {
-  res.sendFile(path.join(__dirname + "/compare/react/dist/index.html"));
-});
-
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
-
-app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
 function browseToReact(request, response) {
   if (!request.user) {
