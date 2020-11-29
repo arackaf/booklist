@@ -16,3 +16,4 @@ lambda/book-covers/.serverless
 lambda/try-upload/.serverless
 config.js
 .env.dev
+svelte/dist
