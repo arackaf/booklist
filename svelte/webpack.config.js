@@ -47,7 +47,6 @@ module.exports = {
     rules: [
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: [
           {
             loader: "babel-loader",
