@@ -60,23 +60,6 @@ if (!IS_DEV) {
   });
 }
 
-/* --------------- SVELTE --------------- */
-
-
-const svelteRouter = express.Router();
-const svelteModules = ["", "books", "s"] // "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
-svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte));
-
-function browseToSvelte(request, response) {
-  if (!request.user) {
-    clearAllCookies(response);
-  }
-  response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
-}
-app.use(subdomain('svelte', svelteRouter));
-
-/* --------------- SVELTE --------------- */
-
 export const JrConn = getJrDbConnection();
 
 passport.use(
@@ -195,6 +178,27 @@ app.use("/book/getRecommendations", cors(), (req, res, next) => next());
 
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
+
+/* --------------- SVELTE --------------- */
+
+const svelteRouter = express.Router();
+const svelteModules = ["", "books", "s"] // "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
+svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte));
+//svelteRouter.get("/login", browseToReact);
+
+function browseToSvelte(request, response) {
+  if (!request.user) {
+    clearAllCookies(response);
+  }
+  response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
+}
+
+app.use(subdomain('svelte', svelteRouter));
+
+/* --------------- SVELTE --------------- */
+
+
+
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
 
@@ -208,6 +212,8 @@ function browseToReact(request, response) {
 app.get("/favicon.ico", function(request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
+
+
 
 app.post("/react/login", passport.authenticate("local"), function(req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
