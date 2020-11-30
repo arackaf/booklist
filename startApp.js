@@ -63,7 +63,7 @@ if (!IS_DEV) {
 export const JrConn = getJrDbConnection();
 
 passport.use(
-  new LocalStrategy(function(email, password, done) {
+  new LocalStrategy(function (email, password, done) {
     if (IS_PUBLIC) {
       return done(null, PUBLIC_USER);
     }
@@ -95,8 +95,8 @@ function consumeRememberMeToken(token, done) {
 
 passport.use(
   new RememberMeStrategy(
-    function(token, done) {
-      consumeRememberMeToken(token, function(err, userResult) {
+    function (token, done) {
+      consumeRememberMeToken(token, function (err, userResult) {
         if (err) {
           return done(err);
         }
@@ -107,17 +107,17 @@ passport.use(
         done(null, userResult);
       });
     },
-    function(user, done) {
+    function (user, done) {
       return done(null, user.token);
     }
   )
 );
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function (id, done) {
   return done(undefined, { id: "" + id, _id: "" + id, admin: id == process.env.ADMIN_USER, jr_admin: jr_admins.has(id) });
 });
 
@@ -166,8 +166,8 @@ const expressWs = expressWsImport(app);
 const statics = ["/static/", "/node_modules/", "/react/", "/svelte", "/utils/"];
 statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
 
-app.ws("/bookEntryWS", function(ws, req) {  
-  ws.on('message', function(msg) {
+app.ws("/bookEntryWS", function (ws, req) {
+  ws.on("message", function (msg) {
     bookEntryQueueManager.sync(req.user.id, ws);
   });
 
@@ -178,11 +178,10 @@ app.use("/book/getRecommendations", cors(), (req, res, next) => next());
 
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
-
 /* --------------- SVELTE --------------- */
 
 const svelteRouter = express.Router();
-const svelteModules = ["", "books", "s"] // "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
+const svelteModules = ["", "books", "s"]; // "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte));
 //svelteRouter.get("/login", browseToReact);
 
@@ -193,11 +192,9 @@ function browseToSvelte(request, response) {
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 }
 
-app.use(subdomain('svelte', svelteRouter));
+app.use(subdomain("svelte", svelteRouter));
 
 /* --------------- SVELTE --------------- */
-
-
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
@@ -209,13 +206,11 @@ function browseToReact(request, response) {
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
 
-app.get("/favicon.ico", function(request, response) {
+app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-
-
-app.post("/react/login", passport.authenticate("local"), function(req, response) {
+app.post("/react/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
   let rememberMe = req.body.rememberme == 1;
 
@@ -230,7 +225,7 @@ app.post("/react/login", passport.authenticate("local"), function(req, response)
   response.send(req.user);
 });
 
-app.post("/react/logout", function(req, response) {
+app.post("/react/logout", function (req, response) {
   let userDao = new UserDao();
   userDao.logout(req.user.id);
 
@@ -248,7 +243,7 @@ const clearAllCookies = response => {
   response.clearCookie("jr_admin");
 };
 
-app.post("/react/createUser", function(req, response) {
+app.post("/react/createUser", function (req, response) {
   let userDao = new UserDao(),
     username = req.body.username,
     password = req.body.password,
@@ -266,7 +261,7 @@ app.post("/react/createUser", function(req, response) {
   });
 });
 
-app.post("/react/resetPassword", async function(req, response) {
+app.post("/react/resetPassword", async function (req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
   let result = await new UserDao().resetPassword(userId, oldPassword, newPassword);
@@ -274,7 +269,7 @@ app.post("/react/resetPassword", async function(req, response) {
 });
 
 app.get("/activate", browseToReact);
-app.get("/activate/:code", function(req, response) {
+app.get("/activate/:code", function (req, response) {
   let userDao = new UserDao(),
     code = req.params.code;
 
@@ -284,7 +279,7 @@ app.get("/activate/:code", function(req, response) {
   userDao.activateUser(code).then(
     result => {
       if (result.success) {
-        req.login(result, function() {
+        req.login(result, function () {
           const rememberMe = result.rememberMe;
 
           response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
