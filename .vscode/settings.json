@@ -4,6 +4,8 @@
         "react/package-lock.json": true,
         "package-lock.json": true,
         "favicon.ico": true,
-        ".gitattributes": true
+        ".gitattributes": true,
+        "react/dist": true,
+        "svelte/dist": true
     }
 }

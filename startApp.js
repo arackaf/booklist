@@ -181,7 +181,8 @@ easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }
 /* --------------- SVELTE --------------- */
 
 const svelteRouter = express.Router();
-const svelteModules = ["", "books", "s"]; // "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
+
+const svelteModules = ["", "login", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte));
 //svelteRouter.get("/login", browseToReact);
 
