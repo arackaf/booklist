@@ -4,6 +4,8 @@
   import { createBrowserHistory } from "history";
   import ajaxUtil from "./util/ajaxUtil";
 
+  import Query from "./graphQL/books/getBooks.graphql";
+
   import Link from "app/Link.svelte";
 
   let currentModule = "";
@@ -32,7 +34,7 @@
 
 <br />
 <br />
-<button on:click={() => ajaxUtil.post("/auth/logout", {}, () => window.location = "/")}>Logout</button>
+<button on:click={() => ajaxUtil.post('/auth/logout', {}, () => (window.location = '/'))}>Logout</button>
 
 {#if currentModule == 'home'}
   <Loadable loader={() => import('./modules/home/Home.svelte')} />
@@ -43,3 +45,6 @@
 {:else if currentModule == 'login'}
   <Loadable loader={() => import('./modules/login/Login.svelte')} />
 {/if}
+
+<hr />
+<h2>{Query}</h2>

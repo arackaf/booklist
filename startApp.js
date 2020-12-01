@@ -37,6 +37,8 @@ import { getJrDbConnection } from "./node/util/dbUtils";
 import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
+const svelteRouter = express.Router();
+
 const IS_PUBLIC = process.env.IS_PUBLIC;
 const PUBLIC_USER_ID = process.env.PUBLIC_USER_ID;
 const PUBLIC_USER = {
@@ -138,15 +140,33 @@ app.use(passport.authenticate("remember-me"));
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
-middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
-middleware(app, { url: "/graphql-public", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
-app.use(
+middleware(svelteRouter, { url: "/graphql", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
+svelteRouter.use(
   "/graphql",
   expressGraphql({
     schema: executableSchema,
     graphiql: true,
     rootValue: root
   })
+);
+
+middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+middleware(app, { url: "/graphql-public", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+
+const mainGraphQLMiddleware = expressGraphql({
+  schema: executableSchema,
+  graphiql: true,
+  rootValue: root
+})
+app.use(
+  "/graphql",
+  (req, res, next) => {
+    if (!req.subdomains.length){
+      mainGraphQLMiddleware(req, res, next);
+    } else {
+      next();
+    }
+  }
 );
 
 const { rootPublic, executableSchemaPublic } = getPublicGraphqlSchema();
@@ -180,8 +200,6 @@ easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }
 
 /* --------------- SVELTE --------------- */
 
-const svelteRouter = express.Router();
-
 const svelteModules = ["", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => (request, response) => {
@@ -195,6 +213,7 @@ const browseToSvelte = moduleName => (request, response) => {
 };
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
 //svelteRouter.get("/login", browseToReact);
+svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
 
