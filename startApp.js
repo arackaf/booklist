@@ -192,14 +192,15 @@ const browseToSvelte = moduleName => (request, response) => {
     }
   }
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
-}
+};
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
 //svelteRouter.get("/login", browseToReact);
-
 
 app.use(subdomain("svelte", svelteRouter));
 
 /* --------------- SVELTE --------------- */
+
+app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
