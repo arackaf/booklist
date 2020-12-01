@@ -182,16 +182,20 @@ easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }
 
 const svelteRouter = express.Router();
 
-const svelteModules = ["", "login", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
-svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte));
-//svelteRouter.get("/login", browseToReact);
-
-function browseToSvelte(request, response) {
+const svelteModules = ["", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
+const validSvelteNonAuthModules = ["", "home", "login"];
+const browseToSvelte = moduleName => (request, response) => {
   if (!request.user) {
     clearAllCookies(response);
+    if (moduleName != "" && moduleName != "home" && moduleName != "login") {
+      return response.redirect("/login");
+    }
   }
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 }
+svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
+//svelteRouter.get("/login", browseToReact);
+
 
 app.use(subdomain("svelte", svelteRouter));
 
