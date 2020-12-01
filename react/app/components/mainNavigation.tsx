@@ -26,7 +26,7 @@ const NavBarItem = props => {
 
 const MainNavigationBar: FunctionComponent<{}> = props => {
   const logout = () => {
-    ajaxUtil.post("/react/logout", {}, () => ((window as any).location = "/"));
+    ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
   };
 
   let isAdminUser = isAdmin();

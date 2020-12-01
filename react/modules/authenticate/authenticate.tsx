@@ -39,7 +39,7 @@ const Login: FunctionComponent<{}> = props => {
     setState(state => ({ ...state, running: true }));
     return new Promise(res => {
       ajaxUtil.post(
-        "/react/login",
+        "/auth/login",
         { username, password, rememberme },
         () => window.location.replace("/"),
         () => {
@@ -75,7 +75,7 @@ const Login: FunctionComponent<{}> = props => {
     }
 
     setState({ ...state, running: true });
-    return ajaxUtil.post("/react/createUser", { username, password, rememberme }, resp => {
+    return ajaxUtil.post("/auth/createUser", { username, password, rememberme }, resp => {
       if (resp.errorCode) {
         setState(state => ({ ...state, errorCode: resp.errorCode, running: false }));
       } else {

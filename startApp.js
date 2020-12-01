@@ -215,7 +215,7 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-app.post("/react/login", passport.authenticate("local"), function (req, response) {
+app.post("/auth/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
   let rememberMe = req.body.rememberme == 1;
 
@@ -230,7 +230,7 @@ app.post("/react/login", passport.authenticate("local"), function (req, response
   response.send(req.user);
 });
 
-app.post("/react/logout", function (req, response) {
+app.post("/auth/logout", function (req, response) {
   let userDao = new UserDao();
   userDao.logout(req.user.id);
 
@@ -248,7 +248,7 @@ const clearAllCookies = response => {
   response.clearCookie("jr_admin");
 };
 
-app.post("/react/createUser", function (req, response) {
+app.post("/auth/createUser", function (req, response) {
   let userDao = new UserDao(),
     username = req.body.username,
     password = req.body.password,
@@ -266,7 +266,7 @@ app.post("/react/createUser", function (req, response) {
   });
 });
 
-app.post("/react/resetPassword", async function (req, response) {
+app.post("/auth/resetPassword", async function (req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
   let result = await new UserDao().resetPassword(userId, oldPassword, newPassword);

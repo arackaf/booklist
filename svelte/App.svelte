@@ -32,7 +32,7 @@
 
 <br />
 <br />
-<button on:click={() => ajaxUtil.post("/react/logout", {}, () => window.location = "/")}>Logout</button>
+<button on:click={() => ajaxUtil.post("/auth/logout", {}, () => window.location = "/")}>Logout</button>
 
 {#if currentModule == 'home'}
   <Loadable loader={() => import('./modules/home/Home.svelte')} />
