@@ -137,6 +137,25 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
+const statics = ["/static/", "/node_modules/", "/react/", "/svelte", "/utils/"];
+statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
+
+const expressWs = expressWsImport(app);
+app.ws("/bookEntryWS", function (ws, req) {
+  ws.on("message", function (msg) {
+    bookEntryQueueManager.sync(req.user.id, ws);
+  });
+
+  bookEntryQueueManager.subscriberAdded(req.user.id, ws);
+});
+
+app.use("/book/getRecommendations", cors(), (req, res, next) => next());
+easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
+
+app.get("/favicon.ico", function (request, response) {
+  response.sendFile(path.join(__dirname + "/favicon.ico"));
+});
+
 /* --------------- SVELTE --------------- */
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
@@ -158,7 +177,7 @@ svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
 
-/* --------------- SVELTE --------------- */
+/* --------------- /SVELTE --------------- */
 
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
@@ -185,21 +204,7 @@ app.use(
   })
 );
 
-const expressWs = expressWsImport(app);
-
-const statics = ["/static/", "/node_modules/", "/react/", "/svelte", "/utils/"];
-statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
-
-app.ws("/bookEntryWS", function (ws, req) {
-  ws.on("message", function (msg) {
-    bookEntryQueueManager.sync(req.user.id, ws);
-  });
-
-  bookEntryQueueManager.subscriberAdded(req.user.id, ws);
-});
-
-app.use("/book/getRecommendations", cors(), (req, res, next) => next());
-easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
+// --------------- REACT ---------------
 
 app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
@@ -213,9 +218,9 @@ function browseToReact(request, response) {
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
 
-app.get("/favicon.ico", function (request, response) {
-  response.sendFile(path.join(__dirname + "/favicon.ico"));
-});
+// --------------- /REACT ---------------
+
+// --------------- AUTH ---------------
 
 app.post("/auth/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
@@ -304,6 +309,8 @@ app.get("/activate/:code", function (req, response) {
     err => console.log(":(", err)
   );
 });
+
+// --------------- /AUTH ---------------
 
 process.on("uncaughtException", error);
 process.on("unhandledRejection", error);
