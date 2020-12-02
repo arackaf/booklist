@@ -141,7 +141,9 @@ const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
 middleware(svelteRouter, { url: "/graphql", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
-svelteRouter.use(
+middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+
+app.use(
   "/graphql",
   expressGraphql({
     schema: executableSchema,
@@ -150,27 +152,7 @@ svelteRouter.use(
   })
 );
 
-middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
-middleware(app, { url: "/graphql-public", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
-
-const mainGraphQLMiddleware = expressGraphql({
-  schema: executableSchema,
-  graphiql: true,
-  rootValue: root
-})
-app.use(
-  "/graphql",
-  (req, res, next) => {
-    if (!req.subdomains.length){
-      mainGraphQLMiddleware(req, res, next);
-    } else {
-      next();
-    }
-  }
-);
-
 const { rootPublic, executableSchemaPublic } = getPublicGraphqlSchema();
-
 app.use(
   "/graphql-public",
   cors(),
@@ -195,7 +177,6 @@ app.ws("/bookEntryWS", function (ws, req) {
 });
 
 app.use("/book/getRecommendations", cors(), (req, res, next) => next());
-
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
 /* --------------- SVELTE --------------- */
