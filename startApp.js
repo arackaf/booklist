@@ -137,11 +137,33 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
+/* --------------- SVELTE --------------- */
+
+middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
+
+const svelteModules = ["", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
+const validSvelteNonAuthModules = ["", "home", "login"];
+const browseToSvelte = moduleName => (request, response) => {
+  if (!request.user) {
+    clearAllCookies(response);
+    if (moduleName != "" && moduleName != "home" && moduleName != "login") {
+      return response.redirect("/login");
+    }
+  }
+  response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
+};
+svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
+//svelteRouter.get("/login", browseToReact);
+svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
+
+app.use(subdomain("svelte", svelteRouter));
+
+/* --------------- SVELTE --------------- */
+
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
-middleware(svelteRouter, { url: "/graphql", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
-middleware(app, { url: "/graphql", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+middleware(app, { url: "/graphql", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
 app.use(
   "/graphql",
@@ -178,27 +200,6 @@ app.ws("/bookEntryWS", function (ws, req) {
 
 app.use("/book/getRecommendations", cors(), (req, res, next) => next());
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
-
-/* --------------- SVELTE --------------- */
-
-const svelteModules = ["", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
-const validSvelteNonAuthModules = ["", "home", "login"];
-const browseToSvelte = moduleName => (request, response) => {
-  if (!request.user) {
-    clearAllCookies(response);
-    if (moduleName != "" && moduleName != "home" && moduleName != "login") {
-      return response.redirect("/login");
-    }
-  }
-  response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
-};
-svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
-//svelteRouter.get("/login", browseToReact);
-svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
-
-app.use(subdomain("svelte", svelteRouter));
-
-/* --------------- SVELTE --------------- */
 
 app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
