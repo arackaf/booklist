@@ -6,6 +6,8 @@
   };
 
   o?.foo();
+
+  new Temp().junk();
 </script>
 
 <h1>Books</h1>

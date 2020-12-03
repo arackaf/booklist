@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": true,
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "lib": ["es2015", "es2017", "dom"],
+    "module": "esNext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "paths": {},
+    "target": "esnext"
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["./node_modules", "./dist", "./service-worker"]
+}

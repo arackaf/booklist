@@ -2,9 +2,9 @@
   import { setContext } from "svelte";
   import Loadable from "svelte-loadable";
   import { createBrowserHistory } from "history";
-  import ajaxUtil from "../../util/ajaxUtil";
+  import ajaxUtil from "util/ajaxUtil";
 
-  import Query from "../../graphQL/books/getBooks.graphql";
+  import Query from "graphQL/books/getBooks.graphql";
 
   import Link from "app/Link.svelte";
 

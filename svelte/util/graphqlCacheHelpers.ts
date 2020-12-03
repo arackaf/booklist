@@ -1,4 +1,4 @@
-import { getDefaultClient } from "micro-graphql-react";
+import { getDefaultClient } from "micro-graphql-svelte";
 let graphqlClient = getDefaultClient();
 
 export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: any = {}) => {
