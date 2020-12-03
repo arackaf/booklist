@@ -49,16 +49,7 @@ module.exports = {
         test: /\.(html|svelte)$/,
         use: [
           {
-            loader: "babel-loader",
-            query: {
-              presets: ["@babel/preset-typescript"],
-              plugins: [
-                "@babel/plugin-proposal-class-properties",
-                "@babel/plugin-syntax-dynamic-import",
-                "@babel/plugin-proposal-optional-chaining",
-                "@babel/plugin-proposal-nullish-coalescing-operator"
-              ]
-            }
+            loader: "babel-loader"
           },
           {
             loader: "svelte-loader",
@@ -71,16 +62,7 @@ module.exports = {
       {
         test: /\.(t|j)sx?$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-        query: {
-          presets: ["@babel/preset-typescript"],
-          plugins: [
-            "@babel/plugin-proposal-class-properties",
-            "@babel/plugin-syntax-dynamic-import",
-            "@babel/plugin-proposal-optional-chaining",
-            "@babel/plugin-proposal-nullish-coalescing-operator"
-          ]
-        }
+        loader: "babel-loader"
       },
       {
         test: /\.graphql$/,
