@@ -1,7 +1,7 @@
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { GenerateSW } = require("workbox-webpack-plugin");
 const path = require("path");
-const isProd = process.env.NODE_ENV == "production";
+const isProd = true || process.env.NODE_ENV == "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -30,8 +30,8 @@ module.exports = {
     main: "./index.js"
   },
   output: {
-    filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",
-    chunkFilename: isProd ? "[name]-chunk-[contenthash].js" : "[name]-chunk.js",
+    filename: isProd ? "[name]-bundle.js" : "[name]-bundle.js",
+    chunkFilename: isProd ? "[name]-chunk.js" : "[name]-chunk.js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "/svelte/dist/"
   },
@@ -63,7 +63,8 @@ module.exports = {
           {
             loader: "svelte-loader",
             options: {
-              emitCss: true
+              emitCss: true,
+              customElement: true
             }
           }
         ]
@@ -115,8 +116,8 @@ module.exports = {
     ]
   },
   optimization: {
-    minimizer: isProd ? [new TerserPlugin()] : []
-    //minimize: false
+    //minimizer: isProd ? [new TerserPlugin()] : []
+    minimize: false
   },
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm" }),
