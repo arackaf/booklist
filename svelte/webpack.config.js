@@ -27,7 +27,8 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
 
 module.exports = {
   entry: {
-    main: "./index.js"
+    main: "./entry-points/main/index.js",
+    login: "./entry-points/login/index.js"
   },
   output: {
     filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",
@@ -101,7 +102,8 @@ module.exports = {
     //minimize: false
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: "default.htm" }),
+    new HtmlWebpackPlugin({ template: "default.htm", chunks: ["main"], filename: "index.html" }),
+    new HtmlWebpackPlugin({ template: "default.htm", chunks: ["login"], filename: "login.html" }),
     new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     // new GenerateSW({
     //   ignoreURLParametersMatching: [/./],
@@ -117,8 +119,8 @@ module.exports = {
     //   ],
     //   importScripts: ["/react/service-worker/sw-index-bundle.js"]
     // }),
+    new BundleAnalyzerPlugin({ analyzerMode: "static" }),
     new Dotenv(isProd ? { systemvars: true } : { path: "./.env.dev" })
-    //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
   ].filter(p => p),
   stats: {
     all: false,

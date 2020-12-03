@@ -172,7 +172,12 @@ const browseToSvelte = moduleName => (request, response) => {
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 };
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
-//svelteRouter.get("/login", browseToReact);
+svelteRouter.get("/login", (request, response) => {
+  if (request.user) {
+    //return response.redirect("/");
+  }
+  response.sendFile(path.join(__dirname + "/svelte/dist/login.html"));
+});
 svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
