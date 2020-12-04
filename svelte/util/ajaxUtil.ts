@@ -1,5 +1,5 @@
 const ajaxUtil = {
-  post(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
+  post(url, data, callback = (resp: any) => {}, errorCallback = (resp: any) => {}) {
     return fetch(url, {
       method: "post",
       credentials: "include",
@@ -16,7 +16,7 @@ const ajaxUtil = {
       })
       .catch(errorCallback);
   },
-  postWithFiles(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
+  postWithFiles(url, data, callback = (resp: any) => {}, errorCallback = (resp: any) => {}) {
     return fetch(url, {
       method: "post",
       credentials: "include",
@@ -26,7 +26,7 @@ const ajaxUtil = {
       .then(callback)
       .catch(errorCallback);
   },
-  postWithCors(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
+  postWithCors(url, data, callback = (resp: any) => {}, errorCallback = (resp: any) => {}) {
     return fetch(url, {
       method: "POST",
       mode: "cors",

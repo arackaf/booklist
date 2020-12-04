@@ -1,7 +1,9 @@
 <script>
   import { setContext } from "svelte";
   import Loadable from "svelte-loadable";
-  import { createBrowserHistory } from "history";
+  import { history } from "util/urlHelpers";
+
+  import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
   import ajaxUtil from "util/ajaxUtil";
 
   import Query from "graphQL/books/getBooks.graphql";
@@ -10,14 +12,13 @@
 
   let currentModule = "";
 
-  const history = createBrowserHistory();
-
   setContext("booklist-history", history);
 
   syncHistory(history.location);
 
   // Listen for changes to the current location.
   let unlisten = history.listen(({ location, action }) => {
+    appStateDispatch({ type: URL_SYNC });
     syncHistory(location);
   });
 
@@ -26,10 +27,16 @@
   }
 </script>
 
-<Link href="">Home</Link>
+<Link href="">Default</Link>
+<Link href="home">Home</Link>
 <Link href="books">Books</Link>
 <Link href="subjects">Subjects</Link>
 <a href="/login">Login</a>
+
+<br />
+<br />
+
+<h1>App State: {$appState.module}</h1>
 
 <br />
 <br />

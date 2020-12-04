@@ -1,12 +1,12 @@
-import createHistory from "history/createBrowserHistory";
-import queryString from "query-string";
+import { createBrowserHistory } from "history";
+export const history = createBrowserHistory();
 
-export const history = createHistory();
+import queryString from "query-string";
 
 type ParsedQuery = {
   pathname: any;
   searchState: any;
-}
+};
 
 export function getCurrentUrlState(): ParsedQuery {
   let location = history.location;
