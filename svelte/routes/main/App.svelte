@@ -8,7 +8,8 @@
 
   import Query from "graphQL/books/getBooks.graphql";
 
-  import Link from "app/Link.svelte";
+  import MainNavigation from "app/components/navigation/MainNavigation.svelte";
+  import Link from "app/components/helpers/Link.svelte";
 
   let currentModule = "";
 
@@ -27,7 +28,25 @@
   }
 </script>
 
-<Link href="">Default</Link>
+<style>
+  .app-container {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+</style>
+
+<meta
+  name="viewport"
+  content={$appState.showingMobile ? 'width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;' : ''} />
+  
+<div class="app-container">
+  <div id="app">
+    <MainNavigation />
+  </div>
+</div>
+
+<!-- <Link href="">Default</Link>
 <Link href="home">Home</Link>
 <Link href="books">Books</Link>
 <Link href="subjects">Subjects</Link>
@@ -51,4 +70,4 @@
 {/if}
 
 <hr />
-<h2>{Query}</h2>
+<h2>{Query}</h2> -->
