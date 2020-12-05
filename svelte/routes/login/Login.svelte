@@ -1,11 +1,8 @@
 <script>
   import Login from "modules/login/Login";
+  import AppUI from "../AppUI.svelte";
 </script>
 
-<div style="margin: 10px">
-
-  
-  <h1>THE LOGIN PAGE</h1>
-  
+<AppUI>
   <Login />
-</div>
+</AppUI>

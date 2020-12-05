@@ -11,7 +11,8 @@
     "paths": {},
     "target": "esnext",
     "strict": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
   "include": ["./**/*.ts"],
   "exclude": ["./node_modules", "./dist", "./service-worker"]

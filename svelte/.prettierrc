@@ -1,3 +1,5 @@
 {
-  "svelteBracketNewLine": true
+  "arrowParens": "avoid",
+  "svelteBracketNewLine": true,
+  "printWidth": 150
 }

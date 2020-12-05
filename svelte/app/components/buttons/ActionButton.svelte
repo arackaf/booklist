@@ -11,12 +11,12 @@
 
   export let style = "";
   export let preset = "";
-  export let className = "";
+  let className;
+  export { className as class };
   export let disabled = false;
 
   export let icon: any = null;
   export let baseWidth: any = null;
-  export let buttonProps = {} as any;
 
   export let onClick: (...args) => any = null as any;
 
@@ -25,9 +25,7 @@
 
   onMount(() => () => (active = false));
 
-  const buttonStyle = `min-width: ${
-    baseWidth || text.length + 2 + "ch"
-  } ${style}`;
+  const buttonStyle = `min-width: ${baseWidth || text.length + 2 + "ch"} ${style}`;
   const iconStyles = `${text.length ? "margin-left: 3px" : ""}`;
   const finishedIconStyles = `${text.length ? "margin-left: 5px" : ""}`;
 
@@ -69,7 +67,7 @@
   style={buttonStyle}
   disabled={isRunning || isFinished || disabled || false}
   class={cn(cssFromPreset(preset, className), className, 'bl-action-button')}
-  {...buttonProps}
+  {...$$restProps}
 >
   {#if isFinished}
     {finishedText}
@@ -83,7 +81,5 @@
 
   {#if isFinished}
     <i style={finishedIconStyles} class="fal fa-check" />
-  {:else if isRunning}
-    <i style={iconStyles} class="fa fa-fw fa-spin fa-spinner" />
-  {:else if icon}<i style={iconStyles} class={icon} />{/if}
+  {:else if isRunning}<i style={iconStyles} class="fa fa-fw fa-spin fa-spinner" />{:else if icon}<i style={iconStyles} class={icon} />{/if}
 </button>
