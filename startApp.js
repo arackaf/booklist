@@ -160,24 +160,27 @@ app.get("/favicon.ico", function (request, response) {
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
-const svelteModules = ["", "books", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
+const svelteModules = ["", "books", "activate", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => (request, response) => {
   if (!request.user) {
     clearAllCookies(response);
-    if (moduleName != "" && moduleName != "home" && moduleName != "login") {
+    if (moduleName != "" && moduleName != "home" && moduleName != "login" && moduleName != "activate") {
       return response.redirect("/login");
     }
   }
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 };
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
-svelteRouter.get("/login", (request, response) => {
-  if (request.user) {
-    //return response.redirect("/");
-  }
-  response.sendFile(path.join(__dirname + "/svelte/dist/login.html"));
+
+const otherSvelteModules = ["login"];
+otherSvelteModules.forEach(module => {
+  svelteRouter.get(`/${module}`, (request, response) => {
+    response.sendFile(path.join(__dirname + `/svelte/dist/${module}.html`));
+  });
 });
+svelteRouter.get("/activate/:code", activateCode);
+
 svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
@@ -271,7 +274,7 @@ app.post("/auth/createUser", function (req, response) {
       response.send({ errorCode: "s1" });
     } else {
       userDao.createUser(username, password, rememberMe).then(() => {
-        userDao.sendActivationCode(username);
+        userDao.sendActivationCode(username, (req.subdomains || [])[0] || "");
         response.send({});
       });
     }
@@ -286,9 +289,19 @@ app.post("/auth/resetPassword", async function (req, response) {
 });
 
 app.get("/activate", browseToReact);
-app.get("/activate/:code", function (req, response) {
-  let userDao = new UserDao(),
-    code = req.params.code;
+app.get("/activate/:code", activateCode);
+async function activateCode(req, response) {
+  let userDao = new UserDao();
+  let code = req.params.code;
+
+  if (req.user) {
+    try {
+      let existingUser = await userDao.findByActivationToken(req.params.code);
+      if (existingUser && existingUser._id == req.user._id) {
+        return response.redirect("/activate?alreadyActivated=true");
+      }
+    } catch (er) {}
+  }
 
   response.clearCookie("remember_me");
   req.logout();
@@ -313,7 +326,7 @@ app.get("/activate/:code", function (req, response) {
     },
     err => console.log(":(", err)
   );
-});
+}
 
 // --------------- /AUTH ---------------
 

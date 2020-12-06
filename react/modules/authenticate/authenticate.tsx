@@ -103,7 +103,7 @@ const Login: FunctionComponent<{}> = props => {
           <div>
             {state.pendingActivation ? (
               <div className="alert alert-success">
-                Success! Now check your email, please. You should be receiving a link to activate your account. (Check your spam folder if it's not
+                Success! Now check your email. You should be receiving a link to activate your account. (Check your spam folder if it's not
                 there)
               </div>
             ) : (

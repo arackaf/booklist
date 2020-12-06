@@ -1,6 +1,6 @@
 <script lang="ts">
   import NavBarItem from "./NavBarItem.svelte";
-  import Link from "../helpers/Link.svelte";
+  import ModuleLink from "./ModuleLink.svelte";
 
   import ajaxUtil from "util/ajaxUtil";
 
@@ -36,7 +36,7 @@
 <header>
   <nav class={nav}>
     <div class={`${navHeader} hidden-xs ${isHome && isLoggedIn ? 'active' : ''}`}>
-      <Link href="home"><i class="fal fa-book" style="margin-right: 5px;" /> <span>My Library</span></Link>
+      <ModuleLink href="home"><i class="fal fa-book" style="margin-right: 5px;" /> <span>My Library</span></ModuleLink>
     </div>
 
     <ul class={navItems}>
@@ -64,7 +64,7 @@
     </ul>
     {#if isLoggedIn}
       <ul class={navItemsRight}>
-        <NavBarItem href="/logout" onClick={logout}><span class="hidden-xs">Logout</span> <i class="visible-xs fal fa-sign-out" /></NavBarItem>
+        <NavBarItem onClick={logout}><span class="hidden-xs">Logout</span> <i class="visible-xs fal fa-sign-out" /></NavBarItem>
       </ul>
     {/if}
   </nav>

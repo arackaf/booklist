@@ -91,7 +91,7 @@
       <div>
         {#if state.pendingActivation}
           <div class="alert alert-success">
-            Success! Now check your email, please. You should be receiving a link to activate your account. (Check your spam folder if it's not there)
+            Success! Now check your email. You should be receiving a link to activate your account. (Check your spam folder if it's not there)
           </div>
         {:else}
           <form>

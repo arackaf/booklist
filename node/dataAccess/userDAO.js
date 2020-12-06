@@ -16,7 +16,13 @@ const newUsersSubjects = [
   { name: "Technology", path: null }
 ];
 
-const siteRoot = process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://localhost:3000";
+const siteRoot = subdomain => {
+  if (subdomain) {
+    return process.env.NODE_ENV == "production" ? `https://${subdomain}.mylibrary.io` : `http://${subdomain}.lvh.me:3000`;
+  } else {
+    return process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://localhost:3000";
+  }
+};
 
 async function wrapWithLoginToken(db, user) {
   if (user && !user.loginToken) {
@@ -128,10 +134,19 @@ class UserDAO extends DAO {
       super.dispose(db);
     }
   }
-  async sendActivationCode(email) {
+  async findByActivationToken(activationToken) {
+    let db = await super.open();
+    try {
+      return await db.collection("users").findOne({ activationToken });
+    } finally {
+      super.dispose(db);
+    }
+  }
+  async sendActivationCode(email, subdomain) {
+    console.log("SUBDOMAIN", subdomain);
     email = email.toLowerCase();
     let code = this.getActivationToken(email);
-    let url = `${siteRoot}/activate/${code}`;
+    let url = `${siteRoot(subdomain)}/activate/${code}`;
 
     await sendEmail({
       to: email,

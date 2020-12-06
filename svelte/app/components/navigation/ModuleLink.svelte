@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { history } from "util/urlHelpers";
   import { appState } from "app/state/appState";
   import cn from "classnames";
 
@@ -8,8 +9,6 @@
   export let disabled = false;
   export let onClick: (evt?: any) => void = null as any;
   export let external = false;
-
-  const history: any = getContext("booklist-history");
 
   function anchorClicked(evt) {
     if (external) {
@@ -23,7 +22,7 @@
     }
 
     if (!disabled && href && href != $appState.module) {
-      history.push(`/${href}`);
+      history.push({ pathname: `/${href}`, search: "" });
     }
   }
 </script>
