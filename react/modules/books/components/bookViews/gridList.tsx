@@ -283,55 +283,6 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-export const GridViewShell: SFC<{ menuBarHeight: any }> = ({ menuBarHeight }) => {
-  const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
-
-  const stickyHeaderStyle: CSSProperties = { position: "sticky", top: `${menuBarHeight}px`, backgroundColor: "white" };
-
-  return (
-    <div style={{ minHeight: 400 }}>
-      <div>
-        <table style={{ position: "relative" }} className="table no-padding-top">
-          <thead>
-            <tr>
-              {!viewingPublic && online ? (
-                <th style={{ ...stickyHeaderStyle, textAlign: "center" }}>
-                  <a style={{ fontSize: "12pt" }}>
-                    <i className={"fal fa-square"} />
-                  </a>
-                </th>
-              ) : null}
-              <th style={{ ...stickyHeaderStyle }} />
-              <th style={{ ...stickyHeaderStyle, minWidth: "200px" }}>
-                <a className="no-underline">Title</a>
-              </th>
-              <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Subjects</th>
-              <th style={{ minWidth: "90px", ...stickyHeaderStyle }}>Tags</th>
-              <th style={{ minWidth: "90px", ...stickyHeaderStyle }} />
-              <th style={{ ...stickyHeaderStyle }} />
-              <th style={{ minWidth: "85px", ...stickyHeaderStyle }}>
-                <a className="no-underline">Pages</a>
-              </th>
-              <th style={{ ...stickyHeaderStyle }}>
-                <a className="no-underline">Added</a>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style={{ backgroundColor: "white" }}>
-              <td colSpan={8}>
-                <h1 style={{ color: "var(--neutral-5)", fontSize: "2em", marginTop: "5px" }}>
-                  Books are loading <i className="fas fa-cog fa-spin"></i>
-                </h1>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
 const BookViewListGrid: SFC<{ books: any; menuBarHeight: any }> = ({ books, menuBarHeight }) => {
   const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
   const { setRead, runDelete } = actions;

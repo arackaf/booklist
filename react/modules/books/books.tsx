@@ -3,7 +3,7 @@ import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContex
 import BooksMenuBar, { BooksMenuBarDisabled } from "./components/booksMenuBar";
 import Loading from "app/components/loading";
 
-import GridView, { GridViewShell } from "./components/bookViews/gridList";
+import GridView from "./components/bookViews/gridList";
 import LazyModal from "app/components/ui/LazyModal";
 
 import BasicListView from "./components/bookViews/basicList";
@@ -149,13 +149,10 @@ const Fallback: SFC<{ uiView: BookSearchUiView; totalPages: number; resultsCount
   return (
     <>
       <BooksMenuBarDisabled measureRef={measureRef} totalPages={totalPages} resultsCount={resultsCount} />
-      {uiView.isGridView ? (
-        <GridViewShell menuBarHeight={menuBarHeight} />
-      ) : (
-        <h1 style={{ color: "var(--neutral-5)", fontSize: "2em", marginTop: "5px" }}>
-          Books are loading <i className="fas fa-cog fa-spin"></i>
-        </h1>
-      )}
+
+      <h1 style={{ color: "var(--neutral-5)", fontSize: "2em", marginTop: "5px" }}>
+        Books are loading <i className="fas fa-cog fa-spin"></i>
+      </h1>
     </>
   );
 };
