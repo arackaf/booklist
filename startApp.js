@@ -137,7 +137,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
-const statics = ["/static/", "/node_modules/", "/react/", "/svelte", "/utils/"];
+const statics = ["/static/", "/node_modules/", "/react/", "/svelte/", "/utils/"];
 statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
 
 const expressWs = expressWsImport(app);
@@ -181,8 +181,6 @@ otherSvelteModules.forEach(module => {
 });
 svelteRouter.get("/activate/:code", activateCode);
 
-svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
-
 app.use(subdomain("svelte", svelteRouter));
 
 /* --------------- /SVELTE --------------- */
@@ -213,8 +211,6 @@ app.use(
 );
 
 // --------------- REACT ---------------
-
-app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
