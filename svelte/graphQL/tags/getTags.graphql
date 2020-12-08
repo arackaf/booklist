@@ -1,0 +1,11 @@
+query allTags($publicUserId: String) {
+  allTags(publicUserId: $publicUserId, SORT: { name: 1 }) {
+    Tags {
+      _id
+      name
+      backgroundColor
+      textColor
+      path
+    }
+  }
+}

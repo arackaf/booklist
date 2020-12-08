@@ -1,0 +1,3 @@
+mutation deleteSubject($_id: String) {
+  deleteSubject(_id: $_id)
+}

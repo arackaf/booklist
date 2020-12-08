@@ -1,0 +1,9 @@
+mutation updateBooksRead($_ids: [String], $isRead: Boolean) {
+  updateBooks(_ids: $_ids, Updates: { isRead: $isRead }) {
+    success
+    Books {
+      _id
+      isRead
+    }
+  }
+}

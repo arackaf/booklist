@@ -1,0 +1,11 @@
+mutation updateBookSummary($_id: String, $bookSummary: BookSummaryMutationInput) {
+  updateBookSummary(_id: $_id, Updates: $bookSummary) {
+    BookSummary {
+      _id
+      title
+      isbn
+      smallImage
+      mediumImage
+    }
+  }
+}

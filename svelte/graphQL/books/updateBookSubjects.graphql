@@ -1,0 +1,11 @@
+mutation updateBooksSubjects($books: [String], $add: [String], $remove: [String]) {
+  remove: updateBooks(_ids: $books, Updates: { subjects_PULL: $remove }) {
+    success
+  }
+  updateBooks(_ids: $books, Updates: { subjects_ADDTOSET: $add }) {
+    Books {
+      _id
+      subjects
+    }
+  }
+}

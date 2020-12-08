@@ -1,0 +1,7 @@
+query getBooksSubjects($subjectIds: [String], $searchChildSubjects: Boolean, $publicUserId: String) {
+  allBooks(subjects_containsAny: $subjectIds, searchChildSubjects: $searchChildSubjects, publicUserId: $publicUserId) {
+    Books {
+      subjects
+    }
+  }
+}

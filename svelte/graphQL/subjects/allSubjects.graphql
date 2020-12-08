@@ -1,0 +1,11 @@
+query allSubjects($publicUserId: String) {
+  allSubjects(publicUserId: $publicUserId, SORT: { name: 1 }) {
+    Subjects {
+      _id
+      name
+      backgroundColor
+      textColor
+      path
+    }
+  }
+}

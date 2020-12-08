@@ -1,0 +1,18 @@
+query InitialOfflineBookSync($page: Int, $pageSize: Int) {
+  allBooks(PAGE: $page, PAGE_SIZE: $pageSize) {
+    Books {
+      _id
+      title
+      isbn
+      pages
+      smallImage
+      publicationDate
+      subjects
+      authors
+      publisher
+      tags
+      isRead
+      dateAdded
+    }
+  }
+}
