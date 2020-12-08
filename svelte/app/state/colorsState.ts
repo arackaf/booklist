@@ -4,7 +4,7 @@ import { query } from "micro-graphql-svelte";
 import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
 import { QueryOf, Queries } from "graphql-typings";
 
-const { queryState } = query<QueryOf<Queries["allLabelColors"]>>(AllLabelColorsQuery, { initialSearch: {} });
+const { queryState } = query<QueryOf<Queries["allLabelColors"]>>(AllLabelColorsQuery, { initialSearch: { cache: 9 } });
 
 export default derived(queryState, state => ({
   loaded: !!state,
