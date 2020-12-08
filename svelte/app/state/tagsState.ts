@@ -1,9 +1,9 @@
-import { useContext, useMemo } from "react";
+import { derived, get } from "svelte/store";
+import { query } from "micro-graphql-svelte";
 import { QueryOf, Queries } from "graphql-typings";
 
 import GetTags from "graphQL/tags/getTags.graphql";
-import { useSuspenseQuery } from "micro-graphql-react";
-import { AppContext } from "../renderUI";
+import { appState } from "./appState";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 interface ITag {
@@ -19,16 +19,15 @@ export interface TagsState {
 
 graphqlSyncAndRefresh("Tag", GetTags, { sort: tagsSort });
 
-export function useTagsState(): TagsState {
-  const [{ publicUserId }] = useContext(AppContext);
-  const req = { publicUserId };
-  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(GetTags, req);
+const { queryState, sync } = query<QueryOf<Queries["allTags"]>>(GetTags);
+sync({ publicUserId: get(appState).publicUserId });
 
-  const tags = data ? data.allTags.Tags : [];
-  const tagHash = useMemo(() => (tags?.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);
+export const tagsState = derived(queryState, $tags => {
+  const tags = $tags.data ? $tags.data.allTags.Tags : [];
+  const tagHash = tags?.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {};
 
-  return { tagsLoaded: loaded, tags, tagHash };
-}
+  return { loaded: $tags.loaded, tags, tagHash };
+});
 
 function tagsSort({ name: name1 }, { name: name2 }) {
   let name1After = name1.toLowerCase() > name2.toLowerCase();
