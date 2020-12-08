@@ -7,7 +7,7 @@
     "start": "webpack -w",
     "webpack": "webpack",
     "tsc": "svelte-check --threshold error && tsc --noEmit",
-    "svelte-check": "svelte-check --watch",
+    "svelte-check": "svelte-check --watch --threshold warning",
     "tscw": "tsc -w --noEmit",
     "deploy": "cd .. && npm run deploy",
     "rollup-sw": "cd ./service-worker && rollup -c -w",
