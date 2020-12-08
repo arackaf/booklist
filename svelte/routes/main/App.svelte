@@ -3,6 +3,7 @@
   import Loadable from "svelte-loadable";
   import { history } from "util/urlHelpers";
   import AppUI from "../AppUI.svelte";
+  import "util/graphql";
 
   import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
   import ajaxUtil from "util/ajaxUtil";

@@ -1,4 +1,4 @@
-import { setDefaultClient, Client } from "micro-graphql-react";
+import { setDefaultClient, Client } from "micro-graphql-svelte";
 
 export const graphqlClient = new Client({
   endpoint: "/graphql",
