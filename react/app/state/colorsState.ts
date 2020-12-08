@@ -7,6 +7,6 @@ export function useColors() {
   let { data } = useSuspenseQuery<QueryOf<Queries["allLabelColors"]>>(AllLabelColorsQuery, { cache: 9 });
   return {
     loaded: !!data,
-    colors: data ? data.allLabelColors.LabelColors.map(c => c.backgroundColor) : null
+    colors: data ? data.allLabelColors.LabelColors.map(c => c.backgroundColor) : []
   };
 }

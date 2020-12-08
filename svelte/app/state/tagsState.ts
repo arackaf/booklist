@@ -19,8 +19,7 @@ export interface TagsState {
 
 graphqlSyncAndRefresh("Tag", GetTags, { sort: tagsSort });
 
-const { queryState, sync } = query<QueryOf<Queries["allTags"]>>(GetTags);
-sync({ publicUserId: get(appState).publicUserId });
+const { queryState } = query<QueryOf<Queries["allTags"]>>(GetTags, { initialSearch: { publicUserId: get(appState).publicUserId } });
 
 export const tagsState = derived(queryState, $tags => {
   const tags = $tags.data ? $tags.data.allTags.Tags : [];

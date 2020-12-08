@@ -21,8 +21,7 @@ graphqlSyncAndRefresh("Tag", GetTags, { sort: tagsSort });
 
 export function useTagsState(): TagsState {
   const [{ publicUserId }] = useContext(AppContext);
-  const req = { publicUserId };
-  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(GetTags, req);
+  const { loaded, data } = useSuspenseQuery<QueryOf<Queries["allTags"]>>(GetTags, { publicUserId });
 
   const tags = data ? data.allTags.Tags : [];
   const tagHash = useMemo(() => (tags?.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {}), [tags]);

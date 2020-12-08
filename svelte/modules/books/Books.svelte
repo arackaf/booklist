@@ -16,7 +16,7 @@
 <h1>Books</h1>
 
 <h2>{$colorsState.loaded}</h2>
-<h2>{$colorsState.colors}</h2>
-<h2>{$tagsState.tags}</h2>
+<ul>{#each $colorsState.colors as c}<li>{c}</li>{/each}</ul>
+<ul>{#each $tagsState.tags as t}<li>{t.name}</li>{/each}</ul>
 
 <Temp val={3} />
