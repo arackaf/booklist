@@ -15,5 +15,5 @@
     "strictNullChecks": false
   },
   "include": ["./**/*.ts"],
-  "exclude": ["./node_modules", "./dist", "./service-worker"]
+  "exclude": ["./node_modules", "./dist", "./service-worker", "../../../../node_modules"]
 }

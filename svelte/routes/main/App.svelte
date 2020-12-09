@@ -6,36 +6,25 @@
   import "util/graphql";
 
   import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
-  import ajaxUtil from "util/ajaxUtil";
-
-  import Query from "graphQL/books/getBooks.graphql";
-  import Link from "app/components/navigation/ModuleLink.svelte";
-
-  let currentModule = "";
-
-  syncHistory(history.location);
 
   // Listen for changes to the current location.
-  let unlisten = history.listen(({ location, action }) => {
+  history.listen(({ location, action }) => {
     appStateDispatch({ type: URL_SYNC });
-    syncHistory(location);
   });
 
-  function syncHistory(location) {
-    currentModule = location.pathname.replace(/^\//, "") || "home";
-  }
+  $: activeModule = $appState.module;
 </script>
 
 <AppUI content={$appState.showingMobile ? 'width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;' : ''}>
-  {#if currentModule == 'home'}
+  {#if activeModule == 'home'}
     <Loadable loader={() => import('modules/home/Home.svelte')} />
-  {:else if currentModule == 'scan'}
+  {:else if activeModule == 'scan'}
     <Loadable loader={() => import('modules/scan/Scan.svelte')} />
-  {:else if currentModule == 'books'}
+  {:else if activeModule == 'books'}
     <Loadable loader={() => import('modules/books/Books.svelte')} />
-  {:else if currentModule == 'subjects'}
+  {:else if activeModule == 'subjects'}
     <Loadable loader={() => import('modules/subjects/Subjects.svelte')} />
-  {:else if currentModule == 'activate'}
+  {:else if activeModule == 'activate'}
     <Loadable loader={() => import('modules/activate/Activate.svelte')} />
   {/if}
 </AppUI>
