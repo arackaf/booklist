@@ -28,11 +28,8 @@ graphqlSyncAndRefresh("Subject", AllSubjectsQuery, {
 export function useSubjectsState() {
   let [app] = useContext(AppContext);
   let { userId, publicUserId } = app;
-  let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(
-    AllSubjectsQuery,
-    { publicUserId },
-    { active: !!userId || !!publicUserId }
-  );
+  
+  let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(AllSubjectsQuery, { publicUserId });
   const subjects = data ? data.allSubjects.Subjects : null;
   const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);
 

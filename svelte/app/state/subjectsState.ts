@@ -1,9 +1,11 @@
+import { get, derived } from "svelte/store";
+
 import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
 import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
 import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
-import { useContext, useMemo } from "react";
-import { AppContext } from "../renderUI";
-import { useSuspenseQuery, useMutation } from "micro-graphql-react";
+
+import { appState } from "./appState";
+import { query } from "micro-graphql-svelte";
 import { standardDelete } from "../../util/graphqlCacheHelpers";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
@@ -22,19 +24,15 @@ export interface SubjectState {
 }
 
 graphqlSyncAndRefresh("Subject", AllSubjectsQuery, {
-  onDelete: resp => standardDelete("Subject", AllSubjectsQuery, resp.deleteSubject)
+  onDelete: resp => standardDelete("Subject", AllSubjectsQuery, resp.deleteSubject),
 });
 
-export function useSubjectsState() {
-  let [app] = useContext(AppContext);
-  let { userId, publicUserId } = app;
-  let { loaded, data } = useSuspenseQuery<QueryOf<Queries["allSubjects"]>>(
-    AllSubjectsQuery,
-    { publicUserId },
-    { active: !!userId || !!publicUserId }
-  );
+let { publicUserId } = get(appState);
+let { queryState } = query<QueryOf<Queries["allSubjects"]>>(AllSubjectsQuery, { initialSearch: { publicUserId } });
+
+export const subjectsState = derived(queryState, ({ loaded, data }) => {
   const subjects = data ? data.allSubjects.Subjects : null;
-  const subjectHash = useMemo(() => (subjects ? objectsToHash(subjects) : {}), [subjects]);
+  const subjectHash = subjects ? objectsToHash(subjects) : {};
 
   return { subjectsLoaded: loaded, subjectHash };
-}
+});
