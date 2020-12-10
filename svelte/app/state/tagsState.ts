@@ -25,7 +25,7 @@ export const tagsState = derived(queryState, $tags => {
   const tags = $tags.data ? $tags.data.allTags.Tags : [];
   const tagHash = tags?.length ? tags.reduce((hash, t) => ((hash[t._id] = t), hash), {}) : {};
 
-  return { loaded: $tags.loaded, tags, tagHash };
+  return { tagsLoaded: $tags.loaded, tags, tagHash };
 });
 
 function tagsSort({ name: name1 }, { name: name2 }) {

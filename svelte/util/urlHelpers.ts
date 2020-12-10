@@ -31,6 +31,6 @@ export function setSearchValues(state) {
 
   history.push({
     pathname: history.location.pathname,
-    search: queryString.stringify(newState)
+    search: newState ? "?" + queryString.stringify(newState) : ""
   });
 }
