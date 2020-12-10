@@ -36,7 +36,7 @@
     "html-webpack-plugin": "^4.3.0",
     "lodash.debounce": "4.0.8",
     "lodash.invert": "^4.3.0",
-    "micro-graphql-svelte": "^0.1.6",
+    "micro-graphql-svelte": "^0.1.7",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.12.0",
     "persistgraphql": "^0.3.11",

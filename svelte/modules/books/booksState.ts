@@ -63,24 +63,22 @@ function booksActive() {
   createSubscription?.();
   createSubscription = null;
 
-  window.removeEventListener("ws-info", handleWs);
+  window.removeEventListener("ws-info", booksInActiveWsHandler);
 }
 
 function booksInactive() {
   createSubscription = graphqlClient.subscribeMutation({ when: /createBook/, run: () => clearCache(GetBooksQuery) });
 
-  window.addEventListener("ws-info", handleWs);
+  window.addEventListener("ws-info", booksInActiveWsHandler);
 }
 
-function handleWs(evt) {
+function booksInActiveWsHandler(evt) {
   if (evt?.detail?.type == "bookAdded") {
     clearCache(GetBooksQuery);
   }
 }
 
 export const searchBooks = () => {
-  const searchState = currentSearch;
-
   const onBooksMutation = [
     {
       when: /createBook/,
@@ -95,7 +93,7 @@ export const searchBooks = () => {
     },
     {
       when: /deleteBook/,
-      run: ({ softReset, currentResults, refresh }, res, req) => {
+      run: ({ softReset, currentResults }, _, req) => {
         let toRemove = currentResults.allBooks.Books.find(b => b._id == req._id);
         if (toRemove) {
           currentResults.allBooks.Books = currentResults.allBooks.Books.filter(b => b != toRemove);
@@ -109,28 +107,28 @@ export const searchBooks = () => {
   const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(GetBooksQuery, {
     onMutation: onBooksMutation
   });
+  const booksActiveWsHandler = evt => {
+    if (evt?.detail?.type == "bookAdded") {
+      get(queryState).softReset();
+    }
+  };
 
   const variablesSyncTeardown = currentSearch.subscribe(searchState => {
     sync(computeBookSearchVariables(searchState));
   });
 
   onMount(() => {
-    function handleWs(evt) {
-      if (evt?.detail?.type == "bookAdded") {
-        get(queryState).softReset();
-      }
-    }
-    window.addEventListener("ws-info", handleWs);
+    window.addEventListener("ws-info", booksActiveWsHandler);
     booksActive();
 
     return () => {
       booksInactive();
-      window.removeEventListener("ws-info", handleWs);
+      window.removeEventListener("ws-info", booksActiveWsHandler);
       variablesSyncTeardown();
     };
   });
 
-  return derived([queryState, subjectsState, tagsState, searchState], ([booksState, subjectsState, tagsState, searchState]) => {
+  return derived([queryState, subjectsState, tagsState, currentSearch], ([booksState, subjectsState, tagsState, searchState]) => {
     const { data, loaded, currentQuery, reload } = booksState;
 
     const booksRaw = data ? data.allBooks.Books : null;
