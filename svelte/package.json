@@ -15,6 +15,7 @@
     "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {
+    "@arackaf-svelte/svelte-loadable": "^1.6.0",
     "@babel/core": "7.4.3",
     "@babel/plugin-proposal-class-properties": "7.4.0",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
@@ -50,7 +51,6 @@
     "shallow-equal": "^1.0.0",
     "svelte": "^3.29.7",
     "svelte-check": "^1.1.18",
-    "svelte-loadable": "^1.5.0",
     "svelte-loader": "^2.13.6",
     "svelte-preprocess": "^4.6.1",
     "terser-webpack-plugin": "^1.2.3",
