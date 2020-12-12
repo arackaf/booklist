@@ -1,8 +1,4 @@
 <script>
-  import { setContext } from "svelte";
-  import { get } from "svelte/store";
-  import Loadable from "@arackaf-svelte/svelte-loadable";
-
   import ModuleRoute from "app/components/navigation/ModuleRoute.svelte";
 
   import { history } from "util/urlHelpers";
