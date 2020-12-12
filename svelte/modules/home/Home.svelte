@@ -6,6 +6,8 @@
   }
 </style>
 
-<div>
-  <h1>Home</h1>
-</div>
+<section>
+  <div>
+    <h1>Home</h1>
+  </div>
+</section>

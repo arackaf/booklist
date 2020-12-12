@@ -6,6 +6,8 @@
   }
 </style>
 
-<div>
-  <h1>Scan</h1>
-</div>
+<section>
+  <div>
+    <h1>Scan</h1>
+  </div>
+</section>

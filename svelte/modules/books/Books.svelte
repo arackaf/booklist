@@ -42,67 +42,69 @@
   }
 </style>
 
-<div>
-  <h1>Books</h1>
-  <br />
-  <br />
-  <ul>
-    {#each $booksState.books as b}
-      <li>{b.title}</li>
-    {/each}
-  </ul>
+<section class="full">
+  <div>
+    <h1>Books</h1>
+    <br />
+    <br />
+    <ul>
+      {#each $booksState.books as b}
+        <li>{b.title}</li>
+      {/each}
+    </ul>
 
-  <input bind:this={quickSearchEl} />
-  <button on:click={() => quickSearch(quickSearchEl.value)}>Go</button>
+    <input bind:this={quickSearchEl} />
+    <button on:click={() => quickSearch(quickSearchEl.value)}>Go</button>
 
-  <div class="root">
-    <div>
-      <h2>Colors</h2>
-      <ul>
-        {#each $colorsState.colors as c}
-          <li>{c}</li>
-        {/each}
-      </ul>
-    </div>
-    <div>
-      <h2>Tags</h2>
-      <ul>
-        {#each $tagsState.tags as t}
-          <li>{t.name}</li>
-        {/each}
-      </ul>
-    </div>
-    <div>
-      <h2>All Subjects</h2>
-      <ul>
-        {#each $allSubjects as t}
-          <li>{t.name}</li>
-        {/each}
-      </ul>
-    </div>
-    <div>
-      <h2>All Subjects Sorted</h2>
-      <ul>
-        {#each $stackedSubjects.allSubjectsSorted as t}
-          <li>{t.name}</li>
-        {/each}
-      </ul>
-    </div>
-    <div>
-      <h2>Stacked Subjects</h2>
-      <ul>
-        {#each $stackedSubjects.subjects as t}
-          <li>{t.name} - {t.children.length}</li>
-        {/each}
-      </ul>
-    </div>
-    <div>
-      <h2>Root Subjects</h2>
-      <ul>
-        {#each $rootSubjects as t}
-          <li>{t.name}</li>
-        {/each}
-      </ul>
+    <div class="root">
+      <div>
+        <h2>Colors</h2>
+        <ul>
+          {#each $colorsState.colors as c}
+            <li>{c}</li>
+          {/each}
+        </ul>
+      </div>
+      <div>
+        <h2>Tags</h2>
+        <ul>
+          {#each $tagsState.tags as t}
+            <li>{t.name}</li>
+          {/each}
+        </ul>
+      </div>
+      <div>
+        <h2>All Subjects</h2>
+        <ul>
+          {#each $allSubjects as t}
+            <li>{t.name}</li>
+          {/each}
+        </ul>
+      </div>
+      <div>
+        <h2>All Subjects Sorted</h2>
+        <ul>
+          {#each $stackedSubjects.allSubjectsSorted as t}
+            <li>{t.name}</li>
+          {/each}
+        </ul>
+      </div>
+      <div>
+        <h2>Stacked Subjects</h2>
+        <ul>
+          {#each $stackedSubjects.subjects as t}
+            <li>{t.name} - {t.children.length}</li>
+          {/each}
+        </ul>
+      </div>
+      <div>
+        <h2>Root Subjects</h2>
+        <ul>
+          {#each $rootSubjects as t}
+            <li>{t.name}</li>
+          {/each}
+        </ul>
+      </div>
     </div>
   </div>
-</div>
+</section>

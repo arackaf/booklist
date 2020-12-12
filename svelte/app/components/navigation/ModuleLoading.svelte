@@ -1,11 +1,12 @@
 <style>
-  div {
+  .module-loading {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: purple;
+    top: calc(50% - 2.5em);
+    left: calc(50% - 2.5em);
+    color: var(--primary-4);
   }
 </style>
 
-<div>Loading ...</div>
+<div class="module-loading">
+  <i class="fa fa-5x fa-spin fa-spinner" />
+</div>

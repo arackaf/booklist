@@ -1,1 +1,6 @@
-<h1>Subjects</h1>
+<section>
+  <h1>Subjects</h1>
+  <button>
+    Hi
+  </button>
+</section>
