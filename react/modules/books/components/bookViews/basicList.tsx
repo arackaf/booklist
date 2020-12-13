@@ -1,4 +1,4 @@
-import React, { SFC, useContext } from "react";
+import React, { FunctionComponent, SFC, useContext } from "react";
 import { ActionButton } from "app/components/ui/Button";
 import { AppContext } from "app/renderUI";
 
@@ -55,7 +55,7 @@ const BookViewListMobileItem = props => {
   );
 };
 
-const BookViewListMobile: SFC<{ books: any }> = props => {
+const BookViewListMobile: FunctionComponent<{ books: any }> = props => {
   const { actions, booksUiState } = useContext(BooksModuleContext);
   const { runDelete, editBook } = actions;
 

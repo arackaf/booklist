@@ -1,5 +1,5 @@
 import { history } from "util/urlHelpers";
-import React, { Component, SFC, useContext } from "react";
+import React, { Component, FunctionComponent, SFC, useContext } from "react";
 import { AppContext } from "app/renderUI";
 import FlexRow from "app/components/layout/FlexRow";
 
@@ -48,7 +48,7 @@ const ActivateIfNotLoggedIn = props => {
   );
 };
 
-const ActivationComponent: SFC<{}> = props => {
+const ActivationComponent: FunctionComponent<{}> = props => {
   const [{ isLoggedIn }] = useContext(AppContext);
   return <section>{isLoggedIn ? <ActivateIfLoggedIn /> : <ActivateIfNotLoggedIn />}</section>;
 };

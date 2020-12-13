@@ -1,4 +1,4 @@
-import React, { SFC, useState, useLayoutEffect, useRef } from "react";
+import React, { SFC, useState, useLayoutEffect, useRef, FunctionComponent } from "react";
 
 import { Button, ActionButton } from "app/components/ui/Button";
 
@@ -14,7 +14,7 @@ import Stack from "app/components/layout/Stack";
 import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
 
-const BookTagSetterDesktop: SFC<{ modifyingBooks: any[]; onDone: any }> = props => {
+const BookTagSetterDesktop: FunctionComponent<{ modifyingBooks: any[]; onDone: any }> = props => {
   const [addingTags, setAddingTags] = useState([]);
   const [removingTags, setRemovingTags] = useState([]);
   const resetTags = () => {

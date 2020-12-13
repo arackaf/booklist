@@ -1,4 +1,4 @@
-import React, { SFC, useState, useLayoutEffect, useContext, useRef } from "react";
+import React, { SFC, useState, useLayoutEffect, useContext, useRef, FunctionComponent } from "react";
 import { useMutation } from "micro-graphql-react";
 
 import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
@@ -20,7 +20,7 @@ interface ILocalProps {
   onDone: any;
 }
 
-const BookSubjectSetter: SFC<ILocalProps> = props => {
+const BookSubjectSetter: FunctionComponent<ILocalProps> = props => {
   const [addingSubjects, setAddingSubjects] = useState([]);
   const [removingSubjects, setRemovingSubjects] = useState([]);
   const resetSubjects = () => {

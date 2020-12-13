@@ -1,4 +1,4 @@
-import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback } from "react";
+import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent } from "react";
 import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
@@ -28,7 +28,7 @@ interface IAddedMenuProps {
 
 const filterDisplayStyles = { flex: "0 0 auto", alignSelf: "center", marginRight: "5px", marginTop: "4px", marginBottom: "4px" };
 
-export const BooksMenuBarDisabled: SFC<{ totalPages: number; resultsCount: number; measureRef: any }> = ({
+export const BooksMenuBarDisabled: FunctionComponent<{ totalPages: number; resultsCount: number; measureRef: any }> = ({
   totalPages,
   resultsCount,
   measureRef
@@ -40,7 +40,7 @@ export const BooksMenuBarDisabled: SFC<{ totalPages: number; resultsCount: numbe
   };
   return <BooksMenuBar measureRef={measureRef} disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
 };
-const BooksMenuBar: SFC<IAddedMenuProps> = props => {
+const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   const { books = [], totalPages = null, resultsCount = null, reload } = props.bookResultsPacket || {};
   const quickSearchEl = useRef(null);
   const [appState] = useContext(AppContext);
@@ -181,7 +181,7 @@ const BooksMenuBar: SFC<IAddedMenuProps> = props => {
   );
 };
 
-const PagingButtons: SFC<{ selectedBooksCount: number; totalPages: number; resultsCount: number; Button: any; disabled: boolean }> = props => {
+const PagingButtons: FunctionComponent<{ selectedBooksCount: number; totalPages: number; resultsCount: number; Button: any; disabled: boolean }> = props => {
   const { selectedBooksCount, totalPages, resultsCount, Button, disabled } = props;
 
   const [appState] = useContext(AppContext);
@@ -254,7 +254,7 @@ type BookSearchFilters = {
   resultsCount: number;
 };
 
-const BookSearchFilters: SFC<{ resultsCount: number; disabled: boolean }> = ({ resultsCount, disabled }) => {
+const BookSearchFilters: FunctionComponent<{ resultsCount: number; disabled: boolean }> = ({ resultsCount, disabled }) => {
   const [appState] = useContext(AppContext);
   const { online } = appState;
   const bookSearchState = useCurrentSearch();

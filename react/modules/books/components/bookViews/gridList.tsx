@@ -1,4 +1,4 @@
-import React, { SFC, CSSProperties, useContext, useMemo, useState } from "react";
+import React, { SFC, CSSProperties, useContext, useMemo, useState, FunctionComponent } from "react";
 
 import { ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
@@ -35,7 +35,7 @@ interface ILocalProps {
   runDelete: any;
 }
 
-const BookRow: SFC<ILocalProps> = props => {
+const BookRow: FunctionComponent<ILocalProps> = props => {
   const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   const { book, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   const { _id } = book;
@@ -192,7 +192,7 @@ const BookRow: SFC<ILocalProps> = props => {
   );
 };
 
-const BookRowDetails: SFC<{ book?: IBookDisplay; setDetailsLoading: any }> = props => {
+const BookRowDetails: FunctionComponent<{ book?: IBookDisplay; setDetailsLoading: any }> = props => {
   let [{ isPublic: viewingPublic }] = useContext(AppContext);
   let { book, setDetailsLoading } = props;
 
@@ -283,7 +283,7 @@ const useBookSelection = (books, selectedBooks) => {
   }, [books, selectedBooks]);
 };
 
-const BookViewListGrid: SFC<{ books: any; menuBarHeight: any }> = ({ books, menuBarHeight }) => {
+const BookViewListGrid: FunctionComponent<{ books: any; menuBarHeight: any }> = ({ books, menuBarHeight }) => {
   const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
   const { setRead, runDelete } = actions;
 

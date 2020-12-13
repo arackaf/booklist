@@ -1,4 +1,4 @@
-import React, { SFC, useState, Suspense, useContext } from "react";
+import React, { SFC, useState, Suspense, useContext, FunctionComponent } from "react";
 import LazyModal from "app/components/ui/LazyModal";
 
 const BookEditModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
@@ -12,7 +12,7 @@ import { BooksModuleContext } from "modules/books/books";
 
 const { coversList } = coversClasses;
 
-const BookViewCovers: SFC<{ books: any }> = props => {
+const BookViewCovers: FunctionComponent<{ books: any }> = props => {
   const { actions } = useContext(BooksModuleContext);
   const { saveEditingBook } = actions;
 

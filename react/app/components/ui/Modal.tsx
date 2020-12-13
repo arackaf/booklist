@@ -1,4 +1,4 @@
-import React, { SFC, useRef, useLayoutEffect, useState, useContext, useCallback, createContext, useMemo } from "react";
+import React, { SFC, useRef, useLayoutEffect, useState, useContext, useCallback, createContext, useMemo, FunctionComponent } from "react";
 
 import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { useTransition, animated, config, useSpring } from "react-spring";
@@ -6,7 +6,7 @@ import { useTransition, animated, config, useSpring } from "react-spring";
 import "css/reach-modal-overrides.scss";
 import { useHeight } from "app/animationHelpers";
 
-export const StandardModalHeader: SFC<{ onHide: any; caption: any }> = props => {
+export const StandardModalHeader: FunctionComponent<{ onHide: any; caption: any }> = props => {
   let { onHide, caption } = props;
   return (
     <>
@@ -27,7 +27,7 @@ const AnimatedDialogContent = animated(DialogContent);
 export const ModalSizingContext = createContext(null);
 
 type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
-const Modal: SFC<ModalTypes> = props => {
+const Modal: FunctionComponent<ModalTypes> = props => {
   let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
 
   const modalTransition = useTransition(!!isOpen, {

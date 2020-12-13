@@ -1,4 +1,4 @@
-import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext, useState } from "react";
+import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext, useState, FunctionComponent } from "react";
 
 import BooksMenuBar, { BooksMenuBarDisabled } from "./components/booksMenuBar";
 import Loading from "app/components/loading";
@@ -143,7 +143,7 @@ export default () => {
   );
 };
 
-const Fallback: SFC<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({ uiView, totalPages, resultsCount }) => {
+const Fallback: FunctionComponent<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({ uiView, totalPages, resultsCount }) => {
   const [measureRef, menuBarHeight] = useHeight();
 
   return (
@@ -157,7 +157,7 @@ const Fallback: SFC<{ uiView: BookSearchUiView; totalPages: number; resultsCount
   );
 };
 
-const RenderModule: SFC<{}> = ({}) => {
+const RenderModule: FunctionComponent<{}> = ({}) => {
   const uiView = useBookSearchUiView();
   const [lastBookResults, setLastBookResults] = useState({ totalPages: 0, resultsCount: 0 });
 
@@ -170,7 +170,7 @@ const RenderModule: SFC<{}> = ({}) => {
   );
 };
 
-const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = ({ uiView, setLastBookResults }) => {
+const MainContent: FunctionComponent<{ uiView: BookSearchUiView; setLastBookResults: any }> = ({ uiView, setLastBookResults }) => {
   const { books, totalPages, resultsCount, currentQuery, reload } = useBooks();
   const { dispatchBooksUiState } = useContext(BooksModuleContext);
 
@@ -207,7 +207,7 @@ const MainContent: SFC<{ uiView: BookSearchUiView; setLastBookResults: any }> = 
   );
 };
 
-const BookResults: SFC<{ books: any; uiView: any; menuBarHeight: any }> = ({ books, uiView, menuBarHeight }) => {
+const BookResults: FunctionComponent<{ books: any; uiView: any; menuBarHeight: any }> = ({ books, uiView, menuBarHeight }) => {
   const { isPending } = useContext(ModuleUpdateContext);
 
   const resultsTransition = useTransition([books], {
