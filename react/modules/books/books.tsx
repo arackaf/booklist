@@ -171,7 +171,7 @@ const RenderModule: FunctionComponent<{}> = ({}) => {
 };
 
 const MainContent: FunctionComponent<{ uiView: BookSearchUiView; setLastBookResults: any }> = ({ uiView, setLastBookResults }) => {
-  const { books, totalPages, resultsCount, currentQuery, reload } = useBooks();
+  const { books, totalPages, resultsCount, currentQuery, reload, booksLoaded } = useBooks();
   const { dispatchBooksUiState } = useContext(BooksModuleContext);
 
   // TODO: useEffect pending https://github.com/facebook/react/issues/17911#issuecomment-581969701
@@ -199,7 +199,7 @@ const MainContent: FunctionComponent<{ uiView: BookSearchUiView; setLastBookResu
         measureRef={measureRef}
         uiDispatch={deferredUiDispatch}
         uiView={uiView}
-        bookResultsPacket={{ books, totalPages, resultsCount, reload }}
+        bookResultsPacket={{ books, totalPages, resultsCount, reload, booksLoaded }}
       />
 
       <BookResults menuBarHeight={menuBarHeight} {...{ books, uiView }} />

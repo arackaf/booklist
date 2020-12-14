@@ -21,6 +21,7 @@ interface IAddedMenuProps {
     books: any;
     totalPages: any;
     resultsCount: any;
+    booksLoaded?: any;
     reload?: any;
   };
   measureRef?: any;
@@ -41,7 +42,7 @@ export const BooksMenuBarDisabled: FunctionComponent<{ totalPages: number; resul
   return <BooksMenuBar measureRef={measureRef} disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
 };
 const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
-  const { books = [], totalPages = null, resultsCount = null, reload } = props.bookResultsPacket || {};
+  const { books = [], totalPages = null, resultsCount = null, booksLoaded, reload } = props.bookResultsPacket || {};
   const quickSearchEl = useRef(null);
   const [appState] = useContext(AppContext);
 
@@ -92,7 +93,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           {isPublic ? <PublicBooksHeader /> : null}
-          <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, Button, disabled }} />
+          <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>
             <div className="btn-group">
               <input
@@ -181,8 +182,15 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   );
 };
 
-const PagingButtons: FunctionComponent<{ selectedBooksCount: number; totalPages: number; resultsCount: number; Button: any; disabled: boolean }> = props => {
-  const { selectedBooksCount, totalPages, resultsCount, Button, disabled } = props;
+const PagingButtons: FunctionComponent<{
+  selectedBooksCount: number;
+  totalPages: number;
+  resultsCount: number;
+  Button: any;
+  disabled: boolean;
+  booksLoaded: boolean;
+}> = props => {
+  const { selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled } = props;
 
   const [appState] = useContext(AppContext);
   const { online } = appState;
@@ -227,11 +235,15 @@ const PagingButtons: FunctionComponent<{ selectedBooksCount: number; totalPages:
         </div>
         {online ? (
           <span className={cn({ disabled })} style={{ display: "inline", minWidth: "7ch" }}>
-            {resultsCount ? (
+            {!booksLoaded ? (
+              <span>Loading...</span>
+            ) : resultsCount ? (
               <span>
                 Page {page} of {totalPages}
               </span>
-            ) : <span>Loading...</span>}
+            ) : (
+              <span>No results</span>
+            )}
           </span>
         ) : null}
         <div className="btn-group">

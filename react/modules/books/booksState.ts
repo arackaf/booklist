@@ -136,7 +136,8 @@ export const useBooks = () => {
     books,
     resultsCount,
     totalPages,
-    reload
+    reload,
+    booksLoaded: loaded
   };
 };
 

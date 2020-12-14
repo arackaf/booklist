@@ -2,10 +2,11 @@
   import { appState } from "app/state/appState";
 
   import measureHeight from "util/measureHeight";
+  
   import { currentSearch as bookSearchState } from "./booksSearchState";
   import { getBookSearchUiView } from "./booksUiState";
   import PagingButtons from "./PagingButtons.svelte";
-import { quickSearch } from "./setBookFilters";
+  import { quickSearch } from "./setBookFilters";
 
   interface BookResultsPacket {
     books: any[];
