@@ -1,5 +1,6 @@
 <script lang="ts">
   import { appState } from "app/state/appState";
+import { getContext } from "svelte";
 
   import measureHeight from "util/measureHeight";
 
@@ -48,6 +49,11 @@
   };
 
   $: ({ isPublic, online } = $appState);
+
+  const booksModuleContext: any = getContext("books-module-context");
+  const { openFilterModal } =  booksModuleContext;
+
+  // ----------
 
   //let resetSearch = () => {};
   //let quickSearchType = () => {};
@@ -99,7 +105,7 @@
               <button
                 title="Filter search"
                 style="border-top-left-radius: 0; border-bottom-left-radius: 0"
-                on:click={actions.beginEditFilters}
+                on:click={openFilterModal}
                 class="btn btn-default hidden-tiny"
               >
                 <i class="fal fa-filter" />

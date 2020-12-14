@@ -1,0 +1,17 @@
+.svelte-helpers-modal-content {
+  border-color: var(--primary-3) !important;
+  --modal-content-padding: 20px !important;
+
+  hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .standard-modal-header {
+    display: flex;
+    align-items: center;
+  }
+  .standard-modal-header .close {
+    font-size: 22px;
+  }
+}
