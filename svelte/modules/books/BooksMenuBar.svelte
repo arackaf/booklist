@@ -2,7 +2,7 @@
   import { appState } from "app/state/appState";
 
   import measureHeight from "util/measureHeight";
-  
+
   import { currentSearch as bookSearchState } from "./booksSearchState";
   import { getBookSearchUiView } from "./booksUiState";
   import PagingButtons from "./PagingButtons.svelte";
@@ -111,19 +111,19 @@
             {/if}
             <button class="btn btn-default hidden-tiny" on:click={reload} disabled={booksLoading}><i class="fal fa-sync" /></button>
             <button
-              onClick={() => uiDispatch({ type: 'SET_GRID_VIEW' })}
+              on:click={() => uiDispatch({ type: 'SET_GRID_VIEW' })}
               class={'btn btn-default hidden-tiny ' + ($uiView.isGridView ? 'active' : '')}
             >
               <i class="fal fa-table" />
             </button>
             <button
-              onClick={() => uiDispatch({ type: 'SET_COVERS_LIST_VIEW' })}
+              on:click={() => uiDispatch({ type: 'SET_COVERS_LIST_VIEW' })}
               class={'btn btn-default hidden-tiny ' + ($uiView.isCoversList ? 'active' : '')}
             >
               <i class="fas fa-th" />
             </button>
             <button
-              onClick={() => uiDispatch({ type: 'SET_BASIC_LIST_VIEW' })}
+              on:click={() => uiDispatch({ type: 'SET_BASIC_LIST_VIEW' })}
               class={'btn btn-default hidden-tiny ' + ($uiView.isBasicList ? 'active' : '')}
             >
               <i class="fal fa-list" />
