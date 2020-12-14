@@ -5,7 +5,8 @@
 
   export let selectedBooksCount: number;
   export let totalPages: number;
-  export let resultsCount: number;
+  export let resultsCount: number | string;
+  export let booksLoaded: boolean;
 
   $: ({ online } = $appState);
 
@@ -33,22 +34,18 @@
 <div class="hidden-xs" style="display: flex; margin-right: 5px; align-items: center">
   <div class="btn-group">
     <button onClick={pageOne} disabled={!canPageOne} class="btn btn-default"><i class="fal fa-angle-double-left" /></button>
-    <button onClick={pageDown} disabled={!canPageDown} class="btn btn-default" style="margin-right: 5px">
-      <i class="fal fa-angle-left" />
-    </button>
+    <button onClick={pageDown} disabled={!canPageDown} class="btn btn-default" style="margin-right: 5px"> <i class="fal fa-angle-left" /> </button>
   </div>
   {#if online}
     <span style="display: inline; min-width: 7ch">
-      {#if resultsCount}<span> Page {page} of {totalPages} </span>{:else}<span>Loading...</span>{/if}
+      {#if booksLoaded}
+        {#if totalPages}<span> Page {page} of {totalPages} </span>{:else}<span>No results</span>{/if}
+      {:else}<span>Loading...</span>{/if}
     </span>
   {/if}
   <div class="btn-group">
-    <button onClick={pageUp} disabled={!canPageUp} class="btn btn-default" style="margin-left: 5px">
-      <i class="fal fa-angle-right" />
-    </button>
+    <button onClick={pageUp} disabled={!canPageUp} class="btn btn-default" style="margin-left: 5px"> <i class="fal fa-angle-right" /> </button>
 
-    {#if online}
-      <button onClick={pageLast} disabled={!canPageLast} class="btn btn-default"><i class="fal fa-angle-double-right" /></button>
-    {/if}
+    {#if online}<button onClick={pageLast} disabled={!canPageLast} class="btn btn-default"><i class="fal fa-angle-double-right" /></button>{/if}
   </div>
 </div>

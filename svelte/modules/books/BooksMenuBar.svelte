@@ -1,35 +1,66 @@
 <script lang="ts">
+  import { appState } from "app/state/appState";
+
   import measureHeight from "util/measureHeight";
-import PagingButtons from "./PagingButtons.svelte";
+  import { currentSearch as bookSearchState } from "./booksSearchState";
+  import { getBookSearchUiView } from "./booksUiState";
+  import PagingButtons from "./PagingButtons.svelte";
+import { quickSearch } from "./setBookFilters";
 
   interface BookResultsPacket {
-    books: any;
-    totalPages: any;
-    resultsCount: any;
-    reload?: any;
+    books: any[];
+    totalPages: number;
+    resultsCount: string | number;
+    reload?: () => void;
+    booksLoading?: boolean;
+    booksLoaded?: boolean;
   }
 
   export let setMenuBarHeight;
   export let bookResultsPacket: BookResultsPacket;
-  $: ({ books = [], totalPages = null, resultsCount = null, reload } = bookResultsPacket);
-  
-  let measureRef = null;
-  let bookSearchState = {};
-  let resetSearch = () => {};
-  let quickSearchType = () => {};
-  let reloadBooks = () => {};
-  let uiDispatch = () => {};
+  $: ({ books = [], totalPages = null, resultsCount = null, reload, booksLoading, booksLoaded } = bookResultsPacket);
+
+  // const { actions, booksUiState } = useContext(BooksModuleContext);
+  // const { setRead } = actions;
+
+  export let uiView: ReturnType<typeof getBookSearchUiView>;
+  const uiDispatch = $uiView.dispatch;
+
+  //const { selectedBooks } = booksUiState;
+  //const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
+  //const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
+
+  //const editSubjectsForSelectedBooks = () => actions.openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
+  //const editTagsForSelectedBooks = () => actions.openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
+
+  $: {
+    quickSearchEl && (quickSearchEl.value = $bookSearchState.search);
+  }
+
+  const resetSearch = () => {
+    quickSearchEl.value = $bookSearchState.search;
+  };
+  const quickSearchType = evt => {
+    if (evt.keyCode == 13) {
+      quickSearch(evt.currentTarget.value);
+    }
+  };
+
+  $: ({ isPublic, online } = $appState);
+
+  //let resetSearch = () => {};
+  //let quickSearchType = () => {};
+  // let uiDispatch = () => {};
   let editSubjectsForSelectedBooks = () => {};
   let editTagsForSelectedBooks = () => {};
   let setRead = () => {};
   let searchInput = "";
   let selectedBooksCount = 0;
-  let online = true;
+  //let online = true;
   let actions = {};
-  let uiView = {};
+  //let uiView = {};
   let selectedBooksIds = {};
-  let isPublic = false;
-  let booksLoading = false;
+  //let isPublic = false;
   //
   let quickSearchEl;
 </script>
@@ -49,13 +80,13 @@ import PagingButtons from "./PagingButtons.svelte";
   <div class="booksMenuBar" style="font-size: 11pt; padding-bottom: 5px; position: relative">
     <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
       <!-- {isPublic ? <PublicBooksHeader /> : null} -->
-      <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount }} />
+      <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded }} />
       <div style="margin-right: 5px">
         <div class="btn-group">
           <input
             autocomplete="off"
             bind:this={quickSearchEl}
-            defaultValue={bookSearchState.search}
+            value={$bookSearchState.search}
             on:blur={resetSearch}
             name="search"
             class={`form-control ${searchInput} tiny-orphan`}
@@ -77,22 +108,22 @@ import PagingButtons from "./PagingButtons.svelte";
                 <button title="Edit tags" onClick={actions.editTags} class="btn btn-default hidden-xs"><i class="fal fa-tags" /></button>
               {/if}
             {/if}
-            <button class="btn btn-default hidden-tiny" on:click={reloadBooks} disabled={booksLoading}><i class="fal fa-sync" /></button>
+            <button class="btn btn-default hidden-tiny" on:click={reload} disabled={booksLoading}><i class="fal fa-sync" /></button>
             <button
               onClick={() => uiDispatch({ type: 'SET_GRID_VIEW' })}
-              class={'btn btn-default hidden-tiny ' + (uiView.isGridView ? 'active' : '')}
+              class={'btn btn-default hidden-tiny ' + ($uiView.isGridView ? 'active' : '')}
             >
               <i class="fal fa-table" />
             </button>
             <button
               onClick={() => uiDispatch({ type: 'SET_COVERS_LIST_VIEW' })}
-              class={'btn btn-default hidden-tiny ' + (uiView.isCoversList ? 'active' : '')}
+              class={'btn btn-default hidden-tiny ' + ($uiView.isCoversList ? 'active' : '')}
             >
               <i class="fas fa-th" />
             </button>
             <button
               onClick={() => uiDispatch({ type: 'SET_BASIC_LIST_VIEW' })}
-              class={'btn btn-default hidden-tiny ' + (uiView.isBasicList ? 'active' : '')}
+              class={'btn btn-default hidden-tiny ' + ($uiView.isBasicList ? 'active' : '')}
             >
               <i class="fal fa-list" />
             </button>

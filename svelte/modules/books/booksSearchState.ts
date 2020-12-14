@@ -3,7 +3,7 @@ import { derived } from "svelte/store";
 import shallowEqual from "shallow-equal/objects";
 import { tagsState } from "app/state/tagsState";
 
-import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
+import { defaultSearchValuesHash, filtersFromUrl, BookSearchFiltersType } from "./booksLoadingUtils";
 import { subjectsState } from "app/state/subjectsState";
 import { appState } from "app/state/appState";
 
@@ -31,6 +31,7 @@ function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
 
 const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection" && k != "userId";
 
+type CurrentSearchType = BookSearchFiltersType & { anyActiveFilters: boolean; activeFilterCount: number; bindableSortValue: string };
 export const currentSearch = derived([booksSearchState, subjectsState, tagsState], ([$books, $subjects, $tags]) => {
   const filters = $books.hashFilters;
 
@@ -43,5 +44,5 @@ export const currentSearch = derived([booksSearchState, subjectsState, tagsState
     anyActiveFilters: !!Object.keys(filters).filter(keyIsFilter).length,
     activeFilterCount: Object.keys(filters).filter(keyIsFilter).length,
     bindableSortValue: `${result.sort}|${result.sortDirection}`
-  });
+  }) as CurrentSearchType;
 });

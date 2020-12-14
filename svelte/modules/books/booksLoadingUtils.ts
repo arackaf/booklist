@@ -18,7 +18,9 @@ export const defaultSearchValuesHash = {
   userId: ""
 };
 
-export function filtersFromUrl(filters) {
+export type BookSearchFiltersType = typeof defaultSearchValuesHash & { tagIds: string[]; subjectIds: string[] };
+
+export function filtersFromUrl(filters): BookSearchFiltersType {
   const { subjects: subjectsHashValue, tags: tagsHashValue } = filters;
   return Object.assign({}, defaultSearchValuesHash, filters, {
     tagIds: tagsHashValue ? tagsHashValue.split("-") : [],

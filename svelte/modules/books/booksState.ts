@@ -129,7 +129,7 @@ export const searchBooks = () => {
   });
 
   return derived([queryState, subjectsState, tagsState, currentSearch], ([booksState, subjectsState, tagsState, searchState]) => {
-    const { data, loaded, currentQuery, reload } = booksState;
+    const { data, loaded, currentQuery, reload, loading } = booksState;
 
     const booksRaw = data ? data.allBooks.Books : null;
     const books: Book[] = adjustBooks(booksRaw, subjectsState, tagsState);
@@ -143,7 +143,9 @@ export const searchBooks = () => {
       books,
       resultsCount,
       totalPages,
-      reload
+      reload,
+      booksLoading: loading,
+      booksLoaded: loaded
     };
   });
 };
