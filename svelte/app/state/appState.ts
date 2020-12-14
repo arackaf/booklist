@@ -1,9 +1,10 @@
-import { writable, get } from "svelte/store"
+import { writable, get, derived } from "svelte/store";
 
 import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
 import { getCurrentUrlState, history } from "util/urlHelpers";
 import ajaxUtil from "util/ajaxUtil";
+import useReducer from "util/useReducer";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
@@ -12,7 +13,7 @@ const { logged_in, userId, loginToken } = isLoggedIn();
 const authSettings = logged_in && userId ? { isLoggedIn: true, userId, loginToken } : { isLoggedIn: false, userId: "", loginToken: "" };
 
 if (logged_in && !loginToken) {
-  ajaxUtil.post("/auth/logout", {}, () => (window as any).location = "/");
+  ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
 }
 
 if (window.screen.width < 700) {
@@ -83,19 +84,18 @@ function appReducer(state: AppState, action): AppState {
     case IS_ONLINE:
       return { ...state, online: true };
     case SET_THEME:
+      localStorageManager.set("color-theme", action.theme);
       return { ...state, colorTheme: action.theme };
     case SET_WHITE_BG:
+      localStorageManager.set("white-bg", action.value ? "1" : "0");
       return { ...state, whiteBackground: action.value ? "1" : "0" };
   }
 
   return state;
 }
 
-export const appState = writable(initialState);
-export const dispatch = action => {
-  const currentState = get(appState);
-  appState.set(appReducer(currentState, action));
-}
+const [appState, dispatch] = useReducer<AppState>(appReducer, initialState);
+export { appState, dispatch };
 
 export const setDeviceOverride = view => {
   try {

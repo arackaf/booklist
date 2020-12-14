@@ -11,10 +11,7 @@
     appStateDispatch({ type: URL_SYNC });
   });
 
-  const booksPreload = () =>
-    new Promise(res => {
-      setTimeout(res, 2000);
-    });
+  const booksPreload = () => {};
 </script>
 
 <AppUI content={$appState.showingMobile ? 'width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;' : ''}>
