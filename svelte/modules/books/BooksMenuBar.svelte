@@ -1,5 +1,18 @@
-<script>
-  //
+<script lang="ts">
+  import measureHeight from "util/measureHeight";
+import PagingButtons from "./PagingButtons.svelte";
+
+  interface BookResultsPacket {
+    books: any;
+    totalPages: any;
+    resultsCount: any;
+    reload?: any;
+  }
+
+  export let setMenuBarHeight;
+  export let bookResultsPacket: BookResultsPacket;
+  $: ({ books = [], totalPages = null, resultsCount = null, reload } = bookResultsPacket);
+  
   let measureRef = null;
   let bookSearchState = {};
   let resetSearch = () => {};
@@ -32,11 +45,11 @@
   }
 </style>
 
-<div class="root" ref={measureRef}>
+<div class="root" use:measureHeight={setMenuBarHeight}>
   <div class="booksMenuBar" style="font-size: 11pt; padding-bottom: 5px; position: relative">
     <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
       <!-- {isPublic ? <PublicBooksHeader /> : null} -->
-      <!-- <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, Button, disabled }} /> -->
+      <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount }} />
       <div style="margin-right: 5px">
         <div class="btn-group">
           <input

@@ -1,23 +1,16 @@
 export default function measureHeight(node, onMeasure) {
-  const ref = useRef<any>();
-  const [height, set] = useState(0);
-  const heightRef = useRef(height);
-  const [ro] = useState(
-    () =>
-      new ResizeObserver(packet => {
-        if (ref.current && heightRef.current != ref.current.offsetHeight) {
-          heightRef.current = ref.current.offsetHeight;
-          set(ref.current.offsetHeight);
-        }
-      })
-  );
-  useLayoutEffect(() => {
-    if (on && ref.current) {
-      set(ref.current.offsetHeight);
-      ro.observe(ref.current, {});
+  let currentHeight = 0;
+  const ro = new ResizeObserver(packet => {
+    if (currentHeight != node.offsetHeight) {
+      currentHeight = node.offsetHeight;
+      onMeasure(currentHeight);
     }
-    return () => ro.disconnect();
-  }, [on, ref.current]);
+  });
+  ro.observe(node);
 
-  return [ref, height as any];
+  return {
+    destroy() {
+      ro.disconnect();
+    }
+  };
 }
