@@ -77,7 +77,7 @@
         <div class="form-group">
           <label for="book_search_pages">Pages</label>
           <FlowItems tightest={true}>
-            <select id="book_search_pages" style="width: 40px" bind:this={pagesDirEl} value={$currentSearch.pagesOperator} class="form-control">
+            <select id="book_search_pages" style="width: 60px" bind:this={pagesDirEl} value={$currentSearch.pagesOperator} class="form-control">
               <option value="lt">{'<'}</option>
               <option value="gt">{'>'}</option>
             </select>

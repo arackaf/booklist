@@ -88,7 +88,7 @@ const BookSearchModal: FunctionComponent<LocalProps> = props => {
             <div className="form-group">
               <label>Pages</label>
               <FlowItems tightest={true}>
-                <select style={{ width: "40px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
+                <select style={{ width: "60px" }} ref={pagesDirEl} defaultValue={filters.pagesOperator} className="form-control">
                   <option value="lt">{"<"}</option>
                   <option value="gt">{">"}</option>
                 </select>
