@@ -41,7 +41,7 @@
 
     let sort = "";
     let sortDirection = "";
-    let sortValue = sortSelectEl.current.value;
+    let sortValue = sortSelectEl.value;
     if (sortValue !== "_id|desc") {
       [sort, sortDirection] = sortValue.split("|");
     }
@@ -49,13 +49,13 @@
     applyFilters({
       subjects: noSubjectsFilter ? [] : subjects,
       tags,
-      search: searchEl.current.value,
-      pages: pagesEl.current.value,
-      pagesOperator: pagesDirEl.current.value,
-      author: authorEl.current.value,
-      publisher: publisherEl.current.value,
-      isRead: isReadE.current.checked ? "" : isRead0.current.checked ? "0" : "1",
-      searchChildSubjects: childSubEl.current && childSubEl.current.checked,
+      search: searchEl.value,
+      pages: pagesEl.value,
+      pagesOperator: pagesDirEl.value,
+      author: authorEl.value,
+      publisher: publisherEl.value,
+      isRead: isReadE.checked ? "" : isRead0.checked ? "0" : "1",
+      searchChildSubjects: childSubEl && childSubEl.checked,
       noSubjects: noSubjectsFilter,
       sort,
       sortDirection
@@ -159,7 +159,7 @@
       {/if}
       <div class="col-xs-12">
         <label class="checkbox">
-          <input type="checkbox" checked={!!noSubjectsFilter} onChange={setNoSubjectsFilter} />
+          <input type="checkbox" checked={!!noSubjectsFilter} on:change={setNoSubjectsFilter} />
           Search books with no subjects set
         </label>
       </div>
