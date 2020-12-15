@@ -1,13 +1,12 @@
 <script lang="ts">
-  import cn from "classnames";
-
   import { appState } from "app/state/appState";
   import ModuleLink from "./ModuleLink.svelte";
 
   export let style = "";
   export let href = "";
   export let disabled = false;
-  export let className = "";
+  let className = "";
+  export { className as class }
   export let onClick: (evt?: any) => void = null as any;
   export let external = false;
 
@@ -21,7 +20,7 @@
   }
 </script>
 
-<li on:click={liClicked} className={spreadClassNames(className, !!disabled ? 'disabled' : '', active ? 'active' : '')}>
+<li on:click={liClicked} class={spreadClassNames(className || "", !!disabled ? 'disabled' : '', active ? 'active' : '')}>
   <ModuleLink {external} {disabled} {style} {href}>
     <slot />
   </ModuleLink>

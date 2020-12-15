@@ -40,7 +40,7 @@
     </div>
 
     <ul class={navItems}>
-      <NavBarItem className="visible-xs" disabled={isPublic} href={'home'} style="margin-top: '2px'"><i class="fal fa-home visible-xs" /></NavBarItem>
+      <NavBarItem class="visible-xs" disabled={isPublic} href={'home'} style="margin-top: '2px'"><i class="fal fa-home visible-xs" /></NavBarItem>
       {#if isLoggedIn || isPublic}
         <NavBarItem disabled={isPublic} href="scan"><span class="hidden-xs">Book entry</span> <i class="visible-xs fal fa-scanner" /></NavBarItem>
       {/if}
