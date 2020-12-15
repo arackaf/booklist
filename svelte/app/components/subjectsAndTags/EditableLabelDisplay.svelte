@@ -23,7 +23,7 @@
     <a
       class={cn('toggle', { expanded })}
       onClick={() => setExpanded(val => !val)}
-      style={{ color: item.textColor || 'white', borderRight: `1px solid ${item.textColor || 'white'}` }}
+      style="color: {item.textColor || 'white'}; border-right: {`1px solid ${item.textColor || 'white'}`}"
     >
       <i class="fad fa-chevron-right" />
     </a>
@@ -31,11 +31,8 @@
 
   <span>{name}</span>
   {#if $$slots.default}
-    <slot></slot>
-  {:else}
-    {item.name}
-  {/if}
-
+    <slot />
+  {:else}{item.name}{/if}
 
   <a onClick={onEdit} style="color: {item.textColor || 'white'}; cursor: pointer; margin-left: 5px;"> <i class="fal fa-pencil-alt" /> </a>
 </span>

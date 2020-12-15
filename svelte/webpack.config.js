@@ -56,10 +56,7 @@ module.exports = {
             loader: "svelte-loader",
             options: {
               emitCss: true,
-              preprocess: require("svelte-preprocess")({}),
-              onwarn: (warning, handler) => {
-                return;
-              }
+              preprocess: require("svelte-preprocess")({})
             }
           }
         ]

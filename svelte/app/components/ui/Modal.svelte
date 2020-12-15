@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Modal from "svelte-helpers/Modal";
   import "css/modal-overrides.scss"
 
@@ -13,7 +13,7 @@
 <Modal on:close={onHide} open={isOpen} {deferStateChangeOnClose}>
   <div>
     {#if headerCaption}
-      <StandardModalHeader caption={headerCaption} {onHide} />
+      <StandardModalHeader caption={headerCaption} />
     {/if}
     <slot />
   </div>
