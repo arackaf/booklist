@@ -5,12 +5,6 @@
   export let caption = "";
 </script>
 
-<style>
-  .close {
-    cursor: pointer;
-  }
-</style>
-
 <div class="standard-modal-header">
   <h4 class="modal-title">{caption}</h4>
   <span style="margin-left: auto" class="close" on:click={onClose}> <span>&times;</span> </span>

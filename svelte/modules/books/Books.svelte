@@ -1,6 +1,7 @@
 <script lang="ts">
   import Modal from "app/components/ui/Modal.svelte";
   import { setContext } from "svelte";
+  import BookSearchModal from "./BookSearchModal.svelte";
   import BooksMenuBar from "./BooksMenuBar.svelte";
   import { searchBooks } from "./booksState";
   import { getBookSearchUiView } from "./booksUiState";
@@ -38,9 +39,7 @@
   <br />
 
   {#if filterModalOpen}
-    <Modal headerCaption="Full Search" isOpen={filterModalOpen} deferStateChangeOnClose={true} onHide={() => (filterModalOpen = false)}>
-      <h1>Ayyyyy</h1>
-    </Modal>
+    <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
   {/if}
   <TempDataTest />
 </section>

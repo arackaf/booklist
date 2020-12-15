@@ -304,7 +304,7 @@ body {
 }
 
 #home,
-[data-reach-dialog-overlay] {
+.svelte-helpers-modal-content {
   --neutral-text: var(--neutral-3);
   --neutral-light-text: var(--neutral-5);
   --neutral-lighter-text: var(--neutral-7);

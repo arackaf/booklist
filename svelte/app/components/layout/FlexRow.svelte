@@ -10,7 +10,7 @@
   export let xsFlowReverse = false;
 </script>
 
-<div {style} className={cn('flex-row', className || "", { tighter, tightest, ['xs-pull-reverse']: xsFlowReverse })}>
+<div {style} class={cn('flex-row', className || "", { tighter, tightest, ['xs-pull-reverse']: xsFlowReverse })}>
   <div>
     <slot />
   </div>
