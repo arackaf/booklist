@@ -1,13 +1,15 @@
 <script lang="ts">
   import ActionButton from "app/components/buttons/ActionButton.svelte";
 
+  import Modal from "app/components/ui/Modal.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Stack from "app/components/layout/Stack.svelte";
+
+  import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+  import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
-
-  import Modal from "app/components/ui/Modal.svelte";
 
   import { currentSearch } from "./booksSearchState";
   import { applyFilters } from "./setBookFilters";
@@ -147,10 +149,10 @@
       </div>
       {#if !noSubjectsFilter}
         <div class="col-sm-3 col-xs-12">
-          <!-- <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} /> -->
+          <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
         </div>
         <div class="col-sm-9 col-xs-12">
-          <!-- <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} /> -->
+          <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
         </div>
         <div class="col-xs-12">
           <label class="checkbox">

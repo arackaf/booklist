@@ -49,6 +49,7 @@ class GenericLabelSelect extends Component<IPropsShape, any> {
     return (
       <div>
         <Autosuggest
+          alwaysRenderSuggestions={true}
           className="auto-suggest-label"
           suggestions={this.state.suggestions}
           onSuggestionsFetchRequested={({ value, reason }) => this.setState({ suggestions: this.props.suggestions })}

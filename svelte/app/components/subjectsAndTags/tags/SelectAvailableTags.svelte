@@ -5,6 +5,7 @@
   export let onSelect;
   export let placeholder = "Tags";
   export let currentlySelected = [];
+
   $: ({ tags } = $tagsState);
   let search = "";
 

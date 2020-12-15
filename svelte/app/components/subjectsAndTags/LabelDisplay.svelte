@@ -9,14 +9,15 @@
   let extraClasses = className || "";
   let disabledStyles = "opacity: 0.4;";
 
+  let stylesToAdd = extraStyles;
   if (disabled) {
-    extraStyles += disabledStyles;
+    stylesToAdd = disabledStyles + stylesToAdd;
   }
 </script>
 
 <span
-  on:click={onClick ? () => onClick(item) : void 0}
-  style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {extraStyles}"
+  on:click={onClick ? () => onClick(item) : e => (e.cancelBubble = false)}
+  style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
   class={'label label-default noselect ' + extraClasses}
 >
   {#if $$slots.default}
