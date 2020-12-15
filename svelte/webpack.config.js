@@ -56,7 +56,10 @@ module.exports = {
             loader: "svelte-loader",
             options: {
               emitCss: true,
-              preprocess: require('svelte-preprocess')({})
+              preprocess: require("svelte-preprocess")({}),
+              onwarn: (warning, handler) => {
+                return;
+              }
             }
           }
         ]
@@ -105,7 +108,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm", chunks: ["main"], filename: "index.html" }),
     new HtmlWebpackPlugin({ template: "default.htm", chunks: ["login"], filename: "login.html" }),
-    
+
     new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     // new GenerateSW({
     //   ignoreURLParametersMatching: [/./],

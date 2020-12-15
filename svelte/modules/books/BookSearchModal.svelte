@@ -4,6 +4,8 @@
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Stack from "app/components/layout/Stack.svelte";
+  import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
 
   import Modal from "app/components/ui/Modal.svelte";
 
@@ -138,10 +140,10 @@
       </div>
 
       <div class="col-sm-3 col-xs-12">
-        <!-- <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} /> -->
+        <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
       </div>
       <div class="col-sm-9 col-xs-12">
-        <!-- <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} /> -->
+        <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
       </div>
       {#if !noSubjectsFilter}
         <div class="col-sm-3 col-xs-12">
