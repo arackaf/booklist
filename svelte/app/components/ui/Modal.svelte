@@ -7,7 +7,7 @@
   export let isOpen;
   export let onHide;
   export let headerCaption;
-  export let deferStateChangeOnClose;
+  export let deferStateChangeOnClose = false;
 </script>
 
 <Modal on:close={onHide} open={isOpen} {deferStateChangeOnClose}>

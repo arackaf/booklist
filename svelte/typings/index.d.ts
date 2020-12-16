@@ -14,3 +14,5 @@ declare module "*.scss" {
 }
 
 declare var ResizeObserver;
+
+declare var jscolor;

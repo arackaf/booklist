@@ -1,41 +1,41 @@
-import React, { useRef, useEffect, useState, useMemo, useLayoutEffect } from "react";
-import { useSubjectsState, getEligibleParents, computeSubjectParentId, useChildMapSelector } from "app/state/subjectsState";
-import { useMutation } from "micro-graphql-react";
-import { MutationOf, Mutations } from "graphql-typings";
+<script lang="ts">
+  import cn from "classnames";
+  import { MutationOf, Mutations } from "graphql-typings";
+  import { subjectsState, getEligibleParents, computeSubjectParentId, childMapSelector } from "app/state/subjectsState";
 
-import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
-import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
-import { useColors } from "app/state/colorsState";
-import CustomColorPicker from "../../ui/CustomColorPicker";
-import ColorsPalette from "../../ui/ColorsPalette";
+  import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
+  import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+  import colorsState from "app/state/colorsState";
+  import CustomColorPicker from "../../ui/CustomColorPicker.svelte";
+  import ColorsPalette from "../../ui/ColorsPalette.svelte";
 
-import cn from "classnames";
-import FlexRow from "../../layout/FlexRow";
-import FlowItems from "../../layout/FlowItems";
-import Stack from "../../layout/Stack";
-import { Button } from "../../ui/Button";
+  import FlexRow from "../../layout/FlexRow.svelte";
+  import FlowItems from "../../layout/FlowItems.svelte";
+  import Stack from "../../layout/Stack.svelte";
+  import Button from "../../buttons/Button.svelte";
 
-const EditSubject = props => {
-  const [deleteShowing, setDeleteShowing] = useState(false);
+  let deleteShowing = false;
 
-  const childSubjectsMap = useChildMapSelector();
+  export let subject;
+  export let onCancelEdit;
 
-  const { subject, onCancelEdit } = props;
-  const childSubjects = childSubjectsMap[subject._id] || [];
+  $: childSubjects = $childMapSelector[subject?._id] || [];
 
-  const [editingSubject, setEditingSubject] = useState(null);
+  let editingSubject = null;
 
-  useLayoutEffect(() => {
-    setEditingSubject({ ...subject, parentId: computeSubjectParentId(subject.path) });
-    setDeleteShowing(false);
-  }, [subject]);
-
-  if (!editingSubject) {
-    return <div></div>;
+  $: {
+    editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
+    deleteShowing = false;
   }
+</script>
 
-  return (
-    <FlexRow>
+{#if !editingSubject}
+  <div />
+{:else}
+  <div>TODO</div>
+{/if}
+
+<!-- <FlexRow>
       {!deleteShowing ? (
         <EditSubjectFields {...{ editingSubject, setEditingSubject, onCancelEdit, setDeleteShowing }} />
       ) : (
@@ -228,4 +228,4 @@ const EditSubjectFields = props => {
   );
 };
 
-export default EditSubject;
+export default EditSubject; -->

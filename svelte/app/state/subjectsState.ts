@@ -16,7 +16,7 @@ export interface SubjectType {
   _id: string;
   name: string;
   path: string;
-};
+}
 
 export interface FullSubject extends SubjectType {
   children: [SubjectType];
@@ -28,7 +28,7 @@ export interface SubjectState {
 }
 
 graphqlSyncAndRefresh("Subject", AllSubjectsQuery, {
-  onDelete: resp => standardDelete("Subject", AllSubjectsQuery, resp.deleteSubject),
+  onDelete: resp => standardDelete("Subject", AllSubjectsQuery, resp.deleteSubject)
 });
 
 let { publicUserId } = get(appState);
@@ -63,7 +63,7 @@ export const stackedSubjects = derived(subjectsState, ({ subjectHash, subjectsLo
     allSubjectsSorted: allSubjectsSorted(subjectHash),
     subjectsUnwound,
     subjectHash,
-    subjectsLoaded,
+    subjectsLoaded
   };
 });
 
@@ -153,11 +153,13 @@ export const computeSubjectParentId = path => {
   }
 };
 
-export const rootSubjects = derived(subjectsState, ({ subjectHash }) =>
-  Object.keys(subjectHash)
-    .map(_id => subjectHash[_id])
-    .filter(s => !s.path)
-    .sort(subjectSortCompare) as SubjectType[]
+export const rootSubjects = derived(
+  subjectsState,
+  ({ subjectHash }) =>
+    Object.keys(subjectHash)
+      .map(_id => subjectHash[_id])
+      .filter(s => !s.path)
+      .sort(subjectSortCompare) as SubjectType[]
 );
 
 export const getChildSubjectsSorted = (_id, subjectHash) => {
@@ -169,7 +171,7 @@ export const getChildSubjectsSorted = (_id, subjectHash) => {
 };
 
 export const childMapSelector = derived(subjectsState, ({ subjectHash }) => {
-  Object.keys(subjectHash)
+  return Object.keys(subjectHash)
     .map(_id => ({ _id, children: getChildSubjectsSorted(_id, subjectHash) }))
     .reduce((hash, o) => ((hash[o._id] = o.children), hash), {});
 });

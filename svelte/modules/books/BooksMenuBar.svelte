@@ -51,7 +51,7 @@ import { getContext } from "svelte";
   $: ({ isPublic, online } = $appState);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal } =  booksModuleContext;
+  const { openFilterModal, editSubjects } =  booksModuleContext;
 
   // ----------
 
@@ -111,7 +111,7 @@ import { getContext } from "svelte";
                 <i class="fal fa-filter" />
               </button>
               {#if !isPublic}
-                <button title="Edit subjects" onClick={actions.editSubjects} class="btn btn-default hidden-xs"><i class="fal fa-sitemap" /></button>
+                <button title="Edit subjects" on:click={editSubjects} class="btn btn-default hidden-xs"><i class="fal fa-sitemap" /></button>
                 <button title="Edit tags" onClick={actions.editTags} class="btn btn-default hidden-xs"><i class="fal fa-tags" /></button>
               {/if}
             {/if}
