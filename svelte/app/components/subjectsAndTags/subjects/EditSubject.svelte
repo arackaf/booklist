@@ -20,16 +20,25 @@
   export let subject;
   export let onCancelEdit;
 
-  const { mutationState } = mutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
-  const { runMutation: updateSubject, running: isSubjectSaving } = $mutationState;
+  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
+  $: updateState = $updateMutationState;
+
+  const { mutationState: deleteMutationState } = mutation<MutationOf<Mutations["deleteSubject"]>>(DeleteSubjectMutation);
+  $: deleteState = $deleteMutationState;
+  const deleteIt = () => deleteState.runMutation({ _id: editingSubject._id }).then(onCancelEdit);
+
   const textColors = ["#ffffff", "#000000"];
 
-  let deleteShowing = false;
+  export let deleteShowing = false;
   let missingName = false;
   let inputEl;
 
   onMount(() => {
     inputEl.focus({ preventScroll: true });
+
+    return () => {
+      deleteShowing = false;
+    };
   });
 
   let editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
@@ -59,7 +68,7 @@
     let { _id, name, parentId, backgroundColor, textColor } = editingSubject;
     let request = { _id, name, parentId, backgroundColor, textColor };
 
-    Promise.resolve(updateSubject(request)).then(onCancelEdit);
+    Promise.resolve(updateState.runMutation(request)).then(onCancelEdit);
   };
 </script>
 
@@ -120,13 +129,13 @@
         </div>
         <div class="col-xs-12">
           <FlowItems pushLast={true}>
-            <Button disabled={isSubjectSaving} preset="primary-xs" onClick={runSave}>
+            <Button disabled={updateState.running} preset="primary-xs" onClick={runSave}>
               Save
-              <i class={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`} />
+              <i class={`fa fa-fw ${updateState.running ? 'fa-spinner fa-spin' : 'fa-save'}`} />
             </Button>
-            <Button disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+            <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
             {#if editingSubject._id}
-              <Button disabled={isSubjectSaving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+              <Button disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                 Delete
                 {editingSubject.name}
                 <i class="fa fa-fw fa-trash" />
@@ -137,50 +146,21 @@
       </FlexRow>
     {:else}
       <div class="col-xs-12">
-        <!-- <PendingDeleteSubjectDisplay {childSubjects} subject={editingSubject} onDelete={onCancelEdit} cancel={() => setDeleteShowing(false)} /> -->
+        <Stack>
+          <div class="alert alert-danger alert-slim" style="align-self: flex-start">
+            <FlowItems tighter={true}>
+              <span>Delete {editingSubject.name}?</span>
+              {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
+            </FlowItems>
+          </div>
+          <FlowItems>
+            <Button disabled={deleteState.running} onClick={deleteIt} preset="danger-xs">
+              {#if deleteState.running}<span> Deleting <i class="fa fa-spinner fa-spin" /> </span>{:else}"Delete it!"{/if}
+            </Button>
+            <Button disabled={deleteState.running} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+          </FlowItems>
+        </Stack>
       </div>
     {/if}
   </FlexRow>
-  <div>TODO</div>
 {/if}
-
-<!-- 
-  );
-};
-
-const PendingDeleteSubjectDisplay = props => {
-  const { subject, cancel, childSubjects, onDelete } = props;
-  const { name, _id } = subject;
-
-  const { runMutation, running } = useMutation<MutationOf<Mutations["deleteSubject"]>>(DeleteSubjectMutation);
-  const deleteIt = () => runMutation({ _id }).then(onDelete);
-
-  return (
-    <Stack>
-      <div class="alert alert-danger alert-slim" style={{ alignSelf: "flex-start" }}>
-        <FlowItems tighter={true}>
-          <span>Delete {name}?</span>
-          {childSubjects?.length ? <strong>Child subjects will also be deleted!</strong> : null}
-        </FlowItems>
-      </div>
-      <FlowItems>
-        <Button disabled={running} onClick={deleteIt} preset="danger-xs">
-          {running ? (
-            <span>
-              Deleting <i class="fa fa-spinner fa-spin"></i>
-            </span>
-          ) : (
-            "Delete it!"
-          )}
-        </Button>
-        <Button disabled={running} onClick={cancel} class="btn btn-xs">
-          Cancel
-        </Button>
-      </FlowItems>
-    </Stack>
-  );
-};
-
-
-
-export default EditSubject; -->

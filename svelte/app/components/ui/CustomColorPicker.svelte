@@ -34,7 +34,7 @@
       onColorChosen("#" + hexColor);
     };
 
-    jscolorInstance = new jscolor(rootElement, {
+    jscolorInstance = new (window as any).jscolor(rootElement, {
       valueElement: valueElementId,
       styleElement: styleElementId,
       onFineChange: _colorChosen
