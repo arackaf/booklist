@@ -1,36 +1,66 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import cn from "classnames";
   import { MutationOf, Mutations } from "graphql-typings";
+
   import { subjectsState, getEligibleParents, computeSubjectParentId, childMapSelector } from "app/state/subjectsState";
 
   import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
   import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
   import colorsState from "app/state/colorsState";
 
-  import EditSubjectFields from "./EditSubjectFields.svelte";
-  import CustomColorPicker from "../../ui/CustomColorPicker.svelte";
-  import ColorsPalette from "../../ui/ColorsPalette.svelte";
-
-  import FlexRow from "../../layout/FlexRow.svelte";
-  import FlowItems from "../../layout/FlowItems.svelte";
-  import Stack from "../../layout/Stack.svelte";
-  import Button from "../../buttons/Button.svelte";
-
-  let deleteShowing = false;
+  import { mutation } from "micro-graphql-svelte";
+  import Stack from "app/components/layout/Stack.svelte";
+  import FlexRow from "app/components/layout/FlexRow.svelte";
+  import ColorsPalette from "app/components/ui/ColorsPalette.svelte";
+  import CustomColorPicker from "app/components/ui/CustomColorPicker.svelte";
+  import FlowItems from "app/components/layout/FlowItems.svelte";
+  import Button from "app/components/buttons/Button.svelte";
 
   export let subject;
   export let onCancelEdit;
 
-  $: childSubjects = $childMapSelector[subject?._id] || [];
+  const { mutationState } = mutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
+  const { runMutation: updateSubject, running: isSubjectSaving } = $mutationState;
+  const textColors = ["#ffffff", "#000000"];
 
-  let editingSubject = null;
-  let setEditingSubject = cb => editingSubject = cb(editingSubject);
-  let setDeleteShowing = val => deleteShowing = val;
+  let deleteShowing = false;
+  let missingName = false;
+  let inputEl;
 
+  onMount(() => {
+    inputEl.focus({ preventScroll: true });
+  });
+
+  let editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
+
+  $: editingSubjectChanged(subject);
+  $: childSubjects = $childMapSelector[editingSubject?._id] || [];
+  $: ({ subjectHash } = $subjectsState);
+  $: ({ colors } = $colorsState);
+  $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
   $: {
+    if (editingSubject.name) {
+      missingName = false;
+    }
+  }
+
+  function editingSubjectChanged(subject) {
     editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
+    missingName = false;
     deleteShowing = false;
   }
+
+  const runSave = () => {
+    if (!editingSubject.name.trim()) {
+      return (missingName = true);
+    }
+
+    let { _id, name, parentId, backgroundColor, textColor } = editingSubject;
+    let request = { _id, name, parentId, backgroundColor, textColor };
+
+    Promise.resolve(updateSubject(request)).then(onCancelEdit);
+  };
 </script>
 
 {#if !editingSubject}
@@ -38,10 +68,76 @@
 {:else}
   <FlexRow>
     {#if !deleteShowing}
-      <EditSubjectFields {...{ editingSubject, setEditingSubject, onCancelEdit, setDeleteShowing }} />
+      <FlexRow>
+        <div class="col-xs-12 col-lg-6">
+          <div class="form-group">
+            <label>Name</label>
+            <input bind:this={inputEl} bind:value={editingSubject.name} class={cn('form-control', { error: missingName })} />
+            {#if missingName}
+              <span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Subjects need names! </span>
+              <br />
+            {/if}
+            <div
+              class="label label-default"
+              style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
+            >
+              {editingSubject.name.trim() || '<label preview>'}
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+          <div class="form-group">
+            <label>Parent</label>
+            <select bind:value={editingSubject.parentId} class="form-control">
+              <option value="">No Parent</option>
+              {#each eligibleParents as s}
+                <option value={s._id}>{s.name}</option>
+              {/each}
+            </select>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <label>Label Color</label>
+            <ColorsPalette currentColor={editingSubject.backgroundColor} {colors} onColorChosen={color => (editingSubject.backgroundColor = color)} />
+            <CustomColorPicker
+              labelStyle="margin-left: 3px"
+              onColorChosen={color => (editingSubject.backgroundColor = color)}
+              currentColor={editingSubject.backgroundColor}
+            />
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <label>Text Color</label>
+            <ColorsPalette currentColor={editingSubject.textColor} colors={textColors} onColorChosen={color => (editingSubject.textColor = color)} />
+            <CustomColorPicker
+              labelStyle="margin-left: 3px"
+              onColorChosen={color => (editingSubject.textColor = color)}
+              currentColor={editingSubject.backgroundColor}
+            />
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <FlowItems pushLast={true}>
+            <Button disabled={isSubjectSaving} preset="primary-xs" onClick={runSave}>
+              Save
+              <i class={`fa fa-fw ${isSubjectSaving ? 'fa-spinner fa-spin' : 'fa-save'}`} />
+            </Button>
+            <Button disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+            {#if editingSubject._id}
+              <Button disabled={isSubjectSaving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+                Delete
+                {editingSubject.name}
+                <i class="fa fa-fw fa-trash" />
+              </Button>
+            {/if}
+          </FlowItems>
+        </div>
+      </FlexRow>
     {:else}
       <div class="col-xs-12">
-        <!-- <PendingDeleteSubjectDisplay {childSubjects} {subject} onDelete={onCancelEdit} cancel={() => setDeleteShowing(false)} /> -->
+        <!-- <PendingDeleteSubjectDisplay {childSubjects} subject={editingSubject} onDelete={onCancelEdit} cancel={() => setDeleteShowing(false)} /> -->
       </div>
     {/if}
   </FlexRow>
