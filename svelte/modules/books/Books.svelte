@@ -42,6 +42,7 @@
   import SubjectEditModal from "./SubjectEditModal.svelte";
   import TagEditModal from "./TagEditModal.svelte";
   import TempDataTest from "./TempDataTest.svelte";
+import EditBookModal from "app/components/editBook/EditBookModal.svelte";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
@@ -69,7 +70,10 @@
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
 
-  let booksModuleContext = { openFilterModal, editSubjects, editTags, booksUiState, dispatchBooksUiState, deleteBook, setRead };
+  let editingBook = null;
+  const editBook = book => (editingBook = book);
+
+  let booksModuleContext = { openFilterModal, editSubjects, editTags, booksUiState, dispatchBooksUiState, deleteBook, setRead, editBook };
   setContext("books-module-context", booksModuleContext);
 </script>
 
@@ -105,6 +109,9 @@
         {/if}
         {#if editTagsModalOpen}
           <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+        {/if}
+        {#if editingBook}
+          <EditBookModal isOpen={!!editingBook} book={editingBook} onHide={() => (editTagsModalOpen = false)} />
         {/if}
       </div>
     </div>

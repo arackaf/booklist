@@ -51,7 +51,7 @@ import { getContext } from "svelte";
   $: ({ isPublic, online } = $appState);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags } =  booksModuleContext;
+  const { openFilterModal, editSubjects, editTags, editBook } =  booksModuleContext;
 
   // ----------
 

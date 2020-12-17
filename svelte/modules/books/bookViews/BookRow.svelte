@@ -22,7 +22,7 @@
   export let book: IBookDisplay;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, dispatchBooksUiState, setRead, deleteBook } = booksModuleContext;
+  const { booksUiState, dispatchBooksUiState, setRead, deleteBook, editBook } = booksModuleContext;
 
   $: ({ _id } = book);
   $: ({ selectedBooks } = $booksUiState);
@@ -37,6 +37,7 @@
     deleting = true;
     deleteBook({ _id });
   };
+
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
 </script>
@@ -97,7 +98,7 @@
         {/if}
         {#if !viewingPublic && online}
           <!-- TODO -->
-          <a style={hoverOverride} class="gridHoverFilter" on:click={() => props.editBook(book)}> <i class="fal fa-pencil-alt" /> </a>
+          <a style={hoverOverride} class="gridHoverFilter" on:click={() => editBook(book)}> <i class="fal fa-pencil-alt" /> </a>
           <a style={hoverOverride} class="gridHoverFilter" on:click={() => (pendingDelete = true)}> <i class={`fal fa-trash-alt`} /> </a>
         {/if}
         {#if pendingDelete}
