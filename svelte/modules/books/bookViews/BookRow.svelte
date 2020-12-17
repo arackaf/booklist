@@ -23,7 +23,7 @@
   //const { , setRead, runDelete } = props;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, dispatchBooksUiState, deleteBook } = booksModuleContext;
+  const { booksUiState, dispatchBooksUiState, setRead, deleteBook } = booksModuleContext;
 
   $: ({ _id } = book);
   $: ({ selectedBooks } = $booksUiState);

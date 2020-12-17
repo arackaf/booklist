@@ -29,6 +29,7 @@
   import { mutation } from "micro-graphql-svelte";
   import { MutationOf, Mutations } from "graphql-typings";
 
+  import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
   import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
   import useReducer from "util/useReducer";
@@ -44,6 +45,10 @@
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
+
+  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateBooks"]>>(UpdateBooksReadMutation);
+
+  const setRead = (_ids, isRead) => Promise.resolve($updateMutationState.runMutation({ _ids, isRead }));
 
   let menuBarHeight = 0;
   const setMenuBarHeight = val => (menuBarHeight = val);
@@ -64,7 +69,7 @@
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
 
-  let booksModuleContext = { openFilterModal, editSubjects, editTags, booksUiState, dispatchBooksUiState, deleteBook };
+  let booksModuleContext = { openFilterModal, editSubjects, editTags, booksUiState, dispatchBooksUiState, deleteBook, setRead };
   setContext("books-module-context", booksModuleContext);
 </script>
 
