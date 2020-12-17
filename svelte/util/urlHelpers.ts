@@ -30,8 +30,11 @@ export function setSearchValues(state) {
     .reduce((hash, prop) => ((hash[prop] = newState[prop]), hash), {});
 
   const newSearchState = queryString.stringify(newState);
-  history.push({
-    pathname: history.location.pathname,
-    search: newSearchState ? "?" + newSearchState : ""
-  });
+
+  if (location.search.replace(/^\?/, "") !== newSearchState) {
+    history.push({
+      pathname: history.location.pathname,
+      search: newSearchState ? "?" + newSearchState : ""
+    });
+  }
 }
