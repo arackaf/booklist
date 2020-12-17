@@ -5,7 +5,8 @@
   import BooksMenuBar from "./BooksMenuBar.svelte";
   import { searchBooks } from "./booksState";
   import { getBookSearchUiView } from "./booksUiState";
-import SubjectEditModal from "./SubjectEditModal.svelte";
+  import SubjectEditModal from "./SubjectEditModal.svelte";
+  import TagEditModal from "./TagEditModal.svelte";
 
   import TempDataTest from "./TempDataTest.svelte";
 
@@ -23,7 +24,10 @@ import SubjectEditModal from "./SubjectEditModal.svelte";
   let editSubjectsModalOpen = false;
   let editSubjects = () => (editSubjectsModalOpen = true);
 
-  let booksModuleContext = { openFilterModal, editSubjects };
+  let editTagsModalOpen = false;
+  let editTags = () => (editTagsModalOpen = true);
+
+  let booksModuleContext = { openFilterModal, editSubjects, editTags };
   setContext("books-module-context", booksModuleContext);
 </script>
 
@@ -47,6 +51,9 @@ import SubjectEditModal from "./SubjectEditModal.svelte";
   {/if}
   {#if editSubjectsModalOpen}
     <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+  {/if}
+  {#if editTagsModalOpen}
+    <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
   {/if}
   <TempDataTest />
 </section>

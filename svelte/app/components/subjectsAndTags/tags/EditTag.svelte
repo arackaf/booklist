@@ -3,10 +3,11 @@
   import cn from "classnames";
   import { MutationOf, Mutations } from "graphql-typings";
 
-  import { subjectsState, getEligibleParents, computeSubjectParentId, childMapSelector } from "app/state/subjectsState";
+  import { tagsState } from "app/state/tagsState";
 
-  import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
-  import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+  import UpdateTagMutation from "graphQL/tags/updateTag.graphql";
+  import CreateTagMutation from "graphQL/tags/createTag.graphql";
+  import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
   import colorsState from "app/state/colorsState";
 
   import { mutation } from "micro-graphql-svelte";
@@ -17,15 +18,19 @@
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Button from "app/components/buttons/Button.svelte";
 
-  export let subject;
+  export let tag;
   export let onCancelEdit;
 
-  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateSubject"]>>(UpdateSubjectMutation);
+  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateTag"]>>(UpdateTagMutation);
   $: updateState = $updateMutationState;
 
-  const { mutationState: deleteMutationState } = mutation<MutationOf<Mutations["deleteSubject"]>>(DeleteSubjectMutation);
+  const { mutationState: createMutationState } = mutation<MutationOf<Mutations["updateTag"]>>(CreateTagMutation);
+  $: createState = $createMutationState;
+
+  const { mutationState: deleteMutationState } = mutation<MutationOf<Mutations["deleteTag"]>>(DeleteTagMutation);
   $: deleteState = $deleteMutationState;
-  const deleteIt = () => deleteState.runMutation({ _id: editingSubject._id }).then(onCancelEdit);
+
+  const deleteIt = () => deleteState.runMutation({ _id: editingTag._id }).then(onCancelEdit);
 
   const textColors = ["#ffffff", "#000000"];
 
@@ -43,39 +48,38 @@
     };
   });
 
-  let editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
+  let editingTag = { ...tag };
 
-  $: editingSubjectChanged(subject);
-  $: childSubjects = $childMapSelector[editingSubject?._id] || [];
-  $: ({ subjectHash } = $subjectsState);
+  $: editingTagChanged(tag);
+
+  $: ({ tagHash } = $tagsState);
   $: ({ colors } = $colorsState);
-  $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
   $: {
-    if (editingSubject.name) {
+    if (editingTag.name) {
       missingName = false;
     }
   }
 
-  function editingSubjectChanged(subject) {
-    editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
+  function editingTagChanged(tag) {
+    editingTag = { ...tag };
     missingName = false;
     deleteShowing = false;
-    originalName = subject.name;
+    originalName = tag.name;
   }
 
   const runSave = () => {
-    if (!editingSubject.name.trim()) {
+    if (!editingTag.name.trim()) {
       return (missingName = true);
     }
 
-    let { _id, name, parentId, backgroundColor, textColor } = editingSubject;
+    let { _id, name, parentId, backgroundColor, textColor } = editingTag;
     let request = { _id, name, parentId, backgroundColor, textColor };
 
-    Promise.resolve(updateState.runMutation(request)).then(onCancelEdit);
+    Promise.resolve((_id ? updateState : createState).runMutation(request)).then(onCancelEdit);
   };
 </script>
 
-{#if !editingSubject}
+{#if !editingTag}
   <div />
 {:else}
   <FlexRow>
@@ -84,49 +88,36 @@
         <div class="col-xs-12 col-lg-6">
           <div class="form-group">
             <label>Name</label>
-            <input bind:this={inputEl} bind:value={editingSubject.name} class={cn('form-control', { error: missingName })} />
-            {#if missingName}
-              <span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Subjects need names! </span>
-              <br />
-            {/if}
+            <input bind:this={inputEl} bind:value={editingTag.name} class={cn('form-control', { error: missingName })} />
+            {#if missingName}<span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Tags need names! </span> <br />{/if}
             <div
               class="label label-default"
-              style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
+              style="background-color: {editingTag.backgroundColor}; color: {editingTag.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
             >
-              {editingSubject.name.trim() || '<label preview>'}
+              {editingTag.name.trim() || '<label preview>'}
             </div>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-6">
-          <div class="form-group">
-            <label>Parent</label>
-            <select bind:value={editingSubject.parentId} class="form-control">
-              <option value="">No Parent</option>
-              {#each eligibleParents as s}
-                <option value={s._id}>{s.name}</option>
-              {/each}
-            </select>
-          </div>
-        </div>
+        <div class="col-xs-12 col-lg-6" />
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Label Color</label>
-            <ColorsPalette currentColor={editingSubject.backgroundColor} {colors} onColorChosen={color => (editingSubject.backgroundColor = color)} />
+            <ColorsPalette currentColor={editingTag.backgroundColor} {colors} onColorChosen={color => (editingTag.backgroundColor = color)} />
             <CustomColorPicker
               labelStyle="margin-left: 3px"
-              onColorChosen={color => (editingSubject.backgroundColor = color)}
-              currentColor={editingSubject.backgroundColor}
+              onColorChosen={color => (editingTag.backgroundColor = color)}
+              currentColor={editingTag.backgroundColor}
             />
           </div>
         </div>
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Text Color</label>
-            <ColorsPalette currentColor={editingSubject.textColor} colors={textColors} onColorChosen={color => (editingSubject.textColor = color)} />
+            <ColorsPalette currentColor={editingTag.textColor} colors={textColors} onColorChosen={color => (editingTag.textColor = color)} />
             <CustomColorPicker
               labelStyle="margin-left: 3px"
-              onColorChosen={color => (editingSubject.textColor = color)}
-              currentColor={editingSubject.backgroundColor}
+              onColorChosen={color => (editingTag.textColor = color)}
+              currentColor={editingTag.backgroundColor}
             />
           </div>
         </div>
@@ -137,7 +128,7 @@
               <i class={`fa fa-fw ${updateState.running ? 'fa-spinner fa-spin' : 'fa-save'}`} />
             </Button>
             <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
-            {#if editingSubject._id}
+            {#if editingTag._id}
               <Button disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                 Delete
                 {originalName}
@@ -151,10 +142,7 @@
       <div class="col-xs-12">
         <Stack>
           <div class="alert alert-danger alert-slim" style="align-self: flex-start">
-            <FlowItems tighter={true}>
-              <span>Delete {editingSubject.name}?</span>
-              {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
-            </FlowItems>
+            <FlowItems tighter={true}><span>Delete {originalName}?</span></FlowItems>
           </div>
           <FlowItems>
             <Button disabled={deleteState.running} onClick={deleteIt} preset="danger-xs">
