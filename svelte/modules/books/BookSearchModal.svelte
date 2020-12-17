@@ -13,9 +13,11 @@
 
   import { currentSearch } from "./booksSearchState";
   import { applyFilters } from "./setBookFilters";
+  import StandardModalFooter from "app/components/ui/StandardModalFooter.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};
+  let closeModal;
 
   let searchEl;
   let pagesEl;
@@ -64,11 +66,11 @@
       sort,
       sortDirection
     });
-    onHide();
+    closeModal();
   };
 </script>
 
-<Modal deferStateChangeOnClose={true} {isOpen} {onHide} headerCaption={'Full Search'}>
+<Modal deferStateChangeOnClose={true} {isOpen} {onHide} headerCaption={'Full Search'} standardFooter={false} bind:closeModal>
   <form on:submit={updateFilters}>
     <FlexRow>
       <div class="col-xs-6">
@@ -169,9 +171,8 @@
       </div>
     </FlexRow>
 
-    <hr />
-    <FlowItems pushLast={true}>
+    <StandardModalFooter>
       <ActionButton text="Filter" preset="primary" onClick={updateFilters} />
-    </FlowItems>
+    </StandardModalFooter>
   </form>
 </Modal>

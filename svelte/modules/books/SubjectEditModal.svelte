@@ -39,7 +39,5 @@
     {#if editingSubject}
       <EditSubject bind:deleteShowing subject={editingSubject} onCancelEdit={cancelEdit} />
     {/if}
-    <hr />
   </Stack>
-  <Button onClick={onHide}>Close</Button>
 </Modal>
