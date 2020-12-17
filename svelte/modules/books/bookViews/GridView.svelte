@@ -110,7 +110,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each books as book}
+          {#each books as book (book._id)}
             <BookRow {book} />
           {/each}
         </tbody>

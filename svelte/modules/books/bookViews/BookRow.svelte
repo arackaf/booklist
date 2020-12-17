@@ -23,24 +23,24 @@
   //const { , setRead, runDelete } = props;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, dispatchBooksUiState } = booksModuleContext;
+  const { booksUiState, dispatchBooksUiState, deleteBook } = booksModuleContext;
 
   $: ({ _id } = book);
-  //const { selectedBooks } = booksUiState;
   $: ({ selectedBooks } = $booksUiState);
 
   let expanded = false;
   let detailsLoading = false;
 
+  let pendingDelete = false;
+  let deleting = false;
+
+  let doDelete = () => {
+    deleting = true;
+    deleteBook({ _id });
+  };
   //const [startDelete, cancelDelete, doDelete, pendingDelete, deleting] = useDelete(() => runDelete(_id));
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
-
-  let startDelete = () => {};
-  let cancelDelete = () => {};
-  let doDelete = () => {};
-  let pendingDelete = false;
-  let deleting = false;
 </script>
 
 <style>
@@ -77,7 +77,7 @@
         {/if}
       </Stack>
 
-      <FlowItems vCenter={true} tighter={true} containerStyle="minHeight: 35px">
+      <FlowItems vCenter={true} tighter={true} containerStyle="min-height: 35px">
         {#if online}
           {#if detailsLoading}
             <a style={hoverOverride} target="_new" class="gridHoverFilter"> <i class="fa fa-fw fa-spin fa-spinner" /> </a>
@@ -99,13 +99,13 @@
         {/if}
         {#if !viewingPublic && online}
           <!-- TODO -->
-          <!-- <a style={hoverOverride} class="gridHoverFilter" on:click={() => props.editBook(book)}> <i class="fal fa-pencil-alt" /> </a> -->
-          <a style={hoverOverride} class="gridHoverFilter" on:click={startDelete}> <i class={`fal fa-trash-alt`} /> </a>
+          <a style={hoverOverride} class="gridHoverFilter" on:click={() => props.editBook(book)}> <i class="fal fa-pencil-alt" /> </a>
+          <a style={hoverOverride} class="gridHoverFilter" on:click={() => (pendingDelete = true)}> <i class={`fal fa-trash-alt`} /> </a>
         {/if}
         {#if pendingDelete}
           <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} preset="danger-xs">Confirm Delete</ActionButton>
         {/if}
-        {#if pendingDelete}<button disabled={deleting} onClick={cancelDelete} class="btn btn-xs"> Cancel </button>{/if}
+        {#if pendingDelete}<button disabled={deleting} on:click={() => (pendingDelete = false)} class="btn btn-xs"> Cancel </button>{/if}
       </FlowItems>
     </Stack>
   </td>

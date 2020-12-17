@@ -25,8 +25,11 @@
 </script>
 
 <script lang="ts">
-  import Modal from "app/components/ui/Modal.svelte";
   import { setContext } from "svelte";
+  import { mutation } from "micro-graphql-svelte";
+  import { MutationOf, Mutations } from "graphql-typings";
+
+  import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
   import useReducer from "util/useReducer";
 
@@ -38,6 +41,9 @@
   import SubjectEditModal from "./SubjectEditModal.svelte";
   import TagEditModal from "./TagEditModal.svelte";
   import TempDataTest from "./TempDataTest.svelte";
+
+  const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
+  const deleteBook = $deleteBookState.runMutation;
 
   let menuBarHeight = 0;
   const setMenuBarHeight = val => (menuBarHeight = val);
@@ -58,7 +64,7 @@
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
 
-  let booksModuleContext = { openFilterModal, editSubjects, editTags, booksUiState, dispatchBooksUiState };
+  let booksModuleContext = { openFilterModal, editSubjects, editTags, booksUiState, dispatchBooksUiState, deleteBook };
   setContext("books-module-context", booksModuleContext);
 </script>
 
