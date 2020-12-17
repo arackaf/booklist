@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getContext } from "svelte";
   import { query } from "micro-graphql-svelte";
   import { QueryOf, Queries } from "graphql-typings";
   import ActionButton from "app/components/buttons/ActionButton.svelte";
@@ -19,10 +20,14 @@
 
   $: ({ isPublic: viewingPublic, online } = $appState);
   export let book: IBookDisplay;
-  //const { booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
+  //const { , setRead, runDelete } = props;
+
+  const booksModuleContext: any = getContext("books-module-context");
+  const { booksUiState, dispatchBooksUiState } = booksModuleContext;
+
   $: ({ _id } = book);
   //const { selectedBooks } = booksUiState;
-  let selectedBooks = {};
+  $: ({ selectedBooks } = $booksUiState);
 
   let expanded = false;
   let detailsLoading = false;
@@ -53,7 +58,7 @@
 <tr>
   {#if !viewingPublic && online}
     <td>
-      <a style="font-size: 12pt" onClick={() => dispatchBooksUiState(['toggle-select', _id])}>
+      <a style="font-size: 12pt" on:click={() => dispatchBooksUiState(['toggle-select', _id])}>
         <i class={'fal ' + (!!selectedBooks[_id] ? 'fa-check-square' : 'fa-square')} />
       </a>
     </td>

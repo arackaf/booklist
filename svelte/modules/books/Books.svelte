@@ -76,20 +76,26 @@
 </style>
 
 <section class="full flush-bottom">
-  <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
-  {#if booksLoaded && books != null}
-    {#if $uiView.isGridView}
-      <GridView {books} />
-    {/if}
-  {/if}
+  <div style="background-color: white;">
+    <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
+    <div className="overlay-holder">
+      <div style="flex: 1; padding: 0px; min-height: 450px">
+        {#if booksLoaded && books != null}
+          {#if $uiView.isGridView}
+            <GridView {books} {menuBarHeight} />
+          {/if}
+        {/if}
 
-  {#if filterModalOpen}
-    <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
-  {/if}
-  {#if editSubjectsModalOpen}
-    <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
-  {/if}
-  {#if editTagsModalOpen}
-    <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
-  {/if}
+        {#if filterModalOpen}
+          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
+        {/if}
+        {#if editSubjectsModalOpen}
+          <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+        {/if}
+        {#if editTagsModalOpen}
+          <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+        {/if}
+      </div>
+    </div>
+  </div>
 </section>

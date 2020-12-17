@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getContext } from "svelte";
   import { query } from "micro-graphql-svelte";
   import { QueryOf, Queries } from "graphql-typings";
   import ActionButton from "app/components/buttons/ActionButton.svelte";
@@ -14,24 +15,30 @@
   import BookRow from "./BookRow.svelte";
   //import { CoverSmall } from "app/components/bookCoverComponent";
   import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
+  import { derived } from "svelte/store";
 
   $: ({ isPublic: viewingPublic, online } = $appState);
 
+  const booksModuleContext: any = getContext("books-module-context");
+  const { booksUiState, dispatchBooksUiState } = booksModuleContext;
+
   //const { book, booksUiState, dispatchBooksUiState, setRead, runDelete } = props;
   //const { _id } = book;
-  //const { selectedBooks } = booksUiState;
+  $: ({ selectedBooks } = $booksUiState);
 
   export let books = [];
-  // const useBookSelection = (books, selectedBooks) => {
-  //   return useMemo(() => {
-  //     let selectedIds = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
-  //     return {
-  //       allAreChecked: books.length == selectedIds,
-  //       selectedBooksCount: selectedIds,
-  //       selectedBookHash: selectedBooks
-  //     };
-  //   }, [books, selectedBooks]);
-  // };
+
+  let bookSelection;
+  $: {
+    //= books, selectedBooks) => {
+
+    let selectedIdsCount = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
+    bookSelection = {
+      allAreChecked: books.length == selectedIdsCount,
+      selectedBooksCount: selectedIdsCount,
+      selectedBookHash: selectedBooks
+    };
+  }
 
   // const { actions, booksUiState, dispatchBooksUiState } = useContext(BooksModuleContext);
   // const { setRead, runDelete } = actions;
@@ -39,16 +46,15 @@
   // const { editBook, openBookSubModal, openBookTagModal } = actions;
   // const { selectedBooks } = booksUiState;
 
-  // const { allAreChecked } = useBookSelection(books, selectedBooks);
   // const [{ isPublic: viewingPublic, online }] = useContext(AppContext);
   // const { sort: currentSort, sortDirection } = useCurrentSearch();
 
   // const editSubjectsForBook = book => openBookSubModal([book]);
   // const editTagsForBook = book => openBookTagModal([book]);
 
-  // const toggleCheckAll = () => {
-  //   dispatchBooksUiState([allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
-  // };
+  const toggleCheckAll = () => {
+    dispatchBooksUiState([bookSelection.allAreChecked ? "de-select" : "select", books.map(b => b._id)]);
+  };
 
   // const setSort = column => {
   //   let newDirection = "asc";
@@ -62,8 +68,8 @@
   // const potentialSortIcon = <i class={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   // const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
-  export let menuBarHeight = 40;
-  $: stickyHeaderStyle = `position: sticky; top: ${menuBarHeight - 8}px, background-color: white; z-index: 2`;
+  export let menuBarHeight;
+  $: stickyHeaderStyle = `position: sticky; top: ${menuBarHeight - 8}px; background-color: white; z-index: 2`;
 
   /*
               <BookRow
@@ -73,9 +79,7 @@
             />
   */
 
- const sortIconIf = x => "";
- const toggleCheckAll = x => "";
- const allAreChecked = false;
+  const sortIconIf = x => "";
 </script>
 
 <div style="min-height: 400px">
@@ -86,7 +90,9 @@
           <tr>
             {#if !viewingPublic && online}
               <th style="{stickyHeaderStyle}; text-align: center; width: 25px;">
-                <a style="font-size: 12pt" onClick={toggleCheckAll}> <i class={'fal ' + (!!allAreChecked ? 'fa-check-square' : 'fa-square')} /> </a>
+                <a style="font-size: 12pt" on:click={toggleCheckAll}>
+                  <i class={'fal ' + (!!bookSelection.allAreChecked ? 'fa-check-square' : 'fa-square')} />
+                </a>
               </th>
             {/if}
             <th style="{stickyHeaderStyle}; width: 60px" />
