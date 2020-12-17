@@ -63,7 +63,7 @@ export const addFilterSubject = _id => {
     return;
   }
 
-  setSearchValues({ subjects: subjects.concat(_id).join("-") });
+  setSearchValues({ page: null, subjects: subjects.concat(_id).join("-") });
 };
 
 export const removeFilterSubject = _id => {
@@ -71,6 +71,7 @@ export const removeFilterSubject = _id => {
   let existingSubjects = hashFilters.subjects.split("-").filter(s => s);
   let newSubjects = existingSubjects.filter(sId => sId != _id);
   let newFilters: any = {
+    page: null,
     subjects: newSubjects.join("-")
   };
   if (!newSubjects.length) {
@@ -87,7 +88,7 @@ export const addFilterTag = _id => {
     return;
   }
 
-  setSearchValues({ tags: tags.concat(_id).join("-") });
+  setSearchValues({ page: null, tags: tags.concat(_id).join("-") });
 };
 
 export const removeFilterTag = _id => {
@@ -96,7 +97,7 @@ export const removeFilterTag = _id => {
 
   let newTags = existingTags.filter(tId => tId != _id);
 
-  setSearchValues({ tags: newTags.join("-") });
+  setSearchValues({ page: null, tags: newTags.join("-") });
 };
 
 export const clearSearchChildSubjects = () => setSearchValues({ searchChildSubjects: null });

@@ -20,7 +20,6 @@
 
   $: ({ isPublic: viewingPublic, online } = $appState);
   export let book: IBookDisplay;
-  //const { , setRead, runDelete } = props;
 
   const booksModuleContext: any = getContext("books-module-context");
   const { booksUiState, dispatchBooksUiState, setRead, deleteBook } = booksModuleContext;
@@ -38,7 +37,6 @@
     deleting = true;
     deleteBook({ _id });
   };
-  //const [startDelete, cancelDelete, doDelete, pendingDelete, deleting] = useDelete(() => runDelete(_id));
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
 </script>
