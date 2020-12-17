@@ -12,7 +12,7 @@
 
   import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 
-  //import { CoverSmall } from "app/components/bookCoverComponent";
+  import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
   import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";
@@ -65,7 +65,7 @@
   {/if}
   <td>
     <div style="width: 60px; min-height: 75px;">
-      <!-- <CoverSmall url={book.smallImage} /> -->
+      <CoverSmall url={book.smallImage} />
     </div>
   </td>
   <td>
