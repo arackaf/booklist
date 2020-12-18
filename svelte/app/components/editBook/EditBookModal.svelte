@@ -7,25 +7,43 @@
 
   import Modal from "../ui/Modal.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
+  import ManageBookCover from "./ManageBookCover.svelte";
 
   export let book;
   export let isOpen = false;
   export let onHide;
+  export let saveBook;
+
+  const updateBook = fn => (book = fn(book));
 </script>
 
 <Modal headerCaption={`Edit: ${book.title}`} deferStateChangeOnClose={true} {isOpen} {onHide} standardFooter={false}>
-  <Tabs defaultTab="a">
+  <Tabs defaultTab="basic">
     <TabHeaders>
-      <TabHeader tabName="a">A</TabHeader>
-      <TabHeader tabName="b">B</TabHeader>
-      <TabHeader tabName="c">C</TabHeader>
+      <TabHeader tabName="basic"><a>Book info</a></TabHeader>
+      <TabHeader tabName="covers">Covers</TabHeader>
     </TabHeaders>
     <TabContents>
-      <TabContent tabName="a">A Content</TabContent>
-      <TabContent tabName="b">B Content</TabContent>
+      <TabContent tabName="basic">
+        {#if book}
+          <EditBookInfo saveBook={saveBook} {book} />
+        {/if}
+      </TabContent>
+      <TabContent tabName="covers">
+        {#if book}
+          <div class="form-group">
+            <label>Small Cover</label>
+            <ManageBookCover _id={book._id} imgKey="smallImage" size="small" img={book.smallImage} updateBookObject={updateBook} />
+          </div>
+          <hr />
+          <div class="form-group">
+            <label>Medium Cover</label>
+            <ManageBookCover _id={book._id} imgKey="mediumImage" size="medium" img={book.mediumImage} updateBookObject={updateBook} />
+          </div>
+        {/if}
+      </TabContent>
       <TabContent tabName="c">C Content</TabContent>
     </TabContents>
   </Tabs>
 
-  <EditBookInfo {book} />
 </Modal>

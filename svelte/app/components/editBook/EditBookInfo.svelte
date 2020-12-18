@@ -11,19 +11,22 @@
 
   export let book;
 
-  $: editingBook = { ...book };
+  let editingBook;
+  $: bookChanged(book);
 
-  debugger;
+  function bookChanged(book) {
+    editingBook = { ...book };
+  }
 
   const addSubject = subject => (editingBook.subjects = editingBook.subjects.concat(subject._id));
-  const removeSubject = subject => (editingBook.subjects = editingBook.subjects.filter(s => s._id != subject._id));
+  const removeSubject = subject => (editingBook.subjects = editingBook.subjects.filter(_id => _id != subject._id));
 
-  const addTag = tag => (editingBook.subjects = editingBook.tags.concat(tag._id));
-  const removeTag = tag => (editingBook.subjects = editingBook.tags.concat(t => t._id != tag._id));
+  const addTag = tag => (editingBook.tags = editingBook.tags.concat(tag._id));
+  const removeTag = tag => (editingBook.tags = editingBook.tags.filter(_id => _id != tag._id));
 
   let missingTitle = false;
 
-  export let saveBook = book => {};
+  export let saveBook;
   export let onSave = book => {};
 
   const save = evt => {
@@ -55,7 +58,7 @@
       <div class={'form-group'}>
         <label>Title</label>
 
-        <input name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
+        <input class="form-control" name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
       </div>
     </div>
 
@@ -117,5 +120,5 @@
   </FlexRow>
   <hr />
 
-  <ActionButton type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
+  <ActionButton onClick={save} type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
 </form>

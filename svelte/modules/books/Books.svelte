@@ -22,6 +22,14 @@
         throw "Invalid key";
     }
   }
+
+  const prepBookForSaving = book => {
+    let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
+    let pages = parseInt(book.pages, 10);
+    book.pages = isNaN(pages) ? void 0 : pages;
+
+    return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
+  };
 </script>
 
 <script lang="ts">
@@ -29,6 +37,7 @@
   import { mutation } from "micro-graphql-svelte";
   import { MutationOf, Mutations } from "graphql-typings";
 
+  import UpdateBookMutation from "graphQL/books/updateBook.graphql";
   import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
   import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 
@@ -42,14 +51,22 @@
   import SubjectEditModal from "./SubjectEditModal.svelte";
   import TagEditModal from "./TagEditModal.svelte";
   import TempDataTest from "./TempDataTest.svelte";
-import EditBookModal from "app/components/editBook/EditBookModal.svelte";
+  import EditBookModal from "app/components/editBook/EditBookModal.svelte";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
 
   const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateBooks"]>>(UpdateBooksReadMutation);
-
   const setRead = (_ids, isRead) => Promise.resolve($updateMutationState.runMutation({ _ids, isRead }));
+
+  const { mutationState: runBookEditState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBookMutation);
+
+  const saveEditingBook = book => {
+    let bookToUse = prepBookForSaving(book);
+    return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookToUse })).then(resp => {
+      editingBook = null;
+    });
+  };
 
   let menuBarHeight = 0;
   const setMenuBarHeight = val => (menuBarHeight = val);
@@ -111,7 +128,7 @@ import EditBookModal from "app/components/editBook/EditBookModal.svelte";
           <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
         {/if}
         {#if editingBook}
-          <EditBookModal isOpen={!!editingBook} book={editingBook} onHide={() => (editTagsModalOpen = false)} />
+          <EditBookModal saveBook={saveEditingBook} isOpen={!!editingBook} book={editingBook} onHide={() => (editingBook = null)} />
         {/if}
       </div>
     </div>

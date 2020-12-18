@@ -14,7 +14,6 @@
       if (localStorageName) {
         localStorageManager.set(localStorageName, tabName);
       }
-      debugger;
       setTab(tabName);
     }
   };
