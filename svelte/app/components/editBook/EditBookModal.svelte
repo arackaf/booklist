@@ -21,12 +21,12 @@
   <Tabs defaultTab="basic">
     <TabHeaders>
       <TabHeader tabName="basic"><a>Book info</a></TabHeader>
-      <TabHeader tabName="covers">Covers</TabHeader>
+      <TabHeader tabName="covers"><a>Covers</a></TabHeader>
     </TabHeaders>
     <TabContents>
       <TabContent tabName="basic">
         {#if book}
-          <EditBookInfo saveBook={saveBook} {book} />
+          <EditBookInfo {saveBook} {book} />
         {/if}
       </TabContent>
       <TabContent tabName="covers">
@@ -45,5 +45,4 @@
       <TabContent tabName="c">C Content</TabContent>
     </TabContents>
   </Tabs>
-
 </Modal>
