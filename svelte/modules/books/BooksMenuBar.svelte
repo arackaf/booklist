@@ -23,7 +23,7 @@ import { getContext } from "svelte";
   $: ({ books = [], totalPages = null, resultsCount = null, reload, booksLoading, booksLoaded } = bookResultsPacket);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, openFilterModal, editSubjects, editTags, setRead } =  booksModuleContext;
+  const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects } =  booksModuleContext;
 
   // const { actions, booksUiState } = useContext(BooksModuleContext);
   // const { setRead } = actions;
@@ -35,6 +35,7 @@ import { getContext } from "svelte";
   $: selectedBooksIds = Object.keys(selectedBooks).filter(k => selectedBooks[k]);
   $: selectedBooksCount = selectedBooksIds.length;
 
+  const editSubjectsForSelectedBooks = () => editBooksSubjects(books.filter(b => selectedBooks[b._id]));
   //const editSubjectsForSelectedBooks = () => actions.openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
   //const editTagsForSelectedBooks = () => actions.openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
 
@@ -55,7 +56,6 @@ import { getContext } from "svelte";
 
   // ----------
 
-  let editSubjectsForSelectedBooks = () => {};
   let editTagsForSelectedBooks = () => {};
   let searchInput = "";
 
