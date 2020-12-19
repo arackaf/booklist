@@ -13,7 +13,8 @@
   import FlowItems from "app/components/layout/FlowItems.svelte";
 import BookRowDetails from "./BookRowDetails.svelte";
 
-  $: ({ isPublic: viewingPublic, online } = $appState);
+  export let isPublic;
+  export let online;
   export let book: IBookDisplay;
 
   const booksModuleContext: any = getContext("books-module-context");
@@ -49,7 +50,7 @@ import BookRowDetails from "./BookRowDetails.svelte";
 </style>
 
 <tr>
-  {#if !viewingPublic && online}
+  {#if !isPublic && online}
     <td>
       <a style="font-size: 12pt" on:click={() => dispatchBooksUiState(['toggle-select', _id])}>
         <i class={'fal ' + (!!selectedBooks[_id] ? 'fa-check-square' : 'fa-square')} />
@@ -90,7 +91,7 @@ import BookRowDetails from "./BookRowDetails.svelte";
             <i class={`fab fa-amazon`} />
           </a>
         {/if}
-        {#if !viewingPublic && online}
+        {#if !isPublic && online}
           <a style={hoverOverride} class="gridHoverFilter" on:click={() => editBook(book)}> <i class="fal fa-pencil-alt" /> </a>
           <a style={hoverOverride} class="gridHoverFilter" on:click={() => (pendingDelete = true)}> <i class={`fal fa-trash-alt`} /> </a>
         {/if}
@@ -110,7 +111,7 @@ import BookRowDetails from "./BookRowDetails.svelte";
       {/each}
     </div>
     <div style="margin-top: 5px">
-      {#if !viewingPublic}<a class="gridHoverFilter" on:click={() => editBooksSubjects([book])}> <i class="fal fa-pencil-alt" /> </a>{/if}
+      {#if !isPublic}<a class="gridHoverFilter" on:click={() => editBooksSubjects([book])}> <i class="fal fa-pencil-alt" /> </a>{/if}
     </div>
   </td>
   <td>
@@ -122,12 +123,12 @@ import BookRowDetails from "./BookRowDetails.svelte";
       {/each}
     </div>
     <div style="margin-top: 5px">
-      {#if !viewingPublic}<a class="gridHoverFilter" on:click={() => editBooksTags([book])}> <i class="fal fa-pencil-alt" /> </a>{/if}
+      {#if !isPublic}<a class="gridHoverFilter" on:click={() => editBooksTags([book])}> <i class="fal fa-pencil-alt" /> </a>{/if}
     </div>
   </td>
   <td>
-    <div style="margin-top: {!viewingPublic ? '3' : '0'}px">
-      {#if !viewingPublic}
+    <div style="margin-top: {!isPublic ? '3' : '0'}px">
+      {#if !isPublic}
         {#if !!book.isRead}
           <ActionButton
             baseWidth="10ch"

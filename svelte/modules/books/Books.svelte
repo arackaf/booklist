@@ -53,6 +53,7 @@
   import EditBookModal from "app/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
+import BasicView from "./bookViews/BasicView.svelte";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
@@ -133,6 +134,8 @@
         {#if booksLoaded && books != null}
           {#if $uiView.isGridView}
             <GridView {books} {menuBarHeight} />
+          {:else if $uiView.isBasicList}
+            <BasicView {books} />
           {/if}
         {/if}
 
