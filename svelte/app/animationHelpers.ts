@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store";
 
 export default function syncHeight(el) {
-  const store = writable(null, (set) => {
+  const store = writable(el.offsetHeight, (set) => {
     if (!el) {
       return;
     }
