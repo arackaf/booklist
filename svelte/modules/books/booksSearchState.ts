@@ -31,7 +31,6 @@ function projectSelectedItems(ids: string = "", hash): TagOrSubject[] {
 
 const keyIsFilter = k => k != "page" && k != "sort" && k != "sortDirection" && k != "userId";
 
-type CurrentSearchType = BookSearchFiltersType & { anyActiveFilters: boolean; activeFilterCount: number; bindableSortValue: string };
 export const currentSearch = derived([booksSearchState, subjectsState, tagsState], ([$books, $subjects, $tags]) => {
   const filters = $books.hashFilters;
 
@@ -44,5 +43,5 @@ export const currentSearch = derived([booksSearchState, subjectsState, tagsState
     anyActiveFilters: !!Object.keys(filters).filter(keyIsFilter).length,
     activeFilterCount: Object.keys(filters).filter(keyIsFilter).length,
     bindableSortValue: `${result.sort}|${result.sortDirection}`
-  }) as CurrentSearchType;
+  });
 });

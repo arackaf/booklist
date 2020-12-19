@@ -1,9 +1,10 @@
 <script lang="ts">
   import { appState } from "app/state/appState";
-import { getContext } from "svelte";
+  import { getContext } from "svelte";
 
   import measureHeight from "util/measureHeight";
-
+  
+  import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import { currentSearch as bookSearchState } from "./booksSearchState";
   import { getBookSearchUiView } from "./booksUiState";
   import PagingButtons from "./PagingButtons.svelte";
@@ -23,7 +24,7 @@ import { getContext } from "svelte";
   $: ({ books = [], totalPages = null, resultsCount = null, reload, booksLoading, booksLoaded } = bookResultsPacket);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } =  booksModuleContext;
+  const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
 
   export let uiView: ReturnType<typeof getBookSearchUiView>;
   const uiDispatch = $uiView.dispatch;
@@ -50,7 +51,6 @@ import { getContext } from "svelte";
   };
 
   $: ({ isPublic, online } = $appState);
-
 </script>
 
 <style>
@@ -134,7 +134,7 @@ import { getContext } from "svelte";
         </div>
       </div>
 
-      <!-- <BookSearchFilters {resultsCount} {disabled} /> -->
+      <ActiveSearchFilters {resultsCount} />
     </div>
   </div>
 </div>
