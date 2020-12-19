@@ -22,15 +22,18 @@ import { getContext } from "svelte";
   export let bookResultsPacket: BookResultsPacket;
   $: ({ books = [], totalPages = null, resultsCount = null, reload, booksLoading, booksLoaded } = bookResultsPacket);
 
+  const booksModuleContext: any = getContext("books-module-context");
+  const { booksUiState, openFilterModal, editSubjects, editTags, setRead } =  booksModuleContext;
+
   // const { actions, booksUiState } = useContext(BooksModuleContext);
   // const { setRead } = actions;
 
   export let uiView: ReturnType<typeof getBookSearchUiView>;
   const uiDispatch = $uiView.dispatch;
 
-  //const { selectedBooks } = booksUiState;
-  //const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
-  //const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
+  $: ({ selectedBooks } = $booksUiState);
+  $: selectedBooksIds = Object.keys(selectedBooks).filter(k => selectedBooks[k]);
+  $: selectedBooksCount = selectedBooksIds.length;
 
   //const editSubjectsForSelectedBooks = () => actions.openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
   //const editTagsForSelectedBooks = () => actions.openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
@@ -50,23 +53,15 @@ import { getContext } from "svelte";
 
   $: ({ isPublic, online } = $appState);
 
-  const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBook } =  booksModuleContext;
-
   // ----------
 
-  //let resetSearch = () => {};
-  //let quickSearchType = () => {};
-  // let uiDispatch = () => {};
   let editSubjectsForSelectedBooks = () => {};
   let editTagsForSelectedBooks = () => {};
-  let setRead = () => {};
   let searchInput = "";
-  let selectedBooksCount = 0;
+
   //let online = true;
   let actions = {};
   //let uiView = {};
-  let selectedBooksIds = {};
   //let isPublic = false;
   //
   let quickSearchEl;
