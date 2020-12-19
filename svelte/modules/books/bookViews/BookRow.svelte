@@ -1,28 +1,23 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { query } from "micro-graphql-svelte";
-  import { QueryOf, Queries } from "graphql-typings";
   import ActionButton from "app/components/buttons/ActionButton.svelte";
   import LabelDisplay from "app/components/subjectsAndTags/LabelDisplay.svelte";
 
   import { appState } from "app/state/appState";
   import { IBookDisplay } from "../booksState";
 
-  import { currentSearch } from "../booksSearchState";
-
-  import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
-
   import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
   import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
+import BookRowDetails from "./BookRowDetails.svelte";
 
   $: ({ isPublic: viewingPublic, online } = $appState);
   export let book: IBookDisplay;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, dispatchBooksUiState, setRead, deleteBook, editBook } = booksModuleContext;
+  const { booksUiState, dispatchBooksUiState, setRead, deleteBook, editBook, editBooksSubjects, editBooksTags } = booksModuleContext;
 
   $: ({ _id } = book);
   $: ({ selectedBooks } = $booksUiState);
@@ -37,7 +32,6 @@
     deleting = true;
     deleteBook({ _id });
   };
-
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
 </script>
@@ -81,9 +75,9 @@
           {#if detailsLoading}
             <a style={hoverOverride} target="_new" class="gridHoverFilter"> <i class="fa fa-fw fa-spin fa-spinner" /> </a>
           {:else if expanded}
-            <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} class="gridHoverFilter"> <i class={`far fa-minus`} /> </a>
+            <a style={hoverOverride} target="_new" on:click={() => expanded = false} class="gridHoverFilter"> <i class={`far fa-minus`} /> </a>
           {:else}
-            <a style={hoverOverride} target="_new" onClick={() => setExpanded(true)} class="gridHoverFilter"> <i class={`far fa-plus`} /> </a>
+            <a style={hoverOverride} target="_new" on:click={() => expanded = true} class="gridHoverFilter"> <i class={`far fa-plus`} /> </a>
           {/if}
         {/if}
         {#if book.isbn && online}
@@ -97,7 +91,6 @@
           </a>
         {/if}
         {#if !viewingPublic && online}
-          <!-- TODO -->
           <a style={hoverOverride} class="gridHoverFilter" on:click={() => editBook(book)}> <i class="fal fa-pencil-alt" /> </a>
           <a style={hoverOverride} class="gridHoverFilter" on:click={() => (pendingDelete = true)}> <i class={`fal fa-trash-alt`} /> </a>
         {/if}
@@ -117,7 +110,7 @@
       {/each}
     </div>
     <div style="margin-top: 5px">
-      {#if !viewingPublic}<a class="gridHoverFilter" onClick={() => props.editBooksSubjects(book)}> <i class="fal fa-pencil-alt" /> </a>{/if}
+      {#if !viewingPublic}<a class="gridHoverFilter" on:click={() => editBooksSubjects([book])}> <i class="fal fa-pencil-alt" /> </a>{/if}
     </div>
   </td>
   <td>
@@ -129,7 +122,7 @@
       {/each}
     </div>
     <div style="margin-top: 5px">
-      {#if !viewingPublic}<a class="gridHoverFilter" onClick={() => props.editBooksTags(book)}> <i class="fal fa-pencil-alt" /> </a>{/if}
+      {#if !viewingPublic}<a class="gridHoverFilter" on:click={() => editBooksTags([book])}> <i class="fal fa-pencil-alt" /> </a>{/if}
     </div>
   </td>
   <td>
@@ -161,9 +154,9 @@
       <div>{book.isbn}</div>
     {/if}
   </td>
-  <td>{book.pages}</td>
+  <td>{book.pages == null ? '' : book.pages}</td>
   <td>{book.dateAddedDisplay}</td>
 </tr>
 {#if expanded}
-  <!-- <BookRowDetails {...{ book, setDetailsLoading }} /> -->
+  <BookRowDetails {book} bind:detailsLoading />
 {/if}

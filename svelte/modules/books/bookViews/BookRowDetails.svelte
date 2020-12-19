@@ -1,90 +1,99 @@
+<script lang="ts">
+  import { query } from "micro-graphql-svelte";
+  import { BookSummary, EditorialReview, Queries, QueryOf } from "graphql-typings";
+
+  import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
+
+  import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
+  import FlexRow from "app/components/layout/FlexRow.svelte";
+  import Stack from "app/components/layout/Stack.svelte";
+
+  import { appState } from "app/state/appState";
+  import { IBookDisplay } from "../booksState";
+
+  export let book: IBookDisplay;
+  export let detailsLoading = false;
+
+  let { isPublic: viewingPublic, publicUserId } = $appState;
+  let { queryState } = query<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { initialSearch: { _id: book._id, publicUserId, cache: 9 } });
+
+  $: ({ loading, data, loaded } = $queryState);
+  $: detailsLoading = loading;
+
+  $: ({ editorialReviews, similarBooks } = data?.getBook?.Book ?? ({} as { editorialReviews: EditorialReview[]; similarBooks: BookSummary[] }));
+</script>
+
 <style>
-  .detailsRow {
+  :global(.detailsRow) {
     padding-right: 10px;
   }
-  .detailsRow > * > div {
+  :global(.detailsRow > * > div) {
     padding-top: 10px;
     max-height: 250px;
     overflow: auto;
   }
 </style>
 
-const BookRowDetails: FunctionComponent<{ book?: IBookDisplay; setDetailsLoading: any }> = props => {
-  let [{ isPublic: viewingPublic }] = useContext(AppContext);
-  let { book, setDetailsLoading } = props;
+{#if loaded}
+  <tr>
+    <td colSpan={viewingPublic ? 8 : 9} style="border-top: 0; padding-left: 50px; padding-top: 0; padding-bottom: 15px;">
+      <FlexRow class="detailsRow">
+        <div class="col-xs-6">
+          {#if !editorialReviews || !editorialReviews.length}
+            <h4>No editorial reviews for this book</h4>
+          {:else}
+            <div>
+              {#each editorialReviews as review, index}
+                <div>
+                  {#if index > 0}
+                    <hr style="border: 2px solid #eee" />
+                  {/if}
+                  <Stack>
+                    <h4>{review.source || '<unknown source>'}</h4>
+                    <div>
+                      {@html review.content}
+                    </div>
+                  </Stack>
+                </div>
+              {/each}
+              <br />
+            </div>
+          {/if}
+        </div>
 
-  let [{ publicUserId }] = useContext(AppContext);
-
-  let { loading, data } = useQuery<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 });
-
-  setDetailsLoading(loading);
-  if (loading) {
-    return null;
-  }
-
-  let editorialReviews, similarBooks;
-  if (data) {
-    ({ editorialReviews, similarBooks } = data.getBook.Book);
-  }
-
-  return (
-    <tr key={"details" + book._id}>
-      <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
-        <FlexRow class="detailsRow">
-          <div class="col-xs-6">
-            {!editorialReviews || !editorialReviews.length ? (
-              <h4>No editorial reviews for this book</h4>
-            ) : (
-              <div>
-                {editorialReviews.map((review, index) => (
-                  <div key={index}>
-                    {index > 0 ? <hr style={{ border: "2px solid #eee" }} /> : null}
-                    <Stack>
-                      <h4>{review.source || "<unknown source>"}</h4>
-                      <div dangerouslySetInnerHTML={{ __html: review.content }} />
-                    </Stack>
-                  </div>
-                ))}
-                <br />
-              </div>
-            )}
-          </div>
-
-          <div class="col-xs-6">
-            {!similarBooks || !similarBooks.length ? (
-              <h4>No similar items found for this book</h4>
-            ) : (
-              <div>
-                <Stack>
-                  <h4>Similar Books</h4>
-                  <table class="table table-condensed" style={{ backgroundColor: "transparent" }}>
-                    <tbody>
-                      {similarBooks.map((book, i) => (
-                        <tr key={i}>
-                          <td>{book.smallImage ? <CoverSmall url={book.smallImage} /> : null}</td>
-                          <td>
-                            <span style={{ fontWeight: "bold" }}>{book.title}</span>
-                            <br />
-                            {book.authors.length ? (
-                              <>
-                                <span style={{ fontStyle: "italic" }}>{book.authors.join(", ")}</span>
-                                <br />
-                              </>
-                            ) : null}
-                            <a target="_new" style={{ color: "black" }} href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
-                              <i class="fab fa-amazon" />
-                            </a>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </Stack>
-              </div>
-            )}
-          </div>
-        </FlexRow>
-      </td>
-    </tr>
-  );
-};
+        <div class="col-xs-6">
+          {#if !similarBooks || !similarBooks.length}
+            <h4>No similar items found for this book</h4>
+          {:else}
+            <div>
+              <Stack>
+                <h4>Similar Books</h4>
+                <table class="table table-condensed" style="backgroundColor: transparent">
+                  <tbody>
+                    {#each similarBooks as book, i}
+                      <tr>
+                        <td>
+                          {#if book.smallImage}
+                            <CoverSmall url={book.smallImage} />
+                          {/if}
+                        </td>
+                        <td>
+                          <span style="font-weight: bold">{book.title}</span>
+                          <br />
+                          {#if book.authors.length}<span style="font-style: italic">{book.authors.join(', ')}</span> <br />{/if}
+                          <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
+                            <i class="fab fa-amazon" />
+                          </a>
+                        </td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </Stack>
+            </div>
+          {/if}
+        </div>
+      </FlexRow>
+    </td>
+  </tr>
+{/if}
