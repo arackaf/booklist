@@ -2,11 +2,11 @@
   import { mutation } from "micro-graphql-svelte";
   import { MutationOf, Mutations } from "graphql-typings";
 
-  import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
-
-  import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-
+  import updateBookTags from "graphQL/books/updateBookTags.graphql";
+  
+  import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
+  import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  
   import Modal from "app/components/ui/Modal.svelte";
   import StandardModalFooter from "app/components/ui/StandardModalFooter.svelte";
   import Button from "app/components/buttons/Button.svelte";
@@ -30,60 +30,60 @@
     onDone: any;
   }
 
-  let addingSubjects = [];
-  let removingSubjects = [];
+  let addingTags = [];
+  let removingTags = [];
 
-  const resetSubjects = () => {
-    addingSubjects = [];
-    removingSubjects = [];
+  const resetTags = () => {
+    addingTags = [];
+    removingTags = [];
   };
 
-  const { mutationState } = mutation<MutationOf<Mutations["updateBooks"]>>(updateBookSubjects);
+  const { mutationState } = mutation<MutationOf<Mutations["updateBooks"]>>(updateBookTags);
   $: ({ runMutation, running } = $mutationState);
 
   const save = () => {
-    let args = { books: modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };
+    let args = { books: modifyingBooks.map(b => b._id), add: addingTags, remove: removingTags };
     return Promise.resolve(runMutation(args)).then(() => {
       onHide();
     });
   };
-  const addingSubjectSet = (adding, { _id }) => (addingSubjects = adding ? addingSubjects.concat(_id) : addingSubjects.filter(x => x != _id));
-  const subjectSelectedToAdd = addingSubjectSet.bind(null, true);
+  const addingTagSet = (adding, { _id }) => (addingTags = adding ? addingTags.concat(_id) : addingTags.filter(x => x != _id));
+  const tagSelectedToAdd = addingTagSet.bind(null, true);
 
-  const removingSubjectSet = (adding, { _id }) => (removingSubjects = adding ? removingSubjects.concat(_id) : removingSubjects.filter(x => x != _id));
-  const subjectSelectedToRemove = removingSubjectSet.bind(null, true);
+  const removingTagSet = (adding, { _id }) => (removingTags = adding ? removingTags.concat(_id) : removingTags.filter(x => x != _id));
+  const tagSelectedToRemove = removingTagSet.bind(null, true);
 
-  const dontAddSubject = addingSubjectSet.bind(null, false);
-  const dontRemoveSubject = removingSubjectSet.bind(null, false);
+  const dontAddTag = addingTagSet.bind(null, false);
+  const dontRemoveTag = removingTagSet.bind(null, false);
 
   let closeModal;
 </script>
 
-<Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" deferStateChangeOnClose={true} standardFooter={false}>
-  <Tabs defaultTab="subjects">
+<Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" deferStateChangeOnClose={true} standardFooter={false}>
+  <Tabs defaultTab="tags">
     <TabHeaders>
-      <TabHeader tabName="subjects"><a>Choose subjects</a></TabHeader>
+      <TabHeader tabName="tags"><a>Choose tags</a></TabHeader>
       <TabHeader tabName="books"><a>For books</a></TabHeader>
     </TabHeaders>
     <TabContents>
-      <TabContent tabName="subjects">
+      <TabContent tabName="tags">
         <FlexRow>
           <div class="col-xs-3">
-            <SelectAvailableSubjects placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
+            <SelectAvailableTags placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
           </div>
           <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
-            <DisplaySelectedSubjects currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+            <DisplaySelectedTags currentlySelected={addingTags} onRemove={dontAddTag} />
           </div>
 
           <div class="col-xs-3">
-            <SelectAvailableSubjects placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
+            <SelectAvailableTags placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
           </div>
           <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
-            <DisplaySelectedSubjects currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+            <DisplaySelectedTags currentlySelected={removingTags} onRemove={dontRemoveTag} />
           </div>
 
           <div class="col-xs-12">
-            <Button onClick={resetSubjects} preset="default-xs">Reset subjects</Button>
+            <Button onClick={resetTags} preset="default-xs">Reset tags</Button>
           </div>
         </FlexRow>
       </TabContent>

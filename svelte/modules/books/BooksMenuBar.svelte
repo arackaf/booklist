@@ -23,7 +23,7 @@ import { getContext } from "svelte";
   $: ({ books = [], totalPages = null, resultsCount = null, reload, booksLoading, booksLoaded } = bookResultsPacket);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects } =  booksModuleContext;
+  const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } =  booksModuleContext;
 
   // const { actions, booksUiState } = useContext(BooksModuleContext);
   // const { setRead } = actions;
@@ -36,9 +36,9 @@ import { getContext } from "svelte";
   $: selectedBooksCount = selectedBooksIds.length;
 
   const editSubjectsForSelectedBooks = () => editBooksSubjects(books.filter(b => selectedBooks[b._id]));
-  //const editSubjectsForSelectedBooks = () => actions.openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
-  //const editTagsForSelectedBooks = () => actions.openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
+  const editTagsForSelectedBooks = () => editBooksTags(books.filter(b => selectedBooks[b._id]));
 
+  let quickSearchEl;
   $: {
     quickSearchEl && (quickSearchEl.value = $bookSearchState.search);
   }
@@ -54,17 +54,6 @@ import { getContext } from "svelte";
 
   $: ({ isPublic, online } = $appState);
 
-  // ----------
-
-  let editTagsForSelectedBooks = () => {};
-  let searchInput = "";
-
-  //let online = true;
-  let actions = {};
-  //let uiView = {};
-  //let isPublic = false;
-  //
-  let quickSearchEl;
 </script>
 
 <style>
@@ -75,6 +64,10 @@ import { getContext } from "svelte";
     padding-top: 2px;
     background-color: white;
     z-index: 1;
+  }
+
+  .searchInput {
+    width: 250px !important;
   }
 </style>
 
@@ -91,7 +84,7 @@ import { getContext } from "svelte";
             value={$bookSearchState.search}
             on:blur={resetSearch}
             name="search"
-            class={`form-control ${searchInput} tiny-orphan`}
+            class="form-control searchInput tiny-orphan"
             placeholder="Title search"
             on:keydown={quickSearchType}
           />
