@@ -1,5 +1,4 @@
 import React, { SFC, useState, Suspense, useContext, FunctionComponent } from "react";
-import LazyModal from "app/components/ui/LazyModal";
 
 import BookEditModal from "app/components/editBook/editModal";
 import DetailsView from "./detailView";
