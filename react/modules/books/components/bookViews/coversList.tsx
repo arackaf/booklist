@@ -1,8 +1,8 @@
 import React, { SFC, useState, Suspense, useContext, FunctionComponent } from "react";
 import LazyModal from "app/components/ui/LazyModal";
 
-const BookEditModal = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
-const DetailsView = LazyModal(() => import(/* webpackChunkName: "book-view-edit-modals" */ "./detailView"));
+import BookEditModal from "app/components/editBook/editModal";
+import DetailsView from "./detailView";
 
 import coversClasses from "./coversList.module.scss";
 import { CoverMedium } from "app/components/bookCoverComponent";
