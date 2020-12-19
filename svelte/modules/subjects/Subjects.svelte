@@ -1,6 +1,58 @@
-<section>
-  <h1>Subjects</h1>
-  <button>
-    Hi
-  </button>
+<script lang="ts">
+  import Button from "app/components/buttons/Button.svelte";
+  import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject.svelte";
+  import Modal from "app/components/ui/Modal.svelte";
+import { rootSubjects } from "app/state/subjectsState";
+  import SubjectList from "./SubjectList.svelte";
+
+  let editModalOpen = false;
+  let editingSubject = { name: "" };
+  const closeEditModal = () => (editModalOpen = false);
+  const editSubject = subject => {
+    editingSubject = subject;
+    editModalOpen = true;
+  };
+</script>
+
+<style>
+  .subjectsRoot {
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  .subjectsRoot :global(ul) {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .subjectsRoot :global(ul ul) {
+    margin-left: 20px;
+  }
+
+  .contentRoot {
+    padding-left: 30px;
+    border-left: 2px solid var(--primary-4);
+  }
+  @media (max-width: 1000px) {
+    .contentRoot {
+      margin-left: 10px;
+      padding-left: 10px;
+    }
+  }
+</style>
+
+<section class="flush-bottom subjectsRoot">
+  <div>
+    <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: '' })}>New Subject</Button>
+  </div>
+
+  <div class="contentRoot">
+    <SubjectList subjects={$rootSubjects} {editSubject} />
+  </div>
+
+  <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={'Edit Subject'} standardFooter={false}>
+    <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
+    <hr />
+    <Button onClick={closeEditModal}>Close</Button>
+  </Modal>
 </section>

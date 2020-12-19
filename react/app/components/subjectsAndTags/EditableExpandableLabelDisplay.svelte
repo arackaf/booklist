@@ -8,22 +8,18 @@
   export let childSubjects;
 
   export let extraStyles = "";
-  let className = "";
-  export { className as class };
-
-  let extraClasses = className || "";
+  export let extraClasses = "";
+  export { extraClasses as class };
 </script>
 
 <span
   style="background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {extraStyles}"
-  class={'label label-default label-editable-expandable noselect ' + extraClasses}
->
+  class="label label-default label-editable-expandable noselect {extraClasses}">
   {#if childSubjects?.length}
     <a
       class={cn('toggle', { expanded })}
-      on:click={() => setExpanded(!expanded)}
-      style="color: {item.textColor || 'white'}; border-right: {`1px solid ${item.textColor || 'white'}`}"
-    >
+      onClick={() => setExpanded(val => !val)}
+      style="color: {item.textColor || 'white'}; border-right: {`1px solid ${item.textColor || 'white'}`}">
       <i class="fad fa-chevron-right" />
     </a>
   {/if}
@@ -32,5 +28,5 @@
     <slot />
   {:else}{item.name}{/if}
 
-  <a on:click={onEdit} style="color: {item.textColor || 'white'}; cursor: pointer; margin-left: 5px;"> <i class="fal fa-pencil-alt" /> </a>
+  <a onClick={onEdit} style="color: {item.textColor || 'white'}; cursor: pointer; margin-left: 5px"> <i class="fal fa-pencil-alt" /></a>
 </span>
