@@ -12,8 +12,9 @@
   let contentEl;
   let initialized = false;
   let heightStore;
-  const SPRING_CONFIG = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
-  //const SPRING_CONFIG = { stiffness: 0.1, damping: 0.1, precision: 0.01 };
+  //const SPRING_CONFIG = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
+  // const SPRING_CONFIG = { stiffness: 0.1, damping: 0.1, precision: 0.01 };
+  const SPRING_CONFIG = { stiffness: 0.1, damping: 0.3, precision: 0.01 };
   const subjectSpring = spring({ height: 0, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG);
 
   onMount(() => {
@@ -28,7 +29,10 @@
     if (heightStore) {
       let height = $heightStore;
       debugger;
-      subjectSpring.set({ height: expanded ? height : 0, opacity: 1, x: 0, y: 0 }, { hard: !$subjectsSettings.initialized });
+      subjectSpring.set(
+        { height: expanded ? height : 0, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
+        { hard: !$subjectsSettings.initialized }
+      );
       initialized = true;
     }
   }
@@ -37,9 +41,9 @@
   let setExpanded = val => (expanded = val);
   export let editSubject;
   export let subject;
-  const height = "auto";
 
   $: childSubjects = $childMapSelector[subject._id];
+  $: ({ height, opacity, x, y } = $subjectSpring);
 </script>
 
 <style>
@@ -58,8 +62,8 @@
     <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
     </div>
-    <div style="height: {$subjectSpring.height}px">
-      <div bind:this={contentEl} data-style="opacity, transform">
+    <div style="height: {height}px; overflow: hidden">
+      <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
         <SubjectList subjects={childSubjects} {editSubject} />
       </div>
     </div>
