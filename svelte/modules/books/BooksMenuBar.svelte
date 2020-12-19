@@ -25,9 +25,6 @@ import { getContext } from "svelte";
   const booksModuleContext: any = getContext("books-module-context");
   const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } =  booksModuleContext;
 
-  // const { actions, booksUiState } = useContext(BooksModuleContext);
-  // const { setRead } = actions;
-
   export let uiView: ReturnType<typeof getBookSearchUiView>;
   const uiDispatch = $uiView.dispatch;
 
