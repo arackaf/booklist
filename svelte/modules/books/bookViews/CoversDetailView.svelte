@@ -1,5 +1,4 @@
 <script lang="ts">
-  //import { closeModal } from "svelte-helpers/Modal";
   import Modal from "app/components/ui/Modal.svelte";
   import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
   import { getContext, tick } from "svelte";

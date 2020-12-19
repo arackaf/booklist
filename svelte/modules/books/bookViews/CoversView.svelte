@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { closeModal } from "svelte-helpers/Modal";
   import { getContext } from "svelte";
 
   import CoverMedium from "app/components/bookCovers/CoverMedium.svelte";
@@ -11,12 +10,6 @@
 
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
-
-  const editPreviewingBook = () => {
-    let bookToEdit = bookPreviewing;
-    closeModal("covers-preview");
-    editBook(bookToEdit);
-  };
 
   const previewBook = book => {
     bookPreviewing = book;

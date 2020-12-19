@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AutoSuggest from "svelte-helpers/AutoSuggest";
+  import AutoSuggest from "svelte-helpers/AutoSuggest.svelte";
   import GenericLabelDisplayItem from "./GenericLabelDisplayItem.svelte";
 
   export let options;
