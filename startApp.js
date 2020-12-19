@@ -181,6 +181,8 @@ otherSvelteModules.forEach(module => {
 });
 svelteRouter.get("/activate/:code", activateCode);
 
+svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
+
 app.use(subdomain("svelte", svelteRouter));
 
 /* --------------- /SVELTE --------------- */
@@ -211,6 +213,8 @@ app.use(
 );
 
 // --------------- REACT ---------------
+
+app.get("/*.js", express.static(__dirname + "/react/dist/"));
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
@@ -286,6 +290,7 @@ app.post("/auth/resetPassword", async function (req, response) {
 
 app.get("/activate", browseToReact);
 app.get("/activate/:code", activateCode);
+
 async function activateCode(req, response) {
   let userDao = new UserDao();
   let code = req.params.code;
