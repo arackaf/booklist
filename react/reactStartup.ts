@@ -1,9 +1,10 @@
+import "react-spring";
+
 import "./static/fontawesome/css/font-awesome-booklist-build.css";
 import "@reach/dialog/styles.css";
 import "./css/site-styles.scss";
 
 import { renderUI } from "app/renderUI";
-
 import { history } from "util/urlHelpers";
 
 import "util/ajaxUtil";
