@@ -4,6 +4,7 @@
   import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
 
   import Modal from "app/components/ui/Modal.svelte";
+  import StandardModalFooter from "app/components/ui/StandardModalFooter.svelte";
   import Button from "app/components/buttons/Button.svelte";
   import ActionButton from "app/components/buttons/ActionButton.svelte";
   import Tabs from "app/components/layout/tabs/Tabs.svelte";
@@ -54,9 +55,11 @@
 
   const dontAddSubject = addingSubjectSet.bind(null, false);
   const dontRemoveSubject = removingSubjectSet.bind(null, false);
+
+  let closeModal;
 </script>
 
-<Modal {isOpen} onHide={onHide} headerCaption="Add / Remove Subjects:">
+<Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" deferStateChangeOnClose={true} standardFooter={false}>
   <Tabs defaultTab="subjects">
     <TabHeaders>
       <TabHeader tabName="subjects"><a>Choose subjects</a></TabHeader>
@@ -93,12 +96,11 @@
       </TabContent>
     </TabContents>
   </Tabs>
-  <hr />
-  <div class="standard-modal-footer">
-    <FlowItems>
+  <StandardModalFooter bind:closeModal>
+    <FlowItems pushLast={true}>
       <ActionButton style="min-width: 10ch" preset="primary" text="Save" runningText="Saving" finishedText="Saved" onClick={save} />
 
-      <Button style="min-width: 10ch" preset="" onClick={onHide}>Cancel</Button>
+      <Button style="min-width: 10ch" preset="" onClick={closeModal}>Cancel</Button>
     </FlowItems>
-  </div>
+  </StandardModalFooter>
 </Modal>

@@ -2,7 +2,7 @@
   import { getContext } from "svelte";
   import Button from "../buttons/Button.svelte";
 
-  let { closeModal } = getContext("svelte-helpers-modal");
+  export const closeModal = getContext("svelte-helpers-modal").closeModal;
 </script>
 
 <hr />
