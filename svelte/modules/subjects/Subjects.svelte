@@ -58,7 +58,7 @@
   </div>
 
   <div class="contentRoot">
-    <SubjectList subjects={$rootSubjects} {editSubject} />
+    <SubjectList root={true} subjects={$rootSubjects} {editSubject} />
   </div>
 
   <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={'Edit Subject'} standardFooter={false}>

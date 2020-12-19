@@ -8,9 +8,9 @@
   import { childMapSelector } from "app/state/subjectsState";
 
   const subjectsSettings: any = getContext("subjects-module");
+  const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
 
   let contentEl;
-  let initialized = false;
   let heightStore;
   //const SPRING_CONFIG = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
   // const SPRING_CONFIG = { stiffness: 0.1, damping: 0.1, precision: 0.01 };
@@ -27,14 +27,28 @@
 
   $: {
     if (heightStore) {
-      let height = $heightStore;
-      debugger;
-      subjectSpring.set(
-        { height: expanded ? height : 0, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-        { hard: !$subjectsSettings.initialized }
-      );
-      initialized = true;
+      heightChanged($heightStore);
     }
+  }
+
+  $: expandedChanged(expanded);
+
+  function heightChanged(height) {
+    setSpring(height, expanded);
+  }
+
+  function expandedChanged(expanded) {
+    $disabledAnimationInChain = true;
+    Promise.resolve(setSpring($heightStore, expanded, true)).then(() => {
+      console.log("DONE");
+    });
+  }
+
+  function setSpring(height, expanded, active = false) {
+    return subjectSpring.set(
+      { height: expanded ? height : 0, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
+      { hard: !$subjectsSettings.initialized || ($disabledAnimationInChain && !active) }
+    );
   }
 
   let expanded = true;
