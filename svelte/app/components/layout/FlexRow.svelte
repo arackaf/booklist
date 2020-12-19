@@ -1,7 +1,7 @@
 <script>
   import cn from "classnames";
 
-  let className;
+  let className = "";
   export { className as class };
 
   export let style = "";

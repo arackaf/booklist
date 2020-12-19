@@ -7,7 +7,7 @@
 
   export let isOpen;
   export let onHide;
-  export let headerCaption;
+  export let headerCaption = "";
   export let deferStateChangeOnClose = false;
   export let standardFooter = true;
   export let closeModal = null;

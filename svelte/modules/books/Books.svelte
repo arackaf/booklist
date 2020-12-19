@@ -44,6 +44,9 @@
   import useReducer from "util/useReducer";
 
   import GridView from "./bookViews/GridView.svelte";
+  import BasicView from "./bookViews/BasicView.svelte";
+  import CoversView from "./bookViews/CoversView.svelte";
+  
   import BookSearchModal from "./BookSearchModal.svelte";
   import BooksMenuBar from "./BooksMenuBar.svelte";
   import { searchBooks } from "./booksState";
@@ -53,7 +56,6 @@
   import EditBookModal from "app/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
-import BasicView from "./bookViews/BasicView.svelte";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
@@ -136,6 +138,8 @@ import BasicView from "./bookViews/BasicView.svelte";
             <GridView {books} {menuBarHeight} />
           {:else if $uiView.isBasicList}
             <BasicView {books} />
+          {:else if $uiView.isCoversList}
+            <CoversView {books} />
           {/if}
         {/if}
 

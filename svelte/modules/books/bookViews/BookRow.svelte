@@ -3,15 +3,13 @@
   import ActionButton from "app/components/buttons/ActionButton.svelte";
   import LabelDisplay from "app/components/subjectsAndTags/LabelDisplay.svelte";
 
-  import { appState } from "app/state/appState";
   import { IBookDisplay } from "../booksState";
 
   import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
-  import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
-  import FlexRow from "app/components/layout/FlexRow.svelte";
+  import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
   import Stack from "app/components/layout/Stack.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
-import BookRowDetails from "./BookRowDetails.svelte";
+  import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic;
   export let online;
@@ -76,9 +74,9 @@ import BookRowDetails from "./BookRowDetails.svelte";
           {#if detailsLoading}
             <a style={hoverOverride} target="_new" class="gridHoverFilter"> <i class="fa fa-fw fa-spin fa-spinner" /> </a>
           {:else if expanded}
-            <a style={hoverOverride} target="_new" on:click={() => expanded = false} class="gridHoverFilter"> <i class={`far fa-minus`} /> </a>
+            <a style={hoverOverride} target="_new" on:click={() => (expanded = false)} class="gridHoverFilter"> <i class={`far fa-minus`} /> </a>
           {:else}
-            <a style={hoverOverride} target="_new" on:click={() => expanded = true} class="gridHoverFilter"> <i class={`far fa-plus`} /> </a>
+            <a style={hoverOverride} target="_new" on:click={() => (expanded = true)} class="gridHoverFilter"> <i class={`far fa-plus`} /> </a>
           {/if}
         {/if}
         {#if book.isbn && online}
