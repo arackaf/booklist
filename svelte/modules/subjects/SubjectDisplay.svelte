@@ -13,10 +13,10 @@
   let blockingUpstream;
   let contentEl;
   let heightStore;
-  //const SPRING_CONFIG = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
-  // const SPRING_CONFIG = { stiffness: 0.1, damping: 0.1, precision: 0.01 };
-  const SPRING_CONFIG = { stiffness: 0.1, damping: 0.3, precision: 0.01 };
-  const subjectSpring = spring({ height: 0, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG);
+
+  const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
+  const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
+  const subjectSpring = spring({ height: 0, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
   onMount(() => {
     heightStore = syncHeight(contentEl);
@@ -29,10 +29,13 @@
       $disabledAnimationInChain = true;
     }
 
+    const newHeight = expanded ? height : 0;
+    const existingHeight = $subjectSpring.height;
     let animation = subjectSpring.set(
-      { height: expanded ? height : 0, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
+      { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
       { hard: !$subjectsSettings.initialized || ($disabledAnimationInChain && !blockingUpstream) }
     );
+    Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING)
     if (blockingUpstream) {
       Promise.resolve(animation).then(() => {
         $disabledAnimationInChain = false;
@@ -69,7 +72,7 @@
     <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
     </div>
-    <div style="height: {height}px; overflow: hidden">
+    <div style="height: {height}px;">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
         <SubjectList subjects={childSubjects} {editSubject} />
       </div>
