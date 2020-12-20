@@ -1,5 +1,5 @@
 <script>
-  import Loadable from "@arackaf-svelte/svelte-loadable";
+  import Loadable from "svelte-loadable";
   import ModuleLoading from "./ModuleLoading.svelte";
   import navigationState from "./navigationState";
   const { navStore, moduleLoaded, moduleUnLoaded } = navigationState;
