@@ -165,7 +165,17 @@ const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => (request, response) => {
   if (!request.user) {
     clearAllCookies(response);
-    if (moduleName != "" && moduleName != "home" && moduleName != "login" && moduleName != "activate") {
+  }
+
+  if (request.query.user && (moduleName == "" || moduleName == "home")) {
+    return response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
+  }
+  if (!request.user) {
+    if (moduleName == "" || moduleName == "home") {
+      return response.sendFile(path.join(__dirname + "/svelte/dist/public.html"));
+    }
+
+    if (moduleName != "login" && moduleName != "activate") {
       return response.redirect("/login");
     }
   }

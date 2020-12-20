@@ -28,7 +28,8 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
 module.exports = {
   entry: {
     main: "./routes/main/index.js",
-    login: "./routes/login/index.js"
+    login: "./routes/login/index.js",
+    public: "./routes/public/index.js"
   },
   output: {
     filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",
@@ -105,6 +106,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: "default.htm", chunks: ["main"], filename: "index.html" }),
     new HtmlWebpackPlugin({ template: "default.htm", chunks: ["login"], filename: "login.html" }),
+    new HtmlWebpackPlugin({ template: "default.htm", chunks: ["public"], filename: "public.html" }),
 
     new MiniCssExtractPlugin({ filename: isProd ? "[name]-[contenthash].css" : "[name].css" }),
     // new GenerateSW({
