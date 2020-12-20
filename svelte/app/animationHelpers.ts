@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store";
 
 export default function syncHeight(el) {
-  const store = writable(el.offsetHeight, (set) => {
+  return writable(el.offsetHeight, (set) => {
     if (!el) {
       return;
     }
@@ -10,6 +10,4 @@ export default function syncHeight(el) {
     ro.observe(el);
     return () => ro.disconnect();
   });
-
-  return derived(store, $val => $val);
 }

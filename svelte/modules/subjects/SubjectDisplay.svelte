@@ -22,25 +22,16 @@
     heightStore = syncHeight(contentEl);
   });
 
-  $: heightChanged($heightStore);
-  $: expandedChanged(expanded);
+  $: setSpring($heightStore, expanded);
 
-  function heightChanged(height) {
-    setSpring(height, expanded);
-  }
-
-  function expandedChanged(expanded) {
-    setSpring($heightStore, expanded, true);
-  }
-
-  function setSpring(height, expanded, active = false) {
+  function setSpring(height, expanded) {
     if (blockingUpstream) {
       $disabledAnimationInChain = true;
     }
 
     let animation = subjectSpring.set(
       { height: expanded ? height : 0, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-      { hard: !$subjectsSettings.initialized || ($disabledAnimationInChain && !active) }
+      { hard: !$subjectsSettings.initialized || ($disabledAnimationInChain && !blockingUpstream) }
     );
     if (blockingUpstream) {
       Promise.resolve(animation).then(() => {
