@@ -24,7 +24,7 @@
   $: isLoggedIn = $appState.isLoggedIn;
   $: isPublic = $appState.isPublic;
 
-  let isHome = currentModule == "home";
+  $: isHome = currentModule == "home";
 </script>
 
 <style>
