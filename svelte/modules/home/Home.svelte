@@ -20,8 +20,10 @@
               <h1>VIS</h1>
             </TabContent>
 
-            <TabContent tabName="rec">
-              <h1>REC</h1>
+            <TabContent let:isActive tabName="rec">
+              {#if isActive}
+                <h1>REC {isActive}</h1>
+              {/if}
             </TabContent>
           </TabContents>
         </Tabs>
