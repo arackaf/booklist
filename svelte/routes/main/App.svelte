@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
   import ModuleRoute from "app/components/navigation/ModuleRoute.svelte";
+
+  import navigationState from "app/components/navigation/navigationState";
+  const { navStore, moduleLoaded } = navigationState;
 
   import { history } from "util/urlHelpers";
   import AppUI from "../AppUI.svelte";
@@ -12,7 +15,7 @@
   });
 
   const booksPreload = () => {
-    return new Promise(res => setTimeout(res, 0))
+    return new Promise(res => setTimeout(res, 2000))
   };
 </script>
 

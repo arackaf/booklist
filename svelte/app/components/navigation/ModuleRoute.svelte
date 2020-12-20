@@ -2,7 +2,7 @@
   import Loadable from "@arackaf-svelte/svelte-loadable";
   import ModuleLoading from "./ModuleLoading.svelte";
   import navigationState from "./navigationState";
-  const { navStore, moduleLoaded } = navigationState;
+  const { navStore, moduleLoaded, moduleUnLoaded } = navigationState;
 
   export let moduleName;
 
@@ -11,16 +11,23 @@
 
   export let preload = () => void 0;
 
-  $: active = $navStore.browsedModule == moduleName || $navStore.moduleLoaded == moduleName;
+  $: active =
+    ($navStore.browsedModule == moduleName || $navStore.lastModuleLoaded == moduleName) &&
+    !($navStore.browsedModule != moduleName && $navStore.modulesLoaded[$navStore.browsedModule]);
+
+  $: {
+    if ($navStore.browsedModule == moduleName && $navStore.modulesLoaded[moduleName]) {
+      moduleLoaded(moduleName);
+    }
+  }
 
   const loader = () => Promise.all([componentLoaderFn(), preload()]).then(([Comp]) => Comp);
 </script>
 
 {#if active}
-  <Loadable unloader={true} on:load={() => moduleLoaded(moduleName)} {loader}>
+  <Loadable unloader={() => moduleUnLoaded(moduleName)} on:load={() => moduleLoaded(moduleName)} {loader}>
     <div style="display: contents;" slot="loading">
       <ModuleLoading />
     </div>
   </Loadable>
 {/if}
-

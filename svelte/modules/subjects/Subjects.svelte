@@ -1,7 +1,7 @@
 <script lang="ts">
   import { setContext } from "svelte";
   import { fade } from "svelte/transition";
-  import { quadIn } from "svelte/easing";
+  import { quadIn, quadOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import Button from "app/components/buttons/Button.svelte";
   import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject.svelte";
@@ -17,11 +17,15 @@
     editModalOpen = true;
   };
 
-  let subjectsSettings = writable({ initialized: false });
+  let subjectsSettings = writable({ initialized: false, exiting: false });
   setContext("subjects-module", subjectsSettings);
 
-  function onLoaded(){
+  function onLoaded() {
     $subjectsSettings.initialized = true;
+  }
+
+  function outStart() {
+    subjectsSettings.update(settings => ({ ...settings, exiting: true }));
   }
 </script>
 
@@ -52,7 +56,13 @@
   }
 </style>
 
-<section in:fade={{ duration: 200, easing: quadIn }} on:introend={onLoaded} class="flush-bottom subjectsRoot">
+<section
+  on:outrostart={outStart}
+  transition:fade={{ duration: 2000 }}
+
+  on:introend={onLoaded}
+  class="flush-bottom subjectsRoot"
+>
   <div>
     <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: '' })}>New Subject</Button>
   </div>

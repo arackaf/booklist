@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getContext, onMount } from "svelte";
   import { spring } from "svelte/motion";
+  import { fade } from "svelte/transition";
   import syncHeight from "app/animationHelpers";
   import EditableExpandableLabelDisplay from "app/components/subjectsAndTags/EditableLabelDisplay.svelte";
 
@@ -35,7 +36,7 @@
       { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
       { hard: !$subjectsSettings.initialized || ($disabledAnimationInChain && !blockingUpstream) }
     );
-    Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING)
+    Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
     if (blockingUpstream) {
       Promise.resolve(animation).then(() => {
         $disabledAnimationInChain = false;
@@ -54,6 +55,8 @@
 
   $: childSubjects = $childMapSelector[subject._id];
   $: ({ height, opacity, x, y } = $subjectSpring);
+
+  //out:fade={{ duration: $subjectsSettings.exiting ? 3000 : 3000 }}
 </script>
 
 <style>
@@ -71,6 +74,7 @@
   <div>
     <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+      {$subjectsSettings.exiting}
     </div>
     <div style="height: {height}px;">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
