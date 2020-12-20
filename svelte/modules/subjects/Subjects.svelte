@@ -25,6 +25,7 @@
   }
 
   function outStart() {
+    console.log("OUTRO START");
     subjectsSettings.update(settings => ({ ...settings, exiting: true }));
   }
 </script>
@@ -57,9 +58,8 @@
 </style>
 
 <section
+  out:fade={{duration: 10}}
   on:outrostart={outStart}
-  transition:fade={{ duration: 2000 }}
-
   on:introend={onLoaded}
   class="flush-bottom subjectsRoot"
 >
