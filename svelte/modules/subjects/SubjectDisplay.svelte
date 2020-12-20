@@ -10,6 +10,7 @@
   const subjectsSettings: any = getContext("subjects-module");
   const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
 
+  let blockingUpstream;
   let contentEl;
   let heightStore;
   //const SPRING_CONFIG = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
@@ -19,18 +20,9 @@
 
   onMount(() => {
     heightStore = syncHeight(contentEl);
-    //updateAnimation(expanded, $heightStore, false);
-    // heightStore.subscribe(height => {
-    //   updateAnimation(expanded, height, false);
-    // });
   });
 
-  $: {
-    if (heightStore) {
-      heightChanged($heightStore);
-    }
-  }
-
+  $: heightChanged($heightStore);
   $: expandedChanged(expanded);
 
   function heightChanged(height) {
@@ -38,21 +30,31 @@
   }
 
   function expandedChanged(expanded) {
-    $disabledAnimationInChain = true;
-    Promise.resolve(setSpring($heightStore, expanded, true)).then(() => {
-      console.log("DONE");
-    });
+    setSpring($heightStore, expanded, true);
   }
 
   function setSpring(height, expanded, active = false) {
-    return subjectSpring.set(
+    if (blockingUpstream) {
+      $disabledAnimationInChain = true;
+    }
+
+    let animation = subjectSpring.set(
       { height: expanded ? height : 0, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
       { hard: !$subjectsSettings.initialized || ($disabledAnimationInChain && !active) }
     );
+    if (blockingUpstream) {
+      Promise.resolve(animation).then(() => {
+        $disabledAnimationInChain = false;
+        blockingUpstream = false;
+      });
+    }
   }
 
   let expanded = true;
-  let setExpanded = val => (expanded = val);
+  let setExpanded = val => {
+    blockingUpstream = true;
+    expanded = val;
+  };
   export let editSubject;
   export let subject;
 
