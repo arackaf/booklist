@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { tick } from "svelte";
+
   import GraphSvg from "./GraphSvg.svelte";
   import RemoveSvg from "./RemoveSvg.svelte";
 
@@ -55,7 +57,9 @@
       removeSvgStart = textBBox.width + 30;
     }
 
-    isShowing && contentEl && (tooltipContentsBox = contentEl.getBBox());
+    if (isShowing && contentEl) {
+      tick().then(() => (tooltipContentsBox = contentEl.getBBox()));
+    }
   }
 
   $: {

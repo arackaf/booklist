@@ -9,8 +9,8 @@
 
 <section>
   <div style="margin-left: auto; margin-right: auto; max-width: 1200px">
-    <div className="">
-      <div className="panel-body" style="position: relative">
+    <div>
+      <div class="panel-body" style="position: relative">
         <Tabs defaultTab="vis" localStorageName="home-tabs">
           <TabHeaders>
             <TabHeader tabName="vis"><a> <i class="far fa-chart-bar" /> View </a></TabHeader>

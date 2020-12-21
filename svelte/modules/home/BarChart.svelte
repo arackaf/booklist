@@ -103,11 +103,11 @@
   <span>Nothing {scaleX.bandwidth()}</span>
 {:else if !graphData.length}
   {#if chartIndex == 0}
-    <div className="alert alert-warning inline-flex" style="margin-bottom: 75px">
+    <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">
       It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
     </div>
   {:else}
-    <div use:scrollInitial className="alert alert-warning" style="margin: 0 auto 75px auto">
+    <div use:scrollInitial class="alert alert-warning" style="margin: 0 auto 75px auto">
       It looks like the child subjects under
       {header}
       currently have no books assigned
@@ -124,7 +124,7 @@
             {#each graphData.filter(d => excluding[d.groupId]) as d}
               <span style="margin-left: 10px">
                 {d.display}{' '}
-                <a style="color: black" onClick={() => restoreBar(d.groupId)}> <i className="far fa-redo" /> </a>
+                <a style="color: black" onClick={() => restoreBar(d.groupId)}> <i class="far fa-redo" /> </a>
               </span>
             {/each}
           </span>
