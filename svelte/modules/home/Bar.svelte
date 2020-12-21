@@ -15,5 +15,5 @@
 {#if data.entries.length == 1}
   <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} />
 {:else}
-  <MultiBar {data} {count} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} />
+  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} />
 {/if}

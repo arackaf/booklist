@@ -81,13 +81,6 @@ import RenderBarChart from "./RenderBarChart.svelte";
     .range([0, chartHeight]);
   $: scaleX = scaleBand().domain(displayValues).range([0, width]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
 
-  $: {
-    let XX = scaleX;
-    let XY = displayValues;
-    console.log(XX)
-    debugger;
-  }
-
   $: svgStyle = "display: block; margin-left: auto; margin-right: auto;";
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
