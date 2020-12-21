@@ -4,6 +4,7 @@
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
+  import BooksCharts from "./BooksCharts.svelte";
 </script>
 
 <section>
@@ -16,15 +17,13 @@
             <TabHeader tabName="rec"><a> <span>Discover books</span> </a></TabHeader>
           </TabHeaders>
           <TabContents>
-            <TabContent tabName="vis">
-              <h1>VIS</h1>
-            </TabContent>
-
-            <TabContent let:isActive tabName="rec">
+            <TabContent let:isActive tabName="vis">
               {#if isActive}
-                <h1>REC {isActive}</h1>
+                <BooksCharts />
               {/if}
             </TabContent>
+
+            <TabContent tabName="rec" />
           </TabContents>
         </Tabs>
       </div>

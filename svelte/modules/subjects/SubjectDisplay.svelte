@@ -2,9 +2,9 @@
   import { getContext, onMount } from "svelte";
   import { spring } from "svelte/motion";
   import { fade } from "svelte/transition";
-  
+
   import { appState } from "app/state/appState";
-  import syncHeight from "app/animationHelpers";
+  import { syncHeight } from "app/animationHelpers";
   import EditableExpandableLabelDisplay from "app/components/subjectsAndTags/EditableLabelDisplay.svelte";
 
   import SubjectList from "./SubjectList.svelte";
@@ -74,7 +74,11 @@
 
 <li style="padding-top: 0; padding-bottom: 0">
   <div>
-    <div on:outrostart={() => console.log("SUBJECT DISPLAY OUTRO START")} out:fade={{ duration: $appState.module == "subjects" ? 3000 : 0 }} class="padding-bottom-med subjectRow">
+    <div
+      on:outrostart={() => console.log('SUBJECT DISPLAY OUTRO START')}
+      out:fade={{ duration: $appState.module == 'subjects' ? 3000 : 0 }}
+      class="padding-bottom-med subjectRow"
+    >
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
       {$subjectsSettings.exiting}
     </div>
