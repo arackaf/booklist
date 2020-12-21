@@ -154,7 +154,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
 
   return (
     <div ref={elRef}>
-      <div style={{ ...width, height }}>
+      <div style={{ height }}>
         <div>
           <h4 style={{ display: "inline" }}>{header}</h4>
           {excludedCount ? (

@@ -9,9 +9,9 @@
   import { subjectsState } from "app/state/subjectsState";
   import { query } from "micro-graphql-svelte";
   import { stackGraphData } from "./stackGraphData";
+  import RenderBarChart from "./RenderBarChart.svelte";
   import SvgTooltip from "./SvgTooltip.svelte";
   import Axis from "./Axis.svelte";
-import RenderBarChart from "./RenderBarChart.svelte";
 
   export let drilldown;
   export let subjects;
@@ -115,7 +115,7 @@ import RenderBarChart from "./RenderBarChart.svelte";
   {/if}
 {:else}
   <div bind:this={el}>
-    <div style={{ ...width, height }}>
+    <div style="height: {height}px">
       <div>
         <h4 style="display: inline">{header}</h4>
         {#if excludedCount}
