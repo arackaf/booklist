@@ -1,4 +1,6 @@
 <script lang="ts">
+  import "./d3-styles.scss";
+
   import Tabs from "app/components/layout/tabs/Tabs.svelte";
   import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
