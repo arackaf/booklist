@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import { history } from "util/urlHelpers";
   import { appState } from "app/state/appState";
-  import cn from "classnames";
 
   export let href: string;
   export let style = "";

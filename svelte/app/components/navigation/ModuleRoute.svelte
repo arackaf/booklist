@@ -1,8 +1,7 @@
 <script>
   import Loadable from "svelte-loadable";
   import ModuleLoading from "./ModuleLoading.svelte";
-  import navigationState from "./navigationState";
-  const { navStore, moduleLoaded, moduleUnLoaded } = navigationState;
+  import { navStore, moduleLoaded, moduleUnLoaded } from "./navigationState";
 
   export let moduleName;
 
@@ -31,3 +30,4 @@
     </div>
   </Loadable>
 {/if}
+
