@@ -17,6 +17,6 @@
   //{...animatedValues}
 </script>
 
-<g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
+<g on:mouseover={() => hoverBar(data.groupId)} on:mouseout={() => unHoverBar(data.groupId)}>
   <rect {height} {width} {x} y={0} fill={color} />
 </g>

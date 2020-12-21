@@ -132,8 +132,8 @@
       </div>
       <svg style={svgStyle} width={totalSvgWidth} {height}>
         <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
-        <g {transform}>
-          {#each showingData.filter(d => !excluding[d.groupId]) as d, i}
+        <g data-x="x" {transform}>
+          {#each showingData as d, i}
             <SvgTooltip
               data={d}
               srcHeight={dataScale(d.count)}
@@ -143,7 +143,9 @@
               index={i}
               childSubjects={d.childSubjects}
               hovered={hoveredMap[d.groupId]}
-              {...{ offsetY, drilldown, chartIndex, removeBar }}
+              {drilldown}
+              {chartIndex}
+              {removeBar}
             />
           {/each}
         </g>
