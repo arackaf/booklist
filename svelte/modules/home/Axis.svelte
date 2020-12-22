@@ -1,5 +1,6 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
+  import Tick from "./Tick.svelte";
 
   //let { children, scale, graphWidth, data, scaleX, masterTransform, ...rest } = props;
 
@@ -11,14 +12,6 @@
   export let masterTransform;
   export let masterTransformX;
   export let masterTransformY;
-
-  const getTranslate = d => {
-    let x = scaleX(d.display);
-    let width = scaleX.bandwidth();
-    let translateX = x + width / 2;
-
-    return `translate(${translateX}, 0)`;
-  };
 
   // const axisTickTransitions = useTransition(data, {
   //   config: config.stiff,
@@ -35,8 +28,6 @@
   //   config: config.stiff
   // };
 
-  $: console.log("WIDTH", graphWidth)
-
   let axisSpring = spring({ width: graphWidth, masterTransformX, masterTransformY }, { stiffness: 0.1, damping: 0.4 });
   $: axisSpring.update(state => ({ ...state, width: graphWidth, masterTransformX, masterTransformY }));
 </script>
@@ -45,10 +36,7 @@
   <g font-size="10" {transform}>
     <path fill="none" stroke="black" d="M0.5,6 V0.5 H{$axisSpring.width + 0.5} V 6" />
     {#each data as d (d)}
-      <g style="opacity: 1" transform={getTranslate(d)}>
-        <line stroke="#000" y1="0" y2="6" x1="0" x2="0" />
-        <text fill="#000" style="text-anchor: end" transform="translate(0, 10) rotate(300)">{d.display}</text>
-      </g>
+      <Tick {scaleX} {d} />
     {/each}
   </g>
 </g>

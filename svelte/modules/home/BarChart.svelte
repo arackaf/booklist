@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { quadOut } from "svelte/easing";
   import { query } from "micro-graphql-svelte";
