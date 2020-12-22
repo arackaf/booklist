@@ -1,16 +1,38 @@
 <script lang="ts">
   import "./d3-styles.scss";
 
+  import { setContext } from "svelte";
+  import { derived, writable } from "svelte/store";
+  import { fade } from "svelte/transition";
+  import { quadOut } from "svelte/easing";
+
   import Tabs from "app/components/layout/tabs/Tabs.svelte";
   import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
   import BooksCharts from "./BooksCharts.svelte";
+
+  let moduleState = writable({ loaded: false, exiting: false });
+  setContext(
+    "module-context",
+    derived(moduleState, $state => ({ ...$state, active: !$state.exiting && $state.loaded }))
+  );
+  function loaded() {
+    moduleState.update(state => ({ ...state, loaded: true }));
+  }
+  function exiting() {
+    moduleState.update(state => ({ ...state, exiting: true }));
+  }
 </script>
 
 <section>
-  <div style="margin-left: auto; margin-right: auto; max-width: 1200px">
+  <div
+    transition:fade={{ duration: 200, easing: quadOut }}
+    on:introend={loaded}
+    on:outrostart={exiting}
+    style="margin-left: auto; margin-right: auto; max-width: 1200px"
+  >
     <div>
       <div class="panel-body" style="position: relative">
         <Tabs defaultTab="vis" localStorageName="home-tabs">

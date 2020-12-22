@@ -1,4 +1,9 @@
 <script lang="ts">
+  import { getContext } from "svelte";
+  import { fade } from "svelte/transition";
+  import { quadOut } from "svelte/easing";
+  import { query } from "micro-graphql-svelte";
+
   import scaleLinear from "d3-scale/src/linear";
   import scaleBand from "d3-scale/src/band";
   import max from "d3-array/src/max";
@@ -7,7 +12,6 @@
 
   import { appState } from "app/state/appState";
   import { subjectsState } from "app/state/subjectsState";
-  import { query } from "micro-graphql-svelte";
   import { stackGraphData } from "./stackGraphData";
   import RenderBarChart from "./RenderBarChart.svelte";
   import SvgTooltip from "./SvgTooltip.svelte";
@@ -97,6 +101,8 @@
   }
 
   $: transform = `scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`;
+
+  const moduleContext: any = getContext("module-context");
 </script>
 
 {#if !graphData || !scaleX.bandwidth()}
@@ -130,7 +136,7 @@
           </span>
         {/if}
       </div>
-      <svg style={svgStyle} width={totalSvgWidth} {height}>
+      <svg transition:fade={{ duration: $moduleContext.active ? 200 : 0, easing: quadOut }} style={svgStyle} width={totalSvgWidth} {height}>
         <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
         <g data-x="x" {transform}>
           {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}
