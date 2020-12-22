@@ -67,14 +67,7 @@
   const hoverBar = groupId => (hoveredMap = { ...hoveredMap, [groupId]: true });
   const unHoverBar = groupId => setTimeout(() => (hoveredMap = { ...hoveredMap, [groupId]: false }), 1);
 
-  $: {
-    if (showingData?.length) {
-      let x = showingData.length * 110 + 60;
-      if (width > x) {
-        width = x;
-      }
-    }
-  }
+  $: adjustedWidth = Math.min(width, showingData?.length * 110 + 60);
   //$: width = Math.min(width, showingData?.length * 110 + 60);
 
   $: dataValues = showingData?.map(({ count }) => count) ?? [];
@@ -84,15 +77,15 @@
   $: dataScale = scaleLinear()
     .domain([0, dataMax ?? []])
     .range([0, chartHeight]);
-  $: scaleX = scaleBand().domain(displayValues).range([0, width]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
+  $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
 
   $: svgStyle = "display: block; margin-left: auto; margin-right: auto;";
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   $: offsetY = margin.bottom - height;
 
-  $: totalSvgWidth = width;
-  $: delta = maxWidth - width;
+  $: totalSvgWidth = adjustedWidth;
+  $: delta = maxWidth - adjustedWidth;
   let extraOffsetX = 0;
   $: {
     if (totalSvgWidth < maxWidth) {
@@ -157,10 +150,12 @@
           {/each}
         </g>
         <Axis
+          masterTransformX={margin.left + extraOffsetX}
+          masterTransformY={-1 * margin.bottom}
           masterTransform={`translate(${margin.left + extraOffsetX}, ${-1 * margin.bottom})`}
           data={showingData}
           {scaleX}
-          graphWidth={width}
+          graphWidth={adjustedWidth}
           scale={scaleX}
           transform={`translate(0, ${height})`}
         />

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { spring } from "svelte/motion";
+
   //let { children, scale, graphWidth, data, scaleX, masterTransform, ...rest } = props;
 
   export let transform;
@@ -7,6 +9,8 @@
   export let graphWidth;
   export let scaleX;
   export let masterTransform;
+  export let masterTransformX;
+  export let masterTransformY;
 
   const getTranslate = d => {
     let x = scaleX(d.display);
@@ -30,12 +34,17 @@
   //   transform: transform, d: `M0.5,6 V0.5 H${props.graphWidth + 0.5} V 6`, masterTransform },
   //   config: config.stiff
   // };
+
+  $: console.log("WIDTH", graphWidth)
+
+  let axisSpring = spring({ width: graphWidth, masterTransformX, masterTransformY }, { stiffness: 0.1, damping: 0.4 });
+  $: axisSpring.update(state => ({ ...state, width: graphWidth, masterTransformX, masterTransformY }));
 </script>
 
-<g transform={masterTransform}>
+<g transform={`translate(${$axisSpring.masterTransformX}, ${$axisSpring.masterTransformY})`}>
   <g font-size="10" {transform}>
-    <path fill="none" stroke="black" d="M0.5,6 V0.5 H{graphWidth + 0.5} V 6" />
-    {#each data as d}
+    <path fill="none" stroke="black" d="M0.5,6 V0.5 H{$axisSpring.width + 0.5} V 6" />
+    {#each data as d (d)}
       <g style="opacity: 1" transform={getTranslate(d)}>
         <line stroke="#000" y1="0" y2="6" x1="0" x2="0" />
         <text fill="#000" style="text-anchor: end" transform="translate(0, 10) rotate(300)">{d.display}</text>
