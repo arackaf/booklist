@@ -1,8 +1,6 @@
 <script lang="ts">
   import "./d3-styles.scss";
 
-  import { setContext } from "svelte";
-  import { derived, writable } from "svelte/store";
   import { fade } from "svelte/transition";
   import { quadOut } from "svelte/easing";
 
@@ -12,18 +10,9 @@
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
   import BooksCharts from "./BooksCharts.svelte";
+  import { setupModuleState } from "app/state/moduleLoadingState";
 
-  let moduleState = writable({ loaded: false, exiting: false });
-  setContext(
-    "module-context",
-    derived(moduleState, $state => ({ ...$state, active: !$state.exiting && $state.loaded }))
-  );
-  function loaded() {
-    moduleState.update(state => ({ ...state, loaded: true }));
-  }
-  function exiting() {
-    moduleState.update(state => ({ ...state, exiting: true }));
-  }
+  const { loaded, exiting } = setupModuleState();
 </script>
 
 <section>

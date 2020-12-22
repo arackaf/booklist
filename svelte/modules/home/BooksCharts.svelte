@@ -27,7 +27,7 @@
 </script>
 
 <div bind:this={chartRootEl}>
-  {#each chartPackets as packet, i}
+  {#each chartPackets as packet, i (packet.header)}
     <BarChart drilldown={getDrilldownChart} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={$chartWidth} height={600} />
   {/each}
 </div>

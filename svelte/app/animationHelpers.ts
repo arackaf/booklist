@@ -1,7 +1,8 @@
-import { writable, derived } from "svelte/store";
+import { getContext } from "svelte";
+import { writable, derived, get } from "svelte/store";
 
 export function syncHeight(el) {
-  return writable(el.offsetHeight, (set) => {
+  return writable(el.offsetHeight, set => {
     if (!el) {
       return;
     }
@@ -13,7 +14,7 @@ export function syncHeight(el) {
 }
 
 export function syncWidth(el) {
-  return writable(el.offsetWidth, (set) => {
+  return writable(el.offsetWidth, set => {
     if (!el) {
       return;
     }
@@ -23,3 +24,10 @@ export function syncWidth(el) {
     return () => ro.disconnect();
   });
 }
+
+export const makeContentTransition = () => {
+  const moduleContext: any = getContext("module-context");
+  return obj => {
+    return { ...obj, duration: get<any>(moduleContext).active ? obj.duration : 0 };
+  };
+};

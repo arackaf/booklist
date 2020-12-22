@@ -11,6 +11,7 @@
   import barCharQuery from "graphQL/home/barChart.graphql";
 
   import { appState } from "app/state/appState";
+  import { makeContentTransition } from "app/animationHelpers";
   import { subjectsState } from "app/state/subjectsState";
   import { stackGraphData } from "./stackGraphData";
   import RenderBarChart from "./RenderBarChart.svelte";
@@ -102,7 +103,7 @@
 
   $: transform = `scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`;
 
-  const moduleContext: any = getContext("module-context");
+  const contentTransition = makeContentTransition();
 </script>
 
 {#if !graphData || !scaleX.bandwidth()}
@@ -136,7 +137,7 @@
           </span>
         {/if}
       </div>
-      <svg transition:fade={{ duration: $moduleContext.active ? 200 : 0, easing: quadOut }} style={svgStyle} width={totalSvgWidth} {height}>
+      <svg transition:fade={contentTransition({ duration: 200, easing: quadOut })} style={svgStyle} width={totalSvgWidth} {height}>
         <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
         <g data-x="x" {transform}>
           {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}
