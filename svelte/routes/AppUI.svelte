@@ -1,5 +1,6 @@
 <script>
-  import MainNavigation from "app/components/navigation/MainNavigation.svelte";
+  import Footer from "app/components/Footer.svelte";
+import MainNavigation from "app/components/navigation/MainNavigation.svelte";
 
   export let content = null;
 </script>
@@ -19,5 +20,6 @@
     <main>
       <slot />
     </main>
+    <Footer />
   </div>
 </div>
