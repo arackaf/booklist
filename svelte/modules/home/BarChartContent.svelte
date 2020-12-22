@@ -26,14 +26,13 @@
   export let chartIndex;
 
   let excluding: any = {};
-  $: showingDataRaw = graphData.filter(d => !excluding[d.groupId]);
-  let showingData: any[];
-  $: {
-    showingDataRaw?.forEach((data: any) => {
+
+  $: showingData = graphData
+    .filter(d => !excluding[d.groupId])
+    .map(data => {
       data.childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
+      return data;
     });
-    showingData = showingDataRaw as any;
-  }
 
   $: adjustedWidth = Math.min(width, showingData?.length * 110 + 60);
 
