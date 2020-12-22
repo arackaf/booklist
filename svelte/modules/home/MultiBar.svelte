@@ -1,4 +1,6 @@
 <script lang="ts">
+import { onMount } from "svelte";
+
   import { spring } from "svelte/motion";
 
   export let data;
@@ -12,10 +14,14 @@
   $: _colors = data.entries.map(e => e.color);
   let colors = [];
 
+  onMount(() => {
+    console.log("MOUNTED");
+  })
+
   $: {
     let heightUsed = 0;
     let count = _colors.length;
-    let height = $heightSpring.height;
+    let height = $barSpring.height;
     colors = _colors.map((color, i) => {
       let isLast = i + 1 == count;
       let sectionHeight = ~~(height / count);
@@ -24,19 +30,19 @@
       const heightToUse = heightUsed;
       heightUsed += barHeight;
 
-      return { x, y: heightToUse, height: barHeight, width, fill: color };
+      return { x, y: heightToUse, height: barHeight, fill: color };
     });
   }
 
-  let heightSpring = spring({ height: 0, x }, { stiffness: 0.1, damping: 0.4 });
+  let barSpring = spring({ height: 0, x, width }, { stiffness: 0.1, damping: 0.4 });
 
   $: {
-    heightSpring.update(state => ({ ...state, height, x }));
+    barSpring.update(state => ({ ...state, height, x, width }));
   }
 </script>
 
 <g on:mouseover={() => hoverBar(data.groupId)} on:mouseout={() => unHoverBar(data.groupId)}>
   {#each colors as c}
-    <rect x={$heightSpring.x} y={c.y} height={c.height} width={c.width} fill={c.fill} />
+    <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} width={$barSpring.width} fill={c.fill} />
   {/each}
 </g>

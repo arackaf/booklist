@@ -17,6 +17,7 @@
   import RenderBarChart from "./RenderBarChart.svelte";
   import SvgTooltip from "./SvgTooltip.svelte";
   import Axis from "./Axis.svelte";
+  import { spring } from "svelte/motion";
 
   export let drilldown;
   export let subjects;
@@ -82,7 +83,8 @@
   $: svgStyle = "display: block; margin-left: auto; margin-right: auto;";
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
-  $: offsetY = margin.bottom - height;
+  let offsetYInitial = margin.bottom - height;
+  $: offsetY = offsetYInitial;
 
   $: totalSvgWidth = adjustedWidth;
   $: delta = maxWidth - adjustedWidth;
@@ -94,7 +96,10 @@
     }
   }
 
-  $: transform = `scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`;
+  let graphTransformSpring = spring({ x: margin.left + extraOffsetX, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
+  $: graphTransformSpring.set({ x: margin.left + extraOffsetX, y: offsetY });
+
+  $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
   const contentTransition = makeContentTransition();
 </script>

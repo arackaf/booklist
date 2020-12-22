@@ -17,7 +17,7 @@
 </script>
 
 <g {transform}>
-  {#each showingData.filter(d => !excluding[d.groupId]) as d, i}
+  {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d)}
     <Bar
       data={d}
       count={showingData.length}
