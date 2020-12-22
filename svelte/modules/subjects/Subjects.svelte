@@ -25,7 +25,6 @@
   }
 
   function outStart() {
-    console.log("OUTRO START");
     subjectsSettings.update(settings => ({ ...settings, exiting: true }));
   }
 </script>

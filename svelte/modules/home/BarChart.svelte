@@ -124,7 +124,7 @@
             {#each graphData.filter(d => excluding[d.groupId]) as d}
               <span style="margin-left: 10px">
                 {d.display}{' '}
-                <a style="color: black" onClick={() => restoreBar(d.groupId)}> <i class="far fa-redo" /> </a>
+                <a style="color: black" on:click={() => restoreBar(d.groupId)}> <i class="far fa-redo" /> </a>
               </span>
             {/each}
           </span>
@@ -133,7 +133,7 @@
       <svg style={svgStyle} width={totalSvgWidth} {height}>
         <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
         <g data-x="x" {transform}>
-          {#each showingData as d, i}
+          {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}
             <SvgTooltip
               data={d}
               srcHeight={dataScale(d.count)}

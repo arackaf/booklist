@@ -20,9 +20,7 @@
   let tooltipHovered = false;
 
   $: isShowing = hovered || tooltipHovered;
-  $: {
-    console.log(isShowing);
-  }
+
   const OFFSET_LEFT = 10;
   const CONTENT_X_START = 5;
   const CONTAINER_PADDING = 5;
@@ -93,13 +91,13 @@
         {display}:
         {data.count}
       </text>
-      <g onClick={removeBar} class="svgPointer">
+      <g on:click={doRemoveBar} class="svgPointer">
         <rect x={CONTENT_X_START + removeSvgStart} y={-1 * textAnchorY - 5} width="20" height="20" fill="black" />
 
         <RemoveSvg x={CONTENT_X_START + removeSvgStart} y={-1 * textAnchorY - 5} width="20" />
       </g>
       {#if childSubjects.length}
-        <g onClick={() => drilldown(chartIndex, childSubjects, display)} class="svgPointer">
+        <g on:click={() => drilldown(chartIndex, childSubjects, display)} class="svgPointer">
           <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black" />
           <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
         </g>

@@ -75,7 +75,6 @@
 <li style="padding-top: 0; padding-bottom: 0">
   <div>
     <div
-      on:outrostart={() => console.log('SUBJECT DISPLAY OUTRO START')}
       out:fade={{ duration: $appState.module == 'subjects' ? 3000 : 0 }}
       class="padding-bottom-med subjectRow"
     >
