@@ -11,6 +11,7 @@
   import Axis from "./Axis.svelte";
   import RenderBarChart from "./RenderBarChart.svelte";
   import SvgTooltip from "./SvgTooltip.svelte";
+  import { onMount } from "svelte";
 
   const scrollInitial = el => {
     el && el.scrollIntoView({ behavior: "smooth" });
@@ -34,7 +35,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(width, showingData?.length * 110 + 60);
+  $: adjustedWidth = Math.min(width, showingData.length * 110 + 60);
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -44,8 +45,6 @@
     .domain([0, dataMax ?? []])
     .range([0, chartHeight]);
   $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
-
-  $: svgStyle = "display: block; margin-left: auto; margin-right: auto;";
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   let offsetYInitial = margin.bottom - height;
@@ -61,8 +60,10 @@
     }
   }
 
+  let mounted = false;
+
   let graphTransformSpring = spring({ x: margin.left + extraOffsetX, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
-  $: graphTransformSpring.set({ x: margin.left + extraOffsetX, y: offsetY });
+  $: graphTransformSpring.set({ x: margin.left + extraOffsetX, y: offsetY }, { hard: !mounted });
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
@@ -73,7 +74,19 @@
   const restoreBar = id => (excluding = { ...excluding, [id]: false });
   const hoverBar = groupId => (hoveredMap = { ...hoveredMap, [groupId]: true });
   const unHoverBar = groupId => setTimeout(() => (hoveredMap = { ...hoveredMap, [groupId]: false }), 1);
+
+  onMount(() => {
+    mounted = true;
+  });
 </script>
+
+<style>
+  svg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
 
 <div use:scrollInitial>
   <div style="height: {height}px">
@@ -91,7 +104,7 @@
         </span>
       {/if}
     </div>
-    <svg transition:fade={contentTransition({ duration: 200, easing: quadOut })} style={svgStyle} width={totalSvgWidth} {height}>
+    <svg transition:fade={contentTransition({ duration: 200, easing: quadOut })} width={totalSvgWidth} {height}>
       <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
       <g {transform}>
         {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}
