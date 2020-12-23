@@ -11,10 +11,11 @@
   export let deferStateChangeOnClose = false;
   export let standardFooter = true;
   export let closeModal = null;
+  export let onModalMount;
 
 </script>
 
-<Modal on:close={onHide} open={isOpen} {deferStateChangeOnClose} bind:closeModal>
+<Modal on:close={onHide} on:mount={() => onModalMount?.()} open={isOpen} {deferStateChangeOnClose} bind:closeModal>
   <div>
     {#if headerCaption}
       <StandardModalHeader caption={headerCaption} />

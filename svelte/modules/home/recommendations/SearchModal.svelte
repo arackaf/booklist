@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Modal from "app/components/ui/Modal.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";
@@ -18,6 +19,9 @@
   export let queryState;
   export let searchDispatch;
 
+  //const focus = el => { setTimeout(() => el.focus()); } 
+  let titleEl;
+
   $: ({ active } = $searchState);
   let { ...initialSearchState } = $searchState;
   let searchChild = !!initialSearchState.searchChildSubjects;
@@ -26,7 +30,7 @@
   let subjects = initialSearchState.subjects ?? [];
   let tags = initialSearchState.tags ?? [];
 
-  $: ({ pageSize, page } = $queryState);
+  $: ({ pageSize, page } = $searchState);
 
   $: ({ loaded, loading, data, error, currentQuery } = $queryState);
 
@@ -60,7 +64,7 @@
   };
 </script>
 
-<Modal deferStateChangeOnClose={true} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal onModalMount={() => titleEl.focus()} deferStateChangeOnClose={true} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form
     on:submit={evt => {
       evt.preventDefault();
@@ -69,7 +73,10 @@
   >
     <FlexRow>
       <div class="col-xs-6">
-        <div class="form-group"><label>Title</label> <input bind:value={title} placeholder="Search title" class="form-control" /></div>
+        <div class="form-group">
+          <label>Title</label>
+          <input bind:this={titleEl} placeholder="Search title" class="form-control" />
+        </div>
       </div>
 
       <div class="col-xs-6">
