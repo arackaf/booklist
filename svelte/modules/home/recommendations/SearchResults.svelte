@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
+  import { quadOut } from "svelte/easing";
+
   import SearchResult from "./SearchResult.svelte";
 
   export let data;
@@ -9,7 +12,7 @@
   $: booksObj = data?.allBooks as { Books: any[] };
   $: books = data?.allBooks?.Books;
 
-  $: noResults =  active && (books != null && !books?.length);
+  $: noResults = active && books != null && !books?.length;
 </script>
 
 <div style="overflow-y: auto; overflow-x: hidden; max-height: 300px; margin-top: 5px; position: relative">
@@ -23,7 +26,7 @@
     {/if}
 
     {#if noResults}
-      <div style="align-self: start">
+      <div transition:fade={{ duration: 200, easing: quadOut }} style="align-self: start">
         <div class="alert alert-warning">No results</div>
       </div>
     {/if}

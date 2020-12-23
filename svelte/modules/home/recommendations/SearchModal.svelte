@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { springIn, springOut } from "svelte-helpers/spring-transitions";
   import Modal from "app/components/ui/Modal.svelte";
+  import ActionIconButton from "app/components/buttons/ActionIconButton.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
@@ -19,8 +20,14 @@
   export let queryState;
   export let searchDispatch;
 
-  //const focus = el => { setTimeout(() => el.focus()); } 
+  //const focus = el => { setTimeout(() => el.focus()); }
   let titleEl;
+
+  let ready = false;
+  const mounted = () => {
+    titleEl.focus();
+    ready = true;
+  };
 
   $: ({ active } = $searchState);
   let { ...initialSearchState } = $searchState;
@@ -62,9 +69,18 @@
       searchChildSubjects: searchChild
     });
   };
+
+  const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.4 };
+  const noResultsIn: any = () => {
+    const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
+    return {
+      duration: ready ? duration : 0,
+      css: t => `transform: translateX(${tickToValue(t)}px)`
+    };
+  };
 </script>
 
-<Modal onModalMount={() => titleEl.focus()} deferStateChangeOnClose={true} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal onModalMount={mounted} deferStateChangeOnClose={true} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form
     on:submit={evt => {
       evt.preventDefault();
@@ -75,7 +91,7 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label>Title</label>
-          <input bind:this={titleEl} placeholder="Search title" class="form-control" />
+          <input bind:this={titleEl} bind:value={title} placeholder="Search title" class="form-control" />
         </div>
       </div>
 
@@ -118,16 +134,15 @@
       </div>
 
       <div class="col-xs-12">
-        <FlexRow>
+        <FlexRow containerStyle="align-items: baseline">
           {#if loading}
             <button style="width: 6ch" disabled={true} class="btn btn-default"><i class="fa fa-fw fa-spin fa-spinner" /></button>
           {:else}
-            <ActionButton onClick={applyFilters} class="btn btn-default">Go</ActionButton>
-            <!-- <SubmitIconButton style={{ width: '6ch' }} key={1} class="btn btn-default"><i class="fal fa-search" /></SubmitIconButton> -->
+            <ActionIconButton onClick={applyFilters} style="width: 6ch" class="btn btn-default"><i class="fal fa-search" /></ActionIconButton>
           {/if}
 
           {#if noAvailableBooks}
-            <div style="font-size: 18px" class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
+            <div in:noResultsIn class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
           {/if}
         </FlexRow>
       </div>
