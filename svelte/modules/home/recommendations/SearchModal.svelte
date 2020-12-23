@@ -83,9 +83,7 @@ import { onMount } from "svelte";
   const noResultsOut: any = () => {
     return {
       duration: ready ? 100 : 0,
-      css: t => {
-        return `transform: translateX(${(1 - t) * 30}px); opacity: ${t}`;
-      }
+      css: t => `transform: translateX(${(1 - t) * 30}px); opacity: ${t}`
     };
   };
 </script>
