@@ -1,11 +1,11 @@
-<script>
-  import Loadable from "svelte-loadable";
+<script lang="ts">
+  import Loadable from "svelte-loadable/Loadable.svelte";
   import ModuleLoading from "./ModuleLoading.svelte";
   import { navStore, moduleLoaded, moduleUnLoaded } from "./navigationState";
 
   export let moduleName;
 
-  let componentLoaderFn;
+  let componentLoaderFn : any;
   export { componentLoaderFn as loader };
 
   export let preload = () => void 0;
@@ -21,10 +21,11 @@
   }
 
   const loader = () => Promise.all([componentLoaderFn(), preload()]).then(([Comp]) => Comp);
+  const unloader: any = () => moduleUnLoaded(moduleName);
 </script>
 
 {#if active}
-  <Loadable unloader={() => moduleUnLoaded(moduleName)} on:load={() => moduleLoaded(moduleName)} {loader}>
+  <Loadable {unloader} on:load={() => moduleLoaded(moduleName)} {loader}>
     <div style="display: contents;" slot="loading">
       <ModuleLoading />
     </div>

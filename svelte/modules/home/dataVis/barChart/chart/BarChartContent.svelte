@@ -8,9 +8,9 @@
   import max from "d3-array/src/max";
 
   import { makeContentTransition } from "app/animationHelpers";
-  import Axis from "./Axis.svelte";
+  import Axis from "../axis/Axis.svelte";
   import RenderBarChart from "./RenderBarChart.svelte";
-  import SvgTooltip from "./SvgTooltip.svelte";
+  import SvgTooltip from "../SvgTooltip.svelte";
   import { onMount } from "svelte";
 
   const scrollInitial = el => {

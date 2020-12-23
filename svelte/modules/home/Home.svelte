@@ -9,7 +9,7 @@
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
-  import BooksCharts from "./BooksCharts.svelte";
+  import BooksCharts from "./dataVis/barChart/chart/BooksCharts.svelte";
   import { setupModuleState } from "app/state/moduleLoadingState";
 
   const { loaded, exiting } = setupModuleState();

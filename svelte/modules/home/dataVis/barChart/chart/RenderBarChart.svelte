@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Bar from "./Bar.svelte";
+  import Bar from "../bars/Bar.svelte";
 
   export let showingData: any[];
   export let excluding;

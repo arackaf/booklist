@@ -9,7 +9,7 @@
   import { appState } from "app/state/appState";
 
   import { subjectsState } from "app/state/subjectsState";
-  import { stackGraphData } from "./stackGraphData";
+  import { stackGraphData } from "../../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
 
   export let drilldown;

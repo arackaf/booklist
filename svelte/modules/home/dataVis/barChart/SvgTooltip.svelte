@@ -1,8 +1,8 @@
 <script lang="ts">
   import { tick } from "svelte";
 
-  import GraphSvg from "./GraphSvg.svelte";
-  import RemoveSvg from "./RemoveSvg.svelte";
+  import GraphSvg from "../svgIcons/GraphSvg.svelte";
+  import RemoveSvg from "../svgIcons/RemoveSvg.svelte";
 
   export let data;
   export let srcHeight;
