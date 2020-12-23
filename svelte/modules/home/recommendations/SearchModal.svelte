@@ -18,7 +18,8 @@
   export let queryState;
   export let searchDispatch;
 
-  let { active, ...initialSearchState } = $searchState;
+  $: ({ active } = $searchState);
+  let { ...initialSearchState } = $searchState;
   let searchChild = !!initialSearchState.searchChildSubjects;
   let isRead = initialSearchState.isRead === true ? "1" : initialSearchState.isRead === false ? "0" : "null";
   let title = initialSearchState.title;
