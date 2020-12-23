@@ -47,13 +47,6 @@
   }
 
   let titleEl;
-
-  let ready = false;
-  const mounted = () => {
-    titleEl.focus();
-    ready = true;
-  };
-
   let searchChild = false;
   let isRead = "null";
   let title = "";
@@ -95,19 +88,19 @@
   const noResultsIn: any = () => {
     const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
     return {
-      duration: ready ? duration : 0,
+      duration,
       css: t => `transform: translateX(${tickToValue(t)}px); opacity: ${quintOut(t)}`
     };
   };
   const noResultsOut: any = () => {
     return {
-      duration: ready ? 100 : 0,
+      duration: 100,
       css: t => `transform: translateX(${(1 - t) * 30}px); opacity: ${t}`
     };
   };
 </script>
 
-<Modal onModalMount={mounted} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form
     on:submit={evt => {
       evt.preventDefault();
