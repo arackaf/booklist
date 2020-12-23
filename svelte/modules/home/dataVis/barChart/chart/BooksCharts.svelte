@@ -8,9 +8,11 @@
   const MAX_CHART_WIDTH = 1100;
   let chartRootEl;
   let chartWidth;
+  let ready = false;
 
   onMount(() => {
     chartWidth = syncWidth(chartRootEl);
+    ready = true;
   });
 
   $: ({ subjects, subjectsLoaded } = $stackedSubjects);
@@ -27,7 +29,9 @@
 </script>
 
 <div bind:this={chartRootEl}>
-  {#each chartPackets as packet, i (packet.header)}
-    <BarChart drilldown={getDrilldownChart} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={$chartWidth} height={600} />
-  {/each}
+  {#if ready}
+    {#each chartPackets as packet, i (packet.header)}
+      <BarChart drilldown={getDrilldownChart} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={$chartWidth} height={600} />
+    {/each}
+  {/if}
 </div>
