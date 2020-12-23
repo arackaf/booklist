@@ -11,6 +11,8 @@
   import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import ActionButton from "app/components/buttons/ActionButton.svelte";
   import SearchResults from "./SearchResults.svelte";
+import { quadIn, quadOut, quintIn, quintOut } from "svelte/easing";
+import { onMount } from "svelte";
 
   export let isOpen;
   export let onHide;
@@ -70,12 +72,20 @@
     });
   };
 
-  const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.4 };
+  const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
   const noResultsIn: any = () => {
     const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
     return {
       duration: ready ? duration : 0,
-      css: t => `transform: translateX(${tickToValue(t)}px)`
+      css: t => `transform: translateX(${tickToValue(t)}px); opacity: ${quintOut(t)}`
+    };
+  };
+  const noResultsOut: any = () => {
+    return {
+      duration: ready ? 100 : 0,
+      css: t => {
+        return `transform: translateX(${(1 - t) * 30}px); opacity: ${t}`;
+      }
     };
   };
 </script>
@@ -142,7 +152,7 @@
           {/if}
 
           {#if noAvailableBooks}
-            <div in:noResultsIn class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
+            <div in:noResultsIn out:noResultsOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
           {/if}
         </FlexRow>
       </div>
