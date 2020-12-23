@@ -79,14 +79,6 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
     return allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
   }, [selectedBooksSet, data]);
 
-  useLayoutEffect(() => {
-    if (props.isOpen) {
-      setSubjects(searchState.subjects || []);
-      setTags(searchState.tags || []);
-      searchDispatch(null);
-    }
-  }, [props.isOpen]);
-
   const selectSubject = subject => setSubjects(subjects.concat(subject._id));
   const selectTag = tag => setTags(tags.concat(tag._id));
   const removeSubject = subject => setSubjects(subjects.filter(_id => _id != subject._id));
