@@ -1,9 +1,9 @@
 <script context="module" lang="ts">
-  const initialState = {
+  const initialState: any = {
     selectedBooks: [],
     recommendationsLoading: false,
     recommendations: []
-  } as any;
+  };
   function reducer(state, [type, payload = null]) {
     switch (type) {
       case "selectBook":
@@ -17,18 +17,9 @@
     }
     return state;
   }
-
-  const PAGE_SIZE = 20;
-
-  const initialSearchState = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
-  const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialSearchState);
 </script>
 
 <script lang="ts">
-  import BooksQuery from "graphQL/home/searchBooks.graphql";
-  import { Queries, QueryOf } from "graphql-typings";
-  import { query } from "micro-graphql-svelte";
-
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Stack from "app/components/layout/Stack.svelte";
@@ -47,19 +38,6 @@
   $: ({ selectedBooks, recommendations, recommendationsLoading } = $recommendationState);
 
   let { publicUserId } = $appState;
-
-  const [reducerState, searchDispatch] = useReducer(searchStateReducer, initialState);
-  $: ({ active, ...searchState } = $reducerState);
-
-  $: variables = { ...searchState, publicUserId };
-  $: ({ page } = variables);
-
-  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery);
-  $: {
-    if (active) {
-      sync(variables);
-    }
-  }
 
   const closeModal = () => {
     searchModalOpen = false;
@@ -120,7 +98,5 @@
       </div>
     </div>
   </FlexRow>
-  {#if searchModalOpen}
-    <SearchModal searchState={reducerState} {queryState} {searchDispatch} isOpen={searchModalOpen} onHide={closeModal} {dispatch} {selectedBooksSet} />
-  {/if}
+  <SearchModal isOpen={searchModalOpen} onHide={closeModal} {dispatch} {selectedBooksSet} />
 </div>

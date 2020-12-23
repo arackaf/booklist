@@ -1,5 +1,16 @@
+<script context="module" lang="ts">
+  const PAGE_SIZE = 20;
+
+  const initialReducerState: any = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
+  const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialReducerState);
+</script>
+
 <script lang="ts">
-  import { springIn, springOut } from "svelte-helpers/spring-transitions";
+  import { quadIn, quadOut, quintIn, quintOut } from "svelte/easing";
+  import { springIn } from "svelte-helpers/spring-transitions";
+
+  import BooksQuery from "graphQL/home/searchBooks.graphql";
+
   import Modal from "app/components/ui/Modal.svelte";
   import ActionIconButton from "app/components/buttons/ActionIconButton.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
@@ -9,20 +20,32 @@
   import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  import ActionButton from "app/components/buttons/ActionButton.svelte";
   import SearchResults from "./SearchResults.svelte";
-import { quadIn, quadOut, quintIn, quintOut } from "svelte/easing";
-import { onMount } from "svelte";
+  import useReducer from "util/useReducer";
+  import { query } from "micro-graphql-svelte";
+  import { Queries, QueryOf } from "graphql-typings";
+  import { appState } from "app/state/appState";
 
   export let isOpen;
   export let onHide;
   export let dispatch;
   export let selectedBooksSet;
-  export let searchState;
-  export let queryState;
-  export let searchDispatch;
 
-  //const focus = el => { setTimeout(() => el.focus()); }
+  const { publicUserId } = $appState;
+
+  const [reducerState, searchDispatch] = useReducer(searchStateReducer, initialReducerState);
+  $: ({ active, ...searchState } = $reducerState);
+
+  $: variables = { ...searchState, publicUserId };
+  $: ({ page } = variables);
+
+  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery);
+  $: {
+    if (active) {
+      sync(variables);
+    }
+  }
+
   let titleEl;
 
   let ready = false;
@@ -31,20 +54,16 @@ import { onMount } from "svelte";
     ready = true;
   };
 
-  $: ({ active } = $searchState);
-  let { ...initialSearchState } = $searchState;
-  let searchChild = !!initialSearchState.searchChildSubjects;
-  let isRead = initialSearchState.isRead === true ? "1" : initialSearchState.isRead === false ? "0" : "null";
-  let title = initialSearchState.title;
-  let subjects = initialSearchState.subjects ?? [];
-  let tags = initialSearchState.tags ?? [];
-
-  $: ({ pageSize, page } = $searchState);
+  let searchChild = false;
+  let isRead = "null";
+  let title = "";
+  let subjects = [];
+  let tags = [];
 
   $: ({ loaded, loading, data, error, currentQuery } = $queryState);
 
   $: resultCount = data?.allBooks?.Meta?.count ?? 0;
-  $: totalPages = Math.ceil(resultCount / pageSize);
+  $: totalPages = Math.ceil(resultCount / PAGE_SIZE);
 
   const pageUp = () => searchDispatch({ page: page + 1 });
   const pageDown = () => searchDispatch({ page: page - 1 });
@@ -88,7 +107,7 @@ import { onMount } from "svelte";
   };
 </script>
 
-<Modal onModalMount={mounted} deferStateChangeOnClose={true} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal onModalMount={mounted} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form
     on:submit={evt => {
       evt.preventDefault();
