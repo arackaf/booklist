@@ -9,8 +9,9 @@
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
-  import BooksCharts from "./dataVis/barChart/chart/BooksCharts.svelte";
+  import BooksCharts from "./dataVis/BooksCharts.svelte";
   import { setupModuleState } from "app/state/moduleLoadingState";
+import BookRecommendations from "./recommendations/BookRecommendations.svelte";
 
   const { loaded, exiting } = setupModuleState();
 </script>
@@ -36,7 +37,9 @@
               {/if}
             </TabContent>
 
-            <TabContent tabName="rec" />
+            <TabContent tabName="rec">
+              <BookRecommendations />
+            </TabContent>
           </TabContents>
         </Tabs>
       </div>

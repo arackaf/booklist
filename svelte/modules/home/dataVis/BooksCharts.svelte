@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import BarChart from "./BarChart.svelte";
+  import BarChart from "./barChart/chart/BarChart.svelte";
 
   import { syncWidth } from "app/animationHelpers";
   import { stackedSubjects } from "app/state/subjectsState";
