@@ -24,7 +24,7 @@
 
     {#if noResults}
       <div style="align-self: start">
-        <div className="alert alert-warning">No results</div>
+        <div class="alert alert-warning">No results</div>
       </div>
     {/if}
   </div>

@@ -1,18 +1,4 @@
-<script context="module" lang="ts">
-  const PAGE_SIZE = 20;
-
-  const initialState = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
-  const searchStateReducer = (_oldState, payload) => (payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialState);
-</script>
-
 <script lang="ts">
-  import { appState } from "app/state/appState";
-  import { query } from "micro-graphql-svelte";
-  import useReducer from "util/useReducer";
-
-  import BooksQuery from "graphQL/home/searchBooks.graphql";
-  import { Queries, QueryOf } from "graphql-typings";
-
   import Modal from "app/components/ui/Modal.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";
@@ -28,31 +14,23 @@
   export let onHide;
   export let dispatch;
   export let selectedBooksSet;
+  export let searchState;
+  export let queryState;
+  export let searchDispatch;
 
-  let { publicUserId } = $appState;
-
-  const [reducerState, searchDispatch] = useReducer(searchStateReducer, initialState);
-
-  let { active, ...initialSearchState } = $reducerState;
+  let { active, ...initialSearchState } = $searchState;
   let searchChild = !!initialSearchState.searchChildSubjects;
-  let isRead = initialSearchState.isRead;
+  let isRead = initialSearchState.isRead === true ? "1" : initialSearchState.isRead === false ? "0" : "null";
   let title = initialSearchState.title;
+  let subjects = initialSearchState.subjects ?? [];
+  let tags = initialSearchState.tags ?? [];
 
-  $: ({ active, ...searchState } = $reducerState);
+  $: ({ pageSize, page } = $queryState);
 
-  $: variables = { ...searchState, publicUserId };
-  $: ({ page } = variables);
-
-  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery);
-  $: {
-    if (active) {
-      sync(variables);
-    }
-  }
   $: ({ loaded, loading, data, error, currentQuery } = $queryState);
 
   $: resultCount = data?.allBooks?.Meta?.count ?? 0;
-  $: totalPages = Math.ceil(resultCount / PAGE_SIZE);
+  $: totalPages = Math.ceil(resultCount / pageSize);
 
   const pageUp = () => searchDispatch({ page: page + 1 });
   const pageDown = () => searchDispatch({ page: page - 1 });
@@ -61,9 +39,6 @@
 
   $: canPageUp = !loading && page < totalPages;
   $: canPageDown = !loading && page > 1;
-
-  let subjects = [];
-  let tags = [];
 
   $: allBooks = data?.allBooks?.Books;
   $: noAvailableBooks = allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
@@ -109,7 +84,7 @@
               <label for="isReadY">Yes</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" bind:group={isRead} value="1" name="isRead" id="isReadN" />
+              <input type="radio" bind:group={isRead} value="0" name="isRead" id="isReadN" />
               <label for="isReadN">No</label>
             </FlowItems>
           </FlowItems>
@@ -139,7 +114,7 @@
           {#if loading}
             <button style="width: 6ch" disabled={true} class="btn btn-default"><i class="fa fa-fw fa-spin fa-spinner" /></button>
           {:else}
-            <ActionButton class="btn btn-default">Go</ActionButton>
+            <ActionButton onClick={applyFilters} class="btn btn-default">Go</ActionButton>
             <!-- <SubmitIconButton style={{ width: '6ch' }} key={1} class="btn btn-default"><i class="fal fa-search" /></SubmitIconButton> -->
           {/if}
 
@@ -153,11 +128,11 @@
         <div>
           {#if resultCount}
             <FlowItems tightest={true} containerStyle="align-items: center; font-size: 14px">
-              <button onClick={pageOne} disabled={!canPageDown} class="btn btn-default"> <i class="fal fa-angle-double-left" /> </button>
-              <button onClick={pageDown} disabled={!canPageDown} class="btn btn-default"> <i class="fal fa-angle-left" /> </button>
+              <button on:click={pageOne} disabled={!canPageDown} class="btn btn-default"> <i class="fal fa-angle-double-left" /> </button>
+              <button on:click={pageDown} disabled={!canPageDown} class="btn btn-default"> <i class="fal fa-angle-left" /> </button>
               <span style="padding-left: 3px; padding-right: 3px"> {page} of {totalPages} </span>
-              <button onClick={pageUp} disabled={!canPageUp} class="btn btn-default"> <i class="fal fa-angle-right" /> </button>
-              <button onClick={pageLast} disabled={!canPageUp} class="btn btn-default"> <i class="fal fa-angle-double-right" /> </button>
+              <button on:click={pageUp} disabled={!canPageUp} class="btn btn-default"> <i class="fal fa-angle-right" /> </button>
+              <button on:click={pageLast} disabled={!canPageUp} class="btn btn-default"> <i class="fal fa-angle-double-right" /> </button>
             </FlowItems>
             <hr />
           {/if}
