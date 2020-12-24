@@ -2,38 +2,28 @@
   z-index: 2;
 }
 
-@media (max-width: 1000px) {
-  div[data-reach-dialog-content] {
-    width: 55vw;
-  }
+div[data-reach-dialog-content] {
+  width: auto;
+  max-width: 600px
 }
+
 @media (max-width: 800px) {
   div[data-reach-dialog-content] {
-    width: 60vw;
+    max-width: 75vw;
   }
 }
-@media (max-width: 650px) {
-  div[data-reach-dialog-content] {
-    width: 70vw;
-  }
-}
+
 @media (max-width: 600px) {
   div[data-reach-dialog-content] {
-    width: 80vw;
+    max-width: 90vw;
   }
 }
-@media (max-width: 550px) {
-  div[data-reach-dialog-content] {
-    width: 90vw;
-  }
-}
+
 @media (max-width: 500px) {
   div[data-reach-dialog-content] {
-    width: 95vw;
+    max-width: 95vw;
   }
 }
-
-
 
 [data-reach-dialog-content] {
   padding: 10px;

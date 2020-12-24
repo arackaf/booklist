@@ -28,7 +28,7 @@ export const ModalSizingContext = createContext(null);
 
 type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
 const Modal: FunctionComponent<ModalTypes> = props => {
-  let { isOpen, onHide, headerCaption, focusRef = null, style = { maxWidth: "600px" }, children } = props;
+  let { isOpen, onHide, headerCaption, focusRef = null, style = {}, children } = props;
 
   const modalTransition = useTransition(!!isOpen, {
     config: isOpen ? { ...config.stiff } : { duration: 150 },
