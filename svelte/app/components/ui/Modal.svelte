@@ -11,7 +11,7 @@
   export let deferStateChangeOnClose = false;
   export let standardFooter = true;
   export let closeModal = null;
-  export let onModalMount;
+  export let onModalMount = null;
 
 </script>
 
