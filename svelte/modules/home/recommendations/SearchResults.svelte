@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { quadOut } from "svelte/easing";
+  import { quadIn, quadOut, quintIn, quintOut } from "svelte/easing";
 
   import SearchResult from "./SearchResult.svelte";
 
@@ -13,16 +13,32 @@
   $: books = data?.allBooks?.Books;
 
   $: noResults = active && books != null && !books?.length;
+
+  const resultsIn: any = () => {
+    return {
+      duration: 250,
+      css: t => `opacity: ${quadOut(t)}`
+    };
+  };
+  const resultsOut: any = () => {
+    debugger;
+    return {
+      duration: 150,
+      css: t => `position: absolute; opacity: ${quintOut(t)}; transform: translateX(${quadOut(1 - t) * 90}%)`
+    };
+  };
 </script>
 
 <div style="overflow-y: auto; overflow-x: hidden; max-height: 300px; margin-top: 5px; position: relative">
   <div className="overlay-holder">
     {#if booksObj?.Books?.length}
-      <ul>
-        {#each booksObj.Books as book}
-          <SearchResult {book} selected={selectedBooksSet.has(book._id)} {dispatch} />
-        {/each}
-      </ul>
+      {#key booksObj}
+        <ul in:resultsIn out:resultsOut>
+          {#each booksObj.Books as book}
+            <SearchResult {book} selected={selectedBooksSet.has(book._id)} {dispatch} />
+          {/each}
+        </ul>
+      {/key}
     {/if}
 
     {#if noResults}
