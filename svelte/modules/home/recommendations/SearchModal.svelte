@@ -117,6 +117,8 @@
     display: flex;
     align-items: flex-start;
     justify-content: left;
+    /* fix transition 1px glitch */
+    backface-visibility: hidden;
   }
 </style>
 
