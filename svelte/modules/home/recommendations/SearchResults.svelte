@@ -21,7 +21,6 @@
     };
   };
   const resultsOut: any = () => {
-    debugger;
     return {
       duration: 150,
       css: t => `position: absolute; opacity: ${quintOut(t)}; transform: translateX(${quadOut(1 - t) * 90}%)`
@@ -34,8 +33,8 @@
     {#if booksObj?.Books?.length}
       {#key booksObj}
         <ul in:resultsIn out:resultsOut>
-          {#each booksObj.Books as book}
-            <SearchResult {book} selected={selectedBooksSet.has(book._id)} {dispatch} />
+          {#each booksObj.Books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
+            <SearchResult {book} {dispatch} />
           {/each}
         </ul>
       {/key}
