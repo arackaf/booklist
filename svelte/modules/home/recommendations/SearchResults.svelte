@@ -4,15 +4,9 @@
 
   import SearchResult from "./SearchResult.svelte";
 
-  export let data;
   export let dispatch;
   export let selectedBooksSet;
-  export let active;
-
-  $: booksObj = data?.allBooks as { Books: any[] };
-  $: books = data?.allBooks?.Books;
-
-  $: noResults = active && books != null && !books?.length;
+  export let booksObj: { Books: any[] };
 
   const resultsIn: any = () => {
     return {
@@ -38,12 +32,6 @@
           {/each}
         </ul>
       {/key}
-    {/if}
-
-    {#if noResults}
-      <div transition:fade={{ duration: 200, easing: quadOut }} style="align-self: start">
-        <div class="alert alert-warning">No results</div>
-      </div>
     {/if}
   </div>
 </div>

@@ -55,6 +55,11 @@
 
   $: ({ loaded, loading, data, error, currentQuery } = $queryState);
 
+  $: booksObj = data?.allBooks as { Books: any[] };
+  $: books = data?.allBooks?.Books;
+
+  $: noResults = active && books != null && !books?.length;
+
   $: resultCount = data?.allBooks?.Meta?.count ?? 0;
   $: totalPages = Math.ceil(resultCount / PAGE_SIZE);
 
@@ -85,17 +90,17 @@
   };
 
   const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
-  const noResultsIn: any = () => {
+  const resultsMessageIn: any = () => {
     const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
     return {
       duration,
-      css: t => `transform: translateX(${tickToValue(t)}px); opacity: ${quintOut(t)}`
+      css: t => `transform: translate3d(${tickToValue(t)}px, 0, 0); opacity: ${quintOut(t)}`
     };
   };
-  const noResultsOut: any = () => {
+  const resultsMessageOut: any = () => {
     return {
-      duration: 100,
-      css: t => `transform: translateX(${(1 - t) * 30}px); opacity: ${t}`
+      duration: 150,
+      css: t => `position: absolute; opacity: ${quadIn(t)}`
     };
   };
 </script>
@@ -154,16 +159,22 @@
       </div>
 
       <div class="col-xs-12">
-        <FlexRow containerStyle="align-items: baseline">
+        <FlexRow>
           {#if loading}
-            <button style="width: 6ch" disabled={true} class="btn btn-default"><i class="fa fa-fw fa-spin fa-spinner" /></button>
+            <button style="font-size: 14px;" disabled={true} class="btn btn-default"><i class="fa fa-fw fa-spin fa-spinner" /></button>
           {:else}
-            <ActionIconButton onClick={applyFilters} style="width: 6ch" class="btn btn-default"><i class="fal fa-search" /></ActionIconButton>
+            <ActionIconButton onClick={applyFilters} style="font-size: 14px;" class="btn btn-default"><i class="fal fa-fw fa-search" /></ActionIconButton>
           {/if}
 
-          {#if noAvailableBooks}
-            <div in:noResultsIn out:noResultsOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
-          {/if}
+          <div style="display: flex; position: relative; flex: 1; align-self: stretch">
+            {#if noAvailableBooks}
+              <div in:resultsMessageIn out:resultsMessageOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
+            {/if}
+
+            {#if noResults}
+              <div in:resultsMessageIn out:resultsMessageOut class="alert alert-warning alert-slimmer">No results</div>
+            {/if}
+          </div>
         </FlexRow>
       </div>
 
@@ -180,7 +191,7 @@
             <hr />
           {/if}
         </div>
-        <SearchResults {dispatch} {data} {selectedBooksSet} {active} />
+        <SearchResults {dispatch} {booksObj} {selectedBooksSet} />
       </div>
     </FlexRow>
   </form>
