@@ -114,9 +114,8 @@
   }
 
   .msg-holder > div {
-    display: flex;
-    align-items: flex-start;
-    justify-content: left;
+    /* prevent shift after in transition */
+    transform: translate3d(0, 0, 0);
   }
 </style>
 
