@@ -105,6 +105,21 @@
   };
 </script>
 
+<style>
+  .msg-holder {
+    display: flex;
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+  }
+
+  .msg-holder > div {
+    display: flex;
+    align-items: flex-start;
+    justify-content: left;
+  }
+</style>
+
 <Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form
     on:submit={evt => {
@@ -160,13 +175,11 @@
 
       <div class="col-xs-12">
         <FlexRow>
-          {#if loading}
-            <button style="font-size: 14px;" disabled={true} class="btn btn-default"><i class="fa fa-fw fa-spin fa-spinner" /></button>
-          {:else}
-            <ActionIconButton onClick={applyFilters} style="font-size: 14px;" class="btn btn-default"><i class="fal fa-fw fa-search" /></ActionIconButton>
-          {/if}
+          <ActionIconButton class="btn btn-default" onClick={applyFilters} disabled={loading}>
+            <i class:fa-spin={loading} class:fa-spinner={loading} class:fa-search={!loading} class="fal fa-fw" />
+          </ActionIconButton>
 
-          <div style="display: flex; position: relative; flex: 1; align-self: stretch">
+          <div class="msg-holder">
             {#if noAvailableBooks}
               <div in:resultsMessageIn out:resultsMessageOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
             {/if}
