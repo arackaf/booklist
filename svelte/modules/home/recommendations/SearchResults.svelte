@@ -22,8 +22,8 @@
   };
   const resultsOut: any = () => {
     return {
-      duration: 150,
-      css: t => `position: absolute; opacity: ${quintOut(t)}; transform: translateX(${quadOut(1 - t) * 90}%)`
+      duration: 200,
+      css: t => `position: absolute; opacity: ${quadIn(t)}; transform: translateX(${(1 - quadOut(t)) * 90}%)`
     };
   };
 </script>
