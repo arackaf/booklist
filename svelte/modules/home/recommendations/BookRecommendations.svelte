@@ -33,7 +33,7 @@
   import SearchModal from "./SearchModal.svelte";
 
   let searchModalOpen = false;
-  type T = { selectedBooks: any; recommendations: any[]; recommendationsLoading: any };
+  type T = { selectedBooks: any[]; recommendations: any[]; recommendationsLoading: any };
   let [recommendationState, dispatch] = useReducer<T>(reducer, initialState);
   $: ({ selectedBooks, recommendations, recommendationsLoading } = $recommendationState);
 
@@ -77,7 +77,7 @@
         </FlowItems>
 
         <div>
-          {#each selectedBooks as book}
+          {#each selectedBooks as book (book._id)}
             <DisplayBook {book} {dispatch} />
           {/each}
         </div>
