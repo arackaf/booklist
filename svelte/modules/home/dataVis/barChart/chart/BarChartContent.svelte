@@ -1,13 +1,10 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import { fade } from "svelte/transition";
-  import { quadOut } from "svelte/easing";
 
   import scaleLinear from "d3-scale/src/linear";
   import scaleBand from "d3-scale/src/band";
   import max from "d3-array/src/max";
 
-  import { makeContentTransition } from "app/animationHelpers";
   import Axis from "../axis/Axis.svelte";
   import RenderBarChart from "./RenderBarChart.svelte";
   import SvgTooltip from "../SvgTooltip.svelte";
@@ -67,8 +64,6 @@
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
-  const contentTransition = makeContentTransition();
-
   let hoveredMap = {};
   const removeBar = id => (excluding = { ...excluding, [id]: true });
   const restoreBar = id => (excluding = { ...excluding, [id]: false });
@@ -104,7 +99,7 @@
         </span>
       {/if}
     </div>
-    <svg transition:fade={contentTransition({ duration: 200, easing: quadOut })} width={totalSvgWidth} {height}>
+    <svg width={totalSvgWidth} {height}>
       <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
       <g {transform}>
         {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}

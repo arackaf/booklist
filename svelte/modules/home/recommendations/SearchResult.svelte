@@ -33,7 +33,7 @@
   const left = () => adding && setTimeout(() => modalContext.isAnimatingResizing.set(!--numberAnimating), 1);
 </script>
 
-<li on:outrostart={leaving} on:outroend={left} out:slideOut style="overflow: hidden">
+<li on:outrostart={leaving} on:outroend={left} out:slideOut|local style="overflow: hidden">
   <div>
     <Stack>
       <FlowItems>

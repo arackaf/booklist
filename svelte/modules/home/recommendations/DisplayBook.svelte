@@ -30,7 +30,7 @@
 </script>
 
 <div style="overflow: hidden">
-  <div bind:this={ref} in:slideIn out:slideOut>
+  <div bind:this={ref} in:slideIn|local out:slideOut|local>
     <FlowItems>
       <div><button on:click={() => dispatch(['deSelectBook', book])} style="cursor: pointer" class="btn btn-xs btn-danger"> Remove </button></div>
       <div style="min-width: 70px">

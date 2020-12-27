@@ -1,5 +1,6 @@
 import { getContext } from "svelte";
 import { writable, derived, get } from "svelte/store";
+import { appState } from "./state/appState";
 
 export function syncHeight(el) {
   return writable(el.offsetHeight, set => {
@@ -24,10 +25,3 @@ export function syncWidth(el) {
     return () => ro.disconnect();
   });
 }
-
-export const makeContentTransition = () => {
-  const moduleContext: any = getContext("module-context");
-  return obj => {
-    return { ...obj, duration: get<any>(moduleContext).active ? obj.duration : 0 };
-  };
-};

@@ -26,7 +26,7 @@
   <div className="overlay-holder">
     {#if booksObj?.Books?.length}
       {#key booksObj}
-        <ul in:resultsIn out:resultsOut>
+        <ul in:resultsIn|local out:resultsOut|local>
           {#each booksObj.Books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
             <SearchResult {book} {dispatch} />
           {/each}

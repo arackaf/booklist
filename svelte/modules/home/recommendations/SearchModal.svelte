@@ -183,11 +183,11 @@
 
           <div class="msg-holder">
             {#if noAvailableBooks}
-              <div in:resultsMessageIn out:resultsMessageOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
+              <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
             {/if}
 
             {#if noResults}
-              <div in:resultsMessageIn out:resultsMessageOut class="alert alert-warning alert-slimmer">No results</div>
+              <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-warning alert-slimmer">No results</div>
             {/if}
           </div>
         </FlexRow>
