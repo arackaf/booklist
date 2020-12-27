@@ -48,7 +48,7 @@
     "rollup-plugin-uglify": "^6.0.0",
     "sass-loader": "^7.1.0",
     "shallow-equal": "^1.0.0",
-    "svelte": "^3.29.7",
+    "svelte": "^3.31.0",
     "svelte-check": "^1.1.18",
     "svelte-file-dropzone": "0.0.15",
     "svelte-helpers": "^0.2.0-beta10",
