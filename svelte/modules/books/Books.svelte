@@ -46,7 +46,7 @@
   import GridView from "./bookViews/GridView.svelte";
   import BasicView from "./bookViews/BasicView.svelte";
   import CoversView from "./bookViews/CoversView.svelte";
-  
+
   import BookSearchModal from "./BookSearchModal.svelte";
   import BooksMenuBar from "./BooksMenuBar.svelte";
   import { searchBooks } from "./booksState";
@@ -56,6 +56,7 @@
   import EditBookModal from "app/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
+  import ModuleLoading from "app/components/navigation/ModuleLoading.svelte";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
@@ -127,6 +128,10 @@
     color: var(--neutral-light-text);
   }
 </style>
+
+{#if booksLoading}
+  <ModuleLoading />
+{/if}
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
