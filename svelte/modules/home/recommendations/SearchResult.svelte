@@ -6,12 +6,16 @@
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Stack from "app/components/layout/Stack.svelte";
 
+  let numberAnimating = 0;
+  const modalContext: any = getContext("svelte-helpers-modal");
+
   export let book;
   export let dispatch;
   let adding = false;
 
   const selectBook = () => {
     adding = true;
+    ++numberAnimating;
     dispatch(["selectBook", book]);
   };
 
@@ -22,9 +26,12 @@
       css: t => `opacity: ${quadIn(t)}; height: ${t * height}px; transform: translateX(${quadIn(1 - t) * 90}%)`
     };
   };
+
+  const leaving = () => modalContext.isAnimatingResizing.set(!numberAnimating);
+  const left = () => adding && setTimeout(() => modalContext.isAnimatingResizing.set(!--numberAnimating), 1);  
 </script>
 
-<li out:slideOut|local style="overflow: hidden">
+<li on:outrostart={leaving} on:outroend={left} out:slideOut|local style="overflow: hidden">
   <div>
     <Stack>
       <FlowItems>
