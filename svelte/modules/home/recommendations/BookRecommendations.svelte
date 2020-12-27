@@ -20,12 +20,15 @@
 </script>
 
 <script lang="ts">
+  import { fade } from "svelte/transition";
+  
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Stack from "app/components/layout/Stack.svelte";
 
   import { appState } from "app/state/appState";
   import ajaxUtil from "util/ajaxUtil";
+  import { preloadRecommendations } from "util/imagePreload";
 
   import useReducer from "util/useReducer";
   import DisplayBook from "./DisplayBook.svelte";
@@ -48,9 +51,10 @@
 
   const getRecommendations = publicUserId => {
     dispatch(["startRecommendationsFetch"]);
-    ajaxUtil.post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
-      dispatch(["setRecommendations", resp.results]);
-    });
+    ajaxUtil
+      .post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId })
+      .then(preloadRecommendations)
+      .then(resp => dispatch(["setRecommendations", resp.results]));
   };
 </script>
 
@@ -84,8 +88,8 @@
       </Stack>
     </div>
     <div class="col-xs-6">
-      <div>
-        {#if recommendations.length}
+      {#if recommendations.length}
+        <div transition:fade>
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
           <table class="table table-condensed table-striped">
             <tbody>
@@ -94,8 +98,8 @@
               {/each}
             </tbody>
           </table>
-        {/if}
-      </div>
+        </div>
+      {/if}
     </div>
   </FlexRow>
   <SearchModal isOpen={searchModalOpen} onHide={closeModal} {dispatch} {selectedBooksSet} />
