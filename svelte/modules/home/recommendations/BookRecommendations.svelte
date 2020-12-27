@@ -28,7 +28,7 @@
 
   import { appState } from "app/state/appState";
   import ajaxUtil from "util/ajaxUtil";
-  import { preloadRecommendations } from "util/imagePreload";
+  import { preloadRecommendationImages } from "util/imagePreload";
 
   import useReducer from "util/useReducer";
   import DisplayBook from "./DisplayBook.svelte";
@@ -53,7 +53,7 @@
     dispatch(["startRecommendationsFetch"]);
     ajaxUtil
       .post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId })
-      .then(preloadRecommendations)
+      .then(preloadRecommendationImages)
       .then(resp => dispatch(["setRecommendations", resp.results]));
   };
 </script>
