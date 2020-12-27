@@ -33,16 +33,24 @@ const imgCache = {
   }
 };
 
-const preloadImages = (images) => {
-  let allPending = images.map(img => {
-    let attrs = getCrossOriginAttribute(img);
-    return imgCache.getImg(img, attrs.crossorigin == "anonymous");
-  });
+const preloadImages = images => {
+  let allPending = images
+    .filter(val => val)
+    .map(img => {
+      let attrs = getCrossOriginAttribute(img);
+      return imgCache.getImg(img, attrs.crossorigin == "anonymous");
+    });
   let promises = allPending.filter(entry => entry.then);
-  return (promises.length ? Promise.all(promises) : Promise.resolve()) as any;
+  return (promises.length ? Promise.all(promises).then(() => {}) : Promise.resolve()) as any;
 };
 
-export const preloadRecommendations = resp => {
+export const preloadRecommendationImages = resp => {
   let images = resp?.results?.map(book => book.smallImage) ?? [];
-  return preloadImages(images).then(() => resp);
+  return preloadImages(images);
+};
+
+export const preloadBookImages = resp => {
+  let smallImages = resp?.data?.allBooks?.Books?.map(book => book.smallImage) ?? [];
+  let mediumImages = resp?.data?.allBooks?.Books?.map(book => book.mediumImage) ?? [];
+  return preloadImages([...smallImages, ...mediumImages]);
 };

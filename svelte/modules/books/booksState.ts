@@ -11,6 +11,7 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 
 import { currentSearch } from "./booksSearchState";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
+import { preloadBookImages } from "util/imagePreload";
 
 interface IEditorialReview {
   content: string;
@@ -105,7 +106,8 @@ export const searchBooks = () => {
     }
   ];
   const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(GetBooksQuery, {
-    onMutation: onBooksMutation
+    onMutation: onBooksMutation,
+    postProcess: preloadBookImages
   });
   const booksActiveWsHandler = evt => {
     if (evt?.detail?.type == "bookAdded") {

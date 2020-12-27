@@ -25,6 +25,7 @@
   import { query } from "micro-graphql-svelte";
   import { Queries, QueryOf } from "graphql-typings";
   import { appState } from "app/state/appState";
+  import { preloadBookImages } from "util/imagePreload";
 
   export let isOpen;
   export let onHide;
@@ -39,7 +40,7 @@
   $: variables = { ...searchState, publicUserId };
   $: ({ page } = variables);
 
-  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery);
+  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery, { postProcess: preloadBookImages });
   $: {
     if (active) {
       sync(variables);
@@ -183,7 +184,9 @@
 
           <div class="msg-holder">
             {#if noAvailableBooks}
-              <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-info alert-slimmer">You've added all of the books from this page</div>
+              <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-info alert-slimmer">
+                You've added all of the books from this page
+              </div>
             {/if}
 
             {#if noResults}
