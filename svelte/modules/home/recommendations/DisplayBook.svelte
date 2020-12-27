@@ -22,7 +22,7 @@
     let height = node.offsetHeight;
     return {
       duration: 200,
-      css: t => `opacity: ${quadIn(t)}; height: ${t * height}px; transform: translateX(${(1 - quadIn(t)) * 25}%)`
+      css: t => `opacity: ${quadIn(t)}; height: ${t * height}px; transform: translateX(${quadIn(1 - t) * 90}%)`
     };
   };
 
