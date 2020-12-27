@@ -6,7 +6,8 @@
 
   export let dispatch;
   export let selectedBooksSet;
-  export let booksObj: { Books: any[] };
+  export let books: any[];
+  export let currentQuery: string;
 
   const resultsIn: any = () => {
     return {
@@ -24,10 +25,10 @@
 
 <div style="overflow-y: auto; overflow-x: hidden; max-height: 300px; margin-top: 5px; position: relative">
   <div className="overlay-holder">
-    {#if booksObj?.Books?.length}
-      {#key booksObj}
+    {#if books?.length}
+      {#key currentQuery}
         <ul in:resultsIn|local out:resultsOut|local>
-          {#each booksObj.Books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
+          {#each books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
             <SearchResult {book} {dispatch} />
           {/each}
         </ul>

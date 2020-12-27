@@ -56,7 +56,6 @@
 
   $: ({ loaded, loading, data, error, currentQuery } = $queryState);
 
-  $: booksObj = data?.allBooks as { Books: any[] };
   $: books = data?.allBooks?.Books;
 
   $: noResults = active && books != null && !books?.length;
@@ -209,7 +208,7 @@
             <hr />
           {/if}
         </div>
-        <SearchResults {dispatch} {booksObj} {selectedBooksSet} />
+        <SearchResults {dispatch} {books} {currentQuery} {selectedBooksSet} />
       </div>
     </FlexRow>
   </form>
