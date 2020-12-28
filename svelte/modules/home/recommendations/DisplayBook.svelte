@@ -9,10 +9,10 @@
   export let book;
   export let dispatch;
 
-  const NO_RESULTS_SPRING = { stiffness: 0.1, damping: 0.4 };
+  const SLIDE_IN_SPRING = { stiffness: 0.1, damping: 0.4 };
 
   const slideIn: any = node => {
-    const { duration, tickToValue } = springIn(-25, 0, NO_RESULTS_SPRING);
+    const { duration, tickToValue } = springIn(-25, 0, SLIDE_IN_SPRING);
     return {
       duration: duration,
       css: t => `opacity: ${quadOut(t)}; transform: translateX(${tickToValue(t)}%)`
