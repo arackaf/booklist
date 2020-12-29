@@ -17,9 +17,10 @@ const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
 
   const mounted = useRef(true);
 
-  //TODO: fix this crap
   useLayoutEffect(() => {
-    mounted.current = false;
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   const keyDown = evt => {
@@ -32,16 +33,23 @@ const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
         Promise.resolve(ajaxUtil.post("/book/saveFromIsbn", { isbn })).then(() => {
           setQueuing(false);
           setQueued(true);
-          setTimeout(() => mounted.current && setQueued(false), 1500);
+          setTimeout(() => {
+            if (mounted.current) {
+              setQueued(false);
+              inputEl.current.value = "";
+            }
+          }, 1500);
         });
       }
     }
   };
   return (
     <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-      <label className="control-label" style={{ marginRight: "5px" }}>
-        ISBN
-      </label>
+      <div>
+        <label className="control-label" style={{ marginRight: "5px" }}>
+          ISBN
+        </label>
+      </div>
       <input style={{ maxWidth: "250px" }} className="form-control" ref={inputEl} onKeyDown={keyDown} disabled={props.disable} />
       {queuing ? <span className="label label-default margin-left">Queuing</span> : null}
       {queued ? <span className="label label-success margin-left">Queued</span> : null}
