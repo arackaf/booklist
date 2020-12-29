@@ -1,7 +1,8 @@
 <script lang="ts">
   import slideAnimate from "app/animationHelpers";
-
   import FlowItems from "app/components/layout/FlowItems.svelte";
+
+  import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
 
   let manuallyEnterBook = () => {};
@@ -59,7 +60,6 @@
         </div>
       {/each}
     </div>
-    <div style="flex: 1" />
-    <!-- <ScanResults /> -->
+    <ScanResults />
   </FlowItems>
 </section>

@@ -30,7 +30,8 @@ import { spring } from "svelte/motion";
 
 const OPEN_SPRING = { stiffness: 0.1, damping: 0.4 };
 const CLOSE_SPRING = { stiffness: 0.2, damping: 0.8 };
-const FADE_SPRING = { stiffness: 0.2, damping: 0.7 };
+const STIFF_DOWN_SPRING = { stiffness: 0.2, damping: 0.6 };
+const FADE_SPRING = { stiffness: 0.2, damping: 0.8 };
 
 function getHeightSpring() {
   const heightSpring = spring(0, OPEN_SPRING);
@@ -51,7 +52,7 @@ function getHeightSpring() {
   return { sync, heightSpring };
 }
 
-export default function slideAnimate(el, { open, fade }) {
+export default function slideAnimate(el, { open, fade, stiffDown = false }) {
   el.parentNode.style.overflow = "hidden";
 
   const { heightSpring, sync } = getHeightSpring();
@@ -67,7 +68,7 @@ export default function slideAnimate(el, { open, fade }) {
     const bigger = newHeight > currentHeight;
 
     if (typeof currentHeight === "number") {
-      Object.assign(heightSpring, bigger ? OPEN_SPRING : CLOSE_SPRING);
+      Object.assign(heightSpring, bigger ? (stiffDown ? STIFF_DOWN_SPRING : OPEN_SPRING) : CLOSE_SPRING);
     }
     currentHeight = newHeight;
     doUpdate();
@@ -89,7 +90,7 @@ export default function slideAnimate(el, { open, fade }) {
   return {
     update({ open: isOpen }) {
       open = isOpen;
-      Object.assign(heightSpring, open ? OPEN_SPRING : CLOSE_SPRING);
+      Object.assign(heightSpring, open ? (stiffDown ? STIFF_DOWN_SPRING : OPEN_SPRING) : CLOSE_SPRING);
       fadeSpring.set(open ? 1 : 0);
       doUpdate();
     },
