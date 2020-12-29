@@ -2,17 +2,23 @@
   import slideAnimate from "app/animationHelpers";
 
   import FlowItems from "app/components/layout/FlowItems.svelte";
+  import BookEntryItem from "./BookEntryItem.svelte";
 
-  /*
-          <SlideInContents opacity={true} in={showScanInstructions} style="width: 80%">
-            </SlideInContents>
-            
-            */
-
-  let entryList = [];
-  let toggleInstructions = "";
   let manuallyEnterBook = () => {};
   let showScanInstructions = false;
+
+  let focused = 0;
+  let selected = null;
+
+  const entryFinished = index => {
+    if (index < 9) {
+      focused = index + 1;
+      selected = index + 1;
+    } else {
+      focused = 0;
+      selected = 0;
+    }
+  };
 </script>
 
 <section>
@@ -27,8 +33,8 @@
       </div>
       <div style="margin-top: 10px">
         <div>
-          <div class="card card-info card-slim" style="width: 80%">
-            <div use:slideAnimate={{ open: showScanInstructions, fade: true }} >
+          <div use:slideAnimate={{ open: showScanInstructions, fade: true }} class="card card-info card-slim" style="width: 80%">
+            <div>
               Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
               book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
               <br />
@@ -39,12 +45,17 @@
             </div>
           </div>
         </div>
-        <hr />
       </div>
       <br />
-      {#each entryList as entry, i}
+
+      {#each Array.from({ length: 10 }) as _, idx}
         <div>
-          <!-- <BookEntryItem ref={inputRefs[i]} entryFinished={() => entryFinished(i)} /> -->
+          <BookEntryItem
+            on:focus={() => (focused = idx)}
+            focused={idx == focused}
+            selected={idx == selected}
+            entryFinished={() => entryFinished(idx)}
+          />
         </div>
       {/each}
     </div>
