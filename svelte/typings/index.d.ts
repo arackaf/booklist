@@ -16,3 +16,5 @@ declare module "*.scss" {
 declare var ResizeObserver;
 
 declare var jscolor;
+
+declare var webSocketAddress: any;

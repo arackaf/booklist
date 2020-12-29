@@ -5,7 +5,7 @@
   import AppUI from "../AppUI.svelte";
   import "util/graphql";
 
-  import booksPreload from "./booksPreload"
+  import booksPreload from "./booksPreload";
 
   import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
 
@@ -13,6 +13,24 @@
     appStateDispatch({ type: URL_SYNC });
   });
 
+  let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
+
+  ws.onmessage = ({ data }) => {
+    let packet = JSON.parse(data);
+    window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
+  };
+
+  ws.onopen = () => {
+    ws.send(`SYNC`);
+    window.addEventListener("sync-ws", () => {
+      ws.send(`SYNC`);
+    });
+  };
+
+  window.onbeforeunload = function () {
+    ws.onclose = function () {}; // disable onclose handler first
+    ws.close();
+  };
 </script>
 
 <AppUI content={$appState.showingMobile ? 'width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;' : ''}>

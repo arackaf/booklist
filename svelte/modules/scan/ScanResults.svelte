@@ -45,6 +45,7 @@
 
     window.addEventListener("ws-info", sendIt);
     window.dispatchEvent(new CustomEvent("sync-ws"));
+
     return () => window.removeEventListener("ws-info", sendIt);
   });
 </script>
@@ -61,7 +62,7 @@
         {/if}
       </span>
     {:else if pending != null}
-      <span className="label label-success">All pending books saved
+      <span class="label label-success">All pending books saved
         {#if booksSaved.length || pending}
           <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
         {/if}</span>
@@ -76,7 +77,7 @@
       </div>
 
       <div style="margin-bottom: 0">
-        {#each booksSaved as book}
+        {#each booksSaved as book (book)}
           <div class="auto-fade-in margin-bottom">
             <div
               class="border-bottom padding-bottom"
