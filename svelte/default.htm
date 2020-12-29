@@ -18,7 +18,7 @@
     
     <script>
       function webSocketAddress(path) {
-        const protocol = window.location.hostname == "localhost" ? "ws" : "wss";
+        const protocol = (window.location.hostname == "localhost" || /lvh\.me/i.test(window.location.hostname)) ? "ws" : "wss";
         const host = window.location.host;
         return `${protocol}://${host}${path || ""}`;
       }
