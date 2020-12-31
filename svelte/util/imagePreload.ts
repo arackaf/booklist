@@ -53,12 +53,18 @@ export const preloadBookImages = (resp, useMedium) => {
   let smallImages = resp?.data?.allBooks?.Books?.map(book => book.smallImage) ?? [];
   let mediumImages = resp?.data?.allBooks?.Books?.map(book => book.mediumImage) ?? [];
 
-  let first = useMedium ? mediumImages : smallImages;
-  let second = useMedium ? smallImages : mediumImages;
+  let toPreload = useMedium ? mediumImages : smallImages;
 
-  let result = preloadImages(first);
-  result.then(() => preloadImages(second));
-  return result;
+  return preloadImages(toPreload);
+};
+
+export const preloadUiChange = (books, useMedium) => {
+  let smallImages = books?.map(book => book.smallImage) ?? [];
+  let mediumImages = books?.map(book => book.mediumImage) ?? [];
+
+  let toPreload = useMedium ? mediumImages : smallImages;
+
+  return preloadImages(toPreload);
 };
 
 export const preloadNewBookImage = book => {

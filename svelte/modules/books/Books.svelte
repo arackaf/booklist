@@ -50,7 +50,7 @@
   import BookSearchModal from "./BookSearchModal.svelte";
   import BooksMenuBar from "./BooksMenuBar.svelte";
   import { searchBooks } from "./booksState";
-  import { getBookSearchUiView } from "./booksUiState";
+  import { getBookSearchUiView, GRID_VIEW, BASIC_LIST_VIEW, COVERS_LIST } from "./booksUiState";
   import SubjectEditModal from "./SubjectEditModal.svelte";
   import TagEditModal from "./TagEditModal.svelte";
   import EditBookModal from "app/components/editBook/EditBookModal.svelte";
@@ -135,15 +135,15 @@
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
+    <BooksMenuBar {books} {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div className="overlay-holder">
       <div style="flex: 1; padding: 0px; min-height: 450px">
         {#if booksLoaded && books != null}
-          {#if $uiView.isGridView}
+          {#if $uiView.view == GRID_VIEW}
             <GridView {books} {menuBarHeight} />
-          {:else if $uiView.isBasicList}
+          {:else if $uiView.view == BASIC_LIST_VIEW}
             <BasicView {books} />
-          {:else if $uiView.isCoversList}
+          {:else if $uiView.view == COVERS_LIST}
             <CoversView {books} />
           {/if}
         {/if}

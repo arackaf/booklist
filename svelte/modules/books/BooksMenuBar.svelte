@@ -3,10 +3,10 @@
   import { getContext } from "svelte";
 
   import measureHeight from "util/measureHeight";
-  
+
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import { currentSearch as bookSearchState } from "./booksSearchState";
-  import { getBookSearchUiView } from "./booksUiState";
+  import { getBookSearchUiView, BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "./booksUiState";
   import PagingButtons from "./PagingButtons.svelte";
   import { quickSearch } from "./setBookFilters";
 
@@ -21,13 +21,14 @@
 
   export let setMenuBarHeight;
   export let bookResultsPacket: BookResultsPacket;
+  export let books: any[];
   $: ({ books = [], totalPages = null, resultsCount = null, reload, booksLoading, booksLoaded } = bookResultsPacket);
 
   const booksModuleContext: any = getContext("books-module-context");
   const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
 
   export let uiView: ReturnType<typeof getBookSearchUiView>;
-  const uiDispatch = $uiView.dispatch;
+  const uiDispatch = view => $uiView.requestState({ type: "SET_PENDING_VIEW", value: view }, books);
 
   $: ({ selectedBooks } = $booksUiState);
   $: selectedBooksIds = Object.keys(selectedBooks).filter(k => selectedBooks[k]);
@@ -102,20 +103,20 @@
             {/if}
             <button class="btn btn-default hidden-tiny" on:click={reload} disabled={booksLoading}><i class="fal fa-sync" /></button>
             <button
-              on:click={() => uiDispatch({ type: 'SET_GRID_VIEW' })}
-              class={'btn btn-default hidden-tiny ' + ($uiView.isGridView ? 'active' : '')}
+              on:click={() => uiDispatch(GRID_VIEW)}
+              class={'btn btn-default hidden-tiny ' + ($uiView.pendingView == GRID_VIEW ? 'active' : '')}
             >
               <i class="fal fa-table" />
             </button>
             <button
-              on:click={() => uiDispatch({ type: 'SET_COVERS_LIST_VIEW' })}
-              class={'btn btn-default hidden-tiny ' + ($uiView.isCoversList ? 'active' : '')}
+              on:click={() => uiDispatch(COVERS_LIST)}
+              class={'btn btn-default hidden-tiny ' + ($uiView.pendingView == COVERS_LIST ? 'active' : '')}
             >
               <i class="fas fa-th" />
             </button>
             <button
-              on:click={() => uiDispatch({ type: 'SET_BASIC_LIST_VIEW' })}
-              class={'btn btn-default hidden-tiny ' + ($uiView.isBasicList ? 'active' : '')}
+              on:click={() => uiDispatch(BASIC_LIST_VIEW)}
+              class={'btn btn-default hidden-tiny ' + ($uiView.pendingView == BASIC_LIST_VIEW ? 'active' : '')}
             >
               <i class="fal fa-list" />
             </button>

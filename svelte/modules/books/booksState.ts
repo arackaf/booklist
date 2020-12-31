@@ -12,6 +12,7 @@ import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { currentSearch } from "./booksSearchState";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
 import { preloadBookImages } from "util/imagePreload";
+import { COVERS_LIST } from "./booksUiState";
 
 interface IEditorialReview {
   content: string;
@@ -79,7 +80,7 @@ function booksInActiveWsHandler(evt) {
   }
 }
 
-export const searchBooks = (uiView: Readable<{ isGridView: boolean; isBasicList: boolean; isCoversList: boolean }>) => {
+export const searchBooks = (uiView: Readable<{ view: string; pendingView: string }>) => {
   const onBooksMutation = [
     {
       when: /createBook/,
@@ -107,7 +108,7 @@ export const searchBooks = (uiView: Readable<{ isGridView: boolean; isBasicList:
   ];
   const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(GetBooksQuery, {
     onMutation: onBooksMutation,
-    postProcess: (resp) => preloadBookImages(resp, get(uiView).isCoversList)
+    postProcess: (resp) => preloadBookImages(resp, get(uiView).pendingView == COVERS_LIST)
   });
   const booksActiveWsHandler = evt => {
     if (evt?.detail?.type == "bookAdded") {
