@@ -14,15 +14,16 @@ export const COVERS_LIST = "books covers view";
 export interface BookUiState {
   view: string;
   pendingView: string;
+  pending: boolean;
 }
 
 export function bookUiReducer(state, action: { type: UI_ACTIONS; value: any }): BookUiState {
   switch (action.type) {
     case "SET_VIEW":
       localStorage.set("book-ui", action.value);
-      return { ...state, view: action.value };
+      return { ...state, view: action.value, pending: false };
     case "SET_PENDING_VIEW":
-      return { ...state, pendingView: action.value };
+      return { ...state, pendingView: action.value, pending: true };
   }
 }
 
@@ -50,11 +51,12 @@ export const getBookSearchUiView = () => {
   };
 
   return derived([appState, uiState], ([$appState, $uiState]) => {
-    let { view, pendingView } = $uiState;
+    let { view, pendingView, pending } = $uiState;
 
     return {
       view,
       pendingView,
+      pending,
 
       dispatch,
       requestState

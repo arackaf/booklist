@@ -129,7 +129,7 @@
   }
 </style>
 
-{#if booksLoading}
+{#if booksLoading || $uiView.pending}
   <ModuleLoading />
 {/if}
 
