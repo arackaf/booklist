@@ -16,12 +16,14 @@
 </script>
 
 <script lang="ts">
-  import slideAnimate from "app/animationHelpers";
-
-  import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
-
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
+  import { quadIn } from "svelte/easing";
+
+  import slideAnimate from "app/animationHelpers";
+  import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
   import useReducer from "util/useReducer";
+  import { preloadNewBookImage } from "util/imagePreload";
 
   type StateType = { pending: any; booksSaved: any[] };
   let [state, dispatch] = useReducer<StateType>(scanReducer, { pending: 0, booksSaved: [] });
@@ -32,15 +34,17 @@
 
   $: toggleClass = showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down";
 
-  // const booksJustSavedTransition = useTransition(booksJustSaved, {
-  //   config: config.stiff,
-  //   enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
-  //   leave: { opacity: 0, transform: `translate3d(100px, 0px, 0px)` }
-  // });
-
   onMount(() => {
     function sendIt({ detail }: any) {
-      dispatch([detail.type, detail.packet]);
+      if (detail.type == "bookAdded") {
+        if (detail.packet.smallImage) {
+          preloadNewBookImage(detail.packet).then(() => {
+            dispatch([detail.type, detail.packet]);
+          });
+        } else {
+          dispatch([detail.type, detail.packet]);
+        }
+      }
     }
 
     window.addEventListener("ws-info", sendIt);
@@ -78,7 +82,7 @@
 
       <div style="margin-bottom: 0">
         {#each booksSaved as book (book)}
-          <div class="auto-fade-in margin-bottom">
+          <div transition:fade={{ easing: quadIn }} class="margin-bottom">
             <div
               class="border-bottom padding-bottom"
               style="display: flex; flex-direction: row; color: {book.success ? 'var(--neutral-text)' : 'red'}"
