@@ -36,14 +36,12 @@
 
   onMount(() => {
     function sendIt({ detail }: any) {
-      if (detail.type == "bookAdded") {
-        if (detail.packet.smallImage) {
-          preloadNewBookImage(detail.packet).then(() => {
-            dispatch([detail.type, detail.packet]);
-          });
-        } else {
+      if (detail.type == "bookAdded" && detail.packet.smallImage) {
+        preloadNewBookImage(detail.packet).then(() => {
           dispatch([detail.type, detail.packet]);
-        }
+        });
+      } else {
+        dispatch([detail.type, detail.packet]);
       }
     }
 
