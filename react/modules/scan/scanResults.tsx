@@ -37,8 +37,8 @@ const ScanResults: FunctionComponent<{}> = props => {
 
   const booksJustSavedTransition = useTransition(booksJustSaved, {
     config: config.stiff,
-    enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
-    leave: { opacity: 0, transform: `translate3d(100px, 0px, 0px)` }
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
   });
 
   useEffect(() => {
