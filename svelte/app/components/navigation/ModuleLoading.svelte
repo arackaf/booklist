@@ -5,6 +5,10 @@
     left: calc(50% - 2.5em);
     color: var(--primary-4);
   }
+
+  .module-loading > i {
+    z-index: 1;
+  }
 </style>
 
 <div class="module-loading">
