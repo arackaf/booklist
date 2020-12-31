@@ -40,7 +40,7 @@
   $: variables = { ...searchState, publicUserId };
   $: ({ page } = variables);
 
-  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery, { postProcess: preloadBookImages });
+  const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery, { postProcess: resp => preloadBookImages(resp, false) });
   $: {
     if (active) {
       sync(variables);

@@ -1,5 +1,5 @@
 import { onMount } from "svelte/internal";
-import { get, derived } from "svelte/store";
+import { get, derived, Readable } from "svelte/store";
 import { query } from "micro-graphql-svelte";
 
 import { QueryOf, Queries, Book } from "graphql-typings";
@@ -79,7 +79,7 @@ function booksInActiveWsHandler(evt) {
   }
 }
 
-export const searchBooks = () => {
+export const searchBooks = (uiView: Readable<{ isGridView: boolean; isBasicList: boolean; isCoversList: boolean }>) => {
   const onBooksMutation = [
     {
       when: /createBook/,
@@ -107,7 +107,7 @@ export const searchBooks = () => {
   ];
   const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(GetBooksQuery, {
     onMutation: onBooksMutation,
-    postProcess: preloadBookImages
+    postProcess: (resp) => preloadBookImages(resp, get(uiView).isCoversList)
   });
   const booksActiveWsHandler = evt => {
     if (evt?.detail?.type == "bookAdded") {

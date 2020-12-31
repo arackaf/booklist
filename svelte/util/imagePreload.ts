@@ -49,10 +49,16 @@ export const preloadRecommendationImages = resp => {
   return preloadImages(images);
 };
 
-export const preloadBookImages = resp => {
+export const preloadBookImages = (resp, useMedium) => {
   let smallImages = resp?.data?.allBooks?.Books?.map(book => book.smallImage) ?? [];
   let mediumImages = resp?.data?.allBooks?.Books?.map(book => book.mediumImage) ?? [];
-  return preloadImages([...smallImages, ...mediumImages]);
+
+  let first = useMedium ? mediumImages : smallImages;
+  let second = useMedium ? smallImages : mediumImages;
+
+  let result = preloadImages(first);
+  result.then(() => preloadImages(second));
+  return result;
 };
 
 export const preloadNewBookImage = book => {

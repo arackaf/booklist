@@ -76,10 +76,10 @@
   let menuBarHeight = 0;
   const setMenuBarHeight = val => (menuBarHeight = val);
 
-  const booksState = searchBooks();
+  const uiView = getBookSearchUiView();
+  const booksState = searchBooks(uiView);
   $: ({ books, booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
 
-  const uiView = getBookSearchUiView();
 
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
