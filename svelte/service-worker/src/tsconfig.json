@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["es2015"],
+    "noEmit": true
+  }
+}
