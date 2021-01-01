@@ -9,6 +9,8 @@
 
   import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
 
+  import setupServiceWorker from "../../util/setupServiceWorker";
+
   history.listen(() => {
     appStateDispatch({ type: URL_SYNC });
   });
@@ -31,6 +33,8 @@
     ws.onclose = function () {}; // disable onclose handler first
     ws.close();
   };
+
+  setupServiceWorker();
 </script>
 
 <AppUI content={$appState.showingMobile ? 'width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;' : ''}>
