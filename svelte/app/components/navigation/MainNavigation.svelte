@@ -36,7 +36,7 @@
 <header>
   <nav class={nav}>
     <div class={`${navHeader} hidden-xs ${isHome && isLoggedIn ? 'active' : ''}`}>
-      <ModuleLink href="home"><i class="fal fa-book" style="margin-right: 5px;" /> <span>My Library</span></ModuleLink>
+      <ModuleLink href="home"><i class="fal fa-book fa-fw" style="margin-right: 5px;" /> <span>My Library</span></ModuleLink>
     </div>
 
     <ul class={navItems}>

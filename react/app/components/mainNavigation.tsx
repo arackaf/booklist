@@ -45,7 +45,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
       <nav className={nav}>
         <div className={`${navHeader} hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
           <a onClick={() => goto("home")}>
-            <i className="fal fa-book" style={{ marginRight: "5px" }} />
+            <i className="fal fa-book fa-fw" style={{ marginRight: "5px" }} />
             <span>My Library</span>
           </a>
         </div>
