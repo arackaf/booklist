@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { history } from "util/urlHelpers";
+  import { browseTo } from "util/urlHelpers";
   import { appState } from "app/state/appState";
 
   export let href: string;
@@ -20,7 +20,7 @@
     }
 
     if (!disabled && href && href != $appState.module) {
-      history.push({ pathname: `/${href}`, search: "" });
+      browseTo(href);
     }
   }
 </script>

@@ -38,3 +38,13 @@ export function setSearchValues(state) {
     });
   }
 }
+
+
+export function browseTo(module) {
+  var userId = getCurrentUrlState().searchState.userId;
+  let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
+
+  if (currentModule !== module) {
+    history.push({ pathname: `/${module}`, search: userId ? `?userId=${userId}` : void 0 });
+  }
+}
