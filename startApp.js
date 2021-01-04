@@ -167,12 +167,13 @@ const browseToSvelte = moduleName => (request, response) => {
     clearAllCookies(response);
   }
 
-  if (request.query.user && (moduleName == "" || moduleName == "home")) {
-    return response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
-  }
   if (!request.user) {
     if (moduleName == "" || moduleName == "home") {
       return response.sendFile(path.join(__dirname + "/svelte/dist/public.html"));
+    }
+
+    if (request.query.userId && moduleName == "view") {
+      return response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
     }
 
     if (moduleName != "login" && moduleName != "activate") {
