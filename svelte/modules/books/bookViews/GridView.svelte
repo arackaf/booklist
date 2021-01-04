@@ -52,55 +52,53 @@
 
 <div style="min-height: 400px">
   {#if books.length}
-    <div>
-      {#key currentQuery}
-        <table
-          on:outrostart={makeAbsolute}
-          transition:fade|local={{ duration: 200, easing: quadOut }}
-          style="position: relative"
-          class="table no-padding-top"
-        >
-          <thead>
-            <tr>
-              {#if !isPublic && online}
-                <th style="{stickyHeaderStyle}; text-align: center; width: 25px;">
-                  <a style="font-size: 12pt" on:click={toggleCheckAll}>
-                    <i class={'fal ' + (!!bookSelection.allAreChecked ? 'fa-check-square' : 'fa-square')} />
-                  </a>
-                </th>
-              {/if}
-              <th style="{stickyHeaderStyle}; width: 60px" />
-              <th style="{stickyHeaderStyle}; min-width: 200px">
-                <a class="no-underline" on:click={() => setSort('title')}>
-                  Title
-                  {#if sort == 'title'}<i class={'fa fa-angle-' + (sortDirection == 'asc' ? 'up' : 'down')} />{/if}
+    {#key currentQuery}
+      <table
+        on:outrostart={makeAbsolute}
+        transition:fade|local={{ duration: 200, easing: quadOut }}
+        style="position: relative"
+        class="table no-padding-top"
+      >
+        <thead>
+          <tr>
+            {#if !isPublic && online}
+              <th style="{stickyHeaderStyle}; text-align: center; width: 25px;">
+                <a style="font-size: 12pt" on:click={toggleCheckAll}>
+                  <i class={'fal ' + (!!bookSelection.allAreChecked ? 'fa-check-square' : 'fa-square')} />
                 </a>
               </th>
-              <th style="min-width: 90px; {stickyHeaderStyle}">Subjects</th>
-              <th style="min-width: 90px; {stickyHeaderStyle}">Tags</th>
-              <th style="min-width: 90px; {stickyHeaderStyle}" />
-              <th style={stickyHeaderStyle} />
-              <th style="min-width: 85px; {stickyHeaderStyle}">
-                <a class="no-underline" on:click={() => setSort('pages')}>
-                  Pages
-                  {#if sort == 'pages'}<i class={'fa fa-angle-' + (sortDirection == 'asc' ? 'up' : 'down')} />{/if}
-                </a>
-              </th>
-              <th style={stickyHeaderStyle}>
-                <a class="no-underline" on:click={() => setSort('_id')}>
-                  Added
-                  {#if sort == '_id'}<i class={'fa fa-angle-' + (sortDirection == 'asc' ? 'up' : 'down')} />{/if}
-                </a>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each books as book (book._id)}
-              <BookRow {book} {isPublic} {online} />
-            {/each}
-          </tbody>
-        </table>
-      {/key}
-    </div>
+            {/if}
+            <th style="{stickyHeaderStyle}; width: 60px" />
+            <th style="{stickyHeaderStyle}; min-width: 200px">
+              <a class="no-underline" on:click={() => setSort('title')}>
+                Title
+                {#if sort == 'title'}<i class={'fa fa-angle-' + (sortDirection == 'asc' ? 'up' : 'down')} />{/if}
+              </a>
+            </th>
+            <th style="min-width: 90px; {stickyHeaderStyle}">Subjects</th>
+            <th style="min-width: 90px; {stickyHeaderStyle}">Tags</th>
+            <th style="min-width: 90px; {stickyHeaderStyle}" />
+            <th style={stickyHeaderStyle} />
+            <th style="min-width: 85px; {stickyHeaderStyle}">
+              <a class="no-underline" on:click={() => setSort('pages')}>
+                Pages
+                {#if sort == 'pages'}<i class={'fa fa-angle-' + (sortDirection == 'asc' ? 'up' : 'down')} />{/if}
+              </a>
+            </th>
+            <th style={stickyHeaderStyle}>
+              <a class="no-underline" on:click={() => setSort('_id')}>
+                Added
+                {#if sort == '_id'}<i class={'fa fa-angle-' + (sortDirection == 'asc' ? 'up' : 'down')} />{/if}
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each books as book (book._id)}
+            <BookRow {book} {isPublic} {online} />
+          {/each}
+        </tbody>
+      </table>
+    {/key}
   {/if}
 </div>
