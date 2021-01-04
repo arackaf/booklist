@@ -101,7 +101,3 @@ export default function slideAnimate(el, { open, fade, stiffDown = false }) {
     }
   };
 }
-
-export function makeAbsolute(evt) {
-  evt.target.style.position = "absolute";
-}

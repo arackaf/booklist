@@ -5,7 +5,6 @@
   import { fade } from "svelte/transition";
 
   import { appState } from "app/state/appState";
-  import { makeAbsolute } from "app/animationHelpers";
   import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
 
   import { currentSearch } from "../booksSearchState";
@@ -50,14 +49,9 @@
   $: stickyHeaderStyle = `position: sticky; top: ${menuBarHeight - 8}px; background-color: white; z-index: 2`;
 </script>
 
-<div style="min-height: 400px">
+<div class="overlay-holder" style="min-height: 400px">
   {#key currentQuery}
-    <table
-      on:outrostart={makeAbsolute}
-      transition:fade|local={{ duration: 2000, easing: quadOut }}
-      style="position: relative"
-      class="table no-padding-top"
-    >
+    <table transition:fade|local={{ duration: 200, easing: quadOut }} style="position: relative" class="table no-padding-top">
       <thead>
         <tr>
           {#if !isPublic && online}

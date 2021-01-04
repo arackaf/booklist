@@ -57,7 +57,6 @@
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
   import ModuleLoading from "app/components/navigation/ModuleLoading.svelte";
-  import { makeAbsolute } from "app/animationHelpers";
   import { fade } from "svelte/transition";
   import { quadOut } from "svelte/easing";
 
@@ -138,20 +137,15 @@
 <section class="full flush-bottom">
   <div style="background-color: white;">
     <BooksMenuBar {books} {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
-    <div className="overlay-holder">
-      <div style="flex: 1; padding: 0px; min-height: 450px">
+    <div>
+      <div class="overlay-holder" style="flex: 1; padding: 0px;">
         {#if booksLoaded}
           {#if !books?.length}
-            <div
-              on:outrostart={makeAbsolute}
-              transition:fade|local={{ duration: 200, easing: quadOut }}
-              class="alert alert-warning"
-              style="margin-top: 20px"
-            >
-              No books found
+            <div transition:fade|local={{ duration: 150, easing: quadOut }}>
+              <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
             </div>
           {:else if booksLoaded && books != null}
-            <div on:outrostart={makeAbsolute} transition:fade|local={{ duration: 200, easing: quadOut }}>
+            <div transition:fade|local={{ duration: 150, easing: quadOut }} style="min-height: 450px;">
               {#if $uiView.view == GRID_VIEW}
                 <GridView {booksState} {menuBarHeight} />
               {:else if $uiView.view == BASIC_LIST_VIEW}
