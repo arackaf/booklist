@@ -168,12 +168,12 @@ const browseToSvelte = moduleName => (request, response) => {
   }
 
   if (!request.user) {
-    if (moduleName == "" || moduleName == "home") {
-      return response.sendFile(path.join(__dirname + "/svelte/dist/public.html"));
+    if (request.query.userId && (moduleName == "view" || moduleName == "settings" || moduleName == "home" || moduleName == "")) {
+      return response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
     }
 
-    if (request.query.userId && moduleName == "view") {
-      return response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
+    if (moduleName == "" || moduleName == "home") {
+      return response.sendFile(path.join(__dirname + "/svelte/dist/public.html"));
     }
 
     if (moduleName != "login" && moduleName != "activate") {
