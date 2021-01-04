@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { Readable } from "svelte/store";
+  
   import { appState } from "app/state/appState";
-import BasicViewItem from "./BasicViewItem.svelte";
+  import BasicViewItem from "./BasicViewItem.svelte";
 
-  export let books: any[] = [];
+  export let booksState: Readable<{ books: any[]; currentQuery: string }>;;
+  $: ({ books } = $booksState);
 
   let { isPublic, online } = $appState;
 </script>

@@ -57,6 +57,9 @@
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
   import ModuleLoading from "app/components/navigation/ModuleLoading.svelte";
+  import { makeAbsolute } from "app/animationHelpers";
+  import { fade } from "svelte/transition";
+  import { quadOut } from "svelte/easing";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
@@ -79,7 +82,6 @@
   const uiView = getBookSearchUiView();
   const booksState = searchBooks(uiView);
   $: ({ books, booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
-
 
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
@@ -137,14 +139,25 @@
   <div style="background-color: white;">
     <BooksMenuBar {books} {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div className="overlay-holder">
+      {#if booksLoaded && !books?.length}
+        <div
+          on:outrostart={makeAbsolute}
+          transition:fade|local={{ duration: 200, easing: quadOut }}
+          class="alert alert-warning"
+          style="margin-top: 20px"
+        >
+          No books found
+        </div>
+      {/if}
+
       <div style="flex: 1; padding: 0px; min-height: 450px">
         {#if booksLoaded && books != null}
           {#if $uiView.view == GRID_VIEW}
-            <GridView {books} {menuBarHeight} />
+            <GridView {booksState} {menuBarHeight} />
           {:else if $uiView.view == BASIC_LIST_VIEW}
-            <BasicView {books} />
+            <BasicView {booksState} />
           {:else if $uiView.view == COVERS_LIST}
-            <CoversView {books} />
+            <CoversView {booksState} />
           {/if}
         {/if}
 

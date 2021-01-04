@@ -1,10 +1,12 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { Readable } from "svelte/store";
 
   import CoverMedium from "app/components/bookCovers/CoverMedium.svelte";
   import CoversDetailView from "./CoversDetailView.svelte";
 
-  export let books: any[];
+  export let booksState: Readable<{ books: any[]; currentQuery: string }>;
+  $: ({ books } = $booksState);
 
   let bookPreviewing = null;
 
