@@ -139,25 +139,27 @@
   <div style="background-color: white;">
     <BooksMenuBar {books} {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div className="overlay-holder">
-      {#if booksLoaded && !books?.length}
-        <div
-          on:outrostart={makeAbsolute}
-          transition:fade|local={{ duration: 200, easing: quadOut }}
-          class="alert alert-warning"
-          style="margin-top: 20px"
-        >
-          No books found
-        </div>
-      {/if}
-
       <div style="flex: 1; padding: 0px; min-height: 450px">
-        {#if booksLoaded && books != null}
-          {#if $uiView.view == GRID_VIEW}
-            <GridView {booksState} {menuBarHeight} />
-          {:else if $uiView.view == BASIC_LIST_VIEW}
-            <BasicView {booksState} />
-          {:else if $uiView.view == COVERS_LIST}
-            <CoversView {booksState} />
+        {#if booksLoaded}
+          {#if !books?.length}
+            <div
+              on:outrostart={makeAbsolute}
+              transition:fade|local={{ duration: 200, easing: quadOut }}
+              class="alert alert-warning"
+              style="margin-top: 20px"
+            >
+              No books found
+            </div>
+          {:else if booksLoaded && books != null}
+            <div on:outrostart={makeAbsolute} transition:fade|local={{ duration: 200, easing: quadOut }}>
+              {#if $uiView.view == GRID_VIEW}
+                <GridView {booksState} {menuBarHeight} />
+              {:else if $uiView.view == BASIC_LIST_VIEW}
+                <BasicView {booksState} />
+              {:else if $uiView.view == COVERS_LIST}
+                <CoversView {booksState} />
+              {/if}
+            </div>
           {/if}
         {/if}
 
