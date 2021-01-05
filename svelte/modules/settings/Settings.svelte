@@ -6,8 +6,10 @@
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
-
+  
   import { history } from "util/urlHelpers";
+  
+  import PublicUserSettings from "./PublicUserSettings.svelte";
 
   $: ({ isPublic, isLoggedIn } = $appState);
 </script>
@@ -32,8 +34,7 @@
     <TabContents>
       {#if !isPublic && isLoggedIn}
         <TabContent style={{ minHeight: '150px' }} tabName="publicSettings">
-          <!-- <PublicUserSettings /> -->
-          PublicUserSettings
+          <PublicUserSettings />
         </TabContent>
         <TabContent style={{ minHeight: '150px' }} tabName="passwordReset">
           <!-- <PasswordReset /> -->
