@@ -8,7 +8,6 @@ import { useStackedSubjects } from "app/state/subjectsState";
 import RecommendMain from "./components/recommend/main";
 
 import "./d3-styles.scss";
-import { SectionLoading } from "app/components/loading";
 import { goto } from "reactStartup";
 import { useTagsState } from "app/state/tagsState";
 import { Tabs, TabHeader, TabHeaders, TabContents, TabContent } from "app/components/layout/Tabs";
@@ -61,9 +60,7 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
                         here.
                       </div>
                     )
-                  ) : (
-                    <SectionLoading style={{ position: "fixed" }} />
-                  )
+                  ) : null
                 ) : null /* tab not active - render nothing */
             }
           </TabContent>

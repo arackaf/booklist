@@ -2,4 +2,16 @@
   export let style = "";
 </script>
 
-<i style="position: absolute; top: 50%; left: 50%; opacity: 0.2; {style}" class="fa fa-5x fa-spin fa-spinner" />
+<style>
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  i {
+    opacity: 0.2;
+  }
+</style>
+
+<div><i {style} class="fa fa-5x fa-spin fa-spinner" /></div>

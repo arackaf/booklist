@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
-import { SectionLoading } from "app/components/loading";
 
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
@@ -23,7 +22,7 @@ const PublicUserSettings: FunctionComponent<{}> = props => {
     <div>
       <FlexRow>
         <div className="col-md-6 col-sm-12" style={{ position: "relative", minHeight: "200px" }}>
-          {!loaded ? <SectionLoading style={{ left: "20%" }} /> : <EditPublicUserSettings settings={data.getUser.User} />}
+          {!loaded ? null : <EditPublicUserSettings settings={data.getUser.User} />}
         </div>
       </FlexRow>
     </div>

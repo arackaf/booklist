@@ -14,13 +14,6 @@ export const LongLoading = ({ ...rest }) => (
   </div>
 );
 
-export const SectionLoading = ({ style = {}, ...rest }) => (
-  <i
-    style={{ position: "absolute", top: "50%", left: "50%", opacity: 0.2, ...style }}
-    className="fa fa-5x fa-spin fa-spinner"
-  />
-);
-
 export const LocalLoading = ({ style = {}, ...rest }) => (
   <div style={{ display: "flex", justifyContent: "center" }}>
     <div {...rest} style={{ opacity: 0.2, ...style }}>
