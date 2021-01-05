@@ -8,6 +8,7 @@
   import { isAdmin } from "util/loginStatus";
 
   import navClasses from "css/navbar.module.scss";
+  import BookSvg from "./BookSvg.svelte";
 
   const { nav, navHeader, navItems, navItemsRight } = navClasses;
 
@@ -29,14 +30,17 @@
 
 <style>
   header :global(a) {
-    text-decoration: none;;
+    text-decoration: none;
   }
 </style>
 
 <header>
   <nav class={nav}>
     <div class={`${navHeader} hidden-xs ${isHome && isLoggedIn ? 'active' : ''}`}>
-      <ModuleLink href="home"><i class="fal fa-book fa-fw" style="margin-right: 5px;" /> <span>My Library</span></ModuleLink>
+      <ModuleLink href="home">
+        <BookSvg height="18" style="margin-right: 5px; color: white; fill: var(--primary-10);" />
+        <span>My Library</span>
+      </ModuleLink>
     </div>
 
     <ul class={navItems}>

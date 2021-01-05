@@ -5,7 +5,7 @@
 
   export let moduleName;
 
-  let componentLoaderFn : any;
+  let componentLoaderFn: any;
   export { componentLoaderFn as loader };
 
   export let preload = () => void 0;
