@@ -6,7 +6,7 @@ import { AppContext } from "app/renderUI";
 
 import navClasses from "css/navbar.module.scss";
 import { isAdmin } from "util/loginStatus";
-import BookSvg from "./BookSvg";
+import BookSvg from "./bookSvg";
 
 const { nav, navHeader, navItems, navItemsRight } = navClasses;
 
