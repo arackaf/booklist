@@ -1,16 +1,23 @@
+<script>
+import SpinnerSvg from "./SpinnerSvg.svelte";
+
+</script>
+
 <style>
   .module-loading {
     position: fixed;
-    top: calc(50% - 2.5em);
-    left: calc(50% - 2.5em);
-    color: var(--primary-4);
+    top: calc(50% - 100px);
+    left: calc(50% - 40px);
+    z-index: 10;
+    opacity: 0.7;
   }
-
-  .module-loading > i {
+  
+  :global(.module-loading > *) {
     z-index: 1;
+    fill: var(--primary-4);
   }
 </style>
 
 <div class="module-loading">
-  <i class="fa fa-5x fa-spin fa-spinner" />
+  <SpinnerSvg class="fa-spin" width="80" />
 </div>
