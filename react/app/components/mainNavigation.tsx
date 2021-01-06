@@ -6,6 +6,7 @@ import { AppContext } from "app/renderUI";
 
 import navClasses from "css/navbar.module.scss";
 import { isAdmin } from "util/loginStatus";
+import BookSvg from "./BookSvg";
 
 const { nav, navHeader, navItems, navItemsRight } = navClasses;
 
@@ -45,7 +46,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
       <nav className={nav}>
         <div className={`${navHeader} hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
           <a onClick={() => goto("home")}>
-            <i className="fal fa-book fa-fw" style={{ marginRight: "5px" }} />
+            <BookSvg height="18" style={{ marginRight: "5px", color: "white", fill: "var(--primary-10)" }} />
             <span>My Library</span>
           </a>
         </div>

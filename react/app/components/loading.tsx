@@ -1,8 +1,9 @@
 import React from "react";
+import SpinnerSvg from "./spinnerSvg";
 
 export default ({ ...rest }) => (
   <div {...rest} className="wait-for-loading">
-    <i className="fa fa-5x fa-spin fa-spinner" />
+    <SpinnerSvg className="fa-spin" width="80" />
   </div>
 );
 
