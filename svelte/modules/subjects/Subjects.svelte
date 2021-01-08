@@ -57,7 +57,7 @@
 </style>
 
 <section
-  out:fade={{duration: 10}}
+  transition:fade={{duration: 150, easing: quadOut}}
   on:outrostart={outStart}
   on:introend={onLoaded}
   class="flush-bottom subjectsRoot"
