@@ -11,11 +11,10 @@ body {
   max-height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   grid-template-areas: 
     'header'
-    'main'
-    'footer';
+    'main';
 
   > header {
     grid-area: header;
@@ -26,8 +25,7 @@ body {
     overflow: auto;
 
     display: grid;
-    grid-template-rows: 1fr;
-
+    grid-template-rows: 1fr auto;
     grid-template-columns: 1fr minmax(0, 1200px) 1fr;
 
     > section {
@@ -43,9 +41,10 @@ body {
       background-color: var(--content-background);
       padding: var(--main-spacing);
     }
+
+    > footer {
+      grid-area: 2 / 1 / 2 / 4;
+    }
   }
 
-  > footer {
-    grid-area: footer;
-  }
 }
