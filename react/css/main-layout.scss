@@ -1,6 +1,5 @@
 html,
 body {
-  width: 100vh;
   height: calc(var(--adjusted-vh, 1vh) * 100);
   margin: 0;
   --main-spacing: 10px 5px 10px 5px;
@@ -8,7 +7,6 @@ body {
 }
 
 #app {
-  width: 100vh;
   height: calc(var(--adjusted-vh, 1vh) * 100);
   max-height: calc(var(--adjusted-vh, 1vh) * 100);
   display: grid;
