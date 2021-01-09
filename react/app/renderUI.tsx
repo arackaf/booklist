@@ -38,7 +38,7 @@ const MobileMeta = () => {
   return (
     <meta
       name="viewport"
-      content={app.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ""}
+      content={app.showingMobile ? "width=device-width, initial-scale=1" : ""}
     />
   );
 };
