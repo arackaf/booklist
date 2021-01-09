@@ -33,10 +33,11 @@ window.onbeforeunload = function () {
   ws.close();
 };
 
-
 function setAdjustedVh() {
   let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--adjusted-vh", `${vh}px`);
+  setTimeout(() => {
+    document.documentElement.style.setProperty("--adjusted-vh", `${vh}px`);
+  });
 }
 
 window.addEventListener("resize", setAdjustedVh);
@@ -95,6 +96,7 @@ const App = () => {
     startTransitionNewModule(() => {
       dispatch({ type: URL_SYNC });
     });
+    setAdjustedVh();
   }, []);
   useEffect(() => {
     return history.listen(location => {
