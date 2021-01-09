@@ -39,12 +39,13 @@ const MobileMeta = () => {
 
   useEffect(() => {
     setInterval(() => {
-      setContent("");
+      // setContent("");
       //setTimeout(() => { setContent("width=device-width, initial-scale=1, maximum-scale=1") }, 10);
-      setTimeout(() => { setContent("") }, 2500);
-      setTimeout(() => { setContent("width=device-width, initial-scale=1") }, 5000);
+      // setTimeout(() => { setContent("") }, 2500);
+      setTimeout(() => { setContent("width=device-width, user-scalable=no, initial-scale=1") }, 10);
+      setTimeout(() => { setContent("width=device-width, initial-scale=1") }, 20);
       //setTimeout(() => { setContent("width=device-width, maximum-scale=10") }, 30);
-    }, 10000);
+    }, 5000);
   }, []);
   return (
     <meta
