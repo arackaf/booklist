@@ -33,12 +33,6 @@ window.onbeforeunload = function () {
   ws.close();
 };
 
-
-function setAdjustedVh() {
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--adjusted-vh", `${vh}px`);
-}
-
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
   return (
@@ -93,10 +87,18 @@ const App = () => {
       dispatch({ type: URL_SYNC });
     });
 
+    function setAdjustedVh() {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--adjusted-vh", `${vh}px`);
+    }
+
     window.addEventListener("resize", setAdjustedVh);
+    window.addEventListener("gestureend", () => {
+      setTimeout(() => setAdjustedVh(), 750);
+    });
     setAdjustedVh();
     setTimeout(setAdjustedVh, 10); //Chrome iOS
-    setTimeout(setAdjustedVh, 100); 
+    setTimeout(setAdjustedVh, 100);
     setTimeout(setAdjustedVh, 250);
     document.documentElement.scrollTop = 0;
   }, []);
