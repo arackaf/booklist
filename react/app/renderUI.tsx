@@ -42,7 +42,7 @@ const MobileMeta = () => {
       setContent("");
       setTimeout(() => { setContent("width=device-width, maximum-scale=10") }, 10);
       setTimeout(() => { setContent("") }, 20);
-      setTimeout(() => { setContent("width=device-width, initial-scale=1") }, 30);
+      setTimeout(() => { setContent("width=device-width, initial-scale=1, maximum-scale=1") }, 30);
     }, 5000);
   }, []);
   return (
