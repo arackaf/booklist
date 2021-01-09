@@ -95,7 +95,16 @@ const App = () => {
       }
 
       window.addEventListener("resize", setAdjustedVh);
+
+      let pinching = false;
+      window.addEventListener("gesturestart", () => {
+        pinching = true;
+      });
       window.addEventListener("gestureend", () => {
+        pinching = false;
+        setTimeout(() => setAdjustedVh(), 1);
+        setTimeout(() => setAdjustedVh(), 100);
+        setTimeout(() => setAdjustedVh(), 250);
         setTimeout(() => setAdjustedVh(), 750);
       });
       setAdjustedVh();
