@@ -107,17 +107,16 @@ const setDeviceOverride = view => {
     } else {
       localStorage.setItem("useDesktop", "1");
     }
+    window.location.reload();
   } catch (e) {}
 };
 
 const requestDesktop = () => dispatch => {
   setDeviceOverride("desktop");
-  dispatch({ type: REQUEST_DESKTOP });
 };
 
 const requestMobile = () => dispatch => {
   setDeviceOverride("mobile");
-  dispatch({ type: REQUEST_MOBILE });
 };
 
 const isOnline = () => ({ type: IS_ONLINE });
