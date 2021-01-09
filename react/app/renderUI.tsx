@@ -1,4 +1,4 @@
-import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useMemo } from "react";
+import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useMemo, useState } from "react";
 const { unstable_useTransition: useTransition } = React as any;
 
 import ReactDOM from "react-dom";
@@ -35,10 +35,18 @@ window.onbeforeunload = function () {
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
+  const [content, setContent] = useState("width=device-width, initial-scale=1");
+
+  useEffect(() => {
+    setInterval(() => {
+      setContent("");
+      setTimeout(() => { setContent("width=device-width, initial-scale=1") }, 10);
+    }, 5000);
+  }, []);
   return (
     <meta
       name="viewport"
-      content={app.showingMobile ? "width=device-width, initial-scale=1" : ""}
+      content={app.showingMobile || 1 ? content : ""}
     />
   );
 };
