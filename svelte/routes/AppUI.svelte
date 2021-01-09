@@ -19,7 +19,7 @@ import MainNavigation from "app/components/navigation/MainNavigation.svelte";
     <MainNavigation />
     <main>
       <slot />
-      <Footer />
     </main>
+    <Footer />
   </div>
 </div>

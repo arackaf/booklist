@@ -136,10 +136,11 @@ const App = () => {
               {Component ? (
                 <main>
                   <Component updating={moduleUpdatePending} />
-                  <WellUiSwitcher />
                 </main>
               ) : null}
             </Suspense>
+
+            <WellUiSwitcher />
           </div>
         </div>
       </ModuleUpdateContext.Provider>
