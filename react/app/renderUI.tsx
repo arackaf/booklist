@@ -95,7 +95,10 @@ const App = () => {
 
     window.addEventListener("resize", setAdjustedVh);
     setAdjustedVh();
-    setTimeout(setAdjustedVh, 100); //Chrome iOS
+    setTimeout(setAdjustedVh, 10); //Chrome iOS
+    setTimeout(setAdjustedVh, 100); 
+    setTimeout(setAdjustedVh, 250);
+    document.documentElement.scrollTop = 0;
   }, []);
   useEffect(() => {
     return history.listen(location => {
