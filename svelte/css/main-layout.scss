@@ -1,14 +1,14 @@
 html,
 body {
-  height: calc(var(--adjusted-vh, 1vh) * 100);
+  height: 100vh;
   margin: 0;
   --main-spacing: 10px 5px 10px 5px;
   --header-footer-spacing: 10px 5px;  
 }
 
 #app {
-  height: calc(var(--adjusted-vh, 1vh) * 100);
-  max-height: calc(var(--adjusted-vh, 1vh) * 100);
+  height: 100vh;
+  max-height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
