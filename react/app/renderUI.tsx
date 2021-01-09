@@ -40,7 +40,7 @@ const MobileMeta = () => {
   useEffect(() => {
     setInterval(() => {
       setContent("");
-      setTimeout(() => { setContent("width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1") }, 10);
+      setTimeout(() => { setContent("width=device-width, initial-scale=2") }, 10);
       setTimeout(() => { setContent("") }, 20);
       setTimeout(() => { setContent("width=device-width, initial-scale=1") }, 30);
     }, 5000);
