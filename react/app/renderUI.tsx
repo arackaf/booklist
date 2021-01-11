@@ -90,7 +90,7 @@ const App = () => {
     document.documentElement.scrollTop = 0;
     if (appState.isMobile) {
       function setAdjustedVh() {
-        let vh = window.innerHeight < 450 ? "1vh" : (window.innerHeight * 0.01) + "px";
+        let vh = (window.innerHeight * 0.01) + "px";
         document.documentElement.style.setProperty("--adjusted-vh", vh);
       }
 
