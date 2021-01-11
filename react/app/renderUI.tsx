@@ -153,11 +153,12 @@ const App = () => {
               {Component ? (
                 <main>
                   <Component updating={moduleUpdatePending} />
+                  {appState.isMobile ? <WellUiSwitcher /> : null}
                 </main>
               ) : null}
             </Suspense>
 
-            <WellUiSwitcher />
+            {!appState.isMobile ? <WellUiSwitcher /> : null}
           </div>
         </div>
       </ModuleUpdateContext.Provider>
