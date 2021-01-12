@@ -64,9 +64,32 @@
     z-index: 1;
   }
 
-  .searchInput {
-    width: 250px !important;
+  .searchInput { 
+    width: 250px;
   }
+
+  @media (max-width: 900px) {
+    .searchInput { 
+      width: 150px;
+    }
+  }
+  @media (max-width: 600px) {
+    .searchInput { 
+      width: 100px;
+    }
+  }
+  @media (max-width: 490px) {
+    .searchInput { 
+      width: 150px;
+    }
+  }
+  @media (max-width: 390px) {
+    .searchInput { 
+      width: 100px;
+    }
+  }
+
+  
 </style>
 
 <div class="root" use:measureHeight={setMenuBarHeight}>

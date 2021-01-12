@@ -39,7 +39,7 @@
       <span>
         {#if $currentSearch.isRead == '1'}Is Read{:else}Not Read{/if}
         &nbsp;
-        {#if $currentSearch.isRead == '1'}<i className="far fa-check" />{/if}
+        {#if $currentSearch.isRead == '1'}<i class="far fa-check" />{/if}
       </span>
     </RemovableLabelDisplay>
   {/if}
