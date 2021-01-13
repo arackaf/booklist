@@ -1,5 +1,6 @@
 <script lang="ts">
   import { appState } from "app/state/appState";
+  import FlowItems from "app/components/layout/FlowItems.svelte";
   import { currentSearch } from "./booksSearchState";
   import { pageOne, setPage } from "./setBookFilters";
 
@@ -24,11 +25,11 @@
 
 {#if !selectedBooksCount}
   <div class="visible-xs" style="margin-right: 5px">
-    <div>
+    <FlowItems tightest={true} vCenter={true}>
       <button onClick={pageDown} disabled={!canPageDown} class="btn btn-default btn-group-size"><i class="fal fa-angle-left" /></button>
       <span style="padding-left: 3px; padding-right: 3px"> {page} of {totalPages} </span>
       <button onClick={pageUp} disabled={!canPageUp} class="btn btn-default btn-group-size"><i class="fal fa-angle-right" /></button>
-    </div>
+    </FlowItems>
   </div>
 {/if}
 <div class="hidden-xs" style="display: flex; margin-right: 5px; align-items: center">

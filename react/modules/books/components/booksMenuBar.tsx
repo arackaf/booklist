@@ -12,6 +12,7 @@ import PublicBooksHeader from "./publicBooksHeader";
 import { BooksModuleContext } from "../books";
 
 import cn from "classnames";
+import FlowItems from "app/components/layout/FlowItems";
 
 interface IAddedMenuProps {
   disabled?: boolean;
@@ -211,7 +212,7 @@ const PagingButtons: FunctionComponent<{
     <>
       {!selectedBooksCount ? (
         <div className="visible-xs" style={{ marginRight: "5px" }}>
-          <div>
+          <FlowItems tightest={true} vCenter={true}>
             <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default btn-group-size">
               <i className="fal fa-angle-left" />
             </Button>
@@ -221,7 +222,7 @@ const PagingButtons: FunctionComponent<{
             <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default btn-group-size">
               <i className="fal fa-angle-right" />
             </Button>
-          </div>
+          </FlowItems>
         </div>
       ) : null}
       <div className="hidden-xs" style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
