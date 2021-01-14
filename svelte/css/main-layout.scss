@@ -26,7 +26,7 @@ body {
     overflow: auto;
 
     display: grid;
-    grid-template-rows: 1fr;
+    grid-template-rows: 1fr auto;
 
     grid-template-columns: 1fr minmax(0, 1200px) 1fr;
 
@@ -35,13 +35,17 @@ body {
         padding-bottom: 0;
       }
       &.full {
-        grid-area: 1 / 1 / 1 / 4;
+        grid-area: 1 / 1 / 2 / 4;
         background-color: unset;
       }
 
-      grid-area: 1 / 2 / 1 / 3;
+      grid-area: 1 / 2 / 2 / 3;
       background-color: var(--content-background);
       padding: var(--main-spacing);
+    }
+
+    > footer {
+      grid-area: 2 / 1 / 3 / 4;
     }
   }
 

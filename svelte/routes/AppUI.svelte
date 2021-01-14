@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
+  import { appState } from "app/state/appState";
   import Footer from "app/components/Footer.svelte";
-import MainNavigation from "app/components/navigation/MainNavigation.svelte";
+  import MainNavigation from "app/components/navigation/MainNavigation.svelte";
 
   export let content = null;
 </script>
@@ -19,7 +20,12 @@ import MainNavigation from "app/components/navigation/MainNavigation.svelte";
     <MainNavigation />
     <main>
       <slot />
+      {#if $appState.isMobile}
+        <Footer />
+      {/if}
     </main>
-    <Footer />
+    {#if !$appState.isMobile}
+      <Footer />
+    {/if}
   </div>
 </div>
