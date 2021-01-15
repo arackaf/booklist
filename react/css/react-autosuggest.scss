@@ -32,7 +32,7 @@
   overflow-y: auto;
 }
 .react-autosuggest__suggestions-container--open {
-  border: 1px solid #aaa;
+  border: var(--default-border-width) solid #aaa;
 }
 
 .react-autosuggest__suggestions-list {
@@ -43,8 +43,8 @@
 .react-autosuggest__suggestion {
   cursor: pointer;
   padding: 6px 6px;
-  border-top: 1px solid white;
-  border-bottom: 1px solid white;
+  border-top: var(--default-border-width) solid white;
+  border-bottom: var(--default-border-width) solid white;
   list-style-type: none;
 }
 
@@ -57,9 +57,9 @@
 }
 
 .react-autosuggest__suggestion--focused:first-child {
-  border-top: 1px solid white;
+  border-top: var(--default-border-width) solid white;
 }
 
 .react-autosuggest__suggestion--focused:last-child {
-  border-bottom: 1px solid white;
+  border-bottom: var(--default-border-width) solid white;
 }

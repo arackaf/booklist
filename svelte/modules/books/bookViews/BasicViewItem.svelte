@@ -27,7 +27,7 @@
   }
 
   :global(.listGroupItem) {
-    border-bottom: 1px solid var(--neutral-border);
+    border-bottom: var(--default-border-width) solid var(--neutral-border);
     padding-top: 5px;
     padding-bottom: 5px;
   }

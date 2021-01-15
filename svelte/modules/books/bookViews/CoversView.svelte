@@ -30,7 +30,7 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    border: 1px solid var(--primary-8);
+    border: var(--default-border-width) solid var(--primary-8);
     border-radius: 5px;
     padding: 5px;
     transition: transform 100ms ease-in, box-shadow 100ms ease-in;

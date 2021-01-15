@@ -75,22 +75,22 @@
   }
   &.alert-warning, &.card-warning { 
     background-color: var(--warning-9);
-    border: 1px solid var(--warning-8);
+    border: var(--default-border-width) solid var(--warning-8);
     color: var(--warning-1);
   }
   &.alert-info, &.card-info { 
     background-color: var(--info-9);
-    border: 1px solid var(--info-8);
+    border: var(--default-border-width) solid var(--info-8);
     color: var(--info-1);  
   }
   &.alert-danger, &.card-danger { 
     background-color: var(--danger-9);
-    border: 1px solid var(--danger-8);
+    border: var(--default-border-width) solid var(--danger-8);
     color: var(--danger-1);
   }
   &.alert-success, &.card-success { 
     background-color: var(--success-9);
-    border: 1px solid var(--success-8);
+    border: var(--default-border-width) solid var(--success-8);
     color: var(--success-1);
   }
   &.alert-slim, &.card-slim {

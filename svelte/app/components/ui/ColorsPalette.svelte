@@ -7,7 +7,7 @@
 <style>
   .colorChoice {
     float: left;
-    border: 1px solid black;
+    border: var(--default-border-width) solid black;
     height: 20px;
     width: 20px;
     margin: 3px;

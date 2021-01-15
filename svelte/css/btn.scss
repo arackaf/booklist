@@ -1,6 +1,6 @@
 .btn {
   margin: 0;
-  border: 1px solid var(--neutral-border);
+  border: var(--default-border-width) solid var(--neutral-border);
   background-color: white;
   padding: 6px 12px;
   font-size: 15px;
@@ -169,7 +169,7 @@
     .tiny-orphan {
       border-top-right-radius: var(--default-border-radius);
       border-bottom-right-radius: var(--default-border-radius);
-      border-right: 1px solid var(--neutral-border)
+      border-right: var(--default-border-width) solid var(--neutral-border)
     }
   }
 }

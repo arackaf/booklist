@@ -16,7 +16,7 @@
     font-size: 14px;
     vertical-align: top;
     padding: 5px;
-    border-top: 1px solid var(--neutral-border);
+    border-top: var(--default-border-width) solid var(--neutral-border);
   }
   th {
     font-size: 16px;
@@ -37,14 +37,14 @@
 
 .tab-headers {
   display: flex;
-  border-bottom: 1px solid var(--primary-9);
+  border-bottom: var(--default-border-width) solid var(--primary-9);
 }
 .tab-header {
   padding: 5px 10px 5px 10px;
 
   &.active {
     font-weight: bold;
-    border-bottom: 1px solid var(--primary-9);
+    border-bottom: var(--default-border-width) solid var(--primary-9);
     background-color: var(--primary-10)
   }
   &.active a, &.disabled a {

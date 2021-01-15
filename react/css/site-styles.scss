@@ -358,7 +358,7 @@ input[disabled]{
 }
 
 hr {
-  border: 1px solid var(--primary-4);
+  border: var(--default-border-width) solid var(--primary-4);
 }
 
 ul {
@@ -438,7 +438,7 @@ label {
 
 .panel {
   padding: 15px;
-  border: 1px solid var(--neutral-border);
+  border: var(--default-border-width) solid var(--neutral-border);
   border-radius: 3px;
 }
 .panel.panel-info {
@@ -458,7 +458,7 @@ label {
 .form-group input,
 input.form-control,
 select.form-control {
-  border: 1px solid var(--neutral-border);
+  border: var(--default-border-width) solid var(--neutral-border);
   padding: 6px 12px;
   border-radius: var(--default-border-radius);
   height: 34px;

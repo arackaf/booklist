@@ -22,7 +22,7 @@
     <a
       class={cn('toggle', { expanded })}
       on:click={() => setExpanded(!expanded)}
-      style="color: {item.textColor || 'white'}; border-right: {`1px solid ${item.textColor || 'white'}`}"
+      style="color: {item.textColor || 'white'}; border-right: {`var(--default-border-width) solid ${item.textColor || 'white'}`}"
     >
       <i class="fad fa-chevron-right" />
     </a>

@@ -39,7 +39,7 @@ export const EditableExpandableLabelDisplay = props => {
         <a
           className={cn("toggle", { expanded })}
           onClick={() => setExpanded(val => !val)}
-          style={{ color: item.textColor || "white", borderRight: `1px solid ${item.textColor || "white"}` }}
+          style={{ color: item.textColor || "white", borderRight: `var(--default-border-width) solid ${item.textColor || "white"}` }}
         >
           <i className="fad fa-chevron-right"></i>
         </a>
@@ -68,7 +68,7 @@ export const RemovableLabelDisplay = props => {
       <a onClick={props.doRemove} style={{ color: item.textColor || "white", cursor: "pointer" }}>
         X
       </a>
-      <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: "1px solid white" }}>{props.name}</span>
+      <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: "var(--default-border-width) solid white" }}>{props.name}</span>
       {props.children || item.name}
     </span>
   );
