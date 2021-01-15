@@ -6,7 +6,7 @@ import { AppContext, ModuleUpdateContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
 import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
-const { searchInput } = styles;
+const { searchInput, menuBarHome } = styles;
 
 import PublicBooksHeader from "./publicBooksHeader";
 import { BooksModuleContext } from "../books";
@@ -96,7 +96,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
           {isPublic ? <PublicBooksHeader /> : null}
           <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>
-            <div className="btn-group">
+            <div className={`${menuBarHome} btn-group`}>
               <input
                 ref={quickSearchEl}
                 defaultValue={bookSearchState.search}
@@ -115,40 +115,40 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
                         title="Filter search"
                         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                         onClick={actions.beginEditFilters}
-                        className="btn btn-default hidden-tiny"
+                        className="btn btn-default"
                       >
                         <i className="fal fa-filter" />
                       </Button>
                       {!isPublic ? (
                         <>
-                          <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default hidden-xs">
+                          <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
                             <i className="fal fa-sitemap" />
                           </Button>
-                          <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default hidden-xs">
+                          <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default">
                             <i className="fal fa-tags" />
                           </Button>
                         </>
                       ) : null}
                     </>
                   ) : null}
-                  <Button className="btn btn-default hidden-tiny" onClick={reloadBooks} disabled={booksLoading}>
+                  <Button className="btn btn-default" onClick={reloadBooks} disabled={booksLoading}>
                     <i className="fal fa-sync"></i>
                   </Button>
                   <Button
                     onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })}
-                    className={"btn btn-default hidden-tiny " + (uiView.isGridView ? "active" : "")}
+                    className={"btn btn-default" + (uiView.isGridView ? "active" : "")}
                   >
                     <i className="fal fa-table" />
                   </Button>
                   <Button
                     onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })}
-                    className={"btn btn-default hidden-tiny " + (uiView.isCoversList ? "active" : "")}
+                    className={"btn btn-default" + (uiView.isCoversList ? "active" : "")}
                   >
                     <i className="fas fa-th" />
                   </Button>
                   <Button
                     onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })}
-                    className={"btn btn-default hidden-tiny " + (uiView.isBasicList ? "active" : "")}
+                    className={"btn btn-default" + (uiView.isBasicList ? "active" : "")}
                   >
                     <i className="fal fa-list" />
                   </Button>
@@ -210,22 +210,7 @@ const PagingButtons: FunctionComponent<{
 
   return (
     <>
-      {!selectedBooksCount ? (
-        <div className="visible-xs" style={{ marginRight: "5px" }}>
-          <FlowItems tightest={true} vCenter={true}>
-            <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default btn-group-size">
-              <i className="fal fa-angle-left" />
-            </Button>
-            <span className={cn({ disabled })} style={{ paddingLeft: "3px", paddingRight: "3px" }}>
-              {page} of {totalPages}
-            </span>
-            <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default btn-group-size">
-              <i className="fal fa-angle-right" />
-            </Button>
-          </FlowItems>
-        </div>
-      ) : null}
-      <div className="hidden-xs" style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
+      <div style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
         <div className="btn-group">
           <Button onClick={pageOne} disabled={!canPageOne} className="btn btn-default">
             <i className="fal fa-angle-double-left" />
@@ -251,7 +236,6 @@ const PagingButtons: FunctionComponent<{
           <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
             <i className="fal fa-angle-right" />
           </Button>
-          {/* TODO: pageLast */}
           {online ? (
             <Button onClick={pageLast} disabled={!canPageLast} className="btn btn-default">
               <i className="fal fa-angle-double-right" />

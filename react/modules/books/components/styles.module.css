@@ -1,17 +1,20 @@
-.searchInput { 
-  width: 250px !important;
+input.searchInput:global(.form-control) { 
+  width: 250px;
 }
 
-@media (max-width: 900px) {
-  .searchInput { 
-    width: 150px !important;
+@media (max-width: 1000px){
+  input.searchInput:global(.form-control) { 
+    width: unset;
+    border-right-width: var(--default-border-width);
+    border-top-right-radius: var(--default-border-radius);
+    border-bottom-right-radius: var(--default-border-radius);
+  }
+
+  .menuBarHome button {
+    display: none;
   }
 }
-@media (max-width: 600px) {
-  .searchInput { 
-    width: 100px !important;
-  }
-}
+
 @media (max-width: 490px) {
   .searchInput { 
     width: 150px !important;
