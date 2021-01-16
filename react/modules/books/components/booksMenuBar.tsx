@@ -6,7 +6,7 @@ import { AppContext, ModuleUpdateContext } from "app/renderUI";
 
 import styles from "./styles.module.css";
 import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
-const { searchInput, menuBarHome } = styles;
+const { searchInput, menuBarHome, mobileMenu } = styles;
 
 import PublicBooksHeader from "./publicBooksHeader";
 import { BooksModuleContext } from "../books";
@@ -93,6 +93,9 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
     <div ref={measureRef} style={{ position: "sticky", top: 0, marginTop: "-2px", paddingTop: "2px", backgroundColor: "white", zIndex: 1 }}>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
+          <a style={{ fontSize: "1.4rem", alignSelf: "center" }} className={`${mobileMenu} margin-right-med`}>
+            <i className="far fa-bars"></i>
+          </a>
           {isPublic ? <PublicBooksHeader /> : null}
           <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>
@@ -134,10 +137,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
                   <Button className="btn btn-default" onClick={reloadBooks} disabled={booksLoading}>
                     <i className="fal fa-sync"></i>
                   </Button>
-                  <Button
-                    onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })}
-                    className={"btn btn-default" + (uiView.isGridView ? "active" : "")}
-                  >
+                  <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default" + (uiView.isGridView ? "active" : "")}>
                     <i className="fal fa-table" />
                   </Button>
                   <Button

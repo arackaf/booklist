@@ -2,9 +2,17 @@ input.searchInput:global(.form-control) {
   width: 250px;
 }
 
-@media (max-width: 1000px){
+.mobileMenu {
+  display: none;
+}
+
+@media (max-width: 1200px){
   input.searchInput:global(.form-control) { 
     width: unset;
+  }
+}
+@media (max-width: 1000px){
+  input.searchInput:global(.form-control) { 
     border-right-width: var(--default-border-width);
     border-top-right-radius: var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
@@ -12,6 +20,10 @@ input.searchInput:global(.form-control) {
 
   .menuBarHome button {
     display: none;
+  }
+
+  .mobileMenu {
+    display: unset;
   }
 }
 
