@@ -90,7 +90,17 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   );
 
   return (
-    <div ref={measureRef} style={{ position: "sticky", top: 0, marginTop: "-2px", paddingTop: "2px", backgroundColor: "white", zIndex: 1 }}>
+    <div ref={measureRef} style={{ position: "sticky", top: 0, marginTop: "-2px", paddingTop: "2px", backgroundColor: "white", zIndex: 3 }}>
+      <div style={{ position: "absolute", top: 0, zIndex: 3 }}>
+        <div style={{ color: "red", backgroundColor: "blue", border: "1px solid red", left: 0, top: 0 }}>
+          <h1>Hello World</h1>
+          <br />
+          <h1>Hello World</h1>
+          <br />
+          <h1>Hello World</h1>
+          <br />
+        </div>
+      </div>
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           <a style={{ fontSize: "1.4rem", alignSelf: "center" }} className={`${mobileMenu} margin-right-med`}>
