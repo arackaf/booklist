@@ -37,3 +37,17 @@ input.searchInput:global(.form-control) {
     width: 100px !important;
   }
 }
+
+:global(.mobile-menu) button {
+    display: flex;    
+}
+
+:global(.mobile-menu) button span {
+    margin-left: 0;
+    margin-right: 10px;
+} 
+
+:global(.mobile-menu) button i {
+    margin-left: auto;
+    margin-right: 2px;
+}

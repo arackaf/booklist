@@ -1,4 +1,6 @@
-import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent } from "react";
+import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent, useState } from "react";
+import { useSpring, config, animated } from "react-spring";
+
 import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
@@ -13,6 +15,7 @@ import { BooksModuleContext } from "../books";
 
 import cn from "classnames";
 import FlowItems from "app/components/layout/FlowItems";
+import { useWidth } from "app/animationHelpers";
 
 interface IAddedMenuProps {
   disabled?: boolean;
@@ -89,21 +92,59 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
     [disabled]
   );
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuRef, mobileMenuWidth] = useWidth();
+  const mobileOpenStyles =
+    useSpring({
+      config: { mass: 1, tension: 500, friction: 40, clamp: !mobileMenuOpen },
+      from: { transform: `translateX(${-1 * mobileMenuWidth}px)` },
+      to: { transform: `translateX(${mobileMenuOpen ? 0 : -1 * mobileMenuWidth}px)` }
+    }) || {};
+
   return (
     <div ref={measureRef} style={{ position: "sticky", top: 0, marginTop: "-2px", paddingTop: "2px", backgroundColor: "white", zIndex: 3 }}>
-      <div style={{ position: "absolute", top: 0, zIndex: 3 }}>
-        <div style={{ color: "red", backgroundColor: "blue", border: "1px solid red", left: 0, top: 0 }}>
-          <h1>Hello World</h1>
-          <br />
-          <h1>Hello World</h1>
-          <br />
-          <h1>Hello World</h1>
-          <br />
+      <animated.div
+        className="mobile-menu"
+        style={{ ...mobileOpenStyles, position: "absolute", top: 0, marginLeft: "calc(-1 * var(--main-spacing-left))", zIndex: 3 }}
+      >
+        <div style={{ color: "red", backgroundColor: "blue", border: "1px solid red" }} ref={mobileMenuRef}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <button onClick={() => setMobileMenuOpen(false)}>Close</button>
+
+            <h1>Hello World </h1>
+
+            <Button
+              title="Filter search"
+              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+              onClick={actions.beginEditFilters}
+              className="btn btn-default"
+            >
+              <span>Set Filters</span>
+              <i className="fal fa-fw fa-filter" />
+            </Button>
+            {!isPublic ? (
+              <>
+                <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
+                  <span>Edit Subjects</span>
+                  <i className="fal fa-fw fa-sitemap" />
+                </Button>
+                <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default">
+                  <span>Edit Subjects</span>
+                  <i className="fal fa-fw fa-tags" />
+                </Button>
+              </>
+            ) : null}
+          </div>
         </div>
-      </div>
+      </animated.div>
+
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
-          <a style={{ fontSize: "1.4rem", alignSelf: "center" }} className={`${mobileMenu} margin-right-med`}>
+          <a
+            style={{ fontSize: "1.4rem", alignSelf: "center", display: "block" }}
+            className={`${mobileMenu} margin-right-med`}
+            onClick={() => setMobileMenuOpen(true)}
+          >
             <i className="far fa-bars"></i>
           </a>
           {isPublic ? <PublicBooksHeader /> : null}

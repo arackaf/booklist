@@ -2,7 +2,11 @@ html,
 body {
   height: calc(var(--adjusted-vh, 1vh) * 100);
   margin: 0;
-  --main-spacing: 10px 5px 10px 5px;
+  --main-spacing-top: 10px;
+  --main-spacing-right: 5px;
+  --main-spacing-bottom: 10px;
+  --main-spacing-left: 5px;
+  --main-spacing: var(--main-spacing-top) var(--main-spacing-right) var(--main-spacing-bottom) var(--main-spacing-left);
   --header-footer-spacing: 10px 5px;  
 }
 
