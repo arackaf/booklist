@@ -1,19 +1,18 @@
 import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent, useState } from "react";
 import { useSpring, config, animated } from "react-spring";
+import cn from "classnames";
 
 import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import { useCurrentSearch } from "../booksSearchState";
 import { AppContext, ModuleUpdateContext } from "app/renderUI";
 
-import styles from "./styles.module.css";
+import "./book-menu-bar-styles.scss";
 import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../setBookFilters";
-const { searchInput, menuBarHome, mobileMenu } = styles;
 
 import PublicBooksHeader from "./publicBooksHeader";
 import { BooksModuleContext } from "../books";
 
-import cn from "classnames";
 import FlowItems from "app/components/layout/FlowItems";
 import { useWidth } from "app/animationHelpers";
 
@@ -102,11 +101,8 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
     }) || {};
 
   return (
-    <div ref={measureRef} style={{ position: "sticky", top: 0, marginTop: "-2px", paddingTop: "2px", backgroundColor: "white", zIndex: 3 }}>
-      <animated.div
-        className="mobile-menu"
-        style={{ ...mobileOpenStyles, position: "absolute", top: 0, marginLeft: "calc(-1 * var(--main-spacing-left))", zIndex: 3 }}
-      >
+    <div className="books-menu-bar" ref={measureRef}>
+      <animated.div className={cn("mobile-menu", { open: mobileMenuOpen })} style={{ ...mobileOpenStyles }}>
         <div style={{ color: "red", backgroundColor: "blue", border: "1px solid red" }} ref={mobileMenuRef}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <button onClick={() => setMobileMenuOpen(false)}>Close</button>
@@ -141,8 +137,8 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           <a
-            style={{ fontSize: "1.4rem", alignSelf: "center", display: "block" }}
-            className={`${mobileMenu} margin-right-med`}
+            style={{ fontSize: "1.4rem", alignSelf: "center" }}
+            className="mobile-menu-button margin-right-med"
             onClick={() => setMobileMenuOpen(true)}
           >
             <i className="far fa-bars"></i>
@@ -150,13 +146,13 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
           {isPublic ? <PublicBooksHeader /> : null}
           <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>
-            <div className={`${menuBarHome} btn-group`}>
+            <div className="menu-bar-home btn-group">
               <input
                 ref={quickSearchEl}
                 defaultValue={bookSearchState.search}
                 onBlur={resetSearch}
                 name="search"
-                className={`form-control ${searchInput} tiny-orphan`}
+                className={`form-control search-input tiny-orphan`}
                 placeholder="Title search"
                 onKeyDown={quickSearchType}
                 disabled={disabled}

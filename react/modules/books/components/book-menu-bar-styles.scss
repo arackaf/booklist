@@ -1,53 +1,69 @@
-input.searchInput:global(.form-control) { 
-  width: 250px;
-}
+.books-menu-bar {
+  position: sticky;
+  top: 0;
+  margin-top: -2px;
+  padding-top: 2px;
+  background-color: white;
+  z-index: 3;
 
-.mobileMenu {
-  display: none;
-}
-
-@media (max-width: 1200px){
-  input.searchInput:global(.form-control) { 
-    width: unset;
-  }
-}
-@media (max-width: 1000px){
-  input.searchInput:global(.form-control) { 
-    border-right-width: var(--default-border-width);
-    border-top-right-radius: var(--default-border-radius);
-    border-bottom-right-radius: var(--default-border-radius);
-  }
-
-  .menuBarHome button {
+  .mobile-menu-button {
     display: none;
   }
 
-  .mobileMenu {
-    display: unset;
+  input.search-input {
+    width: 250px;
   }
-}
 
-@media (max-width: 490px) {
-  .searchInput { 
-    width: 150px !important;
+  .mobile-menu {
+    position: absolute;
+    top: 0;
+    margin-left: calc(-1 * var(--main-spacing-left));
+    z-index: 3;
   }
-}
-@media (max-width: 390px) {
-  .searchInput { 
-    width: 100px !important;
+
+  @media (max-width: 1200px) {
+    input.search-input {
+      width: unset;
+    }
   }
-}
+  @media (max-width: 1000px) {
+    .mobile-menu-button {
+      display: block;
+    }
 
-:global(.mobile-menu) button {
-    display: flex;    
-}
+    input.search-input {
+      border-right-width: var(--default-border-width);
+      border-top-right-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
+    }
 
-:global(.mobile-menu) button span {
+    .menu-bar-home button {
+      display: none;
+    }
+  }
+
+  @media (max-width: 490px) {
+    .search-input {
+      width: 150px !important;
+    }
+  }
+  @media (max-width: 390px) {
+    .search-input {
+      width: 100px !important;
+    }
+  }
+
+  .mobile-menu button {
+    display: flex;
+  }
+
+  .mobile-menu button span {
     margin-left: 0;
     margin-right: 10px;
-} 
+  }
 
-:global(.mobile-menu) button i {
+  .mobile-menu button i {
     margin-left: auto;
     margin-right: 2px;
+  }
 }
