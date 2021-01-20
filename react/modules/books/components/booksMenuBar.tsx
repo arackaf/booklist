@@ -138,7 +138,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           <a
             style={{ fontSize: "1.4rem", alignSelf: "center" }}
-            className="mobile-menu-button margin-right-med"
+            className="mobile-menu-button margin-right"
             onClick={() => setMobileMenuOpen(true)}
           >
             <i className="far fa-bars"></i>

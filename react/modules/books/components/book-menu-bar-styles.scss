@@ -42,13 +42,13 @@
     }
   }
 
-  @media (max-width: 490px) {
-    .search-input {
+  @media (max-width: 600px) {
+    input.search-input {
       width: 150px !important;
     }
   }
-  @media (max-width: 390px) {
-    .search-input {
+  @media (max-width: 501px) {
+    input.search-input {
       width: 100px !important;
     }
   }
