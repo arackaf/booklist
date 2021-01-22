@@ -235,6 +235,7 @@ const MenuOptions: FunctionComponent<{
             <span>Set Filters</span>
             <i className="fal fa-filter" />
           </Button>
+          <hr />
           {!isPublic ? (
             <>
               <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
@@ -245,6 +246,7 @@ const MenuOptions: FunctionComponent<{
                 <span>Edit Tags</span>
                 <i className="fal fa-tags" />
               </Button>
+              <hr />
             </>
           ) : null}
         </>
@@ -253,6 +255,7 @@ const MenuOptions: FunctionComponent<{
         <span>Reload Books</span>
         <i className="fal fa-sync"></i>
       </Button>
+      <hr />
       <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default" + (uiView.isGridView ? "active" : "")}>
         <span>Grid View</span>
         <i className="fal fa-table" />
@@ -265,6 +268,7 @@ const MenuOptions: FunctionComponent<{
         <span>Mobile View</span>
         <i className="fal fa-list" />
       </Button>
+
     </>
   ) : !isPublic ? (
     <>

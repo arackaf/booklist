@@ -15,10 +15,18 @@
   }
 
   .mobile-menu {
+    > * {
+      padding: 10px;
+    }
     position: absolute;
     top: 0;
     margin-left: calc(-1 * var(--main-spacing-left));
     z-index: 3;
+    background-color: white;
+    hr {
+      width: 100%;
+      margin: 0;
+    }
   }
 
   @media (max-width: 1200px) {
@@ -28,7 +36,7 @@
   }
 
   .menu-bar-desktop {
-    button span {
+    button span, h2, hr {
       display: none;
     }
   }
