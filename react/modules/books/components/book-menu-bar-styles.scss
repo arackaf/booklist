@@ -26,6 +26,13 @@
       width: unset;
     }
   }
+
+  .menu-bar-desktop {
+    button span {
+      display: none;
+    }
+  }
+
   @media (max-width: 1000px) {
     .mobile-menu-button {
       display: block;
@@ -37,7 +44,7 @@
       border-bottom-right-radius: var(--default-border-radius);
     }
 
-    .menu-bar-home button {
+    .menu-bar-desktop button {
       display: none;
     }
   }

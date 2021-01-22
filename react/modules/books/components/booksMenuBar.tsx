@@ -45,27 +45,17 @@ export const BooksMenuBarDisabled: FunctionComponent<{ totalPages: number; resul
   return <BooksMenuBar measureRef={measureRef} disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
 };
 const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
-  const { books = [], totalPages = null, resultsCount = null, booksLoaded, reload } = props.bookResultsPacket || {};
+  const { uiView, uiDispatch, disabled, measureRef, bookResultsPacket } = props;
+  const { books = [], totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket || {};
   const quickSearchEl = useRef(null);
   const [appState] = useContext(AppContext);
 
-  const { isPending: booksLoading, startTransition } = useContext(ModuleUpdateContext);
-  const reloadBooks = () => {
-    startTransition(reload);
-  };
-
   const { actions, booksUiState } = useContext(BooksModuleContext);
-  const { setRead } = actions;
 
-  const { uiView, uiDispatch, disabled, measureRef } = props;
   const { selectedBooks } = booksUiState;
   const selectedBooksCount = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]).length, [selectedBooks]);
-  const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
 
   const bookSearchState = useCurrentSearch();
-
-  const editSubjectsForSelectedBooks = () => actions.openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
-  const editTagsForSelectedBooks = () => actions.openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
 
   useEffect(() => {
     quickSearchEl.current.value = bookSearchState.search;
@@ -80,7 +70,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
     }
   };
 
-  let { isPublic, online } = appState;
+  let { isPublic } = appState;
 
   const Button = useCallback(
     ({ children, ...rest }) => (
@@ -103,50 +93,23 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   return (
     <div className="books-menu-bar" ref={measureRef}>
       <animated.div className={cn("mobile-menu", { open: mobileMenuOpen })} style={{ ...mobileOpenStyles }}>
-        <div style={{ color: "red", backgroundColor: "blue", border: "1px solid red" }} ref={mobileMenuRef}>
+        <div style={{ border: "1px solid red" }} ref={mobileMenuRef}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <button onClick={() => setMobileMenuOpen(false)}>Close</button>
-
-            <h1>Hello World </h1>
-
-            <Button
-              title="Filter search"
-              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-              onClick={actions.beginEditFilters}
-              className="btn btn-default"
-            >
-              <span>Set Filters</span>
-              <i className="fal fa-fw fa-filter" />
-            </Button>
-            {!isPublic ? (
-              <>
-                <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
-                  <span>Edit Subjects</span>
-                  <i className="fal fa-fw fa-sitemap" />
-                </Button>
-                <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default">
-                  <span>Edit Subjects</span>
-                  <i className="fal fa-fw fa-tags" />
-                </Button>
-              </>
-            ) : null}
+            <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
           </div>
         </div>
       </animated.div>
 
       <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
-          <a
-            style={{ fontSize: "1.4rem", alignSelf: "center" }}
-            className="mobile-menu-button margin-right"
-            onClick={() => setMobileMenuOpen(true)}
-          >
+          <a style={{ fontSize: "1.4rem", alignSelf: "center" }} className="mobile-menu-button margin-right" onClick={() => setMobileMenuOpen(true)}>
             <i className="far fa-bars"></i>
           </a>
           {isPublic ? <PublicBooksHeader /> : null}
           <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>
-            <div className="menu-bar-home btn-group">
+            <div className="menu-bar-desktop btn-group">
               <input
                 ref={quickSearchEl}
                 defaultValue={bookSearchState.search}
@@ -157,69 +120,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
                 onKeyDown={quickSearchType}
                 disabled={disabled}
               />
-              {!selectedBooksCount ? (
-                <>
-                  {online ? (
-                    <>
-                      <Button
-                        title="Filter search"
-                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                        onClick={actions.beginEditFilters}
-                        className="btn btn-default"
-                      >
-                        <i className="fal fa-filter" />
-                      </Button>
-                      {!isPublic ? (
-                        <>
-                          <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
-                            <i className="fal fa-sitemap" />
-                          </Button>
-                          <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default">
-                            <i className="fal fa-tags" />
-                          </Button>
-                        </>
-                      ) : null}
-                    </>
-                  ) : null}
-                  <Button className="btn btn-default" onClick={reloadBooks} disabled={booksLoading}>
-                    <i className="fal fa-sync"></i>
-                  </Button>
-                  <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default" + (uiView.isGridView ? "active" : "")}>
-                    <i className="fal fa-table" />
-                  </Button>
-                  <Button
-                    onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })}
-                    className={"btn btn-default" + (uiView.isCoversList ? "active" : "")}
-                  >
-                    <i className="fas fa-th" />
-                  </Button>
-                  <Button
-                    onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })}
-                    className={"btn btn-default" + (uiView.isBasicList ? "active" : "")}
-                  >
-                    <i className="fal fa-list" />
-                  </Button>
-                </>
-              ) : !isPublic ? (
-                <>
-                  <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
-                    <i className="fal fa-sitemap" />
-                  </Button>
-                  <Button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default hidden-tiny">
-                    <i className="fal fa-tags" />
-                  </Button>
-                  <Button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
-                    <i className="fal fa-eye" />
-                  </Button>
-                  <Button
-                    title="Set un-read"
-                    onClick={() => setRead(selectedBooksIds, false)}
-                    className="btn btn-default put-line-through hidden-tiny"
-                  >
-                    <i className="fal fa-eye-slash" />
-                  </Button>
-                </>
-              ) : null}
+              <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
             </div>
           </div>
 
@@ -292,6 +193,99 @@ const PagingButtons: FunctionComponent<{
       </div>
     </>
   );
+};
+
+const MenuOptions: FunctionComponent<{
+  Button: any;
+  selectedBooksCount: number;
+  uiView: any;
+  uiDispatch: any;
+  bookResultsPacket: any;
+}> = props => {
+  const [appState] = useContext(AppContext);
+  const { Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket } = props;
+
+  let { isPublic, online } = appState;
+  const { actions, booksUiState } = useContext(BooksModuleContext);
+  const { setRead } = actions;
+
+  const { selectedBooks } = booksUiState;
+  const selectedBooksIds = useMemo(() => Object.keys(selectedBooks).filter(k => selectedBooks[k]), [selectedBooks]);
+
+  const { books = [], reload } = bookResultsPacket || {};
+
+  const editSubjectsForSelectedBooks = () => actions.openBookSubModal(books.filter(b => booksUiState.selectedBooks[b._id]));
+  const editTagsForSelectedBooks = () => actions.openBookTagModal(books.filter(b => booksUiState.selectedBooks[b._id]));
+
+  const { isPending: booksLoading, startTransition } = useContext(ModuleUpdateContext);
+  const reloadBooks = () => {
+    startTransition(reload);
+  };
+
+  return !selectedBooksCount ? (
+    <>
+      {online ? (
+        <>
+          <Button
+            title="Filter search"
+            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+            onClick={actions.beginEditFilters}
+            className="btn btn-default"
+          >
+            <span>Set Filters</span>
+            <i className="fal fa-filter" />
+          </Button>
+          {!isPublic ? (
+            <>
+              <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
+                <span>Edit Subjects</span>
+                <i className="fal fa-sitemap" />
+              </Button>
+              <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default">
+                <span>Edit Tags</span>
+                <i className="fal fa-tags" />
+              </Button>
+            </>
+          ) : null}
+        </>
+      ) : null}
+      <Button className="btn btn-default" onClick={reloadBooks} disabled={booksLoading}>
+        <span>Reload Books</span>
+        <i className="fal fa-sync"></i>
+      </Button>
+      <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default" + (uiView.isGridView ? "active" : "")}>
+        <span>Grid View</span>
+        <i className="fal fa-table" />
+      </Button>
+      <Button onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })} className={"btn btn-default" + (uiView.isCoversList ? "active" : "")}>
+        <span>Covers View</span>
+        <i className="fas fa-th" />
+      </Button>
+      <Button onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })} className={"btn btn-default" + (uiView.isBasicList ? "active" : "")}>
+        <span>Mobile View</span>
+        <i className="fal fa-list" />
+      </Button>
+    </>
+  ) : !isPublic ? (
+    <>
+      <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
+        <span>Add / Remove Subjects</span>
+        <i className="fal fa-sitemap" />
+      </Button>
+      <Button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default hidden-tiny">
+        <span>Add / Remove Tags</span>
+        <i className="fal fa-tags" />
+      </Button>
+      <Button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
+        <span>Set Read</span>
+        <i className="fal fa-eye" />
+      </Button>
+      <Button title="Set un-read" onClick={() => setRead(selectedBooksIds, false)} className="btn btn-default put-line-through hidden-tiny">
+        <span>Set Un-Read</span>
+        <i className="fal fa-eye-slash" />
+      </Button>
+    </>
+  ) : null;
 };
 
 type BookSearchFilters = {
