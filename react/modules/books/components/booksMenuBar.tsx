@@ -101,7 +101,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
         </div>
       </animated.div>
 
-      <div className="booksMenuBar" style={{ fontSize: "11pt", paddingBottom: "5px", position: "relative" }}>
+      <div className="booksMenuBar" style={{ fontSize: "11pt", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           <a style={{ fontSize: "1.4rem", alignSelf: "center" }} className="mobile-menu-button margin-right" onClick={() => setMobileMenuOpen(true)}>
             <i className="far fa-bars"></i>
