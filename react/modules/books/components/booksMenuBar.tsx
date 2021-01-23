@@ -268,7 +268,7 @@ const MenuOptions: FunctionComponent<{
         <span>Mobile View</span>
         <i className="fal fa-list" />
       </Button>
-
+      <hr />
     </>
   ) : !isPublic ? (
     <>
@@ -288,6 +288,7 @@ const MenuOptions: FunctionComponent<{
         <span>Set Un-Read</span>
         <i className="fal fa-eye-slash" />
       </Button>
+      <hr />
     </>
   ) : null;
 };
