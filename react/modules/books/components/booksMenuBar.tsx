@@ -1,5 +1,4 @@
-import React, { SFC, useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent, useState } from "react";
-import { useSpring, config, animated } from "react-spring";
+import React, { useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent, useState } from "react";
 import cn from "classnames";
 
 import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
@@ -12,9 +11,6 @@ import { setPage, quickSearch, pageOne, removeFilters, removeFilterSubject, remo
 
 import PublicBooksHeader from "./publicBooksHeader";
 import { BooksModuleContext } from "../books";
-
-import FlowItems from "app/components/layout/FlowItems";
-import { useWidth } from "app/animationHelpers";
 
 interface IAddedMenuProps {
   disabled?: boolean;
@@ -82,24 +78,17 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   );
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileMenuRef, mobileMenuWidth] = useWidth();
-  const mobileOpenStyles =
-    useSpring({
-      config: { mass: 1, tension: 500, friction: 40, clamp: !mobileMenuOpen },
-      from: { transform: `translateX(${-1 * mobileMenuWidth}px)` },
-      to: { transform: `translateX(${mobileMenuOpen ? 0 : -1 * mobileMenuWidth}px)` }
-    }) || {};
 
   return (
     <div className="books-menu-bar" ref={measureRef}>
-      <animated.div className={cn("mobile-menu", { open: mobileMenuOpen })} style={{ ...mobileOpenStyles }}>
-        <div style={{ border: "1px solid red" }} ref={mobileMenuRef}>
+      <div className={cn("mobile-menu", { open: mobileMenuOpen })}>
+        <div style={{ border: "1px solid red" }}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <button onClick={() => setMobileMenuOpen(false)}>Close</button>
             <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
           </div>
         </div>
-      </animated.div>
+      </div>
 
       <div className="booksMenuBar" style={{ fontSize: "11pt", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
