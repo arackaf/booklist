@@ -28,15 +28,19 @@
       border-top-right-radius: var(--default-border-radius);
       border-bottom-right-radius: var(--default-border-radius);
     }
+
+    .button-container {
+      margin-top: 15px;
+      > * {
+        margin: 5px;
+      }
+    }
+
     position: absolute;
     top: 0;
     margin-left: calc(-1 * var(--main-spacing-left));
     z-index: 3;
     background-color: white;
-    hr {
-      width: 100%;
-      margin: 0;
-    }
   }
 
   @media (max-width: 1200px) {
