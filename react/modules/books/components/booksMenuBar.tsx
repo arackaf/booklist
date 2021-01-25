@@ -83,9 +83,12 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
     <div className="books-menu-bar" ref={measureRef}>
       <div className={cn("mobile-menu", { open: mobileMenuOpen })}>
         <div>
-          <a style={{ fontSize: "1.4rem", alignSelf: "start" }} onClick={() => setMobileMenuOpen(false)}>
-            <i className="far fa-bars"></i>
-          </a>
+          <div style={{ display: "flex" }}>
+            <a style={{ fontSize: "1.4rem", alignSelf: "start" }} onClick={() => setMobileMenuOpen(false)}>
+              <i className="far fa-bars"></i>
+            </a>
+            <h3 style={{ margin: "0 0 0 10px", alignSelf: "center" }}>Book Options</h3>
+          </div>
           <div className="button-container" style={{ display: "flex", flexDirection: "column" }}>
             <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
           </div>
