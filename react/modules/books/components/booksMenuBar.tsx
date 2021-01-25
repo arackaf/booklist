@@ -82,9 +82,11 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   return (
     <div className="books-menu-bar" ref={measureRef}>
       <div className={cn("mobile-menu", { open: mobileMenuOpen })}>
-        <div style={{ border: "1px solid red" }}>
+        <div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <button onClick={() => setMobileMenuOpen(false)}>Close</button>
+            <a style={{ fontSize: "1.4rem", alignSelf: "start" }} onClick={() => setMobileMenuOpen(false)}>
+              <i className="far fa-bars"></i>
+            </a>
             <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
           </div>
         </div>
@@ -217,7 +219,6 @@ const MenuOptions: FunctionComponent<{
         <>
           <Button
             title="Filter search"
-            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
             onClick={actions.beginEditFilters}
             className="btn btn-default"
           >

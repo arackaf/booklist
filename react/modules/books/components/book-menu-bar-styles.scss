@@ -22,7 +22,11 @@
     }
 
     > * {
-      padding: 10px;
+      padding: 4px 4px 4px 5px;
+      border: 1px solid var(--neutral-border);
+      border-left-width: 0;
+      border-top-right-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
     }
     position: absolute;
     top: 0;
