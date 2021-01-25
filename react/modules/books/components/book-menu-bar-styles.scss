@@ -48,6 +48,14 @@
   }
 
   @media (max-width: 1000px) {
+    .page-edge {
+      display: none;
+    }
+    .page {
+      border-radius: var(--default-border-radius) !important;
+      border: var(--default-border-width) solid var(--neutral-border) !important;
+    }
+
     .mobile-menu-button {
       display: block;
     }

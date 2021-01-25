@@ -149,10 +149,10 @@ const PagingButtons: FunctionComponent<{
     <>
       <div style={{ display: "flex", marginRight: "5px", alignItems: "center" }}>
         <div className="btn-group">
-          <Button onClick={pageOne} disabled={!canPageOne} className="btn btn-default">
+          <Button onClick={pageOne} disabled={!canPageOne} className="btn btn-default page-edge">
             <i className="fal fa-angle-double-left" />
           </Button>
-          <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default" style={{ marginRight: "5px" }}>
+          <Button onClick={pageDown} disabled={!canPageDown} className="btn btn-default page" style={{ marginRight: "5px" }}>
             <i className="fal fa-angle-left" />
           </Button>
         </div>
@@ -170,11 +170,11 @@ const PagingButtons: FunctionComponent<{
           </span>
         ) : null}
         <div className="btn-group">
-          <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default" style={{ marginLeft: "5px" }}>
+          <Button onClick={pageUp} disabled={!canPageUp} className="btn btn-default page" style={{ marginLeft: "5px" }}>
             <i className="fal fa-angle-right" />
           </Button>
           {online ? (
-            <Button onClick={pageLast} disabled={!canPageLast} className="btn btn-default">
+            <Button onClick={pageLast} disabled={!canPageLast} className="btn btn-default page-edge">
               <i className="fal fa-angle-double-right" />
             </Button>
           ) : null}
