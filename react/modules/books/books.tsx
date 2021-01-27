@@ -1,6 +1,6 @@
 import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext, useState, FunctionComponent } from "react";
 
-import BooksMenuBar, { BooksMenuBarDisabled } from "./components/booksMenuBar";
+import BooksMenuBar, { BooksMenuBarDisabled } from "./components/menuBar/menuBar";
 import Loading from "app/components/loading";
 
 import GridView from "./components/bookViews/gridList";
