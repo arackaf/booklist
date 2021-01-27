@@ -262,6 +262,7 @@ const MenuOptions: FunctionComponent<{
     </>
   ) : !isPublic ? (
     <>
+      <hr />
       <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
         <span>Add / Remove Subjects</span>
         <i className="fal fa-sitemap" />
