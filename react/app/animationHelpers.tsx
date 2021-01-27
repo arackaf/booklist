@@ -35,6 +35,30 @@ export function useHeight({ on = true /* no value means on */ } = {} as any) {
   return [ref, height as any];
 }
 
+export function useWidth({ on = true /* no value means on */ } = {} as any) {
+  const ref = useRef<any>();
+  const [width, set] = useState(0);
+  const widthRef = useRef(width);
+  const [ro] = useState(
+    () =>
+      new ResizeObserver(packet => {
+        if (ref.current && widthRef.current != ref.current.offsetWidth) {
+          widthRef.current = ref.current.offsetWidth;
+          set(ref.current.offsetWidth);
+        }
+      })
+  );
+  useLayoutEffect(() => {
+    if (on && ref.current) {
+      set(ref.current.offsetWidth);
+      ro.observe(ref.current, {});
+    }
+    return () => ro.disconnect();
+  }, [on, ref.current]);
+
+  return [ref, width as any];
+}
+
 export const SlideInContents = ({
   in: inProp = void 0,
   immediateChanges = null,
