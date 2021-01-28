@@ -147,7 +147,7 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
-  :not(:last-child) { 
+  button:not(:last-of-type), input.form-control { 
     border-right-width: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -157,7 +157,7 @@
     border-top-left-radius: var(--default-border-radius);
     border-bottom-left-radius: var(--default-border-radius);
   }
-  :last-child {
+  button:last-of-type {
     border-top-right-radius: var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
   }
