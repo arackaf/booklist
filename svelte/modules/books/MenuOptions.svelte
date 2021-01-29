@@ -25,42 +25,63 @@
 </script>
 
 {#if !selectedBooksCount}
+  <hr />
   {#if online}
-    <button
-      title="Filter search"
-      style="border-top-left-radius: 0; border-bottom-left-radius: 0"
-      on:click={openFilterModal}
-      class="btn btn-default hidden-tiny"
-    >
+    <button title="Filter search" on:click={openFilterModal} class="btn btn-default hidden-tiny">
+      <span>Set Filters</span>
       <i class="fal fa-filter" />
     </button>
+    <hr />
     {#if !isPublic}
-      <button title="Edit subjects" on:click={editSubjects} class="btn btn-default hidden-xs"><i class="fal fa-sitemap" /></button>
-      <button title="Edit tags" on:click={editTags} class="btn btn-default hidden-xs"><i class="fal fa-tags" /></button>
+      <button title="Edit subjects" on:click={editSubjects} class="btn btn-default hidden-xs">
+        <span>Edit Subjects</span>
+        <i class="fal fa-sitemap" />
+      </button>
+      <button title="Edit tags" on:click={editTags} class="btn btn-default hidden-xs">
+        <span>Edit Tags</span>
+        <i class="fal fa-tags" />
+      </button>
+      <hr />
     {/if}
   {/if}
-  <button class="btn btn-default hidden-tiny" on:click={reload} disabled={booksLoading}><i class="fal fa-sync" /></button>
+  <button class="btn btn-default hidden-tiny" on:click={reload} disabled={booksLoading}>
+    <span>Reload Books</span>
+    <i class="fal fa-sync" />
+  </button>
+  <hr />
   <button on:click={() => uiDispatch(GRID_VIEW)} class={"btn btn-default hidden-tiny " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
+    <span>Grid View</span>
     <i class="fal fa-table" />
   </button>
   <button on:click={() => uiDispatch(COVERS_LIST)} class={"btn btn-default hidden-tiny " + ($uiView.pendingView == COVERS_LIST ? "active" : "")}>
+    <span>Covers View</span>
     <i class="fas fa-th" />
   </button>
   <button
     on:click={() => uiDispatch(BASIC_LIST_VIEW)}
     class={"btn btn-default hidden-tiny " + ($uiView.pendingView == BASIC_LIST_VIEW ? "active" : "")}
   >
+    <span>Mobile View</span>
     <i class="fal fa-list" />
   </button>
+  <hr />
 {:else if !isPublic}
+  <hr />
   <button title="Add/remove subjects" on:click={editSubjectsForSelectedBooks} class={"btn btn-default hidden-tiny"}>
+    <span>Add / Remove Subjects</span>
     <i class="fal fa-sitemap" />
   </button>
-  <button title="Add/remove tags" on:click={editTagsForSelectedBooks} class="btn btn-default hidden-tiny"><i class="fal fa-tags" /></button>
+  <button title="Add/remove tags" on:click={editTagsForSelectedBooks} class="btn btn-default hidden-tiny">
+    <span>Add / Remove Tags</span>
+    <i class="fal fa-tags" />
+  </button>
   <button title="Set read" on:click={() => setRead(selectedBooksIds, true)} class={"btn btn-default hidden-tiny"}>
+    <span>Set Read</span>
     <i class="fal fa-eye" />
   </button>
   <button title="Set un-read" on:click={() => setRead(selectedBooksIds, false)} class="btn btn-default put-line-through hidden-tiny">
+    <span>Set Un-Read</span>
     <i class="fal fa-eye-slash" />
   </button>
+  <hr />
 {/if}
