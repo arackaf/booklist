@@ -14,6 +14,15 @@ import { computeBookSearchVariables } from "./booksLoadingUtils";
 import { preloadBookImages } from "util/imagePreload";
 import { COVERS_LIST } from "./booksUiState";
 
+export interface BookResultsPacket {
+  books: any[];
+  totalPages: number;
+  resultsCount: string | number;
+  reload?: () => void;
+  booksLoading?: boolean;
+  booksLoaded?: boolean;
+}
+
 interface IEditorialReview {
   content: string;
   source: string;

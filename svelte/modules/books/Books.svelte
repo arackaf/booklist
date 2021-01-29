@@ -136,7 +136,7 @@
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <BooksMenuBar {books} {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
+    <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px;">
         {#if booksLoaded}

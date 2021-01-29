@@ -1,0 +1,106 @@
+.books-menu-bar {
+  position: sticky;
+  top: 0;
+  margin-top: -2px;
+  padding-top: 2px;
+  background-color: white;
+  z-index: 3;
+
+  .mobile-menu-button {
+    display: none;
+  }
+
+  input.search-input {
+    width: 250px;
+  }
+
+  .mobile-menu {
+    transform: translateX(-100%);
+    transition: transform 150ms ease-out;
+    &.open {
+      transform: translateX(0);
+    }
+
+    > * {
+      padding: 4px 4px 4px 5px;
+      border: 1px solid var(--neutral-border);
+      border-left-width: 0;
+      border-top-right-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
+    }
+
+    .button-container {
+      margin-top: 10px;
+      > * {
+        margin: 5px;
+      }
+    }
+
+    position: absolute;
+    top: 0;
+    margin-left: calc(-1 * var(--main-spacing-left));
+    z-index: 3;
+    background-color: white;
+  }
+
+  @media (max-width: 1200px) {
+    input.search-input {
+      width: unset;
+    }
+  }
+
+  .menu-bar-desktop {
+    button span, h2, hr {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .page-edge {
+      display: none;
+    }
+    .page {
+      border-radius: var(--default-border-radius) !important;
+      border: var(--default-border-width) solid var(--neutral-border) !important;
+    }
+
+    .mobile-menu-button {
+      display: block;
+    }
+
+    input.search-input {
+      border-right-width: var(--default-border-width);
+      border-top-right-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
+    }
+
+    .menu-bar-desktop button {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    input.search-input {
+      width: 150px !important;
+    }
+  }
+  @media (max-width: 501px) {
+    input.search-input {
+      width: 100px !important;
+    }
+  }
+
+  .mobile-menu button {
+    display: flex;
+  }
+
+  .mobile-menu button span {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+
+  .mobile-menu button i {
+    margin-left: auto;
+    margin-right: 2px;
+  }
+}
