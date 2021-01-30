@@ -20,12 +20,34 @@
 
   export let onClick: (...args) => any = null as any;
 
-  let isRunning = false;
+  export let isRunning = false;
   let isFinished = false;
+
+  let wasRun = false;
+
+  $: {
+    if (finishedText && isRunning) {
+      wasRun = true;
+    }
+  }
+
+  $: {
+    if (!isRunning && wasRun) {
+      wasRun = false;
+
+      isFinished = true;
+      setTimeout(() => {
+        if (active) {
+          isFinished = false;
+          isRunning = false;
+        }
+      }, 2000);
+    }
+  }
 
   onMount(() => () => (active = false));
 
-  const buttonStyle = `min-width: ${baseWidth || text.length + 2 + "ch"} ${style}`;
+  const buttonStyle = `min-width: ${baseWidth || text.length + 2 + "ch"}; ${style}`;
   const iconStyles = `${text.length ? "margin-left: 3px" : ""}`;
   const finishedIconStyles = `${text.length ? "margin-left: 5px" : ""}`;
 
@@ -38,18 +60,7 @@
 
     isRunning = true;
     Promise.resolve(result).then(() => {
-      if (!active) {
-        return;
-      }
-      if (finishedText) {
-        isFinished = true;
-        setTimeout(() => {
-          if (active) {
-            isFinished = false;
-            isRunning = false;
-          }
-        }, 2000);
-      } else {
+      if (active) {
         isRunning = false;
       }
     });
@@ -66,7 +77,7 @@
   on:click={clickHandler}
   style={buttonStyle}
   disabled={isRunning || isFinished || disabled || false}
-  class={cn(cssFromPreset(preset, className), className, 'bl-action-button')}
+  class={cn(cssFromPreset(preset, className), className, "bl-action-button")}
   {...$$restProps}
 >
   {#if isFinished}

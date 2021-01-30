@@ -7,6 +7,8 @@
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import SectionLoading from "app/components/ui/SectionLoading.svelte";
 
+  import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
+
   $: ({ online } = $appState);
 
   const { queryState, sync } = query<QueryOf<Queries["getUser"]>>(PublicUserSettingsQuery, { initialSearch: {} });
@@ -19,7 +21,7 @@
       {#if !loaded}
         <SectionLoading style="left: 20%" />
       {:else}
-        <!-- <EditPublicUserSettings settings={data.getUser.User} /> -->
+        <EditPublicUserSettings settings={data.getUser.User} />
       {/if}
     </div>
   </FlexRow>
