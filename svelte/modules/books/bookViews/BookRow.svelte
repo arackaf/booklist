@@ -29,7 +29,7 @@
 
   let doDelete = () => {
     deleting = true;
-    deleteBook({ _id });
+    return deleteBook({ _id });
   };
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
