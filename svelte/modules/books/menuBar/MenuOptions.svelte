@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { appState } from "app/state/appState";
-  import { BookResultsPacket } from "./booksState";
-  import { getBookSearchUiView, BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "./booksUiState";
+  import { BookResultsPacket } from "../booksState";
+  import { getBookSearchUiView, BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../booksUiState";
 
   export let uiView: ReturnType<typeof getBookSearchUiView>;
 

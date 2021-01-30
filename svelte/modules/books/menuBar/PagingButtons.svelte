@@ -1,8 +1,8 @@
 <script lang="ts">
   import { appState } from "app/state/appState";
   import FlowItems from "app/components/layout/FlowItems.svelte";
-  import { currentSearch } from "./booksSearchState";
-  import { pageOne, setPage } from "./setBookFilters";
+  import { currentSearch } from "../booksSearchState";
+  import { pageOne, setPage } from "../setBookFilters";
 
   export let selectedBooksCount: number;
   export let totalPages: number;

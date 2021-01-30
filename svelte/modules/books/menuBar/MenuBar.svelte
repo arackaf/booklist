@@ -6,12 +6,12 @@
   import measureHeight from "util/measureHeight";
 
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
-  import { currentSearch as bookSearchState } from "./booksSearchState";
-  import { getBookSearchUiView } from "./booksUiState";
+  import { currentSearch as bookSearchState } from "../booksSearchState";
+  import { getBookSearchUiView } from "../booksUiState";
   import PagingButtons from "./PagingButtons.svelte";
   import MenuOptions from "./MenuOptions.svelte";
-  import { quickSearch } from "./setBookFilters";
-  import { BookResultsPacket } from "./booksState";
+  import { quickSearch } from "../setBookFilters";
+  import { BookResultsPacket } from "../booksState";
 
   export let setMenuBarHeight;
   export let bookResultsPacket: BookResultsPacket;

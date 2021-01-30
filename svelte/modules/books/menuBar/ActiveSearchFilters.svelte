@@ -2,9 +2,9 @@
   import cn from "classnames";
 
   import { appState } from "app/state/appState";
-  import { currentSearch } from "./booksSearchState";
+  import { currentSearch } from "../booksSearchState";
   import RemovableLabelDisplay from "app/components/subjectsAndTags/RemovableLabelDisplay.svelte";
-  import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from "./setBookFilters";
+  import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from "../setBookFilters";
 
   export let resultsCount: string | number;
 

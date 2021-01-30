@@ -48,7 +48,7 @@
   import CoversView from "./bookViews/CoversView.svelte";
 
   import BookSearchModal from "./SearchModal.svelte";
-  import BooksMenuBar from "./MenuBar.svelte";
+  import BooksMenuBar from "./menuBar/MenuBar.svelte";
   import { searchBooks } from "./booksState";
   import { getBookSearchUiView, GRID_VIEW, BASIC_LIST_VIEW, COVERS_LIST } from "./booksUiState";
   import SubjectEditModal from "./SubjectEditModal.svelte";
