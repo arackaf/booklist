@@ -6,6 +6,12 @@
   background-color: white;
   z-index: 3;
 
+  .results-holder {
+    > * {
+      justify-self: center;
+    }
+  }
+
   .mobile-menu-button {
     display: none;
   }

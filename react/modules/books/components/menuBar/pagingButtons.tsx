@@ -43,15 +43,21 @@ const PagingButtons: FunctionComponent<{
         </div>
         {online ? (
           <span className={cn({ disabled })} style={{ display: "inline" }}>
-            {!booksLoaded ? (
-              <span>Loading...</span>
-            ) : resultsCount ? (
-              <span>
-                <span className="page-label">Page </span>{page} of {totalPages}
+            <div className="results-holder overlay-holder">
+              {!booksLoaded ? (
+                <span>Loading...</span>
+              ) : resultsCount ? (
+                <span>
+                  <span className="page-label">Page </span>
+                  {page} of {totalPages}
+                </span>
+              ) : (
+                <span>No results</span>
+              )}
+              <span style={{ visibility: "hidden" }}>
+                <span className="page-label">Page </span>1 of 10
               </span>
-            ) : (
-              <span>No results</span>
-            )}
+            </div>
           </span>
         ) : null}
         <div className="btn-group">
