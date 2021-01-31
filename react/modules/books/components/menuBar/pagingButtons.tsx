@@ -42,12 +42,12 @@ const PagingButtons: FunctionComponent<{
           </Button>
         </div>
         {online ? (
-          <span className={cn({ disabled })} style={{ display: "inline", minWidth: "7ch" }}>
+          <span className={cn({ disabled })} style={{ display: "inline" }}>
             {!booksLoaded ? (
               <span>Loading...</span>
             ) : resultsCount ? (
               <span>
-                Page {page} of {totalPages}
+                <span className="page-label">Page </span>{page} of {totalPages}
               </span>
             ) : (
               <span>No results</span>
