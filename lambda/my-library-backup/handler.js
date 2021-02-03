@@ -28,7 +28,7 @@ module.exports.handler = function(event, context, cb) {
 
   console.log(`Backup of database '${dbName}' to S3 bucket '${bucketName}' is starting`);
   process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'];
-  let fileName = dbName + '_' + dayjs().format(dateFormat);
+  let fileName = dbName + '_backup_' + dayjs().format(dateFormat);
   let folderName = `/tmp/${fileName}/`;
   let filePath = `/tmp/${fileName}.zip`;
 
