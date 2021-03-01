@@ -1,5 +1,29 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
 [data-reach-dialog-overlay] {
   z-index: 10;
+  animation: fadeIn 150ms ease-out forwards;
+
+  &.close {
+    animation: fadeOut 150ms ease-out forwards;
+  }
 }
 
 div[data-reach-dialog-content] {
@@ -42,3 +66,4 @@ div[data-reach-dialog-content] {
     font-size: 22px;
   }
 }
+
