@@ -30,14 +30,12 @@ type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: a
 const Modal: FunctionComponent<ModalTypes> = props => {
   let { isOpen, onHide, headerCaption, focusRef = null, style = {}, children } = props;
 
-  const modalTransition = useTransition([!!isOpen], {
+  const modalTransition = useTransition(!!isOpen, {
     config: isOpen ? { ...config.stiff } : { duration: 150 },
-    from: { transform: `translate3d(0px, -10px, 0px)` },
-    enter: { transform: `translate3d(0px, 0px, 0px)` },
-    leave: { transform: `translate3d(0px, 10px, 0px)` }
+    from: { opacity: 0, transform: `translate3d(0px, -10px, 0px)` },
+    enter: { opacity: 1, transform: `translate3d(0px, 0px, 0px)` },
+    leave: { opacity: 0, transform: `translate3d(0px, 10px, 0px)` }
   });
-
-  const overlayRef = useRef(null);
 
   const animatModalSizing = useRef(true);
   const modalSizingPacket = useMemo(() => {
@@ -51,36 +49,30 @@ const Modal: FunctionComponent<ModalTypes> = props => {
     };
   }, []);
 
-  useLayoutEffect(() => {
-    if (!isOpen && overlayRef.current) {
-      overlayRef.current.classList.add("close");
-    }
-  }, [isOpen])
-
   return (
     <ModalSizingContext.Provider value={modalSizingPacket}>
       {modalTransition(
         (styles, isOpen) =>
-          isOpen ? (
+          isOpen && (
             <AnimatedDialogOverlay
-              ref={overlayRef}
               allowPinchZoom={true}
               initialFocusRef={focusRef}
               onDismiss={onHide}
               isOpen={isOpen}
+              style={{ opacity: styles.opacity }}
             >
               <AnimatedDialogContent
                 style={{
                   transform: styles.transform,
                   border: "4px solid hsla(0, 0%, 0%, 0.5)",
                   borderRadius: 10,
-                  style: style.transform
+                  ...style
                 }}
               >
                 <ModalContents content={children} {...{ animatModalSizing, headerCaption, onHide }} />
               </AnimatedDialogContent>
             </AnimatedDialogOverlay>
-          ) : null
+          )
       )}
     </ModalSizingContext.Provider>
   );
