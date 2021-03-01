@@ -1,12 +1,15 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { memo, FunctionComponent, useContext, useState, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 
 import { goto } from "reactStartup";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 
-import navClasses from "css/navbar.module.scss";
 import { isAdmin } from "util/loginStatus";
 import BookSvg from "./bookSvg";
+
+import navClasses from "css/navbar.module.scss";
+import "css/main-mobile-menu.scss";
 
 const { nav, navHeader, navItems, navItemsRight } = navClasses;
 
@@ -103,8 +106,19 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           </ul>
         ) : null}
       </nav>
+      <div id="main-mobile-menu" className="main-mobile-menu">
+      </div>
     </header>
   );
 };
 
 export default MainNavigationBar;
+
+const _MobileMenu = ({ open, children }) => {
+  const [el] = useState(() => document.getElementById("main-mobile-menu"));
+  useLayoutEffect(() => el.classList[open ? "add" : "remove"]("open"), [open])
+ 
+  return createPortal(children, el);
+};
+
+export const MobileMenu = memo(_MobileMenu);
