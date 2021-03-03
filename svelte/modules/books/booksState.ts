@@ -171,8 +171,10 @@ const adjustBooks = (books, subjectsState, tagsState) => {
 
   return books.map((bookRaw: IBookDisplay) => {
     let result = { ...bookRaw };
-    result.subjectObjects = (result.subjects || []).map(s => subjectHash[s]).filter(s => s);
-    result.tagObjects = (result.tags || []).map(s => tagHash[s]).filter(s => s);
+    result.subjects = result.subjects ?? [];
+    result.tags = result.tags ?? [];
+    result.subjectObjects = result.subjects.map(s => subjectHash[s]).filter(s => s);
+    result.tagObjects = result.tags.map(s => tagHash[s]).filter(s => s);
     result.authors = result.authors || [];
 
     let d = new Date(+result.dateAdded);
