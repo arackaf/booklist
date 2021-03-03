@@ -595,3 +595,7 @@ a, button, input, select {
 .border-bottom {
   border-bottom: 2px solid var(--primary-5);
 }
+
+.svelte-modal-overlay {
+  z-index: 99 !important;
+}

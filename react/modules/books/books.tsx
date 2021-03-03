@@ -143,7 +143,11 @@ export default () => {
   );
 };
 
-const Fallback: FunctionComponent<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({ uiView, totalPages, resultsCount }) => {
+const Fallback: FunctionComponent<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({
+  uiView,
+  totalPages,
+  resultsCount
+}) => {
   const [measureRef, menuBarHeight] = useHeight();
 
   return (
@@ -202,40 +206,51 @@ const MainContent: FunctionComponent<{ uiView: BookSearchUiView; setLastBookResu
         bookResultsPacket={{ books, totalPages, resultsCount, reload, booksLoaded }}
       />
 
-      <BookResults menuBarHeight={menuBarHeight} {...{ books, uiView }} />
+      <BookResults menuBarHeight={menuBarHeight} {...{ books, currentQuery, uiView }} />
     </>
   );
 };
 
-const BookResults: FunctionComponent<{ books: any; uiView: any; menuBarHeight: any }> = ({ books, uiView, menuBarHeight }) => {
+const BookResults: FunctionComponent<{ books: any; currentQuery: string; uiView: any; menuBarHeight: any }> = ({
+  books,
+  currentQuery,
+  uiView,
+  menuBarHeight
+}) => {
   const { isPending } = useContext(ModuleUpdateContext);
 
-  const resultsTransition = useTransition([books], {
-    config: config.stiff,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0, position: "absolute" }
-  });
+  const resultsTransition = useTransition(
+    { currentQuery, books },
+    {
+      keys: ({ currentQuery }) => currentQuery,
+      config: config.stiff,
+      from: { opacity: 0 },
+      enter: { opacity: 1 },
+      leave: { opacity: 0 }
+    }
+  );
 
-  return resultsTransition((styles: any, books) => (
+  return (
     <div className="overlay-holder">
-      <animated.div style={{ flex: 1, padding: 0, minHeight: 450, ...styles }}>
-        {!books.length ? (
-          <div className="alert alert-warning" style={{ marginTop: "20px" }}>
-            No books found
-          </div>
-        ) : null}
+      {resultsTransition((styles: any, { books }) => (
+        <animated.div style={{ padding: 0, minHeight: 450, ...styles }}>
+          {!books.length ? (
+            <div className="alert alert-warning" style={{ marginTop: "20px" }}>
+              No books found
+            </div>
+          ) : null}
 
-        {isPending ? <Loading /> : null}
+          {isPending ? <Loading /> : null}
 
-        {uiView.isGridView ? (
-          <GridView menuBarHeight={menuBarHeight} books={books} />
-        ) : uiView.isBasicList ? (
-          <BasicListView books={books} />
-        ) : uiView.isCoversList ? (
-          <CoversView books={books} />
-        ) : null}
-      </animated.div>
+          {uiView.isGridView ? (
+            <GridView menuBarHeight={menuBarHeight} books={books} />
+          ) : uiView.isBasicList ? (
+            <BasicListView books={books} />
+          ) : uiView.isCoversList ? (
+            <CoversView books={books} />
+          ) : null}
+        </animated.div>
+      ))}
     </div>
-  ));
+  );
 };
