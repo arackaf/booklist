@@ -60,15 +60,15 @@ const MenuOptions: FunctionComponent<{
         <i className="fal fa-sync"></i>
       </Button>
       <hr />
-      <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default" + (uiView.isGridView ? "active" : "")}>
+      <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default " + (uiView.isGridView ? "active" : "")}>
         <span>Grid View</span>
         <i className="fal fa-table" />
       </Button>
-      <Button onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })} className={"btn btn-default" + (uiView.isCoversList ? "active" : "")}>
+      <Button onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })} className={"btn btn-default " + (uiView.isCoversList ? "active" : "")}>
         <span>Covers View</span>
         <i className="fas fa-th" />
       </Button>
-      <Button onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })} className={"btn btn-default" + (uiView.isBasicList ? "active" : "")}>
+      <Button onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })} className={"btn btn-default " + (uiView.isBasicList ? "active" : "")}>
         <span>Mobile View</span>
         <i className="fal fa-list" />
       </Button>
