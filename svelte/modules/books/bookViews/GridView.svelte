@@ -47,7 +47,7 @@
 
   export let menuBarHeight;
 
-  $: stickyHeaderStyle = `position: sticky; padding-top: 5px; top: ${menuBarHeight - 3}px; background-color: white; z-index: 2`;
+  $: stickyHeaderStyle = `position: sticky; padding-top: 2px; top: ${menuBarHeight - 4}px; background-color: white; z-index: 2`;
 </script>
 
 <div class="overlay-holder" style="min-height: 400px">
