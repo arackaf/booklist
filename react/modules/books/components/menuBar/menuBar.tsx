@@ -13,6 +13,7 @@ import { useCurrentSearch } from "../../booksSearchState";
 import { quickSearch } from "../../setBookFilters";
 import PublicBooksHeader from "../publicBooksHeader";
 import { BooksModuleContext } from "../../books";
+import { MobileMenu } from "app/components/mainNavigation";
 
 interface IAddedMenuProps {
   disabled?: boolean;
@@ -81,19 +82,11 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
 
   return (
     <div className="books-menu-bar" ref={measureRef}>
-      <div className={cn("mobile-menu", { open: mobileMenuOpen })}>
-        <div>
-          <div style={{ display: "flex" }}>
-            <a style={{ fontSize: "1.4rem", alignSelf: "start" }} onClick={() => setMobileMenuOpen(false)}>
-              <i className="far fa-bars"></i>
-            </a>
-            <h3 style={{ margin: "0 0 0 10px", alignSelf: "center" }}>Book Options</h3>
-          </div>
-          <div className="button-container" style={{ display: "flex", flexDirection: "column" }}>
-            <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
-          </div>
+      <MobileMenu title="Book Options" open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
+        <div className="button-container" style={{ display: "flex", flexDirection: "column" }}>
+          <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
         </div>
-      </div>
+      </MobileMenu>
 
       <div style={{ fontSize: "11pt", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
