@@ -10,8 +10,9 @@ header {
     background-color: white;
 
     border: 1px solid var(--neutral-2);
+    border-top-width: 0;
     border-left-width: 0;
-    border-top-right-radius: var(--default-border-radius);
+    border-top-right-radius: 0; //var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
 
     padding: 4px 4px 4px 5px;
@@ -22,5 +23,35 @@ header {
         margin: 5px;
       }
     }
+
+    .mobile-menu-content {
+      background-color: white;
+    
+      .header {
+        margin-top: 9px;
+        display: flex
+      }
+
+      .button-container {
+        margin-top: 10px;
+        > * {
+          margin: 5px;
+        }
+      }
+    
+      button {
+        display: flex;
+      }
+    
+      button span {
+        margin-left: 0;
+        margin-right: 10px;
+      }
+    
+      button i {
+        margin-left: auto;
+        margin-right: 2px;
+      }
+    }    
   }
 }

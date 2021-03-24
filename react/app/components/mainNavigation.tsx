@@ -106,19 +106,31 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           </ul>
         ) : null}
       </nav>
-      <div id="main-mobile-menu" className="main-mobile-menu">
-      </div>
+      <div id="main-mobile-menu" className="main-mobile-menu"></div>
     </header>
   );
 };
 
 export default MainNavigationBar;
 
-const _MobileMenu = ({ open, children }) => {
+const _MobileMenu = ({ title, open, onClose, children }) => {
   const [el] = useState(() => document.getElementById("main-mobile-menu"));
-  useLayoutEffect(() => el.classList[open ? "add" : "remove"]("open"), [open])
- 
-  return createPortal(children, el);
+  useLayoutEffect(() => el.classList[open ? "add" : "remove"]("open"), [open]);
+
+  return createPortal(
+    <div className="mobile-menu-content">
+      <div>
+        <div className="header">
+          <a style={{ fontSize: "1.4rem", alignSelf: "start" }} onClick={onClose}>
+            <i className="far fa-bars"></i>
+          </a>
+          <h3 style={{ margin: "0 0 0 10px", alignSelf: "center" }}>{title}</h3>
+        </div>
+        {children}
+      </div>
+    </div>,
+    el
+  );
 };
 
 export const MobileMenu = memo(_MobileMenu);
