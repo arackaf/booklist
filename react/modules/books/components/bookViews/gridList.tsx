@@ -313,7 +313,7 @@ const BookViewListGrid: FunctionComponent<{ books: any; menuBarHeight: any }> = 
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
-  const stickyHeaderStyle: CSSProperties = { paddingTop: "5px", position: "sticky", top: `${menuBarHeight - 3}px`, backgroundColor: "white", zIndex: 2 };
+  const stickyHeaderStyle: CSSProperties = { paddingTop: "2px", position: "sticky", top: `${menuBarHeight - 4}px`, backgroundColor: "white", zIndex: 2 };
 
   return (
     <div style={{ minHeight: 400 }}>

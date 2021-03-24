@@ -5,7 +5,9 @@ export const syncUpdates = (cacheName, newResults, resultSet, arrName, options: 
   const cache = graphqlClient.getCache(cacheName);
 
   [...cache.entries].forEach(([uri, currentResults]) => {
-    currentResults.data[resultSet][arrName] = syncCollection(currentResults.data[resultSet][arrName], newResults, options);
+    if (!(currentResults instanceof Promise)) {
+      currentResults.data[resultSet][arrName] = syncCollection(currentResults.data[resultSet][arrName], newResults, options);
+    }
   });
 };
 
@@ -31,9 +33,11 @@ export const syncDeletes = (cacheName, _ids, resultSet, arrName, { sort } = {} a
   const deletedMap = new Set(_ids);
 
   [...cache.entries].forEach(([uri, currentResults]) => {
-    let res = currentResults.data[resultSet];
-    res[arrName] = res[arrName].filter(o => !deletedMap.has(o._id));
-    sort && res[arrName].sort(sort);
+    if (!(currentResults instanceof Promise)) {
+      let res = currentResults.data[resultSet];
+      res[arrName] = res[arrName].filter(o => !deletedMap.has(o._id));
+      sort && res[arrName].sort(sort);
+    }
   });
 };
 
