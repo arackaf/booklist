@@ -1,6 +1,7 @@
 <script lang="ts">
   import NavBarItem from "./NavBarItem.svelte";
   import ModuleLink from "./ModuleLink.svelte";
+  import "./mobile-menu.scss";
 
   import ajaxUtil from "util/ajaxUtil";
 
@@ -36,7 +37,7 @@
 
 <header>
   <nav class={nav}>
-    <div class={`${navHeader} hidden-xs ${isHome && isLoggedIn ? 'active' : ''}`}>
+    <div class={`${navHeader} hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
       <ModuleLink href="home">
         <BookSvg height="18" style="margin-right: 5px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
@@ -44,18 +45,18 @@
     </div>
 
     <ul class={navItems}>
-      <NavBarItem class="visible-xs" disabled={isPublic} href={'home'} style="margin-top: '2px'"><i class="fal fa-home visible-xs" /></NavBarItem>
+      <NavBarItem class="visible-xs" disabled={isPublic} href={"home"} style="margin-top: '2px'"><i class="fal fa-home visible-xs" /></NavBarItem>
       {#if isLoggedIn || isPublic}
         <NavBarItem disabled={isPublic} href="scan"><span class="hidden-xs">Book entry</span> <i class="visible-xs fal fa-scanner" /></NavBarItem>
       {/if}
       {#if isLoggedIn || isPublic}
-        <NavBarItem href={isPublic ? 'view' : 'books'}><span class="hidden-xs">Books</span> <i class="visible-xs fal fa-books" /></NavBarItem>
+        <NavBarItem href={isPublic ? "view" : "books"}><span class="hidden-xs">Books</span> <i class="visible-xs fal fa-books" /></NavBarItem>
       {/if}
       {#if isLoggedIn || isPublic}
         <NavBarItem disabled={isPublic} href="subjects"><span class="hidden-xs">Subjects</span> <i class="visible-xs fal fa-sitemap" /></NavBarItem>
       {/if}
       {#if isLoggedIn || isPublic}
-        <NavBarItem href={'settings'}><span class="hidden-xs">Settings</span> <i class="visible-xs fal fa-cogs" /></NavBarItem>
+        <NavBarItem href={"settings"}><span class="hidden-xs">Settings</span> <i class="visible-xs fal fa-cogs" /></NavBarItem>
       {/if}
       {#if isLoggedIn && isAdminUser}
         <NavBarItem href="admin"><span class="hidden-xs">Admin</span> <i class="visible-xs fal fa-users-cog" /></NavBarItem>
@@ -72,4 +73,5 @@
       </ul>
     {/if}
   </nav>
+  <div id="main-mobile-menu" class="main-mobile-menu" />
 </header>

@@ -65,7 +65,7 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "@playlyfe/gql": "^2.6.1",
+    "@playlyfe/gql": "^2.6.2",
     "serverless-webpack": "^5.3.1"
   }
 }

@@ -13,6 +13,8 @@
   import { quickSearch } from "../setBookFilters";
   import { BookResultsPacket } from "../booksState";
 
+  import MobileMenu from "app/components/navigation/MobileMenu.svelte";
+
   export let setMenuBarHeight;
   export let bookResultsPacket: BookResultsPacket;
   $: ({ totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket);
@@ -45,19 +47,11 @@
 </script>
 
 <div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
-  <div class={cn("mobile-menu", { open: mobileMenuOpen })}>
-    <div>
-      <div style="display: flex">
-        <a style="font-size: 1.4rem; align-self: start" on:click={() => (mobileMenuOpen = false)}>
-          <i class="far fa-bars" />
-        </a>
-        <h3 style="margin: 0 0 0 10px; align-self: center">Book Options</h3>
-      </div>
-      <div class="button-container" style="display: flex; flex-direction: column">
-        <MenuOptions {uiView} {bookResultsPacket} />
-      </div>
+  <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
+    <div class="button-container" style="display: flex; flex-direction: column">
+      <MenuOptions {uiView} {bookResultsPacket} />
     </div>
-  </div>
+  </MobileMenu>
 
   <div style="font-size: 11pt; position: relative">
     <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
