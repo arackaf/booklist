@@ -3,13 +3,11 @@ import React, { SFC, useState, Suspense, useContext, FunctionComponent } from "r
 import BookEditModal from "app/components/editBook/editModal";
 import DetailsView from "./detailView";
 
-import coversClasses from "./coversList.module.scss";
+import "./coversList.scss";
 import { CoverMedium } from "app/components/bookCoverComponent";
 import Loading from "app/components/loading";
 import { useCodeSplitModal } from "modules/books/util";
 import { BooksModuleContext } from "modules/books/books";
-
-const { coversList } = coversClasses;
 
 const BookViewCovers: FunctionComponent<{ books: any }> = props => {
   const { actions } = useContext(BooksModuleContext);
@@ -46,7 +44,7 @@ const BookViewCovers: FunctionComponent<{ books: any }> = props => {
         />
       </Suspense>
       <div>
-        <div style={{ border: 0 }} className={coversList}>
+        <div style={{ border: 0 }} className="bookview-covers-list-root">
           {props.books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
               <div>
