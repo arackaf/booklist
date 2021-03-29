@@ -7,16 +7,19 @@ import EditBook from "app/components/editBook/editBook";
 const DetailsView = props => {
   const { book, saveBook } = props;
   const [url, setUrl] = useState(null);
-  useLayoutEffect(() => {
-    setUrl(book ? book.mediumImage : null);
-  }, [book]);
-
   const [editingBook, setEditingBook] = useState(false);
 
-  if (!book || !props.isOpen) return null;
+  useLayoutEffect(() => {
+    setUrl(book ? book.mediumImage : null);
+    if (props.isOpen) {
+      setEditingBook(false);
+    }
+  }, [props.isOpen]);
+
+  if (!book) return null;
 
   return (
-    <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose}>
+    <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose} headerCaption={editingBook ? `Edit: ${book.title}` : ""}>
       {editingBook ? (
         <EditBook {...{ saveBook, book }} title={book.title} />
       ) : (

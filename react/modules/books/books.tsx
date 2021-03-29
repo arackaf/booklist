@@ -130,7 +130,7 @@ export default () => {
           <BookTagSetter modifyingBooks={bookTagModifying || []} onDone={closeBookTagModal} />
 
           <CreateBookModal
-            title={editingBook ? `Edit ${editingBook.title}` : ""}
+            title={editingBook ? `Edit: ${editingBook.title}` : ""}
             bookToEdit={editingBook}
             isOpen={!!editingBook}
             saveBook={saveEditingBook}

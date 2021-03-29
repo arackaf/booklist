@@ -1,6 +1,5 @@
-import React, { SFC, useState, Suspense, useContext, FunctionComponent } from "react";
+import React, { useState, Suspense, useContext, FunctionComponent } from "react";
 
-import BookEditModal from "app/components/editBook/editModal";
 import DetailsView from "./detailView";
 
 import "./coversList.scss";
