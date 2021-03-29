@@ -1,20 +1,15 @@
 import React, { useState, useLayoutEffect } from "react";
 
 import Modal from "app/components/ui/Modal";
-import { getCrossOriginAttribute } from "util/corsHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
+import EditBook from "app/components/editBook/editBook";
 
 const DetailsView = props => {
-  const { book } = props;
+  const { book, saveBook } = props;
   const [url, setUrl] = useState(null);
   useLayoutEffect(() => {
     setUrl(book ? book.mediumImage : null);
   }, [book]);
-
-  const doEdit = () => {
-    props.onClose();
-    props.editBook(book);
-  };
 
   const [editingBook, setEditingBook] = useState(false);
 
@@ -22,7 +17,9 @@ const DetailsView = props => {
 
   return (
     <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose}>
-      {editingBook ? null : (
+      {editingBook ? (
+        <EditBook {...{ saveBook, book }} title={book.title} />
+      ) : (
         <div style={{ display: "flex", alignItems: "top" }}>
           <div>
             <div style={{ width: "106px" }}>
@@ -39,13 +36,13 @@ const DetailsView = props => {
             ) : null}
             {book.isbn ? <div>{book.isbn}</div> : null}
             <div className="margin-top margin-bottom">
-              <button className="btn btn-xs" onClick={doEdit}>
+              <button className="btn btn-xs" onClick={() => setEditingBook(true)}>
                 Edit book <i className="fal fa-pencil-alt"></i>
               </button>
             </div>
           </div>
         </div>
-      )}  
+      )}
     </Modal>
   );
 };

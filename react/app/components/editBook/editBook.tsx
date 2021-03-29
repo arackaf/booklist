@@ -8,10 +8,10 @@ import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/
 type Props = {
   saveBook: any;
   title: string;
-  bookToEdit: any;
+  book: any;
 };
 
-const EditBook: FunctionComponent<Props> = ({ bookToEdit, saveBook, title }) => {
+const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, saveBook, title }) => {
   const [state, setState] = useState({ tab: "basic", bookEditing: null, title: "" });
 
   const updateBook = updateFn => {

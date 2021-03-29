@@ -14,9 +14,7 @@ const BookViewCovers: FunctionComponent<{ books: any }> = props => {
   const { saveEditingBook } = actions;
 
   const [displaying, setDisplaying] = useState(null);
-
   const [bookPreviewing, openBookPreview, closeBookPreview] = useCodeSplitModal(null);
-  const [bookEditing, openBookEditModalWith, closeBookEdit] = useCodeSplitModal(null);
 
   const previewBook = book => {
     setDisplaying(book);
@@ -24,7 +22,7 @@ const BookViewCovers: FunctionComponent<{ books: any }> = props => {
   };
 
   const doSave = book => {
-    Promise.resolve(saveEditingBook(book)).then(() => closeBookEdit());
+    Promise.resolve(saveEditingBook(book)).then(() => closeModal());
   };
 
   const closeModal = () => closeBookPreview(false);
@@ -32,16 +30,7 @@ const BookViewCovers: FunctionComponent<{ books: any }> = props => {
   return (
     <div>
       <Suspense fallback={<Loading />}>
-        <DetailsView book={displaying} isOpen={bookPreviewing} onClose={closeModal} editBook={openBookEditModalWith} />
-
-        <BookEditModal
-          title={bookEditing ? `Edit ${bookEditing.title}` : ""}
-          bookToEdit={bookEditing}
-          isOpen={!!bookEditing}
-          saveBook={doSave}
-          saveMessage={"Saved"}
-          onClosing={() => openBookEditModalWith(null)}
-        />
+        <DetailsView book={displaying} isOpen={bookPreviewing} saveBook={doSave} onClose={closeModal} />
       </Suspense>
       <div>
         <div style={{ border: 0 }} className="bookview-covers-list-root">
