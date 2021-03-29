@@ -52,7 +52,7 @@
 
 <div class="overlay-holder" style="min-height: 400px">
   {#key currentQuery}
-    <table transition:fade|local={{ duration: 200, easing: quadOut }} style="position: relative" class="table no-padding-top">
+    <table transition:fade|local={{ duration: 100, easing: quadOut }} style="position: relative" class="table no-padding-top">
       <thead>
         <tr>
           {#if !isPublic && online}

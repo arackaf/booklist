@@ -223,7 +223,7 @@ const BookResults: FunctionComponent<{ books: any; currentQuery: string; uiView:
     { currentQuery, books },
     {
       keys: ({ currentQuery }) => currentQuery,
-      config: config.stiff,
+      config: { duration: 150 },
       from: { opacity: 0 },
       enter: { opacity: 1 },
       leave: { opacity: 0 }
