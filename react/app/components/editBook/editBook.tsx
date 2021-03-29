@@ -9,9 +9,10 @@ type Props = {
   saveBook: any;
   title: string;
   book: any;
+  onCancel: any;
 };
 
-const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, saveBook, title }) => {
+const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBook, title }) => {
   const [state, setState] = useState({ tab: "basic", bookEditing: null, title: "" });
 
   const updateBook = updateFn => {
@@ -44,7 +45,7 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, saveBook, title 
         </TabHeader>
       </TabHeaders>
       <TabContents>
-        <TabContent tabName="basic">{book ? <EditBookInfo {...{ book, saveBook }} updateBook={updateBook} /> : null}</TabContent>
+        <TabContent tabName="basic">{book ? <EditBookInfo {...{ book, onCancel, saveBook }} updateBook={updateBook} /> : null}</TabContent>
         <TabContent tabName="covers">
           {book ? (
             <>

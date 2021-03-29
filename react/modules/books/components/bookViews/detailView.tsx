@@ -21,7 +21,7 @@ const DetailsView = props => {
   return (
     <Modal className="fade" isOpen={props.isOpen} onHide={props.onClose} headerCaption={editingBook ? `Edit: ${book.title}` : ""}>
       {editingBook ? (
-        <EditBook {...{ saveBook, book }} title={book.title} />
+        <EditBook {...{ saveBook, book }} onCancel={() => setEditingBook(false)} title={book.title} />
       ) : (
         <div style={{ display: "flex", alignItems: "top" }}>
           <div>

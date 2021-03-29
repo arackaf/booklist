@@ -36,7 +36,7 @@ class ManualBookEntry extends Component<any, any> {
 
     return (
       <Modal className="fade" isOpen={!!this.props.isOpen} onHide={() => this.closeModal()} headerCaption={this.state.title}>
-        <EditBook {...{ saveBook, title }} book={bookEditing}  />
+        <EditBook {...{ saveBook, title }} book={bookEditing} onCancel={() => this.closeModal()} />
       </Modal>
     );
   }

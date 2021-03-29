@@ -9,6 +9,7 @@ import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/Dis
 import FlexRow from "../layout/FlexRow";
 
 import { Form, required, Input, SubmitButton } from "../ui/Form";
+import FlowItems from "../layout/FlowItems";
 
 const useSubjectsOrTags = startingItems => {
   const [items, setItems] = useState(startingItems || []);
@@ -19,7 +20,7 @@ const useSubjectsOrTags = startingItems => {
 };
 
 const EditBookInfo = props => {
-  const { book, saveBook, updateBook } = props;
+  const { book, saveBook, onCancel, updateBook } = props;
 
   const [subjects, selectSubject, removeSubject] = useSubjectsOrTags(book.subjects);
   const [tags, selectTag, removeTag] = useSubjectsOrTags(book.tags);
@@ -122,7 +123,13 @@ const EditBookInfo = props => {
         </FlexRow>
         <hr />
 
-        <SubmitButton style={{ minWidth: "10ch" }} finishedText="Saved" text="Save" className="pull-right" preset="primary" runningText="Saving" />
+        <FlowItems>
+          <SubmitButton style={{ minWidth: "10ch" }} finishedText="Saved" text="Save" className="pull-right" preset="primary" runningText="Saving" />
+
+          <Button style={{ marginLeft: "auto" }} onClick={onCancel}>
+            Cancel
+          </Button>
+        </FlowItems>
       </Form>
     </>
   );
