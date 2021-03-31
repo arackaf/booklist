@@ -10,6 +10,7 @@
 
   export let book: any;
   export let saveBook: any;
+  export let cancel: any;
 
   const updateBook = fn => (book = fn(book));
 </script>
@@ -22,7 +23,7 @@
   <TabContents>
     <TabContent tabName="basic">
       {#if book}
-        <EditBookInfo {saveBook} {book} />
+        <EditBookInfo {saveBook} {book} {cancel} />
       {/if}
     </TabContent>
     <TabContent tabName="covers">
