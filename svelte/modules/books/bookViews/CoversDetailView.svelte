@@ -27,7 +27,7 @@
   }
 </style>
 
-<Modal {isOpen} {onHide} deferStateChangeOnClose={true} standardFooter={false} bind:closeModal>
+<Modal {isOpen} {onHide} deferStateChangeOnClose={true} standardFooter={false} bind:closeModal headerCaption={editing ? `Edit: ${book.title}` : ""}>
   {#if editing}
     <EditBook {book} saveBook={doSave} cancel={() => (editing = false)} />
   {:else}
