@@ -85,7 +85,7 @@ const ModalContents = ({ animatModalSizing, headerCaption, content, onHide }) =>
   const heightStyles =
     useSpring({
       immediate: !uiReady.current || !animatModalSizing.current,
-      config: { ...config.stiff },
+      config: { ...config.stiff, friction: 33, tension: 425 },
       to: { height: contentHeight },
       onRest: () => (uiReady.current = true)
     }) || {};

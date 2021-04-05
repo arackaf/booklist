@@ -8,6 +8,7 @@
   import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import FlexRow from "../layout/FlexRow.svelte";
+  import FlowItems from "../layout/FlowItems.svelte";
 
   export let book;
 
@@ -28,6 +29,7 @@
 
   export let saveBook;
   export let onSave = book => {};
+  export let cancel;
 
   const save = evt => {
     evt.preventDefault();
@@ -55,9 +57,8 @@
 <form on:submit={save}>
   <FlexRow>
     <div class="col-xs-6">
-      <div class={'form-group'}>
+      <div class={"form-group"}>
         <label>Title</label>
-
         <input class="form-control" name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
       </div>
     </div>
@@ -120,5 +121,17 @@
   </FlexRow>
   <hr />
 
-  <ActionButton onClick={save} type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
+  <FlowItems>
+    <ActionButton
+      onClick={save}
+      type="submit"
+      style="min-width: 10ch"
+      finishedText="Saved"
+      text="Save"
+      class="pull-right"
+      preset="primary"
+      runningText="Saving"
+    />
+    <Button style="margin-left: auto;" type="button" onClick={cancel}>Cancel</Button>
+  </FlowItems>
 </form>

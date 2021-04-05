@@ -70,9 +70,7 @@
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
-    return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookToUse })).then(resp => {
-      editingBook = null;
-    });
+    return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookToUse }));
   };
 
   let menuBarHeight = 0;
@@ -112,7 +110,8 @@
     setRead,
     editBook,
     editBooksSubjects,
-    editBooksTags
+    editBooksTags,
+    saveEditingBook
   };
   setContext("books-module-context", booksModuleContext);
 </script>
