@@ -6,15 +6,17 @@ import { useTransition, animated, config, useSpring } from "react-spring";
 import "css/reach-modal-overrides.scss";
 import { useHeight } from "app/animationHelpers";
 
-export const StandardModalHeader: FunctionComponent<{ onHide: any; caption: any }> = props => {
-  let { onHide, caption } = props;
+export const StandardModalHeader: FunctionComponent<{ onHide: any; caption: any; noClose?: boolean; smaller?: boolean }> = props => {
+  let { onHide, caption, noClose, smaller } = props;
   return (
     <>
       <div className="standard-reach-header">
-        <h4 className="modal-title">{caption}</h4>
-        <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
-          <span>&times;</span>
-        </a>
+        {smaller ? <h5 className="modal-title">{caption}</h5> : <h4 className="modal-title">{caption}</h4>}
+        {!noClose ? (
+          <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
+            <span>&times;</span>
+          </a>
+        ) : null}
       </div>
       <hr />
     </>
@@ -26,9 +28,18 @@ const AnimatedDialogContent = animated(DialogContent);
 
 export const ModalSizingContext = createContext(null);
 
-type ModalTypes = { isOpen: boolean; style?: any; onHide: any; headerCaption?: any; className?: string; focusRef?: any };
+type ModalTypes = {
+  isOpen: boolean;
+  style?: any;
+  onHide: any;
+  headerCaption?: any;
+  className?: string;
+  focusRef?: any;
+  noClose?: boolean;
+  smallerHeader?: boolean;
+};
 const Modal: FunctionComponent<ModalTypes> = props => {
-  let { isOpen, onHide, headerCaption, focusRef = null, style = {}, children } = props;
+  let { isOpen, onHide, headerCaption, noClose, focusRef = null, smallerHeader, style = {}, children } = props;
 
   const modalTransition = useTransition(!!isOpen, {
     config: isOpen ? { ...config.stiff } : { duration: 150 },
@@ -69,7 +80,7 @@ const Modal: FunctionComponent<ModalTypes> = props => {
                   ...style
                 }}
               >
-                <ModalContents content={children} {...{ animatModalSizing, headerCaption, onHide }} />
+                <ModalContents content={children} {...{ animatModalSizing, headerCaption, onHide, noClose, smallerHeader }} />
               </AnimatedDialogContent>
             </AnimatedDialogOverlay>
           )
@@ -78,7 +89,7 @@ const Modal: FunctionComponent<ModalTypes> = props => {
   );
 };
 
-const ModalContents = ({ animatModalSizing, headerCaption, content, onHide }) => {
+const ModalContents = ({ animatModalSizing, headerCaption, content, onHide, smallerHeader, noClose }) => {
   const uiReady = useRef(false);
   const [sizingRef, contentHeight] = useHeight();
 
@@ -93,7 +104,7 @@ const ModalContents = ({ animatModalSizing, headerCaption, content, onHide }) =>
   return (
     <animated.div style={{ overflow: "hidden", ...heightStyles }}>
       <div style={{ padding: "10px" }} ref={sizingRef}>
-        {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} /> : null}
+        {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} noClose={noClose} smaller={smallerHeader} /> : null}
         {content}
       </div>
     </animated.div>
