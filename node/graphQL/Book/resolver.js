@@ -45,6 +45,7 @@ export const Book = {
         let $match = { isbn: { $in: flatMap(keyArrays || [], ids => ids.map(id => "" + id)) } };
         let queryPacket = decontructGraphqlQuery(args, ast, BookSummaryMetadata, null, { force: ["isbn"] });
         let { aggregationPipeline } = queryPacket;
+        aggregationPipeline.push({ $match });
 
         let results = await dbHelpers.runQuery(db, "bookSummaries", aggregationPipeline);
         cleanUpResults(results, BookSummaryMetadata);

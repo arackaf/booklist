@@ -301,6 +301,7 @@ input BookFilters {
   authors_nin: [[String]]
   authors_contains: String
   authors_containsAny: [String]
+  authors_containsAll: [String]
   authors_ne: [String]
   subjects_count: Int
   subjects_textContains: String
@@ -312,6 +313,7 @@ input BookFilters {
   subjects_nin: [[String]]
   subjects_contains: String
   subjects_containsAny: [String]
+  subjects_containsAll: [String]
   subjects_ne: [String]
   tags_count: Int
   tags_textContains: String
@@ -323,6 +325,7 @@ input BookFilters {
   tags_nin: [[String]]
   tags_contains: String
   tags_containsAny: [String]
+  tags_containsAll: [String]
   tags_ne: [String]
   isRead: Boolean
   isRead_ne: Boolean
@@ -348,6 +351,7 @@ input BookFilters {
   similarItems_nin: [[String]]
   similarItems_contains: String
   similarItems_containsAny: [String]
+  similarItems_containsAll: [String]
   similarItems_ne: [String]
   OR: [BookFilters]
 }
@@ -733,6 +737,7 @@ type Query {
     authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
+    authors_containsAll: [String]
     authors_ne: [String]
     subjects_count: Int
     subjects_textContains: String
@@ -744,6 +749,7 @@ type Query {
     subjects_nin: [[String]]
     subjects_contains: String
     subjects_containsAny: [String]
+    subjects_containsAll: [String]
     subjects_ne: [String]
     tags_count: Int
     tags_textContains: String
@@ -755,6 +761,7 @@ type Query {
     tags_nin: [[String]]
     tags_contains: String
     tags_containsAny: [String]
+    tags_containsAll: [String]
     tags_ne: [String]
     isRead: Boolean
     isRead_ne: Boolean
@@ -780,6 +787,7 @@ type Query {
     similarItems_nin: [[String]]
     similarItems_contains: String
     similarItems_containsAny: [String]
+    similarItems_containsAll: [String]
     similarItems_ne: [String]
     OR: [BookFilters]
     SORT: BookSort
