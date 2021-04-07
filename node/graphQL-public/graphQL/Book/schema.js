@@ -223,6 +223,7 @@ export const type = `
     authors_nin: [[String]]
     authors_contains: String
     authors_containsAny: [String]
+    authors_containsAll: [String]
     authors_ne: [String]
     subjects_count: Int
     subjects_textContains: String
@@ -234,6 +235,7 @@ export const type = `
     subjects_nin: [[String]]
     subjects_contains: String
     subjects_containsAny: [String]
+    subjects_containsAll: [String]
     subjects_ne: [String]
     tags_count: Int
     tags_textContains: String
@@ -245,6 +247,7 @@ export const type = `
     tags_nin: [[String]]
     tags_contains: String
     tags_containsAny: [String]
+    tags_containsAll: [String]
     tags_ne: [String]
     isRead: Boolean
     isRead_ne: Boolean
@@ -270,6 +273,7 @@ export const type = `
     similarItems_nin: [[String]]
     similarItems_contains: String
     similarItems_containsAny: [String]
+    similarItems_containsAll: [String]
     similarItems_ne: [String]
     OR: [BookFilters]
   }
@@ -392,6 +396,7 @@ export const query = `
     authors_nin: [[String]],
     authors_contains: String,
     authors_containsAny: [String],
+    authors_containsAll: [String],
     authors_ne: [String],
     subjects_count: Int,
     subjects_textContains: String,
@@ -403,6 +408,7 @@ export const query = `
     subjects_nin: [[String]],
     subjects_contains: String,
     subjects_containsAny: [String],
+    subjects_containsAll: [String],
     subjects_ne: [String],
     tags_count: Int,
     tags_textContains: String,
@@ -414,6 +420,7 @@ export const query = `
     tags_nin: [[String]],
     tags_contains: String,
     tags_containsAny: [String],
+    tags_containsAll: [String],
     tags_ne: [String],
     isRead: Boolean,
     isRead_ne: Boolean,
@@ -439,6 +446,7 @@ export const query = `
     similarItems_nin: [[String]],
     similarItems_contains: String,
     similarItems_containsAny: [String],
+    similarItems_containsAll: [String],
     similarItems_ne: [String],
     OR: [BookFilters],
     SORT: BookSort,
