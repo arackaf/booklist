@@ -70,8 +70,8 @@ provider:
 functions:
   upload:
     environment:
-      Mongo_Conn: ${file(~/Dropbox/dev/booklist/lambda-config.js):mongoConnection}
-      DB_Name: ${file(~/Dropbox/dev/booklist/lambda-config.js):dbName}
+      Mongo_Conn: ${file(~/Dropbox/dev/oss/booklist/lambda-config.js):mongoConnection}
+      DB_Name: ${file(~/Dropbox/dev/oss/booklist/lambda-config.js):dbName}
       STAGE: ${self:provider.stage}
     handler: handler.upload
     events:
