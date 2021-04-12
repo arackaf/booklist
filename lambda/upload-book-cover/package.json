@@ -15,6 +15,6 @@
     "uuid": "^7.0.3"
   },
   "devDependencies": {
-    "serverless-webpack": "^5.3.1"
+    "serverless-webpack": "5.4.1"
   }
 }
