@@ -25,15 +25,21 @@ provider:
   runtime: nodejs12.x
   timeout: 30
 
-# you can overwrite defaults here
-  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  stage: live
+  #  region: us-east-1
 
-  iamRoleStatements:
-   - Effect: "Allow"
-     Action:
-       - "s3:*"
-     Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -66,16 +72,12 @@ provider:
 
 functions:
   uploadFromUrl:
-    environment:
-      Mongo_Conn: ${file(~/Dropbox/dev/oss/booklist/lambda-config.js):mongoConnection}
-      DB_Name: ${file(~/Dropbox/dev/oss/booklist/lambda-config.js):dbName}
-      STAGE: ${self:provider.stage}
     handler: handler.uploadFromUrl
     events:
-     - http:
-         path: uploadFromUrl
-         method: post
-         cors: true
+      - http:
+          path: uploadFromUrl
+          method: post
+          cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
