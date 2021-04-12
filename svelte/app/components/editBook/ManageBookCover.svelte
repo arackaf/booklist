@@ -137,7 +137,7 @@
       <img src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
       <FlowItems pushLast={true}>
         <button on:click={runSave} class="btn btn-xs btn-light btn-square-icon"> <i class="fal fa-check" /> </button>
-        <button on:click={() => (uploadState = { pendingImg: '', uploadError: '' })} class="btn btn-xs btn-light btn-square-icon">
+        <button on:click={() => (uploadState = { pendingImg: "", uploadError: "" })} class="btn btn-xs btn-light btn-square-icon">
           <i class="fal fa-undo" />
         </button>
       </FlowItems>
