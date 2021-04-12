@@ -1,4 +1,3 @@
-
 .gridHoverFilter {
   text-decoration: none;
   display: none;
@@ -10,10 +9,10 @@ td:hover .gridHoverFilter {
 }
 
 .detailsRow {
+  padding-top: 10px;
   padding-right: 10px;
 }
 .detailsRow > * > div {
-  padding-top: 10px;
   max-height: 250px;
   overflow: auto;
 }
