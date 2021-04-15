@@ -1,6 +1,6 @@
 "use strict";
 
-const updateBookSummaryCovers = require("./handlerCode");
+const updateBookSummaryCovers = require("./updateBookSummaryCovers");
 
 exports.badCoverSync = async event => {
   await updateBookSummaryCovers();

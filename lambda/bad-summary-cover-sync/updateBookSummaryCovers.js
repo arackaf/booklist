@@ -2,12 +2,12 @@
 
 const request = require("request");
 const { v4: uuid } = require("uuid");
-const dlv = require("dlv");
+const dlv = require("dlv").default;
 
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 
-const getDbConnection = require("./util/getDbConnection");
+const getDbConnection = require("../util/getDbConnection");
 
 const {
   downloadBookCover,
@@ -17,9 +17,9 @@ const {
   saveContentToS3,
   getOpenLibraryCoverUri,
   getGoogleLibraryUri
-} = require("./util/bookCoverHelpers");
+} = require("../util/bookCoverHelpers");
 
-const getSecrets = require("./util/getSecrets");
+const getSecrets = require("../util/getSecrets");
 
 const dbPromise = getDbConnection();
 
@@ -32,7 +32,7 @@ module.exports = async function updateBookSummaryCovers() {
 
   const bookSummaries = await db
     .collection("bookSummaries")
-    .aggregate([{ $match: { smallImage: new RegExp("nophoto") } }, { $limit: 3 }])
+    .aggregate([{ $match: { smallImage: new RegExp("nophoto") } }, { $limit: 15 }])
     .toArray();
 
   let title = "";
@@ -97,11 +97,23 @@ module.exports = async function updateBookSummaryCovers() {
 function getGoogleCoverUrl(isbn, secrets) {
   return new Promise(res => {
     request(getGoogleLibraryUri(isbn, secrets["google-library-key"]), (err, resp, body) => {
-      if (err || !/^2/.test(resp.statusCode)) return res(null);
+      if (err || !/^2/.test(resp.statusCode)) {
+        console.log("Error:", err, resp.statusCode);
+        return res(null);
+      }
 
       try {
-        let item = JSON.parse(body).items[0];
-        let imageLinks = dlv(item, "volumeInfo.imageLinks");
+        let items = JSON.parse(body).items;
+
+        if (!Array.isArray(items) || !items.length || !items[0]) {
+          return res(null);
+        }
+
+        let imageLinks = dlv(items[0], "volumeInfo.imageLinks");
+        if (!imageLinks) {
+          return res(null);
+        }
+
         let smallImage = imageLinks.smallThumbnail || imageLinks.thumbnail;
         if (smallImage) {
           smallImage = smallImage.replace(/&edge=curl/gi, "");
@@ -109,6 +121,8 @@ function getGoogleCoverUrl(isbn, secrets) {
 
         return res(smallImage || null);
       } catch (er) {
+        console.log("processing error", er);
+        console.log("body", body);
         res(null);
       }
     });

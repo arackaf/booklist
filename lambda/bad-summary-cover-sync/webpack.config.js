@@ -1,6 +1,4 @@
 const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const ReplacePlugin = require("webpack-plugin-replace");
 
 module.exports = {
   entry: "./handler.js",

@@ -6,5 +6,5 @@ module.exports = async () => {
   const connString = secrets["mongo-connection-string"];
   const dbName = secrets["db-name"];
 
-  return MongoClient.connect(connString, { useNewUrlParser: true, useUnifiedTopology: true }).then(client => client.db(dbName));
+  return MongoClient.connect(connString, { useNewUrlParser: true }).then(client => client.db(dbName));
 };
