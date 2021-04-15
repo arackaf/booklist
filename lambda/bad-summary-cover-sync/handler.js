@@ -3,7 +3,6 @@
 const updateBookSummaryCovers = require("./handlerCode");
 
 exports.badCoverSync = async event => {
-  console.log("STARTING");
   await updateBookSummaryCovers();
   return {
     statusCode: 200,
