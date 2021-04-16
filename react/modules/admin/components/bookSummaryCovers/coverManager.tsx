@@ -7,10 +7,14 @@ import styles from "./styles.module.css";
 const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
 import ajaxUtil from "util/ajaxUtil";
+import { getBookInfo } from "util/isbnDb";
 import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
 import { graphqlClient } from "util/graphql";
+import FlowItems from "app/components/layout/FlowItems";
+import { Button } from "app/components/ui/Button";
+import Stack from "app/components/layout/Stack";
 
 const updateSmallCover = ({ _id, url, userId, loginToken }) => {
   const request = { userId, loginToken, url, size: "small" };
@@ -32,9 +36,22 @@ const BookSummaryDisplay = props => {
   const { book } = props;
   const [{ userId, loginToken }] = useAppState();
   const [newUrl, setNewUrl] = useState("");
+  const [newImg, setNewImg] = useState("");
 
   const changeImg = () => {
     return updateSmallCover({ _id: book._id, url: newUrl, userId, loginToken }).then(() => setNewUrl(""));
+  };
+
+  const useFetchedImage = () => {
+    return updateSmallCover({ _id: book._id, url: newImg, userId, loginToken }).then(() => setNewImg(""));
+  };
+
+  const go = () => {
+    getBookInfo(book.isbn).then(res => {
+      if (res?.result?.book?.image) {
+        setNewImg(res?.result?.book?.image);
+      }
+    });
   };
 
   return (
@@ -57,6 +74,19 @@ const BookSummaryDisplay = props => {
             </SubmitIconButton>
           </div>
         </Form>
+        <Stack style={{ marginTop: "10px" }}>
+          <Button preset="default-xs" style={{ alignSelf: "flex-start" }} onClick={go}>
+            Find Cover Image
+          </Button>
+          {newImg ? (
+            <>
+              <img style={{ alignSelf: "center" }} src={newImg} />
+              <Button onClick={useFetchedImage} preset="primary">
+                Save
+              </Button>
+            </>
+          ) : null}
+        </Stack>
       </div>
     </div>
   );
