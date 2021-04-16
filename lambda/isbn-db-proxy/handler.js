@@ -9,10 +9,6 @@ module.exports.lookupBook = async event => {
   const key = secrets["isbn-db-key"];
   const { isbn } = JSON.parse(event.body);
 
-  console.log("KEY", key);
-  console.log("body", event.body);
-  console.log("url", `https://api2.isbndb.com/book/${isbn}`);
-
   const result = await new Promise(res => {
     request.get(
       `https://api2.isbndb.com/book/${isbn}`,
@@ -28,7 +24,4 @@ module.exports.lookupBook = async event => {
   });
 
   return corsResponse({ result });
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };

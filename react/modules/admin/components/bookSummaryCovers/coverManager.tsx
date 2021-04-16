@@ -12,7 +12,6 @@ import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
 import { graphqlClient } from "util/graphql";
-import FlowItems from "app/components/layout/FlowItems";
 import { Button } from "app/components/ui/Button";
 import Stack from "app/components/layout/Stack";
 
