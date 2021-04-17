@@ -1,6 +1,5 @@
-<script>
-import { onMount } from "svelte";
-
+<script lang="ts">
+  import { onMount } from "svelte";
 
   export let onClose;
   export let title = "";
@@ -20,8 +19,8 @@ import { onMount } from "svelte";
 
     return () => {
       rootEl.appendChild(menuContent);
-    }
-  })
+    };
+  });
 </script>
 
 <div bind:this={rootEl}>
