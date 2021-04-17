@@ -1,13 +1,5 @@
 const { MongoClient, ObjectID } = require("mongodb");
-const getSecrets = require("./getSecrets");
-
-const getConnection = async () => {
-  const secrets = await getSecrets();
-  const connString = secrets["mongo-connection-string"];
-  const dbName = secrets["db-name"];
-
-  return MongoClient.connect(connString, { useNewUrlParser: true }).then(client => client.db(dbName));
-};
+const getConnection = require("./getDbConnection");
 
 const client = getConnection();
 
