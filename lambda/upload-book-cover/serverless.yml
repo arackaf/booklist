@@ -26,18 +26,24 @@ provider:
   timeout: 30
   apiGateway:
     binaryMediaTypes:
-      - 'multipart/form-data'
+      - "multipart/form-data"
 
-# you can overwrite defaults here
+  # you can overwrite defaults here
   stage: live
-#  region: us-east-1
+  #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-  iamRoleStatements:
-   - Effect: "Allow"
-     Action:
-       - "s3:*"
-     Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+  # you can add statements to the Lambda function's IAM Role here
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
 
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -69,16 +75,12 @@ provider:
 
 functions:
   upload:
-    environment:
-      Mongo_Conn: ${file(~/Dropbox/dev/booklist/lambda-config.js):mongoConnection}
-      DB_Name: ${file(~/Dropbox/dev/booklist/lambda-config.js):dbName}
-      STAGE: ${self:provider.stage}
     handler: handler.upload
     events:
-     - http:
-         path: upload
-         method: post
-         cors: true
+      - http:
+          path: upload
+          method: post
+          cors: true
 
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}

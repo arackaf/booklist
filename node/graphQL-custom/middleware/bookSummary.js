@@ -25,11 +25,11 @@ export default class BooksMiddleware {
   queryMiddleware(queryPacket, { root, args, context, ast }) {
     let { aggregationPipeline } = queryPacket;
 
-    if (queryPacket.$limit == null || queryPacket.$limit > 50) {
+    if (!context.user.admin && (queryPacket.$limit == null || queryPacket.$limit > 50)) {
       queryPacket.$limit = 50;
       if (!aggregationPipeline.find(packet => packet.hasOwnProperty("$limit"))) {
-        aggregationPipeline.push({ $limit: queryPacket.$limit })
+        aggregationPipeline.push({ $limit: queryPacket.$limit });
       }
     }
-  }  
+  }
 }

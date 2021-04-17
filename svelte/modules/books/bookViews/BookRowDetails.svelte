@@ -27,8 +27,10 @@
   :global(.detailsRow) {
     padding-right: 10px;
   }
-  :global(.detailsRow > * > div) {
+  :global(.detailsRow) {
     padding-top: 10px;
+  }
+  :global(.detailsRow > * > div) {
     max-height: 250px;
     overflow: auto;
   }
@@ -49,7 +51,7 @@
                     <hr style="border: 2px solid #eee" />
                   {/if}
                   <Stack>
-                    <h4>{review.source || '<unknown source>'}</h4>
+                    <h4>{review.source || "<unknown source>"}</h4>
                     <div>
                       {@html review.content}
                     </div>
@@ -80,7 +82,7 @@
                         <td>
                           <span style="font-weight: bold">{book.title}</span>
                           <br />
-                          {#if book.authors.length}<span style="font-style: italic">{book.authors.join(', ')}</span> <br />{/if}
+                          {#if book.authors.length}<span style="font-style: italic">{book.authors.join(", ")}</span> <br />{/if}
                           <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
                             <i class="fab fa-amazon" />
                           </a>

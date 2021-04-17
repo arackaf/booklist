@@ -11,51 +11,31 @@
 #
 # Happy Coding!
 
-service: upload-book-cover-from-url
+service: isbn-db-proxy
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-# frameworkVersion: "=X.X.X"
+# frameworkVersion: '2'
 
 provider:
   name: aws
   runtime: nodejs12.x
-  timeout: 30
 
   # you can overwrite defaults here
   stage: live
   #  region: us-east-1
 
+  # you can add statements to the Lambda function's IAM Role here
   iam:
     role:
       statements:
         - Effect: "Allow"
           Action:
-            - "s3:*"
-          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
-        - Effect: "Allow"
-          Action:
             - "secretsmanager:GetSecretValue"
           Resource: "arn:aws:secretsmanager:us-east-1:*"
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
 
 # you can define service wide environment variables here
 #  environment:
@@ -63,27 +43,27 @@ provider:
 
 # you can add packaging information here
 #package:
-#  include:
+#  patterns:
+#    - '!exclude-me.js'
+#    - '!exclude-me-dir/**'
 #    - include-me.js
 #    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
 
 functions:
-  uploadFromUrl:
-    handler: handler.uploadFromUrl
+  badCoverSync:
+    timeout: 10
+    handler: handler.lookupBook
     events:
       - http:
-          path: uploadFromUrl
+          path: /book
           method: post
           cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
 #    events:
-#      - http:
-#          path: users/create
+#      - httpApi:
+#          path: /users/create
 #          method: get
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
