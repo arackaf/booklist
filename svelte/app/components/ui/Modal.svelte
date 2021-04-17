@@ -12,13 +12,14 @@
   export let standardFooter = true;
   export let closeModal = null;
   export let onModalMount = null;
-
+  export let noClose = false;
+  export let smallerHeader = false;
 </script>
 
 <Modal on:close={onHide} on:mount={() => onModalMount?.()} open={isOpen} {deferStateChangeOnClose} bind:closeModal>
   <div>
     {#if headerCaption}
-      <StandardModalHeader caption={headerCaption} />
+      <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {noClose} />
     {/if}
     <slot />
     {#if standardFooter}
