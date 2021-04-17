@@ -1,5 +1,6 @@
 <script lang="ts">
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
+  import LabelDisplay from "../LabelDisplay.svelte";
   import { subjectsState } from "app/state/subjectsState";
   import FlowItems from "../../layout/FlowItems.svelte";
 
@@ -11,6 +12,10 @@
 
 <FlowItems tightest={true}>
   {#each currentlySelected.filter(_id => subjectHash[_id]).map(_id => subjectHash[_id]) as t}
-    <RemovableLabelDisplay item={t} doRemove={() => onRemove(t)} />
+    {#if onRemove}
+      <RemovableLabelDisplay item={t} doRemove={() => onRemove(t)} />
+    {:else}
+      <LabelDisplay item={t} />
+    {/if}
   {/each}
 </FlowItems>
