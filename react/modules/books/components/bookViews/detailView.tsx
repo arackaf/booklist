@@ -29,7 +29,7 @@ const DetailsView = props => {
       ) : (
         <div style={{ display: "flex", alignItems: "top" }}>
           <div>
-            <div style={{ width: "106px" }}>
+            <div>
               <CoverSmall url={url} />
             </div>
           </div>
