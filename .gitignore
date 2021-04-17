@@ -17,3 +17,4 @@ lambda/try-upload/.serverless
 config.js
 .env.dev
 svelte/dist
+.serverless

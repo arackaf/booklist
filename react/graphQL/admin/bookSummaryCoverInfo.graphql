@@ -2,6 +2,7 @@ query GetBookSummaryCoverInfo($smallImage: String) {
   allBookSummarys(smallImage_contains: $smallImage, SORT: { title: 1 }) {
     BookSummarys {
       _id
+      isbn
       title
       smallImage
       mediumImage
