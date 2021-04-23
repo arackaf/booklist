@@ -1,8 +1,8 @@
-const Jimp = require("jimp");
+import Jimp from "jimp";
 
-module.exports = (src, MAX_WIDTH) => {
+export default (src, MAX_WIDTH) => {
   return new Promise(res => {
-    Jimp.read(src, function(err, image) {
+    Jimp.read(src, function (err, image) {
       if (err || !image) {
         return res({ error: true, message: err });
       }

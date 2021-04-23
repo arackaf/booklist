@@ -1,8 +1,8 @@
-const request = require("request");
+import request from "request";
 
-module.exports = url => {
+export default url => {
   return new Promise(res => {
-    request({ uri: url, encoding: null }, function(err, resp, body) {
+    request({ uri: url, encoding: null }, function (err, resp, body) {
       if (err || !body) {
         res({ error: true, msg: err });
       } else {

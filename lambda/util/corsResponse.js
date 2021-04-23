@@ -1,4 +1,4 @@
-module.exports = obj => ({
+export default obj => ({
   statusCode: 200,
   headers: {
     "Access-Control-Allow-Origin": "*",

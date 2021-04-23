@@ -1,18 +1,18 @@
-const path = require("path");
-const uuid = require("uuid/v4");
-const request = require("request");
-const awsMultiPartParser = require("lambda-multipart-parser");
+import path from "path";
+import uuid from "uuid/v4";
+import request from "request";
+import awsMultiPartParser from "lambda-multipart-parser";
 
-const updateBookSummaryCovers = require("./updateBookSummaryCovers");
+import updateBookSummaryCovers from "./updateBookSummaryCovers";
 
-const checkLogin = require("../util/checkLoginToken");
-const resizeImage = require("../util/resizeImage");
-const corsResponse = require("../util/corsResponse");
-const uploadToS3 = require("../util/uploadToS3");
-const downloadFromUrl = require("../util/downloadFromUrl");
-const getSecrets = require("../util/getSecrets");
+import checkLogin from "../util/checkLoginToken";
+import resizeImage from "../util/resizeImage";
+import corsResponse from "../util/corsResponse";
+import uploadToS3 from "../util/uploadToS3";
+import downloadFromUrl from "../util/downloadFromUrl";
+import getSecrets from "../util/getSecrets";
 
-module.exports.upload = async event => {
+export const upload = async event => {
   const formPayload = await awsMultiPartParser.parse(event);
   const { userId, loginToken, size } = formPayload;
   const file = formPayload.files[0];
@@ -32,7 +32,7 @@ module.exports.upload = async event => {
   return corsResponse(s3Result);
 };
 
-module.exports.uploadFromUrl = async event => {
+export const uploadFromUrl = async event => {
   const { userId, loginToken, size, url } = JSON.parse(event.body);
   const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
@@ -51,7 +51,7 @@ module.exports.uploadFromUrl = async event => {
   return corsResponse(s3Result);
 };
 
-module.exports.isbnDbBookCoverLookup = async event => {
+export const isbnDbBookCoverLookup = async event => {
   const secrets = await getSecrets();
   const key = secrets["isbn-db-key"];
   const { isbn } = JSON.parse(event.body);
@@ -84,7 +84,7 @@ module.exports.isbnDbBookCoverLookup = async event => {
   return corsResponse({ result });
 };
 
-exports.bookRecommendationBadCoverSync = async event => {
+export const bookRecommendationBadCoverSync = async event => {
   await updateBookSummaryCovers();
   return {
     statusCode: 200,

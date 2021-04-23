@@ -1,9 +1,9 @@
-const { MongoClient, ObjectID } = require("mongodb");
-const getConnection = require("./getDbConnection");
+import { MongoClient, ObjectID } from "mongodb";
+import getConnection from "./getDbConnection";
 
 const client = getConnection();
 
-module.exports = async (userId, loginToken) => {
+export default async function checkLoginToken(userId, loginToken) {
   const db = await client;
   if (process.env.STAGE == "dev") {
     return true;
@@ -16,4 +16,4 @@ module.exports = async (userId, loginToken) => {
   } catch (er) {
     return false;
   }
-};
+}
