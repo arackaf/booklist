@@ -1,14 +1,14 @@
 "use strict";
 
-const { v4: uuid } = require("uuid");
-const request = require("request");
-const dlv = require("dlv").default;
+import { v4 as uuid } from "uuid";
+import request from "request";
+import dlv from "dlv";
 
-const { ObjectId } = require("mongodb");
+import { ObjectId } from "mongodb";
 
-const getDbConnection = require("../util/getDbConnection");
+import getDbConnection from "../util/getDbConnection";
 
-const {
+import {
   downloadBookCover,
   removeFile,
   resizeIfNeeded,
@@ -16,15 +16,15 @@ const {
   saveContentToS3,
   getOpenLibraryCoverUri,
   getGoogleLibraryUri
-} = require("../util/bookCoverHelpers");
+} from "../util/bookCoverHelpers";
 
-const getSecrets = require("../util/getSecrets");
+import getSecrets from "../util/getSecrets";
 
 const dbPromise = getDbConnection();
 
 const delay = () => new Promise(res => setTimeout(res, 2500));
 
-module.exports = async function updateBookSummaryCovers() {
+export default async function updateBookSummaryCovers() {
   let count = 1;
   const db = await dbPromise;
   const secrets = await getSecrets();
@@ -96,7 +96,7 @@ module.exports = async function updateBookSummaryCovers() {
   console.log("Saving logs to", `bookCoverSyncingLogs/${dateStr}.txt`);
   await saveContentToS3(_logs.join("\n"), `bookCoverSyncingLogs/${dateStr}.txt`);
   console.log("Logs saved");
-};
+}
 
 function getGoogleCoverUrl(isbn, secrets) {
   return new Promise(res => {

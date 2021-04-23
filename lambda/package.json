@@ -13,6 +13,7 @@
     "jimp": "0.10.3",
     "lambda-multipart-parser": "0.0.2",
     "mongodb": "3.6.6",
+    "node-fetch": "^2.6.1",
     "request": "2.88.2",
     "uuid": "7.0.3"
   },
