@@ -5,7 +5,6 @@ const request = require("request");
 const dlv = require("dlv").default;
 
 const { ObjectId } = require("mongodb");
-const moment = require("moment");
 
 const getDbConnection = require("../util/getDbConnection");
 
@@ -91,7 +90,12 @@ module.exports = async function updateBookSummaryCovers() {
     newPath && removeFile(newPath);
   }
 
-  saveContentToS3(_logs.join("\n"), `bookCoverSyncingLogs/${moment().format("YYYY-MM-DD--HH_mm")}.txt`);
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
+
+  console.log("Saving logs to", `bookCoverSyncingLogs/${dateStr}.txt`);
+  await saveContentToS3(_logs.join("\n"), `bookCoverSyncingLogs/${dateStr}.txt`);
+  console.log("Logs saved");
 };
 
 function getGoogleCoverUrl(isbn, secrets) {

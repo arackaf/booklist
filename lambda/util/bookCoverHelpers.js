@@ -133,8 +133,13 @@ function saveContentToS3(content, s3Key) {
     };
 
     s3bucket.upload(params, function (err) {
-      if (err) res(err);
-      else res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
+      if (err) {
+        console.log("Error uploading to S3", { s3Key, err });
+        res(err);
+      } else {
+        console.log("S3 File Saved");
+        res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
+      }
     });
   });
 }
