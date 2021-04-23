@@ -46,7 +46,9 @@ const BookSummaryDisplay = props => {
   };
 
   const go = () => {
-    getBookInfo(book.isbn).then(res => {
+    getBookInfo("0547085907").then(res => {
+      debugger;
+      return;
       if (res?.result?.book?.image) {
         setNewImg(res?.result?.book?.image);
       }
