@@ -3,6 +3,8 @@ const uuid = require("uuid/v4");
 const request = require("request");
 const awsMultiPartParser = require("lambda-multipart-parser");
 
+const updateBookSummaryCovers = require("./updateBookSummaryCovers");
+
 const checkLogin = require("../util/checkLoginToken");
 const resizeImage = require("../util/resizeImage");
 const corsResponse = require("../util/corsResponse");
@@ -80,4 +82,12 @@ module.exports.isbnDbBookCoverLookup = async event => {
   });
 
   return corsResponse({ result });
+};
+
+exports.bookRecommendationBadCoverSync = async event => {
+  await updateBookSummaryCovers();
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Done!" })
+  };
 };
