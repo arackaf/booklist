@@ -7,7 +7,7 @@ import styles from "./styles.module.css";
 const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
 
 import ajaxUtil from "util/ajaxUtil";
-import { getBookInfo } from "util/isbnDb";
+import { getIsbnDbBookCover } from "util/isbnDb";
 import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
@@ -46,9 +46,9 @@ const BookSummaryDisplay = props => {
   };
 
   const go = () => {
-    getBookInfo(book.isbn).then(res => {
-      if (res?.result?.book?.image) {
-        setNewImg(res?.result?.book?.image);
+    getIsbnDbBookCover(book.isbn).then(res => {
+      if (res?.result?.image) {
+        setNewImg(res?.result?.image);
       }
     });
   };
