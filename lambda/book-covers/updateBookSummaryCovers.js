@@ -1,7 +1,7 @@
 "use strict";
 
 import { v4 as uuid } from "uuid";
-import request from "request";
+import fetch from "node-fetch";
 import dlv from "dlv";
 
 import { ObjectId } from "mongodb";
@@ -99,36 +99,35 @@ export default async function updateBookSummaryCovers() {
 }
 
 function getGoogleCoverUrl(isbn, secrets) {
-  return new Promise(res => {
-    request(getGoogleLibraryUri(isbn, secrets["google-library-key"]), (err, resp, body) => {
-      if (err || !/^2/.test(resp.statusCode)) {
-        console.log("Error:", err, resp.statusCode);
-        return res(null);
+  return new Promise(async resolve => {
+    try {
+      let response = await fetch(getGoogleLibraryUri(isbn, secrets["google-library-key"]));
+      if (!response.ok) {
+        console.log("Error:", err, response.statusCode);
+        return resolve(null);
       }
 
-      try {
-        let items = JSON.parse(body).items;
+      let json = await response.json();
+      let items = json.items;
 
-        if (!Array.isArray(items) || !items.length || !items[0]) {
-          return res(null);
-        }
-
-        let imageLinks = dlv(items[0], "volumeInfo.imageLinks");
-        if (!imageLinks) {
-          return res(null);
-        }
-
-        let smallImage = imageLinks.smallThumbnail || imageLinks.thumbnail;
-        if (smallImage) {
-          smallImage = smallImage.replace(/&edge=curl/gi, "");
-        }
-
-        return res(smallImage || null);
-      } catch (er) {
-        console.log("processing error", er);
-        console.log("body", body);
-        res(null);
+      if (!Array.isArray(items) || !items.length || !items[0]) {
+        return resolve(null);
       }
-    });
+
+      let imageLinks = dlv(items[0], "volumeInfo.imageLinks");
+      if (!imageLinks) {
+        return resolve(null);
+      }
+
+      let smallImage = imageLinks.smallThumbnail || imageLinks.thumbnail;
+      if (smallImage) {
+        smallImage = smallImage.replace(/&edge=curl/gi, "");
+      }
+
+      return resolve(smallImage || null);
+    } catch (err) {
+      console.log("Error fetching and processing", err, resp.statusCode);
+      return resolve(null);
+    }
   });
 }
