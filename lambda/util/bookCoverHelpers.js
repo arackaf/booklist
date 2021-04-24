@@ -2,10 +2,12 @@ import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
 import path from "path";
-import request from "request";
-import { v4 as uuid } from "uuid";
-import del from "del";
+import https from "https";
+import http from "http";
 import fs from "fs";
+
+import del from "del";
+import { v4 as uuid } from "uuid";
 
 import Jimp from "jimp";
 
@@ -21,35 +23,44 @@ export function downloadBookCover(url, minSizeToAccept) {
   let uniqueId = uuid();
   let fileName = "file-" + uniqueId + ext;
   let fullName = path.resolve("/tmp/" + fileName);
+  let network = /^https/.test(url) ? https : http;
 
   return new Promise(res => {
     let file = fs.createWriteStream(fullName);
 
-    request(url)
-      .pipe(file)
-      .on("finish", () => {
-        file.close();
+    network
+      .get(url, response => {
+        response.pipe(file);
+        file.on("finish", async () => {
+          await file.close();
 
-        let stats = fs.statSync(fullName);
-        let fileSizeInBytes = stats.size;
+          let stats = fs.statSync(fullName);
+          let fileSizeInBytes = stats.size;
 
-        if (fileSizeInBytes < minSizeToAccept) {
-          removeFile(fullName);
-          res(null);
-        }
-
-        fs.readFile(fullName, (err, data) => {
-          if (err) {
+          if (fileSizeInBytes < minSizeToAccept) {
             removeFile(fullName);
-
             return res(null);
           }
-          res({ fullName, fileName });
+
+          fs.readFile(fullName, (err, data) => {
+            if (err) {
+              removeFile(fullName);
+              return res(null);
+            }
+            console.log("File saved to", fullName);
+            res({ fullName, fileName });
+          });
+        });
+
+        file.on("error", async () => {
+          console.log("File error", err);
+          removeFile(fullName);
+          res(null);
         });
       })
-      .on("error", () => {
+      .on("error", err => {
+        console.log("Request error", err);
         removeFile(fullName);
-
         res(null);
       });
   });
@@ -62,11 +73,12 @@ export function resizeIfNeeded(fileName, width = 50) {
     try {
       Jimp.read(pathToFileUploaded, function (err, image) {
         if (err || !image) {
+          console.log("Error 1", err);
           return res(null);
         }
 
         try {
-          image.exifRotate();
+          image.exifRotate && image.exifRotate();
           if (image.bitmap.width > width) {
             image.resize(width, Jimp.AUTO);
 
@@ -80,6 +92,7 @@ export function resizeIfNeeded(fileName, width = 50) {
             return res(pathToFileUploaded);
           }
         } catch (err) {
+          console.log("Error 2", err);
           return res(null);
         }
       });

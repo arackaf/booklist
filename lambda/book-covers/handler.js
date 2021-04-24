@@ -1,6 +1,6 @@
 import path from "path";
 import uuid from "uuid/v4";
-import request from "request";
+import fetch from "node-fetch";
 import awsMultiPartParser from "lambda-multipart-parser";
 
 import updateBookSummaryCovers from "./updateBookSummaryCovers";
@@ -56,30 +56,23 @@ export const isbnDbBookCoverLookup = async event => {
   const key = secrets["isbn-db-key"];
   const { isbn } = JSON.parse(event.body);
 
-  const result = await new Promise(resolve => {
-    request.get(
-      `https://api2.isbndb.com/book/${isbn}`,
-      {
-        headers: {
-          Authorization: key
-        }
-      },
-      (a, b, body) => {
-        const result = {};
-        try {
-          const bookResult = JSON.parse(body);
-          console.log("Found", bookResult);
-
-          if (bookResult && bookResult.book && bookResult.book.image) {
-            result.image = bookResult.book.image;
-          }
-        } catch (er) {
-          console.log("Error", er);
-        }
-        resolve(result);
+  const result = {};
+  try {
+    const fetchResponse = await fetch(`https://api2.isbndb.com/book/${isbn}`, {
+      headers: {
+        Authorization: key
       }
-    );
-  });
+    });
+    const bookResult = await fetchResponse.json();
+
+    console.log("Found from isbndb:", bookResult);
+
+    if (bookResult && bookResult.book && bookResult.book.image) {
+      result.image = bookResult.book.image;
+    }
+  } catch (err) {
+    console.log("Error", er);
+  }
 
   return corsResponse({ result });
 };
