@@ -1,15 +1,14 @@
 "use strict";
 
-const request = require("request");
-const { v4: uuid } = require("uuid");
-const dlv = require("dlv").default;
+import { v4 as uuid } from "uuid";
+import fetch from "node-fetch";
+import dlv from "dlv";
 
-const { ObjectId } = require("mongodb");
-const moment = require("moment");
+import { ObjectId } from "mongodb";
 
-const getDbConnection = require("../util/getDbConnection");
+import getDbConnection from "../util/getDbConnection";
 
-const {
+import {
   downloadBookCover,
   removeFile,
   resizeIfNeeded,
@@ -17,15 +16,15 @@ const {
   saveContentToS3,
   getOpenLibraryCoverUri,
   getGoogleLibraryUri
-} = require("../util/bookCoverHelpers");
+} from "../util/bookCoverHelpers";
 
-const getSecrets = require("../util/getSecrets");
+import getSecrets from "../util/getSecrets";
 
 const dbPromise = getDbConnection();
 
 const delay = () => new Promise(res => setTimeout(res, 2500));
 
-module.exports = async function updateBookSummaryCovers() {
+export default async function updateBookSummaryCovers() {
   let count = 1;
   const db = await dbPromise;
   const secrets = await getSecrets();
@@ -91,40 +90,44 @@ module.exports = async function updateBookSummaryCovers() {
     newPath && removeFile(newPath);
   }
 
-  saveContentToS3(_logs.join("\n"), `bookCoverSyncingLogs/${moment().format("YYYY-MM-DD--HH_mm")}.txt`);
-};
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
+
+  console.log("Saving logs to", `bookCoverSyncingLogs/${dateStr}.txt`);
+  await saveContentToS3(_logs.join("\n"), `bookCoverSyncingLogs/${dateStr}.txt`);
+  console.log("Logs saved");
+}
 
 function getGoogleCoverUrl(isbn, secrets) {
-  return new Promise(res => {
-    request(getGoogleLibraryUri(isbn, secrets["google-library-key"]), (err, resp, body) => {
-      if (err || !/^2/.test(resp.statusCode)) {
-        console.log("Error:", err, resp.statusCode);
-        return res(null);
+  return new Promise(async resolve => {
+    try {
+      let response = await fetch(getGoogleLibraryUri(isbn, secrets["google-library-key"]));
+      if (!response.ok) {
+        console.log("Error:", err, response.statusCode);
+        return resolve(null);
       }
 
-      try {
-        let items = JSON.parse(body).items;
+      let json = await response.json();
+      let items = json.items;
 
-        if (!Array.isArray(items) || !items.length || !items[0]) {
-          return res(null);
-        }
-
-        let imageLinks = dlv(items[0], "volumeInfo.imageLinks");
-        if (!imageLinks) {
-          return res(null);
-        }
-
-        let smallImage = imageLinks.smallThumbnail || imageLinks.thumbnail;
-        if (smallImage) {
-          smallImage = smallImage.replace(/&edge=curl/gi, "");
-        }
-
-        return res(smallImage || null);
-      } catch (er) {
-        console.log("processing error", er);
-        console.log("body", body);
-        res(null);
+      if (!Array.isArray(items) || !items.length || !items[0]) {
+        return resolve(null);
       }
-    });
+
+      let imageLinks = dlv(items[0], "volumeInfo.imageLinks");
+      if (!imageLinks) {
+        return resolve(null);
+      }
+
+      let smallImage = imageLinks.smallThumbnail || imageLinks.thumbnail;
+      if (smallImage) {
+        smallImage = smallImage.replace(/&edge=curl/gi, "");
+      }
+
+      return resolve(smallImage || null);
+    } catch (err) {
+      console.log("Error fetching and processing", err, resp.statusCode);
+      return resolve(null);
+    }
   });
 }

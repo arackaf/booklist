@@ -1,76 +1,84 @@
-const AWS = require("aws-sdk");
+import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
-const path = require("path");
-const request = require("request");
-const { v4: uuid } = require("uuid");
-const del = require("del");
-const fs = require("fs");
+import path from "path";
+import https from "https";
+import http from "http";
+import fs from "fs";
 
-const Jimp = require("jimp");
+import del from "del";
+import { v4 as uuid } from "uuid";
+
+import Jimp from "jimp";
 
 const GOOGLE_LIBRARY_KEY = process.env.GOOGLE_LIBRARY_KEY;
 
-const getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
-const getGoogleLibraryUri = (isbn, GOOGLE_LIBRARY_KEY) => `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${GOOGLE_LIBRARY_KEY}`;
+export const getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
+export const getGoogleLibraryUri = (isbn, GOOGLE_LIBRARY_KEY) =>
+  `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${GOOGLE_LIBRARY_KEY}`;
 
-exports.getOpenLibraryCoverUri = getOpenLibraryCoverUri;
-exports.getGoogleLibraryUri = getGoogleLibraryUri;
-
-module.exports.downloadBookCover = downloadBookCover;
-function downloadBookCover(url, minSizeToAccept) {
+export function downloadBookCover(url, minSizeToAccept) {
   let ext = path.extname(url) || ".jpg";
 
   let uniqueId = uuid();
   let fileName = "file-" + uniqueId + ext;
   let fullName = path.resolve("/tmp/" + fileName);
+  let network = /^https/.test(url) ? https : http;
 
   return new Promise(res => {
     let file = fs.createWriteStream(fullName);
 
-    request(url)
-      .pipe(file)
-      .on("finish", () => {
-        file.close();
+    network
+      .get(url, response => {
+        response.pipe(file);
+        file.on("finish", async () => {
+          await file.close();
 
-        let stats = fs.statSync(fullName);
-        let fileSizeInBytes = stats.size;
+          let stats = fs.statSync(fullName);
+          let fileSizeInBytes = stats.size;
 
-        if (fileSizeInBytes < minSizeToAccept) {
-          removeFile(fullName);
-          res(null);
-        }
-
-        fs.readFile(fullName, (err, data) => {
-          if (err) {
+          if (fileSizeInBytes < minSizeToAccept) {
             removeFile(fullName);
-
             return res(null);
           }
-          res({ fullName, fileName });
+
+          fs.readFile(fullName, (err, data) => {
+            if (err) {
+              removeFile(fullName);
+              return res(null);
+            }
+            console.log("File saved to", fullName);
+            res({ fullName, fileName });
+          });
+        });
+
+        file.on("error", async () => {
+          console.log("File error", err);
+          removeFile(fullName);
+          res(null);
         });
       })
-      .on("error", () => {
+      .on("error", err => {
+        console.log("Request error", err);
         removeFile(fullName);
-
         res(null);
       });
   });
 }
 
-module.exports.resizeIfNeeded = resizeIfNeeded;
-function resizeIfNeeded(fileName, width = 50) {
+export function resizeIfNeeded(fileName, width = 50) {
   let pathToFileUploaded = path.resolve("/tmp/" + fileName);
   let resizedDestination = path.resolve("/tmp/" + "resized_" + fileName);
   return new Promise(res => {
     try {
       Jimp.read(pathToFileUploaded, function (err, image) {
         if (err || !image) {
+          console.log("Error 1", err);
           return res(null);
         }
 
         try {
-          image.exifRotate();
+          image.exifRotate && image.exifRotate();
           if (image.bitmap.width > width) {
             image.resize(width, Jimp.AUTO);
 
@@ -84,6 +92,7 @@ function resizeIfNeeded(fileName, width = 50) {
             return res(pathToFileUploaded);
           }
         } catch (err) {
+          console.log("Error 2", err);
           return res(null);
         }
       });
@@ -93,15 +102,13 @@ function resizeIfNeeded(fileName, width = 50) {
   });
 }
 
-module.exports.removeFile = removeFile;
-function removeFile(fullName) {
+export function removeFile(fullName) {
   try {
     del.sync(fullName);
   } catch (er) {}
 }
 
-module.exports.saveCoverToS3 = saveCoverToS3;
-function saveCoverToS3(source, s3Key) {
+export function saveCoverToS3(source, s3Key) {
   return new Promise(res => {
     let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
 
@@ -122,8 +129,7 @@ function saveCoverToS3(source, s3Key) {
   });
 }
 
-module.exports.saveContentToS3 = saveContentToS3;
-function saveContentToS3(content, s3Key) {
+export function saveContentToS3(content, s3Key) {
   return new Promise(res => {
     let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
 
@@ -133,8 +139,13 @@ function saveContentToS3(content, s3Key) {
     };
 
     s3bucket.upload(params, function (err) {
-      if (err) res(err);
-      else res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
+      if (err) {
+        console.log("Error uploading to S3", { s3Key, err });
+        res(err);
+      } else {
+        console.log("S3 File Saved");
+        res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
+      }
     });
   });
 }

@@ -11,31 +11,54 @@
 #
 # Happy Coding!
 
-service: isbn-db-proxy
+service: book-covers
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: '2'
-
 provider:
   name: aws
   runtime: nodejs12.x
+  timeout: 30
+  apiGateway:
+    binaryMediaTypes:
+      - "multipart/form-data"
 
   # you can overwrite defaults here
   stage: live
   #  region: us-east-1
 
-  # you can add statements to the Lambda function's IAM Role here
   iam:
     role:
       statements:
         - Effect: "Allow"
           Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: "Allow"
+          Action:
             - "secretsmanager:GetSecretValue"
           Resource: "arn:aws:secretsmanager:us-east-1:*"
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
 
 # you can define service wide environment variables here
 #  environment:
@@ -50,14 +73,37 @@ provider:
 #    - include-me-dir/**
 
 functions:
-  badCoverSync:
-    timeout: 10
-    handler: handler.lookupBook
+  upload:
+    handler: handler.upload
     events:
       - http:
-          path: /book
+          path: upload
           method: post
           cors: true
+
+  uploadFromUrl:
+    handler: handler.uploadFromUrl
+    events:
+      - http:
+          path: uploadFromUrl
+          method: post
+          cors: true
+
+  isbnDbBookCoverLookup:
+    timeout: 10
+    handler: handler.isbnDbBookCoverLookup
+    events:
+      - http:
+          path: /isbndb-cover-lookup
+          method: post
+          cors: true
+
+  bookRecommendationBadCoverSync:
+    timeout: 750
+    handler: handler.bookRecommendationBadCoverSync
+    events:
+      - schedule: rate(24 hours)
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
