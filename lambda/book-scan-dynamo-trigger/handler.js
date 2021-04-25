@@ -47,7 +47,11 @@ module.exports.stickItIn = async event => {
       TableName: "my_library_scan_state_live",
       Item: {
         id: { N: "1" },
-        items: { L: [{ S: "a" }, { S: "x" }] }
+        items: { L: [{ S: "a" }, { S: "xyzabc" }] }
+      },
+      ConditionExpression: "id <> :idKeyVal",
+      ExpressionAttributeValues: {
+        ":idKeyVal": { N: "1" }
       }
     };
     await db.putItem(params).promise();
