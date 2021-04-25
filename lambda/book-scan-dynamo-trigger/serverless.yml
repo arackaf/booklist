@@ -43,7 +43,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
             - dynamodb:DescribeStream
-          Resource: "arn:aws:dynamodb:*:*:my_library_scan_state_${self:provider.stage}"
+          Resource: "arn:aws:dynamodb:*:*:table/my_library_scan_state_${self:provider.stage}"
 
 #  iamRoleStatements:
 #    - Effect: "Allow"
