@@ -1,5 +1,4 @@
-import AWS from "aws-sdk";
-AWS.config.region = "us-east-1";
+import S3 from "aws-sdk/clients/s3";
 
 import path from "path";
 import https from "https";
@@ -110,7 +109,7 @@ export function removeFile(fullName) {
 
 export function saveCoverToS3(source, s3Key) {
   return new Promise(res => {
-    let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
+    let s3bucket = new S3({ params: { Bucket: "my-library-cover-uploads" } });
 
     fs.readFile(source, (err, data) => {
       if (err) {
@@ -131,7 +130,7 @@ export function saveCoverToS3(source, s3Key) {
 
 export function saveContentToS3(content, s3Key) {
   return new Promise(res => {
-    let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
+    let s3bucket = new S3({ params: { Bucket: "my-library-cover-uploads" } });
 
     let params = {
       Key: s3Key,
