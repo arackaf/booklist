@@ -37,6 +37,26 @@ import { getJrDbConnection } from "./node/util/dbUtils";
 import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
+(async function () {
+  try {
+    const db = new AWS.DynamoDB({
+      region: "us-east-1"
+    });
+
+    const params = {
+      TableName: "my_library_scan_state_live",
+      Item: {
+        id: { N: "2" },
+        items: { L: [{ S: "a" }, { S: "heyooo" }] }
+      }
+    };
+    await db.putItem(params).promise();
+    console.log("INSERTED");
+  } catch (err) {
+    console.log("ERROR :(", err);
+  }
+})();
+
 const svelteRouter = express.Router();
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
