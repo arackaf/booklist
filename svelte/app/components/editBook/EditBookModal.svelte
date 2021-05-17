@@ -1,4 +1,7 @@
 <script lang="ts">
+  import ajaxUtil from "util/ajaxUtil";
+  import { needBookCoverPriming } from "util/localStorage";
+
   import Modal from "../ui/Modal.svelte";
   import EditBook from "./EditBook.svelte";
 
@@ -7,10 +10,18 @@
   export let onHide;
   export let saveBook;
 
+  $: {
+    if (isOpen && needBookCoverPriming()) {
+      ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER, { avoidColdStart: true });
+      ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, { avoidColdStart: true });
+    }
+  }
+
   let closeModal;
   const runSave = book => {
     saveBook(book).then(closeModal);
   };
+
 </script>
 
 <Modal headerCaption={`Edit: ${book.title}`} deferStateChangeOnClose={true} {isOpen} {onHide} standardFooter={false} bind:closeModal>

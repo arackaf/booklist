@@ -11,8 +11,13 @@ import corsResponse from "../util/corsResponse";
 import uploadToS3 from "../util/uploadToS3";
 import downloadFromUrl from "../util/downloadFromUrl";
 import getSecrets from "../util/getSecrets";
+import { isWarmingCall } from "../util/isWarmingCall";
 
 export const upload = async event => {
+  if (isWarmingCall(event)) {
+    return corsResponse({ coldStartPrevented: true });
+  }
+
   const formPayload = await awsMultiPartParser.parse(event);
   const { userId, loginToken, size } = formPayload;
   const file = formPayload.files[0];
@@ -33,6 +38,10 @@ export const upload = async event => {
 };
 
 export const uploadFromUrl = async event => {
+  if (isWarmingCall(event)) {
+    return corsResponse({ coldStartPrevented: true });
+  }
+
   const { userId, loginToken, size, url } = JSON.parse(event.body);
   const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
