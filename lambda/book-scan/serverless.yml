@@ -24,7 +24,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
-  stage: live
+  stage: dev
   environment:
     stage: ${self:provider.stage}
 
@@ -46,6 +46,10 @@ provider:
             - dynamodb:DeleteItem
             - dynamodb:DescribeStream
           Resource: "arn:aws:dynamodb:*:*:table/my_library_scan_state_${self:provider.stage}"
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
 
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -75,11 +79,16 @@ provider:
 #    - include-me-dir/**
 
 functions:
+  scanBook:
+    handler: handler.scanBook
+    events:
+      - http:
+          path: scan
+          method: post
+          cors: true
+
   hello:
     handler: handler.hello
-    #    The following are a few example events you can configure
-    #    NOTE: Please make sure to change your handler code to work with those events
-    #    Check the event documentation for details
     events:
       - stream: arn:aws:dynamodb:us-east-1:923801996275:table/my_library_scan_state_live/stream/2021-04-20T18:10:24.658
 
@@ -136,3 +145,5 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+plugins:
+  - serverless-webpack
