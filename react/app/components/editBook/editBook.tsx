@@ -5,6 +5,7 @@ import EditBookInfo from "./editBookInfo";
 
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/Tabs";
 import ajaxUtil from "util/ajaxUtil";
+import { needBookCoverPriming } from "util/localStorage";
 
 type Props = {
   saveBook: any;
@@ -29,7 +30,7 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
   };
 
   useLayoutEffect(() => {
-    if (bookToEdit) {
+    if (bookToEdit && needBookCoverPriming()) {
       ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER, { avoidColdStart: true });
       ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, { avoidColdStart: true });
     }
