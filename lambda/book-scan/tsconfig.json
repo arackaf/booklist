@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./.build/",
+    "module": "es6",
+    "target": "esnext",
+    "allowJs": true,
+    "moduleResolution": "node"
+  }
+}

@@ -1,15 +1,16 @@
 "use strict";
 
 import AWS from "aws-sdk";
+
 import corsResponse from "../util/corsResponse";
 import getDbConnection from "../util/getDbConnection";
 
 export const scanBook = async event => {
   try {
-    console.log(process.env.stage);
     const db = await getDbConnection();
+    const { isbn } = JSON.parse(event.body);
 
-    await db.collection("pendingEntries").insertOne({ isbn: "Hello World" });
+    await db.collection("pendingEntries").insertOne({ isbn });
 
     return corsResponse({ success: true, x: process.env.stage });
   } catch (err) {
