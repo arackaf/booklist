@@ -90,7 +90,13 @@ functions:
   hello:
     handler: handler.hello
     events:
-      - stream: arn:aws:dynamodb:us-east-1:923801996275:table/my_library_scan_state_live/stream/2021-04-20T18:10:24.658
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::ImportValue: Book-Scan-Dynamo-Table-${self:provider.stage}
+
+    # events:
+    #   - stream: arn:aws:dynamodb:us-east-1:923801996275:table/my_library_scan_state_${self:provider.stage}/stream/*
 
   stickItIn:
     handler: handler.stickItIn

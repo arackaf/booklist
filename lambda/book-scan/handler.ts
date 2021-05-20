@@ -12,6 +12,23 @@ export const scanBook = async event => {
 
     await db.collection("pendingEntries").insertOne({ isbn });
 
+    const dynamoDb = new AWS.DynamoDB({
+      region: "us-east-1"
+    });
+
+    const params = {
+      TableName: `my_library_scan_state_${process.env.stage}`,
+      Item: {
+        id: { N: "1" },
+        items: { L: [{ S: "a" }, { S: "xyzabc" }] }
+      },
+      ConditionExpression: "id <> :idKeyVal",
+      ExpressionAttributeValues: {
+        ":idKeyVal": { N: "1" }
+      }
+    };
+    await dynamoDb.putItem(params).promise();
+
     return corsResponse({ success: true, x: process.env.stage });
   } catch (err) {
     return corsResponse({ success: false, error: err });

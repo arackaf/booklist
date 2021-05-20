@@ -25,7 +25,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
-  stage: live
+  stage: dev
 
 # you can overwrite defaults here
 #  stage: dev
@@ -120,6 +120,14 @@ resources:
           WriteCapacityUnits: 5
         StreamSpecification:
           StreamViewType: KEYS_ONLY
+  Outputs:
+    ScanTableArnId:
+      Value:
+        Fn::GetAtt:
+          - ScanTable
+          - StreamArn
+      Export:
+        Name: Book-Scan-Dynamo-Table-${self:provider.stage}
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
