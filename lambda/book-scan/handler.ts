@@ -12,24 +12,92 @@ export const scanBook = async event => {
 
     await db.collection("pendingEntries").insertOne({ isbn });
 
-    const dynamoDb = new AWS.DynamoDB({
+    const dynamoDb = new AWS.DynamoDB.DocumentClient({
       region: "us-east-1"
     });
 
-    const params = {
-      TableName: `my_library_scan_state_${process.env.stage}`,
-      Item: {
-        id: { N: "1" },
-        items: { L: [{ S: "a" }, { S: "xyzabc" }] }
-      },
-      ConditionExpression: "id <> :idKeyVal",
-      ExpressionAttributeValues: {
-        ":idKeyVal": { N: "1" }
-      }
-    };
-    await dynamoDb.putItem(params).promise();
+    const TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
 
-    return corsResponse({ success: true, x: process.env.stage });
+    const params = {
+      TableName: TABLE_NAME,
+      Item: {
+        id: 1,
+        items: ["a", "b"]
+      }
+      // ConditionExpression: "id <> :idKeyVal",
+      // ExpressionAttributeValues: {
+      //   ":idKeyVal": 1
+      // }
+    };
+    await dynamoDb.put(params).promise();
+
+    const x = await dynamoDb.get({ TableName: TABLE_NAME, Key: { id: 1 } }).promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 2 },
+        UpdateExpression: "set loginKey = :login",
+        ExpressionAttributeValues: { ":login": "abc123" }
+      })
+      .promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 3 },
+        UpdateExpression: "set loginKey = :login",
+        ExpressionAttributeValues: { ":login": "abc123" }
+      })
+      .promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 4 },
+        UpdateExpression: "ADD notificationPaths :newPath",
+        ExpressionAttributeValues: { ":newPath": dynamoDb.createSet(["path-yo"]) }
+      })
+      .promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 4 },
+        UpdateExpression: "ADD notificationPaths :newPath SET aaa = :list",
+        ExpressionAttributeValues: { ":newPath": dynamoDb.createSet(["path-yo-2"]), ":list": ["f", "g"] }
+      })
+      .promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 4 },
+        UpdateExpression: "SET aaa = :list DELETE notificationPaths :oldPath",
+        ExpressionAttributeValues: { ":list": ["f", "g"], ":oldPath": dynamoDb.createSet(["path-yo"]) }
+      })
+      .promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 66 },
+        UpdateExpression: "SET myset = :set",
+        ExpressionAttributeValues: { ":set": dynamoDb.createSet(["a", "b", "c"]) }
+      })
+      .promise();
+
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: { id: 4 },
+        UpdateExpression: "SET notificationPaths = :junk",
+        ExpressionAttributeValues: { ":junk": "NOOO", ":idKeyVal": 4 },
+        ConditionExpression: "id <> :idKeyVal"
+      })
+      .promise();
+
+    return corsResponse({ success: true, stage: process.env.stage, val: JSON.stringify(x), val2: x.Item.items[0] });
   } catch (err) {
     return corsResponse({ success: false, error: err });
   }

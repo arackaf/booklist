@@ -72,6 +72,7 @@ export const isbnDbBookCoverLookup = async event => {
         Authorization: key
       }
     });
+
     const bookResult = await fetchResponse.json();
 
     console.log("Found from isbndb:", bookResult);
