@@ -3,7 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "./.build/",
     "module": "es6",
-    "target": "esnext",
+    "target": "es6",
     "allowJs": true,
     "moduleResolution": "node"
   }

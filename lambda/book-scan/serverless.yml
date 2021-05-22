@@ -87,8 +87,8 @@ functions:
           method: post
           cors: true
 
-  hello:
-    handler: handler.hello
+  lookupBooks:
+    handler: handler.lookupBooks
     events:
       - stream:
           type: dynamodb

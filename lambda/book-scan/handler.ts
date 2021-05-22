@@ -6,6 +6,9 @@ import corsResponse from "../util/corsResponse";
 import getDbConnection from "../util/getDbConnection";
 
 import checkLogin from "../util/checkLoginToken";
+import getSecrets from "../util/getSecrets";
+
+import fetch from "node-fetch";
 
 const SCAN_STATE_TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
 
@@ -35,7 +38,7 @@ export const scanBook = async event => {
           TableName: SCAN_STATE_TABLE_NAME,
           Item: {
             id: 1,
-            items: items.map(item => ({ ...item, _id: item._id + "" }))
+            pendingEntries: items.map(item => ({ ...item, _id: item._id + "" }))
           },
           ConditionExpression: "id <> :idKeyVal",
           ExpressionAttributeValues: {
@@ -54,10 +57,10 @@ export const scanBook = async event => {
 
 const __sandbox = async event => {
   try {
-    const db = await getDbConnection();
+    const mongoDb = await getDbConnection();
     const { isbn } = JSON.parse(event.body);
 
-    await db.collection("pendingEntries").insertOne({ isbn });
+    await mongoDb.collection("pendingEntries").insertOne({ isbn });
 
     const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
 
@@ -146,38 +149,80 @@ const __sandbox = async event => {
   }
 };
 
-export const hello = async event => {
-  console.log("CALLED YO", +new Date());
-
+export const lookupBooks = async event => {
   try {
-    const db = new AWS.DynamoDB({
-      region: "us-east-1"
-    });
+    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+    const mongoDb = await getDbConnection();
 
     const params = {
-      TableName: "my_library_scan_state_live",
-      Key: {
-        id: { N: "1" }
-      }
+      TableName: SCAN_STATE_TABLE_NAME,
+      Key: { id: 1 }
     };
-    const result = await db.getItem(params).promise();
-    console.log("FOUND", result.Item);
-    console.log("FOUND", JSON.stringify(result.Item));
-  } catch (err) {
-    console.log("ERROR :(", err);
-  }
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: "Go Serverless v1.0! Your function executed successfully!",
-        input: event
+    const result = await dynamoDb.get(params).promise();
+    if (!result?.Item?.pendingEntries?.length) {
+      return corsResponse({ success: true, empty: true });
+    }
+
+    const pendingEntries = result.Item.pendingEntries;
+    const itemLookup = pendingEntries.reduce((hash, entry) => ((hash[entry.isbn] = entry), hash), {});
+    const secrets = await getSecrets();
+    const isbnDbKey = secrets["isbn-db-key"];
+
+    const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: isbnDbKey
       },
-      null,
-      2
-    )
-  };
+      body: `isbns=${pendingEntries.map(entry => entry.isbn).join(",")}`
+    });
+    const json = await isbnDbResponse.json();
+
+    const newBooks = [];
+    for (const item of json.data) {
+      newBooks.push(getBookFromIsbnDbModel(item));
+    }
+    await mongoDb.collection("books").insertMany(newBooks);
+
+    return corsResponse({ success: true });
+  } catch (err) {
+    return corsResponse({ success: false, err });
+  }
 };
+
+function getBookFromIsbnDbModel(book) {
+  const response = {
+    title: book.title || book.title_long,
+    isbn: book.isbn13 || book.isbn,
+    ean: "",
+    pages: book.pages,
+    smallImage: book.image,
+    mediumImage: book.image,
+    publicationDate: book.date_published, // TODO
+    publisher: book.publisher,
+    authors: book.authors,
+    editorialReviews: [],
+    subjects: [],
+    userId: "" // TODO:
+  };
+
+  if (book.synopsys) {
+    response.editorialReviews.push({
+      source: "synopsys",
+      content: book.synopsys
+    });
+  }
+
+  if (book.overview) {
+    response.editorialReviews.push({
+      source: "overview",
+      content: book.overview
+    });
+  }
+
+  return response;
+}
 
 export const stickItIn = async event => {
   console.log("CALLED YO", +new Date());
