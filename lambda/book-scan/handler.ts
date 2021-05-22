@@ -30,7 +30,7 @@ export const scanBook = async event => {
     if (!scanState.Item) {
       const items = await db
         .collection("pendingEntries")
-        .aggregate([{ $sort: { _id: 1 } }, { $limit: 10 }])
+        .aggregate([{ $sort: { _id: 1 } }, { $limit: 15 }])
         .toArray();
 
       await dynamoDb
@@ -181,7 +181,7 @@ export const lookupBooks = async event => {
 
     const newBooks = [];
     for (const item of json.data) {
-      newBooks.push(getBookFromIsbnDbModel(item));
+      newBooks.push(getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6")); //TODO:
     }
     await mongoDb.collection("books").insertMany(newBooks);
 
@@ -191,20 +191,22 @@ export const lookupBooks = async event => {
   }
 };
 
-function getBookFromIsbnDbModel(book) {
+function getBookFromIsbnDbModel(book, userId) {
+  let smallImage = book.image || "";
+  let mediumImage = book.image || "";
   const response = {
     title: book.title || book.title_long,
     isbn: book.isbn13 || book.isbn,
     ean: "",
     pages: book.pages,
-    smallImage: book.image,
-    mediumImage: book.image,
+    smallImage,
+    mediumImage,
     publicationDate: book.date_published, // TODO
     publisher: book.publisher,
-    authors: book.authors,
+    authors: book.authors || [],
     editorialReviews: [],
     subjects: [],
-    userId: "" // TODO:
+    userId
   };
 
   if (book.synopsys) {
