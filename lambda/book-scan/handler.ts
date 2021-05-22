@@ -2,15 +2,27 @@
 
 import AWS from "aws-sdk";
 
+import path from "path";
+import uuid from "uuid/v4";
+
 import corsResponse from "../util/corsResponse";
 import getDbConnection from "../util/getDbConnection";
 
 import checkLogin from "../util/checkLoginToken";
 import getSecrets from "../util/getSecrets";
+import uploadToS3 from "../util/uploadToS3";
+import downloadFromUrl from "../util/downloadFromUrl";
+import resizeImage from "../util/resizeImage";
+import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 
 import fetch from "node-fetch";
 
 const SCAN_STATE_TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
+
+enum COVER_SIZE {
+  SMALL = 1,
+  MEDIUM = 2
+}
 
 export const scanBook = async event => {
   try {
@@ -160,7 +172,7 @@ export const lookupBooks = async event => {
     };
     const result = await dynamoDb.get(params).promise();
     if (!result?.Item?.pendingEntries?.length) {
-      return corsResponse({ success: true, empty: true });
+      return { success: true, empty: true };
     }
 
     const pendingEntries = result.Item.pendingEntries;
@@ -181,22 +193,28 @@ export const lookupBooks = async event => {
 
     const newBooks = [];
     for (const item of json.data) {
-      newBooks.push(getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6")); //TODO:
+      newBooks.push(await getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6")); //TODO:
     }
+    console.log("Saving all", newBooks.length, JSON.stringify(newBooks));
     await mongoDb.collection("books").insertMany(newBooks);
 
-    return corsResponse({ success: true });
+    return { success: true };
   } catch (err) {
-    return corsResponse({ success: false, err });
+    return { success: false, err };
   }
 };
 
-function getBookFromIsbnDbModel(book, userId) {
-  let smallImage = book.image || "";
-  let mediumImage = book.image || "";
-  const response = {
+async function getBookFromIsbnDbModel(book, userId) {
+  console.log("Processing", JSON.stringify(book));
+
+  let isbn = book.isbn13 || book.isbn;
+
+  let smallImage = await processCoverUrl(book.image, isbn, userId, COVER_SIZE.SMALL);
+  let mediumImage = await processCoverUrl(book.image, isbn, userId, COVER_SIZE.MEDIUM);
+
+  const newBook = {
     title: book.title || book.title_long,
-    isbn: book.isbn13 || book.isbn,
+    isbn,
     ean: "",
     pages: book.pages,
     smallImage,
@@ -210,20 +228,71 @@ function getBookFromIsbnDbModel(book, userId) {
   };
 
   if (book.synopsys) {
-    response.editorialReviews.push({
+    newBook.editorialReviews.push({
       source: "synopsys",
       content: book.synopsys
     });
   }
 
   if (book.overview) {
-    response.editorialReviews.push({
+    newBook.editorialReviews.push({
       source: "overview",
       content: book.overview
     });
   }
 
-  return response;
+  return newBook;
+}
+
+async function processCoverUrl(url, isbn, userId, size: COVER_SIZE) {
+  if (url) {
+    let imageResult = await attemptImageSave(url, userId, COVER_SIZE.SMALL);
+    if (imageResult.success) {
+      console.log("Default image succeeded", imageResult.url);
+      return imageResult.url;
+    } else {
+      console.log("Default failed");
+      if (isbn) {
+        console.log("Trying OpenLibrary");
+
+        let imageResult = await attemptImageSave(getOpenLibraryCoverUri(isbn), userId, COVER_SIZE.SMALL);
+        if (imageResult.success) {
+          console.log("OpenLibrary succeeded", imageResult.url);
+          return imageResult.url;
+        }
+      }
+    }
+  }
+
+  return "";
+}
+
+async function attemptImageSave(url, userId, size: COVER_SIZE) {
+  const targetWidth = size == COVER_SIZE.SMALL ? 50 : size == COVER_SIZE.MEDIUM ? 106 : 200;
+  const minWidth = size == COVER_SIZE.SMALL ? 45 : size == COVER_SIZE.MEDIUM ? 95 : 180;
+
+  const { body, error } = (await downloadFromUrl(url)) as any;
+
+  if (error) {
+    return { error: true, message: error || "" };
+  }
+
+  const imageResult: any = await resizeImage(body, targetWidth, minWidth);
+  if (imageResult.error || !imageResult.body) {
+    console.log(url, "failed", imageResult.error);
+    return { error: true, message: imageResult.error || "" };
+  }
+
+  const newName = `bookCovers/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
+  console.log(url, "success", "Saving to", newName);
+
+  const s3Result: any = await uploadToS3(newName, imageResult.body);
+
+  if (s3Result.success) {
+    console.log(newName, "Saved to s3");
+  }
+
+  return s3Result;
 }
 
 export const stickItIn = async event => {

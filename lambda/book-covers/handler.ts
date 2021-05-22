@@ -9,6 +9,7 @@ import checkLogin from "../util/checkLoginToken";
 import resizeImage from "../util/resizeImage";
 import corsResponse from "../util/corsResponse";
 import uploadToS3 from "../util/uploadToS3";
+import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 import downloadFromUrl from "../util/downloadFromUrl";
 import getSecrets from "../util/getSecrets";
 import { isWarmingCall } from "../util/isWarmingCall";
@@ -49,6 +50,10 @@ export const uploadFromUrl = async event => {
     return corsResponse({});
   }
   const { body, error } = (await downloadFromUrl(url)) as any;
+
+  if (error) {
+    return corsResponse({ error: true });
+  }
 
   const imageResult: any = await resizeImage(body, MAX_WIDTH);
   if (imageResult.error || !imageResult.body) {

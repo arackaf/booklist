@@ -88,6 +88,7 @@ functions:
           cors: true
 
   lookupBooks:
+    timeout: 120
     handler: handler.lookupBooks
     events:
       - stream:
