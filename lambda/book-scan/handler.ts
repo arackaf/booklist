@@ -180,6 +180,9 @@ export const lookupBooks = async event => {
     const secrets = await getSecrets();
     const isbnDbKey = secrets["isbn-db-key"];
 
+    const isbns = pendingEntries.map(entry => entry.isbn).join(",");
+    console.log("---- BOOK LOOKUP STARTING ----", isbns);
+
     const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
       method: "post",
       headers: {
@@ -187,17 +190,17 @@ export const lookupBooks = async event => {
         "Content-Type": "application/json",
         Authorization: isbnDbKey
       },
-      body: `isbns=${pendingEntries.map(entry => entry.isbn).join(",")}`
+      body: `isbns=${isbns}`
     });
     const json = await isbnDbResponse.json();
 
-    const newBooks = [];
     for (const item of json.data) {
-      newBooks.push(await getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6")); //TODO:
+      let newBook = await getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6"); //TODO:
+      console.log("Saving", JSON.stringify(newBook));
+      await mongoDb.collection("books").insertOne(newBook);
     }
-    console.log("Saving all", newBooks.length, JSON.stringify(newBooks));
-    await mongoDb.collection("books").insertMany(newBooks);
 
+    console.log("---- FINISHED. ALL SAVED ----");
     return { success: true };
   } catch (err) {
     return { success: false, err };
@@ -246,16 +249,16 @@ async function getBookFromIsbnDbModel(book, userId) {
 
 async function processCoverUrl(url, isbn, userId, size: COVER_SIZE) {
   if (url) {
-    let imageResult = await attemptImageSave(url, userId, COVER_SIZE.SMALL);
+    let imageResult = await attemptImageSave(url, userId, size);
     if (imageResult.success) {
       console.log("Default image succeeded", imageResult.url);
       return imageResult.url;
     } else {
-      console.log("Default failed");
+      console.log("Default failed", imageResult.message);
       if (isbn) {
         console.log("Trying OpenLibrary");
 
-        let imageResult = await attemptImageSave(getOpenLibraryCoverUri(isbn), userId, COVER_SIZE.SMALL);
+        let imageResult = await attemptImageSave(getOpenLibraryCoverUri(isbn), userId, size);
         if (imageResult.success) {
           console.log("OpenLibrary succeeded", imageResult.url);
           return imageResult.url;
@@ -268,6 +271,8 @@ async function processCoverUrl(url, isbn, userId, size: COVER_SIZE) {
 }
 
 async function attemptImageSave(url, userId, size: COVER_SIZE) {
+  console.log("Processing", url, size == COVER_SIZE.SMALL ? "small" : "medium");
+
   const targetWidth = size == COVER_SIZE.SMALL ? 50 : size == COVER_SIZE.MEDIUM ? 106 : 200;
   const minWidth = size == COVER_SIZE.SMALL ? 45 : size == COVER_SIZE.MEDIUM ? 95 : 180;
 
@@ -289,7 +294,9 @@ async function attemptImageSave(url, userId, size: COVER_SIZE) {
   const s3Result: any = await uploadToS3(newName, imageResult.body);
 
   if (s3Result.success) {
-    console.log(newName, "Saved to s3");
+    console.log(s3Result.url, "Saved to s3");
+  } else {
+    console.log(s3Result.url, "Failed saving to s3");
   }
 
   return s3Result;
