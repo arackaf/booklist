@@ -5,21 +5,64 @@ import AWS from "aws-sdk";
 import corsResponse from "../util/corsResponse";
 import getDbConnection from "../util/getDbConnection";
 
+import checkLogin from "../util/checkLoginToken";
+
+const SCAN_STATE_TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
+
 export const scanBook = async event => {
+  try {
+    const { userId = "", loginToken, isbn } = JSON.parse(event.body);
+
+    if (!(await checkLogin(userId, loginToken))) {
+      return corsResponse({ badLogin: true });
+    }
+
+    const db = await getDbConnection();
+
+    await db.collection("pendingEntries").insertOne({ userId, isbn });
+
+    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+    const scanState = await dynamoDb.get({ TableName: SCAN_STATE_TABLE_NAME, Key: { id: 1 } }).promise();
+
+    if (!scanState.Item) {
+      const items = await db
+        .collection("pendingEntries")
+        .aggregate([{ $sort: { _id: 1 } }, { $limit: 10 }])
+        .toArray();
+
+      await dynamoDb
+        .put({
+          TableName: SCAN_STATE_TABLE_NAME,
+          Item: {
+            id: 1,
+            items: items.map(item => ({ ...item, _id: item._id + "" }))
+          },
+          ConditionExpression: "id <> :idKeyVal",
+          ExpressionAttributeValues: {
+            ":idKeyVal": 1
+          }
+        })
+        .promise()
+        .catch(err => {});
+    }
+
+    return corsResponse({ success: true });
+  } catch (err) {
+    return corsResponse({ success: false, err });
+  }
+};
+
+const __sandbox = async event => {
   try {
     const db = await getDbConnection();
     const { isbn } = JSON.parse(event.body);
 
     await db.collection("pendingEntries").insertOne({ isbn });
 
-    const dynamoDb = new AWS.DynamoDB.DocumentClient({
-      region: "us-east-1"
-    });
-
-    const TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
+    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
 
     const params = {
-      TableName: TABLE_NAME,
+      TableName: SCAN_STATE_TABLE_NAME,
       Item: {
         id: 1,
         items: ["a", "b"]
@@ -31,11 +74,11 @@ export const scanBook = async event => {
     };
     await dynamoDb.put(params).promise();
 
-    const x = await dynamoDb.get({ TableName: TABLE_NAME, Key: { id: 1 } }).promise();
+    const x = await dynamoDb.get({ TableName: SCAN_STATE_TABLE_NAME, Key: { id: 1 } }).promise();
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 2 },
         UpdateExpression: "set loginKey = :login",
         ExpressionAttributeValues: { ":login": "abc123" }
@@ -44,7 +87,7 @@ export const scanBook = async event => {
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 3 },
         UpdateExpression: "set loginKey = :login",
         ExpressionAttributeValues: { ":login": "abc123" }
@@ -53,7 +96,7 @@ export const scanBook = async event => {
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 4 },
         UpdateExpression: "ADD notificationPaths :newPath",
         ExpressionAttributeValues: { ":newPath": dynamoDb.createSet(["path-yo"]) }
@@ -62,7 +105,7 @@ export const scanBook = async event => {
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 4 },
         UpdateExpression: "ADD notificationPaths :newPath SET aaa = :list",
         ExpressionAttributeValues: { ":newPath": dynamoDb.createSet(["path-yo-2"]), ":list": ["f", "g"] }
@@ -71,7 +114,7 @@ export const scanBook = async event => {
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 4 },
         UpdateExpression: "SET aaa = :list DELETE notificationPaths :oldPath",
         ExpressionAttributeValues: { ":list": ["f", "g"], ":oldPath": dynamoDb.createSet(["path-yo"]) }
@@ -80,7 +123,7 @@ export const scanBook = async event => {
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 66 },
         UpdateExpression: "SET myset = :set",
         ExpressionAttributeValues: { ":set": dynamoDb.createSet(["a", "b", "c"]) }
@@ -89,7 +132,7 @@ export const scanBook = async event => {
 
     await dynamoDb
       .update({
-        TableName: TABLE_NAME,
+        TableName: SCAN_STATE_TABLE_NAME,
         Key: { id: 4 },
         UpdateExpression: "SET notificationPaths = :junk",
         ExpressionAttributeValues: { ":junk": "NOOO", ":idKeyVal": 4 },
