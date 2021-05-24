@@ -18,11 +18,110 @@ import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 import fetch from "node-fetch";
 
 const SCAN_STATE_TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
+const WS_STATE_TABLE_NAME = `my_library_ws_state_state_${process.env.stage}`;
 
 enum COVER_SIZE {
   SMALL = 1,
   MEDIUM = 2
 }
+
+export const connect = async (event, context) => {
+  const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+  const connectionId = event.requestContext.connectionId;
+  console.log("CONNECT", connectionId);
+
+  try {
+    await dynamoDb
+      .put({
+        TableName: WS_STATE_TABLE_NAME,
+        Item: { "connection-id": connectionId, userId: "tbd" }
+      })
+      .promise()
+      .catch(err => {
+        console.log("Dynamo Error", err);
+      });
+  } catch (er) {
+    console.log("ERROR", er);
+  }
+
+  // let messenger = new AWS.ApiGatewayManagementApi({
+  //   apiVersion: "2018-11-29",
+  //   endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
+  // });
+
+  // try {
+  //   setTimeout(() => {
+  //     try {
+  //       messenger.postToConnection(
+  //         { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Hello, World One" }) },
+  //         (err, data) => {
+  //         }
+  //       );
+  //     } catch (er) {
+  //     }
+  //   }, 4000);
+  // } catch (er) {
+  // }
+
+  return {
+    statusCode: 200
+  };
+};
+
+export const disconnect = async (event, context) => {
+  const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+  const connectionId = event.requestContext.connectionId;
+  console.log("DIS-CONNECT", connectionId);
+
+  await dynamoDb
+    .delete({
+      TableName: WS_STATE_TABLE_NAME,
+      Key: { "connection-id": connectionId }
+    })
+    .promise()
+    .then(() => {
+      console.log("DONE", connectionId);
+    })
+    .catch(err => {
+      console.log("ERROR", err);
+    });
+
+  return {
+    statusCode: 200
+  };
+
+  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
+  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+};
+
+export const sync = async (event, context) => {
+  console.log("FOO");
+
+  try {
+    let messenger = new AWS.ApiGatewayManagementApi({
+      apiVersion: "2018-11-29",
+      endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
+    });
+
+    console.log("Set up with", event.requestContext.domainName + "/" + event.requestContext.stage);
+
+    await new Promise(res => {
+      messenger.postToConnection(
+        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Hello, World TWO Baby " }) },
+        (err, data) => {
+          res({});
+          console.log("CALLBACK", "ERROR", err, "DATA", data);
+        }
+      );
+    });
+  } catch (er) {
+    console.log("ERROR in foo", er);
+  }
+
+  return {
+    statusCode: 200
+  };
+};
 
 export const scanBook = async event => {
   try {

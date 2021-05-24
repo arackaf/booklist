@@ -45,7 +45,11 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
             - dynamodb:DescribeStream
-          Resource: "arn:aws:dynamodb:*:*:table/my_library_scan_state_${self:provider.stage}"
+          Resource:
+            [
+              "arn:aws:dynamodb:*:*:table/my_library_scan_state_${self:provider.stage}",
+              "arn:aws:dynamodb:*:*:table/my_library_ws_state_state_${self:provider.stage}"
+            ]
         - Effect: "Allow"
           Action:
             - "secretsmanager:GetSecretValue"
@@ -54,35 +58,31 @@ provider:
           Action:
             - "s3:*"
           Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
-
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  patterns:
-#    - '!exclude-me.js'
-#    - '!exclude-me-dir/**'
-#    - include-me.js
-#    - include-me-dir/**
+        - Effect: Allow
+          Action:
+            - "execute-api:ManageConnections"
+          Resource:
+            - "arn:aws:execute-api:*:*:**/@connections/*"
 
 functions:
+  connect:
+    handler: handler.connect
+    events:
+      - websocket:
+          route: $connect
+
+  disconnect:
+    handler: handler.disconnect
+    events:
+      - websocket:
+          route: $disconnect
+
+  sync:
+    handler: handler.sync
+    events:
+      - websocket:
+          route: sync
+
   scanBook:
     handler: handler.scanBook
     events:

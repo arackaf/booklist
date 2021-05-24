@@ -17,6 +17,15 @@
 
   let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
 
+  let ws2 = new WebSocket("wss://fwue4kkta2.execute-api.us-east-1.amazonaws.com/dev");
+
+  setTimeout(() => {
+    ws2.onmessage = ({ data }) => {
+      console.log("DATA!!!", data);
+    };
+    ws2.send(`{ action: "sync" }`);
+  }, 1000);
+
   ws.onmessage = ({ data }) => {
     let packet = JSON.parse(data);
     window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
