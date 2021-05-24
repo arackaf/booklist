@@ -66,13 +66,13 @@ provider:
 
 functions:
   connect:
-    handler: handler.connect
+    handler: ./ws-connection.connect
     events:
       - websocket:
           route: $connect
 
   disconnect:
-    handler: handler.disconnect
+    handler: ./ws-connection.disconnect
     events:
       - websocket:
           route: $disconnect
@@ -105,6 +105,7 @@ functions:
 
   stickItIn:
     handler: handler.stickItIn
+
     #    The following are a few example events you can configure
     #    NOTE: Please make sure to change your handler code to work with those events
     #    Check the event documentation for details
@@ -156,5 +157,9 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
 plugins:
   - serverless-webpack
+
+package:
+  individually: true

@@ -1,12 +1,22 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const slsw = require("serverless-webpack");
+
+const ConditionalPlugin = (condition, plugin) => ({
+  apply: compiler => {
+    let fileName = Object.keys(compiler.options.entry)[0].split("/").pop();
+
+    if (condition(fileName)) {
+      plugin.apply(compiler);
+    }
+  }
+});
 
 module.exports = {
-  entry: "./handler.ts",
+  entry: slsw.lib.entries,
   output: {
     libraryTarget: "commonjs2",
-    path: path.join(__dirname, ".webpack"),
-    filename: "handler.js"
+    path: path.join(__dirname, ".webpack")
   },
   module: {
     rules: [
@@ -27,12 +37,15 @@ module.exports = {
     //minimize: false
   },
   plugins: [
-    new CopyPlugin({
-      patterns: [
-        { from: "../node_modules/saslprep", to: "node_modules/saslprep" },
-        { from: "../node_modules/sparse-bitfield", to: "node_modules/sparse-bitfield" },
-        { from: "../node_modules/memory-pager", to: "node_modules/memory-pager" }
-      ]
-    })
+    ConditionalPlugin(
+      fileName => fileName != "ws-connection",
+      new CopyPlugin({
+        patterns: [
+          { from: "../node_modules/saslprep", to: "node_modules/saslprep" },
+          { from: "../node_modules/sparse-bitfield", to: "node_modules/sparse-bitfield" },
+          { from: "../node_modules/memory-pager", to: "node_modules/memory-pager" }
+        ]
+      })
+    )
   ]
 };

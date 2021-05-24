@@ -24,7 +24,7 @@
       console.log("DATA!!!", data);
     };
     ws2.send(`{ action: "sync" }`);
-  }, 1000);
+  }, 2000);
 
   ws.onmessage = ({ data }) => {
     let packet = JSON.parse(data);
