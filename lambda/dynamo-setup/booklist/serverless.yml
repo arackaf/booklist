@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: dynamo-scan-state
+service: dynamo-booklist
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -105,29 +105,45 @@ provider:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
-    ScanTable:
+    BooklistTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: my_library_scan_state_${self:provider.stage}
+        TableName: My_Library_${self:provider.stage}
         AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: N
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: gsiUserLookupPk
+            AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: pk
             KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+        GlobalSecondaryIndexes:
+          - IndexName: gsiUserLookup
+            KeySchema:
+              - AttributeName: gsiUserLookupPk
+                KeyType: HASH
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
         StreamSpecification:
           StreamViewType: KEYS_ONLY
   Outputs:
-    ScanTableArnId:
+    BooklistTableArnId:
       Value:
         Fn::GetAtt:
-          - ScanTable
+          - BooklistTable
           - StreamArn
       Export:
-        Name: Book-Scan-Dynamo-Table-${self:provider.stage}
+        Name: Booklist-Dynamo-Table-${self:provider.stage}
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
