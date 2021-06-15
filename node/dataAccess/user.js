@@ -5,6 +5,7 @@ import { ObjectID } from "mongodb";
 import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
+import moment from "moment";
 
 var salt = process.env.SALT;
 
@@ -39,37 +40,34 @@ const db = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"
 });
 
+const getPutPacket = obj => ({ TableName: TABLE_NAME, Item: obj });
+
 class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
     let activationToken = this.getActivationToken(email);
     email = email.toLowerCase();
 
-    const pk = `USER#email#${email}`;
+    const pk = `User#${email}`;
     const userId = uuid();
 
-    const params = {
-      TableName: TABLE_NAME,
-      Item: {
+    const mainUserObject = {
+      ...getPutPacket({
         pk,
         sk: pk,
         userId,
-        gsiUserLookupPk: userId,
         email,
         password: this.saltAndHashPassword(password),
-        token: this.saltAndHashToken(email),
-        rememberMe,
-        activationToken
-      },
+        created: moment().format("YYYY-MM-DD")
+      }),
       ConditionExpression: "pk <> :idKeyVal",
       ExpressionAttributeValues: {
         ":idKeyVal": pk
       }
     };
     try {
-      const items = [
-        params,
-        { TableName: TABLE_NAME, Item: { pk: `User#rememberMeToken#${params.Item.userId}`, sk: `User#rememberMeToken#${params.Item.token}` } }
-      ];
+      const userIdLookup = getPutPacket({ pk: `User#login-status-lookup#${userId}`, sk: `User#login-status-lookup#${userId}`, activationToken });
+
+      const items = [mainUserObject, userIdLookup];
       let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) }).promise();
     } catch (er) {
       if (/\[ConditionalCheckFailed/.test(er.message)) {
@@ -77,23 +75,6 @@ class UserDAO extends DAO {
       } else {
         return { errorCode: "sx" };
       }
-    }
-
-    return;
-
-    //let db = await super.open();
-    try {
-      let activationToken = this.getActivationToken(email),
-        newUser = { email, password: this.saltAndHashPassword(password), token: this.saltAndHashToken(email), rememberMe, activationToken };
-
-      await db.collection("users").insert(newUser);
-      let subjectsToInsert = newUsersSubjects.map(s => ({ ...s, userId: "" + newUser._id }));
-      await db.collection("subjects").insert(subjectsToInsert);
-      return newUser;
-    } catch (eee) {
-      console.log(eee);
-    } finally {
-      super.dispose(db);
     }
   }
   async lookupUser(email, password) {
