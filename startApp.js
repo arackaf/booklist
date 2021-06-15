@@ -24,14 +24,12 @@ import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
 import { easyControllers } from "easy-express-controllers";
 import expressWsImport from "express-ws";
-import webpush from "web-push";
 
 import expressGraphql from "express-graphql";
 
 import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
-import uuid from "uuid/v4";
 import { getJrDbConnection } from "./node/util/dbUtils";
 
 import AWS from "aws-sdk";
@@ -48,6 +46,17 @@ const PUBLIC_USER = {
 
 const IS_DEV = process.env.IS_DEV;
 
+console.log(process.env.BOOKLIST_DYNAMO);
+
+import UserDao2 from "./node/dataAccess/user";
+
+(async function () {
+  let u = new UserDao2();
+  let res = await u.createUser("a@aol.com", "foobar", true);
+  console.log(res);
+})();
+
+/*
 const jr_admins = new Set(process.env.JELLYROLLS_ADMINS.split(",").filter(id => id));
 
 if (!IS_DEV) {
@@ -156,7 +165,7 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-/* --------------- SVELTE --------------- */
+
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
@@ -196,7 +205,6 @@ svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
 
-/* --------------- /SVELTE --------------- */
 
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
@@ -362,9 +370,11 @@ function error(err) {
 Promise.resolve(dao.init()).then(() => {
   app.listen(process.env.PORT || 3000);
   if (!IS_PUBLIC) {
-    bookEntryQueueManager.initialize();
-    bookSimilarityQueueManager.initialize();
+    //bookEntryQueueManager.initialize();
+    //bookSimilarityQueueManager.initialize();
   }
 });
 
 export default null;
+
+*/
