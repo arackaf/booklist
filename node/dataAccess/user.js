@@ -44,37 +44,40 @@ class UserDAO extends DAO {
     let activationToken = this.getActivationToken(email);
     email = email.toLowerCase();
 
-    const pk = `USER#${email}`;
+    const pk = `USER#email#${email}`;
     const userId = uuid();
-
-    const readParams = {
-      TableName: TABLE_NAME,
-      Key: {
-        pk,
-        sk: "1"
-      }
-    };
-
-    const result = await db.get(readParams).promise();
-    console.log("Found", result.Item);
 
     const params = {
       TableName: TABLE_NAME,
       Item: {
         pk,
-        sk: "1",
+        sk: pk,
         userId,
-        gsiUserLookup: userId,
+        gsiUserLookupPk: userId,
         email,
-        passwordPlaintext: password,
         password: this.saltAndHashPassword(password),
         token: this.saltAndHashToken(email),
         rememberMe,
         activationToken
+      },
+      ConditionExpression: "pk <> :idKeyVal",
+      ExpressionAttributeValues: {
+        ":idKeyVal": pk
       }
     };
-    await db.put(params).promise();
-    console.log("INSERTED");
+    try {
+      const items = [
+        params,
+        { TableName: TABLE_NAME, Item: { pk: `User#rememberMeToken#${params.Item.userId}`, sk: `User#rememberMeToken#${params.Item.token}` } }
+      ];
+      let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) }).promise();
+    } catch (er) {
+      if (/\[ConditionalCheckFailed/.test(er.message)) {
+        return { errorCode: "s1" };
+      } else {
+        return { errorCode: "sx" };
+      }
+    }
 
     return;
 
