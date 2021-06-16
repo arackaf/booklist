@@ -41,8 +41,8 @@ const db = new AWS.DynamoDB.DocumentClient({
 });
 
 const getGetPacket = (pk, sk) => ({ TableName: TABLE_NAME, Key: { pk, sk } });
-
 const getPutPacket = obj => ({ TableName: TABLE_NAME, Item: obj });
+const getSessionKey = id => `UserLogin#${id}`;
 
 class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
@@ -67,10 +67,16 @@ class UserDAO extends DAO {
       }
     };
     try {
-      const userIdLookup = getPutPacket({ pk: `User#login-status-lookup#${userId}`, sk: `User#login-status-lookup#${userId}`, activationToken });
+      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getSessionKey(userId), activationToken, rememberMe });
 
       const items = [mainUserObject, userIdLookup];
       let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) }).promise();
+
+      return {
+        email,
+        userId,
+        activationToken
+      };
     } catch (er) {
       if (/\[ConditionalCheckFailed/.test(er.message)) {
         return { errorCode: "s1" };
@@ -92,7 +98,7 @@ class UserDAO extends DAO {
     }
 
     const id = result.Item.userId;
-    const sessionKey = `UserLogin#${id}`;
+    const sessionKey = getSessionKey(id);
 
     try {
       // just try and write it even if it's there, than risk a race condition in writing it if it doesn't exist, but having another write come through
@@ -120,48 +126,50 @@ class UserDAO extends DAO {
   }
 
   async lookupUserByToken(token) {
-    let db = await super.open();
-    try {
-      return wrapWithLoginToken(db, await db.collection("users").findOne({ token }));
-    } finally {
-      super.dispose(db);
+    const [id, loginToken] = token.split("|");
+    const sessionKey = getSessionKey(id);
+    const res = await db.get(getGetPacket(sessionKey, sessionKey)).promise();
+    if (!res || !res.Item || res.Item.loginToken !== loginToken) {
+      return null;
     }
+
+    return {
+      id: id,
+      _id: id,
+      loginToken: loginToken
+    };
   }
   async activateUser(activationToken) {
-    let db = await super.open();
-    try {
-      let user = await db.collection("users").findOne({ activationToken });
+    const id = activationToken;
 
-      if (!user) {
-        return { invalid: true };
-      }
-      if (user.activated) {
-        return { alreadyActivated: true };
-      }
-
-      user.loginToken = uuid();
-
-      await db.collection("users").update(
-        { _id: user._id },
-        {
-          $set: { activated: true, loginToken: user.loginToken },
-          $unset: { rememberMe: "" }
-        }
-      );
-      return {
-        success: true,
-        rememberMe: user.rememberMe,
-        username: user.email,
-        _id: user._id,
-        id: user._id,
-        loginToken: user.loginToken,
-        token: user.token
-      };
-    } catch (err) {
-      console.log("oops", err);
-    } finally {
-      super.dispose(db);
+    const sessionKey = getSessionKey(id);
+    const res = await db.get(getGetPacket(sessionKey, sessionKey)).promise();
+    if (!res || !res.Item) {
+      return { invalid: true };
     }
+    if (!res.Item.activationToken) {
+      return { alreadyActivated: true };
+    }
+
+    const loginToken = uuid();
+    const rememberMe = res.Item.rememberMe;
+
+    let xxx = await db
+      .update({
+        TableName: TABLE_NAME,
+        Key: { pk: sessionKey, sk: sessionKey },
+        UpdateExpression: "SET loginToken = :loginToken REMOVE activationToken, rememberMe",
+        ExpressionAttributeValues: { ":loginToken": loginToken }
+      })
+      .promise();
+
+    return {
+      success: true,
+      rememberMe,
+      _id: id,
+      id: id,
+      loginToken
+    };
   }
   async resetPassword(_id, oldPassword, newPassword) {
     let db = await super.open();
@@ -172,14 +180,6 @@ class UserDAO extends DAO {
       }
       await db.collection("users").update({ _id: ObjectID(_id) }, { $set: { password: this.saltAndHashPassword(newPassword) } });
       return { success: true };
-    } finally {
-      super.dispose(db);
-    }
-  }
-  async findById(_id) {
-    let db = await super.open();
-    try {
-      return await db.collection("users").findOne({ _id: ObjectID(_id) });
     } finally {
       super.dispose(db);
     }
@@ -219,13 +219,7 @@ class UserDAO extends DAO {
     email = email.toLowerCase();
     return md5(`${salt}${salt}${email}${salt}${salt}`);
   }
-  async getSubscription(userId) {
-    let db = await super.open();
-    try {
-      let user = await this.findById(userId);
-      return user.subscription;
-    } catch (er) {}
-  }
+
   async updateSubscription(userId, subscription) {
     let db = await super.open();
     try {

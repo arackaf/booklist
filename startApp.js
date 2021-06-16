@@ -55,12 +55,19 @@ import UserDao2 from "./node/dataAccess/user";
   let res = await u.createUser("a@aol.com", "foobar", true);
   console.log(res);
 
-  console.log(" ------- ");
+  console.log("\n-------\n");
+
+  console.log(await u.activateUser(res.userId));
+  console.log(await u.activateUser(res.userId));
+
+  console.log("\n-------\n");
 
   res = await u.lookupUser("a@aoL.com", "foobar");
   console.log("Result", res);
   res = await u.lookupUser("a@aoL.com", "foobar2");
   console.log("Result", res);
+
+  console.log("\n-------\n");
 })();
 
 /*
@@ -126,7 +133,7 @@ passport.use(
       });
     },
     function (user, done) {
-      return done(null, user.token);
+      return done(null, user.loginToken);
     }
   )
 );
@@ -266,7 +273,7 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
-    response.cookie("remember_me", req.user.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
+    response.cookie("remember_me", req.user.loginToken, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
   }
   response.send(req.user);
 });
@@ -348,7 +355,7 @@ async function activateCode(req, response) {
           response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           if (rememberMe) {
-            response.cookie("remember_me", result.token, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
+            response.cookie("remember_me", result.loginToken, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
           }
           response.redirect("/activate");
         });
