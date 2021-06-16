@@ -54,6 +54,13 @@ import UserDao2 from "./node/dataAccess/user";
   let u = new UserDao2();
   let res = await u.createUser("a@aol.com", "foobar", true);
   console.log(res);
+
+  console.log(" ------- ");
+
+  res = await u.lookupUser("a@aoL.com", "foobar");
+  console.log("Result", res);
+  res = await u.lookupUser("a@aoL.com", "foobar2");
+  console.log("Result", res);
 })();
 
 /*
@@ -288,16 +295,21 @@ app.post("/auth/createUser", function (req, response) {
     password = req.body.password,
     rememberMe = req.body.rememberme == 1;
 
-  userDao.checkUserExists(username, password).then(exists => {
+    //TODO: get rid of this call
+
     if (exists) {
       response.send({ errorCode: "s1" });
     } else {
-      userDao.createUser(username, password, rememberMe).then(() => {
-        userDao.sendActivationCode(username, (req.subdomains || [])[0] || "");
-        response.send({});
+      userDao.createUser(username, password, rememberMe).then((result) => {
+        if (result.errorCode) {
+          response.send({ errorCode: result.errorCode });
+        } else {
+          userDao.sendActivationCode(username, (req.subdomains || [])[0] || "");
+          response.send({});
+        }
       });
     }
-  });
+
 });
 
 app.post("/auth/resetPassword", async function (req, response) {

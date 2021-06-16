@@ -60,15 +60,7 @@ class UserDAO extends DAO {
       super.dispose(db);
     }
   }
-  async checkUserExists(email, password) {
-    email = email.toLowerCase();
-    let db = await super.open();
-    try {
-      return !!(await db.collection("users").findOne({ email }));
-    } finally {
-      super.dispose(db);
-    }
-  }
+
   async lookupUserByToken(token) {
     let db = await super.open();
     try {

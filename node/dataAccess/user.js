@@ -40,6 +40,8 @@ const db = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"
 });
 
+const getGetPacket = (pk, sk) => ({ TableName: TABLE_NAME, Key: { pk, sk } });
+
 const getPutPacket = obj => ({ TableName: TABLE_NAME, Item: obj });
 
 class UserDAO extends DAO {
@@ -73,28 +75,50 @@ class UserDAO extends DAO {
       if (/\[ConditionalCheckFailed/.test(er.message)) {
         return { errorCode: "s1" };
       } else {
-        return { errorCode: "sx" };
+        return { errorCode: "sX" };
       }
     }
   }
+
   async lookupUser(email, password) {
     email = email.toLowerCase();
-    let db = await super.open();
-    try {
-      return wrapWithLoginToken(db, await db.collection("users").findOne({ activated: true, email, password: this.saltAndHashPassword(password) }));
-    } finally {
-      super.dispose(db);
+    password = this.saltAndHashPassword(password);
+    let result = await db.get(getGetPacket(`User#${email}`, `User#${email}`)).promise();
+
+    const userExists = (result && result.Item && result.Item.password) === password;
+
+    if (!userExists) {
+      return null;
     }
-  }
-  async checkUserExists(email, password) {
-    email = email.toLowerCase();
-    let db = await super.open();
+
+    const id = result.Item.userId;
+    const sessionKey = `UserLogin#${id}`;
+
     try {
-      return !!(await db.collection("users").findOne({ email }));
-    } finally {
-      super.dispose(db);
+      // just try and write it even if it's there, than risk a race condition in writing it if it doesn't exist, but having another write come through
+      await db
+        .put({
+          ...getPutPacket({ pk: sessionKey, sk: sessionKey, loginToken: uuid() }),
+          ConditionExpression: "pk <> :idKeyVal",
+          ExpressionAttributeValues: {
+            ":idKeyVal": sessionKey
+          }
+        })
+        .promise();
+    } catch (er) {}
+
+    const currentLogin = await db.get(getGetPacket(sessionKey, sessionKey)).promise();
+    if (!currentLogin.Item) {
+      return null; // wtf
     }
+
+    return {
+      _id: id,
+      id: id,
+      loginToken: currentLogin.Item.loginToken
+    };
   }
+
   async lookupUserByToken(token) {
     let db = await super.open();
     try {
