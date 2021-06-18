@@ -40,8 +40,9 @@ const db = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"
 });
 
-const getGetPacket = (pk, sk) => ({ TableName: TABLE_NAME, Key: { pk, sk } });
-const getPutPacket = obj => ({ TableName: TABLE_NAME, Item: obj });
+const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+const getQueryPacket = (keyExpression, rest = {}) => ({ TableName: TABLE_NAME, KeyConditionExpression: keyExpression, ...rest });
+const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 const getSessionKey = id => `UserLogin#${id}`;
 
 class UserDAO extends DAO {
@@ -128,8 +129,17 @@ class UserDAO extends DAO {
   async lookupUserByToken(token) {
     const [id, loginToken] = token.split("|");
     const sessionKey = getSessionKey(id);
-    const res = await db.get(getGetPacket(sessionKey, sessionKey)).promise();
-    if (!res || !res.Item || res.Item.loginToken !== loginToken) {
+
+    const res = await db
+      .query(
+        getQueryPacket(`pk = :sessionKey AND sk = :sessionKey`, {
+          ExpressionAttributeValues: { ":sessionKey": sessionKey, ":loginToken": loginToken },
+          FilterExpression: ` loginToken = :loginToken `
+        })
+      )
+      .promise();
+
+    if (!res || !res.Items || !res.Items[0]) {
       return null;
     }
 
@@ -154,7 +164,7 @@ class UserDAO extends DAO {
     const loginToken = uuid();
     const rememberMe = res.Item.rememberMe;
 
-    let xxx = await db
+    await db
       .update({
         TableName: TABLE_NAME,
         Key: { pk: sessionKey, sk: sessionKey },

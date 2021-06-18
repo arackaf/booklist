@@ -62,10 +62,21 @@ import UserDao2 from "./node/dataAccess/user";
 
   console.log("\n-------\n");
 
-  res = await u.lookupUser("a@aoL.com", "foobar");
-  console.log("Result", res);
-  res = await u.lookupUser("a@aoL.com", "foobar2");
-  console.log("Result", res);
+  let user = await u.lookupUser("a@aoL.com", "foobar");
+  console.log("Result == user", user);
+  let resNull = await u.lookupUser("a@aoL.com", "foobar2");
+  console.log("Result == null", resNull);
+
+  console.log("\n-------\n");
+
+  let userByLoginToken = await u.lookupUserByToken(`${user.id}|${user.loginToken}`);
+  console.log("By loginToken", userByLoginToken);
+
+  let userByLoginTokenNull = await u.lookupUserByToken(`xxx${user.id}|${user.loginToken}a`);
+  console.log("By loginToken null", userByLoginTokenNull);
+
+  userByLoginTokenNull = await u.lookupUserByToken(`${user.id}a|${user.loginToken}`);
+  console.log("By loginToken null", userByLoginTokenNull);
 
   console.log("\n-------\n");
 })();
