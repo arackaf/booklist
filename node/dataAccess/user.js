@@ -6,6 +6,7 @@ import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
 import moment from "moment";
+import { db, makeGetGetPacket, makeGetPutPacket, makeGetQueryPacket } from "./dynamoHelpers";
 
 var salt = process.env.SALT;
 
@@ -36,13 +37,10 @@ async function wrapWithLoginToken(db, user) {
 }
 
 const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
-const db = new AWS.DynamoDB.DocumentClient({
-  region: "us-east-1"
-});
 
-const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-const getQueryPacket = (keyExpression, rest = {}) => ({ TableName: TABLE_NAME, KeyConditionExpression: keyExpression, ...rest });
-const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
+const getGetPacket = makeGetGetPacket(TABLE_NAME);
+const getQueryPacket = makeGetQueryPacket(TABLE_NAME);
+const getPutPacket = makeGetPutPacket(TABLE_NAME);
 const getSessionKey = id => `UserLogin#${id}`;
 
 class UserDAO extends DAO {
@@ -71,7 +69,7 @@ class UserDAO extends DAO {
       const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getSessionKey(userId), activationToken, rememberMe });
 
       const items = [mainUserObject, userIdLookup];
-      let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) }).promise();
+      let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) });
 
       return {
         email,
@@ -90,46 +88,37 @@ class UserDAO extends DAO {
   async lookupUser(email, password) {
     email = email.toLowerCase();
     password = this.saltAndHashPassword(password);
-    let result = await db
-      .query(
-        getQueryPacket(`pk = :userKey and sk = :userKey`, {
-          ExpressionAttributeValues: { ":userKey": `User#${email}`, ":password": password },
-          FilterExpression: ` password = :password `
-        })
-      )
-      .promise();
+    let userFound = await db.queryOne(
+      getQueryPacket(`pk = :userKey and sk = :userKey`, {
+        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":password": password },
+        FilterExpression: ` password = :password `
+      })
+    );
 
-    const userExists = result && result.Items && result.Items[0];
-
-    if (!userExists) {
+    if (!userFound) {
       return null;
     }
 
-    const id = result.Items[0].userId;
+    const id = userFound.userId;
     const sessionKey = getSessionKey(id);
 
     try {
       // just try and write it even if it's there, than risk a race condition in writing it if it doesn't exist, but having another write come through
-      await db
-        .put({
-          ...getPutPacket({ pk: sessionKey, sk: sessionKey, loginToken: uuid() }),
-          ConditionExpression: "pk <> :idKeyVal",
-          ExpressionAttributeValues: {
-            ":idKeyVal": sessionKey
-          }
-        })
-        .promise();
+      await db.put({
+        ...getPutPacket({ pk: sessionKey, sk: sessionKey, loginToken: uuid() }),
+        ConditionExpression: "pk <> :idKeyVal",
+        ExpressionAttributeValues: {
+          ":idKeyVal": sessionKey
+        }
+      });
     } catch (er) {}
 
-    const currentLogin = await db.get(getGetPacket(sessionKey, sessionKey)).promise();
-    if (!currentLogin.Item) {
-      return null; // wtf
-    }
+    const currentLogin = await db.get(getGetPacket(sessionKey, sessionKey));
 
     return {
       _id: id,
       id: id,
-      loginToken: currentLogin.Item.loginToken
+      loginToken: currentLogin.loginToken
     };
   }
 
@@ -137,16 +126,14 @@ class UserDAO extends DAO {
     const [id, loginToken] = token.split("|");
     const sessionKey = getSessionKey(id);
 
-    const res = await db
-      .query(
-        getQueryPacket(`pk = :sessionKey AND sk = :sessionKey`, {
-          ExpressionAttributeValues: { ":sessionKey": sessionKey, ":loginToken": loginToken },
-          FilterExpression: ` loginToken = :loginToken `
-        })
-      )
-      .promise();
+    const item = await db.queryOne(
+      getQueryPacket(`pk = :sessionKey AND sk = :sessionKey`, {
+        ExpressionAttributeValues: { ":sessionKey": sessionKey, ":loginToken": loginToken },
+        FilterExpression: ` loginToken = :loginToken `
+      })
+    );
 
-    if (!res || !res.Items || !res.Items[0]) {
+    if (!item) {
       return null;
     }
 
@@ -160,25 +147,23 @@ class UserDAO extends DAO {
     const id = activationToken;
 
     const sessionKey = getSessionKey(id);
-    const res = await db.get(getGetPacket(sessionKey, sessionKey)).promise();
-    if (!res || !res.Item) {
+    const item = await db.get(getGetPacket(sessionKey, sessionKey));
+    if (!item) {
       return { invalid: true };
     }
-    if (!res.Item.activationToken) {
+    if (!item.activationToken) {
       return { alreadyActivated: true };
     }
 
     const loginToken = uuid();
-    const rememberMe = res.Item.rememberMe;
+    const rememberMe = item.rememberMe;
 
-    await db
-      .update({
-        TableName: TABLE_NAME,
-        Key: { pk: sessionKey, sk: sessionKey },
-        UpdateExpression: "SET loginToken = :loginToken REMOVE activationToken, rememberMe",
-        ExpressionAttributeValues: { ":loginToken": loginToken }
-      })
-      .promise();
+    await db.update({
+      TableName: TABLE_NAME,
+      Key: { pk: sessionKey, sk: sessionKey },
+      UpdateExpression: "SET loginToken = :loginToken REMOVE activationToken, rememberMe",
+      ExpressionAttributeValues: { ":loginToken": loginToken }
+    });
 
     return {
       success: true,
