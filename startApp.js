@@ -130,7 +130,7 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true, cookie: { sameSite: "none", secure: true } }));
+app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
