@@ -53,12 +53,12 @@ import UserDao2 from "./node/dataAccess/user";
 (async function () {
   let u = new UserDao2();
   let res = await u.createUser("a@aol.com", "foobar", true);
-  console.log(res);
+  console.log("create", res);
 
   console.log("\n-------\n");
 
-  console.log(await u.activateUser(res.userId));
-  console.log(await u.activateUser(res.userId));
+  console.log("activate 1", await u.activateUser(res.userId));
+  console.log("activate 2", await u.activateUser(res.userId));
 
   console.log("\n-------\n");
 

@@ -90,15 +90,22 @@ class UserDAO extends DAO {
   async lookupUser(email, password) {
     email = email.toLowerCase();
     password = this.saltAndHashPassword(password);
-    let result = await db.get(getGetPacket(`User#${email}`, `User#${email}`)).promise();
+    let result = await db
+      .query(
+        getQueryPacket(`pk = :userKey and sk = :userKey`, {
+          ExpressionAttributeValues: { ":userKey": `User#${email}`, ":password": password },
+          FilterExpression: ` password = :password `
+        })
+      )
+      .promise();
 
-    const userExists = (result && result.Item && result.Item.password) === password;
+    const userExists = result && result.Items && result.Items[0];
 
     if (!userExists) {
       return null;
     }
 
-    const id = result.Item.userId;
+    const id = result.Items[0].userId;
     const sessionKey = getSessionKey(id);
 
     try {
