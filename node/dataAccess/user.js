@@ -184,6 +184,11 @@ class UserDAO extends DAO {
     //let db = await super.open();
     //await db.collection("users").updateOne({ _id: ObjectID(_id) }, { $set: { loginToken: "" } });
   }
+  async deleteLogon(id, loginToken) {
+    try {
+      await db.deleteItem(getSessionKey(id), getLoginKey(loginToken));
+    } catch (er) {}
+  }
   saltAndHashPassword(password) {
     return md5(`${salt}${password}${salt}`);
   }

@@ -160,7 +160,7 @@ const svelteModules = ["", "books", "activate", "subjects", "settings", "scan", 
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => (request, response) => {
   if (!request.user) {
-    clearAllCookies(response);
+    clearAllCookies(request, response);
   }
 
   if (!request.user) {
@@ -226,7 +226,7 @@ modules.forEach(name => app.get("/" + name, browseToReact));
 
 function browseToReact(request, response) {
   if (!request.user) {
-    clearAllCookies(response);
+    clearAllCookies(request, response);
   }
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
@@ -254,12 +254,20 @@ app.post("/auth/logout", function (req, response) {
   let userDao = new UserDao();
   userDao.logout(req.user.id);
 
-  clearAllCookies(response);
+  clearAllCookies(req, response);
   req.logout();
   response.send({});
 });
 
-const clearAllCookies = response => {
+const clearAllCookies = (request, response) => {
+  let logonToken = request.cookies["loginToken"];
+  let userId = request.cookies["userId"];
+
+  if (logonToken && userId) {
+    let userDao = new UserDao();
+    userDao.deleteLogon(userId, logonToken);
+  }
+
   response.clearCookie("logged_in");
   response.clearCookie("remember_me");
   response.clearCookie("userId");

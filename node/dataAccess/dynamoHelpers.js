@@ -8,6 +8,8 @@ export const makeGetQueryPacket = TABLE_NAME => (keyExpression, rest = {}) => ({
 });
 export const makeGetPutPacket = TABLE_NAME => (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 
+const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
+
 const dynamo = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"
 });
@@ -38,5 +40,9 @@ export const db = {
 
   async transactWrite(packet) {
     return dynamo.transactWrite(packet).promise();
+  },
+
+  async deleteItem(pk, sk) {
+    return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } }).promise();
   }
 };
