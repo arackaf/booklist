@@ -1,14 +1,14 @@
 import AWS from "aws-sdk";
 
-export const makeGetGetPacket = TABLE_NAME => (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-export const makeGetQueryPacket = TABLE_NAME => (keyExpression, rest = {}) => ({
+const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
+
+export const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getQueryPacket = (keyExpression, rest = {}) => ({
   TableName: TABLE_NAME,
   KeyConditionExpression: keyExpression,
   ...rest
 });
-export const makeGetPutPacket = TABLE_NAME => (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
-
-const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
+export const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 
 const dynamo = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"

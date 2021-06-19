@@ -6,7 +6,7 @@ import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
 import moment from "moment";
-import { db, makeGetGetPacket, makeGetPutPacket, makeGetQueryPacket } from "./dynamoHelpers";
+import { db, getGetPacket, getPutPacket, getQueryPacket } from "./dynamoHelpers";
 
 var salt = process.env.SALT;
 
@@ -38,9 +38,6 @@ async function wrapWithLoginToken(db, user) {
 
 const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
 
-const getGetPacket = makeGetGetPacket(TABLE_NAME);
-const getQueryPacket = makeGetQueryPacket(TABLE_NAME);
-const getPutPacket = makeGetPutPacket(TABLE_NAME);
 const getSessionKey = id => `UserLogin#${id}`;
 const getLoginKey = loginToken => `LoginToken#${loginToken}`;
 
