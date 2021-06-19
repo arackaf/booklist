@@ -45,7 +45,6 @@ const getSessionKey = id => `UserLogin#${id}`;
 
 class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
-    let activationToken = this.getActivationToken(email);
     email = email.toLowerCase();
 
     const pk = `User#${email}`;
@@ -66,15 +65,14 @@ class UserDAO extends DAO {
       }
     };
     try {
-      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getSessionKey(userId), activationToken, rememberMe });
+      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getSessionKey(userId), rememberMe });
 
       const items = [mainUserObject, userIdLookup];
       let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) });
 
       return {
         email,
-        userId,
-        activationToken
+        userId
       };
     } catch (er) {
       if (/\[ConditionalCheckFailed/.test(er.message)) {
@@ -186,19 +184,8 @@ class UserDAO extends DAO {
       super.dispose(db);
     }
   }
-  async findByActivationToken(activationToken) {
-    let db = await super.open();
-    try {
-      return await db.collection("users").findOne({ activationToken });
-    } finally {
-      super.dispose(db);
-    }
-  }
-  async sendActivationCode(email, subdomain) {
-    console.log("SUBDOMAIN", subdomain);
-    email = email.toLowerCase();
-    let code = this.getActivationToken(email);
-    let url = `${siteRoot(subdomain)}/activate/${code}`;
+  async sendActivationCode(id, email, subdomain) {
+    let url = `${siteRoot(subdomain)}/activate/${id}`;
 
     await sendEmail({
       to: email,
@@ -207,15 +194,11 @@ class UserDAO extends DAO {
     });
   }
   async logout(_id) {
-    let db = await super.open();
-    await db.collection("users").updateOne({ _id: ObjectID(_id) }, { $set: { loginToken: "" } });
+    //let db = await super.open();
+    //await db.collection("users").updateOne({ _id: ObjectID(_id) }, { $set: { loginToken: "" } });
   }
   saltAndHashPassword(password) {
     return md5(`${salt}${password}${salt}`);
-  }
-  saltAndHashToken(email) {
-    email = email.toLowerCase();
-    return md5(`${salt}${email}${salt}`);
   }
   getActivationToken(email) {
     email = email.toLowerCase();

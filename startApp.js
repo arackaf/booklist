@@ -322,7 +322,7 @@ app.post("/auth/createUser", function (req, response) {
         if (result.errorCode) {
           response.send({ errorCode: result.errorCode });
         } else {
-          userDao.sendActivationCode(username, (req.subdomains || [])[0] || "");
+          userDao.sendActivationCode(result.userId, result.email, (req.subdomains || [])[0] || "");
           response.send({});
         }
       });
@@ -346,7 +346,7 @@ async function activateCode(req, response) {
 
   if (req.user) {
     try {
-      let existingUser = await userDao.findByActivationToken(req.params.code);
+      let existingUser = await userDao.activateUser(req.params.code);
       if (existingUser && existingUser._id == req.user._id) {
         return response.redirect("/activate?alreadyActivated=true");
       }
