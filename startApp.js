@@ -2,7 +2,7 @@ import dao from "./node/dataAccess/dao";
 import bookEntryQueueManager from "./node/app-helpers/bookEntryQueueManager";
 import bookSimilarityQueueManager from "./node/app-helpers/bookSimilarityQueueManager";
 import ErrorLoggerDao from "./node/dataAccess/errorLoggerDAO";
-import UserDao from "./node/dataAccess/userDAO";
+import UserDao from "./node/dataAccess/user";
 
 import express, { response } from "express";
 import subdomain from "express-subdomain";
@@ -46,42 +46,6 @@ const PUBLIC_USER = {
 
 const IS_DEV = process.env.IS_DEV;
 
-console.log(process.env.BOOKLIST_DYNAMO);
-
-import UserDao2 from "./node/dataAccess/user";
-
-(async function () {
-  let u = new UserDao2();
-  let res = await u.createUser("a@aol.com", "foobar", true);
-  console.log("create", res);
-
-  console.log("\n-------\n");
-
-  console.log("activate 1", await u.activateUser(res.userId));
-  console.log("activate 2", await u.activateUser(res.userId));
-
-  console.log("\n-------\n");
-
-  let user = await u.lookupUser("a@aoL.com", "foobar");
-  console.log("Result == user", user);
-  let resNull = await u.lookupUser("a@aoL.com", "foobar2");
-  console.log("Result == null", resNull);
-
-  console.log("\n-------\n");
-
-  let userByLoginToken = await u.lookupUserByToken(`${user.id}|${user.loginToken}`);
-  console.log("By loginToken", userByLoginToken);
-
-  let userByLoginTokenNull = await u.lookupUserByToken(`xxx${user.id}|${user.loginToken}a`);
-  console.log("By loginToken null", userByLoginTokenNull);
-
-  userByLoginTokenNull = await u.lookupUserByToken(`${user.id}a|${user.loginToken}`);
-  console.log("By loginToken null", userByLoginTokenNull);
-
-  console.log("\n-------\n");
-})();
-
-/*
 const jr_admins = new Set(process.env.JELLYROLLS_ADMINS.split(",").filter(id => id));
 
 if (!IS_DEV) {
@@ -166,7 +130,7 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true }));
+app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true, cookie: { sameSite: "none", secure: true } }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
@@ -189,8 +153,6 @@ easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }
 app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
-
-
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
@@ -229,7 +191,6 @@ svelteRouter.get("/activate/:code", activateCode);
 svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
-
 
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
@@ -308,26 +269,25 @@ const clearAllCookies = response => {
 };
 
 app.post("/auth/createUser", function (req, response) {
-  let userDao = new UserDao(),
-    username = req.body.username,
-    password = req.body.password,
-    rememberMe = req.body.rememberme == 1;
+  let userDao = new UserDao();
+  let username = req.body.username;
+  let password = req.body.password;
+  let rememberMe = req.body.rememberme == 1;
 
-    //TODO: get rid of this call
+  //TODO: get rid of this call
 
-    if (exists) {
-      response.send({ errorCode: "s1" });
-    } else {
-      userDao.createUser(username, password, rememberMe).then((result) => {
-        if (result.errorCode) {
-          response.send({ errorCode: result.errorCode });
-        } else {
-          userDao.sendActivationCode(result.userId, result.email, (req.subdomains || [])[0] || "");
-          response.send({});
-        }
-      });
-    }
-
+  if (exists) {
+    response.send({ errorCode: "s1" });
+  } else {
+    userDao.createUser(username, password, rememberMe).then(result => {
+      if (result.errorCode) {
+        response.send({ errorCode: result.errorCode });
+      } else {
+        userDao.sendActivationCode(result.userId, result.email, (req.subdomains || [])[0] || "");
+        response.send({});
+      }
+    });
+  }
 });
 
 app.post("/auth/resetPassword", async function (req, response) {
@@ -406,5 +366,3 @@ Promise.resolve(dao.init()).then(() => {
 });
 
 export default null;
-
-*/
