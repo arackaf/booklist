@@ -23,7 +23,7 @@ const siteRoot = subdomain => {
   if (subdomain) {
     return process.env.NODE_ENV == "production" ? `https://${subdomain}.mylibrary.io` : `http://${subdomain}.lvh.me:3000`;
   } else {
-    return process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://localhost:3000";
+    return process.env.NODE_ENV == "production" ? "https://mylibrary.io" : "http://lvh.me:3000";
   }
 };
 
@@ -42,6 +42,7 @@ const getGetPacket = makeGetGetPacket(TABLE_NAME);
 const getQueryPacket = makeGetQueryPacket(TABLE_NAME);
 const getPutPacket = makeGetPutPacket(TABLE_NAME);
 const getSessionKey = id => `UserLogin#${id}`;
+const getLoginKey = loginToken => `LoginToken#${loginToken}`;
 
 class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
@@ -49,6 +50,7 @@ class UserDAO extends DAO {
 
     const pk = `User#${email}`;
     const userId = uuid();
+    const loginToken = uuid();
 
     const mainUserObject = {
       ...getPutPacket({
@@ -65,14 +67,15 @@ class UserDAO extends DAO {
       }
     };
     try {
-      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getSessionKey(userId), rememberMe });
+      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), awaitingActivation: true, rememberMe });
 
       const items = [mainUserObject, userIdLookup];
       let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) });
 
       return {
         email,
-        userId
+        userId,
+        loginToken
       };
     } catch (er) {
       if (/\[ConditionalCheckFailed/.test(er.message)) {
@@ -98,25 +101,15 @@ class UserDAO extends DAO {
     }
 
     const id = userFound.userId;
+    const loginToken = uuid();
     const sessionKey = getSessionKey(id);
 
-    try {
-      // just try and write it even if it's there, than risk a race condition in writing it if it doesn't exist, but having another write come through
-      await db.put({
-        ...getPutPacket({ pk: sessionKey, sk: sessionKey, loginToken: uuid() }),
-        ConditionExpression: "pk <> :idKeyVal",
-        ExpressionAttributeValues: {
-          ":idKeyVal": sessionKey
-        }
-      });
-    } catch (er) {}
-
-    const currentLogin = await db.get(getGetPacket(sessionKey, sessionKey));
+    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken) }));
 
     return {
       _id: id,
       id: id,
-      loginToken: currentLogin.loginToken
+      loginToken
     };
   }
 
@@ -124,12 +117,7 @@ class UserDAO extends DAO {
     const [id, loginToken] = token.split("|");
     const sessionKey = getSessionKey(id);
 
-    const item = await db.queryOne(
-      getQueryPacket(`pk = :sessionKey AND sk = :sessionKey`, {
-        ExpressionAttributeValues: { ":sessionKey": sessionKey, ":loginToken": loginToken },
-        FilterExpression: ` loginToken = :loginToken `
-      })
-    );
+    const item = await db.get(getGetPacket(getSessionKey(id), getLoginKey(loginToken)));
 
     if (!item) {
       return null;
@@ -141,26 +129,25 @@ class UserDAO extends DAO {
       loginToken: loginToken
     };
   }
-  async activateUser(activationToken) {
-    const id = activationToken;
-
+  async activateUser(id, loginToken) {
     const sessionKey = getSessionKey(id);
-    const item = await db.get(getGetPacket(sessionKey, sessionKey));
+    const loginKey = getLoginKey(loginToken);
+
+    const item = await db.get(getGetPacket(sessionKey, loginKey));
+
     if (!item) {
       return { invalid: true };
     }
-    if (!item.activationToken) {
+    if (!item.awaitingActivation) {
       return { alreadyActivated: true };
     }
 
-    const loginToken = uuid();
     const rememberMe = item.rememberMe;
 
     await db.update({
       TableName: TABLE_NAME,
-      Key: { pk: sessionKey, sk: sessionKey },
-      UpdateExpression: "SET loginToken = :loginToken REMOVE activationToken, rememberMe",
-      ExpressionAttributeValues: { ":loginToken": loginToken }
+      Key: { pk: sessionKey, sk: loginKey },
+      UpdateExpression: "REMOVE awaitingActivation, rememberMe"
     });
 
     return {
@@ -184,8 +171,8 @@ class UserDAO extends DAO {
       super.dispose(db);
     }
   }
-  async sendActivationCode(id, email, subdomain) {
-    let url = `${siteRoot(subdomain)}/activate/${id}`;
+  async sendActivationCode(id, loginToken, email, subdomain) {
+    let url = `${siteRoot(subdomain)}/activate/${id}/${loginToken}`;
 
     await sendEmail({
       to: email,

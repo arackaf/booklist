@@ -108,7 +108,7 @@ passport.use(
       });
     },
     function (user, done) {
-      return done(null, user.loginToken);
+      return done(null, `${user.id}|${user.loginToken}`);
     }
   )
 );
@@ -245,7 +245,7 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
-    response.cookie("remember_me", req.user.loginToken, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
+    response.cookie("remember_me", `${req.user.id}|${req.user.loginToken}`, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
   }
   response.send(req.user);
 });
@@ -276,18 +276,14 @@ app.post("/auth/createUser", function (req, response) {
 
   //TODO: get rid of this call
 
-  if (exists) {
-    response.send({ errorCode: "s1" });
-  } else {
-    userDao.createUser(username, password, rememberMe).then(result => {
-      if (result.errorCode) {
-        response.send({ errorCode: result.errorCode });
-      } else {
-        userDao.sendActivationCode(result.userId, result.email, (req.subdomains || [])[0] || "");
-        response.send({});
-      }
-    });
-  }
+  userDao.createUser(username, password, rememberMe).then(result => {
+    if (result.errorCode) {
+      response.send({ errorCode: result.errorCode });
+    } else {
+      userDao.sendActivationCode(result.userId, result.loginToken, result.email, (req.subdomains || [])[0] || "");
+      response.send({});
+    }
+  });
 });
 
 app.post("/auth/resetPassword", async function (req, response) {
@@ -298,16 +294,16 @@ app.post("/auth/resetPassword", async function (req, response) {
 });
 
 app.get("/activate", browseToReact);
-app.get("/activate/:code", activateCode);
+app.get("/activate/:id/:code", activateCode);
 
 async function activateCode(req, response) {
   let userDao = new UserDao();
+  let userId = req.params.id;
   let code = req.params.code;
 
   if (req.user) {
     try {
-      let existingUser = await userDao.activateUser(req.params.code);
-      if (existingUser && existingUser._id == req.user._id) {
+      if (req.params.id == req.user._id) {
         return response.redirect("/activate?alreadyActivated=true");
       }
     } catch (er) {}
@@ -316,7 +312,7 @@ async function activateCode(req, response) {
   response.clearCookie("remember_me");
   req.logout();
 
-  userDao.activateUser(code).then(
+  userDao.activateUser(userId, code).then(
     result => {
       if (result.success) {
         req.login(result, function () {
@@ -326,7 +322,7 @@ async function activateCode(req, response) {
           response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           if (rememberMe) {
-            response.cookie("remember_me", result.loginToken, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
+            response.cookie("remember_me", `${result._id}|${result.loginToken}`, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
           }
           response.redirect("/activate");
         });

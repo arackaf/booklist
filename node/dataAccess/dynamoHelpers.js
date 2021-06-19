@@ -33,10 +33,10 @@ export const db = {
   },
 
   async update(packet) {
-    await dynamo.update(packet).promise();
+    return dynamo.update(packet).promise();
   },
 
   async transactWrite(packet) {
-    await dynamo.transactWrite(packet).promise();
+    return dynamo.transactWrite(packet).promise();
   }
 };

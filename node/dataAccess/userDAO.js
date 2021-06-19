@@ -127,7 +127,6 @@ class UserDAO extends DAO {
     }
   }
   async sendActivationCode(email, subdomain) {
-    console.log("SUBDOMAIN", subdomain);
     email = email.toLowerCase();
     let code = this.getActivationToken(email);
     let url = `${siteRoot(subdomain)}/activate/${code}`;
