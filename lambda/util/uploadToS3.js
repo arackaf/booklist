@@ -1,4 +1,5 @@
-import S3 from "aws-sdk/clients/s3";
+import AWS from "aws-sdk";
+const { S3 } = AWS;
 
 export default (fileName, body) => {
   const s3 = new S3({});

@@ -1,4 +1,5 @@
-import S3 from "aws-sdk/clients/s3";
+import AWS from "aws-sdk";
+AWS.config.region = "us-east-1";
 
 import path from "path";
 import https from "https";
@@ -51,7 +52,7 @@ export function downloadBookCover(url, minSizeToAccept) {
           });
         });
 
-        file.on("error", async err => {
+        file.on("error", async () => {
           console.log("File error", err);
           removeFile(fullName);
           res(null);
@@ -70,7 +71,7 @@ export function resizeIfNeeded(fileName, width = 50) {
   let resizedDestination = path.resolve("/tmp/" + "resized_" + fileName);
   return new Promise(res => {
     try {
-      Jimp.read(pathToFileUploaded, function (err, image: any) {
+      Jimp.read(pathToFileUploaded, function (err, image) {
         if (err || !image) {
           console.log("Error 1", err);
           return res(null);
@@ -109,7 +110,7 @@ export function removeFile(fullName) {
 
 export function saveCoverToS3(source, s3Key) {
   return new Promise(res => {
-    let s3bucket = new S3({ params: { Bucket: "my-library-cover-uploads" } });
+    let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
 
     fs.readFile(source, (err, data) => {
       if (err) {
@@ -118,7 +119,7 @@ export function saveCoverToS3(source, s3Key) {
       let params = {
         Key: s3Key,
         Body: data
-      } as any;
+      };
 
       s3bucket.upload(params, function (err) {
         if (err) res(err);
@@ -130,9 +131,9 @@ export function saveCoverToS3(source, s3Key) {
 
 export function saveContentToS3(content, s3Key) {
   return new Promise(res => {
-    let s3bucket = new S3({ params: { Bucket: "my-library-cover-uploads" } });
+    let s3bucket = new AWS.S3({ params: { Bucket: "my-library-cover-uploads" } });
 
-    let params: any = {
+    let params = {
       Key: s3Key,
       Body: content
     };

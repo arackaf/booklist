@@ -1,14 +1,10 @@
 import Jimp from "jimp";
 
-export default (src, MAX_WIDTH, MIN_WIDTH = null) => {
+export default (src, MAX_WIDTH) => {
   return new Promise(res => {
     Jimp.read(src, function (err, image) {
       if (err || !image) {
         return res({ error: true, message: err });
-      }
-
-      if (MIN_WIDTH != null && image.bitmap.width < MIN_WIDTH) {
-        return res({ error: true, message: "Min width constraint violated" });
       }
 
       if (image.bitmap.width > MAX_WIDTH) {

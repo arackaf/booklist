@@ -9,7 +9,6 @@ import checkLogin from "../util/checkLoginToken";
 import resizeImage from "../util/resizeImage";
 import corsResponse from "../util/corsResponse";
 import uploadToS3 from "../util/uploadToS3";
-import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 import downloadFromUrl from "../util/downloadFromUrl";
 import getSecrets from "../util/getSecrets";
 import { isWarmingCall } from "../util/isWarmingCall";
@@ -28,7 +27,7 @@ export const upload = async event => {
     return corsResponse({});
   }
 
-  const imageResult: any = await resizeImage(file.content, MAX_WIDTH);
+  const imageResult = await resizeImage(file.content, MAX_WIDTH);
 
   if (imageResult.error || !imageResult.body) {
     return corsResponse({ error: true });
@@ -49,13 +48,9 @@ export const uploadFromUrl = async event => {
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
   }
-  const { body, error } = (await downloadFromUrl(url)) as any;
+  const { body, error } = await downloadFromUrl(url);
 
-  if (error) {
-    return corsResponse({ error: true });
-  }
-
-  const imageResult: any = await resizeImage(body, MAX_WIDTH);
+  const imageResult = await resizeImage(body, MAX_WIDTH);
   if (imageResult.error || !imageResult.body) {
     return corsResponse({ error: true });
   }
@@ -70,14 +65,13 @@ export const isbnDbBookCoverLookup = async event => {
   const key = secrets["isbn-db-key"];
   const { isbn } = JSON.parse(event.body);
 
-  const result: any = {};
+  const result = {};
   try {
     const fetchResponse = await fetch(`https://api2.isbndb.com/book/${isbn}`, {
       headers: {
         Authorization: key
       }
     });
-
     const bookResult = await fetchResponse.json();
 
     console.log("Found from isbndb:", bookResult);
@@ -86,7 +80,7 @@ export const isbnDbBookCoverLookup = async event => {
       result.image = bookResult.book.image;
     }
   } catch (err) {
-    console.log("Error", err);
+    console.log("Error", er);
   }
 
   return corsResponse({ result });

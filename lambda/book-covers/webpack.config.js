@@ -2,23 +2,11 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: "./handler.ts",
+  entry: "./handler.js",
   output: {
     libraryTarget: "commonjs2",
     path: path.join(__dirname, ".webpack"),
     filename: "handler.js"
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: "ts-loader",
-        exclude: /node_modules/
-      }
-    ]
-  },
-  resolve: {
-    extensions: [".ts", ".js"]
   },
   target: "node",
   mode: "production",
