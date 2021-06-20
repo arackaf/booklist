@@ -10,6 +10,13 @@ import { db, getGetPacket, getPutPacket, getQueryPacket } from "./dynamoHelpers"
 
 var salt = process.env.SALT;
 
+const hour = 3600;
+const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
+const getExpiration = rememberMe =>
+  moment()
+    .add(rememberMe ? rememberMeExpiration : 900, "seconds")
+    .unix();
+
 const newUsersSubjects = [
   { name: "History", path: null },
   { name: "Science", path: null },
@@ -83,7 +90,7 @@ class UserDAO extends DAO {
     }
   }
 
-  async lookupUser(email, password) {
+  async lookupUser(email, password, rememberMe) {
     email = email.toLowerCase();
     password = this.saltAndHashPassword(password);
     let userFound = await db.queryOne(
@@ -101,7 +108,7 @@ class UserDAO extends DAO {
     const loginToken = uuid();
     const sessionKey = getSessionKey(id);
 
-    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken) }));
+    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), rememberMe, expires: getExpiration(rememberMe) }));
 
     return {
       _id: id,
@@ -144,7 +151,8 @@ class UserDAO extends DAO {
     await db.update({
       TableName: TABLE_NAME,
       Key: { pk: sessionKey, sk: loginKey },
-      UpdateExpression: "REMOVE awaitingActivation, rememberMe"
+      UpdateExpression: "SET rememberMe = :rememberMe REMOVE awaitingActivation",
+      ExpressionAttributeValues: { ":rememberMe": rememberMe }
     });
 
     return {

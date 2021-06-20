@@ -63,13 +63,14 @@ if (!IS_DEV) {
 export const JrConn = getJrDbConnection();
 
 passport.use(
-  new LocalStrategy(function (email, password, done) {
+  new LocalStrategy({ passReqToCallback: true }, function (request, email, password, done) {
     if (IS_PUBLIC) {
       return done(null, PUBLIC_USER);
     }
+    const rememberMe = request.body.rememberme == 1;
     let userDao = new UserDao();
 
-    userDao.lookupUser(email, password).then(userResult => {
+    userDao.lookupUser(email, password, rememberMe).then(userResult => {
       if (userResult) {
         userResult.id = "" + userResult._id;
         done(null, userResult);
@@ -329,6 +330,7 @@ async function activateCode(req, response) {
           response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          response.cookie("email", result.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
           if (rememberMe) {
             response.cookie("remember_me", `${result._id}|${result.loginToken}`, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
           }
