@@ -116,6 +116,8 @@ resources:
             AttributeType: S
           - AttributeName: gsiUserLookupPk
             AttributeType: S
+          - AttributeName: expires
+            AttributeType: N
         KeySchema:
           - AttributeName: pk
             KeyType: HASH
@@ -136,6 +138,9 @@ resources:
               WriteCapacityUnits: 5
         StreamSpecification:
           StreamViewType: KEYS_ONLY
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
   Outputs:
     BooklistTableArnId:
       Value:
