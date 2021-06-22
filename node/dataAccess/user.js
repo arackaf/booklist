@@ -151,8 +151,8 @@ class UserDAO extends DAO {
     await db.update({
       TableName: TABLE_NAME,
       Key: { pk: sessionKey, sk: loginKey },
-      UpdateExpression: "SET rememberMe = :rememberMe REMOVE awaitingActivation",
-      ExpressionAttributeValues: { ":rememberMe": rememberMe }
+      UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
+      ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
     });
 
     return {
