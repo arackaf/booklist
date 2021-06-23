@@ -243,6 +243,7 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
   response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+  response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
@@ -273,6 +274,7 @@ const clearAllCookies = (request, response) => {
   response.clearCookie("remember_me");
   response.clearCookie("userId");
   response.clearCookie("loginToken");
+  response.clearCookie("email");
   response.clearCookie("admin");
   response.clearCookie("jr_admin");
 };

@@ -71,7 +71,7 @@ class UserDAO extends DAO {
       }
     };
     try {
-      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), awaitingActivation: true, rememberMe });
+      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), email, awaitingActivation: true, rememberMe });
 
       const items = [mainUserObject, userIdLookup];
       let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) });
@@ -90,49 +90,6 @@ class UserDAO extends DAO {
     }
   }
 
-  async lookupUser(email, password, rememberMe) {
-    email = email.toLowerCase();
-    password = this.saltAndHashPassword(password);
-    let userFound = await db.queryOne(
-      getQueryPacket(`pk = :userKey and sk = :userKey`, {
-        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":password": password },
-        FilterExpression: ` password = :password `
-      })
-    );
-
-    if (!userFound) {
-      return null;
-    }
-
-    const id = userFound.userId;
-    const loginToken = uuid();
-    const sessionKey = getSessionKey(id);
-
-    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), rememberMe, expires: getExpiration(rememberMe) }));
-
-    return {
-      _id: id,
-      id: id,
-      loginToken
-    };
-  }
-
-  async lookupUserByToken(token) {
-    const [id, loginToken] = token.split("|");
-    const sessionKey = getSessionKey(id);
-
-    const item = await db.get(getGetPacket(getSessionKey(id), getLoginKey(loginToken)));
-
-    if (!item) {
-      return null;
-    }
-
-    return {
-      id: id,
-      _id: id,
-      loginToken: loginToken
-    };
-  }
   async activateUser(id, loginToken) {
     const sessionKey = getSessionKey(id);
     const loginKey = getLoginKey(loginToken);
@@ -160,9 +117,57 @@ class UserDAO extends DAO {
       rememberMe,
       _id: id,
       id: id,
-      loginToken
+      loginToken,
+      email: item.email
     };
   }
+
+  async lookupUser(email, password, rememberMe) {
+    email = email.toLowerCase();
+    password = this.saltAndHashPassword(password);
+    let userFound = await db.queryOne(
+      getQueryPacket(`pk = :userKey and sk = :userKey`, {
+        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":password": password },
+        FilterExpression: ` password = :password `
+      })
+    );
+
+    if (!userFound) {
+      return null;
+    }
+
+    const id = userFound.userId;
+    const loginToken = uuid();
+    const sessionKey = getSessionKey(id);
+
+    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), email, rememberMe, expires: getExpiration(rememberMe) }));
+
+    return {
+      _id: id,
+      id: id,
+      loginToken,
+      email
+    };
+  }
+
+  async lookupUserByToken(token) {
+    const [id, loginToken] = token.split("|");
+    const sessionKey = getSessionKey(id);
+
+    const item = await db.get(getGetPacket(getSessionKey(id), getLoginKey(loginToken)));
+
+    if (!item) {
+      return null;
+    }
+
+    return {
+      id: id,
+      _id: id,
+      loginToken: loginToken,
+      email: token.email
+    };
+  }
+
   async resetPassword(_id, oldPassword, newPassword) {
     let db = await super.open();
     try {
