@@ -81,7 +81,11 @@ export const Subject = {
     schemaSources: ["../../graphQL-custom/custom-content/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "publicUserId", type: "String" },
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const Tag = {
@@ -95,7 +99,11 @@ export const Tag = {
     textColor: StringType,
     timestamp: FloatType
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "publicUserId", type: "String" },
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const LabelColor = {
@@ -109,7 +117,10 @@ export const LabelColor = {
   extras: {
     overrides: ["getLabelColor"]
   },
-  manualQueryArgs: [{ name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const User = {
