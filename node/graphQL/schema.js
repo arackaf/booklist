@@ -10,7 +10,6 @@ import {
   type as BooksDeletedType
 } from "./BooksDeleted/schema";
 import { query as LabelColorQuery, mutation as LabelColorMutation, type as LabelColorType } from "./LabelColor/schema";
-import { query as PublicUserQuery, mutation as PublicUserMutation, type as PublicUserType } from "./PublicUser/schema";
 import { query as SubjectQuery, mutation as SubjectMutation, type as SubjectType } from "./Subject/schema";
 import {
   query as SubjectsDeletedQuery,
@@ -23,7 +22,6 @@ import {
   mutation as TagsDeletedMutation,
   type as TagsDeletedType
 } from "./TagsDeleted/schema";
-import { query as UserQuery, mutation as UserMutation, type as UserType } from "./User/schema";
 import { type as EditorialReviewType } from "./EditorialReview/schema";
 
 export default `
@@ -74,8 +72,6 @@ export default `
 
   ${LabelColorType}
 
-  ${PublicUserType}
-
   ${SubjectType}
 
   ${SubjectsDeletedType}
@@ -83,8 +79,6 @@ export default `
   ${TagType}
 
   ${TagsDeletedType}
-
-  ${UserType}
 
   type Query {
     ${BookQuery}
@@ -95,8 +89,6 @@ export default `
 
     ${LabelColorQuery}
 
-    ${PublicUserQuery}
-
     ${SubjectQuery}
 
     ${SubjectsDeletedQuery}
@@ -104,8 +96,6 @@ export default `
     ${TagQuery}
 
     ${TagsDeletedQuery}
-
-    ${UserQuery}
   }
 
   type Mutation {
@@ -116,8 +106,31 @@ export default `
     ${SubjectMutation}
 
     ${TagMutation}
-
-    ${UserMutation}
   }
+
+  type User {
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+type UserSingleQueryResult {
+  User: User
+}
+
+extend type Query {
+  getUser: UserSingleQueryResult
+}
+
+input UserUpdates {
+  isPublic: Boolean
+  publicBooksHeader: String
+  publicName: String
+}
+
+extend type Mutation {
+  updateUser(Updates: UserUpdates): UserSingleQueryResult
+}
+
 
 `;

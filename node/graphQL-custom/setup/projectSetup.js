@@ -123,39 +123,6 @@ export const LabelColor = {
   ]
 };
 
-export const User = {
-  table: "users",
-  fields: {
-    isPublic: BoolType,
-    publicName: StringType,
-    publicBooksHeader: StringType
-  },
-  extras: {
-    overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
-  },
-  relationships: {
-    books: {
-      get type() {
-        return Book;
-      },
-      fkField: "_id",
-      keyField: "userId",
-      readonly: true
-    }
-  }
-};
-
-export const PublicUser = {
-  table: "users",
-  fields: {
-    isPublic: StringType,
-    publicName: StringType,
-    publicBooksHeader: StringType
-  },
-  readonly: true,
-  manualQueryArgs: [{ name: "cache", type: "Int" }]
-};
-
 export const SubjectsDeleted = {
   table: "subjectsDeleted",
   readonly: true,

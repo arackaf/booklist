@@ -1,0 +1,23 @@
+type User {
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+type UserSingleQueryResult {
+  User: User
+}
+
+extend type Query {
+  getUser: UserSingleQueryResult
+}
+
+input UserUpdates {
+  isPublic: Boolean
+  publicBooksHeader: String
+  publicName: String
+}
+
+extend type Mutation {
+  updateUser(Updates: UserUpdates): UserSingleQueryResult
+}
