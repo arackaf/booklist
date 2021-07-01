@@ -1,8 +1,8 @@
-import AWS from "aws-sdk";
+import SecretsManager from "aws-sdk/clients/secretsmanager";
 const region = "us-east-1";
 const secretName = "MyLibrary";
 
-const secretsClient = new AWS.SecretsManager({
+const secretsClient = new SecretsManager({
   region
 });
 
