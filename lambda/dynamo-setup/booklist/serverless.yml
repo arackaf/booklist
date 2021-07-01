@@ -21,6 +21,14 @@ service: dynamo-booklist
 frameworkVersion: "2"
 variablesResolutionMode: 20210326
 
+custom:
+  serverlessIfElse:
+    - If: '"${self:provider.stage}" == "dev"'
+      Exclude:
+        - resources.Resources.BooklistTable.Properties.ProvisionedThroughput
+        - resources.Resources.BooklistTable.Properties.GlobalSecondaryIndexes.0.ProvisionedThroughput
+      ElseExclude:
+        - resources.Resources.BooklistTable.Properties.BillingMode
 provider:
   name: aws
   runtime: nodejs12.x
@@ -116,13 +124,12 @@ resources:
             AttributeType: S
           - AttributeName: gsiUserLookupPk
             AttributeType: S
-          - AttributeName: expires
-            AttributeType: N
         KeySchema:
           - AttributeName: pk
             KeyType: HASH
           - AttributeName: sk
             KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
@@ -149,6 +156,8 @@ resources:
           - StreamArn
       Export:
         Name: Booklist-Dynamo-Table-${self:provider.stage}
+plugins:
+  - serverless-plugin-ifelse
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
