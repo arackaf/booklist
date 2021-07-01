@@ -109,6 +109,15 @@ export default `
   }
 
   type User {
+  email: String
+  userId: String
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+type PublicUser {
+  email: String
   isPublic: Boolean
   publicName: String
   publicBooksHeader: String
@@ -118,8 +127,13 @@ type UserSingleQueryResult {
   User: User
 }
 
+type PublicUserSingleQueryResult {
+  PublicUser: User
+}
+
 extend type Query {
   getUser: UserSingleQueryResult
+  getPublicUser(userId: String): PublicUserSingleQueryResult
 }
 
 input UserUpdates {

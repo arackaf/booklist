@@ -61,6 +61,7 @@ class UserDAO extends DAO {
         pk,
         sk: pk,
         userId,
+        gsiUserLookupPk: userId,
         email,
         password: this.saltAndHashPassword(password),
         created: moment().format("YYYY-MM-DD")
@@ -120,6 +121,26 @@ class UserDAO extends DAO {
       loginToken,
       email: item.email
     };
+  }
+
+  async getUser(email, userId) {
+    email = email.toLowerCase();
+    return db.queryOne(
+      getQueryPacket(`pk = :userKey and sk = :userKey`, {
+        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":userId": userId },
+        FilterExpression: ` userId = :userId `
+      })
+    );
+  }
+
+  async getPublicUser(userId) {
+    return db.queryOne(
+      getQueryPacket(`gsiUserLookupPk = :userId`, {
+        IndexName: "gsiUserLookup",
+        ExpressionAttributeValues: { ":userId": userId, ":true": true },
+        FilterExpression: ` isPublic = :true `
+      })
+    );
   }
 
   async lookupUser(email, password, rememberMe) {

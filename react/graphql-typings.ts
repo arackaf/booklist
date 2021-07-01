@@ -815,6 +815,17 @@ export type MutationResultInfo = {
   elapsedTime: Scalars['Int'];
 };
 
+export type PublicUser = {
+  email: Maybe<Scalars['String']>;
+  isPublic: Maybe<Scalars['Boolean']>;
+  publicName: Maybe<Scalars['String']>;
+  publicBooksHeader: Maybe<Scalars['String']>;
+};
+
+export type PublicUserSingleQueryResult = {
+  PublicUser: Maybe<User>;
+};
+
 export type Query = {
   allBooks: BookQueryResults;
   getBook: BookSingleQueryResult;
@@ -1790,6 +1801,8 @@ export type TagSort = {
 };
 
 export type User = {
+  email: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
   isPublic: Maybe<Scalars['Boolean']>;
   publicName: Maybe<Scalars['String']>;
   publicBooksHeader: Maybe<Scalars['String']>;
