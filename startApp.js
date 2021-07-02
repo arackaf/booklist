@@ -253,9 +253,6 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
 });
 
 app.post("/auth/logout", function (req, response) {
-  let userDao = new UserDao();
-  userDao.logout(req.user.id);
-
   clearAllCookies(req, response);
   req.logout();
   response.send({});

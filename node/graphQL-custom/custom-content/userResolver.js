@@ -14,6 +14,9 @@ export default {
     }
   },
   Mutation: {
-    updateUser(root, args, context, ast) {}
+    async updateUser(root, args, context, ast) {
+      let updatedUser = await userDao.updateUser(context.cookies["email"], context.user.id, args.Updates);
+      return { User: updatedUser.Attributes };
+    }
   }
 };

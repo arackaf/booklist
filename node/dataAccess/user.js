@@ -34,15 +34,6 @@ const siteRoot = subdomain => {
   }
 };
 
-async function wrapWithLoginToken(db, user) {
-  if (user && !user.loginToken) {
-    user.loginToken = uuid();
-    await db.collection("users").updateOne({ _id: user._id }, { $set: { loginToken: user.loginToken } });
-  }
-
-  return user;
-}
-
 const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
 
 const getSessionKey = id => `UserLogin#${id}`;
@@ -189,6 +180,26 @@ class UserDAO extends DAO {
     };
   }
 
+  async updateUser(email, userId, updates) {
+    email = email.toLowerCase();
+
+    const pk = `User#${email}`;
+
+    return db.update({
+      TableName: TABLE_NAME,
+      Key: { pk, sk: pk },
+      UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
+      ConditionExpression: "userId = :userId",
+      ExpressionAttributeValues: {
+        ":userId": userId,
+        ":isPublic": updates.isPublic,
+        ":publicName": updates.publicName,
+        ":publicBooksHeader": updates.publicBooksHeader
+      },
+      ReturnValues: "ALL_NEW"
+    });
+  }
+
   async resetPassword(_id, oldPassword, newPassword) {
     let db = await super.open();
     try {
@@ -211,10 +222,6 @@ class UserDAO extends DAO {
       html: `To activate your account, simply click <a href="${url}">here</a>.\n\n\nOr paste this url into a browser ${url}`
     });
   }
-  async logout(_id) {
-    //let db = await super.open();
-    //await db.collection("users").updateOne({ _id: ObjectID(_id) }, { $set: { loginToken: "" } });
-  }
   async deleteLogon(id, loginToken) {
     try {
       await db.deleteItem(getSessionKey(id), getLoginKey(loginToken));
@@ -226,18 +233,6 @@ class UserDAO extends DAO {
   getActivationToken(email) {
     email = email.toLowerCase();
     return md5(`${salt}${salt}${email}${salt}${salt}`);
-  }
-
-  async updateSubscription(userId, subscription) {
-    let db = await super.open();
-    try {
-      await db.collection("users").update(
-        { _id: ObjectID(userId) },
-        {
-          $set: { subscription }
-        }
-      );
-    } catch (er) {}
   }
 }
 
