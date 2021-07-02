@@ -7,12 +7,12 @@ variablesResolutionMode: 20210326
 
 custom:
   serverlessIfElse:
-    - If: '"${self:provider.stage}" == "dev"'
+    - If: '"${self:provider.stage}" == "unused"'
       Exclude:
+        - resources.Resources.BooklistTable.Properties.BillingMode
+      ElseExclude:
         - resources.Resources.BooklistTable.Properties.ProvisionedThroughput
         - resources.Resources.BooklistTable.Properties.GlobalSecondaryIndexes.0.ProvisionedThroughput
-      ElseExclude:
-        - resources.Resources.BooklistTable.Properties.BillingMode
 provider:
   name: aws
   runtime: nodejs12.x
