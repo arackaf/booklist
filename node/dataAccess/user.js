@@ -1,7 +1,5 @@
 import AWS from "aws-sdk";
-import DAO from "./dao";
 import md5 from "blueimp-md5";
-import { ObjectID } from "mongodb";
 import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
@@ -39,7 +37,7 @@ const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
 const getSessionKey = id => `UserLogin#${id}`;
 const getLoginKey = loginToken => `LoginToken#${loginToken}`;
 
-class UserDAO extends DAO {
+class UserDAO {
   async createUser(email, password, rememberMe) {
     email = email.toLowerCase();
 
