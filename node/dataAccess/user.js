@@ -200,17 +200,25 @@ class UserDAO extends DAO {
     });
   }
 
-  async resetPassword(_id, oldPassword, newPassword) {
-    let db = await super.open();
+  async resetPassword(email, userId, oldPassword, newPassword) {
+    email = email.toLowerCase();
+    const pk = `User#${email}`;
+
     try {
-      let user = await db.collection("users").findOne({ _id: ObjectID(_id), password: this.saltAndHashPassword(oldPassword) });
-      if (!user) {
-        return { error: 1 };
-      }
-      await db.collection("users").update({ _id: ObjectID(_id) }, { $set: { password: this.saltAndHashPassword(newPassword) } });
+      let val = await db.update({
+        TableName: TABLE_NAME,
+        Key: { pk, sk: pk },
+        UpdateExpression: "SET password = :newPassword",
+        ConditionExpression: "userId = :userId AND password = :oldPassword",
+        ExpressionAttributeValues: {
+          ":userId": userId,
+          ":oldPassword": this.saltAndHashPassword(oldPassword),
+          ":newPassword": this.saltAndHashPassword(newPassword)
+        }
+      });
       return { success: true };
-    } finally {
-      super.dispose(db);
+    } catch (er) {
+      return { error: 1 };
     }
   }
   async sendActivationCode(id, loginToken, email, subdomain) {
@@ -229,10 +237,6 @@ class UserDAO extends DAO {
   }
   saltAndHashPassword(password) {
     return md5(`${salt}${password}${salt}`);
-  }
-  getActivationToken(email) {
-    email = email.toLowerCase();
-    return md5(`${salt}${salt}${email}${salt}${salt}`);
   }
 }
 

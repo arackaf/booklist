@@ -297,7 +297,7 @@ app.post("/auth/createUser", function (req, response) {
 app.post("/auth/resetPassword", async function (req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
-  let result = await new UserDao().resetPassword(userId, oldPassword, newPassword);
+  let result = await new UserDao().resetPassword(req.cookies["email"], userId, oldPassword, newPassword);
   response.send({ ...result });
 });
 
