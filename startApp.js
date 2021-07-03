@@ -155,6 +155,8 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
+/* --------------- SVELTE --------------- */
+
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
 const svelteModules = ["", "books", "activate", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
@@ -192,6 +194,8 @@ svelteRouter.get("/activate/:code", activateCode);
 svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
+
+/* --------------- /SVELTE --------------- */
 
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
