@@ -10,7 +10,7 @@ module.exports = {
   },
   target: "node",
   mode: "production",
-  externals: ["aws-sdk"],
+  externals: ["aws-sdk", "mongodb-client-encryption", "saslprep"],
   optimization: {
     //minimize: false
   }

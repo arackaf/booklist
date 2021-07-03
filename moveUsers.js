@@ -1,5 +1,5 @@
 import { db, dynamo, getPutPacket, TABLE_NAME } from "./node/dataAccess/dynamoHelpers";
-import connect from "./node/dataAccess/connect";
+import { getDbAndClient } from "./node/dataAccess/connect";
 
 const pause = () => new Promise(res => setTimeout(res, 200));
 
@@ -20,7 +20,7 @@ const toDynamoUser = user => {
 };
 
 (async function () {
-  let mongoDb = await connect();
+  let { client, db: mongoDb } = await getDbAndClient();
   let users = await mongoDb.collection("users").find({}).sort({ _id: 1 }).toArray();
 
   console.log(users.length);
@@ -33,5 +33,7 @@ const toDynamoUser = user => {
     }
     console.log(user.email, "written");
     await pause();
+
+    client.close();
   }
 })();

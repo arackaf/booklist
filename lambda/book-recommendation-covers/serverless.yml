@@ -1,4 +1,4 @@
-service: book-covers
+service: book-recommendation-covers
 
 provider:
   name: aws
@@ -37,30 +37,11 @@ provider:
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
 
 functions:
-  upload:
-    handler: handler.upload
+  bookRecommendationBadCoverSync:
+    timeout: 750
+    handler: handler.bookRecommendationBadCoverSync
     events:
-      - http:
-          path: upload
-          method: post
-          cors: true
-
-  uploadFromUrl:
-    handler: handler.uploadFromUrl
-    events:
-      - http:
-          path: uploadFromUrl
-          method: post
-          cors: true
-
-  isbnDbBookCoverLookup:
-    timeout: 10
-    handler: handler.isbnDbBookCoverLookup
-    events:
-      - http:
-          path: /isbndb-cover-lookup
-          method: post
-          cors: true
+      - schedule: rate(24 hours)
 
 plugins:
   - serverless-webpack

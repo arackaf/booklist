@@ -3,8 +3,6 @@ import uuid from "uuid/v4";
 import fetch from "node-fetch";
 import awsMultiPartParser from "lambda-multipart-parser";
 
-import updateBookSummaryCovers from "./updateBookSummaryCovers";
-
 import checkLogin from "../util/checkLoginToken";
 import resizeImage from "../util/resizeImage";
 import corsResponse from "../util/corsResponse";
@@ -84,12 +82,4 @@ export const isbnDbBookCoverLookup = async event => {
   }
 
   return corsResponse({ result });
-};
-
-export const bookRecommendationBadCoverSync = async event => {
-  await updateBookSummaryCovers();
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: "Done!" })
-  };
 };
