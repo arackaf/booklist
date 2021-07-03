@@ -17,6 +17,15 @@
 
   let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
 
+  let ws2 = new WebSocket("wss://fwue4kkta2.execute-api.us-east-1.amazonaws.com/dev");
+
+  setTimeout(() => {
+    ws2.onmessage = ({ data }) => {
+      console.log("DATA!!!", data);
+    };
+    ws2.send(`{ action: "sync" }`);
+  }, 2000);
+
   ws.onmessage = ({ data }) => {
     let packet = JSON.parse(data);
     window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
@@ -35,14 +44,15 @@
   };
 
   setupServiceWorker();
+
 </script>
 
-<AppUI content={$appState.showingMobile ? 'width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;' : ''}>
-  <ModuleRoute moduleName="home" loader={() => import(/* webpackChunkName: "home-module" */ 'modules/home/Home.svelte')} />
-  <ModuleRoute moduleName="scan" loader={() => import(/* webpackChunkName: "scan-module" */ 'modules/scan/Scan.svelte')} />
-  <ModuleRoute moduleName="books" preload={booksPreload} loader={() => import(/* webpackChunkName: "books-module" */ 'modules/books/Books.svelte')} />
-  <ModuleRoute moduleName="view" preload={booksPreload} loader={() => import(/* webpackChunkName: "books-module" */ 'modules/books/Books.svelte')} />
-  <ModuleRoute moduleName="subjects" loader={() => import(/* webpackChunkName: "subjects-module" */ 'modules/subjects/Subjects.svelte')} />
-  <ModuleRoute moduleName="settings" loader={() => import(/* webpackChunkName: "settings-module" */ 'modules/settings/Settings.svelte')} />
-  <ModuleRoute moduleName="activate" loader={() => import(/* webpackChunkName: "activate-module" */ 'modules/activate/Activate.svelte')} />
+<AppUI content={$appState.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ""}>
+  <ModuleRoute moduleName="home" loader={() => import(/* webpackChunkName: "home-module" */ "modules/home/Home.svelte")} />
+  <ModuleRoute moduleName="scan" loader={() => import(/* webpackChunkName: "scan-module" */ "modules/scan/Scan.svelte")} />
+  <ModuleRoute moduleName="books" preload={booksPreload} loader={() => import(/* webpackChunkName: "books-module" */ "modules/books/Books.svelte")} />
+  <ModuleRoute moduleName="view" preload={booksPreload} loader={() => import(/* webpackChunkName: "books-module" */ "modules/books/Books.svelte")} />
+  <ModuleRoute moduleName="subjects" loader={() => import(/* webpackChunkName: "subjects-module" */ "modules/subjects/Subjects.svelte")} />
+  <ModuleRoute moduleName="settings" loader={() => import(/* webpackChunkName: "settings-module" */ "modules/settings/Settings.svelte")} />
+  <ModuleRoute moduleName="activate" loader={() => import(/* webpackChunkName: "activate-module" */ "modules/activate/Activate.svelte")} />
 </AppUI>

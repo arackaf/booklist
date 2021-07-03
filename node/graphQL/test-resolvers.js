@@ -43,11 +43,6 @@ const runQueries = async () => {
     "_id backgroundColor order"
   ).catch(error => console.error(error));
   await processQuery(
-    `{allPublicUsers(LIMIT:1){PublicUsers{_id isPublic publicName publicBooksHeader}}}`,
-    "PublicUser",
-    "_id isPublic publicName publicBooksHeader"
-  ).catch(error => console.error(error));
-  await processQuery(
     `{allSubjects(LIMIT:1){Subjects{_id name path userId backgroundColor textColor timestamp}}}`,
     "Subject",
     "_id name path userId backgroundColor textColor timestamp"
@@ -67,17 +62,11 @@ const runQueries = async () => {
     "TagsDeleted",
     "_id userId deletedTimestamp"
   ).catch(error => console.error(error));
-  await processQuery(
-    `{allUsers(LIMIT:1){Users{_id isPublic publicName publicBooksHeader}}}`,
-    "User",
-    "_id isPublic publicName publicBooksHeader"
-  ).catch(error => console.error(error));
 
   // await processQuery(`mutation:{Book("_id ean isbn title smallImage mediumImage userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp")}`," mutation Book", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{BookSummary("_id title asin isbn ean smallImage mediumImage authors")}`," mutation BookSummary", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{Subject("_id name path userId backgroundColor textColor timestamp")}`," mutation Subject", "").catch((error) => console.error(error))
-  // await processQuery(`mutation:{Tag("_id name path userId backgroundColor textColor timestamp")}`," mutation Tag", "").catch((error) => console.error(error))
-  // await processQuery(`mutation:{User("_id isPublic publicName publicBooksHeader")}`," mutation User", "")
+  // await processQuery(`mutation:{Tag("_id name path userId backgroundColor textColor timestamp")}`," mutation Tag", "")
   // .catch((error) => console.error(error))
 };
 runQueries().catch(error => console.error(error));

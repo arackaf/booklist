@@ -20,6 +20,7 @@
     "copy-webpack-plugin": "^8.1.1",
     "serverless-webpack": "^5.4.1",
     "webpack": "^5.35.1",
+    "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.6.0"
   }
 }

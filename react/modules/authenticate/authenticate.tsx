@@ -6,6 +6,7 @@ import Stack from "app/components/layout/Stack";
 
 const errorCodes = {
   s1: "This user already exists",
+  sX: "There was an error creating this user",
   c1: "Passwords do not match",
   c2: "No login found for this Email / Password",
   c3: "Password is required",
@@ -103,8 +104,7 @@ const Login: FunctionComponent<{}> = props => {
           <div>
             {state.pendingActivation ? (
               <div className="alert alert-success">
-                Success! Now check your email. You should be receiving a link to activate your account. (Check your spam folder if it's not
-                there)
+                Success! Now check your email. You should be receiving a link to activate your account. (Check your spam folder if it's not there)
               </div>
             ) : (
               <form>
