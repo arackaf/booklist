@@ -1,5 +1,3 @@
-"use strict";
-
 import { v4 as uuid } from "uuid";
 import fetch from "node-fetch";
 import dlv from "dlv";
@@ -24,7 +22,7 @@ const dbPromise = getDbConnection();
 
 const delay = () => new Promise(res => setTimeout(res, 2500));
 
-export default async function updateBookSummaryCovers() {
+async function updateBookSummaryCovers() {
   let count = 1;
   const db = await dbPromise;
   const secrets = await getSecrets();
@@ -131,3 +129,11 @@ function getGoogleCoverUrl(isbn, secrets) {
     }
   });
 }
+
+export const handler = async event => {
+  await updateBookSummaryCovers();
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Done!" })
+  };
+};

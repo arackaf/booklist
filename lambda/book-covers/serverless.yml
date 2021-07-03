@@ -38,7 +38,7 @@ provider:
 
 functions:
   upload:
-    handler: handler.upload
+    handler: handlerFileUpload.handler
     events:
       - http:
           path: upload
@@ -46,7 +46,7 @@ functions:
           cors: true
 
   uploadFromUrl:
-    handler: handler.uploadFromUrl
+    handler: handlerUrlUpload.handler
     events:
       - http:
           path: uploadFromUrl
@@ -55,12 +55,20 @@ functions:
 
   isbnDbBookCoverLookup:
     timeout: 10
-    handler: handler.isbnDbBookCoverLookup
+    handler: handlerIsbnDbLookup.handler
     events:
       - http:
           path: /isbndb-cover-lookup
           method: post
           cors: true
 
+  bookRecommendationBadCoverSync:
+    timeout: 750
+    handler: handlerUpdateSimilarItemsCovers.handler
+    events:
+      - schedule: rate(24 hours)
+
 plugins:
   - serverless-webpack
+package:
+  individually: true
