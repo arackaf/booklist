@@ -1,18 +1,14 @@
-import { MongoClient, ObjectID } from "mongodb";
-import getConnection from "./getDbConnection";
+import { db, getGetPacket } from "../util/dynamoHelpers";
 
-const client = getConnection();
+const TABLE_NAME = `My_Library_${process.env.STAGE}`;
 
 export default async function checkLoginToken(userId, loginToken) {
-  if (process.env.STAGE == "dev" || process.env.stage == "dev") {
-    return true;
-  }
+  const pk = `UserLogin#${userId}`;
+  const sk = `LoginToken#${loginToken}`;
 
-  const db = await client;
   try {
-    const loggedInUser = await db.collection("users").findOne({ _id: ObjectID(userId), loginToken });
-
-    return !!loggedInUser;
+    const result = await db.get(getGetPacket(pk, sk));
+    return !!result;
   } catch (er) {
     return false;
   }

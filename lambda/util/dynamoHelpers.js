@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-export const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
+export const TABLE_NAME = `My_Library_${process.env.STAGE}`;
 
 export const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 export const getQueryPacket = (keyExpression, rest = {}) => ({

@@ -1,12 +1,13 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const slsw = require("serverless-webpack");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = {
-  entry: "./handler.ts",
+  entry: slsw.lib.entries,
   output: {
     libraryTarget: "commonjs2",
-    path: path.join(__dirname, ".webpack"),
-    filename: "handler.js"
+    path: path.join(__dirname, ".webpack")
   },
   module: {
     rules: [
@@ -25,14 +26,6 @@ module.exports = {
   externals: ["aws-sdk", "mongodb-client-encryption", "saslprep"],
   optimization: {
     //minimize: false
-  },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        { from: "../node_modules/saslprep", to: "node_modules/saslprep" },
-        { from: "../node_modules/sparse-bitfield", to: "node_modules/sparse-bitfield" },
-        { from: "../node_modules/memory-pager", to: "node_modules/memory-pager" }
-      ]
-    })
-  ]
+  }
+  //plugins: [new BundleAnalyzerPlugin()]
 };

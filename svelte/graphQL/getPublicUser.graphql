@@ -1,5 +1,5 @@
-query GetPublicUser($_id: String, $cache: Int) {
-  getPublicUser(_id: $_id, cache: $cache) {
+query GetPublicUser($_id: String) {
+  getPublicUser(userId: $_id) {
     PublicUser {
       publicName
       publicBooksHeader

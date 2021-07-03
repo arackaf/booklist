@@ -1,7 +1,5 @@
 import AWS from "aws-sdk";
-import DAO from "./dao";
 import md5 from "blueimp-md5";
-import { ObjectID } from "mongodb";
 import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
@@ -34,21 +32,12 @@ const siteRoot = subdomain => {
   }
 };
 
-async function wrapWithLoginToken(db, user) {
-  if (user && !user.loginToken) {
-    user.loginToken = uuid();
-    await db.collection("users").updateOne({ _id: user._id }, { $set: { loginToken: user.loginToken } });
-  }
-
-  return user;
-}
-
 const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
 
 const getSessionKey = id => `UserLogin#${id}`;
 const getLoginKey = loginToken => `LoginToken#${loginToken}`;
 
-class UserDAO extends DAO {
+class UserDAO {
   async createUser(email, password, rememberMe) {
     email = email.toLowerCase();
 
@@ -61,6 +50,7 @@ class UserDAO extends DAO {
         pk,
         sk: pk,
         userId,
+        gsiUserLookupPk: userId,
         email,
         password: this.saltAndHashPassword(password),
         created: moment().format("YYYY-MM-DD")
@@ -71,7 +61,7 @@ class UserDAO extends DAO {
       }
     };
     try {
-      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), awaitingActivation: true, rememberMe });
+      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), email, awaitingActivation: true, rememberMe });
 
       const items = [mainUserObject, userIdLookup];
       let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) });
@@ -88,6 +78,58 @@ class UserDAO extends DAO {
         return { errorCode: "sX" };
       }
     }
+  }
+
+  async activateUser(id, loginToken) {
+    const sessionKey = getSessionKey(id);
+    const loginKey = getLoginKey(loginToken);
+
+    const item = await db.get(getGetPacket(sessionKey, loginKey));
+
+    if (!item) {
+      return { invalid: true };
+    }
+    if (!item.awaitingActivation) {
+      return { alreadyActivated: true };
+    }
+
+    const rememberMe = item.rememberMe;
+
+    await db.update({
+      TableName: TABLE_NAME,
+      Key: { pk: sessionKey, sk: loginKey },
+      UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
+      ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
+    });
+
+    return {
+      success: true,
+      rememberMe,
+      _id: id,
+      id: id,
+      loginToken,
+      email: item.email
+    };
+  }
+
+  async getUser(email, userId) {
+    email = email.toLowerCase();
+    return db.queryOne(
+      getQueryPacket(`pk = :userKey and sk = :userKey`, {
+        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":userId": userId },
+        FilterExpression: ` userId = :userId `
+      })
+    );
+  }
+
+  async getPublicUser(userId) {
+    return db.queryOne(
+      getQueryPacket(`gsiUserLookupPk = :userId`, {
+        IndexName: "gsiUserLookup",
+        ExpressionAttributeValues: { ":userId": userId, ":true": true },
+        FilterExpression: ` isPublic = :true `
+      })
+    );
   }
 
   async lookupUser(email, password, rememberMe) {
@@ -108,12 +150,13 @@ class UserDAO extends DAO {
     const loginToken = uuid();
     const sessionKey = getSessionKey(id);
 
-    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), rememberMe, expires: getExpiration(rememberMe) }));
+    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), email, rememberMe, expires: getExpiration(rememberMe) }));
 
     return {
       _id: id,
       id: id,
-      loginToken
+      loginToken,
+      email
     };
   }
 
@@ -130,50 +173,50 @@ class UserDAO extends DAO {
     return {
       id: id,
       _id: id,
-      loginToken: loginToken
+      loginToken: loginToken,
+      email: token.email
     };
   }
-  async activateUser(id, loginToken) {
-    const sessionKey = getSessionKey(id);
-    const loginKey = getLoginKey(loginToken);
 
-    const item = await db.get(getGetPacket(sessionKey, loginKey));
+  async updateUser(email, userId, updates) {
+    email = email.toLowerCase();
 
-    if (!item) {
-      return { invalid: true };
-    }
-    if (!item.awaitingActivation) {
-      return { alreadyActivated: true };
-    }
+    const pk = `User#${email}`;
 
-    const rememberMe = item.rememberMe;
-
-    await db.update({
+    return db.update({
       TableName: TABLE_NAME,
-      Key: { pk: sessionKey, sk: loginKey },
-      UpdateExpression: "SET rememberMe = :rememberMe REMOVE awaitingActivation",
-      ExpressionAttributeValues: { ":rememberMe": rememberMe }
+      Key: { pk, sk: pk },
+      UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
+      ConditionExpression: "userId = :userId",
+      ExpressionAttributeValues: {
+        ":userId": userId,
+        ":isPublic": updates.isPublic,
+        ":publicName": updates.publicName,
+        ":publicBooksHeader": updates.publicBooksHeader
+      },
+      ReturnValues: "ALL_NEW"
     });
-
-    return {
-      success: true,
-      rememberMe,
-      _id: id,
-      id: id,
-      loginToken
-    };
   }
-  async resetPassword(_id, oldPassword, newPassword) {
-    let db = await super.open();
+
+  async resetPassword(email, userId, oldPassword, newPassword) {
+    email = email.toLowerCase();
+    const pk = `User#${email}`;
+
     try {
-      let user = await db.collection("users").findOne({ _id: ObjectID(_id), password: this.saltAndHashPassword(oldPassword) });
-      if (!user) {
-        return { error: 1 };
-      }
-      await db.collection("users").update({ _id: ObjectID(_id) }, { $set: { password: this.saltAndHashPassword(newPassword) } });
+      let val = await db.update({
+        TableName: TABLE_NAME,
+        Key: { pk, sk: pk },
+        UpdateExpression: "SET password = :newPassword",
+        ConditionExpression: "userId = :userId AND password = :oldPassword",
+        ExpressionAttributeValues: {
+          ":userId": userId,
+          ":oldPassword": this.saltAndHashPassword(oldPassword),
+          ":newPassword": this.saltAndHashPassword(newPassword)
+        }
+      });
       return { success: true };
-    } finally {
-      super.dispose(db);
+    } catch (er) {
+      return { error: 1 };
     }
   }
   async sendActivationCode(id, loginToken, email, subdomain) {
@@ -185,10 +228,6 @@ class UserDAO extends DAO {
       html: `To activate your account, simply click <a href="${url}">here</a>.\n\n\nOr paste this url into a browser ${url}`
     });
   }
-  async logout(_id) {
-    //let db = await super.open();
-    //await db.collection("users").updateOne({ _id: ObjectID(_id) }, { $set: { loginToken: "" } });
-  }
   async deleteLogon(id, loginToken) {
     try {
       await db.deleteItem(getSessionKey(id), getLoginKey(loginToken));
@@ -196,22 +235,6 @@ class UserDAO extends DAO {
   }
   saltAndHashPassword(password) {
     return md5(`${salt}${password}${salt}`);
-  }
-  getActivationToken(email) {
-    email = email.toLowerCase();
-    return md5(`${salt}${salt}${email}${salt}${salt}`);
-  }
-
-  async updateSubscription(userId, subscription) {
-    let db = await super.open();
-    try {
-      await db.collection("users").update(
-        { _id: ObjectID(userId) },
-        {
-          $set: { subscription }
-        }
-      );
-    } catch (er) {}
   }
 }
 

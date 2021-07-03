@@ -33,51 +33,6 @@ input FloatArrayUpdate {
   value: Float!
 }
 
-type EditorialReview {
-  source: String
-  content: String
-}
-
-input EditorialReviewInput {
-  source: String
-  content: String
-}
-
-input EditorialReviewMutationInput {
-  source: String
-  content: String
-}
-
-input EditorialReviewArrayMutationInput {
-  index: Int
-  Updates: EditorialReviewMutationInput
-}
-
-input EditorialReviewSort {
-  source: Int
-  content: Int
-}
-
-input EditorialReviewFilters {
-  source_contains: String
-  source_startsWith: String
-  source_endsWith: String
-  source_regex: String
-  source: String
-  source_ne: String
-  source_in: [String]
-  source_nin: [String]
-  content_contains: String
-  content_startsWith: String
-  content_endsWith: String
-  content_regex: String
-  content: String
-  content_ne: String
-  content_in: [String]
-  content_nin: [String]
-  OR: [EditorialReviewFilters]
-}
-
 type Book {
   _id: String
   ean: String
@@ -616,6 +571,51 @@ input BooksDeletedFilters {
   OR: [BooksDeletedFilters]
 }
 
+type EditorialReview {
+  source: String
+  content: String
+}
+
+input EditorialReviewInput {
+  source: String
+  content: String
+}
+
+input EditorialReviewMutationInput {
+  source: String
+  content: String
+}
+
+input EditorialReviewArrayMutationInput {
+  index: Int
+  Updates: EditorialReviewMutationInput
+}
+
+input EditorialReviewSort {
+  source: Int
+  content: Int
+}
+
+input EditorialReviewFilters {
+  source_contains: String
+  source_startsWith: String
+  source_endsWith: String
+  source_regex: String
+  source: String
+  source_ne: String
+  source_in: [String]
+  source_nin: [String]
+  content_contains: String
+  content_startsWith: String
+  content_endsWith: String
+  content_regex: String
+  content: String
+  content_ne: String
+  content_in: [String]
+  content_nin: [String]
+  OR: [EditorialReviewFilters]
+}
+
 type LabelColor {
   _id: String
   backgroundColor: String
@@ -689,91 +689,6 @@ input LabelColorFilters {
   order_in: [Int]
   order_nin: [Int]
   OR: [LabelColorFilters]
-}
-
-type PublicUser {
-  _id: String
-  isPublic: String
-  publicName: String
-  publicBooksHeader: String
-}
-
-type PublicUserQueryResults {
-  PublicUsers: [PublicUser!]!
-  Meta: QueryResultsMetadata!
-}
-
-type PublicUserSingleQueryResult {
-  PublicUser: PublicUser
-}
-
-type PublicUserMutationResult {
-  PublicUser: PublicUser
-  success: Boolean!
-  Meta: MutationResultInfo!
-}
-
-type PublicUserMutationResultMulti {
-  PublicUsers: [PublicUser]
-  success: Boolean!
-  Meta: MutationResultInfo!
-}
-
-type PublicUserBulkMutationResult {
-  success: Boolean!
-  Meta: MutationResultInfo!
-}
-
-input PublicUserInput {
-  _id: String
-  isPublic: String
-  publicName: String
-  publicBooksHeader: String
-}
-
-input PublicUserMutationInput {
-  isPublic: String
-  publicName: String
-  publicBooksHeader: String
-}
-
-input PublicUserSort {
-  _id: Int
-  isPublic: Int
-  publicName: Int
-  publicBooksHeader: Int
-}
-
-input PublicUserFilters {
-  _id: String
-  _id_ne: String
-  _id_in: [String]
-  _id_nin: [String]
-  isPublic_contains: String
-  isPublic_startsWith: String
-  isPublic_endsWith: String
-  isPublic_regex: String
-  isPublic: String
-  isPublic_ne: String
-  isPublic_in: [String]
-  isPublic_nin: [String]
-  publicName_contains: String
-  publicName_startsWith: String
-  publicName_endsWith: String
-  publicName_regex: String
-  publicName: String
-  publicName_ne: String
-  publicName_in: [String]
-  publicName_nin: [String]
-  publicBooksHeader_contains: String
-  publicBooksHeader_startsWith: String
-  publicBooksHeader_endsWith: String
-  publicBooksHeader_regex: String
-  publicBooksHeader: String
-  publicBooksHeader_ne: String
-  publicBooksHeader_in: [String]
-  publicBooksHeader_nin: [String]
-  OR: [PublicUserFilters]
 }
 
 type Subject {
@@ -1172,99 +1087,6 @@ input TagsDeletedFilters {
   OR: [TagsDeletedFilters]
 }
 
-type User {
-  _id: String
-  isPublic: Boolean
-  publicName: String
-  publicBooksHeader: String
-  books(
-    FILTER: BookFilters
-    LIMIT: Int
-    SKIP: Int
-    PAGE: Int
-    PAGE_SIZE: Int
-    SORT: BookSort
-    SORTS: [BookSort]
-    PREFER_LOOKUP: Boolean
-    DONT_PREFER_LOOKUP: Boolean
-  ): [Book!]!
-  booksMeta(FILTER: BookFilters): QueryRelationshipResultsMetadata
-}
-
-type UserQueryResults {
-  Users: [User!]!
-  Meta: QueryResultsMetadata!
-}
-
-type UserSingleQueryResult {
-  User: User
-}
-
-type UserMutationResult {
-  User: User
-  success: Boolean!
-  Meta: MutationResultInfo!
-}
-
-type UserMutationResultMulti {
-  Users: [User]
-  success: Boolean!
-  Meta: MutationResultInfo!
-}
-
-type UserBulkMutationResult {
-  success: Boolean!
-  Meta: MutationResultInfo!
-}
-
-input UserInput {
-  _id: String
-  isPublic: Boolean
-  publicName: String
-  publicBooksHeader: String
-}
-
-input UserMutationInput {
-  isPublic: Boolean
-  publicName: String
-  publicBooksHeader: String
-}
-
-input UserSort {
-  _id: Int
-  isPublic: Int
-  publicName: Int
-  publicBooksHeader: Int
-}
-
-input UserFilters {
-  _id: String
-  _id_ne: String
-  _id_in: [String]
-  _id_nin: [String]
-  isPublic: Boolean
-  isPublic_ne: Boolean
-  isPublic_in: [Boolean]
-  isPublic_nin: [Boolean]
-  publicName_contains: String
-  publicName_startsWith: String
-  publicName_endsWith: String
-  publicName_regex: String
-  publicName: String
-  publicName_ne: String
-  publicName_in: [String]
-  publicName_nin: [String]
-  publicBooksHeader_contains: String
-  publicBooksHeader_startsWith: String
-  publicBooksHeader_endsWith: String
-  publicBooksHeader_regex: String
-  publicBooksHeader: String
-  publicBooksHeader_ne: String
-  publicBooksHeader_in: [String]
-  publicBooksHeader_nin: [String]
-  OR: [UserFilters]
-}
-
 type Query {
   allBooks(
     _id: String
@@ -1582,47 +1404,6 @@ type Query {
     cache: Int
   ): LabelColorQueryResults!
 
-  allPublicUsers(
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
-    isPublic_contains: String
-    isPublic_startsWith: String
-    isPublic_endsWith: String
-    isPublic_regex: String
-    isPublic: String
-    isPublic_ne: String
-    isPublic_in: [String]
-    isPublic_nin: [String]
-    publicName_contains: String
-    publicName_startsWith: String
-    publicName_endsWith: String
-    publicName_regex: String
-    publicName: String
-    publicName_ne: String
-    publicName_in: [String]
-    publicName_nin: [String]
-    publicBooksHeader_contains: String
-    publicBooksHeader_startsWith: String
-    publicBooksHeader_endsWith: String
-    publicBooksHeader_regex: String
-    publicBooksHeader: String
-    publicBooksHeader_ne: String
-    publicBooksHeader_in: [String]
-    publicBooksHeader_nin: [String]
-    OR: [PublicUserFilters]
-    SORT: PublicUserSort
-    SORTS: [PublicUserSort]
-    LIMIT: Int
-    SKIP: Int
-    PAGE: Int
-    PAGE_SIZE: Int
-    cache: Int
-  ): PublicUserQueryResults!
-
-  getPublicUser(_id: String, cache: Int): PublicUserSingleQueryResult!
-
   allSubjects(
     _id: String
     _id_ne: String
@@ -1830,42 +1611,6 @@ type Query {
   ): TagsDeletedQueryResults!
 
   getTagsDeleted(_id: String): TagsDeletedSingleQueryResult!
-
-  allUsers(
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
-    isPublic: Boolean
-    isPublic_ne: Boolean
-    isPublic_in: [Boolean]
-    isPublic_nin: [Boolean]
-    publicName_contains: String
-    publicName_startsWith: String
-    publicName_endsWith: String
-    publicName_regex: String
-    publicName: String
-    publicName_ne: String
-    publicName_in: [String]
-    publicName_nin: [String]
-    publicBooksHeader_contains: String
-    publicBooksHeader_startsWith: String
-    publicBooksHeader_endsWith: String
-    publicBooksHeader_regex: String
-    publicBooksHeader: String
-    publicBooksHeader_ne: String
-    publicBooksHeader_in: [String]
-    publicBooksHeader_nin: [String]
-    OR: [UserFilters]
-    SORT: UserSort
-    SORTS: [UserSort]
-    LIMIT: Int
-    SKIP: Int
-    PAGE: Int
-    PAGE_SIZE: Int
-  ): UserQueryResults!
-
-  getUser(_id: String): UserSingleQueryResult!
 }
 
 type Mutation {
@@ -1914,6 +1659,42 @@ type Mutation {
   ): TagBulkMutationResult
 
   deleteTag(_id: String): DeletionResultInfo
+}
 
-  updateUser(_id: String, Updates: UserMutationInput): UserMutationResult
+type User {
+  email: String
+  userId: String
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+type PublicUser {
+  email: String
+  isPublic: Boolean
+  publicName: String
+  publicBooksHeader: String
+}
+
+type UserSingleQueryResult {
+  User: User
+}
+
+type PublicUserSingleQueryResult {
+  PublicUser: User
+}
+
+extend type Query {
+  getUser: UserSingleQueryResult
+  getPublicUser(userId: String): PublicUserSingleQueryResult
+}
+
+input UserUpdates {
+  isPublic: Boolean
+  publicBooksHeader: String
+  publicName: String
+}
+
+extend type Mutation {
+  updateUser(Updates: UserUpdates): UserSingleQueryResult
 }

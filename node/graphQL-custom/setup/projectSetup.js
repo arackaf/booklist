@@ -81,7 +81,11 @@ export const Subject = {
     schemaSources: ["../../graphQL-custom/custom-content/subject/schema"],
     overrides: ["updateSubject", "updateSubjects", "updateSubjectsBulk", "deleteSubject"]
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "publicUserId", type: "String" },
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const Tag = {
@@ -95,7 +99,11 @@ export const Tag = {
     textColor: StringType,
     timestamp: FloatType
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "publicUserId", type: "String" },
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const LabelColor = {
@@ -109,40 +117,10 @@ export const LabelColor = {
   extras: {
     overrides: ["getLabelColor"]
   },
-  manualQueryArgs: [{ name: "ver", type: "String" }, { name: "cache", type: "Int" }]
-};
-
-export const User = {
-  table: "users",
-  fields: {
-    isPublic: BoolType,
-    publicName: StringType,
-    publicBooksHeader: StringType
-  },
-  extras: {
-    overrides: ["createUser", "updateUsers", "updateUsersBulk", "deleteUser"]
-  },
-  relationships: {
-    books: {
-      get type() {
-        return Book;
-      },
-      fkField: "_id",
-      keyField: "userId",
-      readonly: true
-    }
-  }
-};
-
-export const PublicUser = {
-  table: "users",
-  fields: {
-    isPublic: StringType,
-    publicName: StringType,
-    publicBooksHeader: StringType
-  },
-  readonly: true,
-  manualQueryArgs: [{ name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const SubjectsDeleted = {

@@ -155,6 +155,8 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
+/* --------------- SVELTE --------------- */
+
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
 const svelteModules = ["", "books", "activate", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
@@ -192,6 +194,8 @@ svelteRouter.get("/activate/:code", activateCode);
 svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
 
 app.use(subdomain("svelte", svelteRouter));
+
+/* --------------- /SVELTE --------------- */
 
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
@@ -243,6 +247,7 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
   response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+  response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   if (rememberMe) {
@@ -252,9 +257,6 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
 });
 
 app.post("/auth/logout", function (req, response) {
-  let userDao = new UserDao();
-  userDao.logout(req.user.id);
-
   clearAllCookies(req, response);
   req.logout();
   response.send({});
@@ -273,6 +275,7 @@ const clearAllCookies = (request, response) => {
   response.clearCookie("remember_me");
   response.clearCookie("userId");
   response.clearCookie("loginToken");
+  response.clearCookie("email");
   response.clearCookie("admin");
   response.clearCookie("jr_admin");
 };
@@ -298,7 +301,7 @@ app.post("/auth/createUser", function (req, response) {
 app.post("/auth/resetPassword", async function (req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
-  let result = await new UserDao().resetPassword(userId, oldPassword, newPassword);
+  let result = await new UserDao().resetPassword(req.cookies["email"], userId, oldPassword, newPassword);
   response.send({ ...result });
 });
 
