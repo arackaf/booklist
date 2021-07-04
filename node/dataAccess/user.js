@@ -156,7 +156,8 @@ class UserDAO {
       _id: id,
       id: id,
       loginToken,
-      email
+      email,
+      admin: userFound.admin
     };
   }
 
