@@ -9,7 +9,7 @@ provider:
       - "multipart/form-data"
 
   # you can overwrite defaults here
-  stage: dev
+  stage: live
   #  region: us-east-1
   environment:
     STAGE: ${self:provider.stage}
