@@ -26,7 +26,10 @@ enum COVER_SIZE {
 }
 
 export const sync = async (event, context) => {
-  console.log("FOO:");
+  try {
+    const packet = JSON.parse(event.body);
+    console.log("FOO:", typeof packet, packet);
+  } catch (er) {}
 
   try {
     let messenger = new AWS.ApiGatewayManagementApi({

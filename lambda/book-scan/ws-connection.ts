@@ -1,22 +1,21 @@
 import AWS from "aws-sdk";
 
-const WS_STATE_TABLE_NAME = `my_library_ws_state_state_${process.env.stage}`;
+import { TABLE_NAME } from "../util/dynamoHelpers";
+import { getKey } from "./ws-helpers";
+
+const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
 
 export const connect = async event => {
-  const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
   const connectionId = event.requestContext.connectionId;
-  console.log("CONNECT:", connectionId);
+  const key = getKey(connectionId);
 
   try {
     await dynamoDb
       .put({
-        TableName: WS_STATE_TABLE_NAME,
-        Item: { "connection-id": connectionId, userId: "tbd" }
+        TableName: TABLE_NAME,
+        Item: { pk: key, sk: key, "connection-id": connectionId, userId: "pending ..." }
       })
-      .promise()
-      .catch(err => {
-        console.log("Dynamo Error", err);
-      });
+      .promise();
   } catch (er) {
     console.log("ERROR", er);
   }
@@ -27,22 +26,10 @@ export const connect = async event => {
 };
 
 export const disconnect = async event => {
-  const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
   const connectionId = event.requestContext.connectionId;
-  console.log("DIS-CONNECT:", connectionId);
+  const key = getKey(connectionId);
 
-  await dynamoDb
-    .delete({
-      TableName: WS_STATE_TABLE_NAME,
-      Key: { "connection-id": connectionId }
-    })
-    .promise()
-    .then(() => {
-      console.log("DONE", connectionId);
-    })
-    .catch(err => {
-      console.log("ERROR", err);
-    });
+  await dynamoDb.delete({ TableName: TABLE_NAME, Key: { pk: key, sk: key } }).promise();
 
   return {
     statusCode: 200

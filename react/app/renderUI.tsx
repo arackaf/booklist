@@ -11,27 +11,18 @@ import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
+import scanWebSocket from "util/scanWebSocket";
+
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
-declare var webSocketAddress: any;
-let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
+scanWebSocket.open();
+scanWebSocket.send({ action: "sync", xyz: 12 });
 
-ws.onmessage = ({ data }) => {
+scanWebSocket.addHandler(({ data }) => {
   let packet = JSON.parse(data);
+  console.log(data);
   window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
-};
-
-ws.onopen = () => {
-  ws.send(`SYNC`);
-  window.addEventListener("sync-ws", () => {
-    ws.send(`SYNC`);
-  });
-};
-
-window.onbeforeunload = function () {
-  ws.onclose = function () {}; // disable onclose handler first
-  ws.close();
-};
+});
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
@@ -72,10 +63,10 @@ const App = () => {
   const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs });
   const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs });
 
-  const suspensePacket = useMemo(() => ({ startTransition: startTransitionModuleUpdate, isPending: moduleUpdatePending }), [
-    startTransitionModuleUpdate,
-    moduleUpdatePending
-  ]);
+  const suspensePacket = useMemo(
+    () => ({ startTransition: startTransitionModuleUpdate, isPending: moduleUpdatePending }),
+    [startTransitionModuleUpdate, moduleUpdatePending]
+  );
 
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
@@ -90,7 +81,7 @@ const App = () => {
     document.documentElement.scrollTop = 0;
     if (appState.isMobile) {
       function setAdjustedVh() {
-        let vh = (window.innerHeight * 0.01) + "px";
+        let vh = window.innerHeight * 0.01 + "px";
         document.documentElement.style.setProperty("--adjusted-vh", vh);
       }
 
