@@ -17,8 +17,10 @@ import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 
 import fetch from "node-fetch";
 
-const SCAN_STATE_TABLE_NAME = `my_library_scan_state_${process.env.stage}`;
-const WS_STATE_TABLE_NAME = `my_library_ws_state_state_${process.env.stage}`;
+import { db, dynamo, getGetPacket, getUpdatePacket, TABLE_NAME } from "../util/dynamoHelpers";
+import { getKey } from "./ws-helpers";
+
+const SCAN_STATE_TABLE_NAME = "";
 
 enum COVER_SIZE {
   SMALL = 1,
@@ -28,16 +30,27 @@ enum COVER_SIZE {
 export const sync = async (event, context) => {
   try {
     const packet = JSON.parse(event.body);
-    console.log("FOO:", typeof packet, packet);
-  } catch (er) {}
-
-  try {
-    let messenger = new AWS.ApiGatewayManagementApi({
+    const messenger = new AWS.ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
       endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
     });
+    const connectionId = event.requestContext.connectionId;
 
     console.log("Set up with", event.requestContext.domainName + "/" + event.requestContext.stage);
+
+    const key = getKey(connectionId);
+    const wsConnection = db.get(getGetPacket(key, key));
+    if (!wsConnection) {
+      console.log("Connection Dead");
+      return;
+    }
+
+    await db.update(
+      getUpdatePacket(key, key, {
+        UpdateExpression: "SET userId = :userId, loginToken = :loginToken",
+        ExpressionAttributeValues: { ":userId": packet.userId, ":loginToken": packet.loginToken }
+      })
+    );
 
     await new Promise(res => {
       messenger.postToConnection(

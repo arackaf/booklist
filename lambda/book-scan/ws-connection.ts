@@ -3,14 +3,14 @@ import AWS from "aws-sdk";
 import { TABLE_NAME } from "../util/dynamoHelpers";
 import { getKey } from "./ws-helpers";
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+import { dynamo } from "../util/dynamoHelpers";
 
 export const connect = async event => {
   const connectionId = event.requestContext.connectionId;
   const key = getKey(connectionId);
 
   try {
-    await dynamoDb
+    await dynamo
       .put({
         TableName: TABLE_NAME,
         Item: { pk: key, sk: key, "connection-id": connectionId, userId: "pending ..." }
@@ -29,7 +29,7 @@ export const disconnect = async event => {
   const connectionId = event.requestContext.connectionId;
   const key = getKey(connectionId);
 
-  await dynamoDb.delete({ TableName: TABLE_NAME, Key: { pk: key, sk: key } }).promise();
+  await dynamo.delete({ TableName: TABLE_NAME, Key: { pk: key, sk: key } }).promise();
 
   return {
     statusCode: 200

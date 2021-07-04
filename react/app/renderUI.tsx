@@ -12,17 +12,22 @@ import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
 import scanWebSocket from "util/scanWebSocket";
+import { getCookieLookup, isLoggedIn } from "util/loginStatus";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
-scanWebSocket.open();
-scanWebSocket.send({ action: "sync", xyz: 12 });
+const cookieHash = getCookieLookup();
 
-scanWebSocket.addHandler(({ data }) => {
-  let packet = JSON.parse(data);
-  console.log(data);
-  window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
-});
+if (isLoggedIn()) {
+  scanWebSocket.open();
+  scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
+
+  scanWebSocket.addHandler(({ data }) => {
+    let packet = JSON.parse(data);
+    console.log(data);
+    //window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
+  });
+}
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
