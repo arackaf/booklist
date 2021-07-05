@@ -1,0 +1,82 @@
+service: book-scan
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  environment:
+    STAGE: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeStream
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: Allow
+          Action:
+            - "execute-api:ManageConnections"
+          Resource:
+            - "arn:aws:execute-api:*:*:**/@connections/*"
+
+functions:
+  connect:
+    handler: ./ws-connection.connect
+    events:
+      - websocket:
+          route: $connect
+
+  disconnect:
+    handler: ./ws-connection.disconnect
+    events:
+      - websocket:
+          route: $disconnect
+
+  sync:
+    handler: handler.sync
+    events:
+      - websocket:
+          route: sync
+
+  scanBook:
+    handler: handler.scanBook
+    events:
+      - http:
+          path: scan
+          method: post
+          cors: true
+
+  lookupBooks:
+    timeout: 120
+    handler: handler.lookupBooks
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
+  stickItIn:
+    handler: handler.stickItIn
+
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
