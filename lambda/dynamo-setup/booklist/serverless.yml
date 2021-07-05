@@ -17,7 +17,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
-  stage: dev
+  stage: live
 
 resources:
   Resources:
@@ -30,7 +30,7 @@ resources:
             AttributeType: S
           - AttributeName: sk
             AttributeType: S
-          - AttributeName: gsiUserLookupPk
+          - AttributeName: userId
             AttributeType: S
         KeySchema:
           - AttributeName: pk
@@ -42,9 +42,9 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
         GlobalSecondaryIndexes:
-          - IndexName: gsiUserLookup
+          - IndexName: gsiUserIdLookup
             KeySchema:
-              - AttributeName: gsiUserLookupPk
+              - AttributeName: userId
                 KeyType: HASH
             Projection:
               ProjectionType: "ALL"

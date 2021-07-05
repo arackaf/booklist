@@ -8,7 +8,6 @@ export default {
       return { User: user };
     },
     async getPublicUser(root, args, context, ast) {
-      console.log({ userId: args.userId });
       const user = await userDao.getPublicUser(args.userId);
       return { PublicUser: user };
     }

@@ -125,7 +125,7 @@ class UserDAO {
   async getPublicUser(userId) {
     return db.queryOne(
       getQueryPacket(`gsiUserLookupPk = :userId`, {
-        IndexName: "gsiUserLookup",
+        IndexName: "gsiUserIdLookup",
         ExpressionAttributeValues: { ":userId": userId, ":true": true },
         FilterExpression: ` isPublic = :true `
       })
