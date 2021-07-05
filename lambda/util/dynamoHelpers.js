@@ -18,7 +18,7 @@ export const dynamo = new AWS.DynamoDB.DocumentClient({
 
 export const db = {
   async put(packet) {
-    await dynamo.put(packet).promise();
+    return dynamo.put(packet).promise();
   },
 
   async get(packet) {

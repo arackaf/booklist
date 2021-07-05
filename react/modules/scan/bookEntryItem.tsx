@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useRef, useImperativeHandle, forwardRef, useState, useLayoutEffect } from "react";
 import ajaxUtil from "util/ajaxUtil";
+import { getLoginStatus } from "util/loginStatus";
 
 const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
   const inputEl = useRef(null);
@@ -30,7 +31,7 @@ const BookEntryItem: FunctionComponent<any> = forwardRef((props, ref) => {
       const isbn = inputEl.current.value;
       if (isbn.length == 10 || isbn.length == 13) {
         setQueuing(true);
-        Promise.resolve(ajaxUtil.post("/book/saveFromIsbn", { isbn })).then(() => {
+        Promise.resolve(ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn, ...getLoginStatus() })).then(() => {
           setQueuing(false);
           setQueued(true);
           setTimeout(() => {

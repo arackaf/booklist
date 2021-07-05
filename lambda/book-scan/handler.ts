@@ -6,7 +6,6 @@ import path from "path";
 import uuid from "uuid/v4";
 
 import corsResponse from "../util/corsResponse";
-import getDbConnection from "../util/getDbConnection";
 
 import checkLogin from "../util/checkLoginToken";
 import getSecrets from "../util/getSecrets";
@@ -17,8 +16,9 @@ import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 
 import fetch from "node-fetch";
 
-import { db, dynamo, getGetPacket, getUpdatePacket, TABLE_NAME } from "../util/dynamoHelpers";
-import { getKey } from "./ws-helpers";
+import { db, getGetPacket, getPutPacket, getUpdatePacket } from "../util/dynamoHelpers";
+import { getWsSessionKey } from "./ws-helpers";
+import { getScanItemKey } from "./scan-helpers";
 
 const SCAN_STATE_TABLE_NAME = "";
 
@@ -38,7 +38,7 @@ export const sync = async (event, context) => {
 
     console.log("Set up with", event.requestContext.domainName + "/" + event.requestContext.stage);
 
-    const key = getKey(connectionId);
+    const key = getWsSessionKey(connectionId);
     const wsConnection = db.get(getGetPacket(key, key));
     if (!wsConnection) {
       console.log("Connection Dead");
@@ -78,34 +78,11 @@ export const scanBook = async event => {
       return corsResponse({ badLogin: true });
     }
 
-    const db = await getDbConnection();
-
-    await db.collection("pendingEntries").insertOne({ userId, isbn });
-
+    const [pk, sk] = getScanItemKey();
     const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
-    const scanState = await dynamoDb.get({ TableName: SCAN_STATE_TABLE_NAME, Key: { id: 1 } }).promise();
+    await db.put(getPutPacket({ pk, sk, isbn, userId }));
 
-    if (!scanState.Item) {
-      const items = await db
-        .collection("pendingEntries")
-        .aggregate([{ $sort: { _id: 1 } }, { $limit: 15 }])
-        .toArray();
-
-      await dynamoDb
-        .put({
-          TableName: SCAN_STATE_TABLE_NAME,
-          Item: {
-            id: 1,
-            pendingEntries: items.map(item => ({ ...item, _id: item._id + "" }))
-          },
-          ConditionExpression: "id <> :idKeyVal",
-          ExpressionAttributeValues: {
-            ":idKeyVal": 1
-          }
-        })
-        .promise()
-        .catch(err => {});
-    }
+    return corsResponse({ success: true });
 
     return corsResponse({ success: true });
   } catch (err) {
@@ -115,7 +92,7 @@ export const scanBook = async event => {
 
 const __sandbox = async event => {
   try {
-    const mongoDb = await getDbConnection();
+    let mongoDb: any;
     const { isbn } = JSON.parse(event.body);
 
     await mongoDb.collection("pendingEntries").insertOne({ isbn });
@@ -210,7 +187,7 @@ const __sandbox = async event => {
 export const lookupBooks = async event => {
   try {
     const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
-    const mongoDb = await getDbConnection();
+    let mongoDb: any;
 
     const params = {
       TableName: SCAN_STATE_TABLE_NAME,

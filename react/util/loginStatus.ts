@@ -32,6 +32,11 @@ export function getCookieLookup(): Partial<CookieState> {
   }, {});
 }
 
+export const getLoginStatus = () => {
+  const hash = getCookieLookup();
+  return { userId: hash.userId, loginToken: hash.loginToken };
+};
+
 function getCookie(name) {
   for (let piece of document.cookie.split("; ")) {
     const parts = piece.split("=");

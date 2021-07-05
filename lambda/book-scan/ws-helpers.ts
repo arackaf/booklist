@@ -1,1 +1,1 @@
-export const getKey = connectionId => `WebSocketScan#${connectionId}`;
+export const getWsSessionKey = connectionId => `WebSocketScanSession#${connectionId}`;
