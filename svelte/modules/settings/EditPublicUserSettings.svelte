@@ -7,7 +7,9 @@
   import Stack from "app/components/layout/Stack.svelte";
   import { appState } from "app/state/appState";
 
+  import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
   import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
+  import { clearCache } from "util/graphqlCacheHelpers";
 
   export let settings: User;
 
@@ -19,7 +21,7 @@
 
   let validating = false;
 
-  const update = (evt) => {
+  const update = evt => {
     evt.preventDefault();
 
     if (!publicName) {
@@ -29,6 +31,8 @@
       isPublic,
       publicBooksHeader: publicBooksHeader || "",
       publicName: publicName || ""
+    }).then(() => {
+      clearCache(PublicUserSettingsQuery);
     });
   };
 
@@ -70,7 +74,16 @@
           </div>
         {/if}
         <div class="col-xs-12">
-          <ActionButton isRunning={saving} onClick={update} type="submit" style="min-width: 12ch" text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
+          <ActionButton
+            isRunning={saving}
+            onClick={update}
+            type="submit"
+            style="min-width: 12ch"
+            text="Save"
+            runningText="Saving"
+            finishedText="Saved"
+            preset="primary"
+          />
         </div>
       </FlexRow>
     </form>

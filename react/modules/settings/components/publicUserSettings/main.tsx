@@ -9,6 +9,7 @@ import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 
 import { Form, Input, SubmitButton, required } from "app/components/ui/Form";
+import { clearCache } from "util/graphqlCacheHelpers";
 
 const PublicUserSettings: FunctionComponent<{}> = props => {
   const [{ online }] = useContext(AppContext);
@@ -56,6 +57,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
       publicName: pubNameEl.current ? pubNameEl.current.value : ""
     }).then(() => {
       setIsPublic(isPublic);
+      clearCache(PublicUserSettingsQuery);
     });
   };
 
