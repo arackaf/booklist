@@ -36,6 +36,9 @@ export const Form = ({ submit, children }) => {
     validators.current = validators.current.filter(([existingName]) => name != existingName);
     validators.current.push([name, val, valueLambda, testFn]);
   }, []);
+  const removeValidator = useCallback(name => {
+    validators.current = validators.current.filter(([existingName]) => name != existingName);
+  }, []);
 
   const formSubmit = evt => {
     evt.preventDefault();
@@ -58,7 +61,10 @@ export const Form = ({ submit, children }) => {
     }
   }, [submit, addError, clearErrors]);
 
-  const formPacket = useMemo(() => ({ errors, isError, removeError, registerValidator, doSubmit }), [errors, isError, removeError, doSubmit]);
+  const formPacket = useMemo(
+    () => ({ errors, isError, removeError, registerValidator, removeValidator, doSubmit }),
+    [errors, isError, removeError, doSubmit]
+  );
 
   return (
     <form onSubmit={formSubmit}>
@@ -70,7 +76,7 @@ export const Form = ({ submit, children }) => {
 export const Input: FC<any> = forwardRef((props, ref) => {
   const _ref = useRef(null);
   const { name, className = "", onChange, validate: validateOriginal, ...rest } = props;
-  const { isError, removeError, registerValidator } = useContext(FormContext);
+  const { isError, removeError, registerValidator, removeValidator } = useContext(FormContext);
 
   const validationFunctions: any[] = useMemo(() => validateOriginal, [validateOriginal]);
 
@@ -91,7 +97,11 @@ export const Input: FC<any> = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    validateOriginal && registerValidator(name, true, () => inputRef.current.value, validationFunctions);
+    validateOriginal && registerValidator(name, true, () => inputRef.current && inputRef.current.value, validationFunctions);
+
+    return () => {
+      removeValidator(name);
+    };
   }, [validationFunctions]);
 
   return <input className={cn(className, "form-control", { error: isError(name) })} onChange={onChangeFn} ref={inputRef} {...rest} />;
@@ -129,5 +139,5 @@ export const SubmitButton: FC<any> = props => {
 export const SubmitIconButton: FC<any> = props => {
   const { doSubmit } = useContext(FormContext);
 
-  return <ActionIconButton {...props} onClick={doSubmit} />
+  return <ActionIconButton {...props} onClick={doSubmit} />;
 };

@@ -17,7 +17,9 @@ export type QueryOf<T extends EitherType<T, Query>, U extends EitherType<U, Quer
 export type MutationOf<T extends EitherType<T, Mutation>, U extends EitherType<U, Mutation> = never> = GetType<T, Mutation> & GetType<U, Mutation>;
 
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -26,6 +28,40 @@ export type Scalars = {
   Int: number;
   Float: number;
   JSON: any;
+};
+
+
+export type DeletionResultInfo = {
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type MutationResultInfo = {
+  transaction: Scalars['Boolean'];
+  elapsedTime: Scalars['Int'];
+};
+
+export type QueryResultsMetadata = {
+  count: Scalars['Int'];
+};
+
+export type QueryRelationshipResultsMetadata = {
+  count: Scalars['Int'];
+};
+
+export type StringArrayUpdate = {
+  index: Scalars['Int'];
+  value: Scalars['String'];
+};
+
+export type IntArrayUpdate = {
+  index: Scalars['Int'];
+  value: Scalars['Int'];
+};
+
+export type FloatArrayUpdate = {
+  index: Scalars['Int'];
+  value: Scalars['Float'];
 };
 
 export type Book = {
@@ -70,9 +106,132 @@ export type BookSimilarBooksMetaArgs = {
   FILTER: Maybe<BookSummaryFilters>;
 };
 
+export type BookQueryResults = {
+  Books: Array<Book>;
+  Meta: QueryResultsMetadata;
+};
+
+export type BookSingleQueryResult = {
+  Book: Maybe<Book>;
+};
+
+export type BookMutationResult = {
+  Book: Maybe<Book>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type BookMutationResultMulti = {
+  Books: Maybe<Array<Maybe<Book>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
 export type BookBulkMutationResult = {
   success: Scalars['Boolean'];
   Meta: MutationResultInfo;
+};
+
+export type BookInput = {
+  _id: Maybe<Scalars['String']>;
+  ean: Maybe<Scalars['String']>;
+  isbn: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  smallImage: Maybe<Scalars['String']>;
+  mediumImage: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  publisher: Maybe<Scalars['String']>;
+  publicationDate: Maybe<Scalars['String']>;
+  pages: Maybe<Scalars['Int']>;
+  authors: Maybe<Array<Maybe<Scalars['String']>>>;
+  subjects: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags: Maybe<Array<Maybe<Scalars['String']>>>;
+  isRead: Maybe<Scalars['Boolean']>;
+  dateAdded: Maybe<Scalars['String']>;
+  editorialReviews: Maybe<Array<Maybe<EditorialReviewInput>>>;
+  similarItems: Maybe<Array<Maybe<Scalars['String']>>>;
+  similarItemsLastUpdate: Maybe<Scalars['Int']>;
+  timestamp: Maybe<Scalars['Float']>;
+  similarBooks: Maybe<Array<Maybe<BookSummaryInput>>>;
+};
+
+export type BookMutationInput = {
+  ean: Maybe<Scalars['String']>;
+  isbn: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  smallImage: Maybe<Scalars['String']>;
+  mediumImage: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  publisher: Maybe<Scalars['String']>;
+  publicationDate: Maybe<Scalars['String']>;
+  pages: Maybe<Scalars['Int']>;
+  pages_INC: Maybe<Scalars['Int']>;
+  pages_DEC: Maybe<Scalars['Int']>;
+  authors: Maybe<Array<Maybe<Scalars['String']>>>;
+  authors_PUSH: Maybe<Scalars['String']>;
+  authors_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
+  authors_UPDATE: Maybe<StringArrayUpdate>;
+  authors_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
+  authors_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
+  authors_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
+  subjects: Maybe<Array<Maybe<Scalars['String']>>>;
+  subjects_PUSH: Maybe<Scalars['String']>;
+  subjects_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
+  subjects_UPDATE: Maybe<StringArrayUpdate>;
+  subjects_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
+  subjects_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
+  subjects_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags_PUSH: Maybe<Scalars['String']>;
+  tags_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags_UPDATE: Maybe<StringArrayUpdate>;
+  tags_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
+  tags_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
+  tags_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
+  isRead: Maybe<Scalars['Boolean']>;
+  dateAdded: Maybe<Scalars['String']>;
+  editorialReviews: Maybe<Array<Maybe<EditorialReviewInput>>>;
+  editorialReviews_PUSH: Maybe<EditorialReviewInput>;
+  editorialReviews_CONCAT: Maybe<Array<Maybe<EditorialReviewInput>>>;
+  editorialReviews_UPDATE: Maybe<EditorialReviewArrayMutationInput>;
+  editorialReviews_UPDATES: Maybe<Array<Maybe<EditorialReviewArrayMutationInput>>>;
+  editorialReviews_PULL: Maybe<EditorialReviewFilters>;
+  similarItems: Maybe<Array<Maybe<Scalars['String']>>>;
+  similarItems_PUSH: Maybe<Scalars['String']>;
+  similarItems_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
+  similarItems_UPDATE: Maybe<StringArrayUpdate>;
+  similarItems_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
+  similarItems_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
+  similarItems_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
+  similarItemsLastUpdate: Maybe<Scalars['Int']>;
+  similarItemsLastUpdate_INC: Maybe<Scalars['Int']>;
+  similarItemsLastUpdate_DEC: Maybe<Scalars['Int']>;
+  timestamp: Maybe<Scalars['Float']>;
+  timestamp_INC: Maybe<Scalars['Int']>;
+  timestamp_DEC: Maybe<Scalars['Int']>;
+  similarBooks_ADD: Maybe<Array<Maybe<BookSummaryInput>>>;
+};
+
+export type BookSort = {
+  _id: Maybe<Scalars['Int']>;
+  ean: Maybe<Scalars['Int']>;
+  isbn: Maybe<Scalars['Int']>;
+  title: Maybe<Scalars['Int']>;
+  smallImage: Maybe<Scalars['Int']>;
+  mediumImage: Maybe<Scalars['Int']>;
+  userId: Maybe<Scalars['Int']>;
+  publisher: Maybe<Scalars['Int']>;
+  publicationDate: Maybe<Scalars['Int']>;
+  pages: Maybe<Scalars['Int']>;
+  authors: Maybe<Scalars['Int']>;
+  subjects: Maybe<Scalars['Int']>;
+  tags: Maybe<Scalars['Int']>;
+  isRead: Maybe<Scalars['Int']>;
+  dateAdded: Maybe<Scalars['Int']>;
+  editorialReviews: Maybe<Scalars['Int']>;
+  similarItems: Maybe<Scalars['Int']>;
+  similarItemsLastUpdate: Maybe<Scalars['Int']>;
+  timestamp: Maybe<Scalars['Int']>;
 };
 
 export type BookFilters = {
@@ -233,204 +392,6 @@ export type BookFilters = {
   OR: Maybe<Array<Maybe<BookFilters>>>;
 };
 
-export type BookInput = {
-  _id: Maybe<Scalars['String']>;
-  ean: Maybe<Scalars['String']>;
-  isbn: Maybe<Scalars['String']>;
-  title: Maybe<Scalars['String']>;
-  smallImage: Maybe<Scalars['String']>;
-  mediumImage: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  publisher: Maybe<Scalars['String']>;
-  publicationDate: Maybe<Scalars['String']>;
-  pages: Maybe<Scalars['Int']>;
-  authors: Maybe<Array<Maybe<Scalars['String']>>>;
-  subjects: Maybe<Array<Maybe<Scalars['String']>>>;
-  tags: Maybe<Array<Maybe<Scalars['String']>>>;
-  isRead: Maybe<Scalars['Boolean']>;
-  dateAdded: Maybe<Scalars['String']>;
-  editorialReviews: Maybe<Array<Maybe<EditorialReviewInput>>>;
-  similarItems: Maybe<Array<Maybe<Scalars['String']>>>;
-  similarItemsLastUpdate: Maybe<Scalars['Int']>;
-  timestamp: Maybe<Scalars['Float']>;
-  similarBooks: Maybe<Array<Maybe<BookSummaryInput>>>;
-};
-
-export type BookMutationInput = {
-  ean: Maybe<Scalars['String']>;
-  isbn: Maybe<Scalars['String']>;
-  title: Maybe<Scalars['String']>;
-  smallImage: Maybe<Scalars['String']>;
-  mediumImage: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  publisher: Maybe<Scalars['String']>;
-  publicationDate: Maybe<Scalars['String']>;
-  pages: Maybe<Scalars['Int']>;
-  pages_INC: Maybe<Scalars['Int']>;
-  pages_DEC: Maybe<Scalars['Int']>;
-  authors: Maybe<Array<Maybe<Scalars['String']>>>;
-  authors_PUSH: Maybe<Scalars['String']>;
-  authors_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
-  authors_UPDATE: Maybe<StringArrayUpdate>;
-  authors_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
-  authors_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
-  authors_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
-  subjects: Maybe<Array<Maybe<Scalars['String']>>>;
-  subjects_PUSH: Maybe<Scalars['String']>;
-  subjects_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
-  subjects_UPDATE: Maybe<StringArrayUpdate>;
-  subjects_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
-  subjects_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
-  subjects_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
-  tags: Maybe<Array<Maybe<Scalars['String']>>>;
-  tags_PUSH: Maybe<Scalars['String']>;
-  tags_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
-  tags_UPDATE: Maybe<StringArrayUpdate>;
-  tags_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
-  tags_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
-  tags_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
-  isRead: Maybe<Scalars['Boolean']>;
-  dateAdded: Maybe<Scalars['String']>;
-  editorialReviews: Maybe<Array<Maybe<EditorialReviewInput>>>;
-  editorialReviews_PUSH: Maybe<EditorialReviewInput>;
-  editorialReviews_CONCAT: Maybe<Array<Maybe<EditorialReviewInput>>>;
-  editorialReviews_UPDATE: Maybe<EditorialReviewArrayMutationInput>;
-  editorialReviews_UPDATES: Maybe<Array<Maybe<EditorialReviewArrayMutationInput>>>;
-  editorialReviews_PULL: Maybe<EditorialReviewFilters>;
-  similarItems: Maybe<Array<Maybe<Scalars['String']>>>;
-  similarItems_PUSH: Maybe<Scalars['String']>;
-  similarItems_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
-  similarItems_UPDATE: Maybe<StringArrayUpdate>;
-  similarItems_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
-  similarItems_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
-  similarItems_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
-  similarItemsLastUpdate: Maybe<Scalars['Int']>;
-  similarItemsLastUpdate_INC: Maybe<Scalars['Int']>;
-  similarItemsLastUpdate_DEC: Maybe<Scalars['Int']>;
-  timestamp: Maybe<Scalars['Float']>;
-  timestamp_INC: Maybe<Scalars['Int']>;
-  timestamp_DEC: Maybe<Scalars['Int']>;
-  similarBooks_ADD: Maybe<Array<Maybe<BookSummaryInput>>>;
-};
-
-export type BookMutationResult = {
-  Book: Maybe<Book>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BookMutationResultMulti = {
-  Books: Maybe<Array<Maybe<Book>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BookQueryResults = {
-  Books: Array<Book>;
-  Meta: QueryResultsMetadata;
-};
-
-export type BooksDeleted = {
-  _id: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-};
-
-export type BooksDeletedBulkMutationResult = {
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BooksDeletedFilters = {
-  _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_contains: Maybe<Scalars['String']>;
-  userId_startsWith: Maybe<Scalars['String']>;
-  userId_endsWith: Maybe<Scalars['String']>;
-  userId_regex: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  userId_ne: Maybe<Scalars['String']>;
-  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  deletedTimestamp_lt: Maybe<Scalars['Float']>;
-  deletedTimestamp_lte: Maybe<Scalars['Float']>;
-  deletedTimestamp_gt: Maybe<Scalars['Float']>;
-  deletedTimestamp_gte: Maybe<Scalars['Float']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-  deletedTimestamp_ne: Maybe<Scalars['Float']>;
-  deletedTimestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
-  deletedTimestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
-  OR: Maybe<Array<Maybe<BooksDeletedFilters>>>;
-};
-
-export type BooksDeletedInput = {
-  _id: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-};
-
-export type BooksDeletedMutationInput = {
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-  deletedTimestamp_INC: Maybe<Scalars['Int']>;
-  deletedTimestamp_DEC: Maybe<Scalars['Int']>;
-};
-
-export type BooksDeletedMutationResult = {
-  BooksDeleted: Maybe<BooksDeleted>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BooksDeletedMutationResultMulti = {
-  BooksDeleteds: Maybe<Array<Maybe<BooksDeleted>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BooksDeletedQueryResults = {
-  BooksDeleteds: Array<BooksDeleted>;
-  Meta: QueryResultsMetadata;
-};
-
-export type BooksDeletedSingleQueryResult = {
-  BooksDeleted: Maybe<BooksDeleted>;
-};
-
-export type BooksDeletedSort = {
-  _id: Maybe<Scalars['Int']>;
-  userId: Maybe<Scalars['Int']>;
-  deletedTimestamp: Maybe<Scalars['Int']>;
-};
-
-export type BookSingleQueryResult = {
-  Book: Maybe<Book>;
-};
-
-export type BookSort = {
-  _id: Maybe<Scalars['Int']>;
-  ean: Maybe<Scalars['Int']>;
-  isbn: Maybe<Scalars['Int']>;
-  title: Maybe<Scalars['Int']>;
-  smallImage: Maybe<Scalars['Int']>;
-  mediumImage: Maybe<Scalars['Int']>;
-  userId: Maybe<Scalars['Int']>;
-  publisher: Maybe<Scalars['Int']>;
-  publicationDate: Maybe<Scalars['Int']>;
-  pages: Maybe<Scalars['Int']>;
-  authors: Maybe<Scalars['Int']>;
-  subjects: Maybe<Scalars['Int']>;
-  tags: Maybe<Scalars['Int']>;
-  isRead: Maybe<Scalars['Int']>;
-  dateAdded: Maybe<Scalars['Int']>;
-  editorialReviews: Maybe<Scalars['Int']>;
-  similarItems: Maybe<Scalars['Int']>;
-  similarItemsLastUpdate: Maybe<Scalars['Int']>;
-  timestamp: Maybe<Scalars['Int']>;
-};
-
 export type BookSummary = {
   _id: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
@@ -442,9 +403,68 @@ export type BookSummary = {
   authors: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
+export type BookSummaryQueryResults = {
+  BookSummarys: Array<BookSummary>;
+  Meta: QueryResultsMetadata;
+};
+
+export type BookSummarySingleQueryResult = {
+  BookSummary: Maybe<BookSummary>;
+};
+
+export type BookSummaryMutationResult = {
+  BookSummary: Maybe<BookSummary>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type BookSummaryMutationResultMulti = {
+  BookSummarys: Maybe<Array<Maybe<BookSummary>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
 export type BookSummaryBulkMutationResult = {
   success: Scalars['Boolean'];
   Meta: MutationResultInfo;
+};
+
+export type BookSummaryInput = {
+  _id: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  asin: Maybe<Scalars['String']>;
+  isbn: Maybe<Scalars['String']>;
+  ean: Maybe<Scalars['String']>;
+  smallImage: Maybe<Scalars['String']>;
+  mediumImage: Maybe<Scalars['String']>;
+  authors: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type BookSummaryMutationInput = {
+  title: Maybe<Scalars['String']>;
+  asin: Maybe<Scalars['String']>;
+  isbn: Maybe<Scalars['String']>;
+  ean: Maybe<Scalars['String']>;
+  smallImage: Maybe<Scalars['String']>;
+  mediumImage: Maybe<Scalars['String']>;
+  authors: Maybe<Array<Maybe<Scalars['String']>>>;
+  authors_PUSH: Maybe<Scalars['String']>;
+  authors_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
+  authors_UPDATE: Maybe<StringArrayUpdate>;
+  authors_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
+  authors_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
+  authors_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type BookSummarySort = {
+  _id: Maybe<Scalars['Int']>;
+  title: Maybe<Scalars['Int']>;
+  asin: Maybe<Scalars['Int']>;
+  isbn: Maybe<Scalars['Int']>;
+  ean: Maybe<Scalars['Int']>;
+  smallImage: Maybe<Scalars['Int']>;
+  mediumImage: Maybe<Scalars['Int']>;
+  authors: Maybe<Scalars['Int']>;
 };
 
 export type BookSummaryFilters = {
@@ -515,68 +535,79 @@ export type BookSummaryFilters = {
   OR: Maybe<Array<Maybe<BookSummaryFilters>>>;
 };
 
-export type BookSummaryInput = {
+export type BooksDeleted = {
   _id: Maybe<Scalars['String']>;
-  title: Maybe<Scalars['String']>;
-  asin: Maybe<Scalars['String']>;
-  isbn: Maybe<Scalars['String']>;
-  ean: Maybe<Scalars['String']>;
-  smallImage: Maybe<Scalars['String']>;
-  mediumImage: Maybe<Scalars['String']>;
-  authors: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
 };
 
-export type BookSummaryMutationInput = {
-  title: Maybe<Scalars['String']>;
-  asin: Maybe<Scalars['String']>;
-  isbn: Maybe<Scalars['String']>;
-  ean: Maybe<Scalars['String']>;
-  smallImage: Maybe<Scalars['String']>;
-  mediumImage: Maybe<Scalars['String']>;
-  authors: Maybe<Array<Maybe<Scalars['String']>>>;
-  authors_PUSH: Maybe<Scalars['String']>;
-  authors_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
-  authors_UPDATE: Maybe<StringArrayUpdate>;
-  authors_UPDATES: Maybe<Array<Maybe<StringArrayUpdate>>>;
-  authors_PULL: Maybe<Array<Maybe<Scalars['String']>>>;
-  authors_ADDTOSET: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export type BookSummaryMutationResult = {
-  BookSummary: Maybe<BookSummary>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BookSummaryMutationResultMulti = {
-  BookSummarys: Maybe<Array<Maybe<BookSummary>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type BookSummaryQueryResults = {
-  BookSummarys: Array<BookSummary>;
+export type BooksDeletedQueryResults = {
+  BooksDeleteds: Array<BooksDeleted>;
   Meta: QueryResultsMetadata;
 };
 
-export type BookSummarySingleQueryResult = {
-  BookSummary: Maybe<BookSummary>;
+export type BooksDeletedSingleQueryResult = {
+  BooksDeleted: Maybe<BooksDeleted>;
 };
 
-export type BookSummarySort = {
-  _id: Maybe<Scalars['Int']>;
-  title: Maybe<Scalars['Int']>;
-  asin: Maybe<Scalars['Int']>;
-  isbn: Maybe<Scalars['Int']>;
-  ean: Maybe<Scalars['Int']>;
-  smallImage: Maybe<Scalars['Int']>;
-  mediumImage: Maybe<Scalars['Int']>;
-  authors: Maybe<Scalars['Int']>;
-};
-
-export type DeletionResultInfo = {
+export type BooksDeletedMutationResult = {
+  BooksDeleted: Maybe<BooksDeleted>;
   success: Scalars['Boolean'];
   Meta: MutationResultInfo;
+};
+
+export type BooksDeletedMutationResultMulti = {
+  BooksDeleteds: Maybe<Array<Maybe<BooksDeleted>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type BooksDeletedBulkMutationResult = {
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type BooksDeletedInput = {
+  _id: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+};
+
+export type BooksDeletedMutationInput = {
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+  deletedTimestamp_INC: Maybe<Scalars['Int']>;
+  deletedTimestamp_DEC: Maybe<Scalars['Int']>;
+};
+
+export type BooksDeletedSort = {
+  _id: Maybe<Scalars['Int']>;
+  userId: Maybe<Scalars['Int']>;
+  deletedTimestamp: Maybe<Scalars['Int']>;
+};
+
+export type BooksDeletedFilters = {
+  _id: Maybe<Scalars['String']>;
+  _id_ne: Maybe<Scalars['String']>;
+  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_contains: Maybe<Scalars['String']>;
+  userId_startsWith: Maybe<Scalars['String']>;
+  userId_endsWith: Maybe<Scalars['String']>;
+  userId_regex: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  userId_ne: Maybe<Scalars['String']>;
+  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  deletedTimestamp_lt: Maybe<Scalars['Float']>;
+  deletedTimestamp_lte: Maybe<Scalars['Float']>;
+  deletedTimestamp_gt: Maybe<Scalars['Float']>;
+  deletedTimestamp_gte: Maybe<Scalars['Float']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+  deletedTimestamp_ne: Maybe<Scalars['Float']>;
+  deletedTimestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
+  deletedTimestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
+  OR: Maybe<Array<Maybe<BooksDeletedFilters>>>;
 };
 
 export type EditorialReview = {
@@ -584,9 +615,24 @@ export type EditorialReview = {
   content: Maybe<Scalars['String']>;
 };
 
+export type EditorialReviewInput = {
+  source: Maybe<Scalars['String']>;
+  content: Maybe<Scalars['String']>;
+};
+
+export type EditorialReviewMutationInput = {
+  source: Maybe<Scalars['String']>;
+  content: Maybe<Scalars['String']>;
+};
+
 export type EditorialReviewArrayMutationInput = {
   index: Maybe<Scalars['Int']>;
   Updates: Maybe<EditorialReviewMutationInput>;
+};
+
+export type EditorialReviewSort = {
+  source: Maybe<Scalars['Int']>;
+  content: Maybe<Scalars['Int']>;
 };
 
 export type EditorialReviewFilters = {
@@ -609,41 +655,55 @@ export type EditorialReviewFilters = {
   OR: Maybe<Array<Maybe<EditorialReviewFilters>>>;
 };
 
-export type EditorialReviewInput = {
-  source: Maybe<Scalars['String']>;
-  content: Maybe<Scalars['String']>;
-};
-
-export type EditorialReviewMutationInput = {
-  source: Maybe<Scalars['String']>;
-  content: Maybe<Scalars['String']>;
-};
-
-export type EditorialReviewSort = {
-  source: Maybe<Scalars['Int']>;
-  content: Maybe<Scalars['Int']>;
-};
-
-export type FloatArrayUpdate = {
-  index: Scalars['Int'];
-  value: Scalars['Float'];
-};
-
-export type IntArrayUpdate = {
-  index: Scalars['Int'];
-  value: Scalars['Int'];
-};
-
-
 export type LabelColor = {
   _id: Maybe<Scalars['String']>;
   backgroundColor: Maybe<Scalars['String']>;
   order: Maybe<Scalars['Int']>;
 };
 
+export type LabelColorQueryResults = {
+  LabelColors: Array<LabelColor>;
+  Meta: QueryResultsMetadata;
+};
+
+export type LabelColorSingleQueryResult = {
+  LabelColor: Maybe<LabelColor>;
+};
+
+export type LabelColorMutationResult = {
+  LabelColor: Maybe<LabelColor>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type LabelColorMutationResultMulti = {
+  LabelColors: Maybe<Array<Maybe<LabelColor>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
 export type LabelColorBulkMutationResult = {
   success: Scalars['Boolean'];
   Meta: MutationResultInfo;
+};
+
+export type LabelColorInput = {
+  _id: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  order: Maybe<Scalars['Int']>;
+};
+
+export type LabelColorMutationInput = {
+  backgroundColor: Maybe<Scalars['String']>;
+  order: Maybe<Scalars['Int']>;
+  order_INC: Maybe<Scalars['Int']>;
+  order_DEC: Maybe<Scalars['Int']>;
+};
+
+export type LabelColorSort = {
+  _id: Maybe<Scalars['Int']>;
+  backgroundColor: Maybe<Scalars['Int']>;
+  order: Maybe<Scalars['Int']>;
 };
 
 export type LabelColorFilters = {
@@ -670,239 +730,400 @@ export type LabelColorFilters = {
   OR: Maybe<Array<Maybe<LabelColorFilters>>>;
 };
 
-export type LabelColorInput = {
+export type Subject = {
   _id: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
   backgroundColor: Maybe<Scalars['String']>;
-  order: Maybe<Scalars['Int']>;
+  textColor: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Float']>;
 };
 
-export type LabelColorMutationInput = {
-  backgroundColor: Maybe<Scalars['String']>;
-  order: Maybe<Scalars['Int']>;
-  order_INC: Maybe<Scalars['Int']>;
-  order_DEC: Maybe<Scalars['Int']>;
-};
-
-export type LabelColorMutationResult = {
-  LabelColor: Maybe<LabelColor>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type LabelColorMutationResultMulti = {
-  LabelColors: Maybe<Array<Maybe<LabelColor>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type LabelColorQueryResults = {
-  LabelColors: Array<LabelColor>;
+export type SubjectQueryResults = {
+  Subjects: Array<Subject>;
   Meta: QueryResultsMetadata;
 };
 
-export type LabelColorSingleQueryResult = {
-  LabelColor: Maybe<LabelColor>;
+export type SubjectSingleQueryResult = {
+  Subject: Maybe<Subject>;
 };
 
-export type LabelColorSort = {
-  _id: Maybe<Scalars['Int']>;
-  backgroundColor: Maybe<Scalars['Int']>;
-  order: Maybe<Scalars['Int']>;
-};
-
-export type Mutation = {
-  createBook: Maybe<BookMutationResult>;
-  updateBook: Maybe<BookMutationResult>;
-  updateBooks: Maybe<BookMutationResultMulti>;
-  updateBooksBulk: Maybe<BookBulkMutationResult>;
-  deleteBook: Maybe<DeletionResultInfo>;
-  updateBookSummary: Maybe<BookSummaryMutationResult>;
-  createSubject: Maybe<SubjectMutationResult>;
-  updateSubject: Maybe<SubjectMutationResultMulti>;
-  deleteSubject: Maybe<Array<Maybe<Scalars['String']>>>;
-  createTag: Maybe<TagMutationResult>;
-  updateTag: Maybe<TagMutationResult>;
-  updateTags: Maybe<TagMutationResultMulti>;
-  updateTagsBulk: Maybe<TagBulkMutationResult>;
-  deleteTag: Maybe<DeletionResultInfo>;
-  updateUser: Maybe<UserMutationResult>;
-};
-
-
-export type MutationCreateBookArgs = {
-  Book: Maybe<BookInput>;
-};
-
-
-export type MutationUpdateBookArgs = {
-  _id: Maybe<Scalars['String']>;
-  Updates: Maybe<BookMutationInput>;
-};
-
-
-export type MutationUpdateBooksArgs = {
-  _ids: Maybe<Array<Maybe<Scalars['String']>>>;
-  Updates: Maybe<BookMutationInput>;
-};
-
-
-export type MutationUpdateBooksBulkArgs = {
-  Match: Maybe<BookFilters>;
-  Updates: Maybe<BookMutationInput>;
-};
-
-
-export type MutationDeleteBookArgs = {
-  _id: Maybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateBookSummaryArgs = {
-  _id: Maybe<Scalars['String']>;
-  Updates: Maybe<BookSummaryMutationInput>;
-};
-
-
-export type MutationCreateSubjectArgs = {
-  Subject: Maybe<SubjectInput>;
-};
-
-
-export type MutationUpdateSubjectArgs = {
-  _id: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  parentId: Maybe<Scalars['String']>;
-};
-
-
-export type MutationDeleteSubjectArgs = {
-  _id: Maybe<Scalars['String']>;
-};
-
-
-export type MutationCreateTagArgs = {
-  Tag: Maybe<TagInput>;
-};
-
-
-export type MutationUpdateTagArgs = {
-  _id: Maybe<Scalars['String']>;
-  Updates: Maybe<TagMutationInput>;
-};
-
-
-export type MutationUpdateTagsArgs = {
-  _ids: Maybe<Array<Maybe<Scalars['String']>>>;
-  Updates: Maybe<TagMutationInput>;
-};
-
-
-export type MutationUpdateTagsBulkArgs = {
-  Match: Maybe<TagFilters>;
-  Updates: Maybe<TagMutationInput>;
-};
-
-
-export type MutationDeleteTagArgs = {
-  _id: Maybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateUserArgs = {
-  _id: Maybe<Scalars['String']>;
-  Updates: Maybe<UserMutationInput>;
-};
-
-export type MutationResultInfo = {
-  transaction: Scalars['Boolean'];
-  elapsedTime: Scalars['Int'];
-};
-
-export type PublicUser = {
-  _id: Maybe<Scalars['String']>;
-  isPublic: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-};
-
-export type PublicUserBulkMutationResult = {
+export type SubjectMutationResult = {
+  Subject: Maybe<Subject>;
   success: Scalars['Boolean'];
   Meta: MutationResultInfo;
 };
 
-export type PublicUserFilters = {
+export type SubjectMutationResultMulti = {
+  Subjects: Maybe<Array<Maybe<Subject>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type SubjectBulkMutationResult = {
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type SubjectInput = {
+  _id: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Float']>;
+};
+
+export type SubjectMutationInput = {
+  name: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Float']>;
+  timestamp_INC: Maybe<Scalars['Int']>;
+  timestamp_DEC: Maybe<Scalars['Int']>;
+};
+
+export type SubjectSort = {
+  _id: Maybe<Scalars['Int']>;
+  name: Maybe<Scalars['Int']>;
+  path: Maybe<Scalars['Int']>;
+  userId: Maybe<Scalars['Int']>;
+  backgroundColor: Maybe<Scalars['Int']>;
+  textColor: Maybe<Scalars['Int']>;
+  timestamp: Maybe<Scalars['Int']>;
+};
+
+export type SubjectFilters = {
   _id: Maybe<Scalars['String']>;
   _id_ne: Maybe<Scalars['String']>;
   _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
   _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  isPublic_contains: Maybe<Scalars['String']>;
-  isPublic_startsWith: Maybe<Scalars['String']>;
-  isPublic_endsWith: Maybe<Scalars['String']>;
-  isPublic_regex: Maybe<Scalars['String']>;
-  isPublic: Maybe<Scalars['String']>;
-  isPublic_ne: Maybe<Scalars['String']>;
-  isPublic_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  isPublic_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicName_contains: Maybe<Scalars['String']>;
-  publicName_startsWith: Maybe<Scalars['String']>;
-  publicName_endsWith: Maybe<Scalars['String']>;
-  publicName_regex: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicName_ne: Maybe<Scalars['String']>;
-  publicName_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicName_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_contains: Maybe<Scalars['String']>;
-  publicBooksHeader_startsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_endsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_regex: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-  publicBooksHeader_ne: Maybe<Scalars['String']>;
-  publicBooksHeader_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  OR: Maybe<Array<Maybe<PublicUserFilters>>>;
+  name_contains: Maybe<Scalars['String']>;
+  name_startsWith: Maybe<Scalars['String']>;
+  name_endsWith: Maybe<Scalars['String']>;
+  name_regex: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  name_ne: Maybe<Scalars['String']>;
+  name_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  name_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  path_contains: Maybe<Scalars['String']>;
+  path_startsWith: Maybe<Scalars['String']>;
+  path_endsWith: Maybe<Scalars['String']>;
+  path_regex: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  path_ne: Maybe<Scalars['String']>;
+  path_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  path_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_contains: Maybe<Scalars['String']>;
+  userId_startsWith: Maybe<Scalars['String']>;
+  userId_endsWith: Maybe<Scalars['String']>;
+  userId_regex: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  userId_ne: Maybe<Scalars['String']>;
+  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  backgroundColor_contains: Maybe<Scalars['String']>;
+  backgroundColor_startsWith: Maybe<Scalars['String']>;
+  backgroundColor_endsWith: Maybe<Scalars['String']>;
+  backgroundColor_regex: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  backgroundColor_ne: Maybe<Scalars['String']>;
+  backgroundColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  backgroundColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  textColor_contains: Maybe<Scalars['String']>;
+  textColor_startsWith: Maybe<Scalars['String']>;
+  textColor_endsWith: Maybe<Scalars['String']>;
+  textColor_regex: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  textColor_ne: Maybe<Scalars['String']>;
+  textColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  textColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  timestamp_lt: Maybe<Scalars['Float']>;
+  timestamp_lte: Maybe<Scalars['Float']>;
+  timestamp_gt: Maybe<Scalars['Float']>;
+  timestamp_gte: Maybe<Scalars['Float']>;
+  timestamp: Maybe<Scalars['Float']>;
+  timestamp_ne: Maybe<Scalars['Float']>;
+  timestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
+  timestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
+  OR: Maybe<Array<Maybe<SubjectFilters>>>;
 };
 
-export type PublicUserInput = {
+export type SubjectsDeleted = {
   _id: Maybe<Scalars['String']>;
-  isPublic: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
 };
 
-export type PublicUserMutationInput = {
-  isPublic: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-};
-
-export type PublicUserMutationResult = {
-  PublicUser: Maybe<PublicUser>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type PublicUserMutationResultMulti = {
-  PublicUsers: Maybe<Array<Maybe<PublicUser>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type PublicUserQueryResults = {
-  PublicUsers: Array<PublicUser>;
+export type SubjectsDeletedQueryResults = {
+  SubjectsDeleteds: Array<SubjectsDeleted>;
   Meta: QueryResultsMetadata;
 };
 
-export type PublicUserSingleQueryResult = {
-  PublicUser: Maybe<PublicUser>;
+export type SubjectsDeletedSingleQueryResult = {
+  SubjectsDeleted: Maybe<SubjectsDeleted>;
 };
 
-export type PublicUserSort = {
+export type SubjectsDeletedMutationResult = {
+  SubjectsDeleted: Maybe<SubjectsDeleted>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type SubjectsDeletedMutationResultMulti = {
+  SubjectsDeleteds: Maybe<Array<Maybe<SubjectsDeleted>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type SubjectsDeletedBulkMutationResult = {
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type SubjectsDeletedInput = {
+  _id: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+};
+
+export type SubjectsDeletedMutationInput = {
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+  deletedTimestamp_INC: Maybe<Scalars['Int']>;
+  deletedTimestamp_DEC: Maybe<Scalars['Int']>;
+};
+
+export type SubjectsDeletedSort = {
   _id: Maybe<Scalars['Int']>;
-  isPublic: Maybe<Scalars['Int']>;
-  publicName: Maybe<Scalars['Int']>;
-  publicBooksHeader: Maybe<Scalars['Int']>;
+  userId: Maybe<Scalars['Int']>;
+  deletedTimestamp: Maybe<Scalars['Int']>;
+};
+
+export type SubjectsDeletedFilters = {
+  _id: Maybe<Scalars['String']>;
+  _id_ne: Maybe<Scalars['String']>;
+  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_contains: Maybe<Scalars['String']>;
+  userId_startsWith: Maybe<Scalars['String']>;
+  userId_endsWith: Maybe<Scalars['String']>;
+  userId_regex: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  userId_ne: Maybe<Scalars['String']>;
+  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  deletedTimestamp_lt: Maybe<Scalars['Float']>;
+  deletedTimestamp_lte: Maybe<Scalars['Float']>;
+  deletedTimestamp_gt: Maybe<Scalars['Float']>;
+  deletedTimestamp_gte: Maybe<Scalars['Float']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+  deletedTimestamp_ne: Maybe<Scalars['Float']>;
+  deletedTimestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
+  deletedTimestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
+  OR: Maybe<Array<Maybe<SubjectsDeletedFilters>>>;
+};
+
+export type Tag = {
+  _id: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Float']>;
+};
+
+export type TagQueryResults = {
+  Tags: Array<Tag>;
+  Meta: QueryResultsMetadata;
+};
+
+export type TagSingleQueryResult = {
+  Tag: Maybe<Tag>;
+};
+
+export type TagMutationResult = {
+  Tag: Maybe<Tag>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type TagMutationResultMulti = {
+  Tags: Maybe<Array<Maybe<Tag>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type TagBulkMutationResult = {
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type TagInput = {
+  _id: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Float']>;
+};
+
+export type TagMutationInput = {
+  name: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Float']>;
+  timestamp_INC: Maybe<Scalars['Int']>;
+  timestamp_DEC: Maybe<Scalars['Int']>;
+};
+
+export type TagSort = {
+  _id: Maybe<Scalars['Int']>;
+  name: Maybe<Scalars['Int']>;
+  path: Maybe<Scalars['Int']>;
+  userId: Maybe<Scalars['Int']>;
+  backgroundColor: Maybe<Scalars['Int']>;
+  textColor: Maybe<Scalars['Int']>;
+  timestamp: Maybe<Scalars['Int']>;
+};
+
+export type TagFilters = {
+  _id: Maybe<Scalars['String']>;
+  _id_ne: Maybe<Scalars['String']>;
+  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  name_contains: Maybe<Scalars['String']>;
+  name_startsWith: Maybe<Scalars['String']>;
+  name_endsWith: Maybe<Scalars['String']>;
+  name_regex: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  name_ne: Maybe<Scalars['String']>;
+  name_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  name_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  path_contains: Maybe<Scalars['String']>;
+  path_startsWith: Maybe<Scalars['String']>;
+  path_endsWith: Maybe<Scalars['String']>;
+  path_regex: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  path_ne: Maybe<Scalars['String']>;
+  path_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  path_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_contains: Maybe<Scalars['String']>;
+  userId_startsWith: Maybe<Scalars['String']>;
+  userId_endsWith: Maybe<Scalars['String']>;
+  userId_regex: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  userId_ne: Maybe<Scalars['String']>;
+  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  backgroundColor_contains: Maybe<Scalars['String']>;
+  backgroundColor_startsWith: Maybe<Scalars['String']>;
+  backgroundColor_endsWith: Maybe<Scalars['String']>;
+  backgroundColor_regex: Maybe<Scalars['String']>;
+  backgroundColor: Maybe<Scalars['String']>;
+  backgroundColor_ne: Maybe<Scalars['String']>;
+  backgroundColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  backgroundColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  textColor_contains: Maybe<Scalars['String']>;
+  textColor_startsWith: Maybe<Scalars['String']>;
+  textColor_endsWith: Maybe<Scalars['String']>;
+  textColor_regex: Maybe<Scalars['String']>;
+  textColor: Maybe<Scalars['String']>;
+  textColor_ne: Maybe<Scalars['String']>;
+  textColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  textColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  timestamp_lt: Maybe<Scalars['Float']>;
+  timestamp_lte: Maybe<Scalars['Float']>;
+  timestamp_gt: Maybe<Scalars['Float']>;
+  timestamp_gte: Maybe<Scalars['Float']>;
+  timestamp: Maybe<Scalars['Float']>;
+  timestamp_ne: Maybe<Scalars['Float']>;
+  timestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
+  timestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
+  OR: Maybe<Array<Maybe<TagFilters>>>;
+};
+
+export type TagsDeleted = {
+  _id: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+};
+
+export type TagsDeletedQueryResults = {
+  TagsDeleteds: Array<TagsDeleted>;
+  Meta: QueryResultsMetadata;
+};
+
+export type TagsDeletedSingleQueryResult = {
+  TagsDeleted: Maybe<TagsDeleted>;
+};
+
+export type TagsDeletedMutationResult = {
+  TagsDeleted: Maybe<TagsDeleted>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type TagsDeletedMutationResultMulti = {
+  TagsDeleteds: Maybe<Array<Maybe<TagsDeleted>>>;
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type TagsDeletedBulkMutationResult = {
+  success: Scalars['Boolean'];
+  Meta: MutationResultInfo;
+};
+
+export type TagsDeletedInput = {
+  _id: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+};
+
+export type TagsDeletedMutationInput = {
+  userId: Maybe<Scalars['String']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+  deletedTimestamp_INC: Maybe<Scalars['Int']>;
+  deletedTimestamp_DEC: Maybe<Scalars['Int']>;
+};
+
+export type TagsDeletedSort = {
+  _id: Maybe<Scalars['Int']>;
+  userId: Maybe<Scalars['Int']>;
+  deletedTimestamp: Maybe<Scalars['Int']>;
+};
+
+export type TagsDeletedFilters = {
+  _id: Maybe<Scalars['String']>;
+  _id_ne: Maybe<Scalars['String']>;
+  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_contains: Maybe<Scalars['String']>;
+  userId_startsWith: Maybe<Scalars['String']>;
+  userId_endsWith: Maybe<Scalars['String']>;
+  userId_regex: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
+  userId_ne: Maybe<Scalars['String']>;
+  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  deletedTimestamp_lt: Maybe<Scalars['Float']>;
+  deletedTimestamp_lte: Maybe<Scalars['Float']>;
+  deletedTimestamp_gt: Maybe<Scalars['Float']>;
+  deletedTimestamp_gte: Maybe<Scalars['Float']>;
+  deletedTimestamp: Maybe<Scalars['Float']>;
+  deletedTimestamp_ne: Maybe<Scalars['Float']>;
+  deletedTimestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
+  deletedTimestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
+  OR: Maybe<Array<Maybe<TagsDeletedFilters>>>;
 };
 
 export type Query = {
@@ -913,8 +1134,6 @@ export type Query = {
   allBooksDeleteds: BooksDeletedQueryResults;
   getBooksDeleted: BooksDeletedSingleQueryResult;
   allLabelColors: LabelColorQueryResults;
-  allPublicUsers: PublicUserQueryResults;
-  getPublicUser: PublicUserSingleQueryResult;
   allSubjects: SubjectQueryResults;
   getSubject: SubjectSingleQueryResult;
   allSubjectsDeleteds: SubjectsDeletedQueryResults;
@@ -923,8 +1142,8 @@ export type Query = {
   getTag: TagSingleQueryResult;
   allTagsDeleteds: TagsDeletedQueryResults;
   getTagsDeleted: TagsDeletedSingleQueryResult;
-  allUsers: UserQueryResults;
-  getUser: UserSingleQueryResult;
+  getUser: Maybe<UserSingleQueryResult>;
+  getPublicUser: Maybe<PublicUserSingleQueryResult>;
 };
 
 
@@ -1255,52 +1474,6 @@ export type QueryAllLabelColorsArgs = {
 };
 
 
-export type QueryAllPublicUsersArgs = {
-  _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  isPublic_contains: Maybe<Scalars['String']>;
-  isPublic_startsWith: Maybe<Scalars['String']>;
-  isPublic_endsWith: Maybe<Scalars['String']>;
-  isPublic_regex: Maybe<Scalars['String']>;
-  isPublic: Maybe<Scalars['String']>;
-  isPublic_ne: Maybe<Scalars['String']>;
-  isPublic_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  isPublic_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicName_contains: Maybe<Scalars['String']>;
-  publicName_startsWith: Maybe<Scalars['String']>;
-  publicName_endsWith: Maybe<Scalars['String']>;
-  publicName_regex: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicName_ne: Maybe<Scalars['String']>;
-  publicName_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicName_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_contains: Maybe<Scalars['String']>;
-  publicBooksHeader_startsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_endsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_regex: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-  publicBooksHeader_ne: Maybe<Scalars['String']>;
-  publicBooksHeader_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  OR: Maybe<Array<Maybe<PublicUserFilters>>>;
-  SORT: Maybe<PublicUserSort>;
-  SORTS: Maybe<Array<Maybe<PublicUserSort>>>;
-  LIMIT: Maybe<Scalars['Int']>;
-  SKIP: Maybe<Scalars['Int']>;
-  PAGE: Maybe<Scalars['Int']>;
-  PAGE_SIZE: Maybe<Scalars['Int']>;
-  cache: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryGetPublicUserArgs = {
-  _id: Maybe<Scalars['String']>;
-  cache: Maybe<Scalars['Int']>;
-};
-
-
 export type QueryAllSubjectsArgs = {
   _id: Maybe<Scalars['String']>;
   _id_ne: Maybe<Scalars['String']>;
@@ -1521,552 +1694,139 @@ export type QueryGetTagsDeletedArgs = {
 };
 
 
-export type QueryAllUsersArgs = {
-  _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  isPublic: Maybe<Scalars['Boolean']>;
-  isPublic_ne: Maybe<Scalars['Boolean']>;
-  isPublic_in: Maybe<Array<Maybe<Scalars['Boolean']>>>;
-  isPublic_nin: Maybe<Array<Maybe<Scalars['Boolean']>>>;
-  publicName_contains: Maybe<Scalars['String']>;
-  publicName_startsWith: Maybe<Scalars['String']>;
-  publicName_endsWith: Maybe<Scalars['String']>;
-  publicName_regex: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicName_ne: Maybe<Scalars['String']>;
-  publicName_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicName_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_contains: Maybe<Scalars['String']>;
-  publicBooksHeader_startsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_endsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_regex: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-  publicBooksHeader_ne: Maybe<Scalars['String']>;
-  publicBooksHeader_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  OR: Maybe<Array<Maybe<UserFilters>>>;
-  SORT: Maybe<UserSort>;
-  SORTS: Maybe<Array<Maybe<UserSort>>>;
-  LIMIT: Maybe<Scalars['Int']>;
-  SKIP: Maybe<Scalars['Int']>;
-  PAGE: Maybe<Scalars['Int']>;
-  PAGE_SIZE: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryGetUserArgs = {
-  _id: Maybe<Scalars['String']>;
-};
-
-export type QueryRelationshipResultsMetadata = {
-  count: Scalars['Int'];
-};
-
-export type QueryResultsMetadata = {
-  count: Scalars['Int'];
-};
-
-export type StringArrayUpdate = {
-  index: Scalars['Int'];
-  value: Scalars['String'];
-};
-
-export type Subject = {
-  _id: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
+export type QueryGetPublicUserArgs = {
   userId: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  timestamp: Maybe<Scalars['Float']>;
 };
 
-export type SubjectBulkMutationResult = {
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
+export type Mutation = {
+  createBook: Maybe<BookMutationResult>;
+  updateBook: Maybe<BookMutationResult>;
+  updateBooks: Maybe<BookMutationResultMulti>;
+  updateBooksBulk: Maybe<BookBulkMutationResult>;
+  deleteBook: Maybe<DeletionResultInfo>;
+  updateBookSummary: Maybe<BookSummaryMutationResult>;
+  createSubject: Maybe<SubjectMutationResult>;
+  updateSubject: Maybe<SubjectMutationResultMulti>;
+  deleteSubject: Maybe<Array<Maybe<Scalars['String']>>>;
+  createTag: Maybe<TagMutationResult>;
+  updateTag: Maybe<TagMutationResult>;
+  updateTags: Maybe<TagMutationResultMulti>;
+  updateTagsBulk: Maybe<TagBulkMutationResult>;
+  deleteTag: Maybe<DeletionResultInfo>;
+  updateUser: Maybe<UserSingleQueryResult>;
 };
 
-export type SubjectFilters = {
+
+export type MutationCreateBookArgs = {
+  Book: Maybe<BookInput>;
+};
+
+
+export type MutationUpdateBookArgs = {
   _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  name_contains: Maybe<Scalars['String']>;
-  name_startsWith: Maybe<Scalars['String']>;
-  name_endsWith: Maybe<Scalars['String']>;
-  name_regex: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  name_ne: Maybe<Scalars['String']>;
-  name_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  name_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  path_contains: Maybe<Scalars['String']>;
-  path_startsWith: Maybe<Scalars['String']>;
-  path_endsWith: Maybe<Scalars['String']>;
-  path_regex: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  path_ne: Maybe<Scalars['String']>;
-  path_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  path_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_contains: Maybe<Scalars['String']>;
-  userId_startsWith: Maybe<Scalars['String']>;
-  userId_endsWith: Maybe<Scalars['String']>;
-  userId_regex: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  userId_ne: Maybe<Scalars['String']>;
-  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  backgroundColor_contains: Maybe<Scalars['String']>;
-  backgroundColor_startsWith: Maybe<Scalars['String']>;
-  backgroundColor_endsWith: Maybe<Scalars['String']>;
-  backgroundColor_regex: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  backgroundColor_ne: Maybe<Scalars['String']>;
-  backgroundColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  backgroundColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  textColor_contains: Maybe<Scalars['String']>;
-  textColor_startsWith: Maybe<Scalars['String']>;
-  textColor_endsWith: Maybe<Scalars['String']>;
-  textColor_regex: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  textColor_ne: Maybe<Scalars['String']>;
-  textColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  textColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp_lt: Maybe<Scalars['Float']>;
-  timestamp_lte: Maybe<Scalars['Float']>;
-  timestamp_gt: Maybe<Scalars['Float']>;
-  timestamp_gte: Maybe<Scalars['Float']>;
-  timestamp: Maybe<Scalars['Float']>;
-  timestamp_ne: Maybe<Scalars['Float']>;
-  timestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
-  timestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
-  OR: Maybe<Array<Maybe<SubjectFilters>>>;
+  Updates: Maybe<BookMutationInput>;
 };
 
-export type SubjectInput = {
+
+export type MutationUpdateBooksArgs = {
+  _ids: Maybe<Array<Maybe<Scalars['String']>>>;
+  Updates: Maybe<BookMutationInput>;
+};
+
+
+export type MutationUpdateBooksBulkArgs = {
+  Match: Maybe<BookFilters>;
+  Updates: Maybe<BookMutationInput>;
+};
+
+
+export type MutationDeleteBookArgs = {
+  _id: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateBookSummaryArgs = {
+  _id: Maybe<Scalars['String']>;
+  Updates: Maybe<BookSummaryMutationInput>;
+};
+
+
+export type MutationCreateSubjectArgs = {
+  Subject: Maybe<SubjectInput>;
+};
+
+
+export type MutationUpdateSubjectArgs = {
   _id: Maybe<Scalars['String']>;
   name: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
   backgroundColor: Maybe<Scalars['String']>;
   textColor: Maybe<Scalars['String']>;
-  timestamp: Maybe<Scalars['Float']>;
+  parentId: Maybe<Scalars['String']>;
 };
 
-export type SubjectMutationInput = {
-  name: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  timestamp: Maybe<Scalars['Float']>;
-  timestamp_INC: Maybe<Scalars['Int']>;
-  timestamp_DEC: Maybe<Scalars['Int']>;
-};
 
-export type SubjectMutationResult = {
-  Subject: Maybe<Subject>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type SubjectMutationResultMulti = {
-  Subjects: Maybe<Array<Maybe<Subject>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type SubjectQueryResults = {
-  Subjects: Array<Subject>;
-  Meta: QueryResultsMetadata;
-};
-
-export type SubjectsDeleted = {
+export type MutationDeleteSubjectArgs = {
   _id: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
 };
 
-export type SubjectsDeletedBulkMutationResult = {
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
+
+export type MutationCreateTagArgs = {
+  Tag: Maybe<TagInput>;
 };
 
-export type SubjectsDeletedFilters = {
+
+export type MutationUpdateTagArgs = {
   _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_contains: Maybe<Scalars['String']>;
-  userId_startsWith: Maybe<Scalars['String']>;
-  userId_endsWith: Maybe<Scalars['String']>;
-  userId_regex: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  userId_ne: Maybe<Scalars['String']>;
-  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  deletedTimestamp_lt: Maybe<Scalars['Float']>;
-  deletedTimestamp_lte: Maybe<Scalars['Float']>;
-  deletedTimestamp_gt: Maybe<Scalars['Float']>;
-  deletedTimestamp_gte: Maybe<Scalars['Float']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-  deletedTimestamp_ne: Maybe<Scalars['Float']>;
-  deletedTimestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
-  deletedTimestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
-  OR: Maybe<Array<Maybe<SubjectsDeletedFilters>>>;
+  Updates: Maybe<TagMutationInput>;
 };
 
-export type SubjectsDeletedInput = {
+
+export type MutationUpdateTagsArgs = {
+  _ids: Maybe<Array<Maybe<Scalars['String']>>>;
+  Updates: Maybe<TagMutationInput>;
+};
+
+
+export type MutationUpdateTagsBulkArgs = {
+  Match: Maybe<TagFilters>;
+  Updates: Maybe<TagMutationInput>;
+};
+
+
+export type MutationDeleteTagArgs = {
   _id: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
 };
 
-export type SubjectsDeletedMutationInput = {
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-  deletedTimestamp_INC: Maybe<Scalars['Int']>;
-  deletedTimestamp_DEC: Maybe<Scalars['Int']>;
-};
 
-export type SubjectsDeletedMutationResult = {
-  SubjectsDeleted: Maybe<SubjectsDeleted>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type SubjectsDeletedMutationResultMulti = {
-  SubjectsDeleteds: Maybe<Array<Maybe<SubjectsDeleted>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type SubjectsDeletedQueryResults = {
-  SubjectsDeleteds: Array<SubjectsDeleted>;
-  Meta: QueryResultsMetadata;
-};
-
-export type SubjectsDeletedSingleQueryResult = {
-  SubjectsDeleted: Maybe<SubjectsDeleted>;
-};
-
-export type SubjectsDeletedSort = {
-  _id: Maybe<Scalars['Int']>;
-  userId: Maybe<Scalars['Int']>;
-  deletedTimestamp: Maybe<Scalars['Int']>;
-};
-
-export type SubjectSingleQueryResult = {
-  Subject: Maybe<Subject>;
-};
-
-export type SubjectSort = {
-  _id: Maybe<Scalars['Int']>;
-  name: Maybe<Scalars['Int']>;
-  path: Maybe<Scalars['Int']>;
-  userId: Maybe<Scalars['Int']>;
-  backgroundColor: Maybe<Scalars['Int']>;
-  textColor: Maybe<Scalars['Int']>;
-  timestamp: Maybe<Scalars['Int']>;
-};
-
-export type Tag = {
-  _id: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  timestamp: Maybe<Scalars['Float']>;
-};
-
-export type TagBulkMutationResult = {
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type TagFilters = {
-  _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  name_contains: Maybe<Scalars['String']>;
-  name_startsWith: Maybe<Scalars['String']>;
-  name_endsWith: Maybe<Scalars['String']>;
-  name_regex: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  name_ne: Maybe<Scalars['String']>;
-  name_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  name_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  path_contains: Maybe<Scalars['String']>;
-  path_startsWith: Maybe<Scalars['String']>;
-  path_endsWith: Maybe<Scalars['String']>;
-  path_regex: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  path_ne: Maybe<Scalars['String']>;
-  path_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  path_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_contains: Maybe<Scalars['String']>;
-  userId_startsWith: Maybe<Scalars['String']>;
-  userId_endsWith: Maybe<Scalars['String']>;
-  userId_regex: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  userId_ne: Maybe<Scalars['String']>;
-  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  backgroundColor_contains: Maybe<Scalars['String']>;
-  backgroundColor_startsWith: Maybe<Scalars['String']>;
-  backgroundColor_endsWith: Maybe<Scalars['String']>;
-  backgroundColor_regex: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  backgroundColor_ne: Maybe<Scalars['String']>;
-  backgroundColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  backgroundColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  textColor_contains: Maybe<Scalars['String']>;
-  textColor_startsWith: Maybe<Scalars['String']>;
-  textColor_endsWith: Maybe<Scalars['String']>;
-  textColor_regex: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  textColor_ne: Maybe<Scalars['String']>;
-  textColor_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  textColor_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp_lt: Maybe<Scalars['Float']>;
-  timestamp_lte: Maybe<Scalars['Float']>;
-  timestamp_gt: Maybe<Scalars['Float']>;
-  timestamp_gte: Maybe<Scalars['Float']>;
-  timestamp: Maybe<Scalars['Float']>;
-  timestamp_ne: Maybe<Scalars['Float']>;
-  timestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
-  timestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
-  OR: Maybe<Array<Maybe<TagFilters>>>;
-};
-
-export type TagInput = {
-  _id: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  timestamp: Maybe<Scalars['Float']>;
-};
-
-export type TagMutationInput = {
-  name: Maybe<Scalars['String']>;
-  path: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
-  timestamp: Maybe<Scalars['Float']>;
-  timestamp_INC: Maybe<Scalars['Int']>;
-  timestamp_DEC: Maybe<Scalars['Int']>;
-};
-
-export type TagMutationResult = {
-  Tag: Maybe<Tag>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type TagMutationResultMulti = {
-  Tags: Maybe<Array<Maybe<Tag>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type TagQueryResults = {
-  Tags: Array<Tag>;
-  Meta: QueryResultsMetadata;
-};
-
-export type TagsDeleted = {
-  _id: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-};
-
-export type TagsDeletedBulkMutationResult = {
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type TagsDeletedFilters = {
-  _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_contains: Maybe<Scalars['String']>;
-  userId_startsWith: Maybe<Scalars['String']>;
-  userId_endsWith: Maybe<Scalars['String']>;
-  userId_regex: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  userId_ne: Maybe<Scalars['String']>;
-  userId_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  userId_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  deletedTimestamp_lt: Maybe<Scalars['Float']>;
-  deletedTimestamp_lte: Maybe<Scalars['Float']>;
-  deletedTimestamp_gt: Maybe<Scalars['Float']>;
-  deletedTimestamp_gte: Maybe<Scalars['Float']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-  deletedTimestamp_ne: Maybe<Scalars['Float']>;
-  deletedTimestamp_in: Maybe<Array<Maybe<Scalars['Float']>>>;
-  deletedTimestamp_nin: Maybe<Array<Maybe<Scalars['Float']>>>;
-  OR: Maybe<Array<Maybe<TagsDeletedFilters>>>;
-};
-
-export type TagsDeletedInput = {
-  _id: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-};
-
-export type TagsDeletedMutationInput = {
-  userId: Maybe<Scalars['String']>;
-  deletedTimestamp: Maybe<Scalars['Float']>;
-  deletedTimestamp_INC: Maybe<Scalars['Int']>;
-  deletedTimestamp_DEC: Maybe<Scalars['Int']>;
-};
-
-export type TagsDeletedMutationResult = {
-  TagsDeleted: Maybe<TagsDeleted>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type TagsDeletedMutationResultMulti = {
-  TagsDeleteds: Maybe<Array<Maybe<TagsDeleted>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type TagsDeletedQueryResults = {
-  TagsDeleteds: Array<TagsDeleted>;
-  Meta: QueryResultsMetadata;
-};
-
-export type TagsDeletedSingleQueryResult = {
-  TagsDeleted: Maybe<TagsDeleted>;
-};
-
-export type TagsDeletedSort = {
-  _id: Maybe<Scalars['Int']>;
-  userId: Maybe<Scalars['Int']>;
-  deletedTimestamp: Maybe<Scalars['Int']>;
-};
-
-export type TagSingleQueryResult = {
-  Tag: Maybe<Tag>;
-};
-
-export type TagSort = {
-  _id: Maybe<Scalars['Int']>;
-  name: Maybe<Scalars['Int']>;
-  path: Maybe<Scalars['Int']>;
-  userId: Maybe<Scalars['Int']>;
-  backgroundColor: Maybe<Scalars['Int']>;
-  textColor: Maybe<Scalars['Int']>;
-  timestamp: Maybe<Scalars['Int']>;
+export type MutationUpdateUserArgs = {
+  Updates: Maybe<UserUpdates>;
 };
 
 export type User = {
-  _id: Maybe<Scalars['String']>;
-  isPublic: Maybe<Scalars['Boolean']>;
-  publicName: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-  books: Array<Book>;
-  booksMeta: Maybe<QueryRelationshipResultsMetadata>;
-};
-
-
-export type UserBooksArgs = {
-  FILTER: Maybe<BookFilters>;
-  LIMIT: Maybe<Scalars['Int']>;
-  SKIP: Maybe<Scalars['Int']>;
-  PAGE: Maybe<Scalars['Int']>;
-  PAGE_SIZE: Maybe<Scalars['Int']>;
-  SORT: Maybe<BookSort>;
-  SORTS: Maybe<Array<Maybe<BookSort>>>;
-  PREFER_LOOKUP: Maybe<Scalars['Boolean']>;
-  DONT_PREFER_LOOKUP: Maybe<Scalars['Boolean']>;
-};
-
-
-export type UserBooksMetaArgs = {
-  FILTER: Maybe<BookFilters>;
-};
-
-export type UserBulkMutationResult = {
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type UserFilters = {
-  _id: Maybe<Scalars['String']>;
-  _id_ne: Maybe<Scalars['String']>;
-  _id_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  _id_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  isPublic: Maybe<Scalars['Boolean']>;
-  isPublic_ne: Maybe<Scalars['Boolean']>;
-  isPublic_in: Maybe<Array<Maybe<Scalars['Boolean']>>>;
-  isPublic_nin: Maybe<Array<Maybe<Scalars['Boolean']>>>;
-  publicName_contains: Maybe<Scalars['String']>;
-  publicName_startsWith: Maybe<Scalars['String']>;
-  publicName_endsWith: Maybe<Scalars['String']>;
-  publicName_regex: Maybe<Scalars['String']>;
-  publicName: Maybe<Scalars['String']>;
-  publicName_ne: Maybe<Scalars['String']>;
-  publicName_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicName_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_contains: Maybe<Scalars['String']>;
-  publicBooksHeader_startsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_endsWith: Maybe<Scalars['String']>;
-  publicBooksHeader_regex: Maybe<Scalars['String']>;
-  publicBooksHeader: Maybe<Scalars['String']>;
-  publicBooksHeader_ne: Maybe<Scalars['String']>;
-  publicBooksHeader_in: Maybe<Array<Maybe<Scalars['String']>>>;
-  publicBooksHeader_nin: Maybe<Array<Maybe<Scalars['String']>>>;
-  OR: Maybe<Array<Maybe<UserFilters>>>;
-};
-
-export type UserInput = {
-  _id: Maybe<Scalars['String']>;
+  email: Maybe<Scalars['String']>;
+  userId: Maybe<Scalars['String']>;
   isPublic: Maybe<Scalars['Boolean']>;
   publicName: Maybe<Scalars['String']>;
   publicBooksHeader: Maybe<Scalars['String']>;
 };
 
-export type UserMutationInput = {
+export type PublicUser = {
+  email: Maybe<Scalars['String']>;
   isPublic: Maybe<Scalars['Boolean']>;
   publicName: Maybe<Scalars['String']>;
   publicBooksHeader: Maybe<Scalars['String']>;
-};
-
-export type UserMutationResult = {
-  User: Maybe<User>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type UserMutationResultMulti = {
-  Users: Maybe<Array<Maybe<User>>>;
-  success: Scalars['Boolean'];
-  Meta: MutationResultInfo;
-};
-
-export type UserQueryResults = {
-  Users: Array<User>;
-  Meta: QueryResultsMetadata;
 };
 
 export type UserSingleQueryResult = {
   User: Maybe<User>;
 };
 
-export type UserSort = {
-  _id: Maybe<Scalars['Int']>;
-  isPublic: Maybe<Scalars['Int']>;
-  publicName: Maybe<Scalars['Int']>;
-  publicBooksHeader: Maybe<Scalars['Int']>;
+export type PublicUserSingleQueryResult = {
+  PublicUser: Maybe<User>;
 };
 
+export type UserUpdates = {
+  isPublic: Maybe<Scalars['Boolean']>;
+  publicBooksHeader: Maybe<Scalars['String']>;
+  publicName: Maybe<Scalars['String']>;
+};

@@ -369,8 +369,8 @@ function error(err) {
 Promise.resolve(dao.init()).then(() => {
   app.listen(process.env.PORT || 3000);
   if (!IS_PUBLIC) {
-    //bookEntryQueueManager.initialize();
-    //bookSimilarityQueueManager.initialize();
+    bookEntryQueueManager.initialize();
+    bookSimilarityQueueManager.initialize();
   }
 });
 
