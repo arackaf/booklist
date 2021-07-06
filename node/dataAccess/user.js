@@ -114,12 +114,8 @@ class UserDAO {
 
   async getUser(email, userId) {
     email = email.toLowerCase();
-    return db.queryOne(
-      getQueryPacket(`pk = :userKey and sk = :userKey`, {
-        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":userId": userId },
-        FilterExpression: ` userId = :userId `
-      })
-    );
+    const userKey = `User#${email}`;
+    return db.get(getGetPacket(userKey, userKey));
   }
 
   async getPublicUser(userId) {
@@ -135,9 +131,11 @@ class UserDAO {
   async lookupUser(email, password, rememberMe) {
     email = email.toLowerCase();
     password = this.saltAndHashPassword(password);
-    let userFound = await db.queryOne(
-      getQueryPacket(`pk = :userKey and sk = :userKey`, {
-        ExpressionAttributeValues: { ":userKey": `User#${email}`, ":password": password },
+    const userKey = `User#${email}`;
+
+    let userFound = await db.get(
+      getGetPacket(userKey, userKey, {
+        ExpressionAttributeValues: { ":password": password },
         FilterExpression: ` password = :password `
       })
     );
