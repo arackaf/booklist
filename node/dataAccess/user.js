@@ -1,12 +1,13 @@
 import AWS from "aws-sdk";
 import md5 from "blueimp-md5";
+import DAO from "./dao";
 import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
 import moment from "moment";
 import { db, getGetPacket, getPutPacket, getQueryPacket } from "./dynamoHelpers";
 
-var salt = process.env.SALT;
+const salt = process.env.SALT;
 
 const hour = 3600;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
@@ -37,7 +38,7 @@ const TABLE_NAME = process.env.BOOKLIST_DYNAMO;
 const getSessionKey = id => `UserLogin#${id}`;
 const getLoginKey = loginToken => `LoginToken#${loginToken}`;
 
-class UserDAO {
+class UserDAO extends DAO {
   async createUser(email, password, rememberMe) {
     email = email.toLowerCase();
 
@@ -64,7 +65,13 @@ class UserDAO {
       const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), email, awaitingActivation: true, rememberMe });
 
       const items = [mainUserObject, userIdLookup];
-      let res = await db.transactWrite({ TransactItems: items.map(item => ({ Put: item })) });
+      await db.transactWrite({
+        TransactItems: items.map(item => ({ Put: item }))
+      });
+
+      const mongoDb = await super.open();
+      const subjectsToInsert = newUsersSubjects.map(s => ({ ...s, userId }));
+      await mongoDb.collection("subjects").insert(subjectsToInsert);
 
       return {
         email,
