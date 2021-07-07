@@ -5,7 +5,7 @@ import sendEmail from "../app-helpers/sendEmail";
 
 import uuid from "uuid/v4";
 import moment from "moment";
-import { db, getGetPacket, getPutPacket, getQueryPacket } from "./dynamoHelpers";
+import { db, getGetPacket, getPutPacket, getQueryPacket, getUpdatePacket } from "./dynamoHelpers";
 
 const salt = process.env.SALT;
 
@@ -102,12 +102,12 @@ class UserDAO extends DAO {
 
     const rememberMe = item.rememberMe;
 
-    await db.update({
-      TableName: TABLE_NAME,
-      Key: { pk: sessionKey, sk: loginKey },
-      UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
-      ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
-    });
+    await db.update(
+      getUpdatePacket(sessionKey, loginKey, {
+        UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
+        ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
+      })
+    );
 
     return {
       success: true,
@@ -140,9 +140,9 @@ class UserDAO extends DAO {
     password = this.saltAndHashPassword(password);
     const userKey = `User#${email}`;
 
-    let userFound = await db.get(
-      getGetPacket(userKey, userKey, {
-        ExpressionAttributeValues: { ":password": password },
+    let userFound = await db.queryOne(
+      getQueryPacket(` pk = :userKey AND sk = :userKey `, {
+        ExpressionAttributeValues: { ":password": password, ":userKey": userKey },
         FilterExpression: ` password = :password `
       })
     );
@@ -189,19 +189,19 @@ class UserDAO extends DAO {
 
     const pk = `User#${email}`;
 
-    return db.update({
-      TableName: TABLE_NAME,
-      Key: { pk, sk: pk },
-      UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
-      ConditionExpression: "userId = :userId",
-      ExpressionAttributeValues: {
-        ":userId": userId,
-        ":isPublic": updates.isPublic,
-        ":publicName": updates.publicName,
-        ":publicBooksHeader": updates.publicBooksHeader
-      },
-      ReturnValues: "ALL_NEW"
-    });
+    return db.update(
+      getUpdatePacket(pk, pk, {
+        UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
+        ConditionExpression: "userId = :userId",
+        ExpressionAttributeValues: {
+          ":userId": userId,
+          ":isPublic": updates.isPublic,
+          ":publicName": updates.publicName,
+          ":publicBooksHeader": updates.publicBooksHeader
+        },
+        ReturnValues: "ALL_NEW"
+      })
+    );
   }
 
   async resetPassword(email, userId, oldPassword, newPassword) {
@@ -209,17 +209,17 @@ class UserDAO extends DAO {
     const pk = `User#${email}`;
 
     try {
-      let val = await db.update({
-        TableName: TABLE_NAME,
-        Key: { pk, sk: pk },
-        UpdateExpression: "SET password = :newPassword",
-        ConditionExpression: "userId = :userId AND password = :oldPassword",
-        ExpressionAttributeValues: {
-          ":userId": userId,
-          ":oldPassword": this.saltAndHashPassword(oldPassword),
-          ":newPassword": this.saltAndHashPassword(newPassword)
-        }
-      });
+      let val = await db.update(
+        getUpdatePacket(pk, pk, {
+          UpdateExpression: "SET password = :newPassword",
+          ConditionExpression: "userId = :userId AND password = :oldPassword",
+          ExpressionAttributeValues: {
+            ":userId": userId,
+            ":oldPassword": this.saltAndHashPassword(oldPassword),
+            ":newPassword": this.saltAndHashPassword(newPassword)
+          }
+        })
+      );
       return { success: true };
     } catch (er) {
       return { error: 1 };

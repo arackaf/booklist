@@ -10,11 +10,9 @@ export const getQueryPacket = (keyExpression, rest = {}) => ({
 });
 export const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 
-const dynamo = new AWS.DynamoDB.DocumentClient({
+export const dynamo = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"
 });
-
-export { dynamo };
 
 export const db = {
   async put(packet) {
