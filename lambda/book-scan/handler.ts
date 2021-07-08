@@ -18,7 +18,7 @@ import fetch from "node-fetch";
 
 import { db, getGetPacket, getPutPacket, getUpdatePacket } from "../util/dynamoHelpers";
 import { getWsSessionKey } from "./ws-helpers";
-import { getScanItemKey } from "./scan-helpers";
+import { getScanItemKey, getUserScanStatusKey } from "./scan-helpers";
 
 const SCAN_STATE_TABLE_NAME = "";
 
@@ -79,14 +79,81 @@ export const scanBook = async event => {
     }
 
     const [pk, sk] = getScanItemKey();
-    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
-    await db.put(getPutPacket({ pk, sk, isbn, userId }));
+    const scanStatusKey = getUserScanStatusKey(userId);
+
+    try {
+      let res = await db.transactWrite({
+        ReturnConsumedCapacity: "TOTAL",
+        ReturnItemCollectionMetrics: "SIZE",
+        TransactItems: [
+          {
+            Put: getPutPacket({ pk, sk, isbn, userId })
+          },
+          {
+            Update: getUpdatePacket(scanStatusKey, scanStatusKey, {
+              UpdateExpression: "ADD #pendingCount :one",
+              ExpressionAttributeValues: { ":one": 1 },
+              ExpressionAttributeNames: { "#pendingCount": "pendingCount" }
+            })
+          }
+        ]
+      });
+      console.log("transaction result", res);
+    } catch (er) {
+      console.log("ERROR", er);
+    }
 
     return corsResponse({ success: true });
 
     return corsResponse({ success: true });
   } catch (err) {
     return corsResponse({ success: false, err });
+  }
+};
+
+export const lookupBooks = async event => {
+  try {
+    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+    let mongoDb: any;
+
+    const params = {
+      TableName: SCAN_STATE_TABLE_NAME,
+      Key: { id: 1 }
+    };
+    const result = await dynamoDb.get(params).promise();
+    if (!result?.Item?.pendingEntries?.length) {
+      return { success: true, empty: true };
+    }
+
+    const pendingEntries = result.Item.pendingEntries;
+    const itemLookup = pendingEntries.reduce((hash, entry) => ((hash[entry.isbn] = entry), hash), {});
+    const secrets = await getSecrets();
+    const isbnDbKey = secrets["isbn-db-key"];
+
+    const isbns = pendingEntries.map(entry => entry.isbn).join(",");
+    console.log("---- BOOK LOOKUP STARTING ----", isbns);
+
+    const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: isbnDbKey
+      },
+      body: `isbns=${isbns}`
+    });
+    const json = await isbnDbResponse.json();
+
+    for (const item of json.data) {
+      let newBook = await getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6"); //TODO:
+      console.log("Saving", JSON.stringify(newBook));
+      await mongoDb.collection("books").insertOne(newBook);
+    }
+
+    console.log("---- FINISHED. ALL SAVED ----");
+    return { success: true };
+  } catch (err) {
+    return { success: false, err };
   }
 };
 
@@ -181,52 +248,6 @@ const __sandbox = async event => {
     return corsResponse({ success: true, stage: process.env.stage, val: JSON.stringify(x), val2: x.Item.items[0] });
   } catch (err) {
     return corsResponse({ success: false, error: err });
-  }
-};
-
-export const lookupBooks = async event => {
-  try {
-    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
-    let mongoDb: any;
-
-    const params = {
-      TableName: SCAN_STATE_TABLE_NAME,
-      Key: { id: 1 }
-    };
-    const result = await dynamoDb.get(params).promise();
-    if (!result?.Item?.pendingEntries?.length) {
-      return { success: true, empty: true };
-    }
-
-    const pendingEntries = result.Item.pendingEntries;
-    const itemLookup = pendingEntries.reduce((hash, entry) => ((hash[entry.isbn] = entry), hash), {});
-    const secrets = await getSecrets();
-    const isbnDbKey = secrets["isbn-db-key"];
-
-    const isbns = pendingEntries.map(entry => entry.isbn).join(",");
-    console.log("---- BOOK LOOKUP STARTING ----", isbns);
-
-    const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: isbnDbKey
-      },
-      body: `isbns=${isbns}`
-    });
-    const json = await isbnDbResponse.json();
-
-    for (const item of json.data) {
-      let newBook = await getBookFromIsbnDbModel(item, "60a93babcc3928454b5d1cc6"); //TODO:
-      console.log("Saving", JSON.stringify(newBook));
-      await mongoDb.collection("books").insertOne(newBook);
-    }
-
-    console.log("---- FINISHED. ALL SAVED ----");
-    return { success: true };
-  } catch (err) {
-    return { success: false, err };
   }
 };
 
