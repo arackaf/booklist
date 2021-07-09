@@ -23,6 +23,16 @@ provider:
             - dynamodb:DeleteItem
             - dynamodb:DescribeStream
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeStream
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}/index/*"
         - Effect: "Allow"
           Action:
             - "secretsmanager:GetSecretValue"
@@ -64,9 +74,9 @@ functions:
           method: post
           cors: true
 
-  lookupBooks:
+  streamHandler:
     timeout: 120
-    handler: handler.lookupBooks
+    handler: handler.streamHandler
     events:
       - stream:
           type: dynamodb

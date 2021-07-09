@@ -16,7 +16,7 @@ import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 
 import fetch from "node-fetch";
 
-import { db, getGetPacket, getPutPacket, getUpdatePacket } from "../util/dynamoHelpers";
+import { db, getGetPacket, getPutPacket, getQueryPacket, getUpdatePacket } from "../util/dynamoHelpers";
 import { getWsSessionKey } from "./ws-helpers";
 import { getScanItemKey, getUserScanStatusKey } from "./scan-helpers";
 
@@ -47,7 +47,7 @@ export const sync = async (event, context) => {
 
     await db.update(
       getUpdatePacket(key, key, {
-        UpdateExpression: "SET userId = :userId, loginToken = :loginToken",
+        UpdateExpression: "SET userId = :userId, loginToken = :loginToken, gsiUserWebSocketLookupPk = :userId",
         ExpressionAttributeValues: { ":userId": packet.userId, ":loginToken": packet.loginToken }
       })
     );
@@ -108,6 +108,51 @@ export const scanBook = async event => {
     return corsResponse({ success: true });
   } catch (err) {
     return corsResponse({ success: false, err });
+  }
+};
+
+export const streamHandler = async event => {
+  const records = event.Records || [];
+  for (const record of records) {
+    console.log("Inspecting", JSON.stringify(record));
+    const newImage = record?.dynamodb?.NewImage;
+    if (!newImage) {
+      continue;
+    }
+    const pk = newImage.pk.S;
+
+    if (pk.startsWith("UserScanStatus")) {
+      const userId = pk.split("#")[1];
+
+      const items = await db.query(
+        getQueryPacket(` gsiUserWebSocketLookupPk = :userId `, {
+          IndexName: "gsiUserWebSocketLookup",
+          ExpressionAttributeValues: { ":userId": userId }
+        })
+      );
+      console.log("Items found", JSON.stringify(items));
+
+      for (let item of items) {
+        const messenger = new AWS.ApiGatewayManagementApi({
+          apiVersion: "2018-11-29",
+          endpoint: item.endpoint
+        });
+        const connectionId = item["connection-id"];
+
+        console.log("POSTING", { connectionId, endpoint: item.endpoint });
+        await messenger.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify({ message: "Sending update" }) }).promise();
+      }
+    }
+  }
+
+  try {
+    console.log("Records", event.Records);
+    console.log(
+      "Records objects",
+      (event.Records || []).map(o => JSON.stringify(o.dynamodb))
+    );
+  } catch (e) {
+    console.log("ERROR", e);
   }
 };
 

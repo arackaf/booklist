@@ -13,7 +13,13 @@ export const connect = async event => {
     await dynamo
       .put({
         TableName: TABLE_NAME,
-        Item: { pk: key, sk: key, "connection-id": connectionId, userId: "pending ...", timestamp: +new Date() }
+        Item: {
+          pk: key,
+          sk: key,
+          "connection-id": connectionId,
+          timestamp: +new Date(),
+          endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
+        }
       })
       .promise();
   } catch (er) {

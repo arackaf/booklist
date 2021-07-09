@@ -14,6 +14,10 @@ export default {
       initialMessageQueue.forEach(packet => this.send(packet));
       initialMessageQueue.length = 0;
     };
+
+    ws.onmessage = ({ data }) => {
+      handlerQueue.forEach(handler => handler(data));
+    };
   },
   addHandler(handler) {
     handlerQueue.push(handler);

@@ -22,9 +22,9 @@ if (isLoggedIn()) {
   scanWebSocket.open();
   scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
 
-  scanWebSocket.addHandler(({ data }) => {
+  scanWebSocket.addHandler(data => {
     let packet = JSON.parse(data);
-    console.log(data);
+    console.log("DATA RECEIVED", packet);
     //window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
   });
 }
