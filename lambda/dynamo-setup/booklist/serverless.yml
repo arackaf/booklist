@@ -13,6 +13,7 @@ custom:
       ElseExclude:
         - resources.Resources.BooklistTable.Properties.ProvisionedThroughput
         - resources.Resources.BooklistTable.Properties.GlobalSecondaryIndexes.0.ProvisionedThroughput
+        - resources.Resources.BooklistTable.Properties.GlobalSecondaryIndexes.1.ProvisionedThroughput
 provider:
   name: aws
   runtime: nodejs12.x
@@ -31,6 +32,10 @@ resources:
           - AttributeName: sk
             AttributeType: S
           - AttributeName: gsiUserLookupPk
+            AttributeType: S
+          - AttributeName: gsiUserWebSocketLookupPk
+            AttributeType: S
+          - AttributeName: connection-id
             AttributeType: S
         KeySchema:
           - AttributeName: pk
@@ -51,8 +56,20 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 5
               WriteCapacityUnits: 5
+          - IndexName: gsiUserWebSocketLookup
+            KeySchema:
+              - AttributeName: gsiUserWebSocketLookupPk
+                KeyType: HASH
+              - AttributeName: connection-id
+                KeyType: RANGE
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+
         StreamSpecification:
-          StreamViewType: KEYS_ONLY
+          StreamViewType: NEW_IMAGE
         TimeToLiveSpecification:
           AttributeName: expires
           Enabled: true
