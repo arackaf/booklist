@@ -13,12 +13,14 @@ import { history, getCurrentUrlState } from "util/urlHelpers";
 
 import scanWebSocket from "util/scanWebSocket";
 import { getCookieLookup, isLoggedIn } from "util/loginStatus";
+import ajaxUtil from "util/ajaxUtil";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
 const cookieHash = getCookieLookup();
 
 if (isLoggedIn()) {
+  ajaxUtil.getWithCors(process.env.CHECK_SCAN_STATUS, { userId: cookieHash.userId, loginToken: cookieHash.loginToken });
   scanWebSocket.open();
   scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
 

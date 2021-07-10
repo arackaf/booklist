@@ -57,6 +57,16 @@ const ajaxUtil = {
       .replace(/&+/g, "&");
 
     return fetch(`${url}?${queryString}`, { method: "get", credentials: "include" }).then(resp => resp.json());
+  },
+  getWithCors(url, data): any {
+    let queryString = Object.keys(data)
+      .map(p => (Array.isArray(data[p]) ? data[p].map(val => `${p}[]=${val}`).join("&") : `${p}=${data[p]}`))
+      .join("&")
+      .replace(/&+/g, "&");
+
+    return fetch(`${url}?${queryString}`, {
+      method: "get"
+    }).then(resp => resp.json());
   }
 };
 

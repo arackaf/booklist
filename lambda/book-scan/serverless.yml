@@ -66,6 +66,19 @@ functions:
       - websocket:
           route: sync
 
+  checkScanStatus:
+    handler: ./handlers/getPendingScanCount.handler
+    events:
+      - http:
+          path: getScanStatus
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                userId: true
+                loginToken: true
+
   scanBook:
     handler: handler.scanBook
     events:
