@@ -11,13 +11,12 @@ import BookSvg from "./bookSvg";
 import navClasses from "css/navbar.module.scss";
 import "css/main-mobile-menu.scss";
 
-const { nav, navHeader, navItems, navItemsRight } = navClasses;
+const { nav, navHeader, navItems, navItemsRight, numberBadge } = navClasses;
 
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
 const NavBarItem = props => {
   let { disabled, className, active, href, onClick, children, aStyle = {}, ...rest } = props;
-  let hrefToUse = !disabled && !active ? null : href;
 
   return (
     <li className={spreadClassNames(className, !!disabled ? "disabled" : "", active ? "active" : "")} {...rest}>
@@ -59,9 +58,15 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             <i className="fal fa-home visible-xs" />
           </NavBarItem>
           {isLoggedIn || isPublic ? (
-            <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry}>
+            <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry} style={{ position: "relative" }}>
               <span className="hidden-xs">Book entry</span>
               <i className="visible-xs fal fa-scanner" />
+              <span className={numberBadge}>
+                <span className="overlay-holder">
+                  <i className="fas fa-badge"></i>
+                  <span>6</span>
+                </span>
+              </span>
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (
