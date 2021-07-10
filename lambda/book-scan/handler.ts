@@ -126,20 +126,10 @@ export const streamHandler = async event => {
     }
   }
   const notifyAllUsers = [...usersScanned].map(userId =>
-    Promise.resolve(getPendingCount(userId).then(pendingCount => sendWsMessageToUser(userId, { type: "bookAdded", pendingCount })))
+    Promise.resolve(getPendingCount(userId).then(pendingCount => sendWsMessageToUser(userId, { type: "bookQueued", pendingCount })))
   );
 
   await Promise.all(notifyAllUsers);
-
-  try {
-    console.log("Records", event.Records);
-    console.log(
-      "Records objects",
-      (event.Records || []).map(o => JSON.stringify(o.dynamodb))
-    );
-  } catch (e) {
-    console.log("ERROR", e);
-  }
 };
 
 export const lookupBooks = async event => {
