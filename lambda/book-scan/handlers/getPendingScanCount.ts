@@ -1,6 +1,6 @@
 import corsResponse from "../../util/corsResponse";
 import checkLoginToken from "../../util/checkLoginToken";
-import { getPendingCount } from "../data-helpers/pendingScanCount";
+import { getPendingCount } from "../util/data-helpers";
 
 export const handler = async event => {
   try {

@@ -47,7 +47,7 @@ if (isLoggedIn()) {
   scanWebSocket.addHandler(data => {
     let packet = JSON.parse(data);
     console.log("DATA RECEIVED", packet);
-    //window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
+    window.dispatchEvent(new CustomEvent("ws-info", { detail: { ...packet } }));
   });
 }
 

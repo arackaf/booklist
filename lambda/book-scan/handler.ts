@@ -1,25 +1,24 @@
 "use strict";
 
-import AWS from "aws-sdk";
-
 import path from "path";
+
+import AWS from "aws-sdk";
+import fetch from "node-fetch";
 import uuid from "uuid/v4";
 
-import corsResponse from "../util/corsResponse";
-
-import checkLogin from "../util/checkLoginToken";
-import getSecrets from "../util/getSecrets";
-import uploadToS3 from "../util/uploadToS3";
-import downloadFromUrl from "../util/downloadFromUrl";
-import resizeImage from "../util/resizeImage";
-import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
-
-import fetch from "node-fetch";
-
-import { db, getGetPacket, getPutPacket, getQueryPacket, getUpdatePacket } from "../util/dynamoHelpers";
-import { getWsSessionKey } from "./ws-helpers";
+import { getPendingCount } from "./util/data-helpers";
 import { getScanItemKey, getUserScanStatusKey } from "./scan-helpers";
-import { getPendingCount } from "./data-helpers/pendingScanCount";
+import { sendWsMessageToUser } from "./util/ws-helpers";
+import { getWsSessionKey } from "./ws-helpers";
+
+import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
+import checkLogin from "../util/checkLoginToken";
+import corsResponse from "../util/corsResponse";
+import downloadFromUrl from "../util/downloadFromUrl";
+import { db, getGetPacket, getPutPacket, getQueryPacket, getUpdatePacket } from "../util/dynamoHelpers";
+import getSecrets from "../util/getSecrets";
+import resizeImage from "../util/resizeImage";
+import uploadToS3 from "../util/uploadToS3";
 
 const SCAN_STATE_TABLE_NAME = "";
 
@@ -111,6 +110,8 @@ export const scanBook = async event => {
 
 export const streamHandler = async event => {
   const records = event.Records || [];
+  const usersScanned = new Set<string>([]);
+
   for (const record of records) {
     console.log("Inspecting", JSON.stringify(record));
     const newImage = record?.dynamodb?.NewImage;
@@ -121,27 +122,14 @@ export const streamHandler = async event => {
 
     if (pk.startsWith("UserScanStatus")) {
       const userId = pk.split("#")[1];
-
-      const items = await db.query(
-        getQueryPacket(` gsiUserWebSocketLookupPk = :userId `, {
-          IndexName: "gsiUserWebSocketLookup",
-          ExpressionAttributeValues: { ":userId": userId }
-        })
-      );
-      console.log("Items found", JSON.stringify(items));
-
-      for (let item of items) {
-        const messenger = new AWS.ApiGatewayManagementApi({
-          apiVersion: "2018-11-29",
-          endpoint: item.endpoint
-        });
-        const connectionId = item["connection-id"];
-
-        console.log("POSTING", { connectionId, endpoint: item.endpoint });
-        await messenger.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify({ message: "Sending update" }) }).promise();
-      }
+      usersScanned.add(userId);
     }
   }
+  const notifyAllUsers = [...usersScanned].map(userId =>
+    Promise.resolve(getPendingCount(userId).then(pendingCount => sendWsMessageToUser(userId, { type: "bookAdded", pendingCount })))
+  );
+
+  await Promise.all(notifyAllUsers);
 
   try {
     console.log("Records", event.Records);
