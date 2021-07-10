@@ -20,14 +20,6 @@ export default localStorageManager;
 const FIVE_MINUTES = 60 * 5 * 1000;
 
 const BOOK_LAMBDA_PRIME_KEY = "book-cover-lambda-prime";
-const SCAN_PENDING_COUNT = "book-scan-pending-count";
-
-export function savePendingCount(count) {
-  localStorageManager.set(SCAN_PENDING_COUNT, count);
-}
-export function getPendingCount() {
-  return localStorageManager.get(SCAN_PENDING_COUNT);
-}
 
 export function needBookCoverPriming() {
   const lastPriming = +localStorageManager.get(BOOK_LAMBDA_PRIME_KEY);

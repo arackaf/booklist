@@ -6,12 +6,12 @@ const { unstable_createRoot: createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./state/appState";
-import localStorageManager, { savePendingCount } from "util/localStorage";
+import localStorageManager from "util/localStorage";
 import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
-import scanWebSocket from "util/scanWebSocket";
+import { scanWebSocket, saveScanPendingCount, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
 import { getCookieLookup, isLoggedIn } from "util/loginStatus";
 import ajaxUtil from "util/ajaxUtil";
 
@@ -40,9 +40,7 @@ setTimeout(() => {
 }, 300);
 
 if (isLoggedIn()) {
-  ajaxUtil.getWithCors(process.env.CHECK_SCAN_STATUS, { userId: cookieHash.userId, loginToken: cookieHash.loginToken }).then(res => {
-    savePendingCount(res.pendingCount ?? 0);
-  });
+  checkPendingCount();
   scanWebSocket.open();
   scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
 
@@ -50,9 +48,9 @@ if (isLoggedIn()) {
     let packet = JSON.parse(data);
     console.log("DATA RECEIVED", packet);
     if (packet?.pendingCount) {
-      savePendingCount(packet.pendingCount);
+      saveScanPendingCount(packet.pendingCount);
     }
-    window.dispatchEvent(new CustomEvent("ws-info", { detail: { ...packet } }));
+    dispatchScanDataUpdate(packet);
   });
 }
 

@@ -11,7 +11,7 @@ import BookSvg from "./bookSvg";
 import navClasses from "css/navbar.module.scss";
 import "css/main-mobile-menu.scss";
 import { useEffect } from "react";
-import { getPendingCount } from "util/localStorage";
+import { getScanPendingCount } from "util/scanUtils";
 
 const { nav, navHeader, navItems, navItemsRight, numberBadge, bigCount } = navClasses;
 
@@ -45,7 +45,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettings = module == "settings";
   let isSettingsSection = module == "admin";
 
-  let [pendingCount, setPendingCount] = useState(getPendingCount());
+  let [pendingCount, setPendingCount] = useState(getScanPendingCount());
 
   function handleWsPendingCountUpdate(evt) {
     if (typeof evt?.detail?.pendingCount === "number") {
