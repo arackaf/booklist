@@ -19,6 +19,7 @@ import fetch from "node-fetch";
 import { db, getGetPacket, getPutPacket, getQueryPacket, getUpdatePacket } from "../util/dynamoHelpers";
 import { getWsSessionKey } from "./ws-helpers";
 import { getScanItemKey, getUserScanStatusKey } from "./scan-helpers";
+import { getPendingCount } from "./data-helpers/pendingScanCount";
 
 const SCAN_STATE_TABLE_NAME = "";
 
@@ -84,7 +85,6 @@ export const scanBook = async event => {
     try {
       let res = await db.transactWrite({
         ReturnConsumedCapacity: "TOTAL",
-        ReturnItemCollectionMetrics: "SIZE",
         TransactItems: [
           {
             Put: getPutPacket({ pk, sk, isbn, userId })
@@ -98,14 +98,12 @@ export const scanBook = async event => {
           }
         ]
       });
+      const pendingCount = await getPendingCount(userId, true);
       console.log("transaction result", res);
+      return corsResponse({ success: true, pendingCount });
     } catch (er) {
       console.log("ERROR", er);
     }
-
-    return corsResponse({ success: true });
-
-    return corsResponse({ success: true });
   } catch (err) {
     return corsResponse({ success: false, err });
   }
