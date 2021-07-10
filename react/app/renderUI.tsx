@@ -15,9 +15,29 @@ import scanWebSocket from "util/scanWebSocket";
 import { getCookieLookup, isLoggedIn } from "util/loginStatus";
 import ajaxUtil from "util/ajaxUtil";
 
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
+
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
 const cookieHash = getCookieLookup();
+
+const pause = () => new Promise(res => setTimeout(res, 400));
+async function foo() {
+  for (let i = 1; i <= 25; i++) {
+    Toastify({
+      text: `<span>Selfish Gene Loaded</span>`,
+      duration: 900000,
+      gravity: "bottom",
+      close: true,
+      className: "toast-notification book-loaded"
+    }).showToast();
+    await pause();
+  }
+}
+setTimeout(() => {
+  foo();
+}, 300);
 
 if (isLoggedIn()) {
   ajaxUtil.getWithCors(process.env.CHECK_SCAN_STATUS, { userId: cookieHash.userId, loginToken: cookieHash.loginToken });
