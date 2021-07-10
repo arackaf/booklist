@@ -10,8 +10,10 @@ import BookSvg from "./bookSvg";
 
 import navClasses from "css/navbar.module.scss";
 import "css/main-mobile-menu.scss";
+import { useEffect } from "react";
+import { getPendingCount } from "util/localStorage";
 
-const { nav, navHeader, navItems, navItemsRight, numberBadge } = navClasses;
+const { nav, navHeader, navItems, navItemsRight, numberBadge, bigCount } = navClasses;
 
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
@@ -43,6 +45,18 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettings = module == "settings";
   let isSettingsSection = module == "admin";
 
+  let [pendingCount, setPendingCount] = useState(getPendingCount());
+
+  function handleWsPendingCountUpdate(evt) {
+    if (typeof evt?.detail?.pendingCount === "number") {
+      setPendingCount(evt.detail.pendingCount);
+    }
+  }
+  useEffect(() => {
+    window.addEventListener("ws-info", handleWsPendingCountUpdate);
+    return () => window.removeEventListener("ws-info", handleWsPendingCountUpdate);
+  }, []);
+
   return (
     <header>
       <nav className={nav}>
@@ -61,12 +75,14 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry} style={{ position: "relative" }}>
               <span className="hidden-xs">Book entry</span>
               <i className="visible-xs fal fa-scanner" />
-              <span className={numberBadge}>
-                <span className="overlay-holder">
-                  <i className="fas fa-badge"></i>
-                  <span>6</span>
+              {pendingCount ? (
+                <span className={`${numberBadge} ${pendingCount > 9 ? bigCount : ""}`}>
+                  <span className="overlay-holder">
+                    <i className="fas fa-badge"></i>
+                    <span>{pendingCount}</span>
+                  </span>
                 </span>
-              </span>
+              ) : null}
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (

@@ -6,7 +6,7 @@ const { unstable_createRoot: createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./state/appState";
-import localStorageManager from "util/localStorage";
+import localStorageManager, { savePendingCount } from "util/localStorage";
 import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
@@ -36,17 +36,22 @@ async function foo() {
   }
 }
 setTimeout(() => {
-  foo();
+  //foo();
 }, 300);
 
 if (isLoggedIn()) {
-  ajaxUtil.getWithCors(process.env.CHECK_SCAN_STATUS, { userId: cookieHash.userId, loginToken: cookieHash.loginToken });
+  ajaxUtil.getWithCors(process.env.CHECK_SCAN_STATUS, { userId: cookieHash.userId, loginToken: cookieHash.loginToken }).then(res => {
+    savePendingCount(res.pendingCount ?? 0);
+  });
   scanWebSocket.open();
   scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
 
   scanWebSocket.addHandler(data => {
     let packet = JSON.parse(data);
     console.log("DATA RECEIVED", packet);
+    if (packet?.pendingCount) {
+      savePendingCount(packet.pendingCount);
+    }
     window.dispatchEvent(new CustomEvent("ws-info", { detail: { ...packet } }));
   });
 }
