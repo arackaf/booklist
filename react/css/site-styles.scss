@@ -298,9 +298,9 @@
 
 body {
   --content-background: var(--primary-11);
-  
+
   &.white-bg {
-    --content-background: #FFF;
+    --content-background: #fff;
   }
 }
 
@@ -329,7 +329,6 @@ a {
   color: var(--neutral-text);
 }
 
-
 footer {
   background-color: var(--primary-9);
   padding: 9px;
@@ -353,7 +352,7 @@ a {
   outline: 0;
 }
 
-input[disabled]{
+input[disabled] {
   opacity: 0.6;
 }
 
@@ -478,8 +477,9 @@ select.form-control {
   font-size: 14px;
 }
 
-div, span {
-  &.disabled { 
+div,
+span {
+  &.disabled {
     opacity: 0.6;
   }
 }
@@ -551,8 +551,12 @@ div.toast-notification h4 {
   animation: fadein 0.5s ease-in;
 }
 @keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .btn-group input:focus,
@@ -600,7 +604,10 @@ ul.striped {
   }
 }
 
-a, button, input, select {
+a,
+button,
+input,
+select {
   touch-action: manipulation;
 }
 

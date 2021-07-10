@@ -7,7 +7,6 @@
   & > * {
     display: flex;
     flex-flow: row wrap;
-
   }
   &.xs-pull-reverse {
     @media (max-width: 767px) {
@@ -20,12 +19,12 @@
 
 @mixin flow-layout($val) {
   @extend %flow-layout-base;
-  
+
   & > * {
     margin: calc(-1 * #{$val});
   }
 
-  & > * > * {    
+  & > * > * {
     margin: $val;
   }
 }
@@ -68,7 +67,7 @@
     > .col-xs-1 {
       flex-basis: calc(8.33333333% - (#{$val} * 2));
     }
-  
+
     @media (min-width: 768px) {
       > .col-sm-12 {
         flex-basis: calc(100% - (#{$val} * 2));
@@ -107,7 +106,7 @@
         flex-basis: calc(8.33333333% - (#{$val} * 2));
       }
     }
-  
+
     @media (min-width: 992px) {
       > .col-md-12 {
         flex-basis: calc(100% - (#{$val} * 2));
@@ -146,7 +145,7 @@
         flex-basis: calc(8.33333333% - (#{$val} * 2));
       }
     }
-  
+
     @media (min-width: 1200px) {
       > .col-lg-12 {
         flex-basis: calc(100% - (#{$val} * 2));

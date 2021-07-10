@@ -6,14 +6,14 @@
   font-size: 15px;
   border-radius: var(--default-border-radius);
   cursor: pointer;
-  white-space: nowrap;  
+  white-space: nowrap;
 
-  &[disabled]{
+  &[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
   }
   &:hover:not([disabled]) {
-    background-color: var(--neutral-10)
+    background-color: var(--neutral-10);
   }
   &:active:not([disabled]) {
     background-color: var(--neutral-9);
@@ -24,13 +24,14 @@
     color: white;
 
     &:hover:not([disabled]) {
-      background-color: var(--primary-6)
+      background-color: var(--primary-6);
     }
     &:active:not([disabled]) {
       background-color: var(--primary-5);
     }
 
-    &.btn-round-icon, &.btn-square-icon {
+    &.btn-round-icon,
+    &.btn-square-icon {
       border: 0;
     }
   }
@@ -64,7 +65,7 @@
       border-color: var(--primary-3);
     }
   }
-  
+
   &.btn-success {
     background-color: var(--success-5);
     border-color: var(--success-5);
@@ -79,7 +80,7 @@
       border-color: var(--success-3);
     }
   }
-  
+
   &.btn-danger {
     background: var(--danger-5);
     border-color: var(--danger-5);
@@ -94,7 +95,7 @@
       border-color: var(--danger-3);
     }
   }
-  
+
   &.btn-xs {
     font-size: 12px;
     padding: 3px 6px;
@@ -103,8 +104,9 @@
     font-size: 11px;
     padding: 2px 5px;
   }
-  
-  &.btn-round-icon, &.btn-square-icon {
+
+  &.btn-round-icon,
+  &.btn-square-icon {
     text-align: center;
     display: inline-block;
     padding: 4px;
@@ -118,42 +120,51 @@
   }
 }
 
-.btn.btn-group-size { height: 32px; }
+.btn.btn-group-size {
+  height: 32px;
+}
 .btn-group {
   display: flex;
 
-  input.form-control:focus, button:focus, button.btn:focus, button.btn-xs:focus {
+  input.form-control:focus,
+  button:focus,
+  button.btn:focus,
+  button.btn-xs:focus {
     box-shadow: none;
   }
 
   .btn:hover:not([disabled]) {
-    background-color: var(--primary-10)
+    background-color: var(--primary-10);
   }
   .btn:hover.active {
-    background-color: var(--primary-9)
+    background-color: var(--primary-9);
   }
   .btn.active {
-    background-color: var(--primary-10)
+    background-color: var(--primary-10);
   }
-  .btn:active:not([disabled]), .btn.active:active:not([disabled]) {
+  .btn:active:not([disabled]),
+  .btn.active:active:not([disabled]) {
     background-color: var(--primary-8);
   }
 
-  input.form-control, .btn {
+  input.form-control,
+  .btn {
     height: 32px;
   }
 
-  :not(:first-child) { 
+  :not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
-  button:not(:last-of-type), input.form-control { 
+  button:not(:last-of-type),
+  input.form-control {
     border-right-width: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  
-  :first-child, .first-child {
+
+  :first-child,
+  .first-child {
     border-top-left-radius: var(--default-border-radius);
     border-bottom-left-radius: var(--default-border-radius);
   }
@@ -169,8 +180,7 @@
     .tiny-orphan {
       border-top-right-radius: var(--default-border-radius);
       border-bottom-right-radius: var(--default-border-radius);
-      border-right: var(--default-border-width) solid var(--neutral-border)
+      border-right: var(--default-border-width) solid var(--neutral-border);
     }
   }
 }
-

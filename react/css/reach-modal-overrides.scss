@@ -4,7 +4,7 @@
 
 div[data-reach-dialog-content] {
   width: auto;
-  max-width: 600px
+  max-width: 600px;
 }
 
 @media (max-width: 800px) {
@@ -28,7 +28,7 @@ div[data-reach-dialog-content] {
 [data-reach-dialog-content] {
   padding: 10px;
   border-color: var(--primary-3) !important;
-  
+
   hr {
     margin-top: 15px;
     margin-bottom: 15px;

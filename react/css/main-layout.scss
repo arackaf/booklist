@@ -7,7 +7,7 @@ body {
   --main-spacing-bottom: 10px;
   --main-spacing-left: 5px;
   --main-spacing: var(--main-spacing-top) var(--main-spacing-right) var(--main-spacing-bottom) var(--main-spacing-left);
-  --header-footer-spacing: 10px 5px;  
+  --header-footer-spacing: 10px 5px;
 }
 
 #app {
@@ -16,10 +16,10 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
-  grid-template-areas: 
-    'header'
-    'main'
-    'footer';
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
 
   > header {
     grid-area: header;

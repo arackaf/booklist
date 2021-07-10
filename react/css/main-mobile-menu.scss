@@ -26,10 +26,10 @@ header {
 
     .mobile-menu-content {
       background-color: white;
-    
+
       .header {
         margin-top: 9px;
-        display: flex
+        display: flex;
       }
 
       .button-container {
@@ -38,20 +38,20 @@ header {
           margin: 5px;
         }
       }
-    
+
       button {
         display: flex;
       }
-    
+
       button span {
         margin-left: 0;
         margin-right: 10px;
       }
-    
+
       button i {
         margin-left: auto;
         margin-right: 2px;
       }
-    }    
+    }
   }
 }

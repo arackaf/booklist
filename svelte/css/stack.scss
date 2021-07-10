@@ -3,9 +3,9 @@
   flex-direction: column;
 }
 
-@mixin stack-layout($val){
+@mixin stack-layout($val) {
   @extend %stack-layout;
-  
+
   & > * + * {
     margin-top: $val;
   }
@@ -36,4 +36,3 @@
 .form-group.tightest {
   @include stack-layout(2px);
 }
-
