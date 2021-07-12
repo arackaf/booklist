@@ -1,5 +1,5 @@
 import { db, getPutPacket, getUpdatePacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import { getBookLookupsFree, getScanItemBatch, ScanItem } from "./data-helpers";
+import { getBookLookupsFree, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getCurrentLookupFullKey, getUserScanStatusKey } from "./key-helpers";
 
 export const runBookLookupIfAble = async () => {
@@ -51,13 +51,8 @@ export const doLookup = async lookupIdx => {
         })
       },
       ...Object.entries(userUpdateMap).map(([userId, amount]) => {
-        const key = getUserScanStatusKey(userId);
         return {
-          Update: getUpdatePacket(key, key, {
-            UpdateExpression: "ADD #pendingCount :amount",
-            ExpressionAttributeValues: { ":amount": amount },
-            ExpressionAttributeNames: { "#pendingCount": "pendingCount" }
-          })
+          Update: getStatusCountUpdate(userId, amount)
         };
       })
     ]

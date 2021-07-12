@@ -6,7 +6,7 @@ import AWS from "aws-sdk";
 import fetch from "node-fetch";
 import uuid from "uuid/v4";
 
-import { getPendingCount } from "./util/data-helpers";
+import { getPendingCount, getStatusCountUpdate } from "./util/data-helpers";
 import { getScanItemKey, getUserScanStatusKey } from "./util/key-helpers";
 import { sendWsMessageToUser } from "./util/ws-helpers";
 import { getWsSessionKey } from "./ws-helpers";
@@ -76,35 +76,29 @@ export const scanBook = async event => {
     const { userId = "", loginToken, isbn } = JSON.parse(event.body);
 
     if (!(await checkLogin(userId, loginToken))) {
-      return corsResponse({ badLogin: true });
+      return corsResponse({ success: false, badLogin: true });
     }
 
     const [pk, sk] = getScanItemKey();
-    const scanStatusKey = getUserScanStatusKey(userId);
 
-    try {
-      let res = await db.transactWrite({
-        ReturnConsumedCapacity: "TOTAL",
-        TransactItems: [
-          {
-            Put: getPutPacket({ pk, sk, isbn, userId })
-          },
-          {
-            Update: getUpdatePacket(scanStatusKey, scanStatusKey, {
-              UpdateExpression: "ADD #pendingCount :one",
-              ExpressionAttributeValues: { ":one": 1 },
-              ExpressionAttributeNames: { "#pendingCount": "pendingCount" }
-            })
-          }
-        ]
-      });
-      const pendingCount = await getPendingCount(userId, true);
-      console.log("transaction result", res);
-      return corsResponse({ success: true, pendingCount });
-    } catch (er) {
-      console.log("ERROR", er);
-    }
+    let res = await db.transactWrite({
+      ReturnConsumedCapacity: "TOTAL",
+      TransactItems: [
+        {
+          Put: getPutPacket({ pk, sk, isbn, userId })
+        },
+        {
+          Update: getStatusCountUpdate(userId, 1)
+        }
+      ]
+    });
+    const pendingCount = await getPendingCount(userId, true);
+    console.log("transaction result", res);
+
+    return corsResponse({ success: true, pendingCount });
   } catch (err) {
+    console.log("ERROR", err);
+
     return corsResponse({ success: false, err });
   }
 };
