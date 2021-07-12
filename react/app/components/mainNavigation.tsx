@@ -45,7 +45,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettings = module == "settings";
   let isSettingsSection = module == "admin";
 
-  let [pendingCount, setPendingCount] = useState(getScanPendingCount());
+  let [pendingCount, setPendingCount] = useState(0);
 
   function handleWsPendingCountUpdate(evt) {
     if (typeof evt?.detail?.pendingCount === "number") {
