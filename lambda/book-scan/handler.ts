@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 import uuid from "uuid/v4";
 
 import { getPendingCount } from "./util/data-helpers";
-import { getScanItemKey, getUserScanStatusKey } from "./scan-helpers";
+import { getScanItemKey, getUserScanStatusKey } from "./util/key-helpers";
 import { sendWsMessageToUser } from "./util/ws-helpers";
 import { getWsSessionKey } from "./ws-helpers";
 
@@ -15,10 +15,11 @@ import { getOpenLibraryCoverUri } from "../util/bookCoverHelpers";
 import checkLogin from "../util/checkLoginToken";
 import corsResponse from "../util/corsResponse";
 import downloadFromUrl from "../util/downloadFromUrl";
-import { db, getGetPacket, getPutPacket, getQueryPacket, getUpdatePacket } from "../util/dynamoHelpers";
+import { db, getGetPacket, getPutPacket, getUpdatePacket } from "../util/dynamoHelpers";
 import getSecrets from "../util/getSecrets";
 import resizeImage from "../util/resizeImage";
 import uploadToS3 from "../util/uploadToS3";
+import { runBookLookupIfAble } from "./util/book-lookup";
 
 const SCAN_STATE_TABLE_NAME = "";
 
@@ -109,6 +110,17 @@ export const scanBook = async event => {
 };
 
 export const streamHandler = async event => {
+  try {
+    const userNotifications = notifyUserScanStatusUpdates(event);
+    const lookup = runBookLookupIfAble();
+
+    await Promise.all([userNotifications, lookup]);
+  } catch (er) {
+    console.log("ERROR in stream handler", er);
+  }
+};
+
+const notifyUserScanStatusUpdates = async event => {
   const records = event.Records || [];
   const usersScanned = new Set<string>([]);
 
@@ -129,7 +141,7 @@ export const streamHandler = async event => {
     Promise.resolve(getPendingCount(userId).then(pendingCount => sendWsMessageToUser(userId, { type: "bookQueued", pendingCount })))
   );
 
-  await Promise.all(notifyAllUsers);
+  return Promise.all(notifyAllUsers);
 };
 
 export const lookupBooks = async event => {

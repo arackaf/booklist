@@ -30,7 +30,7 @@ export const db = {
     let res = await dynamo.query(packet).promise();
 
     if (!res || !res.Items) {
-      return null;
+      return [];
     }
 
     return res.Items;
