@@ -1,6 +1,6 @@
-import { db, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
+import { db, getPutPacket, getUpdatePacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import { getBookLookupsFree, getScanItemBatch, ScanItem } from "./data-helpers";
-import { getCurrentLookupFullKey } from "./key-helpers";
+import { getCurrentLookupFullKey, getUserScanStatusKey } from "./key-helpers";
 
 export const runBookLookupIfAble = async () => {
   const lookupsFree = await getBookLookupsFree();
@@ -27,6 +27,14 @@ export const doLookup = async lookupIdx => {
     return;
   }
 
+  const userUpdateMap = scanItems.reduce((hash, { userId }) => {
+    if (!hash.hasOwnProperty(userId)) {
+      hash[userId] = 0;
+    }
+    hash[userId]--;
+    return hash;
+  }, {});
+
   await db.transactWrite({
     TransactItems: [
       ...scanItems.map(({ pk, sk }) => ({
@@ -41,7 +49,17 @@ export const doLookup = async lookupIdx => {
           sk,
           scanItems
         })
-      }
+      },
+      ...Object.entries(userUpdateMap).map(([userId, amount]) => {
+        const key = getUserScanStatusKey(userId);
+        return {
+          Update: getUpdatePacket(key, key, {
+            UpdateExpression: "ADD #pendingCount :amount",
+            ExpressionAttributeValues: { ":amount": amount },
+            ExpressionAttributeNames: { "#pendingCount": "pendingCount" }
+          })
+        };
+      })
     ]
   });
 };
