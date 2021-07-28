@@ -12,9 +12,13 @@ export const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: 
 
 export const getUpdatePacket = (pk, sk, rest) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 
+export const getDeletePacket = key => ({ TableName: TABLE_NAME, Key: key });
+
 export const dynamo = new AWS.DynamoDB.DocumentClient({
   region: "us-east-1"
 });
+
+const wait = ms => new Promise(res => setTimeout(res, ms));
 
 export const db = {
   async put(packet) {
@@ -51,7 +55,18 @@ export const db = {
   },
 
   async transactWrite(packet) {
-    return dynamo.transactWrite(packet).promise();
+    try {
+      return dynamo.transactWrite(packet).promise();
+    } catch (err) {
+      await wait(150 * Math.random());
+
+      try {
+        return dynamo.transactWrite(packet).promise();
+      } catch (err) {
+        await wait(500 * Math.random());
+        return dynamo.transactWrite(packet).promise();
+      }
+    }
   },
 
   async deleteItem(pk, sk) {
