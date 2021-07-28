@@ -56,12 +56,12 @@ export const db = {
 
   async transactWrite(packet) {
     try {
-      return dynamo.transactWrite(packet).promise();
+      return await dynamo.transactWrite(packet).promise();
     } catch (err) {
       await wait(150 * Math.random());
 
       try {
-        return dynamo.transactWrite(packet).promise();
+        return await dynamo.transactWrite(packet).promise();
       } catch (err) {
         await wait(500 * Math.random());
         return dynamo.transactWrite(packet).promise();
