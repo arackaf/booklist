@@ -8,6 +8,7 @@ provider:
   lambdaHashingVersion: 20201221
   stage: dev
   environment:
+    stage: ${self:provider.stage}
     STAGE: ${self:provider.stage}
 
   iam:

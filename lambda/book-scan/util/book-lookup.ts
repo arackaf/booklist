@@ -2,7 +2,7 @@ import path from "path";
 
 import AWS from "aws-sdk";
 import fetch from "node-fetch";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import getSecrets from "../../util/getSecrets";
@@ -12,6 +12,7 @@ import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
 import resizeImage from "../../util/resizeImage";
 import uploadToS3 from "../../util/uploadToS3";
+import getDbConnection from "../../util/getDbConnection";
 
 enum COVER_SIZE {
   SMALL = 1,
@@ -55,6 +56,12 @@ export const setupLookup = async lookupIdx => {
     return;
   }
 
+  const scanPacket = {
+    pk,
+    sk,
+    scanItems
+  };
+
   await db.transactWrite({
     TransactItems: [
       ...scanItems.map(({ pk, sk }) => ({
@@ -64,18 +71,18 @@ export const setupLookup = async lookupIdx => {
         }
       })),
       {
-        Put: getPutPacket({
-          pk,
-          sk,
-          scanItems
-        })
+        Put: getPutPacket(scanPacket)
       }
     ]
   });
+
+  await doLookup(scanPacket);
 };
 
 export const doLookup = async (scanPacket: BookLookupPacket) => {
   const scanItems: ScanItem[] = scanPacket.scanItems;
+
+  await lookupBooks(scanPacket.scanItems);
 
   const userUpdateMap = scanItems.reduce((hash, { userId }) => {
     if (!hash.hasOwnProperty(userId)) {
@@ -103,8 +110,7 @@ const wait = ms => new Promise(res => setTimeout(res, ms));
 
 export const lookupBooks = async (scanItems: ScanItem[]) => {
   try {
-    const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
-    let mongoDb: any;
+    const mongoDb = await getDbConnection();
 
     const secrets = await getSecrets();
     const isbnDbKey = secrets["isbn-db-key"];
@@ -144,23 +150,19 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
       }
     }
 
-    await Promise.race([wait(3000), Promise.all(allBookDownloads)]);
+    await Promise.race([wait(5000), Promise.all(allBookDownloads)]);
 
     for (const newBookMaybe of scanItems) {
+      console.log("inspecing possible book", JSON.stringify(newBookMaybe));
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
       }
     }
 
-    // for (const item of json.data) {
-    //   let newBook = await getBookFromIsbnDbData(item, "60a93babcc3928454b5d1cc6"); //TODO:
-    //   console.log("Saving", JSON.stringify(newBook));
-    // }
-
     console.log("---- FINISHED. ALL SAVED ----");
     return { success: true };
   } catch (err) {
-    console.log("ERR", err);
+    console.log("BOOK LOOKUP ERROR", err);
     return { success: false, err };
   }
 };
