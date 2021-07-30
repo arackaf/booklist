@@ -23,8 +23,6 @@ export const sync = async (event, context) => {
     });
     const connectionId = event.requestContext.connectionId;
 
-    console.log("Set up with", event.requestContext.domainName + "/" + event.requestContext.stage);
-
     const key = getWsSessionKey(connectionId);
     const wsConnection = db.get(getGetPacket(key, key));
     if (!wsConnection) {
@@ -68,7 +66,6 @@ export const scanBook = async event => {
     const [pk, sk] = getScanItemKey();
 
     let res = await db.transactWrite({
-      ReturnConsumedCapacity: "TOTAL",
       TransactItems: [
         {
           Put: getPutPacket({ pk, sk, isbn, userId })
@@ -79,7 +76,6 @@ export const scanBook = async event => {
       ]
     });
     const pendingCount = await getPendingCount(userId, true);
-    console.log("transaction result", res);
 
     return corsResponse({ success: true, pendingCount });
   } catch (err) {
@@ -105,7 +101,6 @@ const notifyUserScanStatusUpdates = async event => {
   const usersScanned = new Set<string>([]);
 
   for (const record of records) {
-    console.log("Inspecting", JSON.stringify(record));
     const newImage = record?.dynamodb?.NewImage;
     if (!newImage) {
       continue;
