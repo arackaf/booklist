@@ -133,10 +133,8 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     const allBookDownloads = [];
 
     for (const book of allResults) {
-      const isbn = book.isbn13 || book.isbn;
-
       for (const scanInput of scanItems) {
-        if (scanInput.pk && scanInput.isbn === isbn) {
+        if (scanInput.pk && (scanInput.isbn === book.isbn13 || scanInput.isbn === book.isbn)) {
           allBookDownloads.push(
             (async function () {
               try {

@@ -10,6 +10,8 @@ export const connect = async event => {
   const key = getWsSessionKey(connectionId);
 
   try {
+    const timestamp = +new Date();
+
     await dynamo
       .put({
         TableName: TABLE_NAME,
@@ -17,7 +19,8 @@ export const connect = async event => {
           pk: key,
           sk: key,
           "connection-id": connectionId,
-          timestamp: +new Date(),
+          timestamp,
+          expires: Math.round(timestamp / 1000) + 60 * 60 * 24 * 7, // 1 week
           endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
         }
       })
