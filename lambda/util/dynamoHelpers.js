@@ -55,17 +55,12 @@ export const db = {
   },
 
   async transactWrite(packet) {
+    console.log("ATTEMPTING TRANSACTION", JSON.stringify(packet));
     try {
-      return await dynamo.transactWrite(packet).promise();
+      const result = await attemptExecution(5, () => dynamo.transactWrite(packet).promise());
+      console.log("TRANSACTION SUCCESS");
     } catch (err) {
-      await wait(150 * Math.random());
-
-      try {
-        return await dynamo.transactWrite(packet).promise();
-      } catch (err) {
-        await wait(500 * Math.random());
-        return dynamo.transactWrite(packet).promise();
-      }
+      console.log("TRANSACTION FAILED", err);
     }
   },
 
@@ -73,3 +68,28 @@ export const db = {
     return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } }).promise();
   }
 };
+
+async function attemptExecution(times, executor) {
+  let success;
+  let resultOrError;
+
+  for (let i = 1; i <= 5; i++) {
+    [success, resultOrError] = await attemptRun(executor);
+
+    if (success) {
+      return resultOrError;
+    }
+    console.log("Failed on attempt:", i, resultOrError);
+    await wait(150 * i * Math.random());
+  }
+  throw resultOrError;
+}
+
+async function attemptRun(executor) {
+  try {
+    const result = await executor();
+    return [true, result];
+  } catch (err) {
+    return [false, err];
+  }
+}
