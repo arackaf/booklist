@@ -23,6 +23,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
             - dynamodb:DescribeStream
+            - dynamodb:ConditionCheckItem
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
         - Effect: Allow
           Action:
@@ -33,6 +34,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
             - dynamodb:DescribeStream
+            - dynamodb:ConditionCheckItem
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}/index/*"
         - Effect: "Allow"
           Action:

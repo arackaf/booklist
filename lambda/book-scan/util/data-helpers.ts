@@ -32,7 +32,8 @@ export const getBookLookupsFree = async () => {
 
   const currentLookups = await db.query(
     getQueryPacket(`pk = :pk`, {
-      ExpressionAttributeValues: { ":pk": pk }
+      ExpressionAttributeValues: { ":pk": pk },
+      ConsistentRead: true
     })
   );
   if (!currentLookups.length) {
@@ -58,7 +59,8 @@ export const getScanItemBatch = async () => {
   const result = (await db.query(
     getQueryPacket(` pk = :pk `, {
       ExpressionAttributeValues: { ":pk": getScanItemPk() },
-      Limit: 10
+      Limit: 10,
+      ConsistentRead: true
     })
   )) as ScanItem[];
 

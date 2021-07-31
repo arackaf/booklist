@@ -8,6 +8,8 @@ import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import { SlideInContents } from "app/animationHelpers";
 import FlowItems from "app/components/layout/FlowItems";
+import ajaxUtil from "util/ajaxUtil";
+import { getLoginStatus } from "util/loginStatus";
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
@@ -97,6 +99,39 @@ const BookEntryList: FunctionComponent<{}> = () => {
             <h4 style={{ marginTop: 0, marginBottom: 0, fontSize: "16px" }}>Enter your books here {toggleInstructions} </h4>
             <button className="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}>
               Manual entry
+            </button>
+            <button
+              className="btn btn-xs margin-left"
+              onClick={() => {
+                const wait = ms => new Promise(res => setTimeout(res, ms));
+                (async function () {
+                  const delay = 1000;
+                  for (let i = 0; i < 1; i++) {
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0198788606", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780618918249", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9798577932152", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780553380163", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780553380163", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "039330700X", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780393308181", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "334455", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0142003344", ...getLoginStatus() });
+                    await wait(delay);
+                    ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0465072704", ...getLoginStatus() });
+                    await wait(delay);
+                  }
+                })();
+              }}
+            >
+              TEST
             </button>
           </div>
           <div style={{ marginTop: "10px" }}>

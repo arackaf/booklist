@@ -54,13 +54,14 @@ export const db = {
     return dynamo.update(packet).promise();
   },
 
-  async transactWrite(packet) {
+  async transactWrite(packet, attempts = 5) {
     console.log("ATTEMPTING TRANSACTION", JSON.stringify(packet));
     try {
-      const result = await attemptExecution(5, () => dynamo.transactWrite(packet).promise());
+      const result = await attemptExecution(attempts, () => dynamo.transactWrite(packet).promise());
       console.log("TRANSACTION SUCCESS");
     } catch (err) {
       console.log("TRANSACTION FAILED", err);
+      throw err;
     }
   },
 

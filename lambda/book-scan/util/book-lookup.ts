@@ -49,34 +49,57 @@ export const runBookLookupIfAble = async () => {
 
 export const setupLookup = async lookupIdx => {
   const [pk, sk] = getCurrentLookupFullKey(lookupIdx);
-  const scanItems: ScanItem[] = await getScanItemBatch();
+  let scanPacket;
 
-  if (!scanItems.length) {
-    console.log("No scan items remaining");
-    return;
-  }
+  for (let i = 1; i <= 3; i++) {
+    try {
+      const scanItems: ScanItem[] = await getScanItemBatch();
 
-  const scanPacket = {
-    pk,
-    sk,
-    scanItems
-  };
-
-  await db.transactWrite({
-    TransactItems: [
-      ...scanItems.map(({ pk, sk }) => ({
-        Delete: {
-          Key: { pk, sk },
-          TableName: TABLE_NAME
-        }
-      })),
-      {
-        Put: getPutPacket(scanPacket)
+      if (!scanItems.length) {
+        console.log("No scan items remaining");
+        return;
       }
-    ]
-  });
 
-  await doLookup(scanPacket);
+      scanPacket = {
+        pk,
+        sk,
+        scanItems
+      };
+
+      console.log("SCAN PACKET SETUP", lookupIdx, scanItems);
+
+      await db.transactWrite(
+        {
+          TransactItems: [
+            ...scanItems.map(({ pk, sk }) => ({
+              Delete: {
+                Key: { pk, sk },
+                TableName: TABLE_NAME,
+                ConditionExpression: "attribute_exists(#sk)",
+                ExpressionAttributeNames: {
+                  "#sk": "sk"
+                }
+              }
+            })),
+            {
+              Put: getPutPacket(scanPacket, {
+                ConditionExpression: "attribute_not_exists(#sk)",
+                ExpressionAttributeNames: {
+                  "#sk": "sk"
+                }
+              })
+            }
+          ]
+        },
+        1
+      );
+      console.log("Setup success, doing lookup");
+      await doLookup(scanPacket);
+      return;
+    } catch (err) {
+      console.log("Scan packet setup transaction error", err);
+    }
+  }
 };
 
 export const doLookup = async (scanPacket: BookLookupPacket) => {
