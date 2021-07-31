@@ -92,6 +92,8 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
     return hash;
   }, {});
 
+  console.log("Post lookup - Updating status counts", JSON.stringify(userUpdateMap));
+
   await db.transactWrite({
     TransactItems: [
       {
@@ -150,8 +152,8 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     await Promise.race([wait(5000), Promise.all(allBookDownloads)]);
 
+    console.log("Book lookup results", JSON.stringify(scanItems));
     for (const newBookMaybe of scanItems) {
-      console.log("inspecing possible book", JSON.stringify(newBookMaybe));
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
       }

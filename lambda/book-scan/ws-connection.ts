@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 
 import { TABLE_NAME } from "../util/dynamoHelpers";
-import { getWsSessionKey } from "./ws-helpers";
+import { getWsSessionKey } from "./util/ws-helpers";
 
 import { dynamo } from "../util/dynamoHelpers";
 

@@ -5,16 +5,16 @@ import AWS from "aws-sdk";
 import { getPendingCount, getStatusCountUpdate } from "./util/data-helpers";
 import { getScanItemKey } from "./util/key-helpers";
 import { sendWsMessageToUser } from "./util/ws-helpers";
-import { getWsSessionKey } from "./ws-helpers";
+import { getWsSessionKey } from "./util/ws-helpers";
 
 import checkLogin from "../util/checkLoginToken";
 import corsResponse from "../util/corsResponse";
-import { db, getGetPacket, getPutPacket, getUpdatePacket } from "../util/dynamoHelpers";
+import { db, getGetPacket, getPutPacket, getUpdatePacket, TABLE_NAME } from "../util/dynamoHelpers";
 import { runBookLookupIfAble } from "./util/book-lookup";
 
 const SCAN_STATE_TABLE_NAME = "";
 
-export const sync = async (event, context) => {
+export const sync = async event => {
   try {
     const packet = JSON.parse(event.body);
     const messenger = new AWS.ApiGatewayManagementApi({
@@ -65,7 +65,7 @@ export const scanBook = async event => {
 
     const [pk, sk] = getScanItemKey();
 
-    let res = await db.transactWrite({
+    await db.transactWrite({
       TransactItems: [
         {
           Put: getPutPacket({ pk, sk, isbn, userId })
@@ -75,7 +75,9 @@ export const scanBook = async event => {
         }
       ]
     });
+
     const pendingCount = await getPendingCount(userId, true);
+    await sendWsMessageToUser(userId, { type: "bookQueued", pendingCount });
 
     return corsResponse({ success: true, pendingCount });
   } catch (err) {
@@ -96,15 +98,22 @@ export const streamHandler = async event => {
   }
 };
 
-const notifyUserScanStatusUpdates = async event => {
+const getNewDynamoRecordsFromEvent = event => {
   const records = event.Records || [];
-  const usersScanned = new Set<string>([]);
-
+  const result = [];
   for (const record of records) {
     const newImage = record?.dynamodb?.NewImage;
-    if (!newImage) {
-      continue;
+    if (newImage) {
+      result.push(newImage);
     }
+  }
+  return result;
+};
+
+const notifyUserScanStatusUpdates = async event => {
+  const usersScanned = new Set<string>([]);
+
+  for (const newImage of getNewDynamoRecordsFromEvent(event)) {
     const pk = newImage.pk.S;
 
     if (pk.startsWith("UserScanStatus")) {
