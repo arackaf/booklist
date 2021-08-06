@@ -1,7 +1,7 @@
 import Jimp from "jimp";
 
 export default (src, MAX_WIDTH, MIN_WIDTH = null) => {
-  return new Promise(res => {
+  return new Promise<any>(res => {
     Jimp.read(src, function (err, image) {
       if (err || !image) {
         return res({ error: true, message: err });

@@ -24,7 +24,7 @@ export function downloadBookCover(url, minSizeToAccept) {
   let fullName = path.resolve("/tmp/" + fileName);
   let network = /^https/.test(url) ? https : http;
 
-  return new Promise(res => {
+  return new Promise<any>(res => {
     let file = fs.createWriteStream(fullName);
 
     network

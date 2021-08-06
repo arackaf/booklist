@@ -101,7 +101,7 @@ function getGoogleCoverUrl(isbn, secrets) {
     try {
       let response = await fetch(getGoogleLibraryUri(isbn, secrets["google-library-key"]));
       if (!response.ok) {
-        console.log("Error:", err, response.statusCode);
+        console.log("Error:", response.statusCode);
         return resolve(null);
       }
 
@@ -124,7 +124,7 @@ function getGoogleCoverUrl(isbn, secrets) {
 
       return resolve(smallImage || null);
     } catch (err) {
-      console.log("Error fetching and processing", err, resp.statusCode);
+      console.log("Error fetching and processing", err);
       return resolve(null);
     }
   });
