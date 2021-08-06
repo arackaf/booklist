@@ -60,6 +60,8 @@ export const setupLookup = async lookupIdx => {
         return;
       }
 
+      console.log("Scan items found", scanItems.length, scanItems);
+
       scanPacket = {
         pk,
         sk,
