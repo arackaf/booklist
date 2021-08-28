@@ -5,7 +5,7 @@
     <title>Book tracker</title>
   </head>
   <body class="scheme1">
-    <span style="visibility: hidden; position: fixed;">
+    <span style="visibility: hidden; position: fixed">
       <i class="fal fa-book"></i>
       <i class="fal fa-angle-left"></i> <i class="fal fa-angle-right"></i> <i class="fal fa-angle-double-left"></i> <i class="fal fa-angle-left"></i>
       <i class="fal fa-angle-right"></i> <i class="fal fa-angle-double-right"></i> <i class="fal fa-filter"></i> <i class="fal fa-sitemap"></i>
@@ -15,14 +15,20 @@
       <i class="fa fa-fw fa-arrows"></i> <i class="fa fa-fw fa-pencil"></i> <i class="fa fa-fw fa-plus"></i><i class="fa fa-fw fa-trash"></i>
       <i class="fa fa-fw fa-save"></i>
     </span>
-    <div id="home"></div>
-    
+    <div style="padding: 20px" id="home"></div>
+
     <script>
       function webSocketAddress(path) {
-        const protocol = (window.location.hostname == "localhost" || /lvh\.me/i.test(window.location.hostname)) ? "ws" : "wss";
+        const protocol = window.location.hostname == "localhost" || /lvh\.me/i.test(window.location.hostname) ? "ws" : "wss";
         const host = window.location.host;
         return `${protocol}://${host}${path || ""}`;
       }
+
+      setTimeout(() => {
+        const els = document.getElementsByTagName("wc-counter");
+        let el = els[0];
+        el.initial = 12;
+      }, 1000);
     </script>
   </body>
 </html>

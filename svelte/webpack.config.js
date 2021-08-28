@@ -44,21 +44,41 @@ module.exports = {
     },
     modules: [path.resolve("./"), path.resolve("./node_modules")]
   },
-  mode: isProd ? "production" : "development",
+  mode: isProd || 1 ? "production" : "development",
   module: {
     rules: [
       {
         test: /\.(html|svelte)$/,
-        use: [
+        oneOf: [
           {
-            loader: "babel-loader"
+            test: /.*-wc.svelte/,
+            use: [
+              {
+                loader: "babel-loader"
+              },
+              {
+                loader: "svelte-loader",
+                options: {
+                  emitCss: true,
+                  customElement: true,
+                  preprocess: require("svelte-preprocess")({})
+                }
+              }
+            ]
           },
           {
-            loader: "svelte-loader",
-            options: {
-              emitCss: true,
-              preprocess: require("svelte-preprocess")({})
-            }
+            use: [
+              {
+                loader: "babel-loader"
+              },
+              {
+                loader: "svelte-loader",
+                options: {
+                  emitCss: true,
+                  preprocess: require("svelte-preprocess")({})
+                }
+              }
+            ]
           }
         ]
       },
