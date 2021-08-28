@@ -11,7 +11,6 @@ import BookSvg from "./bookSvg";
 import navClasses from "css/navbar.module.scss";
 import "css/main-mobile-menu.scss";
 import { useEffect } from "react";
-import { getScanPendingCount } from "util/scanUtils";
 
 const { nav, navHeader, navItems, navItemsRight, numberBadge, bigCount } = navClasses;
 

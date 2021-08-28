@@ -11,9 +11,8 @@ import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
-import { scanWebSocket, saveScanPendingCount, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
+import { scanWebSocket, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
 import { getCookieLookup, isLoggedIn } from "util/loginStatus";
-import ajaxUtil from "util/ajaxUtil";
 
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
@@ -23,6 +22,8 @@ document.body.className = localStorageManager.get("color-theme", "scheme1");
 const cookieHash = getCookieLookup();
 
 const pause = () => new Promise(res => setTimeout(res, 400));
+
+//TODO: tie this in for real
 async function foo() {
   for (let i = 1; i <= 25; i++) {
     Toastify({
@@ -41,15 +42,12 @@ setTimeout(() => {
 
 if (isLoggedIn()) {
   checkPendingCount();
-  scanWebSocket.open();
   scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
 
   scanWebSocket.addHandler(data => {
     let packet = JSON.parse(data);
     console.log("DATA RECEIVED", packet);
-    if (packet?.pendingCount) {
-      saveScanPendingCount(packet.pendingCount);
-    }
+
     dispatchScanDataUpdate(packet);
   });
 }

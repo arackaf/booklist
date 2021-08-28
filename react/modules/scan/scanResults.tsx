@@ -2,13 +2,13 @@ import React, { FunctionComponent, useEffect, useState, useReducer, Suspense } f
 
 import { useTransition, config, animated } from "react-spring";
 import { SlideInContents } from "app/animationHelpers";
-import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 
 function scanReducer(state, [type, payload]) {
   switch (type) {
-    case "initial":
-      return { ...state, pending: payload.pending };
+    case "pendingCountSet":
+    case "bookQueued":
+      return { ...state, pending: payload };
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
     case "bookAdded":
@@ -43,7 +43,7 @@ const ScanResults: FunctionComponent<{}> = props => {
 
   useEffect(() => {
     function sendIt({ detail }: any) {
-      dispatch([detail.type, detail.packet]);
+      dispatch([detail.type, detail.pendingCount ?? detail.packet]);
     }
 
     window.addEventListener("ws-info", sendIt);

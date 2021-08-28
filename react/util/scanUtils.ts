@@ -7,8 +7,8 @@ let open = false;
 const handlerQueue = [];
 const initialMessageQueue = [];
 
-export const scanWebSocket = {
-  open() {
+class ScanWebSocketManage {
+  constructor() {
     ws = new WebSocket(process.env.SCAN_WS);
 
     ws.onopen = () => {
@@ -22,10 +22,10 @@ export const scanWebSocket = {
     ws.onmessage = ({ data }) => {
       handlerQueue.forEach(handler => handler(data));
     };
-  },
+  }
   addHandler(handler) {
     handlerQueue.push(handler);
-  },
+  }
   send(packet) {
     if (open) {
       ws.send(JSON.stringify(packet));
@@ -33,17 +33,19 @@ export const scanWebSocket = {
       initialMessageQueue.push(packet);
     }
   }
+
+  close() {}
+}
+
+window.onbeforeunload = function () {
+  if (!ws) {
+    return;
+  }
+  ws.onclose = function () {}; // disable onclose handler first
+  ws.close();
 };
 
-const SCAN_PENDING_COUNT = "book-scan-pending-count";
-
-export function saveScanPendingCount(count) {
-  localStorageManager.set(SCAN_PENDING_COUNT, count);
-}
-
-export function getScanPendingCount(): number {
-  return parseInt(localStorageManager.get(SCAN_PENDING_COUNT), 10);
-}
+export const scanWebSocket = new ScanWebSocketManage();
 
 export async function checkPendingCount() {
   const cookieHash = getCookieLookup();
@@ -57,8 +59,7 @@ export async function checkPendingCount() {
   }
 
   const { pendingCount } = pendingCountResult;
-  saveScanPendingCount(pendingCountResult.pendingCount);
-  dispatchScanDataUpdate({ pendingCount });
+  dispatchScanDataUpdate({ type: "pendingCountSet", pendingCount });
 }
 
 export function dispatchScanDataUpdate(packet) {

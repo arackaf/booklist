@@ -13,6 +13,7 @@ import downloadFromUrl from "../../util/downloadFromUrl";
 import resizeImage from "../../util/resizeImage";
 import uploadToS3 from "../../util/uploadToS3";
 import getDbConnection from "../../util/getDbConnection";
+import { sendWsMessageToUser } from "./ws-helpers";
 
 enum COVER_SIZE {
   SMALL = 1,
@@ -23,12 +24,6 @@ type BookLookupPacket = {
   pk: string;
   sk: string;
   scanItems: ScanItem[];
-};
-
-type BookResult = {
-  title: string;
-  isbn: string;
-  // TODO
 };
 
 export const runBookLookupIfAble = async () => {
@@ -137,6 +132,7 @@ const wait = ms => new Promise(res => setTimeout(res, ms));
 
 export const lookupBooks = async (scanItems: ScanItem[]) => {
   try {
+    const startTime = +new Date();
     const mongoDb = await getDbConnection();
 
     const secrets = await getSecrets();
@@ -181,10 +177,20 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     for (const newBookMaybe of scanItems) {
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
+        sendWsMessageToUser(newBookMaybe.userId, { type: "bookAdded", packet: newBookMaybe });
+      } else {
+        // TODO: send ws scan failure
       }
     }
 
     console.log("---- FINISHED. ALL SAVED ----");
+
+    const endTime = +new Date();
+
+    const waitFor = endTime - startTime;
+    await wait(waitFor);
+    console.log("---- Waiting .... ----", waitFor);
+
     return { success: true };
   } catch (err) {
     console.log("BOOK LOOKUP ERROR", err);
