@@ -23,21 +23,28 @@ const cookieHash = getCookieLookup();
 
 const pause = () => new Promise(res => setTimeout(res, 400));
 
+function showBookToast(title, url) {
+  Toastify({
+    text: `<div><img src="${url}" ></div><span>${title}</span>`,
+    duration: 5 * 1000,
+    gravity: "bottom",
+    close: true,
+    className: "toast-notification book-loaded"
+  }).showToast();
+}
+
 //TODO: tie this in for real
 async function foo() {
-  for (let i = 1; i <= 25; i++) {
-    Toastify({
-      text: `<span>Selfish Gene Loaded</span>`,
-      duration: 900000,
-      gravity: "bottom",
-      close: true,
-      className: "toast-notification book-loaded"
-    }).showToast();
+  for (let i = 1; i <= 2; i++) {
+    showBookToast(
+      "This is the title of my book xxxxxxx",
+      "https://my-library-cover-uploads.s3.amazonaws.com/bookCovers/573d1b97120426ef0078aa92/file-c426e31e-ef40-42fd-9711-f9a812b27bd3.jpg"
+    );
     await pause();
   }
 }
 setTimeout(() => {
-  //foo();
+  // foo();
 }, 300);
 
 if (isLoggedIn()) {
@@ -130,6 +137,14 @@ const App = () => {
       setTimeout(setAdjustedVh, 100);
       setTimeout(setAdjustedVh, 250);
     }
+
+    window.addEventListener("ws-info", ({ detail }: CustomEvent) => {
+      if (detail.type === "scanResults") {
+        for (const { item: book } of detail.packet.results.filter(result => result.success)) {
+          showBookToast(book.title, book.smallImage);
+        }
+      }
+    });
   }, []);
   useEffect(() => {
     return history.listen(location => {

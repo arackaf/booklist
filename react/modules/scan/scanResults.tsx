@@ -3,7 +3,6 @@ import React, { FunctionComponent, useEffect, useState, useReducer, Suspense } f
 import { useTransition, config, animated } from "react-spring";
 import { SlideInContents } from "app/animationHelpers";
 import { CoverSmall } from "app/components/bookCoverComponent";
-import { useLayoutEffect } from "react";
 
 function scanReducer(state, [type, payload]) {
   switch (type) {
