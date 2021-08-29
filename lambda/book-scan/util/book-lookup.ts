@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import getSecrets from "../../util/getSecrets";
-import { getBookLookupsFree, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
+import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getCurrentLookupFullKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
@@ -126,6 +126,14 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
       })
     ]
   });
+  console.log("Post lookup - Updating status counts Complete", JSON.stringify(userUpdateMap));
+
+  for (const [userId] of Object.entries(userUpdateMap)) {
+    console.log("Getting new pending count for", userId);
+    const pendingCount = await getPendingCount(userId, true);
+    console.log("Pending count for", userId, pendingCount, "Sending ws message");
+    await sendWsMessageToUser(userId, { type: "pendingCountSet", pendingCount });
+  }
 };
 
 const wait = ms => new Promise(res => setTimeout(res, ms));
@@ -139,6 +147,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     const isbnDbKey = secrets["isbn-db-key"];
 
     const isbns = [...new Set(scanItems.map(entry => entry.isbn))].join(",");
+    const userIds = [...new Set(scanItems.map(entry => entry.userId))];
     console.log("---- BOOK LOOKUP STARTING ----", isbns);
 
     const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
@@ -173,24 +182,31 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     await Promise.race([wait(5000), Promise.all(allBookDownloads)]);
 
+    const userMessages = userIds.reduce<{ [k: string]: { results: any[] } }>((hash, userId) => {
+      hash[userId] = { results: [] };
+      return hash;
+    }, {});
+
     console.log("Book lookup results", JSON.stringify(scanItems));
     for (const newBookMaybe of scanItems) {
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
-
-        // TODO: batch these messages per user
-        sendWsMessageToUser(newBookMaybe.userId, { type: "bookAdded", packet: newBookMaybe });
+        userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
       } else {
-        // TODO: send ws scan failure
+        userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
       }
     }
 
     console.log("---- FINISHED. ALL SAVED ----");
 
+    for (const [userId, packet] of Object.entries(userMessages)) {
+      sendWsMessageToUser(userId, { type: "scanResults", packet });
+    }
+
     const endTime = +new Date();
 
-    const waitFor = endTime - startTime;
-    await wait(waitFor);
+    const waitFor = 1000 - (endTime - startTime);
+    await wait(Math.max(waitFor, 0));
     console.log("---- Waiting .... ----", waitFor);
 
     return { success: true };

@@ -122,7 +122,7 @@ const notifyUserScanStatusUpdates = async event => {
     }
   }
   const notifyAllUsers = [...usersScanned].map(userId =>
-    Promise.resolve(getPendingCount(userId).then(pendingCount => sendWsMessageToUser(userId, { type: "bookQueued", pendingCount })))
+    Promise.resolve(getPendingCount(userId).then(pendingCount => sendWsMessageToUser(userId, { type: "pendingCountSet", pendingCount })))
   );
 
   return Promise.all(notifyAllUsers);

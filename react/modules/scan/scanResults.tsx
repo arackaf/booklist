@@ -12,12 +12,9 @@ function scanReducer(state, [type, payload]) {
       return { ...state, pending: payload };
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
-    case "bookAdded":
-      // TODO: remove pending state change - send new ws from lamda in lookupBooks after getStatusCountUpdate line 124
-      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 15) };
-    case "bookLookupFailed":
-      let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
-      return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
+    case "scanResults":
+      const newItems = payload.results.map(result => ({ success: result.success, ...result.item }));
+      return { ...state, booksSaved: newItems.concat(state.booksSaved).slice(0, 25) };
   }
   return state;
 }

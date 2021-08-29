@@ -22,6 +22,8 @@ export async function sendWsMessageToUser(userId, message) {
     const connectionId = item["connection-id"];
 
     console.log("POSTING", { connectionId, endpoint: item.endpoint });
-    await messenger.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(message) }).promise();
+    try {
+      await messenger.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(message) }).promise();
+    } catch (er) {}
   }
 }
