@@ -46,7 +46,6 @@ if (isLoggedIn()) {
 
   scanWebSocket.addHandler(data => {
     let packet = JSON.parse(data);
-    console.log("DATA RECEIVED", packet);
 
     dispatchScanDataUpdate(packet);
   });

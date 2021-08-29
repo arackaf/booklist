@@ -177,6 +177,8 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     for (const newBookMaybe of scanItems) {
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
+
+        // TODO: batch these messages per user
         sendWsMessageToUser(newBookMaybe.userId, { type: "bookAdded", packet: newBookMaybe });
       } else {
         // TODO: send ws scan failure
