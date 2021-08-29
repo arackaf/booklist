@@ -138,14 +138,22 @@ const App = () => {
       setTimeout(setAdjustedVh, 250);
     }
 
-    window.addEventListener("ws-info", ({ detail }: CustomEvent) => {
-      if (detail.type === "scanResults") {
+    window.addEventListener("ws-info", ({ detail }: CustomEvent) => {});
+  }, []);
+
+  useEffect(() => {
+    const handler = ({ detail }: CustomEvent) => {
+      if (detail.type === "scanResults" && appState.module !== "scan") {
         for (const { item: book } of detail.packet.results.filter(result => result.success)) {
           showBookToast(book.title, book.smallImage);
         }
       }
-    });
-  }, []);
+    };
+
+    window.addEventListener("ws-info", handler);
+    return () => window.removeEventListener("ws-info", handler);
+  }, [appState.module]);
+
   useEffect(() => {
     return history.listen(location => {
       let urlState = getCurrentUrlState();
