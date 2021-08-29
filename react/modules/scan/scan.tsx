@@ -105,7 +105,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
               onClick={() => {
                 const wait = ms => new Promise(res => setTimeout(res, ms));
                 (async function () {
-                  const delay = 1000;
+                  const delay = 250;
                   for (let i = 0; i < 1; i++) {
                     ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0198788606", ...getLoginStatus() });
                     await wait(delay);

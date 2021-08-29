@@ -47,8 +47,12 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let [pendingCount, setPendingCount] = useState(0);
 
   function handleWsPendingCountUpdate(evt) {
+    const type = evt?.detail?.type;
+
     if (typeof evt?.detail?.pendingCount === "number") {
       setPendingCount(evt.detail.pendingCount);
+    } else if (type === "bookAdded" || type === "evt?.detail?.type") {
+      setPendingCount(num => Math.max(0, num - 1));
     }
   }
   useEffect(() => {

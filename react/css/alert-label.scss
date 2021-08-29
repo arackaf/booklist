@@ -6,6 +6,10 @@
   white-space: nowrap;
   display: inline;
 
+  &.label-block {
+    display: inline-block;
+  }
+
   &.label-default {
     background-color: var(--neutral-background);
     color: white;

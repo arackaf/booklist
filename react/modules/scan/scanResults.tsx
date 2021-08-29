@@ -12,7 +12,7 @@ function scanReducer(state, [type, payload]) {
     case "pendingBookAdded":
       return { ...state, pending: state.pending + 1 };
     case "bookAdded":
-      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 3) };
+      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 15) };
     case "bookLookupFailed":
       let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
       return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
@@ -51,15 +51,21 @@ const ScanResults: FunctionComponent<{}> = props => {
     return () => window.removeEventListener("ws-info", sendIt);
   }, []);
 
+  const labelScanStatusStyles = !!toggleShow ? { display: "inline-block", width: "30ch" } : {};
+
   return (
     <div style={{ flex: 1 }}>
       <div>
         {pending == null ? null : pending ? (
           <span className="label label-info">
-            {`${pending} Book${pending === 1 ? "" : "s"} currently outstanding`} {toggleShow}
+            <span style={labelScanStatusStyles}>{`${pending} Book${pending === 1 ? "" : "s"} currently outstanding`}</span>
+            {toggleShow}
           </span>
         ) : (
-          <span className="label label-success">All pending books saved {toggleShow}</span>
+          <span className="label label-success">
+            <span style={labelScanStatusStyles}>All pending books saved&nbsp;</span>
+            {toggleShow}
+          </span>
         )}
       </div>
 
