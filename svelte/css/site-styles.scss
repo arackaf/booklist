@@ -541,9 +541,12 @@ div.toast-notification.book-loaded {
       display: block;
     }
   }
+
   > :nth-child(2) {
     margin: 12px 10px 12px 10px;
     flex: 1;
+    height: 75px;
+    overflow: hidden;
   }
   > :last-child {
     margin: 12px 5px 12px auto;

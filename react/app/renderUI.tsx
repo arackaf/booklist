@@ -26,6 +26,7 @@ const pause = () => new Promise(res => setTimeout(res, 400));
 function showBookToast(title, url) {
   Toastify({
     text: `<div><img src="${url}" ></div><span>${title}</span>`,
+    escapeMarkup: false,
     duration: 5 * 1000,
     gravity: "bottom",
     close: true,
