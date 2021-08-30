@@ -10,13 +10,14 @@
   --no-cover-medium-font-size: 18px;
 }
 
-.no-cover-small, .no-cover-medium {
+.no-cover-small,
+.no-cover-medium {
   background-color: var(--primary-4);
   color: var(--primary-9);
   text-align: center;
-} 
+}
 
-.no-cover-small{
+.no-cover-small {
   width: var(--no-cover-small-width);
   height: var(--no-cover-small-height);
   font-size: var(--no-cover-small-font-size);
@@ -28,4 +29,4 @@
   height: var(--no-cover-medium-height);
   font-size: var(--no-cover-medium-font-size);
   padding-top: var(--no-cover-medium-padding-top);
-} 
+}

@@ -11,7 +11,7 @@
   tr:hover {
     background-color: var(--primary-10);
   }
-  
+
   td {
     font-size: 14px;
     vertical-align: top;
@@ -27,7 +27,7 @@
   td.min-wdith {
     width: 1px;
     white-space: nowrap;
-  } 
+  }
 }
 .table.no-padding-top > thead > tr > th {
   padding-top: 0;
@@ -45,9 +45,10 @@
   &.active {
     font-weight: bold;
     border-bottom: var(--default-border-width) solid var(--primary-9);
-    background-color: var(--primary-10)
+    background-color: var(--primary-10);
   }
-  &.active a, &.disabled a {
+  &.active a,
+  &.disabled a {
     cursor: default;
   }
   &.disabled a {

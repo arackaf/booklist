@@ -8,7 +8,7 @@
   background-color: var(--primary-4);
   height: 50px;
   font-size: 16px;
-  
+
   a {
     color: var(--primary-10);
 
@@ -16,9 +16,10 @@
       font-size: 20px;
     }
   }
-  
+
   li {
-    &:global(.disabled), &:global(.disabled) a {
+    &:global(.disabled),
+    &:global(.disabled) a {
       color: var(--primary-7);
       cursor: not-allowed;
     }
@@ -36,19 +37,19 @@
 
   :global(.active) {
     background-color: var(--primary-7);
-    
+
     a {
       cursor: default;
     }
   }
 
-  @media (max-width: 767px){
+  @media (max-width: 767px) {
     padding-left: 0px;
   }
 
   @media (max-width: 500px) {
     padding-left: 0;
-    
+
     li a {
       padding-left: 10px;
       padding-right: 10px;
@@ -58,14 +59,14 @@
   @media (max-width: 350px) {
     padding-left: 0;
     min-height: 20px;
-    
+
     li a {
       padding-left: 8px;
       padding-right: 8px;
-  
+
       padding-top: 10px !important;
       padding-bottom: 10px !important;
-      
+
       i {
         font-size: 13pt !important;
       }
@@ -73,11 +74,10 @@
   }
 }
 
-
-:global(.scheme5) .nav li:global(.active), :global(.scheme5) .nav div:global(.active) {
+:global(.scheme5) .nav li:global(.active),
+:global(.scheme5) .nav div:global(.active) {
   background-color: var(--primary-6);
 }
-
 
 .navHeader {
   font-size: 18px;
@@ -86,7 +86,7 @@
   padding-left: 20px;
   padding-right: 20px;
 
-  a { 
+  a {
     display: flex;
     align-items: center;
     touch-action: manipulation;
@@ -96,11 +96,13 @@
 .navItems {
   padding-left: 0;
 }
-.navItems > li, .navItemsRight > li {
+.navItems > li,
+.navItemsRight > li {
   display: flex;
   align-items: stretch;
 }
-.navItems, .navItemsRight {
+.navItems,
+.navItemsRight {
   margin-top: 0;
   margin-bottom: 0;
   display: flex;
@@ -110,5 +112,3 @@
 .navItemsRight {
   margin-left: auto;
 }
-
-
