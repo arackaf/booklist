@@ -64,7 +64,7 @@ functions:
           route: $disconnect
 
   sync:
-    handler: handler.sync
+    handler: ./ws-connection.sync
     events:
       - websocket:
           route: sync
@@ -83,7 +83,7 @@ functions:
                 loginToken: true
 
   scanBook:
-    handler: handler.scanBook
+    handler: ./handlers/scanBook.handler
     events:
       - http:
           path: scan
@@ -92,7 +92,7 @@ functions:
 
   streamHandler:
     timeout: 120
-    handler: handler.streamHandler
+    handler: ./handlers/dynamoStream.handler
     events:
       - stream:
           type: dynamodb

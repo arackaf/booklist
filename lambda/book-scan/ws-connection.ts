@@ -1,9 +1,7 @@
 import AWS from "aws-sdk";
 
-import { TABLE_NAME } from "../util/dynamoHelpers";
 import { getWsSessionKey } from "./util/ws-helpers";
-
-import { dynamo } from "../util/dynamoHelpers";
+import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo } from "../util/dynamoHelpers";
 
 export const connect = async event => {
   const connectionId = event.requestContext.connectionId;
@@ -27,6 +25,47 @@ export const connect = async event => {
       .promise();
   } catch (er) {
     console.log("ERROR", er);
+  }
+
+  return {
+    statusCode: 200
+  };
+};
+
+export const sync = async event => {
+  try {
+    const packet = JSON.parse(event.body);
+    const messenger = new AWS.ApiGatewayManagementApi({
+      apiVersion: "2018-11-29",
+      endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
+    });
+    const connectionId = event.requestContext.connectionId;
+
+    const key = getWsSessionKey(connectionId);
+    const wsConnection = db.get(getGetPacket(key, key));
+    if (!wsConnection) {
+      console.log("Connection Dead");
+      return;
+    }
+
+    await db.update(
+      getUpdatePacket(key, key, {
+        UpdateExpression: "SET userId = :userId, loginToken = :loginToken, gsiUserWebSocketLookupPk = :userId",
+        ExpressionAttributeValues: { ":userId": packet.userId, ":loginToken": packet.loginToken }
+      })
+    );
+
+    await new Promise(res => {
+      messenger.postToConnection(
+        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Hello, World TWO Baby " }) },
+        (err, data) => {
+          res({});
+          console.log("CALLBACK", "ERROR", err, "DATA", data);
+        }
+      );
+    });
+  } catch (er) {
+    console.log("ERROR in foo", er);
   }
 
   return {
