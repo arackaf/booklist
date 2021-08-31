@@ -3,4 +3,6 @@ export class Subject {
   constructor(id) {
     this.id = id;
   }
+
+  subjectAction() {}
 }

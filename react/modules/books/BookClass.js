@@ -7,6 +7,7 @@ export class Book {
   }
 
   addSubject(s) {
+    s.subjectAction();
     this.subjects.push(s);
   }
 }
