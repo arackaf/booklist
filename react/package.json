@@ -11,7 +11,8 @@
     "rollup-sw": "cd ./service-worker && rollup -c -w",
     "persistgraphql": "persistgraphql graphQL",
     "refresh": "npm run persistgraphql && npm start",
-    "ts-migrate": "ts-migrate"
+    "ts-migrate": "ts-migrate",
+    "ts-migrate-full": "ts-migrate-full"
   },
   "dependencies": {
     "@babel/core": "7.4.3",
