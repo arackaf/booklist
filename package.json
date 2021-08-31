@@ -15,7 +15,8 @@
     "start": "node app.js",
     "startw": "nodemon app.js",
     "heroku-install": "cd react && npm i && cd ../svelte && npm i",
-    "heroku-postbuild": "npm run heroku-install && npm run react-build && npm run svelte-build"
+    "heroku-postbuild": "npm run heroku-install && npm run react-build && npm run svelte-build",
+    "ts-migrate": "ts-migrate"
   },
   "dependencies": {
     "apac": "3.0.2",
