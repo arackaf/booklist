@@ -1,7 +1,7 @@
 export class Book {
   id = 0;
   subjects = [];
-  constructor(name) {
+  constructor(name = "") {
     this.name = name;
     this.primarySubjects = [];
   }
