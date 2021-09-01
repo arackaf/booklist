@@ -9,8 +9,6 @@ function scanReducer(state, [type, payload]) {
     case "pendingCountSet":
     case "bookQueued":
       return { ...state, pending: payload };
-    case "pendingBookAdded":
-      return { ...state, pending: state.pending + 1 };
     case "scanResults":
       const newItems = payload.results.map(result => ({ success: result.success, ...result.item }));
       return { ...state, booksSaved: newItems.concat(state.booksSaved).slice(0, 25) };

@@ -112,3 +112,28 @@
 .navItemsRight {
   margin-left: auto;
 }
+
+.numberBadge {
+  --badge-size: 0.7rem;
+  &.bigCount {
+    --badge-size: 0.65rem;
+  }
+
+  position: absolute;
+  right: 3px;
+  top: 3px;
+
+  > span {
+    i {
+      color: var(--info-7);
+      font-size: 1rem;
+    }
+    span {
+      justify-self: center;
+      align-self: center;
+      color: var(--primary-2);
+      font-size: var(--badge-size);
+      line-height: 1rem;
+    }
+  }
+}

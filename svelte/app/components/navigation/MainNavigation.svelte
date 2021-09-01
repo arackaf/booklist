@@ -11,7 +11,7 @@
   import navClasses from "css/navbar.module.scss";
   import BookSvg from "./BookSvg.svelte";
 
-  const { nav, navHeader, navItems, navItemsRight } = navClasses;
+  const { nav, navHeader, navItems, navItemsRight, numberBadge, bigCount } = navClasses;
 
   const logout = () => {
     ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
@@ -27,6 +27,16 @@
   $: isPublic = $appState.isPublic;
 
   $: isHome = currentModule == "home";
+
+  let pendingCount = 0;
+
+  function handleWsPendingCountUpdate(evt) {
+    if (typeof evt?.detail?.pendingCount === "number") {
+      pendingCount = evt.detail.pendingCount;
+    }
+  }
+
+  window.addEventListener("ws-info", handleWsPendingCountUpdate);
 </script>
 
 <style>
@@ -45,9 +55,20 @@
     </div>
 
     <ul class={navItems}>
-      <NavBarItem class="visible-xs" disabled={isPublic} href={"home"} style="margin-top: '2px'"><i class="fal fa-home visible-xs" /></NavBarItem>
+      <NavBarItem class="visible-xs" disabled={isPublic} href={"home"} style="margin-top: '2px';"><i class="fal fa-home visible-xs" /></NavBarItem>
       {#if isLoggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="scan"><span class="hidden-xs">Book entry</span> <i class="visible-xs fal fa-scanner" /></NavBarItem>
+        <NavBarItem disabled={isPublic} href="scan" style="position: relative;">
+          <span class="hidden-xs">Book entry</span>
+          <i class="visible-xs fal fa-scanner" />
+          {#if pendingCount}
+            <span class={`${numberBadge} ${pendingCount > 9 ? bigCount : ""}`}>
+              <span class="overlay-holder">
+                <i class="fas fa-badge" />
+                <span>{pendingCount}</span>
+              </span>
+            </span>
+          {/if}
+        </NavBarItem>
       {/if}
       {#if isLoggedIn || isPublic}
         <NavBarItem href={isPublic ? "view" : "books"}><span class="hidden-xs">Books</span> <i class="visible-xs fal fa-books" /></NavBarItem>
