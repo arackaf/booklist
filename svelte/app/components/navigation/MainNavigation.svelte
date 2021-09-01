@@ -32,7 +32,7 @@
 
   function handleWsPendingCountUpdate(evt) {
     if (typeof evt?.detail?.pendingCount === "number") {
-      pendingCount = 3; //evt.detail.pendingCount;
+      pendingCount = evt.detail.pendingCount;
     }
   }
 
