@@ -5,7 +5,7 @@
     <title>Book tracker</title>
   </head>
   <body class="scheme1">
-    <span style="visibility: hidden; position: fixed;">
+    <span style="visibility: hidden; position: fixed">
       <i class="fal fa-book"></i>
       <i class="fal fa-angle-left"></i> <i class="fal fa-angle-right"></i> <i class="fal fa-angle-double-left"></i> <i class="fal fa-angle-left"></i>
       <i class="fal fa-angle-right"></i> <i class="fal fa-angle-double-right"></i> <i class="fal fa-filter"></i> <i class="fal fa-sitemap"></i>
@@ -16,13 +16,5 @@
       <i class="fa fa-fw fa-save"></i>
     </span>
     <div id="home"></div>
-    
-    <script>
-      function webSocketAddress(path) {
-        const protocol = (window.location.hostname == "localhost" || /lvh\.me/i.test(window.location.hostname)) ? "ws" : "wss";
-        const host = window.location.host;
-        return `${protocol}://${host}${path || ""}`;
-      }
-    </script>
   </body>
 </html>

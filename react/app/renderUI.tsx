@@ -34,20 +34,6 @@ function showBookToast(title, url) {
   }).showToast();
 }
 
-//TODO: tie this in for real
-async function foo() {
-  for (let i = 1; i <= 2; i++) {
-    showBookToast(
-      "This is the title of my book xxxxxxx",
-      "https://my-library-cover-uploads.s3.amazonaws.com/bookCovers/573d1b97120426ef0078aa92/file-c426e31e-ef40-42fd-9711-f9a812b27bd3.jpg"
-    );
-    await pause();
-  }
-}
-setTimeout(() => {
-  // foo();
-}, 300);
-
 if (isLoggedIn()) {
   checkPendingCount();
   scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
