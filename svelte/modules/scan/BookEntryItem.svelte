@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
   import ajaxUtil from "util/ajaxUtil";
+  import { getLoginStatus } from "util/loginStatus";
 
   export let focused;
   export let selected;
@@ -40,7 +41,7 @@
       const isbn = inputEl.value;
       if (isbn.length == 10 || isbn.length == 13) {
         queuing = true;
-        Promise.resolve(ajaxUtil.post("/book/saveFromIsbn", { isbn })).then(() => {
+        Promise.resolve(ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn, ...getLoginStatus() })).then(() => {
           queuing = false;
           queued = true;
           setTimeout(() => {
