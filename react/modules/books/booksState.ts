@@ -72,7 +72,7 @@ function booksInactive() {
 }
 
 function handleWs(evt) {
-  if (evt?.detail?.type == "bookAdded") {
+  if (evt?.detail?.type == "scanResults") {
     clearCache(GetBooksQuery);
   }
 }
