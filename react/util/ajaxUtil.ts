@@ -63,3 +63,6 @@ const ajaxUtil = {
 export default ajaxUtil;
 
 (<any>window).ajaxUtil = ajaxUtil;
+
+//npm run ts-migrate -- migrate . --sources modules/books/SubjectClass.ts
+//npm run ts-migrate -- rename . --sources modules/books
