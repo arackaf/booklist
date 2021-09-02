@@ -14,7 +14,7 @@ const Axis = props => {
 
   const axisTickTransitions = useTransition(data, {
     config: config.stiff,
-    from: { opacity: 0, transform: "" },
+    from: { opacity: 0, transform: null },
     enter: d => ({ opacity: 1, transform: getTranslate(d) }),
     update: d => ({ transform: getTranslate(d) }),
     leave: { opacity: 0 },
