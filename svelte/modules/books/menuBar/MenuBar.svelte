@@ -43,7 +43,6 @@
   };
 
   let mobileMenuOpen = false;
-  //<!-- {isPublic ? <PublicBooksHeader /> : null} -->
 </script>
 
 <div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
