@@ -35,6 +35,8 @@
   const { publicUserId } = $appState;
 
   const [reducerState, searchDispatch] = useReducer(searchStateReducer, initialReducerState);
+
+  let searchState, active;
   $: ({ active, ...searchState } = $reducerState);
 
   $: variables = { ...searchState, publicUserId };
