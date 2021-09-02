@@ -31,6 +31,9 @@
 
   $: toggleClass = showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down";
 
+  $: toggleShow = booksSaved.length || pending;
+  $: labelScanStatusStyles = !!toggleShow ? `display: inline-block; width: 30ch` : "";
+
   onMount(() => {
     function sendIt({ detail }: any) {
       if (detail.type == "scanResults") {
@@ -54,20 +57,22 @@
   <div>
     {#if pending}
       <span class="label label-info">
-        {pending}
-        Book{pending === 1 ? "" : "s"}
-        currently outstanding
-        {#if booksSaved.length || pending}
+        <span style={labelScanStatusStyles}>
+          {pending}
+          Book{pending === 1 ? "" : "s"}
+          currently outstanding
+        </span>
+        {#if toggleShow}
           <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
         {/if}
       </span>
     {:else if pending != null}
-      <span class="label label-success"
-        >All pending books saved
-        {#if booksSaved.length || pending}
+      <span class="label label-success">
+        <span style={labelScanStatusStyles}> All pending books saved </span>
+        {#if toggleShow}
           <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
-        {/if}</span
-      >
+        {/if}
+      </span>
     {/if}
   </div>
 
