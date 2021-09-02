@@ -1,22 +1,15 @@
 <script lang="ts">
-import { onMount } from "svelte";
-
   import { spring } from "svelte/motion";
 
   export let data;
   export let height;
   export let width;
   export let x;
-  export let totalSvgWidth;
   export let hoverBar;
   export let unHoverBar;
 
   $: _colors = data.entries.map(e => e.color);
   let colors = [];
-
-  onMount(() => {
-    console.log("MOUNTED");
-  })
 
   $: {
     let heightUsed = 0;
