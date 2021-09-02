@@ -49,9 +49,7 @@ export default function setupServiceWorker() {
             className: "toast-notification",
             onClick: () => {
               try {
-                if (evt.target.classList.contains("do-sw-update")) {
-                  sw.postMessage("sw-update-accepted");
-                }
+                sw.postMessage("sw-update-accepted");
               } catch (e) {}
             }
           }).showToast();
