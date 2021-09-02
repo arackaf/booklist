@@ -10,9 +10,7 @@
     "deploy": "cd .. && npm run deploy",
     "rollup-sw": "cd ./service-worker && rollup -c -w",
     "persistgraphql": "persistgraphql graphQL",
-    "refresh": "npm run persistgraphql && npm start",
-    "ts-migrate": "ts-migrate",
-    "ts-migrate-full": "ts-migrate-full"
+    "refresh": "npm run persistgraphql && npm start"
   },
   "dependencies": {
     "@babel/core": "7.4.3",
