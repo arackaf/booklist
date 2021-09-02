@@ -10,17 +10,17 @@
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
   import BooksCharts from "./dataVis/BooksCharts.svelte";
-  import { setupModuleState } from "app/state/moduleLoadingState";
-import BookRecommendations from "./recommendations/BookRecommendations.svelte";
+  import BookRecommendations from "./recommendations/BookRecommendations.svelte";
 
-  const { loaded, exiting } = setupModuleState();
+  let ready = false;
 </script>
 
 <section>
   <div
-    transition:fade={{ duration: 200, easing: quadOut }}
-    on:introend={loaded}
-    on:outrostart={exiting}
+    transition:fade={{ duration: 150, easing: quadOut }}
+    on:introend={() => {
+      ready = true;
+    }}
     style="margin-left: auto; margin-right: auto; max-width: 1200px"
   >
     <div>
@@ -32,7 +32,7 @@ import BookRecommendations from "./recommendations/BookRecommendations.svelte";
           </TabHeaders>
           <TabContents>
             <TabContent let:isActive tabName="vis">
-              {#if isActive}
+              {#if isActive && ready}
                 <BooksCharts />
               {/if}
             </TabContent>

@@ -21,7 +21,7 @@
 
 <script lang="ts">
   import { fade } from "svelte/transition";
-  
+
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import Stack from "app/components/layout/Stack.svelte";
@@ -89,7 +89,7 @@
     </div>
     <div class="col-xs-6">
       {#if recommendations.length}
-        <div transition:fade>
+        <div transition:fade|local>
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
           <table class="table table-condensed table-striped">
             <tbody>

@@ -19,7 +19,6 @@
 
   $: ({ subjectHash } = $subjectsState);
 
-
   let { publicUserId } = $appState;
 
   const subjectIds = subjects.map(s => s._id);
@@ -31,7 +30,7 @@
 </script>
 
 {#if !graphData}
-  <span>Nothing</span>
+  <span><i class="fa fa-spinner fa-spin" /></span>
 {:else if !graphData.length}
   {#if chartIndex == 0}
     <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">
