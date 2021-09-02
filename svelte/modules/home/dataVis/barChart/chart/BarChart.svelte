@@ -30,8 +30,16 @@
   const margin = { top: 20, right: 10, bottom: 180, left: 0 };
 </script>
 
-{#if !graphData || !isReady}
+<!-- 
+  Don't show the graph until the isReady flag is true, which flips when the module transition is done. Both transitions running causes
+  problems I don't fully understand. If we have graphData, just assume the page was cached, and show no spinner. There's a small
+  race condition where the data could return faster than the 150ms animation, but the only consequence would be the spinner disappearing
+  a few ms too soon
+-->
+{#if !graphData}
   <span><i class="fa fa-spinner fa-spin" /></span>
+{:else if !isReady}
+  <h4 style="display: inline">{header}</h4>
 {:else if !graphData.length}
   {#if chartIndex == 0}
     <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">
