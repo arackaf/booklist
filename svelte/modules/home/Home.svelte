@@ -32,8 +32,8 @@
           </TabHeaders>
           <TabContents>
             <TabContent let:isActive tabName="vis">
-              {#if isActive && ready}
-                <BooksCharts />
+              {#if isActive}
+                <BooksCharts moduleReady={ready} />
               {/if}
             </TabContent>
 

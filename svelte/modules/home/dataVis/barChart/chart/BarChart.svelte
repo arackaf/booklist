@@ -16,6 +16,7 @@
   export let maxWidth;
   export let width;
   export let height;
+  export let isReady;
 
   $: ({ subjectHash } = $subjectsState);
 
@@ -29,7 +30,7 @@
   const margin = { top: 20, right: 10, bottom: 180, left: 0 };
 </script>
 
-{#if !graphData}
+{#if !graphData || !isReady}
   <span><i class="fa fa-spinner fa-spin" /></span>
 {:else if !graphData.length}
   {#if chartIndex == 0}
