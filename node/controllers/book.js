@@ -1,5 +1,4 @@
 import { controller } from "easy-express-controllers";
-import bookEntryQueueManager from "../app-helpers/bookEntryQueueManager";
 
 const { graphql } = require("graphql");
 import { executableSchema, root } from "../../startApp";
@@ -20,18 +19,6 @@ import { ObjectId } from "mongodb";
 import { getDbConnection } from "../util/dbUtils";
 
 class BookController {
-  async saveFromIsbn({ isbn }) {
-    const userId = this.request.user.id;
-
-    try {
-      let addingItem = { userId, isbn };
-      await bookEntryQueueManager.addPendingBook(userId, addingItem);
-
-      this.send({ success: true });
-    } catch (er) {
-      this.send({ failure: true });
-    }
-  }
   async getRecommendations(params) {
     try {
       let userId = params.publicUserId || this.request.user.id;
