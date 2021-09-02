@@ -37,7 +37,7 @@
     "express-subdomain": "^1.0.5",
     "generic-persistgraphql": "0.2.2",
     "graphql": "^15.5.1",
-    "graphql-tools": "^6.0.11",
+    "graphql-tools": "6.0.11",
     "jimp": "^0.2.28",
     "lambda-multipart-parser": "0.0.2",
     "lodash.flatmap": "^4.5.0",
