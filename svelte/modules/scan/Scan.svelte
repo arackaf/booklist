@@ -7,8 +7,6 @@
 
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
-  import ajaxUtil from "util/ajaxUtil";
-  import { getLoginStatus } from "util/loginStatus";
 
   let manuallyEnterBook = () => {};
   let showScanInstructions = false;
@@ -36,39 +34,6 @@
           <a on:click={() => (showScanInstructions = !showScanInstructions)}> <i class="fa fa-question-circle" /> </a>
         </h4>
         <button class="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}> Manual entry </button>
-        <button
-          class="btn btn-xs margin-left"
-          on:click={() => {
-            const wait = ms => new Promise(res => setTimeout(res, ms));
-            (async function () {
-              const delay = 250;
-              for (let i = 0; i < 1; i++) {
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0198788606", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780618918249", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9798577932152", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780553380163", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780553380163", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "039330700X", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "9780393308181", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "334455", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0142003344", ...getLoginStatus() });
-                await wait(delay);
-                ajaxUtil.postWithCors(process.env.SCAN_BOOK, { isbn: "0465072704", ...getLoginStatus() });
-                await wait(delay);
-              }
-            })();
-          }}
-        >
-          TEST
-        </button>
       </div>
       <div style="margin-top: 10px">
         <div>
