@@ -112,7 +112,7 @@ module.exports = {
     new GenerateSW({
       ignoreURLParametersMatching: [/./],
       exclude: [/\.(ttf|eot|svg|woff)$/],
-      navigateFallback: "react/dist/index.html",
+      navigateFallback: "svelte/dist/index.html",
       navigateFallbackDenylist: [/\/(activate|graphql|graphql-public)\b/],
       runtimeCaching: [
         getCache({ pattern: /^https:\/\/mylibrary\.io\/graphql\?.+cache%22:1/, name: "short-cache", expires: 60 * 5 }), //5 minutes
