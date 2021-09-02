@@ -23,7 +23,6 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
 import { easyControllers } from "easy-express-controllers";
-import expressWsImport from "express-ws";
 
 import expressGraphql from "express-graphql";
 
@@ -138,15 +137,6 @@ app.use(passport.authenticate("remember-me"));
 
 const statics = ["/static/", "/node_modules/", "/react/", "/svelte/", "/utils/"];
 statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
-
-const expressWs = expressWsImport(app);
-app.ws("/bookEntryWS", function (ws, req) {
-  ws.on("message", function (msg) {
-    bookEntryQueueManager.sync(req.user.id, ws);
-  });
-
-  bookEntryQueueManager.subscriberAdded(req.user.id, ws);
-});
 
 app.use("/book/getRecommendations", cors(), (req, res, next) => next());
 easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
