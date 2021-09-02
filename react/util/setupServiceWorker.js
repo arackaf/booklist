@@ -36,13 +36,6 @@ export default function setupServiceWorker() {
           }
         });
         Promise.all([import("toastify-js"), import("toastify-js/src/toastify.css")]).then(([{ default: Toastify }]) => {
-          window.addEventListener("click", evt => {
-            try {
-              if (evt.target.classList.contains("do-sw-update")) {
-                sw.postMessage("sw-update-accepted");
-              }
-            } catch (e) {}
-          });
           Toastify({
             text: `
             <h4 style='display: inline'>An update is available!</h4>
@@ -53,7 +46,14 @@ export default function setupServiceWorker() {
             duration: 700000,
             gravity: "bottom",
             close: true,
-            className: "toast-notification"
+            className: "toast-notification",
+            onClick: () => {
+              try {
+                if (evt.target.classList.contains("do-sw-update")) {
+                  sw.postMessage("sw-update-accepted");
+                }
+              } catch (e) {}
+            }
           }).showToast();
         });
       } catch (er) {}
