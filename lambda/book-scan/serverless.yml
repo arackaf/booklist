@@ -98,8 +98,6 @@ functions:
           type: dynamodb
           arn:
             Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
-  stickItIn:
-    handler: handler.stickItIn
 
 plugins:
   - serverless-webpack
