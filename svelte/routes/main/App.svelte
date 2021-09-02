@@ -6,45 +6,52 @@
   import "util/graphql";
 
   import booksPreload from "./booksPreload";
-
   import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
-
   import setupServiceWorker from "../../util/setupServiceWorker";
+
+  import { scanWebSocket, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
+  import { getCookieLookup, isLoggedIn } from "util/loginStatus";
+
+  import Toastify from "toastify-js";
+  import "toastify-js/src/toastify.css";
+
+  const cookieHash = getCookieLookup();
+
+  if (isLoggedIn()) {
+    checkPendingCount();
+    scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
+
+    scanWebSocket.addHandler(data => {
+      let packet = JSON.parse(data);
+
+      dispatchScanDataUpdate(packet);
+    });
+  }
+
+  function showBookToast(title, url) {
+    Toastify({
+      text: `<div><img src="${url}" ></div><span>${title}</span>`,
+      escapeMarkup: false,
+      duration: 5 * 1000,
+      gravity: "bottom",
+      close: true,
+      className: "toast-notification book-loaded"
+    }).showToast();
+  }
 
   history.listen(() => {
     appStateDispatch({ type: URL_SYNC });
   });
 
-  let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
-
-  let ws2 = new WebSocket("wss://fwue4kkta2.execute-api.us-east-1.amazonaws.com/dev");
-
-  setTimeout(() => {
-    ws2.onmessage = ({ data }) => {
-      console.log("DATA!!!", data);
-    };
-    ws2.send(`{ action: "sync" }`);
-  }, 2000);
-
-  ws.onmessage = ({ data }) => {
-    let packet = JSON.parse(data);
-    window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
-  };
-
-  ws.onopen = () => {
-    ws.send(`SYNC`);
-    window.addEventListener("sync-ws", () => {
-      ws.send(`SYNC`);
-    });
-  };
-
-  window.onbeforeunload = function () {
-    ws.onclose = function () {}; // disable onclose handler first
-    ws.close();
-  };
-
   setupServiceWorker();
 
+  window.addEventListener("ws-info", ({ detail }: any) => {
+    if (detail.type === "scanResults" && $appState.module !== "scan") {
+      for (const { item: book } of detail.packet.results.filter(result => result.success)) {
+        showBookToast(book.title, book.smallImage);
+      }
+    }
+  });
 </script>
 
 <AppUI content={$appState.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ""}>

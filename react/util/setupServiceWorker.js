@@ -49,6 +49,7 @@ export default function setupServiceWorker() {
             <br><br>
             <a class='do-sw-update'>Click to update and reload</a>&nbsp;&nbsp;
           `.trim(),
+            escapeMarkup: false,
             duration: 700000,
             gravity: "bottom",
             close: true,

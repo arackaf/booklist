@@ -1,13 +1,14 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "files.exclude": {
-        "react/package-lock.json": true,
-        "package-lock.json": true,
-        "favicon.ico": true,
-        ".gitattributes": true,
-        "react/dist": true,
-        "svelte/dist": true,
-        "conversions": true,
-        "uploads": true
-    }
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "react/package-lock.json": true,
+    "package-lock.json": true,
+    "favicon.ico": true,
+    ".gitattributes": true,
+    "react/dist": true,
+    "svelte/dist": true,
+    "**/.serverless": true,
+    "conversions": true,
+    "uploads": true
+  }
 }

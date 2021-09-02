@@ -133,7 +133,7 @@
   <ModuleLoading />
 {/if}
 
-<section class="full flush-bottom">
+<section class="full flush-bottom" transition:fade={{ duration: 150, easing: quadOut }}>
   <div style="background-color: white;">
     <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div>

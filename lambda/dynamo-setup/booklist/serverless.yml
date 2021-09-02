@@ -1,0 +1,85 @@
+# Welcome to Serverless!
+
+service: dynamo-booklist
+
+frameworkVersion: "2"
+variablesResolutionMode: 20210326
+
+custom:
+  serverlessIfElse:
+    - If: '"${self:provider.stage}" == "unused"'
+      Exclude:
+        - resources.Resources.BooklistTable.Properties.BillingMode
+      ElseExclude:
+        - resources.Resources.BooklistTable.Properties.ProvisionedThroughput
+        - resources.Resources.BooklistTable.Properties.GlobalSecondaryIndexes.0.ProvisionedThroughput
+        - resources.Resources.BooklistTable.Properties.GlobalSecondaryIndexes.1.ProvisionedThroughput
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+
+resources:
+  Resources:
+    BooklistTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: My_Library_${self:provider.stage}
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: gsiUserLookupPk
+            AttributeType: S
+          - AttributeName: gsiUserWebSocketLookupPk
+            AttributeType: S
+          - AttributeName: connection-id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        GlobalSecondaryIndexes:
+          - IndexName: gsiUserLookup
+            KeySchema:
+              - AttributeName: gsiUserLookupPk
+                KeyType: HASH
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: gsiUserWebSocketLookup
+            KeySchema:
+              - AttributeName: gsiUserWebSocketLookupPk
+                KeyType: HASH
+              - AttributeName: connection-id
+                KeyType: RANGE
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
+  Outputs:
+    BooklistTableArnId:
+      Value:
+        Fn::GetAtt:
+          - BooklistTable
+          - StreamArn
+      Export:
+        Name: Booklist-Dynamo-Table-${self:provider.stage}
+plugins:
+  - serverless-plugin-ifelse

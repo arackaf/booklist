@@ -1,15 +1,12 @@
 <script context="module">
   function scanReducer(state, [type, payload]) {
     switch (type) {
-      case "initial":
-        return { ...state, pending: payload.pending };
-      case "pendingBookAdded":
-        return { ...state, pending: state.pending + 1 };
-      case "bookAdded":
-        return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 3) };
-      case "bookLookupFailed":
-        let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
-        return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
+      case "pendingCountSet":
+      case "bookQueued":
+        return { ...state, pending: payload };
+      case "scanResults":
+        const newItems = payload.results.map(result => ({ success: result.success, ...result.item }));
+        return { ...state, booksSaved: newItems.concat(state.booksSaved).slice(0, 25) };
     }
     return state;
   }
@@ -34,14 +31,18 @@
 
   $: toggleClass = showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down";
 
+  $: toggleShow = booksSaved.length || pending;
+  $: labelScanStatusStyles = !!toggleShow ? `display: inline-block; width: 30ch` : "";
+
   onMount(() => {
     function sendIt({ detail }: any) {
-      if (detail.type == "bookAdded" && detail.packet.smallImage) {
-        preloadNewBookImage(detail.packet).then(() => {
-          dispatch([detail.type, detail.packet]);
+      if (detail.type == "scanResults") {
+        const successfulBooksWithImages = detail.packet.results.filter(result => result.success && result.item.smallImage);
+        Promise.all(successfulBooksWithImages.map(result => preloadNewBookImage(result.item))).then(() => {
+          dispatch([detail.type, detail.pendingCount ?? detail.packet]);
         });
       } else {
-        dispatch([detail.type, detail.packet]);
+        dispatch([detail.type, detail.pendingCount ?? detail.packet]);
       }
     }
 
@@ -56,18 +57,22 @@
   <div>
     {#if pending}
       <span class="label label-info">
-        {pending}
-        Book{pending === 1 ? '' : 's'}
-        currently outstanding
-        {#if booksSaved.length || pending}
+        <span style={labelScanStatusStyles}>
+          {pending}
+          Book{pending === 1 ? "" : "s"}
+          currently outstanding
+        </span>
+        {#if toggleShow}
           <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
         {/if}
       </span>
     {:else if pending != null}
-      <span class="label label-success">All pending books saved
-        {#if booksSaved.length || pending}
+      <span class="label label-success">
+        <span style={labelScanStatusStyles}> All pending books saved </span>
+        {#if toggleShow}
           <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
-        {/if}</span>
+        {/if}
+      </span>
     {/if}
   </div>
 

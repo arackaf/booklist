@@ -44,8 +44,7 @@
               <br />
               <br />
               After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books with a
-              barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get
-              overridden.
+              barcode scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get overridden.
             </div>
           </div>
         </div>

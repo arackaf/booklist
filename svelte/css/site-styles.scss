@@ -524,6 +524,35 @@ div.toast-notification {
   background: var(--primary-4);
   color: var(--primary-10);
 }
+div.toast-notification.book-loaded {
+  width: 300px;
+  display: flex;
+  background: var(--success-7);
+  padding: 0;
+
+  > :first-child {
+    margin: 12px 0 12px 10px;
+
+    width: 60px;
+    height: 75px;
+    overflow: hidden;
+
+    > img {
+      display: block;
+    }
+  }
+
+  > :nth-child(2) {
+    margin: 12px 10px 12px 10px;
+    flex: 1;
+    height: 75px;
+    overflow: hidden;
+  }
+  > :last-child {
+    margin: 12px 5px 12px auto;
+    font-size: 20px;
+  }
+}
 div.toast-notification a,
 div.toast-notification span,
 div.toast-notification h4 {

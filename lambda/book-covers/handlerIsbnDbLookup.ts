@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 
 import corsResponse from "../util/corsResponse";
-import downloadFromUrl from "../util/downloadFromUrl";
 import getSecrets from "../util/getSecrets";
 
 export const handler = async event => {
@@ -9,7 +8,7 @@ export const handler = async event => {
   const key = secrets["isbn-db-key"];
   const { isbn } = JSON.parse(event.body);
 
-  const result = {};
+  const result = {} as any;
   try {
     const fetchResponse = await fetch(`https://api2.isbndb.com/book/${isbn}`, {
       headers: {
@@ -24,7 +23,7 @@ export const handler = async event => {
       result.image = bookResult.book.image;
     }
   } catch (err) {
-    console.log("Error", er);
+    console.log("Error", err);
   }
 
   return corsResponse({ result });

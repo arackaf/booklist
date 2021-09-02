@@ -10,14 +10,14 @@ import BookSvg from "./bookSvg";
 
 import navClasses from "css/navbar.module.scss";
 import "css/main-mobile-menu.scss";
+import { useEffect } from "react";
 
-const { nav, navHeader, navItems, navItemsRight } = navClasses;
+const { nav, navHeader, navItems, navItemsRight, numberBadge, bigCount } = navClasses;
 
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
 const NavBarItem = props => {
   let { disabled, className, active, href, onClick, children, aStyle = {}, ...rest } = props;
-  let hrefToUse = !disabled && !active ? null : href;
 
   return (
     <li className={spreadClassNames(className, !!disabled ? "disabled" : "", active ? "active" : "")} {...rest}>
@@ -44,6 +44,18 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   let isSettings = module == "settings";
   let isSettingsSection = module == "admin";
 
+  let [pendingCount, setPendingCount] = useState(0);
+
+  function handleWsPendingCountUpdate(evt) {
+    if (typeof evt?.detail?.pendingCount === "number") {
+      setPendingCount(evt.detail.pendingCount);
+    }
+  }
+  useEffect(() => {
+    window.addEventListener("ws-info", handleWsPendingCountUpdate);
+    return () => window.removeEventListener("ws-info", handleWsPendingCountUpdate);
+  }, []);
+
   return (
     <header>
       <nav className={nav}>
@@ -59,9 +71,17 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             <i className="fal fa-home visible-xs" />
           </NavBarItem>
           {isLoggedIn || isPublic ? (
-            <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry}>
+            <NavBarItem disabled={isPublic} onClick={isPublic ? null : () => goto("scan")} active={isBookEntry} style={{ position: "relative" }}>
               <span className="hidden-xs">Book entry</span>
               <i className="visible-xs fal fa-scanner" />
+              {pendingCount ? (
+                <span className={`${numberBadge} ${pendingCount > 9 ? bigCount : ""}`}>
+                  <span className="overlay-holder">
+                    <i className="fas fa-badge"></i>
+                    <span>{pendingCount}</span>
+                  </span>
+                </span>
+              ) : null}
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (

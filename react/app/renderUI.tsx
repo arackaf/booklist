@@ -11,27 +11,39 @@ import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
+import { scanWebSocket, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
+import { getCookieLookup, isLoggedIn } from "util/loginStatus";
+
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
+
 document.body.className = localStorageManager.get("color-theme", "scheme1");
 
-declare var webSocketAddress: any;
-let ws = new WebSocket(webSocketAddress("/bookEntryWS"));
+const cookieHash = getCookieLookup();
 
-ws.onmessage = ({ data }) => {
-  let packet = JSON.parse(data);
-  window.dispatchEvent(new CustomEvent("ws-info", { detail: { type: packet._messageType, packet } }));
-};
+const pause = () => new Promise(res => setTimeout(res, 400));
 
-ws.onopen = () => {
-  ws.send(`SYNC`);
-  window.addEventListener("sync-ws", () => {
-    ws.send(`SYNC`);
+function showBookToast(title, url) {
+  Toastify({
+    text: `<div><img src="${url}" ></div><span>${title}</span>`,
+    escapeMarkup: false,
+    duration: 5 * 1000,
+    gravity: "bottom",
+    close: true,
+    className: "toast-notification book-loaded"
+  }).showToast();
+}
+
+if (isLoggedIn()) {
+  checkPendingCount();
+  scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
+
+  scanWebSocket.addHandler(data => {
+    let packet = JSON.parse(data);
+
+    dispatchScanDataUpdate(packet);
   });
-};
-
-window.onbeforeunload = function () {
-  ws.onclose = function () {}; // disable onclose handler first
-  ws.close();
-};
+}
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
@@ -72,10 +84,10 @@ const App = () => {
   const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs });
   const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs });
 
-  const suspensePacket = useMemo(() => ({ startTransition: startTransitionModuleUpdate, isPending: moduleUpdatePending }), [
-    startTransitionModuleUpdate,
-    moduleUpdatePending
-  ]);
+  const suspensePacket = useMemo(
+    () => ({ startTransition: startTransitionModuleUpdate, isPending: moduleUpdatePending }),
+    [startTransitionModuleUpdate, moduleUpdatePending]
+  );
 
   let appStatePacket = useAppState();
   let [appState, appActions, dispatch] = appStatePacket;
@@ -90,7 +102,7 @@ const App = () => {
     document.documentElement.scrollTop = 0;
     if (appState.isMobile) {
       function setAdjustedVh() {
-        let vh = (window.innerHeight * 0.01) + "px";
+        let vh = window.innerHeight * 0.01 + "px";
         document.documentElement.style.setProperty("--adjusted-vh", vh);
       }
 
@@ -112,7 +124,23 @@ const App = () => {
       setTimeout(setAdjustedVh, 100);
       setTimeout(setAdjustedVh, 250);
     }
+
+    window.addEventListener("ws-info", ({ detail }: CustomEvent) => {});
   }, []);
+
+  useEffect(() => {
+    const handler = ({ detail }: CustomEvent) => {
+      if (detail.type === "scanResults" && appState.module !== "scan") {
+        for (const { item: book } of detail.packet.results.filter(result => result.success)) {
+          showBookToast(book.title, book.smallImage);
+        }
+      }
+    };
+
+    window.addEventListener("ws-info", handler);
+    return () => window.removeEventListener("ws-info", handler);
+  }, [appState.module]);
+
   useEffect(() => {
     return history.listen(location => {
       let urlState = getCurrentUrlState();

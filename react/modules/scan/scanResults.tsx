@@ -2,20 +2,16 @@ import React, { FunctionComponent, useEffect, useState, useReducer, Suspense } f
 
 import { useTransition, config, animated } from "react-spring";
 import { SlideInContents } from "app/animationHelpers";
-import FlowItems from "app/components/layout/FlowItems";
 import { CoverSmall } from "app/components/bookCoverComponent";
 
 function scanReducer(state, [type, payload]) {
   switch (type) {
-    case "initial":
-      return { ...state, pending: payload.pending };
-    case "pendingBookAdded":
-      return { ...state, pending: state.pending + 1 };
-    case "bookAdded":
-      return { ...state, pending: state.pending - 1, booksSaved: [{ success: true, ...payload }].concat(state.booksSaved).slice(0, 3) };
-    case "bookLookupFailed":
-      let failure = { _id: "" + new Date(), title: `Failed lookup for ${payload.isbn}`, success: false };
-      return { ...state, pending: state.pending - 1, booksSaved: [failure].concat(state.booksSaved).slice(0, 15) };
+    case "pendingCountSet":
+    case "bookQueued":
+      return { ...state, pending: payload };
+    case "scanResults":
+      const newItems = payload.results.map(result => ({ success: result.success, ...result.item }));
+      return { ...state, booksSaved: newItems.concat(state.booksSaved).slice(0, 25) };
   }
   return state;
 }
@@ -43,7 +39,7 @@ const ScanResults: FunctionComponent<{}> = props => {
 
   useEffect(() => {
     function sendIt({ detail }: any) {
-      dispatch([detail.type, detail.packet]);
+      dispatch([detail.type, detail.pendingCount ?? detail.packet]);
     }
 
     window.addEventListener("ws-info", sendIt);
@@ -51,15 +47,21 @@ const ScanResults: FunctionComponent<{}> = props => {
     return () => window.removeEventListener("ws-info", sendIt);
   }, []);
 
+  const labelScanStatusStyles = !!toggleShow ? { display: "inline-block", width: "30ch" } : {};
+
   return (
     <div style={{ flex: 1 }}>
       <div>
         {pending == null ? null : pending ? (
           <span className="label label-info">
-            {`${pending} Book${pending === 1 ? "" : "s"} currently outstanding`} {toggleShow}
+            <span style={labelScanStatusStyles}>{`${pending} Book${pending === 1 ? "" : "s"} currently outstanding`}</span>
+            {toggleShow}
           </span>
         ) : (
-          <span className="label label-success">All pending books saved {toggleShow}</span>
+          <span className="label label-success">
+            <span style={labelScanStatusStyles}>All pending books saved&nbsp;</span>
+            {toggleShow}
+          </span>
         )}
       </div>
 
