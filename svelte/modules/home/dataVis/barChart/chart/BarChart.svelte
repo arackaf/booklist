@@ -8,6 +8,7 @@
   import { subjectsState } from "app/state/subjectsState";
   import { stackGraphData } from "../../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
+  import SectionLoading from "app/components/ui/SectionLoading.svelte";
 
   export let drilldown;
   export let subjects;
@@ -36,7 +37,7 @@
   a few ms too soon
 -->
 {#if !graphData}
-  <span><i class="fa fa-spinner fa-spin" /></span>
+  <SectionLoading style="margin-top: {chartIndex === 0 ? 150 : 20}px;" />
 {:else if !graphData.length}
   {#if chartIndex == 0}
     <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">
