@@ -19,7 +19,7 @@
   <FlexRow>
     <div class="col-md-6 col-sm-12" style="position: relative; min-height: 200px">
       {#if !loaded}
-        <SectionLoading style="left: 20%" />
+        <SectionLoading />
       {:else}
         <EditPublicUserSettings settings={data.getUser.User} />
       {/if}
