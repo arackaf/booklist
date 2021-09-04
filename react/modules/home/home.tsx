@@ -1,16 +1,24 @@
 import React, { FunctionComponent, useContext, useState, FC } from "react";
 import Measure from "react-measure";
+import "./d3-styles.scss";
 import "d3-transition";
 
-import BarChart from "./components/barChart";
-import { AppContext } from "app/renderUI";
-import { useStackedSubjects } from "app/state/subjectsState";
-import RecommendMain from "./components/recommend/main";
-
-import "./d3-styles.scss";
 import { goto } from "reactStartup";
+
+import { AppContext } from "app/renderUI";
 import { useTagsState } from "app/state/tagsState";
 import { Tabs, TabHeader, TabHeaders, TabContents, TabContent } from "app/components/layout/Tabs";
+import { useStackedSubjects } from "app/state/subjectsState";
+import barCharQuery from "graphQL/home/barChart.graphql";
+import { clearCache } from "util/graphqlCacheHelpers";
+import { graphqlClient } from "util/graphql";
+
+import BarChart from "./components/barChart";
+import RecommendMain from "./components/recommend/main";
+
+graphqlClient.subscribeMutation(
+  [/(create|update|delete)Subjects?/, /(create|update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) }))
+);
 
 const MainHomePane = props => (
   <div>

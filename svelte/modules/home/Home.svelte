@@ -9,8 +9,17 @@
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
   import TabContents from "app/components/layout/tabs/TabContents.svelte";
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
+  import { graphqlClient } from "util/graphql";
+  import { clearCache } from "util/graphqlCacheHelpers";
+
   import BooksCharts from "./dataVis/BooksCharts.svelte";
   import BookRecommendations from "./recommendations/BookRecommendations.svelte";
+
+  import barCharQuery from "graphQL/home/barChart.graphql";
+
+  graphqlClient.subscribeMutation(
+    [/(create|update|delete)Subjects?/, /(create|update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) }))
+  );
 </script>
 
 <section>
