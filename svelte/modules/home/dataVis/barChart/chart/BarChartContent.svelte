@@ -10,10 +10,6 @@
   import SvgTooltip from "../SvgTooltip.svelte";
   import { onMount } from "svelte";
 
-  const scrollInitial = el => {
-    el && el.scrollIntoView({ behavior: "smooth" });
-  };
-
   export let width;
   export let height;
   export let margin;
@@ -22,6 +18,10 @@
   export let graphData: any[];
   export let drilldown;
   export let chartIndex;
+
+  const scrollInitial = el => {
+    el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
+  };
 
   let excluding: any = {};
 
@@ -92,7 +92,7 @@
           Excluding:&nbsp;
           {#each graphData.filter(d => excluding[d.groupId]) as d}
             <span style="margin-left: 10px">
-              {d.display}{' '}
+              {d.display}{" "}
               <a style="color: black" on:click={() => restoreBar(d.groupId)}> <i class="far fa-redo" /> </a>
             </span>
           {/each}

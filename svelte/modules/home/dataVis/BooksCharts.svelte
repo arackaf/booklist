@@ -5,8 +5,6 @@
   import { syncWidth } from "app/animationHelpers";
   import { stackedSubjects } from "app/state/subjectsState";
 
-  export let moduleReady = false;
-
   const MAX_CHART_WIDTH = 1100;
   let chartRootEl;
   let chartWidth;
@@ -33,15 +31,7 @@
 <div bind:this={chartRootEl}>
   {#if ready}
     {#each chartPackets as packet, i (packet.header)}
-      <BarChart
-        isReady={i === 0 ? moduleReady : true}
-        drilldown={getDrilldownChart}
-        {...packet}
-        chartIndex={i}
-        maxWidth={MAX_CHART_WIDTH}
-        width={$chartWidth}
-        height={600}
-      />
+      <BarChart drilldown={getDrilldownChart} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={$chartWidth} height={600} />
     {/each}
   {/if}
 </div>

@@ -16,7 +16,6 @@
   export let maxWidth;
   export let width;
   export let height;
-  export let isReady;
 
   $: ({ subjectHash } = $subjectsState);
 
@@ -38,8 +37,6 @@
 -->
 {#if !graphData}
   <span><i class="fa fa-spinner fa-spin" /></span>
-{:else if !isReady}
-  <h4 style="display: inline">{header}</h4>
 {:else if !graphData.length}
   {#if chartIndex == 0}
     <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">

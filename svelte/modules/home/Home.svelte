@@ -11,18 +11,10 @@
   import TabContent from "app/components/layout/tabs/TabContent.svelte";
   import BooksCharts from "./dataVis/BooksCharts.svelte";
   import BookRecommendations from "./recommendations/BookRecommendations.svelte";
-
-  let ready = false;
 </script>
 
 <section>
-  <div
-    transition:fade={{ duration: 150, easing: quadOut }}
-    on:introend={() => {
-      ready = true;
-    }}
-    style="margin-left: auto; margin-right: auto; max-width: 1200px"
-  >
+  <div transition:fade={{ duration: 150, easing: quadOut }} style="margin-left: auto; margin-right: auto; max-width: 1200px">
     <div>
       <div class="panel-body" style="position: relative">
         <Tabs defaultTab="vis" localStorageName="home-tabs">
@@ -33,7 +25,7 @@
           <TabContents>
             <TabContent let:isActive tabName="vis">
               {#if isActive}
-                <BooksCharts moduleReady={ready} />
+                <BooksCharts />
               {/if}
             </TabContent>
 
