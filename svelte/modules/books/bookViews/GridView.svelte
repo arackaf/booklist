@@ -50,9 +50,9 @@
   $: stickyHeaderStyle = `position: sticky; padding-top: 2px; top: ${menuBarHeight - 4}px; background-color: white; z-index: 2`;
 </script>
 
-<div class="overlay-holder" style="min-height: 400px">
+<div class="overlay-holder">
   {#key currentQuery}
-    <table transition:fade|local={{ duration: 100, easing: quadOut }} style="position: relative" class="table no-padding-top">
+    <table transition:fade|local={{ duration: 100, easing: quadOut }} style="position: relative; align-self: start;" class="table no-padding-top">
       <thead>
         <tr>
           {#if !isPublic && online}

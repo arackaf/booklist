@@ -144,7 +144,7 @@
               <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
             </div>
           {:else if booksLoaded && books != null}
-            <div transition:fade|local={{ duration: 150, easing: quadOut }} style="min-height: 450px;">
+            <div transition:fade|local={{ duration: 150, easing: quadOut }}>
               {#if $uiView.view == GRID_VIEW}
                 <GridView {booksState} {menuBarHeight} />
               {:else if $uiView.view == BASIC_LIST_VIEW}
