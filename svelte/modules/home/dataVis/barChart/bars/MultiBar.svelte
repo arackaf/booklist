@@ -7,6 +7,7 @@
   export let x;
   export let hoverBar;
   export let unHoverBar;
+  export let totalSvgWidth;
 
   $: _colors = data.entries.map(e => e.color);
   let colors = [];
