@@ -15,6 +15,7 @@ import { graphqlClient } from "util/graphql";
 
 import BarChart from "./components/barChart";
 import RecommendMain from "./components/recommend/main";
+import RecentScans from "./recent-scans";
 
 graphqlClient.subscribeMutation(
   [/(create|update|delete)Subjects?/, /(create|update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) }))
@@ -53,6 +54,11 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
               <span>Discover books</span>
             </a>
           </TabHeader>
+          <TabHeader tabName="recent-scans">
+            <a>
+              <span>Recent scans</span>
+            </a>
+          </TabHeader>
         </TabHeaders>
         <TabContents>
           <TabContent tabName="vis">
@@ -75,6 +81,9 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
 
           <TabContent tabName="rec">
             <RecommendMain />
+          </TabContent>
+          <TabContent tabName="recent-scans">
+            <RecentScans />
           </TabContent>
         </TabContents>
       </Tabs>
