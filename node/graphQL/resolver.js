@@ -10,6 +10,7 @@ import Tag, { Tag as TagRest } from "./Tag/resolver";
 import TagsDeleted, { TagsDeleted as TagsDeletedRest } from "./TagsDeleted/resolver";
 
 import resolverAddition1 from "../graphQL-custom/custom-content/user/resolver.js";
+import resolverAddition2 from "../graphQL-custom/custom-content/recently-scanned/resolver.js";
 
 const { Query: BookQuery, Mutation: BookMutation } = Book;
 const { Query: BookSummaryQuery, Mutation: BookSummaryMutation } = BookSummary;
@@ -21,6 +22,7 @@ const { Query: TagQuery, Mutation: TagMutation } = Tag;
 const { Query: TagsDeletedQuery, Mutation: TagsDeletedMutation } = TagsDeleted;
 
 const { Query: queryAddition1 = {}, Mutation: mutationAddition1 = {}, ...restAdditions1 } = resolverAddition1;
+const { Query: queryAddition2 = {}, Mutation: mutationAddition2 = {}, ...restAdditions2 } = resolverAddition2;
 
 export default {
   JSON: GraphQLJSON,
@@ -34,9 +36,18 @@ export default {
     SubjectsDeletedQuery,
     TagQuery,
     TagsDeletedQuery,
-    queryAddition1
+    queryAddition1,
+    queryAddition2
   ),
-  Mutation: Object.assign({}, BookMutation, BookSummaryMutation, SubjectMutation, TagMutation, mutationAddition1),
+  Mutation: Object.assign(
+    {},
+    BookMutation,
+    BookSummaryMutation,
+    SubjectMutation,
+    TagMutation,
+    mutationAddition1,
+    mutationAddition2
+  ),
   Book: { ...BookRest },
   BookSummary: { ...BookSummaryRest },
   BooksDeleted: { ...BooksDeletedRest },
@@ -45,5 +56,6 @@ export default {
   SubjectsDeleted: { ...SubjectsDeletedRest },
   Tag: { ...TagRest },
   TagsDeleted: { ...TagsDeletedRest },
-  ...restAdditions1
+  ...restAdditions1,
+  ...restAdditions2
 };
