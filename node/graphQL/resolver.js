@@ -9,7 +9,7 @@ import SubjectsDeleted, { SubjectsDeleted as SubjectsDeletedRest } from "./Subje
 import Tag, { Tag as TagRest } from "./Tag/resolver";
 import TagsDeleted, { TagsDeleted as TagsDeletedRest } from "./TagsDeleted/resolver";
 
-import resolverAddition1 from "../graphQL-custom/custom-content/userResolver.js";
+import resolverAddition1 from "../graphQL-custom/custom-content/user/resolver.js";
 
 const { Query: BookQuery, Mutation: BookMutation } = Book;
 const { Query: BookSummaryQuery, Mutation: BookSummaryMutation } = BookSummary;
