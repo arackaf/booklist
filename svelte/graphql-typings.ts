@@ -1144,7 +1144,7 @@ export type Query = {
   getTagsDeleted: TagsDeletedSingleQueryResult;
   getUser: Maybe<UserSingleQueryResult>;
   getPublicUser: Maybe<PublicUserSingleQueryResult>;
-  scanResults: Maybe<ScanResults>;
+  recentScanResults: Maybe<ScanResults>;
 };
 
 
@@ -1700,7 +1700,7 @@ export type QueryGetPublicUserArgs = {
 };
 
 
-export type QueryScanResultsArgs = {
+export type QueryRecentScanResultsArgs = {
   exclusiveStartKey: Maybe<DynamoKeyInput>;
 };
 

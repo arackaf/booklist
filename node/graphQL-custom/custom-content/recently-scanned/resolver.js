@@ -4,7 +4,7 @@ const getScanResultPk = userId => `User#${userId}#ScanResult`;
 
 export default {
   Query: {
-    async scanResults(root, args, context, ast) {
+    async recentScanResults(root, args, context, ast) {
       const userId = context.user.id;
       const pk = getScanResultPk(userId);
 

@@ -170,7 +170,7 @@ type ScanResults {
 }
 
 extend type Query {
-  scanResults(exclusiveStartKey: DynamoKeyInput): ScanResults
+  recentScanResults(exclusiveStartKey: DynamoKeyInput): ScanResults
 }
 
 
