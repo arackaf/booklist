@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import getSecrets from "../../util/getSecrets";
 import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
-import { getCurrentLookupFullKey } from "./key-helpers";
+import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
 import resizeImage from "../../util/resizeImage";
@@ -189,11 +189,15 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     console.log("Book lookup results", JSON.stringify(scanItems));
     for (const newBookMaybe of scanItems) {
+      const [pk, sk] = getScanResultKey(newBookMaybe.userId);
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
         userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
+        const { title, smallImage } = newBookMaybe as any;
+        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage }));
       } else {
         userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
+        await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn }));
       }
     }
 
