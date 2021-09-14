@@ -1,0 +1,14 @@
+query RecentScansQuery($lastKey: DynamoKeyInput) {
+  recentScanResults(exclusiveStartKey: $lastKey) {
+    LastEvaluatedKey {
+      pk
+      sk
+    }
+    ScanResults {
+      success
+      isbn
+      title
+      smallImage
+    }
+  }
+}
