@@ -37,15 +37,15 @@ const RecentScans: FunctionComponent<Props> = props => {
   };
 
   return (
-    <div>
-      {recentScans.map(item => (
-        <div>{item.success + ""}</div>
-      ))}
-      {recentScans.map(item => (
-        <div>{item.success + ""}</div>
-      ))}
-      {nextLastKey ? <button onClick={loadNextScans}>Load More</button> : null}
-      <div style={{ position: "absolute" }}>{loading ? <LocalLoading /> : null}</div>
+    <div className="overlay-holder">
+      {loading ? <LocalLoading /> : null}
+      <div>
+        {recentScans.map(item => (
+          <div>{item.title ?? `${item.isbn} Failure`}</div>
+        ))}
+
+        {nextLastKey ? <button onClick={loadNextScans}>Load More</button> : null}
+      </div>
     </div>
   );
 };
