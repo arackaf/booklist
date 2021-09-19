@@ -1,4 +1,4 @@
-import React, { FunctionComponent, Suspense, useEffect, useReducer, useState } from "react";
+import React, { FunctionComponent, Suspense, useEffect, useReducer, useRef, useState } from "react";
 const { unstable_useTransition: useTransition } = React as any;
 
 import { Queries, QueryOf } from "graphql-typings";
@@ -23,10 +23,19 @@ function scanStateReducer(state, data) {
 
 const RecentScans: FunctionComponent<Props> = props => {
   const [currentNextPageKey, setCurrentNextPageKey] = useState<any>(null);
-  const [{ nextNextPageKey, currentScans }, dispatch] = useReducer(scanStateReducer, initialState);
+  const lastNewScans = useRef<any>(null);
 
+  const [{ nextNextPageKey, currentScans }, dispatch] = useReducer(scanStateReducer, initialState);
   const { data, loading } = useQuery<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: currentNextPageKey });
-  dispatch(data);
+
+  const nextScans = data?.recentScanResults?.ScanResults ?? [];
+
+  useEffect(() => {
+    if (nextScans.length && nextScans != lastNewScans.current) {
+      lastNewScans.current = nextScans;
+      dispatch(data);
+    }
+  }, [nextScans]);
 
   const loadNextScans = () => {
     setCurrentNextPageKey(nextNextPageKey);
@@ -36,10 +45,9 @@ const RecentScans: FunctionComponent<Props> = props => {
     <div className="overlay-holder">
       {loading ? <LocalLoading /> : null}
       <div>
-        {currentScans.map(item => (
-          <div>{item.title ?? `${item.isbn} Failure`}</div>
+        {currentScans.map((item, i) => (
+          <div key={i}>{item.title ?? `${item.isbn} Failure`}</div>
         ))}
-
         {nextNextPageKey ? <button onClick={loadNextScans}>Load More</button> : null}
       </div>
     </div>
