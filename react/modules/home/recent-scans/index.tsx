@@ -22,12 +22,10 @@ function scanStateReducer(state, data) {
 }
 
 const RecentScans: FunctionComponent<Props> = props => {
-  const [startTransition, loading] = useTransition({ timeoutMs: 9000 });
-
   const [currentNextPageKey, setCurrentNextPageKey] = useState<any>(null);
   const [{ nextNextPageKey, currentScans }, dispatch] = useReducer(scanStateReducer, initialState);
 
-  const { data } = useQuery<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: currentNextPageKey });
+  const { data, loading } = useQuery<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: currentNextPageKey });
   dispatch(data);
 
   const loadNextScans = () => {
