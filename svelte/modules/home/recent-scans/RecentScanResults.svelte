@@ -1,40 +1,39 @@
 <script lang="ts">
+  import { writable } from "svelte/store";
   import { Queries, QueryOf } from "graphql-typings";
 
   import { query } from "micro-graphql-svelte";
   import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
+  import SectionLoading from "app/components/ui/SectionLoading.svelte";
 
   let currentNextPageKey = null;
-  let currentResults = [];
-  let { queryState, sync } = query<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery) as any;
+  let { queryState, sync, resultsState } = query<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery);
 
-  $: console.log("XXX", $queryState);
-  queryState.subscribe(newVal => {
-    console.log("new val", newVal);
-  });
   $: ({ loaded, loading, data } = $queryState);
-
   $: nextNextPageKey = data?.recentScanResults?.LastEvaluatedKey;
-  $: {
-    if (data?.recentScanResults?.ScanResults) {
-      currentResults = currentResults.concat(data.recentScanResults.ScanResults);
-    }
-  }
 
   $: sync({ lastKey: currentNextPageKey });
+
+  let currentResults = writable([]);
+  resultsState.subscribe(data => {
+    let newResults = data?.recentScanResults?.ScanResults;
+    if (newResults) {
+      currentResults.update(current => (current.push(...newResults), current));
+    }
+  });
+
+  const loadNextScans = () => (currentNextPageKey = nextNextPageKey);
 </script>
 
-YO {loading}
-{loaded}
-{#if loading}
-  <h1>Loading</h1>
-{:else}
-  {#each currentResults as item}
-    <div>
-      {item.success ? item.title : item.isbn + " Failure"}
-    </div>
-  {/each}
-  {#if nextNextPageKey}
-    <button on:click={() => (currentNextPageKey = nextNextPageKey)}>Load Next</button>
-  {/if}
+{#if !loaded}
+  <SectionLoading style="margin-top: 50px;" />
+{/if}
+
+{#each $currentResults as item}
+  <div>
+    {item.success ? item.title : item.isbn + " Failure"}
+  </div>
+{/each}
+{#if nextNextPageKey}
+  <button disabled={loading} on:click={loadNextScans}>Load Next</button>
 {/if}

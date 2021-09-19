@@ -11,14 +11,14 @@ import { LocalLoading } from "app/components/loading";
 type Props = any;
 
 const RecentScans: FunctionComponent<Props> = props => {
-  const [lastKey, setLastKey] = useState<any>(null);
-  const [nextLastKey, setNextLastKey] = useState<any>(null);
-  const { data } = useSuspenseQuery<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey });
+  const [startTransition, loading] = useTransition({ timeoutMs: 9000 });
+
+  const [currentNextPageKey, setCurrentNextPageKey] = useState<any>(null);
+  const [nextNextPageKey, setNextNextPageKey] = useState<any>(null);
+  const { data } = useSuspenseQuery<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: currentNextPageKey });
   const newLastKey = data?.recentScanResults?.LastEvaluatedKey;
 
   const [recentScans, setRecentScans] = useState<any>([]);
-
-  const [startTransition, loading] = useTransition({ timeoutMs: 9000 });
 
   const nextScans = data?.recentScanResults?.ScanResults ?? [];
 
@@ -27,12 +27,12 @@ const RecentScans: FunctionComponent<Props> = props => {
   }, [nextScans]);
 
   useEffect(() => {
-    setNextLastKey(newLastKey);
+    setNextNextPageKey(newLastKey);
   }, [newLastKey]);
 
   const loadNextScans = () => {
     startTransition(() => {
-      setLastKey(nextLastKey);
+      setCurrentNextPageKey(nextNextPageKey);
     });
   };
 
@@ -44,7 +44,7 @@ const RecentScans: FunctionComponent<Props> = props => {
           <div>{item.title ?? `${item.isbn} Failure`}</div>
         ))}
 
-        {nextLastKey ? <button onClick={loadNextScans}>Load More</button> : null}
+        {nextNextPageKey ? <button onClick={loadNextScans}>Load More</button> : null}
       </div>
     </div>
   );
