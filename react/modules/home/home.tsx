@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useContext, useState, FC } from "react";
+const { useTransition } = React as any;
 import Measure from "react-measure";
 import "./d3-styles.scss";
 import "d3-transition";
@@ -97,7 +98,9 @@ const ChartHolder: FC<{}> = props => {
   const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
 
   const getDrilldownChart = (index, subjects, header) => {
-    setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
+    useTransition(() => {
+      setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
+    });
   };
 
   return (

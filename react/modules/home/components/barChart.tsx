@@ -11,7 +11,7 @@ import Axis from "./axis";
 
 import barCharQuery from "graphQL/home/barChart.graphql";
 import { useSubjectsState } from "app/state/subjectsState";
-import { useQuery } from "micro-graphql-react";
+import { useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "app/renderUI";
 import SvgTooltip from "./svgTooltip";
 import { stackGraphData } from "./stackGraphData";
@@ -29,7 +29,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const { subjectHash } = useSubjectsState();
   const subjectIds = subjects.map(s => s._id);
 
-  const { data: newRespData } = useQuery(barCharQuery, { subjectIds, searchChildSubjects: true, publicUserId });
+  const { data: newRespData } = useSuspenseQuery(barCharQuery, { subjectIds, searchChildSubjects: true, publicUserId });
   const graphData = stackGraphData(subjectHash, subjectIds, newRespData);
 
   useEffect(() => {
