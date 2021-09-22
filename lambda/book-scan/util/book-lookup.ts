@@ -189,15 +189,16 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     console.log("Book lookup results", JSON.stringify(scanItems));
     for (const newBookMaybe of scanItems) {
-      const [pk, sk] = getScanResultKey(newBookMaybe.userId);
+      const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
+
       if (!newBookMaybe.pk) {
         await mongoDb.collection("books").insertOne(newBookMaybe);
         userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
         const { title, smallImage } = newBookMaybe as any;
-        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage }));
+        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));
       } else {
         userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
-        await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn }));
+        await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
       }
     }
 
