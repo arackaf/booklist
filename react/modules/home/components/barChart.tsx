@@ -97,7 +97,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     el && el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const margin = { top: 20, right: 10, bottom: 180, left: 0 };
+  const margin = { top: 30, right: 20, bottom: 180, left: 20 };
   const showingDataRaw = graphData?.filter(d => !excluding[d.groupId]);
 
   const showingData = useMemo(() => {
@@ -125,7 +125,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
     );
   }
 
-  width = Math.min(width, showingData.length * 110 + 60);
+  width = Math.min(width, showingData.length * 110 + 60) - margin.left - margin.right;
 
   const dataValues = showingData.map(({ count }) => count);
   const displayValues = showingData.map(({ display }) => display);
@@ -133,20 +133,15 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
   const dataMax = max(dataValues);
   const dataScale = scaleLinear().domain([0, dataMax]).range([0, chartHeight]);
   const scaleX = scaleBand().domain(displayValues).range([0, width]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
-  const svgStyle = { display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
 
   const excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   const offsetY = margin.bottom - height;
 
-  let totalSvgWidth = width;
-  const delta = maxWidth - totalSvgWidth;
-  let extraOffsetX = 0;
-  if (totalSvgWidth < maxWidth) {
-    totalSvgWidth = maxWidth;
-    extraOffsetX = delta / 2;
-  }
+  let totalSvgWidth = width + margin.left + margin.right;
 
-  const transform = `scale(1, -1) translate(${margin.left + extraOffsetX}, ${offsetY})`;
+  const svgStyle = { width: `${totalSvgWidth}px`, display: "block", marginLeft: "auto", marginRight: "auto" }; //, marginLeft: 'auto', marginRight: 'auto'};
+
+  const transform = `scale(1, -1) translate(${margin.left}, ${offsetY})`;
 
   return (
     <div ref={elRef}>
@@ -169,7 +164,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
             </span>
           ) : null}
         </div>
-        <svg style={svgStyle} width={totalSvgWidth} height={height}>
+        <svg style={svgStyle} height={height}>
           <RenderBarChart {...{ showingData, excluding, barMap, scaleX, dataScale, totalSvgWidth, hoverBar, unHoverBar, transform }} />
           <g transform={transform}>
             {showingData
@@ -190,7 +185,7 @@ const BarChart: FC<any> = memo(({ subjects, chartIndex, width, height, drilldown
               ))}
           </g>
           <Axis
-            masterTransform={`translate(${margin.left + extraOffsetX}, ${-1 * margin.bottom})`}
+            masterTransform={`translate(${margin.left}, ${-1 * margin.bottom})`}
             data={showingData}
             scaleX={scaleX}
             graphWidth={width}
