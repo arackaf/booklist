@@ -32,7 +32,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(width, showingData.length * 110 + 60);
+  $: adjustedWidth = Math.min(width, showingData.length * 110 + 60) - margin.left - margin.right;
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -47,20 +47,12 @@
   let offsetYInitial = margin.bottom - height;
   $: offsetY = offsetYInitial;
 
-  $: totalSvgWidth = adjustedWidth;
-  $: delta = maxWidth - adjustedWidth;
-  let extraOffsetX = 0;
-  $: {
-    if (totalSvgWidth < maxWidth) {
-      totalSvgWidth = maxWidth;
-      extraOffsetX = delta / 2;
-    }
-  }
+  $: totalSvgWidth = adjustedWidth + margin.left + margin.right;
 
   let mounted = false;
 
-  let graphTransformSpring = spring({ x: margin.left + extraOffsetX, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
-  $: graphTransformSpring.set({ x: margin.left + extraOffsetX, y: offsetY }, { hard: !mounted });
+  let graphTransformSpring = spring({ x: margin.left, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
+  $: graphTransformSpring.set({ x: margin.left, y: offsetY }, { hard: !mounted });
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
@@ -119,9 +111,9 @@
         {/each}
       </g>
       <Axis
-        masterTransformX={margin.left + extraOffsetX}
+        masterTransformX={margin.left}
         masterTransformY={-1 * margin.bottom}
-        masterTransform={`translate(${margin.left + extraOffsetX}, ${-1 * margin.bottom})`}
+        masterTransform={`translate(${margin.left}, ${-1 * margin.bottom})`}
         data={showingData}
         {scaleX}
         graphWidth={adjustedWidth}

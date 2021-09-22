@@ -27,7 +27,7 @@
 
   $: graphData = stackGraphData(subjectHash, subjectIds, $queryState.data);
 
-  const margin = { top: 20, right: 10, bottom: 180, left: 0 };
+  const margin = { top: 30, right: 20, bottom: 180, left: 20 };
 </script>
 
 <!-- 
