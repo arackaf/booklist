@@ -1,5 +1,5 @@
 import React, { FunctionComponent, Suspense, useState, useRef, useMemo, useContext, useReducer, useLayoutEffect } from "react";
-const { unstable_useTransition: useReactTransition } = React as any;
+const { useTransition: useReactTransition } = React as any;
 
 import Modal, { ModalSizingContext } from "app/components/ui/Modal";
 import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags";
@@ -56,7 +56,7 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
 
   const { isOpen, onHide, dispatch, selectedBooksSet } = props;
 
-  const [startTransition, loading] = useReactTransition({ timeoutMs: 10000 });
+  const [loading, startTransition] = useReactTransition();
 
   const beginSearchDispatch = packet => {
     startTransition(() => searchDispatch(packet));

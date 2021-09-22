@@ -1,8 +1,8 @@
 import React, { createContext, useContext, FunctionComponent, useEffect, Suspense, useMemo } from "react";
-const { unstable_useTransition: useTransition } = React as any;
+const { useTransition } = React as any;
 
 import ReactDOM from "react-dom";
-const { unstable_createRoot: createRoot } = ReactDOM as any;
+const { createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
 import { useAppState, AppState, URL_SYNC, getCurrentModuleFromUrl } from "./state/appState";
@@ -81,8 +81,8 @@ export const ModuleUpdateContext = createContext<{ startTransition: any; isPendi
 const App = () => {
   const suspenseTimeoutValue = parseInt(localStorage.getItem("suspense-timeout"));
   const timeoutMs = isNaN(suspenseTimeoutValue) ? 3000 : suspenseTimeoutValue;
-  const [startTransitionNewModule, isNewModulePending] = useTransition({ timeoutMs });
-  const [startTransitionModuleUpdate, moduleUpdatePending] = useTransition({ timeoutMs });
+  const [isNewModulePending, startTransitionNewModule] = useTransition();
+  const [moduleUpdatePending, startTransitionModuleUpdate] = useTransition();
 
   const suspensePacket = useMemo(
     () => ({ startTransition: startTransitionModuleUpdate, isPending: moduleUpdatePending }),
