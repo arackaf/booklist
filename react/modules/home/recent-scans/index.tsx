@@ -1,5 +1,5 @@
 import React, { FunctionComponent, Suspense, useEffect, useState } from "react";
-const { unstable_useTransition: useTransition } = React as any;
+const { useTransition } = React as any;
 
 import { Queries, QueryOf } from "graphql-typings";
 import "./styles.scss";
@@ -11,7 +11,7 @@ import { LocalLoading } from "app/components/loading";
 type Props = any;
 
 const RecentScans: FunctionComponent<Props> = props => {
-  const [startTransition, loading] = useTransition({ timeoutMs: 9000 });
+  const [loading, startTransition] = useTransition();
 
   const [currentNextPageKey, setCurrentNextPageKey] = useState<any>(null);
   const [nextNextPageKey, setNextNextPageKey] = useState<any>(null);
@@ -40,8 +40,8 @@ const RecentScans: FunctionComponent<Props> = props => {
     <div className="overlay-holder">
       {loading ? <LocalLoading /> : null}
       <div>
-        {recentScans.map(item => (
-          <div>{item.title ?? `${item.isbn} Failure`}</div>
+        {recentScans.map((item, i) => (
+          <div key={i}>{item.title ?? `${item.isbn} Failure`}</div>
         ))}
 
         {nextNextPageKey ? <button onClick={loadNextScans}>Load More</button> : null}
