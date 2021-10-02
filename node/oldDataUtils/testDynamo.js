@@ -1,4 +1,4 @@
-import UserDao2 from "./node/dataAccess/user";
+import UserDao2 from "../dataAccess/user";
 
 (async function () {
   let u = new UserDao2();
