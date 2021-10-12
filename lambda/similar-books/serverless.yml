@@ -1,0 +1,33 @@
+service: similar-books
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  environment:
+    stage: ${self:provider.stage}
+    STAGE: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+
+functions:
+  lookupSimilarBooks:
+    timeout: 750
+    handler: handler.lookupSimilarBooks
+    events:
+      - schedule: rate(24 hours)
+
+plugins:
+  - serverless-webpack
+
+package:
+  individually: true
