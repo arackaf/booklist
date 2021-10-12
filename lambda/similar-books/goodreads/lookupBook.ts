@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { parseString } from "xml2js";
 
-export async function lookupBook(isbn, grKey) {
+export async function lookupBook(isbn, grKey): Promise<any[]> {
   if (!isbn) {
     return [];
   }
