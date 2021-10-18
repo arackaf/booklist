@@ -16,13 +16,19 @@ provider:
       statements:
         - Effect: "Allow"
           Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: "Allow"
+          Action:
             - "secretsmanager:GetSecretValue"
           Resource: "arn:aws:secretsmanager:us-east-1:*"
 
 functions:
   lookupSimilarBooks:
-    timeout: 750
+    timeout: 60
     handler: handler.lookupSimilarBooks
+#    events:
+#      - schedule: rate(1 minute)
 
 plugins:
   - serverless-webpack
