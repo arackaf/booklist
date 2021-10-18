@@ -27,8 +27,8 @@ functions:
   lookupSimilarBooks:
     timeout: 60
     handler: handler.updateSimilarBooks
-#    events:
-#      - schedule: rate(1 minute)
+    events:
+      - schedule: rate(1 minute)
 
 plugins:
   - serverless-webpack
