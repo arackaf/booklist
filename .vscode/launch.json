@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/temp.js",
+      "program": "${workspaceFolder}/app.js",
       "outFiles": ["${workspaceFolder}/**/*.js"]
     }
   ]
