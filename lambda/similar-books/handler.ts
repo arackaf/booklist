@@ -1,10 +1,10 @@
 import getSecrets from "../util/getSecrets";
-import { lookupBook } from "./goodreads/lookupBook";
+import { lookupSimilarBooks } from "./goodreads/lookupSimilarBooks";
 import { addPlaceholder, booksWithoutSimilarity, updateSimilarityInfo } from "./data-helpers/similar-books-helpers";
 
 import { delay } from "../util/asyncHelpers";
 
-export const lookupSimilarBooks = async event => {
+export const updateSimilarBooks = async event => {
   try {
     const secrets = await getSecrets();
     const grKey = secrets["goodreads-key"];
@@ -34,7 +34,7 @@ export const updateSingleBook = async (book, grKey) => {
     return;
   }
 
-  const similarBooks = await lookupBook(book.isbn, grKey);
+  const similarBooks = await lookupSimilarBooks(book.isbn, grKey);
 
   await updateSimilarityInfo(
     book,

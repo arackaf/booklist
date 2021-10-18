@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { parseString } from "xml2js";
 
-export async function lookupBook(isbn, grKey): Promise<any[]> {
+export async function lookupSimilarBooks(isbn, grKey): Promise<any[]> {
   if (!isbn) {
     return [];
   }
@@ -17,7 +17,7 @@ export async function lookupBook(isbn, grKey): Promise<any[]> {
 
           let book = result?.GoodreadsResponse?.book?.[0];
           if (!book) {
-            return [];
+            resolve([]);
           }
 
           let similarBooks = book.similar_books?.[0]?.book;
