@@ -56,15 +56,21 @@ export async function updateSimilarityInfo(book, results) {
         console.log("Not found, saving");
 
         if (!/nophoto/i.test(book.smallImage)) {
-          let res = await downloadBookCover(book.smallImage, 1000);
-          if (res?.fullName) {
-            let { fileName, fullName } = res;
-            let newPath = await resizeIfNeeded(fileName);
+          try {
+            let res = await downloadBookCover(book.smallImage, 1000);
+            if (res?.fullName) {
+              let { fileName, fullName } = res;
+              let newPath = await resizeIfNeeded(fileName);
 
-            if (newPath) {
-              let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);
-              book.smallImage = s3Key;
+              if (newPath) {
+                let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);
+                if (s3Key) {
+                  book.smallImage = s3Key;
+                }
+              }
             }
+          } catch (er) {
+            console.log("Error downloading similar book item cover", er);
           }
         }
         await db.collection("bookSummaries").insertOne(book);
