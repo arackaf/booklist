@@ -24,54 +24,6 @@ class BookDAO extends DAO {
       super.dispose(db);
     }
   }
-
-  async booksWithoutSimilarity() {
-    let db = await super.open();
-    try {
-      try {
-        let dateReference = +new Date() - 1000 * 60 * 60 * 24 * 60;
-        let query = {
-          $and: [
-            { userId: { $ne: "5b57f71b6871ae00145198ff" } },
-            { $or: [{ similarItems: { $exists: false } }, { similarItemsLastUpdate: { $lt: dateReference } }] }
-          ]
-        };
-        let project = { _id: 1, isbn: 1 };
-
-        let books = await db
-          .collection("books")
-          .aggregate([{ $match: query }, { $project: project }, { $limit: 10 }])
-          .toArray();
-
-        return books;
-      } catch (err) {
-        console.log(err);
-      }
-    } finally {
-      super.dispose(db);
-    }
-  }
-
-  async updateBookSimilarity(book, results) {
-    let db = await super.open();
-    try {
-      await db.collection("books").updateOne(
-        { _id: book._id },
-        {
-          $set: { similarItems: results.map(result => result.isbn), similarItemsLastUpdate: +new Date() }
-        }
-      );
-
-      for (let book of results) {
-        let existingEntry = await db.collection("bookSummaries").findOne({ isbn: book.isbn });
-        if (!existingEntry) {
-          await db.collection("bookSummaries").insertOne(book);
-        }
-      }
-    } finally {
-      super.dispose(db);
-    }
-  }
 }
 
 export default BookDAO;

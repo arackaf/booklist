@@ -1,5 +1,4 @@
 import dao from "./node/dataAccess/dao";
-import bookSimilarityQueueManager from "./node/app-helpers/bookSimilarityQueueManager";
 import ErrorLoggerDao from "./node/dataAccess/errorLoggerDAO";
 import UserDao from "./node/dataAccess/user";
 
@@ -357,9 +356,6 @@ function error(err) {
 
 Promise.resolve(dao.init()).then(() => {
   app.listen(process.env.PORT || 3000);
-  if (!IS_PUBLIC) {
-    bookSimilarityQueueManager.initialize();
-  }
 });
 
 export default null;
