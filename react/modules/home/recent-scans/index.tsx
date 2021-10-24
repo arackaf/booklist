@@ -6,7 +6,8 @@ import "./styles.scss";
 
 import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
 import { useSuspenseQuery } from "micro-graphql-react";
-import { LocalLoading } from "app/components/loading";
+import { Button } from "app/components/ui/Button";
+import { SuspenseImg } from "app/components/suspenseImage";
 
 type Props = any;
 
@@ -37,14 +38,40 @@ const RecentScans: FunctionComponent<Props> = props => {
   };
 
   return (
-    <div className="overlay-holder">
-      {loading ? <LocalLoading /> : null}
-      <div>
-        {recentScans.map((item, i) => (
-          <div key={i}>{item.title ?? `${item.isbn} Failure`}</div>
-        ))}
-
-        {nextNextPageKey ? <button onClick={loadNextScans}>Load More</button> : null}
+    <div className="recent-scans-module">
+      <div className="overlay-holder">
+        <div className="results">
+          {recentScans.map((item, i) =>
+            item.success ? (
+              <>
+                <SuspenseImg src={item.smallImage} />
+                <div key={i}>{item.title ?? `${item.isbn} Failure`}</div>
+              </>
+            ) : (
+              <>
+                <div></div>
+                <div>
+                  <div className="alert alert-danger inline-flex">Failed to lookup isbn {item.isbn}</div>
+                </div>
+              </>
+            )
+          )}
+          {nextNextPageKey ? (
+            <>
+              <div></div>
+              <Button preset="info" disabled={loading} onClick={loadNextScans}>
+                Load More
+              </Button>
+            </>
+          ) : (
+            <>
+              <div></div>
+              <div>
+                <div className="alert alert-info inline-flex">No more recent scans</div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
