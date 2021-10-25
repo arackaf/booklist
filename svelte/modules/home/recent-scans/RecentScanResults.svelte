@@ -8,18 +8,16 @@
 
   let currentNextPageKey = null;
   let { queryState, sync, resultsState } = query<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery);
+  $: sync({ lastKey: currentNextPageKey });
 
   $: ({ loaded, loading, data } = $queryState);
   $: nextNextPageKey = data?.recentScanResults?.LastEvaluatedKey;
 
-  $: sync({ lastKey: currentNextPageKey });
-
   let currentResults = writable([]);
+
   resultsState.subscribe(data => {
-    let newResults = data?.recentScanResults?.ScanResults;
-    if (newResults) {
-      currentResults.update(current => (current.push(...newResults), current));
-    }
+    const newResults = data?.recentScanResults?.ScanResults ?? [];
+    currentResults.update(current => (current.push(...newResults), current));
   });
 
   const loadNextScans = () => (currentNextPageKey = nextNextPageKey);
