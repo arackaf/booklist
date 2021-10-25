@@ -8,24 +8,23 @@ import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql"
 import { useSuspenseQuery } from "micro-graphql-react";
 import { Button } from "app/components/ui/Button";
 import { SuspenseImg } from "app/components/suspenseImage";
+import { graphqlClient } from "util/graphql";
 
 type Props = any;
 
 const RecentScans: FunctionComponent<Props> = props => {
   const [loading, startTransition] = useTransition();
 
-  const [currentNextPageKey, setCurrentNextPageKey] = useState<any>(null);
+  const [currentNextPageKeys, setCurrentNextPageKeys] = useState<any>([null]);
   const [nextNextPageKey, setNextNextPageKey] = useState<any>(null);
-  const { data } = useSuspenseQuery<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: currentNextPageKey });
-  const newLastKey = data?.recentScanResults?.LastEvaluatedKey;
 
-  const [recentScans, setRecentScans] = useState<any>([]);
-
-  const nextScans = data?.recentScanResults?.ScanResults ?? [];
-
-  useEffect(() => {
-    setRecentScans(current => current.concat(nextScans));
-  }, [nextScans]);
+  const recentScans = currentNextPageKeys.flatMap(lastKey => {
+    const result = graphqlClient.read<any>(RecentScansQuery, { lastKey });
+    return result?.data?.recentScanResults?.ScanResults ?? [];
+  });
+  const latestKey = currentNextPageKeys[currentNextPageKeys.length - 1];
+  const latestKeyData = graphqlClient.read<any>(RecentScansQuery, { lastKey: latestKey });
+  const newLastKey = latestKeyData?.data?.recentScanResults?.LastEvaluatedKey;
 
   useEffect(() => {
     setNextNextPageKey(newLastKey);
@@ -33,7 +32,7 @@ const RecentScans: FunctionComponent<Props> = props => {
 
   const loadNextScans = () => {
     startTransition(() => {
-      setCurrentNextPageKey(nextNextPageKey);
+      setCurrentNextPageKeys(arr => arr.concat(nextNextPageKey));
     });
   };
 
@@ -67,7 +66,8 @@ const RecentScans: FunctionComponent<Props> = props => {
             <>
               <div></div>
               <div>
-                <div className="alert alert-info inline-flex">No more recent scans</div>
+                <hr />
+                <div className="alert alert-info">No more recent scans</div>
               </div>
             </>
           )}
