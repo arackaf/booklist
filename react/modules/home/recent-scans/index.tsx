@@ -5,7 +5,6 @@ import { Queries, QueryOf } from "graphql-typings";
 import "./styles.scss";
 
 import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
-import { useSuspenseQuery } from "micro-graphql-react";
 import { Button } from "app/components/ui/Button";
 import { SuspenseImg } from "app/components/suspenseImage";
 import { graphqlClient } from "util/graphql";
