@@ -37,7 +37,7 @@
     "history": "4.6.1",
     "html-webpack-plugin": "^4.3.0",
     "lodash.debounce": "4.0.8",
-    "micro-graphql-react": "^0.4.0-rc.6",
+    "micro-graphql-react": "^0.4.0-rc.7",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.14.1",
     "persistgraphql": "^0.3.11",

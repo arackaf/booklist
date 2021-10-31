@@ -19,12 +19,12 @@ const RecentScans: FunctionComponent<Props> = props => {
   const [nextNextPageKey, setNextNextPageKey] = useState<any>(null);
 
   const recentScans = currentNextPageKeys.flatMap(lastKey => {
-    const result = graphqlClient.read<any>(RecentScansQuery, { lastKey });
-    return result?.data?.recentScanResults?.ScanResults ?? [];
+    const result = graphqlClient.read<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey });
+    return result.data?.recentScanResults?.ScanResults ?? [];
   });
   const latestKey = currentNextPageKeys[currentNextPageKeys.length - 1];
-  const latestKeyData = graphqlClient.read<any>(RecentScansQuery, { lastKey: latestKey });
-  const newLastKey = latestKeyData?.data?.recentScanResults?.LastEvaluatedKey;
+  const latestKeyData = graphqlClient.read<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: latestKey });
+  const newLastKey = latestKeyData.data?.recentScanResults?.LastEvaluatedKey;
 
   useEffect(() => {
     setNextNextPageKey(newLastKey);
@@ -40,21 +40,7 @@ const RecentScans: FunctionComponent<Props> = props => {
     <div className="recent-scans-module">
       <div className="overlay-holder">
         <div className="results">
-          {recentScans.map((item, i) =>
-            item.success ? (
-              <>
-                <SuspenseImg src={item.smallImage} />
-                <div key={i}>{item.title ?? `${item.isbn} Failure`}</div>
-              </>
-            ) : (
-              <>
-                <div></div>
-                <div>
-                  <div className="alert alert-danger inline-flex">Failed to lookup isbn {item.isbn}</div>
-                </div>
-              </>
-            )
-          )}
+          {recentScans.map((item, i) => (item.success ? <ScanDisplay key={i} item={item} /> : <ScanFailureDisplay item={item} key={i} />))}
           {nextNextPageKey ? (
             <>
               <div></div>
@@ -74,6 +60,26 @@ const RecentScans: FunctionComponent<Props> = props => {
         </div>
       </div>
     </div>
+  );
+};
+
+const ScanDisplay = ({ item }) => {
+  return (
+    <>
+      <SuspenseImg src={item.smallImage} />
+      <div>{item.title ?? `${item.isbn} Failure`}</div>
+    </>
+  );
+};
+
+const ScanFailureDisplay = ({ item }) => {
+  return (
+    <>
+      <div></div>
+      <div>
+        <div className="alert alert-danger inline-flex">Failed to lookup isbn {item.isbn}</div>
+      </div>
+    </>
   );
 };
 
