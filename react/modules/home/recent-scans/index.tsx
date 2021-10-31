@@ -1,4 +1,4 @@
-import React, { FunctionComponent, Suspense, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 const { useTransition } = React as any;
 
 import { Queries, QueryOf } from "graphql-typings";
@@ -9,9 +9,7 @@ import { Button } from "app/components/ui/Button";
 import { SuspenseImg } from "app/components/suspenseImage";
 import { graphqlClient } from "util/graphql";
 
-type Props = any;
-
-const RecentScans: FunctionComponent<Props> = props => {
+const RecentScans: FunctionComponent = () => {
   const [loading, startTransition] = useTransition();
 
   const [currentNextPageKeys, setCurrentNextPageKeys] = useState<any>([null]);
@@ -39,7 +37,9 @@ const RecentScans: FunctionComponent<Props> = props => {
     <div className="recent-scans-module">
       <div className="overlay-holder">
         <div className="results">
-          {recentScans.map((item, i) => (item.success ? <ScanDisplay key={i} item={item} /> : <ScanFailureDisplay item={item} key={i} />))}
+          {recentScans.map((item, i) => {
+            return item.success ? <ScanDisplay key={i} item={item} /> : <ScanFailureDisplay item={item} key={i} />;
+          })}
           {nextNextPageKey ? (
             <>
               <div></div>
@@ -48,13 +48,7 @@ const RecentScans: FunctionComponent<Props> = props => {
               </Button>
             </>
           ) : (
-            <>
-              <div></div>
-              <div>
-                <hr />
-                <div className="alert alert-info">No more recent scans</div>
-              </div>
-            </>
+            <NoMoreResults />
           )}
         </div>
       </div>
@@ -77,6 +71,18 @@ const ScanFailureDisplay = ({ item }) => {
       <div></div>
       <div>
         <div className="alert alert-danger inline-flex">Failed to lookup isbn {item.isbn}</div>
+      </div>
+    </>
+  );
+};
+
+const NoMoreResults = () => {
+  return (
+    <>
+      <div></div>
+      <div>
+        <hr />
+        <div className="alert alert-info">No more recent scans</div>
       </div>
     </>
   );
