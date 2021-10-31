@@ -7,7 +7,7 @@
     "favicon.ico": true,
     ".gitattributes": true,
     "react/dist": true,
-    "svelte/dist": false,
+    "svelte/dist": true,
     "**/.serverless": true,
     "conversions": true,
     "uploads": true
