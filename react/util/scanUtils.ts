@@ -13,7 +13,6 @@ class ScanWebSocketManage {
 
     ws.onopen = () => {
       open = true;
-      console.log("IS OPEN");
 
       initialMessageQueue.forEach(packet => this.send(packet));
       initialMessageQueue.length = 0;
