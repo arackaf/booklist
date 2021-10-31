@@ -37,6 +37,12 @@ export const db = {
     return res.Items[0];
   },
 
+  async pagedQuery(packet) {
+    let result = await dynamo.query(packet).promise();
+
+    return { items: result.Items || null, lastEvaluatedKey: result.LastEvaluatedKey };
+  },
+
   async update(packet) {
     return dynamo.update(packet).promise();
   },

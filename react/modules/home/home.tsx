@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useContext, useState, FC } from "react";
+const { useTransition } = React as any;
 import Measure from "react-measure";
 import "./d3-styles.scss";
 import "d3-transition";
@@ -15,6 +16,7 @@ import { graphqlClient } from "util/graphql";
 
 import BarChart from "./components/barChart";
 import RecommendMain from "./components/recommend/main";
+import RecentScans from "./recent-scans";
 
 graphqlClient.subscribeMutation(
   [/(create|update|delete)Subjects?/, /(create|update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) }))
@@ -53,6 +55,11 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
               <span>Discover books</span>
             </a>
           </TabHeader>
+          <TabHeader tabName="recent-scans">
+            <a>
+              <span>Recent scans</span>
+            </a>
+          </TabHeader>
         </TabHeaders>
         <TabContents>
           <TabContent tabName="vis">
@@ -76,6 +83,9 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
           <TabContent tabName="rec">
             <RecommendMain />
           </TabContent>
+          <TabContent tabName="recent-scans">
+            <RecentScans />
+          </TabContent>
         </TabContents>
       </Tabs>
     </MainHomePane>
@@ -88,7 +98,9 @@ const ChartHolder: FC<{}> = props => {
   const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
 
   const getDrilldownChart = (index, subjects, header) => {
-    setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
+    useTransition(() => {
+      setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
+    });
   };
 
   return (

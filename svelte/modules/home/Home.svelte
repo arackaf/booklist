@@ -14,6 +14,7 @@
 
   import BooksCharts from "./dataVis/BooksCharts.svelte";
   import BookRecommendations from "./recommendations/BookRecommendations.svelte";
+  import RecentScanResults from "./recent-scans/RecentScanResults.svelte";
 
   import barCharQuery from "graphQL/home/barChart.graphql";
 
@@ -30,6 +31,7 @@
           <TabHeaders>
             <TabHeader tabName="vis"><a> <i class="far fa-chart-bar" /> View </a></TabHeader>
             <TabHeader tabName="rec"><a> <span>Discover books</span> </a></TabHeader>
+            <TabHeader tabName="recent-scans"><a> <span>Recent scan results</span> </a></TabHeader>
           </TabHeaders>
           <TabContents>
             <TabContent let:isActive tabName="vis">
@@ -40,6 +42,9 @@
 
             <TabContent tabName="rec">
               <BookRecommendations />
+            </TabContent>
+            <TabContent tabName="recent-scans">
+              <RecentScanResults />
             </TabContent>
           </TabContents>
         </Tabs>

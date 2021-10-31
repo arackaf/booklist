@@ -147,4 +147,31 @@ extend type Mutation {
 }
 
 
+type ScanResult {
+  success: Boolean
+  isbn: String
+  title: String
+  smallImage: String
+}
+
+type DynamoKey {
+  pk: String
+  sk: String
+}
+
+input DynamoKeyInput {
+  pk: String
+  sk: String
+}
+
+type ScanResults {
+  ScanResults: [ScanResult]
+  LastEvaluatedKey: DynamoKey
+}
+
+extend type Query {
+  recentScanResults(exclusiveStartKey: DynamoKeyInput): ScanResults
+}
+
+
 `;

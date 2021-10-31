@@ -18,6 +18,8 @@
   let { queryState } = query<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { initialSearch: { _id: book._id, publicUserId, cache: 9 } });
 
   $: ({ loading, data, loaded } = $queryState);
+
+  $: console.log($queryState);
   $: detailsLoading = loading;
 
   $: ({ editorialReviews, similarBooks } = data?.getBook?.Book ?? ({} as { editorialReviews: EditorialReview[]; similarBooks: BookSummary[] }));

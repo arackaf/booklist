@@ -67,8 +67,8 @@ const MultiBar = props => {
 
   return (
     <g onMouseOver={() => hoverBar(data.groupId)} onMouseOut={() => unHoverBar(data.groupId)}>
-      {springs.map((props: any) => (
-        <animated.rect {...props} />
+      {springs.map((props: any, i) => (
+        <animated.rect key={i} {...props} />
       ))}
     </g>
   );

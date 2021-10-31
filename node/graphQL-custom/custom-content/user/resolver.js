@@ -1,4 +1,4 @@
-import UserDao from "../../dataAccess/user";
+import UserDao from "../../../dataAccess/user";
 
 const userDao = new UserDao();
 export default {

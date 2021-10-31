@@ -1144,6 +1144,7 @@ export type Query = {
   getTagsDeleted: TagsDeletedSingleQueryResult;
   getUser: Maybe<UserSingleQueryResult>;
   getPublicUser: Maybe<PublicUserSingleQueryResult>;
+  recentScanResults: Maybe<ScanResults>;
 };
 
 
@@ -1698,6 +1699,11 @@ export type QueryGetPublicUserArgs = {
   userId: Maybe<Scalars['String']>;
 };
 
+
+export type QueryRecentScanResultsArgs = {
+  exclusiveStartKey: Maybe<DynamoKeyInput>;
+};
+
 export type Mutation = {
   createBook: Maybe<BookMutationResult>;
   updateBook: Maybe<BookMutationResult>;
@@ -1829,4 +1835,26 @@ export type UserUpdates = {
   isPublic: Maybe<Scalars['Boolean']>;
   publicBooksHeader: Maybe<Scalars['String']>;
   publicName: Maybe<Scalars['String']>;
+};
+
+export type ScanResult = {
+  success: Maybe<Scalars['Boolean']>;
+  isbn: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
+  smallImage: Maybe<Scalars['String']>;
+};
+
+export type DynamoKey = {
+  pk: Maybe<Scalars['String']>;
+  sk: Maybe<Scalars['String']>;
+};
+
+export type DynamoKeyInput = {
+  pk: Maybe<Scalars['String']>;
+  sk: Maybe<Scalars['String']>;
+};
+
+export type ScanResults = {
+  ScanResults: Maybe<Array<Maybe<ScanResult>>>;
+  LastEvaluatedKey: Maybe<DynamoKey>;
 };
