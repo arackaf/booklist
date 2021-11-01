@@ -15,7 +15,7 @@ export const handler = async event => {
         Authorization: key
       }
     });
-    const bookResult = await fetchResponse.json();
+    const bookResult: any = await fetchResponse.json();
 
     console.log("Found from isbndb:", bookResult);
 

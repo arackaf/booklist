@@ -99,7 +99,7 @@ async function updateBookSummaryCovers() {
 function getGoogleCoverUrl(isbn, secrets) {
   return new Promise(async resolve => {
     try {
-      let response = await fetch(getGoogleLibraryUri(isbn, secrets["google-library-key"]));
+      let response: any = await fetch(getGoogleLibraryUri(isbn, secrets["google-library-key"]));
       if (!response.ok) {
         console.log("Error:", response.statusCode);
         return resolve(null);

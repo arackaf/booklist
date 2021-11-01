@@ -73,18 +73,22 @@ const ManageBookCover = props => {
 
   const [uploading, setUploading] = useState(false);
 
-  const processUrlResponse = res => {
+  const processCoverResponse = res => {
+    if (res.error === true) {
+      res.error = "Error uploading";
+    }
+
     if (res.error) {
       setUploadState({ pendingImg: "", uploadError: res.error });
     } else if (!res.url) {
       setUploadState({ pendingImg: "", uploadError: "Error uploading" });
     } else {
-      setUploadState({ pendingImg: res.url, uploadError: "" });
+      setUploadState({ pendingImg: res.url, uploadError: "Error uploading" });
     }
     setUploading(false);
   };
 
-  const processUrlError = res => {
+  const processCoverError = res => {
     setUploadState({ pendingImg: "", uploadError: "Error uploading" });
     setUploading(false);
   };
@@ -97,7 +101,7 @@ const ManageBookCover = props => {
     request.append("size", size);
 
     setUploading(true);
-    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processUrlResponse, processUrlError);
+    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processCoverResponse, processCoverError);
   };
 
   const { pendingImg, uploadError } = uploadState;
@@ -148,7 +152,7 @@ const ManageBookCover = props => {
         </Stack>
       ) : null}
       <div>
-        <RemoteImageUpload {...{ processUrlResponse, processUrlError, size }} />
+        <RemoteImageUpload {...{ processUrlResponse: processCoverResponse, processUrlError: processCoverError, size }} />
       </div>
     </FlowItems>
   );

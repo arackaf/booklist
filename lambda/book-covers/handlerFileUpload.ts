@@ -25,6 +25,7 @@ export const handler = async event => {
   const imageResult = await resizeImage(file.content, MAX_WIDTH);
 
   if (imageResult.error || !imageResult.body) {
+    console.log("resize error", imageResult.message);
     return corsResponse({ error: true });
   }
   const newName = `bookCovers/${userId}/${uuid()}${path.extname(file.filename) || ".jpg"}`;
