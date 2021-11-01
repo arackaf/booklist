@@ -10,6 +10,7 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 
 import { useTransition, config, animated } from "react-spring";
 import { LocalLoading } from "app/components/loading";
+import { getLoginStatus } from "util/loginStatus";
 
 const initialState = {
   selectedBooks: [],
@@ -43,9 +44,14 @@ export default props => {
   const selectedBooksSet = useMemo(() => new Set(selectedBooks.map(b => b._id)), [selectedBooks]);
 
   const getRecommendations = publicUserId => {
+    const { userId, loginToken } = getLoginStatus();
     dispatch(["startRecommendationsFetch"]);
     ajaxUtil.post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
       dispatch(["setRecommendations", resp.results]);
+    });
+
+    ajaxUtil.postWithCors(process.env.GET_RECOMMENDATIONS, { userId, loginToken, bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
+      //dispatch(["setRecommendations", resp.results]);
     });
   };
 

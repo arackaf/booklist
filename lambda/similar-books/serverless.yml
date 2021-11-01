@@ -22,6 +22,16 @@ provider:
           Action:
             - "secretsmanager:GetSecretValue"
           Resource: "arn:aws:secretsmanager:us-east-1:*"
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeStream
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
 
 functions:
   lookupSimilarBooks:
@@ -29,6 +39,14 @@ functions:
     handler: handler.updateSimilarBooks
     events:
       - schedule: rate(1 minute)
+  getRecommendations:
+    timeout: 10
+    handler: handler.getRecommendations
+    events:
+      - http:
+          path: /get-recommendations
+          method: post
+          cors: true
 
 plugins:
   - serverless-webpack

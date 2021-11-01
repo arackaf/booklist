@@ -25,6 +25,10 @@ class BookController {
 
       let resp = await graphql(executableSchema, findBooksQuery, root, this.request, { ids: params.bookIds, publicUserId: params.publicUserId });
       let books = resp.data.allBooks.Books;
+      console.log(
+        "A",
+        books.map(b => b.title)
+      );
       let isbnMap = new Map([]);
       books.forEach(book => {
         (book.similarItems || []).forEach(isbn => {
@@ -39,6 +43,11 @@ class BookController {
 
       let results = await graphql(executableSchema, findRecommendationQuery, root, this.request, { isbns, publicUserId: params.publicUserId });
       let resultRecommendations = results.data.allBookSummarys.BookSummarys;
+      console.log(
+        "B",
+        resultRecommendations.map(r => r.title)
+      );
+
       let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
       let isbnsOrdered = orderBy(
         [...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })),
@@ -58,6 +67,11 @@ class BookController {
 
       let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
       let matchingEans = new Set(matches.map(m => m.ean).filter(x => x));
+
+      console.log(
+        "C",
+        matches.map(r => r.title)
+      );
 
       let finalResults = potentialRecommendations.filter(m => (!m.isbn || !matchingIsbns.has(m.isbn)) && (!m.ean || !matchingEans.has(m.ean)));
 

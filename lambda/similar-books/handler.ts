@@ -3,6 +3,10 @@ import { lookupSimilarBooks } from "./goodreads/lookupSimilarBooks";
 import { addPlaceholder, booksWithoutSimilarity, updateSimilarityInfo } from "./data-helpers/similar-books-helpers";
 
 import { delay } from "../util/asyncHelpers";
+import corsResponse from "../util/corsResponse";
+
+import { isWarmingCall } from "../util/isWarmingCall";
+import checkLogin from "../util/checkLoginToken";
 
 export const updateSimilarBooks = async event => {
   try {
@@ -40,4 +44,19 @@ export const updateSingleBook = async (book, grKey) => {
     book,
     similarBooks.filter(b => b.isbn)
   );
+};
+
+export const getRecommendations = async evt => {
+  if (isWarmingCall(evt)) {
+    return corsResponse({ coldStartPrevented: true });
+  }
+
+  const { bookIds, publicUserId, userId, loginToken } = JSON.parse(evt.body);
+
+  console.log("CHECKING", userId, loginToken);
+  if (!(await checkLogin(userId, loginToken))) {
+    return corsResponse({ no: "NO" });
+  }
+
+  return corsResponse({ success: true });
 };
