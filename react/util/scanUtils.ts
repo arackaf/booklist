@@ -1,5 +1,4 @@
 import ajaxUtil from "./ajaxUtil";
-import localStorageManager from "./localStorage";
 import { getCookieLookup } from "./loginStatus";
 
 let ws;
