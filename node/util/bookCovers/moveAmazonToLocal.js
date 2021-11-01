@@ -16,7 +16,10 @@ async function updateBookCovers(field, maxWidth) {
   const { db, client } = await dbPromise;
   const { root, executableSchema } = getGraphqlSchema(dbPromise);
 
-  let res = await (db.collection("books").find({ [field]: RegExp(/amazon\.com/) }).toArray());
+  let res = await db
+    .collection("books")
+    .find({ [field]: RegExp(/amazon\.com/) })
+    .toArray();
 
   for (let book of res) {
     let { _id, isbn, title } = book;
@@ -28,7 +31,7 @@ async function updateBookCovers(field, maxWidth) {
       let { fileName, fullName } = res;
       let newPath = await resizeIfNeeded(fileName, maxWidth);
 
-      if (newPath) {  
+      if (newPath) {
         let s3Key = await saveCoverToS3(newPath, `bookCovers/${book.userId}/${fileName}`);
 
         console.log("#", count++, title, s3Key, "\n");
@@ -46,7 +49,7 @@ async function updateBookCovers(field, maxWidth) {
   }
 }
 
-(async function() {
+(async function () {
   try {
     console.log("Starting...\n");
     await updateBookCovers("smallImage");
@@ -54,7 +57,6 @@ async function updateBookCovers(field, maxWidth) {
 
     const { db, client } = await dbPromise;
     client.close();
-
   } catch (err) {
     console.log("Error caught at the top level: ", err);
   }

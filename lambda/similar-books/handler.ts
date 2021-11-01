@@ -1,12 +1,13 @@
-import getSecrets from "../util/getSecrets";
+import { ObjectId } from "mongodb";
+
 import { lookupSimilarBooks } from "./goodreads/lookupSimilarBooks";
 import { addPlaceholder, booksWithoutSimilarity, updateSimilarityInfo } from "./data-helpers/similar-books-helpers";
 
+import getSecrets from "../util/getSecrets";
 import { delay } from "../util/asyncHelpers";
 import corsResponse from "../util/corsResponse";
-
 import { isWarmingCall } from "../util/isWarmingCall";
-import checkLogin from "../util/checkLoginToken";
+import getDbConnection from "../util/getDbConnection";
 
 export const updateSimilarBooks = async event => {
   try {
@@ -51,12 +52,23 @@ export const getRecommendations = async evt => {
     return corsResponse({ coldStartPrevented: true });
   }
 
-  const { bookIds, publicUserId, userId, loginToken } = JSON.parse(evt.body);
+  const { bookIds } = JSON.parse(evt.body);
 
-  console.log("CHECKING", userId, loginToken);
-  if (!(await checkLogin(userId, loginToken))) {
-    return corsResponse({ no: "NO" });
-  }
+  const db = await getDbConnection();
+  const books = await db
+    .collection("books")
+    .find({ _id: { $in: bookIds.map(_id => ObjectId(_id)) } }, { _id: 1, similarItems: 1 })
+    .toArray();
 
-  return corsResponse({ success: true });
+  let isbnMap = new Map<string, number>([]);
+  books.forEach(book => {
+    (book.similarItems || []).forEach(isbn => {
+      if (!isbnMap.has(isbn)) {
+        isbnMap.set(isbn, 0);
+      }
+      isbnMap.set(isbn, isbnMap.get(isbn) + 1);
+    });
+  });
+
+  return corsResponse({ success: true, len: books.length, len2: isbnMap.size });
 };
