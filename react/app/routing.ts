@@ -1,4 +1,4 @@
-import {lazy} from "react";
+import { lazy } from "react";
 
 import booksPreload from "../modules/books/booksPreload";
 import subjectsPreload from "../modules/subjects/subjectsPreload";
@@ -14,7 +14,6 @@ const SubjectsComponent = lazy(() => import(/* webpackChunkName: "subject-module
 const StyleDemoComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/styledemo/styledemo"));
 const SettingsComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/settings/settings"));
 const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/admin/admin"));
-const JrComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/jr/songEdit"));
 
 let priorModule = "";
 
@@ -25,7 +24,7 @@ export const getModuleComponent = moduleToLoad => {
   let result = resolveModule(moduleToLoad, priorModule);
   priorModule = moduleToLoad;
   return result;
-}
+};
 const resolveModule = (moduleToLoad, priorModule) => {
   let adminUser = isAdmin();
   let isNew = moduleToLoad != priorModule;
@@ -55,8 +54,6 @@ const resolveModule = (moduleToLoad, priorModule) => {
       return SettingsComponent;
     case "admin":
       return AdminComponent;
-    case "jr":
-      return JrComponent;
   }
 
   return HomeComponent;

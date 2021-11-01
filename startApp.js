@@ -43,8 +43,6 @@ const PUBLIC_USER = {
 
 const IS_DEV = process.env.IS_DEV;
 
-const jr_admins = new Set(process.env.JELLYROLLS_ADMINS.split(",").filter(id => id));
-
 if (!IS_DEV) {
   app.use(function ensureSec(request, response, next) {
     let proto = request.header("x-forwarded-proto") || request.header("X-Forwarded-Proto") || request.get("X-Forwarded-Proto"),
@@ -116,7 +114,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  return done(undefined, { id: "" + id, _id: "" + id, admin: id == process.env.ADMIN_USER, jr_admin: jr_admins.has(id) });
+  return done(undefined, { id: "" + id, _id: "" + id, admin: id == process.env.ADMIN_USER });
 });
 
 app.use(compression());
@@ -237,7 +235,7 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
   response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  req.user.jr_admin && response.cookie("jr_admin", req.user.jr_admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+
   if (rememberMe) {
     response.cookie("remember_me", `${req.user.id}|${req.user.loginToken}`, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
   }
