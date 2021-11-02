@@ -44,14 +44,10 @@ export default props => {
   const selectedBooksSet = useMemo(() => new Set(selectedBooks.map(b => b._id)), [selectedBooks]);
 
   const getRecommendations = publicUserId => {
-    const { userId, loginToken } = getLoginStatus();
+    const { userId } = getLoginStatus();
     dispatch(["startRecommendationsFetch"]);
-    ajaxUtil.post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
+    ajaxUtil.postWithCors(process.env.GET_RECOMMENDATIONS, { userId, publicUserId, bookIds: [...selectedBooksSet] }).then(resp => {
       dispatch(["setRecommendations", resp.results]);
-    });
-
-    ajaxUtil.postWithCors(process.env.GET_RECOMMENDATIONS, { userId, loginToken, bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
-      //dispatch(["setRecommendations", resp.results]);
     });
   };
 

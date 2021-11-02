@@ -23,7 +23,7 @@ const ajaxUtil = {
       body: data
     })
       .then(resp => resp.json())
-      .then(callback)
+      .then(obj => callback(obj))
       .catch(errorCallback);
   },
   postWithCors(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
@@ -37,7 +37,10 @@ const ajaxUtil = {
       body: JSON.stringify(data)
     })
       .then(resp => resp.json())
-      .then(callback)
+      .then(obj => {
+        callback(obj);
+        return obj;
+      })
       .catch(errorCallback);
   },
   postWithFilesCors(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {

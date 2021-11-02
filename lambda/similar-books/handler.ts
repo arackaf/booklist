@@ -100,7 +100,6 @@ export const getRecommendations = async evt => {
 
   return corsResponse({
     success: true,
-    results: finalResults,
-    titles: finalResults.map(b => b.title)
+    results: finalResults
   });
 };
