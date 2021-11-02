@@ -36,7 +36,7 @@ export const updateSingleBook = async (book, grKey) => {
 
   console.log("Book Found", book);
 
-  let isbn = book.isbn.replace("-", "");
+  const isbn = book.isbn.replace("-", "");
   if (isbn.length !== 10 && isbn.length !== 13) {
     return;
   }
@@ -63,7 +63,7 @@ export const getRecommendations = async evt => {
       .find({ _id: { $in: bookIds.map(_id => ObjectId(_id)) } }, { _id: 1, similarItems: 1 })
       .toArray();
 
-    let isbnMap = new Map<string, number>([]);
+    const isbnMap = new Map<string, number>([]);
     books.forEach(book => {
       (book.similarItems || []).forEach(isbn => {
         if (!isbnMap.has(isbn)) {
@@ -73,31 +73,29 @@ export const getRecommendations = async evt => {
       });
     });
 
-    let isbns = [...isbnMap.keys()];
+    const isbns = [...isbnMap.keys()];
 
-    let resultRecommendations = await db
+    const resultRecommendations = await db
       .collection("bookSummaries")
       .find({ isbn: { $in: isbns } })
       .toArray();
 
-    let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
-    let isbnsOrdered = orderBy(
+    const resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
+    const isbnsOrdered = orderBy(
       [...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })),
       ["count"],
       ["desc"]
     );
-    let potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
-
-    let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
+    const potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
+    const potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
 
     const matches = await db
       .collection("books")
       .find({ userId: userId || publicUserId, isbn: { $in: potentialIsbns } })
       .toArray();
 
-    let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
-
-    let finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
+    const matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
+    const finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
 
     return corsResponse({
       success: true,
