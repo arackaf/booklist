@@ -55,13 +55,12 @@
 
     dispatch(["startRecommendationsFetch"]);
     ajaxUtil
-      .post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId })
-      .then(preloadRecommendationImages)
+      .postWithCors(process.env.GET_RECOMMENDATIONS, { userId, publicUserId, bookIds: [...selectedBooksSet] })
+      .then(res => {
+        preloadRecommendationImages(res);
+        return res;
+      })
       .then(resp => dispatch(["setRecommendations", resp.results]));
-
-    ajaxUtil.post(process.env.GET_RECOMMENDATIONS, { userId, loginToken, bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
-      dispatch(["setRecommendations", resp.results]);
-    });
   };
 </script>
 
