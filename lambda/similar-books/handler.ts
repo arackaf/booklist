@@ -9,6 +9,8 @@ import corsResponse from "../util/corsResponse";
 import { isWarmingCall } from "../util/isWarmingCall";
 import getDbConnection from "../util/getDbConnection";
 
+import orderBy from "lodash.orderby";
+
 export const updateSimilarBooks = async event => {
   try {
     const secrets = await getSecrets();
@@ -52,7 +54,7 @@ export const getRecommendations = async evt => {
     return corsResponse({ coldStartPrevented: true });
   }
 
-  const { bookIds } = JSON.parse(evt.body);
+  const { bookIds, userId, publicUserId } = JSON.parse(evt.body);
 
   const db = await getDbConnection();
   const books = await db
@@ -70,5 +72,35 @@ export const getRecommendations = async evt => {
     });
   });
 
-  return corsResponse({ success: true, len: books.length, len2: isbnMap.size });
+  let isbns = [...isbnMap.keys()];
+
+  let resultRecommendations = await db
+    .collection("bookSummaries")
+    .find({ isbn: { $in: isbns } })
+    .toArray();
+
+  let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
+  let isbnsOrdered = orderBy(
+    [...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })),
+    ["count"],
+    ["desc"]
+  );
+  let potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
+
+  let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
+
+  const matches = await db
+    .collection("books")
+    .find({ userId: userId || publicUserId, isbn: { $in: potentialIsbns } })
+    .toArray();
+
+  let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
+
+  let finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
+
+  return corsResponse({
+    success: true,
+    results: finalResults,
+    titles: finalResults.map(b => b.title)
+  });
 };
