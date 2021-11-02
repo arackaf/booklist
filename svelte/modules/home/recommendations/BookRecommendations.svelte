@@ -34,6 +34,7 @@
   import DisplayBook from "./DisplayBook.svelte";
   import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
+  import { getLoginStatus } from "util/loginStatus";
 
   let searchModalOpen = false;
   type T = { selectedBooks: any[]; recommendations: any[]; recommendationsLoading: any };
@@ -50,11 +51,17 @@
   $: selectedBooksSet = new Set(selectedBooks.map(b => b._id));
 
   const getRecommendations = publicUserId => {
+    const { userId, loginToken } = getLoginStatus();
+
     dispatch(["startRecommendationsFetch"]);
     ajaxUtil
       .post("/book/getRecommendations", { bookIds: [...selectedBooksSet], publicUserId })
       .then(preloadRecommendationImages)
       .then(resp => dispatch(["setRecommendations", resp.results]));
+
+    ajaxUtil.post(process.env.GET_RECOMMENDATIONS, { userId, loginToken, bookIds: [...selectedBooksSet], publicUserId }).then(resp => {
+      dispatch(["setRecommendations", resp.results]);
+    });
   };
 </script>
 
