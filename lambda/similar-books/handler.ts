@@ -54,52 +54,57 @@ export const getRecommendations = async evt => {
     return corsResponse({ coldStartPrevented: true });
   }
 
-  const { bookIds, userId, publicUserId } = JSON.parse(evt.body);
+  try {
+    const { bookIds, userId, publicUserId } = JSON.parse(evt.body);
 
-  const db = await getDbConnection();
-  const books = await db
-    .collection("books")
-    .find({ _id: { $in: bookIds.map(_id => ObjectId(_id)) } }, { _id: 1, similarItems: 1 })
-    .toArray();
+    const db = await getDbConnection();
+    const books = await db
+      .collection("books")
+      .find({ _id: { $in: bookIds.map(_id => ObjectId(_id)) } }, { _id: 1, similarItems: 1 })
+      .toArray();
 
-  let isbnMap = new Map<string, number>([]);
-  books.forEach(book => {
-    (book.similarItems || []).forEach(isbn => {
-      if (!isbnMap.has(isbn)) {
-        isbnMap.set(isbn, 0);
-      }
-      isbnMap.set(isbn, isbnMap.get(isbn) + 1);
+    let isbnMap = new Map<string, number>([]);
+    books.forEach(book => {
+      (book.similarItems || []).forEach(isbn => {
+        if (!isbnMap.has(isbn)) {
+          isbnMap.set(isbn, 0);
+        }
+        isbnMap.set(isbn, isbnMap.get(isbn) + 1);
+      });
     });
-  });
 
-  let isbns = [...isbnMap.keys()];
+    let isbns = [...isbnMap.keys()];
 
-  let resultRecommendations = await db
-    .collection("bookSummaries")
-    .find({ isbn: { $in: isbns } })
-    .toArray();
+    let resultRecommendations = await db
+      .collection("bookSummaries")
+      .find({ isbn: { $in: isbns } })
+      .toArray();
 
-  let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
-  let isbnsOrdered = orderBy(
-    [...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })),
-    ["count"],
-    ["desc"]
-  );
-  let potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
+    let resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
+    let isbnsOrdered = orderBy(
+      [...isbnMap.entries()].map(([isbn, count]) => ({ isbn, count })),
+      ["count"],
+      ["desc"]
+    );
+    let potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
 
-  let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
+    let potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
 
-  const matches = await db
-    .collection("books")
-    .find({ userId: userId || publicUserId, isbn: { $in: potentialIsbns } })
-    .toArray();
+    const matches = await db
+      .collection("books")
+      .find({ userId: userId || publicUserId, isbn: { $in: potentialIsbns } })
+      .toArray();
 
-  let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
+    let matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
 
-  let finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
+    let finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
 
-  return corsResponse({
-    success: true,
-    results: finalResults
-  });
+    return corsResponse({
+      success: true,
+      results: finalResults
+    });
+  } catch (err) {
+    console.log("ERROR thrown", err);
+    return corsResponse({ error: true });
+  }
 };
