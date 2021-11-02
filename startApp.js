@@ -20,8 +20,6 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
-import { easyControllers } from "easy-express-controllers";
-
 import expressGraphql from "express-graphql";
 
 import { middleware } from "generic-persistgraphql";
@@ -133,9 +131,6 @@ app.use(passport.authenticate("remember-me"));
 
 const statics = ["/static/", "/node_modules/", "/react/", "/svelte/", "/utils/"];
 statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
-
-app.use("/book/getRecommendations", cors(), (req, res, next) => next());
-easyControllers.createAllControllers(app, { fileTest: f => !/-es6.js$/.test(f) }, { __dirname: "./node" });
 
 app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
