@@ -8,6 +8,8 @@ import { useMutation } from "micro-graphql-react";
 import createBookMutation from "graphQL/scan/createBook.graphql";
 import { SlideInContents } from "app/animationHelpers";
 import FlowItems from "app/components/layout/FlowItems";
+import { useTagsState } from "app/state/tagsState";
+import { useSubjectsState } from "app/state/subjectsState";
 
 const CreateBookModal = lazy(() => import(/* webpackChunkName: "book-view-edit-modals" */ "app/components/editBook/editModal"));
 const defaultEmptyBook = () => ({
@@ -24,6 +26,12 @@ const defaultEmptyBook = () => ({
 const entryList = Array.from({ length: 10 });
 
 const BookEntryList: FunctionComponent<{}> = () => {
+  // ---------------------------------------------------------------------------------------------------------
+  // This component doesn't need this data, but it seems suspending in a portal causes bad things to happen so
+  useTagsState();
+  useSubjectsState();
+  // ---------------------------------------------------------------------------------------------------------
+
   const [showScanInstructions, setShowScanInstructions] = useState(false);
   const toggleScanInstructions = () => setShowScanInstructions(!showScanInstructions);
 
@@ -46,8 +54,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
     modalEntryLoaded: false,
     inManualEntry: false,
     manualSaved: false,
-    manualBook: null,
-    bookToEdit: null
+    manualBook: null
   });
 
   const manuallyEnterBook = () => {
@@ -55,12 +62,11 @@ const BookEntryList: FunctionComponent<{}> = () => {
       modalEntryLoaded: true,
       inManualEntry: true,
       manualSaved: false,
-      manualBook: defaultEmptyBook(),
-      bookToEdit: null
+      manualBook: defaultEmptyBook()
     });
   };
   const manualEntryEnding = () => {
-    setEditState({ ...editState, inManualEntry: false, bookToEdit: null });
+    setEditState({ ...editState, inManualEntry: false });
   };
 
   const saveNewBook = (book, runMutation) => {

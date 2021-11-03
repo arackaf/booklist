@@ -1,6 +1,6 @@
 import { lazy } from "react";
 
-import booksPreload from "../modules/books/booksPreload";
+import booksPreload, { subjectsAndTagsNonPublicPreload } from "../modules/books/booksPreload";
 import subjectsPreload from "../modules/subjects/subjectsPreload";
 
 import { isAdmin } from "util/loginStatus";
@@ -44,6 +44,7 @@ const resolveModule = (moduleToLoad, priorModule) => {
     case "home":
       return HomeComponent;
     case "scan":
+      subjectsAndTagsNonPublicPreload();
       return ScanComponent;
     case "subjects":
       isNew && subjectsPreload();
