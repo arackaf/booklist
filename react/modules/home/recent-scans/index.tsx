@@ -37,9 +37,7 @@ const RecentScans: FunctionComponent = () => {
     <div className="recent-scans-module">
       <div className="overlay-holder">
         <div className="results">
-          {recentScans.map((item, i) => {
-            return item.success ? <ScanDisplay key={i} item={item} /> : <ScanFailureDisplay item={item} key={i} />;
-          })}
+          {recentScans.map((item, i) => (item.success ? <ScanDisplay key={i} item={item} /> : <ScanFailureDisplay item={item} key={i} />))}
           {nextNextPageKey ? (
             <>
               <div></div>

@@ -3,9 +3,14 @@
   import { Queries, QueryOf } from "graphql-typings";
 
   import { query } from "micro-graphql-svelte";
+
+  import Button from "app/components/buttons/Button.svelte";
+
   import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
   import SectionLoading from "app/components/ui/SectionLoading.svelte";
+  import "./index.scss";
 
+  const loadNextScans = () => (currentNextPageKey = nextNextPageKey);
   let currentNextPageKey = null;
   let { queryState, sync, resultsState } = query<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery);
   $: sync({ lastKey: currentNextPageKey });
@@ -20,18 +25,38 @@
     currentResults.update(current => (current.push(...newResults), current));
   });
 
-  const loadNextScans = () => (currentNextPageKey = nextNextPageKey);
+  $: console.log({ currentNextPageKey, nextNextPageKey });
 </script>
 
 {#if !loaded}
   <SectionLoading style="margin-top: 50px;" />
-{/if}
+{:else}
+  <div class="recent-scans-module">
+    <div class="overlay-holder">
+      <div class="results">
+        {#each $currentResults as item, i}
+          {#if item.success}
+            <img src={item.smallImage} />
+            <div>{item.title ?? `${item.isbn} Failure`}</div>
+          {:else}
+            <div />
+            <div>
+              <div class="alert alert-danger inline-flex">Failed to lookup isbn {item.isbn}</div>
+            </div>
+          {/if}
+        {/each}
 
-{#each $currentResults as item}
-  <div>
-    {item.success ? item.title : item.isbn + " Failure"}
+        {#if nextNextPageKey}
+          <div />
+          <Button preset="info" disabled={loading} onClick={loadNextScans}>Load More</Button>
+        {:else}
+          <div />
+          <div>
+            <hr />
+            <div class="alert alert-info">No more recent scans</div>
+          </div>
+        {/if}
+      </div>
+    </div>
   </div>
-{/each}
-{#if nextNextPageKey}
-  <button disabled={loading} on:click={loadNextScans}>Load Next</button>
 {/if}
