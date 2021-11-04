@@ -22,7 +22,7 @@ const SelectAvailableSubjects: FunctionComponent<LocalProps> = props => {
 
   return (
     <GenericLabelSelect
-      inputProps={{ tabIndex: -1, placeholder: props.placeholder || "Subjects", value: search, onChange: setSearch }}
+      inputProps={{ placeholder: props.placeholder || "Subjects", value: search, onChange: setSearch }}
       suggestions={eligible}
       onSuggestionSelected={onSelect}
     />

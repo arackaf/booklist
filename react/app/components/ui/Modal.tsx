@@ -6,14 +6,22 @@ import { useTransition, animated, config, useSpring } from "react-spring";
 import "css/reach-modal-overrides.scss";
 import { useHeight } from "app/animationHelpers";
 
-export const StandardModalHeader: FunctionComponent<{ onHide: any; caption: any; noClose?: boolean; smaller?: boolean }> = props => {
-  let { onHide, caption, noClose, smaller } = props;
+type ModalHeaderTypes = {
+  focusClose?: boolean;
+  onHide: any;
+  caption: any;
+  noClose?: boolean;
+  smaller?: boolean;
+};
+
+export const StandardModalHeader: FunctionComponent<ModalHeaderTypes> = props => {
+  let { onHide, caption, noClose, smaller, focusClose } = props;
   return (
     <>
       <div className="standard-reach-header">
         {smaller ? <h5 className="modal-title">{caption}</h5> : <h4 className="modal-title">{caption}</h4>}
         {!noClose ? (
-          <a style={{ marginLeft: "auto" }} className="close" onClick={onHide}>
+          <a style={{ marginLeft: "auto" }} tabIndex={focusClose ? 0 : -1} className="close" onClick={onHide}>
             <span>&times;</span>
           </a>
         ) : null}
@@ -35,11 +43,12 @@ type ModalTypes = {
   headerCaption?: any;
   className?: string;
   focusRef?: any;
+  focusHeaderCloseButton?: any;
   noClose?: boolean;
   smallerHeader?: boolean;
 };
 const Modal: FunctionComponent<ModalTypes> = props => {
-  let { isOpen, onHide, headerCaption, noClose, focusRef = null, smallerHeader, style = {}, children } = props;
+  let { isOpen, onHide, headerCaption, noClose, focusHeaderCloseButton = false, focusRef = null, smallerHeader, style = {}, children } = props;
 
   const modalTransition = useTransition(!!isOpen, {
     config: isOpen ? { ...config.stiff } : { duration: 150 },
@@ -80,7 +89,11 @@ const Modal: FunctionComponent<ModalTypes> = props => {
                   ...style
                 }}
               >
-                <ModalContents content={children} {...{ animatModalSizing, headerCaption, onHide, noClose, smallerHeader }} />
+                <ModalContents
+                  focusClose={focusHeaderCloseButton}
+                  content={children}
+                  {...{ animatModalSizing, headerCaption, onHide, noClose, smallerHeader }}
+                />
               </AnimatedDialogContent>
             </AnimatedDialogOverlay>
           )
@@ -89,7 +102,7 @@ const Modal: FunctionComponent<ModalTypes> = props => {
   );
 };
 
-const ModalContents = ({ animatModalSizing, headerCaption, content, onHide, smallerHeader, noClose }) => {
+const ModalContents = ({ animatModalSizing, headerCaption, content, onHide, smallerHeader, noClose, focusClose }) => {
   const uiReady = useRef(false);
   const [sizingRef, contentHeight] = useHeight();
 
@@ -104,7 +117,9 @@ const ModalContents = ({ animatModalSizing, headerCaption, content, onHide, smal
   return (
     <animated.div style={{ overflow: "hidden", ...heightStyles }}>
       <div style={{ padding: "10px" }} ref={sizingRef}>
-        {headerCaption ? <StandardModalHeader caption={headerCaption} onHide={onHide} noClose={noClose} smaller={smallerHeader} /> : null}
+        {headerCaption ? (
+          <StandardModalHeader focusClose={focusClose} caption={headerCaption} onHide={onHide} noClose={noClose} smaller={smallerHeader} />
+        ) : null}
         {content}
       </div>
     </animated.div>

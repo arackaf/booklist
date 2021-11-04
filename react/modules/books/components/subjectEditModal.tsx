@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from "react";
-import {Button} from "app/components/ui/Button";
+import { Button } from "app/components/ui/Button";
 
 import Modal from "app/components/ui/Modal";
 
@@ -24,7 +24,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
   const cancelEdit = () => setEditingSubject(null);
 
   return (
-    <Modal isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit Subjects">
+    <Modal focusHeaderCloseButton={true} isOpen={props.editModalOpen} onHide={props.stopEditing} headerCaption="Edit Subjects">
       <Stack>
         <FlowItems pushLast={true} xsFlowReverse={true}>
           <SelectAvailableSubjects placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />

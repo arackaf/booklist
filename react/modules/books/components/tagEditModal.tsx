@@ -142,11 +142,11 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
   let onDelete = e => setState({ deletingId: editingTag._id });
 
   return (
-    <Modal isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit Tags">
+    <Modal focusHeaderCloseButton={true} isOpen={!!editModalOpen} onHide={onDone} headerCaption="Edit Tags">
       <Stack>
         <FlowItems pushLast={true} xsFlowReverse={true}>
           <GenericLabelSelect
-            inputProps={{ tabIndex: "-1", placeholder: "Edit tag", value: tagSearch, onChange: evt => setTagSearch(evt.target.value) }}
+            inputProps={{ placeholder: "Edit tag", value: tagSearch, onChange: evt => setTagSearch(evt.target.value) }}
             suggestions={searchedTags}
             onSuggestionSelected={item => editTag(item)}
           />
