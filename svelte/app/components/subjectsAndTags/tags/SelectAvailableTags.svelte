@@ -21,4 +21,4 @@
   );
 </script>
 
-<GenericLabelSelect {placeholder} bind:search inputProps={{ tabIndex: -1 }} options={eligible} onItemSelected={doSelect} />
+<GenericLabelSelect {placeholder} bind:search options={eligible} onItemSelected={doSelect} />
