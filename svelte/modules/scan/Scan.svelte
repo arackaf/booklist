@@ -2,13 +2,43 @@
   import { quadOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
+  import { mutation } from "micro-graphql-svelte";
+
   import slideAnimate from "app/animationHelpers";
   import FlowItems from "app/components/layout/FlowItems.svelte";
+  import EditBookModal from "app/components/editBook/EditBookModal.svelte";
+
+  import createBookMutation from "graphQL/scan/createBook.graphql";
 
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
 
-  let manuallyEnterBook = () => {};
+  const defaultEmptyBook = () => ({
+    title: "",
+    isbn: "",
+    pages: "",
+    publisher: "",
+    publicationDate: "",
+    authors: [""],
+    tags: [],
+    subjects: []
+  });
+
+  let editingBook = defaultEmptyBook();
+
+  const { mutationState } = mutation(createBookMutation);
+  $: ({ runMutation, running } = $mutationState);
+  let enteringBook = false;
+
+  const manuallyEnterBook = () => {
+    editingBook = defaultEmptyBook();
+    enteringBook = true;
+  };
+
+  const saveManualBook = book => {
+    return runMutation({ book });
+  };
+
   let showScanInstructions = false;
 
   let focused = 0;
@@ -33,7 +63,7 @@
           Enter your books here
           <a on:click={() => (showScanInstructions = !showScanInstructions)}> <i class="fa fa-question-circle" /> </a>
         </h4>
-        <button class="btn btn-xs margin-left" onClick={() => manuallyEnterBook()}> Manual entry </button>
+        <button class="btn btn-xs margin-left" on:click={manuallyEnterBook}> Manual entry </button>
       </div>
       <div style="margin-top: 10px">
         <div>
@@ -63,5 +93,6 @@
       {/each}
     </div>
     <ScanResults />
+    <EditBookModal saveBook={saveManualBook} isOpen={enteringBook} book={editingBook} onHide={() => (enteringBook = false)} />
   </FlowItems>
 </section>

@@ -22,14 +22,6 @@
         throw "Invalid key";
     }
   }
-
-  const prepBookForSaving = book => {
-    let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
-    let pages = parseInt(book.pages, 10);
-    book.pages = isNaN(pages) ? void 0 : pages;
-
-    return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
-  };
 </script>
 
 <script lang="ts">
@@ -69,8 +61,7 @@
   const { mutationState: runBookEditState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBookMutation);
 
   const saveEditingBook = book => {
-    let bookToUse = prepBookForSaving(book);
-    return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookToUse }));
+    return Promise.resolve($runBookEditState.runMutation({ _id: editingBook._id, book }));
   };
 
   let menuBarHeight = 0;
