@@ -56,21 +56,16 @@
   }
 </style>
 
-<section
-  transition:fade={{duration: 150, easing: quadOut}}
-  on:outrostart={outStart}
-  on:introend={onLoaded}
-  class="flush-bottom subjectsRoot"
->
+<section transition:fade={{ duration: 150, easing: quadOut }} on:outrostart={outStart} on:introend={onLoaded} class="flush-bottom subjectsRoot">
   <div>
-    <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: '' })}>New Subject</Button>
+    <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: "" })}>New Subject</Button>
   </div>
 
   <div class="contentRoot">
     <SubjectList root={true} subjects={$rootSubjects} {editSubject} />
   </div>
 
-  <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={'Edit Subject'} standardFooter={false}>
+  <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
     <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
     <hr />
     <Button onClick={closeEditModal}>Close</Button>

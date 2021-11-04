@@ -74,10 +74,7 @@
 
 <li style="padding-top: 0; padding-bottom: 0">
   <div>
-    <div
-      out:fade={{ duration: $appState.module == 'subjects' ? 3000 : 0 }}
-      class="padding-bottom-med subjectRow"
-    >
+    <div out:fade={{ duration: $appState.module == "subjects" ? 3000 : 0 }} class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
       {$subjectsSettings.exiting}
     </div>
