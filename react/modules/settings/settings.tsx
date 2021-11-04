@@ -23,14 +23,10 @@ const SettingsTabContent = ({}) => {
           </TabContent>
         </>
       ) : null}
-      <>
-        <TabContent style={{ minHeight: "150px" }} tabName="miscSettings">
-          <MiscSettings />
-        </TabContent>
-        <TabContent style={{ minHeight: "150px" }} tabName="theme">
-          <ThemeChooser />
-        </TabContent>
-      </>
+
+      <TabContent style={{ minHeight: "150px" }} tabName="theme">
+        <ThemeChooser />
+      </TabContent>
     </TabContents>
   );
 };
@@ -49,9 +45,6 @@ const SettingsTabHeaders = ({}) => {
       <TabHeader tabName="theme">
         <a>Theme</a>
       </TabHeader>
-      <TabHeader tabName="miscSettings">
-        <a>Misc</a>
-      </TabHeader>
     </TabHeaders>
   ) : (
     <TabHeaders>
@@ -64,56 +57,7 @@ const SettingsTabHeaders = ({}) => {
       <TabHeader tabName="theme">
         <a>Theme</a>
       </TabHeader>
-      <TabHeader tabName="miscSettings">
-        <a>Misc</a>
-      </TabHeader>
     </TabHeaders>
-  );
-};
-
-const MiscSettings = props => {
-  const [suspenseTimeout, setSuspenseTimeout] = useState(() => {
-    const suspenseTimeoutValue = parseInt(localStorage.getItem("suspense-timeout"));
-    return isNaN(suspenseTimeoutValue) ? 3000 : suspenseTimeoutValue;
-  });
-
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
-  const suspenseTimeoutEl = useRef(null);
-
-  const save = () => {
-    setSaved(false);
-
-    const suspenseTimeoutValue = +suspenseTimeoutEl.current.value;
-    if (isNaN(suspenseTimeoutValue) || suspenseTimeoutValue <= 0) {
-      return setError("Please enter a positive number");
-    }
-    localStorage.setItem("suspense-timeout", suspenseTimeoutValue + "");
-    setError("");
-    setSaved(true);
-  };
-
-  return (
-    <FlexRow>
-      <div className="col-md-6 col-sm-12">
-        <div className="form-group">
-          <label>Suspense timeout</label>
-          <input
-            style={{ maxWidth: "150px" }}
-            defaultValue={suspenseTimeout}
-            ref={suspenseTimeoutEl}
-            placeholder="Suspense timeout"
-            className="form-control"
-          />
-          <Button style={{ margin: "10px 0", alignSelf: "flex-start" }} preset="primary" onClick={save}>
-            Save
-          </Button>
-
-          {saved ? <div className="alert alert-success">Saved. Refresh the page to see the new timeout value in action</div> : null}
-          {error ? <div className="alert alert-danger">{error}</div> : null}
-        </div>
-      </div>
-    </FlexRow>
   );
 };
 
