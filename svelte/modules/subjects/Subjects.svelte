@@ -16,17 +16,6 @@
     editingSubject = subject;
     editModalOpen = true;
   };
-
-  let subjectsSettings = writable({ initialized: false, exiting: false });
-  setContext("subjects-module", subjectsSettings);
-
-  function onLoaded() {
-    $subjectsSettings.initialized = true;
-  }
-
-  function outStart() {
-    subjectsSettings.update(settings => ({ ...settings, exiting: true }));
-  }
 </script>
 
 <style>
@@ -56,7 +45,7 @@
   }
 </style>
 
-<section transition:fade={{ duration: 150, easing: quadOut }} on:outrostart={outStart} on:introend={onLoaded} class="flush-bottom subjectsRoot">
+<section transition:fade={{ duration: 150, easing: quadOut }} class="flush-bottom subjectsRoot">
   <div>
     <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: "" })}>New Subject</Button>
   </div>
