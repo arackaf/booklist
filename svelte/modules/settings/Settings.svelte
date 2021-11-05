@@ -38,10 +38,6 @@
         </TabContent>
       {/if}
 
-      <TabContent style={{ minHeight: "150px" }} tabName="miscSettings">
-        <!-- <MiscSettings /> -->
-        MiscSettings
-      </TabContent>
       <TabContent style={{ minHeight: "150px" }} tabName="theme">
         <!-- <ThemeChooser /> -->
         ThemeChooser
