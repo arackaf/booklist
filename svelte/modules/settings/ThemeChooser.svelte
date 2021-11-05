@@ -2,32 +2,31 @@
   import classNames from "classnames";
   import { appState, dispatch, SET_THEME, SET_WHITE_BG } from "app/state/appState";
 
-  //import DemoStyles from "./demoStyles";
-  import "./theme-chooser.scss";
   import Stack from "app/components/layout/Stack.svelte";
+  import DemoStyles from "./DemoStyles.svelte";
 
-  let x: any = {};
-
-  const { themeChooserRoot, demoContainer, themeChooserList, themeChooserItem, themeChooser } = x;
+  import "./theme-chooser.scss";
 
   const numThemes = 17;
-
   const themeNames = Array.from({ length: numThemes }, (v, i) => `scheme${i + 1}`);
-
   const arrayOfTen = Array.from({ length: 10 }, (v, i) => i + 1);
 
   $: ({ colorTheme, whiteBackground } = $appState);
+
+  const setWhiteBackground = evt => {
+    dispatch({ type: SET_WHITE_BG, value: evt.target.checked });
+  };
 </script>
 
 <div class="theme-chooser-root">
   <div class="theme-chooser-list">
     <label style="font-size: 16px" class="checkbox margin-bottom">
-      <input checked={whiteBackground == "1"} onChange={evt => dispatch({ type: SET_WHITE_BG, value: evt.target.checked })} type="checkbox" />
+      <input type="checkbox" checked={whiteBackground == "1"} on:change={setWhiteBackground} />
       White background
     </label>
-    {#each themeNames as name, index}
+    {#each themeNames as name}
       <Stack
-        onClick={() => dispatch({ type: SET_THEME, theme: name })}
+        on:click={() => dispatch({ type: SET_THEME, theme: name })}
         class={classNames("theme-chooser-item", { active: colorTheme == name })}
         tightest={true}
       >
@@ -40,6 +39,6 @@
     {/each}
   </div>
   <div class="demo-container">
-    <!-- <DemoStyles /> -->
+    <DemoStyles />
   </div>
 </div>

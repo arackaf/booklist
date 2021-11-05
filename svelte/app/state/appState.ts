@@ -84,7 +84,6 @@ function appReducer(state: AppState, action): AppState {
     case IS_ONLINE:
       return { ...state, online: true };
     case SET_THEME:
-      localStorageManager.set("color-theme", action.theme);
       return { ...state, colorTheme: action.theme };
     case SET_WHITE_BG:
       localStorageManager.set("white-bg", action.value ? "1" : "0");
@@ -96,6 +95,16 @@ function appReducer(state: AppState, action): AppState {
 
 const [appState, dispatch] = useReducer<AppState>(appReducer, initialState);
 export { appState, dispatch };
+
+appState.subscribe(state => {
+  let colorTheme = state.colorTheme;
+  let whiteBg = state.whiteBackground;
+
+  localStorageManager.set("color-theme", colorTheme);
+  localStorageManager.set("white-bg", whiteBg);
+
+  document.body.className = `${colorTheme} ${whiteBg == "1" ? "white-bg" : ""}`;
+});
 
 export const setDeviceOverride = view => {
   try {
