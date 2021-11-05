@@ -1,5 +1,8 @@
 <script>
   import cn from "classnames";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   let className = "";
   export { className as class };
@@ -10,6 +13,6 @@
   export let loosest = false;
 </script>
 
-<div {style} class={cn('stack', className, { tighter, tightest, looser, loosest })} {...$$restProps}>
+<div on:click={evt => dispatch("click", evt)} {style} class={cn("stack", className, { tighter, tightest, looser, loosest })} {...$$restProps}>
   <slot />
 </div>

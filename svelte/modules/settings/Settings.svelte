@@ -9,6 +9,7 @@
 
   import PublicUserSettings from "./PublicUserSettings.svelte";
   import PasswordReset from "./PasswordReset.svelte";
+  import ThemeChooser from "./ThemeChooser.svelte";
 
   $: ({ isPublic, isLoggedIn } = $appState);
 </script>
@@ -39,8 +40,7 @@
       {/if}
 
       <TabContent style={{ minHeight: "150px" }} tabName="theme">
-        <!-- <ThemeChooser /> -->
-        ThemeChooser
+        <ThemeChooser />
       </TabContent>
     </TabContents>
   </Tabs>
