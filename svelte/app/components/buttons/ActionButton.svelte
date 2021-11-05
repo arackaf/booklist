@@ -11,7 +11,7 @@
 
   export let style = "";
   export let preset = "";
-  let className;
+  let className = "";
   export { className as class };
   export let disabled = false;
 
