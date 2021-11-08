@@ -7,6 +7,12 @@
 
   import ajaxUtil from "util/ajaxUtil";
   import { getLoginStatus } from "util/loginStatus";
+  import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
+
+  import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
+  import CoverManager from "./book-covers/CoverManager.svelte";
+
+  graphqlSyncAndRefresh("BookSummary", SummaryQuery);
 </script>
 
 <section>
@@ -17,7 +23,7 @@
     </TabHeaders>
 
     <TabContents>
-      <TabContent style={{ minHeight: "150px" }} tabName="covers">TODO</TabContent>
+      <TabContent style={{ minHeight: "150px" }} tabName="covers"><CoverManager /></TabContent>
       <TabContent style={{ minHeight: "150px" }} tabName="test-scan">
         <button
           class="btn btn-xs margin-left"

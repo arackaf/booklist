@@ -3,6 +3,7 @@ query GetBookSummaryCoverInfo($smallImage: String) {
     BookSummarys {
       _id
       title
+      isbn
       smallImage
       mediumImage
       authors
