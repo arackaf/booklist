@@ -1,25 +1,27 @@
-import React from "react";
+<script lang="ts">
+  import Tabs from "app/components/layout/tabs/Tabs.svelte";
+  import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
+  import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
+  import TabContent from "app/components/layout/tabs/TabContent.svelte";
+  import TabContents from "app/components/layout/tabs/TabContents.svelte";
 
-import CoverManager from "./components/bookSummaryCovers/coverManager";
-import { TabContents, TabContent, TabHeaders, TabHeader, Tabs } from "app/components/layout/Tabs";
-import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
-import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
-import ajaxUtil from "util/ajaxUtil";
-import { getLoginStatus } from "util/loginStatus";
+  import ajaxUtil from "util/ajaxUtil";
+  import { getLoginStatus } from "util/loginStatus";
+</script>
 
-graphqlSyncAndRefresh("BookSummary", SummaryQuery);
+<section>
+  <Tabs defaultTab={"covers"} localStorageName="admin-tab">
+    <TabHeaders>
+      <TabHeader tabName="covers"><a>Recommendation Covers</a></TabHeader>
+      <TabHeader tabName="test-scan"><a>Test Scan</a></TabHeader>
+    </TabHeaders>
 
-const AdminTabContent = ({}) => {
-  return (
     <TabContents>
-      <TabContent style={{ minHeight: "150px" }} tabName="covers">
-        <CoverManager />
-      </TabContent>
-
-      <TabContent style={{ minHeight: "150px" }} tabName="scan">
+      <TabContent style={{ minHeight: "150px" }} tabName="covers">TODO</TabContent>
+      <TabContent style={{ minHeight: "150px" }} tabName="test-scan">
         <button
-          className="btn btn-xs margin-left"
-          onClick={() => {
+          class="btn btn-xs margin-left"
+          on:click={() => {
             const wait = ms => new Promise(res => setTimeout(res, ms));
             (async function () {
               const delay = 250;
@@ -51,37 +53,6 @@ const AdminTabContent = ({}) => {
           TEST
         </button>
       </TabContent>
-
-      <TabContent style={{ minHeight: "150px" }} tabName="user-data">
-        <div>TODO</div>
-      </TabContent>
     </TabContents>
-  );
-};
-
-const AdminTabHeaders = ({}) => {
-  return (
-    <TabHeaders>
-      <TabHeader tabName="covers">
-        <a>Recommendation Covers</a>
-      </TabHeader>
-      <TabHeader tabName="scan">
-        <a>Test Scan</a>
-      </TabHeader>
-      <TabHeader tabName="user-data">
-        <a>User Data</a>
-      </TabHeader>
-    </TabHeaders>
-  );
-};
-
-export default ({}) => {
-  return (
-    <section>
-      <Tabs defaultTab="covers" localStorageName="admin-tabs">
-        <AdminTabHeaders />
-        <AdminTabContent />
-      </Tabs>
-    </section>
-  );
-};
+  </Tabs>
+</section>
