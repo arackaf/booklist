@@ -1,4 +1,4 @@
-import React, { SFC, CSSProperties, useContext, useMemo, useState, FunctionComponent } from "react";
+import React, { CSSProperties, useContext, useMemo, useState, FunctionComponent } from "react";
 
 import { ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
@@ -10,8 +10,6 @@ import { useCurrentSearch } from "../../booksSearchState";
 import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery } from "micro-graphql-react";
 
-import uiStyles from "./uiStyles.module.css";
-import "./gridList.scss";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
@@ -21,7 +19,8 @@ import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
 import useDelete from "app/helpers/useDelete";
 
-const { bookTitle, bookAuthor } = uiStyles;
+import "./uiStyles.scss";
+import "./gridList.scss";
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -65,8 +64,8 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
         <td>
           <Stack>
             <Stack tightest={true}>
-              <div className={bookTitle}>{book.title}</div>
-              {book.authors ? <div className={bookAuthor}>{book.authors.join(", ")}</div> : null}
+              <div className="book-title">{book.title}</div>
+              {book.authors ? <div className="book-author">{book.authors.join(", ")}</div> : null}
             </Stack>
 
             <FlowItems vCenter={true} tighter={true} containerStyle={{ minHeight: "35px" }}>

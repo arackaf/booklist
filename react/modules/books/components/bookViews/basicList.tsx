@@ -2,13 +2,12 @@ import React, { FunctionComponent, SFC, useContext } from "react";
 import { ActionButton } from "app/components/ui/Button";
 import { AppContext } from "app/renderUI";
 
-import uiStyles from "./uiStyles.module.css";
-import "./basicList.scss";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { BooksModuleContext } from "modules/books/books";
 import useDelete from "app/helpers/useDelete";
 
-const { bookTitle, bookAuthor } = uiStyles;
+import "./uiStyles.scss";
+import "./basicList.scss";
 
 const BookViewListMobileItem = props => {
   const { book, online, runDelete } = props;
@@ -23,8 +22,8 @@ const BookViewListMobileItem = props => {
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <div className={`list-group-item-heading ${bookTitle}`}>{book.title}</div>
-            <span className={`list-group-item-text ${bookAuthor}`}>{book.authors.length ? book.authors.join(", ") : ""}</span>
+            <div className="list-group-item-heading book-title">{book.title}</div>
+            <span className="list-group-item-text book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
             <div style={{ marginTop: "auto" }}>
               {!props.viewingPublic && online ? (
                 <>
