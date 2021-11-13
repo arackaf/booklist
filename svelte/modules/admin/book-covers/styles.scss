@@ -1,0 +1,35 @@
+.book-list {
+  margin-top: 10px;
+}
+
+.book-display {
+  display: flex;
+  margin-bottom: 10px;
+
+  .img {
+    flex-basis: 80px;
+  }
+  .book-info {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      font-size: 14px;
+    }
+    .title a {
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .author {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    .btn-group {
+      width: 250px;
+      margin-top: 5px;
+    }
+  }
+  .img img {
+    max-width: 100%;
+  }
+}
