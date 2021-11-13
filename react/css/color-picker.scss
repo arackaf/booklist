@@ -1,0 +1,13 @@
+.color-palette-root {
+  .color-choice {
+    float: left;
+    border: var(--default-border-width) solid black;
+    height: 20px;
+    width: 20px;
+    margin: 3px;
+    cursor: pointer;
+  }
+  .color-choice.color-choice-current {
+    border: 3px solid white;
+  }
+}
