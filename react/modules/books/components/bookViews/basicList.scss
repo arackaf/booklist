@@ -1,0 +1,33 @@
+.book-display-basic-list {
+  .docked-to-panel {
+    .listGroupItem:first-child {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    .listGroupItem {
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+
+  .list-group {
+    & > .list-group-item:first-of-type {
+      border-top: 2px solid var(--primary-8);
+    }
+    & > .list-group-item:hover {
+      background-color: var(--primary-10);
+    }
+  }
+
+  .list-group-item-heading,
+  .list-group-item-text {
+    margin: 0;
+  }
+
+  .list-group-item {
+    border-bottom: var(--default-border-width) solid var(--neutral-border);
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
