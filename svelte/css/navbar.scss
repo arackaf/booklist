@@ -1,0 +1,141 @@
+.master-nav {
+  .nav {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 30px;
+    display: flex;
+    align-items: stretch;
+    color: var(--primary-10);
+    background-color: var(--primary-4);
+    height: 50px;
+    font-size: 16px;
+
+    a {
+      color: var(--primary-10);
+
+      i.visible-xs {
+        font-size: 20px;
+      }
+    }
+
+    li {
+      &.disabled,
+      &.disabled a {
+        color: var(--primary-7);
+        cursor: not-allowed;
+      }
+
+      a {
+        padding-left: 15px;
+        padding-right: 15px;
+
+        display: flex;
+        align-items: center;
+
+        touch-action: manipulation;
+      }
+    }
+
+    .active {
+      background-color: var(--primary-7);
+
+      a {
+        cursor: default;
+      }
+    }
+
+    @media (max-width: 767px) {
+      padding-left: 0px;
+    }
+
+    @media (max-width: 500px) {
+      padding-left: 0;
+
+      li a {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      padding-left: 0;
+      min-height: 20px;
+
+      li a {
+        padding-left: 8px;
+        padding-right: 8px;
+
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+
+        i {
+          font-size: 13pt !important;
+        }
+      }
+    }
+  }
+
+  .scheme5 .nav li.active,
+  .scheme5 .nav div.active {
+    background-color: var(--primary-6);
+  }
+
+  .nav-header {
+    font-size: 18px;
+    display: flex;
+    align-items: stretch;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    a {
+      display: flex;
+      align-items: center;
+      touch-action: manipulation;
+    }
+  }
+
+  .nav-items {
+    padding-left: 0;
+  }
+  .nav-items > li,
+  .nav-items-right > li {
+    display: flex;
+    align-items: stretch;
+  }
+  .nav-items,
+  .nav-items-right {
+    margin-top: 0;
+    margin-bottom: 0;
+    display: flex;
+    align-items: stretch;
+    list-style-type: none;
+  }
+  .nav-items-right {
+    margin-left: auto;
+  }
+
+  .number-badge {
+    --badge-size: 0.7rem;
+    &.big-count {
+      --badge-size: 0.65rem;
+    }
+
+    position: absolute;
+    right: 3px;
+    top: 3px;
+
+    > span {
+      i {
+        color: var(--info-6);
+        font-size: 1rem;
+      }
+      span {
+        justify-self: center;
+        align-self: center;
+        color: var(--primary-2);
+        font-size: var(--badge-size);
+        line-height: 1rem;
+      }
+    }
+  }
+}
