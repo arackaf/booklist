@@ -3,19 +3,16 @@ import { useSpring, animated, config } from "react-spring";
 import { Button } from "app/components/ui/Button";
 import { useRootSubjects, useChildMapSelector, useSubjectMutations, useSubjectsState } from "app/state/subjectsState";
 
-import subjectsListStyles from "./subjectsList.module.scss";
 import { useColors } from "app/state/colorsState";
 import { EditableExpandableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
 import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject";
 import Modal from "app/components/ui/Modal";
 import { useHeight, usePrevious } from "app/animationHelpers";
-import FlexRow from "app/components/layout/FlexRow";
 
-const AnimationContext = createContext(null);
+import "./subjectsList.scss";
+
 const EditContext = createContext(null);
-
-const { subjectsRoot, subjectRow, contentRoot } = subjectsListStyles;
 
 const SubjectDisplay: FC<any> = memo(props => {
   const { subject } = props;
@@ -43,7 +40,7 @@ const SubjectDisplay: FC<any> = memo(props => {
   }) as any;
   const { height, opacity, transform } = styles || {};
 
-  let classes = `padding-bottom-med ${subjectRow}`;
+  let classes = `padding-bottom-med subject-row`;
 
   const openEditModal = useContext(EditContext);
 
@@ -101,7 +98,7 @@ export default () => {
   }) as any;
 
   return (
-    <section className={`flush-bottom ${subjectsRoot}`}>
+    <section className="flush-bottom subjects-root">
       <div>
         <Button className="margin-bottom" preset="primary" onClick={() => openEditModal({ name: "" })}>
           New Subject
@@ -109,7 +106,7 @@ export default () => {
       </div>
 
       <EditContext.Provider value={openEditModal}>
-        <animated.div style={styles} className={contentRoot}>
+        <animated.div style={styles} className="content-root">
           <SubjectList subjects={topLevelSubjects} />
         </animated.div>
       </EditContext.Provider>

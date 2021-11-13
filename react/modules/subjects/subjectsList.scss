@@ -1,4 +1,4 @@
-.subjectsRoot {
+.subjects-root {
   display: grid;
   grid-template-rows: auto 1fr;
 
@@ -6,27 +6,27 @@
     margin-left: 0;
     padding-left: 0;
   }
-  
+
   ul ul {
     margin-left: 20px;
   }
 
-  .contentRoot {
+  .content-root {
     padding-left: 30px;
     border-left: 2px solid var(--primary-4);
-    
+
     @media (max-width: 1000px) {
       margin-left: 10px;
       padding-left: 10px;
     }
   }
 
-  .subjectRow {
+  .subject-row {
     padding-left: 0;
     margin-left: 0;
   }
 
-  .subjectRow > div {
+  .subject-row > div {
     padding-left: 0;
   }
 }
