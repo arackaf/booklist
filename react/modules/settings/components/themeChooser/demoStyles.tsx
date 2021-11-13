@@ -1,13 +1,13 @@
 import React from "react";
 
-import styles from "./styles.module.scss";
 import FlexRow from "app/components/layout/FlexRow";
-const { mockModal, demoRoot } = styles;
+
+import "./styles.scss";
 
 export default props => {
   return (
-    <div className={demoRoot}>
-      <div data-reach-dialog-content className={mockModal}>
+    <div className="demo-root">
+      <div data-reach-dialog-content className="mock-modal">
         <h4>Book Search</h4>
         <hr />
         <FlexRow>
