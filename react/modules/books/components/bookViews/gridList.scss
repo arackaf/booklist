@@ -1,0 +1,20 @@
+.book-display-grid-list {
+  .grid-hover-filter {
+    text-decoration: none;
+    display: none;
+    color: var(--neutral-light-text);
+  }
+
+  td:hover .grid-hover-filter {
+    display: unset;
+  }
+
+  .details-row {
+    padding-top: 10px;
+    padding-right: 10px;
+  }
+  .details-row > * > div {
+    max-height: 250px;
+    overflow: auto;
+  }
+}

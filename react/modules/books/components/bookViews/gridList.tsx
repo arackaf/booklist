@@ -11,7 +11,7 @@ import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery } from "micro-graphql-react";
 
 import uiStyles from "./uiStyles.module.css";
-import gridStyles from "./gridList.module.css";
+import "./gridList.scss";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
@@ -22,7 +22,6 @@ import FlowItems from "app/components/layout/FlowItems";
 import useDelete from "app/helpers/useDelete";
 
 const { bookTitle, bookAuthor } = uiStyles;
-const { gridHoverFilter, detailsRow } = gridStyles;
 
 interface ILocalProps {
   book: IBookDisplay;
@@ -73,15 +72,15 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
             <FlowItems vCenter={true} tighter={true} containerStyle={{ minHeight: "35px" }}>
               {online ? (
                 detailsLoading ? (
-                  <a style={hoverOverride} target="_new" className={`${gridHoverFilter}`}>
+                  <a style={hoverOverride} target="_new" className="grid-hover-filter">
                     <i className="fa fa-fw fa-spin fa-spinner" />
                   </a>
                 ) : expanded ? (
-                  <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} className={`${gridHoverFilter}`}>
+                  <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} className="grid-hover-filter">
                     <i className={`far fa-minus`} />
                   </a>
                 ) : (
-                  <a style={hoverOverride} target="_new" onClick={() => setExpanded(true)} className={`${gridHoverFilter}`}>
+                  <a style={hoverOverride} target="_new" onClick={() => setExpanded(true)} className="grid-hover-filter">
                     <i className={`far fa-plus`} />
                   </a>
                 )
@@ -90,7 +89,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
                 <a
                   style={{ ...hoverOverride, paddingTop: "1px" }}
                   target="_new"
-                  className={`${gridHoverFilter}`}
+                  className="grid-hover-filter"
                   href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
                 >
                   <i className={`fab fa-amazon`} />
@@ -98,10 +97,10 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
               ) : null}
               {!viewingPublic && online ? (
                 <>
-                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={() => props.editBook(book)}>
+                  <a style={hoverOverride} className="grid-hover-filter" onClick={() => props.editBook(book)}>
                     <i className="fal fa-pencil-alt"></i>
                   </a>
-                  <a style={hoverOverride} className={`${gridHoverFilter}`} onClick={startDelete}>
+                  <a style={hoverOverride} className="grid-hover-filter" onClick={startDelete}>
                     <i className={`fal fa-trash-alt`} />
                   </a>
                 </>
@@ -129,7 +128,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
           </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
-              <a className={`${gridHoverFilter}`} onClick={() => props.editBooksSubjects(book)}>
+              <a className="grid-hover-filter" onClick={() => props.editBooksSubjects(book)}>
                 <i className="fal fa-pencil-alt"></i>
               </a>
             ) : null}
@@ -145,7 +144,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
           </div>
           <div style={{ marginTop: 5 }}>
             {!viewingPublic ? (
-              <a className={`${gridHoverFilter}`} onClick={() => props.editBooksTags(book)}>
+              <a className="grid-hover-filter" onClick={() => props.editBooksTags(book)}>
                 <i className="fal fa-pencil-alt"></i>
               </a>
             ) : null}
@@ -213,7 +212,7 @@ const BookRowDetails: FunctionComponent<{ book?: IBookDisplay; setDetailsLoading
   return (
     <tr key={"details" + book._id}>
       <td colSpan={viewingPublic ? 8 : 9} style={{ borderTop: 0, paddingLeft: "50px", paddingTop: 0, paddingBottom: "15px" }}>
-        <FlexRow className={`${detailsRow}`}>
+        <FlexRow className="details-row">
           <div className="col-xs-6">
             {!editorialReviews || !editorialReviews.length ? (
               <h4>No editorial reviews for this book</h4>
@@ -313,10 +312,16 @@ const BookViewListGrid: FunctionComponent<{ books: any; menuBarHeight: any }> = 
   const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
-  const stickyHeaderStyle: CSSProperties = { paddingTop: "2px", position: "sticky", top: `${menuBarHeight - 4}px`, backgroundColor: "white", zIndex: 2 };
+  const stickyHeaderStyle: CSSProperties = {
+    paddingTop: "2px",
+    position: "sticky",
+    top: `${menuBarHeight - 4}px`,
+    backgroundColor: "white",
+    zIndex: 2
+  };
 
   return (
-    <div style={{ minHeight: 400 }}>
+    <div className="book-display-grid-list" style={{ minHeight: 400 }}>
       {books.length ? (
         <div>
           <table style={{ position: "relative" }} className="table no-padding-top">
