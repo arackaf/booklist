@@ -3,8 +3,7 @@ import { useQuery } from "micro-graphql-react";
 
 import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
 import UpdateBookSummary from "graphQL/bookSummary/updateBookSummary.graphql";
-import styles from "./styles.module.css";
-const { bookList, bookDisplay, img, bookInfo, title, author } = styles;
+import "./styles.scss";
 
 import ajaxUtil from "util/ajaxUtil";
 import { getIsbnDbBookCover } from "util/isbnDb";
@@ -54,17 +53,17 @@ const BookSummaryDisplay = props => {
   };
 
   return (
-    <div className={bookDisplay}>
-      <div className={img}>
+    <div className="book-display">
+      <div className="img">
         <img src={book.smallImage} />
       </div>
-      <div className={bookInfo}>
-        <div className={title}>
+      <div className="book-info">
+        <div className="title">
           <a target="_blank" href={`https://amazon.com/s?k=${book.title.replace(/\s+/g, "+")}`}>
             {book.title}
           </a>
         </div>
-        <div className={author}>{(book.authors || []).join(", ")}</div>
+        <div className="author">{(book.authors || []).join(", ")}</div>
         <Form submit={changeImg}>
           <div className="btn-group">
             <input className="form-control" placeholder="New Cover URL" value={newUrl} onChange={evt => setNewUrl(evt.target.value)} />
@@ -100,7 +99,7 @@ export default props => {
   const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (
-    <div className={bookList}>
+    <div className="book-list">
       <label>
         Books missing covers <input type="checkbox" checked={missingCoversFilter} onChange={evt => setMissingCoversFilter(evt.target.checked)} />
       </label>
