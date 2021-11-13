@@ -1,4 +1,4 @@
-import React, { memo, FunctionComponent, useContext, useState, useLayoutEffect } from "react";
+import React, { memo, FunctionComponent, useContext, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 
 import { goto } from "reactStartup";
@@ -8,11 +8,8 @@ import { AppContext } from "app/renderUI";
 import { isAdmin } from "util/loginStatus";
 import BookSvg from "./bookSvg";
 
-import navClasses from "css/navbar.module.scss";
+import "css/navbar.scss";
 import "css/main-mobile-menu.scss";
-import { useEffect } from "react";
-
-const { nav, navHeader, navItems, navItemsRight, numberBadge, bigCount } = navClasses;
 
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
@@ -57,16 +54,16 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
   }, []);
 
   return (
-    <header>
-      <nav className={nav}>
-        <div className={`${navHeader} hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
+    <header className="master-nav">
+      <nav className="nav">
+        <div className={`nav-header hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
           <a onClick={() => goto("home")}>
             <BookSvg height="18" style={{ marginRight: "5px", color: "white", fill: "var(--primary-10)" }} />
             <span>My Library</span>
           </a>
         </div>
 
-        <ul className={navItems}>
+        <ul className="nav-items">
           <NavBarItem className="visible-xs" disabled={isPublic} onClick={() => goto("home")} active={isHome} aStyle={{ marginTop: "2px" }}>
             <i className="fal fa-home visible-xs" />
           </NavBarItem>
@@ -75,7 +72,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
               <span className="hidden-xs">Book entry</span>
               <i className="visible-xs fal fa-scanner" />
               {pendingCount ? (
-                <span className={`${numberBadge} ${pendingCount > 9 ? bigCount : ""}`}>
+                <span className={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
                   <span className="overlay-holder">
                     <i className="fas fa-badge"></i>
                     <span>{pendingCount}</span>
@@ -109,7 +106,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             </NavBarItem>
           ) : null}
         </ul>
-        <ul className={navItemsRight}>
+        <ul className="nav-items-right">
           {!isLoggedIn && !isLoginModule ? (
             <NavBarItem onClick={() => goto("login")}>
               <span className="hidden-xs">Login</span>
@@ -118,7 +115,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           ) : null}
         </ul>
         {isLoggedIn ? (
-          <ul className={navItemsRight}>
+          <ul className="nav-items-right">
             <NavBarItem onClick={logout}>
               <span className="hidden-xs">Logout</span>
               <i className="visible-xs fal fa-sign-out" />
