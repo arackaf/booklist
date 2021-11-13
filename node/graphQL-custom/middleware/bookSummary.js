@@ -6,7 +6,6 @@ AWS.config.region = "us-east-1";
 
 export default class BooksMiddleware {
   async beforeUpdate(match, updates, { root, args, context, ast }) {
-    console.log("admin", context.user.admin);
     return !!context.user.admin;
   }
   adjustResults(results) {
