@@ -1,37 +1,37 @@
-.book-list {
+.admin-covers {
   margin-top: 10px;
-}
 
-.book-display {
-  display: flex;
-  margin-bottom: 10px;
-
-  .img {
-    flex-basis: 80px;
-
-    img {
-      max-width: 100%;
-    }
-  }
-  .book-info {
+  .book-display {
     display: flex;
-    flex-direction: column;
+    margin-bottom: 10px;
 
-    .title {
-      font-size: 14px;
+    .img {
+      flex-basis: 80px;
 
-      a {
-        text-decoration: none;
-        cursor: pointer;
+      img {
+        max-width: 100%;
       }
     }
-    .author {
-      font-size: 12px;
-      margin-bottom: 5px;
-    }
-    .btn-group {
-      width: 250px;
-      margin-top: 5px;
+    .book-info {
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        font-size: 14px;
+
+        a {
+          text-decoration: none;
+          cursor: pointer;
+        }
+      }
+      .author {
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+      .btn-group {
+        width: 250px;
+        margin-top: 5px;
+      }
     }
   }
 }

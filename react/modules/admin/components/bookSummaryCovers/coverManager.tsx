@@ -99,7 +99,7 @@ export default props => {
   const bookSummaries = data ? data.allBookSummarys.BookSummarys : [];
 
   return (
-    <div className="book-list">
+    <div className="admin-covers">
       <label>
         Books missing covers <input type="checkbox" checked={missingCoversFilter} onChange={evt => setMissingCoversFilter(evt.target.checked)} />
       </label>
