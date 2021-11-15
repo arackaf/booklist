@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script>
-      if (typeof fetch === "undefined") {
-        var fetchPolyfill = document.createElement("script");
-        fetchPolyfill.setAttribute("src", "/react/util/unfetch.js");
-        document.head.appendChild(fetchPolyfill);
-        fetchPolyfill.onload = function () {
-          window.fetch = unfetch;
-        };
-      }
-    </script>
-
     <meta charset="UTF-8" />
     <title>Book tracker</title>
   </head>
