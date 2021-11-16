@@ -8,7 +8,7 @@ module.exports = {
   input: "./src/index.ts",
   output: {
     format: "iife",
-    file: "./sw-index-bundle.js"
+    file: "../public/sw-index-bundle.js"
   },
   plugins: [minify({}), graphqlPlugin({ path: path.resolve(__dirname, "../extracted_queries.json") }), typescript()]
 };
