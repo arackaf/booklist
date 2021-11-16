@@ -129,9 +129,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
 
-const statics = ["/static/", "/node_modules/", "/react/", "/svelte/", "/utils/"];
-statics.forEach(folder => app.use(folder, express.static(__dirname + folder)));
-
 app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
@@ -205,7 +202,7 @@ app.use(
 
 // --------------- REACT ---------------
 
-app.get("/*.js", express.static(__dirname + "/react/dist/"));
+app.use("/assets/", express.static(__dirname + "/react/dist/assets"));
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
