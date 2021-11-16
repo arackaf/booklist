@@ -13,22 +13,22 @@ render(React.createElement(App, {}), document.getElementById("home"));
 // import "./css/site-styles.scss";
 
 // import { renderUI } from "app/renderUI";
-// import { history } from "util/urlHelpers";
+import { history } from "util/urlHelpers";
 
 // import "util/ajaxUtil";
 // import "util/graphql";
 
 // import setupServiceWorker from "./util/setupServiceWorker";
-// import { getCurrentUrlState } from "util/urlHelpers";
+import { getCurrentUrlState } from "util/urlHelpers";
 
 // setupServiceWorker();
 // renderUI();
 
-// export function goto(module) {
-//   var userId = getCurrentUrlState().searchState.userId;
-//   let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
+export function goto(module) {
+  var userId = getCurrentUrlState().searchState.userId;
+  let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
 
-//   if (currentModule !== module) {
-//     history.push({ pathname: `/${module}`, search: userId ? `userId=${userId}` : void 0 });
-//   }
-// }
+  if (currentModule !== module) {
+    history.push({ pathname: `/${module}`, search: userId ? `userId=${userId}` : void 0 });
+  }
+}

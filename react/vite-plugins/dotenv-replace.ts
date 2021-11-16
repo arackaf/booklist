@@ -1,16 +1,18 @@
 import dotenv from "dotenv";
 
-import { replaceCodePlugin } from "vite-plugin-replace";
+const envVarSource = process.env.NODE_ENV === "production" ? process.env : dotenv.config().parsed;
 
-const envVarSource = process.env.DEV ? dotenv.config().parsed : process.env;
 export const dotEnvReplacement = () => {
-  const replacements = Object.entries(envVarSource).reduce(
-    (obj, [key, val]) => {
-      obj.replacements.push({ from: `process.env.${key}`, to: `"${val}"` });
-      return obj;
-    },
-    { replacements: [] }
-  );
+  const replacements = Object.entries(envVarSource).reduce((obj, [key, val]) => {
+    obj[`process.env.${key}`] = `"${val}"`;
+    return obj;
+  }, {});
 
-  return replaceCodePlugin(replacements);
+  return {
+    name: "dotenv-replacement",
+    config(obj) {
+      obj.define = obj.define || {};
+      Object.assign(obj.define, replacements);
+    }
+  };
 };

@@ -4,8 +4,9 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
   "scripts": {
-    "dev": "DEV='true' vite",
-    "build": "tsc && vite build",
+    "dev": "DEV=true NODE_ENV=development vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "tscw": "tsc -w --noEmit",
     "deploy": "cd .. && npm run deploy",
     "rollup-sw": "cd ./service-worker && rollup -c -w",
@@ -32,9 +33,9 @@
     "persistgraphql": "^0.3.11",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
-    "react": "^18.0.0-alpha-3c4c1c470-20211021",
+    "react": "^17.0.2",
     "react-autosuggest": "9.3.2",
-    "react-dom": "^18.0.0-alpha-3c4c1c470-20211021",
+    "react-dom": "^17.0.2",
     "react-dropzone": "4.2.5",
     "react-measure": "^2.5.2",
     "react-spring": "^9.0.0-rc.3",
@@ -45,7 +46,6 @@
     "shallow-equal": "^1.0.0",
     "toastify-js": "^1.11.1",
     "typescript": "3.8.3",
-    "vite": "^2.6.14",
-    "vite-plugin-replace": "^0.1.1"
+    "vite": "^2.6.14"
   }
 }
