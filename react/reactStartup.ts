@@ -1,27 +1,34 @@
-import { useSpring, useTransition, animated, config, useSprings } from "react-spring";
-(window as any).__bundleControl = { useSpring, useTransition, animated, config, useSprings };
+import React from "react";
+import { render } from "react-dom";
 
-import "./static/fontawesome/css/font-awesome-booklist-build.css";
-import "@reach/dialog/styles.css";
-import "./css/site-styles.scss";
+import App from "./App";
 
-import { renderUI } from "app/renderUI";
-import { history } from "util/urlHelpers";
+render(React.createElement(App, {}), document.getElementById("home"));
 
-import "util/ajaxUtil";
-import "util/graphql";
+// import { useSpring, useTransition, animated, config, useSprings } from "react-spring";
+// (window as any).__bundleControl = { useSpring, useTransition, animated, config, useSprings };
 
-import setupServiceWorker from "./util/setupServiceWorker";
-import { getCurrentUrlState } from "util/urlHelpers";
+// import "./static/fontawesome/css/font-awesome-booklist-build.css";
+// import "@reach/dialog/styles.css";
+// import "./css/site-styles.scss";
 
-setupServiceWorker();
-renderUI();
+// import { renderUI } from "app/renderUI";
+// import { history } from "util/urlHelpers";
 
-export function goto(module) {
-  var userId = getCurrentUrlState().searchState.userId;
-  let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
+// import "util/ajaxUtil";
+// import "util/graphql";
 
-  if (currentModule !== module) {
-    history.push({ pathname: `/${module}`, search: userId ? `userId=${userId}` : void 0 });
-  }
-}
+// import setupServiceWorker from "./util/setupServiceWorker";
+// import { getCurrentUrlState } from "util/urlHelpers";
+
+// setupServiceWorker();
+// renderUI();
+
+// export function goto(module) {
+//   var userId = getCurrentUrlState().searchState.userId;
+//   let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
+
+//   if (currentModule !== module) {
+//     history.push({ pathname: `/${module}`, search: userId ? `userId=${userId}` : void 0 });
+//   }
+// }
