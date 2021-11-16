@@ -21,12 +21,11 @@ export default defineConfig({
   plugins: [dotEnvReplacement(), react(), graphqlPlugin({ path: path.resolve(__dirname, "./extracted_queries.json") })],
   server: {
     proxy: {
-      "/graphql": "http://localhost:3001/graphql",
-      "/auth/login": "http://localhost:3001/auth/login",
-      "/auth/logout": "http://localhost:3001/auth/logout",
-      "/auth/createUser": "http://localhost:3001/auth/createUser",
-      "/auth/resetPassword": "http://localhost:3001/auth/resetPassword",
-      "/activate": "http://localhost:3001/activate"
+      "/graphql": "http://localhost:3001",
+      "/auth/login": "http://localhost:3001",
+      "/auth/logout": "http://localhost:3001",
+      "/auth/createUser": "http://localhost:3001",
+      "/auth/resetPassword": "http://localhost:3001"
     }
   }
 });
