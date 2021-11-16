@@ -1,7 +1,6 @@
 const path = require("path");
 const graphqlPlugin = require("./rollupGraphqlPlugin");
 const minify = require("rollup-plugin-babel-minify");
-const babel = require("rollup-plugin-babel");
 const typescript = require("rollup-plugin-typescript");
 
 module.exports = {
