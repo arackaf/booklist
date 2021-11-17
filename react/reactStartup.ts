@@ -14,25 +14,9 @@ import "util/graphql";
 import setupServiceWorker from "./util/setupServiceWorker";
 import { getCurrentUrlState } from "util/urlHelpers";
 
-import { registerSW } from "virtual:pwa-register";
+console.log("HELLO WORLD 8");
 
-const updateSW = registerSW({
-  onNeedRefresh() {
-    console.log("!!!! UPDATING !!!!");
-    console.log("!!!! UPDATING !!!!");
-    console.log("!!!! UPDATING !!!!");
-    console.log("!!!! UPDATING !!!!");
-    console.log("!!!! UPDATING !!!!");
-    setTimeout(() => {
-      updateSW(true);
-    }, 10000);
-  },
-  onOfflineReady() {}
-});
-
-console.log("HELLO WORLD 6");
-
-//setupServiceWorker();
+setupServiceWorker();
 renderUI();
 
 export function goto(module) {

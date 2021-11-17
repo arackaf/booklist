@@ -44,7 +44,7 @@ export default defineConfig({
     graphqlPlugin({ path: path.resolve(__dirname, "./extracted_queries.json") }),
     VitePWA({
       workbox: {
-        importScripts: ["foo-bar.js"]
+        importScripts: ["sw-index-bundle.js"]
       }
     })
     // generateSW({
