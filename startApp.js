@@ -202,6 +202,12 @@ app.use(
 
 // --------------- REACT ---------------
 
+app.get("/*.js", express.static(__dirname + "/react/dist"));
+app.get("/*.webmanifest", express.static(__dirname + "/react/dist"));
+app.get("/index.html", express.static(__dirname + "/react/dist"));
+
+app.get("/*.js", express.static(__dirname + "/react/dist/assets"));
+app.get("/*.css", express.static(__dirname + "/react/dist/assets"));
 app.use("/assets/", express.static(__dirname + "/react/dist/assets"));
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];

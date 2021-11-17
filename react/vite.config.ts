@@ -6,6 +6,7 @@ import path from "path";
 import { dotEnvReplacement } from "./vite-plugins/dotenv-replace";
 import graphqlPlugin from "./vite-plugins/graphql-plugin";
 import { generateSW } from "rollup-plugin-workbox";
+import { VitePWA } from "vite-plugin-pwa";
 
 const getCache = ({ name, pattern }: any) => ({
   urlPattern: pattern,
@@ -41,18 +42,24 @@ export default defineConfig({
     dotEnvReplacement(),
     react(),
     graphqlPlugin({ path: path.resolve(__dirname, "./extracted_queries.json") }),
-    generateSW({
-      swDest: "dist/assets/service-worker.js",
-      globDirectory: "dist/assets",
-      ignoreURLParametersMatching: [/./],
-      navigateFallback: "assets/index.html",
-      navigateFallbackDenylist: [/\/(activate|graphql|graphql-public)\b/],
-      runtimeCaching: [
-        getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
-        getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
-      ],
-      importScripts: ["/react/service-worker/sw-index-bundle.js"]
+    VitePWA({
+      workbox: {
+        importScripts: ["foo-bar.js"]
+      }
     })
+    // generateSW({
+    //   swDest: "dist/assets/service-worker.js",
+    //   globDirectory: "dist/assets",
+    //   //ignoreURLParametersMatching: [/./],
+    //   navigateFallback: "index.html",
+    //   additionalManifestEntries: ["index.html"],
+    //   navigateFallbackDenylist: [/\/(activate|graphql|graphql-public)\b/],
+    //   runtimeCaching: [
+    //     getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
+    //     getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
+    //   ],
+    //   importScripts: ["sw-index-bundle.js"]
+    // })
   ],
   server: {
     proxy: {

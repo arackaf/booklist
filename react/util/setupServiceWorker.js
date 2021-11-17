@@ -1,7 +1,8 @@
 import { isLoggedIn } from "util/loginStatus";
 
 export default function setupServiceWorker() {
-  if ("serviceWorker" in navigator && !/localhost/.test(window.location) && !/lvh.me/.test(window.location)) {
+  if ("serviceWorker" in navigator) {
+    // && !/localhost/.test(window.location) && !/lvh.me/.test(window.location)) {
     navigator.serviceWorker.ready.then(reg => {
       let loginInfo = isLoggedIn();
       try {
