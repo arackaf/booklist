@@ -202,7 +202,7 @@ app.use(
 
 // --------------- REACT ---------------
 
-app.use("/", express.static(__dirname + "/react/dist"));
+app.use(express.static(__dirname + "/react/dist"));
 
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
 modules.forEach(name => app.get("/" + name, browseToReact));
