@@ -5,7 +5,6 @@ import path from "path";
 
 import { dotEnvReplacement } from "./vite-plugins/dotenv-replace";
 import graphqlPlugin from "./vite-plugins/graphql-plugin";
-import { generateSW } from "rollup-plugin-workbox";
 import { VitePWA } from "vite-plugin-pwa";
 
 const getCache = ({ name, pattern }: any) => ({
