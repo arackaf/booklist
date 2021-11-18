@@ -29,7 +29,7 @@ export default defineConfig({
   resolve: {
     alias: {
       reactStartup: path.resolve("./reactStartup.ts"),
-      jscolor: path.resolve(__dirname, "./util/jscolor.js"),
+      jscolor: path.resolve("./util/jscolor.js"),
       app: path.resolve("./app"),
       css: path.resolve("./css"),
       graphQL: path.resolve("./graphQL"),
@@ -40,7 +40,7 @@ export default defineConfig({
   plugins: [
     dotEnvReplacement(),
     react(),
-    graphqlPlugin({ path: path.resolve(__dirname, "./extracted_queries.json") }),
+    graphqlPlugin({ path: "./extracted_queries.json" }),
     VitePWA({
       workbox: {
         importScripts: ["sw-index-bundle.js"],
