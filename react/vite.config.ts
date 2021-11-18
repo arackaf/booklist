@@ -46,21 +46,9 @@ export default defineConfig({
         importScripts: ["sw-index-bundle.js"]
       }
     })
-    // generateSW({
-    //   swDest: "dist/assets/service-worker.js",
-    //   globDirectory: "dist/assets",
-    //   //ignoreURLParametersMatching: [/./],
-    //   navigateFallback: "index.html",
-    //   additionalManifestEntries: ["index.html"],
-    //   navigateFallbackDenylist: [/\/(activate|graphql|graphql-public)\b/],
-    //   runtimeCaching: [
-    //     getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
-    //     getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
-    //   ],
-    //   importScripts: ["sw-index-bundle.js"]
-    // })
   ],
   server: {
+    hmr: false,
     proxy: {
       "/graphql": "http://localhost:3001",
       "/auth/login": "http://localhost:3001",
