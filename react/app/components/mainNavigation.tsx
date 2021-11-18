@@ -1,7 +1,7 @@
 import React, { memo, FunctionComponent, useContext, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 
-import { goto } from "reactStartup";
+import { goto } from "util/urlHelpers";
 import ajaxUtil from "util/ajaxUtil";
 import { AppContext } from "app/renderUI";
 

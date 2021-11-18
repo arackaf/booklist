@@ -4,7 +4,7 @@ import Measure from "react-measure";
 import "./d3-styles.scss";
 import "d3-transition";
 
-import { goto } from "reactStartup";
+import { goto } from "util/urlHelpers";
 
 import { AppContext } from "app/renderUI";
 import { useTagsState } from "app/state/tagsState";

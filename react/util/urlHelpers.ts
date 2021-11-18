@@ -6,7 +6,7 @@ export const history = createHistory();
 type ParsedQuery = {
   pathname: any;
   searchState: any;
-}
+};
 
 export function getCurrentUrlState(): ParsedQuery {
   let location = history.location;
@@ -33,4 +33,13 @@ export function setSearchValues(state) {
     pathname: history.location.pathname,
     search: queryString.stringify(newState)
   });
+}
+
+export function goto(module) {
+  var userId = getCurrentUrlState().searchState.userId;
+  let currentModule = history.location.pathname.replace(/\//g, "").toLowerCase();
+
+  if (currentModule !== module) {
+    history.push({ pathname: `/${module}`, search: userId ? `userId=${userId}` : void 0 });
+  }
 }
