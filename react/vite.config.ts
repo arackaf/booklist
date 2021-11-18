@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-import path from "path";
 
 import { dotEnvReplacement } from "./vite-plugins/dotenv-replace";
 import graphqlPlugin from "./vite-plugins/graphql-plugin";
+import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+
+import path from "path";
 
 const getCache = ({ name, pattern }: any) => ({
   urlPattern: pattern,
@@ -43,7 +43,11 @@ export default defineConfig({
     graphqlPlugin({ path: path.resolve(__dirname, "./extracted_queries.json") }),
     VitePWA({
       workbox: {
-        importScripts: ["sw-index-bundle.js"]
+        importScripts: ["sw-index-bundle.js"],
+        runtimeCaching: [
+          getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
+          getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
+        ]
       }
     })
   ],
