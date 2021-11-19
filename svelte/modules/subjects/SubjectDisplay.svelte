@@ -79,11 +79,13 @@
     </div>
     <div style="height: {height}px;">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
-        <ul>
-          {#each childSubjects as s (s._id)}
-            <svelte:self subject={s} {editSubject} />
-          {/each}
-        </ul>
+        {#if childSubjects.length}
+          <ul>
+            {#each childSubjects as s (s._id)}
+              <svelte:self subject={s} {editSubject} />
+            {/each}
+          </ul>
+        {/if}
       </div>
     </div>
   </div>
