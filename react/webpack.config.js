@@ -106,7 +106,7 @@ module.exports = {
     new Dotenv(isProd ? { systemvars: true } : { path: "./.env.dev" }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
-      //exclude: /a\.js|node_modules/,
+      exclude: /node_modules/,
       // include specific files based on a RegExp
       //include: /dir/,
       // add errors to webpack instead of warnings
