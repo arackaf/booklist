@@ -1,13 +1,14 @@
 <script lang="ts">
   import { setContext } from "svelte";
   import { fade } from "svelte/transition";
-  import { quadIn, quadOut } from "svelte/easing";
+  import { quadOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import Button from "app/components/buttons/Button.svelte";
   import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject.svelte";
   import Modal from "app/components/ui/Modal.svelte";
   import { rootSubjects } from "app/state/subjectsState";
-  import SubjectList from "./SubjectList.svelte";
+
+  import SubjectDisplay from "./SubjectDisplay.svelte";
 
   let editModalOpen = false;
   let editingSubject = { name: "" };
@@ -16,6 +17,8 @@
     editingSubject = subject;
     editModalOpen = true;
   };
+
+  setContext("subject-chain-disable-animation", writable(false));
 </script>
 
 <style>
@@ -51,7 +54,11 @@
   </div>
 
   <div class="contentRoot">
-    <SubjectList root={true} subjects={$rootSubjects} {editSubject} />
+    <ul>
+      {#each $rootSubjects as s (s._id)}
+        <SubjectDisplay subject={s} {editSubject} />
+      {/each}
+    </ul>
   </div>
 
   <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>

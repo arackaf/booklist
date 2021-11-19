@@ -7,6 +7,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 
+const CircularDependencyPlugin = require("circular-dependency-plugin");
+
 const getCache = ({ name, pattern, expires, maxEntries }) => ({
   urlPattern: pattern,
   handler: "CacheFirst",
@@ -116,7 +118,20 @@ module.exports = {
       importScripts: ["/react/service-worker/sw-index-bundle.js"]
     }),
     //new BundleAnalyzerPlugin({ analyzerMode: "static" }),
-    new Dotenv(isProd ? { systemvars: true } : { path: "./.env.dev" })
+    new Dotenv(isProd ? { systemvars: true } : { path: "./.env.dev" }),
+    new CircularDependencyPlugin({
+      // exclude detection of files based on a RegExp
+      exclude: /node_modules/,
+      // include specific files based on a RegExp
+      //include: /dir/,
+      // add errors to webpack instead of warnings
+      failOnError: true,
+      // allow import cycles that include an asyncronous import,
+      // e.g. via import(/* webpackMode: "weak" */ './file.js')
+      allowAsyncCycles: false
+      // set the current working directory for displaying module paths
+      //cwd: process.cwd(),
+    })
   ].filter(p => p),
   stats: {
     all: false,
