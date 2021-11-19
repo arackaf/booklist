@@ -3,7 +3,7 @@ import React, { CSSProperties, useContext, useMemo, useState, FunctionComponent 
 import { ActionButton } from "app/components/ui/Button";
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import { IBookDisplay } from "../../booksState";
 import { useCurrentSearch } from "../../booksSearchState";
 
@@ -13,7 +13,7 @@ import { useQuery } from "micro-graphql-react";
 import { CoverSmall } from "app/components/bookCoverComponent";
 import { QueryOf, Queries } from "graphql-typings";
 import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
-import { BooksModuleContext } from "modules/books/books";
+import { BooksModuleContext } from "modules/books/booksState";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";

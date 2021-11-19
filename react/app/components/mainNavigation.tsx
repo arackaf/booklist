@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 
 import { goto } from "util/urlHelpers";
 import ajaxUtil from "util/ajaxUtil";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 import { isAdmin } from "util/loginStatus";
 import BookSvg from "./bookSvg";

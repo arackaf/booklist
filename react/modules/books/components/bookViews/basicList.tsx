@@ -1,9 +1,9 @@
 import React, { FunctionComponent, SFC, useContext } from "react";
 import { ActionButton } from "app/components/ui/Button";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 import { CoverSmall } from "app/components/bookCoverComponent";
-import { BooksModuleContext } from "modules/books/books";
+import { BooksModuleContext } from "modules/books/booksState";
 import useDelete from "app/helpers/useDelete";
 
 import "./uiStyles.scss";

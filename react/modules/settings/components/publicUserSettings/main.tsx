@@ -3,7 +3,7 @@ import React, { FunctionComponent, useContext, useState, useRef } from "react";
 import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
 import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
 import { useSuspenseQuery, useMutation } from "micro-graphql-react";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";

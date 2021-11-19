@@ -1,6 +1,6 @@
 import { history } from "util/urlHelpers";
-import React, { Component, FunctionComponent, SFC, useContext } from "react";
-import { AppContext } from "app/renderUI";
+import React, { Component, FunctionComponent, useContext } from "react";
+import { AppContext } from "app/state/appState";
 import FlexRow from "app/components/layout/FlexRow";
 
 const MainActivatePane = props => (

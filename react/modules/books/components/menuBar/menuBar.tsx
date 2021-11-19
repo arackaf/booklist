@@ -3,7 +3,7 @@ import cn from "classnames";
 
 import "./book-menu-bar-styles.scss";
 
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 import PagingButtons from "./pagingButtons";
 import MenuOptions from "./menuOptions";
@@ -12,7 +12,7 @@ import CurrentSearchFilters from "./currentSearchFilters";
 import { useCurrentSearch } from "../../booksSearchState";
 import { quickSearch } from "../../setBookFilters";
 import PublicBooksHeader from "../publicBooksHeader";
-import { BooksModuleContext } from "../../books";
+import { BooksModuleContext } from "../../booksState";
 import { MobileMenu } from "app/components/mainNavigation";
 
 interface IAddedMenuProps {

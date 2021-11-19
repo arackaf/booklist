@@ -5,7 +5,7 @@ import ajaxUtil from "util/ajaxUtil";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import { CoverSmall } from "app/components/bookCoverComponent";
 
 import { useTransition, config, animated } from "react-spring";

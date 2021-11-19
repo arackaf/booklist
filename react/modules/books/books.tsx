@@ -29,6 +29,8 @@ import SubjectEditModal from "./components/subjectEditModal";
 import TagEditModal from "./components/tagEditModal";
 import BookSearchModal from "./components/bookSearchModal";
 
+import { BooksModuleContext, initialBooksState } from "./booksState";
+
 const prepBookForSaving = book => {
   let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
   let pages = parseInt(book.pages, 10);
@@ -36,28 +38,6 @@ const prepBookForSaving = book => {
 
   return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
 };
-
-export type BooksModuleActions = {
-  editBook: any;
-  saveEditingBook: any;
-  openBookSubModal: any;
-  openBookTagModal: any;
-  editTags: any;
-  editSubjects: any;
-  beginEditFilters: any;
-  setRead: any;
-  runDelete: any;
-};
-
-const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {}, deleting: {} };
-
-export type BooksModuleData = {
-  actions: BooksModuleActions;
-  booksUiState: typeof initialBooksState;
-  dispatchBooksUiState: any;
-};
-
-export const BooksModuleContext = createContext<BooksModuleData>(null);
 
 const keysToHash = (_ids, value) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o, _id) => ((o[_id] = value), o), {});
 

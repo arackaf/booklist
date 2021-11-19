@@ -5,7 +5,7 @@ import { useTagsState } from "app/state/tagsState";
 
 import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
 import { useSubjectsState } from "app/state/subjectsState";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 const bookSearchInitialState = {
   hashFilters: {} as typeof defaultSearchValuesHash

@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useRef, useState, useContext, useEffect } from "react";
 import { ActionButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import Stack from "app/components/layout/Stack";
 
 const errorCodes = {
@@ -58,7 +58,8 @@ const Login: FunctionComponent<{}> = props => {
       confirmPassword = confirmPasswordEl.current.value,
       rememberme = rememberMeEl.current.checked ? 1 : 0;
 
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!re.test(username)) {
       return setState(state => ({ ...state, invalidEmail: true }));
     } else {

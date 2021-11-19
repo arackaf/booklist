@@ -3,7 +3,7 @@ import { QueryOf, Queries } from "graphql-typings";
 
 import GetTags from "graphQL/tags/getTags.graphql";
 import { useSuspenseQuery } from "micro-graphql-react";
-import { AppContext } from "../renderUI";
+import { AppContext } from "app/state/appState";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 interface ITag {

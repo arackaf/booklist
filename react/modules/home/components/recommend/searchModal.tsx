@@ -14,7 +14,7 @@ import { CoverSmall } from "app/components/bookCoverComponent";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useHeight } from "app/animationHelpers";
 
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { QueryOf, Queries } from "graphql-typings";
 

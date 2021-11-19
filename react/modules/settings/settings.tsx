@@ -3,9 +3,7 @@ import React, { useContext, useState, useRef } from "react";
 import PublicUserSettings from "./components/publicUserSettings/main";
 import PasswordReset from "./components/passwordReset/main";
 import ThemeChooser from "./components/themeChooser/main";
-import { AppContext } from "app/renderUI";
-import { Button } from "app/components/ui/Button";
-import FlexRow from "app/components/layout/FlexRow";
+import { AppContext } from "app/state/appState";
 import { TabHeader, TabHeaders, Tabs, TabContents, TabContent } from "app/components/layout/Tabs";
 
 const SettingsTabContent = ({}) => {
