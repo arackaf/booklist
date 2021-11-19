@@ -52,7 +52,7 @@ export default defineConfig({
     })
   ],
   server: {
-    hmr: false,
+    //hmr: false,
     proxy: {
       "/graphql": "http://localhost:3001",
       "/auth/login": "http://localhost:3001",

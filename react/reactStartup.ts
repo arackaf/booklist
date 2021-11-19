@@ -12,7 +12,5 @@ import "util/graphql";
 
 import setupServiceWorker from "./util/setupServiceWorker";
 
-console.log("HELLO WORLD 8");
-
 setupServiceWorker();
 renderUI();

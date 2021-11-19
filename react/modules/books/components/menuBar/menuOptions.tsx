@@ -1,6 +1,5 @@
 import React, { useContext, FunctionComponent, useMemo } from "react";
-import { ModuleUpdateContext } from "app/renderUI";
-import { AppContext } from "app/state/appState";
+import { AppContext, ModuleUpdateContext } from "app/state/appState";
 
 import { BooksModuleContext } from "../../booksState";
 
