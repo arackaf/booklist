@@ -1,8 +1,8 @@
+import { useMemo, useLayoutEffect, createContext } from "react";
 import { graphqlClient } from "util/graphql";
 
 import GetBooksQuery from "graphQL/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
-import { useMemo, useLayoutEffect } from "react";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
@@ -160,3 +160,25 @@ const adjustBooks = books => {
     });
   }, [books, subjectHash, tagHash, subjectsLoaded, tagsLoaded]);
 };
+
+export type BooksModuleActions = {
+  editBook: any;
+  saveEditingBook: any;
+  openBookSubModal: any;
+  openBookTagModal: any;
+  editTags: any;
+  editSubjects: any;
+  beginEditFilters: any;
+  setRead: any;
+  runDelete: any;
+};
+
+export type BooksModuleData = {
+  actions: BooksModuleActions;
+  booksUiState: typeof initialBooksState;
+  dispatchBooksUiState: any;
+};
+
+export const BooksModuleContext = createContext<BooksModuleData>(null);
+
+export const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {}, deleting: {} };

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, createContext } from "react";
 
 import localStorageManager from "util/localStorage";
 import { isLoggedIn } from "util/loginStatus";
@@ -12,15 +12,15 @@ const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile:
 const { logged_in, userId, loginToken } = isLoggedIn();
 const authSettings = logged_in && userId ? { isLoggedIn: true, userId, loginToken } : { isLoggedIn: false, userId: "", loginToken: "" };
 
-if (logged_in && !loginToken){
-  ajaxUtil.post("/auth/logout", {}, () => (window as any).location = "/");
+if (logged_in && !loginToken) {
+  ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
 }
 
-if (logged_in && (window as any).location.pathname == "/login"){
+if (logged_in && (window as any).location.pathname == "/login") {
   window.location.replace("/");
 }
 
-if (logged_in && (window as any).location.pathname == "/login"){
+if (logged_in && (window as any).location.pathname == "/login") {
   window.location.replace("/");
 }
 
@@ -133,7 +133,8 @@ export function useAppState(): [AppState, any, any] {
     localStorageManager.set("white-bg", whiteBg);
     document.body.className = `${colorTheme} ${whiteBg == "1" ? "white-bg" : ""}`;
   }, [colorTheme, whiteBg]);
-  
 
   return result;
 }
+
+export const AppContext = createContext<[AppState, any, any]>(null);

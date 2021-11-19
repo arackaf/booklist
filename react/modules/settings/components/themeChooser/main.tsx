@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import classNames from "classnames";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import { SET_THEME, SET_WHITE_BG } from "app/state/appState";
 
 import DemoStyles from "./demoStyles";

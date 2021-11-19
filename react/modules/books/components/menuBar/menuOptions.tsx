@@ -1,7 +1,8 @@
 import React, { useContext, FunctionComponent, useMemo } from "react";
-import { AppContext, ModuleUpdateContext } from "app/renderUI";
+import { ModuleUpdateContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
-import { BooksModuleContext } from "../../books";
+import { BooksModuleContext } from "../../booksState";
 
 const MenuOptions: FunctionComponent<{
   Button: any;

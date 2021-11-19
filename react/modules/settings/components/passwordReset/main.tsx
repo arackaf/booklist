@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 import { ActionButton } from "app/components/ui/Button";
 import ajaxUtil from "util/ajaxUtil";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 

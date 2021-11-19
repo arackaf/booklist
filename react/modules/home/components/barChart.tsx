@@ -12,7 +12,7 @@ import Axis from "./axis";
 import barCharQuery from "graphQL/home/barChart.graphql";
 import { useSubjectsState } from "app/state/subjectsState";
 import { useSuspenseQuery } from "micro-graphql-react";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import SvgTooltip from "./svgTooltip";
 import { stackGraphData } from "./stackGraphData";
 

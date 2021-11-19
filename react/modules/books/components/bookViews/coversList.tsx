@@ -6,7 +6,7 @@ import "./coversList.scss";
 import { CoverMedium } from "app/components/bookCoverComponent";
 import Loading from "app/components/loading";
 import { useCodeSplitModal } from "modules/books/util";
-import { BooksModuleContext } from "modules/books/books";
+import { BooksModuleContext } from "modules/books/booksState";
 
 const BookViewCovers: FunctionComponent<{ books: any }> = props => {
   const { actions } = useContext(BooksModuleContext);

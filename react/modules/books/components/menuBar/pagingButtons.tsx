@@ -1,6 +1,6 @@
 import React, { useContext, FunctionComponent } from "react";
 import cn from "classnames";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 import { setPage, pageOne } from "../../setBookFilters";
 import { useCurrentSearch } from "../../booksSearchState";

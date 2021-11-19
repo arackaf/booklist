@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 import getPublicUser from "graphQL/getPublicUser.graphql";
 import { useSuspenseQuery } from "micro-graphql-react";

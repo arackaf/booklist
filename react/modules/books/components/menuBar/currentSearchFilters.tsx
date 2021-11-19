@@ -3,7 +3,7 @@ import cn from "classnames";
 
 import { RemovableLabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 import { useCurrentSearch } from "../../booksSearchState";
 import { removeFilters, removeFilterSubject, removeFilterTag, clearAllFilters } from "../../setBookFilters";
 

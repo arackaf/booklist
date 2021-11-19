@@ -1,6 +1,6 @@
 import localStorage from "util/localStorage";
 import { useContext, useReducer } from "react";
-import { AppContext } from "app/renderUI";
+import { AppContext } from "app/state/appState";
 
 type UI_ACTIONS = "SET_GRID_VIEW" | "SET_BASIC_LIST_VIEW" | "SET_COVERS_LIST_VIEW";
 
