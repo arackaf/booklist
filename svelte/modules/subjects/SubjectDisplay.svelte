@@ -6,7 +6,6 @@
   import { syncHeight } from "app/animationHelpers";
   import EditableExpandableLabelDisplay from "app/components/subjectsAndTags/EditableLabelDisplay.svelte";
 
-  import SubjectList from "./SubjectList.svelte";
   import { childMapSelector } from "app/state/subjectsState";
 
   const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
@@ -56,7 +55,7 @@
   export let editSubject;
   export let subject;
 
-  $: childSubjects = $childMapSelector[subject._id];
+  $: childSubjects = $childMapSelector[subject._id] as any[];
   $: ({ height, opacity, x, y } = $subjectSpring);
 
   //
@@ -75,12 +74,16 @@
 
 <li style="padding-top: 0; padding-bottom: 0">
   <div>
-    <div out:fade|local={{ duration: 3000 }} class="padding-bottom-med subjectRow">
+    <div out:fade|local={{ duration: 300 }} class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
     </div>
     <div style="height: {height}px;">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
-        <SubjectList subjects={childSubjects} {editSubject} />
+        <ul>
+          {#each childSubjects as s (s._id)}
+            <svelte:self subject={s} {editSubject} />
+          {/each}
+        </ul>
       </div>
     </div>
   </div>
