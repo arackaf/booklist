@@ -12,5 +12,10 @@ export default defineConfig({
       util: path.resolve("./util")
     }
   },
-  plugins: [react()]
+  plugins: [react()],
+  server: {
+    proxy: {
+      "/graphql": "http://localhost:3001"
+    }
+  }
 });
