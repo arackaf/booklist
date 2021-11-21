@@ -5,9 +5,9 @@
   "version": "0.1.0",
   "scripts": {
     "start": "concurrently npm:dev-sw npm:dev --prefixColors green,blue",
-    "dev": "vite",
+    "dev": "VITE_X=X vite",
     "dev-sw": "vite build --watch --config vite-service-worker.config.ts",
-    "build": "vite build",
+    "build": "set VITE_HELLO2=World && vite build",
     "build-sw": "vite build --config vite-service-worker.config.ts",
     "preview": "vite preview",
     "tscw": "tsc -w --noEmit",

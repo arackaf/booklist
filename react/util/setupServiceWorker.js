@@ -1,6 +1,7 @@
 import { isLoggedIn } from "util/loginStatus";
 
-import { registerSW } from "virtual:pwa-register";
+//import { registerSW } from "virtual:pwa-register";
+const registerSW = () => {};
 
 export default function setupServiceWorker() {
   if ("serviceWorker" in navigator) {
