@@ -10,8 +10,7 @@ export default defineConfig({
       entry: "./service-worker/src/index.ts",
       formats: ["cjs"],
       fileName: () => "sw-index-bundle.js"
-    },
-    watch: { skipWrite: false }
+    }
   },
   plugins: [graphqlPlugin({ path: "./extracted_queries.json" })]
 });
