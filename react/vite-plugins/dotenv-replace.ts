@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-const envVarSource = process.env.NODE_ENV === "production" ? process.env : dotenv.config().parsed;
+const envVarSource = process.env.NODE_ENV === "production" && false ? process.env : dotenv.config().parsed;
 
 export const dotEnvReplacement = () => {
   const replacements = Object.entries(envVarSource).reduce((obj, [key, val]) => {

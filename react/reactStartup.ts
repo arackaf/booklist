@@ -10,7 +10,12 @@ import { renderUI } from "app/renderUI";
 import "util/ajaxUtil";
 import "util/graphql";
 
-import setupServiceWorker from "./util/setupServiceWorker";
+import { registerSW } from "virtual:pwa-register";
 
-setupServiceWorker();
+if ("serviceWorker" in navigator) {
+  // && !/localhost/.test(window.location) && !/lvh.me/.test(window.location)) {
+
+  registerSW();
+}
+
 renderUI();
