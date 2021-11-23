@@ -63,4 +63,5 @@
   <ModuleRoute moduleName="settings" loader={() => import(/* webpackChunkName: "settings-module" */ "modules/settings/Settings.svelte")} />
   <ModuleRoute moduleName="activate" loader={() => import(/* webpackChunkName: "activate-module" */ "modules/activate/Activate.svelte")} />
   <ModuleRoute moduleName="admin" loader={() => import(/* webpackChunkName: "admin-module" */ "modules/admin/Admin.svelte")} />
+  <ModuleRoute moduleName="authenticate" loader={() => import(/* webpackChunkName: "admin-module" */ "modules/login/Login.svelte")} />
 </AppUI>
