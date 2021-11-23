@@ -5,15 +5,15 @@ import subjectsPreload from "../modules/subjects/subjectsPreload";
 
 import { isAdmin } from "util/loginStatus";
 
-const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/activate/activate"));
-const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/authenticate/authenticate"));
-const BooksComponent = lazy(() => import(/* webpackChunkName: "books-module" */ "../modules/books/books"));
-const HomeComponent = lazy(() => import(/* webpackChunkName: "home-module" */ "../modules/home/home"));
-const ScanComponent = lazy(() => import(/* webpackChunkName: "scan-module" */ "../modules/scan/scan"));
-const SubjectsComponent = lazy(() => import(/* webpackChunkName: "subject-module" */ "../modules/subjects/subjects"));
-const StyleDemoComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/styledemo/styledemo"));
+// const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/activate/activate"));
+// const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/authenticate/authenticate"));
+// const BooksComponent = lazy(() => import(/* webpackChunkName: "books-module" */ "../modules/books/books"));
+// const HomeComponent = lazy(() => import(/* webpackChunkName: "home-module" */ "../modules/home/home"));
+// const ScanComponent = lazy(() => import(/* webpackChunkName: "scan-module" */ "../modules/scan/scan"));
+// const SubjectsComponent = lazy(() => import(/* webpackChunkName: "subject-module" */ "../modules/subjects/subjects"));
+// const StyleDemoComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/styledemo/styledemo"));
 const SettingsComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/settings/settings"));
-const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/admin/admin"));
+// const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/admin/admin"));
 
 let priorModule = "";
 
@@ -30,32 +30,32 @@ const resolveModule = (moduleToLoad, priorModule) => {
   let isNew = moduleToLoad != priorModule;
 
   if (moduleToLoad == "admin" && !adminUser) {
-    return HomeComponent;
+    return null;
   }
   switch (moduleToLoad.toLowerCase()) {
     case "activate":
-      return ActivateComponent;
+      return null;
     case "authenticate":
-      return AuthenticateComponent;
+      return null;
     case "books":
     case "view":
       booksPreload();
-      return BooksComponent;
+      return null;
     case "home":
-      return HomeComponent;
+      return null;
     case "scan":
       subjectsAndTagsNonPublicPreload();
-      return ScanComponent;
+      return null;
     case "subjects":
       isNew && subjectsPreload();
-      return SubjectsComponent;
+      return null;
     case "styledemo":
-      return StyleDemoComponent;
+      return null;
     case "settings":
       return SettingsComponent;
     case "admin":
-      return AdminComponent;
+      return null;
   }
 
-  return HomeComponent;
+  return null;
 };
