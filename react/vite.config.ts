@@ -37,7 +37,26 @@ export default defineConfig({
       util: path.resolve("./util")
     }
   },
-  plugins: [dotEnvReplacement(), react(), graphqlPlugin({ path: "./extracted_queries.json" }), VitePWA()],
+  plugins: [
+    dotEnvReplacement(),
+    react(),
+    graphqlPlugin({ path: "./extracted_queries.json" }),
+    VitePWA({
+      workbox: {
+        importScripts: ["sw-index-bundle.js"],
+        runtimeCaching: [
+          getCache({
+            pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/,
+            name: "local-images1"
+          }),
+          getCache({
+            pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/,
+            name: "local-images2"
+          })
+        ]
+      }
+    })
+  ],
   server: {
     //hmr: false,
     proxy: {
