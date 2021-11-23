@@ -84,7 +84,7 @@
     </ul>
     <ul class="nav-items-right">
       {#if !isLoggedIn && !isLoginModule}
-        <NavBarItem external={true} href="/login"><span class="hidden-xs">Login</span> <i class="visible-xs fal fa-sign-in" /></NavBarItem>
+        <NavBarItem href="login"><span class="hidden-xs">Login</span> <i class="visible-xs fal fa-sign-in" /></NavBarItem>
       {/if}
     </ul>
     {#if isLoggedIn}
