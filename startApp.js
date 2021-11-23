@@ -135,27 +135,16 @@ app.get("/favicon.ico", function (request, response) {
 
 /* --------------- SVELTE --------------- */
 
+app.use(subdomain("svelte", svelteRouter));
+svelteRouter.use(express.static(__dirname + "/svelte/dist"));
+
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
-const svelteModules = ["", "books", "activate", "subjects", "settings", "scan", "home", "view", "styledemo", "admin"];
+const svelteModules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "activate"];
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => (request, response) => {
   if (!request.user) {
     clearAllCookies(request, response);
-  }
-
-  if (!request.user) {
-    if (request.query.userId && (moduleName == "view" || moduleName == "settings" || moduleName == "home" || moduleName == "")) {
-      return response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
-    }
-
-    if (moduleName == "" || moduleName == "home") {
-      return response.sendFile(path.join(__dirname + "/svelte/dist/public.html"));
-    }
-
-    if (moduleName != "login" && moduleName != "activate") {
-      return response.redirect("/login");
-    }
   }
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 };
@@ -168,10 +157,6 @@ otherSvelteModules.forEach(module => {
   });
 });
 svelteRouter.get("/activate/:code", activateCode);
-
-svelteRouter.get("/*.js", express.static(__dirname + "/svelte/dist/"));
-
-app.use(subdomain("svelte", svelteRouter));
 
 /* --------------- /SVELTE --------------- */
 
@@ -204,7 +189,7 @@ app.use(
 
 app.use(express.static(__dirname + "/react/dist"));
 
-const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react", "jr"];
+const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react"];
 modules.forEach(name => app.get("/" + name, browseToReact));
 
 function browseToReact(request, response) {
