@@ -4,8 +4,8 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
   "scripts": {
-    "start": "concurrently npm:dev npm:dev-sw --prefixColors blue,green",
-    "dev": "vite",
+    "start": "vite",
+    "dev-all": "concurrently npm:dev npm:dev-sw --prefixColors blue,green",
     "dev-sw": "vite build --watch --config vite-service-worker.config.ts",
     "build": "vite build",
     "build-sw": "vite build --config vite-service-worker.config.ts",
