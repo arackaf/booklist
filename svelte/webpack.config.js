@@ -29,7 +29,7 @@ const getCache = ({ name, pattern, expires, maxEntries }) => ({
 
 module.exports = {
   entry: {
-    main: "./routes/main/index.js"
+    main: "./svelteStartup.ts"
   },
   output: {
     filename: isProd ? "[name]-bundle-[contenthash].js" : "[name]-bundle.js",

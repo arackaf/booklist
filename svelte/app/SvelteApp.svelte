@@ -1,16 +1,15 @@
 <script lang="ts">
   import ModuleRoute from "app/components/navigation/ModuleRoute.svelte";
-
-  import { history } from "util/urlHelpers";
-  import AppUI from "../AppUI.svelte";
-  import "util/graphql";
-
-  import booksPreload from "./booksPreload";
   import { appState, dispatch as appStateDispatch, URL_SYNC } from "app/state/appState";
-  import setupServiceWorker from "../../util/setupServiceWorker";
+  import booksPreload from "modules/books/booksPreload";
 
+  import "util/graphql";
+  import { history } from "util/urlHelpers";
   import { scanWebSocket, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
   import { getCookieLookup, isLoggedIn } from "util/loginStatus";
+  import setupServiceWorker from "util/setupServiceWorker";
+
+  import AppUI from "app/AppUI.svelte";
 
   import Toastify from "toastify-js";
   import "toastify-js/src/toastify.css";
