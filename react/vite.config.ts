@@ -47,7 +47,9 @@ export default defineConfig({
         importScripts: ["sw-index-bundle.js"],
         runtimeCaching: [
           getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
-          getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" })
+          getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" }),
+          getCache({ pattern: /.*\.(eot|woff|woff2|ttf)$/, name: "fonts" }),
+          getCache({ pattern: /.*\.svg$/, name: "svg" })
         ]
       }
     })
