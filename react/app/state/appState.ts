@@ -138,3 +138,5 @@ export function useAppState(): [AppState, any, any] {
 }
 
 export const AppContext = createContext<[AppState, any, any]>(null);
+
+export const ModuleUpdateContext = createContext<{ startTransition: any; isPending: boolean }>(null);

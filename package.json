@@ -10,7 +10,7 @@
   "scripts": {
     "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-build",
-    "react-build": "cd react && rm -rf dist && set NODE_ENV='production' && webpack && cd service-worker && rollup -c",
+    "react-build": "cd react && tsc && npm run build-sw && vite build",
     "svelte-build": "cd svelte && rm -rf dist && set NODE_ENV='production' && webpack",
     "start": "node app.js",
     "startw": "nodemon app.js",

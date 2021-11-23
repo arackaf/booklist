@@ -1,17 +1,17 @@
-const tag = require("graphql-tag");
-const { print } = require("graphql");
-const fs = require("fs");
+import tag from "graphql-tag";
+import { print } from "graphql";
+import fs from "fs";
 
-const { addTypenameTransformer } = require("persistgraphql/lib/src/queryTransformers");
+import { addTypenameTransformer } from "persistgraphql/lib/src/queryTransformers";
 
-module.exports = function(options) {
+export default function (options) {
   return {
     name: "generic-persistgraphql",
 
     transform(code, id) {
       if (!/\.graphql$/.test(id)) return;
 
-      let queryLookup = JSON.parse(fs.readFileSync(options.path));
+      let queryLookup = JSON.parse(fs.readFileSync(options.path) as any);
       let queryAsString = options.add_typename ? print(addTypenameTransformer(tag(code))) : print(tag(code));
 
       if (!(queryAsString in queryLookup)) {
@@ -25,4 +25,4 @@ module.exports = function(options) {
       };
     }
   };
-};
+}

@@ -6,7 +6,7 @@
     "package-lock.json": true,
     "favicon.ico": true,
     ".gitattributes": true,
-    "react/dist": true,
+    "react/dist": false,
     "svelte/dist": true,
     "**/.serverless": true,
     "conversions": true,

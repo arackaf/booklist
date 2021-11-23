@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 const { createRoot } = ReactDOM as any;
 
 import MainNavigationBar from "app/components/mainNavigation";
-import { useAppState, AppContext, URL_SYNC, getCurrentModuleFromUrl } from "./state/appState";
+import { useAppState, AppContext, URL_SYNC, getCurrentModuleFromUrl, ModuleUpdateContext } from "./state/appState";
 import localStorageManager from "util/localStorage";
 import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
@@ -74,8 +74,6 @@ const WellUiSwitcher: FunctionComponent<{}> = () => {
 export function renderUI() {
   createRoot(document.getElementById("home")).render(<App />);
 }
-
-export const ModuleUpdateContext = createContext<{ startTransition: any; isPending: boolean }>(null);
 
 const App = () => {
   const suspenseTimeoutValue = parseInt(localStorage.getItem("suspense-timeout"));

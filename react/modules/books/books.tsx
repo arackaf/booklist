@@ -1,10 +1,9 @@
-import React, { SFC, Suspense, useEffect, useLayoutEffect, useReducer, useContext, createContext, useState, FunctionComponent } from "react";
+import React, { Suspense, useEffect, useReducer, useContext, useState, FunctionComponent } from "react";
 
 import BooksMenuBar, { BooksMenuBarDisabled } from "./components/menuBar/menuBar";
 import Loading from "app/components/loading";
 
 import GridView from "./components/bookViews/gridList";
-import LazyModal from "app/components/ui/LazyModal";
 
 import BasicListView from "./components/bookViews/basicList";
 import CoversView from "./components/bookViews/coversList";
@@ -18,9 +17,9 @@ import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
 import { MutationOf, Mutations } from "graphql-typings";
 import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
-import { ModuleUpdateContext } from "app/renderUI";
+import { ModuleUpdateContext } from "app/state/appState";
 import { useHeight } from "app/animationHelpers";
-import { useTransition, config, animated } from "react-spring";
+import { useTransition, animated } from "react-spring";
 
 import CreateBookModal from "app/components/editBook/editModal";
 import BookSubjectSetter from "./components/bookSubjectSetter";

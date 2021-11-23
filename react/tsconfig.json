@@ -13,7 +13,8 @@
     "paths": {
       "@reach/dialog": ["./typings/modules/@reach/dialog"]
     },
-    "target": "esnext"
+    "target": "esnext",
+    "skipLibCheck": true
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["./node_modules", "./dist", "./service-worker"]
