@@ -6,7 +6,7 @@ import ThemeChooser from "./components/themeChooser/main";
 import { AppContext } from "app/state/appState";
 import { TabHeader, TabHeaders, Tabs, TabContents, TabContent } from "app/components/layout/Tabs";
 
-console.log("AAAA");
+console.log("AAAABBBXXX");
 
 const SettingsTabContent = ({}) => {
   const [{ isPublic, isLoggedIn }] = useContext(AppContext);
