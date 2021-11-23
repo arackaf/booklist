@@ -21,8 +21,6 @@ document.body.className = localStorageManager.get("color-theme", "scheme1");
 
 const cookieHash = getCookieLookup();
 
-const pause = () => new Promise(res => setTimeout(res, 400));
-
 function showBookToast(title, url) {
   Toastify({
     text: `<div><img src="${url}" ></div><span>${title}</span>`,

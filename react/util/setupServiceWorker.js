@@ -1,28 +1,27 @@
-import { isLoggedIn } from "util/loginStatus";
-
+import Toastify from "toastify-js";
 import { registerSW } from "virtual:pwa-register";
+
+import { isLoggedIn } from "util/loginStatus";
 
 export default function setupServiceWorker() {
   if ("serviceWorker" in navigator && !/localhost/.test(window.location) && !/lvh.me/.test(window.location)) {
     const updateSW = registerSW({
       onNeedRefresh() {
-        Promise.all([import("toastify-js"), import("toastify-js/src/toastify.css")]).then(([{ default: Toastify }]) => {
-          Toastify({
-            text: `
+        Toastify({
+          text: `
             <h4 style='display: inline'>An update is available!</h4>
             <br><br>
             <a class='do-sw-update'>Click to update and reload</a>&nbsp;&nbsp;
           `.trim(),
-            escapeMarkup: false,
-            duration: 700000,
-            gravity: "bottom",
-            close: true,
-            className: "toast-notification",
-            onClick() {
-              updateSW(true);
-            }
-          }).showToast();
-        });
+          escapeMarkup: false,
+          duration: 700000,
+          gravity: "bottom",
+          close: true,
+          className: "toast-notification",
+          onClick() {
+            updateSW(true);
+          }
+        }).showToast();
       },
       onOfflineReady() {},
       onRegistered() {
