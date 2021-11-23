@@ -7,7 +7,7 @@ import { isAdmin } from "util/loginStatus";
 
 // const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/activate/activate"));
 // const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/authenticate/authenticate"));
-// const BooksComponent = lazy(() => import(/* webpackChunkName: "books-module" */ "../modules/books/books"));
+const BooksComponent = lazy(() => import(/* webpackChunkName: "books-module" */ "../modules/books/books"));
 // const HomeComponent = lazy(() => import(/* webpackChunkName: "home-module" */ "../modules/home/home"));
 // const ScanComponent = lazy(() => import(/* webpackChunkName: "scan-module" */ "../modules/scan/scan"));
 // const SubjectsComponent = lazy(() => import(/* webpackChunkName: "subject-module" */ "../modules/subjects/subjects"));
@@ -40,7 +40,7 @@ const resolveModule = (moduleToLoad, priorModule) => {
     case "books":
     case "view":
       booksPreload();
-      return null;
+      return BooksComponent;
     case "home":
       return null;
     case "scan":
