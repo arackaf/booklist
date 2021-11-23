@@ -6,9 +6,9 @@ var minify = true;
 
 console.log("\ncreating css builds...");
 
-purify(content, ["./static/fontawesome/css/all.css"], {
+purify(content, ["./css/fontawesome/css/all.css"], {
   minify: minify,
-  output: "./static/fontawesome/css/font-awesome-booklist-build.css"
+  output: "./css/fontawesome/css/font-awesome-booklist-build.css"
 });
 
 console.log("css builds complete");
