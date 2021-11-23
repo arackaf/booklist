@@ -6,13 +6,8 @@
   export let style = "";
   export let disabled = false;
   export let onClick: (evt?: any) => void = null as any;
-  export let external = false;
 
   function anchorClicked(evt) {
-    if (external) {
-      return;
-    }
-
     evt.preventDefault();
 
     if (onClick) {

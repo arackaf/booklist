@@ -6,9 +6,8 @@
   export let href = "";
   export let disabled = false;
   let className = "";
-  export { className as class }
+  export { className as class };
   export let onClick: (evt?: any) => void = null as any;
-  export let external = false;
 
   $: currentModule = $appState.module;
   $: active = currentModule == href;
@@ -20,8 +19,8 @@
   }
 </script>
 
-<li on:click={liClicked} class={spreadClassNames(className || "", !!disabled ? 'disabled' : '', active ? 'active' : '')}>
-  <ModuleLink {external} {disabled} {style} {href}>
+<li on:click={liClicked} class={spreadClassNames(className || "", !!disabled ? "disabled" : "", active ? "active" : "")}>
+  <ModuleLink {disabled} {style} {href}>
     <slot />
   </ModuleLink>
 </li>
