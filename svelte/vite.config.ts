@@ -28,6 +28,7 @@ const getCache = ({ name, pattern }: any) => ({
 export default defineConfig({
   resolve: {
     alias: {
+      "graphql-typings": path.resolve("./graphql-typings.ts"),
       jscolor: path.resolve("./util/jscolor.js"),
       app: path.resolve("./app"),
       css: path.resolve("./css"),
@@ -38,7 +39,7 @@ export default defineConfig({
   },
   plugins: [
     dotEnvReplacement(),
-    svelte(),
+    svelte({ onwarn() {} }),
     graphqlPlugin({ path: "./extracted_queries.json" }),
     VitePWA({
       filename: "service-worker.js",
