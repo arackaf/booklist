@@ -1,4 +1,4 @@
-import "assets/fontawesome/css/font-awesome-booklist-build.css";
+import "css/fontawesome/css/font-awesome-booklist-build.css";
 import "css/site-styles.scss";
 
 import SvelteApp from "app/SvelteApp.svelte";
