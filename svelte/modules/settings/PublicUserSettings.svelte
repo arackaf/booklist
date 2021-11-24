@@ -3,7 +3,7 @@
 
   import { appState } from "app/state/appState";
   import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
-  import { Queries, QueryOf } from "graphql-typings";
+  import type { Queries, QueryOf } from "graphql-typings";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import SectionLoading from "app/components/ui/SectionLoading.svelte";
 

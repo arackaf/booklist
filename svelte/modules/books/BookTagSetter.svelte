@@ -1,12 +1,12 @@
 <script lang="ts">
   import { mutation } from "micro-graphql-svelte";
-  import { MutationOf, Mutations } from "graphql-typings";
+  import type { MutationOf, Mutations } from "graphql-typings";
 
   import updateBookTags from "graphQL/books/updateBookTags.graphql";
-  
+
   import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-  
+
   import Modal from "app/components/ui/Modal.svelte";
   import StandardModalFooter from "app/components/ui/StandardModalFooter.svelte";
   import Button from "app/components/buttons/Button.svelte";

@@ -2,7 +2,7 @@ import { onMount } from "svelte/internal";
 import { get, derived, Readable } from "svelte/store";
 import { query } from "micro-graphql-svelte";
 
-import { QueryOf, Queries, Book } from "graphql-typings";
+import type { QueryOf, Queries, Book } from "graphql-typings";
 import { graphqlClient } from "util/graphql";
 import { tagsState } from "app/state/tagsState";
 import { subjectsState } from "app/state/subjectsState";

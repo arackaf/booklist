@@ -27,7 +27,7 @@
 <script lang="ts">
   import { setContext } from "svelte";
   import { mutation } from "micro-graphql-svelte";
-  import { MutationOf, Mutations } from "graphql-typings";
+  import type { MutationOf, Mutations } from "graphql-typings";
 
   import UpdateBookMutation from "graphQL/books/updateBook.graphql";
   import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
