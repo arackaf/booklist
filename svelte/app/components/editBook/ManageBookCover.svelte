@@ -117,6 +117,7 @@
   {#if !pendingImg}
     <div style="min-width: 100px; max-width: 140px; position: relative;">
       <Dropzone
+        accept={undefined}
         disableDefaultStyles={true}
         multiple={false}
         on:drop={onDrop}

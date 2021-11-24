@@ -30,8 +30,8 @@
         <SelectAvailableTags placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
         <Button onClick={newTag} preset="info-xs">
-          <span className="visible-xs">Add new tag </span>
-          <i className="fa fa-fw fa-plus-square" />
+          <span class="visible-xs">Add new tag </span>
+          <i class="fa fa-fw fa-plus-square" />
         </Button>
       </FlowItems>
     {/if}
