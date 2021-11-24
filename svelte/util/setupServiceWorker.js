@@ -56,30 +56,5 @@ export default function setupServiceWorker() {
         });
       } catch (er) {}
     }
-
-    // if (Notification) {
-    //   Notification.requestPermission().then(permission => {});
-    // }
-
-    if (isLoggedIn()) {
-      // let subscriptionOptions = {
-      //   userVisibleOnly: true,
-      //   applicationServerKey: urlBase64ToUint8Array("BCC0wqyL-OGz5duRO9-kOSUEv72BMGf0x0oaMGryF1eLa3FF-sW2YmunhNqQegrXHykP-Wa6xC1rEnDuBGtjgUo")
-      // };
-      // navigator.serviceWorker.ready.then(registration => {
-      //   registration.pushManager.subscribe(subscriptionOptions).then(subscription => {
-      //     ajaxUtil.post("/user/saveNotificationSubscription", { subscription: JSON.stringify(subscription) });
-      //   });
-      // });
-      /*
-      
-        async saveNotificationSubscription({ subscription }) {
-          let userId = this.request.user.id;
-          await new UserDAO().updateSubscription(userId, JSON.parse(subscription));
-          this.send({ success: true });
-        }
-      
-      */
-    }
   }
 }

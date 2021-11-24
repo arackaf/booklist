@@ -28,7 +28,6 @@ const getCache = ({ name, pattern }: any) => ({
 export default defineConfig({
   resolve: {
     alias: {
-      reactStartup: path.resolve("./reactStartup.ts"),
       jscolor: path.resolve("./util/jscolor.js"),
       app: path.resolve("./app"),
       css: path.resolve("./css"),
