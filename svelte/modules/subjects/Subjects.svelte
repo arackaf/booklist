@@ -1,7 +1,5 @@
 <script lang="ts">
   import { setContext } from "svelte";
-  import { fade } from "svelte/transition";
-  import { quadOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import Button from "app/components/buttons/Button.svelte";
   import EditSubject from "app/components/subjectsAndTags/subjects/EditSubject.svelte";
@@ -48,7 +46,7 @@
   }
 </style>
 
-<section transition:fade={{ duration: 150, easing: quadOut }} class="flush-bottom subjectsRoot">
+<section class="flush-bottom subjectsRoot">
   <div>
     <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: "" })}>New Subject</Button>
   </div>

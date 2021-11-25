@@ -1,9 +1,6 @@
 <script lang="ts">
   import "./d3-styles.scss";
 
-  import { fade } from "svelte/transition";
-  import { quadOut } from "svelte/easing";
-
   import Tabs from "app/components/layout/tabs/Tabs.svelte";
   import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
   import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
@@ -23,7 +20,7 @@
   );
 </script>
 
-<div transition:fade={{ duration: 150, easing: quadOut }} style="margin-left: auto; margin-right: auto; max-width: 1200px">
+<div style="margin-left: auto; margin-right: auto; max-width: 1200px">
   <div>
     <div class="panel-body" style="position: relative">
       <Tabs defaultTab="vis" localStorageName="home-tabs">

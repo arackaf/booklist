@@ -26,6 +26,9 @@
 
 <script lang="ts">
   import { setContext } from "svelte";
+  import { fade } from "svelte/transition";
+  import { quadOut } from "svelte/easing";
+
   import { mutation } from "micro-graphql-svelte";
   import { MutationOf, Mutations } from "graphQL/graphql-typings";
 
@@ -49,8 +52,6 @@
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
   import ModuleLoading from "app/components/navigation/ModuleLoading.svelte";
-  import { fade } from "svelte/transition";
-  import { quadOut } from "svelte/easing";
 
   const { mutationState: deleteBookState } = mutation<MutationOf<Mutations["deleteBook"]>>(DeleteBookMutation);
   const deleteBook = $deleteBookState.runMutation;
@@ -124,7 +125,7 @@
   <ModuleLoading />
 {/if}
 
-<section class="full flush-bottom" transition:fade={{ duration: 150, easing: quadOut }}>
+<section class="full flush-bottom">
   <div style="background-color: white;">
     <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div>

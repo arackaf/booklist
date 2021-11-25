@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { quadOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
-
   import { mutation } from "micro-graphql-svelte";
 
   import slideAnimate from "app/animationHelpers";
@@ -55,7 +52,7 @@
   };
 </script>
 
-<section transition:fade={{ duration: 150, easing: quadOut }}>
+<section>
   <FlowItems pushLast={true} xsFlowReverse={true}>
     <div style="flex: 1">
       <div style="display: flex; align-items: center">
