@@ -1,6 +1,6 @@
 <script lang="ts">
   import { query } from "micro-graphql-svelte";
-  import { BookSummary, EditorialReview, Queries, QueryOf } from "graphql-typings";
+  import { BookSummary, EditorialReview, Queries, QueryOf } from "graphQL/graphql-typings";
 
   import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 

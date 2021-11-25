@@ -1,6 +1,6 @@
 <script lang="ts">
   import { appState } from "app/state/appState";
-  import { MutationOf, Mutations } from "graphql-typings";
+  import { MutationOf, Mutations } from "graphQL/graphql-typings";
   import Dropzone from "svelte-file-dropzone/src/components/Dropzone.svelte";
 
   import ajaxUtil from "util/ajaxUtil";

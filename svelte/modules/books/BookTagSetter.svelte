@@ -1,6 +1,6 @@
 <script lang="ts">
   import { mutation } from "micro-graphql-svelte";
-  import { MutationOf, Mutations } from "graphql-typings";
+  import { MutationOf, Mutations } from "graphQL/graphql-typings";
 
   import updateBookTags from "graphQL/books/updateBookTags.graphql";
 
