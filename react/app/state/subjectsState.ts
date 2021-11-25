@@ -5,7 +5,7 @@ import { useContext, useMemo } from "react";
 import { AppContext } from "app/state/appState";
 import { useSuspenseQuery, useMutation } from "micro-graphql-react";
 import { standardDelete } from "../../util/graphqlCacheHelpers";
-import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
+import { QueryOf, Queries, MutationOf, Mutations } from "graphQL/graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});

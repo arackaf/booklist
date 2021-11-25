@@ -23,7 +23,7 @@
   import SearchResults from "./SearchResults.svelte";
   import useReducer from "util/useReducer";
   import { query } from "micro-graphql-svelte";
-  import { Queries, QueryOf } from "graphql-typings";
+  import { Queries, QueryOf } from "graphQL/graphql-typings";
   import { appState } from "app/state/appState";
   import { preloadBookImages } from "util/imagePreload";
 

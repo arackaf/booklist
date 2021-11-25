@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 
 import { dotEnvReplacement } from "./vite-plugins/dotenv-replace";
 import graphqlPlugin from "./vite-plugins/graphql-plugin";
-import react from "@vitejs/plugin-react";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { VitePWA } from "vite-plugin-pwa";
 
 import path from "path";
@@ -28,7 +28,7 @@ const getCache = ({ name, pattern }: any) => ({
 export default defineConfig({
   resolve: {
     alias: {
-      reactStartup: path.resolve("./reactStartup.ts"),
+      "graphql-typings": path.resolve("./graphql-typings.ts"),
       jscolor: path.resolve("./util/jscolor.js"),
       app: path.resolve("./app"),
       css: path.resolve("./css"),
@@ -39,7 +39,7 @@ export default defineConfig({
   },
   plugins: [
     dotEnvReplacement(),
-    react(),
+    svelte({ onwarn() {} }),
     graphqlPlugin({ path: "./extracted_queries.json" }),
     VitePWA({
       filename: "service-worker.js",
@@ -55,7 +55,7 @@ export default defineConfig({
     })
   ],
   server: {
-    port: 3002,
+    port: 3003,
     //hmr: false,
     proxy: {
       "/graphql": "http://localhost:3001",

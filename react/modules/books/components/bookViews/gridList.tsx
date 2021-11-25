@@ -11,7 +11,7 @@ import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
 import { useQuery } from "micro-graphql-react";
 
 import { CoverSmall } from "app/components/bookCoverComponent";
-import { QueryOf, Queries } from "graphql-typings";
+import { QueryOf, Queries } from "graphQL/graphql-typings";
 import { setBooksSort, addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
 import { BooksModuleContext } from "modules/books/booksState";
 import FlexRow from "app/components/layout/FlexRow";

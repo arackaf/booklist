@@ -24,7 +24,7 @@
 </script>
 
 <div style="overflow-y: auto; overflow-x: hidden; max-height: 300px; margin-top: 5px; position: relative">
-  <div className="overlay-holder">
+  <div class="overlay-holder">
     {#if books?.length}
       {#key currentQuery}
         <ul in:resultsIn|local out:resultsOut|local>

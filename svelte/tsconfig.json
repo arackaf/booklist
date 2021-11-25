@@ -12,7 +12,8 @@
     "target": "esnext",
     "strict": true,
     "noImplicitAny": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "skipLibCheck": true
   },
   "include": ["./**/*.ts", "util/measureHeight.js"],
   "exclude": ["./node_modules", "./dist", "./service-worker", "../../../../node_modules"]

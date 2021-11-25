@@ -15,7 +15,7 @@ import { useCodeSplitModal } from "./util";
 import UpdateBookMutation from "graphQL/books/updateBook.graphql";
 import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
 import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
-import { MutationOf, Mutations } from "graphql-typings";
+import { MutationOf, Mutations } from "graphQL/graphql-typings";
 import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
 import { ModuleUpdateContext } from "app/state/appState";
 import { useHeight } from "app/animationHelpers";

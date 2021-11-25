@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import cn from "classnames";
-  import { MutationOf, Mutations } from "graphql-typings";
+  import { MutationOf, Mutations } from "graphQL/graphql-typings";
 
   import { tagsState } from "app/state/tagsState";
 
@@ -88,13 +88,13 @@
         <div class="col-xs-12 col-lg-6">
           <div class="form-group">
             <label>Name</label>
-            <input bind:this={inputEl} bind:value={editingTag.name} class={cn('form-control', { error: missingName })} />
+            <input bind:this={inputEl} bind:value={editingTag.name} class={cn("form-control", { error: missingName })} />
             {#if missingName}<span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Tags need names! </span> <br />{/if}
             <div
               class="label label-default"
               style="background-color: {editingTag.backgroundColor}; color: {editingTag.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
             >
-              {editingTag.name.trim() || '<label preview>'}
+              {editingTag.name.trim() || "<label preview>"}
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@
           <FlowItems pushLast={true}>
             <Button disabled={updateState.running} preset="primary-xs" onClick={runSave}>
               Save
-              <i class={`fa fa-fw ${updateState.running ? 'fa-spinner fa-spin' : 'fa-save'}`} />
+              <i class={`fa fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
             </Button>
             <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
             {#if editingTag._id}

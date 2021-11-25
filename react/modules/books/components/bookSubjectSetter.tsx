@@ -7,7 +7,7 @@ import { Button, ActionButton } from "app/components/ui/Button";
 
 import Modal from "app/components/ui/Modal";
 import { useStackedSubjects } from "app/state/subjectsState";
-import { MutationOf, Mutations } from "graphql-typings";
+import { MutationOf, Mutations } from "graphQL/graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";
