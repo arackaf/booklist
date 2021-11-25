@@ -159,7 +159,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
       },
       body: `isbns=${isbns}`
     });
-    const json = await isbnDbResponse.json();
+    const json: any = await isbnDbResponse.json();
 
     const allResults = Array.isArray(json?.data) ? json.data : [];
     const allBookDownloads = [];

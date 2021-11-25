@@ -1,4 +1,4 @@
-import { MongoClient, ObjectID } from "mongodb";
+import { MongoClient } from "mongodb";
 import getSecrets from "./getSecrets";
 
 export default async () => {
@@ -7,5 +7,5 @@ export default async () => {
   const connString = secrets[IS_DEV ? "mongo-connection-string-dev" : "mongo-connection-string"];
   const dbName = secrets["db-name"];
 
-  return MongoClient.connect(connString, { useNewUrlParser: true, useUnifiedTopology: true }).then(client => client.db(dbName));
+  return MongoClient.connect(connString).then(client => client.db(dbName));
 };
