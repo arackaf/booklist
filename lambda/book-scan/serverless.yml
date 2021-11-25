@@ -1,7 +1,5 @@
 service: book-scan
 
-frameworkVersion: "2"
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -99,8 +97,14 @@ functions:
           arn:
             Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
 
-plugins:
-  - serverless-webpack
+custom:
+  esbuild:
+    packager: yarn
+    bundle: true
+    minify: true
 
 package:
   individually: true
+
+plugins:
+  - serverless-esbuild
