@@ -55,6 +55,7 @@ export default defineConfig({
     })
   ],
   server: {
+    port: 3002,
     //hmr: false,
     proxy: {
       "/graphql": "http://localhost:3001",
