@@ -13,8 +13,6 @@
     "svelte-check": "svelte-check --watch --threshold error",
     "prod-build": "npm run tsc && npm run build-sw && npm run build",
     "tscw": "tsc -w --noEmit",
-    "deploy": "cd .. && npm run deploy",
-    "rollup-sw": "cd ./service-worker && rollup -c -w",
     "persistgraphql": "persistgraphql graphQL"
   },
   "dependencies": {

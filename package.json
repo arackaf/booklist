@@ -8,12 +8,10 @@
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
   "scripts": {
-    "deploy": "npm run build && modulus deploy -p my-library",
     "build": "npm run react-build",
     "react-build": "cd react && npm run prod-build",
     "svelte-build": "cd svelte && npm run prod-build",
     "start": "node app.js",
-    "startw": "nodemon app.js",
     "heroku-install": "cd react && npm i && cd ../svelte && npm i",
     "heroku-postbuild": "npm run heroku-install && npm run react-build && npm run svelte-build"
   },
