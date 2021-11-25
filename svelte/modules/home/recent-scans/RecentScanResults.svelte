@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { Queries, QueryOf } from "graphql-typings";
+  import { Queries, QueryOf } from "graphql-typings";
 
   import { query } from "micro-graphql-svelte";
 

@@ -7,7 +7,7 @@ import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
 import { appState } from "./appState";
 import { query, mutation } from "micro-graphql-svelte";
 import { standardDelete } from "../../util/graphqlCacheHelpers";
-import type { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
+import { QueryOf, Queries, MutationOf, Mutations } from "graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});

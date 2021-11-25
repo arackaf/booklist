@@ -1,6 +1,6 @@
 <script lang="ts">
   import { mutation } from "micro-graphql-svelte";
-  import type { MutationOf, Mutations, User } from "graphql-typings";
+  import { MutationOf, Mutations, User } from "graphql-typings";
 
   import ActionButton from "app/components/buttons/ActionButton.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";

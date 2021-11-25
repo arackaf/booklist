@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import cn from "classnames";
-  import type { MutationOf, Mutations } from "graphql-typings";
+  import { MutationOf, Mutations } from "graphql-typings";
 
   import { subjectsState, getEligibleParents, computeSubjectParentId, childMapSelector } from "app/state/subjectsState";
 
