@@ -1,5 +1,7 @@
 <script lang="ts">
-  import Loadable from "svelte-loadable/Loadable.svelte";
+  // pending https://github.com/sveltejs/vite-plugin-svelte/issues/217
+  // import Loadable from "svelte-loadable/Loadable.svelte";
+  import Loadable from "./Loadable.svelte";
   import ModuleLoading from "./ModuleLoading.svelte";
   import { navStore, moduleLoaded, moduleUnLoaded } from "./navigationState";
 
@@ -31,4 +33,3 @@
     </div>
   </Loadable>
 {/if}
-
