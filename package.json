@@ -45,13 +45,8 @@
     "passport": "0.3.2",
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
-    "rollup": "^0.67.3",
-    "rollup-plugin-babel-minify": "^6.2.0",
-    "rollup-plugin-uglify": "^6.0.0",
     "typescript": "^3.8.3",
-    "uuid": "^3.4.0",
-    "webpack": "4.43.0",
-    "webpack-cli": "3.3.11"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@playlyfe/gql": "^2.6.2",
