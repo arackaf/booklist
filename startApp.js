@@ -25,8 +25,6 @@ import expressGraphql from "express-graphql";
 import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
-import { getJrDbConnection } from "./node/util/dbUtils";
-
 import AWS from "aws-sdk";
 AWS.config.region = "us-east-1";
 
@@ -52,8 +50,6 @@ if (!IS_DEV) {
     }
   });
 }
-
-export const JrConn = getJrDbConnection();
 
 passport.use(
   new LocalStrategy({ passReqToCallback: true }, function (request, email, password, done) {

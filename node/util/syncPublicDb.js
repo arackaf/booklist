@@ -2,11 +2,11 @@ require("dotenv").config();
 const { MongoClient, ObjectId } = require("mongodb");
 
 const connectPrimary = () => {
-  return MongoClient.connect(process.env.MONGO_CONNECTION, { useNewUrlParser: true }).then(client => [client, client.db(process.env.DB_NAME)]);
+  return MongoClient.connect(process.env.MONGO_CONNECTION).then(client => [client, client.db(process.env.DB_NAME)]);
 };
 
 const connectPublic = () => {
-  return MongoClient.connect(process.env.MONGO_PUBLIC, { useNewUrlParser: true }).then(client => [client, client.db(process.env.DB_NAME_PUBLIC)]);
+  return MongoClient.connect(process.env.MONGO_PUBLIC).then(client => [client, client.db(process.env.DB_NAME_PUBLIC)]);
 };
 
 let masterId = process.env.DEMO_REPLICATION_MASTER;
@@ -29,26 +29,11 @@ async function sync() {
       .collection("users")
       .find({ _id: ObjectId(masterId) })
       .toArray(),
-    dbPrimary
-      .collection("books")
-      .find({ userId: masterId })
-      .toArray(),
-    dbPrimary
-      .collection("subjects")
-      .find({ userId: masterId })
-      .toArray(),
-    dbPrimary
-      .collection("tags")
-      .find({ userId: masterId })
-      .toArray(),
-    dbPrimary
-      .collection("labelColors")
-      .find({})
-      .toArray(),
-    dbPrimary
-      .collection("bookSummaries")
-      .find({})
-      .toArray()
+    dbPrimary.collection("books").find({ userId: masterId }).toArray(),
+    dbPrimary.collection("subjects").find({ userId: masterId }).toArray(),
+    dbPrimary.collection("tags").find({ userId: masterId }).toArray(),
+    dbPrimary.collection("labelColors").find({}).toArray(),
+    dbPrimary.collection("bookSummaries").find({}).toArray()
   ]);
 
   Object.assign(users[0], { token: "", activationToken: "", password: "" });

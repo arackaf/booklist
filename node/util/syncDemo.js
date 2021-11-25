@@ -1,4 +1,3 @@
-import { MongoClient, ObjectId } from "mongodb";
 import { getDbConnection } from "./dbUtils";
 
 let masterId = process.env.DEMO_REPLICATION_MASTER;
@@ -12,20 +11,11 @@ async function sync() {
     await db.collection("subjects").deleteMany({ userId: slaveId });
     await db.collection("tags").deleteMany({ userId: slaveId });
 
-    let newSubjects = await db
-      .collection("subjects")
-      .find({ userId: masterId })
-      .toArray();
+    let newSubjects = await db.collection("subjects").find({ userId: masterId }).toArray();
 
-    let newTags = await db
-      .collection("tags")
-      .find({ userId: masterId })
-      .toArray();
+    let newTags = await db.collection("tags").find({ userId: masterId }).toArray();
 
-    let newBooks = await db
-      .collection("books")
-      .find({ userId: masterId })
-      .toArray();
+    let newBooks = await db.collection("books").find({ userId: masterId }).toArray();
 
     let subjectMap = new Map([]);
     let tagsMap = new Map([]);
