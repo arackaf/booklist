@@ -7,7 +7,7 @@ import "./styles.scss";
 
 import ajaxUtil from "util/ajaxUtil";
 import { getIsbnDbBookCover } from "util/isbnDb";
-import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql-typings";
+import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphQL/graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
 import { graphqlClient } from "util/graphql";

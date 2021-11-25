@@ -6,7 +6,7 @@ import ajaxUtil from "util/ajaxUtil";
 import UpdateBook from "graphQL/books/updateBook.graphql";
 import { useMutation } from "micro-graphql-react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
-import { MutationOf, Mutations } from "graphql-typings";
+import { MutationOf, Mutations } from "graphQL/graphql-typings";
 import FlowItems from "../layout/FlowItems";
 import Stack from "../layout/Stack";
 import { useAppState } from "app/state/appState";

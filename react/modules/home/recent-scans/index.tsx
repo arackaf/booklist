@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 const { useTransition } = React as any;
 
-import { Queries, QueryOf } from "graphql-typings";
+import { Queries, QueryOf } from "graphQL/graphql-typings";
 import "./styles.scss";
 
 import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
