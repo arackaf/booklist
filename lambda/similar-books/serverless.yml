@@ -38,8 +38,8 @@ functions:
           method: post
           cors: true
 
-plugins:
-  - serverless-webpack
-
 package:
   individually: true
+
+plugins:
+  - serverless-esbuild
