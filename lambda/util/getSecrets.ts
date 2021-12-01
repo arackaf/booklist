@@ -1,4 +1,5 @@
-import SecretsManager from "aws-sdk/clients/secretsmanager";
+import { SecretsManager } from "aws-sdk";
+
 const region = "us-east-1";
 const secretName = "MyLibrary";
 

@@ -1,7 +1,5 @@
 service: book-scan
 
-frameworkVersion: "2"
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -52,25 +50,25 @@ provider:
 
 functions:
   connect:
-    handler: ./ws-connection.connect
+    handler: ws-connection.connect
     events:
       - websocket:
           route: $connect
 
   disconnect:
-    handler: ./ws-connection.disconnect
+    handler: ws-connection.disconnect
     events:
       - websocket:
           route: $disconnect
 
   sync:
-    handler: ./ws-connection.sync
+    handler: ws-connection.sync
     events:
       - websocket:
           route: sync
 
   checkScanStatus:
-    handler: ./handlers/getPendingScanCount.handler
+    handler: handlers/getPendingScanCount.handler
     events:
       - http:
           path: getScanStatus
@@ -83,7 +81,7 @@ functions:
                 loginToken: true
 
   scanBook:
-    handler: ./handlers/scanBook.handler
+    handler: handlers/scanBook.handler
     events:
       - http:
           path: scan
@@ -92,15 +90,21 @@ functions:
 
   streamHandler:
     timeout: 120
-    handler: ./handlers/dynamoStream.handler
+    handler: handlers/dynamoStream.handler
     events:
       - stream:
           type: dynamodb
           arn:
             Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
 
-plugins:
-  - serverless-webpack
+custom:
+  esbuild:
+    packager: yarn
+    bundle: true
+    minify: true
 
 package:
   individually: true
+
+plugins:
+  - serverless-esbuild
