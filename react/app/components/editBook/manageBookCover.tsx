@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Dropzone from "react-dropzone";
+import Dropzone, { DropzoneState } from "react-dropzone";
 
 import ajaxUtil from "util/ajaxUtil";
 
@@ -105,6 +105,21 @@ const ManageBookCover = props => {
   };
 
   const { pendingImg, uploadError } = uploadState;
+
+  const getDropzoneStyle = (state: DropzoneState) => {
+    if (uploading) {
+      return { border: "3px solid var(--neutral-6)", color: "var(--neutral-6)", cursor: "wait" };
+    } else if (state.isDragAccept) {
+      return { border: "3px solid var(--primary-8)" };
+    } else if (state.isDragReject) {
+      return { border: "3px solid var(--primary-9)" };
+    } else if (state.isDragActive) {
+      return { border: "3px solid var(--primary-9)" };
+    }
+
+    return { border: "3px solid var(--primary-9)" };
+  };
+
   return (
     <FlowItems pushLast={true}>
       {currentUrl ? (
@@ -119,17 +134,16 @@ const ManageBookCover = props => {
 
       {!pendingImg ? (
         <div style={{ minWidth: "100px", maxWidth: "140px", position: "relative" }}>
-          <Dropzone
-            acceptStyle={{ border: "3px solid var(--primary-8)" }}
-            rejectStyle={{ border: "3px solid var(--primary-9)" }}
-            activeStyle={{ border: "3px solid var(--primary-9)" }}
-            disabledStyle={{ border: "3px solid var(--neutral-6)", color: "var(--neutral-6)", cursor: "wait" }}
-            disabled={uploading}
-            style={{ border: "3px solid var(--primary-9)", padding: "5px", fontSize: "14px", textAlign: "center", cursor: "pointer" }}
-            onDrop={files => onDrop(files)}
-            multiple={false}
-          >
-            <div>Click or drag to upload a new cover</div>
+          <Dropzone disabled={uploading} onDrop={files => onDrop(files)} multiple={false}>
+            {state => (
+              <div
+                {...state.getRootProps()}
+                style={{ padding: "5px", fontSize: "14px", textAlign: "center", cursor: "pointer", ...getDropzoneStyle(state) }}
+              >
+                <input {...state.getInputProps()} />
+                <div>Click or drag to upload a new cover</div>
+              </div>
+            )}
           </Dropzone>
           {uploadError ? (
             <div style={{ display: "inline-block", marginTop: "2px", marginBottom: "2px" }} className="label label-danger">

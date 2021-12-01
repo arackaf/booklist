@@ -39,7 +39,7 @@
     "react": "18.0.0-alpha-3c4c1c470-20211021",
     "react-autosuggest": "9.3.2",
     "react-dom": "18.0.0-alpha-3c4c1c470-20211021",
-    "react-dropzone": "4.2.5",
+    "react-dropzone": "^11.4.2",
     "react-measure": "^2.5.2",
     "react-spring": "^9.0.0-rc.3",
     "sass": "^1.43.4",
