@@ -26,6 +26,7 @@ async function updateBookSummaryCovers() {
   let count = 1;
   const db = await dbPromise;
   const secrets = await getSecrets();
+  const isbnDbKey = secrets["isbn-db-key"];
 
   const bookSummaries = await db
     .collection("bookSummaries")
@@ -44,26 +45,66 @@ async function updateBookSummaryCovers() {
     let { _id, isbn, title } = bookSummary;
 
     await delay();
-    let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000);
-    if (!res) {
-      log("No cover found on OpenLibrary for", title);
 
-      log("Trying Google...");
+    let res;
 
-      let cover = await getGoogleCoverUrl(isbn, secrets);
-      if (!cover) {
-        log(`Cover not found on Google either for ${title}`);
-        continue;
+    try {
+      const fetchResponse = await fetch(`https://api2.isbndb.com/book/${isbn}`, {
+        headers: {
+          Authorization: isbnDbKey
+        }
+      });
+      const bookResult: any = await fetchResponse.json();
+
+      console.log("Found from isbndb:", bookResult);
+
+      if (bookResult && bookResult.book && bookResult.book.image) {
+        let imageUrl = bookResult.book.image;
+        if (imageUrl) {
+          res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 500);
+          if (res) {
+            console.log("Downloaded cover from isbndb");
+          }
+        }
       }
+    } catch (err) {}
 
-      log("Attempting Google cover", cover);
-
-      res = await downloadBookCover(cover, 1000);
-
+    if (!res) {
+      res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000);
       if (!res) {
-        log(`Could not download from Google, either`);
+        log("No cover found on OpenLibrary for", title);
 
-        continue;
+        log("Trying Google...");
+
+        let cover = await getGoogleCoverUrl(isbn, secrets);
+        if (!cover) {
+          log(`Cover not found on Google either for ${title}`);
+          // await db.collection("bookSummaries").updateOne(
+          //   { _id: new ObjectId(_id) },
+          //   {
+          //     $set: { smallImage: "" }
+          //   }
+          // );
+
+          continue;
+        }
+
+        log("Attempting Google cover", cover);
+
+        res = await downloadBookCover(cover, 1000);
+
+        if (!res) {
+          log(`Could not download from Google, either`);
+
+          // await db.collection("bookSummaries").updateOne(
+          //   { _id: new ObjectId(_id) },
+          //   {
+          //     $set: { smallImage: "" }
+          //   }
+          // );
+
+          continue;
+        }
       }
     }
 
@@ -75,13 +116,13 @@ async function updateBookSummaryCovers() {
 
       log("#", count++, title, s3Key);
       await db.collection("bookSummaries").updateOne(
-        { _id: ObjectId(_id) },
+        { _id: new ObjectId(_id) },
         {
           $set: { smallImage: s3Key }
         }
       );
     } else {
-      log(`Google cover failed`);
+      log(`Google cover failed.`);
     }
 
     removeFile(fullName);
