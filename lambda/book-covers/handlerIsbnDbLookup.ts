@@ -3,6 +3,8 @@ import fetch from "node-fetch";
 import corsResponse from "../util/corsResponse";
 import getSecrets from "../util/getSecrets";
 
+console.log("dfd");
+
 export const handler = async event => {
   const secrets = await getSecrets();
   const key = secrets["isbn-db-key"];

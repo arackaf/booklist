@@ -77,6 +77,8 @@ custom:
 
 package:
   individually: true
+  include:
+    - "node_modules/sharp/**"
 
 plugins:
   - serverless-esbuild

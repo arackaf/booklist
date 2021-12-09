@@ -10,8 +10,6 @@ import { v4 as uuid } from "uuid";
 
 import Jimp from "jimp";
 
-const GOOGLE_LIBRARY_KEY = process.env.GOOGLE_LIBRARY_KEY;
-
 export const getOpenLibraryCoverUri = isbn => `http://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
 export const getGoogleLibraryUri = (isbn, GOOGLE_LIBRARY_KEY) =>
   `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=${GOOGLE_LIBRARY_KEY}`;

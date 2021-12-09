@@ -32,18 +32,14 @@ export async function addPlaceholder(books) {
   let db = await getDbConnection();
   await db
     .collection("books")
-    .update(
-      { _id: { $in: books.map(b => ObjectId(b._id)) } },
-      { $set: { similarItems: null, similarItemsLastUpdate: +new Date() } },
-      { multi: true }
-    );
+    .updateMany({ _id: { $in: books.map(b => new ObjectId(b._id)) } }, { $set: { similarItems: null, similarItemsLastUpdate: +new Date() } });
 }
 
 export async function updateSimilarityInfo(book, results) {
   let db = await getDbConnection();
   try {
     await db.collection("books").updateOne(
-      { _id: ObjectId(book._id) },
+      { _id: new ObjectId(book._id) },
       {
         $set: { similarItems: results.map(result => result.isbn), similarItemsLastUpdate: +new Date() }
       }

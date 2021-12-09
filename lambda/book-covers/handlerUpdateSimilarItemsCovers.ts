@@ -1,22 +1,16 @@
-import { v4 as uuid } from "uuid";
-import fetch from "node-fetch";
-import dlv from "dlv";
-
 import { ObjectId } from "mongodb";
+
+import fetch from "node-fetch";
+import { v4 as uuid } from "uuid";
+import dlv from "dlv";
 
 import getDbConnection from "../util/getDbConnection";
 
-import {
-  downloadBookCover,
-  removeFile,
-  resizeIfNeeded,
-  saveCoverToS3,
-  saveContentToS3,
-  getOpenLibraryCoverUri,
-  getGoogleLibraryUri
-} from "../util/bookCoverHelpers";
+import { saveCoverToS3, saveContentToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "../util/bookCoverHelpers";
 
 import getSecrets from "../util/getSecrets";
+import downloadFromUrl from "../util/downloadFromUrl";
+import resizeImage from "../util/resizeImage";
 
 const dbPromise = getDbConnection();
 
@@ -32,8 +26,6 @@ async function updateBookSummaryCovers() {
     .aggregate([{ $match: { smallImage: new RegExp("nophoto") } }, { $limit: 15 }])
     .toArray();
 
-  let title = "";
-
   let _logs = [];
   const log = (...args) => {
     console.log(...args);
@@ -44,7 +36,7 @@ async function updateBookSummaryCovers() {
     let { _id, isbn, title } = bookSummary;
 
     await delay();
-    let res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000);
+    let res = await downloadFromUrl(getOpenLibraryCoverUri(isbn), 1000);
     if (!res) {
       log("No cover found on OpenLibrary for", title);
 
@@ -58,34 +50,35 @@ async function updateBookSummaryCovers() {
 
       log("Attempting Google cover", cover);
 
-      res = await downloadBookCover(cover, 1000);
+      res = await downloadFromUrl(cover, 1000);
+    }
+    if (!res || !("body" in res)) {
+      log(`Could not download from Google, either`);
 
-      if (!res) {
-        log(`Could not download from Google, either`);
-
-        continue;
-      }
+      continue;
     }
 
-    let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName);
+    let newImage = await resizeImage(res.body, 50);
 
-    if (newPath) {
-      let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);
+    if (newImage) {
+      let s3Key = await saveCoverToS3(newImage.body, `bookCovers/bookSummary/${uuid()}-${res.ext}`);
 
       log("#", count++, title, s3Key);
       await db.collection("bookSummaries").updateOne(
-        { _id: ObjectId(_id) },
+        { _id: new ObjectId(_id) },
         {
           $set: { smallImage: s3Key }
         }
       );
     } else {
       log(`Google cover failed`);
+      await db.collection("bookSummaries").updateOne(
+        { _id: new ObjectId(_id) },
+        {
+          $set: { smallImage: "" }
+        }
+      );
     }
-
-    removeFile(fullName);
-    newPath && removeFile(newPath);
   }
 
   const now = new Date();

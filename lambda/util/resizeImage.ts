@@ -1,26 +1,20 @@
 import Jimp from "jimp";
+import sharp from "sharp";
 
-export default (src, MAX_WIDTH, MIN_WIDTH = null) => {
-  return new Promise<any>(res => {
-    Jimp.read(src, function (err, image) {
-      if (err || !image) {
-        return res({ error: true, message: err });
-      }
+export default async function (src, MAX_WIDTH, MIN_WIDTH = null) {
+  try {
+    let buffer;
+    const body = await sharp(src);
+    const metadata = await body.metadata();
 
-      if (MIN_WIDTH != null && image.bitmap.width < MIN_WIDTH) {
-        return res({ error: true, message: "Min width constraint violated" });
-      }
+    if (MAX_WIDTH != null && metadata.width < MAX_WIDTH) {
+      buffer = await body.toBuffer();
+    }
 
-      if (image.bitmap.width > MAX_WIDTH) {
-        image.resize(MAX_WIDTH, Jimp.AUTO);
-      }
-      image.getBuffer(image.getMIME(), (err, body) => {
-        if (err) {
-          return res({ error: true, message: err });
-        }
+    buffer = await body.resize(MAX_WIDTH, undefined, { withoutEnlargement: true }).toBuffer();
 
-        return res({ body });
-      });
-    });
-  });
-};
+    return { body: buffer };
+  } catch (err) {
+    return { error: true, message: err };
+  }
+}

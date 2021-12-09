@@ -19,9 +19,13 @@ export const handler = async event => {
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
   }
-  const { body, error } = await downloadFromUrl(url);
+  const resp = await downloadFromUrl(url);
 
-  const imageResult = await resizeImage(body, MAX_WIDTH);
+  if ("error" in resp) {
+    return corsResponse({ error: true, msg: resp.msg });
+  }
+
+  const imageResult = await resizeImage(resp.body, MAX_WIDTH);
   if (imageResult.error || !imageResult.body) {
     return corsResponse({ error: true });
   }
