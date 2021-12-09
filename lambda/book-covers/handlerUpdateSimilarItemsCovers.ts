@@ -56,12 +56,12 @@ async function updateBookSummaryCovers() {
       });
       const bookResult: any = await fetchResponse.json();
 
-      console.log("Found from isbndb:", bookResult);
+      console.log("Found on isbndb");
 
       if (bookResult && bookResult.book && bookResult.book.image) {
         let imageUrl = bookResult.book.image;
         if (imageUrl) {
-          res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 500);
+          res = await downloadBookCover(imageUrl, 500);
           if (res) {
             console.log("Downloaded cover from isbndb");
           }
