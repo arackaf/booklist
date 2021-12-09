@@ -23,6 +23,12 @@ const dbPromise = getDbConnection();
 const delay = () => new Promise(res => setTimeout(res, 2500));
 
 async function updateBookSummaryCovers() {
+  const log = (...args) => {
+    console.log(...args);
+    _logs.push(args.join(" "));
+  };
+  let _logs = [];
+
   let count = 1;
   const db = await dbPromise;
   const secrets = await getSecrets();
@@ -33,16 +39,11 @@ async function updateBookSummaryCovers() {
     .aggregate([{ $match: { smallImage: new RegExp("nophoto") } }, { $limit: 15 }])
     .toArray();
 
-  let title = "";
-
-  let _logs = [];
-  const log = (...args) => {
-    console.log(...args);
-    _logs.push(args.join(" "));
-  };
+  log("Books found:", bookSummaries.length);
 
   for (let bookSummary of bookSummaries) {
     let { _id, isbn, title } = bookSummary;
+    log("Starting:", title);
 
     await delay();
 
@@ -79,12 +80,12 @@ async function updateBookSummaryCovers() {
         let cover = await getGoogleCoverUrl(isbn, secrets);
         if (!cover) {
           log(`Cover not found on Google either for ${title}`);
-          // await db.collection("bookSummaries").updateOne(
-          //   { _id: new ObjectId(_id) },
-          //   {
-          //     $set: { smallImage: "" }
-          //   }
-          // );
+          await db.collection("bookSummaries").updateOne(
+            { _id: new ObjectId(_id) },
+            {
+              $set: { smallImage: "" }
+            }
+          );
 
           continue;
         }
@@ -96,12 +97,12 @@ async function updateBookSummaryCovers() {
         if (!res) {
           log(`Could not download from Google, either`);
 
-          // await db.collection("bookSummaries").updateOne(
-          //   { _id: new ObjectId(_id) },
-          //   {
-          //     $set: { smallImage: "" }
-          //   }
-          // );
+          await db.collection("bookSummaries").updateOne(
+            { _id: new ObjectId(_id) },
+            {
+              $set: { smallImage: "" }
+            }
+          );
 
           continue;
         }
@@ -122,7 +123,7 @@ async function updateBookSummaryCovers() {
         }
       );
     } else {
-      log(`Google cover failed.`);
+      log("#", count++, "Resize failed");
     }
 
     removeFile(fullName);
