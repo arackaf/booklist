@@ -26,6 +26,7 @@ import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
 import AWS from "aws-sdk";
+import { db, getGetPacket } from "./node/dataAccess/dynamoHelpers";
 AWS.config.region = "us-east-1";
 
 const svelteRouter = express.Router();
@@ -132,27 +133,29 @@ app.get("/favicon.ico", function (request, response) {
 /* --------------- SVELTE --------------- */
 
 app.use(subdomain("svelte", svelteRouter));
-svelteRouter.use(express.static(__dirname + "/svelte/dist"));
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
 const svelteModules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "activate"];
 const validSvelteNonAuthModules = ["", "home", "login"];
-const browseToSvelte = moduleName => (request, response) => {
+const browseToSvelte = moduleName => async (request, response) => {
   if (!request.user) {
     clearAllCookies(request, response);
+  } else {
+    const loginToken = (request.cookies || {}).loginToken;
+    if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
+      clearAllCookies(request, response);
+      request.logout();
+      return response.redirect("/login");
+    }
   }
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 };
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
 
-const otherSvelteModules = ["login"];
-otherSvelteModules.forEach(module => {
-  svelteRouter.get(`/${module}`, (request, response) => {
-    response.sendFile(path.join(__dirname + `/svelte/dist/${module}.html`));
-  });
-});
 svelteRouter.get("/activate/:code", activateCode);
+
+svelteRouter.use(express.static(__dirname + "/svelte/dist"));
 
 /* --------------- /SVELTE --------------- */
 
@@ -183,17 +186,24 @@ app.use(
 
 // --------------- REACT ---------------
 
-app.use(express.static(__dirname + "/react/dist"));
-
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react"];
 modules.forEach(name => app.get("/" + name, browseToReact));
 
-function browseToReact(request, response) {
+async function browseToReact(request, response) {
   if (!request.user) {
     clearAllCookies(request, response);
+  } else {
+    const loginToken = (request.cookies || {}).loginToken;
+    if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
+      clearAllCookies(request, response);
+      request.logout();
+      return response.redirect("/login");
+    }
   }
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
+
+app.use(express.static(__dirname + "/react/dist"));
 
 // --------------- /REACT ---------------
 
