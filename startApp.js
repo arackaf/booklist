@@ -130,6 +130,17 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
+app.post("/loginping", async function (request, response) {
+  const loginToken = (request.cookies || {}).loginToken;
+  if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
+    clearAllCookies(request, response);
+    request.logout();
+    return response.send({ logout: true });
+  } else {
+    return response.send({});
+  }
+});
+
 /* --------------- SVELTE --------------- */
 
 app.use(subdomain("svelte", svelteRouter));
@@ -141,13 +152,6 @@ const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => async (request, response) => {
   if (!request.user) {
     clearAllCookies(request, response);
-  } else {
-    const loginToken = (request.cookies || {}).loginToken;
-    if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
-      clearAllCookies(request, response);
-      request.logout();
-      return response.redirect("/login");
-    }
   }
   response.sendFile(path.join(__dirname + "/svelte/dist/index.html"));
 };
@@ -192,13 +196,6 @@ modules.forEach(name => app.get("/" + name, browseToReact));
 async function browseToReact(request, response) {
   if (!request.user) {
     clearAllCookies(request, response);
-  } else {
-    const loginToken = (request.cookies || {}).loginToken;
-    if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
-      clearAllCookies(request, response);
-      request.logout();
-      return response.redirect("/login");
-    }
   }
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
