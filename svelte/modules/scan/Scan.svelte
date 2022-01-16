@@ -33,6 +33,8 @@
   };
 
   const saveManualBook = book => {
+    let pages = parseInt(book.pages, 10);
+    book.pages = isNaN(pages) ? void 0 : pages;
     return runMutation({ book }).then(() => manuallyEnterBook());
   };
 

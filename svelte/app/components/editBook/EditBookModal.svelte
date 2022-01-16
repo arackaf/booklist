@@ -10,14 +10,6 @@
   export let onHide;
   export let saveBook;
 
-  const prepBookForSaving = book => {
-    let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
-    let pages = parseInt(book.pages, 10);
-    book.pages = isNaN(pages) ? null : pages;
-
-    return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
-  };
-
   $: {
     if (isOpen && needBookCoverPriming()) {
       ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER, { avoidColdStart: true });
@@ -28,7 +20,7 @@
   export let onSave = () => {};
   let closeModal;
   const runSave = book => {
-    saveBook(prepBookForSaving(book)).then(onSave);
+    saveBook(book).then(onSave);
   };
 </script>
 

@@ -61,8 +61,17 @@
 
   const { mutationState: runBookEditState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBookMutation);
 
+  const prepBookForSaving = book => {
+    let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
+    let pages = parseInt(book.pages, 10);
+    book.pages = isNaN(pages) ? void 0 : pages;
+
+    return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {});
+  };
+
   const saveEditingBook = book => {
-    return Promise.resolve($runBookEditState.runMutation({ _id: editingBook._id, book }));
+    const bookInput = prepBookForSaving(book);
+    return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookInput }));
   };
 
   let menuBarHeight = 0;
