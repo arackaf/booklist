@@ -25,9 +25,10 @@
     }
   }
 
+  export let onSave = () => {};
   let closeModal;
   const runSave = book => {
-    saveBook(prepBookForSaving(book)).then(closeModal);
+    saveBook(prepBookForSaving(book)).then(onSave);
   };
 </script>
 

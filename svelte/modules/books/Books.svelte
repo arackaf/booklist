@@ -83,8 +83,12 @@
 
   const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
 
+  let editBookModalOpen = false;
   let editingBook = null;
-  const editBook = book => (editingBook = book);
+  const editBook = book => {
+    editingBook = book;
+    editBookModalOpen = true;
+  };
 
   let booksSubjectEditing = [];
   const editBooksSubjects = books => (booksSubjectEditing = books);
@@ -106,6 +110,10 @@
     saveEditingBook
   };
   setContext("books-module-context", booksModuleContext);
+
+  const stopEditingBook = () => {
+    editBookModalOpen = false;
+  };
 </script>
 
 <style>
@@ -158,7 +166,7 @@
           <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
         {/if}
         {#if editingBook}
-          <EditBookModal saveBook={saveEditingBook} isOpen={!!editingBook} book={editingBook} onHide={() => (editingBook = null)} />
+          <EditBookModal saveBook={saveEditingBook} isOpen={editBookModalOpen} book={editingBook} onSave={stopEditingBook} onHide={stopEditingBook} />
         {/if}
         {#if !!booksSubjectEditing.length}
           <BookSubjectSetter isOpen={!!booksSubjectEditing.length} onHide={() => (booksSubjectEditing = [])} modifyingBooks={booksSubjectEditing} />

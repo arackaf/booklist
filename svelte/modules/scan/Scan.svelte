@@ -33,7 +33,7 @@
   };
 
   const saveManualBook = book => {
-    return runMutation({ book });
+    return runMutation({ book }).then(() => manuallyEnterBook());
   };
 
   let showScanInstructions = false;
