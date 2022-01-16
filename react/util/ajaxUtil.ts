@@ -43,6 +43,24 @@ const ajaxUtil = {
       })
       .catch(errorCallback);
   },
+  postWithCorsAndCredentials(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
+    return fetch(url, {
+      method: "POST",
+      credentials: "include",
+      mode: "cors",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(resp => resp.json())
+      .then(obj => {
+        callback(obj);
+        return obj;
+      })
+      .catch(errorCallback);
+  },
   postWithFilesCors(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
     return fetch(url, {
       method: "POST",

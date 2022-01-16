@@ -1,0 +1,53 @@
+service: book-covers
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  timeout: 10
+
+  # you can overwrite defaults here
+  stage: dev
+  #  region: us-east-1
+  environment:
+    STAGE: ${self:provider.stage}
+    stage: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeStream
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
+
+functions:
+  login:
+    handler: handler.login
+    events:
+      - http:
+          path: login
+          method: post
+          cors: true
+
+custom:
+  esbuild:
+    packager: yarn
+    bundle: true
+    minify: true
+
+package:
+  individually: true
+
+plugins:
+  - serverless-esbuild

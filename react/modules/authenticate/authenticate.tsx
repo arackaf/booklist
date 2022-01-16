@@ -39,6 +39,22 @@ const Login: FunctionComponent<{}> = props => {
 
     setState(state => ({ ...state, running: true }));
     return new Promise(res => {
+      ajaxUtil.postWithCorsAndCredentials(
+        process.env.AUTH_ENDPOINT + "/login",
+        { username, password, rememberme },
+        resp => {
+          console.log("SUCCESS", resp);
+          //window.location.replace("/");
+        },
+        resp => {
+          console.log("FAIL", resp);
+          //setState(state => ({ ...state, running: false, errorCode: "c2" }));
+          //res(true);
+        }
+      );
+    });
+
+    return new Promise(res => {
       ajaxUtil.post(
         "/auth/login",
         { username, password, rememberme },
