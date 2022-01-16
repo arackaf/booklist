@@ -1,11 +1,8 @@
 <script lang="ts">
   import "./d3-styles.scss";
 
-  import Tabs from "app/components/layout/tabs/Tabs.svelte";
-  import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
-  import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
-  import TabContents from "app/components/layout/tabs/TabContents.svelte";
-  import TabContent from "app/components/layout/tabs/TabContent.svelte";
+  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/tabs/index";
+
   import { graphqlClient } from "util/graphql";
   import { clearCache } from "util/graphqlCacheHelpers";
 

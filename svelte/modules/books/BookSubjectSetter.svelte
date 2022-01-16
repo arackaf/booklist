@@ -11,11 +11,8 @@
   import StandardModalFooter from "app/components/ui/StandardModalFooter.svelte";
   import Button from "app/components/buttons/Button.svelte";
   import ActionButton from "app/components/buttons/ActionButton.svelte";
-  import Tabs from "app/components/layout/tabs/Tabs.svelte";
-  import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
-  import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
-  import TabContents from "app/components/layout/tabs/TabContents.svelte";
-  import TabContent from "app/components/layout/tabs/TabContent.svelte";
+
+  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/tabs/index";
 
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";

@@ -1,9 +1,5 @@
 <script lang="ts">
-  import Tabs from "app/components/layout/tabs/Tabs.svelte";
-  import TabHeaders from "app/components/layout/tabs/TabHeaders.svelte";
-  import TabHeader from "app/components/layout/tabs/TabHeader.svelte";
-  import TabContent from "app/components/layout/tabs/TabContent.svelte";
-  import TabContents from "app/components/layout/tabs/TabContents.svelte";
+  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "app/components/layout/tabs/index";
 
   import ajaxUtil from "util/ajaxUtil";
   import { getLoginStatus } from "util/loginStatus";

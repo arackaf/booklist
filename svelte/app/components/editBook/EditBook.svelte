@@ -1,9 +1,5 @@
 <script lang="ts">
-  import Tabs from "../layout/tabs/Tabs.svelte";
-  import TabHeaders from "../layout/tabs/TabHeaders.svelte";
-  import TabHeader from "../layout/tabs/TabHeader.svelte";
-  import TabContents from "../layout/tabs/TabContents.svelte";
-  import TabContent from "../layout/tabs/TabContent.svelte";
+  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
 
   import EditBookInfo from "./EditBookInfo.svelte";
   import ManageBookCover from "./ManageBookCover.svelte";
