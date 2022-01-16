@@ -24,7 +24,7 @@
   $: {
     let selectedIdsCount = Object.keys(selectedBooks).filter(_id => selectedBooks[_id]).length;
     bookSelection = {
-      allAreChecked: books.length == selectedIdsCount,
+      allAreChecked: books.length && books.length == selectedIdsCount,
       selectedBooksCount: selectedIdsCount,
       selectedBookHash: selectedBooks
     };
