@@ -10,9 +10,6 @@
 
   let bookPreviewing = null;
 
-  const booksModuleContext: any = getContext("books-module-context");
-  const { editBook } = booksModuleContext;
-
   const previewBook = book => {
     bookPreviewing = book;
   };

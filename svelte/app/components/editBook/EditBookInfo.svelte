@@ -46,9 +46,6 @@
     });
   };
 
-  const syncAuthor = index => evt => {
-    editingBook.authors[index] = evt.target.value;
-  };
   const addAuthor = evt => {
     editingBook.authors = [...editingBook.authors, ""];
   };
