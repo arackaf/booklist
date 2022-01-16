@@ -59,8 +59,8 @@
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" deferStateChangeOnClose={true} standardFooter={false}>
   <Tabs defaultTab="tags">
     <TabHeaders>
-      <TabHeader tabName="tags"><a>Choose tags</a></TabHeader>
-      <TabHeader tabName="books"><a>For books</a></TabHeader>
+      <TabHeader tabName="tags" text="Choose tags" />
+      <TabHeader tabName="books" text="For books" />
     </TabHeaders>
     <TabContents>
       <TabContent tabName="tags">

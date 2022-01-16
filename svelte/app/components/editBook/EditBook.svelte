@@ -13,8 +13,8 @@
 
 <Tabs defaultTab="basic">
   <TabHeaders>
-    <TabHeader tabName="basic"><a>Book info</a></TabHeader>
-    <TabHeader tabName="covers"><a>Covers</a></TabHeader>
+    <TabHeader tabName="basic" text="Book info" />
+    <TabHeader tabName="covers" text="Covers" />
   </TabHeaders>
   <TabContents>
     <TabContent tabName="basic">

@@ -14,8 +14,8 @@
 <section>
   <Tabs defaultTab={"covers"} localStorageName="admin-tab">
     <TabHeaders>
-      <TabHeader tabName="covers"><a>Recommendation Covers</a></TabHeader>
-      <TabHeader tabName="test-scan"><a>Test Scan</a></TabHeader>
+      <TabHeader tabName="covers" text="Recommendation Covers" />
+      <TabHeader tabName="test-scan" text="Test Scan" />
     </TabHeaders>
 
     <TabContents>

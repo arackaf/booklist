@@ -42,6 +42,16 @@
 .tab-header {
   padding: 5px 10px 5px 10px;
 
+  &::after {
+    display: block;
+    content: attr(data-title);
+    font-weight: bold;
+    height: 1px;
+    color: transparent;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
   &.active {
     font-weight: bold;
     border-bottom: var(--default-border-width) solid var(--primary-9);

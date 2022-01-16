@@ -59,8 +59,8 @@
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" deferStateChangeOnClose={true} standardFooter={false}>
   <Tabs defaultTab="subjects">
     <TabHeaders>
-      <TabHeader tabName="subjects"><a>Choose subjects</a></TabHeader>
-      <TabHeader tabName="books"><a>For books</a></TabHeader>
+      <TabHeader tabName="subjects" text="Choose subjects" />
+      <TabHeader tabName="books" text="For books" />
     </TabHeaders>
     <TabContents>
       <TabContent tabName="subjects">

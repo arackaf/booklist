@@ -22,9 +22,9 @@
     <div class="panel-body" style="position: relative">
       <Tabs defaultTab="vis" localStorageName="home-tabs">
         <TabHeaders>
-          <TabHeader tabName="vis"><a> <i class="far fa-chart-bar" /> View </a></TabHeader>
-          <TabHeader tabName="rec"><a> <span>Discover books</span> </a></TabHeader>
-          <TabHeader tabName="recent-scans"><a> <span>Recent scan results</span> </a></TabHeader>
+          <TabHeader tabName="vis" spaceWith="VIEW...."><a> <i class="far fa-chart-bar" /> View </a></TabHeader>
+          <TabHeader tabName="rec" text="Discover books" />
+          <TabHeader tabName="recent-scans" text="Recent scan results" />
         </TabHeaders>
         <TabContents>
           <TabContent let:isActive tabName="vis">
