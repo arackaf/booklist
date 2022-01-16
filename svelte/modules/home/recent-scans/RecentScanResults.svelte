@@ -19,13 +19,21 @@
   $: nextNextPageKey = data?.recentScanResults?.LastEvaluatedKey;
 
   let currentResults = writable([]);
+  let anyResults = false;
 
   resultsState.subscribe(data => {
     const newResults = data?.recentScanResults?.ScanResults ?? [];
     currentResults.update(current => (current.push(...newResults), current));
   });
 
-  $: console.log({ currentNextPageKey, nextNextPageKey });
+  let noResultsMessage;
+  $: {
+    if ($currentResults.length && !anyResults) {
+      anyResults = true;
+    }
+
+    noResultsMessage = anyResults ? "No more recent scans" : "No recent scans";
+  }
 </script>
 
 {#if !loaded}
@@ -49,14 +57,14 @@
         {#if nextNextPageKey}
           <div />
           <Button preset="info" disabled={loading} onClick={loadNextScans}>Load More</Button>
-        {:else}
-          <div />
-          <div>
-            <hr />
-            <div class="alert alert-info">No more recent scans</div>
-          </div>
         {/if}
       </div>
     </div>
+    {#if !nextNextPageKey}
+      <div class:margin-top-med={anyResults}>
+        <hr />
+        <div class="alert alert-info">{noResultsMessage}</div>
+      </div>
+    {/if}
   </div>
 {/if}

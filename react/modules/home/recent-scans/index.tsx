@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 const { useTransition } = React as any;
 
-import { Queries, QueryOf } from "graphQL/graphql-typings";
+import { Queries, QueryOf, ScanResult } from "graphQL/graphql-typings";
 import "./styles.scss";
 
 import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
@@ -15,10 +15,25 @@ const RecentScans: FunctionComponent = () => {
   const [currentNextPageKeys, setCurrentNextPageKeys] = useState<any>([null]);
   const [nextNextPageKey, setNextNextPageKey] = useState<any>(null);
 
+  const x: ScanResult = {
+    isbn: "123",
+    smallImage: "https://my-library-cover-uploads.s3.amazonaws.com/bookCovers/573d1b97120426ef0078aa92/26ac1fc3-78d5-42d1-9e00-bf6022aa432a.jpg",
+    success: true,
+    title: "Title"
+  };
+
+  const [anyResults, setAnyResults] = useState(false);
   const recentScans = currentNextPageKeys.flatMap(lastKey => {
     const result = graphqlClient.read<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey });
     return result.data?.recentScanResults?.ScanResults ?? [];
   });
+
+  useEffect(() => {
+    if (recentScans.length && !anyResults) {
+      setAnyResults(true);
+    }
+  }, [recentScans]);
+
   const latestKey = currentNextPageKeys[currentNextPageKeys.length - 1];
   const latestKeyData = graphqlClient.read<QueryOf<Queries["recentScanResults"]>>(RecentScansQuery, { lastKey: latestKey });
   const newLastKey = latestKeyData.data?.recentScanResults?.LastEvaluatedKey;
@@ -45,11 +60,10 @@ const RecentScans: FunctionComponent = () => {
                 Load More
               </Button>
             </>
-          ) : (
-            <NoMoreResults />
-          )}
+          ) : null}
         </div>
       </div>
+      {!nextNextPageKey ? <NoMoreResults anyResults={anyResults} /> : null}
     </div>
   );
 };
@@ -74,15 +88,12 @@ const ScanFailureDisplay = ({ item }) => {
   );
 };
 
-const NoMoreResults = () => {
+const NoMoreResults = ({ anyResults }) => {
   return (
-    <>
-      <div></div>
-      <div>
-        <hr />
-        <div className="alert alert-info">No more recent scans</div>
-      </div>
-    </>
+    <div className={anyResults ? "margin-top-med" : ""}>
+      <hr />
+      <div className="alert alert-info">{anyResults ? "No more recent scans" : "No recent scans"}</div>
+    </div>
   );
 };
 
