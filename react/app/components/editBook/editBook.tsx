@@ -43,12 +43,8 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
   return (
     <Tabs defaultTab="basic">
       <TabHeaders>
-        <TabHeader tabName="basic">
-          <a>Book info</a>
-        </TabHeader>
-        <TabHeader tabName="covers">
-          <a>Covers</a>
-        </TabHeader>
+        <TabHeader text="Book info" tabName="basic" />
+        <TabHeader text="Covers" tabName="covers" />
       </TabHeaders>
       <TabContents>
         <TabContent tabName="basic">{book ? <EditBookInfo {...{ book, onCancel, saveBook }} updateBook={updateBook} /> : null}</TabContent>

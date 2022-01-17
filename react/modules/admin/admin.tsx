@@ -62,15 +62,9 @@ const AdminTabContent = ({}) => {
 const AdminTabHeaders = ({}) => {
   return (
     <TabHeaders>
-      <TabHeader tabName="covers">
-        <a>Recommendation Covers</a>
-      </TabHeader>
-      <TabHeader tabName="scan">
-        <a>Test Scan</a>
-      </TabHeader>
-      <TabHeader tabName="user-data">
-        <a>User Data</a>
-      </TabHeader>
+      <TabHeader tabName="covers" text="Recommendation Covers" />
+      <TabHeader tabName="scan" text="Test Scan" />
+      <TabHeader tabName="user-data" text="User Data" />
     </TabHeaders>
   );
 };

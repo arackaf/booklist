@@ -45,21 +45,13 @@ const HomeIfLoggedIn: FunctionComponent<{}> = props => {
     <MainHomePane>
       <Tabs defaultTab="vis" localStorageName="home-tabs">
         <TabHeaders>
-          <TabHeader tabName="vis">
+          <TabHeader tabName="vis" spacerText="VIEW....">
             <a>
               <i className="far fa-chart-bar" /> View
             </a>
           </TabHeader>
-          <TabHeader tabName="rec">
-            <a>
-              <span>Discover books</span>
-            </a>
-          </TabHeader>
-          <TabHeader tabName="recent-scans">
-            <a>
-              <span>Recent scans</span>
-            </a>
-          </TabHeader>
+          <TabHeader tabName="rec" text="Discover books" />
+          <TabHeader tabName="recent-scans" text="Recent scans" />
         </TabHeaders>
         <TabContents>
           <TabContent tabName="vis">

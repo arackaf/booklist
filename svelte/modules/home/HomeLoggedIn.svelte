@@ -24,7 +24,7 @@
         <TabHeaders>
           <TabHeader tabName="vis" spaceWith="VIEW...."><a> <i class="far fa-chart-bar" /> View </a></TabHeader>
           <TabHeader tabName="rec" text="Discover books" />
-          <TabHeader tabName="recent-scans" text="Recent scan results" />
+          <TabHeader tabName="recent-scans" text="Recent scans" />
         </TabHeaders>
         <TabContents>
           <TabContent let:isActive tabName="vis">

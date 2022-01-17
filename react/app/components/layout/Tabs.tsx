@@ -16,7 +16,7 @@ export const TabHeaders = ({ children }) => {
   return <div className="tab-headers">{children}</div>;
 };
 
-export const TabHeader = ({ children, tabName = "", disabled = false }) => {
+export const TabHeader = ({ children = null, tabName = "", text = "", spacerText = "", disabled = false }) => {
   const { currentTab, setTab, localStorageName } = useContext(TabsContext);
   const onClick = disabled
     ? () => {}
@@ -28,8 +28,8 @@ export const TabHeader = ({ children, tabName = "", disabled = false }) => {
       };
 
   return (
-    <div onClick={onClick} className={cn("tab-header", { disabled, active: tabName == currentTab })}>
-      {children}
+    <div onClick={onClick} data-title={text || spacerText} className={cn("tab-header", { disabled, active: tabName == currentTab })}>
+      {text ? <a>{text}</a> : children}
     </div>
   );
 };

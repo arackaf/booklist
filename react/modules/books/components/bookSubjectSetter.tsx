@@ -65,12 +65,10 @@ const BookSubjectSetter: FunctionComponent<ILocalProps> = props => {
     >
       <Tabs defaultTab="subjects">
         <TabHeaders>
-          <TabHeader tabName="subjects">
+          <TabHeader tabName="subjects" spacerText="Choose subjects">
             <a ref={selectRef}>Choose subjects</a>
           </TabHeader>
-          <TabHeader tabName="books">
-            <a>For books</a>
-          </TabHeader>
+          <TabHeader tabName="books" text="For books" />
         </TabHeaders>
         <TabContents>
           <TabContent tabName="subjects">

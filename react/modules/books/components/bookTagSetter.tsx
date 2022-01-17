@@ -50,12 +50,10 @@ const BookTagSetterDesktop: FunctionComponent<{ modifyingBooks: any[]; onDone: a
     <Modal className="fade" isOpen={!!modifyingBooks.length} onHide={props.onDone} headerCaption="Add / Remove Tags:" focusRef={selectRef}>
       <Tabs defaultTab="tags">
         <TabHeaders>
-          <TabHeader tabName="tags">
+          <TabHeader tabName="tags" spacerText="Choose tags">
             <a ref={selectRef}>Choose tags</a>
           </TabHeader>
-          <TabHeader tabName="books">
-            <a>For books</a>
-          </TabHeader>
+          <TabHeader tabName="books" text="For books" />
         </TabHeaders>
         <TabContents>
           <TabContent tabName="tags">
