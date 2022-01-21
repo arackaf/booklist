@@ -7,6 +7,8 @@ import { VitePWA } from "vite-plugin-pwa";
 
 import path from "path";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const getCache = ({ name, pattern }: any) => ({
   urlPattern: pattern,
   handler: "CacheFirst" as const,
@@ -26,6 +28,7 @@ const getCache = ({ name, pattern }: any) => ({
 });
 
 export default defineConfig({
+  base: isProduction ? process.env.REACT_CDN : "",
   resolve: {
     alias: {
       reactStartup: path.resolve("./reactStartup.ts"),
@@ -50,7 +53,8 @@ export default defineConfig({
           getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" }),
           getCache({ pattern: /.*\.(eot|woff|woff2|ttf)$/, name: "fonts" }),
           getCache({ pattern: /.*\.svg$/, name: "svg" })
-        ]
+        ],
+        modifyURLPrefix: { "assets/": (isProduction ? process.env.REACT_CDN : "assets") + "/" }
       }
     })
   ],
