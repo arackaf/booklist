@@ -29,6 +29,7 @@ import AWS from "aws-sdk";
 import { db, getGetPacket } from "./node/dataAccess/dynamoHelpers";
 AWS.config.region = "us-east-1";
 
+const authRouter = express.Router();
 const svelteRouter = express.Router();
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
@@ -39,6 +40,8 @@ const PUBLIC_USER = {
 };
 
 const IS_DEV = process.env.IS_DEV;
+
+const COOKIE_DOMAIN = IS_DEV ? ".lvh.me" : ".mylibrary.io";
 
 if (!IS_DEV) {
   app.use(function ensureSec(request, response, next) {
@@ -121,7 +124,8 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true }));
+
+app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true, cookie: { domain: COOKIE_DOMAIN } }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("remember-me"));
@@ -130,7 +134,22 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
+const authCorsOptions = {
+  origin: true
+};
+
+authRouter.use("*", (req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+authRouter.use(cors(authCorsOptions));
+app.use(subdomain("auth", authRouter));
+
+// maintain old path for now
 app.post("/loginping", async function (request, response) {
+  return response.send({});
+});
+authRouter.post("/loginping", async function (request, response) {
   const loginToken = (request.cookies || {}).loginToken;
   if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
     clearAllCookies(request, response);
@@ -206,23 +225,24 @@ app.use(express.static(__dirname + "/react/dist"));
 
 // --------------- AUTH ---------------
 
-app.post("/auth/login", passport.authenticate("local"), function (req, response) {
+authRouter.post("/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
   let rememberMe = req.body.rememberme == 1;
 
-  response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+  response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+  response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+  response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+  response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+  response.cookie("newAuth", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+  req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
 
   if (rememberMe) {
-    response.cookie("remember_me", `${req.user.id}|${req.user.loginToken}`, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
+    response.cookie("remember_me", `${req.user.id}|${req.user.loginToken}`, { path: "/", maxAge: rememberMeExpiration, domain: COOKIE_DOMAIN });
   }
   response.send(req.user);
 });
 
-app.post("/auth/logout", function (req, response) {
+authRouter.post("/logout", function (req, response) {
   clearAllCookies(req, response);
   req.logout();
   response.send({});
@@ -237,16 +257,17 @@ const clearAllCookies = (request, response) => {
     userDao.deleteLogon(userId, logonToken);
   }
 
-  response.clearCookie("logged_in");
-  response.clearCookie("remember_me");
-  response.clearCookie("userId");
-  response.clearCookie("loginToken");
-  response.clearCookie("email");
-  response.clearCookie("admin");
-  response.clearCookie("jr_admin");
+  response.clearCookie("logged_in", { domain: COOKIE_DOMAIN });
+  response.clearCookie("remember_me", { domain: COOKIE_DOMAIN });
+  response.clearCookie("userId", { domain: COOKIE_DOMAIN });
+  response.clearCookie("loginToken", { domain: COOKIE_DOMAIN });
+  response.clearCookie("email", { domain: COOKIE_DOMAIN });
+  response.clearCookie("admin", { domain: COOKIE_DOMAIN });
+  response.clearCookie("jr_admin", { domain: COOKIE_DOMAIN });
+  response.clearCookie("newAuth", { domain: COOKIE_DOMAIN });
 };
 
-app.post("/auth/createUser", function (req, response) {
+authRouter.post("/createUser", function (req, response) {
   let userDao = new UserDao();
   let username = req.body.username;
   let password = req.body.password;
@@ -264,15 +285,15 @@ app.post("/auth/createUser", function (req, response) {
   });
 });
 
-app.post("/auth/resetPassword", async function (req, response) {
+authRouter.post("/resetPassword", async function (req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
   let result = await new UserDao().resetPassword(req.cookies["email"], userId, oldPassword, newPassword);
   response.send({ ...result });
 });
 
-app.get("/activate", browseToReact);
-app.get("/activate/:id/:code", activateCode);
+authRouter.get("/activate", browseToReact);
+authRouter.get("/activate/:id/:code", activateCode);
 
 async function activateCode(req, response) {
   let userDao = new UserDao();
@@ -287,7 +308,7 @@ async function activateCode(req, response) {
     } catch (er) {}
   }
 
-  response.clearCookie("remember_me");
+  response.clearCookie("remember_me", { domain: COOKIE_DOMAIN });
   req.logout();
 
   userDao.activateUser(userId, code).then(
@@ -296,13 +317,19 @@ async function activateCode(req, response) {
         req.login(result, function () {
           const rememberMe = result.rememberMe;
 
-          response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("email", result.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+          response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+          response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+          response.cookie("email", result.email, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
           if (rememberMe) {
-            response.cookie("remember_me", `${result._id}|${result.loginToken}`, { path: "/", httpOnly: true, maxAge: rememberMeExpiration });
+            response.cookie("remember_me", `${result._id}|${result.loginToken}`, {
+              path: "/",
+              httpOnly: true,
+              maxAge: rememberMeExpiration,
+              domain: COOKIE_DOMAIN
+            });
           }
+          response.cookie("newAuth", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
           response.redirect("/activate");
         });
       } else {

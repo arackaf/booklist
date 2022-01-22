@@ -9,12 +9,23 @@ import "util/graphql";
 import ajaxUtil from "util/ajaxUtil";
 
 import setupServiceWorker from "./util/setupServiceWorker";
+import { getLoginStatus, getCookieLookup, eraseCookie } from "util/loginStatus";
 
 setupServiceWorker();
 renderUI();
 
-ajaxUtil.post("/loginping", {}).then(val => {
-  if (val.logout) {
-    location.reload();
+const user = getLoginStatus();
+const cookieData = getCookieLookup();
+
+if (cookieData.email && !cookieData.newAuth) {
+  ["email", "userId", "loginToken", "remember_me", "logged_in", "admin", "remember_me"].forEach(eraseCookie);
+  location.reload();
+} else {
+  if (user.userId) {
+    ajaxUtil.postAuth("/loginping", {}).then(val => {
+      if (val.logout) {
+        location.reload();
+      }
+    });
   }
-});
+}

@@ -13,11 +13,7 @@ const { logged_in, userId, loginToken } = isLoggedIn();
 const authSettings = logged_in && userId ? { isLoggedIn: true, userId, loginToken } : { isLoggedIn: false, userId: "", loginToken: "" };
 
 if (logged_in && !loginToken) {
-  ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
-}
-
-if (logged_in && (window as any).location.pathname == "/login") {
-  window.location.replace("/");
+  ajaxUtil.postAuth("/logout", {}, () => ((window as any).location = "/"));
 }
 
 if (logged_in && (window as any).location.pathname == "/login") {
