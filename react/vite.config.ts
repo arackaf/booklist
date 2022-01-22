@@ -45,6 +45,7 @@ export default defineConfig({
     react(),
     graphqlPlugin({ path: "./extracted_queries.json" }),
     VitePWA({
+      base: "/",
       filename: "service-worker.js",
       workbox: {
         importScripts: ["sw-index-bundle.js"],
