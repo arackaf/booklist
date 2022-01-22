@@ -29,6 +29,7 @@ import AWS from "aws-sdk";
 import { db, getGetPacket } from "./node/dataAccess/dynamoHelpers";
 AWS.config.region = "us-east-1";
 
+const graphQLRouter = express.Router();
 const authRouter = express.Router();
 const svelteRouter = express.Router();
 
@@ -134,7 +135,7 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-const authCorsOptions = {
+const authGraphQLCorsOptions = {
   origin: true
 };
 
@@ -142,8 +143,15 @@ authRouter.use("*", (req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
-authRouter.use(cors(authCorsOptions));
+authRouter.use(cors(authGraphQLCorsOptions));
 app.use(subdomain("auth", authRouter));
+
+graphQLRouter.use("*", (req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+graphQLRouter.use(cors(authGraphQLCorsOptions));
+app.use(subdomain("graphql", graphQLRouter));
 
 // maintain old path for now
 app.post("/loginping", async function (request, response) {
@@ -185,10 +193,10 @@ svelteRouter.use(express.static(__dirname + "/svelte/dist"));
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
-middleware(app, { url: "/graphql", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+middleware(graphQLRouter, { url: "/", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
-app.use(
-  "/graphql",
+graphQLRouter.use(
+  "/",
   expressGraphql({
     schema: executableSchema,
     graphiql: true,
@@ -197,8 +205,8 @@ app.use(
 );
 
 const { rootPublic, executableSchemaPublic } = getPublicGraphqlSchema();
-app.use(
-  "/graphql-public",
+graphQLRouter.use(
+  "/public",
   cors(),
   expressGraphql({
     schema: executableSchemaPublic,
