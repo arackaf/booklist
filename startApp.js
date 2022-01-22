@@ -145,6 +145,10 @@ authRouter.use("*", (req, res, next) => {
 authRouter.use(cors(authCorsOptions));
 app.use(subdomain("auth", authRouter));
 
+// maintain old path for now
+app.post("/loginping", async function (request, response) {
+  return response.send({});
+});
 authRouter.post("/loginping", async function (request, response) {
   const loginToken = (request.cookies || {}).loginToken;
   if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
