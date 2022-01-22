@@ -21,6 +21,7 @@ type CookieState = {
   loginToken: string;
   remember_me: string;
   logged_in: string;
+  newAuth: string;
 };
 
 export function getCookieLookup(): Partial<CookieState> {
@@ -44,4 +45,8 @@ function getCookie(name) {
       return decodeURIComponent(parts[1]);
     }
   }
+}
+
+export function eraseCookie(name) {
+  document.cookie = name + "=; Max-Age=-99999999;";
 }

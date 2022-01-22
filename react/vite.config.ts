@@ -54,7 +54,7 @@ export default defineConfig({
           getCache({ pattern: /.*\.(eot|woff|woff2|ttf)$/, name: "fonts" }),
           getCache({ pattern: /.*\.svg$/, name: "svg" })
         ],
-        modifyURLPrefix: { "assets/": (isProduction ? process.env.REACT_CDN : "assets") + "/" }
+        modifyURLPrefix: { "assets/": (isProduction ? process.env.REACT_CDN : "") + "/assets/" }
       }
     })
   ],

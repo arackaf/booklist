@@ -8,7 +8,7 @@ import Stack from "app/components/layout/Stack";
 import { Form } from "app/components/ui/Form";
 
 const exectueResetPassword = (oldPassword, newPassword) => {
-  return ajaxUtil.post("/auth/resetPassword", { oldPassword, newPassword }, resp => {});
+  return ajaxUtil.postAuth("/resetPassword", { oldPassword, newPassword }, resp => {});
 };
 
 const PublicUserSettings = props => {
