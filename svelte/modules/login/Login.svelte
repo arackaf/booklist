@@ -9,7 +9,7 @@
     c1: "Passwords do not match",
     c2: "No login found for this Email / Password",
     c3: "Password is required",
-    c4: "Email is required",
+    c4: "Email is required"
   };
 
   let username = "";
@@ -37,8 +37,8 @@
 
     setState(state => ({ ...state, running: true }));
     return new Promise(res => {
-      ajaxUtil.post(
-        "/auth/login",
+      ajaxUtil.postAuth(
+        "/login",
         { username, password, rememberme },
         () => window.location.replace("/"),
         () => {
@@ -51,7 +51,8 @@
   const createUser = evt => {
     evt.preventDefault();
 
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!re.test(username)) {
       return setState(state => ({ ...state, invalidEmail: true }));
     } else {
@@ -67,7 +68,7 @@
     }
 
     setState(() => ({ ...state, running: true }));
-    return ajaxUtil.post("/auth/createUser", { username, password, rememberme }, resp => {
+    return ajaxUtil.postAuth("/createUser", { username, password, rememberme }, resp => {
       if (resp.errorCode) {
         setState(state => ({ ...state, errorCode: resp.errorCode, running: false }));
       } else {

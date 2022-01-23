@@ -1,4 +1,24 @@
 const ajaxUtil = {
+  postAuth(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
+    const prod = /mylibrary\.io/.test(location.host);
+    url = `${location.protocol}//auth.${prod ? "mylibrary.io" : "lvh.me:3001"}${url}`;
+
+    return fetch(url, {
+      method: "post",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(resp => resp.json())
+      .then(obj => {
+        callback(obj);
+        return obj;
+      })
+      .catch(errorCallback);
+  },
   post(url, data, callback = (resp: any) => {}, errorCallback = (resp: any) => {}) {
     return fetch(url, {
       method: "post",

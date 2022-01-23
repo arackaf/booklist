@@ -11,7 +11,7 @@ const { logged_in, userId, loginToken } = isLoggedIn();
 const authSettings = logged_in && userId ? { isLoggedIn: true, userId, loginToken } : { isLoggedIn: false, userId: "", loginToken: "" };
 
 if (logged_in && !loginToken) {
-  ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
+  ajaxUtil.postAuth("/logout", {}, () => ((window as any).location = "/"));
 }
 
 if (window.screen.width < 700) {

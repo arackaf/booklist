@@ -7,7 +7,7 @@
   import { appState } from "app/state/appState";
 
   const exectueResetPassword = (oldPassword, newPassword) => {
-    return ajaxUtil.post("/auth/resetPassword", { oldPassword, newPassword }, resp => {});
+    return ajaxUtil.postAuth("/resetPassword", { oldPassword, newPassword }, resp => {});
   };
 
   $: ({ online } = $appState);

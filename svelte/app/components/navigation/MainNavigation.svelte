@@ -13,7 +13,7 @@
   import "./mobile-menu.scss";
 
   const logout = () => {
-    ajaxUtil.post("/auth/logout", {}, () => ((window as any).location = "/"));
+    ajaxUtil.postAuth("/logout", {}, () => ((window as any).location = "/"));
   };
 
   let isAdminUser = isAdmin();
