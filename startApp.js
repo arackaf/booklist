@@ -170,8 +170,6 @@ authRouter.post("/loginping", async function (request, response) {
 
 /* --------------- SVELTE --------------- */
 
-app.use(subdomain("svelte", svelteRouter));
-
 const svelteModules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "activate"];
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => async (request, response) => {
@@ -184,7 +182,10 @@ svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name))
 
 svelteRouter.get("/activate/:code", activateCode);
 
-svelteRouter.use(express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 /* 5 days * 1000ms */ }));
+app.use("/svelte/dist", express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 /* 5 days * 1000ms */ }));
+svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 /* 5 days * 1000ms */ }));
+
+app.use(subdomain("svelte", svelteRouter));
 
 /* --------------- /SVELTE --------------- */
 
