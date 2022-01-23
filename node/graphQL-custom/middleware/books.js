@@ -108,6 +108,13 @@ export default class BooksMiddleware {
           book.mediumImage.replace(/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
       }
 
+      if (book.smallImage) {
+        book.smallImage = book.smallImage.replace(/my-library-cover-uploads.*?\//, "d193qjyckdxivp.cloudfront.net/");
+      }
+      if (book.mediumImage) {
+        book.mediumImage = book.mediumImage.replace(/my-library-cover-uploads.*?\//, "d193qjyckdxivp.cloudfront.net/");
+      }
+
       if (Array.isArray(book.editorialReviews)) {
         book.editorialReviews = book.editorialReviews.map(entry => ({
           content: entry.Content || entry.content,

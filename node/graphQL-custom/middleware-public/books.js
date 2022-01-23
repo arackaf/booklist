@@ -31,10 +31,12 @@ export default class BooksMiddleware {
     if (args.searchChildSubjects && subjects.length) {
       let db = await root.db;
       let allPaths = subjects.map(s => `,${s},`).join("|");
-      let childIds = (await db
-        .collection("subjects")
-        .find({ path: { $regex: allPaths }, userId: args.userId }, { _id: 1 })
-        .toArray()).map(o => "" + o._id);
+      let childIds = (
+        await db
+          .collection("subjects")
+          .find({ path: { $regex: allPaths }, userId: args.userId }, { _id: 1 })
+          .toArray()
+      ).map(o => "" + o._id);
 
       subjects.push(...childIds);
     }
@@ -103,6 +105,13 @@ export default class BooksMiddleware {
         book.mediumImage =
           "https://my-library-cover-uploads.s3.amazonaws.com/" +
           book.mediumImage.replace(/https?:\/\/my-library-cover-uploads.s3-website-us-east-1.amazonaws.com\//, "");
+      }
+
+      if (book.smallImage) {
+        book.smallImage = book.smallImage.replace(/my-library-cover-uploads.*?\//, "d193qjyckdxivp.cloudfront.net/");
+      }
+      if (book.mediumImage) {
+        book.mediumImage = book.mediumImage.replace(/my-library-cover-uploads.*?\//, "d193qjyckdxivp.cloudfront.net/");
       }
 
       if (Array.isArray(book.editorialReviews)) {
