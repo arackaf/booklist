@@ -172,8 +172,6 @@ authRouter.post("/loginping", async function (request, response) {
 
 app.use(subdomain("svelte", svelteRouter));
 
-middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
-
 const svelteModules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "activate"];
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => async (request, response) => {
@@ -192,6 +190,16 @@ svelteRouter.use(express.static(__dirname + "/svelte/dist"));
 
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
+
+middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
+svelteRouter.use(
+  "/graphql",
+  expressGraphql({
+    schema: executableSchema,
+    graphiql: true,
+    rootValue: root
+  })
+);
 
 middleware(graphQLRouter, { url: "/", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
