@@ -80,7 +80,7 @@
               style="margin-left: auto"
               class="btn btn-primary"
             >
-              {#if recommendationsLoading}<i class="fa fa-fw fa-spin fa-spinner" />{/if}
+              {#if recommendationsLoading}<i class="far fa-fw fa-spin fa-spinner" />{/if}
               Get Recommendations
             </button>
           {/if}

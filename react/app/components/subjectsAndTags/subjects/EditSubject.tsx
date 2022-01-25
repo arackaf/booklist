@@ -71,7 +71,7 @@ const PendingDeleteSubjectDisplay = props => {
         <Button disabled={running} onClick={deleteIt} preset="danger-xs">
           {running ? (
             <span>
-              Deleting <i className="fa fa-spinner fa-spin"></i>
+              Deleting <i className="far fa-spinner fa-spin"></i>
             </span>
           ) : (
             "Delete it!"
@@ -212,14 +212,14 @@ const EditSubjectFields = props => {
       <div className="col-xs-12">
         <FlowItems pushLast={true}>
           <Button disabled={isSubjectSaving} preset="primary-xs" onClick={runSave}>
-            Save <i className={`fa fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
+            Save <i className={`far fa-fw ${isSubjectSaving ? "fa-spinner fa-spin" : "fa-save"}`} />
           </Button>
           <Button disabled={isSubjectSaving} preset="default-xs" onClick={onCancelEdit}>
             Cancel
           </Button>
           {_id ? (
             <Button disabled={isSubjectSaving} preset="danger-xs" onClick={() => setDeleteShowing(true)}>
-              Delete {name} <i className="fa fa-fw fa-trash" />
+              Delete {name} <i className="far fa-fw fa-trash" />
             </Button>
           ) : null}
         </FlowItems>

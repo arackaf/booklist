@@ -164,7 +164,7 @@ const SearchModalContent: FunctionComponent<Partial<LocalProps>> = props => {
             <FlexRow>
               {loading ? (
                 <button style={{ width: "6ch" }} disabled={true} className="btn btn-default">
-                  <i className="fa fa-fw fa-spin fa-spinner" />
+                  <i className="far fa-fw fa-spin fa-spinner" />
                 </button>
               ) : (
                 <SubmitIconButton style={{ width: "6ch" }} key={1} className="btn btn-default">

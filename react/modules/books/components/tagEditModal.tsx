@@ -69,13 +69,13 @@ const EditTag: FunctionComponent<EditTagProps> = props => {
       <div className="col-xs-12">
         <FlowItems pushLast={true}>
           <Button disabled={saving} preset="primary-xs" onClick={doSave}>
-            Save <i className={`fa fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
+            Save <i className={`far fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
           </Button>
           <Button disabled={saving} preset="default-xs" onClick={onCancel}>
             Cancel
           </Button>
           <Button disabled={saving} onClick={onDelete} preset="danger-xs">
-            Delete <i className="fa fa-fw fa-trash" />
+            Delete <i className="far fa-fw fa-trash" />
           </Button>
         </FlowItems>
       </div>
@@ -152,7 +152,7 @@ const TagEditModal: FunctionComponent<ILocalProps> = props => {
           />
           <Button onClick={newTag} preset="info-xs">
             <span className="visible-xs">Add new tag </span>
-            <i className="fa fa-fw fa-plus-square" />
+            <i className="far fa-fw fa-plus-square" />
           </Button>
         </FlowItems>
 
@@ -192,7 +192,7 @@ const PendingDeleteTagInfo = ({ tag, onDelete, onCancel }) => {
         <Button disabled={running} onClick={runDelete} preset="danger-xs">
           {running ? (
             <span>
-              Deleting <i className="fa fa-spinner fa-spin"></i>
+              Deleting <i className="far fa-spinner fa-spin"></i>
             </span>
           ) : (
             "Delete it!"

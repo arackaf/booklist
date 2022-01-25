@@ -35,7 +35,7 @@
     </div>
   {:else}
     <span>
-      Loading ... <i class="fa fa-spinner fa-spin" />
+      Loading ... <i class="far fa-spinner fa-spin" />
     </span>
   {/if}
 </div>

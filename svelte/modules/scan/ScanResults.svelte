@@ -63,14 +63,14 @@
           currently outstanding
         </span>
         {#if toggleShow}
-          <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
+          <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="far fa-white {toggleClass}" /> </a>
         {/if}
       </span>
     {:else if pending != null}
       <span class="label label-success">
         <span style={labelScanStatusStyles}> All pending books saved </span>
         {#if toggleShow}
-          <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="fa fa-white {toggleClass}" /> </a>
+          <a on:click={toggleIncomingQueue} class="margin-left-xs"> <i style="color: white" class="far fa-white {toggleClass}" /> </a>
         {/if}
       </span>
     {/if}

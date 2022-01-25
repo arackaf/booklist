@@ -116,7 +116,7 @@
       </div>
     {/each}
     <div class="col-xs-12">
-      <Button type="button" onClick={evt => addAuthor(evt)} preset="default-xs"><i class="fa fa-fw fa-plus" /> Add author</Button>
+      <Button type="button" onClick={evt => addAuthor(evt)} preset="default-xs"><i class="far fa-fw fa-plus" /> Add author</Button>
     </div>
   </FlexRow>
   <hr />

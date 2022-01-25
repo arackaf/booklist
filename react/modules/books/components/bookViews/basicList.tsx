@@ -31,7 +31,7 @@ const BookViewListMobileItem = props => {
                     <i className="fal fa-pencil-alt"></i>
                   </button>
                   <button style={{ marginLeft: "5px" }} className="btn btn-xs btn-light btn-round-icon" onClick={startDelete}>
-                    <i className="fa fa-fw fa-trash" />
+                    <i className="far fa-fw fa-trash" />
                   </button>
                 </>
               ) : null}

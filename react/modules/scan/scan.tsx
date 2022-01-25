@@ -37,7 +37,7 @@ const BookEntryList: FunctionComponent<{}> = () => {
 
   const toggleInstructions = (
     <a onClick={() => toggleScanInstructions()}>
-      <i className={`fa fa-question-circle`} />
+      <i className={`far fa-question-circle`} />
     </a>
   );
 

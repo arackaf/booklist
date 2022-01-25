@@ -60,7 +60,7 @@
       <div style="display: flex; align-items: center">
         <h4 style="margin-top: 0; margin-bottom: 0; font-size: 16px">
           Enter your books here
-          <a on:click={() => (showScanInstructions = !showScanInstructions)}> <i class="fa fa-question-circle" /> </a>
+          <a on:click={() => (showScanInstructions = !showScanInstructions)}> <i class="far fa-question-circle" /> </a>
         </h4>
         <button class="btn btn-xs margin-left" on:click={manuallyEnterBook}> Manual entry </button>
       </div>

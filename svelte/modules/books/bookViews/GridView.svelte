@@ -66,7 +66,7 @@
           <th style="{stickyHeaderStyle}; min-width: 200px">
             <a class="no-underline" on:click={() => setSort("title")}>
               Title
-              {#if sort == "title"}<i class={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+              {#if sort == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
             </a>
           </th>
           <th style="min-width: 90px; {stickyHeaderStyle}">Subjects</th>
@@ -76,13 +76,13 @@
           <th style="min-width: 85px; {stickyHeaderStyle}">
             <a class="no-underline" on:click={() => setSort("pages")}>
               Pages
-              {#if sort == "pages"}<i class={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+              {#if sort == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
             </a>
           </th>
           <th style={stickyHeaderStyle}>
             <a class="no-underline" on:click={() => setSort("_id")}>
               Added
-              {#if sort == "_id"}<i class={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+              {#if sort == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
             </a>
           </th>
         </tr>

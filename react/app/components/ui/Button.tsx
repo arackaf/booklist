@@ -113,7 +113,7 @@ export const ActionButton: FC<ActionButtonType> = props => {
       {isFinished ? (
         <i style={finishedIconStyles} className="fal fa-check" />
       ) : isRunning ? (
-        <i style={iconStyles} className="fa fa-fw fa-spin fa-spinner" />
+        <i style={iconStyles} className="far fa-fw fa-spin fa-spinner" />
       ) : icon ? (
         <i style={iconStyles} className={icon} />
       ) : null}
@@ -180,7 +180,7 @@ export const ActionIconButton: FC<ActionButtonType> = props => {
       className={cn(cssFromPreset(props), className, "bl-action-button")}
       {...rest}
     >
-      {isFinished ? <i className="fal fa-check" /> : isRunning ? <i className="fa fa-fw fa-spin fa-spinner" /> : props.children}
+      {isFinished ? <i className="fal fa-check" /> : isRunning ? <i className="far fa-fw fa-spin fa-spinner" /> : props.children}
     </button>
   );
 };

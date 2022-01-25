@@ -50,8 +50,8 @@
 <tr>
   {#if !isPublic && online}
     <td>
-      <a style="font-size: 12pt" on:click={() => dispatchBooksUiState(['toggle-select', _id])}>
-        <i class={'fal ' + (!!selectedBooks[_id] ? 'fa-check-square' : 'fa-square')} />
+      <a style="font-size: 12pt" on:click={() => dispatchBooksUiState(["toggle-select", _id])}>
+        <i class={"fal " + (!!selectedBooks[_id] ? "fa-check-square" : "fa-square")} />
       </a>
     </td>
   {/if}
@@ -65,14 +65,14 @@
       <Stack tightest={true}>
         <div class="bookTitle">{book.title}</div>
         {#if book.authors}
-          <div class="bookAuthor">{book.authors.join(', ')}</div>
+          <div class="bookAuthor">{book.authors.join(", ")}</div>
         {/if}
       </Stack>
 
       <FlowItems vCenter={true} tighter={true} containerStyle="min-height: 35px">
         {#if online}
           {#if detailsLoading}
-            <a style={hoverOverride} target="_new" class="gridHoverFilter"> <i class="fa fa-fw fa-spin fa-spinner" /> </a>
+            <a style={hoverOverride} target="_new" class="gridHoverFilter"> <i class="far fa-fw fa-spin fa-spinner" /> </a>
           {:else if expanded}
             <a style={hoverOverride} target="_new" on:click={() => (expanded = false)} class="gridHoverFilter"> <i class={`far fa-minus`} /> </a>
           {:else}
@@ -132,14 +132,14 @@
             baseWidth="10ch"
             text="Read"
             runningText="Saving"
-            icon="fa fa-fw fa-check"
+            icon="far fa-fw fa-check"
             onClick={() => setRead([_id], !book.isRead)}
             preset="success-xs"
           />
         {:else}
           <ActionButton baseWidth="10ch" text="Set read" runningText="Saving" onClick={() => setRead([_id], !book.isRead)} preset="default-xs" />
         {/if}
-      {:else if !!book.isRead}<span class="label label-success"> Read <i class="fa fa-fw fa-check" /> </span>{/if}
+      {:else if !!book.isRead}<span class="label label-success"> Read <i class="far fa-fw fa-check" /> </span>{/if}
     </div>
   </td>
   <td>
@@ -153,7 +153,7 @@
       <div>{book.isbn}</div>
     {/if}
   </td>
-  <td>{book.pages == null ? '' : book.pages}</td>
+  <td>{book.pages == null ? "" : book.pages}</td>
   <td>{book.dateAddedDisplay}</td>
 </tr>
 {#if expanded}

@@ -72,7 +72,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
               {online ? (
                 detailsLoading ? (
                   <a style={hoverOverride} target="_new" className="grid-hover-filter">
-                    <i className="fa fa-fw fa-spin fa-spinner" />
+                    <i className="far fa-fw fa-spin fa-spinner" />
                   </a>
                 ) : expanded ? (
                   <a style={hoverOverride} target="_new" onClick={() => setExpanded(false)} className="grid-hover-filter">
@@ -157,7 +157,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
                   baseWidth="10ch"
                   text="Read"
                   runningText="Saving"
-                  icon="fa fa-fw fa-check"
+                  icon="far fa-fw fa-check"
                   onClick={() => setRead([_id], !book.isRead)}
                   preset="success-xs"
                 />
@@ -172,7 +172,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
               )
             ) : !!book.isRead ? (
               <span className="label label-success">
-                Read <i className="fa fa-fw fa-check" />
+                Read <i className="far fa-fw fa-check" />
               </span>
             ) : null}
           </div>
@@ -308,7 +308,7 @@ const BookViewListGrid: FunctionComponent<{ books: any; menuBarHeight: any }> = 
     setBooksSort(column, newDirection);
   };
 
-  const potentialSortIcon = <i className={"fa fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
+  const potentialSortIcon = <i className={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />;
   const sortIconIf = column => (column == currentSort ? potentialSortIcon : null);
 
   const stickyHeaderStyle: CSSProperties = {

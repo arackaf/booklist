@@ -1,5 +1,5 @@
 /*!
- * Font Awesome Pro 5.12.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license (Commercial License)
  */
 (function (global, factory) {
@@ -8,7 +8,47 @@
   (factory((global['fontawesome-pro-conflict-detection'] = {})));
 }(this, (function (exports) { 'use strict';
 
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+
+      if (enumerableOnly) {
+        symbols = symbols.filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        });
+      }
+
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
         return typeof obj;
@@ -35,25 +75,6 @@
     }
 
     return obj;
-  }
-
-  function _objectSpread(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-      var ownKeys = Object.keys(source);
-
-      if (typeof Object.getOwnPropertySymbols === 'function') {
-        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-        }));
-      }
-
-      ownKeys.forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    }
-
-    return target;
   }
 
   var _WINDOW = {};
@@ -551,7 +572,7 @@
        *
        * @param {string} string Input string
        * @param {string} [key] HMAC key
-       * @param {boolean} raw Raw oytput switch
+       * @param {boolean} [raw] Raw output switch
        * @returns {string} MD5 output
        */
 
@@ -799,7 +820,7 @@
       var diagScriptFun = function diagScriptFun(nodeUnderTestId, md5, parentOrigin) {
         parent.FontAwesomeDetection.__pollUntil({
           fn: function fn() {
-            return !!window.FontAwesomeConfig;
+            return !!window.FontAwesomeConfig || !!window.FontAwesomeKitConfig;
           }
         }).then(function () {
           var scriptNode = document.getElementById(nodeUnderTestId);
@@ -879,7 +900,7 @@
     var scriptsToTest = detectSvgConflicts(DOCUMENT.currentScript);
     var cssToTest = detectWebfontConflicts();
 
-    var nodesFound = _objectSpread({}, scriptsToTest, cssToTest);
+    var nodesFound = _objectSpread2(_objectSpread2({}, scriptsToTest), cssToTest);
 
     var testCount = Object.keys(scriptsToTest).length + Object.keys(cssToTest).length; // The resultsCollectionMaxWait allows for the time between when the tests running under
     // child iframes call postMessage with their results, and when the parent window
@@ -956,7 +977,7 @@
     resultsCollectionMaxWait: +(DOCUMENT.currentScript.getAttribute(resultsCollectionMaxWaitAttr) || "5000")
   };
 
-  var _config = _objectSpread({}, _default, initialConfig, {
+  var _config = _objectSpread2(_objectSpread2(_objectSpread2({}, _default), initialConfig), {}, {
     // These cannot be overridden
     __pollUntil: pollUntil,
     md5ForNode: md5ForNode,

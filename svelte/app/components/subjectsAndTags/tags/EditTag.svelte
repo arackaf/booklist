@@ -125,14 +125,14 @@
           <FlowItems pushLast={true}>
             <Button disabled={updateState.running} preset="primary-xs" onClick={runSave}>
               Save
-              <i class={`fa fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
+              <i class={`far fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
             </Button>
             <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
             {#if editingTag._id}
               <Button disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                 Delete
                 {originalName}
-                <i class="fa fa-fw fa-trash" />
+                <i class="far fa-fw fa-trash" />
               </Button>
             {/if}
           </FlowItems>
@@ -146,7 +146,7 @@
           </div>
           <FlowItems>
             <Button disabled={deleteState.running} onClick={deleteIt} preset="danger-xs">
-              {#if deleteState.running}<span> Deleting <i class="fa fa-spinner fa-spin" /> </span>{:else}"Delete it!"{/if}
+              {#if deleteState.running}<span> Deleting <i class="far fa-spinner fa-spin" /> </span>{:else}"Delete it!"{/if}
             </Button>
             <Button disabled={deleteState.running} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
           </FlowItems>

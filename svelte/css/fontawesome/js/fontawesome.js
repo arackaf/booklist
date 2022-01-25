@@ -1,11 +1,51 @@
 /*!
- * Font Awesome Pro 5.12.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license (Commercial License)
  */
 (function () {
   'use strict';
 
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+
+      if (enumerableOnly) {
+        symbols = symbols.filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        });
+      }
+
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function (obj) {
         return typeof obj;
@@ -56,39 +96,16 @@
     return obj;
   }
 
-  function _objectSpread(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-      var ownKeys = Object.keys(source);
-
-      if (typeof Object.getOwnPropertySymbols === 'function') {
-        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-        }));
-      }
-
-      ownKeys.forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    }
-
-    return target;
-  }
-
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
   }
 
   function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    }
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
   function _arrayWithHoles(arr) {
@@ -96,17 +113,21 @@
   }
 
   function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
   }
 
   function _iterableToArrayLimit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+    if (_i == null) return;
     var _arr = [];
     var _n = true;
     var _d = false;
-    var _e = undefined;
+
+    var _s, _e;
 
     try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
         _arr.push(_s.value);
 
         if (i && _arr.length === i) break;
@@ -125,12 +146,29 @@
     return _arr;
   }
 
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   var noop = function noop() {};
@@ -187,6 +225,7 @@
     'fal': 'light',
     'fad': 'duotone',
     'fab': 'brands',
+    'fak': 'kit',
     'fa': 'solid'
   };
   var STYLE_TO_PREFIX = {
@@ -194,10 +233,12 @@
     'regular': 'far',
     'light': 'fal',
     'duotone': 'fad',
-    'brands': 'fab'
+    'brands': 'fab',
+    'kit': 'fak'
   };
   var LAYERS_TEXT_CLASSNAME = 'fa-layers-text';
-  var FONT_FAMILY_PATTERN = /Font Awesome 5 (Solid|Regular|Light|Duotone|Brands|Free|Pro)/;
+  var FONT_FAMILY_PATTERN = /Font Awesome ([5 ]*)(Solid|Regular|Light|Duotone|Brands|Free|Pro|Kit).*/i; // TODO: do we need to handle font-weight for kit SVG pseudo-elements?
+
   var FONT_WEIGHT_TO_PREFIX = {
     '900': 'fas',
     '400': 'far',
@@ -268,11 +309,11 @@
     showMissingIcons: true
   };
 
-  var _config = _objectSpread({}, _default, initial);
+  var _config = _objectSpread2(_objectSpread2({}, _default), initial);
 
   if (!_config.autoReplaceSvg) _config.observeMutations = false;
 
-  var config = _objectSpread({}, _config);
+  var config = _objectSpread2({}, _config);
 
   WINDOW.FontAwesomeConfig = config;
 
@@ -771,6 +812,7 @@
         attributes = _ref.attributes,
         main = _ref.main,
         mask = _ref.mask,
+        explicitMaskId = _ref.maskId,
         transform = _ref.transform;
     var mainWidth = main.width,
         mainPath = main.icon;
@@ -783,7 +825,7 @@
     });
     var maskRect = {
       tag: 'rect',
-      attributes: _objectSpread({}, ALL_SPACE, {
+      attributes: _objectSpread2(_objectSpread2({}, ALL_SPACE), {}, {
         fill: 'white'
       })
     };
@@ -792,22 +834,22 @@
     } : {};
     var maskInnerGroup = {
       tag: 'g',
-      attributes: _objectSpread({}, trans.inner),
-      children: [fillBlack(_objectSpread({
+      attributes: _objectSpread2({}, trans.inner),
+      children: [fillBlack(_objectSpread2({
         tag: mainPath.tag,
-        attributes: _objectSpread({}, mainPath.attributes, trans.path)
+        attributes: _objectSpread2(_objectSpread2({}, mainPath.attributes), trans.path)
       }, maskInnerGroupChildrenMixin))]
     };
     var maskOuterGroup = {
       tag: 'g',
-      attributes: _objectSpread({}, trans.outer),
+      attributes: _objectSpread2({}, trans.outer),
       children: [maskInnerGroup]
     };
-    var maskId = "mask-".concat(nextUniqueId());
-    var clipId = "clip-".concat(nextUniqueId());
+    var maskId = "mask-".concat(explicitMaskId || nextUniqueId());
+    var clipId = "clip-".concat(explicitMaskId || nextUniqueId());
     var maskTag = {
       tag: 'mask',
-      attributes: _objectSpread({}, ALL_SPACE, {
+      attributes: _objectSpread2(_objectSpread2({}, ALL_SPACE), {}, {
         id: maskId,
         maskUnits: 'userSpaceOnUse',
         maskContentUnits: 'userSpaceOnUse'
@@ -826,7 +868,7 @@
     };
     children.push(defs, {
       tag: 'rect',
-      attributes: _objectSpread({
+      attributes: _objectSpread2({
         fill: 'currentColor',
         'clip-path': "url(#".concat(clipId, ")"),
         mask: "url(#".concat(maskId, ")")
@@ -858,14 +900,14 @@
       });
       children.push({
         tag: 'g',
-        attributes: _objectSpread({}, trans.outer),
+        attributes: _objectSpread2({}, trans.outer),
         children: [{
           tag: 'g',
-          attributes: _objectSpread({}, trans.inner),
+          attributes: _objectSpread2({}, trans.inner),
           children: [{
             tag: main.icon.tag,
             children: main.icon.children,
-            attributes: _objectSpread({}, main.icon.attributes, trans.path)
+            attributes: _objectSpread2(_objectSpread2({}, main.icon.attributes), trans.path)
           }]
         }]
       });
@@ -894,7 +936,7 @@
         x: width / height / 2,
         y: 0.5
       };
-      attributes['style'] = joinStyles(_objectSpread({}, styles, {
+      attributes['style'] = joinStyles(_objectSpread2(_objectSpread2({}, styles), {}, {
         'transform-origin': "".concat(offset.x + transform.x / 16, "em ").concat(offset.y + transform.y / 16, "em")
       }));
     }
@@ -920,7 +962,7 @@
       },
       children: [{
         tag: 'symbol',
-        attributes: _objectSpread({}, attributes, {
+        attributes: _objectSpread2(_objectSpread2({}, attributes), {}, {
           id: id
         }),
         children: children
@@ -937,6 +979,8 @@
         transform = params.transform,
         symbol = params.symbol,
         title = params.title,
+        maskId = params.maskId,
+        titleId = params.titleId,
         extra = params.extra,
         _params$watchable = params.watchable,
         watchable = _params$watchable === void 0 ? false : _params$watchable;
@@ -945,13 +989,16 @@
         width = _ref.width,
         height = _ref.height;
 
-    var widthClass = "fa-w-".concat(Math.ceil(width / height * 16));
+    var isUploadedIcon = prefix === 'fak';
+    var widthClass = isUploadedIcon ? '' : "fa-w-".concat(Math.ceil(width / height * 16));
     var attrClass = [config.replacementClass, iconName ? "".concat(config.familyPrefix, "-").concat(iconName) : '', widthClass].filter(function (c) {
       return extra.classes.indexOf(c) === -1;
+    }).filter(function (c) {
+      return c !== '' || !!c;
     }).concat(extra.classes).join(' ');
     var content = {
       children: [],
-      attributes: _objectSpread({}, extra.attributes, {
+      attributes: _objectSpread2(_objectSpread2({}, extra.attributes), {}, {
         'data-prefix': prefix,
         'data-icon': iconName,
         'class': attrClass,
@@ -960,6 +1007,9 @@
         'viewBox': "0 0 ".concat(width, " ").concat(height)
       })
     };
+    var uploadedIconWidthStyle = isUploadedIcon && !~extra.classes.indexOf('fa-fw') ? {
+      width: "".concat(width / height * 16 * 0.0625, "em")
+    } : {};
 
     if (watchable) {
       content.attributes[DATA_FA_I2SVG] = '';
@@ -968,19 +1018,20 @@
     if (title) content.children.push({
       tag: 'title',
       attributes: {
-        id: content.attributes['aria-labelledby'] || "title-".concat(nextUniqueId())
+        id: content.attributes['aria-labelledby'] || "title-".concat(titleId || nextUniqueId())
       },
       children: [title]
     });
 
-    var args = _objectSpread({}, content, {
+    var args = _objectSpread2(_objectSpread2({}, content), {}, {
       prefix: prefix,
       iconName: iconName,
       main: main,
       mask: mask,
+      maskId: maskId,
       transform: transform,
       symbol: symbol,
-      styles: extra.styles
+      styles: _objectSpread2(_objectSpread2({}, uploadedIconWidthStyle), extra.styles)
     });
 
     var _ref2 = mask.found && main.found ? makeIconMasking(args) : makeIconStandard(args),
@@ -1006,9 +1057,9 @@
         _params$watchable2 = params.watchable,
         watchable = _params$watchable2 === void 0 ? false : _params$watchable2;
 
-    var attributes = _objectSpread({}, extra.attributes, title ? {
+    var attributes = _objectSpread2(_objectSpread2(_objectSpread2({}, extra.attributes), title ? {
       'title': title
-    } : {}, {
+    } : {}), {}, {
       'class': extra.classes.join(' ')
     });
 
@@ -1016,7 +1067,7 @@
       attributes[DATA_FA_I2SVG] = '';
     }
 
-    var styles = _objectSpread({}, extra.styles);
+    var styles = _objectSpread2({}, extra.styles);
 
     if (transformIsMeaningful(transform)) {
       styles['transform'] = transformForCss({
@@ -1058,9 +1109,9 @@
         title = params.title,
         extra = params.extra;
 
-    var attributes = _objectSpread({}, extra.attributes, title ? {
+    var attributes = _objectSpread2(_objectSpread2(_objectSpread2({}, extra.attributes), title ? {
       'title': title
-    } : {}, {
+    } : {}), {}, {
       'class': extra.classes.join(' ')
     });
 
@@ -1096,7 +1147,7 @@
     mark: noop$1,
     measure: noop$1
   };
-  var preamble = "FA \"5.12.1\"";
+  var preamble = "FA \"5.15.4\"";
 
   var begin = function begin(name) {
     p.mark("".concat(preamble, " ").concat(name, " begins"));
@@ -1194,7 +1245,7 @@
     if (typeof namespace.hooks.addPack === 'function' && !skipHooks) {
       namespace.hooks.addPack(prefix, normalized);
     } else {
-      namespace.styles[prefix] = _objectSpread({}, namespace.styles[prefix] || {}, normalized);
+      namespace.styles[prefix] = _objectSpread2(_objectSpread2({}, namespace.styles[prefix] || {}), normalized);
     }
     /**
      * Font Awesome 4 used the prefix of `fa` for all icons. With the introduction
@@ -1237,7 +1288,7 @@
       });
       return acc;
     });
-    var hasRegular = 'far' in styles;
+    var hasRegular = ('far' in styles);
     _byOldName = reduce(shims, function (acc, shim) {
       var oldName = shim[0];
       var prefix = shim[1];
@@ -1282,7 +1333,7 @@
 
       if (styles$1[cls]) {
         acc.prefix = cls;
-      } else if (config.autoFetchSvg && ['fas', 'far', 'fal', 'fad', 'fab', 'fa'].indexOf(cls) > -1) {
+      } else if (config.autoFetchSvg && Object.keys(PREFIX_TO_STYLE).indexOf(cls) > -1) {
         acc.prefix = cls;
       } else if (iconName) {
         var shim = acc.prefix === 'fa' ? byOldName(iconName) : {};
@@ -1344,7 +1395,7 @@
       }).join('\n');
 
       if (node.parentNode && node.outerHTML) {
-        node.outerHTML = newOuterHTML + (config.keepOriginalSource && node.tagName.toLowerCase() !== 'svg' ? "<!-- ".concat(node.outerHTML, " -->") : '');
+        node.outerHTML = newOuterHTML + (config.keepOriginalSource && node.tagName.toLowerCase() !== 'svg' ? "<!-- ".concat(node.outerHTML, " Font Awesome fontawesome.com -->") : '');
       } else if (node.parentNode) {
         var newNode = document.createElement('span');
         node.parentNode.replaceChild(newNode, node);
@@ -1601,10 +1652,11 @@
       return acc;
     }, {});
     var title = node.getAttribute('title');
+    var titleId = node.getAttribute('data-fa-title-id');
 
     if (config.autoA11y) {
       if (title) {
-        extraAttributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(nextUniqueId());
+        extraAttributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(titleId || nextUniqueId());
       } else {
         extraAttributes['aria-hidden'] = 'true';
         extraAttributes['focusable'] = 'false';
@@ -1630,10 +1682,12 @@
     return {
       iconName: null,
       title: null,
+      titleId: null,
       prefix: null,
       transform: meaninglessTransform,
       symbol: false,
       mask: null,
+      maskId: null,
       extra: {
         classes: [],
         styles: {},
@@ -1655,10 +1709,12 @@
     return {
       iconName: iconName,
       title: node.getAttribute('title'),
+      titleId: node.getAttribute('data-fa-title-id'),
       prefix: prefix,
       transform: transform,
       symbol: symbol,
       mask: mask,
+      maskId: node.getAttribute('data-fa-mask-id'),
       extra: {
         classes: extraClasses,
         styles: extraStyles,
@@ -1685,57 +1741,57 @@
   };
   var RING = {
     tag: 'path',
-    attributes: _objectSpread({}, FILL, {
+    attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
       d: 'M156.5,447.7l-12.6,29.5c-18.7-9.5-35.9-21.2-51.5-34.9l22.7-22.7C127.6,430.5,141.5,440,156.5,447.7z M40.6,272H8.5 c1.4,21.2,5.4,41.7,11.7,61.1L50,321.2C45.1,305.5,41.8,289,40.6,272z M40.6,240c1.4-18.8,5.2-37,11.1-54.1l-29.5-12.6 C14.7,194.3,10,216.7,8.5,240H40.6z M64.3,156.5c7.8-14.9,17.2-28.8,28.1-41.5L69.7,92.3c-13.7,15.6-25.5,32.8-34.9,51.5 L64.3,156.5z M397,419.6c-13.9,12-29.4,22.3-46.1,30.4l11.9,29.8c20.7-9.9,39.8-22.6,56.9-37.6L397,419.6z M115,92.4 c13.9-12,29.4-22.3,46.1-30.4l-11.9-29.8c-20.7,9.9-39.8,22.6-56.8,37.6L115,92.4z M447.7,355.5c-7.8,14.9-17.2,28.8-28.1,41.5 l22.7,22.7c13.7-15.6,25.5-32.9,34.9-51.5L447.7,355.5z M471.4,272c-1.4,18.8-5.2,37-11.1,54.1l29.5,12.6 c7.5-21.1,12.2-43.5,13.6-66.8H471.4z M321.2,462c-15.7,5-32.2,8.2-49.2,9.4v32.1c21.2-1.4,41.7-5.4,61.1-11.7L321.2,462z M240,471.4c-18.8-1.4-37-5.2-54.1-11.1l-12.6,29.5c21.1,7.5,43.5,12.2,66.8,13.6V471.4z M462,190.8c5,15.7,8.2,32.2,9.4,49.2h32.1 c-1.4-21.2-5.4-41.7-11.7-61.1L462,190.8z M92.4,397c-12-13.9-22.3-29.4-30.4-46.1l-29.8,11.9c9.9,20.7,22.6,39.8,37.6,56.9 L92.4,397z M272,40.6c18.8,1.4,36.9,5.2,54.1,11.1l12.6-29.5C317.7,14.7,295.3,10,272,8.5V40.6z M190.8,50 c15.7-5,32.2-8.2,49.2-9.4V8.5c-21.2,1.4-41.7,5.4-61.1,11.7L190.8,50z M442.3,92.3L419.6,115c12,13.9,22.3,29.4,30.5,46.1 l29.8-11.9C470,128.5,457.3,109.4,442.3,92.3z M397,92.4l22.7-22.7c-15.6-13.7-32.8-25.5-51.5-34.9l-12.6,29.5 C370.4,72.1,384.4,81.5,397,92.4z'
     })
   };
 
-  var OPACITY_ANIMATE = _objectSpread({}, ANIMATION_BASE, {
+  var OPACITY_ANIMATE = _objectSpread2(_objectSpread2({}, ANIMATION_BASE), {}, {
     attributeName: 'opacity'
   });
 
   var DOT = {
     tag: 'circle',
-    attributes: _objectSpread({}, FILL, {
+    attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
       cx: '256',
       cy: '364',
       r: '28'
     }),
     children: [{
       tag: 'animate',
-      attributes: _objectSpread({}, ANIMATION_BASE, {
+      attributes: _objectSpread2(_objectSpread2({}, ANIMATION_BASE), {}, {
         attributeName: 'r',
         values: '28;14;28;28;14;28;'
       })
     }, {
       tag: 'animate',
-      attributes: _objectSpread({}, OPACITY_ANIMATE, {
+      attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
         values: '1;0;1;1;0;1;'
       })
     }]
   };
   var QUESTION = {
     tag: 'path',
-    attributes: _objectSpread({}, FILL, {
+    attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
       opacity: '1',
       d: 'M263.7,312h-16c-6.6,0-12-5.4-12-12c0-71,77.4-63.9,77.4-107.8c0-20-17.8-40.2-57.4-40.2c-29.1,0-44.3,9.6-59.2,28.7 c-3.9,5-11.1,6-16.2,2.4l-13.1-9.2c-5.6-3.9-6.9-11.8-2.6-17.2c21.2-27.2,46.4-44.7,91.2-44.7c52.3,0,97.4,29.8,97.4,80.2 c0,67.6-77.4,63.5-77.4,107.8C275.7,306.6,270.3,312,263.7,312z'
     }),
     children: [{
       tag: 'animate',
-      attributes: _objectSpread({}, OPACITY_ANIMATE, {
+      attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
         values: '1;0;0;0;0;1;'
       })
     }]
   };
   var EXCLAMATION = {
     tag: 'path',
-    attributes: _objectSpread({}, FILL, {
+    attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
       opacity: '0',
       d: 'M232.5,134.5l7,168c0.3,6.4,5.6,11.5,12,11.5h9c6.4,0,11.7-5.1,12-11.5l7-168c0.3-6.8-5.2-12.5-12-12.5h-23 C237.7,122,232.2,127.7,232.5,134.5z'
     }),
     children: [{
       tag: 'animate',
-      attributes: _objectSpread({}, OPACITY_ANIMATE, {
+      attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
         values: '0;0;1;1;0;0;'
       })
     }]
@@ -1809,12 +1865,6 @@
         return resolve(asFoundIcon(icon));
       }
 
-      var headers = {};
-
-      if (_typeof(WINDOW.FontAwesomeKitConfig) === 'object' && typeof window.FontAwesomeKitConfig.token === 'string') {
-        headers['fa-kit-token'] = WINDOW.FontAwesomeKitConfig.token;
-      }
-
       if (iconName && prefix && !config.showMissingIcons) {
         reject(new MissingIcon("Icon is missing for prefix ".concat(prefix, " with icon name ").concat(iconName)));
       } else {
@@ -1828,10 +1878,12 @@
   function generateSvgReplacementMutation(node, nodeMeta) {
     var iconName = nodeMeta.iconName,
         title = nodeMeta.title,
+        titleId = nodeMeta.titleId,
         prefix = nodeMeta.prefix,
         transform = nodeMeta.transform,
         symbol = nodeMeta.symbol,
         mask = nodeMeta.mask,
+        maskId = nodeMeta.maskId,
         extra = nodeMeta.extra;
     return new picked(function (resolve, reject) {
       picked.all([findIcon(iconName, prefix), findIcon(mask.iconName, mask.prefix)]).then(function (_ref) {
@@ -1849,7 +1901,9 @@
           transform: transform,
           symbol: symbol,
           mask: mask,
+          maskId: maskId,
           title: title,
+          titleId: titleId,
           extra: extra,
           watchable: true
         })]);
@@ -1999,8 +2053,10 @@
         node.removeChild(alreadyProcessedPseudoElement);
         return resolve();
       } else if (fontFamily && content !== 'none' && content !== '') {
-        var prefix = ~['Solid', 'Regular', 'Light', 'Duotone', 'Brands'].indexOf(fontFamily[1]) ? STYLE_TO_PREFIX[fontFamily[1].toLowerCase()] : FONT_WEIGHT_TO_PREFIX[fontWeight];
-        var hexValue = toHex(content.length === 3 ? content.substr(1, 1) : content);
+        var _content = styles.getPropertyValue('content');
+
+        var prefix = ~['Solid', 'Regular', 'Light', 'Duotone', 'Brands', 'Kit'].indexOf(fontFamily[2]) ? STYLE_TO_PREFIX[fontFamily[2].toLowerCase()] : FONT_WEIGHT_TO_PREFIX[fontWeight];
+        var hexValue = toHex(_content.length === 3 ? _content.substr(1, 1) : _content);
         var iconName = byUnicode(prefix, hexValue);
         var iconIdentifier = iconName; // Only convert the pseudo element in this :before/:after position into an icon if we haven't
         // already done so with the same prefix and iconName
@@ -2017,7 +2073,7 @@
           var extra = meta.extra;
           extra.attributes[DATA_FA_PSEUDO_ELEMENT] = position;
           findIcon(iconName, prefix).then(function (main) {
-            var abstract = makeInlineSvgAbstract(_objectSpread({}, meta, {
+            var abstract = makeInlineSvgAbstract(_objectSpread2(_objectSpread2({}, meta), {}, {
               icons: {
                 main: main,
                 mask: emptyCanonicalIcon()
@@ -2095,9 +2151,7 @@
     return s;
   }
 
-  var Library =
-  /*#__PURE__*/
-  function () {
+  var Library = /*#__PURE__*/function () {
     function Library() {
       _classCallCheck(this, Library);
 
@@ -2115,7 +2169,7 @@
 
         var additions = definitions.reduce(this._pullDefinitions, {});
         Object.keys(additions).forEach(function (key) {
-          _this.definitions[key] = _objectSpread({}, _this.definitions[key] || {}, additions[key]);
+          _this.definitions[key] = _objectSpread2(_objectSpread2({}, _this.definitions[key] || {}), additions[key]);
           defineIcons(key, additions[key]);
           build();
         });
@@ -2194,7 +2248,7 @@
         mask = (mask || {}).icon ? mask : findIconDefinition(mask || {});
       }
 
-      return next(iconDefinition, _objectSpread({}, params, {
+      return next(iconDefinition, _objectSpread2(_objectSpread2({}, params), {}, {
         mask: mask
       }));
     };
@@ -2271,8 +2325,12 @@
         symbol = _params$symbol === void 0 ? false : _params$symbol,
         _params$mask = params.mask,
         mask = _params$mask === void 0 ? null : _params$mask,
+        _params$maskId = params.maskId,
+        maskId = _params$maskId === void 0 ? null : _params$maskId,
         _params$title = params.title,
         title = _params$title === void 0 ? null : _params$title,
+        _params$titleId = params.titleId,
+        titleId = _params$titleId === void 0 ? null : _params$titleId,
         _params$classes = params.classes,
         classes = _params$classes === void 0 ? [] : _params$classes,
         _params$attributes = params.attributes,
@@ -2283,14 +2341,14 @@
     var prefix = iconDefinition.prefix,
         iconName = iconDefinition.iconName,
         icon = iconDefinition.icon;
-    return apiObject(_objectSpread({
+    return apiObject(_objectSpread2({
       type: 'icon'
     }, iconDefinition), function () {
       ensureCss();
 
       if (config.autoA11y) {
         if (title) {
-          attributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(nextUniqueId());
+          attributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(titleId || nextUniqueId());
         } else {
           attributes['aria-hidden'] = 'true';
           attributes['focusable'] = 'false';
@@ -2309,9 +2367,11 @@
         },
         prefix: prefix,
         iconName: iconName,
-        transform: _objectSpread({}, meaninglessTransform, transform),
+        transform: _objectSpread2(_objectSpread2({}, meaninglessTransform), transform),
         symbol: symbol,
         title: title,
+        maskId: maskId,
+        titleId: titleId,
         extra: {
           attributes: attributes,
           styles: styles,
@@ -2339,7 +2399,7 @@
       ensureCss();
       return makeLayersTextAbstract({
         content: content,
-        transform: _objectSpread({}, meaninglessTransform, transform),
+        transform: _objectSpread2(_objectSpread2({}, meaninglessTransform), transform),
         title: title,
         extra: {
           attributes: attributes,
@@ -2437,9 +2497,9 @@
       });
     }
 
-    namespace.hooks = _objectSpread({}, namespace.hooks, {
+    namespace.hooks = _objectSpread2(_objectSpread2({}, namespace.hooks), {}, {
       addPack: function addPack(prefix, icons) {
-        namespace.styles[prefix] = _objectSpread({}, namespace.styles[prefix] || {}, icons);
+        namespace.styles[prefix] = _objectSpread2(_objectSpread2({}, namespace.styles[prefix] || {}), icons);
         build();
         autoReplace();
       },

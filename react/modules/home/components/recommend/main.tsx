@@ -86,7 +86,7 @@ export default props => {
                   style={{ marginLeft: "auto" }}
                   className="btn btn-primary"
                 >
-                  {recommendationsLoading ? <i className="fa fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
+                  {recommendationsLoading ? <i className="far fa-fw fa-spin fa-spinner" /> : null} Get Recommendations
                 </button>
               ) : null}
             </FlowItems>

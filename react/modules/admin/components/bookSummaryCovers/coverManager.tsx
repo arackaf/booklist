@@ -113,7 +113,7 @@ export default props => {
         </div>
       ) : (
         <span>
-          Loading ... <i className="fa fa-spinner fa-spin" />
+          Loading ... <i className="far fa-spinner fa-spin" />
         </span>
       )}
     </div>

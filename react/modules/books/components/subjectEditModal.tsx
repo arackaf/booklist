@@ -31,7 +31,7 @@ const SubjectEditModal: FunctionComponent<ILocalProps> = props => {
 
           <Button onClick={newSubject} preset="info-xs">
             <span className="visible-xs">Add new subject </span>
-            <i className="fa fa-fw fa-plus-square" />
+            <i className="far fa-fw fa-plus-square" />
           </Button>
         </FlowItems>
 

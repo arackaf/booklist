@@ -11,7 +11,7 @@ export default () => {
   let { data, loaded } = useSuspenseQuery(getPublicUser, { _id: publicUserId });
   let publicUserInfo = data?.getPublicUser?.PublicUser;
 
-  return loaded ? <HeaderContent {...publicUserInfo} /> : <i className="fa fa-fw fa-spin fa-spinner"></i>;
+  return loaded ? <HeaderContent {...publicUserInfo} /> : <i className="far fa-fw fa-spin fa-spinner"></i>;
 };
 
 const HeaderContent = ({ publicBooksHeader, publicName }: any) => {

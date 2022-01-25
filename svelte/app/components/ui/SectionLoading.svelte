@@ -14,4 +14,4 @@
   }
 </style>
 
-<div><i {style} class="fa fa-5x fa-spin fa-spinner" /></div>
+<div><i {style} class="far fa-5x fa-spin fa-spinner" /></div>

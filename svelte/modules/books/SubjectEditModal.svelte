@@ -31,7 +31,7 @@
 
         <Button onClick={newSubject} preset="info-xs">
           <span class="visible-xs">Add new subject </span>
-          <i class="fa fa-fw fa-plus-square" />
+          <i class="far fa-fw fa-plus-square" />
         </Button>
       </FlowItems>
     {/if}

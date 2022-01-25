@@ -92,5 +92,5 @@
 
   {#if isFinished}
     <i style={finishedIconStyles} class="fal fa-check" />
-  {:else if isRunning}<i style={iconStyles} class="fa fa-fw fa-spin fa-spinner" />{:else if icon}<i style={iconStyles} class={icon} />{/if}
+  {:else if isRunning}<i style={iconStyles} class="far fa-fw fa-spin fa-spinner" />{:else if icon}<i style={iconStyles} class={icon} />{/if}
 </button>

@@ -27,7 +27,7 @@ const ScanResults: FunctionComponent<{}> = props => {
   const toggleShow =
     booksJustSaved.length || pending ? (
       <a onClick={() => toggleIncomingQueue()} className="margin-left-xs">
-        <i style={{ color: "white" }} className={`fa fa-white ${toggleClass}`} />
+        <i style={{ color: "white" }} className={`far fa-white ${toggleClass}`} />
       </a>
     ) : null;
 

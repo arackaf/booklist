@@ -117,7 +117,7 @@ const EditBookInfo = props => {
           ))}
           <div className="col-xs-12">
             <Button type="button" onClick={evt => addAuthor(evt)} preset="default-xs">
-              <i className="fa fa-fw fa-plus" /> Add author
+              <i className="far fa-fw fa-plus" /> Add author
             </Button>
           </div>
         </FlexRow>

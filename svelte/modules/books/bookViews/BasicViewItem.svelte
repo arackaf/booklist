@@ -41,13 +41,13 @@
     <div>
       <div style="display: flex; flex-direction: column; height: 100%">
         <div class="listGroupItemHeading bookTitle">{book.title}</div>
-        <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(', ') : ''}</span>
+        <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(", ") : ""}</span>
         <div style="margin-top: auto">
           {#if !isPublic && online}
             <button class="btn btn-xs btn-light btn-round-icon" on:click={() => editBook(book)}><i class="fal fa-pencil-alt" /></button>
-            <button style="margin-left: 5px;" class="btn btn-xs btn-light btn-round-icon" on:click={() => (pendingDelete = true)}><i
-                class="fa fa-fw fa-trash"
-              /></button>
+            <button style="margin-left: 5px;" class="btn btn-xs btn-light btn-round-icon" on:click={() => (pendingDelete = true)}>
+              <i class="far fa-fw fa-trash" />
+            </button>
           {/if}
           {#if pendingDelete}
             <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} class="margin-left btn btn-xxs btn-danger">

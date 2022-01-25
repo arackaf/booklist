@@ -49,13 +49,13 @@
   on:click={onClick}
   style={styleToUse}
   disabled={isRunning || isFinished || disabled || false}
-  class={cn(cssFromPreset(preset, className), className, 'bl-action-button')}
+  class={cn(cssFromPreset(preset, className), className, "bl-action-button")}
   {...$$restProps}
 >
   {#if isFinished}
     <i class="fal fa-check" />
   {:else if isRunning}
-    <i class="fa fa-fw fa-spin fa-spinner" />
+    <i class="far fa-fw fa-spin fa-spinner" />
   {:else}
     <slot />
   {/if}
