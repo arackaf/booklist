@@ -182,8 +182,8 @@ svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name))
 
 svelteRouter.get("/activate/:code", activateCode);
 
-app.use("/svelte/dist", express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 /* 5 days * 1000ms */ }));
-svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 /* 5 days * 1000ms */ }));
+app.use("/svelte/dist", express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
+svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
 app.use(subdomain("svelte", svelteRouter));
 
@@ -236,7 +236,7 @@ async function browseToReact(request, response) {
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
 
-app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 /* 5 days * 1000ms */ }));
+app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
 // --------------- /REACT ---------------
 
