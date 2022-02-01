@@ -9,6 +9,7 @@ import del from "del";
 import { v4 as uuid } from "uuid";
 
 import Jimp from "jimp";
+import { defaultMetaData } from "./s3MetaData";
 
 const GOOGLE_LIBRARY_KEY = process.env.GOOGLE_LIBRARY_KEY;
 
@@ -117,7 +118,8 @@ export function saveCoverToS3(source, s3Key) {
       }
       let params = {
         Key: s3Key,
-        Body: data
+        Body: data,
+        ...defaultMetaData
       } as any;
 
       s3bucket.upload(params, function (err) {
@@ -134,7 +136,8 @@ export function saveContentToS3(content, s3Key) {
 
     let params: any = {
       Key: s3Key,
-      Body: content
+      Body: content,
+      ...defaultMetaData
     };
 
     s3bucket.upload(params, function (err) {
