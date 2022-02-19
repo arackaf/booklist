@@ -289,6 +289,7 @@ async function attemptImageSave(url, userId, size: COVER_SIZE) {
 
   const targetWidth = size == COVER_SIZE.SMALL ? 50 : size == COVER_SIZE.MEDIUM ? 106 : 200;
   const minWidth = size == COVER_SIZE.SMALL ? 45 : size == COVER_SIZE.MEDIUM ? 95 : 180;
+  const quality = size == COVER_SIZE.SMALL ? 80 : null;
 
   const { body, error } = (await downloadFromUrl(url)) as any;
 
@@ -296,7 +297,7 @@ async function attemptImageSave(url, userId, size: COVER_SIZE) {
     return { error: true, message: error || "" };
   }
 
-  const imageResult: any = await resizeImage(body, targetWidth, minWidth);
+  const imageResult: any = await resizeImage(body, targetWidth, minWidth, quality);
   if (imageResult.error || !imageResult.body) {
     console.log(url, "failed", imageResult.error);
     return { error: true, message: imageResult.error || "" };

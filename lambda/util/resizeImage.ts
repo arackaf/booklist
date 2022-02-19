@@ -1,6 +1,6 @@
 import Jimp from "jimp";
 
-export default (src, MAX_WIDTH, MIN_WIDTH = null) => {
+export default (src, MAX_WIDTH, MIN_WIDTH = null, quality = null) => {
   return new Promise<any>(res => {
     Jimp.read(src, function (err, image) {
       if (err || !image) {
@@ -13,6 +13,9 @@ export default (src, MAX_WIDTH, MIN_WIDTH = null) => {
 
       if (image.bitmap.width > MAX_WIDTH) {
         image.resize(MAX_WIDTH, Jimp.AUTO);
+      }
+      if (quality != null) {
+        image.quality(quality);
       }
       image.getBuffer(image.getMIME(), (err, body) => {
         if (err) {
