@@ -110,7 +110,7 @@ async function updateBookSummaryCovers() {
     }
 
     let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName);
+    let newPath = await resizeIfNeeded(fileName, undefined, 80);
 
     if (newPath) {
       let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);

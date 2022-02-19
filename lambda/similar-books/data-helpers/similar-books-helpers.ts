@@ -60,7 +60,7 @@ export async function updateSimilarityInfo(book, results) {
             let res = await downloadBookCover(book.smallImage, 1000);
             if (res?.fullName) {
               let { fileName, fullName } = res;
-              let newPath = await resizeIfNeeded(fileName);
+              let newPath = await resizeIfNeeded(fileName, undefined, 80);
 
               if (newPath) {
                 let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);
