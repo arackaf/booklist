@@ -2,14 +2,14 @@ const { S3 } = require("aws-sdk");
 const https = require("https");
 const path = require("path");
 const fs = require("fs");
-const jimp = require("jimp");
+const Jimp = require("jimp");
 const del = require("del");
 
 const quality = 75;
 
 function adjust(file, quality) {
   const baseName = path.basename(file);
-  jimp.read(`./${file}`, (err, image) => {
+  Jimp.read(`./${file}`, (err, image) => {
     console.log(file, "quality", image._quality);
     console.log(file, "file size", Buffer.byteLength(image.bitmap.data));
     if (err) {
@@ -165,6 +165,7 @@ async function getS3File(key) {
         response.pipe(file);
         file.on("finish", async () => {
           await file.close();
+          res(null);
         });
 
         file.on("error", async err => {
@@ -179,11 +180,41 @@ async function getS3File(key) {
   });
 }
 
-async function dumpBucket(userId, nextContinuation) {
+async function updateImage(key) {
+  const filename = path.basename(key);
+
+  return new Promise(res => {
+    Jimp.read("./temp/" + filename, async function (err, image) {
+      if (err || !image) {
+        console.log("Failed to read", filename);
+        return res({ error: true, message: err });
+      }
+
+      image.quality(quality);
+
+      try {
+        await image.writeAsync("./temp/converted-" + filename);
+      } catch (er) {
+        console.log("Failed to save", filename, er);
+      }
+      res({ success: true });
+
+      // image.getBuffer(image.getMIME(), (err, body) => {
+      //   if (err) {
+      //     return res({ error: true, message: err });
+      //   }
+
+      //   return res({ body });
+      // });
+    });
+  });
+}
+
+async function processBucket(userId, nextContinuation) {
   return new Promise((res, rej) => {
     s3.listObjectsV2(
       { Bucket: "my-library-cover-uploads", Prefix: "bookCovers/" + userId, ContinuationToken: nextContinuation || void 0 },
-      (err, data) => {
+      async (err, data) => {
         if (err) {
           console.log("ERROR", err);
           return rej(err);
@@ -191,9 +222,13 @@ async function dumpBucket(userId, nextContinuation) {
         //console.log(userId, data.Contents.length, data.NextContinuationToken, data.Contents[0].Key);
 
         for (const obj of data.Contents) {
-          removeTempFolder();
-          getS3File(obj.Key);
-          break;
+          if (obj.Size > 2500) {
+            await getS3File(obj.Key);
+            await updateImage(obj.Key);
+            break;
+          } else {
+            console.log("Skipping file", obj.Key);
+          }
         }
 
         res({ contents: data.Contents, nextToken: data.NextContinuationToken });
@@ -205,14 +240,16 @@ async function dumpBucket(userId, nextContinuation) {
 async function processUser(userId) {
   let nextToken;
   let contents;
+  removeTempFolder();
+
   do {
-    ({ nextToken, contents } = await dumpBucket(userId, nextToken));
+    ({ nextToken, contents } = await processBucket(userId, nextToken));
     break;
   } while (nextToken);
 }
 
 (async function () {
-  for (const user of users) {
+  for (const user of users.filter(u => u == "57486bb7425464000319f062/")) {
     await processUser(user);
     break;
   }
