@@ -140,24 +140,26 @@ const users = [
   "f1ae2ef5-cc3a-4bd3-b382-385f4620889e/",
   "f3b55e0d-ecbc-4a0d-aaf0-5183137842be/"
 ];
+const IMG_DIR_NAME = "./temp";
+
+const getFileName = filename => "./temp/" + filename;
+const getConvertedFilename = filename => "./temp/converted-" + filename;
 
 function removeTempFolder() {
   try {
-    del.sync("./temp");
+    del.sync(IMG_DIR_NAME);
   } catch (er) {}
 }
-
-const FILE_NAME = "./temp";
 
 async function getS3File(key) {
   const url = `https://my-library-cover-uploads.s3.amazonaws.com/${key}`;
 
   const filename = path.basename(key);
-  if (!fs.existsSync("./temp")) {
-    fs.mkdirSync("./temp");
+  if (!fs.existsSync(IMG_DIR_NAME)) {
+    fs.mkdirSync(IMG_DIR_NAME);
   }
 
-  let file = fs.createWriteStream("./temp/" + filename);
+  let file = fs.createWriteStream(getFileName(filename));
 
   return new Promise(res => {
     https
@@ -184,7 +186,7 @@ async function updateImage(key) {
   const filename = path.basename(key);
 
   return new Promise(res => {
-    Jimp.read("./temp/" + filename, async function (err, image) {
+    Jimp.read(getFileName(filename), async function (err, image) {
       if (err || !image) {
         console.log("Failed to read", filename);
         return res({ error: true, message: err });
@@ -193,7 +195,7 @@ async function updateImage(key) {
       image.quality(quality);
 
       try {
-        await image.writeAsync("./temp/converted-" + filename);
+        await image.writeAsync(getConvertedFilename(filename));
       } catch (er) {
         console.log("Failed to save", filename, er);
       }
@@ -225,6 +227,11 @@ async function processBucket(userId, nextContinuation) {
           if (obj.Size > 2500) {
             await getS3File(obj.Key);
             await updateImage(obj.Key);
+
+            const newSize = fs.statSync(getConvertedFilename(path.basename(obj.Key))).size;
+            if (newSize < obj.Size) {
+              console.log("Smaller");
+            }
             break;
           } else {
             console.log("Skipping file", obj.Key);
