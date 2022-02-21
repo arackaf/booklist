@@ -277,8 +277,7 @@ async function processUser(userId) {
 }
 
 (async function () {
-  for (const user of users.filter(u => u !== "573d1b97120426ef0078aa92/" && u !== "5b57f71b6871ae00145198ff/")) {
+  for (const user of users.filter(u => u !== "573d1b97120426ef0078aa92/" && u !== "5b57f71b6871ae00145198ff/" && u !== "bookSummary/")) {
     await processUser(user);
-    break;
   }
 })();
