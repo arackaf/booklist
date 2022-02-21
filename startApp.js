@@ -250,24 +250,29 @@ async function browseToReact(request, response) {
     clearAllCookies(request, response);
   }
 
-  Promise.all([
-    graphql(executableSchema, reactQueries.allLabelColors, root, request, {}),
-    graphql(executableSchema, reactQueries.allSubjects, root, request, {}),
-    graphql(executableSchema, reactQueries.allTags, root, request, {}),
-    graphql(executableSchema, reactQueries.getBooks, root, request, {})
-  ])
-    .then(([labels, subjects, tags, books]) => {
-      const jsonPacket = {
-        [reactQueryLookup[reactQueries.allLabelColors]]: labels,
-        [reactQueryLookup[reactQueries.allSubjects]]: subjects,
-        [reactQueryLookup[reactQueries.allTags]]: tags,
-        [reactQueryLookup[reactQueries.getBooks]]: books
-      };
-      const result = reactHtmlFile.replace("<head>", `<head><script>var __micro_graphql_react_ssr = ${JSON.stringify(jsonPacket)}</script>`);
-      response.send(result);
+  const queries = [
+    [reactQueries.allLabelColors, {}],
+    [reactQueries.allSubjects, {}],
+    [reactQueries.allTags, {}]
+  ];
+
+  if (request.url === "/" || request.url === "/books" || request.url === "/view") {
+    queries.push([reactQueries.getBooks, {}]);
+  }
+
+  Promise.all(queries.map(([query, args]) => graphql(executableSchema, query, root, request, args)))
+    .then(queryResults => {
+      const jsonPacket = {};
+      queries.forEach(([query], idx) => {
+        jsonPacket[reactQueryLookup[query]] = queryResults[idx];
+      });
+
+      const htmlResult = reactHtmlFile.replace("<head>", `<head><script>var __micro_graphql_react_ssr = ${JSON.stringify(jsonPacket)}</script>`);
+      response.send(htmlResult);
     })
     .catch(err => {
       console.log("ERROR", err);
+      response.sendFile(path.join(__dirname + "/react/dist/index.html"));
     });
 }
 
