@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useReducer, useContext, useState, FunctionComponent } from "react";
 
-import BooksMenuBar, { BooksMenuBarDisabled } from "./components/menuBar/menuBar";
+import BooksMenuBar from "./components/menuBar/menuBar";
 import Loading from "app/components/loading";
 
 import GridView from "./components/bookViews/gridList";
@@ -72,7 +72,7 @@ export default () => {
   const [editingBook, openBookEditModal, stopEditingBook] = useCodeSplitModal(null);
   const editBook = book => openBookEditModal(book);
 
-  const { runMutation, running } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBookMutation);
+  const { runMutation } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBookMutation);
 
   const saveEditingBook = book => {
     let bookToUse = prepBookForSaving(book);
@@ -122,33 +122,13 @@ export default () => {
   );
 };
 
-const Fallback: FunctionComponent<{ uiView: BookSearchUiView; totalPages: number; resultsCount: number }> = ({
-  uiView,
-  totalPages,
-  resultsCount
-}) => {
-  const [measureRef, menuBarHeight] = useHeight();
-
-  return (
-    <>
-      <BooksMenuBarDisabled measureRef={measureRef} totalPages={totalPages} resultsCount={resultsCount} />
-
-      <h1 style={{ color: "var(--neutral-5)", fontSize: "2em", marginTop: "5px" }}>
-        Books are loading <i className="fas fa-cog fa-spin"></i>
-      </h1>
-    </>
-  );
-};
-
 const RenderModule: FunctionComponent<{}> = ({}) => {
   const uiView = useBookSearchUiView();
   const [lastBookResults, setLastBookResults] = useState({ totalPages: 0, resultsCount: 0 });
 
   return (
     <div style={{ backgroundColor: "white" }}>
-      <Suspense fallback={<Fallback uiView={uiView} {...lastBookResults} />}>
-        <MainContent uiView={uiView} setLastBookResults={setLastBookResults} />
-      </Suspense>
+      <MainContent uiView={uiView} setLastBookResults={setLastBookResults} />
     </div>
   );
 };

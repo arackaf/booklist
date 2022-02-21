@@ -1,5 +1,4 @@
 import React, { useContext, useRef, useEffect, useMemo, useCallback, FunctionComponent, useState } from "react";
-import cn from "classnames";
 
 import "./book-menu-bar-styles.scss";
 
@@ -29,18 +28,6 @@ interface IAddedMenuProps {
   measureRef?: any;
 }
 
-export const BooksMenuBarDisabled: FunctionComponent<{ totalPages: number; resultsCount: number; measureRef: any }> = ({
-  totalPages,
-  resultsCount,
-  measureRef
-}) => {
-  const bookResultsPacket = {
-    books: [],
-    totalPages,
-    resultsCount
-  };
-  return <BooksMenuBar measureRef={measureRef} disabled={true} uiView={{}} uiDispatch={() => {}} bookResultsPacket={bookResultsPacket} />;
-};
 const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
   const { uiView, uiDispatch, disabled, measureRef, bookResultsPacket } = props;
   const { books = [], totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket || {};
