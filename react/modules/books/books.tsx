@@ -21,14 +21,16 @@ import { ModuleUpdateContext } from "app/state/appState";
 import { useHeight } from "app/animationHelpers";
 import { useTransition, animated } from "react-spring";
 
-import CreateBookModal from "app/components/editBook/editModal";
-import BookSubjectSetter from "./components/bookSubjectSetter";
-import BookTagSetter from "./components/bookTagSetter";
-import SubjectEditModal from "./components/subjectEditModal";
-import TagEditModal from "./components/tagEditModal";
-import BookSearchModal from "./components/bookSearchModal";
-
 import { BooksModuleContext, initialBooksState } from "./booksState";
+import LazyModal from "app/components/ui/LazyModal";
+
+const BookSearchModal = LazyModal(() => import("./components/bookSearchModal"));
+const CreateBookModal = LazyModal(() => import("app/components/editBook/editModal"));
+
+const BookSubjectSetter = LazyModal(() => import("./components/bookSubjectSetter"));
+const BookTagSetter = LazyModal(() => import("./components/bookTagSetter"));
+const SubjectEditModal = LazyModal(() => import("./components/subjectEditModal"));
+const TagEditModal = LazyModal(() => import("./components/tagEditModal"));
 
 const prepBookForSaving = book => {
   let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
@@ -101,12 +103,12 @@ export default () => {
         <RenderModule />
 
         <Suspense fallback={<Loading />}>
-          <SubjectEditModal editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
-          <TagEditModal editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
           <BookSearchModal isOpen={editingFilters} onHide={endEditFilters} />
 
-          <BookSubjectSetter modifyingBooks={bookSubModifying || []} onDone={closeBookSubModal} />
-          <BookTagSetter modifyingBooks={bookTagModifying || []} onDone={closeBookTagModal} />
+          <SubjectEditModal isOpen={subjectEditModalOpen} editModalOpen={subjectEditModalOpen} stopEditing={stopEditingSubjects} />
+          <TagEditModal isOpen={tagEditModalOpen} editModalOpen={tagEditModalOpen} onDone={stopEditingTags} />
+          <BookSubjectSetter isOpen={bookSubModifying} modifyingBooks={bookSubModifying || []} onDone={closeBookSubModal} />
+          <BookTagSetter isOpen={bookTagModifying} modifyingBooks={bookTagModifying || []} onDone={closeBookTagModal} />
 
           <CreateBookModal
             title={editingBook ? `Edit: ${editingBook.title}` : ""}
