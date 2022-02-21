@@ -7,22 +7,6 @@ const del = require("del");
 
 const quality = 75;
 
-function adjust(file, quality) {
-  const baseName = path.basename(file);
-  Jimp.read(`./${file}`, (err, image) => {
-    console.log(file, "quality", image._quality);
-    console.log(file, "file size", Buffer.byteLength(image.bitmap.data));
-    if (err) {
-      console.log("err");
-      return;
-    }
-
-    console.log(file, "file size 2", image.quality(80).bitmap.data.length);
-
-    image.quality(quality).write(`./${baseName}-${quality}.jpeg`);
-  });
-}
-
 const s3 = new S3();
 
 const users = [
@@ -192,22 +176,45 @@ async function updateImage(key) {
         return res({ error: true, message: err });
       }
 
+      if (image.bitmap.width > 55) {
+        return res({ body: null, largeImage: true });
+      }
       image.quality(quality);
 
       try {
         await image.writeAsync(getConvertedFilename(filename));
+        image.getBuffer(image.getMIME(), (err, body) => {
+          if (err) {
+            return rej({ error: true, message: err });
+          }
+
+          return res({ body });
+        });
       } catch (er) {
         console.log("Failed to save", filename, er);
       }
+    });
+  });
+}
+
+async function uploadNewImage(body, filename, key) {
+  const defaultMetaData = {
+    CacheControl: "max-age=630720000,public",
+    ContentType: "image/jpeg"
+  };
+
+  const s3 = new S3({});
+  var params = { Bucket: "my-library-cover-uploads", Key: key, Body: body, ...defaultMetaData };
+
+  return new Promise((res, rej) => {
+    s3.upload(params, function (err, data) {
+      if (err) {
+        console.log(err);
+        return rej({ error: true, message: err });
+      }
+
+      console.log("Uploaded to", key, "from", filename);
       res({ success: true });
-
-      // image.getBuffer(image.getMIME(), (err, body) => {
-      //   if (err) {
-      //     return res({ error: true, message: err });
-      //   }
-
-      //   return res({ body });
-      // });
     });
   });
 }
@@ -221,20 +228,33 @@ async function processBucket(userId, nextContinuation) {
           console.log("ERROR", err);
           return rej(err);
         }
-        //console.log(userId, data.Contents.length, data.NextContinuationToken, data.Contents[0].Key);
 
+        let i = 0;
         for (const obj of data.Contents) {
+          console.log("\n", i++, obj.Key);
           if (obj.Size > 2500) {
-            await getS3File(obj.Key);
-            await updateImage(obj.Key);
+            try {
+              await getS3File(obj.Key);
+              const { body, largeImage } = await updateImage(obj.Key);
+              if (largeImage) {
+                console.log("---- Not a small image. Skipping ----");
+                continue;
+              }
 
-            const newSize = fs.statSync(getConvertedFilename(path.basename(obj.Key))).size;
-            if (newSize < obj.Size) {
-              console.log("Smaller");
+              const convertedFilename = getConvertedFilename(path.basename(obj.Key));
+
+              const newSize = fs.statSync(convertedFilename).size;
+              if (newSize < obj.Size) {
+                await uploadNewImage(body, convertedFilename, obj.Key);
+                console.log("🚀 Success 🚀");
+              } else {
+                console.log("---- No size improvement ----");
+              }
+            } catch (er) {
+              console.log("ERROR", er);
             }
-            break;
           } else {
-            console.log("Skipping file", obj.Key);
+            console.log("---- Skipping file ----", obj.Key);
           }
         }
 
@@ -244,19 +264,20 @@ async function processBucket(userId, nextContinuation) {
   });
 }
 
+let i = 1;
 async function processUser(userId) {
   let nextToken;
   let contents;
   removeTempFolder();
 
   do {
+    console.log(i++, " ============ UserId:", userId, "============");
     ({ nextToken, contents } = await processBucket(userId, nextToken));
-    break;
   } while (nextToken);
 }
 
 (async function () {
-  for (const user of users.filter(u => u == "57486bb7425464000319f062/")) {
+  for (const user of users.filter(u => u !== "573d1b97120426ef0078aa92/" && u !== "5b57f71b6871ae00145198ff/")) {
     await processUser(user);
     break;
   }
