@@ -8,7 +8,7 @@ import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
 import { useTagsState } from "app/state/tagsState";
 import { QueryOf, Queries } from "graphQL/graphql-typings";
-import { computeBookSearchVariables } from "./booksLoadingUtils";
+import { computeBookSearchVariables } from "./bookFiltersToGraphqlArgs";
 import { useSubjectsState } from "app/state/subjectsState";
 
 interface IEditorialReview {

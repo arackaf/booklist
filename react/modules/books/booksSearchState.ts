@@ -1,9 +1,7 @@
-import shallowEqual from "shallow-equal/objects";
-
-import { useMemo, useReducer, useContext } from "react";
+import { useMemo, useContext } from "react";
 import { useTagsState } from "app/state/tagsState";
 
-import { defaultSearchValuesHash, filtersFromUrl } from "./booksLoadingUtils";
+import { defaultSearchValuesHash, filtersFromUrl } from "./bookFiltersToGraphqlArgs";
 import { useSubjectsState } from "app/state/subjectsState";
 import { AppContext } from "app/state/appState";
 
