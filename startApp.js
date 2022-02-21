@@ -27,6 +27,7 @@ import expressGraphql from "express-graphql";
 import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
+import { computeBookSearchVariables, filtersFromUrl } from "./react/modules/books/bookFiltersToGraphqlArgs";
 import { print as reactPrint } from "./react/node_modules/graphql";
 import reactTag from "./react/node_modules/graphql-tag";
 
@@ -256,8 +257,11 @@ async function browseToReact(request, response) {
     [reactQueries.allTags, {}]
   ];
 
-  if (request.url === "/" || request.url === "/books" || request.url === "/view") {
-    queries.push([reactQueries.getBooks, {}]);
+  const path = request.route.path;
+
+  if (path === "/" || path === "/books" || path === "/view") {
+    const bookArgs = computeBookSearchVariables(filtersFromUrl(request.query));
+    queries.push([reactQueries.getBooks, JSON.parse(JSON.stringify(bookArgs))]); // remove undefined props that would normally drop automatically
   }
 
   Promise.all(queries.map(([query, args]) => graphql(executableSchema, query, root, request, args)))
