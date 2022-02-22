@@ -266,9 +266,9 @@ async function browseToReact(request, response) {
 
   Promise.all(queries.map(([query, args]) => graphql(executableSchema, query, root, request, args)))
     .then(queryResults => {
-      const jsonPacket = {};
-      queries.forEach(([query], idx) => {
-        jsonPacket[reactQueryLookup[query]] = queryResults[idx];
+      const jsonPacket = [];
+      queries.forEach(([query, variables], idx) => {
+        jsonPacket.push({ query: reactQueryLookup[query], variables, results: queryResults[idx] });
       });
 
       const htmlResult = reactHtmlFile.replace("<head>", `<head><script>var __micro_graphql_react_ssr = ${JSON.stringify(jsonPacket)}</script>`);
