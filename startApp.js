@@ -42,7 +42,8 @@ const reactQueries = {
   allSubjects: getQuery("./react/graphQL/subjects/allSubjects.graphql"),
   allTags: getQuery("./react/graphQL/tags/getTags.graphql"),
   allLabelColors: getQuery("./react/graphQL/misc/allLabelColors.graphql"),
-  getBooks: getQuery("./react/graphQL/books/getBooks.graphql")
+  getBooks: getQuery("./react/graphQL/books/getBooks.graphql"),
+  getPublicUser: getQuery("./react/graphQL/getPublicUser.graphql")
 };
 
 const graphQLRouter = express.Router();
@@ -251,17 +252,24 @@ async function browseToReact(request, response) {
     clearAllCookies(request, response);
   }
 
+  const path = request.route.path;
+  const isPublic = path === "/view";
+  const publicUserId = request.query.userId;
+  const publicArgs = { publicUserId };
+
   const queries = [
     [reactQueries.allLabelColors, {}],
-    [reactQueries.allSubjects, {}],
-    [reactQueries.allTags, {}]
+    [reactQueries.allSubjects, isPublic ? publicArgs : {}],
+    [reactQueries.allTags, isPublic ? publicArgs : {}]
   ];
-
-  const path = request.route.path;
 
   if (path === "/" || path === "/books" || path === "/view") {
     const bookArgs = computeBookSearchVariables(filtersFromUrl(request.query));
     queries.push([reactQueries.getBooks, JSON.parse(JSON.stringify(bookArgs))]); // remove undefined props that would normally drop automatically
+
+    if (path === "/view") {
+      queries.push([reactQueries.getPublicUser, { _id: publicUserId }]); // remove undefined props that would normally drop automatically
+    }
   }
 
   Promise.all(queries.map(([query, args]) => graphql(executableSchema, query, root, request, args)))
