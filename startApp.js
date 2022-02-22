@@ -8,6 +8,7 @@ import cors from "cors";
 const app = express();
 
 import path from "path";
+import fs from "fs";
 import bodyParser from "body-parser";
 import session from "express-session";
 import cookieParser from "cookie-parser";
@@ -20,14 +21,30 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
+import { graphql } from "graphql";
 import expressGraphql from "express-graphql";
 
 import { middleware } from "generic-persistgraphql";
 import { getPublicGraphqlSchema, getGraphqlSchema } from "./node/util/graphqlUtils";
 
+import { computeBookSearchVariables, filtersFromUrl } from "./react/modules/books/bookFiltersToGraphqlArgs";
+import { print as reactPrint } from "./react/node_modules/graphql";
+import reactTag from "./react/node_modules/graphql-tag";
+
 import AWS from "aws-sdk";
 import { db, getGetPacket } from "./node/dataAccess/dynamoHelpers";
 AWS.config.region = "us-east-1";
+
+const getQuery = path => reactPrint(reactTag(fs.readFileSync(path, { encoding: "utf-8" })));
+
+const reactQueryLookup = JSON.parse(fs.readFileSync("./react/extracted_queries.json", { encoding: "utf-8" }));
+const reactQueries = {
+  allSubjects: getQuery("./react/graphQL/subjects/allSubjects.graphql"),
+  allTags: getQuery("./react/graphQL/tags/getTags.graphql"),
+  allLabelColors: getQuery("./react/graphQL/misc/allLabelColors.graphql"),
+  getBooks: getQuery("./react/graphQL/books/getBooks.graphql"),
+  getPublicUser: getQuery("./react/graphQL/getPublicUser.graphql")
+};
 
 const graphQLRouter = express.Router();
 const authRouter = express.Router();
@@ -229,11 +246,46 @@ graphQLRouter.use(
 const modules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "react"];
 modules.forEach(name => app.get("/" + name, browseToReact));
 
+const reactHtmlFile = fs.readFileSync(path.join(__dirname + "/react/dist/index.html"), { encoding: "utf-8" });
 async function browseToReact(request, response) {
   if (!request.user) {
     clearAllCookies(request, response);
   }
-  response.sendFile(path.join(__dirname + "/react/dist/index.html"));
+
+  const path = request.route.path;
+  const isPublic = path === "/view";
+  const publicUserId = request.query.userId;
+  const publicArgs = { publicUserId };
+
+  const queries = [
+    [reactQueries.allLabelColors, {}],
+    [reactQueries.allSubjects, isPublic ? publicArgs : {}],
+    [reactQueries.allTags, isPublic ? publicArgs : {}]
+  ];
+
+  if (path === "/" || path === "/books" || path === "/view") {
+    const bookArgs = computeBookSearchVariables(filtersFromUrl(request.query));
+    queries.push([reactQueries.getBooks, JSON.parse(JSON.stringify(bookArgs))]); // remove undefined props that would normally drop automatically
+
+    if (path === "/view") {
+      queries.push([reactQueries.getPublicUser, { _id: publicUserId }]); // remove undefined props that would normally drop automatically
+    }
+  }
+
+  Promise.all(queries.map(([query, args]) => graphql(executableSchema, query, root, request, args)))
+    .then(queryResults => {
+      const jsonPacket = [];
+      queries.forEach(([query, variables], idx) => {
+        jsonPacket.push({ query: reactQueryLookup[query], variables, results: queryResults[idx] });
+      });
+
+      const htmlResult = reactHtmlFile.replace("<head>", `<head><script>var __micro_graphql_react_ssr = ${JSON.stringify(jsonPacket)}</script>`);
+      response.send(htmlResult);
+    })
+    .catch(err => {
+      console.log("ERROR", err);
+      response.sendFile(path.join(__dirname + "/react/dist/index.html"));
+    });
 }
 
 app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
