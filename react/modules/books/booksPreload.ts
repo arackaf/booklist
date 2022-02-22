@@ -9,7 +9,7 @@ import { bookSearchVariablesFromCurrentUrl } from "./booksLoadingUtils";
 export function subjectsAndTagsNonPublicPreload() {
   graphqlClient.preload(AllSubjectsQuery, {});
   graphqlClient.preload(GetTags, {});
-  graphqlClient.preload(AllLabelColorsQuery, { cache: 9 });
+  graphqlClient.preload(AllLabelColorsQuery, {});
 }
 
 export default function preload() {
@@ -17,5 +17,5 @@ export default function preload() {
   graphqlClient.preload(GetBooksQuery, variables);
   graphqlClient.preload(AllSubjectsQuery, { publicUserId: variables.publicUserId });
   graphqlClient.preload(GetTags, { publicUserId: variables.publicUserId });
-  graphqlClient.preload(AllLabelColorsQuery, { cache: 9 });
+  graphqlClient.preload(AllLabelColorsQuery, {});
 }

@@ -196,7 +196,7 @@ const BookRowDetails: FunctionComponent<{ book?: IBookDisplay; setDetailsLoading
 
   let [{ publicUserId }] = useContext(AppContext);
 
-  let { loading, data } = useQuery<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { _id: book._id, publicUserId, cache: 9 });
+  let { loading, data } = useQuery<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { _id: book._id, publicUserId });
 
   setDetailsLoading(loading);
   if (loading) {
