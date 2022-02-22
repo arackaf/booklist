@@ -10,20 +10,6 @@ import ajaxUtil from "util/ajaxUtil";
 
 import setupServiceWorker from "./util/setupServiceWorker";
 import { getLoginStatus, getCookieLookup, eraseCookie } from "util/loginStatus";
-import { graphqlClient } from "util/graphql";
-
-declare var __micro_graphql_react_ssr: any[];
-
-if (!(navigator.serviceWorker && navigator.serviceWorker.controller)) {
-  if (typeof __micro_graphql_react_ssr === "object" && __micro_graphql_react_ssr != null) {
-    for (const { query, variables, results } of __micro_graphql_react_ssr) {
-      const cache = graphqlClient.newCacheForQuery(query);
-
-      const url = graphqlClient.getGraphqlQuery({ query, variables });
-      cache.set(url, results);
-    }
-  }
-}
 
 setupServiceWorker();
 renderUI();

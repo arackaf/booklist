@@ -16,6 +16,6 @@
     "target": "esnext",
     "skipLibCheck": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "modules/books/booksLoadingUtils.js"],
+  "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["./node_modules", "./dist", "./service-worker"]
 }
