@@ -29,8 +29,6 @@ import AWS from "aws-sdk";
 import { db, getGetPacket } from "./node/dataAccess/dynamoHelpers";
 AWS.config.region = "us-east-1";
 
-const graphQLRouter = express.Router();
-const authRouter = express.Router();
 const svelteRouter = express.Router();
 
 const IS_PUBLIC = process.env.IS_PUBLIC;
@@ -139,25 +137,7 @@ const authGraphQLCorsOptions = {
   origin: true
 };
 
-authRouter.use("*", (req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-authRouter.use(cors(authGraphQLCorsOptions));
-app.use(subdomain("auth", authRouter));
-
-graphQLRouter.use("*", (req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-graphQLRouter.use(cors(authGraphQLCorsOptions));
-app.use(subdomain("graphql", graphQLRouter));
-
-// maintain old path for now
-app.post("/loginping", async function (request, response) {
-  return response.send({});
-});
-authRouter.post("/loginping", async function (request, response) {
+app.post("/auth/loginping", async function (request, response) {
   const loginToken = (request.cookies || {}).loginToken;
   if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
     clearAllCookies(request, response);
@@ -202,10 +182,10 @@ svelteRouter.use(
   })
 );
 
-middleware(graphQLRouter, { url: "/", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
+middleware(app, { url: "/graphql", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
-graphQLRouter.use(
-  "/",
+app.use(
+  "/graphql",
   expressGraphql({
     schema: executableSchema,
     graphiql: true,
@@ -214,8 +194,8 @@ graphQLRouter.use(
 );
 
 const { rootPublic, executableSchemaPublic } = getPublicGraphqlSchema();
-graphQLRouter.use(
-  "/public",
+app.use(
+  "/graphql-public",
   cors(),
   expressGraphql({
     schema: executableSchemaPublic,
@@ -242,7 +222,7 @@ app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /
 
 // --------------- AUTH ---------------
 
-authRouter.post("/login", passport.authenticate("local"), function (req, response) {
+app.post("/auth/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
   let rememberMe = req.body.rememberme == 1;
 
@@ -259,7 +239,7 @@ authRouter.post("/login", passport.authenticate("local"), function (req, respons
   response.send(req.user);
 });
 
-authRouter.post("/logout", function (req, response) {
+app.post("/auth/logout", function (req, response) {
   clearAllCookies(req, response);
   req.logout();
   response.send({});
@@ -284,7 +264,7 @@ const clearAllCookies = (request, response) => {
   response.clearCookie("newAuth", { domain: COOKIE_DOMAIN });
 };
 
-authRouter.post("/createUser", function (req, response) {
+app.post("/auth/createUser", function (req, response) {
   let userDao = new UserDao();
   let username = req.body.username;
   let password = req.body.password;
@@ -302,15 +282,15 @@ authRouter.post("/createUser", function (req, response) {
   });
 });
 
-authRouter.post("/resetPassword", async function (req, response) {
+app.post("/auth/resetPassword", async function (req, response) {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
   let result = await new UserDao().resetPassword(req.cookies["email"], userId, oldPassword, newPassword);
   response.send({ ...result });
 });
 
-authRouter.get("/activate", browseToReact);
-authRouter.get("/activate/:id/:code", activateCode);
+app.get("/auth/activate", browseToReact);
+app.get("/auth/activate/:id/:code", activateCode);
 
 async function activateCode(req, response) {
   let userDao = new UserDao();

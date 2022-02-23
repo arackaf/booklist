@@ -18,7 +18,7 @@ export function setUserLastSync(userId, lastSync) {
 }
 
 export async function incrementalSync(userId, lastSync) {
-  let syncQuery = `https://graphql.mylibrary.io/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: lastSync })}`;
+  let syncQuery = `/graphql/?query=${offlineUpdateSync}&variables=${JSON.stringify({ timestamp: lastSync })}`;
   let { data } = await doFetch(syncQuery).then(resp => resp.json());
 
   for (let b of data.allBooks.Books) await syncItem(b, "books", bookSyncTransform);
@@ -145,7 +145,7 @@ async function preCacheBookImage(book) {
 }
 
 function getGraphqlResults(query, variables, op, name) {
-  return doFetch(`https://graphql.mylibrary.io/?query=${query}&variables=${JSON.stringify(variables)}`)
+  return doFetch(`/graphql/?query=${query}&variables=${JSON.stringify(variables)}`)
     .then(resp => resp.json())
     .then(resp => {
       return resp.data && resp.data[op] && resp.data[op][name];
