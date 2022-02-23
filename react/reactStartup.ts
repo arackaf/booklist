@@ -17,8 +17,8 @@ renderUI();
 const user = getLoginStatus();
 const cookieData = getCookieLookup();
 
-if (cookieData.email && !cookieData.newAuth) {
-  ["email", "userId", "loginToken", "remember_me", "logged_in", "admin", "remember_me"].forEach(eraseCookie);
+if (cookieData.email && !cookieData.newAuth2) {
+  ["email", "userId", "loginToken", "remember_me", "logged_in", "admin", "remember_me", "newAuth"].forEach(eraseCookie);
   location.reload();
 } else {
   if (user.userId) {

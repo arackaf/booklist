@@ -22,6 +22,7 @@ type CookieState = {
   remember_me: string;
   logged_in: string;
   newAuth: string;
+  newAuth2: string;
 };
 
 export function getCookieLookup(): Partial<CookieState> {
@@ -49,4 +50,5 @@ function getCookie(name) {
 
 export function eraseCookie(name) {
   document.cookie = name + "=; Max-Age=-99999999;";
+  document.cookie = name + `=; path=/; domain=.${location.hostname}; Max-Age=-99999999;`;
 }
