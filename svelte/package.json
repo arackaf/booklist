@@ -24,6 +24,7 @@
     "d3-scale": "1.0.6",
     "d3-selection": "1.1.0",
     "d3-transition": "1.1.0",
+    "dotenv": "^10.0.0",
     "history": "^5.0.0",
     "lodash.debounce": "4.0.8",
     "micro-graphql-svelte": "^0.2.2",
