@@ -29,6 +29,9 @@ const getCache = ({ name, pattern }: any) => ({
 
 export default defineConfig({
   base: isProduction ? process.env.REACT_CDN : "",
+  build: {
+    manifest: true
+  },
   resolve: {
     alias: {
       reactStartup: path.resolve("./reactStartup.ts"),
