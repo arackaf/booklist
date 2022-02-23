@@ -7,7 +7,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 import path from "path";
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = false; //process.env.NODE_ENV === "production";
 
 const getCache = ({ name, pattern }: any) => ({
   urlPattern: pattern,
