@@ -231,6 +231,7 @@ app.post("/auth/login", passport.authenticate("local"), function (req, response)
   response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
   response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
   response.cookie("newAuth", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+  response.cookie("newAuth2", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
   req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
 
   if (rememberMe) {
@@ -262,6 +263,7 @@ const clearAllCookies = (request, response) => {
   response.clearCookie("admin", { domain: COOKIE_DOMAIN });
   response.clearCookie("jr_admin", { domain: COOKIE_DOMAIN });
   response.clearCookie("newAuth", { domain: COOKIE_DOMAIN });
+  response.clearCookie("newAuth2", { domain: COOKIE_DOMAIN });
 };
 
 app.post("/auth/createUser", function (req, response) {
@@ -327,6 +329,7 @@ async function activateCode(req, response) {
             });
           }
           response.cookie("newAuth", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
+          response.cookie("newAuth2", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000, domain: COOKIE_DOMAIN });
           response.redirect("/activate");
         });
       } else {
