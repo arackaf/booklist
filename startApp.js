@@ -221,6 +221,8 @@ async function browseToReact(request, response) {
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
 
+app.get("/service-worker.js", express.static(__dirname + "/react/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
+app.get("/sw-index-bundle.js", express.static(__dirname + "/react/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
 // --------------- /REACT ---------------
