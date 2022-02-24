@@ -296,8 +296,8 @@ app.post("/auth/resetPassword", async function (req, response) {
   response.send({ ...result });
 });
 
-app.get("/auth/activate", browseToReact);
-app.get("/auth/activate/:id/:code", activateCode);
+app.get("/activate", browseToReact);
+app.get("/activate/:id/:code", activateCode);
 
 async function activateCode(req, response) {
   let userDao = new UserDao();
