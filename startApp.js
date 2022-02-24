@@ -283,7 +283,7 @@ app.post("/auth/createUser", function (req, response) {
     if (result.errorCode) {
       response.send({ errorCode: result.errorCode });
     } else {
-      userDao.sendActivationCode(result.userId, result.loginToken, result.email, (req.subdomains || [])[0] || "");
+      userDao.sendActivationCode(result.userId, result.loginToken, result.email, ""); //TODO: (req.subdomains || [])[0] || "");
       response.send({});
     }
   });
