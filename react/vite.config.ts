@@ -28,7 +28,7 @@ const getCache = ({ name, pattern }: any) => ({
 });
 
 export default defineConfig({
-  base: isProduction ? process.env.REACT_CDN : "",
+  base: "",
   build: {
     manifest: true
   },
@@ -57,8 +57,7 @@ export default defineConfig({
           getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" }),
           getCache({ pattern: /.*\.(eot|woff|woff2|ttf)$/, name: "fonts" }),
           getCache({ pattern: /.*\.svg$/, name: "svg" })
-        ],
-        modifyURLPrefix: { "assets/": (isProduction ? process.env.REACT_CDN : "") + "/assets/" }
+        ]
       }
     })
   ],
