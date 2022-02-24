@@ -184,6 +184,10 @@ svelteRouter.use(
 
 middleware(app, { url: "/graphql", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
+app.use("/graphql", (req, res, next) => {
+  res.set("Cache-Control", "no-cache");
+  next();
+});
 app.use(
   "/graphql",
   expressGraphql({
@@ -213,6 +217,7 @@ async function browseToReact(request, response) {
   if (!request.user) {
     clearAllCookies(request, response);
   }
+  response.set("Cache-Control", "no-cache");
   response.sendFile(path.join(__dirname + "/react/dist/index.html"));
 }
 
