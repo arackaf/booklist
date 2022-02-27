@@ -74,8 +74,6 @@ export function renderUI() {
 }
 
 const App = () => {
-  const suspenseTimeoutValue = parseInt(localStorage.getItem("suspense-timeout"));
-  const timeoutMs = isNaN(suspenseTimeoutValue) ? 3000 : suspenseTimeoutValue;
   const [isNewModulePending, startTransitionNewModule] = useTransition();
   const [moduleUpdatePending, startTransitionModuleUpdate] = useTransition();
 
