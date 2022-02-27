@@ -15,19 +15,14 @@ const StyleDemoComponent = lazy(() => import(/* webpackChunkName: "admin-modules
 const SettingsComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/settings/settings"));
 const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/admin/admin"));
 
-let priorModule = "";
-
 export const getModuleComponent = moduleToLoad => {
   if (moduleToLoad === null) {
     return null;
   }
-  let result = resolveModule(moduleToLoad, priorModule);
-  priorModule = moduleToLoad;
-  return result;
+  return resolveModule(moduleToLoad);
 };
-const resolveModule = (moduleToLoad, priorModule) => {
+const resolveModule = moduleToLoad => {
   let adminUser = isAdmin();
-  let isNew = moduleToLoad != priorModule;
 
   if (moduleToLoad == "admin" && !adminUser) {
     return HomeComponent;
@@ -47,7 +42,7 @@ const resolveModule = (moduleToLoad, priorModule) => {
       subjectsAndTagsNonPublicPreload();
       return ScanComponent;
     case "subjects":
-      isNew && subjectsPreload();
+      subjectsPreload();
       return SubjectsComponent;
     case "styledemo":
       return StyleDemoComponent;
