@@ -160,7 +160,8 @@ svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name))
 
 svelteRouter.get("/activate/:code", activateCode);
 
-app.use("/svelte/dist", express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
+svelteRouter.get("/service-worker.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
+svelteRouter.get("/sw-index-bundle.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
 app.use(subdomain("svelte-app", svelteRouter));
