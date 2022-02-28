@@ -1,7 +1,6 @@
 const ajaxUtil = {
   postAuth(url, data, callback = (resp: any) => null, errorCallback = (resp: any) => null) {
-    const prod = /mylibrary\.io/.test(location.host);
-    url = `${location.protocol}//auth.${prod ? "mylibrary.io" : "lvh.me:3001"}${url}`;
+    url = `/auth${url}`;
 
     return fetch(url, {
       method: "post",
