@@ -7,8 +7,6 @@ import { VitePWA } from "vite-plugin-pwa";
 
 import path from "path";
 
-const isProduction = process.env.NODE_ENV === "production";
-
 const getCache = ({ name, pattern }: any) => ({
   urlPattern: pattern,
   handler: "CacheFirst" as const,
@@ -28,7 +26,6 @@ const getCache = ({ name, pattern }: any) => ({
 });
 
 export default defineConfig({
-  base: isProduction ? process.env.SVELTE_CDN : "",
   resolve: {
     alias: {
       "graphql-typings": path.resolve("./graphql-typings.ts"),
@@ -45,7 +42,6 @@ export default defineConfig({
     svelte({ onwarn() {} }),
     graphqlPlugin({ path: "./extracted_queries.json" }),
     VitePWA({
-      base: "/",
       filename: "service-worker.js",
       workbox: {
         importScripts: ["sw-index-bundle.js"],
@@ -54,8 +50,7 @@ export default defineConfig({
           getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" }),
           getCache({ pattern: /.*\.(eot|woff|woff2|ttf)$/, name: "fonts" }),
           getCache({ pattern: /.*\.svg$/, name: "svg" })
-        ],
-        modifyURLPrefix: { "assets/": (isProduction ? process.env.SVELTE_CDN : "") + "/assets/" }
+        ]
       }
     })
   ],
