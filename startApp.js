@@ -163,7 +163,7 @@ svelteRouter.get("/activate/:code", activateCode);
 app.use("/svelte/dist", express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
-app.use(subdomain("svelte", svelteRouter));
+app.use(subdomain("svelte-app", svelteRouter));
 
 /* --------------- /SVELTE --------------- */
 
