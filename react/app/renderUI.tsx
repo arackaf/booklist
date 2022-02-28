@@ -11,15 +11,10 @@ import Loading, { LongLoading } from "./components/loading";
 import { getModuleComponent } from "./routing";
 import { history, getCurrentUrlState } from "util/urlHelpers";
 
-import { scanWebSocket, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
-import { getCookieLookup, isLoggedIn } from "util/loginStatus";
-
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 
 document.body.className = localStorageManager.get("color-theme", "scheme1");
-
-const cookieHash = getCookieLookup();
 
 function showBookToast(title, url) {
   Toastify({
@@ -30,17 +25,6 @@ function showBookToast(title, url) {
     close: true,
     className: "toast-notification book-loaded"
   }).showToast();
-}
-
-if (isLoggedIn()) {
-  checkPendingCount();
-  scanWebSocket.send({ action: "sync", userId: cookieHash.userId, loginToken: cookieHash.loginToken });
-
-  scanWebSocket.addHandler(data => {
-    let packet = JSON.parse(data);
-
-    dispatchScanDataUpdate(packet);
-  });
 }
 
 const MobileMeta = () => {

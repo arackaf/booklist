@@ -1,9 +1,10 @@
 import { lazy } from "react";
 
+import { isAdmin } from "util/loginStatus";
+
 import booksPreload, { subjectsAndTagsNonPublicPreload } from "../modules/books/booksPreload";
 import subjectsPreload from "../modules/subjects/subjectsPreload";
-
-import { isAdmin } from "util/loginStatus";
+import { getModulePreloadFunction } from "./queryPreloads";
 
 const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/activate/activate"));
 const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/authenticate/authenticate"));
@@ -27,7 +28,11 @@ const resolveModule = moduleToLoad => {
   if (moduleToLoad == "admin" && !adminUser) {
     return HomeComponent;
   }
-  switch (moduleToLoad.toLowerCase()) {
+  moduleToLoad = moduleToLoad.toLowerCase();
+  const preload = getModulePreloadFunction(moduleToLoad);
+  preload?.();
+
+  switch (moduleToLoad) {
     case "activate":
       return ActivateComponent;
     case "authenticate":
