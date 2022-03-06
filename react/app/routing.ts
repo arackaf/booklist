@@ -4,7 +4,7 @@ import { isAdmin } from "util/loginStatus";
 
 import booksPreload, { subjectsAndTagsNonPublicPreload } from "../modules/books/booksPreload";
 import subjectsPreload from "../modules/subjects/subjectsPreload";
-import { getModulePreloadFunction } from "./modulePreloads";
+import { doModulePreload } from "./modulePreloads";
 
 const ActivateComponent = lazy(() => import("../modules/activate/activate"));
 const AuthenticateComponent = lazy(() => import("../modules/authenticate/authenticate"));
@@ -29,8 +29,7 @@ const resolveModule = moduleToLoad => {
     return HomeComponent;
   }
   moduleToLoad = moduleToLoad.toLowerCase();
-  const preload = getModulePreloadFunction(moduleToLoad);
-  preload?.();
+  doModulePreload(moduleToLoad);
 
   switch (moduleToLoad) {
     case "activate":
