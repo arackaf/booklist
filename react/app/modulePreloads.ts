@@ -5,10 +5,20 @@ export function getModulePreloadFunction(moduleToLoad: string): Function {
   switch (moduleToLoad.toLowerCase()) {
     case "books":
     case "view":
-      return booksPreload;
+      return () => {
+        import("../modules/books/books");
+        booksPreload();
+      };
     case "scan":
-      return subjectsAndTagsNonPublicPreload;
+      return () => {
+        import("../modules/scan/scan");
+        subjectsAndTagsNonPublicPreload();
+      };
+
     case "subjects":
-      return subjectsPreload;
+      return () => {
+        import("../modules/subjects/subjects");
+        subjectsPreload();
+      };
   }
 }

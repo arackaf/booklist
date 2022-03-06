@@ -4,17 +4,17 @@ import { isAdmin } from "util/loginStatus";
 
 import booksPreload, { subjectsAndTagsNonPublicPreload } from "../modules/books/booksPreload";
 import subjectsPreload from "../modules/subjects/subjectsPreload";
-import { getModulePreloadFunction } from "./queryPreloads";
+import { getModulePreloadFunction } from "./modulePreloads";
 
-const ActivateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/activate/activate"));
-const AuthenticateComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/authenticate/authenticate"));
-const BooksComponent = lazy(() => import(/* webpackChunkName: "books-module" */ "../modules/books/books"));
-const HomeComponent = lazy(() => import(/* webpackChunkName: "home-module" */ "../modules/home/home"));
-const ScanComponent = lazy(() => import(/* webpackChunkName: "scan-module" */ "../modules/scan/scan"));
-const SubjectsComponent = lazy(() => import(/* webpackChunkName: "subject-module" */ "../modules/subjects/subjects"));
-const StyleDemoComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/styledemo/styledemo"));
-const SettingsComponent = lazy(() => import(/* webpackChunkName: "small-modules" */ "../modules/settings/settings"));
-const AdminComponent = lazy(() => import(/* webpackChunkName: "admin-modules" */ "../modules/admin/admin"));
+const ActivateComponent = lazy(() => import("../modules/activate/activate"));
+const AuthenticateComponent = lazy(() => import("../modules/authenticate/authenticate"));
+const BooksComponent = lazy(() => import("../modules/books/books"));
+const HomeComponent = lazy(() => import("../modules/home/home"));
+const ScanComponent = lazy(() => import("../modules/scan/scan"));
+const SubjectsComponent = lazy(() => import("../modules/subjects/subjects"));
+const StyleDemoComponent = lazy(() => import("../modules/styledemo/styledemo"));
+const SettingsComponent = lazy(() => import("../modules/settings/settings"));
+const AdminComponent = lazy(() => import("../modules/admin/admin"));
 
 export const getModuleComponent = moduleToLoad => {
   if (moduleToLoad === null) {

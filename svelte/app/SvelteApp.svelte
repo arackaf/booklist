@@ -54,13 +54,13 @@
 </script>
 
 <AppUI content={$appState.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ""}>
-  <ModuleRoute moduleName="home" loader={() => import(/* webpackChunkName: "home-module" */ "modules/home/Home.svelte")} />
-  <ModuleRoute moduleName="scan" loader={() => import(/* webpackChunkName: "scan-module" */ "modules/scan/Scan.svelte")} />
-  <ModuleRoute moduleName="books" preload={booksPreload} loader={() => import(/* webpackChunkName: "books-module" */ "modules/books/Books.svelte")} />
-  <ModuleRoute moduleName="view" preload={booksPreload} loader={() => import(/* webpackChunkName: "books-module" */ "modules/books/Books.svelte")} />
-  <ModuleRoute moduleName="subjects" loader={() => import(/* webpackChunkName: "subjects-module" */ "modules/subjects/Subjects.svelte")} />
-  <ModuleRoute moduleName="settings" loader={() => import(/* webpackChunkName: "settings-module" */ "modules/settings/Settings.svelte")} />
-  <ModuleRoute moduleName="activate" loader={() => import(/* webpackChunkName: "activate-module" */ "modules/activate/Activate.svelte")} />
-  <ModuleRoute moduleName="admin" loader={() => import(/* webpackChunkName: "admin-module" */ "modules/admin/Admin.svelte")} />
-  <ModuleRoute moduleName="authenticate" loader={() => import(/* webpackChunkName: "admin-module" */ "modules/login/Login.svelte")} />
+  <ModuleRoute moduleName="home" loader={() => import("modules/home/Home.svelte")} />
+  <ModuleRoute moduleName="scan" loader={() => import("modules/scan/Scan.svelte")} />
+  <ModuleRoute moduleName="books" preload={booksPreload} loader={() => import("modules/books/Books.svelte")} />
+  <ModuleRoute moduleName="view" preload={booksPreload} loader={() => import("modules/books/Books.svelte")} />
+  <ModuleRoute moduleName="subjects" loader={() => import("modules/subjects/Subjects.svelte")} />
+  <ModuleRoute moduleName="settings" loader={() => import("modules/settings/Settings.svelte")} />
+  <ModuleRoute moduleName="activate" loader={() => import("modules/activate/Activate.svelte")} />
+  <ModuleRoute moduleName="admin" loader={() => import("modules/admin/Admin.svelte")} />
+  <ModuleRoute moduleName="authenticate" loader={() => import("modules/login/Login.svelte")} />
 </AppUI>

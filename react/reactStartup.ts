@@ -12,7 +12,7 @@ import setupServiceWorker from "./util/setupServiceWorker";
 import { getLoginStatus, getCookieLookup, eraseCookie, isLoggedIn } from "util/loginStatus";
 import { scanWebSocket, checkPendingCount, dispatchScanDataUpdate } from "util/scanUtils";
 import { getCurrentModuleFromUrl } from "app/state/appState";
-import { getModulePreloadFunction } from "app/queryPreloads";
+import { getModulePreloadFunction } from "app/modulePreloads";
 
 setupServiceWorker();
 renderUI();
