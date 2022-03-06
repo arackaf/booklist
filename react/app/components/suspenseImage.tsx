@@ -1,8 +1,8 @@
 import React from "react";
 
-const imgCache = {
+export const imgCache = {
   __cache: {},
-  getImg(src, cors = false) {
+  preload(src, cors = false) {
     if (!src) {
       return;
     }
@@ -23,10 +23,14 @@ const imgCache = {
       });
     }
 
-    if (this.__cache[src] instanceof Promise) {
-      throw this.__cache[src];
-    }
     return this.__cache[src];
+  },
+  getImg(src, cors = false) {
+    const result = this.preload(src, cors);
+    if (result instanceof Promise) {
+      throw result;
+    }
+    return result;
   },
   clearImg: src => {
     delete this.__cache;
