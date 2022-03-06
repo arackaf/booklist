@@ -6,19 +6,19 @@ export function getModulePreloadFunction(moduleToLoad: string): Function {
     case "books":
     case "view":
       return () => {
-        import("../modules/books/books");
         booksPreload();
+        import("../modules/books/books");
       };
     case "scan":
       return () => {
-        import("../modules/scan/scan");
         subjectsAndTagsNonPublicPreload();
+        import("../modules/scan/scan");
       };
 
     case "subjects":
       return () => {
-        import("../modules/subjects/subjects");
         subjectsPreload();
+        import("../modules/subjects/subjects");
       };
   }
 }
