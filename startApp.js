@@ -162,6 +162,7 @@ svelteRouter.get("/activate/:code", activateCode);
 
 svelteRouter.get("/service-worker.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 svelteRouter.get("/sw-index-bundle.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
+svelteRouter.get("/index.html", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
 app.use(subdomain("svelte-app", svelteRouter));
@@ -226,8 +227,8 @@ async function browseToReact(request, response) {
 
 app.get("/service-worker.js", express.static(__dirname + "/react/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 app.get("/sw-index-bundle.js", express.static(__dirname + "/react/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
+app.get("/index.html", express.static(__dirname + "/react/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
-
 // --------------- /REACT ---------------
 
 // --------------- AUTH ---------------
