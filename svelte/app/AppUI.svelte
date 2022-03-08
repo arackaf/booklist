@@ -41,7 +41,8 @@
   }
 </style>
 
-<meta name="viewport" content={$appState.desktopRequested ? "" : "initial-scale=1, maximum-scale=5.0"} />
+<!-- TODO -->
+<!-- <meta name="viewport" content={$appState.desktopRequested ? "" : "initial-scale=1, maximum-scale=5.0"} /> -->
 <div class="app-container">
   <div id="app">
     <MainNavigation />
