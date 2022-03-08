@@ -58,7 +58,8 @@ export default defineConfig({
     port: 3003,
     //hmr: false,
     proxy: {
-      "/graphql": "http://svelte.lvh.me:3001"
+      "/graphql": "http://svelte.lvh.me:3001",
+      "/auth": "http://svelte.lvh.me:3001"
     }
   }
 });

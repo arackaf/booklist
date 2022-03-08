@@ -77,9 +77,13 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
 
       <div style={{ fontSize: "11pt", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
-          <a style={{ fontSize: "1.4rem", alignSelf: "center" }} className="mobile-menu-button margin-right" onClick={() => setMobileMenuOpen(true)}>
+          <button
+            style={{ fontSize: "1.4rem", alignSelf: "center" }}
+            className="mobile-menu-button margin-right raw-button icon-button"
+            onClick={() => setMobileMenuOpen(true)}
+          >
             <i className="far fa-bars"></i>
-          </a>
+          </button>
           {isPublic ? <PublicBooksHeader /> : null}
           <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded, Button, disabled }} />
           <div style={{ marginRight: "5px" }}>

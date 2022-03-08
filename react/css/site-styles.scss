@@ -643,3 +643,25 @@ select {
 .border-bottom {
   border-bottom: 2px solid var(--primary-5);
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.raw-button {
+  padding: 0;
+  background: rgba(255, 255, 255, 1);
+  border: 0;
+  color: var(--neutral-text);
+
+  &:focus,
+  &:active {
+    box-shadow: 0 0 0 white;
+  }
+
+  &.icon-button {
+    i {
+      line-height: 27px; // mobile menu trigger
+    }
+  }
+}
