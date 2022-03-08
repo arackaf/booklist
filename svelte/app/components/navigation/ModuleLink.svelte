@@ -13,9 +13,10 @@
     if (onClick) {
       onClick(evt);
     }
+    let newHref = href.replace(/^\//, "");
 
-    if (!disabled && href && href != $appState.module) {
-      browseTo(href);
+    if (!disabled && newHref && newHref != $appState.module) {
+      browseTo(newHref);
     }
   }
 </script>

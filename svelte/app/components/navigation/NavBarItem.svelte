@@ -10,7 +10,7 @@
   export let onClick: (evt?: any) => void = null as any;
 
   $: currentModule = $appState.module;
-  $: active = currentModule == href;
+  $: active = currentModule == href.replace(/^\//, "");
 
   const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 
