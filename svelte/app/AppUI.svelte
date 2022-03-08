@@ -4,8 +4,6 @@
   import Footer from "app/components/Footer.svelte";
   import MainNavigation from "app/components/navigation/MainNavigation.svelte";
 
-  export let content = null;
-
   onMount(() => {
     document.documentElement.scrollTop = 0;
     if ($appState.isMobile) {
@@ -43,7 +41,7 @@
   }
 </style>
 
-<meta name="viewport" {content} />
+<meta name="viewport" content={$appState.desktopRequested ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0"} />
 <div class="app-container">
   <div id="app">
     <MainNavigation />

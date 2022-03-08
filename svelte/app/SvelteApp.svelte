@@ -53,7 +53,7 @@
   });
 </script>
 
-<AppUI content={$appState.isMobile && $appState.showingDesktop ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0; user-scalable=1;"}>
+<AppUI>
   <ModuleRoute moduleName="home" loader={() => import("modules/home/Home.svelte")} />
   <ModuleRoute moduleName="scan" loader={() => import("modules/scan/Scan.svelte")} />
   <ModuleRoute moduleName="books" preload={booksPreload} loader={() => import("modules/books/Books.svelte")} />

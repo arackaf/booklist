@@ -7,7 +7,7 @@ import { getCurrentUrlState, history } from "util/urlHelpers";
 import ajaxUtil from "util/ajaxUtil";
 
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
-const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false };
+const uiSettings = { isTouch, isDesktop: false, showingDesktop: false, isMobile: false, showingMobile: false, desktopRequested: false };
 
 const { logged_in, userId, loginToken } = isLoggedIn();
 const authSettings = logged_in && userId ? { isLoggedIn: true, userId, loginToken } : { isLoggedIn: false, userId: "", loginToken: "" };
@@ -78,9 +78,9 @@ export type AppState = typeof initialState;
 function appReducer(state: AppState, action): AppState {
   switch (action.type) {
     case REQUEST_DESKTOP:
-      return { ...state, showingDesktop: true, showingMobile: false };
+      return { ...state, showingDesktop: true, showingMobile: false, desktopRequested: true };
     case REQUEST_MOBILE:
-      return { ...state, showingDesktop: false, showingMobile: true };
+      return { ...state, showingDesktop: false, showingMobile: true, desktopRequested: false };
     case URL_SYNC:
       return { ...state, module: getCurrentModuleFromUrl(), urlState: getCurrentUrlState() };
     case IS_OFFLINE:
