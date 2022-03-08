@@ -29,12 +29,7 @@ function showBookToast(title, url) {
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
-  return (
-    <meta
-      name="viewport"
-      content={app.showingMobile ? "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0; user-scalable=0;" : ""}
-    />
-  );
+  return <meta name="viewport" content={app.showingDesktop ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0; user-scalable=1;"} />;
 };
 
 const WellUiSwitcher: FunctionComponent<{}> = () => {
