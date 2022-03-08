@@ -636,9 +636,13 @@ select {
   cursor: pointer;
 }
 
+.fw-700 {
+  font-weight: 700;
+}
+
 .raw-button {
   padding: 0;
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0);
   border: 0;
   color: var(--neutral-text);
 
