@@ -78,6 +78,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
       <div style={{ fontSize: "11pt", position: "relative" }}>
         <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "5px" }}>
           <button
+            aria-label="Open menu"
             style={{ fontSize: "1.4rem", alignSelf: "center" }}
             className="mobile-menu-button margin-right raw-button icon-button"
             onClick={() => setMobileMenuOpen(true)}
