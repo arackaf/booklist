@@ -29,7 +29,7 @@
 
   function showBookToast(title, url) {
     Toastify({
-      text: `<div><img src="${url}" ></div><span>${title}</span>`,
+      text: `<div><img alt="Book cover for recently scanned ${title}" src="${url}" ></div><span>${title}</span>`,
       escapeMarkup: false,
       duration: 5 * 1000,
       gravity: "bottom",

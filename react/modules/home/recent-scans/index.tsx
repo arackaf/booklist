@@ -71,7 +71,7 @@ const RecentScans: FunctionComponent = () => {
 const ScanDisplay = ({ item }) => {
   return (
     <>
-      <SuspenseImg src={item.smallImage} />
+      <SuspenseImg alt="Book cover" src={item.smallImage} />
       <div>{item.title ?? `${item.isbn} Failure`}</div>
     </>
   );

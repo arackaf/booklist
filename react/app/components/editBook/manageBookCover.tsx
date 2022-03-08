@@ -124,7 +124,7 @@ const ManageBookCover = props => {
     <FlowItems pushLast={true}>
       {currentUrl ? (
         <div style={{ minWidth: "110px" }}>
-          <img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
+          <img alt="Current book cover" {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
         </div>
       ) : (
         <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
@@ -154,7 +154,7 @@ const ManageBookCover = props => {
       ) : null}
       {pendingImg ? (
         <Stack>
-          <img src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
+          <img alt="Pending book cover" src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
           <FlowItems pushLast={true}>
             <button onClick={runSave} className="btn btn-xs btn-light btn-square-icon">
               <i className="fal fa-check" />

@@ -44,7 +44,7 @@
       <div class="results">
         {#each $currentResults as item, i}
           {#if item.success}
-            <img src={item.smallImage} />
+            <img alt="Book cover" src={item.smallImage} />
             <div>{item.title ?? `${item.isbn} Failure`}</div>
           {:else}
             <div />

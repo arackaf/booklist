@@ -17,7 +17,7 @@ export const NoCoverMedium = () => (
 );
 
 export const CoverSmall = ({ url }) =>
-  url ? <SuspenseImg {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverSmall />;
+  url ? <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverSmall />;
 
 export const CoverMedium = ({ url }) =>
-  url ? <SuspenseImg style={{ display: "block" }} {...getCrossOriginAttribute(url)} src={url} /> : <NoCoverMedium />;
+  url ? <SuspenseImg alt="Book cover" style={{ display: "block" }} {...getCrossOriginAttribute(url)} src={url} /> : <NoCoverMedium />;

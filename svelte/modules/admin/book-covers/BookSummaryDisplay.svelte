@@ -51,7 +51,7 @@
 
 <div class="book-display">
   <div class="img">
-    <img src={book.smallImage} />
+    <img alt="Book cover" src={book.smallImage} />
   </div>
   <div class="book-info">
     <div class="title">
@@ -71,7 +71,7 @@
     <Stack style="margin-top: 10px">
       <Button preset="default-xs" style="align-self: flex-start" onClick={go}>Find Cover Image</Button>
       {#if newImg}
-        <img style="align-self: center" src={newImg} />
+        <img alt="Pending new book cover" style="align-self: center" src={newImg} />
         <Button onClick={useFetchedImage} preset="primary">Save</Button>
       {/if}
     </Stack>

@@ -55,7 +55,7 @@ const BookSummaryDisplay = props => {
   return (
     <div className="book-display">
       <div className="img">
-        <img src={book.smallImage} />
+        <img alt="Book cover" src={book.smallImage} />
       </div>
       <div className="book-info">
         <div className="title">
@@ -78,7 +78,7 @@ const BookSummaryDisplay = props => {
           </Button>
           {newImg ? (
             <>
-              <img style={{ alignSelf: "center" }} src={newImg} />
+              <img alt="New book cover" style={{ alignSelf: "center" }} src={newImg} />
               <Button onClick={useFetchedImage} preset="primary">
                 Save
               </Button>

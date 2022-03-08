@@ -5,7 +5,7 @@
 </script>
 
 {#if url}
-  <img style="display: block" {...getCrossOriginAttribute(url)} src={url} />
+  <img alt="Book cover" style="display: block" {...getCrossOriginAttribute(url)} src={url} />
 {:else}
   <NoCoverMedium />
 {/if}

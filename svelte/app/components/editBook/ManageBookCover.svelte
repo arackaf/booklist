@@ -109,7 +109,7 @@
 
 <FlowItems pushLast={true}>
   {#if currentUrl}
-    <div style="min-width: 110px"><img {...getCrossOriginAttribute(currentUrl)} src={currentUrl} /></div>
+    <div style="min-width: 110px"><img alt="Current book cover" {...getCrossOriginAttribute(currentUrl)} src={currentUrl} /></div>
   {:else}
     <div style="align-self: flex-start; min-width: 110px;" class="alert alert-warning"><span>No Cover</span></div>
   {/if}
@@ -135,7 +135,7 @@
   {/if}
   {#if pendingImg}
     <Stack>
-      <img src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
+      <img alt="Pending book cover" src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
       <FlowItems pushLast={true}>
         <button on:click={runSave} class="btn btn-xs btn-light btn-square-icon"> <i class="fal fa-check" /> </button>
         <button on:click={() => (uploadState = { pendingImg: "", uploadError: "" })} class="btn btn-xs btn-light btn-square-icon">
