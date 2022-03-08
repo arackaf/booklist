@@ -1,6 +1,5 @@
 import ajaxUtil from "./ajaxUtil";
-import localStorageManager from "./localStorage";
-import { getCookieLookup } from "./loginStatus";
+import { getLoginStatus, getCookieLookup } from "./loginStatus";
 
 let ws;
 let open = false;
@@ -9,6 +8,9 @@ const initialMessageQueue = [];
 
 class ScanWebSocketManage {
   constructor() {
+    if (!getLoginStatus().loginToken) {
+      return;
+    }
     ws = new WebSocket(process.env.SCAN_WS);
 
     ws.onopen = () => {
