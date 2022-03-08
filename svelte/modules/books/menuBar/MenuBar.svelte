@@ -54,9 +54,13 @@
 
   <div style="font-size: 11pt; position: relative">
     <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
-      <a style="font-size: 1.4rem; align-self: center" class="mobile-menu-button margin-right" on:click={() => (mobileMenuOpen = true)}>
+      <button
+        style="font-size: 1.4rem; align-self: center"
+        class="mobile-menu-button margin-right raw-button icon-button"
+        on:click={() => (mobileMenuOpen = true)}
+      >
         <i class="far fa-bars" />
-      </a>
+      </button>
       <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded }} />
       <div style="margin-right: 5px">
         <div class="menu-bar-desktop btn-group">

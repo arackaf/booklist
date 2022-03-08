@@ -27,9 +27,9 @@
   <div class="mobile-menu-content">
     <div>
       <div class="header">
-        <a style="font-size: 1.4rem; align-self: start" on:click={onClose}>
+        <button class="raw-button icon-button" style="font-size: 1.4rem; align-self: start" on:click={onClose}>
           <i class="far fa-bars" />
-        </a>
+        </button>
         <h3 style="margin: 0 0 0 10px; align-self: center">{title}</h3>
       </div>
       <slot />
