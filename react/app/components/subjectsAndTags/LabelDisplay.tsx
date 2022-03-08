@@ -65,7 +65,7 @@ export const RemovableLabelDisplay = props => {
       style={{ backgroundColor: item.backgroundColor, color: item.textColor || "white", ...extraStyles }}
       className={"label label-default noselect " + extraClasses}
     >
-      <button className="raw-button cursor-pointer fw-700" onClick={props.doRemove} style={{ color: item.textColor || "white", fontSize: "inherit" }}>
+      <button className="raw-button cursor-pointer fw-700" onClick={props.doRemove} style={{ color: item.textColor || "white" }}>
         X
       </button>
       <span style={{ marginLeft: 5, paddingLeft: 5, borderLeft: "var(--default-border-width) solid white" }}>{props.name}</span>

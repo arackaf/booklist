@@ -29,7 +29,12 @@ function showBookToast(title, url) {
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
-  return <meta name="viewport" content={app.showingDesktop ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0; user-scalable=1;"} />;
+  return (
+    <meta
+      name="viewport"
+      content={app.isMobile && app.showingDesktop ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0; user-scalable=1;"}
+    />
+  );
 };
 
 const WellUiSwitcher: FunctionComponent<{}> = () => {
@@ -42,8 +47,16 @@ const WellUiSwitcher: FunctionComponent<{}> = () => {
     <footer>
       <i className="fal fa-book" />
       <span style={{ marginLeft: "5px", marginRight: "5px" }}>My Library</span>
-      {showChooseDesktop ? <a onClick={requestDesktop}>Use desktop version</a> : null}
-      {showSwitchBackMobile ? <a onClick={requestMobile}>Use mobile version</a> : null}
+      {showChooseDesktop ? (
+        <button className="raw-button cursor-pointer" name="Use desktop version" onClick={requestDesktop}>
+          Use desktop version
+        </button>
+      ) : null}
+      {showSwitchBackMobile ? (
+        <button className="raw-button cursor-pointer" name="Use mobile version" onClick={requestMobile}>
+          Use mobile version
+        </button>
+      ) : null}
     </footer>
   );
 };
