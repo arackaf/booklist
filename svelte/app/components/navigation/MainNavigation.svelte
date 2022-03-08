@@ -48,7 +48,7 @@
   <nav class="nav">
     <div class={`nav-header hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
       <ModuleLink href="home">
-        <BookSvg height="18" style="margin-right: 5px; color: white; fill: var(--primary-10);" />
+        <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
     </div>
