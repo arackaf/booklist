@@ -15,10 +15,12 @@ const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClas
 
 const NavBarItem = props => {
   let { disabled, className, active, href, onClick, children, aStyle = {}, ...rest } = props;
+  let label = rest["aria-label"];
 
   return (
     <li className={spreadClassNames(className, !!disabled ? "disabled" : "", active ? "active" : "")} {...rest}>
       <a
+        aria-label={label}
         className="no-underline"
         href={href}
         style={aStyle}
@@ -66,6 +68,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
       <nav className="nav">
         <div className={`nav-header hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
           <a
+            aria-label="Navigate home"
             href="/home"
             onClick={e => {
               e.preventDefault();
@@ -80,6 +83,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
 
         <ul className="nav-items">
           <NavBarItem
+            aria-label="Navigate home"
             href="/home"
             className="visible-xs"
             disabled={isPublic}
@@ -91,6 +95,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           </NavBarItem>
           {isLoggedIn || isPublic ? (
             <NavBarItem
+              aria-label="Navigate to scan page"
               href="/scan"
               disabled={isPublic}
               onClick={isPublic ? null : () => goto("scan")}
@@ -110,25 +115,36 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (
-            <NavBarItem href={"/" + isPublic ? "view" : "books"} active={isBookList} onClick={() => goto(isPublic ? "view" : "books")}>
+            <NavBarItem
+              aria-label="Navigate to books page"
+              href={"/" + isPublic ? "view" : "books"}
+              active={isBookList}
+              onClick={() => goto(isPublic ? "view" : "books")}
+            >
               <span className="hidden-xs">Books</span>
               <i className="visible-xs fal fa-books" />
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (
-            <NavBarItem href="/subjects" disabled={isPublic} onClick={isPublic ? null : () => goto("subjects")} active={isSubjects}>
+            <NavBarItem
+              aria-label="Navigate to subjects page"
+              href="/subjects"
+              disabled={isPublic}
+              onClick={isPublic ? null : () => goto("subjects")}
+              active={isSubjects}
+            >
               <span className="hidden-xs">Subjects</span>
               <i className="visible-xs fal fa-sitemap" />
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (
-            <NavBarItem href="/settings" onClick={() => goto("settings")} active={isSettings}>
+            <NavBarItem aria-label="Navigate to settings page" href="/settings" onClick={() => goto("settings")} active={isSettings}>
               <span className="hidden-xs">Settings</span>
               <i className="visible-xs fal fa-cogs" />
             </NavBarItem>
           ) : null}
           {isLoggedIn && isAdminUser ? (
-            <NavBarItem href="/admin" onClick={() => goto("admin")} active={isSettingsSection}>
+            <NavBarItem aria-label="Navigate to admin page" href="/admin" onClick={() => goto("admin")} active={isSettingsSection}>
               <span className="hidden-xs">Admin</span>
               <i className="visible-xs fal fa-users-cog" />
             </NavBarItem>
@@ -136,7 +152,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
         </ul>
         <ul className="nav-items-right">
           {!isLoggedIn && !isLoginModule ? (
-            <NavBarItem href="/login" onClick={() => goto("login")}>
+            <NavBarItem aria-label="Login" href="/login" onClick={() => goto("login")}>
               <span className="hidden-xs">Login</span>
               <i className="visible-xs fal fa-sign-in" />
             </NavBarItem>
@@ -144,7 +160,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
         </ul>
         {isLoggedIn ? (
           <ul className="nav-items-right">
-            <NavBarItem href="/logout" onClick={logout}>
+            <NavBarItem aria-label="Logout" href="/logout" onClick={logout}>
               <span className="hidden-xs">Logout</span>
               <i className="visible-xs fal fa-sign-out" />
             </NavBarItem>
