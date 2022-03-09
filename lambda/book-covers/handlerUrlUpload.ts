@@ -21,7 +21,7 @@ export const handler = async event => {
   }
   const { body, error } = await downloadFromUrl(url);
 
-  const imageResult = await resizeImage(body, MAX_WIDTH);
+  const imageResult = await resizeImage(body, MAX_WIDTH, null, 80);
   if (imageResult.error || !imageResult.body) {
     return corsResponse({ error: true });
   }
