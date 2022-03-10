@@ -37,6 +37,7 @@ export const Book = {
     smallImage: StringType,
     smallImagePreview: StringType,
     mediumImage: StringType,
+    mediumImagePreview: StringType,
     userId: StringType,
     publisher: StringType,
     publicationDate: StringType,

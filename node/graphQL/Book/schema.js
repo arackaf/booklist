@@ -10,6 +10,7 @@ export const type = `
     smallImage: String
     smallImagePreview: String
     mediumImage: String
+    mediumImagePreview: String
     userId: String
     publisher: String
     publicationDate: String
@@ -63,6 +64,7 @@ export const type = `
     smallImage: String
     smallImagePreview: String
     mediumImage: String
+    mediumImagePreview: String
     userId: String
     publisher: String
     publicationDate: String
@@ -88,6 +90,7 @@ export const type = `
     smallImage: String
     smallImagePreview: String
     mediumImage: String
+    mediumImagePreview: String
     userId: String
     publisher: String
     publicationDate: String
@@ -149,6 +152,7 @@ export const type = `
     smallImage: Int
     smallImagePreview: Int
     mediumImage: Int
+    mediumImagePreview: Int
     userId: Int
     publisher: Int
     publicationDate: Int
@@ -233,6 +237,14 @@ export const type = `
     mediumImage_ne: String
     mediumImage_in: [String]
     mediumImage_nin: [String]
+    mediumImagePreview_contains: String
+    mediumImagePreview_startsWith: String
+    mediumImagePreview_endsWith: String
+    mediumImagePreview_regex: String
+    mediumImagePreview: String
+    mediumImagePreview_ne: String
+    mediumImagePreview_in: [String]
+    mediumImagePreview_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -446,6 +458,14 @@ export const query = `
     mediumImage_ne: String,
     mediumImage_in: [String],
     mediumImage_nin: [String],
+    mediumImagePreview_contains: String,
+    mediumImagePreview_startsWith: String,
+    mediumImagePreview_endsWith: String,
+    mediumImagePreview_regex: String,
+    mediumImagePreview: String,
+    mediumImagePreview_ne: String,
+    mediumImagePreview_in: [String],
+    mediumImagePreview_nin: [String],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,

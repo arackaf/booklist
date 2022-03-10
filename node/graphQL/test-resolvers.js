@@ -23,9 +23,9 @@ async function processQuery(query, name, fields, variables = {}) {
 }
 const runQueries = async () => {
   await processQuery(
-    `{allBooks(LIMIT:1){Books{_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp}}}`,
+    `{allBooks(LIMIT:1){Books{_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp}}}`,
     "Book",
-    "_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp"
+    "_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp"
   ).catch(error => console.error(error));
   await processQuery(
     `{allBookSummarys(LIMIT:1){BookSummarys{_id title asin isbn ean smallImage mediumImage authors}}}`,
@@ -63,7 +63,7 @@ const runQueries = async () => {
     "_id userId deletedTimestamp"
   ).catch(error => console.error(error));
 
-  // await processQuery(`mutation:{Book("_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp")}`," mutation Book", "").catch((error) => console.error(error))
+  // await processQuery(`mutation:{Book("_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems similarItemsLastUpdate timestamp")}`," mutation Book", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{BookSummary("_id title asin isbn ean smallImage mediumImage authors")}`," mutation BookSummary", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{Subject("_id name path userId backgroundColor textColor timestamp")}`," mutation Subject", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{Tag("_id name path userId backgroundColor textColor timestamp")}`," mutation Tag", "")

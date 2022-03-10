@@ -14,6 +14,7 @@ export default {
     smallImage: "String",
     smallImagePreview: "String",
     mediumImage: "String",
+    mediumImagePreview: "String",
     userId: "String",
     publisher: "String",
     publicationDate: "String",
