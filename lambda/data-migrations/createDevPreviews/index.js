@@ -34,7 +34,7 @@ async function updateImage(src) {
           return res(null);
         }
 
-        mainImage.resize(50, Jimp.AUTO).quality(80);
+        //mainImage.resize(50, Jimp.AUTO).quality(80);
 
         const thumbnail = mainImage.clone();
         thumbnail.quality(10).blur(1);
