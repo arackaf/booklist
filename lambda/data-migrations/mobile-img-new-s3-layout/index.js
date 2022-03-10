@@ -35,7 +35,7 @@ async function updateImage(inputFileName, quality, blur, output) {
       mainImage.resize(50, Jimp.AUTO).quality(80);
 
       const thumbnail = mainImage.clone();
-      thumbnail.quality(15).blur(5);
+      thumbnail.quality(25).blur(8);
 
       try {
         await thumbnail.writeAsync(getConvertedFilename("thumb-", filename));

@@ -9,39 +9,40 @@ async function run() {
 
   let i = 0;
   for (const book of books) {
-    const { mediumImage } = book;
-    const { body: imgBody } = await downloadImage(mediumImage);
+    const { smallImage, mediumImage } = book;
 
-    if (!imgBody) {
-      continue;
-    }
-    const base64 = await updateImage(imgBody);
-    if (!base64) {
-      continue;
-    }
+    const [mobileImagePreview, smallImagePreview, mediumImagePreview] = await Promise.all([
+      getPreview(smallImage, 35),
+      getPreview(smallImage),
+      getPreview(mediumImage)
+    ]);
 
-    await db.collection("books").updateOne({ _id: book._id }, { $set: { mediumImagePreview: base64 } });
+    await db.collection("books").updateOne({ _id: book._id }, { $set: { mobileImagePreview, smallImagePreview, mediumImagePreview } });
     console.log(book.title, "updated");
   }
 }
 
-async function updateImage(src) {
+async function getPreview(url, previewWidth) {
+  const { body: imgBody } = await downloadImage(url);
+
+  if (!imgBody) {
+    return "";
+  }
+
   return new Promise(res => {
     try {
-      Jimp.read(src, async function (err, mainImage) {
+      Jimp.read(imgBody, async function (err, mainImage) {
         if (err || !mainImage) {
           console.log("Failed to read");
           return res(null);
         }
 
-        //mainImage.resize(50, Jimp.AUTO).quality(80);
+        const thumbnail = mainImage.clone();
+        if (previewWidth) {
+          thumbnail.resize(previewWidth, Jimp.AUTO);
+        }
+        thumbnail.quality(25).blur(8);
 
-        const thumbnail = mainImage.quality(80).clone();
-        thumbnail.quality(5).blur(1);
-        //thumbnail.resize(35, Jimp.AUTO).quality(10).blur(1);
-
-        //await thumbnail.writeAsync(getConvertedFilename("thumb-", filename));
-        //await mainImage.writeAsync(getConvertedFilename("small-", filename));
         const base64 = await thumbnail.getBase64Async(thumbnail.getMIME());
         res(base64);
       });
