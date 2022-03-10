@@ -9,8 +9,8 @@ async function run() {
 
   let i = 0;
   for (const book of books) {
-    const { smallImage } = book;
-    const { body: imgBody } = await downloadImage(smallImage);
+    const { mediumImage } = book;
+    const { body: imgBody } = await downloadImage(mediumImage);
 
     if (!imgBody) {
       continue;
@@ -20,7 +20,7 @@ async function run() {
       continue;
     }
 
-    await db.collection("books").updateOne({ _id: book._id }, { $set: { smallImagePreview: base64 } });
+    await db.collection("books").updateOne({ _id: book._id }, { $set: { mediumImagePreview: base64 } });
     console.log(book.title, "updated");
   }
 }
@@ -36,8 +36,9 @@ async function updateImage(src) {
 
         //mainImage.resize(50, Jimp.AUTO).quality(80);
 
-        const thumbnail = mainImage.clone();
-        thumbnail.quality(10).blur(1);
+        const thumbnail = mainImage.quality(80).clone();
+        thumbnail.quality(5).blur(1);
+        //thumbnail.resize(35, Jimp.AUTO).quality(10).blur(1);
 
         //await thumbnail.writeAsync(getConvertedFilename("thumb-", filename));
         //await mainImage.writeAsync(getConvertedFilename("small-", filename));
