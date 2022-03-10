@@ -26,22 +26,19 @@ async function updateImage(inputFileName, quality, blur, output) {
   const filename = path.basename(inputFileName);
 
   return new Promise(res => {
-    Jimp.read(getFileName(filename), async function (err, image) {
-      if (err || !image) {
+    Jimp.read(getFileName(filename), async function (err, mainImage) {
+      if (err || !mainImage) {
         console.log("Failed to read", filename);
         return res({ error: true, message: err });
       }
 
-      image.resize(50, Jimp.AUTO);
+      mainImage.resize(50, Jimp.AUTO).quality(80);
 
-      const thumbnail = image.clone();
-      const mainImage = image.clone();
-
+      const thumbnail = mainImage.clone();
       thumbnail.quality(10).blur(1);
-      mainImage.quality(80);
 
       try {
-        await thumbnail.writeAsync(getConvertedFilename("thumb2-", filename));
+        await thumbnail.writeAsync(getConvertedFilename("thumb-", filename));
         await mainImage.writeAsync(getConvertedFilename("small-", filename));
         //const base64 = await image.getBase64Async(image.getMIME());
         res();
