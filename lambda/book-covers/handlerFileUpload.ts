@@ -22,7 +22,7 @@ export const handler = async event => {
     return corsResponse({});
   }
 
-  const imageResult = await resizeImage(file.content, MAX_WIDTH, null, 80);
+  const imageResult = (await resizeImage(file.content, MAX_WIDTH, null, 80)) as any;
 
   if (imageResult.error || !imageResult.body) {
     console.log("resize error", imageResult.message);

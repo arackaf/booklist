@@ -2,15 +2,14 @@ import uuid from "uuid/v4";
 
 import uploadToS3 from "../util/uploadToS3";
 import corsResponse from "../util/corsResponse";
-import { resizeImage } from "./resizeImage";
+import { resizeImage, getBuffer } from "./resizeImage";
 
 export async function handleCover(body, size, userId, extension) {
   if (size === "small") {
-    const smallImageResult = await resizeImage(body, 50, null, 80);
-    const mobileImageResult = await resizeImage(body, 35, null, 80);
+    const smallImageResult = await resizeImage(body, 50, null, 80).then(getBuffer);
+    const mobileImageResult = await resizeImage(body, 35, null, 80).then(getBuffer);
 
-    if (smallImageResult.error || !smallImageResult.body || mobileImageResult.error || !mobileImageResult.body) {
-      console.log("Error resizing", mobileImageResult.error, smallImageResult.error);
+    if (smallImageResult.STATUS === "error" || mobileImageResult.STATUS === "error") {
       return corsResponse({ error: true });
     }
 
@@ -38,13 +37,11 @@ export async function handleCover(body, size, userId, extension) {
       });
     }
   } else {
-    const mediumImageResult = await resizeImage(body, 106, null, 80);
+    const mediumImageResult = await resizeImage(body, 106, null, 80).then(getBuffer);
 
-    if (mediumImageResult.error || !mediumImageResult.body) {
-      console.log("Error resizing", mediumImageResult.error);
+    if (mediumImageResult.STATUS === "error") {
       return corsResponse({ error: true });
     }
-
     const mediumImagePath = `medium-covers/${userId}/${uuid()}${extension}`;
     const s3MediumResult = await uploadToS3(mediumImagePath, mediumImageResult.body);
 
