@@ -8,7 +8,7 @@ export const defaultSearchValuesHash = {
   pages: "",
   pagesOperator: "",
   page: 1,
-  pageSize: 25,
+  pageSize: 50,
   isRead: "",
   noSubjects: "",
   sort: "_id",
