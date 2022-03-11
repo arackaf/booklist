@@ -1,4 +1,5 @@
 import path from "path";
+import uuid from "uuid/v4";
 
 import checkLogin from "../util/checkLoginToken";
 import { handleCover } from "../util/handleCover";
@@ -12,7 +13,7 @@ export const handler = async event => {
     return corsResponse({ coldStartPrevented: true });
   }
 
-  const { userId, loginToken, size, url } = JSON.parse(event.body);
+  const { userId, loginToken, url } = JSON.parse(event.body);
 
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
@@ -24,6 +25,24 @@ export const handler = async event => {
     return corsResponse({ error: true });
   }
   const extension = path.extname(url) || ".jpg";
+  const filePath = `${userId}/${uuid()}${extension}`;
 
-  return handleCover(body, size, userId, extension);
+  const allResults = await Promise.all([
+    handleCover(body, "mobile", filePath),
+    handleCover(body, "small", filePath),
+    handleCover(body, "medium", filePath)
+  ]);
+
+  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
+    return corsResponse({ status: allResults[0].STATUS });
+  }
+
+  const [mobile, small, medium] = allResults;
+
+  return corsResponse({
+    success: true,
+    mobile,
+    small,
+    medium
+  });
 };

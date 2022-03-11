@@ -1,61 +1,45 @@
-import uuid from "uuid/v4";
-
 import uploadToS3 from "../util/uploadToS3";
-import corsResponse from "../util/corsResponse";
-import { resizeImage, getBuffer } from "./resizeImage";
+import { resizeImage, getBuffer, ResizeImageFailure, ResizeInvalidSize } from "./resizeImage";
 
-export async function handleCover(body, size, userId, extension) {
-  if (size === "small") {
-    const smallImageResult = await resizeImage(body, 50, null, 80).then(getBuffer);
-    const mobileImageResult = await resizeImage(body, 35, null, 80).then(getBuffer);
+type Sizes = "mobile" | "small" | "medium";
 
-    if (smallImageResult.STATUS === "error" || mobileImageResult.STATUS === "error") {
-      return corsResponse({ error: true });
-    }
+export const SIZE_WIDTHS: { [k in Sizes]: number } = {
+  mobile: 35,
+  small: 50,
+  medium: 106
+};
 
-    const mobileImagePath = `mobile-covers/${userId}/${uuid()}${extension}`;
-    const smallImagePath = `small-covers/${userId}/${uuid()}${extension}`;
+export const QUALITIES: { [k in Sizes]: number } = {
+  mobile: 80,
+  small: 80,
+  medium: 90
+};
 
-    const s3MobileResult = await uploadToS3(mobileImagePath, mobileImageResult.body);
-    const s3SmallResult = await uploadToS3(smallImagePath, smallImageResult.body);
+type HandleCoverSuccess = { STATUS: "success"; image: { url: string; preview: string } };
+type HandleCoverResult = ResizeImageFailure | ResizeInvalidSize | HandleCoverSuccess;
 
-    if (s3MobileResult.STATUS === "success" && s3SmallResult.STATUS === "success") {
-      return corsResponse({
-        success: true,
-        smallImage: { url: s3SmallResult.url, preview: smallImageResult.preview },
-        mobileImage: { url: s3MobileResult.url, preview: mobileImageResult.preview }
-      });
-    } else {
-      console.log(
-        "Error uploading",
-        s3MobileResult.STATUS === "error" ? s3MobileResult.message : null,
-        s3SmallResult.STATUS === "error" ? s3SmallResult.message : null
-      );
-      return corsResponse({
-        success: false,
-        error: true
-      });
-    }
+export async function handleCover(body, size: Sizes, filePath): Promise<HandleCoverResult> {
+  const width = SIZE_WIDTHS[size];
+  const quality = QUALITIES[size];
+
+  const imageResult = await resizeImage(body, width, quality).then(getBuffer);
+  if (imageResult.STATUS === "error") {
+    return { STATUS: "error" };
+  }
+  if (imageResult.STATUS === "invalid-size") {
+    return { STATUS: "invalid-size" };
+  }
+
+  const imagePath = `${size}-covers/${filePath}`;
+  const s3Result = await uploadToS3(imagePath, imageResult.body);
+
+  if (s3Result.STATUS === "success") {
+    return {
+      STATUS: "success",
+      image: { url: s3Result.url, preview: imageResult.preview }
+    };
   } else {
-    const mediumImageResult = await resizeImage(body, 106, null, 80).then(getBuffer);
-
-    if (mediumImageResult.STATUS === "error") {
-      return corsResponse({ error: true });
-    }
-    const mediumImagePath = `medium-covers/${userId}/${uuid()}${extension}`;
-    const s3MediumResult = await uploadToS3(mediumImagePath, mediumImageResult.body);
-
-    if (s3MediumResult.STATUS === "success") {
-      return corsResponse({
-        success: true,
-        mediumImage: { url: s3MediumResult.url, preview: mediumImageResult.preview }
-      });
-    } else {
-      console.log("Erorr uploading", s3MediumResult.message);
-      return corsResponse({
-        success: false,
-        error: true
-      });
-    }
+    console.log("Error uploading", s3Result.STATUS === "error" ? s3Result.message : null);
+    return { STATUS: "error" };
   }
 }

@@ -1,10 +1,12 @@
 import Jimp from "jimp";
 
 export type ResizeImageFailure = { STATUS: "error"; message?: string; previewGenerationError?: boolean };
+export type ResizeInvalidSize = { STATUS: "invalid-size" };
+export type ResizeSuccess = { STATUS: "success"; image: Jimp; preview: string };
 
-export type ResizeImageResult = ResizeImageFailure | { STATUS: "success"; image: Jimp; preview: string };
+export type ResizeImageResult = ResizeImageFailure | ResizeSuccess | ResizeInvalidSize;
 
-export function resizeImage(src, MAX_WIDTH, MIN_WIDTH = null, quality = null) {
+export function resizeImage(src, maxWidth, quality) {
   return new Promise<ResizeImageResult>(res => {
     Jimp.read(src, async function (err, image) {
       if (err || !image) {
@@ -12,16 +14,15 @@ export function resizeImage(src, MAX_WIDTH, MIN_WIDTH = null, quality = null) {
         return res({ STATUS: "error" });
       }
 
-      if (MIN_WIDTH != null && image.bitmap.width < MIN_WIDTH) {
-        return res({ STATUS: "error", message: "Min width constraint violated" });
-      }
+      const minWidth = maxWidth - 5;
 
-      if (image.bitmap.width > MAX_WIDTH) {
-        image.resize(MAX_WIDTH, Jimp.AUTO);
+      if (image.bitmap.width < minWidth) {
+        return res({ STATUS: "invalid-size" });
       }
-      if (quality != null) {
-        image.quality(quality);
+      if (image.bitmap.width > maxWidth) {
+        image.resize(maxWidth, Jimp.AUTO);
       }
+      image.quality(quality);
 
       let preview;
       try {
@@ -38,9 +39,9 @@ export function resizeImage(src, MAX_WIDTH, MIN_WIDTH = null, quality = null) {
   });
 }
 
-type GetBufferResult = ResizeImageFailure | { STATUS: "success"; body: any; preview: string };
+type GetBufferResult = ResizeImageFailure | ResizeInvalidSize | { STATUS: "success"; body: any; preview: string };
 export async function getBuffer(result: ResizeImageResult): Promise<GetBufferResult> {
-  if (result.STATUS === "error") {
+  if (result.STATUS !== "success") {
     return result;
   }
   const { image, preview } = result;
