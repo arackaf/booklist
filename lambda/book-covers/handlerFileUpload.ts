@@ -3,7 +3,7 @@ import uuid from "uuid/v4";
 import awsMultiPartParser from "lambda-multipart-parser";
 
 import checkLogin from "../util/checkLoginToken";
-import resizeImage from "../util/resizeImage";
+import { resizeImage } from "../util/resizeImage";
 import corsResponse from "../util/corsResponse";
 import uploadToS3 from "../util/uploadToS3";
 import { isWarmingCall } from "../util/isWarmingCall";

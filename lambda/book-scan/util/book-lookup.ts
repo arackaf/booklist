@@ -10,7 +10,7 @@ import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUp
 import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
-import resizeImage from "../../util/resizeImage";
+import { resizeImage } from "../../util/resizeImage";
 import uploadToS3 from "../../util/uploadToS3";
 import getDbConnection from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
