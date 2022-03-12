@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, FunctionComponent } from "react";
 import Dropzone, { DropzoneState } from "react-dropzone";
+import Toggle from "react-toggle";
 
 import ajaxUtil from "util/ajaxUtil";
 
@@ -11,9 +12,13 @@ import FlowItems from "../layout/FlowItems";
 import Stack from "../layout/Stack";
 import { useAppState } from "app/state/appState";
 
-const RemoteImageUpload = props => {
+type ManageBookCoverProps = {
+  onResults: (results: any) => void;
+  onError: () => void;
+};
+
+const RemoteImageUpload: FunctionComponent<ManageBookCoverProps> = ({ onResults, onError }) => {
   const [{ userId, loginToken }] = useAppState();
-  const { size, processUrlResponse, processUrlError } = props;
 
   const [url, setUrl] = useState("");
   const [saving, setSaving] = useState(false);
@@ -27,8 +32,8 @@ const RemoteImageUpload = props => {
   const doSave = () => {
     setSaving(true);
 
-    const request = { userId, loginToken, url, size };
-    ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, request, processUrlResponse, processUrlError).then(() => setSaving(false));
+    const request = { userId, loginToken, url };
+    ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, request, onResults, onError).then(() => setSaving(false));
   };
 
   return (
@@ -39,7 +44,7 @@ const RemoteImageUpload = props => {
         style={{ minWidth: "200px" }}
         onChange={e => setUrl(e.target.value)}
         className="form-control"
-        placeholder="New Cover URL"
+        placeholder="Upload from URL"
         tabIndex={-1}
       />
       <button className="btn btn-default" disabled={!url || saving} onClick={doSave}>
@@ -49,9 +54,8 @@ const RemoteImageUpload = props => {
   );
 };
 
-const ManageBookCover = props => {
-  const { _id, img, size, imgKey, updateBook: updateExistingBook } = props;
-  const [currentUrl, setCurrentUrl] = useState(img);
+const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
+  const { onResults, onError } = props;
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
   const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
@@ -59,16 +63,15 @@ const ManageBookCover = props => {
   const [{ loginToken, userId }] = useAppState();
 
   const runSave = () => {
-    let newUrl = uploadState.pendingImg;
-    if (_id) {
-      return updateBook({ _id, book: { [imgKey]: newUrl } }).then(() => {
-        setCurrentUrl(newUrl);
-        setUploadState({ pendingImg: "", uploadError: "" });
-      });
-    } else {
-      setCurrentUrl(newUrl);
-      updateExistingBook(book => ({ ...book, [imgKey]: newUrl }));
-    }
+    // let _id = "";
+    // let newUrl = uploadState.pendingImg;
+    // if (_id) {
+    //   return updateBook({ _id, book: { [imgKey]: newUrl } }).then(() => {
+    //     setUploadState({ pendingImg: "", uploadError: "" });
+    //   });
+    // } else {
+    //   updateExistingBook(book => ({ ...book, [imgKey]: newUrl }));
+    // }
   };
 
   const [uploading, setUploading] = useState(false);
@@ -98,7 +101,6 @@ const ManageBookCover = props => {
     request.append("fileUploaded", files[0]);
     request.append("loginToken", loginToken);
     request.append("userId", userId);
-    request.append("size", size);
 
     setUploading(true);
     ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processCoverResponse, processCoverError);
@@ -120,9 +122,19 @@ const ManageBookCover = props => {
     return { border: "3px solid var(--primary-9)" };
   };
 
+  const [use, setUse] = useState(false);
+
   return (
     <FlowItems pushLast={true}>
-      {currentUrl ? (
+      {/* <div>
+        <label>
+          <Toggle defaultChecked={false} onChange={val => setUse(val)} />
+          <br />
+          <span>Use image</span>
+        </label>
+      </div> */}
+
+      {/* {currentUrl ? (
         <div style={{ minWidth: "110px" }}>
           <img alt="Current book cover" {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
         </div>
@@ -130,28 +142,27 @@ const ManageBookCover = props => {
         <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
           <span>No Cover</span>
         </div>
-      )}
+      )} */}
 
-      {!pendingImg ? (
-        <div style={{ minWidth: "100px", maxWidth: "140px", position: "relative" }}>
-          <Dropzone disabled={uploading} onDrop={files => onDrop(files)} multiple={false}>
-            {state => (
-              <div
-                {...state.getRootProps()}
-                style={{ padding: "5px", fontSize: "14px", textAlign: "center", cursor: "pointer", ...getDropzoneStyle(state) }}
-              >
-                <input {...state.getInputProps()} />
-                <div>Click or drag to upload a new cover</div>
-              </div>
-            )}
-          </Dropzone>
-          {uploadError ? (
-            <div style={{ display: "inline-block", marginTop: "2px", marginBottom: "2px" }} className="label label-danger">
-              {uploadError}
+      <div style={{ position: "relative", flex: 1 }}>
+        <Dropzone disabled={uploading} onDrop={files => onDrop(files)} multiple={false}>
+          {state => (
+            <div
+              {...state.getRootProps()}
+              style={{ padding: "5px", fontSize: "14px", textAlign: "center", cursor: "pointer", ...getDropzoneStyle(state) }}
+            >
+              <input {...state.getInputProps()} />
+              <div style={{ fontWeight: "bold", padding: "15px" }}>Click or drag to upload</div>
             </div>
-          ) : null}
-        </div>
-      ) : null}
+          )}
+        </Dropzone>
+        {uploadError ? (
+          <div style={{ display: "inline-block", marginTop: "2px", marginBottom: "2px" }} className="label label-danger">
+            {uploadError}
+          </div>
+        ) : null}
+      </div>
+
       {pendingImg ? (
         <Stack>
           <img alt="Pending book cover" src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
@@ -165,8 +176,8 @@ const ManageBookCover = props => {
           </FlowItems>
         </Stack>
       ) : null}
-      <div>
-        <RemoteImageUpload {...{ processUrlResponse: processCoverResponse, processUrlError: processCoverError, size }} />
+      <div style={{ flex: 1 }}>
+        <RemoteImageUpload {...{ onResults, onError }} />
       </div>
     </FlowItems>
   );

@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent, useLayoutEffect } from "react";
+import React, { useState, FunctionComponent, useLayoutEffect, useEffect } from "react";
 
 import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
@@ -6,13 +6,20 @@ import EditBookInfo from "./editBookInfo";
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/Tabs";
 import ajaxUtil from "util/ajaxUtil";
 import { needBookCoverPriming } from "util/localStorage";
+import Stack from "../layout/Stack";
+import FlowItems from "../layout/FlowItems";
+import { CoverMobile, CoverSmall, NoCoverMedium } from "../bookCoverComponent";
+import { IBookRaw } from "modules/books/booksState";
 
 type Props = {
   saveBook: any;
   title: string;
-  book: any;
+  book: IBookRaw;
   onCancel: any;
 };
+
+type IndividualCover = { STATUS: string; image?: { url: string; preview: string } };
+type UploadResultsType = { success: boolean; status?: string; mobile: IndividualCover; small: IndividualCover; medium: IndividualCover };
 
 const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBook, title }) => {
   const [state, setState] = useState({ tab: "basic", bookEditing: null, title: "" });
@@ -40,6 +47,15 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
   let { bookEditing } = state;
   let book = bookEditing;
 
+  const [coverProcessingError, setCoverProcessingError] = useState(false);
+  const onCoverError = () => {
+    setCoverProcessingError(true);
+    setCoverProcessingResult(null);
+  };
+  const clearCoverError = () => setCoverProcessingError(false);
+
+  const [coverProcessingResult, setCoverProcessingResult] = useState<UploadResultsType>(null);
+
   return (
     <Tabs defaultTab="basic">
       <TabHeaders>
@@ -51,20 +67,72 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
         <TabContent tabName="covers">
           {book ? (
             <>
-              <div className="form-group">
-                <label>Small Cover</label>
-                <ManageBookCover _id={book._id} imgKey="smallImage" size="small" img={book.smallImage} updateBook={updateBook} />
-              </div>
+              <CurrentCovers book={bookToEdit} />
               <hr />
-              <div className="form-group">
-                <label>Medium Cover</label>
-                <ManageBookCover _id={book._id} imgKey="mediumImage" size="medium" img={book.mediumImage} updateBook={updateBook} />
-              </div>
+
+              <ManageBookCover onError={onCoverError} onResults={setCoverProcessingResult} />
+              {coverProcessingError ? <div className="alert alert-danger">Error processing this cover</div> : null}
+              {coverProcessingResult ? <UploadResults {...coverProcessingResult} /> : null}
             </>
           ) : null}
         </TabContent>
       </TabContents>
     </Tabs>
+  );
+};
+
+const PendingImage: FunctionComponent<{ image: { url: string; preview: string } }> = props => {
+  const {
+    image: { url }
+  } = props;
+
+  return (
+    <Stack>
+      <img src={url} />
+    </Stack>
+  );
+};
+
+const UploadResult: FunctionComponent<IndividualCover> = props => {
+  const success = props.STATUS === "success";
+
+  return <div style={{ flex: 1 }}>{success ? <PendingImage image={props.image} /> : null}</div>;
+};
+
+const UploadResults: FunctionComponent<UploadResultsType> = props => {
+  const { success, status, mobile, small, medium } = props;
+
+  if (!success) {
+    if (status === "invalid-size") {
+      return <div className="alert alert-warning">This image is too small to use</div>;
+    } else {
+      return <div className="alert alert-danger">An error occured</div>;
+    }
+  }
+
+  return (
+    <FlowItems>
+      <UploadResult {...mobile} />
+    </FlowItems>
+  );
+};
+
+const CurrentCovers: FunctionComponent<{ book: IBookRaw }> = ({ book }) => {
+  return (
+    <FlowItems>
+      <Stack tightest={true}>
+        <label className="form-label">Mobile</label>
+        <CoverMobile url={book.mobileImage} />
+      </Stack>
+      <Stack tightest={true}>
+        <label className="form-label">Standard</label>
+        <CoverMobile url={book.smallImage} />
+      </Stack>
+      <Stack tightest={true}>
+        <label className="form-label">Full</label>
+        <CoverMobile url={book.mediumImage} />
+      </Stack>
+    </FlowItems>
   );
 };
 

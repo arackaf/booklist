@@ -4,6 +4,12 @@ import { getCrossOriginAttribute } from "util/corsHelpers";
 import "./bookCoverComponentStyles.css";
 import { SuspenseImg } from "./suspenseImage";
 
+export const NoCoverMobile = () => (
+  <div className="no-cover-small">
+    <div>No Cover</div>
+  </div>
+);
+
 export const NoCoverSmall = () => (
   <div className="no-cover-small">
     <div>No Cover</div>
@@ -16,8 +22,11 @@ export const NoCoverMedium = () => (
   </div>
 );
 
+export const CoverMobile = ({ url }) =>
+  url ? <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverMobile />;
+
 export const CoverSmall = ({ url }) =>
-  url ? <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverSmall />;
+  url ? <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverSmall />;
 
 export const CoverMedium = ({ url }) =>
-  url ? <SuspenseImg alt="Book cover" style={{ display: "block" }} {...getCrossOriginAttribute(url)} src={url} /> : <NoCoverMedium />;
+  url ? <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverMedium />;
