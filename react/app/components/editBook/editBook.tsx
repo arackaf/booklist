@@ -125,17 +125,23 @@ const UploadResults: FunctionComponent<UploadResultsType> = props => {
 const CurrentCovers: FunctionComponent<{ book: IBookRaw }> = ({ book }) => {
   return (
     <FlowItems>
-      <Stack tightest={true}>
-        <label className="form-label">Mobile</label>
-        <CoverMobile url={book.mobileImage} />
+      <Stack style={{ flex: 1 }} tightest={true}>
+        <div>
+          <label className="form-label">Mobile</label>
+          <CoverMobile url={book.mobileImage} />
+        </div>
       </Stack>
-      <Stack tightest={true}>
-        <label className="form-label">Standard</label>
-        <CoverMobile url={book.smallImage} />
+      <Stack style={{ flex: 1 }} tightest={true}>
+        <div>
+          <label className="form-label">Standard</label>
+          <CoverMobile url={book.smallImage} />
+        </div>
       </Stack>
-      <Stack tightest={true}>
-        <label className="form-label">Full</label>
-        <CoverMobile url={book.mediumImage} />
+      <Stack style={{ flex: 1 }} tightest={true}>
+        <div>
+          <label className="form-label">Full</label>
+          <CoverMobile url={book.mediumImage} />
+        </div>
       </Stack>
     </FlowItems>
   );
