@@ -1,4 +1,5 @@
 import React, { useState, FunctionComponent, useLayoutEffect, useEffect } from "react";
+import Toggle from "react-toggle";
 
 import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
@@ -81,22 +82,24 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
   );
 };
 
-const PendingImage: FunctionComponent<{ image: { url: string; preview: string } }> = props => {
-  const {
-    image: { url }
-  } = props;
-
-  return (
-    <Stack>
-      <img src={url} />
-    </Stack>
-  );
-};
-
 const UploadResult: FunctionComponent<IndividualCover> = props => {
   const success = props.STATUS === "success";
+  const { image } = props;
 
-  return <div style={{ flex: 1 }}>{success ? <PendingImage image={props.image} /> : null}</div>;
+  return (
+    <div style={{ flex: 1 }}>
+      {success ? (
+        <Stack inline={true} style={{ alignItems: "center", height: "100%" }}>
+          <div className="margin-bottom">
+            <img src={image!.url} />
+          </div>
+          <div style={{ marginTop: "auto" }}>
+            <Toggle defaultChecked={false} icons={{ unchecked: null }} />
+          </div>
+        </Stack>
+      ) : null}
+    </div>
+  );
 };
 
 const UploadResults: FunctionComponent<UploadResultsType> = props => {
@@ -113,6 +116,8 @@ const UploadResults: FunctionComponent<UploadResultsType> = props => {
   return (
     <FlowItems>
       <UploadResult {...mobile} />
+      <UploadResult {...small} />
+      <UploadResult {...medium} />
     </FlowItems>
   );
 };
