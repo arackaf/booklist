@@ -25,12 +25,11 @@ export const NoCoverMedium = () => (
 const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = "" }) => {
   const initialUrl = useRef(url || "");
   const urlChanged = url !== initialUrl.current;
+  const [loaded, setLoaded] = useState(false);
 
   if (!url) {
     return <NoCoverComponent />;
   }
-
-  const [loaded, setLoaded] = useState(false);
 
   if (preview) {
     return (
