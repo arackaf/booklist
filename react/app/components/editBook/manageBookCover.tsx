@@ -62,6 +62,11 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
     onError();
   };
 
+  const processCoverFinished = res => {
+    setUploading(false);
+    onResults(res);
+  };
+
   const onDrop = files => {
     let request = new FormData();
     request.append("fileUploaded", files[0]);
@@ -69,7 +74,7 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
     request.append("userId", userId);
 
     setUploading(true);
-    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, onResults, processCoverError);
+    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processCoverFinished, processCoverError);
   };
 
   const { uploadError } = uploadState;
