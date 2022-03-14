@@ -1,6 +1,5 @@
 import path from "path";
 
-import AWS from "aws-sdk";
 import fetch from "node-fetch";
 import { v4 as uuid } from "uuid";
 
@@ -10,15 +9,10 @@ import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUp
 import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
-import { resizeImage } from "../../util/resizeImage";
-import uploadToS3 from "../../util/uploadToS3";
 import getDbConnection from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
 
-enum COVER_SIZE {
-  SMALL = 1,
-  MEDIUM = 2
-}
+import { handleCover } from "../../util/handleCover";
 
 type BookLookupPacket = {
   pk: string;
@@ -221,21 +215,55 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
   }
 };
 
+const getEmptyImageData = () => ({
+  mobileImage: "",
+  mobileImagePreview: "",
+  smallImage: "",
+  smallImagePreview: "",
+  mediumImage: "",
+  mediumImagePreview: ""
+});
+
+type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
+type ProcessCoverResults = UnwrapPromise<ReturnType<typeof processCoverUrl>>;
+
+const syncImageData = (results: ProcessCoverResults, imageData: ReturnType<typeof getEmptyImageData>) => {
+  if (!imageData.mobileImage && results?.mobile.STATUS === "success") {
+    imageData.mobileImage = results?.mobile?.image.url;
+    imageData.mobileImagePreview = results.mobile.image.preview;
+  }
+  if (!imageData.smallImage && results?.small.STATUS === "success") {
+    imageData.smallImage = results?.small?.image.url;
+    imageData.smallImagePreview = results.small.image.preview;
+  }
+  if (!imageData.mediumImage && results?.medium.STATUS === "success") {
+    imageData.mediumImage = results?.medium?.image.url;
+    imageData.mediumImagePreview = results.medium.image.preview;
+  }
+};
+
 async function getBookFromIsbnDbData(book, userId) {
   console.log("Processing", JSON.stringify(book));
 
   let isbn = book.isbn13 || book.isbn;
 
-  let smallImage = await processCoverUrl(book.image, isbn, userId, COVER_SIZE.SMALL);
-  let mediumImage = await processCoverUrl(book.image, isbn, userId, COVER_SIZE.MEDIUM);
+  let imageData = getEmptyImageData();
+  let initialCoverResults = await processCoverUrl(book.image, isbn, userId);
+
+  syncImageData(initialCoverResults, imageData);
+  if (!imageData.mobileImage || !imageData.smallImage || !imageData.mediumImage) {
+    console.log("One or more covers missing, trying OpenLibrary");
+
+    let imageResult = await processCoverUrl(getOpenLibraryCoverUri(isbn), isbn, userId);
+    syncImageData(imageResult, imageData);
+  }
 
   const newBook = {
     title: book.title || book.title_long,
     isbn,
     ean: "",
     pages: book.pages,
-    smallImage,
-    mediumImage,
+    ...imageData,
     publicationDate: book.date_published, // TODO
     publisher: book.publisher,
     authors: book.authors || [],
@@ -261,58 +289,30 @@ async function getBookFromIsbnDbData(book, userId) {
   return newBook;
 }
 
-async function processCoverUrl(url, isbn, userId, size: COVER_SIZE) {
-  if (url) {
-    let imageResult = await attemptImageSave(url, userId, size);
-    if (imageResult.success) {
-      console.log("Default image succeeded", imageResult.url);
-      return imageResult.url;
-    } else {
-      console.log("Default failed", imageResult.message);
-      if (isbn) {
-        console.log("Trying OpenLibrary");
-
-        let imageResult = await attemptImageSave(getOpenLibraryCoverUri(isbn), userId, size);
-        if (imageResult.success) {
-          console.log("OpenLibrary succeeded", imageResult.url);
-          return imageResult.url;
-        }
-      }
-    }
-  }
-
-  return "";
-}
-
-async function attemptImageSave(url, userId, size: COVER_SIZE) {
-  console.log("Processing", url, size == COVER_SIZE.SMALL ? "small" : "medium");
-
-  const targetWidth = size == COVER_SIZE.SMALL ? 50 : size == COVER_SIZE.MEDIUM ? 106 : 200;
-  const minWidth = size == COVER_SIZE.SMALL ? 45 : size == COVER_SIZE.MEDIUM ? 95 : 180;
-  const quality = size == COVER_SIZE.SMALL ? 80 : null;
-
-  const { body, error } = (await downloadFromUrl(url)) as any;
+async function processCoverUrl(url, isbn, userId) {
+  const { body, error } = await downloadFromUrl(url);
 
   if (error) {
-    return { error: true, message: error || "" };
+    return null;
+  }
+  const extension = path.extname(url) || ".jpg";
+  const filePath = `${userId}/${uuid()}${extension}`;
+
+  const allResults = await Promise.all([
+    handleCover(body, "mobile", filePath),
+    handleCover(body, "small", filePath),
+    handleCover(body, "medium", filePath)
+  ]);
+
+  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
+    return null;
   }
 
-  const imageResult: any = await resizeImage(body, targetWidth, minWidth, quality);
-  if (imageResult.error || !imageResult.body) {
-    console.log(url, "failed", imageResult.error);
-    return { error: true, message: imageResult.error || "" };
-  }
+  const [mobile, small, medium] = allResults;
 
-  const newName = `bookCovers/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
-  console.log(url, "success", "Saving to", newName);
-
-  const s3Result: any = await uploadToS3(newName, imageResult.body);
-
-  if (s3Result.success) {
-    console.log(s3Result.url, "Saved to s3");
-  } else {
-    console.log(s3Result.url, "Failed saving to s3");
-  }
-
-  return s3Result;
+  return {
+    mobile,
+    small,
+    medium
+  };
 }
