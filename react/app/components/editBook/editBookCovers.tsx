@@ -104,16 +104,19 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
   );
 };
 
-const UploadResult: FunctionComponent<IndividualCover & { useNewImage: boolean; setUseNewImage: (val: boolean) => void }> = props => {
+type UploadResultAdditionalTypes = { size: "mobile" | "small" | "medium"; useNewImage: boolean; setUseNewImage: (val: boolean) => void };
+
+const UploadResult: FunctionComponent<IndividualCover & UploadResultAdditionalTypes> = props => {
   const success = props.STATUS === "success";
-  const { image, useNewImage, setUseNewImage } = props;
+  const { image, useNewImage, setUseNewImage, size } = props;
+  const ImgComponent = size === "mobile" ? CoverMobile : size === "small" ? CoverSmall : CoverMedium;
 
   return (
     <div style={{ flex: 1 }}>
       {success ? (
         <Stack inline={true} style={{ alignItems: "center", height: "100%" }}>
           <div className="margin-bottom">
-            <img src={image!.url} />
+            <ImgComponent url={image.url} preview={image.preview} />
           </div>
           <div style={{ marginTop: "auto" }}>
             <Toggle checked={useNewImage} onChange={e => setUseNewImage(e.target.checked)} icons={{ unchecked: null }} />
@@ -146,9 +149,9 @@ const UploadResults: FunctionComponent<UploadResultsType & UseCoversState> = pro
 
   return (
     <FlowItems>
-      <UploadResult {...mobile} useNewImage={useNewMobile} setUseNewImage={setUseNewMobile} />
-      <UploadResult {...small} useNewImage={useNewSmall} setUseNewImage={setUseNewSmall} />
-      <UploadResult {...medium} useNewImage={useNewMedium} setUseNewImage={setUseNewMedium} />
+      <UploadResult {...mobile} useNewImage={useNewMobile} setUseNewImage={setUseNewMobile} size="mobile" />
+      <UploadResult {...small} useNewImage={useNewSmall} setUseNewImage={setUseNewSmall} size="small" />
+      <UploadResult {...medium} useNewImage={useNewMedium} setUseNewImage={setUseNewMedium} size="medium" />
     </FlowItems>
   );
 };
@@ -159,19 +162,19 @@ const CurrentCovers: FunctionComponent<{ book: IBookRaw }> = ({ book }) => {
       <Stack style={{ flex: 1 }} tightest={true}>
         <div>
           <label className="form-label">Mobile</label>
-          <CoverMobile url={book.mobileImage} />
+          <CoverMobile url={book.mobileImage} preview={book.mobileImagePreview} />
         </div>
       </Stack>
       <Stack style={{ flex: 1 }} tightest={true}>
         <div>
           <label className="form-label">Standard</label>
-          <CoverSmall url={book.smallImage} />
+          <CoverSmall url={book.smallImage} preview={book.smallImagePreview} />
         </div>
       </Stack>
       <Stack style={{ flex: 1 }} tightest={true}>
         <div>
           <label className="form-label">Full</label>
-          <CoverMedium url={book.mediumImage} />
+          <CoverMedium url={book.mediumImage} preview={book.mediumImagePreview} />
         </div>
       </Stack>
     </FlowItems>
