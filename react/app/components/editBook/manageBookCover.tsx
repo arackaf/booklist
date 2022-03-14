@@ -58,21 +58,7 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
   const { onResults, onError } = props;
   const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
 
-  const { runMutation: updateBook } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
-
   const [{ loginToken, userId }] = useAppState();
-
-  const runSave = () => {
-    // let _id = "";
-    // let newUrl = uploadState.pendingImg;
-    // if (_id) {
-    //   return updateBook({ _id, book: { [imgKey]: newUrl } }).then(() => {
-    //     setUploadState({ pendingImg: "", uploadError: "" });
-    //   });
-    // } else {
-    //   updateExistingBook(book => ({ ...book, [imgKey]: newUrl }));
-    // }
-  };
 
   const [uploading, setUploading] = useState(false);
 
@@ -122,28 +108,8 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
     return { border: "3px solid var(--primary-9)" };
   };
 
-  const [use, setUse] = useState(false);
-
   return (
     <FlowItems pushLast={true}>
-      {/* <div>
-        <label>
-          <Toggle defaultChecked={false} onChange={val => setUse(val)} />
-          <br />
-          <span>Use image</span>
-        </label>
-      </div> */}
-
-      {/* {currentUrl ? (
-        <div style={{ minWidth: "110px" }}>
-          <img alt="Current book cover" {...getCrossOriginAttribute(currentUrl)} src={currentUrl} />
-        </div>
-      ) : (
-        <div style={{ alignSelf: "flex-start", minWidth: "110px" }} className="alert alert-warning">
-          <span>No Cover</span>
-        </div>
-      )} */}
-
       <div style={{ position: "relative", flex: 1 }}>
         <Dropzone disabled={uploading} onDrop={files => onDrop(files)} multiple={false}>
           {state => (
@@ -163,19 +129,6 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
         ) : null}
       </div>
 
-      {pendingImg ? (
-        <Stack>
-          <img alt="Pending book cover" src={pendingImg} {...getCrossOriginAttribute(pendingImg)} />
-          <FlowItems pushLast={true}>
-            <button onClick={runSave} className="btn btn-xs btn-light btn-square-icon">
-              <i className="fal fa-check" />
-            </button>
-            <button className="btn btn-xs btn-light btn-square-icon" onClick={() => setUploadState({ pendingImg: "", uploadError: "" })}>
-              <i className="fal fa-undo" />
-            </button>
-          </FlowItems>
-        </Stack>
-      ) : null}
       <div style={{ flex: 1 }}>
         <RemoteImageUpload {...{ onResults, onError }} />
       </div>
