@@ -50,31 +50,16 @@ const RemoteImageUpload: FunctionComponent<ManageBookCoverProps> = ({ onResults,
 
 const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
   const { onResults, onError } = props;
-  const [uploadState, setUploadState] = useState({ pendingImg: "", uploadError: "" });
+  const [uploadState, setUploadState] = useState({ uploadError: "" });
 
   const [{ loginToken, userId }] = useAppState();
 
   const [uploading, setUploading] = useState(false);
 
-  const processCoverResponse = res => {
-    return;
-    if (res.error === true) {
-      res.error = "Error uploading";
-    }
-
-    if (res.error) {
-      setUploadState({ pendingImg: "", uploadError: res.error });
-    } else if (!res.url) {
-      setUploadState({ pendingImg: "", uploadError: "Error uploading" });
-    } else {
-      setUploadState({ pendingImg: res.url, uploadError: "Error uploading" });
-    }
-    setUploading(false);
-  };
-
   const processCoverError = res => {
-    setUploadState({ pendingImg: "", uploadError: "Error uploading" });
+    setUploadState({ uploadError: "Error uploading" });
     setUploading(false);
+    onError();
   };
 
   const onDrop = files => {
@@ -84,7 +69,7 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
     request.append("userId", userId);
 
     setUploading(true);
-    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processCoverResponse, processCoverError);
+    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, onResults, processCoverError);
   };
 
   const { uploadError } = uploadState;
