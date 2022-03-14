@@ -57,6 +57,7 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
   const [uploading, setUploading] = useState(false);
 
   const processCoverResponse = res => {
+    return;
     if (res.error === true) {
       res.error = "Error uploading";
     }
@@ -86,7 +87,7 @@ const ManageBookCover: FunctionComponent<ManageBookCoverProps> = props => {
     ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, processCoverResponse, processCoverError);
   };
 
-  const { pendingImg, uploadError } = uploadState;
+  const { uploadError } = uploadState;
 
   const getDropzoneStyle = (state: DropzoneState) => {
     if (uploading) {

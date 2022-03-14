@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent, useLayoutEffect, useEffect } from "react";
+import React, { useState, FunctionComponent } from "react";
 import Toggle from "react-toggle";
 import { useMutation } from "micro-graphql-react";
 import type { MutationOf, Mutations, BookMutationInput } from "graphql-typings";
