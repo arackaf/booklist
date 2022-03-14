@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent, useMemo } from "react";
 import Toggle from "react-toggle";
 import { useMutation } from "micro-graphql-react";
 import type { MutationOf, Mutations, BookMutationInput } from "graphql-typings";
@@ -24,13 +24,16 @@ type UploadResultsType = { success: boolean; status?: string; mobile: Individual
 export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) => {
   const { runMutation: runBookMutation } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
 
-  const [saveEligible, setSaveEligible] = useState(false);
   const [coverProcessingResult, setCoverProcessingResult] = useState<UploadResultsType>(null);
   const [useNewMobile, setUseNewMobile] = useState(false);
   const [useNewSmall, setUseNewSmall] = useState(false);
   const [useNewMedium, setUseNewMedium] = useState(false);
 
   const isNew = () => !book?._id;
+
+  const saveEligible = useMemo(() => {
+    return coverProcessingResult?.success && useNewMobile && useNewSmall && useNewMedium;
+  }, [coverProcessingResult, useNewMobile, useNewSmall, useNewMedium]);
 
   const runSave = () => {
     let { _id } = book;
@@ -65,7 +68,6 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
   const onCoverError = () => {
     setCoverProcessingError(true);
     setCoverProcessingResult(null);
-    setSaveEligible(false);
   };
   const clearCoverError = () => setCoverProcessingError(false);
 
@@ -73,12 +75,10 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
     clearCoverError();
     setCoverProcessingResult(obj);
     if (obj.success) {
-      setSaveEligible(true);
       setUseNewMobile(obj.mobile.STATUS === "success");
       setUseNewSmall(obj.small.STATUS === "success");
       setUseNewMedium(obj.medium.STATUS === "success");
     } else {
-      setSaveEligible(false);
       setUseNewMobile(false);
       setUseNewSmall(false);
       setUseNewMedium(false);
