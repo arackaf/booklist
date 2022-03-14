@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 
 import "./bookCoverComponentStyles.css";
@@ -23,6 +23,9 @@ export const NoCoverMedium = () => (
 );
 
 const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = "" }) => {
+  const initialUrl = useRef(url || "");
+  const urlChanged = url !== initialUrl.current;
+
   if (!url) {
     return <NoCoverComponent />;
   }
@@ -32,12 +35,22 @@ const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = ""
   if (preview) {
     return (
       <>
-        <img alt="Book cover preview" src={preview} style={{ display: !loaded ? "" : "none" }} />
-        <img alt="Book cover" {...getCrossOriginAttribute(url)} src={url} onLoad={() => setLoaded(true)} style={{ display: loaded ? "" : "none" }} />
+        <img alt="Book cover preview" src={preview} style={{ display: !loaded ? "block" : "none" }} />
+        <img
+          alt="Book cover"
+          {...getCrossOriginAttribute(url)}
+          src={url}
+          onLoad={() => setLoaded(true)}
+          style={{ display: loaded ? "block" : "none" }}
+        />
       </>
     );
   } else {
-    return <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />;
+    return urlChanged ? (
+      <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+    ) : (
+      <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+    );
   }
 };
 
