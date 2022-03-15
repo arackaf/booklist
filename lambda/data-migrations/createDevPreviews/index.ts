@@ -15,7 +15,7 @@ import { downloadImage } from "../downloadImage";
 
 import downloadFromUrl from "../../util/downloadFromUrl";
 import uploadToS3 from "../../util/uploadToS3";
-import { resizeImage } from "../../util/resizeImage";
+import { resizeImage, getBuffer } from "../../util/resizeImage";
 import { SIZE_WIDTHS, QUALITIES } from "../../util/handleCover";
 
 const imagePath = (size, filePath) => `${size}-covers/${filePath}`;
@@ -38,18 +38,18 @@ async function processUser(userId, books, db) {
 
     await Promise.all([
       (async () => {
-        if (!mobileImagePreview && (smallImage || mediumImage)) {
+        if (smallImage || mediumImage) {
           try {
             const originalImage = smallImage || mediumImage;
 
             const { body } = await downloadFromUrl(originalImage);
             if (body) {
-              const mobileResults = await resizeImage(body, SIZE_WIDTHS.mobile, QUALITIES.mobile);
+              const mobileResults = await resizeImage(body, SIZE_WIDTHS.mobile, QUALITIES.mobile).then(getBuffer);
               if (mobileResults.STATUS === "success") {
                 const extension = path.extname(originalImage) || ".jpg";
                 const filePath = `${userId}/${uuid()}${extension}`;
 
-                const s3Result = await uploadToS3(imagePath("mobile", filePath), new Buffer(body));
+                const s3Result = await uploadToS3(imagePath("mobile", filePath), mobileResults.body);
                 if (s3Result.STATUS === "success") {
                   imageUpdates.mobileImage = s3Result.url;
                   imageUpdates.mobileImagePreview = mobileResults.preview;
@@ -60,29 +60,29 @@ async function processUser(userId, books, db) {
             console.log("error ", er);
           }
         }
-      })(),
-      (async () => {
-        if (smallImage && !smallImagePreview) {
-          try {
-            const { image, preview } = await moveAndPreview(userId, smallImage, "small");
-            imageUpdates.smallImage = image;
-            imageUpdates.smallImagePreview = preview as string;
-          } catch (er) {
-            console.log("Er a", er);
-          }
-        }
-      })(),
-      (async () => {
-        if (mediumImage && !mediumImagePreview) {
-          try {
-            const { image, preview } = await moveAndPreview(userId, mediumImage, "medium");
-            imageUpdates.mediumImage = image;
-            imageUpdates.mediumImagePreview = preview as string;
-          } catch (er) {
-            console.log("Er b", er);
-          }
-        }
       })()
+      // (async () => {
+      //   if (smallImage && !smallImagePreview) {
+      //     try {
+      //       const { image, preview } = await moveAndPreview(userId, smallImage, "small");
+      //       imageUpdates.smallImage = image;
+      //       imageUpdates.smallImagePreview = preview as string;
+      //     } catch (er) {
+      //       console.log("Er a", er);
+      //     }
+      //   }
+      // })(),
+      // (async () => {
+      //   if (mediumImage && !mediumImagePreview) {
+      //     try {
+      //       const { image, preview } = await moveAndPreview(userId, mediumImage, "medium");
+      //       imageUpdates.mediumImage = image;
+      //       imageUpdates.mediumImagePreview = preview as string;
+      //     } catch (er) {
+      //       console.log("Er b", er);
+      //     }
+      //   }
+      // })()
     ]);
 
     if (Object.keys(imageUpdates).length) {
