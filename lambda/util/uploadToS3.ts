@@ -1,4 +1,4 @@
-import S3 from "aws-sdk/clients/s3";
+const S3 = require("aws-sdk/clients/s3");
 import { defaultMetaData } from "./s3MetaData";
 
 type S3UploadResult = { STATUS: "error"; message: any } | { STATUS: "success"; url: string };
