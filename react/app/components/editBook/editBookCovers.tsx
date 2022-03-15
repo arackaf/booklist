@@ -32,7 +32,7 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
   const isNew = () => !book?._id;
 
   const saveEligible = useMemo(() => {
-    return coverProcessingResult?.success && useNewMobile && useNewSmall && useNewMedium;
+    return coverProcessingResult?.success && (useNewMobile || useNewSmall || useNewMedium);
   }, [coverProcessingResult, useNewMobile, useNewSmall, useNewMedium]);
 
   const runSave = () => {
