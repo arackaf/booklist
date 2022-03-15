@@ -1,5 +1,5 @@
 const { MongoClient } = require("mongodb");
-const { DEV, DB_NAME } = require("./connection-strings");
+const { DEV, PROD, DB_NAME } = require("./connection-strings");
 
 module.exports.connect = async () => {
   const client = await MongoClient.connect(DEV);

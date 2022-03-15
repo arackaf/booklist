@@ -1,3 +1,11 @@
+const AWS = require("aws-sdk");
+
+const TABLE_NAME = `My_Library_live`;
+
+const dynamo = new AWS.DynamoDB.DocumentClient({
+  region: "us-east-1"
+});
+
 const Jimp = require("jimp");
 
 const path = require("path");
@@ -11,6 +19,15 @@ import { resizeImage } from "../../util/resizeImage";
 import { SIZE_WIDTHS, QUALITIES } from "../../util/handleCover";
 
 const imagePath = (size, filePath) => `${size}-covers/${filePath}`;
+
+async function dumpUsers() {
+  const res = await dynamo
+    .scan({ TableName: TABLE_NAME, FilterExpression: `begins_with(pk, :userVal)`, ExpressionAttributeValues: { ":userVal": "User#" } })
+    .promise();
+
+  return res.Items;
+}
+
 async function processUser(userId, books, db) {
   for (const book of books) {
     console.log("====================================");
@@ -19,48 +36,54 @@ async function processUser(userId, books, db) {
 
     const imageUpdates = {} as any;
 
-    if (!mobileImagePreview && (smallImage || mediumImage)) {
-      try {
-        const originalImage = smallImage || mediumImage;
+    await Promise.all([
+      (async () => {
+        if (!mobileImagePreview && (smallImage || mediumImage)) {
+          try {
+            const originalImage = smallImage || mediumImage;
 
-        const { body } = await downloadFromUrl(originalImage);
-        if (body) {
-          const mobileResults = await resizeImage(body, SIZE_WIDTHS.mobile, QUALITIES.mobile);
-          if (mobileResults.STATUS === "success") {
-            const extension = path.extname(originalImage) || ".jpg";
-            const filePath = `${userId}/${uuid()}${extension}`;
+            const { body } = await downloadFromUrl(originalImage);
+            if (body) {
+              const mobileResults = await resizeImage(body, SIZE_WIDTHS.mobile, QUALITIES.mobile);
+              if (mobileResults.STATUS === "success") {
+                const extension = path.extname(originalImage) || ".jpg";
+                const filePath = `${userId}/${uuid()}${extension}`;
 
-            const s3Result = await uploadToS3(imagePath("mobile", filePath), new Buffer(body));
-            if (s3Result.STATUS === "success") {
-              imageUpdates.mobileImage = s3Result.url;
-              imageUpdates.mobileImagePreview = mobileResults.preview;
+                const s3Result = await uploadToS3(imagePath("mobile", filePath), new Buffer(body));
+                if (s3Result.STATUS === "success") {
+                  imageUpdates.mobileImage = s3Result.url;
+                  imageUpdates.mobileImagePreview = mobileResults.preview;
+                }
+              }
             }
+          } catch (er) {
+            console.log("error ", er);
           }
         }
-      } catch (er) {
-        console.log("error ", er);
-      }
-    }
-
-    if (smallImage && !smallImagePreview) {
-      try {
-        const { image, preview } = await moveAndPreview(userId, smallImage, "small");
-        imageUpdates.smallImage = image;
-        imageUpdates.smallImagePreview = preview as string;
-      } catch (er) {
-        console.log("Er a", er);
-      }
-    }
-
-    if (mediumImage && !mediumImagePreview) {
-      try {
-        const { image, preview } = await moveAndPreview(userId, mediumImage, "medium");
-        imageUpdates.mediumImage = image;
-        imageUpdates.mediumImagePreview = preview as string;
-      } catch (er) {
-        console.log("Er b", er);
-      }
-    }
+      })(),
+      (async () => {
+        if (smallImage && !smallImagePreview) {
+          try {
+            const { image, preview } = await moveAndPreview(userId, smallImage, "small");
+            imageUpdates.smallImage = image;
+            imageUpdates.smallImagePreview = preview as string;
+          } catch (er) {
+            console.log("Er a", er);
+          }
+        }
+      })(),
+      (async () => {
+        if (mediumImage && !mediumImagePreview) {
+          try {
+            const { image, preview } = await moveAndPreview(userId, mediumImage, "medium");
+            imageUpdates.mediumImage = image;
+            imageUpdates.mediumImagePreview = preview as string;
+          } catch (er) {
+            console.log("Er b", er);
+          }
+        }
+      })()
+    ]);
 
     if (Object.keys(imageUpdates).length) {
       console.log("Saving book...");
@@ -98,19 +121,16 @@ async function moveAndPreview(userId, url, size) {
 
 async function run() {
   const [client, db] = (await connect()) as any;
-  const users = await db.collection("users").find({}).toArray();
+  const users = await dumpUsers();
 
   for (const user of users) {
-    if ("" + user._id === "5b57f71b6871ae00145198ff") {
+    if (user.userId === "5b57f71b6871ae00145198ff") {
       continue;
     }
-    console.log("Processing user", user._id, user.email);
-    const books = await db
-      .collection("books")
-      .find({ userId: "" + user._id })
-      .toArray();
+    console.log("Processing user", user.userId, user.email);
+    const books = await db.collection("books").find({ userId: user.userId }).toArray();
     console.log("Found", books.length, "books");
-    await processUser("60a93babcc3928454b5d1cc6", books, db);
+    await processUser(user.userId, books, db);
   }
 
   client.close();
