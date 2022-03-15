@@ -26,10 +26,18 @@ const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = ""
   const initialUrl = useRef(url || "");
   const urlChanged = url !== initialUrl.current;
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   if (!url) {
     return <NoCoverComponent />;
   }
+
+  useEffect(() => {
+    // make sure the image src is added after the onload handler
+    if (imgRef.current) {
+      imgRef.current.src = url;
+    }
+  }, [url]);
 
   if (preview) {
     return (
@@ -38,7 +46,7 @@ const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = ""
         <img
           alt="Book cover"
           {...getCrossOriginAttribute(url)}
-          src={url}
+          ref={imgRef}
           onLoad={() => setLoaded(true)}
           style={{ display: loaded ? "block" : "none" }}
         />

@@ -18,7 +18,7 @@ const BookViewListMobileItem = props => {
     <div className="list-group-item">
       <div style={{ display: "flex" }}>
         <div style={{ marginRight: "5px", minWidth: "55px" }}>
-          <CoverSmall url={book.smallImage} />
+          <CoverSmall preview={book.smallImagePreview} url={book.smallImage} />
         </div>
         <div>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>

@@ -58,7 +58,7 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
         ) : null}
         <td>
           <div style={{ width: "60px", minHeight: "75px" }}>
-            <CoverSmall url={book.smallImage} />
+            <CoverSmall preview={book.smallImagePreview} url={book.smallImage} />
           </div>
         </td>
         <td>
