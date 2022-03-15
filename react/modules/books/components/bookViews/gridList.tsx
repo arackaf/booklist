@@ -57,9 +57,16 @@ const BookRow: FunctionComponent<ILocalProps> = props => {
           </td>
         ) : null}
         <td>
-          <div style={{ width: "60px", minHeight: "75px" }}>
+          <div style={{ width: "260px", minHeight: "75px", display: "flex", alignItems: "flex-start" }}>
+            <img src={book.smallImagePreview} />
             <CoverSmall url={book.smallImage} />
+            <img src={book.mobileImagePreview} />
+            <img src={book.mobileImage} />
           </div>
+
+          <br />
+          <img src={book.mediumImagePreview} />
+          <img src={book.mediumImage} />
         </td>
         <td>
           <Stack>
