@@ -1,16 +1,18 @@
 import React, { useState, FunctionComponent, useLayoutEffect } from "react";
+import type { IBookRaw } from "modules/books/booksState";
 
-import ManageBookCover from "./manageBookCover";
 import EditBookInfo from "./editBookInfo";
 
 import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/Tabs";
 import ajaxUtil from "util/ajaxUtil";
 import { needBookCoverPriming } from "util/localStorage";
 
+import { EditBookCovers } from "./editBookCovers";
+
 type Props = {
   saveBook: any;
   title: string;
-  book: any;
+  book: IBookRaw;
   onCancel: any;
 };
 
@@ -48,21 +50,7 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
       </TabHeaders>
       <TabContents>
         <TabContent tabName="basic">{book ? <EditBookInfo {...{ book, onCancel, saveBook }} updateBook={updateBook} /> : null}</TabContent>
-        <TabContent tabName="covers">
-          {book ? (
-            <>
-              <div className="form-group">
-                <label>Small Cover</label>
-                <ManageBookCover _id={book._id} imgKey="smallImage" size="small" img={book.smallImage} updateBook={updateBook} />
-              </div>
-              <hr />
-              <div className="form-group">
-                <label>Medium Cover</label>
-                <ManageBookCover _id={book._id} imgKey="mediumImage" size="medium" img={book.mediumImage} updateBook={updateBook} />
-              </div>
-            </>
-          ) : null}
-        </TabContent>
+        <TabContent tabName="covers">{book ? <EditBookCovers book={book} updateBook={updateBook} /> : null}</TabContent>
       </TabContents>
     </Tabs>
   );

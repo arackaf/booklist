@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 
 import "./bookCoverComponentStyles.css";
 import { SuspenseImg } from "./suspenseImage";
+
+export const NoCoverMobile = () => (
+  <div className="no-cover-small">
+    <div>No Cover</div>
+  </div>
+);
 
 export const NoCoverSmall = () => (
   <div className="no-cover-small">
@@ -16,8 +22,39 @@ export const NoCoverMedium = () => (
   </div>
 );
 
-export const CoverSmall = ({ url }) =>
-  url ? <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} /> : <NoCoverSmall />;
+const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = "" }) => {
+  const initialUrl = useRef(url || "");
+  const urlChanged = url !== initialUrl.current;
+  const [loaded, setLoaded] = useState(false);
 
-export const CoverMedium = ({ url }) =>
-  url ? <SuspenseImg alt="Book cover" style={{ display: "block" }} {...getCrossOriginAttribute(url)} src={url} /> : <NoCoverMedium />;
+  if (!url) {
+    return <NoCoverComponent />;
+  }
+
+  if (preview) {
+    return (
+      <>
+        <img alt="Book cover preview" src={preview} style={{ display: !loaded ? "block" : "none" }} />
+        <img
+          alt="Book cover"
+          {...getCrossOriginAttribute(url)}
+          src={url}
+          onLoad={() => setLoaded(true)}
+          style={{ display: loaded ? "block" : "none" }}
+        />
+      </>
+    );
+  } else {
+    return urlChanged ? (
+      <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+    ) : (
+      <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+    );
+  }
+};
+
+export const CoverMobile = ({ url, preview = "" }) => <Cover url={url} preview={preview} NoCoverComponent={NoCoverMobile} />;
+
+export const CoverSmall = ({ url, preview = "" }) => <Cover url={url} preview={preview} NoCoverComponent={NoCoverSmall} />;
+
+export const CoverMedium = ({ url, preview = "" }) => <Cover url={url} preview={preview} NoCoverComponent={NoCoverMedium} />;

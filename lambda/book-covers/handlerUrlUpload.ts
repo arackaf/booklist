@@ -2,9 +2,9 @@ import path from "path";
 import uuid from "uuid/v4";
 
 import checkLogin from "../util/checkLoginToken";
-import resizeImage from "../util/resizeImage";
+import { handleCover } from "../util/handleCover";
 import corsResponse from "../util/corsResponse";
-import uploadToS3 from "../util/uploadToS3";
+
 import downloadFromUrl from "../util/downloadFromUrl";
 import { isWarmingCall } from "../util/isWarmingCall";
 
@@ -13,20 +13,36 @@ export const handler = async event => {
     return corsResponse({ coldStartPrevented: true });
   }
 
-  const { userId, loginToken, size, url } = JSON.parse(event.body);
-  const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
+  const { userId, loginToken, url } = JSON.parse(event.body);
 
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
   }
   const { body, error } = await downloadFromUrl(url);
 
-  const imageResult = await resizeImage(body, MAX_WIDTH, null, 80);
-  if (imageResult.error || !imageResult.body) {
+  if (error) {
+    console.log("Error downloading", error);
     return corsResponse({ error: true });
   }
+  const extension = path.extname(url) || ".jpg";
+  const filePath = `${userId}/${uuid()}${extension}`;
 
-  const newName = `bookCovers/${userId}/${uuid()}${path.extname(url) || ".jpg"}`;
-  const s3Result = await uploadToS3(newName, imageResult.body);
-  return corsResponse(s3Result);
+  const allResults = await Promise.all([
+    handleCover(body, "mobile", filePath),
+    handleCover(body, "small", filePath),
+    handleCover(body, "medium", filePath)
+  ]);
+
+  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
+    return corsResponse({ status: allResults[0].STATUS });
+  }
+
+  const [mobile, small, medium] = allResults;
+
+  return corsResponse({
+    success: true,
+    mobile,
+    small,
+    medium
+  });
 };

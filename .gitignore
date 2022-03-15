@@ -20,3 +20,4 @@ svelte/dist
 .serverless
 react/public/sw-index-bundle.js
 svelte/public/sw-index-bundle.js
+lambda/data-migrations/connection-strings.js

@@ -3,10 +3,9 @@ import uuid from "uuid/v4";
 import awsMultiPartParser from "lambda-multipart-parser";
 
 import checkLogin from "../util/checkLoginToken";
-import resizeImage from "../util/resizeImage";
 import corsResponse from "../util/corsResponse";
-import uploadToS3 from "../util/uploadToS3";
 import { isWarmingCall } from "../util/isWarmingCall";
+import { handleCover } from "../util/handleCover";
 
 export const handler = async event => {
   if (isWarmingCall(event)) {
@@ -14,21 +13,33 @@ export const handler = async event => {
   }
 
   const formPayload = await awsMultiPartParser.parse(event);
-  const { userId, loginToken, size } = formPayload;
+  const { userId, loginToken } = formPayload;
   const file = formPayload.files[0];
-  const MAX_WIDTH = size == "small" ? 50 : size == "medium" ? 106 : 200;
 
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
   }
 
-  const imageResult = await resizeImage(file.content, MAX_WIDTH, null, 80);
+  const extension = path.extname(file.filename) || ".jpg";
+  const filePath = `${userId}/${uuid()}${extension}`;
+  const body = file.content;
 
-  if (imageResult.error || !imageResult.body) {
-    console.log("resize error", imageResult.message);
-    return corsResponse({ error: true });
+  const allResults = await Promise.all([
+    handleCover(body, "mobile", filePath),
+    handleCover(body, "small", filePath),
+    handleCover(body, "medium", filePath)
+  ]);
+
+  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
+    return corsResponse({ status: allResults[0].STATUS });
   }
-  const newName = `bookCovers/${userId}/${uuid()}${path.extname(file.filename) || ".jpg"}`;
-  const s3Result = await uploadToS3(newName, imageResult.body);
-  return corsResponse(s3Result);
+
+  const [mobile, small, medium] = allResults;
+
+  return corsResponse({
+    success: true,
+    mobile,
+    small,
+    medium
+  });
 };

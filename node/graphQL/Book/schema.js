@@ -5,8 +5,12 @@ export const type = `
     ean: String
     isbn: String
     title: String
+    mobileImage: String
+    mobileImagePreview: String
     smallImage: String
+    smallImagePreview: String
     mediumImage: String
+    mediumImagePreview: String
     userId: String
     publisher: String
     publicationDate: String
@@ -55,8 +59,12 @@ export const type = `
     ean: String
     isbn: String
     title: String
+    mobileImage: String
+    mobileImagePreview: String
     smallImage: String
+    smallImagePreview: String
     mediumImage: String
+    mediumImagePreview: String
     userId: String
     publisher: String
     publicationDate: String
@@ -77,8 +85,12 @@ export const type = `
     ean: String
     isbn: String
     title: String
+    mobileImage: String
+    mobileImagePreview: String
     smallImage: String
+    smallImagePreview: String
     mediumImage: String
+    mediumImagePreview: String
     userId: String
     publisher: String
     publicationDate: String
@@ -135,8 +147,12 @@ export const type = `
     ean: Int
     isbn: Int
     title: Int
+    mobileImage: Int
+    mobileImagePreview: Int
     smallImage: Int
+    smallImagePreview: Int
     mediumImage: Int
+    mediumImagePreview: Int
     userId: Int
     publisher: Int
     publicationDate: Int
@@ -181,6 +197,22 @@ export const type = `
     title_ne: String
     title_in: [String]
     title_nin: [String]
+    mobileImage_contains: String
+    mobileImage_startsWith: String
+    mobileImage_endsWith: String
+    mobileImage_regex: String
+    mobileImage: String
+    mobileImage_ne: String
+    mobileImage_in: [String]
+    mobileImage_nin: [String]
+    mobileImagePreview_contains: String
+    mobileImagePreview_startsWith: String
+    mobileImagePreview_endsWith: String
+    mobileImagePreview_regex: String
+    mobileImagePreview: String
+    mobileImagePreview_ne: String
+    mobileImagePreview_in: [String]
+    mobileImagePreview_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -189,6 +221,14 @@ export const type = `
     smallImage_ne: String
     smallImage_in: [String]
     smallImage_nin: [String]
+    smallImagePreview_contains: String
+    smallImagePreview_startsWith: String
+    smallImagePreview_endsWith: String
+    smallImagePreview_regex: String
+    smallImagePreview: String
+    smallImagePreview_ne: String
+    smallImagePreview_in: [String]
+    smallImagePreview_nin: [String]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -197,6 +237,14 @@ export const type = `
     mediumImage_ne: String
     mediumImage_in: [String]
     mediumImage_nin: [String]
+    mediumImagePreview_contains: String
+    mediumImagePreview_startsWith: String
+    mediumImagePreview_endsWith: String
+    mediumImagePreview_regex: String
+    mediumImagePreview: String
+    mediumImagePreview_ne: String
+    mediumImagePreview_in: [String]
+    mediumImagePreview_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -370,6 +418,22 @@ export const query = `
     title_ne: String,
     title_in: [String],
     title_nin: [String],
+    mobileImage_contains: String,
+    mobileImage_startsWith: String,
+    mobileImage_endsWith: String,
+    mobileImage_regex: String,
+    mobileImage: String,
+    mobileImage_ne: String,
+    mobileImage_in: [String],
+    mobileImage_nin: [String],
+    mobileImagePreview_contains: String,
+    mobileImagePreview_startsWith: String,
+    mobileImagePreview_endsWith: String,
+    mobileImagePreview_regex: String,
+    mobileImagePreview: String,
+    mobileImagePreview_ne: String,
+    mobileImagePreview_in: [String],
+    mobileImagePreview_nin: [String],
     smallImage_contains: String,
     smallImage_startsWith: String,
     smallImage_endsWith: String,
@@ -378,6 +442,14 @@ export const query = `
     smallImage_ne: String,
     smallImage_in: [String],
     smallImage_nin: [String],
+    smallImagePreview_contains: String,
+    smallImagePreview_startsWith: String,
+    smallImagePreview_endsWith: String,
+    smallImagePreview_regex: String,
+    smallImagePreview: String,
+    smallImagePreview_ne: String,
+    smallImagePreview_in: [String],
+    smallImagePreview_nin: [String],
     mediumImage_contains: String,
     mediumImage_startsWith: String,
     mediumImage_endsWith: String,
@@ -386,6 +458,14 @@ export const query = `
     mediumImage_ne: String,
     mediumImage_in: [String],
     mediumImage_nin: [String],
+    mediumImagePreview_contains: String,
+    mediumImagePreview_startsWith: String,
+    mediumImagePreview_endsWith: String,
+    mediumImagePreview_regex: String,
+    mediumImagePreview: String,
+    mediumImagePreview_ne: String,
+    mediumImagePreview_in: [String],
+    mediumImagePreview_nin: [String],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,
