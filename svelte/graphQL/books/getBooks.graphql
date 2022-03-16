@@ -42,7 +42,10 @@ query SearchBooks(
       isbn
       ean
       pages
+      mobileImage
+      mobileImagePreview
       smallImage
+      smallImagePreview
       mediumImage
       publicationDate
       subjects

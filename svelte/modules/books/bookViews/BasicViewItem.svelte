@@ -36,7 +36,7 @@
 <div class="listGroupItem">
   <div style="display: flex">
     <div style="margin-right: 5px; min-width: 55px">
-      <CoverSmall url={book.smallImage} />
+      <CoverSmall url={book.smallImage} preview={book.smallImagePreview} />
     </div>
     <div>
       <div style="display: flex; flex-direction: column; height: 100%">

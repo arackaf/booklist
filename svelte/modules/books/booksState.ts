@@ -44,8 +44,12 @@ export interface IBookRaw {
   isRead: boolean;
   readChanging?: boolean;
   isbn: string;
+  mobileImage: string;
+  mobileImagePreview: string;
   smallImage: string;
+  smallImagePreview: string;
   mediumImage: string;
+  mediumImagePreview: string;
   pages: any;
   publicationDate: any;
   publisher: string;
