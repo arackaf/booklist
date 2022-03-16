@@ -38,7 +38,7 @@
     box-shadow: 0px 4px 12px var(--neutral-7);
   }
 
-  @media (max-width: 600px) {
+  /* @media (max-width: 600px) {
     figure {
       width: 70px;
       margin: 7px 10px 0 0;
@@ -59,7 +59,7 @@
       width: var(--no-cover-small-width);
       max-height: var(--no-cover-small-height);
     }
-  }
+  } */
 
   .coversList :global(img) {
     max-width: 100%;

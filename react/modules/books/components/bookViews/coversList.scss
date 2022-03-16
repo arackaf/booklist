@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  
+
   figure {
     width: 120px;
     margin: 15px 15px 0 0;
@@ -18,26 +18,12 @@
       transform: translateY(-5px);
       box-shadow: 0px 4px 12px var(--neutral-7);
     }
-    
-    @media(max-width: 600px){
-      width: 70px;
-      margin: 7px 10px 0 0;
-      
-      :global(.no-cover-medium){
-        width: 70px;
-        font-size: var(--no-cover-small-font-size);
-        padding-top: var(--no-cover-small-padding-top);
-        max-height: 90px;
-      }
+
+    @media (max-width: 600px) {
+      margin: 10px 10px 0 0;
     }
-    @media(max-width: 420px){
-      width: 50px;
+    @media (max-width: 420px) {
       margin: 5px 5px 0 0;
-    
-      :global(.no-cover-medium){
-        width: var(--no-cover-small-width);
-        max-height: var(--no-cover-small-height);
-      }
     }
   }
 
@@ -46,7 +32,7 @@
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   figcaption {
     white-space: nowrap;
     overflow: hidden;
