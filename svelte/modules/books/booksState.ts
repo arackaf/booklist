@@ -121,8 +121,7 @@ export const searchBooks = (uiView: Readable<{ view: string; pendingView: string
   ];
 
   const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(GetBooksQuery, {
-    onMutation: onBooksMutation,
-    postProcess: resp => preloadBookImages(resp, get(uiView).pendingView == COVERS_LIST)
+    onMutation: onBooksMutation
   });
   const booksActiveWsHandler = evt => {
     if (evt?.detail?.type == "bookAdded") {

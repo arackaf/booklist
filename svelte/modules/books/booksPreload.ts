@@ -13,9 +13,7 @@ const COVERS_LIST = "books covers view";
 export default function preload() {
   let variables = bookSearchVariablesFromCurrentUrl();
   return Promise.all([
-    Promise.resolve(graphqlClient.preload(GetBooksQuery, variables)).then(resp =>
-      preloadBookImages(resp, localStorage.get("book-ui") == COVERS_LIST)
-    ),
+    graphqlClient.preload(GetBooksQuery, variables),
     graphqlClient.preload(AllSubjectsQuery, { publicUserId: variables.publicUserId }),
     graphqlClient.preload(GetTags, { publicUserId: variables.publicUserId }),
     graphqlClient.preload(AllLabelColorsQuery, { cache: 9 })
