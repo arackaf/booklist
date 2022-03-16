@@ -475,6 +475,10 @@ select.form-control {
 input.form-control,
 select.form-control {
   font-size: 14px;
+
+  @media (max-width: 600px) {
+    font-size: 16px;
+  }
 }
 
 div,

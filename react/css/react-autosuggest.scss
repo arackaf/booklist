@@ -11,6 +11,10 @@
   font-size: 14px;
   border-color: var(--neutral-border);
   border-width: 1px;
+
+  @media (max-width: 600px) {
+    font-size: 16px;
+  }
 }
 
 .react-autosuggest__input:focus {
