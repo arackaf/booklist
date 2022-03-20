@@ -37,7 +37,7 @@
     "svelte": "^3.46.4",
     "svelte-check": "^2.2.10",
     "svelte-file-dropzone": "0.0.15",
-    "svelte-helpers": "0.2.4",
+    "svelte-helpers": "0.2.5",
     "svelte-loadable": "^1.5.1",
     "svelte-preprocess": "^4.9.8",
     "toastify-js": "^1.11.1",
