@@ -37,18 +37,18 @@ const MenuOptions: FunctionComponent<{
         <>
           <Button title="Filter search" onClick={actions.beginEditFilters} className="btn btn-default">
             <span>Set Filters</span>
-            <i className="fal fa-filter" />
+            <i className="fal fa-fw fa-filter" />
           </Button>
           <hr />
           {!isPublic ? (
             <>
               <Button title="Edit subjects" onClick={actions.editSubjects} className="btn btn-default">
                 <span>Edit Subjects</span>
-                <i className="fal fa-sitemap" />
+                <i className="fal fa-fw fa-sitemap" />
               </Button>
               <Button title="Edit tags" onClick={actions.editTags} className="btn btn-default">
                 <span>Edit Tags</span>
-                <i className="fal fa-tags" />
+                <i className="fal fa-fw fa-tags" />
               </Button>
               <hr />
             </>
@@ -57,20 +57,20 @@ const MenuOptions: FunctionComponent<{
       ) : null}
       <Button className="btn btn-default" onClick={reloadBooks} disabled={booksLoading}>
         <span>Reload Books</span>
-        <i className="fal fa-sync"></i>
+        <i className="fal fa-fw fa-sync"></i>
       </Button>
       <hr />
       <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default " + (uiView.isGridView ? "active" : "")}>
         <span>Grid View</span>
-        <i className="fal fa-table" />
+        <i className="fal fa-fw fa-table" />
       </Button>
       <Button onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })} className={"btn btn-default " + (uiView.isCoversList ? "active" : "")}>
         <span>Covers View</span>
-        <i className="fas fa-th" />
+        <i className="fas fa-fw fa-th" />
       </Button>
       <Button onClick={() => uiDispatch({ type: "SET_BASIC_LIST_VIEW" })} className={"btn btn-default " + (uiView.isBasicList ? "active" : "")}>
         <span>Mobile View</span>
-        <i className="fal fa-list" />
+        <i className="fal fa-fw fa-list" />
       </Button>
       <hr />
     </>
@@ -79,19 +79,19 @@ const MenuOptions: FunctionComponent<{
       <hr />
       <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
         <span>Add / Remove Subjects</span>
-        <i className="fal fa-sitemap" />
+        <i className="fal fa-fw fa-sitemap" />
       </Button>
       <Button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default hidden-tiny">
         <span>Add / Remove Tags</span>
-        <i className="fal fa-tags" />
+        <i className="fal fa-fw fa-tags" />
       </Button>
       <Button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
         <span>Set Read</span>
-        <i className="fal fa-eye" />
+        <i className="fal fa-fw fa-eye" />
       </Button>
       <Button title="Set un-read" onClick={() => setRead(selectedBooksIds, false)} className="btn btn-default put-line-through hidden-tiny">
         <span>Set Un-Read</span>
-        <i className="fal fa-eye-slash" />
+        <i className="fal fa-fw fa-eye-slash" />
       </Button>
       <hr />
     </>
