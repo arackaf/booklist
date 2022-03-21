@@ -27,10 +27,10 @@
   <div class="mobile-menu-content">
     <div>
       <div class="header">
-        <button class="raw-button icon-button" style="font-size: 1.4rem; align-self: start" on:click={onClose}>
-          <i class="far fa-bars" />
+        <button class="raw-button icon-button" on:click={onClose}>
+          <i class="far fa-times" />
         </button>
-        <h3 style="margin: 0 0 0 10px; align-self: center">{title}</h3>
+        <h3>{title}</h3>
       </div>
       <slot />
     </div>

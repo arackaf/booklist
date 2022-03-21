@@ -30,6 +30,18 @@ header {
       .header {
         margin-top: 8px;
         display: flex;
+
+        button {
+          margin-left: 2px;
+          font-size: 1.4rem;
+          align-self: start;
+          cursor: pointer;
+        }
+
+        h3 {
+          margin: 0 0 0 8px;
+          align-self: center;
+        }
       }
 
       .button-container {

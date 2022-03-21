@@ -15,6 +15,7 @@
 
   .mobile-menu-button {
     display: none;
+    cursor: pointer;
   }
 
   input.search-input {
@@ -28,7 +29,9 @@
   }
 
   .menu-bar-desktop {
-    button span, h2, hr {
+    button span,
+    h2,
+    hr {
       display: none;
     }
   }

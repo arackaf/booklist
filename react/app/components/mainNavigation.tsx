@@ -182,10 +182,10 @@ const _MobileMenu = ({ title, open, onClose, children }) => {
     <div className="mobile-menu-content">
       <div>
         <div className="header">
-          <button aria-label="Close menu" className="raw-button icon-button" style={{ fontSize: "1.4rem", alignSelf: "start" }} onClick={onClose}>
-            <i className="far fa-bars"></i>
+          <button aria-label="Close menu" className="raw-button icon-button" onClick={onClose}>
+            <i className="far fa-times"></i>
           </button>
-          <h3 style={{ margin: "0 0 0 10px", alignSelf: "center" }}>{title}</h3>
+          <h3>{title}</h3>
         </div>
         {children}
       </div>
