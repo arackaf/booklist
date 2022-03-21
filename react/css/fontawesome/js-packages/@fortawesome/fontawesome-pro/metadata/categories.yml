@@ -208,6 +208,7 @@ interfaces:
     - sign-out
     - sitemap
     - sync
+    - times
     - trash
     - trash-alt
     - undo
@@ -238,6 +239,7 @@ mathematics:
   icons:
     - minus
     - plus
+    - times
   label: Mathematics
 medical:
   icons:

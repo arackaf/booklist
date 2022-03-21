@@ -330,6 +330,9 @@ readers do not read off random characters that represent icons */
 .fa-th:before {
   content: "\f00a"; }
 
+.fa-times:before {
+  content: "\f00d"; }
+
 .fa-trash:before {
   content: "\f1f8"; }
 

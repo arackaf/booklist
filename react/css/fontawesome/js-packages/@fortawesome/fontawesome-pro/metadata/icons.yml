@@ -790,6 +790,32 @@ th:
     - solid
   unicode: f00a
   voted: false
+times:
+  changes:
+    - '1'
+    - 5.0.0
+    - 5.0.13
+    - 5.11.0
+    - 5.11.1
+  label: Times
+  search:
+    terms:
+      - close
+      - cross
+      - error
+      - exit
+      - incorrect
+      - notice
+      - notification
+      - notify
+      - problem
+      - wrong
+      - x
+  styles:
+    - regular
+    - light
+  unicode: f00d
+  voted: false
 trash:
   changes:
     - '4.2'

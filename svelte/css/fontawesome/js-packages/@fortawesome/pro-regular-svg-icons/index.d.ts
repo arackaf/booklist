@@ -15,6 +15,7 @@ export const faQuestionCircle: IconDefinition;
 export const faRedo: IconDefinition;
 export const faSave: IconDefinition;
 export const faSpinner: IconDefinition;
+export const faTimes: IconDefinition;
 export const faTrash: IconDefinition;
 import { IconDefinition, IconLookup, IconName, IconPrefix, IconPack } from '@fortawesome/fontawesome-common-types';
 export { IconDefinition, IconLookup, IconName, IconPrefix, IconPack } from '@fortawesome/fontawesome-common-types';

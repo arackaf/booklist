@@ -51,6 +51,7 @@ export type IconName = 'amazon' |
   'sync' | 
   'table' | 
   'tags' | 
+  'times' | 
   'trash-alt' | 
   'undo' | 
   'users-cog' | 
@@ -71,6 +72,7 @@ export type IconName = 'amazon' |
   'redo' | 
   'save' | 
   'spinner' | 
+  'times' | 
   'trash' | 
   'badge' | 
   'cog' | 

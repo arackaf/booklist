@@ -88,6 +88,11 @@ var faSpinner = {
   iconName: 'spinner',
   icon: [512, 512, [], "f110", "M296 48c0 22.091-17.909 40-40 40s-40-17.909-40-40 17.909-40 40-40 40 17.909 40 40zm-40 376c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40zm248-168c0-22.091-17.909-40-40-40s-40 17.909-40 40 17.909 40 40 40 40-17.909 40-40zm-416 0c0-22.091-17.909-40-40-40S8 233.909 8 256s17.909 40 40 40 40-17.909 40-40zm20.922-187.078c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40c0-22.092-17.909-40-40-40zm294.156 294.156c-22.091 0-40 17.909-40 40s17.909 40 40 40c22.092 0 40-17.909 40-40s-17.908-40-40-40zm-294.156 0c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40z"]
 };
+var faTimes = {
+  prefix: 'far',
+  iconName: 'times',
+  icon: [320, 512, [], "f00d", "M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"]
+};
 var faTrash = {
   prefix: 'far',
   iconName: 'trash',
@@ -111,7 +116,8 @@ var _iconsCache = {
   faRedo: faRedo,
   faSave: faSave,
   faSpinner: faSpinner,
+  faTimes: faTimes,
   faTrash: faTrash
 };
 
-export { _iconsCache as far, prefix, faAngleDoubleDown, faAngleDoubleUp, faAngleDown, faAngleUp, faArrows, faBars, faChartBar, faCheck, faCloudUploadAlt, faMinus, faPencil, faPlus, faPlusSquare, faQuestionCircle, faRedo, faSave, faSpinner, faTrash };
+export { _iconsCache as far, prefix, faAngleDoubleDown, faAngleDoubleUp, faAngleDown, faAngleUp, faArrows, faBars, faChartBar, faCheck, faCloudUploadAlt, faMinus, faPencil, faPlus, faPlusSquare, faQuestionCircle, faRedo, faSave, faSpinner, faTimes, faTrash };
