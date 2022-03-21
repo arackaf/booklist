@@ -54,11 +54,13 @@
     </div>
 
     <ul class="nav-items">
-      <NavBarItem class="visible-xs" disabled={isPublic} href="/home" style="margin-top: '2px';"><i class="fal fa-home visible-xs" /></NavBarItem>
+      <NavBarItem class="visible-xs" disabled={isPublic} href="/home" style="margin-top: '2px';"
+        ><i class="fal fa-fw fa-home visible-xs" /></NavBarItem
+      >
       {#if isLoggedIn || isPublic}
         <NavBarItem disabled={isPublic} href="/scan" style="position: relative;">
           <span class="hidden-xs">Book entry</span>
-          <i class="visible-xs fal fa-scanner" />
+          <i class="visible-xs fal fa-fw fa-scanner" />
           {#if pendingCount}
             <span class={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
               <span class="overlay-holder">
@@ -70,26 +72,28 @@
         </NavBarItem>
       {/if}
       {#if isLoggedIn || isPublic}
-        <NavBarItem href={isPublic ? "/view" : "/books"}><span class="hidden-xs">Books</span> <i class="visible-xs fal fa-books" /></NavBarItem>
+        <NavBarItem href={isPublic ? "/view" : "/books"}><span class="hidden-xs">Books</span> <i class="visible-xs fal fa-fw fa-books" /></NavBarItem>
       {/if}
       {#if isLoggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="/subjects"><span class="hidden-xs">Subjects</span> <i class="visible-xs fal fa-sitemap" /></NavBarItem>
+        <NavBarItem disabled={isPublic} href="/subjects"
+          ><span class="hidden-xs">Subjects</span> <i class="visible-xs fal fa-fw fa-sitemap" /></NavBarItem
+        >
       {/if}
       {#if isLoggedIn || isPublic}
-        <NavBarItem href="/settings"><span class="hidden-xs">Settings</span> <i class="visible-xs fal fa-cogs" /></NavBarItem>
+        <NavBarItem href="/settings"><span class="hidden-xs">Settings</span> <i class="visible-xs fal fa-fw fa-cogs" /></NavBarItem>
       {/if}
       {#if isLoggedIn && isAdminUser}
-        <NavBarItem href="/admin"><span class="hidden-xs">Admin</span> <i class="visible-xs fal fa-users-cog" /></NavBarItem>
+        <NavBarItem href="/admin"><span class="hidden-xs">Admin</span> <i class="visible-xs fal fa-fw fa-users-cog" /></NavBarItem>
       {/if}
     </ul>
     <ul class="nav-items-right">
       {#if !isLoggedIn && !isLoginModule}
-        <NavBarItem href="/login"><span class="hidden-xs">Login</span> <i class="visible-xs fal fa-sign-in" /></NavBarItem>
+        <NavBarItem href="/login"><span class="hidden-xs">Login</span> <i class="visible-xs fal fa-fw fa-sign-in" /></NavBarItem>
       {/if}
     </ul>
     {#if isLoggedIn}
       <ul class="nav-items-right">
-        <NavBarItem onClick={logout}><span class="hidden-xs">Logout</span> <i class="visible-xs fal fa-sign-out" /></NavBarItem>
+        <NavBarItem onClick={logout}><span class="hidden-xs">Logout</span> <i class="visible-xs fal fa-fw fa-sign-out" /></NavBarItem>
       </ul>
     {/if}
   </nav>

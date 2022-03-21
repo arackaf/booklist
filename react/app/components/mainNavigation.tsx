@@ -91,7 +91,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
             active={isHome}
             aStyle={{ marginTop: "2px" }}
           >
-            <i className="fal fa-home visible-xs" />
+            <i className="fal fa-fw fa-home visible-xs" />
           </NavBarItem>
           {isLoggedIn || isPublic ? (
             <NavBarItem
@@ -103,7 +103,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
               style={{ position: "relative" }}
             >
               <span className="hidden-xs">Book entry</span>
-              <i className="visible-xs fal fa-scanner" />
+              <i className="visible-xs fal fa-fw fa-scanner" />
               {pendingCount ? (
                 <span className={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
                   <span className="overlay-holder">
@@ -122,7 +122,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
               onClick={() => goto(isPublic ? "view" : "books")}
             >
               <span className="hidden-xs">Books</span>
-              <i className="visible-xs fal fa-books" />
+              <i className="visible-xs fal fa-fw fa-books" />
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (
@@ -134,19 +134,19 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
               active={isSubjects}
             >
               <span className="hidden-xs">Subjects</span>
-              <i className="visible-xs fal fa-sitemap" />
+              <i className="visible-xs fal fa-fw fa-sitemap" />
             </NavBarItem>
           ) : null}
           {isLoggedIn || isPublic ? (
             <NavBarItem aria-label="Navigate to settings page" href="/settings" onClick={() => goto("settings")} active={isSettings}>
               <span className="hidden-xs">Settings</span>
-              <i className="visible-xs fal fa-cogs" />
+              <i className="visible-xs fal fa-fw fa-cogs" />
             </NavBarItem>
           ) : null}
           {isLoggedIn && isAdminUser ? (
             <NavBarItem aria-label="Navigate to admin page" href="/admin" onClick={() => goto("admin")} active={isSettingsSection}>
               <span className="hidden-xs">Admin</span>
-              <i className="visible-xs fal fa-users-cog" />
+              <i className="visible-xs fal fa-fw fa-users-cog" />
             </NavBarItem>
           ) : null}
         </ul>
@@ -154,7 +154,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           {!isLoggedIn && !isLoginModule ? (
             <NavBarItem aria-label="Login" href="/login" onClick={() => goto("login")}>
               <span className="hidden-xs">Login</span>
-              <i className="visible-xs fal fa-sign-in" />
+              <i className="visible-xs fal fa-fw fa-sign-in" />
             </NavBarItem>
           ) : null}
         </ul>
@@ -162,7 +162,7 @@ const MainNavigationBar: FunctionComponent<{}> = props => {
           <ul className="nav-items-right">
             <NavBarItem aria-label="Logout" href="/logout" onClick={logout}>
               <span className="hidden-xs">Logout</span>
-              <i className="visible-xs fal fa-sign-out" />
+              <i className="visible-xs fal fa-fw fa-sign-out" />
             </NavBarItem>
           </ul>
         ) : null}
