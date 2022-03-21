@@ -71,7 +71,7 @@ const BooksMenuBar: FunctionComponent<IAddedMenuProps> = props => {
     <div className="books-menu-bar" ref={measureRef}>
       <MobileMenu title="Book Options" open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
         <div className="button-container" style={{ display: "flex", flexDirection: "column" }}>
-          <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket }} />
+          <MenuOptions {...{ Button, selectedBooksCount, uiView, uiDispatch, bookResultsPacket, setMobileMenuOpen }} />
         </div>
       </MobileMenu>
 

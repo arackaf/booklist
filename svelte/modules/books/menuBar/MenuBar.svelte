@@ -43,12 +43,15 @@
   };
 
   let mobileMenuOpen = false;
+  const closeMobileMenu = () => {
+    mobileMenuOpen = false;
+  };
 </script>
 
 <div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {uiView} {bookResultsPacket} />
+      <MenuOptions {uiView} {bookResultsPacket} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
