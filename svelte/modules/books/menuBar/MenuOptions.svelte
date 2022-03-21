@@ -50,7 +50,7 @@
   </button>
   <hr />
   <button on:click={() => uiDispatch(GRID_VIEW)} class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
-    <span>Grid View</span>
+    <span>Main View</span>
     <i class="fal fa-fw fa-table" />
   </button>
   <button on:click={() => uiDispatch(COVERS_LIST)} class={"btn btn-default " + ($uiView.pendingView == COVERS_LIST ? "active" : "")}>

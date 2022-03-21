@@ -61,7 +61,7 @@ const MenuOptions: FunctionComponent<{
       </Button>
       <hr />
       <Button onClick={() => uiDispatch({ type: "SET_GRID_VIEW" })} className={"btn btn-default " + (uiView.isGridView ? "active" : "")}>
-        <span>Grid View</span>
+        <span>Main View</span>
         <i className="fal fa-fw fa-table" />
       </Button>
       <Button onClick={() => uiDispatch({ type: "SET_COVERS_LIST_VIEW" })} className={"btn btn-default " + (uiView.isCoversList ? "active" : "")}>
