@@ -77,19 +77,19 @@ const MenuOptions: FunctionComponent<{
   ) : !isPublic ? (
     <>
       <hr />
-      <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default hidden-tiny"}>
+      <Button title="Add/remove subjects" onClick={editSubjectsForSelectedBooks} className={"btn btn-default"}>
         <span>Add / Remove Subjects</span>
         <i className="fal fa-fw fa-sitemap" />
       </Button>
-      <Button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default hidden-tiny">
+      <Button title="Add/remove tags" onClick={editTagsForSelectedBooks} className="btn btn-default">
         <span>Add / Remove Tags</span>
         <i className="fal fa-fw fa-tags" />
       </Button>
-      <Button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default hidden-tiny"}>
+      <Button title="Set read" onClick={() => setRead(selectedBooksIds, true)} className={"btn btn-default"}>
         <span>Set Read</span>
         <i className="fal fa-fw fa-eye" />
       </Button>
-      <Button title="Set un-read" onClick={() => setRead(selectedBooksIds, false)} className="btn btn-default put-line-through hidden-tiny">
+      <Button title="Set un-read" onClick={() => setRead(selectedBooksIds, false)} className="btn btn-default put-line-through">
         <span>Set Un-Read</span>
         <i className="fal fa-fw fa-eye-slash" />
       </Button>
