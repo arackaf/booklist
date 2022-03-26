@@ -20,7 +20,7 @@ const BookViewListMobileItem = props => {
         <div style={{ marginRight: "5px", minWidth: "55px" }}>
           <CoverSmall preview={book.smallImagePreview} url={book.smallImage} />
         </div>
-        <div>
+        <div style={{ overflow: "hidden" }}>
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <div className="list-group-item-heading book-title">{book.title}</div>
             <span className="list-group-item-text book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
