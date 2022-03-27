@@ -21,6 +21,13 @@
 </script>
 
 <style>
+  :global(.listGroupItemHeading) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+
   :global(.listGroupItemHeading),
   :global(.listGroupItemText) {
     margin: 0;
@@ -38,7 +45,7 @@
     <div style="margin-right: 5px; min-width: 55px">
       <CoverSmall url={book.smallImage} preview={book.smallImagePreview} />
     </div>
-    <div>
+    <div style="overflow: hidden">
       <div style="display: flex; flex-direction: column; height: 100%">
         <div class="listGroupItemHeading bookTitle">{book.title}</div>
         <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(", ") : ""}</span>

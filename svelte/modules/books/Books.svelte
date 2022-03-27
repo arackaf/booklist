@@ -146,7 +146,7 @@
   <div style="background-color: white;">
     <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} />
     <div>
-      <div class="overlay-holder" style="flex: 1; padding: 0px;">
+      <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
         {#if booksLoaded}
           {#if !books?.length}
             <div transition:fade|local={{ duration: 150, easing: quadOut }}>
