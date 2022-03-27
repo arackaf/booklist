@@ -190,9 +190,9 @@ const BookResults: FunctionComponent<{ books: any; currentQuery: string; uiView:
   );
 
   return (
-    <div className="overlay-holder">
+    <div className="overlay-holder" style={{ gridTemplateColumns: "100%" }}>
       {resultsTransition((styles: any, { books }) => (
-        <animated.div style={{ padding: 0, overflow: uiView.isBasicList ? "hidden" : null, minHeight: 450, ...styles }}>
+        <animated.div style={{ padding: 0, minHeight: 450, ...styles }}>
           {!books.length ? (
             <div className="alert alert-warning" style={{ marginTop: "20px" }}>
               No books found
