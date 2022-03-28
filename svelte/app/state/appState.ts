@@ -21,7 +21,7 @@ if (window.screen.width < 700) {
 }
 
 if (!!localStorage.getItem("useDesktop")) {
-  Object.assign(uiSettings, { showingDesktop: true, showingMobile: false });
+  Object.assign(uiSettings, { showingDesktop: true, showingMobile: false, desktopRequested: true });
 }
 
 const REQUEST_DESKTOP = "root.REQUEST_DESKTOP";
@@ -116,12 +116,12 @@ export const setDeviceOverride = view => {
 
 export const requestDesktop = () => {
   setDeviceOverride("desktop");
-  dispatch({ type: REQUEST_DESKTOP });
+  location.reload();
 };
 
 export const requestMobile = () => {
   setDeviceOverride("mobile");
-  dispatch({ type: REQUEST_MOBILE });
+  location.reload();
 };
 
 const isOnline = () => dispatch({ type: IS_ONLINE });

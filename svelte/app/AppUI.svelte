@@ -31,6 +31,12 @@
       setTimeout(setAdjustedVh, 250);
     }
   });
+
+  const metaTag = document.querySelector("meta[name='viewport']");
+
+  $: {
+    metaTag.setAttribute("content", $appState.desktopRequested ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0");
+  }
 </script>
 
 <style>
@@ -41,8 +47,6 @@
   }
 </style>
 
-<!-- TODO -->
-<!-- <meta name="viewport" content={$appState.desktopRequested ? "" : "initial-scale=1, maximum-scale=5.0"} /> -->
 <div class="app-container">
   <div id="app">
     <MainNavigation />
