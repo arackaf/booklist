@@ -29,9 +29,13 @@ function showBookToast(title, url) {
 
 const MobileMeta = () => {
   const [app] = useContext(AppContext);
-  // TODO:
+  const metaTag = document.querySelector("meta[name='viewport']");
+
+  useEffect(() => {
+    metaTag.setAttribute("content", app.desktopRequested ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0");
+  }, [metaTag, app.desktopRequested]);
+
   return null;
-  return <meta name="viewport" content={app.desktopRequested ? "" : "width=device-width, initial-scale=1, maximum-scale=5.0"} />;
 };
 
 const WellUiSwitcher: FunctionComponent<{}> = () => {

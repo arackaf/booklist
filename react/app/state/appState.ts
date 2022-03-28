@@ -27,7 +27,7 @@ if (window.screen.width < 700) {
 }
 
 if (!!localStorage.getItem("useDesktop")) {
-  Object.assign(uiSettings, { showingDesktop: true, showingMobile: false });
+  Object.assign(uiSettings, { showingDesktop: true, showingMobile: false, desktopRequested: true });
 }
 
 const REQUEST_DESKTOP = "root.REQUEST_DESKTOP";
