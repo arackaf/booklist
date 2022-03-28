@@ -8,6 +8,7 @@ import useDelete from "app/helpers/useDelete";
 
 import "./uiStyles.scss";
 import "./basicList.scss";
+import FlowItems from "app/components/layout/FlowItems";
 
 const BookViewListMobileItem = props => {
   const { book, online, runDelete } = props;
@@ -24,13 +25,13 @@ const BookViewListMobileItem = props => {
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <div className="list-group-item-heading book-title">{book.title}</div>
             <span className="list-group-item-text book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
-            <div style={{ marginTop: "auto" }}>
+            <FlowItems style={{ marginTop: "auto" }}>
               {!props.viewingPublic && online ? (
                 <>
-                  <button className="btn btn-xs btn-light btn-round-icon" onClick={() => props.editBook(book)}>
-                    <i className="fal fa-pencil-alt"></i>
+                  <button className="btn btn-xs btn-light btn-square-icon" onClick={() => props.editBook(book)}>
+                    <i className="fal fa-fw fa-pencil-alt"></i>
                   </button>
-                  <button style={{ marginLeft: "5px" }} className="btn btn-xs btn-light btn-round-icon" onClick={startDelete}>
+                  <button className="btn btn-xs btn-light btn-square-icon margin-left" onClick={startDelete}>
                     <i className="far fa-fw fa-trash" />
                   </button>
                 </>
@@ -45,7 +46,7 @@ const BookViewListMobileItem = props => {
                   Cancel
                 </button>
               ) : null}
-            </div>
+            </FlowItems>
           </div>
         </div>
       </div>

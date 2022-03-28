@@ -3,6 +3,7 @@
   import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
 
   import ActionButton from "app/components/buttons/ActionButton.svelte";
+  import FlowItems from "app/components/layout/FlowItems.svelte";
 
   export let book: any;
   export let isPublic;
@@ -49,10 +50,10 @@
       <div style="display: flex; flex-direction: column; height: 100%">
         <div class="listGroupItemHeading bookTitle">{book.title}</div>
         <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(", ") : ""}</span>
-        <div style="margin-top: auto">
+        <FlowItems style="margin-top: auto">
           {#if !isPublic && online}
-            <button class="btn btn-xs btn-light btn-round-icon" on:click={() => editBook(book)}><i class="fal fa-pencil-alt" /></button>
-            <button style="margin-left: 5px;" class="btn btn-xs btn-light btn-round-icon" on:click={() => (pendingDelete = true)}>
+            <button class="btn btn-xs btn-light btn-square-icon" on:click={() => editBook(book)}><i class="fal fa-fw fa-pencil-alt" /></button>
+            <button class="btn btn-xs btn-light btn-square-icon margin-left" on:click={() => (pendingDelete = true)}>
               <i class="far fa-fw fa-trash" />
             </button>
           {/if}
@@ -64,7 +65,7 @@
           {#if pendingDelete}
             <button on:click={() => (pendingDelete = false)} disabled={deleting} class="margin-left btn btn-xxs"> Cancel </button>
           {/if}
-        </div>
+        </FlowItems>
       </div>
     </div>
   </div>
