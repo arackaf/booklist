@@ -165,19 +165,19 @@ const CurrentCovers: FunctionComponent<{ book: IBookRaw }> = ({ book }) => {
       <Stack style={{ flex: 1 }} tightest={true}>
         <div>
           <label className="form-label">Mobile</label>
-          <CoverMobile url={book.mobileImage} preview={book.mobileImagePreview} />
+          <CoverMobile url={book.mobileImage} preview={book.mobileImagePreview} dontSuspend={true} />
         </div>
       </Stack>
       <Stack style={{ flex: 1 }} tightest={true}>
         <div>
           <label className="form-label">Standard</label>
-          <CoverSmall url={book.smallImage} preview={book.smallImagePreview} />
+          <CoverSmall url={book.smallImage} preview={book.smallImagePreview} dontSuspend={true} />
         </div>
       </Stack>
       <Stack style={{ flex: 1 }} tightest={true}>
         <div>
           <label className="form-label">Full</label>
-          <CoverMedium url={book.mediumImage} preview={book.mediumImagePreview} />
+          <CoverMedium url={book.mediumImage} preview={book.mediumImagePreview} dontSuspend={true} />
         </div>
       </Stack>
     </FlowItems>

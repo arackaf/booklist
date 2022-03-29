@@ -22,7 +22,7 @@ export const NoCoverMedium = () => (
   </div>
 );
 
-const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = "" }) => {
+const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => {
   const initialUrl = useRef(url || "");
   const urlChanged = url !== initialUrl.current;
   const [loaded, setLoaded] = useState(false);
@@ -55,14 +55,22 @@ const Cover = ({ url, NoCoverComponent, preview = "", style = {}, className = ""
   } else {
     return urlChanged ? (
       <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
-    ) : (
+    ) : !dontSuspend ? (
       <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+    ) : (
+      <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
     );
   }
 };
 
-export const CoverMobile = ({ url, preview = "" }) => <Cover url={url} preview={preview} NoCoverComponent={NoCoverMobile} />;
+export const CoverMobile = ({ url, preview = "", dontSuspend = false }) => (
+  <Cover url={url} preview={preview} NoCoverComponent={NoCoverMobile} dontSuspend={dontSuspend} />
+);
 
-export const CoverSmall = ({ url, preview = "" }) => <Cover url={url} preview={preview} NoCoverComponent={NoCoverSmall} />;
+export const CoverSmall = ({ url, preview = "", dontSuspend = false }) => (
+  <Cover url={url} preview={preview} NoCoverComponent={NoCoverSmall} dontSuspend={dontSuspend} />
+);
 
-export const CoverMedium = ({ url, preview = "" }) => <Cover url={url} preview={preview} NoCoverComponent={NoCoverMedium} />;
+export const CoverMedium = ({ url, preview = "", dontSuspend = false }) => (
+  <Cover url={url} preview={preview} NoCoverComponent={NoCoverMedium} dontSuspend={dontSuspend} />
+);
