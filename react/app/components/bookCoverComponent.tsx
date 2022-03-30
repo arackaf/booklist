@@ -33,17 +33,22 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
   }
 
   useEffect(() => {
+    setLoaded(false);
+  }, [url]);
+
+  useEffect(() => {
     // make sure the image src is added after the onload handler
     if (imgRef.current) {
       imgRef.current.src = url;
     }
-  }, [url]);
+  }, [url, imgRef, preview]);
 
   if (preview) {
     return (
       <>
-        <img alt="Book cover preview" src={preview} style={{ display: !loaded ? "block" : "none" }} />
+        <img key="book-preview" alt="Book cover preview" src={preview} style={{ display: !loaded ? "block" : "none" }} />
         <img
+          key={`book-preview-real-${url}`}
           alt="Book cover"
           {...getCrossOriginAttribute(url)}
           ref={imgRef}
@@ -53,12 +58,10 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
       </>
     );
   } else {
-    return urlChanged ? (
-      <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
-    ) : !dontSuspend ? (
-      <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+    return urlChanged || dontSuspend ? (
+      <img key="book-real" alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
     ) : (
-      <img alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
+      <SuspenseImg alt="Book cover" {...getCrossOriginAttribute(url)} style={{ display: "block" }} src={url} />
     );
   }
 };

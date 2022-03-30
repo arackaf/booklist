@@ -1,0 +1,9 @@
+query GetBookCoverPreviews($_id: String) {
+  getBook(_id: $_id) {
+    Book {
+      mobileImagePreview
+      smallImagePreview
+      mediumImagePreview
+    }
+  }
+}

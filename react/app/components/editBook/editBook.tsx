@@ -1,5 +1,8 @@
-import React, { useState, FunctionComponent, useLayoutEffect } from "react";
+import React, { useState, FunctionComponent, useLayoutEffect, useEffect } from "react";
 import type { IBookRaw } from "modules/books/booksState";
+
+import GetBookCoverPreviews from "graphQL/books/getBookCoverPreviews.graphql";
+import { graphqlClient } from "util/graphql";
 
 import EditBookInfo from "./editBookInfo";
 
@@ -38,6 +41,18 @@ const EditBook: FunctionComponent<Props> = ({ book: bookToEdit, onCancel, saveBo
     }
     editBook(bookToEdit);
   }, [bookToEdit]);
+
+  useEffect(() => {
+    const _id = bookToEdit?._id;
+    if (_id) {
+      graphqlClient.runQuery(GetBookCoverPreviews, { _id: bookToEdit._id }).then(resp => {
+        if (_id === bookToEdit?._id) {
+          const newBookValues = resp?.data?.getBook?.Book ?? {};
+          updateBook(book => Object.assign({}, book, newBookValues));
+        }
+      });
+    }
+  }, [bookToEdit?._id]);
 
   let { bookEditing } = state;
   let book = bookEditing;
