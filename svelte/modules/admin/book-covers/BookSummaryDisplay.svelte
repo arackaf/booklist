@@ -18,9 +18,10 @@
       request,
       res => {
         const newImage = res?.small?.image?.url;
+        const newImagePreview = res?.small?.image?.preview;
 
-        if (newImage && !res.error) {
-          return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: newImage } });
+        if (newImage && newImagePreview && !res.error) {
+          return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: newImage, smallImagePreview: newImagePreview } });
         }
       },
       err => {

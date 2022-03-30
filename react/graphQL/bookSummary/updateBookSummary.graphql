@@ -5,7 +5,9 @@ mutation updateBookSummary($_id: String, $bookSummary: BookSummaryMutationInput)
       title
       isbn
       smallImage
+      smallImagePreview
       mediumImage
+      mediumImagePreview
     }
   }
 }

@@ -21,8 +21,9 @@ const updateSmallCover = ({ _id, url, userId, loginToken }) => {
     request,
     res => {
       const newImage = res?.small?.image?.url;
-      if (newImage && !res.error) {
-        return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: newImage } });
+      const newImagePreview = res?.small?.image?.preview;
+      if (newImage && newImagePreview && !res.error) {
+        return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: newImage, smallImagePreview: newImagePreview } });
       }
     },
     err => {
