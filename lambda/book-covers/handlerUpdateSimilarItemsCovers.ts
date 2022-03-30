@@ -30,7 +30,7 @@ async function updateBookSummaryCovers() {
 
   const bookSummaries = await db
     .collection("bookSummaries")
-    .aggregate([{ $match: { $or: [{ smallImage: new RegExp("nophoto") }, { smallImage: "" }] } }, { $limit: 15 }])
+    .aggregate([{ $match: { smallImage: new RegExp("nophoto") } }, { $limit: 15 }])
     .toArray();
 
   log("Books found:", bookSummaries.length);
@@ -57,16 +57,16 @@ async function updateBookSummaryCovers() {
         let imageUrl = bookResult.book.image;
         if (imageUrl) {
           res = await attemptSimilarBookCover(imageUrl, 500);
-          if (res) {
+          if (res?.STATUS === "success") {
             console.log("Downloaded cover from isbndb");
           }
         }
       }
     } catch (err) {}
 
-    if (res.STATUS !== "success") {
+    if (res?.STATUS !== "success") {
       res = await attemptSimilarBookCover(getOpenLibraryCoverUri(isbn), 1000);
-      if (res.STATUS !== "success") {
+      if (res?.STATUS !== "success") {
         log("No cover found on OpenLibrary for", title);
 
         log("Trying Google...");
@@ -77,7 +77,7 @@ async function updateBookSummaryCovers() {
           await db.collection("bookSummaries").updateOne(
             { _id: new ObjectId(_id) },
             {
-              $set: { smallImage: "" }
+              $set: { smallImage: "", smallImagePreview: "" }
             }
           );
 
@@ -88,13 +88,13 @@ async function updateBookSummaryCovers() {
 
         res = await attemptSimilarBookCover(cover, 1000);
 
-        if (!res) {
+        if (res?.STATUS !== "success") {
           log(`Could not download from Google, either`);
 
           await db.collection("bookSummaries").updateOne(
             { _id: new ObjectId(_id) },
             {
-              $set: { smallImage: "" }
+              $set: { smallImage: "", smallImagePreview: "" }
             }
           );
 
