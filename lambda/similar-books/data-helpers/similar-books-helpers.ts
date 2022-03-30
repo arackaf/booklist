@@ -52,8 +52,12 @@ export async function updateSimilarityInfo(book, results) {
         console.log("Not found, saving");
 
         if (!/nophoto/i.test(book.smallImage)) {
+          const urlToAttempt = book.smallImage;
+          // if this fails in any way, just set it to the generic placeholder
+          book.smallImage = "https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png";
+
           try {
-            let res = await attemptSimilarBookCover(book.smallImage, 1000);
+            let res = await attemptSimilarBookCover(urlToAttempt, 1000);
             if (res.STATUS === "success") {
               let { preview, url } = res.image;
 
