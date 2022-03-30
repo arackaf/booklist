@@ -9,7 +9,6 @@ import { saveContentToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "..
 
 import getSecrets from "../util/getSecrets";
 import { HandleCoverResult } from "../util/handleCover";
-
 import { attemptSimilarBookCover } from "../util/similarBookHelpers";
 
 const dbPromise = getDbConnection();
