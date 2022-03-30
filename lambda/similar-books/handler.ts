@@ -60,7 +60,8 @@ export const getRecommendations = async evt => {
     const db = await getDbConnection();
     const books = await db
       .collection("books")
-      .find({ _id: { $in: bookIds.map(_id => ObjectId(_id)) } }, { _id: 1, similarItems: 1 })
+      .find({ _id: { $in: bookIds.map(_id => new ObjectId(_id)) } })
+      .project({ _id: 1, similarItems: 1 })
       .toArray();
 
     const isbnMap = new Map<string, number>([]);

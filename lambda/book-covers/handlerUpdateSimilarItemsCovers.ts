@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import fetch from "node-fetch";
 import dlv from "dlv";
 
@@ -6,17 +5,12 @@ import { ObjectId } from "mongodb";
 
 import getDbConnection from "../util/getDbConnection";
 
-import {
-  downloadBookCover,
-  removeFile,
-  resizeIfNeeded,
-  saveCoverToS3,
-  saveContentToS3,
-  getOpenLibraryCoverUri,
-  getGoogleLibraryUri
-} from "../util/bookCoverHelpers";
+import { saveContentToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "../util/bookCoverHelpers";
 
 import getSecrets from "../util/getSecrets";
+import { HandleCoverResult } from "../util/handleCover";
+
+import { attemptSimilarBookCover } from "../util/similarBookHelpers";
 
 const dbPromise = getDbConnection();
 
@@ -47,7 +41,7 @@ async function updateBookSummaryCovers() {
 
     await delay();
 
-    let res;
+    let res: HandleCoverResult;
 
     try {
       const fetchResponse = await fetch(`https://api2.isbndb.com/book/${isbn}`, {
@@ -62,17 +56,17 @@ async function updateBookSummaryCovers() {
       if (bookResult && bookResult.book && bookResult.book.image) {
         let imageUrl = bookResult.book.image;
         if (imageUrl) {
-          res = await downloadBookCover(imageUrl, 500);
-          if (res) {
+          res = await attemptSimilarBookCover(imageUrl, 500);
+          if (res?.STATUS === "success") {
             console.log("Downloaded cover from isbndb");
           }
         }
       }
     } catch (err) {}
 
-    if (!res) {
-      res = await downloadBookCover(getOpenLibraryCoverUri(isbn), 1000);
-      if (!res) {
+    if (res?.STATUS !== "success") {
+      res = await attemptSimilarBookCover(getOpenLibraryCoverUri(isbn), 1000);
+      if (res?.STATUS !== "success") {
         log("No cover found on OpenLibrary for", title);
 
         log("Trying Google...");
@@ -83,7 +77,7 @@ async function updateBookSummaryCovers() {
           await db.collection("bookSummaries").updateOne(
             { _id: new ObjectId(_id) },
             {
-              $set: { smallImage: "" }
+              $set: { smallImage: "", smallImagePreview: "" }
             }
           );
 
@@ -92,15 +86,15 @@ async function updateBookSummaryCovers() {
 
         log("Attempting Google cover", cover);
 
-        res = await downloadBookCover(cover, 1000);
+        res = await attemptSimilarBookCover(cover, 1000);
 
-        if (!res) {
+        if (res?.STATUS !== "success") {
           log(`Could not download from Google, either`);
 
           await db.collection("bookSummaries").updateOne(
             { _id: new ObjectId(_id) },
             {
-              $set: { smallImage: "" }
+              $set: { smallImage: "", smallImagePreview: "" }
             }
           );
 
@@ -109,25 +103,17 @@ async function updateBookSummaryCovers() {
       }
     }
 
-    let { fileName, fullName } = res;
-    let newPath = await resizeIfNeeded(fileName, undefined, 80);
+    if (res.STATUS === "success") {
+      const { url, preview } = res.image;
 
-    if (newPath) {
-      let s3Key = await saveCoverToS3(newPath, `bookCovers/bookSummary/${fileName}`);
-
-      log("#", count++, title, s3Key);
+      log("#", count++, title, url);
       await db.collection("bookSummaries").updateOne(
         { _id: new ObjectId(_id) },
         {
-          $set: { smallImage: s3Key }
+          $set: { smallImage: url, smallImagePreview: preview }
         }
       );
-    } else {
-      log("#", count++, "Resize failed");
     }
-
-    removeFile(fullName);
-    newPath && removeFile(newPath);
   }
 
   const now = new Date();
@@ -138,7 +124,7 @@ async function updateBookSummaryCovers() {
   console.log("Logs saved");
 }
 
-function getGoogleCoverUrl(isbn, secrets) {
+function getGoogleCoverUrl(isbn, secrets): Promise<string> {
   return new Promise(async resolve => {
     try {
       let response: any = await fetch(getGoogleLibraryUri(isbn, secrets["google-library-key"]));
