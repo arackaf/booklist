@@ -17,7 +17,9 @@ export const BookSummary = {
     isbn: StringType,
     ean: StringType,
     smallImage: StringType,
+    smallImagePreview: StringType,
     mediumImage: StringType,
+    mediumImagePreview: StringType,
     authors: StringArrayType
   },
   extras: {

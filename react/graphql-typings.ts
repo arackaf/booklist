@@ -447,7 +447,9 @@ export type BookSummary = {
   isbn: Maybe<Scalars['String']>;
   ean: Maybe<Scalars['String']>;
   smallImage: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['String']>;
   mediumImage: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['String']>;
   authors: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -484,7 +486,9 @@ export type BookSummaryInput = {
   isbn: Maybe<Scalars['String']>;
   ean: Maybe<Scalars['String']>;
   smallImage: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['String']>;
   mediumImage: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['String']>;
   authors: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -494,7 +498,9 @@ export type BookSummaryMutationInput = {
   isbn: Maybe<Scalars['String']>;
   ean: Maybe<Scalars['String']>;
   smallImage: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['String']>;
   mediumImage: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['String']>;
   authors: Maybe<Array<Maybe<Scalars['String']>>>;
   authors_PUSH: Maybe<Scalars['String']>;
   authors_CONCAT: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -511,7 +517,9 @@ export type BookSummarySort = {
   isbn: Maybe<Scalars['Int']>;
   ean: Maybe<Scalars['Int']>;
   smallImage: Maybe<Scalars['Int']>;
+  smallImagePreview: Maybe<Scalars['Int']>;
   mediumImage: Maybe<Scalars['Int']>;
+  mediumImagePreview: Maybe<Scalars['Int']>;
   authors: Maybe<Scalars['Int']>;
 };
 
@@ -560,6 +568,14 @@ export type BookSummaryFilters = {
   smallImage_ne: Maybe<Scalars['String']>;
   smallImage_in: Maybe<Array<Maybe<Scalars['String']>>>;
   smallImage_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  smallImagePreview_contains: Maybe<Scalars['String']>;
+  smallImagePreview_startsWith: Maybe<Scalars['String']>;
+  smallImagePreview_endsWith: Maybe<Scalars['String']>;
+  smallImagePreview_regex: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['String']>;
+  smallImagePreview_ne: Maybe<Scalars['String']>;
+  smallImagePreview_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  smallImagePreview_nin: Maybe<Array<Maybe<Scalars['String']>>>;
   mediumImage_contains: Maybe<Scalars['String']>;
   mediumImage_startsWith: Maybe<Scalars['String']>;
   mediumImage_endsWith: Maybe<Scalars['String']>;
@@ -568,6 +584,14 @@ export type BookSummaryFilters = {
   mediumImage_ne: Maybe<Scalars['String']>;
   mediumImage_in: Maybe<Array<Maybe<Scalars['String']>>>;
   mediumImage_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  mediumImagePreview_contains: Maybe<Scalars['String']>;
+  mediumImagePreview_startsWith: Maybe<Scalars['String']>;
+  mediumImagePreview_endsWith: Maybe<Scalars['String']>;
+  mediumImagePreview_regex: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['String']>;
+  mediumImagePreview_ne: Maybe<Scalars['String']>;
+  mediumImagePreview_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  mediumImagePreview_nin: Maybe<Array<Maybe<Scalars['String']>>>;
   authors_count: Maybe<Scalars['Int']>;
   authors_textContains: Maybe<Scalars['String']>;
   authors_startsWith: Maybe<Scalars['String']>;
@@ -1451,6 +1475,14 @@ export type QueryAllBookSummarysArgs = {
   smallImage_ne: Maybe<Scalars['String']>;
   smallImage_in: Maybe<Array<Maybe<Scalars['String']>>>;
   smallImage_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  smallImagePreview_contains: Maybe<Scalars['String']>;
+  smallImagePreview_startsWith: Maybe<Scalars['String']>;
+  smallImagePreview_endsWith: Maybe<Scalars['String']>;
+  smallImagePreview_regex: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['String']>;
+  smallImagePreview_ne: Maybe<Scalars['String']>;
+  smallImagePreview_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  smallImagePreview_nin: Maybe<Array<Maybe<Scalars['String']>>>;
   mediumImage_contains: Maybe<Scalars['String']>;
   mediumImage_startsWith: Maybe<Scalars['String']>;
   mediumImage_endsWith: Maybe<Scalars['String']>;
@@ -1459,6 +1491,14 @@ export type QueryAllBookSummarysArgs = {
   mediumImage_ne: Maybe<Scalars['String']>;
   mediumImage_in: Maybe<Array<Maybe<Scalars['String']>>>;
   mediumImage_nin: Maybe<Array<Maybe<Scalars['String']>>>;
+  mediumImagePreview_contains: Maybe<Scalars['String']>;
+  mediumImagePreview_startsWith: Maybe<Scalars['String']>;
+  mediumImagePreview_endsWith: Maybe<Scalars['String']>;
+  mediumImagePreview_regex: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['String']>;
+  mediumImagePreview_ne: Maybe<Scalars['String']>;
+  mediumImagePreview_in: Maybe<Array<Maybe<Scalars['String']>>>;
+  mediumImagePreview_nin: Maybe<Array<Maybe<Scalars['String']>>>;
   authors_count: Maybe<Scalars['Int']>;
   authors_textContains: Maybe<Scalars['String']>;
   authors_startsWith: Maybe<Scalars['String']>;
