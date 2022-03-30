@@ -25,9 +25,9 @@ export const handler = async event => {
   const body = file.content;
 
   const allResults = await Promise.all([
-    handleCover(body, "mobile", filePath),
-    handleCover(body, "small", filePath),
-    handleCover(body, "medium", filePath)
+    handleCover(body, "mobile", `mobile-covers/${filePath}`),
+    handleCover(body, "small", `small-covers/${filePath}`),
+    handleCover(body, "medium", `medium-covers/${filePath}`)
   ]);
 
   if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {

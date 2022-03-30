@@ -18,7 +18,7 @@ export const QUALITIES: { [k in Sizes]: number } = {
 type HandleCoverSuccess = { STATUS: "success"; image: { url: string; preview: string } };
 export type HandleCoverResult = ResizeImageFailure | ResizeInvalidSize | HandleCoverSuccess;
 
-export async function handleCover(body, size: Sizes, filePath, fullImagePath = null): Promise<HandleCoverResult> {
+export async function handleCover(body, size: Sizes, imagePath): Promise<HandleCoverResult> {
   const width = SIZE_WIDTHS[size];
   const quality = QUALITIES[size];
 
@@ -30,7 +30,6 @@ export async function handleCover(body, size: Sizes, filePath, fullImagePath = n
     return { STATUS: "invalid-size" };
   }
 
-  const imagePath = fullImagePath || `${size}-covers/${filePath}`;
   const s3Result = await uploadToS3(imagePath, imageResult.body);
 
   if (s3Result.STATUS === "success") {

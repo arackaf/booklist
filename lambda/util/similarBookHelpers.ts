@@ -19,7 +19,7 @@ export async function attemptSimilarBookCover(url: string, minLength = null): Pr
     const extension = path.extname(url) || ".jpg";
     const filePath = `similar-books/${uuid()}${extension}`;
 
-    let result = await handleCover(body, "small", null, filePath);
+    let result = await handleCover(body, "small", filePath);
     return result;
   } catch (er) {
     return { STATUS: "error" };
