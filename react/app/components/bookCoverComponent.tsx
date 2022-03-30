@@ -5,7 +5,7 @@ import "./bookCoverComponentStyles.css";
 import { SuspenseImg } from "./suspenseImage";
 
 export const NoCoverMobile = () => (
-  <div className="no-cover-small">
+  <div className="no-cover-mobile">
     <div>No Cover</div>
   </div>
 );
