@@ -20,8 +20,9 @@ const updateSmallCover = ({ _id, url, userId, loginToken }) => {
     process.env.UPLOAD_BOOK_COVER_FROM_URL,
     request,
     res => {
-      if (res.url && !res.error) {
-        return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: res.url } });
+      const newImage = res?.small?.image?.url;
+      if (newImage && !res.error) {
+        return graphqlClient.processMutation(UpdateBookSummary, { _id, bookSummary: { smallImage: newImage } });
       }
     },
     err => {
