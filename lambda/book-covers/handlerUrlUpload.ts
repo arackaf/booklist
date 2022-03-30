@@ -2,7 +2,7 @@ import path from "path";
 import uuid from "uuid/v4";
 
 import checkLogin from "../util/checkLoginToken";
-import { handleCover } from "../util/handleCover";
+import { handleCover, HandleCoverResult } from "../util/handleCover";
 import corsResponse from "../util/corsResponse";
 
 import downloadFromUrl from "../util/downloadFromUrl";
@@ -13,7 +13,7 @@ export const handler = async event => {
     return corsResponse({ coldStartPrevented: true });
   }
 
-  const { userId, loginToken, url } = JSON.parse(event.body);
+  const { userId, loginToken, url, similarBookCover = false } = JSON.parse(event.body);
 
   if (!(await checkLogin(userId, loginToken))) {
     return corsResponse({});
@@ -25,22 +25,25 @@ export const handler = async event => {
     return corsResponse({ error: true });
   }
   const extension = path.extname(url) || ".jpg";
-  const filePath = `${userId}/${uuid()}${extension}`;
 
-  const allResults = await Promise.all([
-    handleCover(body, "mobile", `mobile-covers/${filePath}`),
-    handleCover(body, "small", `small-covers/${filePath}`),
-    handleCover(body, "medium", `medium-covers/${filePath}`)
-  ]);
+  let allResults: HandleCoverResult[];
+  if (similarBookCover) {
+    allResults = await Promise.all([void 0, handleCover(body, "small", `similar-books/${uuid()}${extension}`), void 0]);
+  } else {
+    const filePath = `${userId}/${uuid()}${extension}`;
 
-  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
-    return corsResponse({ status: allResults[0].STATUS });
+    allResults = await Promise.all([
+      handleCover(body, "mobile", `mobile-covers/${filePath}`),
+      handleCover(body, "small", `small-covers/${filePath}`),
+      handleCover(body, "medium", `medium-covers/${filePath}`)
+    ]);
   }
 
+  const success = allResults.filter(x => x).every(r => r.STATUS === "success");
   const [mobile, small, medium] = allResults;
 
   return corsResponse({
-    success: true,
+    success,
     mobile,
     small,
     medium

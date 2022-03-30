@@ -15,7 +15,7 @@ import { Button } from "app/components/ui/Button";
 import Stack from "app/components/layout/Stack";
 
 const updateSmallCover = ({ _id, url, userId, loginToken }) => {
-  const request = { userId, loginToken, url };
+  const request = { userId, loginToken, url, similarBookCover: true };
   return ajaxUtil.postWithCors(
     process.env.UPLOAD_BOOK_COVER_FROM_URL,
     request,
