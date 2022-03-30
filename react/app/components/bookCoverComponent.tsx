@@ -28,10 +28,6 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
   const [loaded, setLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  if (!url) {
-    return <NoCoverComponent />;
-  }
-
   useEffect(() => {
     setLoaded(false);
   }, [url]);
@@ -42,6 +38,10 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
       imgRef.current.src = url;
     }
   }, [url, imgRef, preview]);
+
+  if (!url) {
+    return <NoCoverComponent />;
+  }
 
   if (preview) {
     return (
