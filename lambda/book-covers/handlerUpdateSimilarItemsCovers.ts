@@ -30,7 +30,7 @@ async function updateBookSummaryCovers() {
 
   const bookSummaries = await db
     .collection("bookSummaries")
-    .aggregate([{ $match: { $or: [{ smallImage: new RegExp("nophoto") }, { smallImage: "" }] } }, { $limit: 2 }])
+    .aggregate([{ $match: { $or: [{ smallImage: new RegExp("nophoto") }, { smallImage: "" }] } }, { $limit: 15 }])
     .toArray();
 
   log("Books found:", bookSummaries.length);
