@@ -1,8 +1,8 @@
-import Jimp from "jimp";
+const Jimp = require("jimp");
 
 export type ResizeImageFailure = { STATUS: "error"; message?: string; previewGenerationError?: boolean };
 export type ResizeInvalidSize = { STATUS: "invalid-size" };
-export type ResizeSuccess = { STATUS: "success"; image: Jimp; preview: string };
+export type ResizeSuccess = { STATUS: "success"; image: typeof Jimp; preview: string };
 
 export type ResizeImageResult = ResizeImageFailure | ResizeSuccess | ResizeInvalidSize;
 
