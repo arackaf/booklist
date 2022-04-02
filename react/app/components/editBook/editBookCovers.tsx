@@ -57,6 +57,7 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
     if (_id) {
       return runBookMutation({ _id, book: updateObject }).then(() => {
         setCoverProcessingResult(null);
+        updateBook(b => ({ ...b, ...updateObject }));
       });
     } else {
       updateBook(b => ({ ...b, ...updateObject }));
