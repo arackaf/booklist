@@ -19,7 +19,6 @@ import { MutationOf, Mutations } from "graphQL/graphql-typings";
 import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
 import { ModuleUpdateContext } from "app/state/appState";
 import { useHeight } from "app/animationHelpers";
-import { useTransition, animated } from "react-spring";
 
 import CreateBookModal from "app/components/editBook/editModal";
 import BookSubjectSetter from "./components/bookSubjectSetter";
@@ -178,38 +177,25 @@ const BookResults: FunctionComponent<{ books: any; currentQuery: string; uiView:
 }) => {
   const { isPending } = useContext(ModuleUpdateContext);
 
-  const resultsTransition = useTransition(
-    { currentQuery, books },
-    {
-      keys: ({ currentQuery }) => currentQuery,
-      config: { duration: 150 },
-      from: { opacity: 0 },
-      enter: { opacity: 1 },
-      leave: { opacity: 0 }
-    }
-  );
-
   return (
     <div className="overlay-holder" style={{ gridTemplateColumns: "100%" }}>
-      {resultsTransition((styles: any, { books }) => (
-        <animated.div style={{ padding: 0, minHeight: 450, ...styles }}>
-          {!books.length ? (
-            <div className="alert alert-warning" style={{ marginTop: "20px" }}>
-              No books found
-            </div>
-          ) : null}
+      <div style={{ padding: 0, minHeight: 450 }}>
+        {!books.length ? (
+          <div className="alert alert-warning" style={{ marginTop: "20px" }}>
+            No books found
+          </div>
+        ) : null}
 
-          {isPending ? <Loading /> : null}
+        {isPending ? <Loading /> : null}
 
-          {uiView.isGridView ? (
-            <GridView menuBarHeight={menuBarHeight} books={books} />
-          ) : uiView.isBasicList ? (
-            <BasicListView books={books} />
-          ) : uiView.isCoversList ? (
-            <CoversView books={books} />
-          ) : null}
-        </animated.div>
-      ))}
+        {uiView.isGridView ? (
+          <GridView menuBarHeight={menuBarHeight} books={books} />
+        ) : uiView.isBasicList ? (
+          <BasicListView books={books} />
+        ) : uiView.isCoversList ? (
+          <CoversView books={books} />
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -91,12 +91,6 @@ export default () => {
   }, []);
   const closeEditModal = useCallback(() => setEditModalOpen(false), []);
 
-  const styles = useSpring({
-    config: { ...config.slow },
-    from: { opacity: 0 },
-    to: { opacity: 1 }
-  }) as any;
-
   return (
     <section className="flush-bottom subjects-root">
       <div>
@@ -106,9 +100,9 @@ export default () => {
       </div>
 
       <EditContext.Provider value={openEditModal}>
-        <animated.div style={styles} className="content-root">
+        <div className="content-root">
           <SubjectList subjects={topLevelSubjects} />
-        </animated.div>
+        </div>
       </EditContext.Provider>
 
       <Modal className="fade" isOpen={editModalOpen} onHide={closeEditModal} headerCaption={"Edit Subject"}>
