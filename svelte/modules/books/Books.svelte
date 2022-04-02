@@ -149,11 +149,11 @@
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
         {#if booksLoaded}
           {#if !books?.length}
-            <div transition:fade|local={{ duration: 150, easing: quadOut }}>
+            <div>
               <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
             </div>
           {:else if booksLoaded && books != null}
-            <div transition:fade|local={{ duration: 150, easing: quadOut }}>
+            <div>
               {#if $uiView.view == GRID_VIEW}
                 <GridView {booksState} {menuBarHeight} />
               {:else if $uiView.view == BASIC_LIST_VIEW}
