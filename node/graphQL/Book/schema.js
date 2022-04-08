@@ -173,14 +173,6 @@ export const type = `
     _id_ne: String
     _id_in: [String]
     _id_nin: [String]
-    ean_contains: String
-    ean_startsWith: String
-    ean_endsWith: String
-    ean_regex: String
-    ean: String
-    ean_ne: String
-    ean_in: [String]
-    ean_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -197,54 +189,6 @@ export const type = `
     title_ne: String
     title_in: [String]
     title_nin: [String]
-    mobileImage_contains: String
-    mobileImage_startsWith: String
-    mobileImage_endsWith: String
-    mobileImage_regex: String
-    mobileImage: String
-    mobileImage_ne: String
-    mobileImage_in: [String]
-    mobileImage_nin: [String]
-    mobileImagePreview_contains: String
-    mobileImagePreview_startsWith: String
-    mobileImagePreview_endsWith: String
-    mobileImagePreview_regex: String
-    mobileImagePreview: String
-    mobileImagePreview_ne: String
-    mobileImagePreview_in: [String]
-    mobileImagePreview_nin: [String]
-    smallImage_contains: String
-    smallImage_startsWith: String
-    smallImage_endsWith: String
-    smallImage_regex: String
-    smallImage: String
-    smallImage_ne: String
-    smallImage_in: [String]
-    smallImage_nin: [String]
-    smallImagePreview_contains: String
-    smallImagePreview_startsWith: String
-    smallImagePreview_endsWith: String
-    smallImagePreview_regex: String
-    smallImagePreview: String
-    smallImagePreview_ne: String
-    smallImagePreview_in: [String]
-    smallImagePreview_nin: [String]
-    mediumImage_contains: String
-    mediumImage_startsWith: String
-    mediumImage_endsWith: String
-    mediumImage_regex: String
-    mediumImage: String
-    mediumImage_ne: String
-    mediumImage_in: [String]
-    mediumImage_nin: [String]
-    mediumImagePreview_contains: String
-    mediumImagePreview_startsWith: String
-    mediumImagePreview_endsWith: String
-    mediumImagePreview_regex: String
-    mediumImagePreview: String
-    mediumImagePreview_ne: String
-    mediumImagePreview_in: [String]
-    mediumImagePreview_nin: [String]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -261,14 +205,6 @@ export const type = `
     publisher_ne: String
     publisher_in: [String]
     publisher_nin: [String]
-    publicationDate_contains: String
-    publicationDate_startsWith: String
-    publicationDate_endsWith: String
-    publicationDate_regex: String
-    publicationDate: String
-    publicationDate_ne: String
-    publicationDate_in: [String]
-    publicationDate_nin: [String]
     pages_lt: Int
     pages_lte: Int
     pages_gt: Int
@@ -325,28 +261,6 @@ export const type = `
     dateAdded_ne: String
     dateAdded_in: [String]
     dateAdded_nin: [String]
-    editorialReviews_count: Int
-    editorialReviews: EditorialReviewFilters
-    similarItems_count: Int
-    similarItems_textContains: String
-    similarItems_startsWith: String
-    similarItems_endsWith: String
-    similarItems_regex: String
-    similarItems: [String]
-    similarItems_in: [[String]]
-    similarItems_nin: [[String]]
-    similarItems_contains: String
-    similarItems_containsAny: [String]
-    similarItems_containsAll: [String]
-    similarItems_ne: [String]
-    similarItemsLastUpdate_lt: Int
-    similarItemsLastUpdate_lte: Int
-    similarItemsLastUpdate_gt: Int
-    similarItemsLastUpdate_gte: Int
-    similarItemsLastUpdate: Int
-    similarItemsLastUpdate_ne: Int
-    similarItemsLastUpdate_in: [Int]
-    similarItemsLastUpdate_nin: [Int]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -394,14 +308,6 @@ export const query = `
     _id_ne: String,
     _id_in: [String],
     _id_nin: [String],
-    ean_contains: String,
-    ean_startsWith: String,
-    ean_endsWith: String,
-    ean_regex: String,
-    ean: String,
-    ean_ne: String,
-    ean_in: [String],
-    ean_nin: [String],
     isbn_contains: String,
     isbn_startsWith: String,
     isbn_endsWith: String,
@@ -418,54 +324,6 @@ export const query = `
     title_ne: String,
     title_in: [String],
     title_nin: [String],
-    mobileImage_contains: String,
-    mobileImage_startsWith: String,
-    mobileImage_endsWith: String,
-    mobileImage_regex: String,
-    mobileImage: String,
-    mobileImage_ne: String,
-    mobileImage_in: [String],
-    mobileImage_nin: [String],
-    mobileImagePreview_contains: String,
-    mobileImagePreview_startsWith: String,
-    mobileImagePreview_endsWith: String,
-    mobileImagePreview_regex: String,
-    mobileImagePreview: String,
-    mobileImagePreview_ne: String,
-    mobileImagePreview_in: [String],
-    mobileImagePreview_nin: [String],
-    smallImage_contains: String,
-    smallImage_startsWith: String,
-    smallImage_endsWith: String,
-    smallImage_regex: String,
-    smallImage: String,
-    smallImage_ne: String,
-    smallImage_in: [String],
-    smallImage_nin: [String],
-    smallImagePreview_contains: String,
-    smallImagePreview_startsWith: String,
-    smallImagePreview_endsWith: String,
-    smallImagePreview_regex: String,
-    smallImagePreview: String,
-    smallImagePreview_ne: String,
-    smallImagePreview_in: [String],
-    smallImagePreview_nin: [String],
-    mediumImage_contains: String,
-    mediumImage_startsWith: String,
-    mediumImage_endsWith: String,
-    mediumImage_regex: String,
-    mediumImage: String,
-    mediumImage_ne: String,
-    mediumImage_in: [String],
-    mediumImage_nin: [String],
-    mediumImagePreview_contains: String,
-    mediumImagePreview_startsWith: String,
-    mediumImagePreview_endsWith: String,
-    mediumImagePreview_regex: String,
-    mediumImagePreview: String,
-    mediumImagePreview_ne: String,
-    mediumImagePreview_in: [String],
-    mediumImagePreview_nin: [String],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,
@@ -482,14 +340,6 @@ export const query = `
     publisher_ne: String,
     publisher_in: [String],
     publisher_nin: [String],
-    publicationDate_contains: String,
-    publicationDate_startsWith: String,
-    publicationDate_endsWith: String,
-    publicationDate_regex: String,
-    publicationDate: String,
-    publicationDate_ne: String,
-    publicationDate_in: [String],
-    publicationDate_nin: [String],
     pages_lt: Int,
     pages_lte: Int,
     pages_gt: Int,
@@ -546,28 +396,6 @@ export const query = `
     dateAdded_ne: String,
     dateAdded_in: [String],
     dateAdded_nin: [String],
-    editorialReviews_count: Int,
-    editorialReviews: EditorialReviewFilters,
-    similarItems_count: Int,
-    similarItems_textContains: String,
-    similarItems_startsWith: String,
-    similarItems_endsWith: String,
-    similarItems_regex: String,
-    similarItems: [String],
-    similarItems_in: [[String]],
-    similarItems_nin: [[String]],
-    similarItems_contains: String,
-    similarItems_containsAny: [String],
-    similarItems_containsAll: [String],
-    similarItems_ne: [String],
-    similarItemsLastUpdate_lt: Int,
-    similarItemsLastUpdate_lte: Int,
-    similarItemsLastUpdate_gt: Int,
-    similarItemsLastUpdate_gte: Int,
-    similarItemsLastUpdate: Int,
-    similarItemsLastUpdate_ne: Int,
-    similarItemsLastUpdate_in: [Int],
-    similarItemsLastUpdate_nin: [Int],
     timestamp_lt: Float,
     timestamp_lte: Float,
     timestamp_gt: Float,
