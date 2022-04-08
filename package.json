@@ -36,7 +36,7 @@
     "graphql-tools": "8.2.0",
     "lodash.flatmap": "4.5.0",
     "lodash.orderby": "4.6.0",
-    "moment": "2.13.0",
+    "moment": "2.19.3",
     "mongo-graphql-starter": "0.11.12",
     "mongodb": "4.2.0",
     "node-fetch": "2.6.7",
