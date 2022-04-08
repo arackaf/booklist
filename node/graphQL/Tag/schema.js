@@ -96,22 +96,6 @@ export const type = `
     userId_ne: String
     userId_in: [String]
     userId_nin: [String]
-    backgroundColor_contains: String
-    backgroundColor_startsWith: String
-    backgroundColor_endsWith: String
-    backgroundColor_regex: String
-    backgroundColor: String
-    backgroundColor_ne: String
-    backgroundColor_in: [String]
-    backgroundColor_nin: [String]
-    textColor_contains: String
-    textColor_startsWith: String
-    textColor_endsWith: String
-    textColor_regex: String
-    textColor: String
-    textColor_ne: String
-    textColor_in: [String]
-    textColor_nin: [String]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
@@ -183,22 +167,6 @@ export const query = `
     userId_ne: String,
     userId_in: [String],
     userId_nin: [String],
-    backgroundColor_contains: String,
-    backgroundColor_startsWith: String,
-    backgroundColor_endsWith: String,
-    backgroundColor_regex: String,
-    backgroundColor: String,
-    backgroundColor_ne: String,
-    backgroundColor_in: [String],
-    backgroundColor_nin: [String],
-    textColor_contains: String,
-    textColor_startsWith: String,
-    textColor_endsWith: String,
-    textColor_regex: String,
-    textColor: String,
-    textColor_ne: String,
-    textColor_in: [String],
-    textColor_nin: [String],
     timestamp_lt: Float,
     timestamp_lte: Float,
     timestamp_gt: Float,
