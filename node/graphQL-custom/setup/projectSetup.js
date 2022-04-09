@@ -16,7 +16,7 @@ export const BookSummary = {
     asin: StringType,
     isbn: StringType,
     ean: fieldOf(StringType).nonQueryable(),
-    smallImage: fieldOf(StringType).nonQueryable(),
+    smallImage: StringType,
     smallImagePreview: fieldOf(StringType).nonQueryable(),
     mediumImage: fieldOf(StringType).nonQueryable(),
     mediumImagePreview: fieldOf(StringType).nonQueryable(),

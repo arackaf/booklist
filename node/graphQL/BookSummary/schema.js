@@ -108,6 +108,14 @@ export const type = `
     isbn_ne: String
     isbn_in: [String]
     isbn_nin: [String]
+    smallImage_contains: String
+    smallImage_startsWith: String
+    smallImage_endsWith: String
+    smallImage_regex: String
+    smallImage: String
+    smallImage_ne: String
+    smallImage_in: [String]
+    smallImage_nin: [String]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -161,6 +169,14 @@ export const query = `
     isbn_ne: String,
     isbn_in: [String],
     isbn_nin: [String],
+    smallImage_contains: String,
+    smallImage_startsWith: String,
+    smallImage_endsWith: String,
+    smallImage_regex: String,
+    smallImage: String,
+    smallImage_ne: String,
+    smallImage_in: [String],
+    smallImage_nin: [String],
     authors_count: Int,
     authors_textContains: String,
     authors_startsWith: String,
