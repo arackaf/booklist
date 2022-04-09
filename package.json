@@ -37,7 +37,7 @@
     "lodash.flatmap": "4.5.0",
     "lodash.orderby": "4.6.0",
     "moment": "2.13.0",
-    "mongo-graphql-starter": "0.11.13",
+    "mongo-graphql-starter": "0.11.14",
     "mongodb": "4.2.0",
     "node-fetch": "2.6.7",
     "nodemailer": "6.4.16",
