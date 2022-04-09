@@ -72,10 +72,6 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
     return <NoCoverComponent />;
   }
 
-  if (preview.indexOf(`"w":`)) {
-    preview = JSON.parse(preview);
-  }
-
   if (preview) {
     return (
       <>

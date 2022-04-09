@@ -47,6 +47,7 @@ query SearchBooks(
       smallImage
       smallImagePreview
       mediumImage
+      mediumImagePreview
       publicationDate
       subjects
       authors
