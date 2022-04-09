@@ -31,9 +31,6 @@ export const imgCache = {
       throw result;
     }
     return result;
-  },
-  clearImg: src => {
-    delete this.__cache;
   }
 };
 
