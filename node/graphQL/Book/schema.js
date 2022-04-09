@@ -6,11 +6,11 @@ export const type = `
     isbn: String
     title: String
     mobileImage: String
-    mobileImagePreview: String
+    mobileImagePreview: JSON
     smallImage: String
-    smallImagePreview: String
+    smallImagePreview: JSON
     mediumImage: String
-    mediumImagePreview: String
+    mediumImagePreview: JSON
     userId: String
     publisher: String
     publicationDate: String
@@ -60,11 +60,11 @@ export const type = `
     isbn: String
     title: String
     mobileImage: String
-    mobileImagePreview: String
+    mobileImagePreview: JSON
     smallImage: String
-    smallImagePreview: String
+    smallImagePreview: JSON
     mediumImage: String
-    mediumImagePreview: String
+    mediumImagePreview: JSON
     userId: String
     publisher: String
     publicationDate: String
@@ -86,11 +86,11 @@ export const type = `
     isbn: String
     title: String
     mobileImage: String
-    mobileImagePreview: String
+    mobileImagePreview: JSON
     smallImage: String
-    smallImagePreview: String
+    smallImagePreview: JSON
     mediumImage: String
-    mediumImagePreview: String
+    mediumImagePreview: JSON
     userId: String
     publisher: String
     publicationDate: String
@@ -148,11 +148,8 @@ export const type = `
     isbn: Int
     title: Int
     mobileImage: Int
-    mobileImagePreview: Int
     smallImage: Int
-    smallImagePreview: Int
     mediumImage: Int
-    mediumImagePreview: Int
     userId: Int
     publisher: Int
     publicationDate: Int

@@ -8,9 +8,9 @@ export default {
     isbn: "String",
     ean: "String",
     smallImage: "String",
-    smallImagePreview: "String",
+    smallImagePreview: "JSON",
     mediumImage: "String",
-    mediumImagePreview: "String",
+    mediumImagePreview: "JSON",
     authors: "StringArray"
   },
   extras: {
