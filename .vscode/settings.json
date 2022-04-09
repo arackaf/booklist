@@ -1,8 +1,8 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
-    "react/package-lock.json": true,
-    "svelte/package-lock.json": true,
+    "react/package-lock.json": false,
+    "svelte/package-lock.json": false,
     "package-lock.json": true,
     "favicon.ico": true,
     ".gitattributes": true,

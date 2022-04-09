@@ -84,10 +84,6 @@ export const type = `
   }
 
   input BookSummaryFilters {
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     title_contains: String
     title_startsWith: String
     title_endsWith: String
@@ -112,14 +108,6 @@ export const type = `
     isbn_ne: String
     isbn_in: [String]
     isbn_nin: [String]
-    ean_contains: String
-    ean_startsWith: String
-    ean_endsWith: String
-    ean_regex: String
-    ean: String
-    ean_ne: String
-    ean_in: [String]
-    ean_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -128,30 +116,6 @@ export const type = `
     smallImage_ne: String
     smallImage_in: [String]
     smallImage_nin: [String]
-    smallImagePreview_contains: String
-    smallImagePreview_startsWith: String
-    smallImagePreview_endsWith: String
-    smallImagePreview_regex: String
-    smallImagePreview: String
-    smallImagePreview_ne: String
-    smallImagePreview_in: [String]
-    smallImagePreview_nin: [String]
-    mediumImage_contains: String
-    mediumImage_startsWith: String
-    mediumImage_endsWith: String
-    mediumImage_regex: String
-    mediumImage: String
-    mediumImage_ne: String
-    mediumImage_in: [String]
-    mediumImage_nin: [String]
-    mediumImagePreview_contains: String
-    mediumImagePreview_startsWith: String
-    mediumImagePreview_endsWith: String
-    mediumImagePreview_regex: String
-    mediumImagePreview: String
-    mediumImagePreview_ne: String
-    mediumImagePreview_in: [String]
-    mediumImagePreview_nin: [String]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -181,10 +145,6 @@ export const mutation = `
 export const query = `
 
   allBookSummarys (
-    _id: String,
-    _id_ne: String,
-    _id_in: [String],
-    _id_nin: [String],
     title_contains: String,
     title_startsWith: String,
     title_endsWith: String,
@@ -209,14 +169,6 @@ export const query = `
     isbn_ne: String,
     isbn_in: [String],
     isbn_nin: [String],
-    ean_contains: String,
-    ean_startsWith: String,
-    ean_endsWith: String,
-    ean_regex: String,
-    ean: String,
-    ean_ne: String,
-    ean_in: [String],
-    ean_nin: [String],
     smallImage_contains: String,
     smallImage_startsWith: String,
     smallImage_endsWith: String,
@@ -225,30 +177,6 @@ export const query = `
     smallImage_ne: String,
     smallImage_in: [String],
     smallImage_nin: [String],
-    smallImagePreview_contains: String,
-    smallImagePreview_startsWith: String,
-    smallImagePreview_endsWith: String,
-    smallImagePreview_regex: String,
-    smallImagePreview: String,
-    smallImagePreview_ne: String,
-    smallImagePreview_in: [String],
-    smallImagePreview_nin: [String],
-    mediumImage_contains: String,
-    mediumImage_startsWith: String,
-    mediumImage_endsWith: String,
-    mediumImage_regex: String,
-    mediumImage: String,
-    mediumImage_ne: String,
-    mediumImage_in: [String],
-    mediumImage_nin: [String],
-    mediumImagePreview_contains: String,
-    mediumImagePreview_startsWith: String,
-    mediumImagePreview_endsWith: String,
-    mediumImagePreview_regex: String,
-    mediumImagePreview: String,
-    mediumImagePreview_ne: String,
-    mediumImagePreview_in: [String],
-    mediumImagePreview_nin: [String],
     authors_count: Int,
     authors_textContains: String,
     authors_startsWith: String,

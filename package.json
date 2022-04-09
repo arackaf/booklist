@@ -2,8 +2,8 @@
   "name": "booklist",
   "main": "app.js",
   "engines": {
-    "node": "14.17.2",
-    "npm": "6.14.13"
+    "node": "16.11.1",
+    "npm": "8.0.0"
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
   "version": "0.1.0",
@@ -18,38 +18,38 @@
     "heroku-postbuild": "npm run heroku-install && npm run react-build && npm run svelte-build"
   },
   "dependencies": {
+    "@graphql-tools/schema": "^8.3.7",
     "aws-sdk": "2.462.0",
     "blueimp-md5": "2.3.0",
-    "body-parser": "^1.19.0",
-    "compression": "^1.7.4",
+    "body-parser": "1.19.0",
+    "compression": "1.7.4",
     "cookie-parser": "1.4.0",
-    "cors": "^2.8.5",
-    "del": "^3.0.0",
-    "dotenv": "^4.0.0",
+    "cors": "2.8.5",
+    "del": "3.0.0",
+    "dotenv": "4.0.0",
     "esm": "3.2.25",
     "express": "4.x",
-    "express-graphql": "^0.9.0",
-    "express-session": "^1.16.1",
-    "express-subdomain": "^1.0.5",
+    "express-graphql": "^0.12.0",
+    "express-session": "1.16.1",
+    "express-subdomain": "1.0.5",
     "generic-persistgraphql": "0.2.2",
-    "graphql": "^15.5.1",
-    "graphql-tools": "^8.2.0",
-    "lodash.flatmap": "^4.5.0",
-    "lodash.orderby": "^4.6.0",
-    "moment": "^2.13.0",
-    "mongo-graphql-starter": "^0.11.11",
-    "mongodb": "^4.2.0",
-    "node-fetch": "^3.0.0",
+    "graphql": "^16.3.0",
+    "lodash.flatmap": "4.5.0",
+    "lodash.orderby": "4.6.0",
+    "moment": "2.13.0",
+    "mongo-graphql-starter": "0.11.13",
+    "mongodb": "4.2.0",
+    "node-fetch": "2.6.7",
     "nodemailer": "6.4.16",
     "nodemailer-smtp-transport": "2.4.1",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
     "passport-remember-me": "0.0.1",
-    "typescript": "^3.8.3",
-    "uuid": "^3.4.0"
+    "typescript": "3.8.3",
+    "uuid": "3.4.0"
   },
   "devDependencies": {
-    "@playlyfe/gql": "^2.6.2",
-    "serverless-webpack": "^5.3.1"
+    "@playlyfe/gql": "2.6.2",
+    "serverless-webpack": "5.3.1"
   }
 }
