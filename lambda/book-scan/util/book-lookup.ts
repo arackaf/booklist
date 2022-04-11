@@ -9,7 +9,7 @@ import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUp
 import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
-import getDbConnection from "../../util/getDbConnection";
+import { getDbConnection } from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
 
 import { handleCover } from "../../util/handleCover";
@@ -135,7 +135,6 @@ const wait = ms => new Promise(res => setTimeout(res, ms));
 export const lookupBooks = async (scanItems: ScanItem[]) => {
   try {
     const startTime = +new Date();
-    const mongoDb = await getDbConnection();
 
     const secrets = await getSecrets();
     const isbnDbKey = secrets["isbn-db-key"];
@@ -186,7 +185,10 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
       const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
 
       if (!newBookMaybe.pk) {
+        const { db: mongoDb, client: mongoClient } = await getDbConnection();
         await mongoDb.collection("books").insertOne(newBookMaybe);
+        await mongoClient.close();
+
         userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
         const { title, smallImage } = newBookMaybe as any;
         await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));

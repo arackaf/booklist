@@ -1,11 +1,9 @@
-import getDbConnection from "../../util/getDbConnection";
-import { ObjectId } from "mongodb";
+import { ObjectId, Db } from "mongodb";
 
 import { attemptSimilarBookCover } from "../../util/similarBookHelpers";
 
-export async function booksWithoutSimilarity($limit: number = 20) {
+export async function booksWithoutSimilarity(db: Db, $limit: number = 20) {
   try {
-    let db = await getDbConnection();
     let dateReference = +new Date() - 1000 * 60 * 60 * 24 * 60;
     let query = {
       $and: [
@@ -28,15 +26,13 @@ export async function booksWithoutSimilarity($limit: number = 20) {
   }
 }
 
-export async function addPlaceholder(books) {
-  let db = await getDbConnection();
+export async function addPlaceholder(db: Db, books) {
   await db
     .collection("books")
     .updateMany({ _id: { $in: books.map(b => new ObjectId(b._id)) } }, { $set: { similarItems: null, similarItemsLastUpdate: +new Date() } });
 }
 
-export async function updateSimilarityInfo(book, results) {
-  let db = await getDbConnection();
+export async function updateSimilarityInfo(db: Db, book, results) {
   try {
     await db.collection("books").updateOne(
       { _id: new ObjectId(book._id) },
