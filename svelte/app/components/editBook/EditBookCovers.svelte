@@ -1,6 +1,35 @@
 <script lang="ts">
   import ManageBookCover from "./ManageBookCover.svelte";
 
+  type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
+  type UploadResultsType = { success: boolean; status?: string; mobile: IndividualCover; small: IndividualCover; medium: IndividualCover };
+
+  let coverProcessingResult: UploadResultsType = null;
+
+  let useNewMobile = false;
+  let useNewSmall = false;
+  let useNewMedium = false;
+
+  let coverProcessingError = false;
+  const onCoverError = () => {
+    coverProcessingError = true;
+    coverProcessingResult = null;
+  };
+  const clearCoverError = () => (coverProcessingError = false);
+
+  const onCoverResults = (obj: UploadResultsType) => {
+    clearCoverError();
+    coverProcessingResult = obj;
+    if (obj.success) {
+      useNewMobile = obj.mobile.STATUS === "success";
+      useNewSmall = obj.small.STATUS === "success";
+      useNewMedium = obj.medium.STATUS === "success";
+    } else {
+      useNewMobile = false;
+      useNewSmall = false;
+      useNewMedium = false;
+    }
+  };
   /*
 export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) => {
   const { runMutation: runBookMutation } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
@@ -76,7 +105,7 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
   <!-- <CurrentCovers book={book} /> -->
   <!-- <hr /> -->
 
-  <ManageBookCover />
+  <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
   <!-- onError={onCoverError} onResults={onCoverResults} /> -->
   <!-- {coverProcessingError ? <div className="alert alert-danger">Error processing this cover</div> : null}
       {coverProcessingResult ? (
