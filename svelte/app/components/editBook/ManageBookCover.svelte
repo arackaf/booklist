@@ -42,7 +42,7 @@
     request.append("userId", userId);
 
     uploading = true;
-    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, onResults, onError);
+    ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, onResults, onError).then(() => (uploading = false));
   };
 
   let dragging = false;

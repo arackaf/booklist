@@ -21,7 +21,7 @@
 <div style="flex: 1">
   {#if success}
     <Stack inline={true} style="alignItems: center; height: 100%">
-      <div class="margin-bottom">
+      <div class="margin-bottom" style="opacity: {useNewImage ? 1 : 0.5}">
         <svelte:component this={ImgComponent} url={image.url} preview={image.preview} />
       </div>
       <div style="marginTop: auto;">
