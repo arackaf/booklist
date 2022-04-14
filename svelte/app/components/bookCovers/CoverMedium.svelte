@@ -1,11 +1,9 @@
-<script>
-  import { getCrossOriginAttribute } from "util/corsHelpers";
+<script lang="ts">
+  import Cover from "./Cover.svelte";
   import NoCoverMedium from "./NoCoverMedium.svelte";
+
   export let url = "";
+  export let preview = "";
 </script>
 
-{#if url}
-  <img alt="Book cover" style="display: block" {...getCrossOriginAttribute(url)} src={url} />
-{:else}
-  <NoCoverMedium />
-{/if}
+<Cover {url} {preview} NoCoverComponent={NoCoverMedium} />

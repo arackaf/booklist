@@ -1,14 +1,27 @@
 <script lang="ts">
+  import { stat } from "fs";
+
   import ManageBookCover from "./ManageBookCover.svelte";
+  import UploadResults from "./UploadResults.svelte";
 
   type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
-  type UploadResultsType = { success: boolean; status?: string; mobile: IndividualCover; small: IndividualCover; medium: IndividualCover };
+  type UploadResultsType = {
+    success: boolean;
+    status?: "success" | "invalid-size" | "error";
+    mobile: IndividualCover;
+    small: IndividualCover;
+    medium: IndividualCover;
+  };
 
   let coverProcessingResult: UploadResultsType = null;
 
   let useNewMobile = false;
   let useNewSmall = false;
   let useNewMedium = false;
+
+  const setUseNewMobile = val => (useNewMobile = val);
+  const setUseNewSmall = val => (useNewSmall = val);
+  const setUseNewMedium = val => (useNewMedium = val);
 
   let coverProcessingError = false;
   const onCoverError = () => {
@@ -30,6 +43,11 @@
       useNewMedium = false;
     }
   };
+
+  //TODO:
+  // - svelte covers for pending results do not update when you upload a new cover
+  // - cover upload spinner does not stop
+
   /*
 export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) => {
   const { runMutation: runBookMutation } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
@@ -99,6 +117,8 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
   return (
 
   */
+
+  $: ({ success, status, mobile, small, medium } = coverProcessingResult || ({} as any));
 </script>
 
 <div>
@@ -106,6 +126,27 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
   <!-- <hr /> -->
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
+
+  {#if coverProcessingError}
+    <div class="alert alert-danger">Error processing this cover</div>
+  {/if}
+
+  {#if coverProcessingResult}
+    <UploadResults
+      {success}
+      {status}
+      {mobile}
+      {small}
+      {medium}
+      {useNewMobile}
+      {setUseNewMobile}
+      {useNewSmall}
+      {setUseNewSmall}
+      {useNewMedium}
+      {setUseNewMedium}
+    />
+  {/if}
+
   <!-- onError={onCoverError} onResults={onCoverResults} /> -->
   <!-- {coverProcessingError ? <div className="alert alert-danger">Error processing this cover</div> : null}
       {coverProcessingResult ? (
