@@ -119,7 +119,7 @@ const UploadResult: FunctionComponent<IndividualCover & UploadResultAdditionalTy
     <div style={{ flex: 1 }}>
       {success ? (
         <Stack inline={true} style={{ alignItems: "center", height: "100%" }}>
-          <div className="margin-bottom">
+          <div className="margin-bottom" style={{ opacity: useNewImage ? 1 : 0.5 }}>
             <ImgComponent url={image.url} preview={image.preview} />
           </div>
           <div style={{ marginTop: "auto" }}>
