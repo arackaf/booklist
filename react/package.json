@@ -33,7 +33,7 @@
     "history": "4.6.1",
     "lodash.debounce": "4.0.8",
     "madge": "^5.0.1",
-    "micro-graphql-react": "0.4.0-rc.14",
+    "micro-graphql-react": "0.4.0-rc.15",
     "persistgraphql": "^0.3.11",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
@@ -48,7 +48,7 @@
     "shallow-equal": "^1.0.0",
     "toastify-js": "^1.11.1",
     "typescript": "^4.6.3",
-    "vite": "^2.6.14",
+    "vite": "^2.9.1",
     "vite-plugin-pwa": "^0.11.13"
   }
 }
