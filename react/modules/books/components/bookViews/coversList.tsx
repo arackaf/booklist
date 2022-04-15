@@ -36,7 +36,7 @@ const BookViewCovers: FunctionComponent<{ books: any }> = props => {
           {props.books.map((book, i) => (
             <figure onClick={() => previewBook(book)}>
               <div>
-                <CoverMedium url={book.mediumImage} />
+                <CoverMedium url={book.mediumImage} preview={book.mediumImagePreview} />
               </div>
               <figcaption>{book.title}</figcaption>
             </figure>

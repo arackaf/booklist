@@ -16,4 +16,4 @@
   }
 </script>
 
-<canvas bind:this={canvasRef} width={preview.w} height={preview.h} />
+<canvas bind:this={canvasRef} class="book-preview" width={preview.w} height={preview.h} />

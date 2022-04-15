@@ -88,7 +88,7 @@
       {#each books as book, i}
         <figure on:click={() => previewBook(book)}>
           <div>
-            <CoverMedium url={book.mediumImage} />
+            <CoverMedium url={book.mediumImage} preview={book.mediumImagePreview} />
           </div>
           <figcaption>{book.title}</figcaption>
         </figure>

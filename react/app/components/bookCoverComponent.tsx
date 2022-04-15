@@ -48,7 +48,7 @@ const PreviewCanvas: FunctionComponent<CanvasPreviewProps> = ({ preview }) => {
     ctx.putImageData(imageData, 0, 0);
   }, [preview]);
 
-  return <canvas ref={canvasRef} width={preview.w} height={preview.h} />;
+  return <canvas className="book-preview" ref={canvasRef} width={preview.w} height={preview.h} />;
 };
 
 const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => {
