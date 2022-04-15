@@ -9,6 +9,7 @@
   import { IBookRaw } from "modules/books/booksState";
   import Button from "../buttons/Button.svelte";
   import ActionButton from "../buttons/ActionButton.svelte";
+  import CurrentCovers from "./CurrentCovers.svelte";
 
   export let book;
   export let updateBook: (updater: (book: IBookRaw) => IBookRaw) => void;
@@ -94,7 +95,7 @@
 </script>
 
 <div>
-  <!-- <CurrentCovers book={book} /> -->
+  <CurrentCovers {book} />
   <hr />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
