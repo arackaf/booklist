@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { stat } from "fs";
-
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
 

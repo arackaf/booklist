@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Toggle from "svelte-toggle";
+
   import CoverMobile from "../bookCovers/CoverMobile.svelte";
   import CoverSmall from "../bookCovers/CoverSmall.svelte";
   import CoverMedium from "../bookCovers/CoverMedium.svelte";
@@ -12,21 +14,22 @@
 
   $: success = STATUS === "success";
   $: ImgComponent = size === "mobile" ? CoverMobile : size === "small" ? CoverSmall : CoverMedium;
-
-  const toggleUse = (e: any) => {
-    setUseNewImage(e.target.checked);
-  };
 </script>
 
 <div style="flex: 1">
   {#if success}
-    <Stack inline={true} style="alignItems: center; height: 100%">
+    <Stack inline={true} style="align-items: center; height: 100%">
       <div class="margin-bottom" style="opacity: {useNewImage ? 1 : 0.5}">
         <svelte:component this={ImgComponent} url={image.url} preview={image.preview} />
       </div>
-      <div style="marginTop: auto;">
-        <!-- <Toggle checked={useNewImage} onChange={e => setUseNewImage(e.target.checked)} icons={{ unchecked: null }} /> -->
-        <input type="checkbox" checked={useNewImage} on:change={toggleUse} />
+      <div style="margin-top: auto;">
+        <Toggle
+          toggledColor="var(--success-5)"
+          untoggledColor="var(--neutral-5)"
+          toggled={!!useNewImage}
+          on:toggle={e => setUseNewImage(!useNewImage)}
+          hideLabel
+        />
       </div>
     </Stack>
   {/if}
