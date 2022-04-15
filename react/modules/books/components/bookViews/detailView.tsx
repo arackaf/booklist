@@ -11,10 +11,12 @@ import FlowItems from "app/components/layout/FlowItems";
 const DetailsView = props => {
   const { book, saveBook } = props;
   const [url, setUrl] = useState(null);
+  const [urlPreview, setUrlPreview] = useState(null);
   const [editingBook, setEditingBook] = useState(false);
 
   useLayoutEffect(() => {
     setUrl(book ? book.mediumImage : null);
+    setUrlPreview(book ? book.mediumImagePreview : null);
     if (props.isOpen) {
       setEditingBook(false);
     }
@@ -30,7 +32,7 @@ const DetailsView = props => {
         <div style={{ display: "flex", alignItems: "top" }}>
           <div>
             <div>
-              <CoverSmall url={url} />
+              <CoverSmall url={url} preview={urlPreview} dontSuspend={true} />
             </div>
           </div>
           <Stack tighter={true} style={{ paddingLeft: "10px" }}>
