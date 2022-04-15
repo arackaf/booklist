@@ -14,11 +14,11 @@
     loaded = true;
   };
 
-  onMount(() => {
+  $: {
     if (previewedImage) {
       previewedImage.src = url;
     }
-  });
+  }
 </script>
 
 {#if url}
