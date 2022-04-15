@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
 
   import { getCrossOriginAttribute } from "util/corsHelpers";
+  import CoverPreview from "./CoverPreview.svelte";
 
   export let url = "";
   export let preview = "";
@@ -11,7 +12,9 @@
   let previewedImage = null;
 
   const onLoad = () => {
-    loaded = true;
+    setTimeout(() => {
+      loaded = true;
+    }, 3000);
   };
 
   $: {
@@ -30,7 +33,7 @@
       style="display: {loaded ? 'block' : 'none'}"
       {...getCrossOriginAttribute(url)}
     />
-    <img alt="Book cover preview" src={preview} style="display: {loaded ? 'none' : 'block'}" />
+    <CoverPreview {loaded} {preview} />
   {:else}
     <img on:load={onLoad} src={url} alt="Book cover" style="display: block" {...getCrossOriginAttribute(url)} />
   {/if}

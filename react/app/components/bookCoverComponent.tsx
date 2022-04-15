@@ -37,7 +37,7 @@ const Preview: FunctionComponent<CoverPreviewProps> = ({ preview, loaded }) => {
   }
 };
 
-const PreviewCanvas: FunctionComponent<CanvasPreviewProps> = ({ preview, loaded }) => {
+const PreviewCanvas: FunctionComponent<CanvasPreviewProps> = ({ preview }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useLayoutEffect(() => {
@@ -46,7 +46,7 @@ const PreviewCanvas: FunctionComponent<CanvasPreviewProps> = ({ preview, loaded 
     const imageData = ctx.createImageData(preview.w, preview.h);
     imageData.data.set(pixels);
     ctx.putImageData(imageData, 0, 0);
-  }, []);
+  }, [preview]);
 
   return <canvas ref={canvasRef} width={preview.w} height={preview.h} />;
 };
