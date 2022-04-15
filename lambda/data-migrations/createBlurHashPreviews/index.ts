@@ -30,8 +30,10 @@ async function run() {
   const books = await db
     .collection("books")
     .find({
+      userId: { $ne: "5b57f71b6871ae00145198ff" },
       $or: [{ mobileImagePreview: { $type: "string" } }, { smallImagePreview: { $type: "string" } }, { mediumImagePreview: { $type: "string" } }]
     })
+    .limit(3)
     .toArray();
 
   console.log(books.length, "books to process");
@@ -98,7 +100,7 @@ async function run() {
 
       if (Object.keys(updateObject).length) {
         console.log("#", idx, book.title, "Saving");
-        await db.collection("books").updateOne({ _id: book._id }, { $set: updateObject });
+        //await db.collection("books").updateOne({ _id: book._id }, { $set: updateObject });
       } else {
         console.log("#", idx, "Nothing to save");
       }
