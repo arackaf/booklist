@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
+  import EditBookCovers from "./EditBookCovers.svelte";
 
   import EditBookInfo from "./EditBookInfo.svelte";
   import ManageBookCover from "./ManageBookCover.svelte";
@@ -24,15 +25,7 @@
     </TabContent>
     <TabContent tabName="covers">
       {#if book}
-        <div class="form-group">
-          <label>Small Cover</label>
-          <ManageBookCover _id={book._id} imgKey="smallImage" size="small" img={book.smallImage} updateBookObject={updateBook} />
-        </div>
-        <hr />
-        <div class="form-group">
-          <label>Medium Cover</label>
-          <ManageBookCover _id={book._id} imgKey="mediumImage" size="medium" img={book.mediumImage} updateBookObject={updateBook} />
-        </div>
+        <EditBookCovers {book} {updateBook} />
       {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>

@@ -1,0 +1,44 @@
+service: blurhash
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  timeout: 30
+
+  # you can overwrite defaults here
+  stage: dev
+  #  region: us-east-1
+  environment:
+    STAGE: ${self:provider.stage}
+    stage: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+
+layers:
+  node12:
+    package:
+      artifact: ./node12_canvas_layer.zip
+  node12Lib64:
+    package:
+      artifact: ./node12_canvas_lib64_layer.zip
+
+functions:
+  syncBlurhash:
+    timeout: 750
+    handler: ./dist/blurhash-previews/index.handler
+    layers:
+      - { Ref: Node12LambdaLayer }
+      - { Ref: Node12Lib64LambdaLayer }
+    events:
+      - schedule: rate(1 minute)

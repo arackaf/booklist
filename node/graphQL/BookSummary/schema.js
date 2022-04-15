@@ -7,9 +7,9 @@ export const type = `
     isbn: String
     ean: String
     smallImage: String
-    smallImagePreview: String
+    smallImagePreview: JSON
     mediumImage: String
-    mediumImagePreview: String
+    mediumImagePreview: JSON
     authors: [String]
   }
 
@@ -46,9 +46,9 @@ export const type = `
     isbn: String
     ean: String
     smallImage: String
-    smallImagePreview: String
+    smallImagePreview: JSON
     mediumImage: String
-    mediumImagePreview: String
+    mediumImagePreview: JSON
     authors: [String]
   }
 
@@ -58,9 +58,9 @@ export const type = `
     isbn: String
     ean: String
     smallImage: String
-    smallImagePreview: String
+    smallImagePreview: JSON
     mediumImage: String
-    mediumImagePreview: String
+    mediumImagePreview: JSON
     authors: [String]
     authors_PUSH: String
     authors_CONCAT: [String]
@@ -77,9 +77,7 @@ export const type = `
     isbn: Int
     ean: Int
     smallImage: Int
-    smallImagePreview: Int
     mediumImage: Int
-    mediumImagePreview: Int
     authors: Int
   }
 

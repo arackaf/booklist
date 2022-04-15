@@ -17,9 +17,9 @@ export const BookSummary = {
     isbn: StringType,
     ean: fieldOf(StringType).nonQueryable(),
     smallImage: StringType,
-    smallImagePreview: fieldOf(StringType).nonQueryable(),
+    smallImagePreview: fieldOf(JSONType).nonQueryable(),
     mediumImage: fieldOf(StringType).nonQueryable(),
-    mediumImagePreview: fieldOf(StringType).nonQueryable(),
+    mediumImagePreview: fieldOf(JSONType).nonQueryable(),
     authors: StringArrayType
   },
   extras: {

@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, FunctionComponent, useLayoutEffect } from "react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
 
 import "./bookCoverComponentStyles.css";
 import { SuspenseImg } from "./suspenseImage";
+
+import { decode } from "blurhash";
 
 export const NoCoverMobile = () => (
   <div className="no-cover-mobile">
@@ -21,6 +23,33 @@ export const NoCoverMedium = () => (
     <div>No Cover</div>
   </div>
 );
+
+type CoverPreviewProps = { preview: string | { blurhash: string; w: number; h: number }; loaded: boolean };
+type CanvasPreviewProps = { preview: { blurhash: string; w: number; h: number }; loaded: boolean };
+
+const Preview: FunctionComponent<CoverPreviewProps> = ({ preview, loaded }) => {
+  if (loaded) {
+    return null;
+  } else if (typeof preview === "string") {
+    return <img key="book-preview" alt="Book cover preview" src={preview} style={{ display: "block" }} />;
+  } else {
+    return <PreviewCanvas preview={preview} loaded={loaded} />;
+  }
+};
+
+const PreviewCanvas: FunctionComponent<CanvasPreviewProps> = ({ preview }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useLayoutEffect(() => {
+    const pixels = decode(preview.blurhash, preview.w, preview.h);
+    const ctx = canvasRef.current.getContext("2d");
+    const imageData = ctx.createImageData(preview.w, preview.h);
+    imageData.data.set(pixels);
+    ctx.putImageData(imageData, 0, 0);
+  }, [preview]);
+
+  return <canvas className="book-preview" ref={canvasRef} width={preview.w} height={preview.h} />;
+};
 
 const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => {
   const initialUrl = useRef(url || "");
@@ -46,7 +75,7 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
   if (preview) {
     return (
       <>
-        <img key="book-preview" alt="Book cover preview" src={preview} style={{ display: !loaded ? "block" : "none" }} />
+        <Preview loaded={loaded} preview={preview} />
         <img
           key={`book-preview-real-${url}`}
           alt="Book cover"

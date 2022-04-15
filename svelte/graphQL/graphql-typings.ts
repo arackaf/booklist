@@ -70,11 +70,11 @@ export type Book = {
   isbn: Maybe<Scalars['String']>;
   title: Maybe<Scalars['String']>;
   mobileImage: Maybe<Scalars['String']>;
-  mobileImagePreview: Maybe<Scalars['String']>;
+  mobileImagePreview: Maybe<Scalars['JSON']>;
   smallImage: Maybe<Scalars['String']>;
-  smallImagePreview: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['JSON']>;
   mediumImage: Maybe<Scalars['String']>;
-  mediumImagePreview: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['JSON']>;
   userId: Maybe<Scalars['String']>;
   publisher: Maybe<Scalars['String']>;
   publicationDate: Maybe<Scalars['String']>;
@@ -142,11 +142,11 @@ export type BookInput = {
   isbn: InputMaybe<Scalars['String']>;
   title: InputMaybe<Scalars['String']>;
   mobileImage: InputMaybe<Scalars['String']>;
-  mobileImagePreview: InputMaybe<Scalars['String']>;
+  mobileImagePreview: InputMaybe<Scalars['JSON']>;
   smallImage: InputMaybe<Scalars['String']>;
-  smallImagePreview: InputMaybe<Scalars['String']>;
+  smallImagePreview: InputMaybe<Scalars['JSON']>;
   mediumImage: InputMaybe<Scalars['String']>;
-  mediumImagePreview: InputMaybe<Scalars['String']>;
+  mediumImagePreview: InputMaybe<Scalars['JSON']>;
   userId: InputMaybe<Scalars['String']>;
   publisher: InputMaybe<Scalars['String']>;
   publicationDate: InputMaybe<Scalars['String']>;
@@ -168,11 +168,11 @@ export type BookMutationInput = {
   isbn: InputMaybe<Scalars['String']>;
   title: InputMaybe<Scalars['String']>;
   mobileImage: InputMaybe<Scalars['String']>;
-  mobileImagePreview: InputMaybe<Scalars['String']>;
+  mobileImagePreview: InputMaybe<Scalars['JSON']>;
   smallImage: InputMaybe<Scalars['String']>;
-  smallImagePreview: InputMaybe<Scalars['String']>;
+  smallImagePreview: InputMaybe<Scalars['JSON']>;
   mediumImage: InputMaybe<Scalars['String']>;
-  mediumImagePreview: InputMaybe<Scalars['String']>;
+  mediumImagePreview: InputMaybe<Scalars['JSON']>;
   userId: InputMaybe<Scalars['String']>;
   publisher: InputMaybe<Scalars['String']>;
   publicationDate: InputMaybe<Scalars['String']>;
@@ -230,11 +230,8 @@ export type BookSort = {
   isbn: InputMaybe<Scalars['Int']>;
   title: InputMaybe<Scalars['Int']>;
   mobileImage: InputMaybe<Scalars['Int']>;
-  mobileImagePreview: InputMaybe<Scalars['Int']>;
   smallImage: InputMaybe<Scalars['Int']>;
-  smallImagePreview: InputMaybe<Scalars['Int']>;
   mediumImage: InputMaybe<Scalars['Int']>;
-  mediumImagePreview: InputMaybe<Scalars['Int']>;
   userId: InputMaybe<Scalars['Int']>;
   publisher: InputMaybe<Scalars['Int']>;
   publicationDate: InputMaybe<Scalars['Int']>;
@@ -361,9 +358,9 @@ export type BookSummary = {
   isbn: Maybe<Scalars['String']>;
   ean: Maybe<Scalars['String']>;
   smallImage: Maybe<Scalars['String']>;
-  smallImagePreview: Maybe<Scalars['String']>;
+  smallImagePreview: Maybe<Scalars['JSON']>;
   mediumImage: Maybe<Scalars['String']>;
-  mediumImagePreview: Maybe<Scalars['String']>;
+  mediumImagePreview: Maybe<Scalars['JSON']>;
   authors: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -400,9 +397,9 @@ export type BookSummaryInput = {
   isbn: InputMaybe<Scalars['String']>;
   ean: InputMaybe<Scalars['String']>;
   smallImage: InputMaybe<Scalars['String']>;
-  smallImagePreview: InputMaybe<Scalars['String']>;
+  smallImagePreview: InputMaybe<Scalars['JSON']>;
   mediumImage: InputMaybe<Scalars['String']>;
-  mediumImagePreview: InputMaybe<Scalars['String']>;
+  mediumImagePreview: InputMaybe<Scalars['JSON']>;
   authors: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
@@ -412,9 +409,9 @@ export type BookSummaryMutationInput = {
   isbn: InputMaybe<Scalars['String']>;
   ean: InputMaybe<Scalars['String']>;
   smallImage: InputMaybe<Scalars['String']>;
-  smallImagePreview: InputMaybe<Scalars['String']>;
+  smallImagePreview: InputMaybe<Scalars['JSON']>;
   mediumImage: InputMaybe<Scalars['String']>;
-  mediumImagePreview: InputMaybe<Scalars['String']>;
+  mediumImagePreview: InputMaybe<Scalars['JSON']>;
   authors: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   authors_PUSH: InputMaybe<Scalars['String']>;
   authors_CONCAT: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -431,9 +428,7 @@ export type BookSummarySort = {
   isbn: InputMaybe<Scalars['Int']>;
   ean: InputMaybe<Scalars['Int']>;
   smallImage: InputMaybe<Scalars['Int']>;
-  smallImagePreview: InputMaybe<Scalars['Int']>;
   mediumImage: InputMaybe<Scalars['Int']>;
-  mediumImagePreview: InputMaybe<Scalars['Int']>;
   authors: InputMaybe<Scalars['Int']>;
 };
 

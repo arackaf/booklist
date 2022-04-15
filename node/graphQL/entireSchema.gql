@@ -319,9 +319,9 @@ type BookSummary {
   isbn: String
   ean: String
   smallImage: String
-  smallImagePreview: String
+  smallImagePreview: JSON
   mediumImage: String
-  mediumImagePreview: String
+  mediumImagePreview: JSON
   authors: [String]
 }
 
@@ -358,9 +358,9 @@ input BookSummaryInput {
   isbn: String
   ean: String
   smallImage: String
-  smallImagePreview: String
+  smallImagePreview: JSON
   mediumImage: String
-  mediumImagePreview: String
+  mediumImagePreview: JSON
   authors: [String]
 }
 
@@ -370,9 +370,9 @@ input BookSummaryMutationInput {
   isbn: String
   ean: String
   smallImage: String
-  smallImagePreview: String
+  smallImagePreview: JSON
   mediumImage: String
-  mediumImagePreview: String
+  mediumImagePreview: JSON
   authors: [String]
   authors_PUSH: String
   authors_CONCAT: [String]
@@ -389,9 +389,7 @@ input BookSummarySort {
   isbn: Int
   ean: Int
   smallImage: Int
-  smallImagePreview: Int
   mediumImage: Int
-  mediumImagePreview: Int
   authors: Int
 }
 
