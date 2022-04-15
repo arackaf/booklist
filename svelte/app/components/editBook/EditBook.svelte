@@ -25,7 +25,7 @@
     </TabContent>
     <TabContent tabName="covers">
       {#if book}
-        <EditBookCovers />
+        <EditBookCovers {book} {updateBook} />
       {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>

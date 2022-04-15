@@ -1,6 +1,20 @@
 <script lang="ts">
+  import { BookMutationInput, MutationOf, Mutations } from "graphQL/graphql-typings";
+  import UpdateBook from "graphQL/books/updateBook.graphql";
+
+  import { mutation } from "micro-graphql-svelte";
+
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
+  import { IBookRaw } from "modules/books/booksState";
+  import Button from "../buttons/Button.svelte";
+  import ActionButton from "../buttons/ActionButton.svelte";
+
+  export let book;
+  export let updateBook: (updater: (book: IBookRaw) => IBookRaw) => void;
+
+  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
+  $: updateBookState = $updateMutationState;
 
   type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
   type UploadResultsType = {
@@ -42,25 +56,6 @@
     }
   };
 
-  //TODO:
-  // - svelte covers for pending results do not update when you upload a new cover
-  // - cover upload spinner does not stop
-
-  /*
-export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) => {
-  const { runMutation: runBookMutation } = useMutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
-
-  const [coverProcessingResult, setCoverProcessingResult] = useState<UploadResultsType>(null);
-  const [useNewMobile, setUseNewMobile] = useState(false);
-  const [useNewSmall, setUseNewSmall] = useState(false);
-  const [useNewMedium, setUseNewMedium] = useState(false);
-
-  const isNew = () => !book?._id;
-
-  const saveEligible = useMemo(() => {
-    return coverProcessingResult?.success && (useNewMobile || useNewSmall || useNewMedium);
-  }, [coverProcessingResult, useNewMobile, useNewSmall, useNewMedium]);
-
   const runSave = () => {
     let { _id } = book;
 
@@ -81,47 +76,26 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
     }
 
     if (_id) {
-      return runBookMutation({ _id, book: updateObject }).then(() => {
-        setCoverProcessingResult(null);
+      return updateBookState.runMutation({ _id, book: updateObject }).then(() => {
+        coverProcessingResult = null;
         updateBook(b => ({ ...b, ...updateObject }));
       });
     } else {
       updateBook(b => ({ ...b, ...updateObject }));
-      setCoverProcessingResult(null);
+      coverProcessingResult = null;
     }
   };
-
-  const [coverProcessingError, setCoverProcessingError] = useState(false);
-  const onCoverError = () => {
-    setCoverProcessingError(true);
-    setCoverProcessingResult(null);
-  };
-  const clearCoverError = () => setCoverProcessingError(false);
-
-  const onCoverResults = (obj: UploadResultsType) => {
-    clearCoverError();
-    setCoverProcessingResult(obj);
-    if (obj.success) {
-      setUseNewMobile(obj.mobile.STATUS === "success");
-      setUseNewSmall(obj.small.STATUS === "success");
-      setUseNewMedium(obj.medium.STATUS === "success");
-    } else {
-      setUseNewMobile(false);
-      setUseNewSmall(false);
-      setUseNewMedium(false);
-    }
-  };
-
-  return (
-
-  */
 
   $: ({ success, status, mobile, small, medium } = coverProcessingResult || ({} as any));
+
+  $: saveEligible = coverProcessingResult?.success && (useNewMobile || useNewSmall || useNewMedium);
+
+  $: isNew = !book?._id;
 </script>
 
 <div>
   <!-- <CurrentCovers book={book} /> -->
-  <!-- <hr /> -->
+  <hr />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
@@ -145,18 +119,11 @@ export const EditBookCovers: FunctionComponent<Props> = ({ book, updateBook }) =
     />
   {/if}
 
-  <!-- onError={onCoverError} onResults={onCoverResults} /> -->
-  <!-- {coverProcessingError ? <div className="alert alert-danger">Error processing this cover</div> : null}
-      {coverProcessingResult ? (
-        <UploadResults {...{ ...coverProcessingResult, useNewMobile, setUseNewMobile, useNewSmall, setUseNewSmall, useNewMedium, setUseNewMedium }} />
-      ) : null} -->
-  <!-- {saveEligible && isNew() ? (
-        <Button className="margin-top" preset="primary" onClick={runSave}>
-          Set image info
-        </Button>
-      ) : null}
-      {saveEligible && !isNew() ? (
-        <ActionButton className="margin-top" preset="primary" onClick={runSave} finishedText="Saved" text="Save" runningText="Saving" />
-      ) : null} 
-    -->
+  {#if saveEligible && isNew}
+    <Button class="margin-top" preset="primary" onClick={runSave}>Set image info</Button>
+  {/if}
+
+  {#if saveEligible && !isNew}
+    <ActionButton class="margin-top" preset="primary" onClick={runSave} finishedText="Saved" text="Save" runningText="Saving" />
+  {/if}
 </div>
