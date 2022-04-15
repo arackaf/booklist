@@ -12,9 +12,7 @@
   let previewedImage = null;
 
   const onLoad = () => {
-    setTimeout(() => {
-      loaded = true;
-    }, 3000);
+    loaded = true;
   };
 
   $: {

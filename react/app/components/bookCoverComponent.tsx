@@ -81,7 +81,7 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
           alt="Book cover"
           {...getCrossOriginAttribute(url)}
           ref={imgRef}
-          onLoad={() => setTimeout(() => setLoaded(true), 3000)}
+          onLoad={() => setLoaded(true)}
           style={{ display: loaded ? "block" : "none" }}
         />
       </>
