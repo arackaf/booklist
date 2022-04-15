@@ -1,16 +1,14 @@
-const blurhash = require("blurhash");
-const { createCanvas, loadImage, Image } = require("canvas");
+import * as blurhash from "blurhash";
+import { createCanvas, loadImage, Image } from "canvas";
 
-function getImageData(image) {
+function getImageData(image: Image) {
   const canvas = createCanvas(image.width, image.height);
   const context = canvas.getContext("2d");
   context.drawImage(image, 0, 0);
   return context.getImageData(0, 0, image.width, image.height);
 }
 
-exports.getBlurhashPreview = async function getBlurhashPreview(url) {
-  url = "https://my-library-cover-uploads.s3.amazonaws.com/small-covers/60a93babcc3928454b5d1cc6/dcf8480a-21cb-4c53-8179-839d006bd52a.jpg";
-
+export async function getBlurhashPreview(url: string) {
   console.log("Getting blurhash for", url);
   const image = await loadImage(url);
   console.log("image size", image.width, image.height);
@@ -23,4 +21,4 @@ exports.getBlurhashPreview = async function getBlurhashPreview(url) {
   }
   console.log("Success", blurHashValue, image.width, image.height);
   return { blurhash: blurHashValue, w: image.width, h: image.height };
-};
+}

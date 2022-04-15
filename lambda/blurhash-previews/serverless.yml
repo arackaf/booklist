@@ -36,7 +36,7 @@ layers:
 functions:
   syncBlurhash:
     timeout: 750
-    handler: handler.getBlurhashPreview
+    handler: ./dist/blurhash-previews/index.handler
     layers:
       - { Ref: Node12LambdaLayer }
       - { Ref: Node12Lib64LambdaLayer }
