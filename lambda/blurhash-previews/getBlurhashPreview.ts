@@ -1,24 +1,38 @@
-import * as blurhash from "blurhash";
-import { createCanvas, loadImage, Image } from "canvas";
+import { encode } from "blurhash";
+import fetch from "node-fetch";
 
-function getImageData(image: Image) {
-  const canvas = createCanvas(image.width, image.height);
-  const context = canvas.getContext("2d");
-  context.drawImage(image, 0, 0);
-  return context.getImageData(0, 0, image.width, image.height);
-}
+const sharpDownload = url => {
+  return fetch(url).then(fetchResponse => fetchResponse.buffer());
+};
+
+const sharp = require("sharp");
 
 export async function getBlurhashPreview(url: string) {
-  console.log("Getting blurhash for", url);
-  const image = await loadImage(url);
-  console.log("image size", image.width, image.height);
-  const imageData = getImageData(image);
-  const blurHashValue = await blurhash.encode(imageData.data, imageData.width, imageData.height, 4, 4);
+  const imgBuffer = await sharpDownload(url);
+  const image = sharp(imgBuffer);
+  const dimensions = await image.metadata();
 
-  if (!blurhash.isBlurhashValid(blurHashValue)) {
-    console.log("Blurhash encoded incorrectly");
-    return null;
-  }
-  console.log("Success", blurHashValue, image.width, image.height);
-  return { blurhash: blurHashValue, w: image.width, h: image.height };
+  return new Promise(res => {
+    console.log("Processing image. Metadata:", dimensions);
+    const { width, height } = dimensions;
+
+    image
+      .raw()
+      .ensureAlpha()
+      .resize(50, 62, { fit: "inside" })
+      .toBuffer((err, buffer) => {
+        try {
+          if (err) {
+            console.log("Error getting buffer", err);
+            return res(null);
+          } else {
+            const blurhash = encode(new Uint8ClampedArray(buffer), width, height, 4, 4);
+            return res(blurhash);
+          }
+        } catch (err) {
+          console.log("Failure", err);
+          return res(null);
+        }
+      });
+  });
 }

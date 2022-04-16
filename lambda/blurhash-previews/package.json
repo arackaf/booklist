@@ -5,6 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "install-deps": "npm i && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i --arch=x64 --platform=linux sharp",
     "deploy": "rm -rf dist && tsc && sls deploy && rm -rf dist"
   },
   "author": "",

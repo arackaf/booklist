@@ -2,6 +2,18 @@ import { getDbConnection } from "../util/getDbConnection";
 import { getBlurhashPreview } from "./getBlurhashPreview";
 
 export async function handler() {
+  try {
+    const result = await getBlurhashPreview(
+      "https://my-library-cover-uploads.s3.amazonaws.com/small-covers/60a93babcc3928454b5d1cc6/dcf8480a-21cb-4c53-8179-839d006bd52a.jpg"
+    );
+
+    console.log(result);
+  } catch (er) {
+    console.log("Error", er);
+  }
+}
+
+export async function old__handler() {
   const { db, client } = await getDbConnection();
 
   try {
@@ -36,8 +48,12 @@ export async function handler() {
                 console.log("Updating mobile");
                 const blurhashValue = await getBlurhashPreview(mobileImage);
 
-                console.log("Mobile downloaded. Blurhash value ===", blurhashValue);
-                updateObject.mobileImagePreview = blurhashValue;
+                if (blurhashValue) {
+                  console.log("Mobile downloaded. Blurhash value ===", blurhashValue);
+                  updateObject.mobileImagePreview = blurhashValue;
+                } else {
+                  console.log("Mobile download failed");
+                }
               } catch (er) {
                 console.log("Mobile failed");
               }
@@ -51,8 +67,12 @@ export async function handler() {
                 console.log("Updating small");
                 const blurhashValue = await getBlurhashPreview(smallImage);
 
-                console.log("Small downloaded. Blurhash value ===", blurhashValue);
-                updateObject.smallImagePreview = blurhashValue;
+                if (blurhashValue) {
+                  console.log("Small downloaded. Blurhash value ===", blurhashValue);
+                  updateObject.smallImagePreview = blurhashValue;
+                } else {
+                  console.log("Small download failed");
+                }
               } catch (er) {
                 console.log("Small failed");
               }
@@ -66,8 +86,12 @@ export async function handler() {
                 console.log("Updating medium");
                 const blurhashValue = await getBlurhashPreview(mediumImage);
 
-                console.log("Medium downloaded. Blurhash value ===", blurhashValue);
-                updateObject.mediumImagePreview = blurhashValue;
+                if (blurhashValue) {
+                  console.log("Medium downloaded. Blurhash value ===", blurhashValue);
+                  updateObject.mediumImagePreview = blurhashValue;
+                } else {
+                  console.log("Medium download failed");
+                }
               } catch (er) {
                 console.log("Medium failed");
               }
