@@ -1,5 +1,5 @@
-import { getDbConnection } from "../util/getDbConnection";
 import { getBlurhashPreview } from "./getBlurhashPreview";
+import { getDbConnection } from "../util/getDbConnection";
 
 export async function handler() {
   try {
