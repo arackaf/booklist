@@ -19,7 +19,6 @@ export async function getBlurhashPreview(url: string) {
     image
       .raw()
       .ensureAlpha()
-      .resize(50, 62, { fit: "inside" })
       .toBuffer((err, buffer) => {
         try {
           if (err) {
@@ -28,7 +27,7 @@ export async function getBlurhashPreview(url: string) {
           } else {
             const blurhash = encode(new Uint8ClampedArray(buffer), width, height, 4, 4);
             if (isBlurhashValid(blurhash)) {
-              return res(blurhash);
+              return res({ blurhash, w: width, h: height });
             } else {
               return res(null);
             }
