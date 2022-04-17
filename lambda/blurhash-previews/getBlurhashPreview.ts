@@ -1,4 +1,4 @@
-import { encode } from "blurhash";
+import { encode, isBlurhashValid } from "blurhash";
 import fetch from "node-fetch";
 
 const sharpDownload = url => {
@@ -27,7 +27,11 @@ export async function getBlurhashPreview(url: string) {
             return res(null);
           } else {
             const blurhash = encode(new Uint8ClampedArray(buffer), width, height, 4, 4);
-            return res(blurhash);
+            if (isBlurhashValid(blurhash)) {
+              return res(blurhash);
+            } else {
+              return res(null);
+            }
           }
         } catch (err) {
           console.log("Failure", err);
