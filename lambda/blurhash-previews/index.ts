@@ -2,18 +2,6 @@ import { getBlurhashPreview } from "./getBlurhashPreview";
 import { getDbConnection } from "../util/getDbConnection";
 
 export async function handler() {
-  try {
-    const result = await getBlurhashPreview(
-      "https://my-library-cover-uploads.s3.amazonaws.com/small-covers/60a93babcc3928454b5d1cc6/dcf8480a-21cb-4c53-8179-839d006bd52a.jpg"
-    );
-
-    console.log(result);
-  } catch (er) {
-    console.log("Error", er);
-  }
-}
-
-export async function old__handler() {
   const { db, client } = await getDbConnection();
 
   try {
