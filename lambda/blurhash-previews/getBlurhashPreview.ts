@@ -1,11 +1,11 @@
 import { encode, isBlurhashValid } from "blurhash";
 import fetch from "node-fetch";
 
+const sharp = require("sharp");
+
 const sharpDownload = url => {
   return fetch(url).then(fetchResponse => fetchResponse.buffer());
 };
-
-const sharp = require("sharp");
 
 export async function getBlurhashPreview(url: string) {
   const imgBuffer = await sharpDownload(url);
