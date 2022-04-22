@@ -137,7 +137,7 @@ const authGraphQLCorsOptions = {
 
 app.post("/auth/loginping", async function (request, response) {
   const loginToken = (request.cookies || {}).loginToken;
-  if (!(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
+  if (!request.user || !(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
     clearAllCookies(request, response);
     request.logout();
     return response.send({ logout: true });
