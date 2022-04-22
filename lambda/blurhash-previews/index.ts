@@ -1,5 +1,5 @@
-import { getDbConnection } from "../util/getDbConnection";
 import { getBlurhashPreview } from "./getBlurhashPreview";
+import { getDbConnection } from "../util/getDbConnection";
 
 export async function handler() {
   const { db, client } = await getDbConnection();
@@ -36,8 +36,12 @@ export async function handler() {
                 console.log("Updating mobile");
                 const blurhashValue = await getBlurhashPreview(mobileImage);
 
-                console.log("Mobile downloaded. Blurhash value ===", blurhashValue);
-                updateObject.mobileImagePreview = blurhashValue;
+                if (blurhashValue) {
+                  console.log("Mobile downloaded. Blurhash value ===", blurhashValue);
+                  updateObject.mobileImagePreview = blurhashValue;
+                } else {
+                  console.log("Mobile download failed");
+                }
               } catch (er) {
                 console.log("Mobile failed");
               }
@@ -51,8 +55,12 @@ export async function handler() {
                 console.log("Updating small");
                 const blurhashValue = await getBlurhashPreview(smallImage);
 
-                console.log("Small downloaded. Blurhash value ===", blurhashValue);
-                updateObject.smallImagePreview = blurhashValue;
+                if (blurhashValue) {
+                  console.log("Small downloaded. Blurhash value ===", blurhashValue);
+                  updateObject.smallImagePreview = blurhashValue;
+                } else {
+                  console.log("Small download failed");
+                }
               } catch (er) {
                 console.log("Small failed");
               }
@@ -66,8 +74,12 @@ export async function handler() {
                 console.log("Updating medium");
                 const blurhashValue = await getBlurhashPreview(mediumImage);
 
-                console.log("Medium downloaded. Blurhash value ===", blurhashValue);
-                updateObject.mediumImagePreview = blurhashValue;
+                if (blurhashValue) {
+                  console.log("Medium downloaded. Blurhash value ===", blurhashValue);
+                  updateObject.mediumImagePreview = blurhashValue;
+                } else {
+                  console.log("Medium download failed");
+                }
               } catch (er) {
                 console.log("Medium failed");
               }

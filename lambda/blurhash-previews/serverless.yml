@@ -25,20 +25,9 @@ provider:
             - "secretsmanager:GetSecretValue"
           Resource: "arn:aws:secretsmanager:us-east-1:*"
 
-layers:
-  node12:
-    package:
-      artifact: ./node12_canvas_layer.zip
-  node12Lib64:
-    package:
-      artifact: ./node12_canvas_lib64_layer.zip
-
 functions:
   syncBlurhash:
     timeout: 750
     handler: ./dist/blurhash-previews/index.handler
-    layers:
-      - { Ref: Node12LambdaLayer }
-      - { Ref: Node12Lib64LambdaLayer }
     events:
       - schedule: rate(1 minute)
