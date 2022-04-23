@@ -54,7 +54,7 @@
   "workspaces": [
     "app",
     "css",
-    "graphql",
+    "gql",
     "modules",
     "util",
     "util/jscolor"

@@ -9,7 +9,7 @@ import max from "d3-array/src/max";
 import Bar from "./bar";
 import Axis from "./axis";
 
-import barCharQuery from "graphql/home/barChart.graphql";
+import barCharQuery from "gql/home/barChart.graphql";
 import { useSubjectsState } from "app/state/subjectsState";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "app/state/appState";

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState, useMemo, useLayoutEffect } from "react";
 import { useSubjectsState, getEligibleParents, computeSubjectParentId, useChildMapSelector } from "app/state/subjectsState";
 import { useMutation } from "micro-graphql-react";
-import { MutationOf, Mutations } from "graphql/graphql-typings";
+import { MutationOf, Mutations } from "gql/graphql-typings";
 
-import UpdateSubjectMutation from "graphql/subjects/updateSubject.graphql";
-import DeleteSubjectMutation from "graphql/subjects/deleteSubject.graphql";
+import UpdateSubjectMutation from "gql/subjects/updateSubject.graphql";
+import DeleteSubjectMutation from "gql/subjects/deleteSubject.graphql";
 import { useColors } from "app/state/colorsState";
 import CustomColorPicker from "../../ui/CustomColorPicker";
 import ColorsPalette from "../../ui/ColorsPalette";

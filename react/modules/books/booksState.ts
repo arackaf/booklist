@@ -1,13 +1,13 @@
 import { useMemo, useLayoutEffect, createContext } from "react";
 import { graphqlClient } from "util/graphql";
 
-import GetBooksQuery from "graphql/books/getBooks.graphql";
+import GetBooksQuery from "gql/books/getBooks.graphql";
 import { useCurrentSearch } from "./booksSearchState";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
 
 import { useTagsState } from "app/state/tagsState";
-import { QueryOf, Queries } from "graphql/graphql-typings";
+import { QueryOf, Queries } from "gql/graphql-typings";
 import { computeBookSearchVariables } from "./bookFiltersToGraphqlArgs";
 import { useSubjectsState } from "app/state/subjectsState";
 

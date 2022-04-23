@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
-import { QueryOf, Queries } from "graphql/graphql-typings";
+import { QueryOf, Queries } from "gql/graphql-typings";
 
-import GetTags from "graphql/tags/getTags.graphql";
+import GetTags from "gql/tags/getTags.graphql";
 import { useSuspenseQuery } from "micro-graphql-react";
 import { AppContext } from "app/state/appState";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";

@@ -12,10 +12,10 @@ import { useBooks } from "./booksState";
 import { useMutation } from "micro-graphql-react";
 import { useCodeSplitModal } from "./util";
 
-import UpdateBookMutation from "graphql/books/updateBook.graphql";
-import UpdateBooksReadMutation from "graphql/books/updateBooksRead.graphql";
-import DeleteBookMutation from "graphql/books/deleteBook.graphql";
-import { MutationOf, Mutations } from "graphql/graphql-typings";
+import UpdateBookMutation from "gql/books/updateBook.graphql";
+import UpdateBooksReadMutation from "gql/books/updateBooksRead.graphql";
+import DeleteBookMutation from "gql/books/deleteBook.graphql";
+import { MutationOf, Mutations } from "gql/graphql-typings";
 import { useBookSearchUiView, BookSearchUiView } from "./booksUiState";
 import { ModuleUpdateContext } from "app/state/appState";
 import { useHeight } from "app/animationHelpers";
