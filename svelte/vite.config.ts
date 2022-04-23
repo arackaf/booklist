@@ -28,7 +28,6 @@ const getCache = ({ name, pattern }: any) => ({
 export default defineConfig({
   resolve: {
     alias: {
-      "graphql-typings": path.resolve("./graphql-typings.ts"),
       graphQL: path.resolve("./graphQL")
     }
   },
