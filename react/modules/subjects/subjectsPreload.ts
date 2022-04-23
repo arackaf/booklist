@@ -1,6 +1,6 @@
 import { graphqlClient } from "util/graphql";
-import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
+import AllSubjectsQuery from "graphql/subjects/allSubjects.graphql";
+import AllLabelColorsQuery from "graphql/misc/allLabelColors.graphql";
 
 import { getCurrentUrlState } from "util/urlHelpers";
 

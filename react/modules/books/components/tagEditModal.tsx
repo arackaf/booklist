@@ -6,13 +6,13 @@ import GenericLabelSelect from "app/components/subjectsAndTags/genericLabelSelec
 import ColorsPalette from "app/components/ui/ColorsPalette";
 import Modal from "app/components/ui/Modal";
 
-import UpdateTag from "graphQL/tags/updateTag.graphql";
-import CreateTag from "graphQL/tags/createTag.graphql";
-import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
+import UpdateTag from "graphql/tags/updateTag.graphql";
+import CreateTag from "graphql/tags/createTag.graphql";
+import DeleteTagMutation from "graphql/tags/deleteTag.graphql";
 
 import { useMutation } from "micro-graphql-react";
 import { filterTags, useTagsState } from "app/state/tagsState";
-import { MutationOf, Mutations } from "graphQL/graphql-typings";
+import { MutationOf, Mutations } from "graphql/graphql-typings";
 import { useColors } from "app/state/colorsState";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";

@@ -3,11 +3,11 @@ import { updateSyncInfo, insertItems, deleteItem } from "./indexedDbUpdateUtils"
 import { getLibraryDatabase } from "./indexedDbUtil";
 import { syncItem } from "./incrementalSync";
 
-import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
-import allTags from "../../graphQL/tags/getTags.graphql";
-import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
-import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
-import initialOfflineBookSync from "../../graphQL/books/initialOfflineBookSync.graphql";
+import allSubjects from "../../graphql/subjects/allSubjects.graphql";
+import allTags from "../../graphql/tags/getTags.graphql";
+import allLabelColors from "../../graphql/misc/allLabelColors.graphql";
+import offlineUpdateSync from "../../graphql/misc/offlineUpdateSync.graphql";
+import initialOfflineBookSync from "../../graphql/books/initialOfflineBookSync.graphql";
 import { readTableCount } from "./indexedDbDataAccess";
 
 export function setUserLastSync(userId, lastSync) {

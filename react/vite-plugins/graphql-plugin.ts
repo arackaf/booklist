@@ -1,5 +1,5 @@
-import tag from "graphql-tag";
-import { print } from "graphql";
+import tag from "persistgraphql/node_modules/graphql-tag";
+import { print } from "persistgraphql/node_modules/graphql";
 import fs from "fs";
 
 import { addTypenameTransformer } from "persistgraphql/lib/src/queryTransformers";
@@ -12,7 +12,7 @@ export default function (options) {
       if (!/\.graphql$/.test(id)) return;
 
       let queryLookup = JSON.parse(fs.readFileSync(options.path) as any);
-      let queryAsString = options.add_typename ? print(addTypenameTransformer(tag(code))) : print(tag(code));
+      let queryAsString = options.add_typename ? print(addTypenameTransformer(tag(code) as any)) : print(tag(code));
 
       if (!(queryAsString in queryLookup)) {
         console.error(`Query ${queryAsString} not found`);
