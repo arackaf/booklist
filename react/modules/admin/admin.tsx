@@ -2,7 +2,7 @@ import React from "react";
 
 import CoverManager from "./components/bookSummaryCovers/coverManager";
 import { TabContents, TabContent, TabHeaders, TabHeader, Tabs } from "app/components/layout/Tabs";
-import SummaryQuery from "graphql/admin/bookSummaryCoverInfo.graphql";
+import SummaryQuery from "gql/admin/bookSummaryCoverInfo.graphql";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 import ajaxUtil from "util/ajaxUtil";
 import { getLoginStatus } from "util/loginStatus";

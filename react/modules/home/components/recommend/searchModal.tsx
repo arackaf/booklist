@@ -16,9 +16,9 @@ import { useHeight } from "app/animationHelpers";
 
 import { AppContext } from "app/state/appState";
 import { useSuspenseQuery } from "micro-graphql-react";
-import { QueryOf, Queries } from "graphql/graphql-typings";
+import { QueryOf, Queries } from "gql/graphql-typings";
 
-import BooksQuery from "graphql/home/searchBooks.graphql";
+import BooksQuery from "gql/home/searchBooks.graphql";
 
 import { useSpring, useTransition, animated, config } from "react-spring";
 import Loading from "app/components/loading";

@@ -3,10 +3,10 @@ import React, { SFC, useState, useLayoutEffect, useRef, FunctionComponent } from
 import { Button, ActionButton } from "app/components/ui/Button";
 
 import { useMutation } from "micro-graphql-react";
-import updateBookSubjects from "graphql/books/updateBookTags.graphql";
+import updateBookSubjects from "gql/books/updateBookTags.graphql";
 
 import Modal from "app/components/ui/Modal";
-import { MutationOf, Mutations } from "graphql/graphql-typings";
+import { MutationOf, Mutations } from "gql/graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import FlowItems from "app/components/layout/FlowItems";
 import { TabHeaders, Tabs, TabHeader, TabContents, TabContent } from "app/components/layout/Tabs";

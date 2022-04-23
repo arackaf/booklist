@@ -5,7 +5,7 @@ import ScanResults from "./scanResults";
 import Loading from "app/components/loading";
 
 import { useMutation } from "micro-graphql-react";
-import createBookMutation from "graphql/scan/createBook.graphql";
+import createBookMutation from "gql/scan/createBook.graphql";
 import { SlideInContents } from "app/animationHelpers";
 import FlowItems from "app/components/layout/FlowItems";
 import { useTagsState } from "app/state/tagsState";

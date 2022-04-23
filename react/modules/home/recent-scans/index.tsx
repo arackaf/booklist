@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 const { useTransition } = React as any;
 
-import { Queries, QueryOf, ScanResult } from "graphql/graphql-typings";
+import { Queries, QueryOf, ScanResult } from "gql/graphql-typings";
 import "./styles.scss";
 
-import RecentScansQuery from "../../../graphql/recent-scans/recentScans.graphql";
+import RecentScansQuery from "../../../gql/recent-scans/recentScans.graphql";
 import { Button } from "app/components/ui/Button";
 import { SuspenseImg } from "app/components/suspenseImage";
 import { graphqlClient } from "util/graphql";
