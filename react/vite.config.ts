@@ -32,14 +32,6 @@ export default defineConfig({
   build: {
     manifest: true
   },
-  resolve: {
-    alias: {
-      // css: path.resolve("./css"),
-      // graphQL: path.resolve("./graphQL"),
-      // modules: path.resolve("./modules"),
-      util: path.resolve("./util")
-    }
-  },
   plugins: [
     dotEnvReplacement(),
     react(),
