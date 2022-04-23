@@ -26,11 +26,6 @@ const getCache = ({ name, pattern }: any) => ({
 });
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      graphQL: path.resolve("./graphQL")
-    }
-  },
   plugins: [
     dotEnvReplacement(),
     svelte({ onwarn() {} }),

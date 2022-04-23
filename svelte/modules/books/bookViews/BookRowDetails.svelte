@@ -1,8 +1,8 @@
 <script lang="ts">
   import { query } from "micro-graphql-svelte";
-  import { BookSummary, EditorialReview, Queries, QueryOf } from "graphQL/graphql-typings";
+  import { BookSummary, EditorialReview, Queries, QueryOf } from "gql/graphql-typings";
 
-  import BookDetailsQuery from "graphQL/books/getBookDetails.graphql";
+  import BookDetailsQuery from "gql/books/getBookDetails.graphql";
 
   import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";

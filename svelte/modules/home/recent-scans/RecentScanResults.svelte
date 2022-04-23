@@ -1,12 +1,12 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import { Queries, QueryOf } from "graphQL/graphql-typings";
+  import { Queries, QueryOf } from "gql/graphql-typings";
 
   import { query } from "micro-graphql-svelte";
 
   import Button from "app/components/buttons/Button.svelte";
 
-  import RecentScansQuery from "../../../graphQL/recent-scans/recentScans.graphql";
+  import RecentScansQuery from "../../../gql/recent-scans/recentScans.graphql";
   import SectionLoading from "app/components/ui/SectionLoading.svelte";
   import "./index.scss";
 

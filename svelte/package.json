@@ -53,6 +53,7 @@
   "workspaces": [
     "app",
     "css",
+    "gql",
     "modules",
     "util",
     "util/jscolor"

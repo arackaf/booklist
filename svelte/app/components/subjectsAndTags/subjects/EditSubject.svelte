@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import cn from "classnames";
-  import { MutationOf, Mutations } from "graphQL/graphql-typings";
+  import { MutationOf, Mutations } from "gql/graphql-typings";
 
   import { subjectsState, getEligibleParents, computeSubjectParentId, childMapSelector } from "app/state/subjectsState";
 
-  import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
-  import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+  import UpdateSubjectMutation from "gql/subjects/updateSubject.graphql";
+  import DeleteSubjectMutation from "gql/subjects/deleteSubject.graphql";
   import colorsState from "app/state/colorsState";
 
   import { mutation } from "micro-graphql-svelte";

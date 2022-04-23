@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import cn from "classnames";
-  import { MutationOf, Mutations } from "graphQL/graphql-typings";
+  import { MutationOf, Mutations } from "gql/graphql-typings";
 
   import { tagsState } from "app/state/tagsState";
 
-  import UpdateTagMutation from "graphQL/tags/updateTag.graphql";
-  import CreateTagMutation from "graphQL/tags/createTag.graphql";
-  import DeleteTagMutation from "graphQL/tags/deleteTag.graphql";
+  import UpdateTagMutation from "gql/tags/updateTag.graphql";
+  import CreateTagMutation from "gql/tags/createTag.graphql";
+  import DeleteTagMutation from "gql/tags/deleteTag.graphql";
   import colorsState from "app/state/colorsState";
 
   import { mutation } from "micro-graphql-svelte";

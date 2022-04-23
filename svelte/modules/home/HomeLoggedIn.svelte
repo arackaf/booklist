@@ -10,7 +10,7 @@
   import BookRecommendations from "./recommendations/BookRecommendations.svelte";
   import RecentScanResults from "./recent-scans/RecentScanResults.svelte";
 
-  import barCharQuery from "graphQL/home/barChart.graphql";
+  import barCharQuery from "gql/home/barChart.graphql";
 
   graphqlClient.subscribeMutation(
     [/(create|update|delete)Subjects?/, /(create|update|delete)Books?/].map(when => ({ when, run: () => clearCache(barCharQuery) }))

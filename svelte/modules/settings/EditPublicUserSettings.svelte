@@ -1,14 +1,14 @@
 <script lang="ts">
   import { mutation } from "micro-graphql-svelte";
-  import { MutationOf, Mutations, User } from "graphQL/graphql-typings";
+  import { MutationOf, Mutations, User } from "gql/graphql-typings";
 
   import ActionButton from "app/components/buttons/ActionButton.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import Stack from "app/components/layout/Stack.svelte";
   import { appState } from "app/state/appState";
 
-  import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
-  import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
+  import PublicUserSettingsQuery from "gql/settings/getPublisUserSettingsQuery.graphql";
+  import UpdatePublisUserSettingsMutation from "gql/settings/updatePublicUserSettings.graphql";
   import { clearCache } from "util/graphqlCacheHelpers";
 
   export let settings: User;

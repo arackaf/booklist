@@ -71,7 +71,7 @@ module.exports = {
         test: /\.graphql$/,
         exclude: /node_modules/,
         use: {
-          loader: "generic-persistgraphql/loader",
+          loader: "generic-persistgql/loader",
           options: {
             path: path.resolve(__dirname, "extracted_queries.json")
           }
