@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.3.7",
-    "aws-sdk": "2.462.0",
+    "aws-sdk": "2.1120.0",
     "blueimp-md5": "2.3.0",
     "body-parser": "1.19.0",
     "compression": "1.7.4",
