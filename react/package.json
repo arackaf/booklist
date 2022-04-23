@@ -53,10 +53,10 @@
   },
   "workspaces": [
     "app",
-    "util/jscolor",
     "css",
     "graphql",
     "modules",
-    "util"
+    "util",
+    "util/jscolor"
   ]
 }
