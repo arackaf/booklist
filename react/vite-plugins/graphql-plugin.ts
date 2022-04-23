@@ -1,5 +1,5 @@
-import tag from "persistgraphql/node_modules/graphql-tag";
-import { print } from "persistgraphql/node_modules/graphql";
+import tag from "graphql-tag";
+import { print } from "graphql";
 import fs from "fs";
 
 import { addTypenameTransformer } from "persistgraphql/lib/src/queryTransformers";

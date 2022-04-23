@@ -1,10 +1,10 @@
 import { graphqlClient } from "util/graphql";
 
-import GetBooksQuery from "graphql/books/getBooks.graphql";
-import AllSubjectsQuery from "graphql/subjects/allSubjects.graphql";
-import GetTags from "graphql/tags/getTags.graphql";
-import AllLabelColorsQuery from "graphql/misc/allLabelColors.graphql";
-import PublicUserQuery from "graphql/getPublicUser.graphql";
+import GetBooksQuery from "gql/books/getBooks.graphql";
+import AllSubjectsQuery from "gql/subjects/allSubjects.graphql";
+import GetTags from "gql/tags/getTags.graphql";
+import AllLabelColorsQuery from "gql/misc/allLabelColors.graphql";
+import PublicUserQuery from "gql/getPublicUser.graphql";
 
 import { bookSearchVariablesFromCurrentUrl } from "./booksLoadingUtils";
 

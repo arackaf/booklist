@@ -9,7 +9,7 @@ import ManageBookCover from "./manageBookCover";
 import Stack from "../layout/Stack";
 import FlowItems from "../layout/FlowItems";
 import { CoverMobile, CoverSmall, CoverMedium } from "../bookCoverComponent";
-import UpdateBook from "graphql/books/updateBook.graphql";
+import UpdateBook from "gql/books/updateBook.graphql";
 
 import { Button, ActionButton } from "../ui/Button";
 

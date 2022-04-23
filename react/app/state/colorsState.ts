@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "micro-graphql-react";
 
-import AllLabelColorsQuery from "graphql/misc/allLabelColors.graphql";
-import { QueryOf, Queries } from "graphql/graphql-typings";
+import AllLabelColorsQuery from "gql/misc/allLabelColors.graphql";
+import { QueryOf, Queries } from "gql/graphql-typings";
 
 export function useColors() {
   let { data } = useSuspenseQuery<QueryOf<Queries["allLabelColors"]>>(AllLabelColorsQuery, {});

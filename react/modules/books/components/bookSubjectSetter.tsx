@@ -1,13 +1,13 @@
 import React, { SFC, useState, useLayoutEffect, useContext, useRef, FunctionComponent } from "react";
 import { useMutation } from "micro-graphql-react";
 
-import updateBookSubjects from "graphql/books/updateBookSubjects.graphql";
+import updateBookSubjects from "gql/books/updateBookSubjects.graphql";
 
 import { Button, ActionButton } from "app/components/ui/Button";
 
 import Modal from "app/components/ui/Modal";
 import { useStackedSubjects } from "app/state/subjectsState";
-import { MutationOf, Mutations } from "graphql/graphql-typings";
+import { MutationOf, Mutations } from "gql/graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 import FlowItems from "app/components/layout/FlowItems";

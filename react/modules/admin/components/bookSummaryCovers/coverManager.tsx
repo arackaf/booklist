@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useQuery } from "micro-graphql-react";
 
-import SummaryQuery from "graphql/admin/bookSummaryCoverInfo.graphql";
-import UpdateBookSummary from "graphql/bookSummary/updateBookSummary.graphql";
+import SummaryQuery from "gql/admin/bookSummaryCoverInfo.graphql";
+import UpdateBookSummary from "gql/bookSummary/updateBookSummary.graphql";
 import "./styles.scss";
 
 import ajaxUtil from "util/ajaxUtil";
 import { getIsbnDbBookCover } from "util/isbnDb";
-import { QueryOf, Queries, BookSummaryBulkMutationResult } from "graphql/graphql-typings";
+import { QueryOf, Queries, BookSummaryBulkMutationResult } from "gql/graphql-typings";
 import { Form, SubmitIconButton } from "app/components/ui/Form";
 import { useAppState } from "app/state/appState";
 import { graphqlClient } from "util/graphql";
