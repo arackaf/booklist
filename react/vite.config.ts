@@ -36,7 +36,7 @@ export default defineConfig({
     alias: {
       // css: path.resolve("./css"),
       // graphQL: path.resolve("./graphQL"),
-      modules: path.resolve("./modules"),
+      // modules: path.resolve("./modules"),
       util: path.resolve("./util")
     }
   },

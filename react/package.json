@@ -55,6 +55,7 @@
     "app",
     "util/jscolor",
     "css",
-    "graphql"
+    "graphql",
+    "modules"
   ]
 }
