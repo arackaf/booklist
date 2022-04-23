@@ -10,7 +10,7 @@ import { AppContext } from "app/state/appState";
 import { useTagsState } from "app/state/tagsState";
 import { Tabs, TabHeader, TabHeaders, TabContents, TabContent } from "app/components/layout/Tabs";
 import { useStackedSubjects } from "app/state/subjectsState";
-import barCharQuery from "graphQL/home/barChart.graphql";
+import barCharQuery from "graphql/home/barChart.graphql";
 import { clearCache } from "util/graphqlCacheHelpers";
 import { graphqlClient } from "util/graphql";
 

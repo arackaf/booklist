@@ -1,7 +1,7 @@
 import React, { useState, FunctionComponent, useLayoutEffect, useEffect } from "react";
 import type { IBookRaw } from "modules/books/booksState";
 
-import GetBookCoverPreviews from "graphQL/books/getBookCoverPreviews.graphql";
+import GetBookCoverPreviews from "graphql/books/getBookCoverPreviews.graphql";
 import { graphqlClient } from "util/graphql";
 
 import EditBookInfo from "./editBookInfo";

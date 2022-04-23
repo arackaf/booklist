@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useContext, useState, useRef } from "react";
 
-import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
-import UpdatePublisUserSettingsMutation from "graphQL/settings/updatePublicUserSettings.graphql";
+import PublicUserSettingsQuery from "graphql/settings/getPublisUserSettingsQuery.graphql";
+import UpdatePublisUserSettingsMutation from "graphql/settings/updatePublicUserSettings.graphql";
 import { useSuspenseQuery, useMutation } from "micro-graphql-react";
 import { AppContext } from "app/state/appState";
-import { QueryOf, Queries, MutationOf, Mutations } from "graphQL/graphql-typings";
+import { QueryOf, Queries, MutationOf, Mutations } from "graphql/graphql-typings";
 import FlexRow from "app/components/layout/FlexRow";
 import Stack from "app/components/layout/Stack";
 

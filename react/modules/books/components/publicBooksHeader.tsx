@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AppContext } from "app/state/appState";
 
-import getPublicUser from "graphQL/getPublicUser.graphql";
+import getPublicUser from "graphql/getPublicUser.graphql";
 import { useSuspenseQuery } from "micro-graphql-react";
 
 export default () => {

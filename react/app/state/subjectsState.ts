@@ -1,11 +1,11 @@
-import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
-import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+import AllSubjectsQuery from "graphql/subjects/allSubjects.graphql";
+import UpdateSubjectMutation from "graphql/subjects/updateSubject.graphql";
+import DeleteSubjectMutation from "graphql/subjects/deleteSubject.graphql";
 import { useContext, useMemo } from "react";
 import { AppContext } from "app/state/appState";
 import { useSuspenseQuery, useMutation } from "micro-graphql-react";
 import { standardDelete } from "../../util/graphqlCacheHelpers";
-import { QueryOf, Queries, MutationOf, Mutations } from "graphQL/graphql-typings";
+import { QueryOf, Queries, MutationOf, Mutations } from "graphql/graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});
