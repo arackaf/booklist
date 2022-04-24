@@ -1,5 +1,5 @@
-import "css/fontawesome/css/all.min.css";
-import "css/site-styles.scss";
+import "styles/fontawesome/css/all.min.css";
+import "styles/site-styles.scss";
 
 import { getLoginStatus, getCookieLookup, eraseCookie } from "util/loginStatus";
 

@@ -9,7 +9,7 @@
 
   import BookSvg from "./BookSvg.svelte";
 
-  import "css/navbar.scss";
+  import "styles/navbar.scss";
   import "./mobile-menu.scss";
 
   const logout = () => {
