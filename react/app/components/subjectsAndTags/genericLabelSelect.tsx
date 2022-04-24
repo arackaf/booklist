@@ -1,5 +1,5 @@
 import Autosuggest from "react-autosuggest";
-import "css/react-autosuggest.scss";
+import "styles/react-autosuggest.scss";
 
 import { LabelDisplay } from "app/components/subjectsAndTags/LabelDisplay";
 import React, { Component } from "react";

@@ -8,8 +8,8 @@ import { AppContext } from "app/state/appState";
 import { isAdmin } from "util/loginStatus";
 import BookSvg from "./bookSvg";
 
-import "css/navbar.scss";
-import "css/main-mobile-menu.scss";
+import "styles/navbar.scss";
+import "styles/main-mobile-menu.scss";
 
 const spreadClassNames = (baseCssClasses = "", ...userClasses) => `${baseCssClasses} ${userClasses.join(" ")}`;
 

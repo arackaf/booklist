@@ -3,7 +3,7 @@ import React, { SFC, useRef, useLayoutEffect, useState, useContext, useCallback,
 import { DialogOverlay, DialogContent } from "@reach/dialog";
 import { useTransition, animated, config, useSpring } from "react-spring";
 
-import "css/reach-modal-overrides.scss";
+import "styles/reach-modal-overrides.scss";
 import { useHeight } from "app/animationHelpers";
 
 type ModalHeaderTypes = {

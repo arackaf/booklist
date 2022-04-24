@@ -1,7 +1,7 @@
 import "react-toggle/style.css";
 import "@reach/dialog/styles.css";
-import "./css/fontawesome/css/all.min.css";
-import "./css/site-styles.scss";
+import "styles/fontawesome/css/all.min.css";
+import "styles/site-styles.scss";
 
 import { renderUI } from "app/renderUI";
 

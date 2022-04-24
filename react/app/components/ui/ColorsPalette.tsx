@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import "css/color-picker.scss";
+import "styles/color-picker.scss";
 
 export default class ColorsPalette extends Component<any, any> {
   render() {

@@ -53,7 +53,7 @@
   },
   "workspaces": [
     "app",
-    "css",
+    "styles",
     "gql",
     "modules",
     "util",
