@@ -1,7 +1,7 @@
 <script lang="ts">
   import { query } from "micro-graphql-svelte";
 
-  import barCharQuery from "graphQL/home/barChart.graphql";
+  import barCharQuery from "gql/home/barChart.graphql";
 
   import { appState } from "app/state/appState";
 

@@ -4,7 +4,7 @@
   import { graphqlClient } from "util/graphql";
   import { getIsbnDbBookCover } from "util/isbnDb";
 
-  import UpdateBookSummary from "graphQL/bookSummary/updateBookSummary.graphql";
+  import UpdateBookSummary from "gql/bookSummary/updateBookSummary.graphql";
   import ActionIconButton from "app/components/buttons/ActionIconButton.svelte";
   import Stack from "app/components/layout/Stack.svelte";
   import Button from "app/components/buttons/Button.svelte";

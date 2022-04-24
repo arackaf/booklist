@@ -49,5 +49,13 @@
   },
   "devDependencies": {
     "prettier-plugin-svelte": "^1.4.1"
-  }
+  },
+  "workspaces": [
+    "app",
+    "css",
+    "gql",
+    "modules",
+    "util",
+    "util/jscolor"
+  ]
 }

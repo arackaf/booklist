@@ -3,11 +3,11 @@ import { updateSyncInfo, insertItems, deleteItem } from "./indexedDbUpdateUtils"
 import { getLibraryDatabase } from "./indexedDbUtil";
 import { syncItem } from "./incrementalSync";
 
-import allSubjects from "../../graphQL/subjects/allSubjects.graphql";
-import allTags from "../../graphQL/tags/getTags.graphql";
-import allLabelColors from "../../graphQL/misc/allLabelColors.graphql";
-import offlineUpdateSync from "../../graphQL/misc/offlineUpdateSync.graphql";
-import initialOfflineBookSync from "../../graphQL/books/initialOfflineBookSync.graphql";
+import allSubjects from "../../gql/subjects/allSubjects.graphql";
+import allTags from "../../gql/tags/getTags.graphql";
+import allLabelColors from "../../gql/misc/allLabelColors.graphql";
+import offlineUpdateSync from "../../gql/misc/offlineUpdateSync.graphql";
+import initialOfflineBookSync from "../../gql/books/initialOfflineBookSync.graphql";
 import { readTableCount } from "./indexedDbDataAccess";
 
 export function setUserLastSync(userId, lastSync) {
@@ -100,7 +100,7 @@ async function syncImages(db, onComplete) {
               bookToUpdate.imgSync = 1;
               booksStore.put(bookToUpdate).onsuccess = res;
             };
-            req.onerror = () => res();
+            req.onerror = () => res(null);
           });
         }
       } catch (er) {

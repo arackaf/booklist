@@ -1,8 +1,8 @@
 import { derived } from "svelte/store";
 import { query } from "micro-graphql-svelte";
 
-import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
-import { QueryOf, Queries, QueryAllLabelColorsArgs } from "graphQL/graphql-typings";
+import AllLabelColorsQuery from "gql/misc/allLabelColors.graphql";
+import { QueryOf, Queries, QueryAllLabelColorsArgs } from "gql/graphql-typings";
 
 const { queryState } = query<QueryOf<Queries["allLabelColors"]>, Partial<QueryAllLabelColorsArgs>>(AllLabelColorsQuery, {
   initialSearch: { cache: 9 }

@@ -5,7 +5,7 @@
   import { getLoginStatus } from "util/loginStatus";
   import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
-  import SummaryQuery from "graphQL/admin/bookSummaryCoverInfo.graphql";
+  import SummaryQuery from "gql/admin/bookSummaryCoverInfo.graphql";
   import CoverManager from "./book-covers/CoverManager.svelte";
 
   graphqlSyncAndRefresh("BookSummary", SummaryQuery);

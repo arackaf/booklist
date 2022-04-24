@@ -2,8 +2,8 @@
   import { query } from "micro-graphql-svelte";
 
   import { appState } from "app/state/appState";
-  import PublicUserSettingsQuery from "graphQL/settings/getPublisUserSettingsQuery.graphql";
-  import { Queries, QueryOf } from "graphQL/graphql-typings";
+  import PublicUserSettingsQuery from "gql/settings/getPublisUserSettingsQuery.graphql";
+  import { Queries, QueryOf } from "gql/graphql-typings";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import SectionLoading from "app/components/ui/SectionLoading.svelte";
 

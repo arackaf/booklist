@@ -1,8 +1,8 @@
 import { derived, get } from "svelte/store";
 import { query } from "micro-graphql-svelte";
-import { QueryOf, Queries } from "graphQL/graphql-typings";
+import { QueryOf, Queries } from "gql/graphql-typings";
 
-import GetTags from "graphQL/tags/getTags.graphql";
+import GetTags from "gql/tags/getTags.graphql";
 import { appState } from "./appState";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 

@@ -26,17 +26,6 @@ const getCache = ({ name, pattern }: any) => ({
 });
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      "graphql-typings": path.resolve("./graphql-typings.ts"),
-      jscolor: path.resolve("./util/jscolor.js"),
-      app: path.resolve("./app"),
-      css: path.resolve("./css"),
-      graphQL: path.resolve("./graphQL"),
-      modules: path.resolve("./modules"),
-      util: path.resolve("./util")
-    }
-  },
   plugins: [
     dotEnvReplacement(),
     svelte({ onwarn() {} }),

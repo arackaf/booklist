@@ -1,10 +1,10 @@
 import { graphqlClient } from "util/graphql";
 import { preloadBookImages } from "util/imagePreload";
 
-import GetBooksQuery from "graphQL/books/getBooks.graphql";
-import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import GetTags from "graphQL/tags/getTags.graphql";
-import AllLabelColorsQuery from "graphQL/misc/allLabelColors.graphql";
+import GetBooksQuery from "gql/books/getBooks.graphql";
+import AllSubjectsQuery from "gql/subjects/allSubjects.graphql";
+import GetTags from "gql/tags/getTags.graphql";
+import AllLabelColorsQuery from "gql/misc/allLabelColors.graphql";
 import { bookSearchVariablesFromCurrentUrl } from "modules/books/booksLoadingUtils";
 import localStorage from "util/localStorage";
 

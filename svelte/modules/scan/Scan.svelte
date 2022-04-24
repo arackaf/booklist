@@ -5,7 +5,7 @@
   import FlowItems from "app/components/layout/FlowItems.svelte";
   import EditBookModal from "app/components/editBook/EditBookModal.svelte";
 
-  import createBookMutation from "graphQL/scan/createBook.graphql";
+  import createBookMutation from "gql/scan/createBook.graphql";
 
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";

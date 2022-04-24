@@ -9,7 +9,7 @@
   import { quadIn, quadOut, quintIn, quintOut } from "svelte/easing";
   import { springIn } from "svelte-helpers/spring-transitions";
 
-  import BooksQuery from "graphQL/home/searchBooks.graphql";
+  import BooksQuery from "gql/home/searchBooks.graphql";
 
   import Modal from "app/components/ui/Modal.svelte";
   import ActionIconButton from "app/components/buttons/ActionIconButton.svelte";
@@ -23,7 +23,7 @@
   import SearchResults from "./SearchResults.svelte";
   import useReducer from "util/useReducer";
   import { query } from "micro-graphql-svelte";
-  import { Queries, QueryOf } from "graphQL/graphql-typings";
+  import { Queries, QueryOf } from "gql/graphql-typings";
   import { appState } from "app/state/appState";
   import { preloadBookImages } from "util/imagePreload";
 

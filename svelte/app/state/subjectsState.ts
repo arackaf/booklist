@@ -1,13 +1,13 @@
 import { get, derived, Readable } from "svelte/store";
 
-import AllSubjectsQuery from "graphQL/subjects/allSubjects.graphql";
-import UpdateSubjectMutation from "graphQL/subjects/updateSubject.graphql";
-import DeleteSubjectMutation from "graphQL/subjects/deleteSubject.graphql";
+import AllSubjectsQuery from "gql/subjects/allSubjects.graphql";
+import UpdateSubjectMutation from "gql/subjects/updateSubject.graphql";
+import DeleteSubjectMutation from "gql/subjects/deleteSubject.graphql";
 
 import { appState } from "./appState";
 import { query, mutation } from "micro-graphql-svelte";
 import { standardDelete } from "../../util/graphqlCacheHelpers";
-import { QueryOf, Queries, MutationOf, Mutations } from "graphQL/graphql-typings";
+import { QueryOf, Queries, MutationOf, Mutations } from "gql/graphql-typings";
 import { graphqlSyncAndRefresh } from "util/graphqlHelpers";
 
 const objectsToHash = objs => objs.reduce((hash, o) => ((hash[o._id] = o), hash), {});

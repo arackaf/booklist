@@ -30,11 +30,11 @@
   import { quadOut } from "svelte/easing";
 
   import { mutation } from "micro-graphql-svelte";
-  import { MutationOf, Mutations } from "graphQL/graphql-typings";
+  import { MutationOf, Mutations } from "gql/graphql-typings";
 
-  import UpdateBookMutation from "graphQL/books/updateBook.graphql";
-  import UpdateBooksReadMutation from "graphQL/books/updateBooksRead.graphql";
-  import DeleteBookMutation from "graphQL/books/deleteBook.graphql";
+  import UpdateBookMutation from "gql/books/updateBook.graphql";
+  import UpdateBooksReadMutation from "gql/books/updateBooksRead.graphql";
+  import DeleteBookMutation from "gql/books/deleteBook.graphql";
 
   import useReducer from "util/useReducer";
 

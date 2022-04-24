@@ -1,8 +1,8 @@
 <script lang="ts">
   import { mutation } from "micro-graphql-svelte";
-  import { MutationOf, Mutations } from "graphQL/graphql-typings";
+  import { MutationOf, Mutations } from "gql/graphql-typings";
 
-  import updateBookSubjects from "graphQL/books/updateBookSubjects.graphql";
+  import updateBookSubjects from "gql/books/updateBookSubjects.graphql";
 
   import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";

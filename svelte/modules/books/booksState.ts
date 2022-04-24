@@ -2,12 +2,12 @@ import { onMount } from "svelte/internal";
 import { get, derived, Readable } from "svelte/store";
 import { query } from "micro-graphql-svelte";
 
-import { QueryOf, Queries, Book } from "graphQL/graphql-typings";
+import { QueryOf, Queries, Book } from "gql/graphql-typings";
 import { graphqlClient } from "util/graphql";
 import { tagsState } from "app/state/tagsState";
 import { subjectsState } from "app/state/subjectsState";
 import { clearCache, syncCollection } from "util/graphqlCacheHelpers";
-import GetBooksQuery from "graphQL/books/getBooks.graphql";
+import GetBooksQuery from "gql/books/getBooks.graphql";
 
 import { currentSearch } from "./booksSearchState";
 import { computeBookSearchVariables } from "./booksLoadingUtils";
