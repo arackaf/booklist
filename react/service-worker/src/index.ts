@@ -6,10 +6,10 @@ import { readTable, readBooks, getSyncInfo } from "./indexedDbDataAccess";
 import { syncResultsFor, syncSubjectsResults } from "./incrementalSync";
 import { getLibraryDatabase } from "./indexedDbUtil";
 
-import searchBooksQuery from "../../graphql/books/getBooks.graphql";
-import allSubjects from "../../graphql/subjects/allSubjects.graphql";
-import allTags from "../../graphql/tags/getTags.graphql";
-import allLabelColors from "../../graphql/misc/allLabelColors.graphql";
+import searchBooksQuery from "../../gql/books/getBooks.graphql";
+import allSubjects from "../../gql/subjects/allSubjects.graphql";
+import allTags from "../../gql/tags/getTags.graphql";
+import allLabelColors from "../../gql/misc/allLabelColors.graphql";
 import { updateSyncInfo, clearUserData } from "./indexedDbUpdateUtils";
 
 self.addEventListener("push", () => {
