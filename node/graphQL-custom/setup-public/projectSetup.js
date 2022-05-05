@@ -1,5 +1,5 @@
 import { dataTypes, createGraphqlSchema, dbHelpers } from "mongo-graphql-starter";
-const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf, JSONType } = dataTypes;
+const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf, JSONType, fieldOf } = dataTypes;
 
 export const EditorialReview = {
   fields: {
@@ -16,9 +16,9 @@ export const Book = {
     isbn: StringType,
     title: StringType,
     smallImage: StringType,
-    smallImagePreview: JSONType,
+    smallImagePreview: fieldOf(JSONType).nonQueryable(),
     mediumImage: StringType,
-    mediumImagePreview: JSONType,
+    mediumImagePreview: fieldOf(JSONType).nonQueryable(),
     userId: StringType,
     publisher: StringType,
     publicationDate: StringType,
