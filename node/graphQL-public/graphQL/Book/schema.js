@@ -6,7 +6,9 @@ export const type = `
     isbn: String
     title: String
     smallImage: String
+    smallImagePreview: JSON
     mediumImage: String
+    mediumImagePreview: JSON
     userId: String
     publisher: String
     publicationDate: String
@@ -52,7 +54,9 @@ export const type = `
     isbn: String
     title: String
     smallImage: String
+    smallImagePreview: JSON
     mediumImage: String
+    mediumImagePreview: JSON
     userId: String
     publisher: String
     publicationDate: String
@@ -71,7 +75,9 @@ export const type = `
     isbn: String
     title: String
     smallImage: String
+    smallImagePreview: JSON
     mediumImage: String
+    mediumImagePreview: JSON
     userId: String
     publisher: String
     publicationDate: String
@@ -173,6 +179,10 @@ export const type = `
     smallImage_ne: String
     smallImage_in: [String]
     smallImage_nin: [String]
+    smallImagePreview: JSON
+    smallImagePreview_ne: JSON
+    smallImagePreview_in: [JSON]
+    smallImagePreview_nin: [JSON]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -181,6 +191,10 @@ export const type = `
     mediumImage_ne: String
     mediumImage_in: [String]
     mediumImage_nin: [String]
+    mediumImagePreview: JSON
+    mediumImagePreview_ne: JSON
+    mediumImagePreview_in: [JSON]
+    mediumImagePreview_nin: [JSON]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -346,6 +360,10 @@ export const query = `
     smallImage_ne: String,
     smallImage_in: [String],
     smallImage_nin: [String],
+    smallImagePreview: JSON,
+    smallImagePreview_ne: JSON,
+    smallImagePreview_in: [JSON],
+    smallImagePreview_nin: [JSON],
     mediumImage_contains: String,
     mediumImage_startsWith: String,
     mediumImage_endsWith: String,
@@ -354,6 +372,10 @@ export const query = `
     mediumImage_ne: String,
     mediumImage_in: [String],
     mediumImage_nin: [String],
+    mediumImagePreview: JSON,
+    mediumImagePreview_ne: JSON,
+    mediumImagePreview_in: [JSON],
+    mediumImagePreview_nin: [JSON],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,

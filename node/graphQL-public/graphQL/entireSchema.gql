@@ -33,58 +33,15 @@ input FloatArrayUpdate {
   value: Float!
 }
 
-type EditorialReview {
-  source: String
-  content: String
-}
-
-input EditorialReviewInput {
-  source: String
-  content: String
-}
-
-input EditorialReviewMutationInput {
-  source: String
-  content: String
-}
-
-input EditorialReviewArrayMutationInput {
-  index: Int
-  Updates: EditorialReviewMutationInput
-}
-
-input EditorialReviewSort {
-  source: Int
-  content: Int
-}
-
-input EditorialReviewFilters {
-  source_contains: String
-  source_startsWith: String
-  source_endsWith: String
-  source_regex: String
-  source: String
-  source_ne: String
-  source_in: [String]
-  source_nin: [String]
-  content_contains: String
-  content_startsWith: String
-  content_endsWith: String
-  content_regex: String
-  content: String
-  content_ne: String
-  content_in: [String]
-  content_nin: [String]
-  OR: [EditorialReviewFilters]
-}
-
 type Book {
   _id: String
   ean: String
   isbn: String
   title: String
   smallImage: String
+  smallImagePreview: JSON
   mediumImage: String
+  mediumImagePreview: JSON
   userId: String
   publisher: String
   publicationDate: String
@@ -130,7 +87,9 @@ input BookInput {
   isbn: String
   title: String
   smallImage: String
+  smallImagePreview: JSON
   mediumImage: String
+  mediumImagePreview: JSON
   userId: String
   publisher: String
   publicationDate: String
@@ -149,7 +108,9 @@ input BookMutationInput {
   isbn: String
   title: String
   smallImage: String
+  smallImagePreview: JSON
   mediumImage: String
+  mediumImagePreview: JSON
   userId: String
   publisher: String
   publicationDate: String
@@ -251,6 +212,10 @@ input BookFilters {
   smallImage_ne: String
   smallImage_in: [String]
   smallImage_nin: [String]
+  smallImagePreview: JSON
+  smallImagePreview_ne: JSON
+  smallImagePreview_in: [JSON]
+  smallImagePreview_nin: [JSON]
   mediumImage_contains: String
   mediumImage_startsWith: String
   mediumImage_endsWith: String
@@ -259,6 +224,10 @@ input BookFilters {
   mediumImage_ne: String
   mediumImage_in: [String]
   mediumImage_nin: [String]
+  mediumImagePreview: JSON
+  mediumImagePreview_ne: JSON
+  mediumImagePreview_in: [JSON]
+  mediumImagePreview_nin: [JSON]
   userId_contains: String
   userId_startsWith: String
   userId_endsWith: String
@@ -354,6 +323,51 @@ input BookFilters {
   similarItems_containsAll: [String]
   similarItems_ne: [String]
   OR: [BookFilters]
+}
+
+type EditorialReview {
+  source: String
+  content: String
+}
+
+input EditorialReviewInput {
+  source: String
+  content: String
+}
+
+input EditorialReviewMutationInput {
+  source: String
+  content: String
+}
+
+input EditorialReviewArrayMutationInput {
+  index: Int
+  Updates: EditorialReviewMutationInput
+}
+
+input EditorialReviewSort {
+  source: Int
+  content: Int
+}
+
+input EditorialReviewFilters {
+  source_contains: String
+  source_startsWith: String
+  source_endsWith: String
+  source_regex: String
+  source: String
+  source_ne: String
+  source_in: [String]
+  source_nin: [String]
+  content_contains: String
+  content_startsWith: String
+  content_endsWith: String
+  content_regex: String
+  content: String
+  content_ne: String
+  content_in: [String]
+  content_nin: [String]
+  OR: [EditorialReviewFilters]
 }
 
 type LabelColor {
@@ -687,6 +701,10 @@ type Query {
     smallImage_ne: String
     smallImage_in: [String]
     smallImage_nin: [String]
+    smallImagePreview: JSON
+    smallImagePreview_ne: JSON
+    smallImagePreview_in: [JSON]
+    smallImagePreview_nin: [JSON]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -695,6 +713,10 @@ type Query {
     mediumImage_ne: String
     mediumImage_in: [String]
     mediumImage_nin: [String]
+    mediumImagePreview: JSON
+    mediumImagePreview_ne: JSON
+    mediumImagePreview_in: [JSON]
+    mediumImagePreview_nin: [JSON]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String

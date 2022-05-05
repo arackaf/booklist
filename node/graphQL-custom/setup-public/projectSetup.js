@@ -1,5 +1,5 @@
 import { dataTypes, createGraphqlSchema, dbHelpers } from "mongo-graphql-starter";
-const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf } = dataTypes;
+const { MongoIdType, StringType, StringArrayType, BoolType, IntType, arrayOf, JSONType } = dataTypes;
 
 export const EditorialReview = {
   fields: {
@@ -16,7 +16,9 @@ export const Book = {
     isbn: StringType,
     title: StringType,
     smallImage: StringType,
+    smallImagePreview: JSONType,
     mediumImage: StringType,
+    mediumImagePreview: JSONType,
     userId: StringType,
     publisher: StringType,
     publicationDate: StringType,
@@ -47,7 +49,11 @@ export const Subject = {
     backgroundColor: StringType,
     textColor: StringType
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "publicUserId", type: "String" },
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const Tag = {
@@ -60,7 +66,11 @@ export const Tag = {
     backgroundColor: StringType,
     textColor: StringType
   },
-  manualQueryArgs: [{ name: "publicUserId", type: "String" }, { name: "ver", type: "String" }, { name: "cache", type: "Int" }]
+  manualQueryArgs: [
+    { name: "publicUserId", type: "String" },
+    { name: "ver", type: "String" },
+    { name: "cache", type: "Int" }
+  ]
 };
 
 export const LabelColor = {
