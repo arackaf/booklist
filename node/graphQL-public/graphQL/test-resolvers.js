@@ -23,9 +23,9 @@ async function processQuery(query, name, fields, variables = {}) {
 }
 const runQueries = async () => {
   await processQuery(
-    `{allBooks(LIMIT:1){Books{_id ean isbn title smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems}}}`,
+    `{allBooks(LIMIT:1){Books{_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems}}}`,
     "Book",
-    "_id ean isbn title smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems"
+    "_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems"
   ).catch(error => console.error(error));
   await processQuery(
     `{allLabelColors(LIMIT:1){LabelColors{_id backgroundColor order}}}`,
@@ -43,7 +43,7 @@ const runQueries = async () => {
     "_id name path userId backgroundColor textColor"
   ).catch(error => console.error(error));
 
-  // await processQuery(`mutation:{Book("_id ean isbn title smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems")}`," mutation Book", "").catch((error) => console.error(error))
+  // await processQuery(`mutation:{Book("_id ean isbn title mobileImage mobileImagePreview smallImage smallImagePreview mediumImage mediumImagePreview userId publisher publicationDate pages authors subjects tags isRead dateAdded editorialReviews {source,content} similarItems")}`," mutation Book", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{Subject("_id name path userId backgroundColor textColor")}`," mutation Subject", "").catch((error) => console.error(error))
   // await processQuery(`mutation:{Tag("_id name path userId backgroundColor textColor")}`," mutation Tag", "")
   // .catch((error) => console.error(error))

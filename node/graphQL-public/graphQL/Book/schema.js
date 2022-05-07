@@ -5,6 +5,8 @@ export const type = `
     ean: String
     isbn: String
     title: String
+    mobileImage: String
+    mobileImagePreview: JSON
     smallImage: String
     smallImagePreview: JSON
     mediumImage: String
@@ -53,6 +55,8 @@ export const type = `
     ean: String
     isbn: String
     title: String
+    mobileImage: String
+    mobileImagePreview: JSON
     smallImage: String
     smallImagePreview: JSON
     mediumImage: String
@@ -74,6 +78,8 @@ export const type = `
     ean: String
     isbn: String
     title: String
+    mobileImage: String
+    mobileImagePreview: JSON
     smallImage: String
     smallImagePreview: JSON
     mediumImage: String
@@ -127,6 +133,7 @@ export const type = `
     ean: Int
     isbn: Int
     title: Int
+    mobileImage: Int
     smallImage: Int
     mediumImage: Int
     userId: Int
@@ -171,6 +178,14 @@ export const type = `
     title_ne: String
     title_in: [String]
     title_nin: [String]
+    mobileImage_contains: String
+    mobileImage_startsWith: String
+    mobileImage_endsWith: String
+    mobileImage_regex: String
+    mobileImage: String
+    mobileImage_ne: String
+    mobileImage_in: [String]
+    mobileImage_nin: [String]
     smallImage_contains: String
     smallImage_startsWith: String
     smallImage_endsWith: String
@@ -179,10 +194,6 @@ export const type = `
     smallImage_ne: String
     smallImage_in: [String]
     smallImage_nin: [String]
-    smallImagePreview: JSON
-    smallImagePreview_ne: JSON
-    smallImagePreview_in: [JSON]
-    smallImagePreview_nin: [JSON]
     mediumImage_contains: String
     mediumImage_startsWith: String
     mediumImage_endsWith: String
@@ -191,10 +202,6 @@ export const type = `
     mediumImage_ne: String
     mediumImage_in: [String]
     mediumImage_nin: [String]
-    mediumImagePreview: JSON
-    mediumImagePreview_ne: JSON
-    mediumImagePreview_in: [JSON]
-    mediumImagePreview_nin: [JSON]
     userId_contains: String
     userId_startsWith: String
     userId_endsWith: String
@@ -352,6 +359,14 @@ export const query = `
     title_ne: String,
     title_in: [String],
     title_nin: [String],
+    mobileImage_contains: String,
+    mobileImage_startsWith: String,
+    mobileImage_endsWith: String,
+    mobileImage_regex: String,
+    mobileImage: String,
+    mobileImage_ne: String,
+    mobileImage_in: [String],
+    mobileImage_nin: [String],
     smallImage_contains: String,
     smallImage_startsWith: String,
     smallImage_endsWith: String,
@@ -360,10 +375,6 @@ export const query = `
     smallImage_ne: String,
     smallImage_in: [String],
     smallImage_nin: [String],
-    smallImagePreview: JSON,
-    smallImagePreview_ne: JSON,
-    smallImagePreview_in: [JSON],
-    smallImagePreview_nin: [JSON],
     mediumImage_contains: String,
     mediumImage_startsWith: String,
     mediumImage_endsWith: String,
@@ -372,10 +383,6 @@ export const query = `
     mediumImage_ne: String,
     mediumImage_in: [String],
     mediumImage_nin: [String],
-    mediumImagePreview: JSON,
-    mediumImagePreview_ne: JSON,
-    mediumImagePreview_in: [JSON],
-    mediumImagePreview_nin: [JSON],
     userId_contains: String,
     userId_startsWith: String,
     userId_endsWith: String,

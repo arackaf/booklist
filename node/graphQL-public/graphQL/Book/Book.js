@@ -8,6 +8,8 @@ export default {
     ean: "String",
     isbn: "String",
     title: "String",
+    mobileImage: "String",
+    mobileImagePreview: "JSON",
     smallImage: "String",
     smallImagePreview: "JSON",
     mediumImage: "String",

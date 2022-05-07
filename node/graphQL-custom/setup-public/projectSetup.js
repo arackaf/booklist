@@ -15,6 +15,8 @@ export const Book = {
     ean: StringType,
     isbn: StringType,
     title: StringType,
+    mobileImage: StringType,
+    mobileImagePreview: fieldOf(JSONType).nonQueryable(),
     smallImage: StringType,
     smallImagePreview: fieldOf(JSONType).nonQueryable(),
     mediumImage: StringType,
