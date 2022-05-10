@@ -137,9 +137,4 @@ function makePublicRouterInstance(router) {
   return instance;
 }
 
-if (typeof exports.default === "function" || (typeof exports.default === "object" && exports.default !== null)) {
-  Object.assign(exports.default, exports);
-  module.exports = exports.default;
-}
-
 //# sourceMappingURL=router.js.map
