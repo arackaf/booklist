@@ -356,14 +356,16 @@ const BookViewListGrid: FunctionComponent<{ books: any; menuBarHeight: any }> = 
               </tr>
             </thead>
             <tbody>
-              {books.map(book => (
-                <BookRow
-                  key={book._id}
-                  editBooksSubjects={editSubjectsForBook}
-                  editBooksTags={editTagsForBook}
-                  {...{ book, editBook, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
-                />
-              ))}
+              {books
+                .filter((b, i) => i === 0)
+                .map(book => (
+                  <BookRow
+                    key={book._id}
+                    editBooksSubjects={editSubjectsForBook}
+                    editBooksTags={editTagsForBook}
+                    {...{ book, editBook, online, setRead, booksUiState, dispatchBooksUiState, runDelete }}
+                  />
+                ))}
             </tbody>
           </table>
         </div>

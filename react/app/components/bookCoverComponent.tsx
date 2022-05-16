@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect, FunctionComponent, useLayoutEffect } from "react";
 import { getCrossOriginAttribute } from "util/corsHelpers";
+import { WcWrapper } from "util/WcWrapper";
 
 import "./bookCoverComponentStyles.css";
 import { SuspenseImg } from "./suspenseImage";
 
 import { decode } from "blurhash";
+
+import "uikit/book-cover";
 
 export const NoCoverMobile = () => (
   <div className="no-cover-mobile">
@@ -71,6 +74,8 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
   if (!url) {
     return <NoCoverComponent />;
   }
+
+  return <WcWrapper wcTag="uikit-cover" url={url} preview={preview} />;
 
   if (preview) {
     return (

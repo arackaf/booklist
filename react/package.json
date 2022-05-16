@@ -57,6 +57,7 @@
     "gql",
     "modules",
     "util",
-    "util/jscolor"
+    "util/jscolor",
+    "../booklist-ui"
   ]
 }
