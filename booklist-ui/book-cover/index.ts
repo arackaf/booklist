@@ -26,15 +26,11 @@ class BookCover extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === "url") {
-      console.log("ATTRIBUTE", name, newValue);
-      this.appendMainImage(newValue);
+      this.createMainImage(newValue);
     }
   }
 
-  appendMainImage(url: string) {
-    if (this.imageEl) {
-      this.removeChild(this.imageEl);
-    }
+  createMainImage(url: string) {
     this.loaded = false;
     const img = document.createElement("img");
     img.alt = "Book cover";
