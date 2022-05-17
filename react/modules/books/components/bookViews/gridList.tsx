@@ -358,6 +358,11 @@ const BookViewListGrid: FunctionComponent<{ books: any; menuBarHeight: any }> = 
             <tbody>
               {books
                 .filter((b, i) => i === 0)
+                .map(book => ({
+                  ...book,
+                  smallImagePreview:
+                    "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEACAWGBwYFCAcGhwkIiAmMFA0MCwsMGJGSjpQdGZ6eHJmcG6AkLicgIiuim5woNqirr7EztDOfJri8uDI8LjKzsYBIiQkMCowXjQ0XsaEcITGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxv/AABEIAD8AMgMBEQACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+gEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoLEQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AMtRzSNyzCOaBM0rfpQQy6p4pkgTQAlACUAc2o5pGxZhFBLL8J4oJZZDcUCFLUAKDmgQ6mBzS9aRqWYqQmXojxQSS7qYg3UASoaBEtAHMKeaDYsxGgll2LpQSSE0CEB5pgTxmgRNQI5hetI3LMVAmXYulMkeaBCDrQOxYioJJ6BHML1pGxZioEXYulMkkIoGAWgCeIUCZPigk5detI1LMNAi/COKZLLITNArjhHQO5IiYoFckxQI5RetI1LMNAmaNv0pkMuotAiTbQIcBQAuKBH/2Q=="
+                }))
                 .map(book => (
                   <BookRow
                     key={book._id}

@@ -1,4 +1,5 @@
 import { getCrossOriginAttribute } from "./getCrossOriginAttribute";
+import { syncSingleChild } from "../helpers/syncChild";
 
 type blurhash = { w: number; h: number; blurhash: string };
 
@@ -9,7 +10,16 @@ class BookCover extends HTMLElement {
   loaded: boolean = false;
 
   set preview(val: string | blurhash) {
-    console.log("PREVIEW SETTER");
+    this.previewEl = this.createPreview(val);
+    this.render();
+  }
+
+  createPreview(val: string | blurhash): HTMLElement {
+    if (typeof val === "string") {
+      const img = document.createElement("img");
+      img.src = val;
+      return img;
+    }
   }
 
   static observedAttributes = ["url"];
@@ -36,6 +46,7 @@ class BookCover extends HTMLElement {
         this.render();
       }
     });
+    this.imageEl = img;
   }
 
   connectedCallback() {
@@ -44,13 +55,7 @@ class BookCover extends HTMLElement {
 
   render() {
     const elementMaybe = this.loaded ? this.imageEl : this.previewEl;
-    if (elementMaybe !== this.firstElementChild) {
-      let removing;
-      while (removing = this.firstElementChild) {
-        removing.
-      }
-      this.appendChild(elementMaybe);
-    }
+    syncSingleChild(this, elementMaybe);
   }
 }
 
