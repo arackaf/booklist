@@ -57,6 +57,14 @@ passport.use(
     if (IS_PUBLIC) {
       return done(null, PUBLIC_USER);
     }
+
+    if (request.url === "/graphql-ios") {
+      const loginToken = request.body.loginToken;
+      const userResult = iosUserCache[loginToken];
+
+      return done(null, userResult || null);
+    }
+
     const rememberMe = request.body.rememberme == 1;
     let userDao = new UserDao();
 
@@ -201,6 +209,15 @@ app.use(
   })
 );
 
+app.use("/graphql-ios", function (req, response, next) {
+  req.body.username = "xxx";
+  req.body.password = "xxx";
+  next();
+});
+app.post("/graphql-ios", passport.authenticate("local"), function (req, response) {
+  return response.redirect(307, "/graphql");
+});
+
 const { rootPublic, executableSchemaPublic } = getPublicGraphqlSchema();
 app.use(
   "/graphql-public",
@@ -232,6 +249,23 @@ app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /
 // --------------- /REACT ---------------
 
 // --------------- AUTH ---------------
+
+const iosUserCache = {};
+
+app.post("/login-ios", function (req, response) {
+  const userDao = new UserDao();
+  const { email, password } = req.body;
+
+  userDao.lookupUser(email, password, true).then(userResult => {
+    if (userResult) {
+      userResult.id = "" + userResult._id;
+      iosUserCache[userResult.loginToken] = userResult;
+      return response.json({ success: true, loginToken: userResult.loginToken });
+    } else {
+      return response.json({ success: false });
+    }
+  });
+});
 
 app.post("/auth/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
@@ -371,6 +405,7 @@ function error(err) {
 
 Promise.resolve(dao.init()).then(() => {
   app.listen(process.env.PORT || 3001);
+  console.log("Listening ...");
 });
 
 export default null;
