@@ -37,6 +37,52 @@ const MobileMeta = () => {
   return null;
 };
 
+import ajaxUtil from "util/ajaxUtil";
+const query = `
+{
+  allBooks {
+    Books {
+      _id
+      title
+      smallImage
+      smallImagePreview
+    }
+  }
+}
+`.trim();
+
+(async function () {
+  const results = await ajaxUtil.postWithCors(
+    "http://lvh.me:3002/login-ios",
+    {
+      email: "tester1",
+      password: "password"
+    },
+    resp => {
+      console.log("LOGIN SUCCESS", resp);
+    },
+    err => {
+      console.log("LOGIN ERROR", err);
+    }
+  );
+
+  console.log(results);
+
+  await ajaxUtil.postWithCors(
+    "http://lvh.me:3002/graphql-ios",
+    {
+      query,
+      loginToken: results.loginToken
+    },
+    resp => {
+      console.log("SUCCESS", resp);
+    },
+    err => {
+      console.log("ERROR", err);
+    }
+  );
+})();
+
 const WellUiSwitcher: FunctionComponent<{}> = () => {
   const [app, { requestDesktop, requestMobile }] = useContext(AppContext);
 
