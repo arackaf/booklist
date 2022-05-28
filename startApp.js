@@ -251,15 +251,23 @@ app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /
 // --------------- AUTH ---------------
 
 const iosUserCache = {};
+const iosUserCacheLoginTokenLookup = {};
 
 app.post("/login-ios", function (req, response) {
   const userDao = new UserDao();
   const { email, password } = req.body;
 
+  const loginToken = iosUserCacheLoginTokenLookup[email];
+  if (loginToken) {
+    return response.json({ success: true, loginToken });
+  }
+
   userDao.lookupUser(email, password, true).then(userResult => {
     if (userResult) {
       userResult.id = "" + userResult._id;
       iosUserCache[userResult.loginToken] = userResult;
+      iosUserCacheLoginTokenLookup[userResult.email] = userResult.loginToken;
+
       return response.json({ success: true, loginToken: userResult.loginToken });
     } else {
       return response.json({ success: false });
