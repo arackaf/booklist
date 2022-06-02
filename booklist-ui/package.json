@@ -1,3 +1,6 @@
 {
-  "name": "uikit"
+  "name": "uikit",
+  "dependencies": {
+    "@xstate/fsm": "^2.0.0"
+  }
 }

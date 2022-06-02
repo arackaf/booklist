@@ -1,4 +1,4 @@
-import { getCrossOriginAttribute } from "./getCrossOriginAttribute";
+import { setCrossOriginAttribute } from "./setCrossOriginAttribute";
 import { syncSingleChild } from "../helpers/syncChild";
 import { decode } from "blurhash";
 
@@ -8,10 +8,23 @@ class BookCover extends HTMLElement {
   loaded: boolean = false;
   imageEl?: HTMLImageElement;
   previewEl?: HTMLElement;
-  static observedAttributes = ["url"];
+  noCoverElement: HTMLElement;
+  #_url = "";
 
   set preview(val: string | blurhash) {
     this.previewEl = this.createPreview(val);
+    this.render();
+  }
+
+  set url(val: string) {
+    this.loaded = false;
+    this.#_url = val;
+    this.createMainImage(val);
+    this.render();
+  }
+
+  set nocover(val: string) {
+    this.noCoverElement = document.createElement(val);
     this.render();
   }
 
@@ -23,18 +36,16 @@ class BookCover extends HTMLElement {
     }
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "url") {
-      this.createMainImage(newValue);
-    }
-  }
-
   createMainImage(url: string) {
     this.loaded = false;
+    if (!url) {
+      this.imageEl = null;
+      return;
+    }
+
     const img = document.createElement("img");
     img.alt = "Book cover";
-    getCrossOriginAttribute(img, url);
-    img.src = url;
+    setCrossOriginAttribute(img, url);
     img.addEventListener("load", () => {
       if (img === this.imageEl) {
         this.loaded = true;
@@ -42,6 +53,7 @@ class BookCover extends HTMLElement {
       }
     });
     this.imageEl = img;
+    img.src = url;
   }
 
   connectedCallback() {
@@ -49,8 +61,10 @@ class BookCover extends HTMLElement {
   }
 
   render() {
-    const elementMaybe = this.loaded ? this.imageEl : this.previewEl;
-    syncSingleChild(this, elementMaybe);
+    const elementMaybe = this.loaded ? this.imageEl : this.#_url ? this.previewEl : this.noCoverElement;
+    if (elementMaybe) {
+      syncSingleChild(this, elementMaybe);
+    }
   }
 }
 

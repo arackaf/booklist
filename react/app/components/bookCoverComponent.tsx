@@ -8,6 +8,7 @@ import { SuspenseImg } from "./suspenseImage";
 import { decode } from "blurhash";
 
 import "uikit/book-cover";
+import "uikit/no-book-cover";
 
 export const NoCoverMobile = () => (
   <div className="no-cover-mobile">
@@ -54,7 +55,7 @@ const PreviewCanvas: FunctionComponent<CanvasPreviewProps> = ({ preview }) => {
   return <canvas className="book-preview" ref={canvasRef} width={preview.w} height={preview.h} />;
 };
 
-const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => {
+const Cover = ({ url, noCoverComponent = "", preview = "" }) => {
   const initialUrl = useRef(url || "");
   const urlChanged = url !== initialUrl.current;
   const [loaded, setLoaded] = useState(false);
@@ -71,11 +72,11 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
     }
   }, [url, imgRef, preview]);
 
-  if (!url) {
-    return <NoCoverComponent />;
-  }
+  // if (!url) {
+  //   return <NoCoverComponent />;
+  // }
 
-  return <WcWrapper wcTag="uikit-cover" url={url} preview={preview} />;
+  return <WcWrapper wcTag="uikit-cover" url={url} preview={preview} nocover={noCoverComponent} />;
 
   if (preview) {
     return (
@@ -101,13 +102,13 @@ const Cover = ({ url, NoCoverComponent, preview = "", dontSuspend = false }) => 
 };
 
 export const CoverMobile = ({ url, preview = "", dontSuspend = false }) => (
-  <Cover url={url} preview={preview} NoCoverComponent={NoCoverMobile} dontSuspend={dontSuspend} />
+  <Cover url={url} preview={preview} noCoverComponent="uikit-no-cover-mobile" />
 );
 
 export const CoverSmall = ({ url, preview = "", dontSuspend = false }) => (
-  <Cover url={url} preview={preview} NoCoverComponent={NoCoverSmall} dontSuspend={dontSuspend} />
+  <Cover url={url} preview={preview} noCoverComponent="uikit-no-cover-small" />
 );
 
 export const CoverMedium = ({ url, preview = "", dontSuspend = false }) => (
-  <Cover url={url} preview={preview} NoCoverComponent={NoCoverMedium} dontSuspend={dontSuspend} />
+  <Cover url={url} preview={preview} noCoverComponent="uikit-no-cover-medium" />
 );
