@@ -56,10 +56,6 @@ class BookCover extends HTMLElement {
     img.src = url;
   }
 
-  connectedCallback() {
-    //this.render();
-  }
-
   render() {
     const elementMaybe = this.loaded ? this.imageEl : this.#_url ? this.previewEl : this.noCoverElement;
     if (elementMaybe) {
