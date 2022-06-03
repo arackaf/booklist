@@ -31,7 +31,7 @@ class BookCover extends HTMLElement {
   createPreview(val: string | blurhash): HTMLElement {
     if (typeof val === "string") {
       return base64Preview(val);
-    } else {
+    } else if (typeof val === "object" && val !== null) {
       return blurHashPreview(val);
     }
   }
