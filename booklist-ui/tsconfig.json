@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": true,
+    "baseUrl": "./",
+    "lib": ["es2015", "es2017", "dom"],
+    "module": "esNext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "target": "esnext"
+  },
+  "include": ["./**/*.ts"]
+}
