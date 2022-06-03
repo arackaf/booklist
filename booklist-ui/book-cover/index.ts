@@ -57,7 +57,7 @@ class BookCover extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    //this.render();
   }
 
   render() {
