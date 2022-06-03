@@ -1,6 +1,6 @@
 import { setCrossOriginAttribute } from "./setCrossOriginAttribute";
 import { syncSingleChild } from "../helpers/syncChild";
-import { decode } from "blurhash";
+import { decode } from "../node_modules/blurhash/dist/esm/index";
 
 type blurhash = { w: number; h: number; blurhash: string };
 

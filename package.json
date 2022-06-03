@@ -12,9 +12,8 @@
     "react-build": "cd react && npm run prod-build",
     "svelte-build": "cd svelte && npm run prod-build",
     "start": "node app.js",
-    "install-web-apps": "cd react && npm i && cd ../svelte && npm i",
-    "master-build": "npm i && npm run install-web-apps && npm run react-build && npm run svelte-build",
-    "heroku-install": "cd react && npm i && cd ../svelte && npm i",
+    "install-web-apps": "cd react && npm i && cd ../svelte && npm i && cd ../booklist-ui && npm i",
+    "heroku-install": "npm run install-web-apps",
     "heroku-postbuild": "npm run heroku-install && npm run react-build && npm run svelte-build"
   },
   "dependencies": {
