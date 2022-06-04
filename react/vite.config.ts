@@ -41,6 +41,7 @@ export default defineConfig({
       filename: "service-worker.js",
       workbox: {
         importScripts: ["sw-index-bundle.js"],
+        navigateFallbackDenylist: [/\/activate\//],
         runtimeCaching: [
           getCache({ pattern: /^https:\/\/d193qjyckdxivp.cloudfront.net\/bookCovers/i, name: "images" }),
           getCache({ pattern: /.*\.(eot|woff|woff2|ttf)$/, name: "fonts" }),
