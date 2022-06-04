@@ -54,7 +54,8 @@ class UserDAO extends DAO {
         gsiUserLookupPk: userId,
         email,
         password: this.saltAndHashPassword(password),
-        created: moment().format("YYYY-MM-DD")
+        created: moment().format("YYYY-MM-DD"),
+        awaitingActivation: true
       }),
       ConditionExpression: "pk <> :idKeyVal",
       ExpressionAttributeValues: {
@@ -102,12 +103,27 @@ class UserDAO extends DAO {
 
     const rememberMe = item.rememberMe;
 
-    await db.update(
-      getUpdatePacket(sessionKey, loginKey, {
-        UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
-        ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
-      })
-    );
+    try {
+      const userKey = `User#${item.email}`;
+      console.log(userKey);
+      await db.transactWrite({
+        TransactItems: [
+          {
+            Update: getUpdatePacket(userKey, userKey, {
+              UpdateExpression: "REMOVE awaitingActivation"
+            })
+          },
+          {
+            Update: getUpdatePacket(sessionKey, loginKey, {
+              UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
+              ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
+            })
+          }
+        ]
+      });
+    } catch (er) {
+      console.log(er);
+    }
 
     return {
       success: true,
@@ -140,32 +156,36 @@ class UserDAO extends DAO {
     password = this.saltAndHashPassword(password);
     const userKey = `User#${email}`;
 
-    let userFound = await db.queryOne(
-      getQueryPacket(` pk = :userKey AND sk = :userKey `, {
-        ExpressionAttributeValues: { ":password": password, ":userKey": userKey },
-        FilterExpression: ` password = :password `
-      })
-    );
+    try {
+      let userFound = await db.queryOne(
+        getQueryPacket(` pk = :userKey AND sk = :userKey `, {
+          ExpressionAttributeValues: { ":password": password, ":userKey": userKey, ":true": true },
+          FilterExpression: ` password = :password AND awaitingActivation <> :true `
+        })
+      );
 
-    if (!userFound) {
+      if (!userFound) {
+        return null;
+      }
+
+      const id = userFound.userId;
+      const loginToken = uuid();
+      const sessionKey = getSessionKey(id);
+
+      await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), email, rememberMe, expires: getExpiration(rememberMe) }));
+
+      return {
+        _id: id,
+        id: id,
+        loginToken,
+        email,
+        admin: userFound.admin
+      };
+    } catch (loginErr) {
+      console.log("Login error", loginErr);
       return null;
     }
-
-    const id = userFound.userId;
-    const loginToken = uuid();
-    const sessionKey = getSessionKey(id);
-
-    await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), email, rememberMe, expires: getExpiration(rememberMe) }));
-
-    return {
-      _id: id,
-      id: id,
-      loginToken,
-      email,
-      admin: userFound.admin
-    };
   }
-
   async lookupUserByToken(token) {
     const [id, loginToken] = token.split("|");
     const sessionKey = getSessionKey(id);

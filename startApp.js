@@ -166,7 +166,11 @@ const browseToSvelte = moduleName => async (request, response) => {
 };
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
 
-svelteRouter.get("/activate/:code", activateCode);
+svelteRouter.use("/activate/:id/:code", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+svelteRouter.get("/activate/:id/:code", activateCode);
 
 svelteRouter.get("/service-worker.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 svelteRouter.get("/sw-index-bundle.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
@@ -344,6 +348,14 @@ app.post("/auth/resetPassword", async function (req, response) {
   response.send({ ...result });
 });
 
+app.use("/activate", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+app.use("/activate/:id/:code", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
 app.get("/activate", browseToReact);
 app.get("/activate/:id/:code", activateCode);
 

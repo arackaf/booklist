@@ -53,7 +53,8 @@ export default defineConfig({
     port: 3002,
     proxy: {
       "/graphql": "http://localhost:3001",
-      "/auth": "http://localhost:3001"
+      "/auth": "http://localhost:3001",
+      "/activate": "http://localhost:3001"
     }
     //hmr: false,
   }
