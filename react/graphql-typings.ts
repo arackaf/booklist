@@ -65,17 +65,17 @@ export type FloatArrayUpdate = {
 };
 
 export type Book = {
-  _id: Maybe<Scalars['String']>;
+  _id: Scalars['String'];
   ean: Maybe<Scalars['String']>;
   isbn: Maybe<Scalars['String']>;
-  title: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   mobileImage: Maybe<Scalars['String']>;
   mobileImagePreview: Maybe<Scalars['JSON']>;
   smallImage: Maybe<Scalars['String']>;
   smallImagePreview: Maybe<Scalars['JSON']>;
   mediumImage: Maybe<Scalars['String']>;
   mediumImagePreview: Maybe<Scalars['JSON']>;
-  userId: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
   publisher: Maybe<Scalars['String']>;
   publicationDate: Maybe<Scalars['String']>;
   pages: Maybe<Scalars['Int']>;
@@ -137,17 +137,17 @@ export type BookBulkMutationResult = {
 };
 
 export type BookInput = {
-  _id: InputMaybe<Scalars['String']>;
+  _id: Scalars['String'];
   ean: InputMaybe<Scalars['String']>;
   isbn: InputMaybe<Scalars['String']>;
-  title: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
   mobileImage: InputMaybe<Scalars['String']>;
   mobileImagePreview: InputMaybe<Scalars['JSON']>;
   smallImage: InputMaybe<Scalars['String']>;
   smallImagePreview: InputMaybe<Scalars['JSON']>;
   mediumImage: InputMaybe<Scalars['String']>;
   mediumImagePreview: InputMaybe<Scalars['JSON']>;
-  userId: InputMaybe<Scalars['String']>;
+  userId: Scalars['String'];
   publisher: InputMaybe<Scalars['String']>;
   publicationDate: InputMaybe<Scalars['String']>;
   pages: InputMaybe<Scalars['Int']>;
@@ -248,10 +248,6 @@ export type BookSort = {
 };
 
 export type BookFilters = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   isbn_contains: InputMaybe<Scalars['String']>;
   isbn_startsWith: InputMaybe<Scalars['String']>;
   isbn_endsWith: InputMaybe<Scalars['String']>;
@@ -352,7 +348,7 @@ export type BookFilters = {
 };
 
 export type BookSummary = {
-  _id: Maybe<Scalars['String']>;
+  _id: Scalars['String'];
   title: Maybe<Scalars['String']>;
   asin: Maybe<Scalars['String']>;
   isbn: Maybe<Scalars['String']>;
@@ -391,7 +387,7 @@ export type BookSummaryBulkMutationResult = {
 };
 
 export type BookSummaryInput = {
-  _id: InputMaybe<Scalars['String']>;
+  _id: Scalars['String'];
   title: InputMaybe<Scalars['String']>;
   asin: InputMaybe<Scalars['String']>;
   isbn: InputMaybe<Scalars['String']>;
@@ -457,14 +453,6 @@ export type BookSummaryFilters = {
   isbn_ne: InputMaybe<Scalars['String']>;
   isbn_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   isbn_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  smallImage_contains: InputMaybe<Scalars['String']>;
-  smallImage_startsWith: InputMaybe<Scalars['String']>;
-  smallImage_endsWith: InputMaybe<Scalars['String']>;
-  smallImage_regex: InputMaybe<Scalars['String']>;
-  smallImage: InputMaybe<Scalars['String']>;
-  smallImage_ne: InputMaybe<Scalars['String']>;
-  smallImage_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  smallImage_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   authors_count: InputMaybe<Scalars['Int']>;
   authors_textContains: InputMaybe<Scalars['String']>;
   authors_startsWith: InputMaybe<Scalars['String']>;
@@ -601,9 +589,9 @@ export type EditorialReviewFilters = {
 };
 
 export type LabelColor = {
-  _id: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  order: Maybe<Scalars['Int']>;
+  _id: Scalars['String'];
+  backgroundColor: Scalars['String'];
+  order: Scalars['Int'];
 };
 
 export type LabelColorQueryResults = {
@@ -633,9 +621,9 @@ export type LabelColorBulkMutationResult = {
 };
 
 export type LabelColorInput = {
-  _id: InputMaybe<Scalars['String']>;
-  backgroundColor: InputMaybe<Scalars['String']>;
-  order: InputMaybe<Scalars['Int']>;
+  _id: Scalars['String'];
+  backgroundColor: Scalars['String'];
+  order: Scalars['Int'];
 };
 
 export type LabelColorMutationInput = {
@@ -652,16 +640,12 @@ export type LabelColorSort = {
 };
 
 export type LabelColorFilters = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   OR: InputMaybe<Array<InputMaybe<LabelColorFilters>>>;
 };
 
 export type Subject = {
-  _id: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
+  _id: Scalars['String'];
+  name: Scalars['String'];
   path: Maybe<Scalars['String']>;
   userId: Maybe<Scalars['String']>;
   backgroundColor: Maybe<Scalars['String']>;
@@ -696,8 +680,8 @@ export type SubjectBulkMutationResult = {
 };
 
 export type SubjectInput = {
-  _id: InputMaybe<Scalars['String']>;
-  name: InputMaybe<Scalars['String']>;
+  _id: Scalars['String'];
+  name: Scalars['String'];
   path: InputMaybe<Scalars['String']>;
   userId: InputMaybe<Scalars['String']>;
   backgroundColor: InputMaybe<Scalars['String']>;
@@ -727,10 +711,6 @@ export type SubjectSort = {
 };
 
 export type SubjectFilters = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   name_contains: InputMaybe<Scalars['String']>;
   name_startsWith: InputMaybe<Scalars['String']>;
   name_endsWith: InputMaybe<Scalars['String']>;
@@ -842,12 +822,12 @@ export type SubjectsDeletedFilters = {
 };
 
 export type Tag = {
-  _id: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
+  _id: Scalars['String'];
+  name: Scalars['String'];
   path: Maybe<Scalars['String']>;
-  userId: Maybe<Scalars['String']>;
-  backgroundColor: Maybe<Scalars['String']>;
-  textColor: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  backgroundColor: Scalars['String'];
+  textColor: Scalars['String'];
   timestamp: Maybe<Scalars['Float']>;
 };
 
@@ -878,12 +858,12 @@ export type TagBulkMutationResult = {
 };
 
 export type TagInput = {
-  _id: InputMaybe<Scalars['String']>;
-  name: InputMaybe<Scalars['String']>;
+  _id: Scalars['String'];
+  name: Scalars['String'];
   path: InputMaybe<Scalars['String']>;
-  userId: InputMaybe<Scalars['String']>;
-  backgroundColor: InputMaybe<Scalars['String']>;
-  textColor: InputMaybe<Scalars['String']>;
+  userId: Scalars['String'];
+  backgroundColor: Scalars['String'];
+  textColor: Scalars['String'];
   timestamp: InputMaybe<Scalars['Float']>;
 };
 
@@ -909,10 +889,6 @@ export type TagSort = {
 };
 
 export type TagFilters = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   name_contains: InputMaybe<Scalars['String']>;
   name_startsWith: InputMaybe<Scalars['String']>;
   name_endsWith: InputMaybe<Scalars['String']>;
@@ -1046,10 +1022,6 @@ export type Query = {
 
 
 export type QueryAllBooksArgs = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   isbn_contains: InputMaybe<Scalars['String']>;
   isbn_startsWith: InputMaybe<Scalars['String']>;
   isbn_endsWith: InputMaybe<Scalars['String']>;
@@ -1194,14 +1166,6 @@ export type QueryAllBookSummarysArgs = {
   isbn_ne: InputMaybe<Scalars['String']>;
   isbn_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   isbn_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  smallImage_contains: InputMaybe<Scalars['String']>;
-  smallImage_startsWith: InputMaybe<Scalars['String']>;
-  smallImage_endsWith: InputMaybe<Scalars['String']>;
-  smallImage_regex: InputMaybe<Scalars['String']>;
-  smallImage: InputMaybe<Scalars['String']>;
-  smallImage_ne: InputMaybe<Scalars['String']>;
-  smallImage_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  smallImage_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   authors_count: InputMaybe<Scalars['Int']>;
   authors_textContains: InputMaybe<Scalars['String']>;
   authors_startsWith: InputMaybe<Scalars['String']>;
@@ -1266,10 +1230,6 @@ export type QueryGetBooksDeletedArgs = {
 
 
 export type QueryAllLabelColorsArgs = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   OR: InputMaybe<Array<InputMaybe<LabelColorFilters>>>;
   SORT: InputMaybe<LabelColorSort>;
   SORTS: InputMaybe<Array<InputMaybe<LabelColorSort>>>;
@@ -1283,10 +1243,6 @@ export type QueryAllLabelColorsArgs = {
 
 
 export type QueryAllSubjectsArgs = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   name_contains: InputMaybe<Scalars['String']>;
   name_startsWith: InputMaybe<Scalars['String']>;
   name_endsWith: InputMaybe<Scalars['String']>;
@@ -1377,10 +1333,6 @@ export type QueryGetSubjectsDeletedArgs = {
 
 
 export type QueryAllTagsArgs = {
-  _id: InputMaybe<Scalars['String']>;
-  _id_ne: InputMaybe<Scalars['String']>;
-  _id_in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  _id_nin: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   name_contains: InputMaybe<Scalars['String']>;
   name_startsWith: InputMaybe<Scalars['String']>;
   name_endsWith: InputMaybe<Scalars['String']>;

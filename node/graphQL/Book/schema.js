@@ -1,17 +1,17 @@
 export const type = `
   
   type Book {
-    _id: String
+    _id: String!
     ean: String
     isbn: String
-    title: String
+    title: String!
     mobileImage: String
     mobileImagePreview: JSON
     smallImage: String
     smallImagePreview: JSON
     mediumImage: String
     mediumImagePreview: JSON
-    userId: String
+    userId: String!
     publisher: String
     publicationDate: String
     pages: Int
@@ -55,17 +55,17 @@ export const type = `
   }
 
   input BookInput {
-    _id: String
+    _id: String!
     ean: String
     isbn: String
-    title: String
+    title: String!
     mobileImage: String
     mobileImagePreview: JSON
     smallImage: String
     smallImagePreview: JSON
     mediumImage: String
     mediumImagePreview: JSON
-    userId: String
+    userId: String!
     publisher: String
     publicationDate: String
     pages: Int
@@ -166,10 +166,6 @@ export const type = `
   }
 
   input BookFilters {
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -301,10 +297,6 @@ export const mutation = `
 export const query = `
 
   allBooks (
-    _id: String,
-    _id_ne: String,
-    _id_in: [String],
-    _id_nin: [String],
     isbn_contains: String,
     isbn_startsWith: String,
     isbn_endsWith: String,

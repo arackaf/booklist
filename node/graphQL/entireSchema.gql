@@ -34,17 +34,17 @@ input FloatArrayUpdate {
 }
 
 type Book {
-  _id: String
+  _id: String!
   ean: String
   isbn: String
-  title: String
+  title: String!
   mobileImage: String
   mobileImagePreview: JSON
   smallImage: String
   smallImagePreview: JSON
   mediumImage: String
   mediumImagePreview: JSON
-  userId: String
+  userId: String!
   publisher: String
   publicationDate: String
   pages: Int
@@ -98,17 +98,17 @@ type BookBulkMutationResult {
 }
 
 input BookInput {
-  _id: String
+  _id: String!
   ean: String
   isbn: String
-  title: String
+  title: String!
   mobileImage: String
   mobileImagePreview: JSON
   smallImage: String
   smallImagePreview: JSON
   mediumImage: String
   mediumImagePreview: JSON
-  userId: String
+  userId: String!
   publisher: String
   publicationDate: String
   pages: Int
@@ -209,10 +209,6 @@ input BookSort {
 }
 
 input BookFilters {
-  _id: String
-  _id_ne: String
-  _id_in: [String]
-  _id_nin: [String]
   isbn_contains: String
   isbn_startsWith: String
   isbn_endsWith: String
@@ -313,7 +309,7 @@ input BookFilters {
 }
 
 type BookSummary {
-  _id: String
+  _id: String!
   title: String
   asin: String
   isbn: String
@@ -352,7 +348,7 @@ type BookSummaryBulkMutationResult {
 }
 
 input BookSummaryInput {
-  _id: String
+  _id: String!
   title: String
   asin: String
   isbn: String
@@ -418,14 +414,6 @@ input BookSummaryFilters {
   isbn_ne: String
   isbn_in: [String]
   isbn_nin: [String]
-  smallImage_contains: String
-  smallImage_startsWith: String
-  smallImage_endsWith: String
-  smallImage_regex: String
-  smallImage: String
-  smallImage_ne: String
-  smallImage_in: [String]
-  smallImage_nin: [String]
   authors_count: Int
   authors_textContains: String
   authors_startsWith: String
@@ -562,9 +550,9 @@ input EditorialReviewFilters {
 }
 
 type LabelColor {
-  _id: String
-  backgroundColor: String
-  order: Int
+  _id: String!
+  backgroundColor: String!
+  order: Int!
 }
 
 type LabelColorQueryResults {
@@ -594,9 +582,9 @@ type LabelColorBulkMutationResult {
 }
 
 input LabelColorInput {
-  _id: String
-  backgroundColor: String
-  order: Int
+  _id: String!
+  backgroundColor: String!
+  order: Int!
 }
 
 input LabelColorMutationInput {
@@ -613,16 +601,12 @@ input LabelColorSort {
 }
 
 input LabelColorFilters {
-  _id: String
-  _id_ne: String
-  _id_in: [String]
-  _id_nin: [String]
   OR: [LabelColorFilters]
 }
 
 type Subject {
-  _id: String
-  name: String
+  _id: String!
+  name: String!
   path: String
   userId: String
   backgroundColor: String
@@ -657,8 +641,8 @@ type SubjectBulkMutationResult {
 }
 
 input SubjectInput {
-  _id: String
-  name: String
+  _id: String!
+  name: String!
   path: String
   userId: String
   backgroundColor: String
@@ -688,10 +672,6 @@ input SubjectSort {
 }
 
 input SubjectFilters {
-  _id: String
-  _id_ne: String
-  _id_in: [String]
-  _id_nin: [String]
   name_contains: String
   name_startsWith: String
   name_endsWith: String
@@ -803,12 +783,12 @@ input SubjectsDeletedFilters {
 }
 
 type Tag {
-  _id: String
-  name: String
+  _id: String!
+  name: String!
   path: String
-  userId: String
-  backgroundColor: String
-  textColor: String
+  userId: String!
+  backgroundColor: String!
+  textColor: String!
   timestamp: Float
 }
 
@@ -839,12 +819,12 @@ type TagBulkMutationResult {
 }
 
 input TagInput {
-  _id: String
-  name: String
+  _id: String!
+  name: String!
   path: String
-  userId: String
-  backgroundColor: String
-  textColor: String
+  userId: String!
+  backgroundColor: String!
+  textColor: String!
   timestamp: Float
 }
 
@@ -870,10 +850,6 @@ input TagSort {
 }
 
 input TagFilters {
-  _id: String
-  _id_ne: String
-  _id_in: [String]
-  _id_nin: [String]
   name_contains: String
   name_startsWith: String
   name_endsWith: String
@@ -986,10 +962,6 @@ input TagsDeletedFilters {
 
 type Query {
   allBooks(
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     isbn_contains: String
     isbn_startsWith: String
     isbn_endsWith: String
@@ -1132,14 +1104,6 @@ type Query {
     isbn_ne: String
     isbn_in: [String]
     isbn_nin: [String]
-    smallImage_contains: String
-    smallImage_startsWith: String
-    smallImage_endsWith: String
-    smallImage_regex: String
-    smallImage: String
-    smallImage_ne: String
-    smallImage_in: [String]
-    smallImage_nin: [String]
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -1196,10 +1160,6 @@ type Query {
   getBooksDeleted(_id: String): BooksDeletedSingleQueryResult!
 
   allLabelColors(
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     OR: [LabelColorFilters]
     SORT: LabelColorSort
     SORTS: [LabelColorSort]
@@ -1212,10 +1172,6 @@ type Query {
   ): LabelColorQueryResults!
 
   allSubjects(
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String
@@ -1300,10 +1256,6 @@ type Query {
   getSubjectsDeleted(_id: String): SubjectsDeletedSingleQueryResult!
 
   allTags(
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String

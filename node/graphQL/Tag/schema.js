@@ -1,12 +1,12 @@
 export const type = `
   
   type Tag {
-    _id: String
-    name: String
+    _id: String!
+    name: String!
     path: String
-    userId: String
-    backgroundColor: String
-    textColor: String
+    userId: String!
+    backgroundColor: String!
+    textColor: String!
     timestamp: Float
   }
 
@@ -37,12 +37,12 @@ export const type = `
   }
 
   input TagInput {
-    _id: String
-    name: String
+    _id: String!
+    name: String!
     path: String
-    userId: String
-    backgroundColor: String
-    textColor: String
+    userId: String!
+    backgroundColor: String!
+    textColor: String!
     timestamp: Float
   }
 
@@ -68,10 +68,6 @@ export const type = `
   }
 
   input TagFilters {
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String
@@ -139,10 +135,6 @@ export const mutation = `
 export const query = `
 
   allTags (
-    _id: String,
-    _id_ne: String,
-    _id_in: [String],
-    _id_nin: [String],
     name_contains: String,
     name_startsWith: String,
     name_endsWith: String,

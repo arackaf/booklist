@@ -1,9 +1,9 @@
 export const type = `
   
   type LabelColor {
-    _id: String
-    backgroundColor: String
-    order: Int
+    _id: String!
+    backgroundColor: String!
+    order: Int!
   }
 
   type LabelColorQueryResults {
@@ -33,9 +33,9 @@ export const type = `
   }
 
   input LabelColorInput {
-    _id: String
-    backgroundColor: String
-    order: Int
+    _id: String!
+    backgroundColor: String!
+    order: Int!
   }
 
   input LabelColorMutationInput {
@@ -52,10 +52,6 @@ export const type = `
   }
 
   input LabelColorFilters {
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     OR: [LabelColorFilters]
   }
   
@@ -70,10 +66,6 @@ export const mutation = `
 export const query = `
 
   allLabelColors (
-    _id: String,
-    _id_ne: String,
-    _id_in: [String],
-    _id_nin: [String],
     OR: [LabelColorFilters],
     SORT: LabelColorSort,
     SORTS: [LabelColorSort],

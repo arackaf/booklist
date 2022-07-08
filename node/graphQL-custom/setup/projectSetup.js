@@ -1,5 +1,5 @@
 import { dataTypes, createGraphqlSchema, dbHelpers } from "mongo-graphql-starter";
-const { MongoIdType, StringType, StringArrayType, BoolType, IntType, FloatType, arrayOf, JSONType, fieldOf } = dataTypes;
+const { MongoIdType, StringType, StringArrayType, BoolType, IntType, FloatType, arrayOf, JSONType } = dataTypes;
 
 export const EditorialReview = {
   fields: {
@@ -11,15 +11,15 @@ export const EditorialReview = {
 export const BookSummary = {
   table: "bookSummaries",
   fields: {
-    _id: fieldOf(MongoIdType).nonQueryable(),
+    _id: MongoIdType.nonQueryable().nonNull(),
     title: StringType,
     asin: StringType,
     isbn: StringType,
-    ean: fieldOf(StringType).nonQueryable(),
-    smallImage: StringType,
-    smallImagePreview: fieldOf(JSONType).nonQueryable(),
-    mediumImage: fieldOf(StringType).nonQueryable(),
-    mediumImagePreview: fieldOf(JSONType).nonQueryable(),
+    ean: StringType.nonQueryable(),
+    smallImage: StringType.nonQueryable(),
+    smallImagePreview: JSONType.nonQueryable(),
+    mediumImage: StringType.nonQueryable(),
+    mediumImagePreview: JSONType.nonQueryable(),
     authors: StringArrayType
   },
   extras: {
@@ -30,28 +30,28 @@ export const BookSummary = {
 export const Book = {
   table: "books",
   fields: {
-    _id: MongoIdType,
-    ean: fieldOf(StringType).nonQueryable(),
+    _id: MongoIdType.nonQueryable().nonNull(),
+    ean: StringType.nonQueryable(),
     isbn: StringType,
-    title: StringType,
-    mobileImage: fieldOf(StringType).nonQueryable(),
-    mobileImagePreview: fieldOf(JSONType).nonQueryable(),
-    smallImage: fieldOf(StringType).nonQueryable(),
-    smallImagePreview: fieldOf(JSONType).nonQueryable(),
-    mediumImage: fieldOf(StringType).nonQueryable(),
-    mediumImagePreview: fieldOf(JSONType).nonQueryable(),
-    userId: StringType,
+    title: StringType.nonNull(),
+    mobileImage: StringType.nonQueryable(),
+    mobileImagePreview: JSONType.nonQueryable(),
+    smallImage: StringType.nonQueryable(),
+    smallImagePreview: JSONType.nonQueryable(),
+    mediumImage: StringType.nonQueryable(),
+    mediumImagePreview: JSONType.nonQueryable(),
+    userId: StringType.nonNull(),
     publisher: StringType,
-    publicationDate: fieldOf(StringType).nonQueryable(),
+    publicationDate: StringType.nonQueryable(),
     pages: IntType,
-    authors: StringArrayType,
-    subjects: StringArrayType,
-    tags: StringArrayType,
+    authors: StringArrayType.containsNonNull(),
+    subjects: StringArrayType.containsNonNull(),
+    tags: StringArrayType.containsNonNull(),
     isRead: BoolType,
     dateAdded: StringType,
-    editorialReviews: fieldOf(arrayOf(EditorialReview)).nonQueryable(),
-    similarItems: fieldOf(StringArrayType).nonQueryable(),
-    similarItemsLastUpdate: fieldOf(IntType).nonQueryable(),
+    editorialReviews: arrayOf(EditorialReview).nonQueryable().containsNonNull(),
+    similarItems: StringArrayType.nonQueryable(),
+    similarItemsLastUpdate: IntType.nonQueryable(),
     timestamp: FloatType
   },
   manualQueryArgs: [
@@ -74,12 +74,12 @@ export const Book = {
 export const Subject = {
   table: "subjects",
   fields: {
-    _id: MongoIdType,
-    name: StringType,
+    _id: MongoIdType.nonQueryable().nonNull(),
+    name: StringType.nonNull(),
     path: StringType,
     userId: StringType,
-    backgroundColor: fieldOf(StringType).nonQueryable(),
-    textColor: fieldOf(StringType).nonQueryable(),
+    backgroundColor: StringType.nonQueryable(),
+    textColor: StringType.nonQueryable(),
     timestamp: FloatType
   },
   extras: {
@@ -97,12 +97,12 @@ export const Subject = {
 export const Tag = {
   table: "tags",
   fields: {
-    _id: MongoIdType,
-    name: StringType,
+    _id: MongoIdType.nonQueryable().nonNull(),
+    name: StringType.nonNull(),
     path: StringType,
-    userId: StringType,
-    backgroundColor: fieldOf(StringType).nonQueryable(),
-    textColor: fieldOf(StringType).nonQueryable(),
+    userId: StringType.nonNull(),
+    backgroundColor: StringType.nonQueryable().nonNull(),
+    textColor: StringType.nonQueryable().nonNull(),
     timestamp: FloatType
   },
   manualQueryArgs: [
@@ -115,9 +115,9 @@ export const Tag = {
 export const LabelColor = {
   table: "labelColors",
   fields: {
-    _id: MongoIdType,
-    backgroundColor: fieldOf(StringType).nonQueryable(),
-    order: fieldOf(IntType).nonQueryable()
+    _id: MongoIdType.nonQueryable().nonNull(),
+    backgroundColor: StringType.nonQueryable().nonNull(),
+    order: IntType.nonQueryable().nonNull()
   },
   readonly: true,
   extras: {

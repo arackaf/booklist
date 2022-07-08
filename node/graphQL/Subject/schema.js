@@ -3,8 +3,8 @@ import SchemaExtras1 from "../../graphQL-custom/custom-content/subject/schema";
 export const type = `
   
   type Subject {
-    _id: String
-    name: String
+    _id: String!
+    name: String!
     path: String
     userId: String
     backgroundColor: String
@@ -39,8 +39,8 @@ export const type = `
   }
 
   input SubjectInput {
-    _id: String
-    name: String
+    _id: String!
+    name: String!
     path: String
     userId: String
     backgroundColor: String
@@ -70,10 +70,6 @@ export const type = `
   }
 
   input SubjectFilters {
-    _id: String
-    _id_ne: String
-    _id_in: [String]
-    _id_nin: [String]
     name_contains: String
     name_startsWith: String
     name_endsWith: String
@@ -124,10 +120,6 @@ export const mutation = `
 export const query = `
 
   allSubjects (
-    _id: String,
-    _id_ne: String,
-    _id_in: [String],
-    _id_nin: [String],
     name_contains: String,
     name_startsWith: String,
     name_endsWith: String,
