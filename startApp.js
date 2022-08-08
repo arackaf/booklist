@@ -160,25 +160,10 @@ app.use("/auth/loginping", function (req, response, next) {
   req.body.password = "xxx";
   next();
 });
-app.post(
-  "/auth/loginping",
-  passport.authenticate("local"),
-  function (request, response) {
-    // login successful
-    console.log("Ayyyyyy");
-    return response.send({ valid: true, refresh: request.refresh });
-
-    // if (!request.user || !(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
-    //   clearAllCookies(request, response);
-    //   request.logout();
-    //   return response.send({ logout: true });
-    // } else {
-    // }
-  },
-  function () {
-    console.log("BAD CALLBACK");
-  }
-);
+app.post("/auth/loginping", passport.authenticate("local"), function (request, response) {
+  // login successful
+  return response.send({ valid: true, refresh: request.refresh });
+});
 
 /* --------------- SVELTE --------------- */
 
