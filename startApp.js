@@ -53,6 +53,7 @@ if (!IS_DEV) {
 
 passport.use(
   new LocalStrategy({ passReqToCallback: true }, function (request, email, password, done) {
+    console.log("USE");
     if (IS_PUBLIC) {
       return done(null, PUBLIC_USER);
     }
@@ -62,20 +63,70 @@ passport.use(
       const userResult = iosUserCache[loginToken];
 
       return done(null, userResult || null);
+    } else if (request.url.indexOf("/loginping") !== -1) {
+      const loginToken = (request.cookies || {}).loginToken;
+      const userId = (request.cookies || {}).userId;
+
+      Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken))
+        .then(res => {
+          const { user, refresh } = res;
+          console.log("Logging in with", user);
+
+          request.refresh = refresh;
+          done(null, user);
+        })
+        .catch(er => {
+          console.log(er);
+          request.logout();
+          done(null, false, { message: "No login found" });
+        });
+    } else {
+      const userDao = new UserDao();
+      userDao.lookupUser(email, password).then(userResult => {
+        if (userResult) {
+          userResult.id = "" + userResult._id;
+          done(null, userResult);
+        } else {
+          done(null, false, { message: "Incorrect login" });
+        }
+      });
     }
-
-    let userDao = new UserDao();
-
-    userDao.lookupUser(email, password).then(userResult => {
-      if (userResult) {
-        userResult.id = "" + userResult._id;
-        done(null, userResult);
-      } else {
-        done(null, false, { message: "Incorrect login" });
-      }
-    });
   })
 );
+
+async function hanldeLoginPing(response, currentUser, userId, loginToken) {
+  if (!loginToken || !userId) {
+    throw "No login token or no userId";
+  }
+
+  const userDao = new UserDao();
+  const loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+
+  //console.log(loginPacket);
+
+  if (!loginPacket || !loginPacket.email) {
+    throw "No login packet or no email";
+  }
+
+  if (currentUser) {
+    return { user: currentUser };
+  } else {
+    try {
+      const { admin } = await userDao.getUser(loginPacket.email);
+
+      const user = {
+        _id: userId,
+        id: userId,
+        admin
+      };
+
+      return { user, refresh: true };
+    } catch (er) {
+      console.log(er);
+      throw er;
+    }
+  }
+}
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -98,27 +149,36 @@ app.use(cookieParser());
 app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(passport.authenticate("local"));
 
 app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-const authGraphQLCorsOptions = {
-  origin: true
-};
-
-app.post("/auth/loginping", async function (request, response) {
-  console.log("XXX");
-  const loginToken = (request.cookies || {}).loginToken;
-  if (!request.user || !(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
-    clearAllCookies(request, response);
-    request.logout();
-    return response.send({ logout: true });
-  } else {
-    return response.send({});
-  }
+app.use("/auth/loginping", function (req, response, next) {
+  console.log({ user: req.user });
+  req.body.username = "xxx";
+  req.body.password = "xxx";
+  next();
 });
+app.post(
+  "/auth/loginping",
+  passport.authenticate("local"),
+  function (request, response) {
+    // login successful
+    console.log("Ayyyyyy");
+    return response.send({ valid: true, refresh: request.refresh });
+
+    // if (!request.user || !(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
+    //   clearAllCookies(request, response);
+    //   request.logout();
+    //   return response.send({ logout: true });
+    // } else {
+    // }
+  },
+  function () {
+    console.log("BAD CALLBACK");
+  }
+);
 
 /* --------------- SVELTE --------------- */
 

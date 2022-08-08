@@ -129,7 +129,7 @@ class UserDAO extends DAO {
     };
   }
 
-  async getUser(email, userId) {
+  async getUser(email) {
     email = email.toLowerCase();
     const userKey = `User#${email}`;
     return db.get(getGetPacket(userKey, userKey));
