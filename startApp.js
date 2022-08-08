@@ -53,7 +53,6 @@ if (!IS_DEV) {
 
 passport.use(
   new LocalStrategy({ passReqToCallback: true }, function (request, email, password, done) {
-    console.log("USE");
     if (IS_PUBLIC) {
       return done(null, PUBLIC_USER);
     }
@@ -70,13 +69,11 @@ passport.use(
       Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken))
         .then(res => {
           const { user, refresh } = res;
-          console.log("Logging in with", user);
 
           request.refresh = refresh;
           done(null, user);
         })
         .catch(er => {
-          console.log(er);
           request.logout();
           done(null, false, { message: "No login found" });
         });
@@ -95,17 +92,15 @@ passport.use(
 );
 
 async function hanldeLoginPing(response, currentUser, userId, loginToken) {
-  if (!loginToken || !userId) {
-    throw "No login token or no userId";
+  let loginPacket;
+
+  if (loginToken && userId) {
+    const userDao = new UserDao();
+    loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
   }
 
-  const userDao = new UserDao();
-  const loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
-
-  //console.log(loginPacket);
-
   if (!loginPacket || !loginPacket.email) {
-    throw "No login packet or no email";
+    throw "No existing, valid login";
   }
 
   if (currentUser) {
@@ -155,7 +150,6 @@ app.get("/favicon.ico", function (request, response) {
 });
 
 app.use("/auth/loginping", function (req, response, next) {
-  console.log({ user: req.user });
   req.body.username = "xxx";
   req.body.password = "xxx";
   next();
