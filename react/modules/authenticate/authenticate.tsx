@@ -17,7 +17,6 @@ const Login: FunctionComponent<{}> = props => {
   const [{}, appActions] = useContext(AppContext);
   const usernameEl = useRef(null);
   const passwordEl = useRef(null);
-  const rememberMeEl = useRef(null);
   const confirmPasswordEl = useRef(null);
 
   const [state, setState] = useState({ newUser: false, errorCode: null, pendingActivation: false, invalidEmail: false, running: false });
@@ -27,7 +26,6 @@ const Login: FunctionComponent<{}> = props => {
 
     let username = usernameEl.current.value;
     let password = passwordEl.current.value;
-    let rememberme = rememberMeEl.current.checked ? 1 : 0;
 
     if (!username) {
       return setState(state => ({ ...state, errorCode: "c4" }));
@@ -41,7 +39,7 @@ const Login: FunctionComponent<{}> = props => {
     return new Promise(res => {
       ajaxUtil.postAuth(
         "/login",
-        { username, password, rememberme },
+        { username, password },
         () => window.location.replace("/"),
         () => {
           setState(state => ({ ...state, running: false, errorCode: "c2" }));
@@ -55,8 +53,7 @@ const Login: FunctionComponent<{}> = props => {
 
     let username = usernameEl.current.value,
       password = passwordEl.current.value,
-      confirmPassword = confirmPasswordEl.current.value,
-      rememberme = rememberMeEl.current.checked ? 1 : 0;
+      confirmPassword = confirmPasswordEl.current.value;
 
     let re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -77,7 +74,7 @@ const Login: FunctionComponent<{}> = props => {
     }
 
     setState({ ...state, running: true });
-    return ajaxUtil.postAuth("/createUser", { username, password, rememberme }, resp => {
+    return ajaxUtil.postAuth("/createUser", { username, password }, resp => {
       if (resp.errorCode) {
         setState(state => ({ ...state, errorCode: resp.errorCode, running: false }));
       } else {
@@ -138,11 +135,6 @@ const Login: FunctionComponent<{}> = props => {
 
                   {pwdError ? <div className="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div> : null}
 
-                  <div className="checkbox">
-                    <label>
-                      <input type="checkbox" ref={rememberMeEl} /> Remember me
-                    </label>
-                  </div>
                   {state.newUser ? (
                     <ActionButton text="Create user" onClick={evt => createUser(evt)} preset="primary" className="margin-top margin-bottom" />
                   ) : (

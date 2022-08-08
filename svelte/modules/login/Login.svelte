@@ -14,7 +14,6 @@
 
   let username = "";
   let password = "";
-  let rememberme = false;
   let confirmPassword = "";
 
   let state = { newUser: false, errorCode: null, pendingActivation: false, invalidEmail: false, running: false };
@@ -39,7 +38,7 @@
     return new Promise(res => {
       ajaxUtil.postAuth(
         "/login",
-        { username, password, rememberme },
+        { username, password },
         () => window.location.replace("/"),
         () => {
           setState(state => ({ ...state, running: false, errorCode: "c2" }));
@@ -68,7 +67,7 @@
     }
 
     setState(() => ({ ...state, running: true }));
-    return ajaxUtil.postAuth("/createUser", { username, password, rememberme }, resp => {
+    return ajaxUtil.postAuth("/createUser", { username, password }, resp => {
       if (resp.errorCode) {
         setState(state => ({ ...state, errorCode: resp.errorCode, running: false }));
       } else {
@@ -131,7 +130,6 @@
                 <div class="alert alert-danger margin-top margin-bottom">{errorCodes[state.errorCode]}</div>
               {/if}
 
-              <div class="checkbox"><label> <input bind:checked={rememberme} type="checkbox" /> Remember me </label></div>
               {#if state.newUser}
                 <ActionButton text="Create user" onClick={createUser} preset="primary" class="margin-top margin-bottom" />
               {:else}

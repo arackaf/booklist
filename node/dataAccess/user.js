@@ -11,10 +11,7 @@ const salt = process.env.SALT;
 
 const hour = 3600;
 const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
-const getExpiration = rememberMe =>
-  moment()
-    .add(rememberMe ? rememberMeExpiration : 900, "seconds")
-    .unix();
+const getExpiration = () => moment().add(rememberMeExpiration, "seconds").unix();
 
 const newUsersSubjects = [
   { name: "History", path: null },
@@ -39,7 +36,7 @@ const getSessionKey = id => `UserLogin#${id}`;
 const getLoginKey = loginToken => `LoginToken#${loginToken}`;
 
 class UserDAO extends DAO {
-  async createUser(email, password, rememberMe) {
+  async createUser(email, password) {
     email = email.toLowerCase();
 
     const pk = `User#${email}`;
@@ -63,7 +60,7 @@ class UserDAO extends DAO {
       }
     };
     try {
-      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), email, awaitingActivation: true, rememberMe });
+      const userIdLookup = getPutPacket({ pk: getSessionKey(userId), sk: getLoginKey(loginToken), email, awaitingActivation: true });
 
       const items = [mainUserObject, userIdLookup];
       await db.transactWrite({
@@ -101,8 +98,6 @@ class UserDAO extends DAO {
       return { alreadyActivated: true };
     }
 
-    const rememberMe = item.rememberMe;
-
     try {
       const userKey = `User#${item.email}`;
       console.log(userKey);
@@ -115,8 +110,8 @@ class UserDAO extends DAO {
           },
           {
             Update: getUpdatePacket(sessionKey, loginKey, {
-              UpdateExpression: "SET rememberMe = :rememberMe, expires = :expires REMOVE awaitingActivation",
-              ExpressionAttributeValues: { ":rememberMe": rememberMe, ":expires": getExpiration(rememberMe) }
+              UpdateExpression: "SET expires = :expires REMOVE awaitingActivation",
+              ExpressionAttributeValues: { ":expires": getExpiration() }
             })
           }
         ]
@@ -127,7 +122,6 @@ class UserDAO extends DAO {
 
     return {
       success: true,
-      rememberMe,
       _id: id,
       id: id,
       loginToken,
@@ -151,7 +145,7 @@ class UserDAO extends DAO {
     );
   }
 
-  async lookupUser(email, password, rememberMe) {
+  async lookupUser(email, password) {
     email = email.toLowerCase();
     password = this.saltAndHashPassword(password);
     const userKey = `User#${email}`;
@@ -172,7 +166,7 @@ class UserDAO extends DAO {
       const loginToken = uuid();
       const sessionKey = getSessionKey(id);
 
-      await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), email, rememberMe, expires: getExpiration(rememberMe) }));
+      await db.put(getPutPacket({ pk: sessionKey, sk: getLoginKey(loginToken), email, expires: getExpiration() }));
 
       return {
         _id: id,
