@@ -75,7 +75,7 @@ export type Book = {
   smallImagePreview: Maybe<Scalars['JSON']>;
   mediumImage: Maybe<Scalars['String']>;
   mediumImagePreview: Maybe<Scalars['JSON']>;
-  userId: Scalars['String'];
+  userId: Maybe<Scalars['String']>;
   publisher: Maybe<Scalars['String']>;
   publicationDate: Maybe<Scalars['String']>;
   pages: Maybe<Scalars['Int']>;
@@ -147,7 +147,7 @@ export type BookInput = {
   smallImagePreview: InputMaybe<Scalars['JSON']>;
   mediumImage: InputMaybe<Scalars['String']>;
   mediumImagePreview: InputMaybe<Scalars['JSON']>;
-  userId: Scalars['String'];
+  userId: InputMaybe<Scalars['String']>;
   publisher: InputMaybe<Scalars['String']>;
   publicationDate: InputMaybe<Scalars['String']>;
   pages: InputMaybe<Scalars['Int']>;
@@ -825,7 +825,7 @@ export type Tag = {
   _id: Scalars['String'];
   name: Scalars['String'];
   path: Maybe<Scalars['String']>;
-  userId: Scalars['String'];
+  userId: Maybe<Scalars['String']>;
   backgroundColor: Scalars['String'];
   textColor: Scalars['String'];
   timestamp: Maybe<Scalars['Float']>;
@@ -861,7 +861,7 @@ export type TagInput = {
   _id: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   path: InputMaybe<Scalars['String']>;
-  userId: Scalars['String'];
+  userId: InputMaybe<Scalars['String']>;
   backgroundColor: Scalars['String'];
   textColor: Scalars['String'];
   timestamp: InputMaybe<Scalars['Float']>;

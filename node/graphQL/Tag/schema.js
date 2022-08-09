@@ -4,7 +4,7 @@ export const type = `
     _id: String!
     name: String!
     path: String
-    userId: String!
+    userId: String
     backgroundColor: String!
     textColor: String!
     timestamp: Float
@@ -40,7 +40,7 @@ export const type = `
     _id: String
     name: String!
     path: String
-    userId: String!
+    userId: String
     backgroundColor: String!
     textColor: String!
     timestamp: Float

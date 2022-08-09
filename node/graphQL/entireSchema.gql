@@ -44,7 +44,7 @@ type Book {
   smallImagePreview: JSON
   mediumImage: String
   mediumImagePreview: JSON
-  userId: String!
+  userId: String
   publisher: String
   publicationDate: String
   pages: Int
@@ -108,7 +108,7 @@ input BookInput {
   smallImagePreview: JSON
   mediumImage: String
   mediumImagePreview: JSON
-  userId: String!
+  userId: String
   publisher: String
   publicationDate: String
   pages: Int
@@ -786,7 +786,7 @@ type Tag {
   _id: String!
   name: String!
   path: String
-  userId: String!
+  userId: String
   backgroundColor: String!
   textColor: String!
   timestamp: Float
@@ -822,7 +822,7 @@ input TagInput {
   _id: String
   name: String!
   path: String
-  userId: String!
+  userId: String
   backgroundColor: String!
   textColor: String!
   timestamp: Float

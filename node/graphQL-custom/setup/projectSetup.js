@@ -40,7 +40,7 @@ export const Book = {
     smallImagePreview: JSONType.nonQueryable(),
     mediumImage: StringType.nonQueryable(),
     mediumImagePreview: JSONType.nonQueryable(),
-    userId: StringType.nonNull(),
+    userId: StringType,
     publisher: StringType,
     publicationDate: StringType.nonQueryable(),
     pages: IntType,
@@ -100,7 +100,7 @@ export const Tag = {
     _id: MongoIdType.nonQueryable().nonNull(),
     name: StringType.nonNull(),
     path: StringType,
-    userId: StringType.nonNull(),
+    userId: StringType,
     backgroundColor: StringType.nonQueryable().nonNull(),
     textColor: StringType.nonQueryable().nonNull(),
     timestamp: FloatType

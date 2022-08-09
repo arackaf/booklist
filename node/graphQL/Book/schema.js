@@ -11,7 +11,7 @@ export const type = `
     smallImagePreview: JSON
     mediumImage: String
     mediumImagePreview: JSON
-    userId: String!
+    userId: String
     publisher: String
     publicationDate: String
     pages: Int
@@ -65,7 +65,7 @@ export const type = `
     smallImagePreview: JSON
     mediumImage: String
     mediumImagePreview: JSON
-    userId: String!
+    userId: String
     publisher: String
     publicationDate: String
     pages: Int
