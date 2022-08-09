@@ -137,7 +137,7 @@ export type BookBulkMutationResult = {
 };
 
 export type BookInput = {
-  _id: Scalars['String'];
+  _id: InputMaybe<Scalars['String']>;
   ean: InputMaybe<Scalars['String']>;
   isbn: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
@@ -387,7 +387,7 @@ export type BookSummaryBulkMutationResult = {
 };
 
 export type BookSummaryInput = {
-  _id: Scalars['String'];
+  _id: InputMaybe<Scalars['String']>;
   title: InputMaybe<Scalars['String']>;
   asin: InputMaybe<Scalars['String']>;
   isbn: InputMaybe<Scalars['String']>;
@@ -621,7 +621,7 @@ export type LabelColorBulkMutationResult = {
 };
 
 export type LabelColorInput = {
-  _id: Scalars['String'];
+  _id: InputMaybe<Scalars['String']>;
   backgroundColor: Scalars['String'];
   order: Scalars['Int'];
 };
@@ -680,7 +680,7 @@ export type SubjectBulkMutationResult = {
 };
 
 export type SubjectInput = {
-  _id: Scalars['String'];
+  _id: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   path: InputMaybe<Scalars['String']>;
   userId: InputMaybe<Scalars['String']>;
@@ -858,7 +858,7 @@ export type TagBulkMutationResult = {
 };
 
 export type TagInput = {
-  _id: Scalars['String'];
+  _id: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   path: InputMaybe<Scalars['String']>;
   userId: Scalars['String'];

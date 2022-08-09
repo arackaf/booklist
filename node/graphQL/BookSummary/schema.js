@@ -40,7 +40,7 @@ export const type = `
   }
 
   input BookSummaryInput {
-    _id: String!
+    _id: String
     title: String
     asin: String
     isbn: String

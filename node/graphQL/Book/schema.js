@@ -55,7 +55,7 @@ export const type = `
   }
 
   input BookInput {
-    _id: String!
+    _id: String
     ean: String
     isbn: String
     title: String!

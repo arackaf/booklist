@@ -39,7 +39,7 @@ export const type = `
   }
 
   input SubjectInput {
-    _id: String!
+    _id: String
     name: String!
     path: String
     userId: String

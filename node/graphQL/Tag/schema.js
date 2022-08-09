@@ -37,7 +37,7 @@ export const type = `
   }
 
   input TagInput {
-    _id: String!
+    _id: String
     name: String!
     path: String
     userId: String!

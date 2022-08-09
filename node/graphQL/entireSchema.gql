@@ -98,7 +98,7 @@ type BookBulkMutationResult {
 }
 
 input BookInput {
-  _id: String!
+  _id: String
   ean: String
   isbn: String
   title: String!
@@ -348,7 +348,7 @@ type BookSummaryBulkMutationResult {
 }
 
 input BookSummaryInput {
-  _id: String!
+  _id: String
   title: String
   asin: String
   isbn: String
@@ -582,7 +582,7 @@ type LabelColorBulkMutationResult {
 }
 
 input LabelColorInput {
-  _id: String!
+  _id: String
   backgroundColor: String!
   order: Int!
 }
@@ -641,7 +641,7 @@ type SubjectBulkMutationResult {
 }
 
 input SubjectInput {
-  _id: String!
+  _id: String
   name: String!
   path: String
   userId: String
@@ -819,7 +819,7 @@ type TagBulkMutationResult {
 }
 
 input TagInput {
-  _id: String!
+  _id: String
   name: String!
   path: String
   userId: String!

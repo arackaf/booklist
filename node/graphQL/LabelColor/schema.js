@@ -33,7 +33,7 @@ export const type = `
   }
 
   input LabelColorInput {
-    _id: String!
+    _id: String
     backgroundColor: String!
     order: Int!
   }
