@@ -18,7 +18,6 @@ const rememberMeExpiration = 2 * 365 * 24 * hour; //2 years
 
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as RememberMeStrategy } from "passport-remember-me";
 
 import { graphqlHTTP } from "express-graphql";
 
@@ -63,54 +62,66 @@ passport.use(
       const userResult = iosUserCache[loginToken];
 
       return done(null, userResult || null);
+    } else if (request.url.indexOf("/loginping") !== -1) {
+      const loginToken = (request.cookies || {}).loginToken;
+      const userId = (request.cookies || {}).userId;
+
+      Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken))
+        .then(res => {
+          const { user, refresh } = res;
+
+          request.refresh = refresh;
+          done(null, user);
+        })
+        .catch(er => {
+          request.logout();
+          done(null, false, { message: "No login found" });
+        });
+    } else {
+      const userDao = new UserDao();
+      userDao.lookupUser(email, password).then(userResult => {
+        if (userResult) {
+          userResult.id = "" + userResult._id;
+          done(null, userResult);
+        } else {
+          done(null, false, { message: "Incorrect login" });
+        }
+      });
     }
-
-    const rememberMe = request.body.rememberme == 1;
-    let userDao = new UserDao();
-
-    userDao.lookupUser(email, password, rememberMe).then(userResult => {
-      if (userResult) {
-        userResult.id = "" + userResult._id;
-        done(null, userResult);
-      } else {
-        done(null, false, { message: "Incorrect login" });
-      }
-    });
   })
 );
 
-function consumeRememberMeToken(token, done) {
-  let userDao = new UserDao();
+async function hanldeLoginPing(response, currentUser, userId, loginToken) {
+  let loginPacket;
 
-  userDao.lookupUserByToken(token).then(userResult => {
-    if (userResult) {
-      userResult.id = "" + userResult._id;
-      done(null, userResult);
-    } else {
-      done(null, null);
+  const userDao = new UserDao();
+  if (loginToken && userId) {
+    loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+  }
+
+  if (!loginPacket || !loginPacket.email) {
+    throw "No existing, valid login";
+  }
+
+  if (currentUser) {
+    return { user: currentUser };
+  } else {
+    try {
+      const { admin } = await userDao.getUser(loginPacket.email);
+
+      const user = {
+        _id: userId,
+        id: userId,
+        admin
+      };
+
+      return { user, refresh: true };
+    } catch (er) {
+      console.log(er);
+      throw er;
     }
-  });
+  }
 }
-
-passport.use(
-  new RememberMeStrategy(
-    function (token, done) {
-      consumeRememberMeToken(token, function (err, userResult) {
-        if (err) {
-          return done(err);
-        }
-        if (!userResult) {
-          return done(null, false);
-        }
-
-        done(null, userResult);
-      });
-    },
-    function (user, done) {
-      return done(null, `${user.id}|${user.loginToken}`);
-    }
-  )
-);
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -133,25 +144,19 @@ app.use(cookieParser());
 app.use(session({ secret: "adam_booklist", saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(passport.authenticate("remember-me"));
 
 app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-const authGraphQLCorsOptions = {
-  origin: true
-};
-
-app.post("/auth/loginping", async function (request, response) {
-  const loginToken = (request.cookies || {}).loginToken;
-  if (!request.user || !(await db.get(getGetPacket(`UserLogin#${request.user.id}`, `LoginToken#${loginToken}`)))) {
-    clearAllCookies(request, response);
-    request.logout();
-    return response.send({ logout: true });
-  } else {
-    return response.send({});
-  }
+app.use("/auth/loginping", function (req, response, next) {
+  req.body.username = "xxx";
+  req.body.password = "xxx";
+  next();
+});
+app.post("/auth/loginping", passport.authenticate("local"), function (request, response) {
+  // login successful
+  return response.send({ valid: true, refresh: request.refresh });
 });
 
 /* --------------- SVELTE --------------- */
@@ -281,19 +286,14 @@ app.post("/login-ios", function (req, response) {
 
 app.post("/auth/login", passport.authenticate("local"), function (req, response) {
   // If this function gets called, authentication was successful. `req.user` contains the authenticated user.
-  let rememberMe = req.body.rememberme == 1;
+  response.cookie("logged_in", "true", { maxAge: rememberMeExpiration });
+  response.cookie("userId", req.user.id, { maxAge: rememberMeExpiration });
+  response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMeExpiration });
+  response.cookie("email", req.user.email, { maxAge: rememberMeExpiration });
+  response.cookie("newAuth", "true", { maxAge: rememberMeExpiration });
+  response.cookie("newAuth2", "true", { maxAge: rememberMeExpiration });
+  req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMeExpiration });
 
-  response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("userId", req.user.id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("loginToken", req.user.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("email", req.user.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("newAuth", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  response.cookie("newAuth2", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-  req.user.admin && response.cookie("admin", req.user.admin, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-
-  if (rememberMe) {
-    response.cookie("remember_me", `${req.user.id}|${req.user.loginToken}`, { path: "/", maxAge: rememberMeExpiration });
-  }
   response.send(req.user);
 });
 
@@ -313,7 +313,6 @@ const clearAllCookies = (request, response) => {
   }
 
   response.clearCookie("logged_in");
-  response.clearCookie("remember_me");
   response.clearCookie("userId");
   response.clearCookie("loginToken");
   response.clearCookie("email");
@@ -327,11 +326,10 @@ app.post("/auth/createUser", function (req, response) {
   let userDao = new UserDao();
   let username = req.body.username;
   let password = req.body.password;
-  let rememberMe = req.body.rememberme == 1;
 
   //TODO: get rid of this call
 
-  userDao.createUser(username, password, rememberMe).then(result => {
+  userDao.createUser(username, password).then(result => {
     if (result.errorCode) {
       response.send({ errorCode: result.errorCode });
     } else {
@@ -372,28 +370,18 @@ async function activateCode(req, response) {
     } catch (er) {}
   }
 
-  response.clearCookie("remember_me");
   req.logout();
 
   userDao.activateUser(userId, code).then(
     result => {
       if (result.success) {
         req.login(result, function () {
-          const rememberMe = result.rememberMe;
-
-          response.cookie("logged_in", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("userId", "" + result._id, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("loginToken", result.loginToken, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("email", result.email, { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          if (rememberMe) {
-            response.cookie("remember_me", `${result._id}|${result.loginToken}`, {
-              path: "/",
-              httpOnly: true,
-              maxAge: rememberMeExpiration
-            });
-          }
-          response.cookie("newAuth", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
-          response.cookie("newAuth2", "true", { maxAge: rememberMe ? rememberMeExpiration : 900000 });
+          response.cookie("logged_in", "true", { maxAge: rememberMeExpiration });
+          response.cookie("userId", "" + result._id, { maxAge: rememberMeExpiration });
+          response.cookie("loginToken", result.loginToken, { maxAge: rememberMeExpiration });
+          response.cookie("email", result.email, { maxAge: rememberMeExpiration });
+          response.cookie("newAuth", "true", { maxAge: rememberMeExpiration });
+          response.cookie("newAuth2", "true", { maxAge: rememberMeExpiration });
           response.redirect("/activate");
         });
       } else {
