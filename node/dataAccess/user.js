@@ -240,6 +240,11 @@ class UserDAO extends DAO {
     }
   }
   async sendActivationCode(id, loginToken, email, subdomain) {
+    if (/svelte/i.test(subdomain)) {
+      subdomain = "svelte";
+    } else {
+      subdomain = "";
+    }
     let url = `${siteRoot(subdomain)}/activate/${id}/${loginToken}`;
 
     await sendEmail({
