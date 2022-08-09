@@ -94,8 +94,8 @@ passport.use(
 async function hanldeLoginPing(response, currentUser, userId, loginToken) {
   let loginPacket;
 
+  const userDao = new UserDao();
   if (loginToken && userId) {
-    const userDao = new UserDao();
     loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
   }
 
