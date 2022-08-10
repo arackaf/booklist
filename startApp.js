@@ -161,7 +161,7 @@ app.post("/auth/loginping", passport.authenticate("local"), function (request, r
 
 /* --------------- SVELTE --------------- */
 
-const svelteModules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo", "activate"];
+const svelteModules = ["", "books", "login", "subjects", "settings", "scan", "home", "view", "admin", "styledemo"];
 const validSvelteNonAuthModules = ["", "home", "login"];
 const browseToSvelte = moduleName => async (request, response) => {
   if (!request.user) {
@@ -171,10 +171,15 @@ const browseToSvelte = moduleName => async (request, response) => {
 };
 svelteModules.forEach(name => svelteRouter.get("/" + name, browseToSvelte(name)));
 
+svelteRouter.use("/activate", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
 svelteRouter.use("/activate/:id/:code", (req, res, next) => {
   res.set("Cache-Control", "no-store");
   next();
 });
+svelteRouter.get("/activate", browseToSvelte("activate"));
 svelteRouter.get("/activate/:id/:code", activateCode);
 
 svelteRouter.get("/service-worker.js", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
@@ -182,6 +187,7 @@ svelteRouter.get("/sw-index-bundle.js", express.static(__dirname + "/svelte/dist
 svelteRouter.get("/index.html", express.static(__dirname + "/svelte/dist", { setHeaders: resp => resp.set("Cache-Control", "no-cache") }));
 svelteRouter.use(cors(), express.static(__dirname + "/svelte/dist", { maxAge: 432000 * 1000 * 10 /* 50 days * 1000ms */ }));
 
+app.use(subdomain("svelte", svelteRouter));
 app.use(subdomain("svelte-app", svelteRouter));
 
 /* --------------- /SVELTE --------------- */
