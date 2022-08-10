@@ -34,6 +34,7 @@ export default defineConfig({
       filename: "service-worker.js",
       workbox: {
         importScripts: ["sw-index-bundle.js"],
+        navigateFallbackDenylist: [/\/activate\//],
         runtimeCaching: [
           getCache({ pattern: /^https:\/\/s3.amazonaws.com\/my-library-cover-uploads/, name: "local-images1" }),
           getCache({ pattern: /^https:\/\/my-library-cover-uploads.s3.amazonaws.com/, name: "local-images2" }),
