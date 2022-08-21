@@ -16,6 +16,7 @@
     "persistgraphql": "persistgraphql graphQL"
   },
   "dependencies": {
+    "@shoelace-style/shoelace": "^2.0.0-beta.81",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@types/node": "^16.11.10",
     "blurhash": "^1.1.5",

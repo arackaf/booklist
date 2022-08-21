@@ -29,6 +29,8 @@
   import { fade } from "svelte/transition";
   import { quadOut } from "svelte/easing";
 
+  import Button from "./Button.svelte";
+
   import { mutation } from "micro-graphql-svelte";
   import { MutationOf, Mutations } from "gql/graphql-typings";
 
@@ -168,9 +170,9 @@
         {#if filterModalOpen}
           <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
         {/if}
-        {#if editSubjectsModalOpen}
-          <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
-        {/if}
+
+        <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+
         {#if editTagsModalOpen}
           <TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
         {/if}

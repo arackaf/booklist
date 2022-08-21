@@ -14,6 +14,23 @@
   import Toastify from "toastify-js";
   import "toastify-js/src/toastify.css";
 
+  import "uikit/modal";
+
+  import "@shoelace-style/shoelace/dist/components/dialog/dialog.js";
+  import "@shoelace-style/shoelace/dist/themes/light.css";
+
+  import { setDefaultAnimation } from "@shoelace-style/shoelace/dist/utilities/animation-registry";
+
+  console.log({ setDefaultAnimation });
+
+  setDefaultAnimation("dialog.show", {
+    keyframes: [
+      { opacity: 0, transform: "scale(0.8)" },
+      { opacity: 1, transform: "scale(1)" }
+    ],
+    options: { duration: 1500, easing: "ease" }
+  });
+
   const cookieHash = getCookieLookup();
 
   if (isLoggedIn()) {
