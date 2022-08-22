@@ -25,10 +25,30 @@
 
   setDefaultAnimation("dialog.show", {
     keyframes: [
-      { opacity: 0, transform: "scale(0.8)" },
-      { opacity: 1, transform: "scale(1)" }
+      { opacity: 0, transform: "translate3d(0px, -20px, 0px)" },
+      { opacity: 1, transform: "translate3d(0px, 0px, 0px)" }
     ],
-    options: { duration: 1500, easing: "ease" }
+    //options: { duration: 250, easing: "cubic-bezier(0.445, 0.050, 0.550, 0.950)" }
+    //options: { duration: 250, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
+    options: { duration: 200, easing: "ease-out" }
+  });
+  setDefaultAnimation("dialog.hide", {
+    keyframes: [
+      { opacity: 1, transform: "translate3d(0px, 0px, 0px)" },
+      { opacity: 0, transform: "translate3d(0px, 20px, 0px)" }
+    ],
+    //options: { duration: 250, easing: "cubic-bezier(0.445, 0.050, 0.550, 0.950)" }
+    //options: { duration: 250, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
+    options: { duration: 200, easing: "ease-in" }
+  });
+
+  setDefaultAnimation("dialog.overlay.show", {
+    keyframes: [{ opacity: 0 }, { opacity: 1 }],
+    options: { duration: 200, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
+  });
+  setDefaultAnimation("dialog.overlay.hide", {
+    keyframes: [{ opacity: 1 }, { opacity: 0 }],
+    options: { duration: 1500, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
   });
 
   const cookieHash = getCookieLookup();

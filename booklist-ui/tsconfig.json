@@ -6,7 +6,8 @@
     "module": "esNext",
     "moduleResolution": "node",
     "noEmit": true,
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["@types/resize-observer-browser"]
   },
   "include": ["./**/*.ts"]
 }
