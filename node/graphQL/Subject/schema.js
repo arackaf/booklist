@@ -80,28 +80,11 @@ export const type = `
     name_nin: [String]
     path_contains: String
     path_startsWith: String
-    path_endsWith: String
-    path_regex: String
     path: String
-    path_ne: String
-    path_in: [String]
-    path_nin: [String]
-    userId_contains: String
-    userId_startsWith: String
-    userId_endsWith: String
-    userId_regex: String
     userId: String
-    userId_ne: String
     userId_in: [String]
-    userId_nin: [String]
     timestamp_lt: Float
-    timestamp_lte: Float
     timestamp_gt: Float
-    timestamp_gte: Float
-    timestamp: Float
-    timestamp_ne: Float
-    timestamp_in: [Float]
-    timestamp_nin: [Float]
     OR: [SubjectFilters]
   }
   
@@ -130,28 +113,11 @@ export const query = `
     name_nin: [String],
     path_contains: String,
     path_startsWith: String,
-    path_endsWith: String,
-    path_regex: String,
     path: String,
-    path_ne: String,
-    path_in: [String],
-    path_nin: [String],
-    userId_contains: String,
-    userId_startsWith: String,
-    userId_endsWith: String,
-    userId_regex: String,
     userId: String,
-    userId_ne: String,
     userId_in: [String],
-    userId_nin: [String],
     timestamp_lt: Float,
-    timestamp_lte: Float,
     timestamp_gt: Float,
-    timestamp_gte: Float,
-    timestamp: Float,
-    timestamp_ne: Float,
-    timestamp_in: [Float],
-    timestamp_nin: [Float],
     OR: [SubjectFilters],
     SORT: SubjectSort,
     SORTS: [SubjectSort],

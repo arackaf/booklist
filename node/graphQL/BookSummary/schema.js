@@ -90,22 +90,12 @@ export const type = `
     title_ne: String
     title_in: [String]
     title_nin: [String]
-    asin_contains: String
-    asin_startsWith: String
-    asin_endsWith: String
-    asin_regex: String
     asin: String
-    asin_ne: String
     asin_in: [String]
-    asin_nin: [String]
-    isbn_contains: String
-    isbn_startsWith: String
-    isbn_endsWith: String
-    isbn_regex: String
     isbn: String
-    isbn_ne: String
     isbn_in: [String]
-    isbn_nin: [String]
+    smallImage_contains: String
+    smallImage: String
     authors_count: Int
     authors_textContains: String
     authors_startsWith: String
@@ -143,22 +133,12 @@ export const query = `
     title_ne: String,
     title_in: [String],
     title_nin: [String],
-    asin_contains: String,
-    asin_startsWith: String,
-    asin_endsWith: String,
-    asin_regex: String,
     asin: String,
-    asin_ne: String,
     asin_in: [String],
-    asin_nin: [String],
-    isbn_contains: String,
-    isbn_startsWith: String,
-    isbn_endsWith: String,
-    isbn_regex: String,
     isbn: String,
-    isbn_ne: String,
     isbn_in: [String],
-    isbn_nin: [String],
+    smallImage_contains: String,
+    smallImage: String,
     authors_count: Int,
     authors_textContains: String,
     authors_startsWith: String,
