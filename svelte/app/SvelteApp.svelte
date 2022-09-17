@@ -28,8 +28,10 @@
       { opacity: 0, transform: "translate3d(0px, -20px, 0px)" },
       { opacity: 1, transform: "translate3d(0px, 0px, 0px)" }
     ],
-    options: { duration: 250, easing: "cubic-bezier(0.445, 0.050, 0.550, 0.950)" }
-    // options: { duration: 250, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
+    options: { duration: 250, easing: "cubic-bezier(0.785, 0.135, 0.150, 0.860)" }
+    // options: { duration: 250, easing: "cubic-bezier(0.800, 0.360, 0.365, 1.315)" }
+    // options: { duration: 250, easing: "ease" }
+    // options: { duration: 250, easing: "cubic-bezier(0.445, 0.050, 0.550, 0.950)" }
     // options: { duration: 200, easing: "ease-out" }
   });
   setDefaultAnimation("dialog.hide", {
@@ -39,7 +41,8 @@
     ],
     //options: { duration: 250, easing: "cubic-bezier(0.445, 0.050, 0.550, 0.950)" }
     //options: { duration: 250, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
-    options: { duration: 200, easing: "ease-in" }
+    // options: { duration: 200, easing: "ease-in" }
+    options: { duration: 200, easing: "cubic-bezier(0.785, 0.135, 0.150, 0.860)" }
   });
 
   setDefaultAnimation("dialog.overlay.show", {
@@ -48,7 +51,8 @@
   });
   setDefaultAnimation("dialog.overlay.hide", {
     keyframes: [{ opacity: 1 }, { opacity: 0 }],
-    options: { duration: 200, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
+    // options: { duration: 200, easing: "cubic-bezier(0.190, 1.000, 0.220, 1.000)" }
+    options: { duration: 200, easing: "cubic-bezier(0.785, 0.135, 0.150, 0.860)" }
   });
 
   const cookieHash = getCookieLookup();
