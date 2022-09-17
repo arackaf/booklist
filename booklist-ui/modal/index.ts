@@ -21,13 +21,6 @@ class Modal extends HTMLElement {
   constructor() {
     super();
 
-    /*
-        on:sl-hide={() => {
-          console.log("Hiding");
-          open = false;
-        }}
-    */
-
     this.sd = this.attachShadow({ mode: "open" });
     this.sd.innerHTML = `
       <style>
@@ -42,7 +35,6 @@ class Modal extends HTMLElement {
         }
       </style>
       <sl-dialog
-        {open}
         label="Dialog"
         class="dialog-width"
         style="--width: 50vw;"
@@ -68,6 +60,7 @@ class Modal extends HTMLElement {
     });
     this.modal.addEventListener("sl-hide", () => {
       this.active = false;
+      this["on-hide"]();
     });
   }
 
@@ -86,6 +79,8 @@ class Modal extends HTMLElement {
   }
 
   #activeVal = false;
+
+  ["on-hide"] = () => {};
 
   get active() {
     return this.#activeVal;
@@ -106,6 +101,7 @@ class Modal extends HTMLElement {
   }
 
   set open(val) {
+    console.log("Open set to", val);
     this.modal.open = val;
   }
 }

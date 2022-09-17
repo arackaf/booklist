@@ -23,7 +23,7 @@
   let deleteShowing;
 </script>
 
-<uikit-modal open={isOpen}>
+<uikit-modal open={isOpen} on-hide={onHide}>
   <Stack>
     {#if !deleteShowing}
       <FlowItems pushLast={true} xsFlowReverse={true}>
