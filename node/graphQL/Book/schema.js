@@ -166,102 +166,28 @@ export const type = `
   }
 
   input BookFilters {
-    isbn_contains: String
-    isbn_startsWith: String
-    isbn_endsWith: String
-    isbn_regex: String
     isbn: String
-    isbn_ne: String
     isbn_in: [String]
-    isbn_nin: [String]
     title_contains: String
-    title_startsWith: String
-    title_endsWith: String
-    title_regex: String
-    title: String
-    title_ne: String
-    title_in: [String]
-    title_nin: [String]
-    userId_contains: String
-    userId_startsWith: String
-    userId_endsWith: String
-    userId_regex: String
     userId: String
-    userId_ne: String
     userId_in: [String]
-    userId_nin: [String]
     publisher_contains: String
-    publisher_startsWith: String
-    publisher_endsWith: String
-    publisher_regex: String
     publisher: String
-    publisher_ne: String
     publisher_in: [String]
-    publisher_nin: [String]
     pages_lt: Int
-    pages_lte: Int
     pages_gt: Int
-    pages_gte: Int
     pages: Int
-    pages_ne: Int
-    pages_in: [Int]
-    pages_nin: [Int]
-    authors_count: Int
     authors_textContains: String
-    authors_startsWith: String
-    authors_endsWith: String
-    authors_regex: String
-    authors: [String]
     authors_in: [[String]]
-    authors_nin: [[String]]
-    authors_contains: String
-    authors_containsAny: [String]
-    authors_containsAll: [String]
-    authors_ne: [String]
     subjects_count: Int
-    subjects_textContains: String
-    subjects_startsWith: String
-    subjects_endsWith: String
-    subjects_regex: String
-    subjects: [String]
-    subjects_in: [[String]]
-    subjects_nin: [[String]]
-    subjects_contains: String
     subjects_containsAny: [String]
-    subjects_containsAll: [String]
-    subjects_ne: [String]
-    tags_count: Int
-    tags_textContains: String
-    tags_startsWith: String
-    tags_endsWith: String
-    tags_regex: String
-    tags: [String]
-    tags_in: [[String]]
-    tags_nin: [[String]]
-    tags_contains: String
     tags_containsAny: [String]
-    tags_containsAll: [String]
-    tags_ne: [String]
     isRead: Boolean
     isRead_ne: Boolean
-    isRead_in: [Boolean]
-    isRead_nin: [Boolean]
-    dateAdded_contains: String
-    dateAdded_startsWith: String
-    dateAdded_endsWith: String
-    dateAdded_regex: String
-    dateAdded: String
-    dateAdded_ne: String
-    dateAdded_in: [String]
-    dateAdded_nin: [String]
     timestamp_lt: Float
     timestamp_lte: Float
     timestamp_gt: Float
     timestamp_gte: Float
-    timestamp: Float
-    timestamp_ne: Float
-    timestamp_in: [Float]
-    timestamp_nin: [Float]
     OR: [BookFilters]
   }
   
@@ -297,102 +223,28 @@ export const mutation = `
 export const query = `
 
   allBooks (
-    isbn_contains: String,
-    isbn_startsWith: String,
-    isbn_endsWith: String,
-    isbn_regex: String,
     isbn: String,
-    isbn_ne: String,
     isbn_in: [String],
-    isbn_nin: [String],
     title_contains: String,
-    title_startsWith: String,
-    title_endsWith: String,
-    title_regex: String,
-    title: String,
-    title_ne: String,
-    title_in: [String],
-    title_nin: [String],
-    userId_contains: String,
-    userId_startsWith: String,
-    userId_endsWith: String,
-    userId_regex: String,
     userId: String,
-    userId_ne: String,
     userId_in: [String],
-    userId_nin: [String],
     publisher_contains: String,
-    publisher_startsWith: String,
-    publisher_endsWith: String,
-    publisher_regex: String,
     publisher: String,
-    publisher_ne: String,
     publisher_in: [String],
-    publisher_nin: [String],
     pages_lt: Int,
-    pages_lte: Int,
     pages_gt: Int,
-    pages_gte: Int,
     pages: Int,
-    pages_ne: Int,
-    pages_in: [Int],
-    pages_nin: [Int],
-    authors_count: Int,
     authors_textContains: String,
-    authors_startsWith: String,
-    authors_endsWith: String,
-    authors_regex: String,
-    authors: [String],
     authors_in: [[String]],
-    authors_nin: [[String]],
-    authors_contains: String,
-    authors_containsAny: [String],
-    authors_containsAll: [String],
-    authors_ne: [String],
     subjects_count: Int,
-    subjects_textContains: String,
-    subjects_startsWith: String,
-    subjects_endsWith: String,
-    subjects_regex: String,
-    subjects: [String],
-    subjects_in: [[String]],
-    subjects_nin: [[String]],
-    subjects_contains: String,
     subjects_containsAny: [String],
-    subjects_containsAll: [String],
-    subjects_ne: [String],
-    tags_count: Int,
-    tags_textContains: String,
-    tags_startsWith: String,
-    tags_endsWith: String,
-    tags_regex: String,
-    tags: [String],
-    tags_in: [[String]],
-    tags_nin: [[String]],
-    tags_contains: String,
     tags_containsAny: [String],
-    tags_containsAll: [String],
-    tags_ne: [String],
     isRead: Boolean,
     isRead_ne: Boolean,
-    isRead_in: [Boolean],
-    isRead_nin: [Boolean],
-    dateAdded_contains: String,
-    dateAdded_startsWith: String,
-    dateAdded_endsWith: String,
-    dateAdded_regex: String,
-    dateAdded: String,
-    dateAdded_ne: String,
-    dateAdded_in: [String],
-    dateAdded_nin: [String],
     timestamp_lt: Float,
     timestamp_lte: Float,
     timestamp_gt: Float,
     timestamp_gte: Float,
-    timestamp: Float,
-    timestamp_ne: Float,
-    timestamp_in: [Float],
-    timestamp_nin: [Float],
     OR: [BookFilters],
     SORT: BookSort,
     SORTS: [BookSort],

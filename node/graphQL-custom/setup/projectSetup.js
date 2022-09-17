@@ -13,10 +13,10 @@ export const BookSummary = {
   fields: {
     _id: MongoIdType.nonQueryable().nonNull(),
     title: StringType,
-    asin: StringType,
-    isbn: StringType,
+    asin: StringType.limitQueriesTo(["", "in"]),
+    isbn: StringType.limitQueriesTo(["", "in"]),
     ean: StringType.nonQueryable(),
-    smallImage: StringType.nonQueryable(),
+    smallImage: StringType.limitQueriesTo(["", "contains"]),
     smallImagePreview: JSONType.nonQueryable(),
     mediumImage: StringType.nonQueryable(),
     mediumImagePreview: JSONType.nonQueryable(),
@@ -32,27 +32,27 @@ export const Book = {
   fields: {
     _id: MongoIdType.nonQueryable().nonNull(),
     ean: StringType.nonQueryable(),
-    isbn: StringType,
-    title: StringType.nonNull(),
+    isbn: StringType.limitQueriesTo(["", "in"]),
+    title: StringType.nonNull().limitQueriesTo(["contains"]),
     mobileImage: StringType.nonQueryable(),
     mobileImagePreview: JSONType.nonQueryable(),
     smallImage: StringType.nonQueryable(),
     smallImagePreview: JSONType.nonQueryable(),
     mediumImage: StringType.nonQueryable(),
     mediumImagePreview: JSONType.nonQueryable(),
-    userId: StringType,
-    publisher: StringType,
+    userId: StringType.limitQueriesTo(["", "in"]),
+    publisher: StringType.limitQueriesTo(["", "in", "contains"]),
     publicationDate: StringType.nonQueryable(),
-    pages: IntType,
-    authors: StringArrayType.containsNonNull(),
-    subjects: StringArrayType.containsNonNull(),
-    tags: StringArrayType.containsNonNull(),
-    isRead: BoolType,
-    dateAdded: StringType,
+    pages: IntType.limitQueriesTo(["", "lt", "gt"]),
+    authors: StringArrayType.containsNonNull().limitQueriesTo(["textContains", "in"]),
+    subjects: StringArrayType.containsNonNull().limitQueriesTo(["containsAny", "count"]),
+    tags: StringArrayType.containsNonNull().limitQueriesTo(["containsAny"]),
+    isRead: BoolType.limitQueriesTo(["", "ne"]),
+    dateAdded: StringType.nonQueryable(),
     editorialReviews: arrayOf(EditorialReview).nonQueryable().containsNonNull(),
     similarItems: StringArrayType.nonQueryable(),
     similarItemsLastUpdate: IntType.nonQueryable(),
-    timestamp: FloatType
+    timestamp: FloatType.limitQueriesTo(["lt", "gt", "lte", "gte"])
   },
   manualQueryArgs: [
     { name: "searchChildSubjects", type: "Boolean" },
@@ -76,11 +76,11 @@ export const Subject = {
   fields: {
     _id: MongoIdType.nonQueryable().nonNull(),
     name: StringType.nonNull(),
-    path: StringType,
-    userId: StringType,
+    path: StringType.limitQueriesTo(["", "contains", "startsWith"]),
+    userId: StringType.limitQueriesTo(["", "in"]),
     backgroundColor: StringType.nonQueryable(),
     textColor: StringType.nonQueryable(),
-    timestamp: FloatType
+    timestamp: FloatType.limitQueriesTo(["lt", "gt"])
   },
   extras: {
     resolverSources: ["../../graphQL-custom/custom-content/subject/resolver"],
@@ -99,11 +99,11 @@ export const Tag = {
   fields: {
     _id: MongoIdType.nonQueryable().nonNull(),
     name: StringType.nonNull(),
-    path: StringType,
-    userId: StringType,
+    path: StringType.limitQueriesTo(["", "contains", "startsWith"]),
+    userId: StringType.limitQueriesTo(["", "in"]),
     backgroundColor: StringType.nonQueryable().nonNull(),
     textColor: StringType.nonQueryable().nonNull(),
-    timestamp: FloatType
+    timestamp: FloatType.limitQueriesTo(["lt", "gt"])
   },
   manualQueryArgs: [
     { name: "publicUserId", type: "String" },
@@ -134,7 +134,7 @@ export const SubjectsDeleted = {
   readonly: true,
   fields: {
     userId: StringType,
-    deletedTimestamp: FloatType
+    deletedTimestamp: FloatType.limitQueriesTo(["lt", "gt"])
   }
 };
 
@@ -143,7 +143,7 @@ export const TagsDeleted = {
   readonly: true,
   fields: {
     userId: StringType,
-    deletedTimestamp: FloatType
+    deletedTimestamp: FloatType.limitQueriesTo(["lt", "gt"])
   }
 };
 
@@ -152,6 +152,6 @@ export const BooksDeleted = {
   readonly: true,
   fields: {
     userId: StringType,
-    deletedTimestamp: FloatType
+    deletedTimestamp: FloatType.limitQueriesTo(["lt", "gt"])
   }
 };

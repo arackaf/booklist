@@ -65,13 +65,7 @@ export const type = `
     userId_in: [String]
     userId_nin: [String]
     deletedTimestamp_lt: Float
-    deletedTimestamp_lte: Float
     deletedTimestamp_gt: Float
-    deletedTimestamp_gte: Float
-    deletedTimestamp: Float
-    deletedTimestamp_ne: Float
-    deletedTimestamp_in: [Float]
-    deletedTimestamp_nin: [Float]
     OR: [SubjectsDeletedFilters]
   }
   
@@ -99,13 +93,7 @@ export const query = `
     userId_in: [String],
     userId_nin: [String],
     deletedTimestamp_lt: Float,
-    deletedTimestamp_lte: Float,
     deletedTimestamp_gt: Float,
-    deletedTimestamp_gte: Float,
-    deletedTimestamp: Float,
-    deletedTimestamp_ne: Float,
-    deletedTimestamp_in: [Float],
-    deletedTimestamp_nin: [Float],
     OR: [SubjectsDeletedFilters],
     SORT: SubjectsDeletedSort,
     SORTS: [SubjectsDeletedSort],
