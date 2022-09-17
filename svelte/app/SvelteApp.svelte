@@ -21,8 +21,6 @@
 
   import { setDefaultAnimation } from "@shoelace-style/shoelace/dist/utilities/animation-registry";
 
-  console.log({ setDefaultAnimation });
-
   setDefaultAnimation("dialog.show", {
     keyframes: [
       { opacity: 0, transform: "translate3d(0px, -20px, 0px)" },
