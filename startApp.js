@@ -57,21 +57,40 @@ passport.use(
       return done(null, PUBLIC_USER);
     }
 
+    const loginToken = (request.cookies || {}).loginToken;
+    const userId = (request.cookies || {}).userId;
+
     if (request.url === "/graphql-ios") {
       const loginToken = request.body.loginToken;
       const userResult = iosUserCache[loginToken];
 
       return done(null, userResult || null);
-    } else if (request.url.indexOf("/loginping") !== -1) {
-      const loginToken = (request.cookies || {}).loginToken;
-      const userId = (request.cookies || {}).userId;
+    } else if (request.url.indexOf("/graphql") !== -1) {
+      console.log("AAA");
+      Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken, 1))
+        .then(res => {
+          const { user, refresh } = res;
 
+          if (user) {
+            done(null, user);
+          } else {
+            request.refresh = refresh;
+          }
+        })
+        .catch(er => {
+          request.logout();
+          done(null, false, { message: "No login found" });
+        });
+    } else if (request.url.indexOf("/loginping") !== -1) {
       Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken))
         .then(res => {
           const { user, refresh } = res;
 
-          request.refresh = refresh;
-          done(null, user);
+          if (user) {
+            done(null, user);
+          } else {
+            request.refresh = refresh;
+          }
         })
         .catch(er => {
           request.logout();
@@ -91,32 +110,40 @@ passport.use(
   })
 );
 
-async function hanldeLoginPing(response, currentUser, userId, loginToken) {
+async function hanldeLoginPing(response, currentUser, userId, loginToken, log) {
+  console.log("a");
   let loginPacket;
 
   const userDao = new UserDao();
   if (loginToken && userId) {
     loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
   }
+  log && console.log("b");
 
   if (!loginPacket || !loginPacket.email) {
     throw "No existing, valid login";
   }
+  log && console.log("c");
 
   if (currentUser) {
+    log && console.log("d");
     return { user: currentUser };
   } else {
     try {
+      log && console.log("e");
       const { admin } = await userDao.getUser(loginPacket.email);
 
+      log && console.log("f");
       const user = {
         _id: userId,
         id: userId,
         admin
       };
 
+      log && console.log("g");
       return { user, refresh: true };
     } catch (er) {
+      log && console.log("h", er);
       console.log(er);
       throw er;
     }
