@@ -66,32 +66,16 @@ passport.use(
 
       return done(null, userResult || null);
     } else if (request.url.indexOf("/graphql") !== -1) {
-      console.log("AAA");
-      Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken, 1))
-        .then(res => {
-          const { user, refresh } = res;
+      if (request.user) {
+        return done(null, request.user);
+      }
 
-          if (user) {
-            done(null, user);
-          } else {
-            request.refresh = refresh;
-          }
-        })
-        .catch(er => {
-          request.logout();
-          done(null, false, { message: "No login found" });
-        });
+      Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken, 1))
+        .then(user => done(null, user))
+        .catch(er => {});
     } else if (request.url.indexOf("/loginping") !== -1) {
-      Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken))
-        .then(res => {
-          const { user, refresh } = res;
-
-          if (user) {
-            done(null, user);
-          } else {
-            request.refresh = refresh;
-          }
-        })
+      Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken))
+        .then(user => done(null, user))
         .catch(er => {
           request.logout();
           done(null, false, { message: "No login found" });
@@ -110,38 +94,31 @@ passport.use(
   })
 );
 
-async function hanldeLoginPing(response, currentUser, userId, loginToken, log) {
-  console.log("a");
+async function refreshCurrentUserIfNeeded(currentUser, userId, loginToken, log) {
   let loginPacket;
 
   const userDao = new UserDao();
   if (loginToken && userId) {
     loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
   }
-  log && console.log("b");
 
   if (!loginPacket || !loginPacket.email) {
     throw "No existing, valid login";
   }
-  log && console.log("c");
 
   if (currentUser) {
-    log && console.log("d");
-    return { user: currentUser };
+    return currentUser;
   } else {
     try {
-      log && console.log("e");
       const { admin } = await userDao.getUser(loginPacket.email);
 
-      log && console.log("f");
       const user = {
         _id: userId,
         id: userId,
         admin
       };
 
-      log && console.log("g");
-      return { user, refresh: true };
+      return user;
     } catch (er) {
       log && console.log("h", er);
       console.log(er);
@@ -149,6 +126,8 @@ async function hanldeLoginPing(response, currentUser, userId, loginToken, log) {
     }
   }
 }
+
+async function getUserFromEmail(email) {}
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -183,7 +162,7 @@ app.use("/auth/loginping", function (req, response, next) {
 });
 app.post("/auth/loginping", passport.authenticate("local"), function (request, response) {
   // login successful
-  return response.send({ valid: true, refresh: request.refresh });
+  return response.send({ valid: true });
 });
 
 /* --------------- SVELTE --------------- */
@@ -242,6 +221,14 @@ app.use("/graphql", (req, res, next) => {
   res.set("Cache-Control", "no-cache");
   next();
 });
+
+app.use("/graphql", function (req, response, next) {
+  req.body.username = "xxx";
+  req.body.password = "xxx";
+  next();
+});
+app.get("/graphql", passport.authenticate("local"));
+
 app.use(
   "/graphql",
   graphqlHTTP({
