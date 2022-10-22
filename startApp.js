@@ -65,7 +65,7 @@ passport.use(
       const userResult = iosUserCache[loginToken];
 
       return done(null, userResult || null);
-    } else if (request.url.indexOf("/graphql") !== -1 || request.url.indexOf("/loginverify") !== -1) {
+    } else if (request.url.indexOf("/graphql") !== -1) {
       if (request.user) {
         return done(null, request.user);
       }
