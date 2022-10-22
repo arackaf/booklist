@@ -6,35 +6,6 @@
     <meta name="viewport" content="" />
     <title>Book tracker</title>
     <link rel="preload" crossorigin="anonymous" href="https://d193qjyckdxivp.cloudfront.net/1x1.png" as="image" />
-    <script>
-      (() => {
-        const user = getLoginStatus();
-        if (user.loginToken && user.userId) {
-          window.__startupVerify = fetch("/auth/loginverify", {
-            method: "post",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            },
-            body: "{}"
-          });
-        }
-
-        function getLoginStatus() {
-          const hash = getCookieLookup();
-          return { userId: hash.userId, loginToken: hash.loginToken };
-        }
-        function getCookieLookup() {
-          return document.cookie.split("; ").reduce((lookup, v) => {
-            const parts = v.split("=");
-            lookup[parts[0]] = parts[1];
-
-            return lookup;
-          }, {});
-        }
-      })();
-    </script>
   </head>
   <body class="scheme1">
     <span style="visibility: hidden; position: fixed">
