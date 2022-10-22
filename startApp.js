@@ -217,6 +217,8 @@ const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
+
+svelteRouter.get("/graphql", loginReady, passport.authenticate("local"));
 svelteRouter.use("/graphql", (req, res, next) => {
   res.set("Cache-Control", "no-cache");
   next();
