@@ -98,13 +98,24 @@ passport.use(
   })
 );
 
+const dynamoCallCache = {};
+
 async function refreshCurrentUserIfNeeded(currentUser, userId, loginToken, log) {
   let loginPacket;
 
   const userDao = new UserDao();
   if (loginToken && userId) {
+    const key = `${userId}-${loginToken}`;
+
+    if (!dynamoCallCache[key]) {
+      dynamoCallCache[key] = db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+      setTimeout(() => {
+        delete dynamoCallCache[key];
+      }, 25000);
+    }
+
     const start = +new Date();
-    loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+    loginPacket = await dynamoCallCache[key];
     const end = +new Date();
     console.log("TIME", end - start);
   }
