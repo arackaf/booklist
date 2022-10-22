@@ -65,14 +65,18 @@ passport.use(
       const userResult = iosUserCache[loginToken];
 
       return done(null, userResult || null);
-    } else if (request.url.indexOf("/graphql") !== -1) {
+    } else if (request.url.indexOf("/graphql") !== -1 || request.url.indexOf("/loginverify") !== -1) {
       if (request.user) {
         return done(null, request.user);
       }
 
-      Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken, 1))
-        .then(user => done(null, user))
-        .catch(er => {});
+      if (userId && loginToken) {
+        Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken, 1))
+          .then(user => done(null, user))
+          .catch(er => {});
+      } else {
+        done(null, false);
+      }
     } else if (request.url.indexOf("/loginping") !== -1) {
       Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken))
         .then(user => done(null, user))
@@ -99,7 +103,10 @@ async function refreshCurrentUserIfNeeded(currentUser, userId, loginToken, log) 
 
   const userDao = new UserDao();
   if (loginToken && userId) {
+    const start = +new Date();
     loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+    const end = +new Date();
+    console.log("TIME", end - start);
   }
 
   if (!loginPacket || !loginPacket.email) {
@@ -110,18 +117,15 @@ async function refreshCurrentUserIfNeeded(currentUser, userId, loginToken, log) 
     return currentUser;
   } else {
     try {
-      const { admin } = await userDao.getUser(loginPacket.email);
-
       const user = {
         _id: userId,
         id: userId,
-        admin
+        admin: false // TODO
       };
 
       return user;
     } catch (er) {
-      log && console.log("h", er);
-      console.log(er);
+      console.log("Error in refreshCurrentUserIfNeeded", er);
       throw er;
     }
   }
@@ -155,12 +159,12 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-app.use("/auth/loginping", function (req, response, next) {
-  req.body.username = "xxx";
-  req.body.password = "xxx";
-  next();
+app.post("/auth/loginverify", loginReady, passport.authenticate("local"), function (request, response) {
+  // login successful
+  return response.send({ valid: true });
 });
-app.post("/auth/loginping", passport.authenticate("local"), function (request, response) {
+
+app.post("/auth/loginping", loginReady, passport.authenticate("local"), function (request, response) {
   // login successful
   return response.send({ valid: true });
 });
@@ -222,12 +226,7 @@ app.use("/graphql", (req, res, next) => {
   next();
 });
 
-app.use("/graphql", function (req, response, next) {
-  req.body.username = "xxx";
-  req.body.password = "xxx";
-  next();
-});
-app.get("/graphql", passport.authenticate("local"));
+app.get("/graphql", loginReady, passport.authenticate("local"));
 
 app.use(
   "/graphql",
@@ -238,12 +237,7 @@ app.use(
   })
 );
 
-app.use("/graphql-ios", function (req, response, next) {
-  req.body.username = "xxx";
-  req.body.password = "xxx";
-  next();
-});
-app.post("/graphql-ios", passport.authenticate("local"), function (req, response) {
+app.post("/graphql-ios", loginReady, passport.authenticate("local"), function (req, response) {
   return response.redirect(307, "/graphql");
 });
 
@@ -281,6 +275,12 @@ app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /
 
 const iosUserCache = {};
 const iosUserCacheLoginTokenLookup = {};
+
+function loginReady(req, response, next) {
+  req.body.username = "xxx";
+  req.body.password = "xxx";
+  next();
+}
 
 app.post("/login-ios", function (req, response) {
   const userDao = new UserDao();
