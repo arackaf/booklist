@@ -19,16 +19,9 @@ if (cookieData.email && !cookieData.newAuth) {
   location.reload();
 } else {
   if (user.userId) {
-    ajaxUtil
-      .postAuth("/loginping", {})
-      .then(val => {
-        if (val.refresh) {
-          location.reload();
-        }
-      })
-      .catch(er => {
-        ["email", "userId", "loginToken", "remember_me", "logged_in", "admin", "remember_me", "newAuth"].forEach(eraseCookie);
-        location.reload();
-      });
+    ajaxUtil.postAuth("/loginping", {}).catch(er => {
+      ["email", "userId", "loginToken", "remember_me", "logged_in", "admin", "remember_me", "newAuth"].forEach(eraseCookie);
+      location.reload();
+    });
   }
 }

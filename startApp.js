@@ -57,22 +57,29 @@ passport.use(
       return done(null, PUBLIC_USER);
     }
 
+    const loginToken = (request.cookies || {}).loginToken;
+    const userId = (request.cookies || {}).userId;
+
     if (request.url === "/graphql-ios") {
       const loginToken = request.body.loginToken;
       const userResult = iosUserCache[loginToken];
 
       return done(null, userResult || null);
+    } else if (request.url.indexOf("/graphql") !== -1) {
+      if (request.user) {
+        return done(null, request.user);
+      }
+
+      if (userId && loginToken) {
+        Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken, 1))
+          .then(user => done(null, user))
+          .catch(er => {});
+      } else {
+        done(null, false);
+      }
     } else if (request.url.indexOf("/loginping") !== -1) {
-      const loginToken = (request.cookies || {}).loginToken;
-      const userId = (request.cookies || {}).userId;
-
-      Promise.resolve(hanldeLoginPing(response, request.user, userId, loginToken))
-        .then(res => {
-          const { user, refresh } = res;
-
-          request.refresh = refresh;
-          done(null, user);
-        })
+      Promise.resolve(refreshCurrentUserIfNeeded(request.user, userId, loginToken))
+        .then(user => done(null, user))
         .catch(er => {
           request.logout();
           done(null, false, { message: "No login found" });
@@ -91,12 +98,26 @@ passport.use(
   })
 );
 
-async function hanldeLoginPing(response, currentUser, userId, loginToken) {
+const dynamoCallCache = {};
+
+async function refreshCurrentUserIfNeeded(currentUser, userId, loginToken, log) {
   let loginPacket;
 
   const userDao = new UserDao();
   if (loginToken && userId) {
-    loginPacket = await db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+    const key = `${userId}-${loginToken}`;
+
+    if (!dynamoCallCache[key]) {
+      dynamoCallCache[key] = db.get(getGetPacket(`UserLogin#${userId}`, `LoginToken#${loginToken}`));
+      setTimeout(() => {
+        delete dynamoCallCache[key];
+      }, 25000);
+    }
+
+    const start = +new Date();
+    loginPacket = await dynamoCallCache[key];
+    const end = +new Date();
+    console.log("TIME", end - start);
   }
 
   if (!loginPacket || !loginPacket.email) {
@@ -104,24 +125,24 @@ async function hanldeLoginPing(response, currentUser, userId, loginToken) {
   }
 
   if (currentUser) {
-    return { user: currentUser };
+    return currentUser;
   } else {
     try {
-      const { admin } = await userDao.getUser(loginPacket.email);
-
       const user = {
         _id: userId,
         id: userId,
-        admin
+        admin: false // TODO
       };
 
-      return { user, refresh: true };
+      return user;
     } catch (er) {
-      console.log(er);
+      console.log("Error in refreshCurrentUserIfNeeded", er);
       throw er;
     }
   }
 }
+
+async function getUserFromEmail(email) {}
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -149,14 +170,14 @@ app.get("/favicon.ico", function (request, response) {
   response.sendFile(path.join(__dirname + "/favicon.ico"));
 });
 
-app.use("/auth/loginping", function (req, response, next) {
-  req.body.username = "xxx";
-  req.body.password = "xxx";
-  next();
-});
-app.post("/auth/loginping", passport.authenticate("local"), function (request, response) {
+app.post("/auth/loginverify", loginReady, passport.authenticate("local"), function (request, response) {
   // login successful
-  return response.send({ valid: true, refresh: request.refresh });
+  return response.send({ valid: true });
+});
+
+app.post("/auth/loginping", loginReady, passport.authenticate("local"), function (request, response) {
+  // login successful
+  return response.send({ valid: true });
 });
 
 /* --------------- SVELTE --------------- */
@@ -196,6 +217,8 @@ const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
+
+svelteRouter.get("/graphql", loginReady, passport.authenticate("local"));
 svelteRouter.use("/graphql", (req, res, next) => {
   res.set("Cache-Control", "no-cache");
   next();
@@ -215,6 +238,9 @@ app.use("/graphql", (req, res, next) => {
   res.set("Cache-Control", "no-cache");
   next();
 });
+
+app.get("/graphql", loginReady, passport.authenticate("local"));
+
 app.use(
   "/graphql",
   graphqlHTTP({
@@ -224,12 +250,7 @@ app.use(
   })
 );
 
-app.use("/graphql-ios", function (req, response, next) {
-  req.body.username = "xxx";
-  req.body.password = "xxx";
-  next();
-});
-app.post("/graphql-ios", passport.authenticate("local"), function (req, response) {
+app.post("/graphql-ios", loginReady, passport.authenticate("local"), function (req, response) {
   return response.redirect(307, "/graphql");
 });
 
@@ -267,6 +288,12 @@ app.use(express.static(__dirname + "/react/dist", { maxAge: 432000 * 1000 * 10 /
 
 const iosUserCache = {};
 const iosUserCacheLoginTokenLookup = {};
+
+function loginReady(req, response, next) {
+  req.body.username = "xxx";
+  req.body.password = "xxx";
+  next();
+}
 
 app.post("/login-ios", function (req, response) {
   const userDao = new UserDao();
