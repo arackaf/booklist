@@ -1,13 +1,27 @@
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]";
+
 import Head from "next/head";
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      x: 12,
+      session: await unstable_getServerSession(context.req, context.res, authOptions),
+      session2: await unstable_getServerSession(context.req, context.res, authOptions)
+    }
+  };
+}
+
+export default function Home(props, xxx) {
   const { data: session } = useSession();
 
   console.log("client", { session });
+  console.log("client ssr", props, xxx);
 
   return (
     <div className={styles.container}>
