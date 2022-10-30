@@ -1,27 +1,14 @@
 import React from "react";
-
-import { NextAuthHandler } from "next-auth/core";
-import { Session } from "next-auth";
-import { headers, cookies } from "next/headers";
-import { authOptions } from "../../../pages/api/auth/[...nextauth]";
-
-export const getSession = async (options = authOptions) => {
-  const session = await NextAuthHandler<Session | {} | string>({
-    options,
-    req: {
-      host: headers().get("x-forwarded-host") ?? "http://localhost:3000",
-      action: "session",
-      method: "GET",
-      cookies: Array.from(cookies().entries()).reduce((acc, [key]) => ({ ...acc, [key]: cookies().get(key) }), {}),
-      headers: headers()
-    }
-  });
-
-  return session;
-};
+import { getSession } from "../../../lib/getSessionRsc";
 
 export default async function () {
-  const xxx = await getSession();
-  console.log(xxx);
+  const session = await getSession();
+
+  const foo = await fetch("http://localhost:3000/api/hello", { credentials: "include" });
+  const foo2 = await fetch("http://localhost:3000/api/hello", { credentials: "same-origin" });
+  const res = await foo.json();
+
+  console.log("rsc", { session });
+  console.log("rsc api", { res });
   return <main style={{ margin: "50px" }}>Yo RSC!!!</main>;
 }
