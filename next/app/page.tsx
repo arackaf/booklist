@@ -1,3 +1,3 @@
 export default function () {
-  return <h3>Page!!!</h3>;
+  return <section>Page!!!</section>;
 }

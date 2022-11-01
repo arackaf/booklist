@@ -1,3 +1,5 @@
+import "./styles.css";
+
 export default function () {
-  return <div>Hello World, RSC!</div>;
+  return <section>Hello World, RSC!</section>;
 }
