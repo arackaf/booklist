@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "prod-build": "tsc && npm run build-sw && npm run build",
     "tscw": "tsc -w --noEmit",
-    "persistgraphql": "persistgraphql graphql",
+    "persistgraphql": "persistgraphql gql",
     "check-circular": "madge --circular reactStartup.ts"
   },
   "dependencies": {
