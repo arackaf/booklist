@@ -73,7 +73,7 @@
     }
 
     let { _id, name, parentId, backgroundColor, textColor } = editingTag;
-    let request = { _id, name, parentId, backgroundColor, textColor };
+    let request = { _id, name, parentId, backgroundColor: backgroundColor ?? "", textColor: textColor ?? "" };
 
     Promise.resolve((_id ? updateState : createState).runMutation(request)).then(onCancelEdit);
   };

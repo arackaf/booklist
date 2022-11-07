@@ -1,4 +1,4 @@
-mutation createTag($name: String, $backgroundColor: String, $textColor: String) {
+mutation createTag($name: String!, $backgroundColor: String!, $textColor: String!) {
   createTag(Tag: { name: $name, backgroundColor: $backgroundColor, textColor: $textColor }) {
     Tag {
       _id

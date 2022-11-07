@@ -13,7 +13,7 @@
     "svelte-check": "svelte-check --watch --threshold error",
     "prod-build": "npm run tsc && npm run build-sw && npm run build",
     "tscw": "tsc -w --noEmit",
-    "persistgraphql": "persistgraphql graphQL"
+    "persistgraphql": "persistgraphql gql"
   },
   "dependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
