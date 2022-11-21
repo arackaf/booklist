@@ -9,9 +9,6 @@ export default async function handler(req, res) {
 
   console.log("in api, session:", { session });
 
-  res.status(200).json({ name: "Hello World", session });
-  return;
-
   readBooks();
 
   fetch(process.env.MONGO_URL + "/action/findOne", {
@@ -33,7 +30,7 @@ export default async function handler(req, res) {
       return res.json();
     })
     .then(res => {
-      console.log("SUCCESS", res);
+      console.log("RESULT", res);
     })
     .catch(err => {
       console.log({ err });
@@ -58,7 +55,7 @@ export default async function handler(req, res) {
       return res.json();
     })
     .then(res => {
-      console.log("SUCCESS", res);
+      console.log("RESULT", res);
     })
     .catch(err => {
       console.log({ err });
@@ -84,7 +81,7 @@ export default async function handler(req, res) {
       return res.json();
     })
     .then(res => {
-      console.log("SUCCESS", res);
+      console.log("RESULT", res);
     })
     .catch(err => {
       console.log({ err });
@@ -109,7 +106,7 @@ export default async function handler(req, res) {
       return res.json();
     })
     .then(res => {
-      console.log("SUCCESS", res);
+      console.log("RESULT", res);
     })
     .catch(err => {
       console.log({ err });

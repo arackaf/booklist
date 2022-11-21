@@ -32,8 +32,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   session: {
-    maxAge: 60 * 60 * 24 * 365,
-    strategy: "jwt"
+    maxAge: 60 * 60 * 24 * 365
   },
 
   secret: process.env.NEXTAUTH_SECRET,
@@ -41,20 +40,16 @@ export const authOptions: NextAuthOptions = {
   adapter: DynamoDBAdapter(client, { tableName: process.env.DYNAMO_AUTH_TABLE }),
 
   callbacks: {
-    // async signIn({ user, account, profile, email, credentials }) {
-    //   return true;
-    // },
-    async jwt(props) {
-      //session.userId = user.id;
-      //session.abc = "abc";
-      return props.token;
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log({ user, account, profile });
+      (user as any).providerId = account.providerAccountId;
+      return true;
     },
     async session(props) {
       const { session, user, token } = props;
 
       (session as any).ppp = "ui";
       (session.user as any).q = "pop";
-      (session as any).real_userId = token.sub;
 
       console.log("\n\nauth", props);
       //session.userId = user.id;
