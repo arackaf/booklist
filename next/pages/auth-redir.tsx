@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const session2: Session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as any;
-  console.log({ session });
+  console.log("session in page", { session });
   if (!session?.userId) {
     context.res.writeHead(302, { Location: "/" });
     context.res.end();

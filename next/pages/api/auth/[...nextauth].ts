@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
@@ -23,7 +23,7 @@ const client = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
   }
 });
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_AUTH_CLIENT_ID,
@@ -32,7 +32,8 @@ export const authOptions = {
   ],
 
   session: {
-    maxAge: 60 * 60 * 24 * 365
+    maxAge: 60 * 60 * 24 * 365,
+    strategy: "jwt"
   },
 
   secret: process.env.NEXTAUTH_SECRET,
@@ -40,8 +41,24 @@ export const authOptions = {
   adapter: DynamoDBAdapter(client, { tableName: process.env.DYNAMO_AUTH_TABLE }),
 
   callbacks: {
-    async session({ session, user, token }) {
-      session.userId = user.id;
+    // async signIn({ user, account, profile, email, credentials }) {
+    //   return true;
+    // },
+    async jwt(props) {
+      //session.userId = user.id;
+      //session.abc = "abc";
+      return props.token;
+    },
+    async session(props) {
+      const { session, user, token } = props;
+
+      (session as any).ppp = "ui";
+      (session.user as any).q = "pop";
+      (session as any).real_userId = token.sub;
+
+      console.log("\n\nauth", props);
+      //session.userId = user.id;
+      //session.abc = "abc";
       return session;
     }
   }
