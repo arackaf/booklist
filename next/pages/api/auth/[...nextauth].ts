@@ -32,7 +32,8 @@ export const authOptions: NextAuthOptions = {
   ],
 
   session: {
-    maxAge: 60 * 60 * 24 * 365
+    maxAge: 60 * 60 * 24 * 365,
+    strategy: "jwt"
   },
 
   secret: process.env.NEXTAUTH_SECRET,
@@ -41,7 +42,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log({ user, account, profile });
+      console.log("signin", { user, account, profile });
       (user as any).providerId = account.providerAccountId;
       return true;
     },
