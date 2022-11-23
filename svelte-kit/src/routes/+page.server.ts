@@ -8,9 +8,6 @@ export async function load(params) {
 
 	// const val = params.url.searchParams.get('val');
 	const val = params.url.search;
-	//const search = params
-
-	//await new Promise((res) => setTimeout(res, 1000));
 
 	const result = {
 		searchProps: 'Value ' + val + ' ' + i++
