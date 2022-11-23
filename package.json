@@ -2,7 +2,7 @@
   "name": "booklist",
   "main": "app.js",
   "engines": {
-    "node": "16.11.1",
+    "node": "16.14.0",
     "npm": "8.0.0"
   },
   "description": "A book management web app for exploring modern web technologies.  Think ToDo, but more realistic",
