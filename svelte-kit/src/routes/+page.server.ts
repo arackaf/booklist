@@ -15,9 +15,18 @@ export async function load(params) {
 
 	params.setHeaders({
 		'cache-control': 'max-age=60'
+		//Vary: 'Cookie'
 	});
-
-	params.depends('search:main');
 
 	return result;
 }
+
+export const actions = {
+	default: async (evt: any) => {
+		const currentValue = +evt.cookies.get('search-bust');
+		const newValue = isNaN(currentValue) ? 1 : currentValue + 1;
+		evt.cookies.set('search-bust', newValue);
+
+		return {};
+	}
+};
