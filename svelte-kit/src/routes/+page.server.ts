@@ -17,7 +17,7 @@ export async function load(params) {
 	};
 
 	params.setHeaders({
-		'cache-control': 'max-age: 20'
+		'cache-control': 'max-age=20'
 	});
 
 	return result;
