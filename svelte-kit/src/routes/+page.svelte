@@ -10,9 +10,9 @@
   {$page.data.searchProps}
 </h2>
 
-<a href="/?val=1">1</a>
-<a href="/?val=2">2</a>
-<a href="/?val=3">3</a>
+<a href="/?val=A">1</a>
+<a href="/?val=B">2</a>
+<a href="/?val=C">3</a>
 
 <button on:click={() => invalidate("search:main")}>Invalidate</button>
 
