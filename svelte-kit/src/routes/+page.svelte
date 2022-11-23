@@ -3,9 +3,11 @@
 	import { onMount } from "svelte";
 
   onMount(() => {
-    console.log("Mount");
-    console.log({ page: $page })
+    //console.log("Mount");
+    //console.log({ page: $page })
   })
+
+  //$: console.log({ page: $page });
 
   function go() { 
     window.history.pushState({}, "/?val=1", "/?val=11")
