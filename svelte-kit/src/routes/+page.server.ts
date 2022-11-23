@@ -17,15 +17,8 @@ export async function load(params) {
 	};
 
 	params.setHeaders({
-		'cache-control': 'max-age=20'
+		'cache-control': 'max-age: 20000'
 	});
 
 	return result;
 }
-
-export const actions = {
-	search: async (event: any) => {
-		console.log('Searching in action');
-		return {};
-	}
-};
