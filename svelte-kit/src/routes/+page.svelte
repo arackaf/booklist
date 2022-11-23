@@ -1,11 +1,8 @@
 <script lang="ts">
+	import { invalidate } from "$app/navigation";
   import { page } from "$app/stores";
 	import { onMount } from "svelte";
 
-
-  function go() { 
-    window.history.pushState({}, "/?val=1", "/?val=11")
-  }
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -17,5 +14,6 @@
 <a href="/?val=2">2</a>
 <a href="/?val=3">3</a>
 
-<a href="/foo?val=4">foo</a>
+<button on:click={() => invalidate("search:main")}>Invalidate</button>
+
 

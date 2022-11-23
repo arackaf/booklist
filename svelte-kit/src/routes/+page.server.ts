@@ -10,12 +10,14 @@ export async function load(params) {
 	const val = params.url.search;
 
 	const result = {
-		searchProps: 'Value ' + val + ' ' + i++
+		searchProps: 'Value ' + val + ' ' + ' CACHE TEST VALUE === ' + i++
 	};
 
 	params.setHeaders({
-		'cache-control': 'max-age=20000'
+		'cache-control': 'max-age=60'
 	});
+
+	params.depends('search:main');
 
 	return result;
 }
