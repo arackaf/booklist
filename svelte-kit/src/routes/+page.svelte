@@ -24,4 +24,9 @@
 <a href="/?val=3">3</a>
 
 <a href="/foo?val=4">foo</a>
-<button on:click={go}>Go</button>
+
+<form method="GET" action="?/search">
+  <input name="val"  />
+
+  <button type="submit">Go maybe?</button>
+</form>
