@@ -3,6 +3,9 @@
 	import MainNavigation from '$lib/components/navigation/MainNavigation.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
+	import '$styles/site-styles.scss';
+	import './styles.scss';
+
 	const appState = writable({ isMobile: false });
 
 	const theme = 'scheme5';
