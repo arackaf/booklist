@@ -298,7 +298,8 @@
 	--primary-11: hsl(0, 0%, 99%);
 }
 
-body {
+body,
+.app-container {
 	--content-background: var(--primary-11);
 
 	&.white-bg {

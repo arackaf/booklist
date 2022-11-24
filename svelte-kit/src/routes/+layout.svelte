@@ -4,9 +4,11 @@
 	import Footer from '$lib/components/Footer.svelte';
 
 	const appState = writable({ isMobile: false });
+
+	const theme = 'scheme5';
 </script>
 
-<div class="app-container">
+<div class={`app-container ${theme}`}>
 	<div id="app">
 		<MainNavigation />
 		<main>
