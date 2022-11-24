@@ -1,0 +1,66 @@
+/*!
+ * Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license (Commercial License)
+ */
+@import "_variables.less";
+
+@font-face {
+  font-family: 'Font Awesome 5 Duotone';
+  font-style: normal;
+  font-weight: 900;
+  font-display: @fa-font-display;
+  src: url('@{fa-font-path}/fa-duotone-900.eot');
+  src: url('@{fa-font-path}/fa-duotone-900.eot?#iefix') format('embedded-opentype'),
+    url('@{fa-font-path}/fa-duotone-900.woff2') format('woff2'),
+    url('@{fa-font-path}/fa-duotone-900.woff') format('woff'),
+    url('@{fa-font-path}/fa-duotone-900.ttf') format('truetype'),
+    url('@{fa-font-path}/fa-duotone-900.svg#fontawesome') format('svg');
+}
+
+.fad {
+  position: relative;
+  font-family: 'Font Awesome 5 Duotone';
+  font-weight: 900;
+}
+
+.fad:before {
+  position: absolute;
+  color: ~'var(--@{fa-css-prefix}-primary-color, inherit)';
+  opacity: @fa-primary-opacity;
+  opacity: ~'var(--@{fa-css-prefix}-primary-opacity, @{fa-primary-opacity})';
+}
+
+.fad:after {
+  color: ~'var(--@{fa-css-prefix}-secondary-color, inherit)';
+  opacity: @fa-secondary-opacity;
+  opacity: ~'var(--@{fa-css-prefix}-secondary-opacity, @{fa-secondary-opacity})';
+}
+
+.@{fa-css-prefix}-swap-opacity .fad:before,
+.fad.@{fa-css-prefix}-swap-opacity:before {
+  opacity: @fa-secondary-opacity;
+  opacity: ~'var(--@{fa-css-prefix}-secondary-opacity, @{fa-secondary-opacity})';
+}
+
+.@{fa-css-prefix}-swap-opacity .fad:after,
+.fad.@{fa-css-prefix}-swap-opacity:after {
+  opacity: @fa-primary-opacity;
+  opacity: ~'var(--@{fa-css-prefix}-primary-opacity, @{fa-primary-opacity})';
+}
+
+.fad.@{fa-css-prefix}-inverse {
+  color: @fa-inverse;
+}
+
+.fad.@{fa-css-prefix}-stack-1x, .fad.@{fa-css-prefix}-stack-2x {
+  position: absolute;
+}
+
+.fad.@{fa-css-prefix}-stack-1x:before,
+.fad.@{fa-css-prefix}-stack-2x:before,
+.fad.@{fa-css-prefix}-fw:before {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.fad.@{fa-css-prefix}-chevron-right:after { content: "\10f054"; }
