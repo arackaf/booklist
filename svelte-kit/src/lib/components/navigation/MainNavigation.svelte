@@ -110,7 +110,7 @@
 		</ul>
 		{#if isLoggedIn}
 			<ul class="nav-items-right">
-				<NavBarItem onClick={logout}>
+				<NavBarItem href="/logout">
 					<span class="hidden-xs">Logout</span>
 					<i class="visible-xs fal fa-fw fa-sign-out" />
 				</NavBarItem>
