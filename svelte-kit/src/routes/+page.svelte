@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { invalidate } from "$app/navigation";
+  import { enhance } from '$app/forms';
   import { page } from "$app/stores";
-	import { onMount } from "svelte";
+
 
   import "./styles.scss"
 </script>
@@ -24,6 +24,6 @@
   <span>Hello world</span>
 </div>
 
-<form method="POST">
+<form method="POST" use:enhance>
   <button>Run mutation</button>
 </form>
