@@ -3,6 +3,7 @@
 	import MainNavigation from '$lib/components/navigation/MainNavigation.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
+	import '$styles/fontawesome/css/all.min.css';
 	import '$styles/site-styles.scss';
 	import './styles.scss';
 
