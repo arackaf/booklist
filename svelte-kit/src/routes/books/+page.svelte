@@ -31,7 +31,7 @@
 	import { writable } from 'svelte/store';
 	import ModuleLoading from '$lib/components/navigation/ModuleLoading.svelte';
 
-	// import GridView from './bookViews/GridView.svelte';
+	import GridView from './bookViews/GridView.svelte';
 	// import BasicView from './bookViews/BasicView.svelte';
 	// import CoversView from './bookViews/CoversView.svelte';
 
@@ -146,7 +146,7 @@
 					{:else if booksLoaded && books != null}
 						<div>
 							<!-- {#if $uiView.view == GRID_VIEW} -->
-							<!-- <GridView {booksState} {menuBarHeight} /> -->
+							<GridView {booksState} {menuBarHeight} />
 							<!-- {:else if $uiView.view == BASIC_LIST_VIEW}
 								<BasicView {booksState} />
 							{:else if $uiView.view == COVERS_LIST}
