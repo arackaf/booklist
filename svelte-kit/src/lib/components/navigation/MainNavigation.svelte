@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+
 	import NavBarItem from './NavBarItem.svelte';
 	import ModuleLink from './ModuleLink.svelte';
 
@@ -13,6 +15,8 @@
 	import './mobile-menu.scss';
 	import { onMount } from 'svelte';
 
+	$: currentModule = $page.route.id;
+
 	const logout = () => {};
 	// const logout = () => {
 	//   ajaxUtil.postAuth("/logout", {}, () => ((window as any).location = "/"));
@@ -20,9 +24,6 @@
 
 	//let isAdminUser = isAdmin();
 	let isAdminUser = false;
-
-	//let currentModule;
-	//$: currentModule = $appState.module;
 
 	//$: isLoginModule = currentModule == 'authenticate';
 	let isLoginModule = false;
@@ -32,8 +33,7 @@
 	//$: isPublic = $appState.isPublic;
 	let isPublic = false;
 
-	//$: isHome = currentModule == 'home';
-	let isHome = false;
+	$: isHome = currentModule == '/home';
 
 	let pendingCount = 0;
 

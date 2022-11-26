@@ -1,5 +1,6 @@
 <script lang="ts">
 	//import { appState } from "app/state/appState";
+	import { page } from '$app/stores';
 	import ModuleLink from './ModuleLink.svelte';
 
 	export let style = '';
@@ -9,9 +10,10 @@
 	export { className as class };
 	export let onClick: (evt?: any) => void = null as any;
 
-	//$: currentModule = $appState.module;
-	//$: active = currentModule == href.replace(/^\//, "");
-	let active = true;
+	$: currentModule = $page.route.id;
+	$: active = href === currentModule;
+
+	$: console.log({ currentModule, href, active });
 
 	const spreadClassNames = (baseCssClasses = '', ...userClasses: string[]) =>
 		`${baseCssClasses} ${userClasses.join(' ')}`;
