@@ -3,7 +3,7 @@
 
 	// import { appState } from 'app/state/appState';
 	// import { currentSearch } from '../booksSearchState';
-	const currentSearch = writable({} as any);
+	const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
 	import RemovableLabelDisplay from '$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte';
 	//import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';
 	const clearAllFilters = (...args: any[]) => {};

@@ -19,7 +19,10 @@
 	export let setMenuBarHeight: any;
 	//export let bookResultsPacket: BookResultsPacket;
 	let bookResultsPacket = {} as any;
-	$: ({ totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket);
+	//$: ({ totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket);
+	const totalPages = 1;
+	const resultsCount = 50;
+	const booksLoaded = true;
 
 	const booksModuleContext: any = getContext('books-module-context');
 	const { booksUiState } = booksModuleContext;
