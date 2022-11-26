@@ -239,7 +239,13 @@ app.use("/graphql", (req, res, next) => {
   next();
 });
 
-app.get("/graphql", loginReady, passport.authenticate("local"));
+app.get("/graphql", loginReady, (req, res, next) => {
+  if (req.headers.referer.indexOf("view?userId") !== -1) {
+    next();
+  } else {
+    passport.authenticate("local")(req, res, next);
+  }
+});
 
 app.use(
   "/graphql",
