@@ -36,7 +36,7 @@
 	// import CoversView from './bookViews/CoversView.svelte';
 
 	// import BookSearchModal from './SearchModal.svelte';
-	// import BooksMenuBar from './menuBar/MenuBar.svelte';
+	import BooksMenuBar from './menuBar/MenuBar.svelte';
 	// import { searchBooks } from './booksState';
 	import { /*getBookSearchUiView,*/ GRID_VIEW, BASIC_LIST_VIEW, COVERS_LIST } from './booksUiState';
 	// import SubjectEditModal from './SubjectEditModal.svelte';
@@ -135,7 +135,7 @@
 
 <section class="full flush-bottom">
 	<div style="background-color: white;">
-		<!-- <BooksMenuBar {setMenuBarHeight} {uiView} bookResultsPacket={$booksState} /> -->
+		<BooksMenuBar {setMenuBarHeight} {uiView} />
 		<div>
 			<div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
 				{#if booksLoaded}
