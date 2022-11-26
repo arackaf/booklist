@@ -26,8 +26,6 @@
 
 <script lang="ts">
   import { setContext } from "svelte";
-  import { fade } from "svelte/transition";
-  import { quadOut } from "svelte/easing";
 
   import { mutation } from "micro-graphql-svelte";
   import { MutationOf, Mutations } from "gql/graphql-typings";
