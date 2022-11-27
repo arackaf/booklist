@@ -232,6 +232,15 @@ svelteRouter.use(
   })
 );
 
+svelteRouter.use(
+  "/gqlraw",
+  graphqlHTTP({
+    schema: executableSchema,
+    graphiql: true,
+    rootValue: root
+  })
+);
+
 middleware(app, { url: "/graphql", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
 app.use("/graphql", (req, res, next) => {
@@ -243,6 +252,14 @@ app.get("/graphql", loginReady, passport.authenticate("local"));
 
 app.use(
   "/graphql",
+  graphqlHTTP({
+    schema: executableSchema,
+    graphiql: true,
+    rootValue: root
+  })
+);
+app.use(
+  "/gqlraw",
   graphqlHTTP({
     schema: executableSchema,
     graphiql: true,
