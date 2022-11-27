@@ -90,7 +90,7 @@
 		reload: () => {},
 		booksLoading: false
 	});
-	$: ({ books, booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
+	$: ({ /*books,*/ booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
 
 	let filterModalOpen = false;
 	let openFilterModal = () => (filterModalOpen = true);
@@ -136,6 +136,8 @@
 	};
 
 	let isOpen = false;
+
+	$: books = $page.data.books;
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -168,7 +170,8 @@
 
 				<table>
 					<tbody>
-						{#each $page.data.books as book}
+						<!-- {#each $page.data.books as book} -->
+						{#each books as book}
 							<tr>
 								<td>{book.title}</td>
 								<td>{book.userId}</td>

@@ -55,7 +55,8 @@
 				$page.url.searchParams.delete('search');
 			}
 
-			goto($page.url.toString(), { invalidateAll: true });
+			// goto($page.url.toString(), { invalidateAll: true });
+			goto($page.url.toString());
 
 			//quickSearch(evt.currentTarget.value);
 		}
