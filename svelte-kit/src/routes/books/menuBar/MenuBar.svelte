@@ -45,18 +45,18 @@
 	};
 	const quickSearchType = (evt: any) => {
 		if (evt.keyCode == 13) {
-			const params = $page.url.searchParams;
+			const params = new URLSearchParams($page.url.search);
 
 			const search = evt.target.value;
 
 			if (search) {
-				$page.url.searchParams.set('search', search);
+				params.set('search', search);
 			} else {
-				$page.url.searchParams.delete('search');
+				params.delete('search');
 			}
 
 			// goto($page.url.toString(), { invalidateAll: true });
-			goto($page.url.toString());
+			goto(`/books?${params}`);
 
 			//quickSearch(evt.currentTarget.value);
 		}
