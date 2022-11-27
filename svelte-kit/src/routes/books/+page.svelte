@@ -59,7 +59,6 @@
 	// const { mutationState: runBookEditState } = mutation<MutationOf<Mutations['updateBook']>>(UpdateBookMutation);
 
 	import { getStores, navigating, page, updated } from '$app/stores';
-	import { dataset_dev } from 'svelte/internal';
 
 	console.log({ page: $page });
 

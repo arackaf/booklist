@@ -14,7 +14,9 @@
 	//import { BookResultsPacket } from '../booksState';
 
 	//import MobileMenu from 'app/components/navigation/MobileMenu.svelte';
-	import { writable } from 'svelte/store';
+
+	import { getStores, navigating, page, updated } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let setMenuBarHeight: any;
 	//export let bookResultsPacket: BookResultsPacket;
@@ -43,6 +45,18 @@
 	};
 	const quickSearchType = (evt: any) => {
 		if (evt.keyCode == 13) {
+			const params = $page.url.searchParams;
+
+			const search = evt.target.value;
+
+			if (search) {
+				$page.url.searchParams.set('search', search);
+			} else {
+				$page.url.searchParams.delete('search');
+			}
+
+			goto($page.url.toString(), { invalidateAll: true });
+
 			//quickSearch(evt.currentTarget.value);
 		}
 	};
