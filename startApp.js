@@ -232,6 +232,10 @@ svelteRouter.use(
   })
 );
 
+svelteRouter.use("/gqlraw", (req, res, next) => {
+  res.set("Cache-Control", "no-cache");
+  next();
+});
 svelteRouter.use(
   "/gqlraw",
   graphqlHTTP({
@@ -258,6 +262,11 @@ app.use(
     rootValue: root
   })
 );
+
+app.use("/gqlraw", (req, res, next) => {
+  res.set("Cache-Control", "no-cache");
+  next();
+});
 app.use(
   "/gqlraw",
   graphqlHTTP({
