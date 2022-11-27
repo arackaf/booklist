@@ -31,6 +31,9 @@
 	import { writable } from 'svelte/store';
 	import ModuleLoading from '$lib/components/navigation/ModuleLoading.svelte';
 
+	import AutoSuggest from 'svelte-helpers/AutoSuggest.svelte';
+	import Modal from 'svelte-helpers/Modal.svelte';
+
 	import GridView from './bookViews/GridView.svelte';
 	// import BasicView from './bookViews/BasicView.svelte';
 	// import CoversView from './bookViews/CoversView.svelte';
@@ -54,6 +57,11 @@
 	// const setRead = (_ids, isRead) => Promise.resolve($updateMutationState.runMutation({ _ids, isRead }));
 
 	// const { mutationState: runBookEditState } = mutation<MutationOf<Mutations['updateBook']>>(UpdateBookMutation);
+
+	import { getStores, navigating, page, updated } from '$app/stores';
+	import { dataset_dev } from 'svelte/internal';
+
+	console.log({ page: $page });
 
 	const prepBookForSaving = (book: any) => {
 		let propsToUpdate = ['title', 'isbn', 'smallImage', 'pages', 'publisher', 'publicationDate', 'authors', 'subjects', 'tags'];
@@ -127,6 +135,8 @@
 	const stopEditingBook = () => {
 		editBookModalOpen = false;
 	};
+
+	let isOpen = false;
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -136,6 +146,7 @@
 <section class="full flush-bottom">
 	<div style="background-color: white;">
 		<BooksMenuBar {setMenuBarHeight} {uiView} />
+
 		<div>
 			<div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
 				{#if booksLoaded}
@@ -155,6 +166,17 @@
 						</div>
 					{/if}
 				{/if}
+
+				<table>
+					<tbody>
+						{#each $page.data.books as book}
+							<tr>
+								<td>{book.title}</td>
+								<td>{book.userId}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
 
 				<!-- {#if filterModalOpen}
 					<BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
@@ -179,6 +201,14 @@
 	</div>
 </section>
 
+<!-- <AutoSuggest onItemSelected={() => {}} filterField="name" />
+
+<button on:click={() => (isOpen = true)}>Open</button>
+<Modal open={isOpen} on:close={() => (isOpen = false)}>
+	<div>
+		<h1>Hi there</h1>
+	</div>
+</Modal> -->
 <style>
 	:global(.bookTitle) {
 		font-size: 15px;

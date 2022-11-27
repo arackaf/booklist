@@ -13,10 +13,7 @@
 	$: currentModule = $page.route.id;
 	$: active = href === currentModule;
 
-	$: console.log({ currentModule, href, active });
-
-	const spreadClassNames = (baseCssClasses = '', ...userClasses: string[]) =>
-		`${baseCssClasses} ${userClasses.join(' ')}`;
+	const spreadClassNames = (baseCssClasses = '', ...userClasses: string[]) => `${baseCssClasses} ${userClasses.join(' ')}`;
 
 	function liClicked() {
 		onClick && onClick();
