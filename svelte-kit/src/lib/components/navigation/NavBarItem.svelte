@@ -11,7 +11,7 @@
 	export let onClick: (evt?: any) => void = null as any;
 
 	$: currentModule = $page.route.id;
-	$: active = href === currentModule;
+	$: active = currentModule?.indexOf(href) !== -1;
 
 	const spreadClassNames = (baseCssClasses = '', ...userClasses: string[]) => `${baseCssClasses} ${userClasses.join(' ')}`;
 

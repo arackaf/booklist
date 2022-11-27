@@ -33,7 +33,7 @@
 	//$: isPublic = $appState.isPublic;
 	let isPublic = false;
 
-	$: isHome = currentModule == '/home';
+	$: isHome = currentModule?.indexOf('/home') !== -1;
 
 	let pendingCount = 0;
 
@@ -90,6 +90,12 @@
 			{#if isLoggedIn || isPublic}
 				<NavBarItem href="/settings"
 					><span class="hidden-xs">Settings</span>
+					<i class="visible-xs fal fa-fw fa-cogs" />
+				</NavBarItem>
+			{/if}
+			{#if isLoggedIn || isPublic}
+				<NavBarItem href="/intro"
+					><span class="hidden-xs">Intro</span>
 					<i class="visible-xs fal fa-fw fa-cogs" />
 				</NavBarItem>
 			{/if}
