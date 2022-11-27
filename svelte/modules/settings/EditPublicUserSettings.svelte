@@ -36,7 +36,7 @@
     });
   };
 
-  $: publicLink = currentlyPublic ? `http://${window.location.host}/view?userId=${$appState.userId}` : "";
+  $: publicLink = currentlyPublic ? `${window.location.protocol}//${window.location.host}/view?userId=${$appState.userId}` : "";
 </script>
 
 <Stack looser={true}>

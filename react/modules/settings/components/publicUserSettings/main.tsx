@@ -44,7 +44,7 @@ const EditPublicUserSettings: FunctionComponent<{ settings: UserSettings }> = pr
   const [pendingIsPublic, setPendingIsPublic] = useState(settings.isPublic);
   const [isPublic, setIsPublic] = useState(settings.isPublic);
 
-  const publicLink = isPublic ? `http://${window.location.host}/view?userId=${app.userId}` : "";
+  const publicLink = isPublic ? `${window.location.protocol}//${window.location.host}/view?userId=${app.userId}` : "";
 
   const pubNameEl = useRef(null);
   const pubHeaderEl = useRef(null);
