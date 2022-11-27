@@ -216,6 +216,7 @@ app.use(subdomain("svelte-app", svelteRouter));
 const { root, executableSchema } = getGraphqlSchema();
 export { root, executableSchema };
 
+middleware(svelteRouter, { url: "/gqlraw", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 middleware(svelteRouter, { url: "/graphql", x: "SVELTE", mappingFile: path.resolve(__dirname, "./svelte/extracted_queries.json") });
 
 svelteRouter.get("/graphql", loginReady, passport.authenticate("local"));
@@ -245,6 +246,7 @@ svelteRouter.use(
   })
 );
 
+middleware(app, { url: "/gqlraw", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 middleware(app, { url: "/graphql", x: "REACT", mappingFile: path.resolve(__dirname, "./react/extracted_queries.json") });
 
 app.use("/graphql", (req, res, next) => {
