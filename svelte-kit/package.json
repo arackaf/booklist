@@ -26,6 +26,7 @@
 	"type": "module",
 	"dependencies": {
 		"classnames": "^2.3.2",
+		"mongodb": "^4.12.1",
 		"sass": "^1.56.1",
 		"svelte-helpers": "^0.2.9"
 	}

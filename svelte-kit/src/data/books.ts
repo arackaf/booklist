@@ -1,6 +1,28 @@
 import { env } from '$env/dynamic/private';
+import { getDbConnection } from './dbUtils';
 
-export const searchBooks = (search: string) => {
+const { db } = await getDbConnection();
+
+export const searchBooks = async (search: string) => {
+	const nativeStart = +new Date();
+
+	const result = await db
+		.collection('books')
+		.aggregate([
+			{ $match: { title: { $regex: search || '', $options: 'i' }, userId: '60a93babcc3928454b5d1cc6' } },
+			{ $project: { _id: 1, title: 1, userId: 1 } },
+			{ $limit: 50 },
+			{ $sort: { title: 1 } }
+		])
+		.toArray();
+
+	const nativeEnd = +new Date();
+
+	console.log('result', result);
+	console.log('Native time', nativeEnd - nativeStart);
+	return result.map(b => ({ ...b, _id: b._id.toString() }));
+
+	const httpStart = +new Date();
 	return fetch(env.MONGO_URL + '/action/aggregate', {
 		method: 'POST',
 		headers: {
@@ -15,12 +37,17 @@ export const searchBooks = (search: string) => {
 			pipeline: [
 				{ $match: { title: { $regex: search || '', $options: 'i' }, userId: '60a93babcc3928454b5d1cc6' } },
 				{ $project: { _id: 1, title: 1, userId: 1 } },
+				{ $limit: 50 },
 				{ $sort: { title: 1 } }
 			]
 		})
 	})
 		.then(res => res.json())
-		.then(res => res.documents)
+		.then(res => {
+			const httpEnd = +new Date();
+			console.log('HTTP time', httpEnd - httpStart);
+			return res.documents;
+		})
 		.catch(err => {
 			console.log({ err });
 		});

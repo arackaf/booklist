@@ -60,7 +60,7 @@
 
 	import { getStores, navigating, page, updated } from '$app/stores';
 
-	console.log({ page: $page });
+	// console.log({ page: $page });
 
 	const prepBookForSaving = (book: any) => {
 		let propsToUpdate = ['title', 'isbn', 'smallImage', 'pages', 'publisher', 'publicationDate', 'authors', 'subjects', 'tags'];
