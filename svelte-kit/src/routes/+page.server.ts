@@ -1,7 +1,5 @@
 let i = 0;
 
-import type { PageServerLoad } from './$types';
-
 // @ts-ignore
 export async function load(params) {
 	console.log('LOADING');

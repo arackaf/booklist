@@ -171,6 +171,12 @@
 				<table>
 					<tbody>
 						<!-- {#each $page.data.books as book} -->
+
+						{#each $page.data.subjects as subject}
+							<span>{subject.name}|</span>
+						{/each}
+						<hr />
+
 						{#each books as book}
 							<tr>
 								<td>{book.title}</td>
