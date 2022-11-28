@@ -177,6 +177,11 @@
 						{/each}
 						<hr />
 
+						{#each $page.data.tags as tag}
+							<span>{tag.name}|</span>
+						{/each}
+						<hr />
+
 						{#each books as book}
 							<tr>
 								<td>{book.title}</td>
