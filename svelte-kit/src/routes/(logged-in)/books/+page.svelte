@@ -60,7 +60,8 @@
 
 	import { getStores, navigating, page, updated } from '$app/stores';
 
-	// console.log({ page: $page });
+	//TODO: TEMP
+	import DisplaySubject from './DisplaySubject.svelte';
 
 	const prepBookForSaving = (book: any) => {
 		let propsToUpdate = ['title', 'isbn', 'smallImage', 'pages', 'publisher', 'publicationDate', 'authors', 'subjects', 'tags'];
@@ -204,14 +205,18 @@
 
 				<div style="flex: 1; padding: 10px">
 					{#each $page.data.subjects.allSubjectsSorted as subject}
-						<span>{subject.name}|</span>
+						<div>{subject.name}</div>
 					{/each}
 
 					<hr />
 
-					{#each $page.data.subjects.stackedSubjects as subject}
-						<div>{subject.name}</div>
-					{/each}
+					<ul>
+						{#each $page.data.subjects.stackedSubjects as subject}
+							<li>
+								<DisplaySubject {subject} />
+							</li>
+						{/each}
+					</ul>
 				</div>
 			</div>
 
@@ -233,6 +238,12 @@
 	</div>
 </Modal> -->
 <style>
+	:global(ul) {
+		margin-left: 20px !important;
+	}
+	:global(li) {
+		list-style: circle !important;
+	}
 	:global(.bookTitle) {
 		font-size: 15px;
 		font-weight: normal;
