@@ -168,29 +168,6 @@
 					{/if}
 				{/if}
 
-				<table>
-					<tbody>
-						<!-- {#each $page.data.books as book} -->
-
-						{#each $page.data.subjects as subject}
-							<span>{subject.name}|</span>
-						{/each}
-						<hr />
-
-						{#each $page.data.tags as tag}
-							<span>{tag.name}|</span>
-						{/each}
-						<hr />
-
-						{#each books as book}
-							<tr>
-								<td>{book.title}</td>
-								<td>{book.userId}</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-
 				<!-- {#if filterModalOpen}
 					<BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
 				{/if}
@@ -210,6 +187,39 @@
 					<BookTagSetter isOpen={!!booksTagEditing.length} onHide={() => (booksTagEditing = [])} modifyingBooks={booksTagEditing} />
 				{/if} -->
 			</div>
+
+			<div style="display: flex; flex-direction: row">
+				<table style="flex: 1; padding: 10px">
+					<tbody>
+						<!-- {#each $page.data.books as book} -->
+
+						{#each books as book}
+							<tr>
+								<td>{book.title}</td>
+								<td>{book.userId}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+
+				<div style="flex: 1; padding: 10px">
+					{#each $page.data.subjects.allSubjectsSorted as subject}
+						<span>{subject.name}|</span>
+					{/each}
+
+					<hr />
+
+					{#each $page.data.subjects.stackedSubjects as subject}
+						<div>{subject.name}</div>
+					{/each}
+				</div>
+			</div>
+
+			<hr />
+
+			{#each $page.data.tags as tag}
+				<span>{tag.name}|</span>
+			{/each}
 		</div>
 	</div>
 </section>
