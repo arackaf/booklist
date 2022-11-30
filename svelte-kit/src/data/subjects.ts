@@ -30,10 +30,6 @@ const stackAndGetTopLevelSubjects = (rawSubjects: Subject[]): FullSubject[] => {
 		parent.childLevel = !parent.path ? 0 : (parent.path.match(/\,/g) || []).length - 1;
 	});
 
-	subjects.forEach(s => {
-		console.log(s);
-	});
-
 	return subjects.filter(s => s.path == null);
 };
 

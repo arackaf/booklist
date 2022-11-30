@@ -17,6 +17,7 @@
 
 	import { getStores, navigating, page, updated } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { searchState } from '../searchState';
 
 	export let setMenuBarHeight: any;
 	//export let bookResultsPacket: BookResultsPacket;
@@ -36,12 +37,8 @@
 	$: selectedBooksCount = selectedBooksIds.length;
 
 	let quickSearchEl: any = {};
-	$: {
-		//quickSearchEl && (quickSearchEl.value = $bookSearchState.search);
-	}
-
 	const resetSearch = () => {
-		//quickSearchEl.value = $bookSearchState.search;
+		quickSearchEl.value = $searchState.search;
 	};
 	const quickSearchType = (evt: any) => {
 		if (evt.keyCode == 13) {
@@ -90,7 +87,7 @@
 					<input
 						autocomplete="off"
 						bind:this={quickSearchEl}
-						value={''}
+						value={$searchState.search}
 						on:blur={resetSearch}
 						name="search"
 						class="form-control search-input tiny-orphan"
