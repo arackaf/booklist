@@ -38,7 +38,7 @@
 
 	let quickSearchEl: any = {};
 	const resetSearch = () => {
-		quickSearchEl.value = $searchState.search;
+		//quickSearchEl.value = $searchState.search;
 	};
 	const quickSearchType = (evt: any) => {
 		if (evt.keyCode == 13) {
@@ -53,7 +53,7 @@
 			}
 
 			// goto($page.url.toString(), { invalidateAll: true });
-			goto(`/books?${params}`);
+			goto(`/books?${params}`, { keepFocus: true });
 
 			//quickSearch(evt.currentTarget.value);
 		}
@@ -63,6 +63,9 @@
 	const closeMobileMenu = () => {
 		mobileMenuOpen = false;
 	};
+
+	//TODO: remove
+	export let selectedSubjects = [] as any[];
 </script>
 
 <div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
@@ -84,16 +87,22 @@
 			<PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded }} />
 			<div style="margin-right: 5px">
 				<div class="menu-bar-desktop btn-group">
-					<input
-						autocomplete="off"
-						bind:this={quickSearchEl}
-						value={$searchState.search}
-						on:blur={resetSearch}
-						name="search"
-						class="form-control search-input tiny-orphan"
-						placeholder="Title search"
-						on:keydown={quickSearchType}
-					/>
+					<form action="/books">
+						<!-- svelte-ignore a11y-autofocus -->
+						<input
+							autofocus
+							autocomplete="off"
+							bind:this={quickSearchEl}
+							value={$searchState.search}
+							on:blur={resetSearch}
+							name="search"
+							class="form-control search-input tiny-orphan"
+							placeholder="Title search"
+						/>
+						{#each selectedSubjects as sub}
+							<input type="hidden" name="subjects" value={sub} />
+						{/each}
+					</form>
 					<MenuOptions {uiView} {bookResultsPacket} />
 				</div>
 			</div>

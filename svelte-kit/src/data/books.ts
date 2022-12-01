@@ -3,14 +3,8 @@ import { getDbConnection } from './dbUtils';
 
 const { db } = await getDbConnection();
 
+//temp
 export const searchBooks = async (search: string) => {
-	(async function () {
-		const setupStart = +new Date();
-		const { db } = await getDbConnection();
-		const setupEnd = +new Date();
-		console.log('Setup time', setupEnd - setupStart);
-	})();
-
 	const nativeStart = +new Date();
 
 	const httpStart = +new Date();

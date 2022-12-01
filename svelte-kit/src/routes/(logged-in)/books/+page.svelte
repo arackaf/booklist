@@ -139,6 +139,16 @@
 	let isOpen = false;
 
 	$: books = $page.data.books;
+
+	//TODO: remove
+	let selectedSubjects = [] as any[];
+	const subjectToggle = (evt: any) => {
+		const selected = evt.target.checked;
+		const id = evt.target.value;
+		console.log(selected, id);
+
+		selectedSubjects = selected ? [...selectedSubjects, id] : selectedSubjects.filter(subjectId => subjectId !== id);
+	};
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -147,7 +157,7 @@
 
 <section class="full flush-bottom">
 	<div style="background-color: white;">
-		<BooksMenuBar {setMenuBarHeight} {uiView} />
+		<BooksMenuBar {setMenuBarHeight} {uiView} {selectedSubjects} />
 
 		<div>
 			<div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
@@ -205,7 +215,11 @@
 
 				<div style="flex: 1; padding: 10px">
 					{#each $page.data.subjects.allSubjectsSorted as subject}
-						<div>{subject.name}</div>
+						<div>
+							{subject.name}
+
+							<input type="checkbox" name="subjects" value={subject._id} on:change={subjectToggle} />
+						</div>
 					{/each}
 
 					<hr />
