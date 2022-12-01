@@ -63,9 +63,6 @@
 	const closeMobileMenu = () => {
 		mobileMenuOpen = false;
 	};
-
-	//TODO: remove
-	export let selectedSubjects = [] as any[];
 </script>
 
 <div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
@@ -99,8 +96,8 @@
 							class="form-control search-input tiny-orphan"
 							placeholder="Title search"
 						/>
-						{#each selectedSubjects as sub}
-							<input type="hidden" name="subjects" value={sub} />
+						{#each $searchState.subjects as subject}
+							<input type="hidden" name="subjects" value={subject} />
 						{/each}
 					</form>
 					<MenuOptions {uiView} {bookResultsPacket} />
