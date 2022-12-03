@@ -13,3 +13,9 @@ export const searchState = derived(page, $page => {
     selectedTags: []
   };
 });
+
+export const urlWithoutFilter = (filter: string) => {
+  const newUrl = new URL(get(page).url);
+  newUrl.searchParams.delete(filter);
+  return newUrl.toString();
+};

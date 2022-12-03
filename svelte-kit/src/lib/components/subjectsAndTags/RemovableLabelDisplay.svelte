@@ -2,7 +2,7 @@
   export let item = {} as any;
   export let extraStyles = "";
   export let name = "";
-  export let doRemove: any;
+  export let doRemove: () => void = () => {};
 
   let className = "";
   export { className as class };

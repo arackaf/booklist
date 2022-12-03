@@ -4,7 +4,7 @@
   // import { appState } from 'app/state/appState';
   // import { currentSearch } from '../booksSearchState';
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
-  import { searchState } from "../searchState";
+  import { searchState, urlWithoutFilter } from "../searchState";
 
   const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
   //import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';
@@ -33,19 +33,7 @@
 
 <div style="display: flex; align-items: flex-start; align-content: center; flex-wrap: wrap">
   {#if $searchState.search}
-    <RemovableLabelDisplay
-      extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
-      item={{ name: `"${$searchState.search}"` }}
-      doRemove={() => removeFilters("search")}
-    />
-  {/if}
-  {#if $searchState.search}
-    <RemovableLabelDisplay
-      extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
-      item={{ name: `"${$searchState.search}"` }}
-      doRemove={() => removeFilters("search")}
-      href="XXX"
-    />
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `"${$searchState.search}"` }} href={urlWithoutFilter("search")} />
   {/if}
   {#if $currentSearch.isRead == "1" || $currentSearch.isRead == "0"}
     <RemovableLabelDisplay
