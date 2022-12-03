@@ -70,10 +70,10 @@
     //   sort,
     //   sortDirection
     // });
-    closeModal();
   };
 
   const onFormData = (evt: any) => {
+    closeModal();
     const searchParams: URLSearchParams = evt.formData;
     sanitize(searchParams);
 
