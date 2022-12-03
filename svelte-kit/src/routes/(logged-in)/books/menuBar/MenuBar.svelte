@@ -66,9 +66,6 @@
   };
 
   function onFormData(evt: any) {
-    evt.formData.set("x", "hey");
-    console.log("HEY");
-
     //const entries: FormData = evt.data;
     //if (!entries.get('search')) {
     //entries.delete('search');

@@ -6,6 +6,8 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
 
+  import { searchState } from "./searchState";
+
   // import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   // import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   // import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
@@ -70,16 +72,16 @@
     closeModal();
   };
 
-  import { searchState } from "./searchState";
+  const onFormData = () => {};
 </script>
 
 <Modal deferStateChangeOnClose={true} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false} bind:closeModal>
-  <form on:submit={updateFilters}>
+  <form action="/books" on:formdata={onFormData}>
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_title">Title</label>
-          <input id="book_search_title" value={$searchState.search} placeholder="Search title" class="form-control" />
+          <input id="book_search_title" name="search" value={$searchState.search} placeholder="Search title" class="form-control" />
         </div>
       </div>
       <div class="col-xs-6">
