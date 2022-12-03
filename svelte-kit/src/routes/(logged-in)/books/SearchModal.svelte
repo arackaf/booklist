@@ -87,13 +87,13 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_pub">Publisher</label>
-          <input id="book_search_pub" bind:this={publisherEl} value={""} placeholder="Publisher" class="form-control" />
+          <input id="book_search_pub" name="publisher" value={$searchState.publisher} placeholder="Publisher" class="form-control" />
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_auth">Author</label>
-          <input id="book_search_auth" bind:this={authorEl} value={""} placeholder="Author" class="form-control" />
+          <input id="book_search_auth" name="author" value={$searchState.author} placeholder="Author" class="form-control" />
         </div>
       </div>
       <Stack class="col-xs-6">
