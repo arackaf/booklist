@@ -7,6 +7,7 @@
   import Stack from "$lib/components/layout/Stack.svelte";
 
   import { searchState } from "./searchState";
+  import { sanitize } from "$lib/util/sanitizeForm";
 
   // import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   // import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
@@ -72,7 +73,16 @@
     closeModal();
   };
 
-  const onFormData = () => {};
+  const onFormData = (evt: any) => {
+    const searchParams: URLSearchParams = evt.formData;
+    sanitize(searchParams);
+
+    const [sort, sortDirection] = searchParams.get("sort_pack")!.split("|");
+    searchParams.delete("sort_pack");
+
+    searchParams.set("sort", sort);
+    searchParams.set("sortDirection", sortDirection);
+  };
 </script>
 
 <Modal deferStateChangeOnClose={true} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false} bind:closeModal>
@@ -118,7 +128,7 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_sort">Sort</label>
-          <select id="book_search_sort" bind:this={sortSelectEl} style="margin-bottom: 0" value={""} class="form-control">
+          <select id="book_search_sort" name="sort_pack" value={$searchState.sortPacket} class="form-control">
             <option value="title|asc">Title A-Z</option>
             <option value="title|desc">Title Z-A</option>
             <option value="pages|asc">Pages, Low</option>

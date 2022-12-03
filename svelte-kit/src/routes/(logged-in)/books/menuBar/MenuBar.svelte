@@ -39,7 +39,7 @@
 
   let quickSearchEl: any = {};
   const resetSearch = () => {
-    //quickSearchEl.value = $searchState.search;
+    quickSearchEl.value = $searchState.search;
   };
   const quickSearchType = (evt: any) => {
     if (evt.keyCode == 13) {
