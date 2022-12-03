@@ -7,9 +7,9 @@
 
 // type UI_ACTIONS = "SET_VIEW" | "SET_PENDING_VIEW";
 
-export const GRID_VIEW = 'books table view';
-export const BASIC_LIST_VIEW = 'books mobile view';
-export const COVERS_LIST = 'books covers view';
+export const GRID_VIEW = "books table view";
+export const BASIC_LIST_VIEW = "books mobile view";
+export const COVERS_LIST = "books covers view";
 
 // export interface BookUiState {
 //   view: string;

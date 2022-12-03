@@ -1,7 +1,10 @@
 <script>
-import SpinnerSvg from "./SpinnerSvg.svelte";
-
+  import SpinnerSvg from "./SpinnerSvg.svelte";
 </script>
+
+<div class="module-loading">
+  <SpinnerSvg class="fa-spin" width="80" />
+</div>
 
 <style>
   .module-loading {
@@ -11,13 +14,9 @@ import SpinnerSvg from "./SpinnerSvg.svelte";
     z-index: 10;
     opacity: 0.7;
   }
-  
+
   :global(.module-loading > *) {
     z-index: 1;
     fill: var(--primary-4);
   }
 </style>
-
-<div class="module-loading">
-  <SpinnerSvg class="fa-spin" width="80" />
-</div>

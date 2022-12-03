@@ -16,11 +16,11 @@
 
 <span
   style="background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {extraStyles}"
-  class={'label label-default label-editable-expandable noselect ' + extraClasses}
+  class={"label label-default label-editable-expandable noselect " + extraClasses}
 >
   {#if childSubjects?.length}
     <a
-      class={cn('toggle', { expanded })}
+      class={cn("toggle", { expanded })}
       on:click={() => setExpanded(!expanded)}
       style="color: {item.textColor || 'white'}; border-right: {`var(--default-border-width) solid ${item.textColor || 'white'}`}"
     >

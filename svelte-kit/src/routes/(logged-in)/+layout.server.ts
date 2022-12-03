@@ -1,12 +1,12 @@
-import { allSubjects } from '$data/subjects';
-import { allTags } from '$data/tags';
+import { allSubjects } from "$data/subjects";
+import { allTags } from "$data/tags";
 
 export function load() {
-	const subjects = allSubjects();
-	const tags = allTags();
+  const subjects = allSubjects();
+  const tags = allTags();
 
-	return {
-		subjects,
-		tags
-	};
+  return {
+    subjects,
+    tags
+  };
 }
