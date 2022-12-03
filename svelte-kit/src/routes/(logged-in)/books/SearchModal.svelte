@@ -109,10 +109,10 @@
           <input id="book_search_auth" bind:this={authorEl} value={""} placeholder="Author" class="form-control" />
         </div>
       </div>
-      <div class="col-xs-6">
-        <Stack tighter={true}>
+      <Stack class="col-xs-6">
+        <Stack tighter={true} style="flex: 1">
           <label for="__" class="form-label">Is Read?</label>
-          <FlowItems class="radio">
+          <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
             <FlowItems tightest={true} vCenter={true}>
               <input type="radio" checked={false} bind:this={isReadE} name="isRead" id="isReadE" />
               <label for="isReadE">Either</label>
@@ -127,7 +127,7 @@
             </FlowItems>
           </FlowItems>
         </Stack>
-      </div>
+      </Stack>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_sort">Sort</label>
