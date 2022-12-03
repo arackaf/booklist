@@ -86,19 +86,6 @@
       </div>
       <div class="col-xs-6">
         <div class="form-group">
-          <label for="book_search_pages">Pages</label>
-          <FlowItems tightest={true}>
-            <select id="book_search_pages" style="width: 60px" bind:this={pagesDirEl} value={"lt"} class="form-control">
-              <option value="lt">{"<"}</option>
-              <option value="gt">{">"}</option>
-            </select>
-
-            <input value={0} bind:this={pagesEl} style="width: 80px" type="number" placeholder="Pages" class="form-control" />
-          </FlowItems>
-        </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
           <label for="book_search_pub">Publisher</label>
           <input id="book_search_pub" bind:this={publisherEl} value={""} placeholder="Publisher" class="form-control" />
         </div>
