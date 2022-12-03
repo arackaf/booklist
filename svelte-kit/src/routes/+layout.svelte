@@ -6,10 +6,14 @@
   import "$styles/fontawesome/css/all.min.css";
   import "$styles/site-styles.scss";
   import "./styles.scss";
+  import { onMount } from "svelte";
 
   const appState = writable({ isMobile: false });
 
   const theme = "scheme5";
+  onMount(() => {
+    document.body.classList.add(theme);
+  });
 </script>
 
 <div class={`app-container ${theme}`}>
