@@ -39,6 +39,14 @@
       doRemove={() => removeFilters("search")}
     />
   {/if}
+  {#if $searchState.search}
+    <RemovableLabelDisplay
+      extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
+      item={{ name: `"${$searchState.search}"` }}
+      doRemove={() => removeFilters("search")}
+      href="XXX"
+    />
+  {/if}
   {#if $currentSearch.isRead == "1" || $currentSearch.isRead == "0"}
     <RemovableLabelDisplay
       extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
