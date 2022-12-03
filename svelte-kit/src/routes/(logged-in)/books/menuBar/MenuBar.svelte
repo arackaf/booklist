@@ -18,6 +18,7 @@
 	import { getStores, navigating, page, updated } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { searchState } from '../searchState';
+	import { enhance } from '$app/forms';
 
 	export let setMenuBarHeight: any;
 	//export let bookResultsPacket: BookResultsPacket;
@@ -63,6 +64,33 @@
 	const closeMobileMenu = () => {
 		mobileMenuOpen = false;
 	};
+
+	function onFormData(evt: any) {
+		evt.formData.set('x', 'hey');
+		console.log('HEY');
+
+		//const entries: FormData = evt.data;
+		//if (!entries.get('search')) {
+		//entries.delete('search');
+		//}
+		// return async (obj: any) => {
+		// 	debugger;
+		// 	await obj.update();
+		// };
+	}
+
+	import { beforeNavigate, afterNavigate } from '$app/navigation';
+	beforeNavigate(({ type }) => {
+		console.log('BEFORE');
+		//focused = document.activeElement;
+	});
+
+	afterNavigate(({ type }) => {
+		console.log('AFTER');
+		if (type === 'form') {
+			//focused?.focus();
+		}
+	});
 </script>
 
 <div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
@@ -84,7 +112,7 @@
 			<PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded }} />
 			<div style="margin-right: 5px">
 				<div class="menu-bar-desktop btn-group">
-					<form action="/books">
+					<form action="/books" on:formdata={onFormData}>
 						<!-- svelte-ignore a11y-autofocus -->
 						<input
 							autofocus

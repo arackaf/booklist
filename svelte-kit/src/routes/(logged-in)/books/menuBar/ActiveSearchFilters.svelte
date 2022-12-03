@@ -3,8 +3,10 @@
 
 	// import { appState } from 'app/state/appState';
 	// import { currentSearch } from '../booksSearchState';
-	const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
 	import RemovableLabelDisplay from '$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte';
+	import { searchState } from '../searchState';
+
+	const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
 	//import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';
 	const clearAllFilters = (...args: any[]) => {};
 	const removeFilters = (...args: any[]) => {};
@@ -30,10 +32,10 @@
 {/if}
 
 <div style="display: flex; align-items: flex-start; align-content: center; flex-wrap: wrap">
-	{#if $currentSearch.search}
+	{#if $searchState.search}
 		<RemovableLabelDisplay
 			extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
-			item={{ name: `"${$currentSearch.search}"` }}
+			item={{ name: `"${$searchState.search}"` }}
 			doRemove={() => removeFilters('search')}
 		/>
 	{/if}

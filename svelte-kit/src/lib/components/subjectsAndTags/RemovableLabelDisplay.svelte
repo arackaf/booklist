@@ -13,9 +13,17 @@
   style="background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {extraStyles}"
   class={"label label-default noselect " + extraClasses}
 >
-  <button on:click={doRemove} class="raw-button fw-700 cursor-pointer" style="color: {item.textColor || 'white'}; font-size: inherit"> X </button>
+  <a on:click={doRemove} href="todo" class="fw-700" style="color: {item.textColor || 'white'}; font-size: inherit"> X </a>
   <span style="margin-left: 5px; padding-left: 5px; border-left: var(--default-border-width) solid white">{name}</span>
   {#if $$slots.default}
     <slot />
-  {:else}{item.name}{/if}
+  {:else}
+    {item.name}
+  {/if}
 </span>
+
+<style>
+  a {
+    text-decoration: none;
+  }
+</style>
