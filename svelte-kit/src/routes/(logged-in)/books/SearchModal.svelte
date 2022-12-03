@@ -77,11 +77,14 @@
     const searchParams: URLSearchParams = evt.formData;
     sanitize(searchParams);
 
-    const [sort, sortDirection] = searchParams.get("sort_pack")!.split("|");
+    const sortPacket = searchParams.get("sort_pack")!;
     searchParams.delete("sort_pack");
 
-    searchParams.set("sort", sort);
-    searchParams.set("sortDirection", sortDirection);
+    if (sortPacket !== "_id|desc") {
+      const [sort, sortDirection] = sortPacket.split("|");
+      searchParams.set("sort", sort);
+      searchParams.set("sortDirection", sortDirection);
+    }
   };
 </script>
 
