@@ -20,6 +20,9 @@
   import { searchState } from "../searchState";
   import { enhance } from "$app/forms";
 
+  import { beforeNavigate, afterNavigate } from "$app/navigation";
+  import QuickFormFiller from "./QuickFormFiller.svelte";
+
   export let setMenuBarHeight: any;
   //export let bookResultsPacket: BookResultsPacket;
   let bookResultsPacket = {} as any;
@@ -41,24 +44,6 @@
   const resetSearch = () => {
     quickSearchEl.value = $searchState.search;
   };
-  const quickSearchType = (evt: any) => {
-    if (evt.keyCode == 13) {
-      const params = new URLSearchParams($page.url.search);
-
-      const search = evt.target.value;
-
-      if (search) {
-        params.set("search", search);
-      } else {
-        params.delete("search");
-      }
-
-      // goto($page.url.toString(), { invalidateAll: true });
-      goto(`/books?${params}`, { keepFocus: true });
-
-      //quickSearch(evt.currentTarget.value);
-    }
-  };
 
   let mobileMenuOpen = false;
   const closeMobileMenu = () => {
@@ -76,7 +61,6 @@
     // };
   }
 
-  import { beforeNavigate, afterNavigate } from "$app/navigation";
   beforeNavigate(({ type }) => {
     console.log("BEFORE");
     //focused = document.activeElement;
@@ -121,6 +105,7 @@
               class="form-control search-input tiny-orphan"
               placeholder="Title search"
             />
+            <QuickFormFiller />
             {#each $searchState.subjects as subject}
               <input type="hidden" name="subjects" value={subject} />
             {/each}
