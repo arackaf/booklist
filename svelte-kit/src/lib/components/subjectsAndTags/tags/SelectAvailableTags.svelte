@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Tag } from "$data/types";
+  import { filterTags } from "$lib/state/tagsState";
 
-  //import { filterTags, tagsState } from "app/state/tagsState";
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
   export let allTags: Tag[];
@@ -9,7 +9,6 @@
   export let placeholder = "Tags";
   export let currentlySelected: string[] = [];
 
-  //$: ({ tags } = $tagsState);
   let search = "";
 
   const doSelect = (item: any) => {
@@ -20,11 +19,11 @@
   type TagSelectedHash = { [_id: string]: true };
 
   $: itemHash = currentlySelected.reduce<TagSelectedHash>((hash, _id) => ((hash[_id] = true), hash), {});
-  const eligible: Tag[] = allTags;
-  // $: eligible = filterTags(
-  //   tags.filter(s => !itemHash[s._id]),
-  //   search
-  // );
+
+  $: eligible = filterTags(
+    allTags.filter(s => !itemHash[s._id]),
+    search
+  );
 </script>
 
 <GenericLabelSelect {placeholder} bind:search options={eligible} onItemSelected={doSelect} />
