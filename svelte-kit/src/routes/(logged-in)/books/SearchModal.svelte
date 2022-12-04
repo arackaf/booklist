@@ -79,7 +79,7 @@
   };
 
   const onFormData = (evt: any) => {
-    closeModal();
+    //closeModal();
     const searchParams: URLSearchParams = evt.formData;
     sanitize(searchParams);
 
