@@ -3,7 +3,6 @@ import { getDbConnection } from "./dbUtils";
 
 const { db } = await getDbConnection();
 
-//temp
 export const searchBooks = async (search: string) => {
   const nativeStart = +new Date();
 
