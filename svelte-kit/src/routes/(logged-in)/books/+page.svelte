@@ -250,12 +250,6 @@
 	</div>
 </Modal> -->
 <style>
-  :global(ul) {
-    margin-left: 20px !important;
-  }
-  :global(li) {
-    list-style: circle !important;
-  }
   :global(.bookTitle) {
     font-size: 15px;
     font-weight: normal;
