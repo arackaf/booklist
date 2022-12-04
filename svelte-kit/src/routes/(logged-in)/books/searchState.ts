@@ -20,8 +20,16 @@ export const searchState = derived(page, $page => {
   };
 });
 
-export const urlWithoutFilter = (filter: string) => {
-  const newUrl = new URL(get(page).url);
+export const changeFilter = derived(page, $page => {
+  return {
+    withoutSearch: urlWithoutFilter($page.url, "search"),
+    withoutAuthor: urlWithoutFilter($page.url, "author"),
+    withoutPublisher: urlWithoutFilter($page.url, "publisher")
+  };
+});
+
+const urlWithoutFilter = (url: URL, filter: string) => {
+  const newUrl = new URL(url);
   newUrl.searchParams.delete(filter);
   return newUrl.toString();
 };

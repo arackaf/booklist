@@ -4,7 +4,7 @@
   // import { appState } from 'app/state/appState';
   // import { currentSearch } from '../booksSearchState';
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
-  import { searchState, urlWithoutFilter } from "../searchState";
+  import { searchState, changeFilter } from "../searchState";
 
   const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
   //import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';
@@ -33,7 +33,7 @@
 
 <div style="display: flex; align-items: flex-start; align-content: center; flex-wrap: wrap">
   {#if $searchState.search}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `"${$searchState.search}"` }} href={urlWithoutFilter("search")} />
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `"${$searchState.search}"` }} href={$changeFilter.withoutSearch} />
   {/if}
   {#if $currentSearch.isRead == "1" || $currentSearch.isRead == "0"}
     <RemovableLabelDisplay
@@ -47,27 +47,17 @@
       </span>
     </RemovableLabelDisplay>
   {/if}
-  {#if $currentSearch.publisher}
+  {#if $searchState.publisher}
     <RemovableLabelDisplay
       extraStyles={filterDisplayStyles}
-      item={{ name: `Publisher: "${$currentSearch.publisher}"` }}
-      doRemove={() => removeFilters("publisher")}
+      item={{ name: `Publisher: "${$searchState.publisher}"` }}
+      href={$changeFilter.withoutPublisher}
     />
   {/if}
-  {#if $currentSearch.author}
-    <RemovableLabelDisplay
-      extraStyles={filterDisplayStyles}
-      item={{ name: `Author: "${$currentSearch.author}"` }}
-      doRemove={() => removeFilters("author")}
-    />
+  {#if $searchState.author}
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `Author: "${$searchState.author}"` }} href={$changeFilter.withoutAuthor} />
   {/if}
-  {#if $currentSearch.pages || $currentSearch.pages == "0"}
-    <RemovableLabelDisplay
-      extraStyles={filterDisplayStyles}
-      item={{ name: `Pages: ${$currentSearch.pagesOperator == "lt" ? "<" : ">"} ${$currentSearch.pages}` }}
-      doRemove={() => removeFilters("pages", "pagesOperator")}
-    />
-  {/if}
+
   {#if $currentSearch.noSubjects}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `No subjects` }} doRemove={() => removeFilters("noSubjects")} />
   {/if}
