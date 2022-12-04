@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import Button from "$lib/components/buttons/Button.svelte";
 
   import Modal from "$lib/components/ui/Modal.svelte";
@@ -12,7 +13,8 @@
   // import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   // import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   // import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-  // import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
+  import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
+  import type { Tag, TagHash } from "$data/types";
 
   // import { currentSearch } from "./booksSearchState";
   // import { applyFilters } from "./setBookFilters";
@@ -20,6 +22,10 @@
 
   export let isOpen = false;
   export let onHide = () => {};
+
+  export let allTags: Tag[];
+  export let tagHash: TagHash[];
+
   let closeModal: any;
 
   //let searchEl: any;
@@ -143,7 +149,7 @@
       </div>
 
       <div class="col-sm-3 col-xs-12">
-        <!-- <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} /> -->
+        <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} {allTags} />
       </div>
       <div class="col-sm-9 col-xs-12">
         <!-- <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} /> -->

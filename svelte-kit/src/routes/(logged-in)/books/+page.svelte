@@ -26,6 +26,7 @@
 
 <script lang="ts">
   import { setContext } from "svelte";
+  import { getStores, navigating, page, updated } from "$app/stores";
 
   import useReducer from "$lib/state/useReducer";
   import { writable } from "svelte/store";
@@ -57,8 +58,6 @@
   // const setRead = (_ids, isRead) => Promise.resolve($updateMutationState.runMutation({ _ids, isRead }));
 
   // const { mutationState: runBookEditState } = mutation<MutationOf<Mutations['updateBook']>>(UpdateBookMutation);
-
-  import { getStores, navigating, page, updated } from "$app/stores";
 
   //TODO: TEMP
   import DisplaySubject from "./DisplaySubject.svelte";
@@ -140,6 +139,9 @@
   let isOpen = false;
 
   $: books = $page.data.books;
+  $: tagsPacket = $page.data.tags;
+
+  $: ({ allTags, tagHash } = tagsPacket);
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -171,7 +173,7 @@
         {/if}
 
         {#if filterModalOpen}
-          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} />
+          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {tagHash} />
         {/if}
         <!--
 				{#if editSubjectsModalOpen}
@@ -232,7 +234,7 @@
 
       <hr />
 
-      {#each $page.data.tags as tag}
+      {#each $page.data.tags.allTags as tag}
         <span>{tag.name}|</span>
       {/each}
     </div>
