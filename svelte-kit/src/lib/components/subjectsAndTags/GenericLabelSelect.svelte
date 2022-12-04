@@ -2,11 +2,11 @@
   import AutoSuggest from "svelte-helpers/AutoSuggest.svelte";
   import GenericLabelDisplayItem from "./GenericLabelDisplayItem.svelte";
 
-  export let options;
+  export let options: any;
   export let placeholder = "";
   export let inputProps = {};
   export let search = "";
-  export let onItemSelected;
+  export let onItemSelected: (option: any, inputEl: HTMLInputElement) => void;
 
   let inputStyles = "width: 100px; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-radius: 0;";
 </script>
