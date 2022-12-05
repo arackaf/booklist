@@ -27,8 +27,8 @@
 
   let missingTitle = false;
 
-  export let saveBook: any;
-  export let onSave = (book: any) => {};
+  //export let saveBook: any;
+  //export let onSave = (book: any) => {};
   export let cancel: any;
 
   const save = (evt: any) => {
@@ -44,9 +44,9 @@
     missingTitle = false;
     //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
     bookToSave.authors = editingBook.authors.filter(a => a);
-    return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
-      onSave(savedBook);
-    });
+    // return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
+    //   onSave(savedBook);
+    // });
   };
 
   const addAuthor = (evt: any) => {

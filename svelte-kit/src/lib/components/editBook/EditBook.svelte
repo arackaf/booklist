@@ -18,9 +18,9 @@
   </TabHeaders>
   <TabContents>
     <TabContent tabName="basic">
-      <!-- {#if book}
+      {#if book}
         <EditBookInfo {book} {cancel} />
-      {/if} -->
+      {/if}
     </TabContent>
     <TabContent tabName="covers">
       <!-- {#if book}
