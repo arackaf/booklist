@@ -25,7 +25,7 @@
 </script>
 
 <script lang="ts">
-  import { setContext } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { getStores, navigating, page, updated } from "$app/stores";
 
   import useReducer from "$lib/state/useReducer";
@@ -45,7 +45,7 @@
   import { /*getBookSearchUiView,*/ GRID_VIEW, BASIC_LIST_VIEW, COVERS_LIST } from "./booksUiState";
   // import SubjectEditModal from './SubjectEditModal.svelte';
   // import TagEditModal from './TagEditModal.svelte';
-  // import EditBookModal from 'app/components/editBook/EditBookModal.svelte';
+  import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   // import BookSubjectSetter from './BookSubjectSetter.svelte';
   // import BookTagSetter from './BookTagSetter.svelte';
   // import ModuleLoading from 'app/components/navigation/ModuleLoading.svelte';
@@ -62,6 +62,17 @@
   //TODO: TEMP
   import DisplaySubject from "./DisplaySubject.svelte";
   import { searchState } from "./searchState";
+  import { enhance } from "$app/forms";
+
+  onMount(() => {
+    console.log("MOUNT");
+    const div = document.createElement("div");
+    document.body.appendChild(div);
+
+    setTimeout(() => {
+      div.appendChild(document.createElement("div"));
+    }, 2000);
+  });
 
   const prepBookForSaving = (book: any) => {
     let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
@@ -142,6 +153,8 @@
   $: tagsPacket = $page.data.tags;
 
   $: ({ allTags, tagHash } = tagsPacket);
+
+  let temp_editBookModalOpen = false;
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -175,6 +188,17 @@
         {#if filterModalOpen}
           <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {tagHash} />
         {/if}
+
+        <Modal open={temp_editBookModalOpen} closeModal={() => (temp_editBookModalOpen = false)}>
+          <form action="?/saveBook" use:enhance>
+            <input />
+          </form>
+        </Modal>
+
+        {#if editingBook}
+          <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} />
+        {/if}
+
         <!--
 				{#if editSubjectsModalOpen}
 					<SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
@@ -182,9 +206,7 @@
 				{#if editTagsModalOpen}
 					<TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
 				{/if}
-				{#if editingBook}
-					<EditBookModal saveBook={saveEditingBook} isOpen={editBookModalOpen} book={editingBook} onSave={stopEditingBook} onHide={stopEditingBook} />
-				{/if}
+
 				{#if !!booksSubjectEditing.length}
 					<BookSubjectSetter isOpen={!!booksSubjectEditing.length} onHide={() => (booksSubjectEditing = [])} modifyingBooks={booksSubjectEditing} />
 				{/if}
@@ -202,6 +224,7 @@
               <tr>
                 <td>{book.title}</td>
                 <td>{book.userId}</td>
+                <td><button on:click={() => editBook(book)}>Edit</button></td>
               </tr>
             {/each}
           </tbody>
