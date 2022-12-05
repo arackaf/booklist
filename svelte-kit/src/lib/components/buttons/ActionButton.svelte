@@ -52,6 +52,9 @@
   const finishedIconStyles = `${text.length ? "margin-left: 5px" : ""}`;
 
   const clickHandler = (...args: any[]) => {
+    if (!onClick) {
+      return;
+    }
     let result = onClick(...args);
 
     if (!result?.then) {
