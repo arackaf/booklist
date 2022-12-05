@@ -354,6 +354,13 @@ a {
   outline: 0;
 }
 
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset[disabled] input,
 input[disabled] {
   opacity: 0.6;
 }
