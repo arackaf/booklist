@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { invalidate, invalidateAll } from "$app/navigation";
+  import { invalidate } from "$app/navigation";
 
   import ActionButton from "../buttons/ActionButton.svelte";
   import Button from "../buttons/Button.svelte";
@@ -55,20 +55,24 @@
     editingBook.authors = [...editingBook.authors, ""];
   };
 
+  let saving = false;
   function fn({ form, cancel, data }: any) {
     if (!data.get("title")) {
       missingTitle = true;
       return cancel();
     }
+    missingTitle = false;
 
+    saving = true;
     return async () => {
+      saving = false;
       invalidate("books-results");
     };
   }
 </script>
 
 <form action="?/saveBook" use:enhance={fn}>
-  <fieldset>
+  <fieldset disabled={saving}>
     <FlexRow>
       <div class="col-xs-6">
         <div class={"form-group"}>
@@ -77,8 +81,8 @@
           <input type="hidden" name="_id" value={editingBook._id} />
         </div>
       </div>
-      <input type="hidden" name="author" value="Richard Dawkins" />
-      <input type="hidden" name="author" value="Steven Pinker" />
+      <input type="hidden" name="authors" value="Richard Dawkins" />
+      <input type="hidden" name="authors" value="Steven Pinker" />
 
       <div class="col-xs-6">
         <div class="form-group"><label>ISBN</label> <input class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" /></div>
@@ -135,14 +139,14 @@
         </div>
       {/each}
       <div class="col-xs-12">
-        <Button type="button" onClick={evt => addAuthor(evt)} preset="default-xs"><i class="far fa-fw fa-plus" /> Add author</Button>
+        <Button type="button" disabled={saving} onClick={evt => addAuthor(evt)} preset="default-xs"><i class="far fa-fw fa-plus" />Add author</Button>
       </div>
     </FlexRow>
     <hr />
 
     <FlowItems>
-      <ActionButton type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
-      <Button style="margin-left: auto;" type="button" onClick={cancel}>Cancel</Button>
+      <ActionButton type="submit" style="min-width: 10ch" isRunning={saving} finishedText="Saved" text="Save" preset="primary" runningText="Saving" />
+      <Button disabled={saving} style="margin-left: auto;" type="button" onClick={cancel}>Cancel</Button>
     </FlowItems>
   </fieldset>
 </form>
