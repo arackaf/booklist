@@ -3,8 +3,6 @@ import { env } from "$env/dynamic/private";
 export const updateBook = async (book: any) => {
   const { _id, title } = book;
 
-  console.log("Updatig", _id, title);
-
   return fetch(env.MONGO_URL + "/action/updateOne", {
     method: "POST",
     headers: {
@@ -21,10 +19,6 @@ export const updateBook = async (book: any) => {
     })
   })
     .then(res => res.json())
-    .then(res => {
-      console.log(res);
-      return res;
-    })
     .catch(err => {
       console.log({ err });
     });

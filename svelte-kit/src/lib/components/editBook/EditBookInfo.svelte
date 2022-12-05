@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { invalidate, invalidateAll } from "$app/navigation";
 
   import ActionButton from "../buttons/ActionButton.svelte";
   import Button from "../buttons/Button.svelte";
@@ -43,7 +44,6 @@
 
     const bookToSave = { ...editingBook };
 
-    missingTitle = false;
     //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
     //bookToSave.authors = editingBook.authors.filter(a => a);
     // return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
@@ -54,43 +54,57 @@
   const addAuthor = (evt: any) => {
     editingBook.authors = [...editingBook.authors, ""];
   };
+
+  function fn({ form, cancel, data }: any) {
+    if (!data.get("title")) {
+      missingTitle = true;
+      return cancel();
+    }
+
+    return async () => {
+      invalidate("books-results");
+    };
+  }
 </script>
 
-<form action="?/saveBook" use:enhance>
-  <FlexRow>
-    <div class="col-xs-6">
-      <div class={"form-group"}>
-        <label>Title</label>
-        <input type="hidden" name="_id" value={editingBook._id} />
-        <input class="form-control" name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
+<form action="?/saveBook" use:enhance={fn}>
+  <fieldset>
+    <FlexRow>
+      <div class="col-xs-6">
+        <div class={"form-group"}>
+          <label>Title</label>
+          <input class="form-control" name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
+          <input type="hidden" name="_id" value={editingBook._id} />
+        </div>
       </div>
-    </div>
-    <input type="hidden" name="author" value="Richard Dawkins" />
-    <input type="hidden" name="author" value="Steven Pinker" />
+      <input type="hidden" name="author" value="Richard Dawkins" />
+      <input type="hidden" name="author" value="Steven Pinker" />
 
-    <div class="col-xs-6">
-      <div class="form-group"><label>ISBN</label> <input class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" /></div>
-    </div>
-
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label>Pages</label>
-        <input class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
+      <div class="col-xs-6">
+        <div class="form-group"><label>ISBN</label> <input class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" /></div>
       </div>
-    </div>
 
-    <div class="col-xs-6">
-      <div class="form-group"><label>Publisher</label> <input class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" /></div>
-    </div>
-
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label>Published</label>
-        <input class="form-control" bind:value={editingBook.publicationDate} placeholder="Publication date" />
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Pages</label>
+          <input class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
+        </div>
       </div>
-    </div>
 
-    <!-- <div class="col-xs-12">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Publisher</label> <input class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" />
+        </div>
+      </div>
+
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label>Published</label>
+          <input class="form-control" bind:value={editingBook.publicationDate} placeholder="Publication date" />
+        </div>
+      </div>
+
+      <!-- <div class="col-xs-12">
       <FlexRow>
         <div class="col-sm-3 col-xs-12">
           <SelectAvailableTags currentlySelected={editingBook.tags} onSelect={addTag} />
@@ -101,7 +115,7 @@
       </FlexRow>
     </div> -->
 
-    <!-- <div class="col-xs-12">
+      <!-- <div class="col-xs-12">
       <FlexRow>
         <div class="col-sm-3 col-xs-12">
           <SelectAvailableSubjects currentlySelected={editingBook.subjects} onSelect={addSubject} />
@@ -112,22 +126,23 @@
       </FlexRow>
     </div> -->
 
-    {#each editingBook.authors || [] as author, index (index)}
-      <div class="col-xs-4">
-        <div class="form-group">
-          <label>Author</label>
-          <input bind:value={editingBook.authors[index]} class="form-control" placeholder={`Author ${index + 1}`} />
+      {#each editingBook.authors || [] as author, index (index)}
+        <div class="col-xs-4">
+          <div class="form-group">
+            <label>Author</label>
+            <input bind:value={editingBook.authors[index]} class="form-control" placeholder={`Author ${index + 1}`} />
+          </div>
         </div>
+      {/each}
+      <div class="col-xs-12">
+        <Button type="button" onClick={evt => addAuthor(evt)} preset="default-xs"><i class="far fa-fw fa-plus" /> Add author</Button>
       </div>
-    {/each}
-    <div class="col-xs-12">
-      <Button type="button" onClick={evt => addAuthor(evt)} preset="default-xs"><i class="far fa-fw fa-plus" /> Add author</Button>
-    </div>
-  </FlexRow>
-  <hr />
+    </FlexRow>
+    <hr />
 
-  <FlowItems>
-    <ActionButton type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
-    <Button style="margin-left: auto;" type="button" onClick={cancel}>Cancel</Button>
-  </FlowItems>
+    <FlowItems>
+      <ActionButton type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
+      <Button style="margin-left: auto;" type="button" onClick={cancel}>Cancel</Button>
+    </FlowItems>
+  </fieldset>
 </form>

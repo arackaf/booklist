@@ -153,8 +153,6 @@
   $: tagsPacket = $page.data.tags;
 
   $: ({ allTags, tagHash } = tagsPacket);
-
-  let temp_editBookModalOpen = false;
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -188,12 +186,6 @@
         {#if filterModalOpen}
           <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {tagHash} />
         {/if}
-
-        <Modal open={temp_editBookModalOpen} closeModal={() => (temp_editBookModalOpen = false)}>
-          <form action="?/saveBook" use:enhance>
-            <input />
-          </form>
-        </Modal>
 
         {#if editingBook}
           <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} />

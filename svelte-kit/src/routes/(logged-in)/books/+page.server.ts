@@ -1,3 +1,4 @@
+import { invalidate } from "$app/navigation";
 import { searchBooks, updateBook } from "$data/books";
 import { toJson } from "$lib/util/formDataHelpers";
 
@@ -5,6 +6,8 @@ export async function load(params: any) {
   const s = +new Date();
   const books = searchBooks(params.url.searchParams.get("search"));
   const e = +new Date();
+
+  params.depends("books-results");
 
   //console.log(params);
   //console.log(params.url.searchParams.get('search'));
@@ -21,14 +24,12 @@ export async function load(params: any) {
 export const actions = {
   async saveBook({ request }: any) {
     const formData: URLSearchParams = await request.formData();
-    console.log("Saving book", formData);
-    console.log("Form data toString", [...formData.entries()]);
 
     const fields = toJson(formData, {
       strings: ["_id", "title"],
       arrays: ["author"]
     });
-    console.log({ fields });
+
     await updateBook(fields);
 
     return { success: true };
