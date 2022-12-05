@@ -13,10 +13,8 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "^1.0.0-next.570",
     "prettier": "^2.6.2",
     "prettier-plugin-svelte": "^2.7.0",
-    "svelte": "^3.44.0",
     "svelte-check": "^2.7.1",
     "svelte-preprocess": "^4.10.6",
     "tslib": "^2.3.1",
@@ -25,6 +23,8 @@
   },
   "type": "module",
   "dependencies": {
+    "svelte": "^3.44.0",
+    "@sveltejs/kit": "^1.0.0-next.571",
     "classnames": "^2.3.2",
     "mongodb": "^4.12.1",
     "sass": "^1.56.1",
