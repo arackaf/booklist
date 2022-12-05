@@ -48,7 +48,7 @@ export const searchBooks = async (search: string) => {
     .then(res => res.json())
     .then(res => {
       const httpEnd = +new Date();
-      console.log("HTTP time", httpEnd - httpStart);
+      console.log("HTTP time books", httpEnd - httpStart);
       return res.documents;
     })
     .catch(err => {
