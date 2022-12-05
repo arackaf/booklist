@@ -69,16 +69,29 @@
       invalidate("books-results");
     };
   }
+
+  function titleKeyDown(evt: any) {
+    if (evt.target.value) {
+      missingTitle = false;
+    }
+  }
 </script>
 
 <form action="?/saveBook" use:enhance={fn}>
   <fieldset disabled={saving}>
+    <input type="hidden" name="_id" value={editingBook._id} />
     <FlexRow>
       <div class="col-xs-6">
         <div class={"form-group"}>
           <label>Title</label>
-          <input class="form-control" name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
-          <input type="hidden" name="_id" value={editingBook._id} />
+          <input
+            class="form-control"
+            name="title"
+            class:error={missingTitle}
+            bind:value={editingBook.title}
+            on:input={titleKeyDown}
+            placeholder="Title (required)"
+          />
         </div>
       </div>
       <input type="hidden" name="authors" value="Richard Dawkins" />
