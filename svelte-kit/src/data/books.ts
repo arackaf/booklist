@@ -1,8 +1,38 @@
 import { env } from "$env/dynamic/private";
 
+export const updateBook = async (book: any) => {
+  const { _id, title } = book;
+
+  console.log("Updatig", _id, title);
+
+  return fetch(env.MONGO_URL + "/action/updateOne", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Request-Headers": "*",
+      "api-key": env.MONGO_URL_API_KEY
+    },
+    body: JSON.stringify({
+      collection: "books",
+      database: "my-library",
+      dataSource: "Cluster0",
+      filter: { _id: { $oid: _id } },
+      update: { $set: { title } }
+    })
+  })
+    .then(res => res.json())
+    .then(res => {
+      console.log(res);
+      return res;
+    })
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
 export const searchBooks = async (search: string) => {
   const httpStart = +new Date();
-  const httpResponse = fetch(env.MONGO_URL + "/action/aggregate", {
+  return fetch(env.MONGO_URL + "/action/aggregate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,6 +60,4 @@ export const searchBooks = async (search: string) => {
     .catch(err => {
       console.log({ err });
     });
-
-  return httpResponse;
 };

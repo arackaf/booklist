@@ -8,7 +8,7 @@
   import Stack from "$lib/components/layout/Stack.svelte";
 
   import { searchState } from "./searchState";
-  import { sanitize } from "$lib/util/sanitizeForm";
+  import { sanitize } from "$lib/util/formDataHelpers";
 
   // import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   // import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";

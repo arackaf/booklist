@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
+
   import ActionButton from "../buttons/ActionButton.svelte";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "../buttons/Button.svelte";
 
   //import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   //import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
@@ -43,7 +45,7 @@
 
     missingTitle = false;
     //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
-    bookToSave.authors = editingBook.authors.filter(a => a);
+    //bookToSave.authors = editingBook.authors.filter(a => a);
     // return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
     //   onSave(savedBook);
     // });
@@ -54,15 +56,17 @@
   };
 </script>
 
-<form on:submit={save}>
+<form action="?/saveBook" use:enhance>
   <FlexRow>
     <div class="col-xs-6">
       <div class={"form-group"}>
         <label>Title</label>
-        <input type="hidden" value={editingBook._id} />
+        <input type="hidden" name="_id" value={editingBook._id} />
         <input class="form-control" name="title" class:error={missingTitle} bind:value={editingBook.title} placeholder="Title (required)" />
       </div>
     </div>
+    <input type="hidden" name="author" value="Richard Dawkins" />
+    <input type="hidden" name="author" value="Steven Pinker" />
 
     <div class="col-xs-6">
       <div class="form-group"><label>ISBN</label> <input class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" /></div>
@@ -123,16 +127,7 @@
   <hr />
 
   <FlowItems>
-    <ActionButton
-      onClick={save}
-      type="submit"
-      style="min-width: 10ch"
-      finishedText="Saved"
-      text="Save"
-      class="pull-right"
-      preset="primary"
-      runningText="Saving"
-    />
+    <ActionButton type="submit" style="min-width: 10ch" finishedText="Saved" text="Save" class="pull-right" preset="primary" runningText="Saving" />
     <Button style="margin-left: auto;" type="button" onClick={cancel}>Cancel</Button>
   </FlowItems>
 </form>
