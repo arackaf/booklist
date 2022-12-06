@@ -212,7 +212,7 @@
           <tbody>
             <!-- {#each $page.data.books as book} -->
 
-            {#each books as book}
+            {#each $books as book}
               <tr>
                 <td>{book.title}</td>
                 <td>{book.userId}</td>

@@ -77,7 +77,7 @@
   }
 </script>
 
-<form action="?/saveBook" use:enhance={fn}>
+<form method="post" action="?/saveBook" use:enhance={fn}>
   <fieldset disabled={saving}>
     <input type="hidden" name="_id" value={editingBook._id} />
     <FlexRow>
