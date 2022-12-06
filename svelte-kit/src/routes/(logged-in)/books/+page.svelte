@@ -188,7 +188,7 @@
         {/if}
 
         {#if editingBook}
-          <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} />
+          <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} tags={allTags} />
         {/if}
 
         <!--
@@ -208,14 +208,15 @@
       </div>
 
       <div style="display: flex; flex-direction: row">
-        <table style="flex: 1; padding: 10px">
+        <table style="flex: 3; padding: 10px">
           <tbody>
             <!-- {#each $page.data.books as book} -->
 
             {#each $books as book}
               <tr>
                 <td>{book.title}</td>
-                <td>{book.userId}</td>
+                <td>{book.authors.join(", ")}</td>
+                <td>{book.tags.join(", ")}</td>
                 <td><button on:click={() => editBook(book)}>Edit</button></td>
               </tr>
             {/each}
