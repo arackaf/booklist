@@ -1,19 +1,21 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
+  import type { Tag } from "$data/types";
 
   import ActionButton from "../buttons/ActionButton.svelte";
   import Button from "../buttons/Button.svelte";
 
-  //import SelectAvailableTags from "app/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
+  import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   //import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
-  //import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   //import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import FlexRow from "../layout/FlexRow.svelte";
   import FlowItems from "../layout/FlowItems.svelte";
 
   export let book: any;
+  export let tags: Tag[];
 
   let editingBook: any;
   $: bookChanged(book);
@@ -30,33 +32,14 @@
 
   let missingTitle = false;
 
-  //export let saveBook: any;
-  //export let onSave = (book: any) => {};
   export let cancel: any;
-
-  const save = (evt: any) => {
-    evt.preventDefault();
-
-    if (!editingBook.title) {
-      missingTitle = true;
-      return;
-    }
-
-    const bookToSave = { ...editingBook };
-
-    //trim out empty authors now, so they're not applied in the reducer, and show up as empty entries on subsequent edits
-    //bookToSave.authors = editingBook.authors.filter(a => a);
-    // return Promise.resolve(saveBook(bookToSave)).then(savedBook => {
-    //   onSave(savedBook);
-    // });
-  };
 
   const addAuthor = (evt: any) => {
     editingBook.authors = [...editingBook.authors, ""];
   };
 
   let saving = false;
-  function fn({ form, cancel, data }: any) {
+  function executeSave({ cancel, data }: any) {
     if (!data.get("title")) {
       missingTitle = true;
       return cancel();
@@ -77,7 +60,7 @@
   }
 </script>
 
-<form method="post" action="?/saveBook" use:enhance={fn}>
+<form method="post" action="?/saveBook" use:enhance={executeSave}>
   <fieldset disabled={saving}>
     <input type="hidden" name="_id" value={editingBook._id} />
     <FlexRow>
@@ -121,16 +104,16 @@
         </div>
       </div>
 
-      <!-- <div class="col-xs-12">
-      <FlexRow>
-        <div class="col-sm-3 col-xs-12">
-          <SelectAvailableTags currentlySelected={editingBook.tags} onSelect={addTag} />
-        </div>
-        <div style="display: {editingBook.tags.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
-          <DisplaySelectedTags currentlySelected={editingBook.tags} onRemove={removeTag} />
-        </div>
-      </FlexRow>
-    </div> -->
+      <div class="col-xs-12">
+        <FlexRow>
+          <div class="col-sm-3 col-xs-12">
+            <SelectAvailableTags allTags={tags} currentlySelected={editingBook.tags} onSelect={addTag} />
+          </div>
+          <div style="display: {editingBook.tags.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
+            <DisplaySelectedTags {tags} currentlySelected={editingBook.tags} onRemove={removeTag} />
+          </div>
+        </FlexRow>
+      </div>
 
       <!-- <div class="col-xs-12">
       <FlexRow>

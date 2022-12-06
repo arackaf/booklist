@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/private";
 
 export const updateBook = async (book: any) => {
-  const { _id, title } = book;
+  const { _id, title, tags } = book;
 
   return fetch(env.MONGO_URL + "/action/updateOne", {
     method: "POST",
@@ -15,7 +15,7 @@ export const updateBook = async (book: any) => {
       database: "my-library",
       dataSource: "Cluster0",
       filter: { _id: { $oid: _id } },
-      update: { $set: { title } }
+      update: { $set: { title, tags } }
     })
   })
     .then(res => res.json())
@@ -39,7 +39,7 @@ export const searchBooks = async (search: string) => {
       dataSource: "Cluster0",
       pipeline: [
         { $match: { title: { $regex: search || "", $options: "i" }, userId: "60a93babcc3928454b5d1cc6" } },
-        { $project: { _id: 1, title: 1, userId: 1 } },
+        { $project: { _id: 1, title: 1, userId: 1, authors: 1, tags: 1, subjects: 1 } },
         { $limit: 50 },
         { $sort: { title: 1 } }
       ]
@@ -49,6 +49,15 @@ export const searchBooks = async (search: string) => {
     .then(res => {
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
+
+      const books = res.documents;
+      books.forEach((book: any) => {
+        ["authors", "subjects", "tags"].forEach(arr => {
+          if (!Array.isArray(book[arr])) {
+            book[arr] = [];
+          }
+        });
+      });
       return res.documents;
     })
     .catch(err => {

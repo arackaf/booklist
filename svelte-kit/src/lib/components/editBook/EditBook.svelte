@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Tag } from "$data/types";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
   //import EditBookCovers from "./EditBookCovers.svelte";
 
@@ -7,6 +8,7 @@
 
   export let book: any;
   export let cancel: any;
+  export let tags: Tag[];
 
   const updateBook = (fn: any) => (book = fn(book));
 </script>
@@ -19,7 +21,7 @@
   <TabContents>
     <TabContent tabName="basic">
       {#if book}
-        <EditBookInfo {book} {cancel} />
+        <EditBookInfo {book} {cancel} {tags} />
       {/if}
     </TabContent>
     <TabContent tabName="covers">

@@ -1,8 +1,6 @@
 import { updateBook } from "$data/books";
 import { toJson } from "$lib/util/formDataHelpers";
 
-import { error } from "@sveltejs/kit";
-
 type Book = {
   _id: string;
   title: string;
@@ -15,7 +13,7 @@ export const actions = {
 
     const fields = toJson(formData, {
       strings: ["_id", "title"],
-      arrays: ["authors"]
+      arrays: ["authors", "tags"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
 
