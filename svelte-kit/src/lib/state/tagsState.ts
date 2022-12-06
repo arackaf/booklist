@@ -1,4 +1,4 @@
-import type { Tag } from "$data/types";
+import type { Tag, TagHash } from "$data/types";
 
 // export const tagsState = derived(queryState, $tags => {
 //   const tags = $tags.data ? $tags.data.allTags.Tags : [];
@@ -12,6 +12,13 @@ import type { Tag } from "$data/types";
 //   let bothEqual = name1.toLowerCase() === name2.toLowerCase();
 //   return bothEqual ? 0 : name1After ? 1 : -1;
 // }
+
+export const toHash = (tags: Tag[]): TagHash => {
+  return tags.reduce<TagHash>((hash, tag) => {
+    hash[tag._id] = tag;
+    return hash;
+  }, {});
+};
 
 export const filterTags = (tags: Tag[], search: string) => {
   let filterFn: (txt: string) => boolean;
