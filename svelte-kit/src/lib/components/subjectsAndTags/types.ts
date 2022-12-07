@@ -7,4 +7,5 @@ export type Label = {
 export type HierarchicalLabel = Label & {
   childLevel: number;
   prepend: Label[];
+  disabled: boolean;
 };

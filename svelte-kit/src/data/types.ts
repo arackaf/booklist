@@ -4,8 +4,8 @@ export type Subject = {
   path: string;
 };
 
-export type SubjectWithPrepends = Subject & {
-  prepend: Subject[];
+export type DisablableSubject = Subject & {
+  disabled: boolean;
 };
 
 export type FullSubject = Subject & {
@@ -14,7 +14,7 @@ export type FullSubject = Subject & {
 };
 
 export type SubjectHash = {
-  [_id: string]: Subject;
+  [_id: string]: FullSubject;
 };
 
 export type Tag = {

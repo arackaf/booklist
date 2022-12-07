@@ -1,9 +1,9 @@
-import type { FullSubject, Subject, SubjectHash, SubjectWithPrepends } from "$data/types";
+import type { DisablableSubject, FullSubject, Subject, SubjectHash } from "$data/types";
 
 export const subjectState = (allSubjectsSorted: Subject[] = []) => {
   const subjects = stackAndGetTopLevelSubjects(allSubjectsSorted);
   const subjectsUnwound = unwindSubjects(subjects);
-  const subjectHash = toHash(allSubjectsSorted);
+  const subjectHash = toHash(subjectsUnwound);
 
   return {
     subjects,
@@ -13,7 +13,6 @@ export const subjectState = (allSubjectsSorted: Subject[] = []) => {
 };
 
 export const stackAndGetTopLevelSubjects = (allSubjects: Subject[]): FullSubject[] => {
-  //let subjects = Object.keys(subjectsHash).map(_id => ({ ...subjectsHash[_id] }));
   const subjects: FullSubject[] = allSubjects.map(s => ({
     ...s,
     childLevel: 0,
@@ -34,7 +33,7 @@ export const unwindSubjects = (subjects: FullSubject[]): FullSubject[] => {
   return result;
 };
 
-export const toHash = (subjects: Subject[]): SubjectHash => {
+export const toHash = (subjects: FullSubject[]): SubjectHash => {
   return subjects.reduce<SubjectHash>((hash, tag) => {
     hash[tag._id] = tag;
     return hash;
@@ -52,41 +51,44 @@ export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: 
     let regex = new RegExp(search, "i");
     searchFn = s => regex.test(s.name) && !alreadySelected[s._id];
   }
-  return subjects.reduce<SubjectWithPrepends[]>((result, s) => {
+  const selectedLookup: Set<string> = new Set([]);
+  return subjects.reduce<DisablableSubject[]>((result, s) => {
     if (searchFn(s)) {
-      const entry: SubjectWithPrepends = { ...s, prepend: [] };
+      const entry: DisablableSubject = { ...s, disabled: false };
+      const toAdd: DisablableSubject[] = [entry];
 
       let currentSubject = s;
       let parentId;
-      let ancestorsInactive = 0;
-      while ((parentId = computeSubjectParentId(currentSubject.path))) {
-        if (!parentId) {
+
+      while ((parentId = computeParentId(currentSubject.path))) {
+        if (!parentId || selectedLookup.has(parentId)) {
           break;
         }
         let parent = lookupMap[parentId];
         if (!parent) {
           break;
         }
+        let parentEntry: DisablableSubject = { ...parent, disabled: false };
 
         if (alreadySelected[parent._id] || !searchFn(parent)) {
-          ancestorsInactive++;
+          toAdd.unshift(parentEntry);
+          selectedLookup.add(parentId);
+
+          if (alreadySelected[parent._id]) {
+            parentEntry.disabled = true;
+          }
         }
 
-        entry.prepend.unshift(parent);
         currentSubject = parent;
       }
 
-      if (!ancestorsInactive) {
-        entry.prepend = [];
-      }
-
-      result.push(entry);
+      result.push(...toAdd);
     }
     return result;
   }, []);
 };
 
-const computeSubjectParentId = (path: string) => {
+const computeParentId = (path: string) => {
   if (path) {
     let pathParts = path.split(",");
     return pathParts[pathParts.length - 2];
