@@ -1,4 +1,5 @@
-import type { DisablableSubject, FullSubject, Subject, SubjectHash } from "$data/types";
+import type { DisablableSubject, FullSubject, Hash, Subject } from "$data/types";
+import { toHash } from "./helpers";
 
 export const subjectState = (allSubjectsSorted: Subject[] = []) => {
   const subjects = stackAndGetTopLevelSubjects(allSubjectsSorted);
@@ -33,17 +34,10 @@ export const unwindSubjects = (subjects: FullSubject[]): FullSubject[] => {
   return result;
 };
 
-export const toHash = (subjects: FullSubject[]): SubjectHash => {
-  return subjects.reduce<SubjectHash>((hash, tag) => {
-    hash[tag._id] = tag;
-    return hash;
-  }, {});
-};
-
 type LookupHash = { [_id: string]: true };
 type SearchFn = (s: Subject) => boolean;
 
-export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: SubjectHash = {}, alreadySelected: LookupHash = {}) => {
+export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: Hash<FullSubject> = {}, alreadySelected: LookupHash = {}) => {
   let searchFn: SearchFn;
   if (!search) {
     searchFn = s => !alreadySelected[s._id];

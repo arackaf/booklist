@@ -1,11 +1,4 @@
-import type { Tag, TagHash } from "$data/types";
-
-export const toHash = (tags: Tag[]): TagHash => {
-  return tags.reduce<TagHash>((hash, tag) => {
-    hash[tag._id] = tag;
-    return hash;
-  }, {});
-};
+import type { Tag } from "$data/types";
 
 export const filterTags = (tags: Tag[], search: string) => {
   let filterFn: (txt: string) => boolean;

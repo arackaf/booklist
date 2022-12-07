@@ -10,7 +10,7 @@
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-  //import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+  import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import FlexRow from "../layout/FlexRow.svelte";
   import FlowItems from "../layout/FlowItems.svelte";
 
@@ -25,7 +25,7 @@
     editingBook = { ...book };
   }
 
-  const addSubject = (subject: any) => (editingBook.subjects = editingBook.subjects.concat(subject._id));
+  const addSubject = (subject: Subject) => (editingBook.subjects = editingBook.subjects.concat(subject._id));
   const removeSubject = (subject: any) => (editingBook.subjects = editingBook.subjects.filter(_id => _id != subject._id));
 
   const addTag = (tag: any) => (editingBook.tags = editingBook.tags.concat(tag._id));
@@ -122,7 +122,7 @@
             <SelectAvailableSubjects {subjects} currentlySelected={editingBook.subjects} onSelect={addSubject} />
           </div>
           <div style="display: {editingBook.subjects.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
-            <!-- <DisplaySelectedSubjects currentlySelected={editingBook.subjects} onRemove={removeSubject} /> -->
+            <DisplaySelectedSubjects {subjects} currentlySelected={editingBook.subjects} onRemove={removeSubject} />
           </div>
         </FlexRow>
       </div>

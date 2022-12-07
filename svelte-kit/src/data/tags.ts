@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import type { Tag, TagHash } from "./types";
+import type { Hash, Tag } from "./types";
 
 export const allTags = async () => {
   const httpStart = +new Date();
@@ -23,7 +23,7 @@ export const allTags = async () => {
       console.log("HTTP tags time", httpEnd - httpStart);
 
       const tags = res.documents as Tag[];
-      const tagHash = tags.reduce<TagHash>((hash, tag) => {
+      const tagHash = tags.reduce<Hash<Tag>>((hash, tag) => {
         hash[tag._id] = tag;
         return hash;
       }, {});

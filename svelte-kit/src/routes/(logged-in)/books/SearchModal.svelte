@@ -14,7 +14,7 @@
   // import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   // import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
-  import type { Tag, TagHash } from "$data/types";
+  import type { Hash, Tag } from "$data/types";
 
   // import { currentSearch } from "./booksSearchState";
   // import { applyFilters } from "./setBookFilters";
@@ -24,7 +24,7 @@
   export let onHide = () => {};
 
   export let allTags: Tag[];
-  export let tagHash: TagHash[];
+  export let tagHash: Hash<Tag>;
 
   let closeModal: any;
 

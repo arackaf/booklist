@@ -1,6 +1,8 @@
 export type Subject = {
   _id: string;
   name: string;
+  textColor: string;
+  backgroundColor: string;
   path: string;
 };
 
@@ -13,15 +15,11 @@ export type FullSubject = Subject & {
   childLevel: number;
 };
 
-export type SubjectHash = {
-  [_id: string]: FullSubject;
+export type Hash<T> = {
+  [_id: string]: T;
 };
 
 export type Tag = {
   _id: string;
   name: string;
-};
-
-export type TagHash = {
-  [_id: string]: Tag;
 };

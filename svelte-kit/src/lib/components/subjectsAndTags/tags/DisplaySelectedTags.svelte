@@ -1,10 +1,10 @@
 <script lang="ts">
+  import type { Tag } from "$data/types";
+  import { toHash } from "$lib/state/helpers";
+
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
-
   import FlowItems from "../../layout/FlowItems.svelte";
-  import type { Tag } from "$data/types";
-  import { toHash } from "$lib/state/tagsState";
 
   export let tags: Tag[];
   export let onRemove: ((tag: Tag) => void) | null = null;

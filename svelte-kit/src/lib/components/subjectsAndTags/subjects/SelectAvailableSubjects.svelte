@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Subject } from "$data/types";
+  import type { DisablableSubject, Subject } from "$data/types";
   import type { Label } from "../types";
   import { filterSubjects, subjectState } from "$lib/state/subjectsState";
 
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
-  export let onSelect: (item: Label) => void;
+  export let onSelect: (item: DisablableSubject) => void;
   export let placeholder = "Subjects";
   export let currentlySelected: string[] = [];
 
@@ -13,7 +13,10 @@
 
   let search = "";
 
-  const doSelect = (item: Label) => {
+  const doSelect = (item: DisablableSubject) => {
+    if (item.disabled) {
+      return false;
+    }
     onSelect(item);
     search = "";
   };

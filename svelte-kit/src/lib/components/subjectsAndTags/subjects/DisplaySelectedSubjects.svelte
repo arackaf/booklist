@@ -1,13 +1,17 @@
 <script lang="ts">
+  import type { Subject } from "$data/types";
+
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
-  import { subjectsState } from "app/state/subjectsState";
   import FlowItems from "../../layout/FlowItems.svelte";
+  import { toHash } from "$lib/state/helpers";
 
   export let currentlySelected: any[];
   export let onRemove: any;
 
-  $: ({ subjectHash } = $subjectsState);
+  export let subjects: Subject[];
+
+  $: subjectHash = toHash(subjects);
 </script>
 
 <FlowItems tightest={true}>

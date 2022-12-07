@@ -8,7 +8,11 @@ export const allSubjects = async () => {
 
   const result: Subject[] = (await db
     .collection("subjects")
-    .aggregate([{ $match: { userId: "60a93babcc3928454b5d1cc6" } }, { $project: { _id: 1, name: 1, path: 1 } }, { $sort: { name: 1 } }])
+    .aggregate([
+      { $match: { userId: "60a93babcc3928454b5d1cc6" } },
+      { $project: { _id: 1, name: 1, path: 1, textColor: 1, backgroundColor: 1 } },
+      { $sort: { name: 1 } }
+    ])
     .toArray()) as Subject[];
 
   const nativeEnd = +new Date();
