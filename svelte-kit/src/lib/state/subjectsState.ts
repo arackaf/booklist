@@ -51,7 +51,7 @@ export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: 
     let regex = new RegExp(search, "i");
     searchFn = s => regex.test(s.name) && !alreadySelected[s._id];
   }
-  const selectedLookup: Set<string> = new Set([]);
+  const forcedLookup: Set<string> = new Set([]);
   return subjects.reduce<DisablableSubject[]>((result, s) => {
     if (searchFn(s)) {
       const entry: DisablableSubject = { ...s, disabled: false };
@@ -61,18 +61,17 @@ export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: 
       let parentId;
 
       while ((parentId = computeParentId(currentSubject.path))) {
-        if (!parentId || selectedLookup.has(parentId)) {
+        const parent = lookupMap[parentId];
+
+        if (!parent || forcedLookup.has(parentId)) {
           break;
         }
-        let parent = lookupMap[parentId];
-        if (!parent) {
-          break;
-        }
-        let parentEntry: DisablableSubject = { ...parent, disabled: false };
+
+        const parentEntry: DisablableSubject = { ...parent, disabled: false };
 
         if (alreadySelected[parent._id] || !searchFn(parent)) {
           toAdd.unshift(parentEntry);
-          selectedLookup.add(parentId);
+          forcedLookup.add(parentId);
 
           if (alreadySelected[parent._id]) {
             parentEntry.disabled = true;
