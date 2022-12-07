@@ -18,10 +18,11 @@
 </script>
 
 <span
-  on:click={onClick ? () => onClick?.(item) : e => (e.cancelBubble = false)}
+  on:click={onClick ? () => onClick?.(item) : null}
   on:keypress={() => {}}
   style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
-  class={"label label-default noselect " + extraClasses}
+  class={"label label-default disabled noselect " + extraClasses}
+  class:disabled
 >
   {#if $$slots.default}
     <slot />
@@ -29,3 +30,9 @@
     {item.name}
   {/if}
 </span>
+
+<style>
+  span.disabled {
+    cursor: inherit !important;
+  }
+</style>
