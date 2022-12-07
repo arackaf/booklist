@@ -1,13 +1,13 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import type { Tag } from "$data/types";
+  import type { Subject, Tag } from "$data/types";
 
   import ActionButton from "../buttons/ActionButton.svelte";
   import Button from "../buttons/Button.svelte";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
-  //import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
+  import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   //import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
@@ -16,6 +16,7 @@
 
   export let book: any;
   export let tags: Tag[];
+  export let subjects: Subject[];
 
   let editingBook: any;
   $: bookChanged(book);
@@ -115,16 +116,16 @@
         </FlexRow>
       </div>
 
-      <!-- <div class="col-xs-12">
-      <FlexRow>
-        <div class="col-sm-3 col-xs-12">
-          <SelectAvailableSubjects currentlySelected={editingBook.subjects} onSelect={addSubject} />
-        </div>
-        <div style="display: {editingBook.subjects.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
-          <DisplaySelectedSubjects currentlySelected={editingBook.subjects} onRemove={removeSubject} />
-        </div>
-      </FlexRow>
-    </div> -->
+      <div class="col-xs-12">
+        <FlexRow>
+          <div class="col-sm-3 col-xs-12">
+            <SelectAvailableSubjects {subjects} currentlySelected={editingBook.subjects} onSelect={addSubject} />
+          </div>
+          <div style="display: {editingBook.subjects.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
+            <!-- <DisplaySelectedSubjects currentlySelected={editingBook.subjects} onRemove={removeSubject} /> -->
+          </div>
+        </FlexRow>
+      </div>
 
       {#each editingBook.authors || [] as author, index (index)}
         <div class="col-xs-4">

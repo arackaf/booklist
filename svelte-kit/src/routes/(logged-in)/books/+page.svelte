@@ -153,6 +153,7 @@
   $: tagsPacket = $page.data.tags;
 
   $: ({ allTags, tagHash } = tagsPacket);
+  $: allSubjects = $page.data.subjects.allSubjectsSorted;
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -188,7 +189,7 @@
         {/if}
 
         {#if editingBook}
-          <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} tags={allTags} />
+          <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} subjects={allSubjects} tags={allTags} />
         {/if}
 
         <!--
@@ -237,14 +238,6 @@
           </form>
 
           <hr />
-
-          <ul>
-            {#each $page.data.subjects.stackedSubjects as subject}
-              <li>
-                <DisplaySubject {subject} />
-              </li>
-            {/each}
-          </ul>
         </div>
       </div>
 

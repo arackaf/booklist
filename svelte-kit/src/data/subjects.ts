@@ -1,37 +1,7 @@
 import { getDbConnection } from "./dbUtils";
+import type { Subject } from "./types";
 
 const { db } = await getDbConnection();
-
-type Subject = {
-  _id: string;
-  name: string;
-  path: string;
-};
-
-type FullSubject = Subject & {
-  children: Subject[];
-  childLevel: number;
-};
-
-type SubjectHash = {
-  [_id: string]: Subject;
-};
-
-const stackAndGetTopLevelSubjects = (rawSubjects: Subject[]): FullSubject[] => {
-  //let subjects = Object.keys(subjectsHash).map(_id => ({ ...subjectsHash[_id] }));
-  const subjects: FullSubject[] = rawSubjects.map(s => ({
-    ...s,
-    childLevel: 0,
-    children: []
-  }));
-
-  subjects.forEach(parent => {
-    parent.children.push(...subjects.filter(child => new RegExp(`,${parent._id},$`).test(child.path)));
-    parent.childLevel = !parent.path ? 0 : (parent.path.match(/\,/g) || []).length - 1;
-  });
-
-  return subjects.filter(s => s.path == null);
-};
 
 export const allSubjects = async () => {
   const nativeStart = +new Date();
@@ -46,10 +16,7 @@ export const allSubjects = async () => {
   console.log("Native time subjects", nativeEnd - nativeStart);
   const allSubjectsSorted = result.map(s => ({ ...s, _id: s._id.toString() }));
 
-  const stackedSubjects = stackAndGetTopLevelSubjects(allSubjectsSorted);
-
   return {
-    allSubjectsSorted,
-    stackedSubjects
+    allSubjectsSorted
   };
 };

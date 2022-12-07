@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Tag } from "$data/types";
+  import type { Subject, Tag } from "$data/types";
   import Modal from "../ui/Modal.svelte";
   import EditBook from "./EditBook.svelte";
 
@@ -7,10 +7,11 @@
   export let isOpen = false;
   export let onHide: any;
   export let tags: Tag[];
+  export let subjects: Subject[];
 
   let closeModal: any;
 </script>
 
 <Modal headerCaption={`Edit: ${book.title}`} deferStateChangeOnClose={true} {isOpen} {onHide} standardFooter={false} bind:closeModal>
-  <EditBook {book} {tags} cancel={closeModal} />
+  <EditBook {book} {subjects} {tags} cancel={closeModal} />
 </Modal>

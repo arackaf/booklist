@@ -1,24 +1,35 @@
 <script lang="ts">
-  import { stackedSubjects, filterSubjects, subjectsState } from "app/state/subjectsState";
+  import type { Subject } from "$data/types";
+  import { filterSubjects, subjectState } from "$lib/state/subjectsState";
+
+  //import { stackedSubjects, filterSubjects, subjectsState } from "app/state/subjectsState";
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
+  import type { Label } from "../types";
 
-  export let onSelect;
+  export let onSelect: (item: Label) => void;
   export let placeholder = "Subjects";
-  export let currentlySelected = [];
+  export let currentlySelected: string[] = [];
 
-  $: ({ subjectsUnwound } = $stackedSubjects);
-  $: ({ subjectHash } = $subjectsState);
+  export let subjects: Subject[];
+
+  console.log(subjects);
+
+  //$: ({ subjectsUnwound } = $stackedSubjects);
+  //$: ({ subjectHash } = $subjectsState);
 
   let search = "";
 
-  const doSelect = item => {
+  const doSelect = (item: Label) => {
     onSelect(item);
     search = "";
   };
 
-  $: itemHash = currentlySelected.reduce((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
+  type LookupHash = { [_id: string]: true };
+  $: itemHash = currentlySelected.reduce<LookupHash>((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
 
-  $: eligible = filterSubjects(subjectsUnwound, search, subjectHash, itemHash);
+  $: subjectsPacket = subjectState(subjects);
+
+  $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, itemHash);
 </script>
 
 <GenericLabelSelect {placeholder} bind:search options={eligible} onItemSelected={doSelect} />

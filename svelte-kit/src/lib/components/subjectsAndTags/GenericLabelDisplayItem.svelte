@@ -1,7 +1,8 @@
 <script lang="ts">
+  import type { HierarchicalLabel } from "./types";
   import LabelDisplay from "./LabelDisplay.svelte";
 
-  export let item;
+  export let item: HierarchicalLabel;
   let effectiveChildLevel = item.childLevel - (item.prepend || []).length || 0;
 </script>
 

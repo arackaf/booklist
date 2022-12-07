@@ -1,6 +1,8 @@
 <script lang="ts">
-  export let onClick = null;
-  export let item;
+  import type { Label } from "./types";
+
+  export let onClick: ((item: Label) => void) | null = null;
+  export let item: Label;
   export let extraStyles = "";
   export let disabled = false;
   let className = "";
@@ -16,11 +18,14 @@
 </script>
 
 <span
-  on:click={onClick ? () => onClick(item) : e => (e.cancelBubble = false)}
+  on:click={onClick ? () => onClick?.(item) : e => (e.cancelBubble = false)}
+  on:keypress={() => {}}
   style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
   class={"label label-default noselect " + extraClasses}
 >
   {#if $$slots.default}
     <slot />
-  {:else}{item.name}{/if}
+  {:else}
+    {item.name}
+  {/if}
 </span>
