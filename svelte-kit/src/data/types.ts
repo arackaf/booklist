@@ -22,4 +22,6 @@ export type Hash<T> = {
 export type Tag = {
   _id: string;
   name: string;
+  textColor: string;
+  backgroundColor: string;
 };

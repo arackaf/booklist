@@ -14,7 +14,11 @@ export const allTags = async () => {
       collection: "tags",
       database: "my-library",
       dataSource: "Cluster0",
-      pipeline: [{ $match: { userId: "60a93babcc3928454b5d1cc6" } }, { $project: { _id: 1, name: 1, userId: 1 } }, { $sort: { name: 1 } }]
+      pipeline: [
+        { $match: { userId: "60a93babcc3928454b5d1cc6" } },
+        { $project: { _id: 1, name: 1, userId: 1, textColor: 1, backgroundColor: 1 } },
+        { $sort: { name: 1 } }
+      ]
     })
   })
     .then(res => res.json())
