@@ -29,4 +29,4 @@
   $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, itemHash);
 </script>
 
-<GenericLabelSelect {placeholder} noFiltering={true} bind:search options={eligible} onItemSelected={doSelect} />
+<GenericLabelSelect {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />
