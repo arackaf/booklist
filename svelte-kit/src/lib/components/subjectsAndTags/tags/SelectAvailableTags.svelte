@@ -26,4 +26,4 @@
   );
 </script>
 
-<GenericLabelSelect {placeholder} bind:search options={eligible} onItemSelected={doSelect} />
+<GenericLabelSelect {placeholder} bind:search options={() => eligible} onItemSelected={doSelect} />
