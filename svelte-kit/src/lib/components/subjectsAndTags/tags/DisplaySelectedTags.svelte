@@ -15,7 +15,6 @@
 
 <FlowItems tightest={true}>
   {#each currentlySelected.filter(_id => tagHash[_id]).map(_id => tagHash[_id]) as t}
-    <input type="hidden" name="tags" value={t._id} />
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}

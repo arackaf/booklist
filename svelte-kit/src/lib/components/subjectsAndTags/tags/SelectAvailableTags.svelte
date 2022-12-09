@@ -26,4 +26,7 @@
   );
 </script>
 
+{#each currentlySelected as _id}
+  <input type="hidden" name="tags" value={_id} />
+{/each}
 <GenericLabelSelect {placeholder} bind:search options={() => eligible} onItemSelected={doSelect} />

@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/private";
 
 export const updateBook = async (book: any) => {
-  const { _id, title, tags } = book;
+  const { _id, title, tags, subjects } = book;
 
   return fetch(env.MONGO_URL + "/action/updateOne", {
     method: "POST",
@@ -15,7 +15,7 @@ export const updateBook = async (book: any) => {
       database: "my-library",
       dataSource: "Cluster0",
       filter: { _id: { $oid: _id } },
-      update: { $set: { title, tags } }
+      update: { $set: { title, tags, subjects } }
     })
   })
     .then(res => res.json())

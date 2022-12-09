@@ -29,4 +29,7 @@
   $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, itemHash);
 </script>
 
+{#each currentlySelected as _id}
+  <input type="hidden" name="subjects" value={_id} />
+{/each}
 <GenericLabelSelect {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />

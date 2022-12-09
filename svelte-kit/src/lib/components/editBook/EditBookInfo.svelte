@@ -26,10 +26,10 @@
   }
 
   const addSubject = (subject: Subject) => (editingBook.subjects = editingBook.subjects.concat(subject._id));
-  const removeSubject = (subject: any) => (editingBook.subjects = editingBook.subjects.filter(_id => _id != subject._id));
+  const removeSubject = (subject: any) => (editingBook.subjects = editingBook.subjects.filter((_id: string) => _id != subject._id));
 
   const addTag = (tag: any) => (editingBook.tags = editingBook.tags.concat(tag._id));
-  const removeTag = (tag: any) => (editingBook.tags = editingBook.tags.filter(_id => _id != tag._id));
+  const removeTag = (tag: any) => (editingBook.tags = editingBook.tags.filter((_id: string) => _id != tag._id));
 
   let missingTitle = false;
 

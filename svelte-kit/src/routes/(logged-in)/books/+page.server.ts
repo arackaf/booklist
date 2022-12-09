@@ -13,7 +13,7 @@ export const actions = {
 
     const fields = toJson(formData, {
       strings: ["_id", "title"],
-      arrays: ["authors", "tags"]
+      arrays: ["authors", "tags", "subjects"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
 
