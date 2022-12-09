@@ -25,3 +25,12 @@ export type Tag = {
   textColor: string;
   backgroundColor: string;
 };
+
+export type Book = {
+  _id: string;
+  title: string;
+  pages: number;
+  authors: string[];
+  tags: string[];
+  subjects: string[];
+};

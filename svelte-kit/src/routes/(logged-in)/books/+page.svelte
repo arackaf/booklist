@@ -65,6 +65,8 @@
   import { enhance } from "$app/forms";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+  import { updateBook, type UpdatesTo } from "$lib/state/booksState";
+  import type { Book } from "$data/types";
 
   onMount(() => {
     console.log("MOUNT");
@@ -124,18 +126,8 @@
     editBookModalOpen = true;
   };
 
-  const onBookUpdated = (_id: string, updated: any) => {
-    const currentBooks = get(books) as any;
-    const { fieldsSet } = updated;
-    const updatedBooks = currentBooks.map((book: any) => {
-      if (book._id !== _id) {
-        return book;
-      }
-
-      const result = Object.assign({}, book, fieldsSet);
-      return result;
-    });
-    $page.data.books.set(updatedBooks);
+  const onBookUpdated = (_id: string, updates: UpdatesTo<Book>) => {
+    updateBook($page.data.books, _id, updates);
   };
 
   let booksSubjectEditing = [] as any[];
