@@ -26,14 +26,11 @@
 
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { getStores, navigating, page, updated } from "$app/stores";
+  import { page } from "$app/stores";
 
   import useReducer from "$lib/state/useReducer";
-  import { get, writable } from "svelte/store";
+  import { writable } from "svelte/store";
   import ModuleLoading from "$lib/components/navigation/ModuleLoading.svelte";
-
-  import AutoSuggest from "svelte-helpers/AutoSuggest.svelte";
-  import Modal from "svelte-helpers/Modal.svelte";
 
   import GridView from "./bookViews/GridView.svelte";
   // import BasicView from './bookViews/BasicView.svelte';
@@ -60,9 +57,7 @@
   // const { mutationState: runBookEditState } = mutation<MutationOf<Mutations['updateBook']>>(UpdateBookMutation);
 
   //TODO: TEMP
-  import DisplaySubject from "./DisplaySubject.svelte";
   import { searchState } from "./searchState";
-  import { enhance } from "$app/forms";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { updateBook, type UpdatesTo } from "$lib/state/booksState";
