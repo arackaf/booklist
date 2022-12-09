@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Subject } from "$data/types";
   import Stack from "$lib/components/layout/Stack.svelte";
+  import FlowItems from "../../layout/FlowItems.svelte";
   import { toHash } from "$lib/state/helpers";
 
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
-  import FlowItems from "../../layout/FlowItems.svelte";
 
   export let currentlySelected: any[];
   export let onRemove: ((s: Subject) => void) | null = null;

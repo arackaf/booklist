@@ -1,15 +1,16 @@
 <script lang="ts">
+  import type { Book, Subject, Tag } from "$data/types";
   import { getContext } from "svelte";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import LabelDisplay from "$lib/components/subjectsAndTags/LabelDisplay.svelte";
 
-  import type { Book, Subject } from "$data/types";
-
-  //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
-  //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
   import Stack from "$lib/components/layout/Stack.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+  import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+
+  //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
+  //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
   //import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic: boolean;
@@ -17,6 +18,7 @@
   export let book: Book;
 
   export let subjects: Subject[];
+  export let tags: Tag[];
 
   const booksModuleContext: any = getContext("books-module-context");
   const { booksUiState, dispatchBooksUiState, setRead, deleteBook, editBook, editBooksSubjects, editBooksTags } = booksModuleContext;
@@ -129,6 +131,7 @@
         </div>
       {/each}
     </div> -->
+    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} />
     <div style="margin-top: 5px">
       {#if !isPublic}
         <a class="gridHoverFilter" on:click={() => editBooksTags([book])} on:keypress={noop}>

@@ -33,6 +33,7 @@ export type Book = {
   isbn: string;
   publisher: string;
   publicationDate: string;
+  dateAddedDisplay: string;
   isRead: boolean;
   authors: string[];
   tags: string[];

@@ -1,19 +1,25 @@
 <script lang="ts">
   import type { Tag } from "$data/types";
+  import Stack from "$lib/components/layout/Stack.svelte";
+  import FlowItems from "../../layout/FlowItems.svelte";
   import { toHash } from "$lib/state/helpers";
 
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
-  import FlowItems from "../../layout/FlowItems.svelte";
+
+  export let currentlySelected: string[];
+  export let onRemove: ((tag: Tag) => void) | null = null;
 
   export let tags: Tag[];
-  export let onRemove: ((tag: Tag) => void) | null = null;
-  export let currentlySelected: string[];
+  export let vertical: boolean = false;
+  export let style: string = "";
+
+  $: Component = vertical ? Stack : FlowItems;
 
   $: tagHash = toHash(tags);
 </script>
 
-<FlowItems tightest={true}>
+<svelte:component this={Component} tightest={true} {style}>
   {#each currentlySelected.filter(_id => tagHash[_id]).map(_id => tagHash[_id]) as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
@@ -21,4 +27,4 @@
       <LabelDisplay item={t} />
     {/if}
   {/each}
-</FlowItems>
+</svelte:component>
