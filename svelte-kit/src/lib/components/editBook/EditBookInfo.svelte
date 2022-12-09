@@ -78,8 +78,6 @@
           />
         </div>
       </div>
-      <input type="hidden" name="authors" value="Richard Dawkins" />
-      <input type="hidden" name="authors" value="Steven Pinker" />
 
       <div class="col-xs-6">
         <div class="form-group"><label>ISBN</label> <input class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" /></div>
@@ -131,7 +129,7 @@
         <div class="col-xs-4">
           <div class="form-group">
             <label>Author</label>
-            <input bind:value={editingBook.authors[index]} class="form-control" placeholder={`Author ${index + 1}`} />
+            <input bind:value={editingBook.authors[index]} class="form-control" name="authors" placeholder={`Author ${index + 1}`} />
           </div>
         </div>
       {/each}
