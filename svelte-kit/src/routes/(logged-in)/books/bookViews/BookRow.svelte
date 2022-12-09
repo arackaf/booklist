@@ -113,13 +113,6 @@
       {/each}
     </div> -->
     <DisplaySelectedSubjects style="align-items: start" vertical={true} currentlySelected={book.subjects} {subjects} />
-    <div style="margin-top: 5px">
-      {#if !isPublic}
-        <a class="gridHoverFilter" on:click={() => editBooksSubjects([book])} on:keypress={noop}>
-          <i class="fal fa-pencil-alt" />
-        </a>
-      {/if}
-    </div>
   </td>
   <td>
     <!-- addFilterTag(t._id) -->
@@ -132,13 +125,6 @@
       {/each}
     </div> -->
     <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} />
-    <div style="margin-top: 5px">
-      {#if !isPublic}
-        <a class="gridHoverFilter" on:click={() => editBooksTags([book])} on:keypress={noop}>
-          <i class="fal fa-pencil-alt" />
-        </a>
-      {/if}
-    </div>
   </td>
   <td>
     <div style="margin-top: {!isPublic ? '3' : '0'}px">
