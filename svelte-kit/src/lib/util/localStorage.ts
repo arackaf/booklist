@@ -1,13 +1,13 @@
 class LocalStorage {
   get(key: string, defaultValue = "") {
-    if (!window.localStorage) return;
+    if (typeof window === "undefined" || typeof window.localStorage === "undefined") return;
 
     let currentValue = localStorage.getItem(key);
 
     return currentValue || defaultValue;
   }
   set(key: string, value: string) {
-    if (!window.localStorage) return;
+    if (typeof window === "undefined" || typeof window.localStorage === "undefined") return;
 
     localStorage.setItem(key, value);
   }

@@ -194,16 +194,7 @@
           <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {tagHash} />
         {/if}
 
-        {#if editingBook}
-          <EditBookModal
-            isOpen={editBookModalOpen}
-            book={editingBook}
-            {onBookUpdated}
-            onHide={stopEditingBook}
-            subjects={allSubjects}
-            tags={allTags}
-          />
-        {/if}
+        <EditBookModal isOpen={editBookModalOpen} book={editingBook} {onBookUpdated} onHide={stopEditingBook} subjects={allSubjects} tags={allTags} />
 
         <!--
 				{#if editSubjectsModalOpen}

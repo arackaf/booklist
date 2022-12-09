@@ -13,6 +13,6 @@
   let closeModal: any;
 </script>
 
-<Modal headerCaption={`Edit: ${book.title}`} deferStateChangeOnClose={true} {isOpen} {onHide} standardFooter={false} bind:closeModal>
+<Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false} bind:closeModal>
   <EditBook {book} {onBookUpdated} {subjects} {tags} cancel={closeModal} />
 </Modal>
