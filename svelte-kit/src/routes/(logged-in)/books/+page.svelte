@@ -86,7 +86,7 @@
   // 	return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookInput }));
   // };
 
-  let menuBarHeight = 0;
+  let menuBarHeight = 150;
   const setMenuBarHeight = (val: number) => (menuBarHeight = val);
 
   const uiView = writable({ pending: false, view: GRID_VIEW });
@@ -167,22 +167,20 @@
 
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
-        {#if booksLoaded}
-          {#if !books?.length}
-            <div>
-              <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
-            </div>
-          {:else if booksLoaded && books != null}
-            <div>
-              <!-- {#if $uiView.view == GRID_VIEW} -->
-              <GridView {booksState} {menuBarHeight} />
-              <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
+        {#if !$books.length}
+          <div>
+            <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
+          </div>
+        {:else}
+          <div>
+            <!-- {#if $uiView.view == GRID_VIEW} -->
+            <GridView {books} {menuBarHeight} />
+            <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
 								<BasicView {booksState} />
 							{:else if $uiView.view == COVERS_LIST}
 								<CoversView {booksState} />
 							{/if} -->
-            </div>
-          {/if}
+          </div>
         {/if}
 
         {#if filterModalOpen}
@@ -206,52 +204,6 @@
 					<BookTagSetter isOpen={!!booksTagEditing.length} onHide={() => (booksTagEditing = [])} modifyingBooks={booksTagEditing} />
 				{/if} -->
       </div>
-
-      <div style="display: flex; flex-direction: row">
-        <table style="flex: 3; padding: 10px">
-          <tbody>
-            <!-- {#each $page.data.books as book} -->
-
-            {#each $books as book}
-              <tr>
-                <td>{book.title}</td>
-                <td>{book.authors.join(", ")}</td>
-                <td>
-                  <DisplaySelectedSubjects currentlySelected={book.subjects} subjects={allSubjects} />
-                </td>
-                <td>
-                  <DisplaySelectedTags currentlySelected={book.tags} tags={allTags} />
-                </td>
-                <td>
-                  <button on:click={() => editBook(book)}>Edit</button>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-
-        <div style="flex: 1; padding: 10px">
-          <form>
-            <input type="hidden" name="search" value={$searchState.search} />
-            {#each $page.data.subjects.allSubjectsSorted as subject}
-              <div>
-                {subject.name}
-
-                <input type="checkbox" name="subjects" value={subject._id} checked={$searchState.subjectsLookup.has(subject._id)} />
-              </div>
-            {/each}
-            <button>Go</button>
-          </form>
-
-          <hr />
-        </div>
-      </div>
-
-      <hr />
-
-      {#each $page.data.tags.allTags as tag}
-        <span>{tag.name}|</span>
-      {/each}
     </div>
   </div>
 </section>
