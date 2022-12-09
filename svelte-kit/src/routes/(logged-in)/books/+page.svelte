@@ -174,7 +174,7 @@
         {:else}
           <div>
             <!-- {#if $uiView.view == GRID_VIEW} -->
-            <GridView {books} {menuBarHeight} />
+            <GridView books={$books} {menuBarHeight} />
             <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
 								<BasicView {booksState} />
 							{:else if $uiView.view == COVERS_LIST}

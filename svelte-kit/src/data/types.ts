@@ -30,7 +30,17 @@ export type Book = {
   _id: string;
   title: string;
   pages: number;
+  isbn: string;
+  publisher: string;
+  publicationDate: string;
+  isRead: boolean;
   authors: string[];
   tags: string[];
   subjects: string[];
+};
+
+export type BookDisplay = Book & {
+  subjectObjects: any[];
+  tagObjects: any[];
+  dateAddedDisplay: string;
 };

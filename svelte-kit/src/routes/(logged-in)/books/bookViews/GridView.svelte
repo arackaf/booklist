@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Book } from "$data/types";
 
+  import BookRow from "./BookRow.svelte";
+
   const isPublic = false;
   const online = true;
 
@@ -57,7 +59,7 @@
   </thead>
   <tbody>
     {#each books as book (book._id)}
-      <!-- <BookRow {book} {isPublic} {online} /> -->
+      <BookRow {book} {isPublic} {online} />
     {/each}
   </tbody>
 </table>

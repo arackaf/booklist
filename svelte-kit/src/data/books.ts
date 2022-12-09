@@ -39,7 +39,7 @@ export const searchBooks = async (search: string) => {
       dataSource: "Cluster0",
       pipeline: [
         { $match: { title: { $regex: search || "", $options: "i" }, userId: "60a93babcc3928454b5d1cc6" } },
-        { $project: { _id: 1, title: 1, userId: 1, authors: 1, tags: 1, subjects: 1 } },
+        { $project: { _id: 1, title: 1, userId: 1, authors: 1, tags: 1, subjects: 1, isbn: 1, publisher: 1, publicationDate: 1, isRead: 1 } },
         { $limit: 50 },
         { $sort: { title: 1 } }
       ]
