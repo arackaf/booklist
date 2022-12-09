@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Book } from "$data/types";
+  import type { Book, Subject } from "$data/types";
 
   import BookRow from "./BookRow.svelte";
 
@@ -7,6 +7,7 @@
   const online = true;
 
   export let books: Book[];
+  export let subjects: Subject[];
   const noop = () => {};
   function toggleCheckAll() {}
 
@@ -59,7 +60,7 @@
   </thead>
   <tbody>
     {#each books as book (book._id)}
-      <BookRow {book} {isPublic} {online} />
+      <BookRow {book} {subjects} {isPublic} {online} />
     {/each}
   </tbody>
 </table>

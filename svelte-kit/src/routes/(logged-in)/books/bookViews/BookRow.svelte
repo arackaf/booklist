@@ -3,17 +3,20 @@
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import LabelDisplay from "$lib/components/subjectsAndTags/LabelDisplay.svelte";
 
-  import type { BookDisplay } from "$data/types";
+  import type { Book, Subject } from "$data/types";
 
   //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
   //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
   import Stack from "$lib/components/layout/Stack.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
+  import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   //import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic: boolean;
   export let online: boolean;
-  export let book: BookDisplay;
+  export let book: Book;
+
+  export let subjects: Subject[];
 
   const booksModuleContext: any = getContext("books-module-context");
   const { booksUiState, dispatchBooksUiState, setRead, deleteBook, editBook, editBooksSubjects, editBooksTags } = booksModuleContext;
@@ -107,6 +110,7 @@
         </div>
       {/each}
     </div> -->
+    <DisplaySelectedSubjects style="align-items: start" vertical={true} currentlySelected={book.subjects} {subjects} />
     <div style="margin-top: 5px">
       {#if !isPublic}
         <a class="gridHoverFilter" on:click={() => editBooksSubjects([book])} on:keypress={noop}>
@@ -172,11 +176,11 @@
 <style>
   .gridHoverFilter {
     text-decoration: none;
-    display: none;
+    visibility: hidden;
     color: var(--neutral-light-text);
   }
 
   td:hover .gridHoverFilter {
-    display: unset;
+    visibility: visible;
   }
 </style>
