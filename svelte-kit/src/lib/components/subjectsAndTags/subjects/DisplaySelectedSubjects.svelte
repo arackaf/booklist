@@ -7,7 +7,7 @@
   import { toHash } from "$lib/state/helpers";
 
   export let currentlySelected: any[];
-  export let onRemove: any;
+  export let onRemove: ((s: Subject) => void) | null = null;
 
   export let subjects: Subject[];
 
@@ -17,7 +17,7 @@
 <FlowItems tightest={true}>
   {#each currentlySelected.filter(_id => subjectHash[_id]).map(_id => subjectHash[_id]) as t}
     {#if onRemove}
-      <RemovableLabelDisplay item={t} doRemove={() => onRemove(t)} />
+      <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}
       <LabelDisplay item={t} />
     {/if}

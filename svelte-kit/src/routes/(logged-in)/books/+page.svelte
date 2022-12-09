@@ -147,8 +147,6 @@
     editBookModalOpen = false;
   };
 
-  let isOpen = false;
-
   $: books = $page.data.books;
   $: tagsPacket = $page.data.tags;
 
@@ -250,14 +248,6 @@
   </div>
 </section>
 
-<!-- <AutoSuggest onItemSelected={() => {}} filterField="name" />
-
-<button on:click={() => (isOpen = true)}>Open</button>
-<Modal open={isOpen} on:close={() => (isOpen = false)}>
-	<div>
-		<h1>Hi there</h1>
-	</div>
-</Modal> -->
 <style>
   :global(.bookTitle) {
     font-size: 15px;
