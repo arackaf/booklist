@@ -18,6 +18,8 @@
   export let tags: Tag[];
   export let subjects: Subject[];
 
+  export let onBookUpdated: (_id: string, updates: any) => void;
+
   let editingBook: any;
   $: bookChanged(book);
 
@@ -45,12 +47,13 @@
       missingTitle = true;
       return cancel();
     }
+    const _id = data.get("_id");
     missingTitle = false;
 
     saving = true;
-    return async () => {
+    return async ({ result }: any) => {
       saving = false;
-      invalidate("books-results");
+      onBookUpdated(_id, result.data.updates);
     };
   }
 

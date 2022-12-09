@@ -19,6 +19,6 @@ export const actions = {
 
     await updateBook(fields);
 
-    return { success: true };
+    return { success: true, updates: { fieldsSet: fields } };
   }
 };

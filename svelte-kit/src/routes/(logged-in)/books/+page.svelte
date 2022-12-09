@@ -29,7 +29,7 @@
   import { getStores, navigating, page, updated } from "$app/stores";
 
   import useReducer from "$lib/state/useReducer";
-  import { writable } from "svelte/store";
+  import { get, writable } from "svelte/store";
   import ModuleLoading from "$lib/components/navigation/ModuleLoading.svelte";
 
   import AutoSuggest from "svelte-helpers/AutoSuggest.svelte";
@@ -63,6 +63,8 @@
   import DisplaySubject from "./DisplaySubject.svelte";
   import { searchState } from "./searchState";
   import { enhance } from "$app/forms";
+  import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
 
   onMount(() => {
     console.log("MOUNT");
@@ -120,6 +122,20 @@
   const editBook = (book: any) => {
     editingBook = book;
     editBookModalOpen = true;
+  };
+
+  const onBookUpdated = (_id: string, updated: any) => {
+    const currentBooks = get(books) as any;
+    const { fieldsSet } = updated;
+    const updatedBooks = currentBooks.map((book: any) => {
+      if (book._id !== _id) {
+        return book;
+      }
+
+      const result = Object.assign({}, book, fieldsSet);
+      return result;
+    });
+    $page.data.books.set(updatedBooks);
   };
 
   let booksSubjectEditing = [] as any[];
@@ -187,7 +203,14 @@
         {/if}
 
         {#if editingBook}
-          <EditBookModal isOpen={editBookModalOpen} book={editingBook} onHide={stopEditingBook} subjects={allSubjects} tags={allTags} />
+          <EditBookModal
+            isOpen={editBookModalOpen}
+            book={editingBook}
+            {onBookUpdated}
+            onHide={stopEditingBook}
+            subjects={allSubjects}
+            tags={allTags}
+          />
         {/if}
 
         <!--
@@ -215,8 +238,15 @@
               <tr>
                 <td>{book.title}</td>
                 <td>{book.authors.join(", ")}</td>
-                <td>{book.tags.join(", ")}</td>
-                <td><button on:click={() => editBook(book)}>Edit</button></td>
+                <td>
+                  <DisplaySelectedSubjects currentlySelected={book.subjects} subjects={allSubjects} />
+                </td>
+                <td>
+                  <DisplaySelectedTags currentlySelected={book.tags} tags={allTags} />
+                </td>
+                <td>
+                  <button on:click={() => editBook(book)}>Edit</button>
+                </td>
               </tr>
             {/each}
           </tbody>

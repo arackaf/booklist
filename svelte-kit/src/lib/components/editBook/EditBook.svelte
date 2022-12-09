@@ -11,6 +11,7 @@
   export let subjects: Subject[];
   export let tags: Tag[];
 
+  export let onBookUpdated: (_id: string, updates: any) => void;
   const updateBook = (fn: any) => (book = fn(book));
 </script>
 
@@ -22,7 +23,7 @@
   <TabContents>
     <TabContent tabName="basic">
       {#if book}
-        <EditBookInfo {book} {cancel} {subjects} {tags} />
+        <EditBookInfo {book} {cancel} {subjects} {tags} {onBookUpdated} />
       {/if}
     </TabContent>
     <TabContent tabName="covers">

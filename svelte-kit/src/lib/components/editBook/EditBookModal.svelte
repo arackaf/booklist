@@ -8,10 +8,11 @@
   export let onHide: any;
   export let tags: Tag[];
   export let subjects: Subject[];
+  export let onBookUpdated: (_id: string, updates: any) => void;
 
   let closeModal: any;
 </script>
 
 <Modal headerCaption={`Edit: ${book.title}`} deferStateChangeOnClose={true} {isOpen} {onHide} standardFooter={false} bind:closeModal>
-  <EditBook {book} {subjects} {tags} cancel={closeModal} />
+  <EditBook {book} {onBookUpdated} {subjects} {tags} cancel={closeModal} />
 </Modal>
