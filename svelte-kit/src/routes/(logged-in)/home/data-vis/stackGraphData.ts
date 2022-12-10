@@ -1,16 +1,15 @@
+import type { Book } from "$data/types";
 import { computeParentId, getChildSubjectsSorted } from "$lib/state/subjectsState";
 
-export const stackGraphData = (subjectHash: any, subjectIds: string[], data: any) => {
-  if (!data) return null;
-
+export const stackGraphData = (subjectHash: any, subjectIds: string[], books: Book[]) => {
   let targetSubjectsLookup = new Set(subjectIds);
 
   let subjectResultsMap = new Map<string, number>([]);
 
-  data.allBooks.Books.forEach((item: any) => {
+  books.forEach(item => {
     let subjectsHeld = item.subjects
-      .filter((_id: any) => subjectHash[_id])
-      .map((_id: any) => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
+      .filter(_id => subjectHash[_id])
+      .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
 
     let uniqueSubjects = Array.from(new Set(subjectsHeld));
     let uniqueSubjectString = uniqueSubjects.sort().join(",");

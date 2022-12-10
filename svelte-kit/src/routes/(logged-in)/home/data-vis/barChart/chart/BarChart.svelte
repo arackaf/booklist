@@ -9,14 +9,15 @@
   import { stackGraphData } from "../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
   //import SectionLoading from "app/components/ui/SectionLoading.svelte";
-  import type { Subject } from "$data/types";
+  import type { Book, Hash, Subject } from "$data/types";
 
+  export let books: Book[];
+  export let subjectHash: Hash<Subject>;
   export let subjects: Subject[];
-  const subjectHash = toHash(subjects);
+
   export let drilldown: any;
   export let header: any;
   export let chartIndex: any;
-  export let maxWidth: any;
   export let width: any;
   export let height: any;
 
@@ -25,7 +26,10 @@
   const subjectIds = subjects.map(s => s._id);
   //const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
 
-  //$: graphData = stackGraphData(subjectHash, subjectIds, $queryState.data);
+  $: graphData = stackGraphData(subjectHash, subjectIds, books);
+  $: {
+    console.log({ books, subjectIds, graphData });
+  }
 
   const margin = { top: 30, right: 20, bottom: 180, left: 20 };
 </script>
@@ -52,5 +56,5 @@
     </div>
   {/if}
 {:else}
-  <BarChartContent {width} {height} {margin} {maxWidth} {header} {graphData} {drilldown} {chartIndex} />
+  <BarChartContent {width} {height} {margin} {header} {graphData} {drilldown} {chartIndex} />
 {/if}

@@ -5,11 +5,13 @@
   import BarChart from "./barChart/chart/BarChart.svelte";
 
   import { syncWidth } from "$lib/util/animationHelpers";
-  import type { Subject } from "$data/types";
+  import type { Book, Subject } from "$data/types";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
+  import { toHash } from "$lib/state/helpers";
 
-  const subjects: Subject[] = $page.data.subjects.allSubjectsSorted;
-  debugger;
+  const subjects: Subject[] = $page.data.subjects;
+  const subjectHash = toHash(subjects);
+  const books: Book[] = $page.data.books;
   const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const MAX_CHART_WIDTH = 1100;
@@ -22,21 +24,26 @@
     ready = true;
   });
 
-  let chartPackets: any[] = [{ subjects: stackedSubjects, header: "All books" }];
+  let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
 
   const getDrilldownChart = (index: number, subjects: any, header: any) => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
   };
 </script>
 
-{#each stackedSubjects as s}
-  <div>{s.name}</div>
-{/each}
-
 <div bind:this={chartRootEl}>
-  {#if false && ready}
+  {#if ready}
     {#each chartPackets as packet, i (packet.header)}
-      <BarChart drilldown={getDrilldownChart} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={$chartWidth} height={600} />
+      <BarChart
+        drilldown={getDrilldownChart}
+        subjects={packet.subjects}
+        {subjectHash}
+        header={packet.header}
+        {books}
+        chartIndex={i}
+        width={$chartWidth}
+        height={600}
+      />
     {/each}
   {/if}
 </div>

@@ -154,7 +154,7 @@
   $: tagsPacket = $page.data.tags;
 
   $: ({ allTags, tagHash } = tagsPacket);
-  $: allSubjects = $page.data.subjects.allSubjectsSorted;
+  $: allSubjects = $page.data.subjects;
 </script>
 
 {#if booksLoading || $uiView.pending}

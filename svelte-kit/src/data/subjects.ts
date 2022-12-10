@@ -18,9 +18,7 @@ export const allSubjects = async () => {
   const nativeEnd = +new Date();
 
   console.log("Native time subjects", nativeEnd - nativeStart);
-  const allSubjectsSorted = result.map(s => ({ ...s, _id: s._id.toString() }));
+  const allSubjectsSorted: Subject[] = result.map(s => ({ ...s, _id: s._id.toString() }));
 
-  return {
-    allSubjectsSorted
-  };
+  return allSubjectsSorted;
 };

@@ -55,14 +55,43 @@ export const searchBooks = async (search: string) => {
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
 
-      const books = res.documents;
-      books.forEach((book: any) => {
+      res.documents.forEach((book: any) => {
         ["authors", "subjects", "tags"].forEach(arr => {
           if (!Array.isArray(book[arr])) {
             book[arr] = [];
           }
         });
       });
+      return res.documents;
+    })
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
+export const booksSubjectsDump = async (subjects?: string[]) => {
+  const filter = subjects == null ? { "subjects.0": { $exists: true } } : {};
+
+  const httpStart = +new Date();
+  return fetch(env.MONGO_URL + "/action/aggregate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Request-Headers": "*",
+      "api-key": env.MONGO_URL_API_KEY
+    },
+    body: JSON.stringify({
+      collection: "books",
+      database: "my-library",
+      dataSource: "Cluster0",
+      pipeline: [{ $match: { userId: "60a93babcc3928454b5d1cc6", ...filter } }, { $project: { subjects: 1 } }]
+    })
+  })
+    .then(res => res.json())
+    .then(res => {
+      const httpEnd = +new Date();
+      console.log("HTTP time books", httpEnd - httpStart);
+
       return res.documents;
     })
     .catch(err => {
