@@ -1,16 +1,16 @@
-import { computeSubjectParentId, getChildSubjectsSorted } from "app/state/subjectsState";
+import { computeParentId, getChildSubjectsSorted } from "$lib/state/subjectsState";
 
-export const stackGraphData = (subjectHash, subjectIds, data) => {
+export const stackGraphData = (subjectHash: any, subjectIds: string[], data: any) => {
   if (!data) return null;
 
   let targetSubjectsLookup = new Set(subjectIds);
 
   let subjectResultsMap = new Map<string, number>([]);
 
-  data.allBooks.Books.forEach(item => {
+  data.allBooks.Books.forEach((item: any) => {
     let subjectsHeld = item.subjects
-      .filter(_id => subjectHash[_id])
-      .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
+      .filter((_id: any) => subjectHash[_id])
+      .map((_id: any) => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id));
 
     let uniqueSubjects = Array.from(new Set(subjectsHeld));
     let uniqueSubjectString = uniqueSubjects.sort().join(",");
@@ -18,7 +18,7 @@ export const stackGraphData = (subjectHash, subjectIds, data) => {
     if (!subjectResultsMap.has(uniqueSubjectString)) {
       subjectResultsMap.set(uniqueSubjectString, 0);
     }
-    subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString) + 1);
+    subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString)! + 1);
   });
 
   return Array.from(subjectResultsMap).map(([name, count], i) => {
@@ -43,8 +43,8 @@ export const stackGraphData = (subjectHash, subjectIds, data) => {
     };
   });
 
-  function getApplicableRootSubject(subject) {
-    let parentId = computeSubjectParentId(subject.path);
+  function getApplicableRootSubject(subject: any): any {
+    let parentId = computeParentId(subject.path);
 
     if (!parentId) {
       return subject;

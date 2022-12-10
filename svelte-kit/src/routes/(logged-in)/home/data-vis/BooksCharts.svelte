@@ -1,12 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { page } from "$app/stores";
+
   import BarChart from "./barChart/chart/BarChart.svelte";
 
   import { syncWidth } from "$lib/util/animationHelpers";
   import type { Subject } from "$data/types";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
 
-  const subjects: Subject[] = [];
+  const subjects: Subject[] = $page.data.subjects.allSubjectsSorted;
+  debugger;
   const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const MAX_CHART_WIDTH = 1100;
@@ -26,8 +29,12 @@
   };
 </script>
 
+{#each stackedSubjects as s}
+  <div>{s.name}</div>
+{/each}
+
 <div bind:this={chartRootEl}>
-  {#if ready}
+  {#if false && ready}
     {#each chartPackets as packet, i (packet.header)}
       <BarChart drilldown={getDrilldownChart} {...packet} chartIndex={i} maxWidth={MAX_CHART_WIDTH} width={$chartWidth} height={600} />
     {/each}

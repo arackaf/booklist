@@ -81,11 +81,28 @@ export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: 
   }, []);
 };
 
-const computeParentId = (path: string) => {
+export const computeParentId = (path: string) => {
   if (path) {
     let pathParts = path.split(",");
     return pathParts[pathParts.length - 2];
   } else {
     return "";
   }
+};
+
+export const getChildSubjectsSorted = (_id: string, subjectHash: Hash<Subject>) => {
+  let regex = new RegExp(`,${_id},$`);
+  return Object.keys(subjectHash)
+    .map(_id => subjectHash[_id])
+    .filter(sc => regex.test(sc.path))
+    .sort(subjectSortCompare);
+};
+
+const subjectSortCompare = ({ name: name1 }: Subject, { name: name2 }: Subject) => {
+  name1 = name1 || "";
+  name2 = name2 || "";
+
+  let name1After = name1.toLowerCase() > name2.toLowerCase(),
+    bothEqual = name1.toLowerCase() === name2.toLowerCase();
+  return bothEqual ? 0 : name1After ? 1 : -1;
 };

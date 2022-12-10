@@ -1,12 +1,9 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  // @ts-ignore
-  import scaleLinear from "d3-scale/src/linear";
-  // @ts-ignore
-  import scaleBand from "d3-scale/src/band";
-  // @ts-ignore
-  import max from "d3-array/src/max";
+  import { scaleLinear } from "d3-scale";
+  import { scaleBand } from "d3-scale";
+  import { max } from "d3-array";
 
   import Axis from "../axis/Axis.svelte";
   import RenderBarChart from "./RenderBarChart.svelte";

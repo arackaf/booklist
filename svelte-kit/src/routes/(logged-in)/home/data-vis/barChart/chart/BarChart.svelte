@@ -6,26 +6,26 @@
   //import { appState } from "app/state/appState";
 
   import { toHash } from "$lib/state/helpers";
-  import { stackGraphData } from "../../../stackGraphData";
+  import { stackGraphData } from "../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
-  import SectionLoading from "app/components/ui/SectionLoading.svelte";
+  //import SectionLoading from "app/components/ui/SectionLoading.svelte";
   import type { Subject } from "$data/types";
 
   export let subjects: Subject[];
   const subjectHash = toHash(subjects);
   export let drilldown: any;
-  export let header;
-  export let chartIndex;
-  export let maxWidth;
-  export let width;
-  export let height;
+  export let header: any;
+  export let chartIndex: any;
+  export let maxWidth: any;
+  export let width: any;
+  export let height: any;
 
   //let { publicUserId } = $appState;
 
   const subjectIds = subjects.map(s => s._id);
-  const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
+  //const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
 
-  $: graphData = stackGraphData(subjectHash, subjectIds, $queryState.data);
+  //$: graphData = stackGraphData(subjectHash, subjectIds, $queryState.data);
 
   const margin = { top: 30, right: 20, bottom: 180, left: 20 };
 </script>
@@ -37,7 +37,8 @@
   a few ms too soon
 -->
 {#if !graphData}
-  <SectionLoading style="margin-top: {chartIndex === 0 ? 150 : 20}px;" />
+  <span />
+  <!-- <SectionLoading style="margin-top: {chartIndex === 0 ? 150 : 20}px;" /> -->
 {:else if !graphData.length}
   {#if chartIndex == 0}
     <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">
