@@ -18,7 +18,6 @@
   }
 
   $: element = href != null ? "a" : "span";
-  $: console.log({ href });
 </script>
 
 <svelte:element
