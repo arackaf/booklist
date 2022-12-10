@@ -13,6 +13,7 @@
   export let subjects: Subject[];
   export let vertical: boolean = false;
   export let style: string = "";
+  export let href: ((s: Subject) => string) | null = null;
 
   $: Component = vertical ? Stack : FlowItems;
 
@@ -20,11 +21,11 @@
 </script>
 
 <svelte:component this={Component} tightest={true} {style}>
-  {#each currentlySelected.filter(_id => subjectHash[_id]).map(_id => subjectHash[_id]) as t}
+  {#each currentlySelected.filter(_id => subjectHash[_id]).map(_id => subjectHash[_id]) as s}
     {#if onRemove}
-      <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
+      <RemovableLabelDisplay item={s} doRemove={() => onRemove?.(s)} />
     {:else}
-      <LabelDisplay item={t} />
+      <LabelDisplay item={s} href={href != null ? href(s) : null} />
     {/if}
   {/each}
 </svelte:component>

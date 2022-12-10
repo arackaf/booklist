@@ -112,7 +112,7 @@
         </div>
       {/each}
     </div> -->
-    <DisplaySelectedSubjects style="align-items: start" vertical={true} currentlySelected={book.subjects} {subjects} />
+    <DisplaySelectedSubjects style="align-items: start" vertical={true} currentlySelected={book.subjects} {subjects} href={() => "xyz"} />
   </td>
   <td>
     <!-- addFilterTag(t._id) -->
@@ -124,7 +124,7 @@
         </div>
       {/each}
     </div> -->
-    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} />
+    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} href={() => "xyz"} />
   </td>
   <td>
     <div style="margin-top: {!isPublic ? '3' : '0'}px">

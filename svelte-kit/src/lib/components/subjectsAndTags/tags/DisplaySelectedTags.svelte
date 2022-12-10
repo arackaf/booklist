@@ -13,6 +13,7 @@
   export let tags: Tag[];
   export let vertical: boolean = false;
   export let style: string = "";
+  export let href: ((s: Tag) => string) | null = null;
 
   $: Component = vertical ? Stack : FlowItems;
 
@@ -24,7 +25,7 @@
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}
-      <LabelDisplay item={t} />
+      <LabelDisplay item={t} href={href != null ? href(t) : null} />
     {/if}
   {/each}
 </svelte:component>

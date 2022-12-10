@@ -7,6 +7,7 @@
   export let disabled = false;
   let className = "";
   export { className as class };
+  export let href: string | null = null;
 
   let extraClasses = className || "";
   let disabledStyles = "opacity: 0.4;";
@@ -15,9 +16,13 @@
   if (disabled) {
     stylesToAdd = disabledStyles + stylesToAdd;
   }
+
+  const element = href != null ? "a" : "span";
 </script>
 
-<span
+<svelte:element
+  this={element}
+  {href}
   on:click={onClick ? () => onClick?.(item) : null}
   on:keypress={() => {}}
   style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
@@ -29,10 +34,15 @@
   {:else}
     {item.name}
   {/if}
-</span>
+</svelte:element>
 
 <style>
-  span.disabled {
+  a {
+    cursor: pointer !important;
+    text-decoration: none;
+  }
+  span.disabled,
+  a.disabled {
     cursor: inherit !important;
   }
 </style>
