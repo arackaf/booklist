@@ -2,7 +2,6 @@
   import type { Book, Subject, Tag } from "$data/types";
   import { getContext } from "svelte";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
-  import LabelDisplay from "$lib/components/subjectsAndTags/LabelDisplay.svelte";
 
   import Stack from "$lib/components/layout/Stack.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
@@ -104,15 +103,6 @@
     </Stack>
   </td>
   <td>
-    <!-- /*addFilterSubject(s._id)*/ -->
-    <!-- <div style="margin-top: 3px">
-      {#each book.subjectObjects as s}
-        <div style="margin-bottom: 4px">
-
-          <LabelDisplay onClick={() => {}} item={s} />
-        </div>
-      {/each}
-    </div> -->
     <DisplaySelectedSubjects
       style="align-items: start"
       vertical={true}
@@ -122,15 +112,6 @@
     />
   </td>
   <td>
-    <!-- addFilterTag(t._id) -->
-    <!-- <div style="margin-top: 3px">
-      {#each book.tagObjects as tag}
-        <div style="margin-bottom: 4px">
-
-          <LabelDisplay onClick={t => {}} item={tag} />
-        </div>
-      {/each}
-    </div> -->
     <DisplaySelectedTags
       style="align-items: start"
       vertical={true}
