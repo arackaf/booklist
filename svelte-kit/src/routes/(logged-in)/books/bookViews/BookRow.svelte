@@ -8,6 +8,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  import { searchMutationState } from "../searchState";
 
   //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
   //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
@@ -112,7 +113,13 @@
         </div>
       {/each}
     </div> -->
-    <DisplaySelectedSubjects style="align-items: start" vertical={true} currentlySelected={book.subjects} {subjects} href={() => "xyz"} />
+    <DisplaySelectedSubjects
+      style="align-items: start"
+      vertical={true}
+      currentlySelected={book.subjects}
+      {subjects}
+      href={s => $searchMutationState.urlWithSubjectFilter(s._id)}
+    />
   </td>
   <td>
     <!-- addFilterTag(t._id) -->
@@ -124,7 +131,13 @@
         </div>
       {/each}
     </div> -->
-    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} href={() => "xyz"} />
+    <DisplaySelectedTags
+      style="align-items: start"
+      vertical={true}
+      currentlySelected={book.tags}
+      {tags}
+      href={s => $searchMutationState.urlWithTagFilter(s._id)}
+    />
   </td>
   <td>
     <div style="margin-top: {!isPublic ? '3' : '0'}px">

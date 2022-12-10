@@ -17,7 +17,8 @@
     stylesToAdd = disabledStyles + stylesToAdd;
   }
 
-  const element = href != null ? "a" : "span";
+  $: element = href != null ? "a" : "span";
+  $: console.log({ href });
 </script>
 
 <svelte:element

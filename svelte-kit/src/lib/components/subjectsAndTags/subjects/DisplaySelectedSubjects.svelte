@@ -13,7 +13,7 @@
   export let subjects: Subject[];
   export let vertical: boolean = false;
   export let style: string = "";
-  export let href: ((s: Subject) => string) | null = null;
+  export let href: ((s: Subject) => string | null) | null = null;
 
   $: Component = vertical ? Stack : FlowItems;
 

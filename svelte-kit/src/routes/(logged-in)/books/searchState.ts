@@ -4,6 +4,7 @@ import { derived, get } from "svelte/store";
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;
   const subjects = searchParams.getAll("subjects") ?? [];
+  const tags = searchParams.getAll("tags") ?? [];
 
   const sort = searchParams.get("sort") ?? "_id";
   const sortDirection = searchParams.get("sortDirection") ?? "desc";
@@ -14,9 +15,34 @@ export const searchState = derived(page, $page => {
     publisher: searchParams.get("publisher") ?? "",
     subjects,
     subjectsLookup: new Set(subjects),
+    tags,
+    tagsLookup: new Set(tags),
     selectedSubjects: [],
     selectedTags: [],
     sortPacket: `${sort}|${sortDirection}`
+  };
+});
+
+export const searchMutationState = derived([page, searchState], ([$page, $searchState]) => {
+  return {
+    urlWithSubjectFilter(_id: string) {
+      if ($searchState.subjectsLookup.has(_id)) {
+        return null;
+      } else {
+        const searchParams = new URLSearchParams($page.url.searchParams);
+        searchParams.append("subjects", _id);
+        return `/books?${searchParams.toString()}`;
+      }
+    },
+    urlWithTagFilter(_id: string) {
+      if ($searchState.tagsLookup.has(_id)) {
+        return null;
+      } else {
+        const searchParams = new URLSearchParams($page.url.searchParams);
+        searchParams.append("tags", _id);
+        return `/books?${searchParams.toString()}`;
+      }
+    }
   };
 });
 
