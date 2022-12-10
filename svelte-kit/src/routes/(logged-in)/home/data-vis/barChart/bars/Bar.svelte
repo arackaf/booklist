@@ -2,14 +2,13 @@
   import MultiBar from "./MultiBar.svelte";
   import SingleBar from "./SingleBar.svelte";
 
-  export let x;
+  export let x: any;
   export let data: any;
-  export let height;
-  export let width;
-  export let totalSvgWidth;
-  export let count;
-  export let hoverBar;
-  export let unHoverBar;
+  export let height: any;
+  export let width: any;
+  export let totalSvgWidth: any;
+  export let hoverBar: any;
+  export let unHoverBar: any;
 </script>
 
 {#if data.entries.length == 1}

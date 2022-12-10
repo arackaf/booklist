@@ -1,24 +1,24 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  export let data;
-  export let height;
-  export let width;
-  export let x;
-  export let hoverBar;
-  export let unHoverBar;
-  export let totalSvgWidth;
+  export let data: any;
+  export let height: any;
+  export let width: any;
+  export let x: any;
+  export let hoverBar: any;
+  export let unHoverBar: any;
+  export let totalSvgWidth: any;
 
-  $: _colors = data.entries.map(e => e.color);
-  let colors = [];
+  $: _colors = data.entries.map((e: any) => e.color);
+  let colors: any[] = [];
 
-  let itemsClamped = {};
+  let itemsClamped: any = {};
 
   $: {
     let heightUsed = 0;
     let count = _colors.length;
     let currentHeight = $barSpring.height;
-    colors = _colors.map((color, i) => {
+    colors = _colors.map((color: any, i: any) => {
       let isLast = i + 1 == count;
       let sectionHeight = ~~(currentHeight / count);
       let finalSectionHeight = ~~(height / count);

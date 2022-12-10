@@ -1,13 +1,13 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  export let color;
-  export let hoverBar;
-  export let unHoverBar;
-  export let data;
-  export let height;
-  export let width;
-  export let x;
+  export let color: any;
+  export let hoverBar: any;
+  export let unHoverBar: any;
+  export let data: any;
+  export let height: any;
+  export let width: any;
+  export let x: any;
   export let totalSvgWidth;
 
   // let animatedValues = useSpring({

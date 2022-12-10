@@ -1,10 +1,10 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  export let d;
-  export let scaleX;
+  export let d: any;
+  export let scaleX: any;
 
-  const getTranslateX = (d, scaleX) => {
+  const getTranslateX = (d: any, scaleX: any) => {
     let x = scaleX(d.display);
     let width = scaleX.bandwidth();
     let translateX = x + width / 2;
@@ -14,7 +14,7 @@
 
   let axisSpring = spring({ translateX: getTranslateX(d, scaleX) }, { stiffness: 0.1, damping: 0.4 });
   $: axisSpring.set({ translateX: getTranslateX(d, scaleX) });
-  
+
   $: translate = `translate(${$axisSpring.translateX}, 0)`;
 </script>
 

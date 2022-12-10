@@ -19,7 +19,7 @@
     ready = true;
   });
 
-  let chartPackets: any[] = [{ subjects, header: "All books" }];
+  let chartPackets: any[] = [{ subjects: stackedSubjects, header: "All books" }];
 
   const getDrilldownChart = (index: number, subjects: any, header: any) => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
