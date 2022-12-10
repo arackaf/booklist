@@ -3,9 +3,8 @@
   //import { currentSearch } from "../booksSearchState";
   //import { pageOne, setPage } from "../setBookFilters";
 
-  export let totalPages: number;
-  export let resultsCount: number | string;
-  export let booksLoaded: boolean;
+  let totalPages: number = 1;
+  let resultsCount: number = 50;
 
   const online = true;
   const page = 1;
@@ -36,9 +35,11 @@
   {#if online}
     <div class="results-holder overlay-holder">
       <span style="display: inline;">
-        {#if booksLoaded}
-          {#if totalPages}<span><span class="page-label">Page </span>{page} of {totalPages}</span>{:else}<span>No results</span>{/if}
-        {:else}<span>Loading...</span>{/if}
+        {#if totalPages}
+          <span><span class="page-label">Page </span>{page} of {totalPages}</span>
+        {:else}
+          <span>No results</span>
+        {/if}
       </span>
       <span style="visibility: hidden">
         <span class="page-label">Page </span>1 of 10

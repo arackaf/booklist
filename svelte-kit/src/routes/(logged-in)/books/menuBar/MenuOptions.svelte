@@ -1,12 +1,13 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { writable } from "svelte/store";
   //import { appState } from "app/state/appState";
   //import { BookResultsPacket } from "../booksState";
   import { /*getBookSearchUiView,*/ BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../booksUiState";
 
-  export let uiView: any; // ReturnType<typeof getBookSearchUiView>;
+  let uiView: any = writable({}); // ReturnType<typeof getBookSearchUiView>;
 
-  export let bookResultsPacket: any; //BookResultsPacket;
+  let bookResultsPacket: any = {}; //BookResultsPacket;
   export let closeMobileMenu: () => void = () => {};
   $: ({ books = [], reload, booksLoading } = bookResultsPacket);
 

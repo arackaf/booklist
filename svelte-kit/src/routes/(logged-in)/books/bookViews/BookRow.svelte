@@ -8,6 +8,7 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import { searchMutationState } from "../searchState";
+  import { selectionState, selectedBooksLookup } from "../selectionState";
 
   //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
   //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
@@ -21,10 +22,9 @@
   export let tags: Tag[];
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, dispatchBooksUiState, setRead, deleteBook, editBook, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { setRead, deleteBook, editBook } = booksModuleContext;
 
   $: ({ _id } = book);
-  $: ({ selectedBooks } = $booksUiState);
 
   let expanded = false;
   let detailsLoading = false;
@@ -44,9 +44,9 @@
 <tr>
   {#if !isPublic && online}
     <td>
-      <a style="font-size: 12pt" on:click={() => dispatchBooksUiState(["toggle-select", _id])} on:keypress={noop}>
-        <i class={"fal " + (!!selectedBooks[_id] ? "fa-check-square" : "fa-square")} />
-      </a>
+      <span class="cursor-pointer" style="font-size: 12pt" on:click={() => selectionState.toggle(_id)} on:keypress={noop}>
+        <i class={"fal " + (!!$selectedBooksLookup[_id] ? "fa-check-square" : "fa-square")} />
+      </span>
     </td>
   {/if}
   <td>

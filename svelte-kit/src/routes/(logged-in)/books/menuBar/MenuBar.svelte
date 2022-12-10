@@ -90,7 +90,7 @@
       >
         <i class="far fa-bars" />
       </button>
-      <PagingButtons {...{ selectedBooksCount, totalPages, resultsCount, booksLoaded }} />
+      <PagingButtons />
       <div style="margin-right: 5px">
         <div class="menu-bar-desktop btn-group">
           <form action="/books" on:formdata={onFormData}>
@@ -110,7 +110,7 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions {uiView} {bookResultsPacket} />
+          <MenuOptions />
         </div>
       </div>
 
