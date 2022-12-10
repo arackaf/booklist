@@ -2,13 +2,13 @@
   import Bar from "../bars/Bar.svelte";
 
   export let showingData: any[];
-  export let excluding;
-  export let scaleX;
-  export let dataScale;
-  export let totalSvgWidth;
-  export let hoverBar;
-  export let unHoverBar;
-  export let transform;
+  export let excluding: any;
+  export let scaleX: any;
+  export let dataScale: any;
+  export let totalSvgWidth: any;
+  export let hoverBar: any;
+  export let unHoverBar: any;
+  export let transform: any;
 
   // let animatedGOffsetValues = useSpring({
   //   config: config.stiff,
@@ -18,15 +18,6 @@
 
 <g {transform}>
   {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d)}
-    <Bar
-      data={d}
-      count={showingData.length}
-      x={scaleX(d.display)}
-      width={scaleX.bandwidth()}
-      height={dataScale(d.count)}
-      {totalSvgWidth}
-      {hoverBar}
-      {unHoverBar}
-    />
+    <Bar data={d} x={scaleX(d.display)} width={scaleX.bandwidth()} height={dataScale(d.count)} {totalSvgWidth} {hoverBar} {unHoverBar} />
   {/each}
 </g>

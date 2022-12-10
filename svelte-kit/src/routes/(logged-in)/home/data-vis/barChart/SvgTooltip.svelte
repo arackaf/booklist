@@ -4,18 +4,18 @@
   import GraphSvg from "../svgIcons/GraphSvg.svelte";
   import RemoveSvg from "../svgIcons/RemoveSvg.svelte";
 
-  export let data;
-  export let srcHeight;
-  export let srcWidth;
-  export let srcX;
-  export let count;
-  export let index;
-  export let childSubjects;
-  export let hovered;
+  export let data: any;
+  export let srcHeight: any;
+  export let srcWidth: any;
+  export let srcX: any;
+  export let count: any;
+  export let index: any;
+  export let childSubjects: any;
+  export let hovered: any;
 
-  export let drilldown;
-  export let chartIndex;
-  export let removeBar;
+  export let drilldown: any;
+  export let chartIndex: any;
+  export let removeBar: any;
 
   let tooltipHovered = false;
 
@@ -28,13 +28,13 @@
   let removeSvgStart = 0;
 
   const display = data?.entries
-    .map(e => e.name)
+    .map((e: any) => e.name)
     .sort()
     .join(",");
 
   let rootEl;
-  let contentEl;
-  let textEl;
+  let contentEl: any;
+  let textEl: any;
 
   let adjust = { x: 0, y: 0 };
   let tooltipContentsBox = { width: 0, height: 0, x: 0, y: 0 };
@@ -81,6 +81,7 @@
   <g
     on:mouseover={() => (tooltipHovered = true)}
     on:mouseleave={() => (tooltipHovered = false)}
+    on:focus={() => {}}
     class="svg-tooltip"
     bind:this={rootEl}
     transform={`scale(1, -1) translate(${srcX + OFFSET_LEFT}, 0) translate(${adjust.x}, ${adjust.y})`}
@@ -91,17 +92,17 @@
         {display}:
         {data.count}
       </text>
-      <g on:click={doRemoveBar} class="svgPointer">
+      <g on:click={doRemoveBar} class="svgPointer" on:keypress={() => {}}>
         <rect x={CONTENT_X_START + removeSvgStart} y={-1 * textAnchorY - 5} width="20" height="20" fill="black" />
 
         <RemoveSvg x={CONTENT_X_START + removeSvgStart} y={-1 * textAnchorY - 5} width="20" />
       </g>
       {#if childSubjects.length}
-        <g on:click={() => drilldown(chartIndex, childSubjects, display)} class="svgPointer">
+        <g on:click={() => drilldown(chartIndex, childSubjects, display)} on:keypress={() => {}} class="svgPointer">
           <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="30" height="20" fill="black" />
           <GraphSvg x={CONTENT_X_START} y={-1 * textAnchorY + 30} width="20" />
         </g>
-        ) : (
+      {:else}
         <rect x={CONTENT_X_START - 5} y={-1 * textAnchorY + 30} width="1" height="5" fill="black" />
       {/if}
     </g>

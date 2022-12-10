@@ -1,29 +1,29 @@
 <script lang="ts">
-  import { query } from "micro-graphql-svelte";
+  //import { query } from "micro-graphql-svelte";
 
-  import barCharQuery from "gql/home/barChart.graphql";
+  //import barCharQuery from "gql/home/barChart.graphql";
 
-  import { appState } from "app/state/appState";
+  //import { appState } from "app/state/appState";
 
-  import { subjectsState } from "app/state/subjectsState";
+  import { toHash } from "$lib/state/helpers";
   import { stackGraphData } from "../../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
   import SectionLoading from "app/components/ui/SectionLoading.svelte";
+  import type { Subject } from "$data/types";
 
-  export let drilldown;
-  export let subjects;
+  export let subjects: Subject[];
+  const subjectHash = toHash(subjects);
+  export let drilldown: any;
   export let header;
   export let chartIndex;
   export let maxWidth;
   export let width;
   export let height;
 
-  $: ({ subjectHash } = $subjectsState);
-
-  let { publicUserId } = $appState;
+  //let { publicUserId } = $appState;
 
   const subjectIds = subjects.map(s => s._id);
-  const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId } });
+  const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
 
   $: graphData = stackGraphData(subjectHash, subjectIds, $queryState.data);
 

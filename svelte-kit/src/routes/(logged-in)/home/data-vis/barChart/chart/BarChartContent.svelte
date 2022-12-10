@@ -1,8 +1,11 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
+  // @ts-ignore
   import scaleLinear from "d3-scale/src/linear";
+  // @ts-ignore
   import scaleBand from "d3-scale/src/band";
+  // @ts-ignore
   import max from "d3-array/src/max";
 
   import Axis from "../axis/Axis.svelte";
@@ -10,16 +13,15 @@
   import SvgTooltip from "../SvgTooltip.svelte";
   import { onMount } from "svelte";
 
-  export let width;
-  export let height;
-  export let margin;
-  export let maxWidth;
-  export let header;
+  export let width: any;
+  export let height: any;
+  export let margin: any;
+  export let header: any;
   export let graphData: any[];
-  export let drilldown;
-  export let chartIndex;
+  export let drilldown: any;
+  export let chartIndex: any;
 
-  const scrollInitial = el => {
+  const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -28,7 +30,7 @@
   $: showingData = graphData
     .filter(d => !excluding[d.groupId])
     .map(data => {
-      data.childSubjects = data.entries.reduce((subjects, { children: theseChildren }) => subjects.concat(theseChildren), []);
+      data.childSubjects = data.entries.reduce((subjects: any, { children: theseChildren }: any) => subjects.concat(theseChildren), [] as any);
       return data;
     });
 
@@ -56,24 +58,16 @@
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
-  let hoveredMap = {};
-  const removeBar = id => (excluding = { ...excluding, [id]: true });
-  const restoreBar = id => (excluding = { ...excluding, [id]: false });
-  const hoverBar = groupId => (hoveredMap = { ...hoveredMap, [groupId]: true });
-  const unHoverBar = groupId => setTimeout(() => (hoveredMap = { ...hoveredMap, [groupId]: false }), 1);
+  let hoveredMap: any = {};
+  const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
+  const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
+  const hoverBar = (groupId: any) => (hoveredMap = { ...hoveredMap, [groupId]: true });
+  const unHoverBar = (groupId: any) => setTimeout(() => (hoveredMap = { ...hoveredMap, [groupId]: false }), 1);
 
   onMount(() => {
     mounted = true;
   });
 </script>
-
-<style>
-  svg {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-</style>
 
 <div use:scrollInitial>
   <div style="height: {height}px">
@@ -85,7 +79,7 @@
           {#each graphData.filter(d => excluding[d.groupId]) as d}
             <span style="margin-left: 10px">
               {d.display}{" "}
-              <a style="color: black" on:click={() => restoreBar(d.groupId)}> <i class="far fa-redo" /> </a>
+              <a style="color: black" on:click={() => restoreBar(d.groupId)} on:keypress={() => {}}> <i class="far fa-redo" /> </a>
             </span>
           {/each}
         </span>
@@ -113,14 +107,20 @@
       <Axis
         masterTransformX={margin.left}
         masterTransformY={-1 * margin.bottom}
-        masterTransform={`translate(${margin.left}, ${-1 * margin.bottom})`}
         data={showingData}
         {scaleX}
         graphWidth={adjustedWidth}
-        scale={scaleX}
         transform={`translate(0, ${height})`}
       />
     </svg>
   </div>
   <hr />
 </div>
+
+<style>
+  svg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
