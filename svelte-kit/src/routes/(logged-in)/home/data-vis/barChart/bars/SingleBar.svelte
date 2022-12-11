@@ -14,7 +14,6 @@
   export let totalSvgWidth;
 
   let rootEl: any;
-  let tooltipEl: any;
 
   // let animatedValues = useSpring({
   //   config: config.stiff,
@@ -33,9 +32,10 @@
   onMount(() => {
     console.log({ rootEl });
     const div = document.createElement("div");
+    div.classList.add("popper-tooltip");
     document.body.appendChild(div);
 
-    const junk = new Tooltip({
+    new Tooltip({
       target: div
     });
     console.log({ div, x: div.outerHTML });
@@ -45,17 +45,24 @@
         placement: "left-start",
         strategy: "absolute"
       });
-    }, 2000);
+    }, 500);
 
-    //popper.forceUpdate();
+    rootEl.addEventListener("mouseenter", () => div.classList.add("show"));
+    rootEl.addEventListener("mouseleave", () => div.classList.remove("show"));
   });
 </script>
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
-<div bind:this={tooltipEl}>
-  <span>A</span>
-  <span>B</span>
-</div>
+
 <g bind:this={rootEl}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>
+
+<style>
+  :global(.popper-tooltip) {
+    display: none;
+  }
+  :global(.popper-tooltip.show) {
+    display: block;
+  }
+</style>

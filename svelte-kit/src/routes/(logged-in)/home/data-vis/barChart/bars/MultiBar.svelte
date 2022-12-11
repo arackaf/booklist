@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { spring } from "svelte/motion";
+  import { createPopper } from "@popperjs/core";
+  import Tooltip from "../Tooltip.svelte";
 
   export let data: any;
   export let height: any;
@@ -8,6 +11,9 @@
   export let hoverBar: any;
   export let unHoverBar: any;
   export let totalSvgWidth: any;
+
+  let rootEl: any;
+  let tooltipEl: any;
 
   $: _colors = data.entries.map((e: any) => e.color);
   let colors: any[] = [];
@@ -45,9 +51,32 @@
     itemsClamped = {};
     barSpring.update(state => ({ ...state, height, x }));
   }
+
+  onMount(() => {
+    console.log({ rootEl });
+    const div = document.createElement("div");
+    div.classList.add("popper-tooltip");
+    document.body.appendChild(div);
+
+    new Tooltip({
+      target: div
+    });
+    console.log({ div, x: div.outerHTML });
+
+    setTimeout(() => {
+      const popper = createPopper(rootEl, div, {
+        placement: "left-start",
+        strategy: "absolute"
+      });
+    }, 500);
+
+    rootEl.addEventListener("mouseenter", () => div.classList.add("show"));
+    rootEl.addEventListener("mouseleave", () => div.classList.remove("show"));
+  });
 </script>
 
-<g on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)}>
+<!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
+<g bind:this={rootEl}>
   {#each colors as c}
     <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
   {/each}
