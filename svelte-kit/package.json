@@ -25,6 +25,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@popperjs/core": "^2.11.6",
     "@sveltejs/kit": "^1.0.0-next.571",
     "classnames": "^2.3.2",
     "d3-array": "1.2.0",
@@ -32,7 +33,9 @@
     "d3-scale": "1.0.6",
     "d3-selection": "1.1.0",
     "d3-transition": "1.1.0",
+    "i": "^0.3.7",
     "mongodb": "^4.12.1",
+    "npm": "^9.2.0",
     "sass": "^1.56.1",
     "svelte": "^3.44.0",
     "svelte-helpers": "^0.2.19"
