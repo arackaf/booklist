@@ -11,16 +11,20 @@
 
 <style>
   .root {
-    background-color: pink;
-    transform: translateX(calc(100% + var(--arrow-size) / 2));
+    --bg-color: var(--info-9);
     --arrow-size: 10px;
     --arrow-offset: calc(var(--arrow-size) / 2);
+    color: var(--neutral-3);
+    background-color: var(--bg-color);
+    padding: 10px;
+    border-radius: 5px;
     margin-top: 10px;
+    transform: translateX(calc(100% + var(--arrow-size) / 2));
   }
 
   .arrow,
   .arrow::before {
-    background-color: pink;
+    background-color: var(--bg-color);
     position: absolute;
     width: var(--arrow-size);
     height: var(--arrow-size);
