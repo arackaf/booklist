@@ -53,15 +53,16 @@
   }
 
   onMount(() => {
-    console.log({ rootEl });
     const div = document.createElement("div");
     div.classList.add("popper-tooltip");
     document.body.appendChild(div);
 
     new Tooltip({
-      target: div
+      target: div,
+      props: {
+        name: "XYZ"
+      }
     });
-    console.log({ div, x: div.outerHTML });
 
     setTimeout(() => {
       const popper = createPopper(rootEl, div, {

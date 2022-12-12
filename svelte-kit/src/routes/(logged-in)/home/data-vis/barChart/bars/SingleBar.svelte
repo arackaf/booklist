@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { spring } from "svelte/motion";
-  import { createPopper } from "@popperjs/core";
+
   import Tooltip from "../Tooltip.svelte";
+  import { popper } from "$lib/util/popper";
 
   export let color: any;
   export let hoverBar: any;
@@ -30,31 +31,14 @@
   }
 
   onMount(() => {
-    console.log({ rootEl });
     const div = document.createElement("div");
     div.classList.add("popper-tooltip");
-    document.body.appendChild(div);
-
-    new Tooltip({
-      target: div
-    });
-    console.log({ div, x: div.outerHTML });
-
-    setTimeout(() => {
-      const popper = createPopper(rootEl, div, {
-        placement: "left-start",
-        strategy: "absolute"
-      });
-    }, 500);
-
-    rootEl.addEventListener("mouseenter", () => div.classList.add("show"));
-    rootEl.addEventListener("mouseleave", () => div.classList.remove("show"));
   });
 </script>
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
 
-<g bind:this={rootEl}>
+<g bind:this={rootEl} use:popper={{ Comp: Tooltip, props: { name: "QQQ" } }}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>
 
