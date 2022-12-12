@@ -1,12 +1,13 @@
 <script lang="ts">
   export let name: string;
+  export let position: Position;
 </script>
 
-<div class="root">
+<div class={"root " + position}>
   <div>{name}</div>
   <span>Hello</span>
   <span>World</span>
-  <div class="arrow" />
+  <div class={"arrow " + position} />
 </div>
 
 <style>
@@ -18,6 +19,9 @@
     background-color: var(--bg-color);
     padding: 10px;
     border-radius: 5px;
+  }
+
+  .root.left {
     margin-top: 10px;
     transform: translateX(calc(100% + var(--arrow-size) / 2));
   }

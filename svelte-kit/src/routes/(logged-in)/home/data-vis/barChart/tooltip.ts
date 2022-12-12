@@ -2,19 +2,17 @@ import debounce from "lodash.debounce";
 import { createPopper } from "@popperjs/core";
 import Tooltip from "./Tooltip.svelte";
 
-export type PopperOptions = {
-  Comp: any;
-  props: any;
-} & any;
+export type Position = "left" | "right" | "top";
+export type PopperOptions = { position: Position };
 
-export const tooltip = <T extends Record<string, any>>(node: any, { Comp, props }: PopperOptions) => {
+export const tooltip = <T extends Record<string, any>>(node: any, { position }: PopperOptions) => {
   const div = document.createElement("div");
   div.classList.add("popper-tooltip");
   document.body.appendChild(div);
 
   new Tooltip({
     target: div,
-    props
+    props: { position, name: "Hello" }
   });
 
   const popper = createPopper(node, div, {
