@@ -25,7 +25,7 @@ export const popper = <T extends Record<string, any>>(node: any, { Comp, props }
     popper.update();
     div.classList.add("show");
   });
-  node.addEventListener("mouseleave", () => div.classList.remove("show"));
+  //node.addEventListener("mouseleave", () => div.classList.remove("show"));
 
   const updateTooltip = debounce(() => {
     console.log("Popper update");
