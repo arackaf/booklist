@@ -2,8 +2,7 @@
   import { onMount } from "svelte";
   import { spring } from "svelte/motion";
 
-  import Tooltip from "../Tooltip.svelte";
-  import { popper } from "$lib/util/popper";
+  import { tooltip } from "../tooltip";
 
   export let color: any;
   export let hoverBar: any;
@@ -38,7 +37,7 @@
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
 
-<g bind:this={rootEl} use:popper={{ Comp: Tooltip, props: { name: "QQQ" } }}>
+<g bind:this={rootEl} use:tooltip={{ props: { name: "QQQ" } }}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>
 

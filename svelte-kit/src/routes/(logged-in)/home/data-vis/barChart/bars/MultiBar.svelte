@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { spring } from "svelte/motion";
-  import { createPopper } from "@popperjs/core";
-  import Tooltip from "../Tooltip.svelte";
 
   export let data: any;
   export let height: any;
@@ -52,28 +49,28 @@
     barSpring.update(state => ({ ...state, height, x }));
   }
 
-  onMount(() => {
-    const div = document.createElement("div");
-    div.classList.add("popper-tooltip");
-    document.body.appendChild(div);
+  // onMount(() => {
+  //   const div = document.createElement("div");
+  //   div.classList.add("popper-tooltip");
+  //   document.body.appendChild(div);
 
-    new Tooltip({
-      target: div,
-      props: {
-        name: "XYZ"
-      }
-    });
+  //   new Tooltip({
+  //     target: div,
+  //     props: {
+  //       name: "XYZ"
+  //     }
+  //   });
 
-    setTimeout(() => {
-      const popper = createPopper(rootEl, div, {
-        placement: "left-start",
-        strategy: "absolute"
-      });
-    }, 500);
+  //   setTimeout(() => {
+  //     const popper = createPopper(rootEl, div, {
+  //       placement: "left-start",
+  //       strategy: "absolute"
+  //     });
+  //   }, 500);
 
-    rootEl.addEventListener("mouseenter", () => div.classList.add("show"));
-    rootEl.addEventListener("mouseleave", () => div.classList.remove("show"));
-  });
+  //   rootEl.addEventListener("mouseenter", () => div.classList.add("show"));
+  //   rootEl.addEventListener("mouseleave", () => div.classList.remove("show"));
+  // });
 </script>
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
