@@ -15,7 +15,13 @@ export const tooltip = <T extends Record<string, any>>(node: any, { position }: 
     props: { position, name: "Hello" }
   });
 
-  const popperPlacement: Placement = position === "left" ? "left-start" : position === "top" ? "top" : ("" as any);
+  const placementMap: { [keys in Position]: Placement } = {
+    left: "left-start",
+    top: "top",
+    right: "right-start"
+  };
+
+  const popperPlacement: Placement = placementMap[position];
   const popper = createPopper(node, div, {
     placement: popperPlacement,
     strategy: "absolute"

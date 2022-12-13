@@ -37,7 +37,7 @@
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
 
-<g bind:this={rootEl} use:tooltip={{ position: "top" }}>
+<g bind:this={rootEl} use:tooltip={{ position: "right" }}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>
 

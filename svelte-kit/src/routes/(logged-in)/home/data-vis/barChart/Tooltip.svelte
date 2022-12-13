@@ -6,7 +6,7 @@
 </script>
 
 <div class={"root " + position}>
-  <div>{name} blah blah blah blah</div>
+  <div>{name} blah blah blah blah blah</div>
   <span>Hello</span>
   <span>World</span>
   <div class={"arrow " + position} />
@@ -28,6 +28,10 @@
     margin-top: 10px;
     transform: translateX(calc(100% + var(--arrow-diagonal)));
   }
+  .root.right {
+    margin-top: 10px;
+    transform: translateX(calc(-1 * (100% + var(--arrow-diagonal))));
+  }
   .root.top {
     transform: translateY(calc(-1 * var(--arrow-diagonal)));
   }
@@ -47,6 +51,10 @@
   .arrow.left {
     top: calc(50% - var(--arrow-offset));
     left: calc(-1 * var(--arrow-offset));
+  }
+  .arrow.right {
+    top: calc(50% - var(--arrow-offset));
+    right: calc(-1 * var(--arrow-offset));
   }
   .arrow.top {
     left: calc(50% - var(--arrow-offset));
