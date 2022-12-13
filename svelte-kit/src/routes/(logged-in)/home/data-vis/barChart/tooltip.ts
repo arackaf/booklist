@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce";
-import { createPopper } from "@popperjs/core";
+import { createPopper, type Placement } from "@popperjs/core";
 import Tooltip from "./Tooltip.svelte";
 
 export type Position = "left" | "right" | "top";
@@ -15,8 +15,9 @@ export const tooltip = <T extends Record<string, any>>(node: any, { position }: 
     props: { position, name: "Hello" }
   });
 
+  const popperPlacement: Placement = position === "left" ? "left-start" : position === "top" ? "top" : ("" as any);
   const popper = createPopper(node, div, {
-    placement: "left-start",
+    placement: popperPlacement,
     strategy: "absolute"
   });
 

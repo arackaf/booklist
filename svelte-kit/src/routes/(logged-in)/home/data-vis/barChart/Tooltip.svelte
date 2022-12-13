@@ -28,6 +28,9 @@
     margin-top: 10px;
     transform: translateX(calc(100% + var(--arrow-diagonal)));
   }
+  .root.top {
+    transform: translateY(calc(-1 * var(--arrow-diagonal)));
+  }
 
   .arrow,
   .arrow::before {
@@ -44,6 +47,10 @@
   .arrow.left {
     top: calc(50% - var(--arrow-offset));
     left: calc(-1 * var(--arrow-offset));
+  }
+  .arrow.top {
+    left: calc(50% - var(--arrow-offset));
+    bottom: calc(-1 * var(--arrow-offset));
   }
   .arrow::before {
     visibility: visible;
