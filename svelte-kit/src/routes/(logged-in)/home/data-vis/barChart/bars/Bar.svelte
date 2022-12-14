@@ -2,6 +2,7 @@
   import MultiBar from "./MultiBar.svelte";
   import SingleBar from "./SingleBar.svelte";
 
+  export let index: number;
   export let x: any;
   export let data: any;
   export let height: any;
@@ -9,10 +10,11 @@
   export let totalSvgWidth: any;
   export let hoverBar: any;
   export let unHoverBar: any;
+  export let drilldown: any;
 </script>
 
 {#if data.entries.length == 1}
-  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} />
+  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} {drilldown} {index} />
 {:else}
   <MultiBar {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} />
 {/if}

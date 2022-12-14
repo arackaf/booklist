@@ -4,7 +4,9 @@
 
   import { tooltip } from "../tooltip";
 
+  export let drilldown: any;
   export let color: any;
+  export let index: number;
   export let hoverBar: any;
   export let unHoverBar: any;
   export let data: any;
@@ -14,6 +16,10 @@
   export let totalSvgWidth;
 
   let rootEl: any;
+
+  $: {
+    console.log({ index, drilldown });
+  }
 
   // let animatedValues = useSpring({
   //   config: config.stiff,
@@ -37,7 +43,7 @@
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
 
-<g bind:this={rootEl} use:tooltip={{ position: "right" }}>
+<g bind:this={rootEl} use:tooltip={{ position: "right", data, drilldown }}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>
 

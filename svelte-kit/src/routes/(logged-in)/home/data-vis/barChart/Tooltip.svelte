@@ -1,14 +1,21 @@
 <script lang="ts">
-  import type { Position } from "./tooltip";
+  import type { Data, Position } from "./tooltip";
 
-  export let name: string;
   export let position: Position;
+  export let data: Data;
+  export let drilldown: any;
+
+  $: console.log({ data });
 </script>
 
 <div class={"root " + position}>
-  <div>{name} blah blah blah blah blah</div>
-  <span>Hello</span>
-  <span>World</span>
+  <div class="content">
+    <span class="name">{data.display}: {data.count}</span>
+    <button class="raw-button"><i class="fal fa-times" /></button>
+  </div>
+  <br />
+  <br />
+  <button class="raw-button">Drill</button>
   <div class={"arrow " + position} />
 </div>
 
@@ -34,6 +41,21 @@
   }
   .root.top {
     transform: translateY(calc(-1 * var(--arrow-diagonal)));
+  }
+
+  .content {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .name {
+    font-size: 22px;
+    margin-right: 12px;
+  }
+
+  button {
+    cursor: pointer;
+    font-size: 18px;
   }
 
   .arrow,

@@ -3,16 +3,23 @@ import { createPopper, type Placement } from "@popperjs/core";
 import Tooltip from "./Tooltip.svelte";
 
 export type Position = "left" | "right" | "top";
-export type PopperOptions = { position: Position };
+export type PopperOptions = { position: Position; data: Data; drilldown: any };
 
-export const tooltip = <T extends Record<string, any>>(node: any, { position }: PopperOptions) => {
+export type Data = {
+  count: number;
+  display: string;
+  childSubjects: string[];
+};
+
+export const tooltip = <T extends Record<string, any>>(node: any, props: PopperOptions) => {
+  const { position, data, drilldown } = props;
   const div = document.createElement("div");
   div.classList.add("popper-tooltip");
   document.body.appendChild(div);
 
   new Tooltip({
     target: div,
-    props: { position, name: "Hello" }
+    props: { position, data, drilldown }
   });
 
   const placementMap: { [keys in Position]: Placement } = {
@@ -31,7 +38,6 @@ export const tooltip = <T extends Record<string, any>>(node: any, { position }: 
     popper.update();
     div.classList.add("show");
   });
-  //node.addEventListener("mouseleave", () => div.classList.remove("show"));
 
   const updateTooltip = debounce(() => {
     console.log("Popper update");
