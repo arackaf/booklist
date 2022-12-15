@@ -9,6 +9,7 @@
   export let hoverBar: any;
   export let unHoverBar: any;
   export let transform: any;
+  export let drilldown: any;
 
   // let animatedGOffsetValues = useSpring({
   //   config: config.stiff,
@@ -18,6 +19,16 @@
 
 <g {transform}>
   {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d)}
-    <Bar data={d} x={scaleX(d.display)} width={scaleX.bandwidth()} height={dataScale(d.count)} {totalSvgWidth} {hoverBar} {unHoverBar} />
+    <Bar
+      data={d}
+      x={scaleX(d.display)}
+      width={scaleX.bandwidth()}
+      index={i}
+      height={dataScale(d.count)}
+      {totalSvgWidth}
+      {hoverBar}
+      {unHoverBar}
+      {drilldown}
+    />
   {/each}
 </g>

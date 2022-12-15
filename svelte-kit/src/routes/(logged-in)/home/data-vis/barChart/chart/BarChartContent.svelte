@@ -83,7 +83,7 @@
       {/if}
     </div>
     <svg width={totalSvgWidth} {height}>
-      <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {unHoverBar} {transform} />
+      <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {drilldown} {unHoverBar} {transform} />
       <g {transform}>
         {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}
           <SvgTooltip

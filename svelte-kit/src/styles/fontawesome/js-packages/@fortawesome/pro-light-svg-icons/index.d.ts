@@ -26,6 +26,7 @@ export const faSync: IconDefinition;
 export const faTable: IconDefinition;
 export const faTags: IconDefinition;
 export const faTimes: IconDefinition;
+export const faTimesCircle: IconDefinition;
 export const faTrashAlt: IconDefinition;
 export const faUndo: IconDefinition;
 export const faUsersCog: IconDefinition;

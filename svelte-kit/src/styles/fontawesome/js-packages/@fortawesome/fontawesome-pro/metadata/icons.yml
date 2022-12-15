@@ -816,6 +816,29 @@ times:
     - light
   unicode: f00d
   voted: false
+times-circle:
+  changes:
+    - '1'
+    - 5.0.0
+  label: Times Circle
+  search:
+    terms:
+      - close
+      - cross
+      - exit
+      - incorrect
+      - notice
+      - notification
+      - notify
+      - problem
+      - wrong
+      - x
+  styles:
+    - regular
+    - light
+    - duotone
+  unicode: f057
+  voted: false
 trash:
   changes:
     - '4.2'

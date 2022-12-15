@@ -28,7 +28,7 @@
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books);
   $: {
-    console.log({ books, subjectIds, graphData });
+    console.log({ chartIndex, books, subjectIds, graphData });
   }
 
   const margin = { top: 30, right: 20, bottom: 180, left: 20 };
@@ -50,9 +50,7 @@
     </div>
   {:else}
     <div class="alert alert-warning" style="margin: 0 auto 75px auto">
-      It looks like the child subjects under
-      {header}
-      currently have no books assigned
+      It looks like the subjects under {header} currently have no books assigned
     </div>
   {/if}
 {:else}

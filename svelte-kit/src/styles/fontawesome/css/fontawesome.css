@@ -333,6 +333,9 @@ readers do not read off random characters that represent icons */
 .fa-times:before {
   content: "\f00d"; }
 
+.fa-times-circle:before {
+  content: "\f057"; }
+
 .fa-trash:before {
   content: "\f1f8"; }
 

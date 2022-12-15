@@ -24,6 +24,7 @@ export interface IconPack {
 export type IconName = 'amazon' | 
   'goodreads-g' | 
   'chevron-right' | 
+  'times-circle' | 
   'angle-double-left' | 
   'angle-double-right' | 
   'angle-left' | 
@@ -52,6 +53,7 @@ export type IconName = 'amazon' |
   'table' | 
   'tags' | 
   'times' | 
+  'times-circle' | 
   'trash-alt' | 
   'undo' | 
   'users-cog' | 
@@ -73,6 +75,7 @@ export type IconName = 'amazon' |
   'save' | 
   'spinner' | 
   'times' | 
+  'times-circle' | 
   'trash' | 
   'badge' | 
   'cog' | 
