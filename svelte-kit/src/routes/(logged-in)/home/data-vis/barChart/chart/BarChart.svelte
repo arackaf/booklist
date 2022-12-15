@@ -28,7 +28,7 @@
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books);
   $: {
-    console.log({ books, subjectIds, graphData });
+    console.log({ chartIndex, books, subjectIds, graphData });
   }
 
   const margin = { top: 30, right: 20, bottom: 180, left: 20 };

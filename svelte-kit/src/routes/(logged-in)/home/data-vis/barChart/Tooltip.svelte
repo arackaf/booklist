@@ -6,11 +6,7 @@
   export let data: Data;
   export let drilldown: any;
 
-  const runDrilldown = () =>
-    drilldown(
-      data.childSubjects.map((s: Subject) => s._id),
-      data.display
-    );
+  const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
 
 <div class={"root " + position}>
