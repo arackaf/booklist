@@ -209,6 +209,7 @@ interfaces:
     - sitemap
     - sync
     - times
+    - times-circle
     - trash
     - trash-alt
     - undo

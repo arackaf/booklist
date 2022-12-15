@@ -333,6 +333,9 @@ readers do not read off random characters that represent icons */
 .fa-times:before {
   content: "\f00d"; }
 
+.fa-times-circle:before {
+  content: "\f057"; }
+
 .fa-trash:before {
   content: "\f1f8"; }
 
@@ -422,6 +425,9 @@ readers do not read off random characters that represent icons */
 
 .fad.fa-chevron-right:after {
   content: "\10f054"; }
+
+.fad.fa-times-circle:after {
+  content: "\10f057"; }
 @font-face {
   font-family: 'Font Awesome 5 Pro';
   font-style: normal;

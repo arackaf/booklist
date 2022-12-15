@@ -99,6 +99,11 @@
     iconName: 'times',
     icon: [320, 512, [], "f00d", "M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"]
   };
+  var faTimesCircle = {
+    prefix: 'far',
+    iconName: 'times-circle',
+    icon: [512, 512, [], "f057", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"]
+  };
   var faTrash = {
     prefix: 'far',
     iconName: 'trash',
@@ -123,6 +128,7 @@
     faSave: faSave,
     faSpinner: faSpinner,
     faTimes: faTimes,
+    faTimesCircle: faTimesCircle,
     faTrash: faTrash
   };
 
@@ -146,6 +152,7 @@
   exports.faSave = faSave;
   exports.faSpinner = faSpinner;
   exports.faTimes = faTimes;
+  exports.faTimesCircle = faTimesCircle;
   exports.faTrash = faTrash;
 
   Object.defineProperty(exports, '__esModule', { value: true });

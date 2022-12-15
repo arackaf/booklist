@@ -143,6 +143,11 @@ var faTimes = {
   iconName: 'times',
   icon: [320, 512, [], "f00d", "M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"]
 };
+var faTimesCircle = {
+  prefix: 'fal',
+  iconName: 'times-circle',
+  icon: [512, 512, [], "f057", "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 464c-118.7 0-216-96.1-216-216 0-118.7 96.1-216 216-216 118.7 0 216 96.1 216 216 0 118.7-96.1 216-216 216zm94.8-285.3L281.5 256l69.3 69.3c4.7 4.7 4.7 12.3 0 17l-8.5 8.5c-4.7 4.7-12.3 4.7-17 0L256 281.5l-69.3 69.3c-4.7 4.7-12.3 4.7-17 0l-8.5-8.5c-4.7-4.7-4.7-12.3 0-17l69.3-69.3-69.3-69.3c-4.7-4.7-4.7-12.3 0-17l8.5-8.5c4.7-4.7 12.3-4.7 17 0l69.3 69.3 69.3-69.3c4.7-4.7 12.3-4.7 17 0l8.5 8.5c4.6 4.7 4.6 12.3 0 17z"]
+};
 var faTrashAlt = {
   prefix: 'fal',
   iconName: 'trash-alt',
@@ -187,9 +192,10 @@ var _iconsCache = {
   faTable: faTable,
   faTags: faTags,
   faTimes: faTimes,
+  faTimesCircle: faTimesCircle,
   faTrashAlt: faTrashAlt,
   faUndo: faUndo,
   faUsersCog: faUsersCog
 };
 
-export { _iconsCache as fal, prefix, faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight, faBook, faBooks, faCheck, faCheckSquare, faCogs, faEye, faEyeSlash, faFilter, faHome, faLevelUp, faList, faPencilAlt, faPlus, faScanner, faSearch, faSignIn, faSignOut, faSitemap, faSpinner, faSquare, faSync, faTable, faTags, faTimes, faTrashAlt, faUndo, faUsersCog };
+export { _iconsCache as fal, prefix, faAngleDoubleLeft, faAngleDoubleRight, faAngleLeft, faAngleRight, faBook, faBooks, faCheck, faCheckSquare, faCogs, faEye, faEyeSlash, faFilter, faHome, faLevelUp, faList, faPencilAlt, faPlus, faScanner, faSearch, faSignIn, faSignOut, faSitemap, faSpinner, faSquare, faSync, faTable, faTags, faTimes, faTimesCircle, faTrashAlt, faUndo, faUsersCog };
