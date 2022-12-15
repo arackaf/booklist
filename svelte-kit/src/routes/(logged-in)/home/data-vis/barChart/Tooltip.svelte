@@ -4,18 +4,18 @@
   export let position: Position;
   export let data: Data;
   export let drilldown: any;
-
-  $: console.log({ data });
 </script>
 
 <div class={"root " + position}>
   <div class="content">
     <span class="name">{data.display}: {data.count}</span>
-    <button class="raw-button"><i class="fal fa-times" /></button>
+    <button class="raw-button"><i class="fad fa-times-circle" /></button>
   </div>
+
   <br />
-  <br />
-  <button class="raw-button">Drill</button>
+
+  <button class="drilldown-btn raw-button"><span>View</span> <i class="far fa-chart-bar" /></button>
+
   <div class={"arrow " + position} />
 </div>
 
@@ -43,6 +43,13 @@
     transform: translateY(calc(-1 * var(--arrow-diagonal)));
   }
 
+  .drilldown-btn {
+    display: flex;
+    align-items: center;
+  }
+  .drilldown-btn span {
+    margin-right: 7px;
+  }
   .content {
     display: flex;
     align-items: baseline;
@@ -53,9 +60,11 @@
     margin-right: 12px;
   }
 
+  .content button {
+    font-size: 22px;
+  }
   button {
     cursor: pointer;
-    font-size: 18px;
   }
 
   .arrow,
