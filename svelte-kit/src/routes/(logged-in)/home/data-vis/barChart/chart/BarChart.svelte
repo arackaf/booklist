@@ -50,9 +50,7 @@
     </div>
   {:else}
     <div class="alert alert-warning" style="margin: 0 auto 75px auto">
-      It looks like the child subjects under
-      {header}
-      currently have no books assigned
+      It looks like the subjects under {header} currently have no books assigned
     </div>
   {/if}
 {:else}

@@ -35,7 +35,7 @@
   {#if ready}
     {#each chartPackets as packet, i (packet.header)}
       <BarChart
-        drilldown={getDrilldownChart}
+        drilldown={getDrilldownChart.bind(null, i)}
         subjects={packet.subjects}
         {subjectHash}
         header={packet.header}

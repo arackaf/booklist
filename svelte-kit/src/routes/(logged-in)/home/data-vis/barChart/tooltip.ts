@@ -1,6 +1,7 @@
 import debounce from "lodash.debounce";
 import { createPopper, type Placement } from "@popperjs/core";
 import Tooltip from "./Tooltip.svelte";
+import type { Subject } from "$data/types";
 
 export type Position = "left" | "right" | "top";
 export type PopperOptions = { position: Position; data: Data; drilldown: any };
@@ -8,7 +9,7 @@ export type PopperOptions = { position: Position; data: Data; drilldown: any };
 export type Data = {
   count: number;
   display: string;
-  childSubjects: string[];
+  childSubjects: Subject[];
 };
 
 export const tooltip = <T extends Record<string, any>>(node: any, props: PopperOptions) => {

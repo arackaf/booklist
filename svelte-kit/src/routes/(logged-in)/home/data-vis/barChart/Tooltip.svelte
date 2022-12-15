@@ -1,9 +1,16 @@
 <script lang="ts">
+  import type { Subject } from "$data/types";
   import type { Data, Position } from "./tooltip";
 
   export let position: Position;
   export let data: Data;
   export let drilldown: any;
+
+  const runDrilldown = () =>
+    drilldown(
+      data.childSubjects.map((s: Subject) => s._id),
+      data.display
+    );
 </script>
 
 <div class={"root " + position}>
@@ -12,9 +19,11 @@
     <button class="raw-button"><i class="fad fa-times-circle" /></button>
   </div>
 
-  <br />
+  {#if data.childSubjects?.length}
+    <br />
 
-  <button class="drilldown-btn raw-button"><span>View</span> <i class="far fa-chart-bar" /></button>
+    <button on:click={runDrilldown} class="drilldown-btn raw-button"><span>View</span> <i class="far fa-chart-bar" /></button>
+  {/if}
 
   <div class={"arrow " + position} />
 </div>
