@@ -40,7 +40,7 @@
   $: dataScale = scaleLinear()
     .domain([0, dataMax ?? []])
     .range([0, chartHeight]);
-  $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner([0.1]).paddingOuter([0.3]).align([0.5]);
+  $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   let offsetYInitial = margin.bottom - height;
