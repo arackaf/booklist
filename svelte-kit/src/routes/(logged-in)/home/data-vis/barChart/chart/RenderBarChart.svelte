@@ -15,11 +15,13 @@
   //   config: config.stiff,
   //   to: { transform }
   // });
+  $: nonExcludedGroups = showingData.filter(d => !excluding[d.groupId]);
 </script>
 
 <g {transform}>
-  {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d)}
+  {#each nonExcludedGroups as d, i (d)}
     <Bar
+      barCount={nonExcludedGroups.length}
       data={d}
       x={scaleX(d.display)}
       width={scaleX.bandwidth()}

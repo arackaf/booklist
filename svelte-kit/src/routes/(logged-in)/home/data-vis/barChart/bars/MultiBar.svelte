@@ -1,5 +1,6 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
+  import type { Position } from "../tooltip";
 
   export let data: any;
   export let height: any;
@@ -8,6 +9,7 @@
   export let hoverBar: any;
   export let unHoverBar: any;
   export let totalSvgWidth: any;
+  export let position: Position;
 
   let rootEl: any;
   let tooltipEl: any;
