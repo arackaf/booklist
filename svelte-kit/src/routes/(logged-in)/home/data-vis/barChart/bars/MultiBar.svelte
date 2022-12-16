@@ -1,7 +1,8 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import type { Position } from "../tooltip";
+  import { tooltip, type Position } from "../tooltip";
 
+  export let drilldown: any;
   export let data: any;
   export let height: any;
   export let width: any;
@@ -76,7 +77,7 @@
 </script>
 
 <!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
-<g bind:this={rootEl}>
+<g bind:this={rootEl} use:tooltip={{ position, data, drilldown }}>
   {#each colors as c}
     <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
   {/each}
