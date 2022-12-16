@@ -1,10 +1,57 @@
-import debounce from "lodash.debounce";
-import { createPopper, type Placement } from "@popperjs/core";
+import { createPopper, type Placement, type Instance as PopperInstance } from "@popperjs/core";
 import Tooltip from "./Tooltip.svelte";
 import type { Subject } from "$data/types";
 
 export type Position = "left" | "right" | "top";
 export type PopperOptions = { position: Position; data: Data; drilldown: any };
+
+class TooltipHoverState {
+  #isDead: boolean = true;
+  #overBar: boolean = false;
+  #overtooltip: boolean = false;
+
+  #popper: PopperInstance | null = null;
+  #div: HTMLDivElement | null = null;
+
+  activate(popper: PopperInstance, div: HTMLDivElement) {
+    this.#isDead = false;
+    this.#popper = popper;
+    this.#div = div;
+  }
+
+  hoverTooltip = () => {
+    this.#overtooltip = true;
+    this.#overBar = false;
+  };
+  hoverBar = () => {
+    this.#overBar = true;
+    this.#overtooltip = false;
+  };
+
+  leaveTooltip = () => {
+    this.#overtooltip = false;
+    this.check();
+  };
+  leaveBar = () => {
+    this.#overBar = false;
+    this.check();
+  };
+
+  check() {
+    setTimeout(() => {
+      if (this.isOff()) {
+        this.#popper?.destroy();
+        if (this.#div) {
+          this.#div.parentElement?.removeChild(this.#div);
+        }
+        this.#isDead = true;
+      }
+    }, 100);
+  }
+
+  isOff = () => !this.#overBar && !this.#overtooltip;
+  isDead = () => this.#isDead;
+}
 
 export type Data = {
   count: number;
@@ -14,35 +61,52 @@ export type Data = {
 
 export const tooltip = <T extends Record<string, any>>(node: any, props: PopperOptions) => {
   const { position, data, drilldown } = props;
-  const div = document.createElement("div");
-  div.classList.add("popper-tooltip");
-  document.body.appendChild(div);
 
-  new Tooltip({
-    target: div,
-    props: { position, data, drilldown }
-  });
+  const tooltipMabager = new TooltipHoverState();
 
-  const placementMap: { [keys in Position]: Placement } = {
-    left: "left-start",
-    top: "top",
-    right: "right-start"
-  };
+  function initializePopper() {
+    const div = document.createElement("div");
+    div.classList.add("popper-tooltip");
+    document.body.appendChild(div);
 
-  const popperPlacement: Placement = placementMap[position];
-  const popper = createPopper(node, div, {
-    placement: popperPlacement,
-    strategy: "absolute"
-  });
+    new Tooltip({
+      target: div,
+      props: { position, data, drilldown }
+    });
+
+    const placementMap: { [keys in Position]: Placement } = {
+      left: "left-start",
+      top: "top",
+      right: "right-start"
+    };
+
+    const popperPlacement: Placement = placementMap[position];
+    const popper = createPopper(node, div, {
+      placement: popperPlacement,
+      strategy: "absolute"
+    });
+
+    div.classList.add("show");
+
+    tooltipMabager.activate(popper, div);
+
+    const contentDiv = div.firstElementChild!;
+    contentDiv.addEventListener("mouseenter", tooltipMabager.hoverTooltip);
+    contentDiv.addEventListener("mouseleave", () => {
+      tooltipMabager.leaveTooltip();
+    });
+  }
 
   node.addEventListener("mouseenter", () => {
-    popper.update();
-    div.classList.add("show");
+    if (tooltipMabager.isDead()) {
+      initializePopper();
+    } else {
+      tooltipMabager.hoverBar();
+    }
   });
-
-  const updateTooltip = debounce(() => {
-    console.log("Popper update");
-  }, 20);
+  node.addEventListener("mouseleave", () => {
+    tooltipMabager.leaveBar();
+  });
 
   return {};
 };
