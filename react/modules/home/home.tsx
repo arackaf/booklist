@@ -90,9 +90,7 @@ const ChartHolder: FC<{}> = props => {
   const [chartWidth, setChartWidth] = useState(MAX_CHART_WIDTH);
 
   const getDrilldownChart = (index, subjects, header) => {
-    useTransition(() => {
-      setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
-    });
+    setChartPackets(charts => [...charts.slice(0, index + 1), { subjects: subjects.concat(), header }]);
   };
 
   return (
