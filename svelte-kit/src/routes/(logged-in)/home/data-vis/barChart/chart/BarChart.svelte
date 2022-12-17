@@ -26,7 +26,7 @@
   const subjectIds = subjects.map(s => s._id);
   //const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
 
-  $: graphData = stackGraphData(subjectHash, subjectIds, books);
+  $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
   $: {
     console.log({ chartIndex, books, subjectIds, graphData });
   }
