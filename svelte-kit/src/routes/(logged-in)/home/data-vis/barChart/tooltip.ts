@@ -40,17 +40,21 @@ class TooltipHoverState {
   check() {
     setTimeout(() => {
       if (this.isOff()) {
-        this.#popper?.destroy();
-        if (this.#div) {
-          this.#div.parentElement?.removeChild(this.#div);
-        }
-        this.#isDead = true;
+        this.destroy();
       }
     }, 100);
   }
 
   isOff = () => !this.#overBar && !this.#overtooltip;
   isDead = () => this.#isDead;
+
+  destroy() {
+    this.#popper?.destroy();
+    if (this.#div) {
+      this.#div.parentElement?.removeChild(this.#div);
+    }
+    this.#isDead = true;
+  }
 }
 
 export type Data = {
@@ -108,5 +112,9 @@ export const tooltip = <T extends Record<string, any>>(node: any, props: PopperO
     tooltipMabager.leaveBar();
   });
 
-  return {};
+  return {
+    destroy() {
+      tooltipMabager.destroy();
+    }
+  };
 };
