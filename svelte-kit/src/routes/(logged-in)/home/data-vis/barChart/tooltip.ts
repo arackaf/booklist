@@ -3,7 +3,7 @@ import Tooltip from "./Tooltip.svelte";
 import type { Subject } from "$data/types";
 
 export type Position = "left" | "right" | "top";
-export type PopperOptions = { position: Position; data: Data; drilldown: any };
+export type PopperOptions = { position: Position; data: Data; drilldown: any; removeBar: (id: string) => void };
 
 class TooltipHoverState {
   #isDead: boolean = true;
@@ -58,13 +58,14 @@ class TooltipHoverState {
 }
 
 export type Data = {
+  groupId: string;
   count: number;
   display: string;
   childSubjects: Subject[];
 };
 
-export const tooltip = <T extends Record<string, any>>(node: any, props: PopperOptions) => {
-  const { position, data, drilldown } = props;
+export const tooltip = (node: any, props: PopperOptions) => {
+  const { position, data, drilldown, removeBar } = props;
 
   const tooltipMabager = new TooltipHoverState();
 
@@ -75,7 +76,7 @@ export const tooltip = <T extends Record<string, any>>(node: any, props: PopperO
 
     new Tooltip({
       target: div,
-      props: { position, data, drilldown }
+      props: { position, data, drilldown, removeBar }
     });
 
     const placementMap: { [keys in Position]: Placement } = {

@@ -5,6 +5,7 @@
   export let position: Position;
   export let data: Data;
   export let drilldown: any;
+  export let removeBar: (id: string) => void;
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
@@ -12,7 +13,7 @@
 <div class={"root " + position}>
   <div class="content">
     <span class="name">{data.display}: {data.count}</span>
-    <button class="raw-button"><i class="fad fa-times-circle" /></button>
+    <button class="raw-button" on:click={() => removeBar(data.groupId)}><i class="fad fa-times-circle" /></button>
   </div>
 
   {#if data.childSubjects?.length}

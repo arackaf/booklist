@@ -12,6 +12,7 @@
   export let x: any;
   export let totalSvgWidth;
   export let position: Position;
+  export let removeBar: (id: string) => void;
 
   let barSpring = spring({ height: 0, x: totalSvgWidth, width }, { stiffness: 0.1, damping: 0.4 });
 
@@ -25,6 +26,6 @@
   });
 </script>
 
-<g use:tooltip={{ position, data, drilldown }}>
+<g use:tooltip={{ position, data, drilldown, removeBar }}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>

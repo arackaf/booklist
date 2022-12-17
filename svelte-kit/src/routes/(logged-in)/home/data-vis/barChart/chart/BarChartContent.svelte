@@ -92,6 +92,7 @@
             height={dataScale(d.count)}
             {totalSvgWidth}
             {drilldown}
+            {removeBar}
           />
         {/each}
       </g>

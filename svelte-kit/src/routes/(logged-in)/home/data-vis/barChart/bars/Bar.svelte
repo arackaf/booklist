@@ -11,14 +11,15 @@
   export let totalSvgWidth: any;
   export let drilldown: any;
   export let barCount: number;
+  export let removeBar: (id: string) => void;
 
   $: position = (height < 150 ? "top" : index < barCount / 2 ? "left" : "right") as Position;
 </script>
 
 {#if data.entries.length == 1}
-  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {drilldown} {position} />
+  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {drilldown} {position} {removeBar} />
 {:else}
-  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {position} {drilldown} />
+  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {position} {drilldown} {removeBar} />
 {/if}
 
 <style>

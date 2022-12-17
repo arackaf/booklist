@@ -9,6 +9,7 @@
   export let x: any;
   export let totalSvgWidth: any;
   export let position: Position;
+  export let removeBar: (id: string) => void;
 
   let rootEl: any;
 
@@ -50,7 +51,7 @@
   }
 </script>
 
-<g bind:this={rootEl} use:tooltip={{ position, data, drilldown }}>
+<g bind:this={rootEl} use:tooltip={{ position, data, drilldown, removeBar }}>
   {#each colors as c}
     <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
   {/each}
