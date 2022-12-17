@@ -6,9 +6,6 @@
 
   export let drilldown: any;
   export let color: any;
-  export let index: number;
-  export let hoverBar: any;
-  export let unHoverBar: any;
   export let data: any;
   export let height: any;
   export let width: any;
@@ -28,17 +25,6 @@
   });
 </script>
 
-<!-- on:mouseover={() => hoverBar(data.groupId)} on:focus={null} on:blur={null} on:mouseout={() => unHoverBar(data.groupId)} -->
-
 <g use:tooltip={{ position, data, drilldown }}>
   <rect height={Math.max(0, $barSpring.height)} width={$barSpring.width} x={$barSpring.x} y={0} fill={color} />
 </g>
-
-<style>
-  :global(.popper-tooltip) {
-    display: none;
-  }
-  :global(.popper-tooltip.show) {
-    display: block;
-  }
-</style>

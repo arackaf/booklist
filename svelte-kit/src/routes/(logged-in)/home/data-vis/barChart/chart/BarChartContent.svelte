@@ -6,9 +6,8 @@
   import { max } from "d3-array";
 
   import Axis from "../axis/Axis.svelte";
-  import RenderBarChart from "./RenderBarChart.svelte";
-  import SvgTooltip from "../SvgTooltip.svelte";
   import { onMount } from "svelte";
+  import Bar from "../bars/Bar.svelte";
 
   export let width: any;
   export let height: any;
@@ -17,6 +16,10 @@
   export let graphData: any[];
   export let drilldown: any;
   export let chartIndex: any;
+
+  onMount(() => {
+    mounted = true;
+  });
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -55,15 +58,10 @@
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
-  let hoveredMap: any = {};
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
-  const hoverBar = (groupId: any) => (hoveredMap = { ...hoveredMap, [groupId]: true });
-  const unHoverBar = (groupId: any) => setTimeout(() => (hoveredMap = { ...hoveredMap, [groupId]: false }), 1);
 
-  onMount(() => {
-    mounted = true;
-  });
+  $: nonExcludedGroups = showingData.filter(d => !excluding[d.groupId]);
 </script>
 
 <div use:scrollInitial>
@@ -72,10 +70,10 @@
       <h4 style="display: inline">{header}</h4>
       {#if excludedCount}
         <span style="margin-left: 10px">
-          Excluding:&nbsp;
+          Excluding:
           {#each graphData.filter(d => excluding[d.groupId]) as d}
             <span style="margin-left: 10px">
-              {d.display}{" "}
+              {" " + d.display}
               <a style="color: black" on:click={() => restoreBar(d.groupId)} on:keypress={() => {}}> <i class="far fa-redo" /> </a>
             </span>
           {/each}
@@ -83,24 +81,21 @@
       {/if}
     </div>
     <svg width={totalSvgWidth} {height}>
-      <RenderBarChart {showingData} {excluding} {scaleX} {dataScale} {totalSvgWidth} {hoverBar} {drilldown} {unHoverBar} {transform} />
       <g {transform}>
-        {#each showingData.filter(d => !excluding[d.groupId]) as d, i (d.groupId)}
-          <SvgTooltip
+        {#each nonExcludedGroups as d, i (d)}
+          <Bar
+            barCount={nonExcludedGroups.length}
             data={d}
-            srcHeight={dataScale(d.count)}
-            srcWidth={scaleX.bandwidth()}
-            srcX={scaleX(d.display)}
-            count={showingData.length}
+            x={scaleX(d.display)}
+            width={scaleX.bandwidth()}
             index={i}
-            childSubjects={d.childSubjects}
-            hovered={hoveredMap[d.groupId]}
+            height={dataScale(d.count)}
+            {totalSvgWidth}
             {drilldown}
-            {chartIndex}
-            {removeBar}
           />
         {/each}
       </g>
+
       <Axis
         masterTransformX={margin.left}
         masterTransformY={-1 * margin.bottom}

@@ -9,8 +9,6 @@
   export let height: any;
   export let width: any;
   export let totalSvgWidth: any;
-  export let hoverBar: any;
-  export let unHoverBar: any;
   export let drilldown: any;
   export let barCount: number;
 
@@ -18,7 +16,16 @@
 </script>
 
 {#if data.entries.length == 1}
-  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} {drilldown} {index} {position} />
+  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {drilldown} {position} />
 {:else}
-  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {hoverBar} {unHoverBar} {position} {drilldown} />
+  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {position} {drilldown} />
 {/if}
+
+<style>
+  :global(.popper-tooltip) {
+    display: none;
+  }
+  :global(.popper-tooltip.show) {
+    display: block;
+  }
+</style>
