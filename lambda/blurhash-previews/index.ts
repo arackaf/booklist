@@ -30,8 +30,10 @@ export async function handler() {
       let base64Preview = "";
 
       try {
-        const plaiceholderResult = await getPlaiceholder(biggestImage);
-        base64Preview = plaiceholderResult.base64 || "";
+        if (biggestImage) {
+          const plaiceholderResult = await getPlaiceholder(biggestImage);
+          base64Preview = plaiceholderResult.base64 || "";
+        }
       } catch (er) {}
 
       console.log("Current img", smallImage);
