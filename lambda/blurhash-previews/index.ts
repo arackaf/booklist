@@ -1,3 +1,5 @@
+import { getPlaiceholder } from "plaiceholder";
+
 import { getBlurhashPreview } from "./getBlurhashPreview";
 import { getDbConnection } from "../util/getDbConnection";
 
@@ -24,6 +26,14 @@ export async function handler() {
 
       const { mobileImage, mobileImagePreview, smallImage, smallImagePreview, mediumImage, mediumImagePreview } = book;
 
+      const biggestImage = mediumImage || smallImage || mobileImage;
+      let base64Preview = "";
+
+      try {
+        const plaiceholderResult = await getPlaiceholder(biggestImage);
+        base64Preview = plaiceholderResult.base64 || "";
+      } catch (er) {}
+
       console.log("Current img", smallImage);
       const idx = i++;
 
@@ -35,6 +45,7 @@ export async function handler() {
               try {
                 console.log("Updating mobile");
                 const blurhashValue = await getBlurhashPreview(mobileImage);
+                (blurhashValue as any).b64 = base64Preview;
 
                 if (blurhashValue) {
                   console.log("Mobile downloaded. Blurhash value ===", blurhashValue);
@@ -54,6 +65,7 @@ export async function handler() {
               try {
                 console.log("Updating small");
                 const blurhashValue = await getBlurhashPreview(smallImage);
+                (blurhashValue as any).b64 = base64Preview;
 
                 if (blurhashValue) {
                   console.log("Small downloaded. Blurhash value ===", blurhashValue);
@@ -73,6 +85,7 @@ export async function handler() {
               try {
                 console.log("Updating medium");
                 const blurhashValue = await getBlurhashPreview(mediumImage);
+                (blurhashValue as any).b64 = base64Preview;
 
                 if (blurhashValue) {
                   console.log("Medium downloaded. Blurhash value ===", blurhashValue);
