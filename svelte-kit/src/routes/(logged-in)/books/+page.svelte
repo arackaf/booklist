@@ -25,6 +25,8 @@
 </script>
 
 <script lang="ts">
+  import "$lib/components/bookCoverWC/component";
+
   import { onMount, setContext } from "svelte";
   import { page } from "$app/stores";
 
@@ -85,7 +87,7 @@
   // 	return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookInput }));
   // };
 
-  let menuBarHeight = 150;
+  let menuBarHeight = 0;
   const setMenuBarHeight = (val: number) => (menuBarHeight = val);
 
   const uiView = writable({ pending: false, view: GRID_VIEW });
