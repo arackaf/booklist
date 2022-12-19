@@ -5,19 +5,19 @@
   export let preview: string | PreviewPacket | null;
 
   $: previewString = preview == null ? "" : typeof preview === "string" ? preview : preview.b64;
-
-  $: style = preview != null && typeof preview === "object" ? `width:${preview.w}px;height:${preview.h}px` : "";
+  $: sizingStyle = preview != null && typeof preview === "object" ? `width:${preview.w}px;height:${preview.h}px` : "";
 </script>
 
-<div>
-  <img alt="Book cover preview" src={previewString} data-slot="preview" style={"border-radius:2px;" + style} class="preview" />
-  <img alt="Book cover" src={url} data-slot="image" class="image" />
+<div style={sizingStyle}>
+  <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
+  <img alt="Book cover" src={url} class="image" />
 </div>
 
 <style>
   div {
     display: grid;
     grid-template-areas: "content";
+    overflow: hidden;
   }
   div > * {
     grid-area: content;
@@ -25,6 +25,8 @@
 
   .preview {
     z-index: 1;
+    border-radius: 2px;
+    filter: blur(3px);
   }
   .image {
     z-index: 2;
