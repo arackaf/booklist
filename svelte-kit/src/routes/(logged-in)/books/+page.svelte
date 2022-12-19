@@ -64,7 +64,6 @@
   import type { Book } from "$data/types";
 
   onMount(() => {
-    console.log("MOUNT");
     const div = document.createElement("div");
     document.body.appendChild(div);
 

@@ -62,12 +62,12 @@
   }
 
   beforeNavigate(({ type }) => {
-    console.log("BEFORE");
+    //console.log("BEFORE");
     //focused = document.activeElement;
   });
 
   afterNavigate(({ type }) => {
-    console.log("AFTER");
+    //console.log("AFTER");
     if (type === "form") {
       //focused?.focus();
     }
