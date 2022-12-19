@@ -9,6 +9,7 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import { searchMutationState } from "../searchState";
   import { selectionState, selectedBooksLookup } from "../selectionState";
+  import BookCover from "$lib/components/ui/BookCover.svelte";
 
   //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
   //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
@@ -51,6 +52,7 @@
   {/if}
   <td>
     <div style="width: 60px; min-height: 75px;">
+      <BookCover url={book.smallImage} preview={book.smallImagePreview} />
       <!-- <CoverSmall url={book.smallImage} preview={book.smallImagePreview} /> -->
     </div>
   </td>

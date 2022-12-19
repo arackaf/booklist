@@ -24,7 +24,20 @@ export const updateBook = async (book: any) => {
     });
 };
 
-const bookFields = ["_id", "title", "userId", "authors", "tags", "subjects", "isbn", "publisher", "publicationDate", "isRead"];
+const bookFields = [
+  "_id",
+  "title",
+  "userId",
+  "authors",
+  "tags",
+  "subjects",
+  "isbn",
+  "publisher",
+  "publicationDate",
+  "isRead",
+  "smallImage",
+  "smallImagePreview"
+];
 const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) => {
   result[field] = 1;
   return result;

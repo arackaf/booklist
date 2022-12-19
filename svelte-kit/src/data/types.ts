@@ -26,6 +26,8 @@ export type Tag = {
   backgroundColor: string;
 };
 
+export type PreviewPacket = { w: number; h: number; b64: string };
+
 export type Book = {
   _id: string;
   title: string;
@@ -38,6 +40,8 @@ export type Book = {
   authors: string[];
   tags: string[];
   subjects: string[];
+  smallImage: string | null;
+  smallImagePreview: string | PreviewPacket | null;
 };
 
 export type BookDisplay = Book & {
