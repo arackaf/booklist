@@ -6,10 +6,19 @@ export const stackGraphData = (subjectHash: any, subjectIds: string[], books: Bo
 
   let subjectResultsMap = new Map<string, number>([]);
 
+  if (childSubjectsOnly) {
+    books = books.filter(b => {
+      return b.subjects.some(s => {
+        const actualSubject = subjectHash[s];
+        return targetSubjectsLookup.has(s) || targetSubjectsLookup.has(getApplicableRootSubject(actualSubject)._id);
+      });
+    });
+  }
+
   books.forEach(item => {
     let subjectsHeld = item.subjects
       .filter(_id => subjectHash[_id])
-      .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id], childSubjectsOnly)?._id))
+      .map(_id => (targetSubjectsLookup.has(_id) ? _id : getApplicableRootSubject(subjectHash[_id])._id))
       .filter(_id => _id);
 
     if (!subjectsHeld.length) {
@@ -47,15 +56,17 @@ export const stackGraphData = (subjectHash: any, subjectIds: string[], books: Bo
     };
   });
 
-  function getApplicableRootSubject(subject: any, childSubjectsOnly: boolean): any {
+  function getApplicableRootSubject(subject: any): any {
     let parentId = computeParentId(subject.path);
 
-    if (!parentId) {
-      return childSubjectsOnly ? null : subject;
+    if (targetSubjectsLookup.has(subject._id)) {
+      return subject;
+    } else if (!parentId) {
+      return subject;
     } else if (targetSubjectsLookup.has(parentId)) {
       return subjectHash[parentId];
     } else {
-      return getApplicableRootSubject(subjectHash[parentId], childSubjectsOnly);
+      return getApplicableRootSubject(subjectHash[parentId]);
     }
   }
 };
