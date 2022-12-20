@@ -38,10 +38,12 @@ const bookFields = [
   "smallImage",
   "smallImagePreview"
 ];
+
 const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) => {
   result[field] = 1;
   return result;
 }, {});
+
 export const searchBooks = async (search: string) => {
   const httpStart = +new Date();
   return fetch(env.MONGO_URL + "/action/aggregate", {
@@ -82,9 +84,7 @@ export const searchBooks = async (search: string) => {
     });
 };
 
-export const booksSubjectsDump = async (subjects?: string[]) => {
-  const filter = subjects == null ? { "subjects.0": { $exists: true } } : {};
-
+export const booksSubjectsDump = async () => {
   const httpStart = +new Date();
   return fetch(env.MONGO_URL + "/action/aggregate", {
     method: "POST",
@@ -97,7 +97,7 @@ export const booksSubjectsDump = async (subjects?: string[]) => {
       collection: "books",
       database: "my-library",
       dataSource: "Cluster0",
-      pipeline: [{ $match: { userId: "60a93babcc3928454b5d1cc6", ...filter } }, { $project: { subjects: 1 } }]
+      pipeline: [{ $match: { userId: "60a93babcc3928454b5d1cc6", "subjects.0": { $exists: true } } }, { $project: { subjects: 1 } }]
     })
   })
     .then(res => res.json())
