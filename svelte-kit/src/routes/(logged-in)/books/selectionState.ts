@@ -21,5 +21,8 @@ export const selectionState = {
     } else {
       this.selectBook(_id);
     }
+  },
+  clear() {
+    selectedBooks.set([]);
   }
 };

@@ -64,6 +64,7 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { updateBook, type UpdatesTo } from "$lib/state/booksState";
   import type { Book } from "$data/types";
+  import { selectionState } from "./selectionState";
 
   onMount(() => {
     const div = document.createElement("div");
@@ -72,6 +73,8 @@
     setTimeout(() => {
       div.appendChild(document.createElement("div"));
     }, 2000);
+
+    selectionState.clear();
   });
 
   const prepBookForSaving = (book: any) => {
