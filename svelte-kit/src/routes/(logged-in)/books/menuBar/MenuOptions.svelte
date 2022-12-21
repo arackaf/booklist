@@ -1,15 +1,19 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
-  //import { appState } from "app/state/appState";
+
   //import { BookResultsPacket } from "../booksState";
   import { /*getBookSearchUiView,*/ BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../booksUiState";
+  import { selectedBooksLookup, selectionState } from "../selectionState";
 
   let uiView: any = writable({}); // ReturnType<typeof getBookSearchUiView>;
 
   let bookResultsPacket: any = {}; //BookResultsPacket;
   export let closeMobileMenu: () => void = () => {};
-  $: ({ books = [], reload, booksLoading } = bookResultsPacket);
+  $: ({ reload, booksLoading } = bookResultsPacket);
+
+  $: books = $page.data.books;
 
   const uiDispatch = (view: any) => $uiView.requestState({ type: "SET_PENDING_VIEW", value: view }, books);
 
@@ -18,14 +22,15 @@
   //$: ({ isPublic, online } = $appState);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState, openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
 
-  $: ({ selectedBooks } = $booksUiState);
-  $: selectedBooksIds = Object.keys(selectedBooks).filter(k => selectedBooks[k]);
+  selectionState;
+
+  $: selectedBooksIds = Object.keys($selectedBooksLookup);
   $: selectedBooksCount = selectedBooksIds.length;
 
-  const editSubjectsForSelectedBooks = () => editBooksSubjects(books.filter((b: any) => selectedBooks[b._id]));
-  const editTagsForSelectedBooks = () => editBooksTags(books.filter((b: any) => selectedBooks[b._id]));
+  const editSubjectsForSelectedBooks = () => editBooksSubjects();
+  const editTagsForSelectedBooks = () => editBooksTags($books.filter((b: any) => selectedBooksIds[b._id]));
 
   const mobileHandler =
     (fn: () => unknown, delay = false) =>

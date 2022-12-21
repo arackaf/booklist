@@ -31,7 +31,7 @@
   import { page } from "$app/stores";
 
   import useReducer from "$lib/state/useReducer";
-  import { writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import ModuleLoading from "$lib/components/navigation/ModuleLoading.svelte";
 
   import GridView from "./bookViews/GridView.svelte";
@@ -45,7 +45,7 @@
   // import SubjectEditModal from './SubjectEditModal.svelte';
   // import TagEditModal from './TagEditModal.svelte';
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
-  // import BookSubjectSetter from './BookSubjectSetter.svelte';
+  import BookSubjectSetter from "./BookSubjectSetter.svelte";
   // import BookTagSetter from './BookTagSetter.svelte';
   // import ModuleLoading from 'app/components/navigation/ModuleLoading.svelte';
 
@@ -64,7 +64,7 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { updateBook, type UpdatesTo } from "$lib/state/booksState";
   import type { Book } from "$data/types";
-  import { selectionState } from "./selectionState";
+  import { selectedBooksLookup, selectionState } from "./selectionState";
 
   onMount(() => {
     const div = document.createElement("div");
@@ -104,6 +104,12 @@
   });
   $: ({ /*books,*/ booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
 
+  $: books = $page.data.books as Writable<Book[]>;
+  $: tagsPacket = $page.data.tags;
+
+  $: ({ allTags, tagHash } = tagsPacket);
+  $: allSubjects = $page.data.subjects;
+
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
 
@@ -126,8 +132,13 @@
     updateBook($page.data.books, _id, updates);
   };
 
+  let booksSubjectsModalOpen = false;
+
   let booksSubjectEditing = [] as any[];
-  const editBooksSubjects = (books: any[]) => (booksSubjectEditing = books);
+  const editBooksSubjects = () => {
+    booksSubjectEditing = $books.filter(b => $selectedBooksLookup[b._id]);
+    booksSubjectsModalOpen = true;
+  };
 
   let booksTagEditing = [] as any[];
   const editBooksTags = (books: any[]) => (booksTagEditing = books);
@@ -150,12 +161,6 @@
   const stopEditingBook = () => {
     editBookModalOpen = false;
   };
-
-  $: books = $page.data.books;
-  $: tagsPacket = $page.data.tags;
-
-  $: ({ allTags, tagHash } = tagsPacket);
-  $: allSubjects = $page.data.subjects;
 </script>
 
 {#if booksLoading || $uiView.pending}
@@ -190,17 +195,17 @@
 
         <EditBookModal isOpen={editBookModalOpen} book={editingBook} {onBookUpdated} onHide={stopEditingBook} subjects={allSubjects} tags={allTags} />
 
+        <BookSubjectSetter isOpen={booksSubjectsModalOpen} onHide={() => (booksSubjectsModalOpen = false)} modifyingBooks={booksSubjectEditing} />
+
         <!--
-				{#if editSubjectsModalOpen}
-					<SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
-				{/if}
+        {#if editSubjectsModalOpen}
+          <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+        {/if}
 				{#if editTagsModalOpen}
 					<TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
 				{/if}
 
-				{#if !!booksSubjectEditing.length}
-					<BookSubjectSetter isOpen={!!booksSubjectEditing.length} onHide={() => (booksSubjectEditing = [])} modifyingBooks={booksSubjectEditing} />
-				{/if}
+
 				{#if !!booksTagEditing.length}
 					<BookTagSetter isOpen={!!booksTagEditing.length} onHide={() => (booksTagEditing = [])} modifyingBooks={booksTagEditing} />
 				{/if} -->
