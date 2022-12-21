@@ -17,32 +17,4 @@
   // );
 </script>
 
-<section>
-  <div style="margin-left: auto; margin-right: auto; max-width: 1200px">
-    <div>
-      <div class="panel-body" style="position: relative">
-        <Tabs defaultTab="vis" localStorageName="home-tabs">
-          <TabHeaders>
-            <TabHeader tabName="vis" spaceWith="VIEW...."><a> <i class="far fa-chart-bar" /> View </a></TabHeader>
-            <TabHeader tabName="rec" text="Discover books" />
-            <TabHeader tabName="recent-scans" text="Recent scans" />
-          </TabHeaders>
-          <TabContents>
-            <TabContent let:isActive tabName="vis">
-              {#if isActive}
-                <BooksCharts />
-              {/if}
-            </TabContent>
-
-            <TabContent tabName="rec">
-              <!-- <BookRecommendations /> -->
-            </TabContent>
-            <TabContent tabName="recent-scans">
-              <!-- <RecentScanResults /> -->
-            </TabContent>
-          </TabContents>
-        </Tabs>
-      </div>
-    </div>
-  </div>
-</section>
+<BooksCharts />

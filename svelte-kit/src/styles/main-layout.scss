@@ -8,6 +8,7 @@ body {
   --main-spacing-left: 5px;
   --main-spacing: var(--main-spacing-top) var(--main-spacing-right) var(--main-spacing-bottom) var(--main-spacing-left);
   --header-footer-spacing: 10px 5px;
+  --content-max-width: 1200px;
 }
 
 #app {
@@ -32,7 +33,7 @@ body {
     display: grid;
     grid-template-rows: 1fr auto;
 
-    grid-template-columns: 1fr minmax(0, 1200px) 1fr;
+    grid-template-columns: 1fr minmax(0, var(--content-max-width)) 1fr;
 
     > section {
       &.flush-bottom {
