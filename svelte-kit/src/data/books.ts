@@ -24,6 +24,31 @@ export const updateBook = async (book: any) => {
     });
 };
 
+export const updateBooksSubjects = async (_ids: string[], add: string[], remove: string[]) => {
+  return fetch(env.MONGO_URL + "/action/updateMany", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Request-Headers": "*",
+      "api-key": env.MONGO_URL_API_KEY
+    },
+    body: JSON.stringify({
+      collection: "books",
+      database: "my-library",
+      dataSource: "Cluster0",
+      filter: { $or: _ids.map(_id => ({ _id: { $oid: _id } })) },
+      //filter: { _id: { $in: { $map: { input: _ids, as: "$oid" } } } },
+      // filter: { _id: { $in: { $oid: _ids } } },
+      update: { $addToSet: { subjects: { $each: add } } }
+      // update: { $set: { subjects: { $addToSet: add } } }
+    })
+  })
+    .then(res => res.json())
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
 const bookFields = [
   "_id",
   "title",
