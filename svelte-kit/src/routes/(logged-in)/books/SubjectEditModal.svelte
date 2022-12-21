@@ -1,0 +1,54 @@
+<script lang="ts">
+  import Button from "$lib/components/buttons/Button.svelte";
+  import Modal from "$lib/components/ui/Modal.svelte";
+
+  import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
+  import FlowItems from "$lib/components/layout/FlowItems.svelte";
+  import Stack from "$lib/components/layout/Stack.svelte";
+  import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
+  import type { Subject } from "$data/types";
+
+  export let isOpen = false;
+  export let onHide = () => {};
+
+  const emptySubject = {
+    _id: "",
+    name: "",
+    textColor: "",
+    backgroundColor: "",
+    path: ""
+  };
+
+  interface ILocalProps {
+    editModalOpen: boolean;
+    stopEditing: any;
+  }
+  let editingSubject: Subject | null = null;
+
+  const cancelEdit = () => (editingSubject = null);
+  const newSubject = () => (editingSubject = emptySubject);
+  const editSubject = (subject: Subject) => (editingSubject = subject);
+
+  let deleteShowing: boolean = false;
+
+  export let subjects: Subject[];
+</script>
+
+<Modal {isOpen} {onHide} headerCaption="Edit Subjects" deferStateChangeOnClose={true}>
+  <Stack>
+    {#if !deleteShowing}
+      <FlowItems pushLast={true} xsFlowReverse={true}>
+        <SelectAvailableSubjects {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
+
+        <Button onClick={newSubject} preset="info-xs">
+          <span class="visible-xs">Add new subject </span>
+          <i class="far fa-fw fa-plus-square" />
+        </Button>
+      </FlowItems>
+    {/if}
+
+    {#if editingSubject}
+      <EditSubject bind:deleteShowing subject={editingSubject} onCancelEdit={cancelEdit} />
+    {/if}
+  </Stack>
+</Modal>
