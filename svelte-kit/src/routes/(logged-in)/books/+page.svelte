@@ -87,9 +87,6 @@
   // 	return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookInput }));
   // };
 
-  let menuBarHeight = 0;
-  const setMenuBarHeight = (val: number) => (menuBarHeight = val);
-
   const uiView = writable({ pending: false, view: GRID_VIEW });
   //const uiView = getBookSearchUiView();
   //const booksState = searchBooks(uiView);
@@ -164,7 +161,7 @@
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <BooksMenuBar {setMenuBarHeight} {uiView} />
+    <BooksMenuBar {uiView} />
 
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
@@ -175,7 +172,7 @@
         {:else}
           <div>
             <!-- {#if $uiView.view == GRID_VIEW} -->
-            <GridView books={$books} subjects={allSubjects} tags={allTags} {menuBarHeight} />
+            <GridView books={$books} subjects={allSubjects} tags={allTags} />
             <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
 								<BasicView {booksState} />
 							{:else if $uiView.view == COVERS_LIST}

@@ -23,7 +23,6 @@
   import { beforeNavigate, afterNavigate } from "$app/navigation";
   import QuickFormFiller from "./QuickFormFiller.svelte";
 
-  export let setMenuBarHeight: any;
   //export let bookResultsPacket: BookResultsPacket;
   let bookResultsPacket = {} as any;
   //$: ({ totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket);
@@ -74,7 +73,7 @@
   });
 </script>
 
-<div class="books-menu-bar" use:measureHeight={setMenuBarHeight}>
+<div class="books-menu-bar">
   <!-- <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
 		<div class="button-container" style="display: flex; flex-direction: column">
 			<MenuOptions {uiView} {bookResultsPacket} {closeMobileMenu} />
