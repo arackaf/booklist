@@ -1,18 +1,16 @@
+<script>
+  import { SectionNav, SectionNavItem } from "$lib/components/section-nav";
+</script>
+
 <section>
   <div style="margin-left: auto; margin-right: auto; max-width: var(--content-max-width)">
     <div>
       <div class="panel-body" style="position: relative">
-        <nav class="section-nav">
-          <div class="section-nav-item active">
-            <a>View</a>
-          </div>
-          <div class="section-nav-item">
-            <a>Discover</a>
-          </div>
-          <div class="section-nav-item">
-            <a>Recent scans</a>
-          </div>
-        </nav>
+        <SectionNav>
+          <SectionNavItem href="/home/view">View</SectionNavItem>
+          <SectionNavItem href="/home/discover">Discover</SectionNavItem>
+          <SectionNavItem href="/home/recent-scans">Recent Scans</SectionNavItem>
+        </SectionNav>
         <slot />
       </div>
     </div>
