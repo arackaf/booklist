@@ -97,7 +97,11 @@ export const booksSubjectsDump = async () => {
       collection: "books",
       database: "my-library",
       dataSource: "Cluster0",
-      pipeline: [{ $match: { userId: "60a93babcc3928454b5d1cc6", "subjects.0": { $exists: true } } }, { $project: { subjects: 1 } }]
+      pipeline: [
+        { $match: { userId: "60a93babcc3928454b5d1cc6", "subjects.0": { $exists: true } } },
+        { $group: { _id: "$subjects", count: { $count: {} } } },
+        { $project: { _id: 0, subjects: "$_id", count: 1 } }
+      ]
     })
   })
     .then(res => res.json())

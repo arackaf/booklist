@@ -5,13 +5,13 @@
   import BarChart from "./barChart/chart/BarChart.svelte";
 
   import { syncWidth } from "$lib/util/animationHelpers";
-  import type { Book, Subject } from "$data/types";
+  import type { BookSubjectStack, Subject } from "$data/types";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
   import { toHash } from "$lib/state/helpers";
 
   const subjects: Subject[] = $page.data.subjects;
   const subjectHash = toHash(subjects);
-  const books: Book[] = $page.data.books;
+  const books: BookSubjectStack[] = $page.data.books;
   const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const MAX_CHART_WIDTH = 1100;

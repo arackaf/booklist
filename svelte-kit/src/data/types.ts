@@ -28,6 +28,8 @@ export type Tag = {
 
 export type PreviewPacket = { w: number; h: number; b64: string };
 
+export type BookSubjectStack = { subjects: string[]; count: number };
+
 export type Book = {
   _id: string;
   title: string;

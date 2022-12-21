@@ -9,9 +9,9 @@
   import { stackGraphData } from "../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
   //import SectionLoading from "app/components/ui/SectionLoading.svelte";
-  import type { Book, Hash, Subject } from "$data/types";
+  import type { BookSubjectStack, Hash, Subject } from "$data/types";
 
-  export let books: Book[];
+  export let books: BookSubjectStack[];
   export let subjectHash: Hash<Subject>;
   export let subjects: Subject[];
 
