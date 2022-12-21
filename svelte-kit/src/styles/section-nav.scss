@@ -1,0 +1,34 @@
+.section-nav {
+  display: flex;
+  border-bottom: var(--default-border-width) solid var(--primary-9);
+  margin: calc(-1 * var(--main-spacing-top)) 0 var(--main-spacing-top);
+}
+.section-nav-item {
+  padding: 15px 15px 15px 15px;
+
+  &::after {
+    display: block;
+    content: attr(data-title);
+    font-weight: bold;
+    height: 1px;
+    color: transparent;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  &.active {
+    font-weight: bold;
+    background-color: var(--primary-10);
+  }
+  &.active a,
+  &.disabled a {
+    cursor: default;
+  }
+  &.disabled a {
+    color: var(--neutral-lighter-text);
+  }
+  &:not(.active):not(.disabled):hover {
+    cursor: pointer;
+    background-color: var(--neutral-10);
+  }
+}
