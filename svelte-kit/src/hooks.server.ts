@@ -37,7 +37,20 @@ export const handle = SvelteKitAuth({
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any
+  // adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any
+
+  callbacks: {
+    async jwt({ token, account }) {
+      console.log({ token, account });
+      token.userId ??= account?.providerAccountId;
+      return token;
+    },
+    async session({ session, user, token }) {
+      console.log({ session, user, token });
+      (session as any).userId = token.userId;
+      return session;
+    }
+  }
 });
 
 // const PRELOAD = new Set(["font", "js", "css"]);
