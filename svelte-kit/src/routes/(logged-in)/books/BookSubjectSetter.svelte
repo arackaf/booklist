@@ -1,11 +1,6 @@
 <script lang="ts">
-  // import { mutation } from "micro-graphql-svelte";
-  // import { MutationOf, Mutations } from "gql/graphql-typings";
-
-  //import updateBookSubjects from "gql/books/updateBookSubjects.graphql";
-
   import { page } from "$app/stores";
-  import type { Subject } from "$data/types";
+  import type { Book, Subject } from "$data/types";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
@@ -20,16 +15,13 @@
   import Stack from "$lib/components/layout/Stack.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import { enhance } from "$app/forms";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   $: subjects = $page.data.subjects;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
+  export let onSave: (_id: string | string[], updates: UpdatesTo<Book>) => void;
   export let onHide: () => void;
-
-  interface ILocalProps {
-    modifyingBooks: any[];
-    onDone: any;
-  }
 
   let addingSubjects: string[] = [];
   let removingSubjects: string[] = [];
@@ -45,18 +37,22 @@
     }
   }
 
-  //const { mutationState } = mutation<MutationOf<Mutations["updateBooks"]>>(updateBookSubjects);
-  //$: ({ runMutation, running } = $mutationState);
-
   let saving = false;
   const save = () => {
-    //let args = { books: modifyingBooks.map(b => b._id), add: addingSubjects, remove: removingSubjects };
-    //return Promise.resolve(runMutation(args)).then(() => {
-    //onHide();
-    //});
     saving = true;
+    const updates = {
+      arraySync: {
+        subjects: {
+          push: addingSubjects,
+          pull: removingSubjects
+        }
+      }
+    };
     return async ({ result }: any) => {
-      //onBookUpdated(_id, result.data.updates);
+      onSave(
+        modifyingBooks.map(b => b._id),
+        updates
+      );
       onHide();
       saving = false;
     };

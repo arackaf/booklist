@@ -128,7 +128,7 @@
     editBookModalOpen = true;
   };
 
-  const onBookUpdated = (_id: string, updates: UpdatesTo<Book>) => {
+  const onBooksUpdated = (_id: string | string[], updates: UpdatesTo<Book>) => {
     runUpdate($page.data.books, _id, updates);
   };
 
@@ -193,9 +193,21 @@
           <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {tagHash} />
         {/if}
 
-        <EditBookModal isOpen={editBookModalOpen} book={editingBook} {onBookUpdated} onHide={stopEditingBook} subjects={allSubjects} tags={allTags} />
+        <EditBookModal
+          isOpen={editBookModalOpen}
+          book={editingBook}
+          onBookUpdated={onBooksUpdated}
+          onHide={stopEditingBook}
+          subjects={allSubjects}
+          tags={allTags}
+        />
 
-        <BookSubjectSetter isOpen={booksSubjectsModalOpen} onHide={() => (booksSubjectsModalOpen = false)} modifyingBooks={booksSubjectEditing} />
+        <BookSubjectSetter
+          isOpen={booksSubjectsModalOpen}
+          onSave={onBooksUpdated}
+          onHide={() => (booksSubjectsModalOpen = false)}
+          modifyingBooks={booksSubjectEditing}
+        />
 
         <!--
         {#if editSubjectsModalOpen}
