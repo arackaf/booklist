@@ -62,7 +62,7 @@
   import { searchState } from "./searchState";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  import { updateBook, type UpdatesTo } from "$lib/state/booksState";
+  import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
   import type { Book } from "$data/types";
   import { selectedBooksLookup, selectionState } from "./selectionState";
 
@@ -129,7 +129,7 @@
   };
 
   const onBookUpdated = (_id: string, updates: UpdatesTo<Book>) => {
-    updateBook($page.data.books, _id, updates);
+    runUpdate($page.data.books, _id, updates);
   };
 
   let booksSubjectsModalOpen = false;
