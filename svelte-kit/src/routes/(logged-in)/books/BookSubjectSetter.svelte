@@ -84,11 +84,13 @@
       </TabHeaders>
       <TabContents>
         <TabContent tabName="subjects">
-          <input type="hidden" name="_ids" value={modifyingBooks.map(b => b._id)} />
+          {#each modifyingBooks as b}
+            <input type="hidden" name="_ids" value={b._id} />
+          {/each}
           {#each addingSubjects as s}
             <input type="hidden" name="add" value={s} />
           {/each}
-          {#each addingSubjects as s}
+          {#each removingSubjects as s}
             <input type="hidden" name="remove" value={s} />
           {/each}
           <FlexRow>
