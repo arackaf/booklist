@@ -26,8 +26,6 @@ export const updateBook = async (book: any) => {
 };
 
 export const updateBooksSubjects = async (_ids: string[], add: string[], remove: string[]) => {
-  const filter = { $or: _ids.map(_id => ({ _id: { $oid: _id } })) };
-  console.log({ filter: JSON.stringify(filter) });
   if (add.length) {
     await runMultiUpdate("books", {
       filter: { $or: _ids.map(_id => ({ _id: { $oid: _id } })) },
