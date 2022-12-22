@@ -4,7 +4,7 @@
 
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
-  export let allTags: Tag[];
+  export let tags: Tag[];
   export let onSelect: (tag: Tag) => void;
   export let placeholder = "Tags";
   export let currentlySelected: string[] = [];
@@ -21,7 +21,7 @@
   $: itemHash = currentlySelected.reduce<TagSelectedHash>((hash, _id) => ((hash[_id] = true), hash), {});
 
   $: eligible = filterTags(
-    allTags.filter(s => !itemHash[s._id]),
+    tags.filter(s => !itemHash[s._id]),
     search
   );
 </script>

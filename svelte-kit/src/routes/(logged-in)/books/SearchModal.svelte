@@ -149,7 +149,7 @@
       </div>
 
       <div class="col-sm-3 col-xs-12">
-        <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} {allTags} />
+        <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
       </div>
       <div class="col-sm-9 col-xs-12">
         <!-- <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} /> -->

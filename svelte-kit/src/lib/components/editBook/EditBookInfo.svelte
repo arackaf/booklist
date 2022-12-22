@@ -109,7 +109,7 @@
       <div class="col-xs-12">
         <FlexRow>
           <div class="col-sm-3 col-xs-12">
-            <SelectAvailableTags allTags={tags} currentlySelected={editingBook.tags} onSelect={addTag} />
+            <SelectAvailableTags {tags} currentlySelected={editingBook.tags} onSelect={addTag} />
           </div>
           <div style="display: {editingBook.tags.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
             <DisplaySelectedTags {tags} currentlySelected={editingBook.tags} onRemove={removeTag} />
