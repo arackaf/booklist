@@ -1,3 +1,4 @@
+import { sequence } from "@sveltejs/kit/hooks";
 import SvelteKitAuth from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
 import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, DYNAMO_AUTH_TABLE } from "$env/static/private";
@@ -23,7 +24,7 @@ const client = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
   }
 });
 
-export const handle = SvelteKitAuth({
+const auth = SvelteKitAuth({
   providers: [
     GoogleProvider({
       clientId: GOOGLE_AUTH_CLIENT_ID,
@@ -53,12 +54,14 @@ export const handle = SvelteKitAuth({
   }
 });
 
-// const PRELOAD = new Set(["font", "js", "css"]);
+const PRELOAD = new Set(["font", "js", "css"]);
 
-// export async function handle({ event, resolve }: any) {
-//   const response = await resolve(event, {
-//     preload: ({ type }: any) => PRELOAD.has(type)
-//   });
+export async function preload({ event, resolve }: any) {
+  const response = await resolve(event, {
+    preload: ({ type }: any) => PRELOAD.has(type)
+  });
 
-//   return response;
-// }
+  return response;
+}
+
+export const handle = sequence(preload, auth);
