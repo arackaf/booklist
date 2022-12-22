@@ -39,6 +39,12 @@
     removingSubjects = [];
   };
 
+  $: {
+    if (isOpen) {
+      resetSubjects();
+    }
+  }
+
   //const { mutationState } = mutation<MutationOf<Mutations["updateBooks"]>>(updateBookSubjects);
   //$: ({ runMutation, running } = $mutationState);
 
