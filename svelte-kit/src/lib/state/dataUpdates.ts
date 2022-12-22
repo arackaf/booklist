@@ -1,7 +1,21 @@
 import { get, type Writable } from "svelte/store";
 
+type ArraySync<ArrType> = {
+  push?: ArrType[];
+  pull?: ArrType[];
+};
+
+type ArrayKeys<T> = {
+  [k in keyof T]: T[k] extends Array<unknown> ? k : never;
+}[keyof T];
+
+type ArraySyncs<T> = {
+  [k in ArrayKeys<T>]: T[k] extends Array<infer U> ? ArraySync<U> : never;
+};
+
 export type UpdatesTo<T> = {
-  fieldsSet: Partial<T>;
+  fieldsSet?: Partial<T>;
+  arraySync?: Partial<ArraySyncs<T>>;
 };
 
 export const runUpdate = <T>(currentItems: Writable<T[]>, _id: string | string[], updates: UpdatesTo<T>) => {
@@ -12,7 +26,7 @@ export const runUpdate = <T>(currentItems: Writable<T[]>, _id: string | string[]
 export const updateItems = <T>(store: Writable<T[]>, _ids: string[], updates: UpdatesTo<T>) => {
   const currentItems = get(store);
 
-  const { fieldsSet } = updates;
+  const { fieldsSet, arraySync } = updates;
   const _idLookup = new Set(_ids);
 
   const updatedItems = currentItems.map((item: any) => {
@@ -20,8 +34,23 @@ export const updateItems = <T>(store: Writable<T[]>, _ids: string[], updates: Up
       return item;
     }
 
-    const result = Object.assign({}, item, fieldsSet);
-    return result;
+    item = { ...item };
+
+    if (fieldsSet) {
+      Object.assign(item, fieldsSet);
+    }
+    if (arraySync) {
+      for (const key of Object.keys(arraySync)) {
+        const updates: ArraySync<unknown> = (arraySync as any)[key];
+
+        const lookup = new Set(item[key]);
+        updates.push?.forEach(adding => lookup.add(adding));
+        updates.pull?.forEach(removing => lookup.delete(removing));
+
+        item[key] = [...lookup];
+      }
+    }
+    return item;
   });
 
   store.set(updatedItems);
