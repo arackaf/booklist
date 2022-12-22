@@ -1,4 +1,4 @@
-import { updateBook, updateBooksSubjects } from "$data/books";
+import { updateBook, updateBooksSubjects, updateBooksTags } from "$data/books";
 import { toJson } from "$lib/util/formDataHelpers";
 
 type Book = {
@@ -29,6 +29,17 @@ export const actions = {
     }) as any;
 
     await updateBooksSubjects(fields._ids, fields.add, fields.remove);
+
+    return { success: true };
+  },
+  async setBooksTags({ request }: any) {
+    const formData: URLSearchParams = await request.formData();
+
+    const fields = toJson(formData, {
+      arrays: ["_ids", "add", "remove"]
+    }) as any;
+
+    await updateBooksTags(fields._ids, fields.add, fields.remove);
 
     return { success: true };
   }

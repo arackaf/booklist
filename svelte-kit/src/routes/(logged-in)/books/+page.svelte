@@ -46,7 +46,7 @@
   // import TagEditModal from './TagEditModal.svelte';
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
-  // import BookTagSetter from './BookTagSetter.svelte';
+  import BookTagSetter from "./BookTagSetter.svelte";
   // import ModuleLoading from 'app/components/navigation/ModuleLoading.svelte';
 
   // const { mutationState: deleteBookState } = mutation<MutationOf<Mutations['deleteBook']>>(DeleteBookMutation);
@@ -133,15 +133,11 @@
   };
 
   let booksSubjectsModalOpen = false;
+  let booksTagsModalOpen = false;
 
-  let booksSubjectEditing = [] as any[];
-  const editBooksSubjects = () => {
-    booksSubjectEditing = $books.filter(b => $selectedBooksLookup[b._id]);
-    booksSubjectsModalOpen = true;
-  };
-
-  let booksTagEditing = [] as any[];
-  const editBooksTags = (books: any[]) => (booksTagEditing = books);
+  $: booksEditing = $books.filter(b => $selectedBooksLookup[b._id]);
+  const editBooksSubjects = () => (booksSubjectsModalOpen = true);
+  const editBooksTags = () => (booksTagsModalOpen = true);
 
   let booksModuleContext = {
     openFilterModal,
@@ -206,7 +202,13 @@
           isOpen={booksSubjectsModalOpen}
           onSave={onBooksUpdated}
           onHide={() => (booksSubjectsModalOpen = false)}
-          modifyingBooks={booksSubjectEditing}
+          modifyingBooks={booksEditing}
+        />
+        <BookTagSetter
+          isOpen={booksTagsModalOpen}
+          onSave={onBooksUpdated}
+          onHide={() => (booksTagsModalOpen = false)}
+          modifyingBooks={booksEditing}
         />
 
         <!--
@@ -219,7 +221,6 @@
 
 
 				{#if !!booksTagEditing.length}
-					<BookTagSetter isOpen={!!booksTagEditing.length} onHide={() => (booksTagEditing = [])} modifyingBooks={booksTagEditing} />
 				{/if} -->
       </div>
     </div>

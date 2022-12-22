@@ -30,7 +30,7 @@
   $: selectedBooksCount = selectedBooksIds.length;
 
   const editSubjectsForSelectedBooks = () => editBooksSubjects();
-  const editTagsForSelectedBooks = () => editBooksTags($books.filter((b: any) => selectedBooksIds[b._id]));
+  const editTagsForSelectedBooks = () => editBooksTags();
 
   const mobileHandler =
     (fn: () => unknown, delay = false) =>
