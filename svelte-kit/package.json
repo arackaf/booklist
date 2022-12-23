@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
+    "@types/blueimp-md5": "^2.18.0",
     "@types/d3-array": "^3.0.3",
     "@types/d3-scale": "^4.0.2",
     "@types/lodash.debounce": "^4.0.7",
@@ -33,6 +34,7 @@
     "@next-auth/dynamodb-adapter": "^1.0.5",
     "@popperjs/core": "^2.11.6",
     "@sveltejs/kit": "^1.0.1",
+    "blueimp-md5": "2.3.0",
     "classnames": "^2.3.2",
     "d3-array": "1.2.0",
     "d3-axis": "1.0.8",

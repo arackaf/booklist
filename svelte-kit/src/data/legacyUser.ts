@@ -1,7 +1,7 @@
 import md5 from "blueimp-md5";
 import { env } from "$env/dynamic/private";
 
-import { db, getQueryPacket } from "./dynamoHelpers";
+import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
 const salt = env.SALT;
 
@@ -31,6 +31,15 @@ export async function lookupUser(email: string, password: string) {
     console.log("Login error", loginErr);
     return null;
   }
+}
+
+export async function syncUser(newId: string, legacyId: string) {
+  const userSync = {
+    pk: `UserAlias#${newId}`,
+    sk: legacyId
+  };
+
+  db.put(getPutPacket(userSync));
 }
 
 function saltAndHashPassword(password: string) {

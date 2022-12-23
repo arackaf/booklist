@@ -1,19 +1,35 @@
-import { lookupUser } from "$data/legacyUser";
+import { lookupUser, syncUser } from "$data/legacyUser";
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const actions = {
-  async attemptSync({ request }: any) {
-    const formData: URLSearchParams = await request.formData();
+  async attemptSync({ request, locals }: any) {
+    try {
+      const session = await locals.getSession();
+      const { userId } = session;
 
-    const fields = toJson(formData, {
-      strings: ["email", "password"]
-    }) as { email: string; password: string };
+      const formData: URLSearchParams = await request.formData();
 
-    console.log({ fields });
-    const { email, password } = fields;
+      const fields = toJson(formData, {
+        strings: ["email", "password"]
+      }) as { email: string; password: string };
 
-    const result = await lookupUser(email, password);
+      console.log({ fields });
+      const { email, password } = fields;
 
-    return { success: true, result };
+      const result = await lookupUser(email, password);
+
+      if (result == null || !result.id) {
+        return { success: false, error: false };
+      }
+
+      if (result.id) {
+        await syncUser(userId, result.id);
+      }
+
+      return { success: true, result };
+    } catch (er) {
+      console.log(er);
+      return { success: false, error: true };
+    }
   }
 };
