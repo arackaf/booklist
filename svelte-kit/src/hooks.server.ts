@@ -6,6 +6,7 @@ import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AWS_ACCESS_KEY_ID, AWS_SECRE
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
+import { getUserSync } from "$data/legacyUser";
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -41,8 +42,15 @@ const auth = SvelteKitAuth({
   // adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any
 
   callbacks: {
-    signIn(params) {
-      (params.account as any).overridden = "HELLO";
+    async signIn({ account }) {
+      (account as any).overridden = "HELLO";
+
+      if (account == null) {
+        return false;
+      }
+
+      const userSync = await getUserSync(account.providerAccountId);
+      console.log({ userSync });
 
       return true;
     },

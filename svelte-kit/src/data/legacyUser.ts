@@ -3,6 +3,8 @@ import { env } from "$env/dynamic/private";
 
 import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
+const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
+
 const salt = env.SALT;
 
 export async function lookupUser(email: string, password: string) {
@@ -35,11 +37,27 @@ export async function lookupUser(email: string, password: string) {
 
 export async function syncUser(newId: string, legacyId: string) {
   const userSync = {
-    pk: `UserAlias#${newId}`,
+    pk: getUserAliasKey(newId),
     sk: legacyId
   };
 
   db.put(getPutPacket(userSync));
+}
+
+export async function getUserSync(userId: string) {
+  const key = getUserAliasKey(userId);
+
+  try {
+    const syncEntry = await db.queryOne(
+      getQueryPacket(` pk = :key `, {
+        ExpressionAttributeValues: { ":key": key }
+      })
+    );
+
+    return syncEntry;
+  } catch (er) {
+    return null;
+  }
 }
 
 function saltAndHashPassword(password: string) {
