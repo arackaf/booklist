@@ -42,18 +42,15 @@ const auth = SvelteKitAuth({
 
   callbacks: {
     signIn(params) {
-      console.log(params);
       (params.account as any).overridden = "HELLO";
 
       return true;
     },
     async jwt({ token, account }) {
-      console.log("JWT", account);
       token.userId ??= account?.providerAccountId;
       return token;
     },
     async session({ session, user, token }) {
-      console.log("SESSION");
       (session as any).userId = token.userId;
       return session;
     }
