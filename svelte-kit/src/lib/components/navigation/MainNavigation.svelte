@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { signIn, signOut } from "@auth/sveltekit/client";
 
   import NavBarItem from "./NavBarItem.svelte";
   import ModuleLink from "./ModuleLink.svelte";
@@ -15,20 +16,15 @@
   import "./mobile-menu.scss";
   import { onMount } from "svelte";
 
-  $: currentModule = $page.route.id;
+  $: ({ loggedIn } = $page.data);
 
-  const logout = () => {};
-  // const logout = () => {
-  //   ajaxUtil.postAuth("/logout", {}, () => ((window as any).location = "/"));
-  // };
+  $: currentModule = $page.route.id;
 
   //let isAdminUser = isAdmin();
   let isAdminUser = false;
 
   //$: isLoginModule = currentModule == 'authenticate';
   let isLoginModule = false;
-  //$: isLoggedIn = $appState.isLoggedIn;
-  let isLoggedIn = true;
 
   //$: isPublic = $appState.isPublic;
   let isPublic = false;
@@ -50,7 +46,7 @@
 
 <header class="master-nav">
   <nav class="nav">
-    <div class={`nav-header hidden-xs ${isHome && isLoggedIn ? "active" : ""}`}>
+    <div class={`nav-header hidden-xs ${isHome && loggedIn ? "active" : ""}`}>
       <ModuleLink href="/home">
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
@@ -61,7 +57,7 @@
       <NavBarItem class="visible-xs" disabled={isPublic} href="/home" style="margin-top: '2px';">
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
-      {#if isLoggedIn || isPublic}
+      {#if loggedIn || isPublic}
         <NavBarItem disabled={isPublic} href="/scan" style="position: relative;">
           <span class="hidden-xs">Book entry</span>
           <i class="visible-xs fal fa-fw fa-scanner" />
@@ -75,31 +71,31 @@
           {/if}
         </NavBarItem>
       {/if}
-      {#if isLoggedIn || isPublic}
+      {#if loggedIn || isPublic}
         <NavBarItem href={isPublic ? "/view" : "/books"}
           ><span class="hidden-xs">Books</span>
           <i class="visible-xs fal fa-fw fa-books" />
         </NavBarItem>
       {/if}
-      {#if isLoggedIn || isPublic}
+      {#if loggedIn || isPublic}
         <NavBarItem disabled={isPublic} href="/subjects">
           <span class="hidden-xs">Subjects</span>
           <i class="visible-xs fal fa-fw fa-sitemap" />
         </NavBarItem>
       {/if}
-      {#if isLoggedIn || isPublic}
+      {#if loggedIn || isPublic}
         <NavBarItem href="/settings"
           ><span class="hidden-xs">Settings</span>
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
       {/if}
-      {#if isLoggedIn || isPublic}
+      {#if loggedIn || isPublic}
         <NavBarItem href="/intro"
           ><span class="hidden-xs">Intro</span>
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
       {/if}
-      {#if isLoggedIn && isAdminUser}
+      {#if loggedIn && isAdminUser}
         <NavBarItem href="/admin">
           <span class="hidden-xs">Admin</span>
           <i class="visible-xs fal fa-fw fa-users-cog" />
@@ -107,16 +103,16 @@
       {/if}
     </ul>
     <ul class="nav-items-right">
-      {#if !isLoggedIn && !isLoginModule}
-        <NavBarItem href="/login">
+      {#if !loggedIn && !isLoginModule}
+        <NavBarItem onClick={() => signIn("google")}>
           <span class="hidden-xs">Login</span>
           <i class="visible-xs fal fa-fw fa-sign-in" />
         </NavBarItem>
       {/if}
     </ul>
-    {#if isLoggedIn}
+    {#if loggedIn}
       <ul class="nav-items-right">
-        <NavBarItem href="/logout">
+        <NavBarItem onClick={signOut}>
           <span class="hidden-xs">Logout</span>
           <i class="visible-xs fal fa-fw fa-sign-out" />
         </NavBarItem>

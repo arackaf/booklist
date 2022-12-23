@@ -27,9 +27,6 @@
   //const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
-  $: {
-    console.log({ chartIndex, books, subjectIds, graphData });
-  }
 
   const margin = { top: 30, right: 20, bottom: 180, left: 20 };
 </script>
