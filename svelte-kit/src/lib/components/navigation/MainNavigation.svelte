@@ -104,7 +104,12 @@
     </ul>
     <ul class="nav-items-right">
       {#if !loggedIn && !isLoginModule}
-        <NavBarItem onClick={() => signIn("google")}>
+        <NavBarItem
+          onClick={() =>
+            signIn("google", {
+              callbackUrl: "/books"
+            })}
+        >
           <span class="hidden-xs">Login</span>
           <i class="visible-xs fal fa-fw fa-sign-in" />
         </NavBarItem>
