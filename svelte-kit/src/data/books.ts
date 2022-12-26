@@ -28,7 +28,7 @@ export const updateBook = async (book: any) => {
 export const updateBooksSubjects = async (_ids: string[], add: string[], remove: string[]) => {
   if (add.length) {
     await runMultiUpdate("books", {
-      filter: { $or: _ids.map(_id => ({ _id: { $oid: _id } })) },
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       update: {
         $addToSet: { subjects: { $each: add } }
       }
@@ -36,7 +36,7 @@ export const updateBooksSubjects = async (_ids: string[], add: string[], remove:
   }
   if (remove.length) {
     await runMultiUpdate("books", {
-      filter: { $or: _ids.map(_id => ({ _id: { $oid: _id } })) },
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       update: {
         $pull: { subjects: { $in: remove } }
       }
@@ -47,7 +47,7 @@ export const updateBooksSubjects = async (_ids: string[], add: string[], remove:
 export const updateBooksTags = async (_ids: string[], add: string[], remove: string[]) => {
   if (add.length) {
     await runMultiUpdate("books", {
-      filter: { $or: _ids.map(_id => ({ _id: { $oid: _id } })) },
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       update: {
         $addToSet: { tags: { $each: add } }
       }
@@ -55,7 +55,7 @@ export const updateBooksTags = async (_ids: string[], add: string[], remove: str
   }
   if (remove.length) {
     await runMultiUpdate("books", {
-      filter: { $or: _ids.map(_id => ({ _id: { $oid: _id } })) },
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       update: {
         $pull: { tags: { $in: remove } }
       }
