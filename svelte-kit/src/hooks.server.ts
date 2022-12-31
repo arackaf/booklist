@@ -1,5 +1,5 @@
 import { sequence } from "@sveltejs/kit/hooks";
-import SvelteKitAuth from "@auth/sveltekit";
+import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
 import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, DYNAMO_AUTH_TABLE } from "$env/static/private";
 
@@ -67,7 +67,7 @@ const auth = SvelteKitAuth({
 
 const PRELOAD = new Set(["font", "js", "css"]);
 
-export async function preload({ event, resolve }: any) {
+async function preload({ event, resolve }: any) {
   const response = await resolve(event, {
     preload: ({ type }: any) => PRELOAD.has(type)
   });
