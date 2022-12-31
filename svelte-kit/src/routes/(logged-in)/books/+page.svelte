@@ -185,9 +185,7 @@
           </div>
         {/if}
 
-        {#if filterModalOpen}
-          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {allSubjects} />
-        {/if}
+        <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {allSubjects} />
 
         <EditBookModal
           isOpen={editBookModalOpen}

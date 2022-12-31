@@ -28,11 +28,7 @@
   export let allTags: Tag[];
   export let allSubjects: Subject[];
 
-  let closeModal: any;
-
   //let searchEl: any;
-  let pagesEl: any;
-  let pagesDirEl: any;
   let isReadE: any;
   let isRead0: any;
   let childSubEl: any;
@@ -96,8 +92,8 @@
   };
 </script>
 
-<Modal deferStateChangeOnClose={true} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false} bind:closeModal>
-  <form action="/books" on:formdata={onFormData}>
+<Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
+  <form action="/books" on:formdata={onFormData} on:submit={onHide}>
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
@@ -182,7 +178,9 @@
       </div>
     </FlexRow>
 
-    <Button text="Filter" preset="primary" type="submit" />
+    <div class="margin-top-med">
+      <Button text="Filter" preset="primary">Search</Button>
+    </div>
     <!-- <StandardModalFooter>
       <ActionButton text="Filter" preset="primary" onClick={updateFilters} />
     </StandardModalFooter> -->
