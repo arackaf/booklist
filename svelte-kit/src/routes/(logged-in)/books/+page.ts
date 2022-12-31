@@ -1,12 +1,17 @@
+import { BOOKS_CACHE, getBooksCacheCookie } from "$lib/state/cacheHelpers";
 import { writable } from "svelte/store";
 
-export async function load(params: any) {
-  const search = params.url.searchParams.get("search") || "";
+export async function load({ url, fetch, setHeaders }: any) {
+  const search = url.searchParams.get("search") || "";
 
-  const resp = await params.fetch("/api/books?search=" + search);
+  let headers = {} as any;
+  const cacheValue = getBooksCacheCookie();
+  if (cacheValue) {
+    headers[BOOKS_CACHE] = cacheValue;
+  }
+
+  const resp = await fetch("/api/books?search=" + search, { headers });
   const books = await resp.json();
-
-  params.depends("books-results");
 
   return {
     books: writable(books)
