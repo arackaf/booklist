@@ -111,7 +111,7 @@
           <div class="col-sm-3 col-xs-12">
             <SelectAvailableTags {tags} currentlySelected={editingBook.tags} onSelect={addTag} />
           </div>
-          <div style="display: {editingBook.tags.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
+          <div class="col-sm-9 col-xs-12">
             <DisplaySelectedTags {tags} currentlySelected={editingBook.tags} onRemove={removeTag} />
           </div>
         </FlexRow>
@@ -122,7 +122,7 @@
           <div class="col-sm-3 col-xs-12">
             <SelectAvailableSubjects {subjects} currentlySelected={editingBook.subjects} onSelect={addSubject} />
           </div>
-          <div style="display: {editingBook.subjects.length ? '' : 'none'}" class="col-sm-9 col-xs-12">
+          <div class="col-sm-9 col-xs-12">
             <DisplaySelectedSubjects {subjects} currentlySelected={editingBook.subjects} onRemove={removeSubject} />
           </div>
         </FlexRow>
