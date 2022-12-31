@@ -10,11 +10,13 @@
   import { searchState } from "./searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
 
-  // import DisplaySelectedSubjects from "app/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  // import SelectAvailableSubjects from "app/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-  // import DisplaySelectedTags from "app/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
-  import type { Hash, Tag } from "$data/types";
+  import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
+
+  import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+
+  import type { Subject, Tag } from "$data/types";
 
   // import { currentSearch } from "./booksSearchState";
   // import { applyFilters } from "./setBookFilters";
@@ -24,7 +26,7 @@
   export let onHide = () => {};
 
   export let allTags: Tag[];
-  export let tagHash: Hash<Tag>;
+  export let allSubjects: Subject[];
 
   let closeModal: any;
 
@@ -147,20 +149,23 @@
           </select>
         </div>
       </div>
+      <div class="col-xs-6" />
 
       <div class="col-sm-3 col-xs-12">
         <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
       </div>
       <div class="col-sm-9 col-xs-12">
-        <!-- <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} /> -->
+        <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
       </div>
+
       {#if !noSubjectsFilter}
         <div class="col-sm-3 col-xs-12">
-          <!-- <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} /> -->
+          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
         </div>
         <div class="col-sm-9 col-xs-12">
-          <!-- <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} /> -->
+          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
         </div>
+
         <div class="col-xs-12">
           <label class="checkbox">
             <input type="checkbox" bind:this={childSubEl} checked={false} />
@@ -168,6 +173,7 @@
           </label>
         </div>
       {/if}
+
       <div class="col-xs-12">
         <label class="checkbox">
           <input type="checkbox" checked={!!noSubjectsFilter} on:change={setNoSubjectsFilter} />

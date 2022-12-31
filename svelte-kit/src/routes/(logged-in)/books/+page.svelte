@@ -186,7 +186,7 @@
         {/if}
 
         {#if filterModalOpen}
-          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {tagHash} />
+          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {allSubjects} />
         {/if}
 
         <EditBookModal
