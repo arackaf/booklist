@@ -28,7 +28,7 @@
   "type": "module",
   "dependencies": {
     "@auth/core": "0.2.3",
-    "@auth/sveltekit": "^0.1.6",
+    "@auth/sveltekit": "^0.1.10",
     "@aws-sdk/client-dynamodb": "^3.199.0",
     "@aws-sdk/lib-dynamodb": "^3.199.0",
     "@next-auth/dynamodb-adapter": "^1.0.5",
