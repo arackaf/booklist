@@ -39,7 +39,7 @@ const auth = SvelteKitAuth({
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  // adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any
+  adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any,
 
   callbacks: {
     async signIn({ account }) {
