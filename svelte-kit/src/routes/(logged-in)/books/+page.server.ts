@@ -1,4 +1,5 @@
 import { updateBook, updateBooksSubjects, updateBooksTags } from "$data/books";
+import { BOOKS_CACHE } from "$lib/state/cacheHelpers";
 import { toJson } from "$lib/util/formDataHelpers";
 
 type Book = {
@@ -8,7 +9,7 @@ type Book = {
 };
 
 export const actions = {
-  async saveBook({ request }: any) {
+  async saveBook({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
@@ -18,6 +19,8 @@ export const actions = {
     fields.authors = fields.authors.filter(a => a);
 
     await updateBook(fields);
+
+    cookies.set(BOOKS_CACHE, +new Date(), { path: "/", httpOnly: false });
 
     return { success: true, updates: { fieldsSet: fields } };
   },

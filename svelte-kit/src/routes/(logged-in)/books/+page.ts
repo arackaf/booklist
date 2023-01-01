@@ -1,7 +1,7 @@
 import { BOOKS_CACHE, getBooksCacheCookie } from "$lib/state/cacheHelpers";
 import { writable } from "svelte/store";
 
-export async function load({ url, fetch, setHeaders }: any) {
+export async function load({ url, fetch }: any) {
   const search = url.searchParams.get("search") || "";
 
   let headers = {} as any;

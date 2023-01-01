@@ -7,6 +7,7 @@ import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 import { getUserSync } from "$data/legacyUser";
+import { BOOKS_CACHE } from "$lib/state/cacheHelpers";
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -68,7 +69,13 @@ const auth = SvelteKitAuth({
 
 const PRELOAD = new Set(["font", "js", "css"]);
 
-async function preload({ event, resolve }: any) {
+async function handleFn({ event, resolve }: any) {
+  const initialRequest = event.request.headers.get("Sec-Fetch-Dest") === "document";
+
+  if (initialRequest) {
+    event.cookies.set(BOOKS_CACHE, +new Date(), { path: "/", httpOnly: false });
+  }
+
   const response = await resolve(event, {
     preload: ({ type }: any) => PRELOAD.has(type)
   });
@@ -76,4 +83,4 @@ async function preload({ event, resolve }: any) {
   return response;
 }
 
-export const handle = sequence(preload, auth);
+export const handle = sequence(handleFn, auth);
