@@ -7,7 +7,7 @@ import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 import { getUserSync } from "$data/legacyUser";
-import { BOOKS_CACHE } from "$lib/state/cacheHelpers";
+import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -73,7 +73,7 @@ async function handleFn({ event, resolve }: any) {
   const initialRequest = event.request.headers.get("Sec-Fetch-Dest") === "document";
 
   if (initialRequest) {
-    event.cookies.set(BOOKS_CACHE, +new Date(), { path: "/", httpOnly: false });
+    bustCache(event.cookies, BOOKS_CACHE);
   }
 
   const response = await resolve(event, {

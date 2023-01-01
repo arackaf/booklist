@@ -1,5 +1,5 @@
 import { updateBook, updateBooksSubjects, updateBooksTags } from "$data/books";
-import { BOOKS_CACHE } from "$lib/state/cacheHelpers";
+import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
 import { toJson } from "$lib/util/formDataHelpers";
 
 type Book = {
@@ -20,7 +20,7 @@ export const actions = {
 
     await updateBook(fields);
 
-    cookies.set(BOOKS_CACHE, +new Date(), { path: "/", httpOnly: false });
+    bustCache(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: fields } };
   },
