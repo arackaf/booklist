@@ -4,13 +4,9 @@ import { writable } from "svelte/store";
 export async function load({ url, fetch }: any) {
   const search = url.searchParams.get("search") || "";
 
-  let headers = {} as any;
-  const cacheValue = getBooksCacheCookie();
-  if (cacheValue) {
-    headers[BOOKS_CACHE] = cacheValue;
-  }
-
-  const resp = await fetch("/api/books?search=" + search, { headers });
+  const resp = await fetch("/api/books?search=" + search, {
+    headers: { [BOOKS_CACHE]: getBooksCacheCookie() }
+  });
   const books = await resp.json();
 
   return {
