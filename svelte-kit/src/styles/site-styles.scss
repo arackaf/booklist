@@ -665,16 +665,21 @@ select {
   border: 0;
   color: var(--neutral-text);
   font-size: inherit;
+  cursor: pointer;
 
   &:focus,
   &:active {
-    box-shadow: 0 0 0 white;
+    box-shadow: none;
   }
 
   &.icon-button {
     i {
       line-height: 27px; // mobile menu trigger
     }
+  }
+
+  &.bold {
+    font-weight: bold;
   }
 }
 

@@ -26,33 +26,33 @@
     <tr>
       {#if !isPublic && online}
         <th style="text-align: center; width: 25px;">
-          <a style="font-size: 12pt" on:click={toggleCheckAll} on:keypress={noop}>
+          <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
             <i class={"fal " + (!!bookSelection.allAreChecked ? "fa-check-square" : "fa-square")} />
-          </a>
+          </button>
         </th>
       {/if}
       <th style="width: 60px" />
       <th style="min-width: 200px">
-        <a class="no-underline" on:click={() => setSort("title")} on:keypress={noop}>
+        <button class="raw-button bold no-underline" on:click={() => setSort("title")} on:keypress={noop}>
           Title
           {#if sort == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
-        </a>
+        </button>
       </th>
       <th style="min-width: 90px;">Subjects</th>
       <th style="min-width: 90px;">Tags</th>
       <th style="min-width: 90px;" />
       <th />
       <th style="min-width: 85px; ">
-        <a class="no-underline" on:click={() => setSort("pages")} on:keypress={noop}>
+        <button class="raw-button bold no-underline" on:click={() => setSort("pages")}>
           Pages
           {#if sort == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
-        </a>
+        </button>
       </th>
       <th>
-        <a class="no-underline" on:click={() => setSort("_id")} on:keypress={noop}>
+        <button class="raw-button no-underline" on:click={() => setSort("_id")}>
           Added
           {#if sort == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
-        </a>
+        </button>
       </th>
     </tr>
   </thead>
