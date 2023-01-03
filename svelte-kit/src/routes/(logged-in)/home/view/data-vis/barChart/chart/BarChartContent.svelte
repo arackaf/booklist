@@ -74,7 +74,9 @@
           {#each graphData.filter(d => excluding[d.groupId]) as d}
             <span style="margin-left: 10px">
               {" " + d.display}
-              <a style="color: black" on:click={() => restoreBar(d.groupId)} on:keypress={() => {}}> <i class="far fa-redo" /> </a>
+              <button class="raw-button" style="color: black" on:click={() => restoreBar(d.groupId)}>
+                <i class="far fa-redo" />
+              </button>
             </span>
           {/each}
         </span>

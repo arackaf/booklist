@@ -70,8 +70,9 @@
     <FlexRow>
       <div class="col-xs-6">
         <div class={"form-group"}>
-          <label>Title</label>
+          <label for="book-edit-title">Title</label>
           <input
+            id="book-edit-title"
             class="form-control"
             name="title"
             class:error={missingTitle}
@@ -83,26 +84,30 @@
       </div>
 
       <div class="col-xs-6">
-        <div class="form-group"><label>ISBN</label> <input class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" /></div>
-      </div>
-
-      <div class="col-xs-6">
         <div class="form-group">
-          <label>Pages</label>
-          <input class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
+          <label for="book-edit-isbn">ISBN</label>
+          <input id="book-edit-isbn" class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
-          <label>Publisher</label> <input class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" />
+          <label for="book-edit-pages">Pages</label>
+          <input id="book-edit-pages" class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
-          <label>Published</label>
-          <input class="form-control" bind:value={editingBook.publicationDate} placeholder="Publication date" />
+          <label for="book-edit-publisher">Publisher</label>
+          <input id="book-edit-publisher" class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" />
+        </div>
+      </div>
+
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label for="book-edit-published">Published</label>
+          <input id="book-edit-published" class="form-control" bind:value={editingBook.publicationDate} placeholder="Publication date" />
         </div>
       </div>
 
@@ -131,8 +136,14 @@
       {#each editingBook.authors || [] as author, index (index)}
         <div class="col-xs-4">
           <div class="form-group">
-            <label>Author</label>
-            <input bind:value={editingBook.authors[index]} class="form-control" name="authors" placeholder={`Author ${index + 1}`} />
+            <label for={`book-edit-author-${index}`}>Author</label>
+            <input
+              id={`book-edit-author-${index}`}
+              bind:value={editingBook.authors[index]}
+              class="form-control"
+              name="authors"
+              placeholder={`Author ${index + 1}`}
+            />
           </div>
         </div>
       {/each}

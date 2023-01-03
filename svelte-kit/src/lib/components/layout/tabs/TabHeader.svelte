@@ -23,7 +23,7 @@
 
 <div on:click={onClick} on:keypress={() => {}} data-title={text || spaceWith} class={cn("tab-header", { disabled, active: tabName == currentTab })}>
   {#if text}
-    <a>{text}</a>
+    <button class="raw-button">{text}</button>
   {:else}
     <slot />
   {/if}

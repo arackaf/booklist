@@ -53,15 +53,18 @@
   }
 
   &.active {
-    font-weight: bold;
     border-bottom: var(--default-border-width) solid var(--primary-9);
     background-color: var(--primary-10);
+
+    button {
+      font-weight: bold;
+    }
   }
-  &.active a,
-  &.disabled a {
+  &.active button,
+  &.disabled button {
     cursor: default;
   }
-  &.disabled a {
+  &.disabled button {
     color: var(--neutral-lighter-text);
   }
   &:not(.active):not(.disabled):hover {
