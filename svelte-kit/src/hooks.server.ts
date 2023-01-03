@@ -68,7 +68,13 @@ const auth = SvelteKitAuth({
 
 const PRELOAD = new Set(["font", "js", "css"]);
 
-async function preload({ event, resolve }: any) {
+async function handleFn({ event, resolve }: any) {
+  //const initialRequest = event.request.headers.get("Sec-Fetch-Dest") === "document";
+
+  //console.log("Sec-Fetch-Dest", event.request.headers.get("Sec-Fetch-Dest"));
+  //const xxx = event.request.headers.get("Referer");
+  //console.log(!!xxx, xxx);
+
   const response = await resolve(event, {
     preload: ({ type }: any) => PRELOAD.has(type)
   });
@@ -76,4 +82,4 @@ async function preload({ event, resolve }: any) {
   return response;
 }
 
-export const handle = sequence(preload, auth);
+export const handle = sequence(handleFn, auth);
