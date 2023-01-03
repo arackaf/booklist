@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
-  import cn from "classnames";
+  import { getContext, onMount } from "svelte";
   import "./menu-bar-styles.scss";
 
   import measureHeight from "$lib/util/measureHeight";
@@ -15,13 +14,11 @@
 
   //import MobileMenu from 'app/components/navigation/MobileMenu.svelte';
 
-  import { getStores, navigating, page, updated } from "$app/stores";
-  import { goto } from "$app/navigation";
   import { searchState } from "../searchState";
-  import { enhance } from "$app/forms";
 
   import { beforeNavigate, afterNavigate } from "$app/navigation";
   import QuickFormFiller from "./QuickFormFiller.svelte";
+  import { sanitize } from "$lib/util/formDataHelpers";
 
   //export let bookResultsPacket: BookResultsPacket;
   let bookResultsPacket = {} as any;
@@ -35,11 +32,11 @@
 
   export let uiView: any; //ReturnType<typeof getBookSearchUiView>;
 
+  let quickSearchEl: any = {};
+
   $: ({ selectedBooks } = $booksUiState);
   $: selectedBooksIds = Object.keys(selectedBooks).filter(k => selectedBooks[k]);
-  $: selectedBooksCount = selectedBooksIds.length;
 
-  let quickSearchEl: any = {};
   const resetSearch = () => {
     quickSearchEl.value = $searchState.search;
   };
@@ -50,27 +47,9 @@
   };
 
   function onFormData(evt: any) {
-    //const entries: FormData = evt.data;
-    //if (!entries.get('search')) {
-    //entries.delete('search');
-    //}
-    // return async (obj: any) => {
-    // 	debugger;
-    // 	await obj.update();
-    // };
+    const searchParams: URLSearchParams = evt.formData;
+    sanitize(searchParams);
   }
-
-  beforeNavigate(({ type }) => {
-    //console.log("BEFORE");
-    //focused = document.activeElement;
-  });
-
-  afterNavigate(({ type }) => {
-    //console.log("AFTER");
-    if (type === "form") {
-      //focused?.focus();
-    }
-  });
 </script>
 
 <div class="books-menu-bar">
