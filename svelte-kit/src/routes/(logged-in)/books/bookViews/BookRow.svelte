@@ -68,15 +68,15 @@
       <FlowItems vCenter={true} tighter={true} containerStyle="min-height: 35px">
         {#if online}
           {#if detailsLoading}
-            <a style={hoverOverride} target="_new" class="gridHoverFilter"> <i class="far fa-fw fa-spin fa-spinner" /> </a>
+            <span><i class="far fa-fw fa-spin fa-spinner" /></span>
           {:else if expanded}
-            <a style={hoverOverride} target="_new" on:click={() => (expanded = false)} class="gridHoverFilter" on:keypress={noop}>
+            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = false)}>
               <i class={`far fa-minus`} />
-            </a>
+            </button>
           {:else}
-            <a style={hoverOverride} target="_new" on:click={() => (expanded = true)} class="gridHoverFilter" on:keypress={noop}>
+            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = true)}>
               <i class={`far fa-plus`} />
-            </a>
+            </button>
           {/if}
         {/if}
         {#if book.isbn && online}
@@ -90,12 +90,12 @@
           </a>
         {/if}
         {#if !isPublic && online}
-          <a style={hoverOverride} class="gridHoverFilter" on:click={() => editBook(book)} on:keypress={noop}>
+          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => editBook(book)}>
             <i class="fal fa-pencil-alt" />
-          </a>
-          <a style={hoverOverride} class="gridHoverFilter" on:click={() => (pendingDelete = true)} on:keypress={noop}>
+          </button>
+          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (pendingDelete = true)} on:keypress={noop}>
             <i class={`fal fa-trash-alt`} />
-          </a>
+          </button>
         {/if}
         {#if pendingDelete}
           <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} preset="danger-xs">Confirm Delete</ActionButton>

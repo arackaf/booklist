@@ -15,7 +15,9 @@
   {/if}
   {#if !noClose}
     <!-- TODO: -->
-    <span style="margin-left: auto" class="close" on:click={closeModal}> <span>&times;</span> </span>
+    <button style="margin-left: auto; display: flex;" class="close raw-button" on:click={closeModal}>
+      <i class="far fa-times" />
+    </button>
   {/if}
 </div>
 <hr />
