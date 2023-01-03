@@ -12,7 +12,7 @@
   //import { quickSearch } from '../setBookFilters';
   //import { BookResultsPacket } from '../booksState';
 
-  //import MobileMenu from 'app/components/navigation/MobileMenu.svelte';
+  import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
 
   import { searchState } from "../searchState";
 
@@ -53,11 +53,11 @@
 </script>
 
 <div class="books-menu-bar">
-  <!-- <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
-		<div class="button-container" style="display: flex; flex-direction: column">
-			<MenuOptions {uiView} {bookResultsPacket} {closeMobileMenu} />
-		</div>
-	</MobileMenu> -->
+  <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
+    <div class="button-container" style="display: flex; flex-direction: column">
+      <MenuOptions {closeMobileMenu} />
+    </div>
+  </MobileMenu>
 
   <div style="font-size: 11pt; position: relative">
     <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
