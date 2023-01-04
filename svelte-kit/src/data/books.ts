@@ -99,6 +99,7 @@ export const searchBooks = async (search: string) => {
       pipeline: [
         { $match: { title: { $regex: search || "", $options: "i" }, userId: "60a93babcc3928454b5d1cc6" } },
         { $project: bookProjections },
+        { $addFields: { dateAdded: { $toDate: "$_id" } } },
         { $limit: 50 },
         { $sort: { title: 1 } }
       ]
@@ -115,6 +116,9 @@ export const searchBooks = async (search: string) => {
             book[arr] = [];
           }
         });
+
+        const date = new Date(book.dateAdded);
+        book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
       });
       return res.documents;
     })

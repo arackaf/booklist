@@ -49,7 +49,7 @@
         </button>
       </th>
       <th>
-        <button class="raw-button no-underline" on:click={() => setSort("_id")}>
+        <button class="raw-button bold no-underline" on:click={() => setSort("_id")}>
           Added
           {#if sort == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </button>
