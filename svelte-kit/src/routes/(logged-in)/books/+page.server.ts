@@ -19,7 +19,12 @@ export async function load({ depends, isDataRequest, cookies }: any) {
 }
 
 export const actions = {
-  async saveBook({ request, cookies }: any) {
+  async saveBook({ request, cookies, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
@@ -28,31 +33,41 @@ export const actions = {
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
 
-    await updateBook(fields);
+    await updateBook(session.userId, fields);
 
     bustCache(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: fields } };
   },
-  async setBooksSubjects({ request }: any) {
+  async setBooksSubjects({ request, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
       arrays: ["_ids", "add", "remove"]
     }) as any;
 
-    await updateBooksSubjects(fields._ids, fields.add, fields.remove);
+    await updateBooksSubjects(session.userId, fields);
 
     return { success: true };
   },
-  async setBooksTags({ request }: any) {
+  async setBooksTags({ request, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
       arrays: ["_ids", "add", "remove"]
     }) as any;
 
-    await updateBooksTags(fields._ids, fields.add, fields.remove);
+    await updateBooksTags(session.userId, fields);
 
     return { success: true };
   }

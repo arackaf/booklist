@@ -97,7 +97,7 @@ export const booksSubjectsDump = async (userId: string) => {
     });
 };
 
-export const updateBook = async (book: any) => {
+export const updateBook = async (userId: string, book: any) => {
   const { _id, title, tags, subjects, authors } = book;
 
   return fetch(env.MONGO_URL + "/action/updateOne", {
@@ -111,7 +111,7 @@ export const updateBook = async (book: any) => {
       collection: "books",
       database: "my-library",
       dataSource: "Cluster0",
-      filter: { _id: { $oid: _id } },
+      filter: { _id: { $oid: _id }, userId },
       update: { $set: { title, tags, subjects, authors } }
     })
   })
@@ -121,7 +121,15 @@ export const updateBook = async (book: any) => {
     });
 };
 
-export const updateBooksSubjects = async (_ids: string[], add: string[], remove: string[]) => {
+type BulkUpdate = {
+  _ids: string[];
+  add: string[];
+  remove: string[];
+};
+
+export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
+  const { _ids, add, remove } = updates;
+
   if (add.length) {
     await runMultiUpdate("books", {
       filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
@@ -132,7 +140,7 @@ export const updateBooksSubjects = async (_ids: string[], add: string[], remove:
   }
   if (remove.length) {
     await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
       update: {
         $pull: { subjects: { $in: remove } }
       }
@@ -140,10 +148,12 @@ export const updateBooksSubjects = async (_ids: string[], add: string[], remove:
   }
 };
 
-export const updateBooksTags = async (_ids: string[], add: string[], remove: string[]) => {
+export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
+  const { _ids, add, remove } = updates;
+
   if (add.length) {
     await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
       update: {
         $addToSet: { tags: { $each: add } }
       }
