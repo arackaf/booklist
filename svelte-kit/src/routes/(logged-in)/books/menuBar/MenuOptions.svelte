@@ -1,17 +1,23 @@
 <script lang="ts">
+  import { afterNavigate, beforeNavigate, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
 
-  //import { BookResultsPacket } from "../booksState";
   import { /*getBookSearchUiView,*/ BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../booksUiState";
   import { selectedBooksLookup, selectionState } from "../selectionState";
+  export let closeMobileMenu: () => void = () => {};
 
   let uiView: any = writable({}); // ReturnType<typeof getBookSearchUiView>;
 
-  let bookResultsPacket: any = {}; //BookResultsPacket;
-  export let closeMobileMenu: () => void = () => {};
-  $: ({ reload, booksLoading } = bookResultsPacket);
+  let reloading = false;
+
+  const reload = () => {
+    reloading = true;
+    invalidate("reload-books").then(() => {
+      reloading = false;
+    });
+  };
 
   $: books = $page.data.books;
 
@@ -65,9 +71,9 @@
       <hr />
     {/if}
   {/if}
-  <button class="btn btn-default" on:click={mobileHandler(reload)} disabled={booksLoading}>
+  <button class="btn btn-default" on:click={mobileHandler(reload)} disabled={reloading}>
     <span>Reload Books</span>
-    <i class="fal fa-fw fa-sync" />
+    <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
   </button>
   <hr />
   <button on:click={mobileHandler(() => uiDispatch(GRID_VIEW))} class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>

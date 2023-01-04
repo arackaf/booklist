@@ -8,6 +8,16 @@ type Book = {
   authors: string[];
 };
 
+export async function load({ depends, isDataRequest, cookies }: any) {
+  depends("reload-books");
+
+  if (isDataRequest) {
+    bustCache(cookies, BOOKS_CACHE);
+  }
+
+  return {};
+}
+
 export const actions = {
   async saveBook({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
