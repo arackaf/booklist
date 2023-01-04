@@ -7,7 +7,7 @@ export async function load({ locals }: any) {
     return {};
   }
 
-  const subjects = allSubjects();
+  const subjects = allSubjects(session.userId);
   const books = booksSubjectsDump(session.userId);
 
   return {
