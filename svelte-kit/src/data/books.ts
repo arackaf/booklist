@@ -21,7 +21,7 @@ const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) =>
   return result;
 }, {});
 
-export const searchBooks = async (search: string) => {
+export const searchBooks = async (userId: string, search: string) => {
   const httpStart = +new Date();
   return fetch(env.MONGO_URL + "/action/aggregate", {
     method: "POST",
@@ -35,7 +35,7 @@ export const searchBooks = async (search: string) => {
       database: "my-library",
       dataSource: "Cluster0",
       pipeline: [
-        { $match: { title: { $regex: search || "", $options: "i" }, userId: "60a93babcc3928454b5d1cc6" } },
+        { $match: { title: { $regex: search || "", $options: "i" }, userId } },
         { $project: bookProjections },
         { $addFields: { dateAdded: { $toDate: "$_id" } } },
         { $limit: 50 },
@@ -65,7 +65,7 @@ export const searchBooks = async (search: string) => {
     });
 };
 
-export const booksSubjectsDump = async () => {
+export const booksSubjectsDump = async (userId: string) => {
   const httpStart = +new Date();
   return fetch(env.MONGO_URL + "/action/aggregate", {
     method: "POST",
@@ -79,7 +79,7 @@ export const booksSubjectsDump = async () => {
       database: "my-library",
       dataSource: "Cluster0",
       pipeline: [
-        { $match: { userId: "60a93babcc3928454b5d1cc6", "subjects.0": { $exists: true } } },
+        { $match: { userId, "subjects.0": { $exists: true } } },
         { $group: { _id: "$subjects", count: { $count: {} } } },
         { $project: { _id: 0, subjects: "$_id", count: 1 } }
       ]

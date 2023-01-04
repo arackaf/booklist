@@ -49,11 +49,14 @@ const auth = SvelteKitAuth({
       }
 
       const userSync = await getUserSync(account.providerAccountId);
+      if (userSync) {
+        account.syncdId = userSync.sk;
+      }
 
       return true;
     },
     async jwt({ token, account }) {
-      token.userId ??= account?.providerAccountId;
+      token.userId ??= account?.syncdId || account?.providerAccountId;
       return token;
     },
     async session({ session, user, token }) {
