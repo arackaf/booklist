@@ -10,8 +10,8 @@ export async function load({ parent, locals }: any) {
     throw redirect(302, "/");
   }
 
-  const subjects = allSubjects();
-  const tags = allTags();
+  const subjects = allSubjects(session.userId);
+  const tags = allTags(session.userId);
 
   return {
     subjects,

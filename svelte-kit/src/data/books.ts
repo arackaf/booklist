@@ -22,7 +22,9 @@ const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) =>
 }, {});
 
 export const searchBooks = async (userId: string, search: string) => {
+  userId = userId || "";
   const httpStart = +new Date();
+
   return fetch(env.MONGO_URL + "/action/aggregate", {
     method: "POST",
     headers: {
@@ -66,7 +68,9 @@ export const searchBooks = async (userId: string, search: string) => {
 };
 
 export const booksSubjectsDump = async (userId: string) => {
+  userId = userId || "";
   const httpStart = +new Date();
+
   return fetch(env.MONGO_URL + "/action/aggregate", {
     method: "POST",
     headers: {
@@ -98,6 +102,7 @@ export const booksSubjectsDump = async (userId: string) => {
 };
 
 export const updateBook = async (userId: string, book: any) => {
+  userId = userId || "";
   const { _id, title, tags, subjects, authors } = book;
 
   return fetch(env.MONGO_URL + "/action/updateOne", {
@@ -128,6 +133,7 @@ type BulkUpdate = {
 };
 
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
+  userId = userId || "";
   const { _ids, add, remove } = updates;
 
   if (add.length) {
@@ -149,6 +155,7 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
+  userId = userId || "";
   const { _ids, add, remove } = updates;
 
   if (add.length) {
