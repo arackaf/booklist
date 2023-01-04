@@ -13,6 +13,7 @@ export async function getDbConnection() {
 
 export const runSingleUpdate = runRequest.bind(null, "updateOne");
 export const runMultiUpdate = runRequest.bind(null, "updateMany");
+export const runAggregate = runRequest.bind(null, "aggregate");
 
 export function runRequest(action: string, collection: string, body: object) {
   return fetch(`${env.MONGO_URL}/action/${action}`, {

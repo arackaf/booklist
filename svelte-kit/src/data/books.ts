@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import { runMultiUpdate } from "./dbUtils";
+import { runAggregate, runMultiUpdate } from "./dbUtils";
 
 const bookFields = [
   "_id",
@@ -25,27 +25,15 @@ export const searchBooks = async (userId: string, search: string) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  return fetch(env.MONGO_URL + "/action/aggregate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Request-Headers": "*",
-      "api-key": env.MONGO_URL_API_KEY
-    },
-    body: JSON.stringify({
-      collection: "books",
-      database: "my-library",
-      dataSource: "Cluster0",
-      pipeline: [
-        { $match: { title: { $regex: search || "", $options: "i" }, userId } },
-        { $project: bookProjections },
-        { $addFields: { dateAdded: { $toDate: "$_id" } } },
-        { $limit: 50 },
-        { $sort: { title: 1 } }
-      ]
-    })
+  return runAggregate("books", {
+    pipeline: [
+      { $match: { title: { $regex: search || "", $options: "i" }, userId } },
+      { $project: bookProjections },
+      { $addFields: { dateAdded: { $toDate: "$_id" } } },
+      { $limit: 50 },
+      { $sort: { title: 1 } }
+    ]
   })
-    .then(res => res.json())
     .then(res => {
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
