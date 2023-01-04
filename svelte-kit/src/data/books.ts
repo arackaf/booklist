@@ -1,68 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { runMultiUpdate } from "./dbUtils";
 
-export const updateBook = async (book: any) => {
-  const { _id, title, tags, subjects, authors } = book;
-
-  return fetch(env.MONGO_URL + "/action/updateOne", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Request-Headers": "*",
-      "api-key": env.MONGO_URL_API_KEY
-    },
-    body: JSON.stringify({
-      collection: "books",
-      database: "my-library",
-      dataSource: "Cluster0",
-      filter: { _id: { $oid: _id } },
-      update: { $set: { title, tags, subjects, authors } }
-    })
-  })
-    .then(res => res.json())
-    .catch(err => {
-      console.log({ err });
-    });
-};
-
-export const updateBooksSubjects = async (_ids: string[], add: string[], remove: string[]) => {
-  if (add.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      update: {
-        $addToSet: { subjects: { $each: add } }
-      }
-    });
-  }
-  if (remove.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      update: {
-        $pull: { subjects: { $in: remove } }
-      }
-    });
-  }
-};
-
-export const updateBooksTags = async (_ids: string[], add: string[], remove: string[]) => {
-  if (add.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      update: {
-        $addToSet: { tags: { $each: add } }
-      }
-    });
-  }
-  if (remove.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      update: {
-        $pull: { tags: { $in: remove } }
-      }
-    });
-  }
-};
-
 const bookFields = [
   "_id",
   "title",
@@ -157,4 +95,66 @@ export const booksSubjectsDump = async () => {
     .catch(err => {
       console.log({ err });
     });
+};
+
+export const updateBook = async (book: any) => {
+  const { _id, title, tags, subjects, authors } = book;
+
+  return fetch(env.MONGO_URL + "/action/updateOne", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Request-Headers": "*",
+      "api-key": env.MONGO_URL_API_KEY
+    },
+    body: JSON.stringify({
+      collection: "books",
+      database: "my-library",
+      dataSource: "Cluster0",
+      filter: { _id: { $oid: _id } },
+      update: { $set: { title, tags, subjects, authors } }
+    })
+  })
+    .then(res => res.json())
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
+export const updateBooksSubjects = async (_ids: string[], add: string[], remove: string[]) => {
+  if (add.length) {
+    await runMultiUpdate("books", {
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      update: {
+        $addToSet: { subjects: { $each: add } }
+      }
+    });
+  }
+  if (remove.length) {
+    await runMultiUpdate("books", {
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      update: {
+        $pull: { subjects: { $in: remove } }
+      }
+    });
+  }
+};
+
+export const updateBooksTags = async (_ids: string[], add: string[], remove: string[]) => {
+  if (add.length) {
+    await runMultiUpdate("books", {
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      update: {
+        $addToSet: { tags: { $each: add } }
+      }
+    });
+  }
+  if (remove.length) {
+    await runMultiUpdate("books", {
+      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      update: {
+        $pull: { tags: { $in: remove } }
+      }
+    });
+  }
 };

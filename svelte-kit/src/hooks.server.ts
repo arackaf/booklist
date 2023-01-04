@@ -44,14 +44,11 @@ const auth = SvelteKitAuth({
 
   callbacks: {
     async signIn({ account }) {
-      (account as any).overridden = "HELLO";
-
       if (account == null) {
         return false;
       }
 
       const userSync = await getUserSync(account.providerAccountId);
-      console.log({ userSync });
 
       return true;
     },
