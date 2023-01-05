@@ -1,25 +1,13 @@
-import { env } from "$env/dynamic/private";
+import { runAggregate } from "./dbUtils";
 import type { Hash, Tag } from "./types";
 
 export const allTags = async (userId: string = "") => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  return fetch(env.MONGO_URL + "/action/aggregate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Request-Headers": "*",
-      "api-key": env.MONGO_URL_API_KEY
-    },
-    body: JSON.stringify({
-      collection: "tags",
-      database: "my-library",
-      dataSource: "Cluster0",
-      pipeline: [{ $match: { userId } }, { $project: { _id: 1, name: 1, userId: 1, textColor: 1, backgroundColor: 1 } }, { $sort: { name: 1 } }]
-    })
+  return runAggregate("tags", {
+    pipeline: [{ $match: { userId } }, { $project: { _id: 1, name: 1, userId: 1, textColor: 1, backgroundColor: 1 } }, { $sort: { name: 1 } }]
   })
-    .then(res => res.json())
     .then(res => {
       const httpEnd = +new Date();
       console.log("HTTP tags time", httpEnd - httpStart);
