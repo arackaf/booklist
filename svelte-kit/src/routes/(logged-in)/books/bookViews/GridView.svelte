@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
-  import { searchState } from "../searchState";
+  import { changeFilter, searchState } from "../searchState";
   import { selectedBooks, selectionState } from "../selectionState";
 
   const isPublic = false;
@@ -11,8 +11,6 @@
   export let subjects: Subject[];
   export let tags: Tag[];
   const noop = () => {};
-
-  const setSort = (arg: string) => {};
 
   $: ({ sortField, sortDirection } = $searchState);
 
@@ -24,6 +22,14 @@
       selectionState.selectAll(books);
     }
   }
+
+  const setSort = (field: string) => {
+    let direction = "asc";
+    if (field === sortField && sortDirection === "desc") {
+      direction = "desc";
+    }
+    $changeFilter.withSort(`${field}-${direction}`);
+  };
 </script>
 
 <table style="position: relative; align-self: start;" class="table no-padding-top">

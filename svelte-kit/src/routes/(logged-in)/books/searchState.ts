@@ -52,12 +52,21 @@ export const changeFilter = derived(page, $page => {
   return {
     withoutSearch: urlWithoutFilter($page.url, "search"),
     withoutAuthor: urlWithoutFilter($page.url, "author"),
-    withoutPublisher: urlWithoutFilter($page.url, "publisher")
+    withoutPublisher: urlWithoutFilter($page.url, "publisher"),
+    withSort(value: string) {
+      urlWithFilter($page.url, "sort", value);
+    }
   };
 });
 
 const urlWithoutFilter = (url: URL, filter: string) => {
   const newUrl = new URL(url);
   newUrl.searchParams.delete(filter);
+  return newUrl.toString();
+};
+
+const urlWithFilter = (url: URL, filter: string, value: string) => {
+  const newUrl = new URL(url);
+  newUrl.searchParams.set(filter, value);
   return newUrl.toString();
 };
