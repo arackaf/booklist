@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
-
   import BookRow from "./BookRow.svelte";
+  import { searchState } from "../searchState";
 
   const isPublic = false;
   const online = true;
@@ -14,8 +14,8 @@
 
   const setSort = (arg: string) => {};
 
-  const sortDirection: string = "desc";
-  const sort: string = "_id";
+  $: ({ sortField, sortDirection } = $searchState);
+
   const bookSelection = {
     allAreChecked: false
   };
@@ -35,7 +35,7 @@
       <th style="min-width: 200px">
         <button class="raw-button bold no-underline" on:click={() => setSort("title")} on:keypress={noop}>
           Title
-          {#if sort == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </button>
       </th>
       <th style="min-width: 90px;">Subjects</th>
@@ -45,13 +45,13 @@
       <th style="min-width: 85px; ">
         <button class="raw-button bold no-underline" on:click={() => setSort("pages")}>
           Pages
-          {#if sort == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </button>
       </th>
       <th>
         <button class="raw-button bold no-underline" on:click={() => setSort("_id")}>
           Added
-          {#if sort == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </button>
       </th>
     </tr>
