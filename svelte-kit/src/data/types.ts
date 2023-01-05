@@ -52,3 +52,13 @@ export type BookDisplay = Book & {
   tagObjects: any[];
   dateAddedDisplay: string;
 };
+
+type BookSortKeys = "_id" | "title" | "pages";
+type BookSortValue = Partial<{
+  [k in BookSortKeys]: number;
+}>;
+
+export type BookSearch = Partial<{
+  search: string;
+  sort: BookSortValue;
+}>;

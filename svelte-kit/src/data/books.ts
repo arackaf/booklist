@@ -1,9 +1,10 @@
 import { queryBooks, updateSingleBook, updateMultipleBooks } from "./dbUtils";
-import type { Book } from "./types";
+import type { Book, BookSearch } from "./types";
 
 const bookFields = [
   "_id",
   "title",
+  "pages",
   "userId",
   "authors",
   "tags",
@@ -21,9 +22,11 @@ const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) =>
   return result;
 }, {});
 
-export const searchBooks = async (userId: string, search: string) => {
+export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
+
+  const { search, sort } = searchPacket;
 
   return queryBooks({
     pipeline: [
@@ -31,7 +34,7 @@ export const searchBooks = async (userId: string, search: string) => {
       { $project: bookProjections },
       { $addFields: { dateAdded: { $toDate: "$_id" } } },
       { $limit: 50 },
-      { $sort: { title: 1 } }
+      { $sort: sort ?? { _id: -1 } }
     ]
   })
     .then(books => {

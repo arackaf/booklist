@@ -80,15 +80,6 @@
     //closeModal();
     const searchParams: URLSearchParams = evt.formData;
     sanitize(searchParams);
-
-    const sortPacket = searchParams.get("sort_pack")!;
-    searchParams.delete("sort_pack");
-
-    if (sortPacket !== "_id|desc") {
-      const [sort, sortDirection] = sortPacket.split("|");
-      searchParams.set("sort", sort);
-      searchParams.set("sortDirection", sortDirection);
-    }
   };
 </script>
 
@@ -135,13 +126,13 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_sort">Sort</label>
-          <select id="book_search_sort" name="sort_pack" value={$searchState.sortPacket} class="form-control">
-            <option value="title|asc">Title A-Z</option>
-            <option value="title|desc">Title Z-A</option>
-            <option value="pages|asc">Pages, Low</option>
-            <option value="pages|desc">Pages, High</option>
-            <option value="_id|asc">Created, Earliest</option>
-            <option value="_id|desc">Created, Latest</option>
+          <select id="book_search_sort" name="sort" value={$searchState.sortPacket} class="form-control">
+            <option value="title-asc">Title A-Z</option>
+            <option value="title-desc">Title Z-A</option>
+            <option value="pages-asc">Pages, Low</option>
+            <option value="pages-desc">Pages, High</option>
+            <option value="_id-asc">Created, Earliest</option>
+            <option value="_id-desc">Created, Most Recent</option>
           </select>
         </div>
       </div>

@@ -6,8 +6,8 @@ export const searchState = derived(page, $page => {
   const subjects = searchParams.getAll("subjects") ?? [];
   const tags = searchParams.getAll("tags") ?? [];
 
-  const sort = searchParams.get("sort") ?? "_id";
-  const sortDirection = searchParams.get("sortDirection") ?? "desc";
+  const sortString = searchParams.get("sort") ?? "_id-desc";
+  const [sortField, sortDir] = sortString.split("-");
 
   return {
     search: searchParams.get("search") ?? "",
@@ -19,7 +19,7 @@ export const searchState = derived(page, $page => {
     tagsLookup: new Set(tags),
     selectedSubjects: [],
     selectedTags: [],
-    sortPacket: `${sort}|${sortDirection}`
+    sortPacket: `${sortField}-${sortDir}`
   };
 });
 
