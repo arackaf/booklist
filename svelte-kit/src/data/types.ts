@@ -44,6 +44,7 @@ export type Book = {
   subjects: string[];
   smallImage: string | null;
   smallImagePreview: string | PreviewPacket | null;
+  dateAdded: string;
 };
 
 export type BookDisplay = Book & {
