@@ -59,25 +59,13 @@ export const booksSubjectsDump = async (userId: string) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  return fetch(env.MONGO_URL + "/action/aggregate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Request-Headers": "*",
-      "api-key": env.MONGO_URL_API_KEY
-    },
-    body: JSON.stringify({
-      collection: "books",
-      database: "my-library",
-      dataSource: "Cluster0",
-      pipeline: [
-        { $match: { userId, "subjects.0": { $exists: true } } },
-        { $group: { _id: "$subjects", count: { $count: {} } } },
-        { $project: { _id: 0, subjects: "$_id", count: 1 } }
-      ]
-    })
+  return runAggregate("books", {
+    pipeline: [
+      { $match: { userId, "subjects.0": { $exists: true } } },
+      { $group: { _id: "$subjects", count: { $count: {} } } },
+      { $project: { _id: 0, subjects: "$_id", count: 1 } }
+    ]
   })
-    .then(res => res.json())
     .then(res => {
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
