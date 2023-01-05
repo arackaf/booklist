@@ -9,7 +9,9 @@
 </script>
 
 <div>
-  <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
+  {#if previewString}
+    <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
+  {/if}
   <img alt="Book cover" src={url} class="image" />
 </div>
 

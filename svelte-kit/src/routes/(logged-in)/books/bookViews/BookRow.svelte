@@ -11,9 +11,7 @@
   import { selectionState, selectedBooksLookup } from "../selectionState";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 
-  //import CoverSmall from "$lib/components/bookCovers/CoverSmall.svelte";
-  //import { addFilterSubject, addFilterTag } from "modules/books/setBookFilters";
-  //import BookRowDetails from "./BookRowDetails.svelte";
+  import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic: boolean;
   export let online: boolean;
@@ -53,7 +51,6 @@
   <td>
     <div style="width: 60px; min-height: 75px;">
       <BookCover url={book.smallImage} preview={book.smallImagePreview} />
-      <!-- <CoverSmall url={book.smallImage} preview={book.smallImagePreview} /> -->
     </div>
   </td>
   <td>
@@ -155,7 +152,7 @@
   <td>{book.dateAddedDisplay}</td>
 </tr>
 {#if expanded}
-  <!-- <BookRowDetails {book} bind:detailsLoading /> -->
+  <BookRowDetails id={book._id} bind:detailsLoading />
 {/if}
 
 <style>
