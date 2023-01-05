@@ -27,10 +27,11 @@
 
   //$: ({ editorialReviews, similarBooks } = data?.getBook?.Book ?? ({} as { editorialReviews: EditorialReview[]; similarBooks: BookSummary[] }));
 
+  export let id: string;
   let loaded = false;
 
   onMount(() => {
-    fetch("/api/book-details")
+    fetch("/api/book-details?id=" + id)
       .then(resp => resp.json())
       .then(val => {
         console.log("Val", val);

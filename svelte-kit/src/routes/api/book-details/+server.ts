@@ -1,5 +1,4 @@
-import { searchBooks } from "$data/books";
-import type { BookSearch } from "$data/types";
+import { getBookDetails } from "$data/books";
 import { json } from "@sveltejs/kit";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; setHeaders: any; locals: any }) {
@@ -14,9 +13,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
 
   const id = url.searchParams.get("id") || "";
 
-  const bookDetails = {
-    title: "Ayyyyy"
-  };
+  console.log({ id });
+  const bookDetails = await getBookDetails(id);
 
   return json(bookDetails);
 }

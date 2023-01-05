@@ -59,6 +59,47 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     });
 };
 
+export const getBookDetails = async (id: string) => {
+  const httpStart = +new Date();
+
+  return queryBooks({
+    pipeline: [
+      { $match: { _id: { $oid: id } } },
+      {
+        $lookup: {
+          from: "bookSummaries",
+          localField: "similarItems",
+          foreignField: "isbn",
+          as: "similarBooks",
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                title: 1,
+                authors: 1,
+                smallImage: 1,
+                smallImagePreview: 1,
+                asin: 1
+              }
+            }
+          ]
+        }
+      },
+      { $project: { editorialReviews: 1, similarBooks: 1 /*"$similarBooks.title": 1*/ } }
+    ]
+  })
+    .then(books => {
+      console.log({ books });
+      const httpEnd = +new Date();
+      console.log("HTTP time books", httpEnd - httpStart);
+
+      return books[0];
+    })
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
 export const booksSubjectsDump = async (userId: string) => {
   userId = userId || "";
   const httpStart = +new Date();
