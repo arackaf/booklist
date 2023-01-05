@@ -1,5 +1,6 @@
 import { env } from "$env/dynamic/private";
-import { runAggregate, runMultiUpdate } from "./dbUtils";
+import { queryBooks, runMultiUpdate } from "./dbUtils";
+import type { Book } from "./types";
 
 const bookFields = [
   "_id",
@@ -25,7 +26,7 @@ export const searchBooks = async (userId: string, search: string) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  return runAggregate("books", {
+  return queryBooks({
     pipeline: [
       { $match: { title: { $regex: search || "", $options: "i" }, userId } },
       { $project: bookProjections },
@@ -34,21 +35,22 @@ export const searchBooks = async (userId: string, search: string) => {
       { $sort: { title: 1 } }
     ]
   })
-    .then(res => {
+    .then(books => {
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
 
-      res.documents.forEach((book: any) => {
-        ["authors", "subjects", "tags"].forEach(arr => {
+      const arrayFieldsToInit = ["authors", "subjects", "tags"] as (keyof Book)[];
+      books.forEach(book => {
+        arrayFieldsToInit.forEach(arr => {
           if (!Array.isArray(book[arr])) {
-            book[arr] = [];
+            (book as any)[arr] = [] as string[];
           }
         });
 
         const date = new Date(book.dateAdded);
         book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
       });
-      return res.documents;
+      return books;
     })
     .catch(err => {
       console.log({ err });
@@ -59,18 +61,18 @@ export const booksSubjectsDump = async (userId: string) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  return runAggregate("books", {
+  return queryBooks({
     pipeline: [
       { $match: { userId, "subjects.0": { $exists: true } } },
       { $group: { _id: "$subjects", count: { $count: {} } } },
       { $project: { _id: 0, subjects: "$_id", count: 1 } }
     ]
   })
-    .then(res => {
+    .then(records => {
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
 
-      return res.documents;
+      return records;
     })
     .catch(err => {
       console.log({ err });
