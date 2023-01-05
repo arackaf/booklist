@@ -1,5 +1,4 @@
-import { env } from "$env/dynamic/private";
-import { queryBooks, runMultiUpdate } from "./dbUtils";
+import { queryBooks, updateSingleBook, updateMultipleBooks } from "./dbUtils";
 import type { Book } from "./types";
 
 const bookFields = [
@@ -83,25 +82,7 @@ export const updateBook = async (userId: string, book: any) => {
   userId = userId || "";
   const { _id, title, tags, subjects, authors } = book;
 
-  return fetch(env.MONGO_URL + "/action/updateOne", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Request-Headers": "*",
-      "api-key": env.MONGO_URL_API_KEY
-    },
-    body: JSON.stringify({
-      collection: "books",
-      database: "my-library",
-      dataSource: "Cluster0",
-      filter: { _id: { $oid: _id }, userId },
-      update: { $set: { title, tags, subjects, authors } }
-    })
-  })
-    .then(res => res.json())
-    .catch(err => {
-      console.log({ err });
-    });
+  return updateSingleBook({ _id: { $oid: _id }, userId }, { $set: { title, tags, subjects, authors } });
 };
 
 type BulkUpdate = {
@@ -115,20 +96,21 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
   const { _ids, add, remove } = updates;
 
   if (add.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      update: {
+    await updateMultipleBooks(
+      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      {
         $addToSet: { subjects: { $each: add } }
       }
-    });
+    );
   }
+
   if (remove.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
-      update: {
+    await updateMultipleBooks(
+      { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
+      {
         $pull: { subjects: { $in: remove } }
       }
-    });
+    );
   }
 };
 
@@ -137,19 +119,19 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
   const { _ids, add, remove } = updates;
 
   if (add.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
-      update: {
+    await updateMultipleBooks(
+      { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
+      {
         $addToSet: { tags: { $each: add } }
       }
-    });
+    );
   }
   if (remove.length) {
-    await runMultiUpdate("books", {
-      filter: { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      update: {
+    await updateMultipleBooks(
+      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      {
         $pull: { tags: { $in: remove } }
       }
-    });
+    );
   }
 };

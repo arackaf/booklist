@@ -5,6 +5,28 @@ export const runSingleUpdate = runRequest.bind(null, "updateOne");
 export const runMultiUpdate = runRequest.bind(null, "updateMany");
 const runAggregate = runRequest.bind(null, "aggregate");
 
+export const updateSingleBook = (filter: object, update: object) => {
+  return runSingleUpdate("books", {
+    filter,
+    update
+  })
+    .then(res => res.json())
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
+export const updateMultipleBooks = (filter: object, update: object) => {
+  return runMultiUpdate("books", {
+    filter,
+    update
+  })
+    .then(res => res.json())
+    .catch(err => {
+      console.log({ err });
+    });
+};
+
 type MongoQueryResponse<T> = {
   documents: T[];
 };
