@@ -1,15 +1,15 @@
-import { runAggregate } from "./dbUtils";
+import { querySubjects } from "./dbUtils";
 
 export const allSubjects = async (userId: string) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  return runAggregate("subjects", {
+  return querySubjects({
     pipeline: [{ $match: { userId } }, { $project: { _id: 1, name: 1, path: 1, textColor: 1, backgroundColor: 1 } }, { $sort: { name: 1 } }]
-  }).then(res => {
+  }).then(subjects => {
     const httpEnd = +new Date();
 
     console.log("Http time subjects", httpEnd - httpStart);
-    return res.documents;
+    return subjects;
   });
 };

@@ -1,15 +1,17 @@
 import { env } from "$env/dynamic/private";
-import type { Book } from "./types";
+import type { Book, Subject, Tag } from "./types";
 
 export const runSingleUpdate = runRequest.bind(null, "updateOne");
 export const runMultiUpdate = runRequest.bind(null, "updateMany");
-export const runAggregate = runRequest.bind(null, "aggregate");
+const runAggregate = runRequest.bind(null, "aggregate");
 
 type MongoQueryResponse<T> = {
   documents: T[];
 };
 
 export const queryBooks = (body: object) => runQuery<Book>("books", body);
+export const querySubjects = (body: object) => runQuery<Subject>("subjects", body);
+export const queryTags = (body: object) => runQuery<Tag>("tags", body);
 
 const runQuery = <T>(table: string, body: object) => {
   return runAggregate(table, body).then((res: MongoQueryResponse<T>) => res.documents);
