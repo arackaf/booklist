@@ -1,6 +1,8 @@
 import { derived, get, writable } from "svelte/store";
+import type { Book } from "$data/types";
 
-const selectedBooks = writable([] as string[]);
+export const selectedBooks = writable([] as string[]);
+
 export const selectedBooksLookup = derived(selectedBooks, $selectedBooks => {
   return $selectedBooks.reduce<{ [s: string]: true }>((result, _id) => {
     result[_id] = true;
@@ -9,6 +11,9 @@ export const selectedBooksLookup = derived(selectedBooks, $selectedBooks => {
 });
 
 export const selectionState = {
+  selectAll(books: Book[]) {
+    selectedBooks.set(books.map(b => b._id));
+  },
   selectBook(_id: string) {
     selectedBooks.update(books => books.concat(_id));
   },

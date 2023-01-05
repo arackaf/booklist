@@ -2,6 +2,7 @@
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
   import { searchState } from "../searchState";
+  import { selectedBooks, selectionState } from "../selectionState";
 
   const isPublic = false;
   const online = true;
@@ -10,15 +11,19 @@
   export let subjects: Subject[];
   export let tags: Tag[];
   const noop = () => {};
-  function toggleCheckAll() {}
 
   const setSort = (arg: string) => {};
 
   $: ({ sortField, sortDirection } = $searchState);
 
-  const bookSelection = {
-    allAreChecked: false
-  };
+  $: allBooksSelected = books.length === $selectedBooks.length;
+  function toggleCheckAll() {
+    if (allBooksSelected) {
+      selectionState.clear();
+    } else {
+      selectionState.selectAll(books);
+    }
+  }
 </script>
 
 <table style="position: relative; align-self: start;" class="table no-padding-top">
@@ -27,7 +32,7 @@
       {#if !isPublic && online}
         <th style="text-align: center; width: 25px;">
           <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
-            <i class={"fal " + (!!bookSelection.allAreChecked ? "fa-check-square" : "fa-square")} />
+            <i class={"fal " + (!!allBooksSelected ? "fa-check-square" : "fa-square")} />
           </button>
         </th>
       {/if}
