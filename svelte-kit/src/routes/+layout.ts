@@ -1,4 +1,7 @@
-import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
-import {} from "$lib/state/screen";
+import { setInitialState } from "$lib/state/screen";
 
-export async function load({ isDataRequest, ...rest }: any) {}
+export async function load({ isDataRequest, data }: any) {
+  setInitialState(data.isMobile, false);
+
+  return data;
+}

@@ -1,12 +1,27 @@
 import { writable, derived } from "svelte/store";
 
 const _screenState = writable({
-  isMobile: false,
-  desktopRequested: false
+  isMobile: void 0,
+  desktopRequested: void 0
 });
 
-export const setIsMobile = (val: boolean) => {
-  _screenState.update(state => ({ ...state, isMobile: val }));
+export const setInitialState = (isMobile: boolean, desktopRequested: boolean) => {
+  _screenState.update(state => {
+    console.log("SERVER", typeof window === "undefined", "Current state", state, "passed", { isMobile, desktopRequested }, "NEW STATE", {
+      ...state,
+      isMobile,
+      desktopRequested
+    });
+    if (typeof window === "undefined" || typeof state.isMobile === "undefined") {
+      return {
+        ...state,
+        isMobile,
+        desktopRequested
+      };
+    }
+
+    return state;
+  });
 };
 
 export const requestDesktop = () => {
