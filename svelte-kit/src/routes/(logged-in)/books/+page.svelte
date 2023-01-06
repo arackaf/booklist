@@ -216,10 +216,7 @@
 				{#if editTagsModalOpen}
 					<TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
 				{/if}
-
-
-				{#if !!booksTagEditing.length}
-				{/if} -->
+         -->
       </div>
     </div>
   </div>
