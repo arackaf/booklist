@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
   import { afterNavigate, beforeNavigate, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
   import { getContext } from "svelte";
@@ -14,9 +15,12 @@
 
   const reload = () => {
     reloading = true;
-    invalidate("reload-books").then(() => {
-      reloading = false;
-    });
+
+    return async () => {
+      invalidate("reload-books").then(() => {
+        reloading = false;
+      });
+    };
   };
 
   $: books = $page.data.books;
@@ -69,10 +73,12 @@
     <hr />
   {/if}
 
-  <button class="btn btn-default" on:click={mobileHandler(reload)} disabled={reloading}>
-    <span>Reload Books</span>
-    <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
-  </button>
+  <form method="POST" action="?/reloadBooks" use:enhance={reload}>
+    <button class="btn btn-default" type="submit" disabled={reloading}>
+      <span>Reload Books</span>
+      <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
+    </button>
+  </form>
   <hr />
   <button on:click={mobileHandler(() => uiDispatch(GRID_VIEW))} class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
     <span>Main View</span>
