@@ -1,9 +1,17 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  //import { appState, requestDesktop, requestMobile } from "app/state/appState";
+  import { invalidate } from "$app/navigation";
 
-  const requestDesktop = () => {};
-  const requestMobile = () => {};
+  const requestDesktop = () => {
+    fetch("/api/device-override/view-desktop").then(() => {
+      invalidate("app-root");
+    });
+  };
+  const requestMobile = () => {
+    fetch("/api/device-override/view-mobile").then(() => {
+      invalidate("app-root");
+    });
+  };
 
   $: ({ isMobile, desktopRequested } = $page.data);
 
