@@ -1,5 +1,5 @@
 import { page } from "$app/stores";
-import { derived, get } from "svelte/store";
+import { derived } from "svelte/store";
 
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;

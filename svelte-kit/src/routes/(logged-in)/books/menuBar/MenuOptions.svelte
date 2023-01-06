@@ -1,11 +1,10 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { afterNavigate, beforeNavigate, invalidate } from "$app/navigation";
+  import { invalidate } from "$app/navigation";
   import { page } from "$app/stores";
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
 
-  import { /*getBookSearchUiView,*/ BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../booksUiState";
   import { selectedBooksLookup, selectionState } from "../selectionState";
   export let closeMobileMenu: () => void = () => {};
 

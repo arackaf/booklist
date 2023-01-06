@@ -41,7 +41,7 @@
   import BookSearchModal from "./SearchModal.svelte";
   import BooksMenuBar from "./menuBar/MenuBar.svelte";
   // import { searchBooks } from './booksState';
-  import { /*getBookSearchUiView,*/ GRID_VIEW, BASIC_LIST_VIEW, COVERS_LIST } from "./booksUiState";
+
   // import SubjectEditModal from './SubjectEditModal.svelte';
   // import TagEditModal from './TagEditModal.svelte';
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
@@ -96,9 +96,6 @@
   // 	return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookInput }));
   // };
 
-  const uiView = writable({ pending: false, view: GRID_VIEW });
-  //const uiView = getBookSearchUiView();
-  //const booksState = searchBooks(uiView);
   const booksState = writable({
     books: [],
     booksLoaded: false,
@@ -165,13 +162,13 @@
   };
 </script>
 
-{#if booksLoading || $uiView.pending}
+{#if booksLoading}
   <ModuleLoading />
 {/if}
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <BooksMenuBar {uiView} />
+    <BooksMenuBar />
 
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
@@ -181,8 +178,6 @@
           </div>
         {:else}
           <div>
-            <!-- {#if $uiView.view == GRID_VIEW} -->
-
             {#if isMobile}
               <h1>MOBILE</h1>
             {:else}

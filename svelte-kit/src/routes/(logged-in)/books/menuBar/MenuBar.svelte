@@ -30,8 +30,6 @@
   const booksModuleContext: any = getContext("books-module-context");
   const { booksUiState } = booksModuleContext;
 
-  export let uiView: any; //ReturnType<typeof getBookSearchUiView>;
-
   let quickSearchEl: any = {};
 
   $: ({ selectedBooks } = $booksUiState);
