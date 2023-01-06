@@ -152,7 +152,7 @@
   <td>{book.dateAddedDisplay}</td>
 </tr>
 {#if expanded}
-  <BookRowDetails id={book._id} bind:detailsLoading />
+  <BookRowDetails {isPublic} id={book._id} bind:detailsLoading />
 {/if}
 
 <style>

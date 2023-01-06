@@ -9,8 +9,7 @@
   export let id: string;
   export let detailsLoading = false;
 
-  // TODO:
-  const viewingPublic = false;
+  export let isPublic: boolean;
   let bookDetails: BookDetails;
 
   $: ({ editorialReviews, similarBooks } = bookDetails || {});
@@ -28,7 +27,7 @@
 
 {#if bookDetails}
   <tr>
-    <td colSpan={viewingPublic ? 8 : 9} style="border-top: 0; padding-left: 50px; padding-top: 0; padding-bottom: 15px;">
+    <td colSpan={isPublic ? 8 : 9} style="border-top: 0; padding-left: 50px; padding-top: 0; padding-bottom: 15px;">
       <FlexRow class="detailsRow">
         <div class="col-xs-6">
           {#if !editorialReviews || !editorialReviews.length}
