@@ -1,8 +1,8 @@
 import { writable, derived } from "svelte/store";
 
 const _screenState = writable({
-  isMobile: void 0,
-  desktopRequested: void 0
+  isMobile: void 0 as unknown as boolean,
+  desktopRequested: void 0 as unknown as boolean
 });
 
 export const setInitialState = (isMobile: boolean, desktopRequested: boolean) => {
