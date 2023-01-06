@@ -6,16 +6,14 @@
   let totalPages: number = 1;
   let resultsCount: number = 50;
 
-  const online = true;
   const page = 1;
   const pageSize = 50;
   const setPage = (page: number) => {};
   const pageOne = () => {};
-  //$: ({ online } = $appState);
 
   //$: ({ page, pageSize } = $currentSearch);
 
-  $: canPageUp = online ? page < totalPages : resultsCount == pageSize;
+  $: canPageUp = page < totalPages;
   $: canPageDown = page > 1;
   $: canPageOne = page > 1;
   $: canPageLast = page < totalPages;
@@ -32,24 +30,23 @@
       <i class="fal fa-angle-left" />
     </button>
   </div>
-  {#if online}
-    <div class="results-holder overlay-holder">
-      <span style="display: inline;">
-        {#if totalPages}
-          <span><span class="page-label">Page </span>{page} of {totalPages}</span>
-        {:else}
-          <span>No results</span>
-        {/if}
-      </span>
-      <span style="visibility: hidden">
-        <span class="page-label">Page </span>1 of 10
-      </span>
-    </div>
-  {/if}
+
+  <div class="results-holder overlay-holder">
+    <span style="display: inline;">
+      {#if totalPages}
+        <span><span class="page-label">Page </span>{page} of {totalPages}</span>
+      {:else}
+        <span>No results</span>
+      {/if}
+    </span>
+    <span style="visibility: hidden">
+      <span class="page-label">Page </span>1 of 10
+    </span>
+  </div>
+
   <div class="btn-group">
     <button on:click={pageUp} disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px"> <i class="fal fa-angle-right" /> </button>
-    {#if online}
-      <button on:click={pageLast} disabled={!canPageLast} class="btn btn-default page-edge"><i class="fal fa-angle-double-right" /></button>
-    {/if}
+
+    <button on:click={pageLast} disabled={!canPageLast} class="btn btn-default page-edge"><i class="fal fa-angle-double-right" /></button>
   </div>
 </div>

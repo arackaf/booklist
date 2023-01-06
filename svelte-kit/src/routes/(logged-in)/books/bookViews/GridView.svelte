@@ -5,7 +5,6 @@
   import { selectedBooks, selectionState } from "../selectionState";
 
   const isPublic = false;
-  const online = true;
 
   export let books: Book[];
   export let subjects: Subject[];
@@ -35,7 +34,7 @@
 <table style="position: relative; align-self: start;" class="table no-padding-top">
   <thead>
     <tr>
-      {#if !isPublic && online}
+      {#if !isPublic}
         <th style="text-align: center; width: 25px;">
           <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
             <i class={"fal " + (!!allBooksSelected ? "fa-check-square" : "fa-square")} />
@@ -69,7 +68,7 @@
   </thead>
   <tbody>
     {#each books as book (book._id)}
-      <BookRow {book} {subjects} {tags} {isPublic} {online} />
+      <BookRow {book} {subjects} {tags} {isPublic} />
     {/each}
   </tbody>
 </table>

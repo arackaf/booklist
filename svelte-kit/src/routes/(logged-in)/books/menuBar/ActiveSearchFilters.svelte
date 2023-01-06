@@ -15,9 +15,6 @@
 
   export let resultsCount: string | number;
 
-  const appState = writable({} as any);
-  $: ({ online } = $appState);
-
   $: resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
   const removeAllFiltersLabel = {
     backgroundColor: "var(--danger-7)",
@@ -27,7 +24,7 @@
   const filterDisplayStyles = "flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px";
 </script>
 
-{#if online && resultsCount}
+{#if resultsCount}
   <div style="flex: 0 0 auto; margin-right: 5px; align-self: center;">{resultsDisplay}</div>
 {/if}
 

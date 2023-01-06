@@ -14,7 +14,6 @@
   import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic: boolean;
-  export let online: boolean;
   export let book: Book;
 
   export let subjects: Subject[];
@@ -41,7 +40,7 @@
 </script>
 
 <tr>
-  {#if !isPublic && online}
+  {#if !isPublic}
     <td>
       <span class="cursor-pointer" style="font-size: 12pt" on:click={() => selectionState.toggle(_id)} on:keypress={noop}>
         <i class={"fal " + (!!$selectedBooksLookup[_id] ? "fa-check-square" : "fa-square")} />
@@ -63,20 +62,19 @@
       </Stack>
 
       <FlowItems vCenter={true} tighter={true} containerStyle="min-height: 35px">
-        {#if online}
-          {#if detailsLoading}
-            <span><i class="far fa-fw fa-spin fa-spinner" /></span>
-          {:else if expanded}
-            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = false)}>
-              <i class={`far fa-minus fa-fw`} />
-            </button>
-          {:else}
-            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = true)}>
-              <i class={`far fa-plus fa-fw`} />
-            </button>
-          {/if}
+        {#if detailsLoading}
+          <span><i class="far fa-fw fa-spin fa-spinner" /></span>
+        {:else if expanded}
+          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = false)}>
+            <i class={`far fa-minus fa-fw`} />
+          </button>
+        {:else}
+          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = true)}>
+            <i class={`far fa-plus fa-fw`} />
+          </button>
         {/if}
-        {#if book.isbn && online}
+
+        {#if book.isbn}
           <a
             style="padding-top: 1px; {hoverOverride}"
             target="_new"
@@ -86,7 +84,7 @@
             <i class={`fab fa-amazon fa-fw`} />
           </a>
         {/if}
-        {#if !isPublic && online}
+        {#if !isPublic}
           <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => editBook(book)}>
             <i class="fal fa-pencil-alt fa-fw" />
           </button>

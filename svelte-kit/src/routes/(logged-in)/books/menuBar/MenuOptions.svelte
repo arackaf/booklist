@@ -24,8 +24,6 @@
   const uiDispatch = (view: any) => $uiView.requestState({ type: "SET_PENDING_VIEW", value: view }, books);
 
   const isPublic = false;
-  const online = true;
-  //$: ({ isPublic, online } = $appState);
 
   const booksModuleContext: any = getContext("books-module-context");
   const { openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
@@ -53,24 +51,24 @@
 
 {#if !selectedBooksCount}
   <hr />
-  {#if online}
-    <button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="btn btn-default">
-      <span>Set Filters</span>
-      <i class="fal fa-fw fa-filter" />
+
+  <button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="btn btn-default">
+    <span>Set Filters</span>
+    <i class="fal fa-fw fa-filter" />
+  </button>
+  <hr />
+  {#if !isPublic}
+    <button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="btn btn-default">
+      <span>Edit Subjects</span>
+      <i class="fal fa-fw fa-sitemap" />
+    </button>
+    <button title="Edit tags" on:click={mobileHandler(editTags, true)} class="btn btn-default">
+      <span>Edit Tags</span>
+      <i class="fal fa-fw fa-tags" />
     </button>
     <hr />
-    {#if !isPublic}
-      <button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="btn btn-default">
-        <span>Edit Subjects</span>
-        <i class="fal fa-fw fa-sitemap" />
-      </button>
-      <button title="Edit tags" on:click={mobileHandler(editTags, true)} class="btn btn-default">
-        <span>Edit Tags</span>
-        <i class="fal fa-fw fa-tags" />
-      </button>
-      <hr />
-    {/if}
   {/if}
+
   <button class="btn btn-default" on:click={mobileHandler(reload)} disabled={reloading}>
     <span>Reload Books</span>
     <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
