@@ -26,6 +26,7 @@
 
 <script lang="ts">
   import "$lib/components/bookCoverWC/component";
+  import { screenState } from "$lib/state/screen";
 
   import { onMount, setContext } from "svelte";
   import { page } from "$app/stores";
@@ -176,7 +177,13 @@
         {:else}
           <div>
             <!-- {#if $uiView.view == GRID_VIEW} -->
-            <GridView books={$books} subjects={allSubjects} tags={allTags} />
+
+            {#if $screenState.isMobile}
+              <h1>MOBILE</h1>
+            {:else}
+              <GridView books={$books} subjects={allSubjects} tags={allTags} />
+            {/if}
+
             <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
 								<BasicView {booksState} />
 							{:else if $uiView.view == COVERS_LIST}
