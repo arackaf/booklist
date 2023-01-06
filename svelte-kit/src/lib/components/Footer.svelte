@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   //import { appState, requestDesktop, requestMobile } from "app/state/appState";
 
   const requestDesktop = () => {};
   const requestMobile = () => {};
-  let showChooseDesktop = false;
-  let showSwitchBackMobile = false;
-  // $: showChooseDesktop = $appState.isMobile && $appState.showingMobile;
-  // $: showSwitchBackMobile = $appState.isMobile && $appState.showingDesktop;
+
+  $: ({ isMobile, desktopRequested } = $page.data);
+
+  $: showChooseDesktop = isMobile && !desktopRequested;
+  $: showSwitchBackMobile = isMobile && desktopRequested;
 </script>
 
 <footer>

@@ -26,7 +26,6 @@
 
 <script lang="ts">
   import "$lib/components/bookCoverWC/component";
-  import { screenState } from "$lib/state/screen";
 
   import { onMount, setContext } from "svelte";
   import { page } from "$app/stores";
@@ -66,6 +65,12 @@
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
   import type { Book } from "$data/types";
   import { selectedBooksLookup, selectionState } from "./selectionState";
+
+  import type { PageData } from "./$types";
+
+  export let data: PageData;
+
+  $: ({ isMobile } = data);
 
   onMount(() => {
     const div = document.createElement("div");
@@ -178,7 +183,7 @@
           <div>
             <!-- {#if $uiView.view == GRID_VIEW} -->
 
-            {#if $screenState.isMobile}
+            {#if isMobile}
               <h1>MOBILE</h1>
             {:else}
               <GridView books={$books} subjects={allSubjects} tags={allTags} />

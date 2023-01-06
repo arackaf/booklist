@@ -4,6 +4,8 @@ export async function load({ locals, isDataRequest, request, cookies, ...rest }:
   const userAgent = request.headers.get("User-Agent");
   const isMobile = false || /mobile/i.test(userAgent);
 
+  const desktopRequested = !!cookies.get("desktop-requested");
+
   const initialRequest = !isDataRequest;
   if (initialRequest) {
     bustCache(cookies, BOOKS_CACHE);
@@ -14,6 +16,7 @@ export async function load({ locals, isDataRequest, request, cookies, ...rest }:
 
   return {
     isMobile,
+    desktopRequested,
     loggedIn
   };
 }
