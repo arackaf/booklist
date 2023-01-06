@@ -62,3 +62,21 @@ export type BookSearch = Partial<{
   search: string;
   sort: BookSortValue;
 }>;
+
+type EditorialReview = {
+  source: string;
+  content: string;
+};
+
+type SimilarBook = {
+  title: string;
+  authors: string[];
+  smallImage: string;
+  smallImagePreview: string;
+  asin: string;
+};
+
+export type BookDetails = {
+  editorialReviews: EditorialReview[];
+  similarBooks: SimilarBook[];
+};

@@ -1,5 +1,5 @@
 import { queryBooks, updateSingleBook, updateMultipleBooks } from "./dbUtils";
-import type { Book, BookSearch } from "./types";
+import type { Book, BookDetails, BookSearch } from "./types";
 
 const bookFields = [
   "_id",
@@ -62,7 +62,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 export const getBookDetails = async (id: string) => {
   const httpStart = +new Date();
 
-  return queryBooks({
+  return queryBooks<BookDetails>({
     pipeline: [
       { $match: { _id: { $oid: id } } },
       {

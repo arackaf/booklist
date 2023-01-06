@@ -31,7 +31,7 @@ type MongoQueryResponse<T> = {
   documents: T[];
 };
 
-export const queryBooks = (body: object) => runQuery<Book>("books", body);
+export const queryBooks = <TProjection = Book>(body: object) => runQuery<TProjection>("books", body);
 export const querySubjects = (body: object) => runQuery<Subject>("subjects", body);
 export const queryTags = (body: object) => runQuery<Tag>("tags", body);
 
