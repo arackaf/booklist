@@ -1,45 +1,32 @@
 <script lang="ts">
-  // import { query } from "micro-graphql-svelte";
-  // import { BookSummary, EditorialReview, Queries, QueryOf } from "gql/graphql-typings";
+  import type { BookDetails } from "$data/types";
 
-  // import BookDetailsQuery from "gql/books/getBookDetails.graphql";
-
-  //import CoverSmall from "app/components/bookCovers/CoverSmall.svelte";
   import FlexRow from "$lib/components/layout/FlexRow.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
+  import BookCover from "$lib/components/ui/BookCover.svelte";
   import { onMount } from "svelte";
 
-  //import { appState } from "app/state/appState";
-  //import { IBookDisplay } from "../booksState";
-
-  //export let book: IBookDisplay;
-  export let detailsLoading = true;
-
-  const viewingPublic = false;
-  const publicUserId = "";
-  //let { isPublic: viewingPublic, publicUserId } = $appState;
-  //let { queryState } = query<QueryOf<Queries["getBook"]>>(BookDetailsQuery, { initialSearch: { _id: book._id, publicUserId, cache: 9 } });
-
-  //$: ({ loading, data, loaded } = $queryState);
-
-  //$: console.log($queryState);
-  //$: detailsLoading = loading;
-
-  //$: ({ editorialReviews, similarBooks } = data?.getBook?.Book ?? ({} as { editorialReviews: EditorialReview[]; similarBooks: BookSummary[] }));
-
   export let id: string;
-  let loaded = false;
+  export let detailsLoading = false;
+
+  // TODO:
+  const viewingPublic = false;
+  let bookDetails: BookDetails;
+
+  $: ({ editorialReviews, similarBooks } = bookDetails || {});
 
   onMount(() => {
+    detailsLoading = true;
     fetch("/api/book-details?id=" + id)
       .then(resp => resp.json())
-      .then(val => {
-        console.log("Val", val);
+      .then(details => {
+        bookDetails = details;
+        detailsLoading = false;
       });
   });
 </script>
 
-{#if loaded}
+{#if bookDetails}
   <tr>
     <td colSpan={viewingPublic ? 8 : 9} style="border-top: 0; padding-left: 50px; padding-top: 0; padding-bottom: 15px;">
       <FlexRow class="detailsRow">
@@ -79,7 +66,7 @@
                       <tr>
                         <td>
                           {#if book.smallImage}
-                            <CoverSmall url={book.smallImage} />
+                            <BookCover preview={book.smallImagePreview} url={book.smallImage} />
                           {/if}
                         </td>
                         <td>

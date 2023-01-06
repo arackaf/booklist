@@ -68,11 +68,11 @@
             <span><i class="far fa-fw fa-spin fa-spinner" /></span>
           {:else if expanded}
             <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = false)}>
-              <i class={`far fa-minus`} />
+              <i class={`far fa-minus fa-fw`} />
             </button>
           {:else}
             <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = true)}>
-              <i class={`far fa-plus`} />
+              <i class={`far fa-plus fa-fw`} />
             </button>
           {/if}
         {/if}
@@ -83,15 +83,15 @@
             class="gridHoverFilter"
             href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
           >
-            <i class={`fab fa-amazon`} />
+            <i class={`fab fa-amazon fa-fw`} />
           </a>
         {/if}
         {#if !isPublic && online}
           <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => editBook(book)}>
-            <i class="fal fa-pencil-alt" />
+            <i class="fal fa-pencil-alt fa-fw" />
           </button>
           <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (pendingDelete = true)} on:keypress={noop}>
-            <i class={`fal fa-trash-alt`} />
+            <i class={`fal fa-trash-alt fa-fw`} />
           </button>
         {/if}
         {#if pendingDelete}
