@@ -14,22 +14,7 @@
           <div class="alert alert-warning margin-bottom">Did you spell this right?</div>
         </div>
       </div>
-      <div class="col-sm-6 col-xs-12">
-        <div class="form-group">
-          <label>Pages</label>
-          <div class="form-inline">
-            <div style="margin-right: 5px; display: inline-block" class="form-group">
-              <select class="form-control">
-                <option value="lt">{"<"}</option>
-                <option value="gt">{">"}</option>
-              </select>
-            </div>
-            <div class="form-group" style="display: inline-block">
-              <input style="width: 100px" type="number" placeholder="Pages" class="form-control" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="col-sm-6 col-xs-12" />
       <div class="col-xs-6">
         <div class="form-group">
           <label>Publisher</label>
