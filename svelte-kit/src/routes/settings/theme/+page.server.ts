@@ -11,7 +11,7 @@ export const actions = {
   async setWhiteBb({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
 
-    const whiteBg = formData.get("whiteBg");
+    const whiteBg = formData.get("whitebg") == "on" ? 1 : 0;
 
     cookies.set(WHITE_BG_COOKIE, whiteBg, { maxAge: ONE_YEAR_SECONDS });
   }

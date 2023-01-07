@@ -10,6 +10,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   const desktopRequested = !!cookies.get(DESKTOP_REQUESTED_COOKIE);
 
   const theme = cookies.get("theme") || "scheme5";
+  const whiteBg = (cookies.get("wbg") || "0") == "1";
 
   const initialRequest = !isDataRequest;
   if (initialRequest) {
@@ -21,7 +22,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
 
   return {
     theme,
-    whiteBb: false,
+    whiteBg,
     isMobile,
     desktopRequested,
     showMobile: isMobile && !desktopRequested,

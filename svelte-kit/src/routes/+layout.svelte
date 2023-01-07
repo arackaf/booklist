@@ -13,7 +13,7 @@
 
   export let data: PageData;
 
-  $: ({ showMobile, theme, whiteBb } = data);
+  $: ({ showMobile, theme, whiteBg } = data);
 
   $: {
     if (typeof document === "object") {
@@ -22,7 +22,7 @@
         document.body.classList.remove(`scheme${i}`);
       }
 
-      if (whiteBb) {
+      if (whiteBg) {
         document.body.classList.add("white-bg");
       }
       document.body.classList.add(theme);
@@ -40,7 +40,7 @@
   });
 </script>
 
-<div class={`app-container ${theme}`} class:white-bg={whiteBb}>
+<div class={`app-container ${theme}`} class:white-bg={whiteBg}>
   <div id="app">
     <MainNavigation />
     <main>

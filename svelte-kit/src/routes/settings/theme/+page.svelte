@@ -6,21 +6,31 @@
 
   import DemoStyles from "./DemoStyles.svelte";
   import ThemeOption from "./ThemeOption.svelte";
+  import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
 
   const themeNames = Array.from({ length: NUM_THEMES }, (v, i) => `scheme${i + 1}`);
 
   export let data: PageData;
-  $: ({ theme, whiteBb } = data);
+  $: ({ theme, whiteBg } = data);
 
-  const setWhiteBackground = () => {};
+  let whiteBgForm: HTMLFormElement;
+
+  function setWhiteBg() {
+    return async () => {
+      invalidate("app-root");
+    };
+  }
 </script>
 
 <div class="theme-chooser-root">
   <div class="theme-chooser-list">
-    <label style="font-size: 16px" class="checkbox margin-bottom">
-      <input type="checkbox" checked={whiteBb} on:change={setWhiteBackground} />
-      White background
-    </label>
+    <form bind:this={whiteBgForm} method="POST" action="?/setWhiteBb" use:enhance={setWhiteBg}>
+      <label style="font-size: 16px" class="checkbox margin-bottom">
+        <input type="checkbox" name="whitebg" checked={whiteBg} on:change={() => whiteBgForm.requestSubmit()} />
+        White background
+      </label>
+    </form>
     {#each themeNames as name}
       <ThemeOption {theme} {name} />
     {/each}
