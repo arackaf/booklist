@@ -2,4 +2,6 @@
   import Layout from "../SettingsLayout.svelte";
 </script>
 
-<Layout />
+<Layout>
+  <slot />
+</Layout>
