@@ -4,6 +4,7 @@
   import { page } from "$app/stores";
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
+  import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 
   import { selectedBooksLookup, selectionState } from "../selectionState";
   export let closeMobileMenu: () => void = () => {};
@@ -79,21 +80,27 @@
     </button>
   </form>
   <hr />
-  <button on:click={mobileHandler(() => uiDispatch(GRID_VIEW))} class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
-    <span>Main View</span>
-    <i class="fal fa-fw fa-table" />
-  </button>
-  <button on:click={mobileHandler(() => uiDispatch(COVERS_LIST))} class={"btn btn-default " + ($uiView.pendingView == COVERS_LIST ? "active" : "")}>
-    <span>Covers View</span>
-    <i class="fas fa-fw fa-th" />
-  </button>
-  <button
-    on:click={mobileHandler(() => uiDispatch(BASIC_LIST_VIEW))}
-    class={"btn btn-default " + ($uiView.pendingView == BASIC_LIST_VIEW ? "active" : "")}
-  >
-    <span>Mobile View</span>
-    <i class="fal fa-fw fa-list" />
-  </button>
+  <form method="POST" action="?/setBooksView" use:enhance={reload} on:submit={closeMobileMenu}>
+    <input type="hidden" name="view" value={GRID_VIEW} />
+    <button class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
+      <span>Main View</span>
+      <i class="fal fa-fw fa-table" />
+    </button>
+  </form>
+  <form method="POST" action="?/setBooksView" use:enhance={reload} on:submit={closeMobileMenu}>
+    <input type="hidden" name="view" value={COVERS_LIST} />
+    <button class={"btn btn-default " + ($uiView.pendingView == COVERS_LIST ? "active" : "")}>
+      <span>Covers View</span>
+      <i class="fas fa-fw fa-th" />
+    </button>
+  </form>
+  <form method="POST" action="?/setBooksView" use:enhance={reload} on:submit={closeMobileMenu}>
+    <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
+    <button class={"btn btn-default last-child " + ($uiView.pendingView == BASIC_LIST_VIEW ? "active" : "")}>
+      <span>Mobile View</span>
+      <i class="fal fa-fw fa-list" />
+    </button>
+  </form>
   <hr />
 {:else if !isPublic}
   <hr />

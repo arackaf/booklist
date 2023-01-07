@@ -156,11 +156,17 @@
   }
 
   form > .btn,
-  & > button:not(:last-of-type),
+  .btn,
   input.form-control {
     border-right-width: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+  }
+
+  > .btn:last-child,
+  > form:last-child > .btn,
+  > form > .btn.last-child {
+    border-right-width: var(--default-border-width);
   }
 
   :first-child,
@@ -168,7 +174,9 @@
     border-top-left-radius: var(--default-border-radius);
     border-bottom-left-radius: var(--default-border-radius);
   }
-  & > button:last-of-type {
+  & > button.btn:last-child,
+  & > form:last-child > .btn,
+  & > form > .btn.last-child {
     border-top-right-radius: var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
   }

@@ -1,6 +1,7 @@
 import { updateBook, updateBooksSubjects, updateBooksTags } from "$data/books";
 import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
 import { toJson } from "$lib/util/formDataHelpers";
+import { BOOKS_VIEW_COOKIE } from "./bookViews/constants";
 
 type Book = {
   _id: string;
@@ -9,6 +10,11 @@ type Book = {
 };
 
 export const actions = {
+  async setBooksView({ request, cookies }: any) {
+    const formData: URLSearchParams = await request.formData();
+
+    cookies.set(BOOKS_VIEW_COOKIE, formData.get("view"));
+  },
   async reloadBooks({ cookies }: any) {
     bustCache(cookies, BOOKS_CACHE);
   },
