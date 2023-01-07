@@ -70,7 +70,7 @@
 
   export let data: PageData;
 
-  $: ({ isMobile } = data);
+  $: ({ showMobile } = data);
 
   onMount(() => {
     const div = document.createElement("div");
@@ -178,7 +178,7 @@
           </div>
         {:else}
           <div>
-            {#if isMobile}
+            {#if showMobile}
               <h1>MOBILE</h1>
             {:else}
               <GridView books={$books} subjects={allSubjects} tags={allTags} />

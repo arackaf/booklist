@@ -20,6 +20,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   return {
     isMobile,
     desktopRequested,
+    showMobile: isMobile && !desktopRequested,
     loggedIn
   };
 }
