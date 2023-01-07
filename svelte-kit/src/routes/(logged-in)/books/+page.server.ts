@@ -1,5 +1,6 @@
 import { updateBook, updateBooksSubjects, updateBooksTags } from "$data/books";
 import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
+import { ONE_YEAR_SECONDS } from "$lib/util/constants";
 import { toJson } from "$lib/util/formDataHelpers";
 import { BOOKS_VIEW_COOKIE } from "./bookViews/constants";
 
@@ -13,7 +14,7 @@ export const actions = {
   async setBooksView({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
 
-    cookies.set(BOOKS_VIEW_COOKIE, formData.get("view"));
+    cookies.set(BOOKS_VIEW_COOKIE, formData.get("view"), { maxAge: ONE_YEAR_SECONDS });
   },
   async reloadBooks({ cookies }: any) {
     bustCache(cookies, BOOKS_CACHE);
