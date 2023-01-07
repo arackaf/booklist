@@ -1,6 +1,5 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   import { beforeNavigate, afterNavigate } from "$app/navigation";
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
   import Footer from "$lib/components/Footer.svelte";
@@ -10,7 +9,11 @@
   import "$styles/site-styles.scss";
   import "./styles.scss";
 
-  const appState = writable({ isMobile: false });
+  import type { PageData } from "./$types";
+
+  export let data: PageData;
+
+  $: ({ showMobile } = data);
 
   const theme = "scheme5";
   onMount(() => {
@@ -37,11 +40,11 @@
       {/if}
       <slot />
 
-      {#if $appState.isMobile}
+      {#if showMobile}
         <Footer />
       {/if}
     </main>
-    {#if !$appState.isMobile}
+    {#if !showMobile}
       <Footer />
     {/if}
   </div>
