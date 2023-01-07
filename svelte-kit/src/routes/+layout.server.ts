@@ -9,6 +9,8 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
 
   const desktopRequested = !!cookies.get(DESKTOP_REQUESTED_COOKIE);
 
+  const theme = cookies.get("theme") || "scheme5";
+
   const initialRequest = !isDataRequest;
   if (initialRequest) {
     bustCache(cookies, BOOKS_CACHE);
@@ -18,7 +20,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   const loggedIn = !!session?.user;
 
   return {
-    theme: "scheme5",
+    theme,
     whiteBb: false,
     isMobile,
     desktopRequested,
