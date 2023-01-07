@@ -7,14 +7,13 @@
     <h4>Book Search</h4>
     <hr />
     <FlexRow>
-      <div class="col-sm-6 col-xs-12">
+      <div class="col-xs-12">
         <div class="form-group">
           <label>Title</label>
           <input placeholder="Search title" class="form-control" value="The Slefish Gene" />
           <div class="alert alert-warning margin-bottom">Did you spell this right?</div>
         </div>
       </div>
-      <div class="col-sm-6 col-xs-12" />
       <div class="col-xs-6">
         <div class="form-group">
           <label>Publisher</label>
@@ -22,7 +21,7 @@
           <div class="alert alert-success margin-bottom">Looks good to me!</div>
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-sm-6 col-xs-12">
         <div class="form-group">
           <label>Author</label>
           <input placeholder="Author" class="form-control" />
