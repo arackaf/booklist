@@ -6,13 +6,13 @@ export const actions = {
 
     const theme = formData.get("theme");
 
-    cookies.set(THEME_COOKIE, theme, { maxAge: ONE_YEAR_SECONDS });
+    cookies.set(THEME_COOKIE, theme, { path: "/", maxAge: ONE_YEAR_SECONDS });
   },
   async setWhiteBb({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
 
     const whiteBg = formData.get("whitebg") == "on" ? 1 : 0;
 
-    cookies.set(WHITE_BG_COOKIE, whiteBg, { maxAge: ONE_YEAR_SECONDS });
+    cookies.set(WHITE_BG_COOKIE, whiteBg, { path: "/", maxAge: ONE_YEAR_SECONDS });
   }
 };
