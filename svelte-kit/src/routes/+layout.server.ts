@@ -18,6 +18,8 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   const loggedIn = !!session?.user;
 
   return {
+    theme: "scheme5",
+    whiteBb: false,
     isMobile,
     desktopRequested,
     showMobile: isMobile && !desktopRequested,

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { beforeNavigate, afterNavigate } from "$app/navigation";
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
   import Footer from "$lib/components/Footer.svelte";
@@ -10,15 +9,25 @@
   import "./styles.scss";
 
   import type { PageData } from "./$types";
+  import { NUM_THEMES } from "$lib/util/constants";
 
   export let data: PageData;
 
-  $: ({ showMobile } = data);
+  $: ({ showMobile, theme, whiteBb } = data);
 
-  const theme = "scheme5";
-  onMount(() => {
-    document.body.classList.add(theme);
-  });
+  $: {
+    if (typeof document === "object") {
+      document.body.classList.remove("white-bg");
+      for (let i = 0; i < NUM_THEMES; i++) {
+        document.body.classList.remove(`scheme${i}`);
+      }
+
+      if (whiteBb) {
+        document.body.classList.add("white-bg");
+      }
+      document.body.classList.add(theme);
+    }
+  }
 
   let navigating = false;
 
@@ -31,7 +40,7 @@
   });
 </script>
 
-<div class={`app-container ${theme}`}>
+<div class={`app-container ${theme}`} class:white-bg={whiteBb}>
   <div id="app">
     <MainNavigation />
     <main>
