@@ -1,7 +1,8 @@
 import { env } from "$env/dynamic/private";
 import type { Book, Subject, Tag } from "./types";
 
-export const runSingleUpdate = runRequest.bind(null, "updateOne");
+export const updateSingleBook = runSingleUpdate.bind(null, "books");
+
 export const runMultiUpdate = runRequest.bind(null, "updateMany");
 const runAggregate = runRequest.bind(null, "aggregate");
 
@@ -19,10 +20,10 @@ function deleteById(collection: string, userId: string, _id: string) {
     });
 }
 
-export const updateSingleBook = (userId: string, filter: object, update: object) => {
+export function runSingleUpdate(collection: string, userId: string, filter: object, update: object) {
   userId = userId || "";
 
-  return runSingleUpdate("books", {
+  return runRequest("updateOne", collection, {
     filter: { ...filter, userId },
     update
   })
@@ -30,7 +31,7 @@ export const updateSingleBook = (userId: string, filter: object, update: object)
     .catch(err => {
       console.log({ err });
     });
-};
+}
 
 export const updateMultipleBooks = (userId: string, filter: object, update: object) => {
   userId = userId || "";
