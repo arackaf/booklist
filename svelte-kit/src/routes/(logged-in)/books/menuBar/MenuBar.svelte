@@ -1,39 +1,19 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
   import "./menu-bar-styles.scss";
 
-  import measureHeight from "$lib/util/measureHeight";
-
-  import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
-  //import { currentSearch as bookSearchState } from '../booksSearchState';
-  //import { getBookSearchUiView } from '../booksUiState';
-  import PagingButtons from "./PagingButtons.svelte";
-  import MenuOptions from "./MenuOptions.svelte";
-  //import { quickSearch } from '../setBookFilters';
-  //import { BookResultsPacket } from '../booksState';
-
+  import { sanitize } from "$lib/util/formDataHelpers";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
 
+  import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
+  import PagingButtons from "./PagingButtons.svelte";
+  import MenuOptions from "./MenuOptions.svelte";
   import { searchState } from "../searchState";
-
-  import { beforeNavigate, afterNavigate } from "$app/navigation";
   import QuickFormFiller from "./QuickFormFiller.svelte";
-  import { sanitize } from "$lib/util/formDataHelpers";
 
-  //export let bookResultsPacket: BookResultsPacket;
-  let bookResultsPacket = {} as any;
-  //$: ({ totalPages = null, resultsCount = null, booksLoaded } = bookResultsPacket);
   const totalPages = 1;
   const resultsCount = 50;
-  const booksLoaded = true;
-
-  const booksModuleContext: any = getContext("books-module-context");
-  const { booksUiState } = booksModuleContext;
 
   let quickSearchEl: any = {};
-
-  $: ({ selectedBooks } = $booksUiState);
-  $: selectedBooksIds = Object.keys(selectedBooks).filter(k => selectedBooks[k]);
 
   const resetSearch = () => {
     quickSearchEl.value = $searchState.search;
