@@ -101,7 +101,6 @@ export const getBookDetails = async (id: string) => {
 };
 
 export const booksSubjectsDump = async (userId: string) => {
-  userId = userId || "";
   const httpStart = +new Date();
 
   return queryBooks({
@@ -123,10 +122,9 @@ export const booksSubjectsDump = async (userId: string) => {
 };
 
 export const updateBook = async (userId: string, book: any) => {
-  userId = userId || "";
   const { _id, title, tags, subjects, authors } = book;
 
-  return updateSingleBook({ _id: { $oid: _id }, userId }, { $set: { title, tags, subjects, authors } });
+  return updateSingleBook(userId, { _id: { $oid: _id } }, { $set: { title, tags, subjects, authors } });
 };
 
 type BulkUpdate = {
@@ -136,11 +134,11 @@ type BulkUpdate = {
 };
 
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
-  userId = userId || "";
   const { _ids, add, remove } = updates;
 
   if (add.length) {
     await updateMultipleBooks(
+      userId,
       { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       {
         $addToSet: { subjects: { $each: add } }
@@ -150,7 +148,8 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
 
   if (remove.length) {
     await updateMultipleBooks(
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
+      userId,
+      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       {
         $pull: { subjects: { $in: remove } }
       }
@@ -159,12 +158,12 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
-  userId = userId || "";
   const { _ids, add, remove } = updates;
 
   if (add.length) {
     await updateMultipleBooks(
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) }, userId },
+      userId,
+      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       {
         $addToSet: { tags: { $each: add } }
       }
@@ -172,6 +171,7 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
   }
   if (remove.length) {
     await updateMultipleBooks(
+      userId,
       { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
       {
         $pull: { tags: { $in: remove } }

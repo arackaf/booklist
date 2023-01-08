@@ -5,9 +5,11 @@ export const runSingleUpdate = runRequest.bind(null, "updateOne");
 export const runMultiUpdate = runRequest.bind(null, "updateMany");
 const runAggregate = runRequest.bind(null, "aggregate");
 
-export const updateSingleBook = (filter: object, update: object) => {
+export const updateSingleBook = (userId: string, filter: object, update: object) => {
+  userId = userId || "";
+
   return runSingleUpdate("books", {
-    filter,
+    filter: { ...filter, userId },
     update
   })
     .then(res => res.json())
@@ -16,9 +18,11 @@ export const updateSingleBook = (filter: object, update: object) => {
     });
 };
 
-export const updateMultipleBooks = (filter: object, update: object) => {
+export const updateMultipleBooks = (userId: string, filter: object, update: object) => {
+  userId = userId || "";
+
   return runMultiUpdate("books", {
-    filter,
+    filter: { ...filter, userId },
     update
   })
     .then(res => res.json())
