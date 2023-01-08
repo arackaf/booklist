@@ -2,8 +2,8 @@ import { env } from "$env/dynamic/private";
 import type { Book, Subject, Tag } from "./types";
 
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
+export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
 
-export const runMultiUpdate = runRequest.bind(null, "updateMany");
 const runAggregate = runRequest.bind(null, "aggregate");
 
 export const deleteBookById = deleteById.bind(null, "books");
@@ -33,10 +33,10 @@ export function runSingleUpdate(collection: string, userId: string, filter: obje
     });
 }
 
-export const updateMultipleBooks = (userId: string, filter: object, update: object) => {
+export function runMultiUpdate(collection: string, userId: string, filter: object, update: object) {
   userId = userId || "";
 
-  return runMultiUpdate("books", {
+  return runRequest("updateMany", collection, {
     filter: { ...filter, userId },
     update
   })
@@ -44,7 +44,7 @@ export const updateMultipleBooks = (userId: string, filter: object, update: obje
     .catch(err => {
       console.log({ err });
     });
-};
+}
 
 type MongoQueryResponse<T> = {
   documents: T[];
