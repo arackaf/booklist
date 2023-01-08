@@ -3,10 +3,14 @@
   import { invalidate } from "$app/navigation";
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
+  import BookReadSetter from "../BookReadSetter.svelte";
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 
   import { selectedBooksLookup } from "../selectionState";
   export let closeMobileMenu: () => void = () => {};
+
+  let bulkReadSaving: boolean;
+  let bulkUnReadSaving: boolean;
 
   let uiView: any = writable({}); // ReturnType<typeof getBookSearchUiView>;
 
@@ -120,25 +124,18 @@
     <span>Add / Remove Tags</span>
     <i class="fal fa-fw fa-tags" />
   </button>
-  <form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
-    {#each selectedBooksIds as _id}
-      <input type="hidden" name="_ids" value={_id} />
-    {/each}
-    <input type="hidden" name="read" value="true" />
-    <button title="Set read" class={"btn btn-default"}>
+  <BookReadSetter _ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
+    <button title="Set read" class="btn btn-default" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Read</span>
       <i class="fal fa-fw fa-eye" />
     </button>
-  </form>
-  <form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
-    {#each selectedBooksIds as _id}
-      <input type="hidden" name="_ids" value={_id} />
-    {/each}
-    <input type="hidden" name="read" value="false" />
-    <button title="Set un-read" class="btn btn-default put-line-through last-child">
+  </BookReadSetter>
+  <BookReadSetter _ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
+    <button title="Set un-read" class="btn btn-default put-line-through last-child" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Un-Read</span>
       <i class="fal fa-fw fa-eye-slash" />
     </button>
-  </form>
+  </BookReadSetter>
+
   <hr />
 {/if}
