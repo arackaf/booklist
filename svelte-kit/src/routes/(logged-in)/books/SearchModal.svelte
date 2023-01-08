@@ -7,7 +7,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
 
-  import { searchState } from "./searchState";
+  import { searchState } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";

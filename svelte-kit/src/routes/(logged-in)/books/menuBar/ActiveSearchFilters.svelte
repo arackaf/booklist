@@ -4,7 +4,7 @@
   // import { appState } from 'app/state/appState';
   // import { currentSearch } from '../booksSearchState';
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
-  import { searchState, changeFilter } from "../searchState";
+  import { searchState, changeFilter } from "../state/searchState";
 
   const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
   //import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';

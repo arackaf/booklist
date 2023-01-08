@@ -6,7 +6,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 
-  import { selectedBooksLookup } from "../selectionState";
+  import { selectedBooksLookup } from "../state/selectionState";
   export let closeMobileMenu: () => void = () => {};
 
   let bulkReadSaving: boolean;

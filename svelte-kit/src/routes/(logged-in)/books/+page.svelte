@@ -59,12 +59,12 @@
   // const { mutationState: runBookEditState } = mutation<MutationOf<Mutations['updateBook']>>(UpdateBookMutation);
 
   //TODO: TEMP
-  import { searchState } from "./searchState";
+  import { searchState } from "./state/searchState";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
   import type { Book } from "$data/types";
-  import { selectedBooksLookup, selectionState } from "./selectionState";
+  import { selectedBooksLookup, selectionState } from "./state/selectionState";
 
   import type { PageData } from "./$types";
 

@@ -14,8 +14,8 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import { runDelete } from "$lib/state/dataUpdates";
 
-  import { searchMutationState } from "../searchState";
-  import { selectionState, selectedBooksLookup } from "../selectionState";
+  import { searchMutationState } from "../state/searchState";
+  import { selectionState, selectedBooksLookup } from "../state/selectionState";
   import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic: boolean;

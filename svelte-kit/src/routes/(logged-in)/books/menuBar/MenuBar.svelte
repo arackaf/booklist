@@ -7,7 +7,7 @@
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
   import MenuOptions from "./MenuOptions.svelte";
-  import { searchState } from "../searchState";
+  import { searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
 
   const totalPages = 1;

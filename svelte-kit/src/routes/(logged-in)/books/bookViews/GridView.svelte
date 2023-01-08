@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
-  import { changeFilter, searchState } from "../searchState";
-  import { selectedBooks, selectionState } from "../selectionState";
+  import { changeFilter, searchState } from "../state/searchState";
+  import { selectedBooks, selectionState } from "../state/selectionState";
 
   const isPublic = false;
 
