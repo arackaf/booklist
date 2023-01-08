@@ -18,6 +18,7 @@
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
   import BookRowDetails from "./BookRowDetails.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState";
+  import BookReadSetter from "../BookReadSetter.svelte";
 
   export let isPublic: boolean;
   export let book: Book;
@@ -141,26 +142,16 @@
   <td>
     <div style="margin-top: {!isPublic ? '3' : '0'}px">
       {#if !isPublic}
-        {#if !!book.isRead}
+        <BookReadSetter _ids={[_id]} value={!book.isRead} bind:saving={readSaving}>
           <ActionButton
             baseWidth="10ch"
-            text="Read"
+            text={book.isRead ? "Read" : "Set read"}
             isRunning={readSaving || multiReadSaving}
             runningText="Saving"
-            icon="far fa-fw fa-check"
-            onClick={() => setRead([_id], !book.isRead)}
-            preset="success-xs"
+            icon={book.isRead ? "far fa-fw fa-check" : null}
+            preset={book.isRead ? "success-xs" : "default-xs"}
           />
-        {:else}
-          <ActionButton
-            baseWidth="10ch"
-            text="Set read"
-            isRunning={readSaving || multiReadSaving}
-            runningText="Saving"
-            onClick={() => setRead([_id], !book.isRead)}
-            preset="default-xs"
-          />
-        {/if}
+        </BookReadSetter>
       {:else if !!book.isRead}<span class="label label-success"> Read <i class="far fa-fw fa-check" /> </span>{/if}
     </div>
   </td>
