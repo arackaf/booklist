@@ -7,7 +7,7 @@
   import { onMount } from "svelte";
 
   export let id: string;
-  export let detailsLoading = false;
+  export let detailsLoading: boolean | undefined = true;
 
   export let isPublic: boolean;
   let bookDetails: BookDetails;
@@ -15,12 +15,11 @@
   $: ({ editorialReviews, similarBooks } = bookDetails || {});
 
   onMount(() => {
-    detailsLoading = true;
     fetch("/api/book-details?id=" + id)
       .then(resp => resp.json())
       .then(details => {
         bookDetails = details;
-        detailsLoading = false;
+        detailsLoading = void 0;
       });
   });
 </script>

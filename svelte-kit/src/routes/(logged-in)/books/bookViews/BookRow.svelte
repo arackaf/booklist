@@ -30,7 +30,7 @@
   $: ({ _id } = book);
 
   let expanded = false;
-  let detailsLoading = false;
+  let detailsLoading: boolean;
 
   let pendingDelete = false;
   const noop = () => {};
