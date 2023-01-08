@@ -116,7 +116,7 @@
     <span>Set Read</span>
     <i class="fal fa-fw fa-eye" />
   </button>
-  <button title="Set un-read" on:click={mobileHandler(() => setRead(selectedBooksIds, false))} class="btn btn-default put-line-through">
+  <button title="Set un-read" on:click={mobileHandler(() => setRead(selectedBooksIds, false))} class="btn btn-default put-line-through last-child">
     <span>Set Un-Read</span>
     <i class="fal fa-fw fa-eye-slash" />
   </button>

@@ -164,6 +164,7 @@
   }
 
   > .btn:last-child,
+  > .btn.last-child,
   > form:last-child > .btn,
   > form > .btn.last-child {
     border-right-width: var(--default-border-width);
@@ -176,7 +177,8 @@
   }
   & > button.btn:last-child,
   & > form:last-child > .btn,
-  & > form > .btn.last-child {
+  & > form > .btn.last-child,
+  & > .btn.last-child {
     border-top-right-radius: var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
   }
