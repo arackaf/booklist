@@ -91,11 +91,6 @@
     return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {} as any);
   };
 
-  // const saveEditingBook = (book: any) => {
-  // 	const bookInput = prepBookForSaving(book);
-  // 	return Promise.resolve($runBookEditState.runMutation({ _id: book._id, book: bookInput }));
-  // };
-
   const booksState = writable({
     books: [],
     booksLoaded: false,
@@ -151,7 +146,6 @@
     editBook,
     editBooksSubjects,
     editBooksTags,
-    saveEditingBook: () => {},
     onBooksUpdated
   };
   setContext("books-module-context", booksModuleContext);
