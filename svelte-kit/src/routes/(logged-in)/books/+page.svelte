@@ -110,7 +110,7 @@
   $: books = $page.data.books as Writable<Book[]>;
   $: tagsPacket = $page.data.tags;
 
-  $: ({ allTags, tagHash } = tagsPacket);
+  $: ({ allTags } = tagsPacket);
   $: allSubjects = $page.data.subjects;
 
   let filterModalOpen = false;
@@ -149,11 +149,11 @@
     booksUiState,
     dispatchBooksUiState,
     deleteBook: () => {},
-    setRead: () => {},
     editBook,
     editBooksSubjects,
     editBooksTags,
-    saveEditingBook: () => {}
+    saveEditingBook: () => {},
+    onBooksUpdated
   };
   setContext("books-module-context", booksModuleContext);
 

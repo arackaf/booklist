@@ -21,10 +21,18 @@
     };
   };
 
+  const uiViewChange = () => {
+    return async () => {
+      invalidate("");
+    };
+  };
+
   const isPublic = false;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, onBooksUpdated } = booksModuleContext;
+
+  const setRead = (a: any, b: any) => {};
 
   $: selectedBooksIds = Object.keys($selectedBooksLookup);
   $: selectedBooksCount = selectedBooksIds.length;
@@ -43,6 +51,14 @@
       );
       fn();
     };
+
+  const booksUpdated = () => {
+    const _ids = selectedBooksIds;
+    return async ({ result }: any) => {
+      onBooksUpdated(_ids, result.data.updates);
+      closeMobileMenu?.();
+    };
+  };
 </script>
 
 {#if !selectedBooksCount}
@@ -72,21 +88,21 @@
     </button>
   </form>
   <hr />
-  <form method="POST" action="?/setBooksView" use:enhance={reload} on:submit={closeMobileMenu}>
+  <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
     <input type="hidden" name="view" value={GRID_VIEW} />
     <button class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
       <span>Main View</span>
       <i class="fal fa-fw fa-table" />
     </button>
   </form>
-  <form method="POST" action="?/setBooksView" use:enhance={reload} on:submit={closeMobileMenu}>
+  <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
     <input type="hidden" name="view" value={COVERS_LIST} />
     <button class={"btn btn-default " + ($uiView.pendingView == COVERS_LIST ? "active" : "")}>
       <span>Covers View</span>
       <i class="fas fa-fw fa-th" />
     </button>
   </form>
-  <form method="POST" action="?/setBooksView" use:enhance={reload} on:submit={closeMobileMenu}>
+  <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
     <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
     <button class={"btn btn-default last-child " + ($uiView.pendingView == BASIC_LIST_VIEW ? "active" : "")}>
       <span>Mobile View</span>
@@ -104,13 +120,25 @@
     <span>Add / Remove Tags</span>
     <i class="fal fa-fw fa-tags" />
   </button>
-  <button title="Set read" on:click={mobileHandler(() => setRead(selectedBooksIds, true))} class={"btn btn-default"}>
-    <span>Set Read</span>
-    <i class="fal fa-fw fa-eye" />
-  </button>
-  <button title="Set un-read" on:click={mobileHandler(() => setRead(selectedBooksIds, false))} class="btn btn-default put-line-through last-child">
-    <span>Set Un-Read</span>
-    <i class="fal fa-fw fa-eye-slash" />
-  </button>
+  <form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
+    {#each selectedBooksIds as _id}
+      <input type="hidden" name="_ids" value={_id} />
+    {/each}
+    <input type="hidden" name="read" value="true" />
+    <button title="Set read" class={"btn btn-default"}>
+      <span>Set Read</span>
+      <i class="fal fa-fw fa-eye" />
+    </button>
+  </form>
+  <form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
+    {#each selectedBooksIds as _id}
+      <input type="hidden" name="_ids" value={_id} />
+    {/each}
+    <input type="hidden" name="read" value="false" />
+    <button title="Set un-read" class="btn btn-default put-line-through last-child">
+      <span>Set Un-Read</span>
+      <i class="fal fa-fw fa-eye-slash" />
+    </button>
+  </form>
   <hr />
 {/if}

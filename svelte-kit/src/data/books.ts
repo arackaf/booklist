@@ -179,3 +179,7 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
     );
   }
 };
+
+export const updateBooksRead = async (userId: string, _ids: string[], read: boolean) => {
+  await updateMultipleBooks(userId, { _id: { $in: _ids.map(_id => ({ $oid: _id })) } }, { $set: { isRead: read } });
+};
