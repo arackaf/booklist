@@ -1,16 +1,21 @@
 <script lang="ts">
-  import type { Book, Subject, Tag } from "$data/types";
   import { getContext } from "svelte";
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
 
+  import { page } from "$app/stores";
+  import { enhance } from "$app/forms";
+
+  import type { Book, Subject, Tag } from "$data/types";
+
+  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
+  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import { runDelete } from "$lib/state/dataUpdates";
+
   import { searchMutationState } from "../searchState";
   import { selectionState, selectedBooksLookup } from "../selectionState";
-  import BookCover from "$lib/components/ui/BookCover.svelte";
-
   import BookRowDetails from "./BookRowDetails.svelte";
 
   export let isPublic: boolean;
@@ -20,7 +25,7 @@
   export let tags: Tag[];
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { setRead, deleteBook, editBook } = booksModuleContext;
+  const { setRead, editBook } = booksModuleContext;
 
   $: ({ _id } = book);
 
@@ -28,12 +33,21 @@
   let detailsLoading = false;
 
   let pendingDelete = false;
-  let deleting = false;
   const noop = () => {};
 
-  let doDelete = () => {
+  let deleting = false;
+
+  const deleteBook = () => {
     deleting = true;
-    return deleteBook({ _id });
+
+    return async ({ result }: any) => {
+      deleting = false;
+      pendingDelete = false;
+
+      if (result.data.success) {
+        runDelete($page.data.books, _id);
+      }
+    };
   };
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
@@ -93,7 +107,10 @@
           </button>
         {/if}
         {#if pendingDelete}
-          <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} preset="danger-xs">Confirm Delete</ActionButton>
+          <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
+            <input type="hidden" name="_id" value={_id} />
+            <ActionButton text="Confirm Delete" runningText="Deleting" isRunning={deleting} preset="danger-xs">Confirm Delete</ActionButton>
+          </form>
         {/if}
         {#if pendingDelete}<button disabled={deleting} on:click={() => (pendingDelete = false)} class="btn btn-xs"> Cancel </button>{/if}
       </FlowItems>

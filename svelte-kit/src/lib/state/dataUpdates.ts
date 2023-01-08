@@ -55,3 +55,22 @@ export const updateItems = <T>(store: Writable<T[]>, _ids: string[], updates: Up
 
   store.set(updatedItems);
 };
+
+type MongoObject = {
+  _id: string;
+};
+
+export const runDelete = <T extends MongoObject>(currentItems: Writable<T[]>, _id: string | string[]) => {
+  const _ids: string[] = Array.isArray(_id) ? _id : [_id];
+  deleteItems(currentItems, _ids);
+};
+
+export const deleteItems = <T extends MongoObject>(store: Writable<T[]>, _ids: string[]) => {
+  const idLookup = new Set(_ids);
+
+  store.update(items =>
+    items.filter(item => {
+      return !idLookup.has(item._id);
+    })
+  );
+};

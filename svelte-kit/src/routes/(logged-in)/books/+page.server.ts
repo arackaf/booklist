@@ -1,4 +1,4 @@
-import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead } from "$data/books";
+import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook } from "$data/books";
 import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
 import { ONE_YEAR_SECONDS } from "$lib/util/constants";
 import { toJson } from "$lib/util/formDataHelpers";
@@ -88,5 +88,18 @@ export const actions = {
     await updateBooksRead(session.userId, fields._ids, fields.read === "true");
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
+  },
+  async deleteBook({ request, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
+    const formData: URLSearchParams = await request.formData();
+    const _id = formData.get("_id")!;
+
+    await deleteBook(session.userId, _id);
+
+    return { success: true };
   }
 };

@@ -1,4 +1,4 @@
-import { queryBooks, updateSingleBook, updateMultipleBooks } from "./dbUtils";
+import { queryBooks, updateSingleBook, updateMultipleBooks, deleteBookById } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 
 const bookFields = [
@@ -182,4 +182,8 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
 
 export const updateBooksRead = async (userId: string, _ids: string[], read: boolean) => {
   await updateMultipleBooks(userId, { _id: { $in: _ids.map(_id => ({ $oid: _id })) } }, { $set: { isRead: read } });
+};
+
+export const deleteBook = async (userId: string, _id: string) => {
+  await deleteBookById(userId, _id);
 };

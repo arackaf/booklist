@@ -148,7 +148,6 @@
     editTags,
     booksUiState,
     dispatchBooksUiState,
-    deleteBook: () => {},
     editBook,
     editBooksSubjects,
     editBooksTags,

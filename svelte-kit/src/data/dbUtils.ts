@@ -5,6 +5,20 @@ export const runSingleUpdate = runRequest.bind(null, "updateOne");
 export const runMultiUpdate = runRequest.bind(null, "updateMany");
 const runAggregate = runRequest.bind(null, "aggregate");
 
+export const deleteBookById = deleteById.bind(null, "books");
+
+function deleteById(collection: string, userId: string, _id: string) {
+  userId = userId || "";
+
+  return runRequest("deleteOne", collection, {
+    filter: { userId, _id: { $oid: _id } }
+  })
+    .then(res => res.json())
+    .catch(err => {
+      console.log({ err });
+    });
+}
+
 export const updateSingleBook = (userId: string, filter: object, update: object) => {
   userId = userId || "";
 
