@@ -49,15 +49,6 @@
   import BookTagSetter from "./BookTagSetter.svelte";
   // import ModuleLoading from 'app/components/navigation/ModuleLoading.svelte';
 
-  // const { mutationState: deleteBookState } = mutation<MutationOf<Mutations['deleteBook']>>(DeleteBookMutation);
-  // const deleteBook = $deleteBookState.runMutation;
-
-  // const { mutationState: updateMutationState } =
-  // 	mutation<MutationOf<Mutations['updateBooks']>>(UpdateBooksReadMutation);
-  // const setRead = (_ids, isRead) => Promise.resolve($updateMutationState.runMutation({ _ids, isRead }));
-
-  // const { mutationState: runBookEditState } = mutation<MutationOf<Mutations['updateBook']>>(UpdateBookMutation);
-
   //TODO: TEMP
   import { searchState } from "./state/searchState";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";

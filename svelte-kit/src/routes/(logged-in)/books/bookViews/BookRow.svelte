@@ -27,7 +27,7 @@
   export let tags: Tag[];
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { setRead, editBook } = booksModuleContext;
+  const { editBook } = booksModuleContext;
 
   $: ({ _id } = book);
 
