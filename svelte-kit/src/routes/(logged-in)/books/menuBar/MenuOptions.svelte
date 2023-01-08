@@ -5,6 +5,7 @@
   import { writable } from "svelte/store";
   import BookReadSetter from "../BookReadSetter.svelte";
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
+  import { endSaving, startSaving } from "../state/booksReadSavingState";
 
   import { selectedBooksLookup } from "../state/selectionState";
   export let closeMobileMenu: () => void = () => {};
@@ -36,10 +37,9 @@
   const booksModuleContext: any = getContext("books-module-context");
   const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, onBooksUpdated } = booksModuleContext;
 
-  const setRead = (a: any, b: any) => {};
-
   $: selectedBooksIds = Object.keys($selectedBooksLookup);
   $: selectedBooksCount = selectedBooksIds.length;
+  const getSelectedBooksIds = () => selectedBooksIds;
 
   const editSubjectsForSelectedBooks = () => editBooksSubjects();
   const editTagsForSelectedBooks = () => editBooksTags();
@@ -56,13 +56,13 @@
       fn();
     };
 
-  const booksUpdated = () => {
-    const _ids = selectedBooksIds;
-    return async ({ result }: any) => {
-      onBooksUpdated(_ids, result.data.updates);
-      closeMobileMenu?.();
-    };
-  };
+  $: {
+    if (bulkReadSaving || bulkUnReadSaving) {
+      startSaving(getSelectedBooksIds());
+    } else {
+      endSaving(getSelectedBooksIds());
+    }
+  }
 </script>
 
 {#if !selectedBooksCount}
@@ -136,6 +136,5 @@
       <i class="fal fa-fw fa-eye-slash" />
     </button>
   </BookReadSetter>
-
   <hr />
 {/if}

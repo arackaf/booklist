@@ -17,6 +17,7 @@
   import { searchMutationState } from "../state/searchState";
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
   import BookRowDetails from "./BookRowDetails.svelte";
+  import { booksReadSaving } from "../state/booksReadSavingState";
 
   export let isPublic: boolean;
   export let book: Book;
@@ -28,6 +29,9 @@
   const { setRead, editBook } = booksModuleContext;
 
   $: ({ _id } = book);
+
+  let readSaving: boolean;
+  $: multiReadSaving = $booksReadSaving[_id] == "1";
 
   let expanded = false;
   let detailsLoading: boolean;
@@ -141,13 +145,21 @@
           <ActionButton
             baseWidth="10ch"
             text="Read"
+            isRunning={readSaving || multiReadSaving}
             runningText="Saving"
             icon="far fa-fw fa-check"
             onClick={() => setRead([_id], !book.isRead)}
             preset="success-xs"
           />
         {:else}
-          <ActionButton baseWidth="10ch" text="Set read" runningText="Saving" onClick={() => setRead([_id], !book.isRead)} preset="default-xs" />
+          <ActionButton
+            baseWidth="10ch"
+            text="Set read"
+            isRunning={readSaving || multiReadSaving}
+            runningText="Saving"
+            onClick={() => setRead([_id], !book.isRead)}
+            preset="default-xs"
+          />
         {/if}
       {:else if !!book.isRead}<span class="label label-success"> Read <i class="far fa-fw fa-check" /> </span>{/if}
     </div>
