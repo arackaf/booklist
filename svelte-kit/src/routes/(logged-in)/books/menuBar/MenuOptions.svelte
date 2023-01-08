@@ -1,18 +1,16 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import { page } from "$app/stores";
   import { getContext } from "svelte";
   import { writable } from "svelte/store";
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 
-  import { selectedBooksLookup, selectionState } from "../selectionState";
+  import { selectedBooksLookup } from "../selectionState";
   export let closeMobileMenu: () => void = () => {};
 
   let uiView: any = writable({}); // ReturnType<typeof getBookSearchUiView>;
 
   let reloading = false;
-
   const reload = () => {
     reloading = true;
 
@@ -23,16 +21,10 @@
     };
   };
 
-  $: books = $page.data.books;
-
-  const uiDispatch = (view: any) => $uiView.requestState({ type: "SET_PENDING_VIEW", value: view }, books);
-
   const isPublic = false;
 
   const booksModuleContext: any = getContext("books-module-context");
   const { openFilterModal, editSubjects, editTags, setRead, editBooksSubjects, editBooksTags } = booksModuleContext;
-
-  selectionState;
 
   $: selectedBooksIds = Object.keys($selectedBooksLookup);
   $: selectedBooksCount = selectedBooksIds.length;
