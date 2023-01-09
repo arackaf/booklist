@@ -13,6 +13,7 @@ export const deleteBookById = deleteById.bind(null, "books");
 export const queryBooks = <TProjection = Book>(body: object) => runQuery<TProjection>("books", body);
 export const querySubjects = (body: object) => runQuery<Subject>("subjects", body);
 export const queryTags = (body: object) => runQuery<Tag>("tags", body);
+export const queryLabelColors = <TProjection = Book>(body: object) => runQuery<TProjection>("labelColors", body);
 
 const runQuery = <T>(table: string, body: object) => {
   return runAggregate(table, body).then((res: MongoQueryResponse<T>) => res.documents);
