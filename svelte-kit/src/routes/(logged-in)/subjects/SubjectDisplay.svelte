@@ -59,7 +59,7 @@
     blockingUpstream = true;
     expanded = val;
   };
-  export let editSubject = (subject: any) => {};
+  export let editSubject: (subject: Subject) => void;
   export let subject: FullSubject;
 
   $: childSubjects = subject.children;
