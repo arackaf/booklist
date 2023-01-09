@@ -80,3 +80,9 @@ export type BookDetails = {
   editorialReviews: EditorialReview[];
   similarBooks: SimilarBook[];
 };
+
+export type Color = {
+  _id: string;
+  backgroundColor: string;
+  order: number;
+};
