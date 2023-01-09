@@ -12,23 +12,23 @@
 
 "use strict";
 
-if (!window.jscolor) {
-  window.jscolor = (function() {
+if (typeof window === "object" && !window.jscolor) {
+  window.jscolor = (function () {
     var jsc = {
-      register: function() {
+      register: function () {
         jsc.attachDOMReadyEvent(jsc.init);
         jsc.attachEvent(document, "mousedown", jsc.onDocumentMouseDown);
         jsc.attachEvent(document, "touchstart", jsc.onDocumentTouchStart);
         jsc.attachEvent(window, "resize", jsc.onWindowResize);
       },
 
-      init: function() {
+      init: function () {
         if (jsc.jscolor.lookupClass) {
           jsc.jscolor.installByClassName(jsc.jscolor.lookupClass);
         }
       },
 
-      tryInstallOnElements: function(elms, className) {
+      tryInstallOnElements: function (elms, className) {
         var matchClass = new RegExp("(^|\\s)(" + className + ")(\\s*(\\{[^}]*\\})|\\s|$)", "i");
 
         for (var i = 0; i < elms.length; i += 1) {
@@ -63,7 +63,7 @@ if (!window.jscolor) {
         }
       },
 
-      isColorAttrSupported: (function() {
+      isColorAttrSupported: (function () {
         var elm = document.createElement("input");
         if (elm.setAttribute) {
           elm.setAttribute("type", "color");
@@ -74,20 +74,20 @@ if (!window.jscolor) {
         return false;
       })(),
 
-      isCanvasSupported: (function() {
+      isCanvasSupported: (function () {
         var elm = document.createElement("canvas");
         return !!(elm.getContext && elm.getContext("2d"));
       })(),
 
-      fetchElement: function(mixed) {
+      fetchElement: function (mixed) {
         return typeof mixed === "string" ? document.getElementById(mixed) : mixed;
       },
 
-      isElementType: function(elm, type) {
+      isElementType: function (elm, type) {
         return elm.nodeName.toLowerCase() === type.toLowerCase();
       },
 
-      getDataAttr: function(el, name) {
+      getDataAttr: function (el, name) {
         var attrName = "data-" + name;
         var attrValue = el.getAttribute(attrName);
         if (attrValue !== null) {
@@ -96,7 +96,7 @@ if (!window.jscolor) {
         return null;
       },
 
-      attachEvent: function(el, evnt, func) {
+      attachEvent: function (el, evnt, func) {
         if (el.addEventListener) {
           el.addEventListener(evnt, func, false);
         } else if (el.attachEvent) {
@@ -104,7 +104,7 @@ if (!window.jscolor) {
         }
       },
 
-      detachEvent: function(el, evnt, func) {
+      detachEvent: function (el, evnt, func) {
         if (el.removeEventListener) {
           el.removeEventListener(evnt, func, false);
         } else if (el.detachEvent) {
@@ -114,7 +114,7 @@ if (!window.jscolor) {
 
       _attachedGroupEvents: {},
 
-      attachGroupEvent: function(groupName, el, evnt, func) {
+      attachGroupEvent: function (groupName, el, evnt, func) {
         if (!jsc._attachedGroupEvents.hasOwnProperty(groupName)) {
           jsc._attachedGroupEvents[groupName] = [];
         }
@@ -122,7 +122,7 @@ if (!window.jscolor) {
         jsc.attachEvent(el, evnt, func);
       },
 
-      detachGroupEvents: function(groupName) {
+      detachGroupEvents: function (groupName) {
         if (jsc._attachedGroupEvents.hasOwnProperty(groupName)) {
           for (var i = 0; i < jsc._attachedGroupEvents[groupName].length; i += 1) {
             var evt = jsc._attachedGroupEvents[groupName][i];
@@ -132,9 +132,9 @@ if (!window.jscolor) {
         }
       },
 
-      attachDOMReadyEvent: function(func) {
+      attachDOMReadyEvent: function (func) {
         var fired = false;
-        var fireOnce = function() {
+        var fireOnce = function () {
           if (!fired) {
             fired = true;
             func();
@@ -153,7 +153,7 @@ if (!window.jscolor) {
           window.addEventListener("load", fireOnce, false);
         } else if (document.attachEvent) {
           // IE
-          document.attachEvent("onreadystatechange", function() {
+          document.attachEvent("onreadystatechange", function () {
             if (document.readyState === "complete") {
               document.detachEvent("onreadystatechange", arguments.callee);
               fireOnce();
@@ -165,7 +165,7 @@ if (!window.jscolor) {
 
           // IE7/8
           if (document.documentElement.doScroll && window == window.top) {
-            var tryScroll = function() {
+            var tryScroll = function () {
               if (!document.body) {
                 return;
               }
@@ -181,20 +181,20 @@ if (!window.jscolor) {
         }
       },
 
-      warn: function(msg) {
+      warn: function (msg) {
         if (window.console && window.console.warn) {
           window.console.warn(msg);
         }
       },
 
-      preventDefault: function(e) {
+      preventDefault: function (e) {
         if (e.preventDefault) {
           e.preventDefault();
         }
         e.returnValue = false;
       },
 
-      captureTarget: function(target) {
+      captureTarget: function (target) {
         // IE
         if (target.setCapture) {
           jsc._capturedTarget = target;
@@ -202,7 +202,7 @@ if (!window.jscolor) {
         }
       },
 
-      releaseTarget: function() {
+      releaseTarget: function () {
         // IE
         if (jsc._capturedTarget) {
           jsc._capturedTarget.releaseCapture();
@@ -210,7 +210,7 @@ if (!window.jscolor) {
         }
       },
 
-      fireEvent: function(el, evnt) {
+      fireEvent: function (el, evnt) {
         if (!el) {
           return;
         }
@@ -227,12 +227,12 @@ if (!window.jscolor) {
         }
       },
 
-      classNameToList: function(className) {
+      classNameToList: function (className) {
         return className.replace(/^\s+|\s+$/g, "").split(/\s+/);
       },
 
       // The className parameter (str) can only contain a single class name
-      hasClass: function(elm, className) {
+      hasClass: function (elm, className) {
         if (!className) {
           return false;
         }
@@ -240,7 +240,7 @@ if (!window.jscolor) {
       },
 
       // The className parameter (str) can contain multiple class names separated by whitespace
-      setClass: function(elm, className) {
+      setClass: function (elm, className) {
         var classList = jsc.classNameToList(className);
         for (var i = 0; i < classList.length; i += 1) {
           if (!jsc.hasClass(elm, classList[i])) {
@@ -250,7 +250,7 @@ if (!window.jscolor) {
       },
 
       // The className parameter (str) can contain multiple class names separated by whitespace
-      unsetClass: function(elm, className) {
+      unsetClass: function (elm, className) {
         var classList = jsc.classNameToList(className);
         for (var i = 0; i < classList.length; i += 1) {
           var repl = new RegExp("^\\s*" + classList[i] + "\\s*|" + "\\s*" + classList[i] + "\\s*$|" + "\\s+" + classList[i] + "(\\s+)", "g");
@@ -258,13 +258,13 @@ if (!window.jscolor) {
         }
       },
 
-      getStyle: function(elm) {
+      getStyle: function (elm) {
         return window.getComputedStyle ? window.getComputedStyle(elm) : elm.currentStyle;
       },
 
-      setStyle: (function() {
+      setStyle: (function () {
         var helper = document.createElement("div");
-        var getSupportedProp = function(names) {
+        var getSupportedProp = function (names) {
           for (var i = 0; i < names.length; i += 1) {
             if (names[i] in helper.style) {
               return names[i];
@@ -275,7 +275,7 @@ if (!window.jscolor) {
           borderRadius: getSupportedProp(["borderRadius", "MozBorderRadius", "webkitBorderRadius"]),
           boxShadow: getSupportedProp(["boxShadow", "MozBoxShadow", "webkitBoxShadow"])
         };
-        return function(elm, prop, value) {
+        return function (elm, prop, value) {
           switch (prop.toLowerCase()) {
             case "opacity":
               var alphaOpacity = Math.round(parseFloat(value) * 100);
@@ -289,15 +289,15 @@ if (!window.jscolor) {
         };
       })(),
 
-      setBorderRadius: function(elm, value) {
+      setBorderRadius: function (elm, value) {
         jsc.setStyle(elm, "borderRadius", value || "0");
       },
 
-      setBoxShadow: function(elm, value) {
+      setBoxShadow: function (elm, value) {
         jsc.setStyle(elm, "boxShadow", value || "none");
       },
 
-      getElementPos: function(e, relativeToViewport) {
+      getElementPos: function (e, relativeToViewport) {
         var x = 0,
           y = 0;
         var rect = e.getBoundingClientRect();
@@ -311,12 +311,12 @@ if (!window.jscolor) {
         return [x, y];
       },
 
-      getElementSize: function(e) {
+      getElementSize: function (e) {
         return [e.offsetWidth, e.offsetHeight];
       },
 
       // get pointer's X/Y coordinates relative to viewport
-      getAbsPointerPos: function(e) {
+      getAbsPointerPos: function (e) {
         if (!e) {
           e = window.event;
         }
@@ -334,7 +334,7 @@ if (!window.jscolor) {
       },
 
       // get pointer's X/Y coordinates relative to target element
-      getRelPointerPos: function(e) {
+      getRelPointerPos: function (e) {
         if (!e) {
           e = window.event;
         }
@@ -360,17 +360,17 @@ if (!window.jscolor) {
         return { x: x, y: y };
       },
 
-      getViewPos: function() {
+      getViewPos: function () {
         var doc = document.documentElement;
         return [(window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0), (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0)];
       },
 
-      getViewSize: function() {
+      getViewSize: function () {
         var doc = document.documentElement;
         return [window.innerWidth || doc.clientWidth, window.innerHeight || doc.clientHeight];
       },
 
-      redrawPosition: function() {
+      redrawPosition: function () {
         if (jsc.picker && jsc.picker.owner) {
           var thisObj = jsc.picker.owner;
 
@@ -420,11 +420,17 @@ if (!window.jscolor) {
           } else {
             var pp = [
               -vp[a] + tp[a] + ps[a] > vs[a]
-                ? -vp[a] + tp[a] + ts[a] / 2 > vs[a] / 2 && tp[a] + ts[a] - ps[a] >= 0 ? tp[a] + ts[a] - ps[a] : tp[a]
+                ? -vp[a] + tp[a] + ts[a] / 2 > vs[a] / 2 && tp[a] + ts[a] - ps[a] >= 0
+                  ? tp[a] + ts[a] - ps[a]
+                  : tp[a]
                 : tp[a],
               -vp[b] + tp[b] + ts[b] + ps[b] - l + l * c > vs[b]
-                ? -vp[b] + tp[b] + ts[b] / 2 > vs[b] / 2 && tp[b] + ts[b] - l - l * c >= 0 ? tp[b] + ts[b] - l - l * c : tp[b] + ts[b] - l + l * c
-                : tp[b] + ts[b] - l + l * c >= 0 ? tp[b] + ts[b] - l + l * c : tp[b] + ts[b] - l - l * c
+                ? -vp[b] + tp[b] + ts[b] / 2 > vs[b] / 2 && tp[b] + ts[b] - l - l * c >= 0
+                  ? tp[b] + ts[b] - l - l * c
+                  : tp[b] + ts[b] - l + l * c
+                : tp[b] + ts[b] - l + l * c >= 0
+                ? tp[b] + ts[b] - l + l * c
+                : tp[b] + ts[b] - l - l * c
             ];
           }
 
@@ -437,7 +443,7 @@ if (!window.jscolor) {
         }
       },
 
-      _drawPosition: function(thisObj, x, y, positionValue, contractShadow) {
+      _drawPosition: function (thisObj, x, y, positionValue, contractShadow) {
         var vShadow = contractShadow ? 0 : thisObj.shadowBlur; // px
 
         jsc.picker.wrap.style.position = positionValue;
@@ -447,7 +453,7 @@ if (!window.jscolor) {
         jsc.setBoxShadow(jsc.picker.boxS, thisObj.shadow ? new jsc.BoxShadow(0, vShadow, thisObj.shadowBlur, 0, thisObj.shadowColor) : null);
       },
 
-      getPickerDims: function(thisObj) {
+      getPickerDims: function (thisObj) {
         var displaySlider = !!jsc.getSliderComponent(thisObj);
         var dims = [
           2 * thisObj.insetWidth +
@@ -462,16 +468,16 @@ if (!window.jscolor) {
         return dims;
       },
 
-      getPickerOuterDims: function(thisObj) {
+      getPickerOuterDims: function (thisObj) {
         var dims = jsc.getPickerDims(thisObj);
         return [dims[0] + 2 * thisObj.borderWidth, dims[1] + 2 * thisObj.borderWidth];
       },
 
-      getPadToSliderPadding: function(thisObj) {
+      getPadToSliderPadding: function (thisObj) {
         return Math.max(thisObj.padding, 1.5 * (2 * thisObj.pointerBorderWidth + thisObj.pointerThickness));
       },
 
-      getPadYComponent: function(thisObj) {
+      getPadYComponent: function (thisObj) {
         switch (thisObj.mode.charAt(1).toLowerCase()) {
           case "v":
             return "v";
@@ -480,7 +486,7 @@ if (!window.jscolor) {
         return "s";
       },
 
-      getSliderComponent: function(thisObj) {
+      getSliderComponent: function (thisObj) {
         if (thisObj.mode.length > 2) {
           switch (thisObj.mode.charAt(2).toLowerCase()) {
             case "s":
@@ -494,7 +500,7 @@ if (!window.jscolor) {
         return null;
       },
 
-      onDocumentMouseDown: function(e) {
+      onDocumentMouseDown: function (e) {
         if (!e) {
           e = window.event;
         }
@@ -514,7 +520,7 @@ if (!window.jscolor) {
         }
       },
 
-      onDocumentTouchStart: function(e) {
+      onDocumentTouchStart: function (e) {
         if (!e) {
           e = window.event;
         }
@@ -533,11 +539,11 @@ if (!window.jscolor) {
         }
       },
 
-      onWindowResize: function(e) {
+      onWindowResize: function (e) {
         jsc.redrawPosition();
       },
 
-      onParentScroll: function(e) {
+      onParentScroll: function (e) {
         // hide the picker when one of the parent elements is scrolled
         if (jsc.picker && jsc.picker.owner) {
           jsc.picker.owner.hide();
@@ -556,13 +562,13 @@ if (!window.jscolor) {
       _pointerOrigin: null,
       _capturedTarget: null,
 
-      onControlPointerStart: function(e, target, controlName, pointerType) {
+      onControlPointerStart: function (e, target, controlName, pointerType) {
         var thisObj = target._jscInstance;
 
         jsc.preventDefault(e);
         jsc.captureTarget(target);
 
-        var registerDragEvents = function(doc, offset) {
+        var registerDragEvents = function (doc, offset) {
           jsc.attachGroupEvent(
             "drag",
             doc,
@@ -613,8 +619,8 @@ if (!window.jscolor) {
         jsc.dispatchFineChange(thisObj);
       },
 
-      onDocumentPointerMove: function(e, target, controlName, pointerType, offset) {
-        return function(e) {
+      onDocumentPointerMove: function (e, target, controlName, pointerType, offset) {
+        return function (e) {
           var thisObj = target._jscInstance;
           switch (controlName) {
             case "pad":
@@ -636,8 +642,8 @@ if (!window.jscolor) {
         };
       },
 
-      onDocumentPointerEnd: function(e, target, controlName, pointerType) {
-        return function(e) {
+      onDocumentPointerEnd: function (e, target, controlName, pointerType) {
+        return function (e) {
           var thisObj = target._jscInstance;
           jsc.detachGroupEvents("drag");
           jsc.releaseTarget();
@@ -648,7 +654,7 @@ if (!window.jscolor) {
         };
       },
 
-      dispatchChange: function(thisObj) {
+      dispatchChange: function (thisObj) {
         if (thisObj.valueElement) {
           if (jsc.isElementType(thisObj.valueElement, "input")) {
             jsc.fireEvent(thisObj.valueElement, "change");
@@ -656,7 +662,7 @@ if (!window.jscolor) {
         }
       },
 
-      dispatchFineChange: function(thisObj) {
+      dispatchFineChange: function (thisObj) {
         if (thisObj.onFineChange) {
           var callback;
           if (typeof thisObj.onFineChange === "string") {
@@ -668,7 +674,7 @@ if (!window.jscolor) {
         }
       },
 
-      setPad: function(thisObj, e, ofsX, ofsY) {
+      setPad: function (thisObj, e, ofsX, ofsY) {
         var pointerAbs = jsc.getAbsPointerPos(e);
         var x = ofsX + pointerAbs.x - jsc._pointerOrigin.x - thisObj.padding - thisObj.insetWidth;
         var y = ofsY + pointerAbs.y - jsc._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
@@ -686,7 +692,7 @@ if (!window.jscolor) {
         }
       },
 
-      setSld: function(thisObj, e, ofsY) {
+      setSld: function (thisObj, e, ofsY) {
         var pointerAbs = jsc.getAbsPointerPos(e);
         var y = ofsY + pointerAbs.y - jsc._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
 
@@ -706,7 +712,7 @@ if (!window.jscolor) {
       _vmlCSS: "jsc_vml_css_",
       _vmlReady: false,
 
-      initVML: function() {
+      initVML: function () {
         if (!jsc._vmlReady) {
           // init VML namespace
           var doc = document;
@@ -747,7 +753,7 @@ if (!window.jscolor) {
         }
       },
 
-      createPalette: function() {
+      createPalette: function () {
         var paletteObj = {
           elm: null,
           draw: null
@@ -759,7 +765,7 @@ if (!window.jscolor) {
           var canvas = document.createElement("canvas");
           var ctx = canvas.getContext("2d");
 
-          var drawFunc = function(width, height, type) {
+          var drawFunc = function (width, height, type) {
             canvas.width = width;
             canvas.height = height;
 
@@ -831,7 +837,7 @@ if (!window.jscolor) {
           vRect.appendChild(vGrad);
           vmlContainer.appendChild(vRect);
 
-          var drawFunc = function(width, height, type) {
+          var drawFunc = function (width, height, type) {
             vmlContainer.style.width = width + "px";
             vmlContainer.style.height = height + "px";
 
@@ -860,7 +866,7 @@ if (!window.jscolor) {
         return paletteObj;
       },
 
-      createSliderGradient: function() {
+      createSliderGradient: function () {
         var sliderObj = {
           elm: null,
           draw: null
@@ -872,7 +878,7 @@ if (!window.jscolor) {
           var canvas = document.createElement("canvas");
           var ctx = canvas.getContext("2d");
 
-          var drawFunc = function(width, height, color1, color2) {
+          var drawFunc = function (width, height, color1, color2) {
             canvas.width = width;
             canvas.height = height;
 
@@ -910,7 +916,7 @@ if (!window.jscolor) {
           rect.appendChild(grad);
           vmlContainer.appendChild(rect);
 
-          var drawFunc = function(width, height, color1, color2) {
+          var drawFunc = function (width, height, color1, color2) {
             vmlContainer.style.width = width + "px";
             vmlContainer.style.height = height + "px";
 
@@ -933,8 +939,8 @@ if (!window.jscolor) {
       leavePad: 1 << 2,
       leaveSld: 1 << 3,
 
-      BoxShadow: (function() {
-        var BoxShadow = function(hShadow, vShadow, blur, spread, color, inset) {
+      BoxShadow: (function () {
+        var BoxShadow = function (hShadow, vShadow, blur, spread, color, inset) {
           this.hShadow = hShadow;
           this.vShadow = vShadow;
           this.blur = blur;
@@ -943,7 +949,7 @@ if (!window.jscolor) {
           this.inset = !!inset;
         };
 
-        BoxShadow.prototype.toString = function() {
+        BoxShadow.prototype.toString = function () {
           var vals = [
             Math.round(this.hShadow) + "px",
             Math.round(this.vShadow) + "px",
@@ -965,7 +971,7 @@ if (!window.jscolor) {
       // var myColor = new jscolor(<targetElement> [, <options>])
       //
 
-      jscolor: function(targetElement, options) {
+      jscolor: function (targetElement, options) {
         // General options
         //
         this.value = null; // initial HEX color. To change it later, use methods fromString(), fromHSV() and fromRGB()
@@ -1024,23 +1030,23 @@ if (!window.jscolor) {
           }
         }
 
-        this.hide = function() {
+        this.hide = function () {
           if (isPickerOwner()) {
             detachPicker();
           }
         };
 
-        this.show = function() {
+        this.show = function () {
           drawPicker();
         };
 
-        this.redraw = function() {
+        this.redraw = function () {
           if (isPickerOwner()) {
             drawPicker();
           }
         };
 
-        this.importColor = function() {
+        this.importColor = function () {
           if (!this.valueElement) {
             this.exportColor();
           } else {
@@ -1074,7 +1080,7 @@ if (!window.jscolor) {
           }
         };
 
-        this.exportColor = function(flags) {
+        this.exportColor = function (flags) {
           if (!(flags & jsc.leaveValue) && this.valueElement) {
             var value = this.toString();
             if (this.uppercase) {
@@ -1109,7 +1115,7 @@ if (!window.jscolor) {
         // s: 0-100
         // v: 0-100
         //
-        this.fromHSV = function(h, s, v, flags) {
+        this.fromHSV = function (h, s, v, flags) {
           // null = don't change
           if (h !== null) {
             if (isNaN(h)) {
@@ -1143,7 +1149,7 @@ if (!window.jscolor) {
         // g: 0-255
         // b: 0-255
         //
-        this.fromRGB = function(r, g, b, flags) {
+        this.fromRGB = function (r, g, b, flags) {
           // null = don't change
           if (r !== null) {
             if (isNaN(r)) {
@@ -1182,7 +1188,7 @@ if (!window.jscolor) {
           this.exportColor(flags);
         };
 
-        this.fromString = function(str, flags) {
+        this.fromString = function (str, flags) {
           var m;
           if ((m = str.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i))) {
             // HEX notation
@@ -1216,7 +1222,7 @@ if (!window.jscolor) {
           return false;
         };
 
-        this.toString = function() {
+        this.toString = function () {
           return (
             (0x100 | Math.round(this.rgb[0])).toString(16).substr(1) +
             (0x100 | Math.round(this.rgb[1])).toString(16).substr(1) +
@@ -1224,19 +1230,19 @@ if (!window.jscolor) {
           );
         };
 
-        this.toHEXString = function() {
+        this.toHEXString = function () {
           return "#" + this.toString().toUpperCase();
         };
 
-        this.toRGBString = function() {
+        this.toRGBString = function () {
           return "rgb(" + Math.round(this.rgb[0]) + "," + Math.round(this.rgb[1]) + "," + Math.round(this.rgb[2]) + ")";
         };
 
-        this.isLight = function() {
+        this.isLight = function () {
           return 0.213 * this.rgb[0] + 0.715 * this.rgb[1] + 0.072 * this.rgb[2] > 255 / 2;
         };
 
-        this._processParentElementsInDOM = function() {
+        this._processParentElementsInDOM = function () {
           if (this._linkedElementsProcessed) {
             return;
           }
@@ -1544,7 +1550,7 @@ if (!window.jscolor) {
           } catch (eOldIE) {
             p.btn.style.cursor = "hand";
           }
-          p.btn.onmousedown = function() {
+          p.btn.onmousedown = function () {
             THIS.hide();
           };
           p.btnT.style.lineHeight = THIS.buttonHeight + "px";
@@ -1589,7 +1595,7 @@ if (!window.jscolor) {
               var yComponent = 2;
               break;
           }
-          var x = Math.round(THIS.hsv[0] / 360 * (THIS.width - 1));
+          var x = Math.round((THIS.hsv[0] / 360) * (THIS.width - 1));
           var y = Math.round((1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1));
           var crossOuterSize = 2 * THIS.pointerBorderWidth + THIS.pointerThickness + 2 * THIS.crossSize;
           var ofs = -Math.floor(crossOuterSize / 2);
@@ -1674,12 +1680,12 @@ if (!window.jscolor) {
         if (jsc.isElementType(this.targetElement, "button")) {
           if (this.targetElement.onclick) {
             var origCallback = this.targetElement.onclick;
-            this.targetElement.onclick = function(evt) {
+            this.targetElement.onclick = function (evt) {
               origCallback.call(this, evt);
               return false;
             };
           } else {
-            this.targetElement.onclick = function() {
+            this.targetElement.onclick = function () {
               return false;
             };
           }
@@ -1712,7 +1718,7 @@ if (!window.jscolor) {
         // valueElement
         if (this.valueElement) {
           if (jsc.isElementType(this.valueElement, "input")) {
-            var updateField = function() {
+            var updateField = function () {
               THIS.fromString(THIS.valueElement.value, jsc.leaveValue);
               jsc.dispatchFineChange(THIS);
             };
@@ -1753,7 +1759,7 @@ if (!window.jscolor) {
     //
     jsc.jscolor.lookupClass = "jscolor";
 
-    jsc.jscolor.installByClassName = function(className) {
+    jsc.jscolor.installByClassName = function (className) {
       var inputElms = document.getElementsByTagName("input");
       var buttonElms = document.getElementsByTagName("button");
 
