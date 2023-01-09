@@ -28,6 +28,7 @@
   $: setSpring($heightStore, expanded);
 
   let initialRender = false;
+  let hide = false;
   function setSpring(height: number, expanded: boolean) {
     if (blockingUpstream) {
       $disabledAnimationInChain = true;
@@ -40,7 +41,10 @@
         { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
         { hard: !initialRender || ($disabledAnimationInChain && !blockingUpstream) }
       )
-      .then(() => (initialRender = true));
+      .then(() => {
+        initialRender = true;
+        hide = !expanded;
+      });
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
     if (blockingUpstream) {
       Promise.resolve(animation).then(() => {
@@ -69,7 +73,7 @@
     <div out:fade|local={{ duration: 300 }} class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
     </div>
-    <div style="height: {height}px; overflow: hidden;">
+    <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
         {#if childSubjects.length}
           <ul>
