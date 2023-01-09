@@ -35,7 +35,7 @@
   let originalName = "";
 
   onMount(() => {
-    inputEl.focus({ preventScroll: true });
+    inputEl?.focus({ preventScroll: true });
 
     return () => {
       deleteShowing = false;
