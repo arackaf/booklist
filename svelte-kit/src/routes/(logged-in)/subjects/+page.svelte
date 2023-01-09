@@ -3,7 +3,7 @@
   import { writable } from "svelte/store";
 
   import Button from "$lib/components/buttons/Button.svelte";
-  //import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
+  import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
   //import { rootSubjects } from "app/state/subjectsState";
@@ -44,7 +44,7 @@
   </div>
 
   <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
-    <!-- <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} /> -->
+    <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
     <hr />
     <Button onClick={closeEditModal}>Close</Button>
   </Modal>

@@ -6,12 +6,12 @@
 
   //import colorsState from 'app/state/colorsState';
 
-  import Stack from "app/components/layout/Stack.svelte";
-  import FlexRow from "app/components/layout/FlexRow.svelte";
-  import ColorsPalette from "app/components/ui/ColorsPalette.svelte";
-  import CustomColorPicker from "app/components/ui/CustomColorPicker.svelte";
-  import FlowItems from "app/components/layout/FlowItems.svelte";
-  import Button from "app/components/buttons/Button.svelte";
+  import Stack from "$lib/components/layout/Stack.svelte";
+  import FlexRow from "$lib/components/layout/FlexRow.svelte";
+  import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
+  import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
+  import FlowItems from "$lib/components/layout/FlowItems.svelte";
+  import Button from "$lib/components/buttons/Button.svelte";
   import { writable } from "svelte/store";
 
   export let subject: any;
@@ -48,7 +48,7 @@
   //$: childSubjects = $childMapSelector[editingSubject?._id] || [];
   //$: ({ subjectHash } = $subjectsState);
 
-  let colorsState = writable({ colors: {} });
+  let colorsState = writable({ colors: [] });
   $: ({ colors } = $colorsState);
   // $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
   // $: {
