@@ -6,18 +6,12 @@
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
-  //import { rootSubjects } from "app/state/subjectsState";
 
   import SubjectDisplay from "./SubjectDisplay.svelte";
 
   export let data: any;
   $: ({ subjects } = data);
-
   $: rootSubjects = stackAndGetTopLevelSubjects(subjects);
-
-  $: {
-    console.log({ data });
-  }
 
   let editModalOpen = false;
   let editingSubject = { name: "" };
