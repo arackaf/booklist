@@ -2,9 +2,7 @@
   import { onMount } from "svelte";
   import cn from "classnames";
 
-  //import { subjectsState, getEligibleParents, computeSubjectParentId, childMapSelector } from 'app/state/subjectsState';
-
-  //import colorsState from 'app/state/colorsState';
+  import type { Color, Subject } from "$data/types";
 
   import Stack from "$lib/components/layout/Stack.svelte";
   import FlexRow from "$lib/components/layout/FlexRow.svelte";
@@ -12,17 +10,11 @@
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
-  import { writable } from "svelte/store";
-  import { computeParentId, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
-  import type { Color, Subject } from "$data/types";
+  import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
 
   export let subject: any;
   export let allSubjects: Subject[];
   export let colors: Color[];
-
-  $: {
-    console.log({ colors });
-  }
 
   export let onCancelEdit: any;
   export let deleteShowing = false;
@@ -47,8 +39,9 @@
   let editingSubject = { ...subject, parentId: computeParentId(subject.path) };
 
   $: editingSubjectChanged(subject);
-  //$: childSubjects = $childMapSelector[editingSubject?._id] || [];
+
   $: subjectHash = getSubjectsHash(allSubjects);
+  $: childSubjects = getChildSubjectsSorted(subject._id, subjectHash);
 
   //let colorsState = writable({ colors: [] });
   //$: ({ colors } = $colorsState);
@@ -77,7 +70,6 @@
 
   let updateState = {} as any;
   let deleteState = {} as any;
-  let childSubjects = [] as any[];
 </script>
 
 {#if !editingSubject}
@@ -167,7 +159,11 @@
           </div>
           <FlowItems>
             <Button disabled={deleteState.running} onClick={deleteIt} preset="danger-xs">
-              {#if deleteState.running}<span> Deleting <i class="far fa-spinner fa-spin" /> </span>{:else}"Delete it!"{/if}
+              {#if deleteState.running}
+                <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
+              {:else}
+                Delete it!
+              {/if}
             </Button>
             <Button disabled={deleteState.running} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
           </FlowItems>
