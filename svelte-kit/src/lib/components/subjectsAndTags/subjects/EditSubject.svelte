@@ -11,6 +11,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
+  import { enhance } from "$app/forms";
 
   export let subject: any;
   export let allSubjects: Subject[];
@@ -133,10 +134,13 @@
         </div>
         <div class="col-xs-12">
           <FlowItems pushLast={true}>
-            <Button disabled={updateState.running} preset="primary-xs" onClick={runSave}>
-              Save
-              <i class={`far fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
-            </Button>
+            <form method="POST" action="/subjects?/saveSubject" use:enhance>
+              <input type="hidden" name="a" value="b" />
+              <Button disabled={updateState.running} preset="primary-xs">
+                Save
+                <i class={`far fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
+              </Button>
+            </form>
             <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
             {#if editingSubject._id}
               <Button disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
