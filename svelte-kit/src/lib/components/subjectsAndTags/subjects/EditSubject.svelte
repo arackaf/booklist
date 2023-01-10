@@ -13,22 +13,24 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
   import { writable } from "svelte/store";
+  import { computeParentId, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
+  import type { Color, Subject } from "$data/types";
 
   export let subject: any;
+  export let allSubjects: Subject[];
+  export let colors: Color[];
+
+  $: {
+    console.log({ colors });
+  }
+
   export let onCancelEdit: any;
+  export let deleteShowing = false;
 
-  // const { mutationState: updateMutationState } = mutation<MutationOf<Mutations['updateSubject']>>(UpdateSubjectMutation);
-  // $: updateState = $updateMutationState;
-
-  // const { mutationState: deleteMutationState } = mutation<MutationOf<Mutations['deleteSubject']>>(DeleteSubjectMutation);
-  //let deleteState = writable({} as any);
-  // $: deleteState = $deleteMutationState;
-  // const deleteIt = () => deleteState.runMutation({ _id: editingSubject._id }).then(onCancelEdit);
   const deleteIt = () => {};
 
   const textColors = ["#ffffff", "#000000"];
 
-  export let deleteShowing = false;
   let missingName = false;
   let inputEl: any;
 
@@ -42,26 +44,26 @@
     };
   });
 
-  //let editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
+  let editingSubject = { ...subject, parentId: computeParentId(subject.path) };
 
-  //$: editingSubjectChanged(subject);
+  $: editingSubjectChanged(subject);
   //$: childSubjects = $childMapSelector[editingSubject?._id] || [];
-  //$: ({ subjectHash } = $subjectsState);
+  $: subjectHash = getSubjectsHash(allSubjects);
 
-  let colorsState = writable({ colors: [] });
-  $: ({ colors } = $colorsState);
-  // $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
-  // $: {
-  // 	if (editingSubject.name) {
-  // 		missingName = false;
-  // 	}
-  // }
+  //let colorsState = writable({ colors: [] });
+  //$: ({ colors } = $colorsState);
+  $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
+  $: {
+    if (editingSubject.name) {
+      missingName = false;
+    }
+  }
 
   function editingSubjectChanged(subject: any) {
-    // editingSubject = { ...subject, parentId: computeSubjectParentId(subject.path) };
-    // missingName = false;
-    // deleteShowing = false;
-    // originalName = subject.name;
+    editingSubject = { ...subject, parentId: computeParentId(subject.path) };
+    missingName = false;
+    deleteShowing = false;
+    originalName = subject.name;
   }
 
   const runSave = () => {
@@ -73,8 +75,6 @@
     //Promise.resolve(updateState.runMutation(request)).then(onCancelEdit);
   };
 
-  let editingSubject: any = null;
-  let eligibleParents = [] as any[];
   let updateState = {} as any;
   let deleteState = {} as any;
   let childSubjects = [] as any[];
@@ -116,7 +116,11 @@
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Label Color</label>
-            <ColorsPalette currentColor={editingSubject.backgroundColor} {colors} onColorChosen={color => (editingSubject.backgroundColor = color)} />
+            <ColorsPalette
+              currentColor={editingSubject.backgroundColor}
+              colors={colors.map(c => c.backgroundColor)}
+              onColorChosen={color => (editingSubject.backgroundColor = color)}
+            />
             <CustomColorPicker
               labelStyle="margin-left: 3px"
               onColorChosen={color => (editingSubject.backgroundColor = color)}

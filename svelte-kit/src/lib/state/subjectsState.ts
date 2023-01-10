@@ -1,6 +1,7 @@
 import type { DisablableSubject, FullSubject, Hash, Subject } from "$data/types";
 import { toHash } from "./helpers";
 
+// TODO
 export const subjectState = (allSubjectsSorted: Subject[] = []) => {
   const subjects = stackAndGetTopLevelSubjects(allSubjectsSorted);
   const subjectsUnwound = unwindSubjects(subjects);
@@ -11,6 +12,10 @@ export const subjectState = (allSubjectsSorted: Subject[] = []) => {
     subjectsUnwound,
     subjectHash
   };
+};
+
+export const getSubjectsHash = (subjects: Subject[]): Hash<Subject> => {
+  return toHash(subjects);
 };
 
 export const stackAndGetTopLevelSubjects = (allSubjects: Subject[]): FullSubject[] => {
@@ -106,3 +111,13 @@ const subjectSortCompare = ({ name: name1 }: Subject, { name: name2 }: Subject) 
     bothEqual = name1.toLowerCase() === name2.toLowerCase();
   return bothEqual ? 0 : name1After ? 1 : -1;
 };
+
+export const getEligibleParents = (subjectHash: Hash<Subject>, _id: string) => {
+  let eligibleParents = _id
+    ? flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path))
+    : flattenSubjects(subjectHash);
+
+  return eligibleParents.sort(subjectSortCompare);
+};
+
+export const flattenSubjects = (subjects: Hash<Subject>) => Object.keys(subjects).map(k => subjects[k]);

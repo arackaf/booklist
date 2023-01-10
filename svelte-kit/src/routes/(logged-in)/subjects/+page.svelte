@@ -10,7 +10,8 @@
   import SubjectDisplay from "./SubjectDisplay.svelte";
 
   export let data: any;
-  $: ({ subjects } = data);
+
+  $: ({ subjects, colors } = data);
   $: rootSubjects = stackAndGetTopLevelSubjects(subjects);
 
   let editModalOpen = false;
@@ -38,7 +39,7 @@
   </div>
 
   <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
-    <EditSubject subject={editingSubject} onCancelEdit={closeEditModal} />
+    <EditSubject allSubjects={subjects} {colors} subject={editingSubject} onCancelEdit={closeEditModal} />
     <hr />
     <Button onClick={closeEditModal}>Close</Button>
   </Modal>
