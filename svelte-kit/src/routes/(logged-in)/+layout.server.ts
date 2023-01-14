@@ -25,6 +25,7 @@ export async function load({ cookies, locals, depends, isDataRequest }: any) {
   const tags = allTags(session.userId);
 
   return {
+    booksCache,
     subjects,
     tags
   };
