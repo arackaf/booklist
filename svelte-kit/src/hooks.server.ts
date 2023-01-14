@@ -1,7 +1,7 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
-import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, DYNAMO_AUTH_TABLE } from "$env/static/private";
+import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, DYNAMO_AUTH_TABLE } from "$env/static/private";
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
@@ -10,8 +10,8 @@ import { getUserSync } from "$data/legacyUser";
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY
+    accessKeyId: AMAZON_ACCESS_KEY,
+    secretAccessKey: AMAZON_SECRET_KEY
   },
 
   region: "us-east-1"
