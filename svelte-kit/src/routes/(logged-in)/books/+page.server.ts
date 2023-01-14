@@ -1,5 +1,5 @@
 import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook } from "$data/books";
-import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
+import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { ONE_YEAR_SECONDS } from "$lib/util/constants";
 import { toJson } from "$lib/util/formDataHelpers";
 import { BOOKS_VIEW_COOKIE } from "./bookViews/constants";
@@ -17,7 +17,7 @@ export const actions = {
     cookies.set(BOOKS_VIEW_COOKIE, formData.get("view"), { maxAge: ONE_YEAR_SECONDS });
   },
   async reloadBooks({ cookies }: any) {
-    bustCache(cookies, BOOKS_CACHE);
+    updateCacheCookie(cookies, BOOKS_CACHE);
   },
   async saveBook({ request, cookies, locals }: any) {
     const session = await locals.getSession();
@@ -35,7 +35,7 @@ export const actions = {
 
     await updateBook(session.userId, fields);
 
-    bustCache(cookies, BOOKS_CACHE);
+    updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: fields } };
   },

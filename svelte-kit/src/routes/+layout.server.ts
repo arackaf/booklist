@@ -1,4 +1,4 @@
-import { BOOKS_CACHE, bustCache } from "$lib/state/cacheHelpers";
+import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { DESKTOP_REQUESTED_COOKIE } from "$lib/util/constants";
 
 export async function load({ locals, isDataRequest, request, cookies, depends }: any) {
@@ -14,7 +14,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
 
   const initialRequest = !isDataRequest;
   if (initialRequest) {
-    bustCache(cookies, BOOKS_CACHE);
+    updateCacheCookie(cookies, BOOKS_CACHE);
   }
 
   const session = await locals.getSession();
