@@ -11,7 +11,6 @@ export async function load(params) {
 
   params.setHeaders({
     "cache-control": "max-age=60"
-    //Vary: 'Cookie'
   });
 
   return result;

@@ -10,8 +10,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   }
 
   setHeaders({
-    "cache-control": "max-age=60",
-    Vary: BOOKS_CACHE
+    "cache-control": "max-age=60"
   });
 
   const search = url.searchParams.get("search") || "";

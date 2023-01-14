@@ -162,7 +162,7 @@
           </div>
         {:else}
           <div>
-            {#if showMobile}
+            {#if false && showMobile}
               <h1>MOBILE</h1>
             {:else}
               <GridView books={$books} subjects={allSubjects} tags={allTags} />
