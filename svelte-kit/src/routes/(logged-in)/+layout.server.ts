@@ -16,8 +16,7 @@ export async function load({ cookies, locals, depends, isDataRequest }: any) {
     updateCacheCookie(cookies, BOOKS_CACHE);
   }
 
-  depends("reload-subjects");
-  depends("reload-tags");
+  depends("reload-root-data");
 
   const subjects = allSubjects(session.userId);
   const tags = allTags(session.userId);

@@ -10,6 +10,12 @@ type Book = {
   authors: string[];
 };
 
+export function load({ cookies }: any) {
+  const booksCache = cookies.get(BOOKS_CACHE);
+
+  return { booksCache };
+}
+
 export const actions = {
   async setBooksView({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
