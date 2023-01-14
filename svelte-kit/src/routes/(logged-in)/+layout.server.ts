@@ -5,15 +5,18 @@ import { allTags } from "$data/tags";
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 
 export async function load({ cookies, locals, depends, isDataRequest }: any) {
+  const initialRequest = !isDataRequest;
+
   const session = await locals.getSession();
 
   if (!session?.user) {
     throw redirect(302, "/");
   }
 
-  const initialRequest = !isDataRequest;
+  const booksCache = initialRequest ? +new Date() : cookies.get(BOOKS_CACHE);
+
   if (initialRequest) {
-    updateCacheCookie(cookies, BOOKS_CACHE);
+    updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
   }
 
   depends("reload-root-data");
