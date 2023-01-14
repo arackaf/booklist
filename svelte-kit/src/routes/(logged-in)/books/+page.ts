@@ -1,12 +1,12 @@
-import { BOOKS_CACHE, getCachingHeaders } from "$lib/state/cacheHelpers";
+import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 import { writable } from "svelte/store";
 
 export async function load({ url, fetch, depends }: any) {
   depends("reload-books");
 
-  const resp = await fetch("/api/books?" + url.searchParams.toString(), {
-    headers: getCachingHeaders(BOOKS_CACHE)
-  });
+  const cache = getCurrentCookieValue(BOOKS_CACHE);
+
+  const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}`);
   const books = await resp.json();
 
   return {

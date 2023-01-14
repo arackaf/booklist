@@ -7,17 +7,7 @@ export const updateCacheCookie = (cookies: any, name: string) => {
   cookies.set(name, +new Date(), { path: "/", maxAge: ONE_YEAR_SECONDS, httpOnly: false });
 };
 
-export const getCachingHeaders = (name: string) => {
-  const currentCacheValue = getCurrentCookieValue(name);
-
-  return currentCacheValue
-    ? {
-        [name]: currentCacheValue
-      }
-    : {};
-};
-
-const getCurrentCookieValue = (name: string) => {
+export const getCurrentCookieValue = (name: string) => {
   const cookies = getCookieLookup();
   return cookies[name] ?? "";
 };
