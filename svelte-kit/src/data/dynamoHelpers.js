@@ -32,6 +32,12 @@ export const db = {
     return result.Item || null;
   },
 
+  async query(packet) {
+    let res = await dynamo.query(packet).promise();
+
+    return res?.Items ?? [];
+  },
+
   async queryOne(packet) {
     let res = await dynamo.query(packet).promise();
 
