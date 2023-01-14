@@ -70,7 +70,7 @@ export function runRequest(action: string, collection: string, body: object) {
     body: JSON.stringify({
       collection,
       database: "my-library",
-      dataSource: "Cluster0",
+      dataSource: "ServerlessInstance0",
       ...body
     })
   })
