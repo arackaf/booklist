@@ -47,6 +47,6 @@
     "npm": "^9.2.0",
     "sass": "^1.56.1",
     "svelte": "^3.44.0",
-    "svelte-helpers": "^0.2.21"
+    "svelte-helpers": "0.2.22"
   }
 }
