@@ -134,7 +134,7 @@
         </div>
         <div class="col-xs-12">
           <FlowItems pushLast={true}>
-            <form method="POST" action="/subjects?/saveSubject" use:enhance>
+            <form method="POST" action="/settings?/saveSubject" use:enhance>
               <input type="hidden" name="a" value="b" />
               <Button disabled={updateState.running} preset="primary-xs">
                 Save
