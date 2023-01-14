@@ -13,7 +13,11 @@ export const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: 
 export const getUpdatePacket = (pk, sk, rest) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 
 const dynamo = new AWS.DynamoDB.DocumentClient({
-  region: "us-east-1"
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: env.AMAZON_ACCESS_KEY,
+    secretAccessKey: env.AMAZON_SECRET_KEY
+  }
 });
 
 export { dynamo };
