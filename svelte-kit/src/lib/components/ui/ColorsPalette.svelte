@@ -24,8 +24,9 @@
     width: 20px;
     margin: 3px;
     cursor: pointer;
+    transition: transform 75ms ease-in;
   }
   .colorChoice.colorChoiceCurrent {
-    border: 3px solid white;
+    transform: scale(1.25);
   }
 </style>
