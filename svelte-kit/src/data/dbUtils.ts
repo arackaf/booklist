@@ -9,9 +9,37 @@ type MongoSingleQueryResponse<T> = {
   document: T;
 };
 
+type SubjectEditFields = {
+  name: string;
+  path: string | null;
+  textColor: string;
+  backgroundColor: string;
+};
+
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
-export const updateSingleSubject = runSingleUpdate.bind(null, "subjects");
+export const updateSingleSubject = (userId: string, _id: string, updates: SubjectEditFields) => {
+  return runMultiUpdate("subjects", userId, { $or: [{ _id: { $oid: _id } }, { _id: 999 }] }, [
+    {
+      $addFields: {
+        pathMatch: {
+          $regexFind: {
+            input: "$c",
+            regex: ".*m"
+          }
+        }
+      }
+    },
+    {
+      $set: {
+        name: updates.name
+      }
+    },
+    {
+      $unset: ["pathMatch"]
+    }
+  ]);
+};
 
 export const deleteBookById = deleteById.bind(null, "books");
 
@@ -20,14 +48,15 @@ export const querySubjects = (body: object) => runQuery<Subject>("subjects", bod
 export const queryTags = (body: object) => runQuery<Tag>("tags", body);
 export const queryLabelColors = <TProjection = Book>(body: object) => runQuery<TProjection>("labelColors", body);
 
-export const getSubject = (_id: string) => findById<Subject>("subjects", _id);
+export const getSubject = (_id: string, userId: string) => findById<Subject>("subjects", _id, userId);
 
 const runQuery = <T>(table: string, body: object) => {
   return runRequest("aggregate", table, body).then((res: MongoMultiQueryResponse<T>) => res.documents);
 };
 
-const findById = <T>(table: string, _id: string) => {
-  return runRequest("findOne", table, { filter: { _id: { $oid: _id } } }).then((res: MongoSingleQueryResponse<T>) => res.document);
+const findById = <T>(table: string, _id: string, userId: string) => {
+  userId = userId || "";
+  return runRequest("findOne", table, { filter: { _id: { $oid: _id }, userId } }).then((res: MongoSingleQueryResponse<T>) => res.document);
 };
 
 export function runSingleUpdate(collection: string, userId: string, filter: object, update: object) {

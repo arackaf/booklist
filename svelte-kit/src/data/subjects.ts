@@ -20,7 +20,16 @@ export const updateSubject = async (userId: string, subject: Subject & { parentI
 
   console.log({ _id, name, parentId, backgroundColor, path, textColor });
 
-  const temp = await getSubject(_id);
+  const newPath = await getNewPath(userId, parentId);
+  return updateSingleSubject(userId, _id, { name, path: newPath, backgroundColor, textColor });
+};
 
-  return updateSingleSubject(userId, { _id: { $oid: _id } }, { $set: { name, parentId, backgroundColor, textColor } });
+const getNewPath = async (userId: string, parentId: string): Promise<string | null> => {
+  let newParent = parentId ? await getSubject(parentId, userId) : null;
+
+  if (!newParent) {
+    return null;
+  }
+
+  return `${newParent.path || ","}${newParent._id},`;
 };
