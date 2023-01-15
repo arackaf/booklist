@@ -7,6 +7,7 @@ type MongoQueryResponse<T> = {
 
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
+export const updateSingleSubject = runSingleUpdate.bind(null, "subjects");
 
 export const deleteBookById = deleteById.bind(null, "books");
 
@@ -27,11 +28,9 @@ export function runSingleUpdate(collection: string, userId: string, filter: obje
   return runRequest("updateOne", collection, {
     filter: { ...filter, userId },
     update
-  })
-    .then(res => res.json())
-    .catch(err => {
-      console.log({ err });
-    });
+  }).catch(err => {
+    console.log({ err });
+  });
 }
 
 export function runMultiUpdate(collection: string, userId: string, filter: object, update: object) {
@@ -40,11 +39,9 @@ export function runMultiUpdate(collection: string, userId: string, filter: objec
   return runRequest("updateMany", collection, {
     filter: { ...filter, userId },
     update
-  })
-    .then(res => res.json())
-    .catch(err => {
-      console.log({ err });
-    });
+  }).catch(err => {
+    console.log({ err });
+  });
 }
 
 function deleteById(collection: string, userId: string, _id: string) {
@@ -52,11 +49,9 @@ function deleteById(collection: string, userId: string, _id: string) {
 
   return runRequest("deleteOne", collection, {
     filter: { userId, _id: { $oid: _id } }
-  })
-    .then(res => res.json())
-    .catch(err => {
-      console.log({ err });
-    });
+  }).catch(err => {
+    console.log({ err });
+  });
 }
 
 export function runRequest(action: string, collection: string, body: object) {
