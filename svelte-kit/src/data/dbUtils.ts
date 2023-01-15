@@ -21,19 +21,22 @@ type SubjectEditFields = {
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
 export const updateSingleSubject = async (userId: string, _id: string, updates: SubjectEditFields) => {
-  let newParent: Subject | null;
+  let newParent: Subject | null = null;
   let newSubjectPath: string | null;
   let newDescendantPathPiece: string | null;
 
-  const parentChanged = !!(updates.parentId && updates.originalParentId !== updates.parentId);
+  const parentChanged = updates.originalParentId !== updates.parentId;
+
   if (parentChanged) {
-    newParent = await getSubject(updates.parentId!, userId);
-    if (!newParent) {
-      return null;
+    if (updates.parentId) {
+      newParent = await getSubject(updates.parentId!, userId);
+      if (!newParent) {
+        return null;
+      }
     }
 
-    newSubjectPath = (newParent.path || ",") + `${newParent._id},`;
-    newDescendantPathPiece = `,${_id},`;
+    newSubjectPath = newParent ? (newParent.path || ",") + `${newParent._id},` : null;
+    newDescendantPathPiece = `${newSubjectPath || ","}${_id},`;
   }
 
   const conditions: object[] = [{ _id: { $oid: _id } }];
