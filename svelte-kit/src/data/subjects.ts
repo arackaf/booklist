@@ -1,4 +1,5 @@
-import { querySubjects } from "./dbUtils";
+import { getSubject, querySubjects, updateSingleSubject } from "./dbUtils";
+import type { Subject } from "./types";
 
 export const allSubjects = async (userId: string) => {
   userId = userId || "";
@@ -12,4 +13,12 @@ export const allSubjects = async (userId: string) => {
     console.log("Http time subjects", httpEnd - httpStart);
     return subjects;
   });
+};
+
+export const updateSubject = async (userId: string, subject: Subject & { parentId: string }) => {
+  const { _id, name, parentId, backgroundColor, textColor } = subject;
+
+  const temp = await getSubject(_id);
+
+  return updateSingleSubject(userId, { _id: { $oid: _id } }, { $set: { name, parentId, backgroundColor, textColor } });
 };

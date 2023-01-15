@@ -1,8 +1,12 @@
 import { env } from "$env/dynamic/private";
 import type { Book, Subject, Tag } from "./types";
 
-type MongoQueryResponse<T> = {
+type MongoMultiQueryResponse<T> = {
   documents: T[];
+};
+
+type MongoSingleQueryResponse<T> = {
+  document: T;
 };
 
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
@@ -16,11 +20,15 @@ export const querySubjects = (body: object) => runQuery<Subject>("subjects", bod
 export const queryTags = (body: object) => runQuery<Tag>("tags", body);
 export const queryLabelColors = <TProjection = Book>(body: object) => runQuery<TProjection>("labelColors", body);
 
+export const getSubject = (_id: string) => findById<Subject>("subjects", _id);
+
 const runQuery = <T>(table: string, body: object) => {
-  return runAggregate(table, body).then((res: MongoQueryResponse<T>) => res.documents);
+  return runRequest("aggregate", table, body).then((res: MongoMultiQueryResponse<T>) => res.documents);
 };
 
-const runAggregate = runRequest.bind(null, "aggregate");
+const findById = <T>(table: string, _id: string) => {
+  return runRequest("findOne", table, { filter: { _id: { $oid: _id } } }).then((res: MongoSingleQueryResponse<T>) => res.document);
+};
 
 export function runSingleUpdate(collection: string, userId: string, filter: object, update: object) {
   userId = userId || "";

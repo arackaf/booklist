@@ -6,6 +6,10 @@ export type Subject = {
   path: string;
 };
 
+export type SubjectWithParentId = Subject & {
+  parentId: string;
+};
+
 export type DisablableSubject = Subject & {
   disabled: boolean;
 };
