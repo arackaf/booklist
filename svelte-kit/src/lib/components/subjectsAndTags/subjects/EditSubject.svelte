@@ -78,80 +78,86 @@
 {:else}
   <FlexRow>
     {#if !deleteShowing}
-      <FlexRow>
-        <div class="col-xs-12 col-lg-6">
-          <div class="form-group">
-            <label>Name</label>
-            <input bind:this={inputEl} bind:value={editingSubject.name} class={cn("form-control", { error: missingName })} />
-            {#if missingName}
-              <span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Subjects need names! </span>
-              <br />
-            {/if}
-            <div
-              class="label label-default"
-              style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
-            >
-              {editingSubject.name.trim() || "<label preview>"}
+      <form method="POST" action="/subjects?/saveSubject" use:enhance>
+        <FlexRow>
+          <input type="hidden" name="_id" value={editingSubject._id} />
+          <div class="col-xs-12 col-lg-6">
+            <div class="form-group">
+              <label>Name</label>
+              <input bind:this={inputEl} bind:value={editingSubject.name} name="name" class={cn("form-control", { error: missingName })} />
+              {#if missingName}
+                <span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Subjects need names! </span>
+                <br />
+              {/if}
+              <div
+                class="label label-default"
+                style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
+              >
+                {editingSubject.name.trim() || "<label preview>"}
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-xs-12 col-lg-6">
-          <div class="form-group">
-            <label>Parent</label>
-            <select bind:value={editingSubject.parentId} class="form-control">
-              <option value="">No Parent</option>
-              {#each eligibleParents as s}
-                <option value={s._id}>{s.name}</option>
-              {/each}
-            </select>
+          <div class="col-xs-12 col-lg-6">
+            <div class="form-group">
+              <label>Parent</label>
+              <select bind:value={editingSubject.parentId} name="parentId" class="form-control">
+                <option value="">No Parent</option>
+                {#each eligibleParents as s}
+                  <option value={s._id}>{s.name}</option>
+                {/each}
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
-            <label>Label Color</label>
-            <ColorsPalette
-              currentColor={editingSubject.backgroundColor}
-              colors={colors.map(c => c.backgroundColor)}
-              onColorChosen={color => (editingSubject.backgroundColor = color)}
-            />
-            <CustomColorPicker
-              labelStyle="margin-left: 3px"
-              onColorChosen={color => (editingSubject.backgroundColor = color)}
-              currentColor={editingSubject.backgroundColor}
-            />
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Label Color</label>
+              <ColorsPalette
+                currentColor={editingSubject.backgroundColor}
+                colors={colors.map(c => c.backgroundColor)}
+                onColorChosen={color => (editingSubject.backgroundColor = color)}
+              />
+              <CustomColorPicker
+                labelStyle="margin-left: 3px"
+                onColorChosen={color => (editingSubject.backgroundColor = color)}
+                currentColor={editingSubject.backgroundColor}
+              />
+              <input type="hidden" name="backgroundColor" value={editingSubject.backgroundColor} />
+            </div>
           </div>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
-            <label>Text Color</label>
-            <ColorsPalette currentColor={editingSubject.textColor} colors={textColors} onColorChosen={color => (editingSubject.textColor = color)} />
-            <CustomColorPicker
-              labelStyle="margin-left: 3px"
-              onColorChosen={color => (editingSubject.textColor = color)}
-              currentColor={editingSubject.backgroundColor}
-            />
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Text Color</label>
+              <ColorsPalette
+                currentColor={editingSubject.textColor}
+                colors={textColors}
+                onColorChosen={color => (editingSubject.textColor = color)}
+              />
+              <CustomColorPicker
+                labelStyle="margin-left: 3px"
+                onColorChosen={color => (editingSubject.textColor = color)}
+                currentColor={editingSubject.backgroundColor}
+              />
+              <input type="hidden" name="textColor" value={editingSubject.textColor} />
+            </div>
           </div>
-        </div>
-        <div class="col-xs-12">
-          <FlowItems pushLast={true}>
-            <form method="POST" action="/subjects?/saveSubject" use:enhance>
-              <input type="hidden" name="a" value="b" />
+          <div class="col-xs-12">
+            <FlowItems pushLast={true}>
               <Button disabled={updateState.running} preset="primary-xs">
                 Save
                 <i class={`far fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
               </Button>
-            </form>
-            <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
-            {#if editingSubject._id}
-              <Button disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
-                Delete
-                {originalName}
-                <i class="far fa-fw fa-trash" />
-              </Button>
-            {/if}
-          </FlowItems>
-        </div>
-      </FlexRow>
+              <Button type="button" disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+              {#if editingSubject._id}
+                <Button type="button" disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+                  Delete
+                  {originalName}
+                  <i class="far fa-fw fa-trash" />
+                </Button>
+              {/if}
+            </FlowItems>
+          </div>
+        </FlexRow>
+      </form>
     {:else}
       <div class="col-xs-12">
         <Stack>
