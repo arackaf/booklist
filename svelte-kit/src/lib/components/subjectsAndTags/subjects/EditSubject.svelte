@@ -81,6 +81,7 @@
       <form method="POST" action="/subjects?/saveSubject" use:enhance>
         <FlexRow>
           <input type="hidden" name="_id" value={editingSubject._id} />
+          <input type="hidden" name="path" value={editingSubject.path} />
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
               <label>Name</label>

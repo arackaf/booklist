@@ -12,7 +12,7 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "name", "parentId", "backgroundColor", "textColor"],
+      strings: ["_id", "name", "parentId", "path", "backgroundColor", "textColor"],
       arrays: ["authors", "tags", "subjects"]
     }) as SubjectWithParentId;
 

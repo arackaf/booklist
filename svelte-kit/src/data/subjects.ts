@@ -16,7 +16,9 @@ export const allSubjects = async (userId: string) => {
 };
 
 export const updateSubject = async (userId: string, subject: Subject & { parentId: string }) => {
-  const { _id, name, parentId, backgroundColor, textColor } = subject;
+  const { _id, name, parentId, backgroundColor, path, textColor } = subject;
+
+  console.log({ _id, name, parentId, backgroundColor, path, textColor });
 
   const temp = await getSubject(_id);
 
