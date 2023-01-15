@@ -21,7 +21,7 @@ export const updateSubject = async (userId: string, subject: Subject & { parentI
   console.log({ _id, name, parentId, backgroundColor, path, textColor });
 
   const newPath = await getNewPath(userId, parentId);
-  return updateSingleSubject(userId, _id, { name, path: newPath, backgroundColor, textColor });
+  return updateSingleSubject(userId, _id, { name, path: newPath, parentId, backgroundColor, textColor });
 };
 
 const getNewPath = async (userId: string, parentId: string): Promise<string | null> => {

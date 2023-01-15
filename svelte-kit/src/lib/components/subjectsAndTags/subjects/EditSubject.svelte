@@ -28,6 +28,7 @@
   let inputEl: any;
 
   let originalName = "";
+  let originalParentId = "";
 
   onMount(() => {
     inputEl?.focus({ preventScroll: true });
@@ -58,6 +59,7 @@
     missingName = false;
     deleteShowing = false;
     originalName = subject.name;
+    originalParentId = editingSubject.parentId;
   }
 
   const runSave = () => {
@@ -82,6 +84,7 @@
         <FlexRow>
           <input type="hidden" name="_id" value={editingSubject._id} />
           <input type="hidden" name="path" value={editingSubject.path} />
+          <input type="hidden" name="originalParentId" value={originalParentId} />
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
               <label>Name</label>

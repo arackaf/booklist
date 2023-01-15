@@ -12,14 +12,38 @@ type MongoSingleQueryResponse<T> = {
 type SubjectEditFields = {
   name: string;
   path: string | null;
+  parentId: string | null;
+  originalParentId: string | null;
   textColor: string;
   backgroundColor: string;
 };
 
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
-export const updateSingleSubject = (userId: string, _id: string, updates: SubjectEditFields) => {
-  return runMultiUpdate("subjects", userId, { $or: [{ _id: { $oid: _id } }, { _id: 999 }] }, [
+export const updateSingleSubject = async (userId: string, _id: string, updates: SubjectEditFields) => {
+  let newParent: Subject | null;
+  if (updates.parentId) {
+    newParent = await getSubject(updates.parentId, userId);
+    if (!newParent) {
+      return null;
+    }
+  }
+
+  const conditions = [{ _id: { $oid: _id } }];
+
+  const changeOnOriginal = (field: string, value: any) => {
+    return {
+      [field]: {
+        $cond: {
+          if: { $eq: ["$_id", { $oid: _id }] },
+          then: value,
+          else: `$${field}`
+        }
+      }
+    };
+  };
+
+  return runMultiUpdate("subjects", userId, { $or: conditions }, [
     {
       $addFields: {
         pathMatch: {
@@ -32,7 +56,9 @@ export const updateSingleSubject = (userId: string, _id: string, updates: Subjec
     },
     {
       $set: {
-        name: updates.name
+        ...changeOnOriginal("name", updates.name),
+        ...changeOnOriginal("textColor", updates.textColor),
+        ...changeOnOriginal("backgroundColor", updates.backgroundColor)
       }
     },
     {
