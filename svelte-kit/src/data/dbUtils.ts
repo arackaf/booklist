@@ -22,22 +22,34 @@ export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
 export const updateSingleSubject = async (userId: string, _id: string, updates: SubjectEditFields) => {
   let newParent: Subject | null;
-  if (updates.parentId) {
-    newParent = await getSubject(updates.parentId, userId);
+  let newSubjectPath: string | null;
+  let newDescendantPathPiece: string | null;
+
+  const parentChanged = !!(updates.parentId && updates.originalParentId !== updates.parentId);
+  if (parentChanged) {
+    newParent = await getSubject(updates.parentId!, userId);
     if (!newParent) {
       return null;
     }
+
+    newSubjectPath = (newParent.path || ",") + `${newParent._id},`;
+    newDescendantPathPiece = `,${_id},`;
   }
 
-  const conditions = [{ _id: { $oid: _id } }];
+  const conditions: object[] = [{ _id: { $oid: _id } }];
+  if (parentChanged) {
+    conditions.push({
+      path: { $regex: `.*,${_id},` }
+    });
+  }
 
-  const changeOnOriginal = (field: string, value: any) => {
+  const changeOnOriginal = (field: string, value: any, altValue?: any) => {
     return {
       [field]: {
         $cond: {
           if: { $eq: ["$_id", { $oid: _id }] },
           then: value,
-          else: `$${field}`
+          else: altValue === void 0 ? `$${field}` : altValue
         }
       }
     };
@@ -48,8 +60,8 @@ export const updateSingleSubject = async (userId: string, _id: string, updates: 
       $addFields: {
         pathMatch: {
           $regexFind: {
-            input: "$c",
-            regex: ".*m"
+            input: "$path",
+            regex: `.*,${_id},`
           }
         }
       }
@@ -58,7 +70,12 @@ export const updateSingleSubject = async (userId: string, _id: string, updates: 
       $set: {
         ...changeOnOriginal("name", updates.name),
         ...changeOnOriginal("textColor", updates.textColor),
-        ...changeOnOriginal("backgroundColor", updates.backgroundColor)
+        ...changeOnOriginal("backgroundColor", updates.backgroundColor),
+        ...(parentChanged
+          ? changeOnOriginal("path", newSubjectPath!, {
+              $replaceAll: { input: "$path", find: "$pathMatch.match", replacement: newDescendantPathPiece! }
+            })
+          : {})
       }
     },
     {
