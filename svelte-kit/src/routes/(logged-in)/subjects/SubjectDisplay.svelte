@@ -67,24 +67,24 @@
   $: ({ height, opacity, x, y } = $subjectSpring);
 
   function exitStart(evt: any) {
-    evt.target.style.position = "absolute";
+    //evt.target.style.position = "absolute";
   }
 </script>
 
 <li
   style="padding-top: 0; padding-bottom: 0"
   on:outrostart={exitStart}
-  out:fly|local={{ x: 100, duration: 150, easing: quadIn }}
-  in:fly|local={{ x: -100, duration: 150 }}
+  out:fly|local={{ x: 200, duration: 250, easing: quadIn }}
+  in:fly|local={{ x: -200, duration: 250 }}
 >
   <div>
     <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
     </div>
     <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
-      <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
+      <div bind:this={contentEl} style="opacity: {opacity};">
         {#if childSubjects.length}
-          <ul on:outrostart={exitStart} out:fly|local={{ x: 100, duration: 150, easing: quadIn }} in:fly|local={{ x: -100, duration: 150 }}>
+          <ul on:outrostart={exitStart} out:fly|local={{ x: 200, duration: 250, easing: quadIn }} in:fly|local={{ x: -200, duration: 250 }}>
             {#each childSubjects as s (s._id)}
               <svelte:self subject={s} {editSubject} />
             {/each}
