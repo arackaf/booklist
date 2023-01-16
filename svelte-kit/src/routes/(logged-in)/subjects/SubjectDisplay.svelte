@@ -3,6 +3,7 @@
 
   import { spring } from "svelte/motion";
   import { fly } from "svelte/transition";
+  import { quadIn } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
@@ -65,10 +66,17 @@
   $: childSubjects = subject.children;
   $: ({ height, opacity, x, y } = $subjectSpring);
 
-  //
+  function exitStart(evt: any) {
+    evt.target.style.position = "fixed";
+  }
 </script>
 
-<li style="padding-top: 0; padding-bottom: 0" out:fly|local={{ x: 200, duration: 300 }} in:fly|local={{ x: -200, duration: 300 }}>
+<li
+  style="padding-top: 0; padding-bottom: 0"
+  on:outrostart={exitStart}
+  out:fly|local={{ x: 100, duration: 200, easing: quadIn }}
+  in:fly|local={{ x: -200, duration: 300 }}
+>
   <div>
     <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
@@ -76,7 +84,7 @@
     <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
         {#if childSubjects.length}
-          <ul out:fly|local={{ x: 200, duration: 300 }} in:fly|local={{ x: -200, duration: 300 }}>
+          <ul on:outrostart={exitStart} out:fly|local={{ x: 100, duration: 200, easing: quadIn }} in:fly|local={{ x: -200, duration: 300 }}>
             {#each childSubjects as s (s._id)}
               <svelte:self subject={s} {editSubject} />
             {/each}
