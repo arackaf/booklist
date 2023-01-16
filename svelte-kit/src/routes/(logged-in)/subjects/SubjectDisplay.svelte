@@ -2,7 +2,7 @@
   import { getContext, onMount } from "svelte";
 
   import { spring } from "svelte/motion";
-  import { fade } from "svelte/transition";
+  import { fly } from "svelte/transition";
 
   import type { FullSubject, Subject } from "$data/types";
 
@@ -68,15 +68,15 @@
   //
 </script>
 
-<li style="padding-top: 0; padding-bottom: 0">
+<li style="padding-top: 0; padding-bottom: 0" out:fly|local={{ x: 200, duration: 300 }} in:fly|local={{ x: -200, duration: 300 }}>
   <div>
-    <div out:fade|local={{ duration: 300 }} class="padding-bottom-med subjectRow">
+    <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
     </div>
     <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
         {#if childSubjects.length}
-          <ul>
+          <ul out:fly|local={{ x: 200, duration: 300 }} in:fly|local={{ x: -200, duration: 300 }}>
             {#each childSubjects as s (s._id)}
               <svelte:self subject={s} {editSubject} />
             {/each}
