@@ -10,6 +10,9 @@
   import { syncHeight } from "$lib/util/animationHelpers";
   import EditableExpandableLabelDisplay from "$lib/components/subjectsAndTags/EditableLabelDisplay.svelte";
 
+  export let editSubject: (subject: Subject) => void;
+  export let subject: FullSubject;
+
   const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
 
   let blockingUpstream: boolean;
@@ -58,8 +61,6 @@
     blockingUpstream = true;
     expanded = val;
   };
-  export let editSubject: (subject: Subject) => void;
-  export let subject: FullSubject;
 
   $: childSubjects = subject.children;
   $: ({ height, opacity, x, y } = $subjectSpring);
