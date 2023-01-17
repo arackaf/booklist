@@ -1,4 +1,4 @@
-import type { SubjectEditFields } from "$data/dbUtils";
+import { deleteSingleSubject, type SubjectEditFields } from "$data/dbUtils";
 import { updateSubject } from "$data/subjects";
 import { toJson } from "$lib/util/formDataHelpers";
 
@@ -17,5 +17,16 @@ export const actions = {
     }) as SubjectEditFields & { _id: string };
 
     await updateSubject(session.userId, fields);
+  },
+  async deleteSubject({ request, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
+    const formData: URLSearchParams = await request.formData();
+    const _id = formData.get("_id")!;
+
+    await deleteSingleSubject(session.userId, _id);
   }
 };

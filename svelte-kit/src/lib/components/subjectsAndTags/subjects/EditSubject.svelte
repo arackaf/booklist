@@ -23,9 +23,7 @@
   export let onCancelEdit: any;
   export let deleteShowing = false;
 
-  export let onSaveComplete = () => {};
-
-  const deleteIt = () => {};
+  export let onComplete = () => {};
 
   const textColors = ["#ffffff", "#000000"];
 
@@ -81,12 +79,22 @@
     return async () => {
       invalidateAll().then(() => {
         saving = false;
-        onSaveComplete();
+        onComplete();
       });
     };
   }
 
-  let deleteState = {} as any;
+  let deleting = false;
+  function runDelete() {
+    deleting = true;
+
+    return async () => {
+      invalidateAll().then(() => {
+        deleting = false;
+        onComplete();
+      });
+    };
+  }
 </script>
 
 {#if !editingSubject}
@@ -169,7 +177,7 @@
                 <Button type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                   Delete
                   {originalName}
-                  <i class="far fa-fw fa-trash" />
+                  <i class="fal fa-fw fa-trash-alt" />
                 </Button>
               {/if}
             </FlowItems>
@@ -177,26 +185,30 @@
         </FlexRow>
       </form>
     {:else}
-      <div class="col-xs-12">
-        <Stack>
-          <div class="alert alert-danger alert-slim" style="align-self: flex-start">
-            <FlowItems tighter={true}>
-              <span>Delete {editingSubject.name}?</span>
-              {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
+      <form method="POST" action="/subjects?/deleteSubject" use:enhance={runDelete}>
+        <input type="hidden" name="_id" value={editingSubject._id} />
+        <div class="col-xs-12">
+          <Stack>
+            <div class="alert alert-danger alert-slim" style="align-self: flex-start">
+              <FlowItems tighter={true}>
+                <span>Delete {editingSubject.name}?</span>
+                {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
+              </FlowItems>
+            </div>
+
+            <FlowItems>
+              <Button disabled={deleting} preset="danger-xs">
+                {#if deleting}
+                  <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
+                {:else}
+                  Delete it!
+                {/if}
+              </Button>
+              <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
             </FlowItems>
-          </div>
-          <FlowItems>
-            <Button disabled={deleteState.running} onClick={deleteIt} preset="danger-xs">
-              {#if deleteState.running}
-                <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
-              {:else}
-                Delete it!
-              {/if}
-            </Button>
-            <Button disabled={deleteState.running} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
-          </FlowItems>
-        </Stack>
-      </div>
+          </Stack>
+        </div>
+      </form>
     {/if}
   </FlexRow>
 {/if}

@@ -20,6 +20,9 @@ export type SubjectEditFields = {
 
 export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
+
+export const deleteSingleSubject = runSingleDelete.bind(null, "subjects");
+
 export const updateSingleSubject = async (userId: string, _id: string, updates: SubjectEditFields) => {
   let newParent: Subject | null = null;
   let newSubjectPath: string | null;
@@ -111,6 +114,16 @@ export function runSingleUpdate(collection: string, userId: string, filter: obje
   return runRequest("updateOne", collection, {
     filter: { ...filter, userId },
     update
+  }).catch(err => {
+    console.log({ err });
+  });
+}
+
+export function runSingleDelete(collection: string, userId: string, _id: string) {
+  userId = userId || "";
+
+  return runRequest("deleteOne", collection, {
+    filter: { _id: { $oid: _id }, userId }
   }).catch(err => {
     console.log({ err });
   });

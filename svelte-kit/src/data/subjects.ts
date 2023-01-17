@@ -1,5 +1,4 @@
-import { getSubject, querySubjects, updateSingleSubject, type SubjectEditFields } from "./dbUtils";
-import type { Subject } from "./types";
+import { deleteSingleSubject, getSubject, querySubjects, updateSingleSubject, type SubjectEditFields } from "./dbUtils";
 
 export const allSubjects = async (userId: string) => {
   userId = userId || "";
@@ -20,6 +19,10 @@ export const updateSubject = async (userId: string, subject: SubjectEditFields &
 
   const newPath = await getNewPath(userId, parentId);
   return updateSingleSubject(userId, _id, { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });
+};
+
+export const deleteSubject = async (userId: string, _id: string) => {
+  return deleteSingleSubject(userId, _id);
 };
 
 const getNewPath = async (userId: string, parentId: string | null): Promise<string | null> => {
