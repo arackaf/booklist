@@ -1,5 +1,5 @@
-import { deleteSingleSubject, type SubjectEditFields } from "$data/dbUtils";
-import { updateSubject } from "$data/subjects";
+import type { SubjectEditFields } from "$data/dbUtils";
+import { saveSubject, deleteSingleSubject } from "$data/subjects";
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const actions = {
@@ -16,7 +16,7 @@ export const actions = {
       arrays: ["authors", "tags", "subjects"]
     }) as SubjectEditFields & { _id: string };
 
-    await updateSubject(session.userId, fields._id, fields);
+    await saveSubject(session.userId, fields._id, fields);
   },
   async deleteSubject({ request, locals }: any) {
     const session = await locals.getSession();
