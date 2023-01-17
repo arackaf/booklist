@@ -10,8 +10,6 @@
   import { syncHeight } from "$lib/util/animationHelpers";
   import EditableExpandableLabelDisplay from "$lib/components/subjectsAndTags/EditableLabelDisplay.svelte";
 
-  //import { childMapSelector } from "app/state/subjectsState";
-
   const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
 
   let blockingUpstream: boolean;
@@ -67,16 +65,14 @@
   $: ({ height, opacity, x, y } = $subjectSpring);
 
   function exitStart(evt: any) {
-    evt.target.style.position = "absolute";
+    evt.target.style.height = "0";
+    evt.target.style.overflow = "visible";
   }
+
+  const scaleTransitionProps = { duration: 150, easing: quadIn };
 </script>
 
-<li
-  style="padding-top: 0; padding-bottom: 0; transform-origin: left;"
-  on:outrostart={exitStart}
-  out:scale|local={{ duration: 150, easing: quadIn }}
-  in:scale|local={{ duration: 150 }}
->
+<li style="padding-top: 0; padding-bottom: 0;" on:outrostart={exitStart} in:scale|local={scaleTransitionProps} out:scale|local={scaleTransitionProps}>
   <div>
     <div class="padding-bottom-med subjectRow">
       <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
@@ -84,12 +80,7 @@
     <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
       <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
         {#if childSubjects.length}
-          <ul
-            on:outrostart={exitStart}
-            out:scale|local={{ duration: 150, easing: quadIn }}
-            in:scale|local={{ duration: 150 }}
-            style="transform-origin: left;"
-          >
+          <ul on:outrostart={exitStart} in:scale|local={scaleTransitionProps} out:scale|local={scaleTransitionProps}>
             {#each childSubjects as s (s._id)}
               <svelte:self subject={s} {editSubject} />
             {/each}
@@ -101,6 +92,12 @@
 </li>
 
 <style>
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .subjectRow {
     padding-left: 0;
     margin-left: 0;

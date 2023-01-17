@@ -46,6 +46,12 @@
 </section>
 
 <style>
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .subjectsRoot {
     display: grid;
     grid-template-rows: auto 1fr;
