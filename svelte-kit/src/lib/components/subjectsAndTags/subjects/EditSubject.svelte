@@ -2,6 +2,9 @@
   import { onMount } from "svelte";
   import cn from "classnames";
 
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
+
   import type { Color, Subject } from "$data/types";
 
   import Stack from "$lib/components/layout/Stack.svelte";
@@ -10,8 +13,8 @@
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
+
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
-  import { enhance } from "$app/forms";
 
   export let subject: any;
   export let allSubjects: Subject[];
@@ -19,6 +22,8 @@
 
   export let onCancelEdit: any;
   export let deleteShowing = false;
+
+  export let onSaveComplete = () => {};
 
   const deleteIt = () => {};
 
@@ -62,16 +67,25 @@
     originalParentId = editingSubject.parentId;
   }
 
-  const runSave = () => {
-    // if (!editingSubject.name.trim()) {
-    // 	return (missingName = true);
-    // }
-    // let { _id, name, parentId, backgroundColor, textColor } = editingSubject;
-    // let request = { _id, name, parentId, backgroundColor, textColor };
-    //Promise.resolve(updateState.runMutation(request)).then(onCancelEdit);
-  };
+  let saving = false;
+  function runSave({ data, action, cancel }: any) {
+    const name = data.get("name");
+    if (!name) {
+      missingName = true;
+      cancel();
+      return;
+    }
 
-  let updateState = {} as any;
+    saving = true;
+
+    return async () => {
+      invalidateAll().then(() => {
+        saving = false;
+        onSaveComplete();
+      });
+    };
+  }
+
   let deleteState = {} as any;
 </script>
 
@@ -80,7 +94,7 @@
 {:else}
   <FlexRow>
     {#if !deleteShowing}
-      <form method="POST" action="/subjects?/saveSubject" use:enhance>
+      <form method="POST" action="/subjects?/saveSubject" use:enhance={runSave}>
         <FlexRow>
           <input type="hidden" name="_id" value={editingSubject._id} />
           <input type="hidden" name="path" value={editingSubject.path} />
@@ -146,13 +160,13 @@
           </div>
           <div class="col-xs-12">
             <FlowItems pushLast={true}>
-              <Button disabled={updateState.running} preset="primary-xs">
+              <Button disabled={saving} preset="primary-xs">
                 Save
-                <i class={`far fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
+                <i class={`far fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
               </Button>
-              <Button type="button" disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+              <Button type="button" disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
               {#if editingSubject._id}
-                <Button type="button" disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+                <Button type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                   Delete
                   {originalName}
                   <i class="far fa-fw fa-trash" />
