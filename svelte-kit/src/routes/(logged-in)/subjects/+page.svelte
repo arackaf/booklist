@@ -11,6 +11,7 @@
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
 
   import SubjectDisplay from "./SubjectDisplay.svelte";
+  import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
   export let data: any;
 
@@ -26,12 +27,6 @@
   };
 
   setContext("subject-chain-disable-animation", writable(false));
-
-  function exitStart(evt: any) {
-    evt.target.style.height = "0";
-    evt.target.style.overflow = "visible";
-  }
-  const scaleTransitionProps = { duration: 150, easing: quadIn };
 </script>
 
 <section class="flush-bottom subjectsRoot">

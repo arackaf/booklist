@@ -10,6 +10,7 @@
   import { syncHeight } from "$lib/util/animationHelpers";
   import EditableExpandableLabelDisplay from "$lib/components/subjectsAndTags/EditableLabelDisplay.svelte";
   import { flip } from "svelte/animate";
+  import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
   export let editSubject: (subject: Subject) => void;
   export let subject: FullSubject;
@@ -65,13 +66,6 @@
 
   $: childSubjects = subject.children;
   $: ({ height, opacity, x, y } = $subjectSpring);
-
-  function exitStart(evt: any) {
-    evt.target.style.height = "0";
-    evt.target.style.overflow = "visible";
-  }
-
-  const scaleTransitionProps = { duration: 150, easing: quadIn };
 </script>
 
 <div>
