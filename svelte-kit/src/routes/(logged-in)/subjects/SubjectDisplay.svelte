@@ -9,6 +9,7 @@
 
   import { syncHeight } from "$lib/util/animationHelpers";
   import EditableExpandableLabelDisplay from "$lib/components/subjectsAndTags/EditableLabelDisplay.svelte";
+  import { flip } from "svelte/animate";
 
   export let editSubject: (subject: Subject) => void;
   export let subject: FullSubject;
@@ -73,24 +74,29 @@
   const scaleTransitionProps = { duration: 150, easing: quadIn };
 </script>
 
-<li style="padding-top: 0; padding-bottom: 0;" on:outrostart={exitStart} in:scale|local={scaleTransitionProps} out:scale|local={scaleTransitionProps}>
-  <div>
-    <div class="padding-bottom-med subjectRow">
-      <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
-    </div>
-    <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
-      <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
-        {#if childSubjects.length}
-          <ul on:outrostart={exitStart} in:scale|local={scaleTransitionProps} out:scale|local={scaleTransitionProps}>
-            {#each childSubjects as s (s._id)}
+<div>
+  <div class="padding-bottom-med subjectRow">
+    <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+  </div>
+  <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
+    <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
+      {#if childSubjects.length}
+        <ul on:outrostart={exitStart} in:scale|local={scaleTransitionProps} out:scale|local={scaleTransitionProps}>
+          {#each childSubjects as s (s._id)}
+            <li
+              animate:flip={{ duration: 150, easing: quadIn }}
+              on:outrostart={exitStart}
+              in:scale|local={scaleTransitionProps}
+              out:scale|local={scaleTransitionProps}
+            >
               <svelte:self subject={s} {editSubject} />
-            {/each}
-          </ul>
-        {/if}
-      </div>
+            </li>
+          {/each}
+        </ul>
+      {/if}
     </div>
   </div>
-</li>
+</div>
 
 <style>
   ul {

@@ -1,6 +1,9 @@
 <script lang="ts">
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
+  import { flip } from "svelte/animate";
+  import { quadIn } from "svelte/easing";
+  import { scale } from "svelte/transition";
 
   import Button from "$lib/components/buttons/Button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
@@ -23,6 +26,12 @@
   };
 
   setContext("subject-chain-disable-animation", writable(false));
+
+  function exitStart(evt: any) {
+    evt.target.style.height = "0";
+    evt.target.style.overflow = "visible";
+  }
+  const scaleTransitionProps = { duration: 150, easing: quadIn };
 </script>
 
 <section class="flush-bottom subjectsRoot">
@@ -33,7 +42,14 @@
   <div class="contentRoot">
     <ul>
       {#each rootSubjects as s (s._id)}
-        <SubjectDisplay subject={s} {editSubject} />
+        <li
+          on:outrostart={exitStart}
+          in:scale|local={scaleTransitionProps}
+          out:scale|local={scaleTransitionProps}
+          animate:flip={{ duration: 150, easing: quadIn }}
+        >
+          <SubjectDisplay subject={s} {editSubject} />
+        </li>
       {/each}
     </ul>
   </div>
