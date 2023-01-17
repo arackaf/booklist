@@ -14,8 +14,8 @@ export const allSubjects = async (userId: string) => {
   });
 };
 
-export const updateSubject = async (userId: string, subject: SubjectEditFields & { _id: string }) => {
-  const { _id, name, originalParentId, parentId, backgroundColor, path, textColor } = subject;
+export const updateSubject = async (userId: string, _id: string, subject: SubjectEditFields) => {
+  const { name, originalParentId, parentId, backgroundColor, path, textColor } = subject;
 
   const newPath = await getNewPath(userId, parentId);
   return updateSingleSubject(userId, _id, { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });

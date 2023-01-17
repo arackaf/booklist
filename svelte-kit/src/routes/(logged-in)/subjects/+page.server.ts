@@ -16,7 +16,7 @@ export const actions = {
       arrays: ["authors", "tags", "subjects"]
     }) as SubjectEditFields & { _id: string };
 
-    await updateSubject(session.userId, fields);
+    await updateSubject(session.userId, fields._id, fields);
   },
   async deleteSubject({ request, locals }: any) {
     const session = await locals.getSession();
