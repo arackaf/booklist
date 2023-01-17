@@ -1,9 +1,9 @@
+import type { SubjectEditFields } from "$data/dbUtils";
 import { updateSubject } from "$data/subjects";
-import type { SubjectWithParentId } from "$data/types";
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const actions = {
-  async saveSubject({ request, cookies, locals }: any) {
+  async saveSubject({ request, locals }: any) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
@@ -14,7 +14,7 @@ export const actions = {
     const fields = toJson(formData, {
       strings: ["_id", "name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"],
       arrays: ["authors", "tags", "subjects"]
-    }) as SubjectWithParentId;
+    }) as SubjectEditFields & { _id: string };
 
     await updateSubject(session.userId, fields);
   }

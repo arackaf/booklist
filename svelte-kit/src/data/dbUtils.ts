@@ -9,7 +9,7 @@ type MongoSingleQueryResponse<T> = {
   document: T;
 };
 
-type SubjectEditFields = {
+export type SubjectEditFields = {
   name: string;
   path: string | null;
   parentId: string | null;
