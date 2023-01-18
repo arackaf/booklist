@@ -65,6 +65,11 @@
     originalParentId = editingSubject.parentId;
   }
 
+  export const reset = () => {
+    inputEl.focus();
+    deleteShowing = false;
+  };
+
   let saving = false;
   function runSave({ data, action, cancel }: any) {
     const name = data.get("name");

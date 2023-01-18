@@ -28,6 +28,8 @@
 
   const newSubject = () => ({ _id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
 
+  let resetEditSubject: () => void;
+
   setContext("subject-chain-disable-animation", writable(false));
 </script>
 
@@ -46,8 +48,21 @@
     </ul>
   </div>
 
-  <Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
-    <EditSubject allSubjects={subjects} {colors} subject={editingSubject} onComplete={closeEditModal} onCancelEdit={closeEditModal} />
+  <Modal
+    isOpen={editModalOpen}
+    onModalMount={resetEditSubject}
+    onHide={() => (editModalOpen = false)}
+    headerCaption={"Edit Subject"}
+    standardFooter={false}
+  >
+    <EditSubject
+      bind:reset={resetEditSubject}
+      allSubjects={subjects}
+      {colors}
+      subject={editingSubject}
+      onComplete={closeEditModal}
+      onCancelEdit={closeEditModal}
+    />
     <hr />
     <Button onClick={closeEditModal}>Close</Button>
   </Modal>

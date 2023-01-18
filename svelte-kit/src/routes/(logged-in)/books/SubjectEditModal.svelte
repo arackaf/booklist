@@ -33,9 +33,15 @@
   const editSubject = (subject: Subject) => (editingSubject = subject);
 
   let deleteShowing: boolean = false;
+
+  $: {
+    if (isOpen) {
+      cancelEdit();
+    }
+  }
 </script>
 
-<Modal {isOpen} {onHide} headerCaption="Edit Subjects" deferStateChangeOnClose={true}>
+<Modal {isOpen} {onHide} headerCaption="Edit Subjects">
   <Stack>
     {#if !deleteShowing}
       <FlowItems pushLast={true} xsFlowReverse={true}>
