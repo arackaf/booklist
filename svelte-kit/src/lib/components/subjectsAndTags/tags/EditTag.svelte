@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import cn from "classnames";
-  import { MutationOf, Mutations } from "gql/graphql-typings";
 
   import { tagsState } from "app/state/tagsState";
 
@@ -10,7 +9,6 @@
   import DeleteTagMutation from "gql/tags/deleteTag.graphql";
   import colorsState from "app/state/colorsState";
 
-  import { mutation } from "micro-graphql-svelte";
   import Stack from "app/components/layout/Stack.svelte";
   import FlexRow from "app/components/layout/FlexRow.svelte";
   import ColorsPalette from "app/components/ui/ColorsPalette.svelte";

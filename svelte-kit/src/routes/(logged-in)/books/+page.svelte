@@ -43,7 +43,7 @@
   // import { searchBooks } from './booksState';
 
   import SubjectEditModal from "./SubjectEditModal.svelte";
-  // import TagEditModal from './TagEditModal.svelte';
+  import TagEditModal from "./TagEditModal.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
@@ -61,7 +61,7 @@
 
   export let data: PageData;
 
-  $: ({ colors, subjects, showMobile } = data);
+  $: ({ colors, subjects, tags, showMobile } = data);
 
   onMount(() => {
     const div = document.createElement("div");
@@ -203,11 +203,9 @@
         {#if editSubjectsModalOpen}
           <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
         {/if}
-        <!--
-				{#if editTagsModalOpen}
-					<TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
-				{/if}
-         -->
+        {#if editTagsModalOpen}
+          <TagEditModal {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+        {/if}
       </div>
     </div>
   </div>
