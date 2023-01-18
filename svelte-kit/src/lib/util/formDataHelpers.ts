@@ -23,7 +23,7 @@ export const toJson = (params: URLSearchParams, options: Options) => {
   const result: Lookup = {};
 
   options.strings?.forEach(k => {
-    result[k] = params.get(k);
+    result[k] = params.get(k) ?? "";
   });
   options.numbers?.forEach(k => {
     const val = params.get(k);

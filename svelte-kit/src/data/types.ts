@@ -3,7 +3,7 @@ export type Subject = {
   name: string;
   textColor: string;
   backgroundColor: string;
-  path: string;
+  path: string | null;
 };
 
 export type DisablableSubject = Subject & {

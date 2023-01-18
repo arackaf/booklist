@@ -26,12 +26,14 @@
     editModalOpen = true;
   };
 
+  const newSubject = () => ({ _id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
+
   setContext("subject-chain-disable-animation", writable(false));
 </script>
 
 <section class="flush-bottom subjectsRoot">
   <div>
-    <Button class="margin-bottom" preset="primary" onClick={() => editSubject({ name: "" })}>New Subject</Button>
+    <Button class="margin-bottom" preset="primary" onClick={() => editSubject(newSubject())}>New Subject</Button>
   </div>
 
   <div class="contentRoot">

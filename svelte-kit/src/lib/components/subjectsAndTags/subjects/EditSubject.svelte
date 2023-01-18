@@ -110,7 +110,13 @@
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
               <label>Name</label>
-              <input bind:this={inputEl} bind:value={editingSubject.name} name="name" class={cn("form-control", { error: missingName })} />
+              <input
+                bind:this={inputEl}
+                bind:value={editingSubject.name}
+                name="name"
+                placeholder="Subject name"
+                class={cn("form-control", { error: missingName })}
+              />
               {#if missingName}
                 <span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Subjects need names! </span>
                 <br />

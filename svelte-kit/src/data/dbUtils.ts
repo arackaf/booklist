@@ -39,6 +39,14 @@ const findById = <T>(table: string, _id: string, userId: string) => {
   return runRequest("findOne", table, { filter: { _id: { $oid: _id }, userId } }).then((res: MongoSingleQueryResponse<T>) => res.document);
 };
 
+export function insertObject(collection: string, userId: string, document: object) {
+  return runRequest("insertOne", collection, {
+    document: { ...document, userId }
+  }).catch(err => {
+    console.log({ err });
+  });
+}
+
 export function runSingleUpdate(collection: string, userId: string, filter: object, update: object) {
   userId = userId || "";
 
