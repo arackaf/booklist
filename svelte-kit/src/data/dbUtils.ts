@@ -30,13 +30,13 @@ export const queryLabelColors = <TProjection = Book>(body: object) => runQuery<T
 
 export const getSubject = (_id: string, userId: string) => findById<Subject>("subjects", _id, userId);
 
-const runQuery = <T>(table: string, body: object) => {
-  return runRequest("aggregate", table, body).then((res: MongoMultiQueryResponse<T>) => res.documents);
+const runQuery = <T>(collection: string, body: object) => {
+  return runRequest("aggregate", collection, body).then((res: MongoMultiQueryResponse<T>) => res.documents);
 };
 
-const findById = <T>(table: string, _id: string, userId: string) => {
+const findById = <T>(collection: string, _id: string, userId: string) => {
   userId = userId || "";
-  return runRequest("findOne", table, { filter: { _id: { $oid: _id }, userId } }).then((res: MongoSingleQueryResponse<T>) => res.document);
+  return runRequest("findOne", collection, { filter: { _id: { $oid: _id }, userId } }).then((res: MongoSingleQueryResponse<T>) => res.document);
 };
 
 export function insertObject(collection: string, userId: string, document: object) {
