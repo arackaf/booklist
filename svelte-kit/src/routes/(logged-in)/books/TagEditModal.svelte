@@ -2,7 +2,7 @@
   import Button from "$lib/components/buttons/Button.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
 
-  import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
+  // import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -31,14 +31,14 @@
         <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
         <Button onClick={newTag} preset="info-xs">
-          <span class="visible-xs">Add new tag </span>
+          <span>Add new tag </span>
           <i class="far fa-fw fa-plus-square" />
         </Button>
       </FlowItems>
     {/if}
 
-    {#if editingTag}
-      <EditTag bind:deleteShowing tag={editingTag} onCancelEdit={cancelEdit} />
-    {/if}
+    <!-- {#if editingTag} -->
+    <!-- <EditTag bind:deleteShowing tag={editingTag} onCancelEdit={cancelEdit} /> -->
+    <!-- {/if} -->
   </Stack>
 </Modal>

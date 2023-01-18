@@ -201,9 +201,8 @@
         />
 
         <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
-        {#if editTagsModalOpen}
-          <TagEditModal {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
-        {/if}
+
+        <TagEditModal tags={allTags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
       </div>
     </div>
   </div>
