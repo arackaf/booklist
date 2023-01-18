@@ -6,10 +6,13 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-  import type { Subject } from "$data/types";
+  import type { Color, Subject } from "$data/types";
 
   export let isOpen = false;
   export let onHide = () => {};
+
+  export let colors: Color[];
+  export let subjects: Subject[];
 
   const emptySubject = {
     _id: "",
@@ -30,8 +33,6 @@
   const editSubject = (subject: Subject) => (editingSubject = subject);
 
   let deleteShowing: boolean = false;
-
-  export let subjects: Subject[];
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Subjects" deferStateChangeOnClose={true}>
@@ -48,7 +49,7 @@
     {/if}
 
     {#if editingSubject}
-      <EditSubject bind:deleteShowing subject={editingSubject} onCancelEdit={cancelEdit} />
+      <EditSubject {colors} allSubjects={subjects} bind:deleteShowing subject={editingSubject} onCancelEdit={cancelEdit} />
     {/if}
   </Stack>
 </Modal>

@@ -42,7 +42,7 @@
   import BooksMenuBar from "./menuBar/MenuBar.svelte";
   // import { searchBooks } from './booksState';
 
-  // import SubjectEditModal from './SubjectEditModal.svelte';
+  import SubjectEditModal from "./SubjectEditModal.svelte";
   // import TagEditModal from './TagEditModal.svelte';
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
@@ -61,7 +61,7 @@
 
   export let data: PageData;
 
-  $: ({ showMobile } = data);
+  $: ({ colors, subjects, showMobile } = data);
 
   onMount(() => {
     const div = document.createElement("div");
@@ -200,10 +200,10 @@
           modifyingBooks={booksEditing}
         />
 
-        <!--
         {#if editSubjectsModalOpen}
-          <SubjectEditModal isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+          <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
         {/if}
+        <!--
 				{#if editTagsModalOpen}
 					<TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
 				{/if}
