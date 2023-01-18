@@ -200,9 +200,8 @@
           modifyingBooks={booksEditing}
         />
 
-        {#if editSubjectsModalOpen}
-          <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
-        {/if}
+        <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+
         <!--
 				{#if editTagsModalOpen}
 					<TagEditModal isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
