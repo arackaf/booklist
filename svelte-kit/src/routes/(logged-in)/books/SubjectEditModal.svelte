@@ -42,7 +42,7 @@
         <SelectAvailableSubjects {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
 
         <Button onClick={newSubject} preset="info-xs">
-          <span class="visible-xs">Add new subject </span>
+          <span>Add new subject </span>
           <i class="far fa-fw fa-plus-square" />
         </Button>
       </FlowItems>
