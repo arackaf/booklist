@@ -37,12 +37,7 @@
   <div class="contentRoot">
     <ul>
       {#each rootSubjects as s (s._id)}
-        <li
-          on:outrostart={exitStart}
-          in:scale|local={scaleTransitionProps}
-          out:scale|local={scaleTransitionProps}
-          animate:flip={{ duration: 150, easing: quadIn }}
-        >
+        <li on:outrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
           <SubjectDisplay subject={s} {editSubject} />
         </li>
       {/each}
