@@ -2,39 +2,31 @@
   import { onMount } from "svelte";
   import cn from "classnames";
 
-  import { tagsState } from "app/state/tagsState";
+  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
 
-  import UpdateTagMutation from "gql/tags/updateTag.graphql";
-  import CreateTagMutation from "gql/tags/createTag.graphql";
-  import DeleteTagMutation from "gql/tags/deleteTag.graphql";
-  import colorsState from "app/state/colorsState";
+  import type { Color, Tag } from "$data/types";
 
-  import Stack from "app/components/layout/Stack.svelte";
-  import FlexRow from "app/components/layout/FlexRow.svelte";
-  import ColorsPalette from "app/components/ui/ColorsPalette.svelte";
-  import CustomColorPicker from "app/components/ui/CustomColorPicker.svelte";
-  import FlowItems from "app/components/layout/FlowItems.svelte";
-  import Button from "app/components/buttons/Button.svelte";
+  import Stack from "$lib/components/layout/Stack.svelte";
+  import FlexRow from "$lib/components/layout/FlexRow.svelte";
+  import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
+  import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
+  import FlowItems from "$lib/components/layout/FlowItems.svelte";
+  import Button from "$lib/components/buttons/Button.svelte";
 
-  export let tag;
-  export let onCancelEdit;
+  export let tag: Tag;
+  export let allTags: Tag[];
+  export let colors: Color[];
 
-  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateTag"]>>(UpdateTagMutation);
-  $: updateState = $updateMutationState;
+  export let onCancelEdit: () => void;
+  export let deleteShowing = false;
 
-  const { mutationState: createMutationState } = mutation<MutationOf<Mutations["updateTag"]>>(CreateTagMutation);
-  $: createState = $createMutationState;
-
-  const { mutationState: deleteMutationState } = mutation<MutationOf<Mutations["deleteTag"]>>(DeleteTagMutation);
-  $: deleteState = $deleteMutationState;
-
-  const deleteIt = () => deleteState.runMutation({ _id: editingTag._id }).then(onCancelEdit);
+  export let onComplete = () => {};
 
   const textColors = ["#ffffff", "#000000"];
 
-  export let deleteShowing = false;
   let missingName = false;
-  let inputEl;
+  let inputEl: HTMLInputElement;
 
   let originalName = "";
 
@@ -50,31 +42,54 @@
 
   $: editingTagChanged(tag);
 
-  $: ({ tagHash } = $tagsState);
-  $: ({ colors } = $colorsState);
   $: {
     if (editingTag.name) {
       missingName = false;
     }
   }
 
-  function editingTagChanged(tag) {
+  function editingTagChanged(tag: Tag) {
     editingTag = { ...tag };
     missingName = false;
     deleteShowing = false;
     originalName = tag.name;
   }
 
-  const runSave = () => {
-    if (!editingTag.name.trim()) {
-      return (missingName = true);
+  export const reset = () => {
+    inputEl.focus();
+    deleteShowing = false;
+  };
+
+  let saving = false;
+  function runSave({ data, action, cancel }: any) {
+    const name = data.get("name");
+    if (!name) {
+      missingName = true;
+      cancel();
+      return;
     }
 
-    let { _id, name, parentId, backgroundColor, textColor } = editingTag;
-    let request = { _id, name, parentId, backgroundColor: backgroundColor ?? "", textColor: textColor ?? "" };
+    saving = true;
 
-    Promise.resolve((_id ? updateState : createState).runMutation(request)).then(onCancelEdit);
-  };
+    return async () => {
+      invalidateAll().then(() => {
+        saving = false;
+        onComplete();
+      });
+    };
+  }
+
+  let deleting = false;
+  function runDelete() {
+    deleting = true;
+
+    return async () => {
+      invalidateAll().then(() => {
+        deleting = false;
+        onComplete();
+      });
+    };
+  }
 </script>
 
 {#if !editingTag}

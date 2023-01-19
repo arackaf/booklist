@@ -16,11 +16,11 @@
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
 
-  export let subject: any;
+  export let subject: Subject;
   export let allSubjects: Subject[];
   export let colors: Color[];
 
-  export let onCancelEdit: any;
+  export let onCancelEdit: () => void;
   export let deleteShowing = false;
 
   export let onComplete = () => {};
@@ -28,7 +28,7 @@
   const textColors = ["#ffffff", "#000000"];
 
   let missingName = false;
-  let inputEl: any;
+  let inputEl: HTMLInputElement;
 
   let originalName = "";
   let originalParentId = "";
@@ -48,8 +48,6 @@
   $: subjectHash = getSubjectsHash(allSubjects);
   $: childSubjects = getChildSubjectsSorted(subject._id, subjectHash);
 
-  //let colorsState = writable({ colors: [] });
-  //$: ({ colors } = $colorsState);
   $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
   $: {
     if (editingSubject.name) {

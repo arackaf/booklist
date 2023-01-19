@@ -86,7 +86,7 @@ export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: 
   }, []);
 };
 
-export const computeParentId = (path: string) => {
+export const computeParentId = (path: string | null) => {
   if (path) {
     let pathParts = path.split(",");
     return pathParts[pathParts.length - 2];
