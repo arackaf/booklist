@@ -12,8 +12,7 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"],
-      arrays: ["authors", "tags", "subjects"]
+      strings: ["_id", "name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"]
     }) as SubjectEditFields & { _id: string };
 
     await saveSubject(session.userId, fields._id, fields);

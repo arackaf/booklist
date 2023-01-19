@@ -210,7 +210,7 @@
                 {#if deleting}
                   <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
                 {:else}
-                  Delete it!
+                  <span>Delete it!</span>
                 {/if}
               </Button>
               <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
