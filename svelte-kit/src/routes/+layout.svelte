@@ -13,7 +13,8 @@
 
   export let data: PageData;
 
-  $: ({ showMobile, theme, whiteBg } = data);
+  $: ({ showMobile, uxState } = data);
+  $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
     if (typeof document === "object") {

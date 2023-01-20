@@ -1,4 +1,5 @@
 import { ONE_YEAR_SECONDS, THEME_COOKIE, WHITE_BG_COOKIE } from "$lib/util/constants";
+import { updateUxState } from "$lib/util/uxState";
 
 export const actions = {
   async setTheme({ request, cookies }: any) {
@@ -6,13 +7,13 @@ export const actions = {
 
     const theme = formData.get("theme");
 
-    cookies.set(THEME_COOKIE, theme, { path: "/", maxAge: ONE_YEAR_SECONDS });
+    updateUxState(cookies, { theme });
   },
   async setWhiteBb({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
 
     const whiteBg = formData.get("whitebg") == "on" ? 1 : 0;
 
-    cookies.set(WHITE_BG_COOKIE, whiteBg, { path: "/", maxAge: ONE_YEAR_SECONDS });
+    updateUxState(cookies, { wbg: whiteBg });
   }
 };

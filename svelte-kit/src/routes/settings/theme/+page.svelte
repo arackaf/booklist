@@ -12,7 +12,8 @@
   const themeNames = Array.from({ length: NUM_THEMES }, (v, i) => `scheme${i + 1}`);
 
   export let data: PageData;
-  $: ({ theme, whiteBg } = data);
+  $: ({ uxState } = data);
+  $: ({ theme, wbg: whiteBg } = uxState);
 
   let whiteBgForm: HTMLFormElement;
 
@@ -27,7 +28,7 @@
   <div class="theme-chooser-list">
     <form bind:this={whiteBgForm} method="POST" action="?/setWhiteBb" use:enhance={setWhiteBg}>
       <label style="font-size: 16px" class="checkbox margin-bottom">
-        <input type="checkbox" name="whitebg" checked={whiteBg} on:change={() => whiteBgForm.requestSubmit()} />
+        <input type="checkbox" name="whitebg" checked={whiteBg == "1"} on:change={() => whiteBgForm.requestSubmit()} />
         White background
       </label>
     </form>

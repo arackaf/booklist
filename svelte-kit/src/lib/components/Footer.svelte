@@ -13,7 +13,8 @@
     });
   };
 
-  $: ({ isMobile, desktopRequested } = $page.data);
+  $: ({ isMobile, uxState } = $page.data);
+  $: ({ desktopRequested } = uxState);
 
   $: showChooseDesktop = isMobile && !desktopRequested;
   $: showSwitchBackMobile = isMobile && desktopRequested;

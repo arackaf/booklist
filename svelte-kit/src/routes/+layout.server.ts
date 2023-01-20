@@ -1,5 +1,6 @@
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { DESKTOP_REQUESTED_COOKIE } from "$lib/util/constants";
+import { getUxState } from "$lib/util/uxState";
 
 export async function load({ locals, isDataRequest, request, cookies, depends }: any) {
   depends("app-root");
@@ -7,10 +8,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   const userAgent = request.headers.get("User-Agent");
   const isMobile = true || /mobile/i.test(userAgent);
 
-  const desktopRequested = !!cookies.get(DESKTOP_REQUESTED_COOKIE);
-
-  const theme = cookies.get("theme") || "scheme5";
-  const whiteBg = (cookies.get("wbg") || "0") == "1";
+  const uxState = getUxState(cookies);
 
   const initialRequest = !isDataRequest;
   if (initialRequest) {
@@ -21,11 +19,9 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   const loggedIn = !!session?.user;
 
   return {
-    theme,
-    whiteBg,
+    uxState,
     isMobile,
-    desktopRequested,
-    showMobile: isMobile && !desktopRequested,
+    showMobile: isMobile && !uxState.desktopRequested,
     loggedIn
   };
 }
