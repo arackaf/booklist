@@ -60,12 +60,13 @@ type BookSortValue = Partial<{
   [k in BookSortKeys]: number;
 }>;
 
-export type BookSearch = Partial<{
+export type BookSearch = {
   search: string;
   publisher: string;
   author: string;
-  sort: BookSortValue;
-}>;
+  sort?: BookSortValue;
+  tags: string[];
+};
 
 type EditorialReview = {
   source: string;

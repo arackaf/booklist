@@ -27,7 +27,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, publisher, author, sort } = searchPacket;
+  const { search, publisher, author, tags, sort } = searchPacket;
   const $match: any = { userId };
 
   if (search) {
@@ -39,6 +39,11 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (author) {
     $match.authors = { $regex: escapeRegexp(author), $options: "i" };
   }
+  if (tags.length) {
+    $match.tags = { $in: tags };
+  }
+
+  console.log({ tags });
 
   return queryBooks({
     pipeline: [

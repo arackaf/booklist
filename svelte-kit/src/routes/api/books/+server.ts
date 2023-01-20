@@ -17,11 +17,13 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const publisher = url.searchParams.get("publisher") || "";
   const author = url.searchParams.get("author") || "";
   const sortString = url.searchParams.get("sort") || "";
+  const tags = url.searchParams.getAll("tags");
 
   const packet: BookSearch = {
     author,
     search,
-    publisher
+    publisher,
+    tags
   };
 
   if (sortString) {
