@@ -105,7 +105,7 @@
             </div>
 
             <div class="col-xs-12">
-              <Button onClick={resetSubjects} preset="default-xs">Reset subjects</Button>
+              <Button type="button" onClick={resetSubjects} preset="default-xs">Reset subjects</Button>
             </div>
           </FlexRow>
         </TabContent>
