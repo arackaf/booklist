@@ -1,5 +1,5 @@
 import type { Subject } from "./types";
-import { getSubject, querySubjects, runMultiUpdate, deleteById, type SubjectEditFields, insertObject } from "./dbUtils";
+import { getSubject, querySubjects, runMultiUpdate, deleteById, type SubjectEditFields, insertObject, runRequest } from "./dbUtils";
 
 export const allSubjects = async (userId: string) => {
   userId = userId || "";
@@ -97,7 +97,37 @@ const updateSingleSubject = async (userId: string, _id: string, updates: Subject
   ]);
 };
 
-export const deleteSingleSubject = deleteById.bind(null, "subjects");
+export const deleteSubject = async (userId: string, _id: string) => {
+  const subjectsToDelete = await querySubjects({
+    pipeline: [
+      {
+        $match: {
+          userId,
+          $or: [{ _id: { $oid: _id } }, { path: { $regex: `.*,${_id},` } }]
+        }
+      },
+      { $project: { _id: 1, name: 1 } }
+    ]
+  });
+
+  const subjectIds = subjectsToDelete.map(s => s._id);
+
+  await runMultiUpdate(
+    "books",
+    userId,
+    {
+      subjects: { $in: subjectIds }
+    },
+    { $pull: { subjects: { $in: subjectIds } } }
+  );
+
+  await runRequest("deleteMany", "subjects", {
+    filter: {
+      userId,
+      $or: [{ _id: { $oid: _id } }, { path: { $regex: `.*,${_id},` } }]
+    }
+  });
+};
 
 const getNewPath = async (userId: string, parentId: string | null): Promise<string | null> => {
   let newParent = parentId ? await getSubject(parentId, userId) : null;

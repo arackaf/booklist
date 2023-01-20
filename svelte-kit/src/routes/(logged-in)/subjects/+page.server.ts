@@ -1,5 +1,5 @@
 import type { SubjectEditFields } from "$data/dbUtils";
-import { saveSubject, deleteSingleSubject } from "$data/subjects";
+import { saveSubject, deleteSubject } from "$data/subjects";
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const actions = {
@@ -26,6 +26,6 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
     const _id = formData.get("_id")!;
 
-    await deleteSingleSubject(session.userId, _id);
+    await deleteSubject(session.userId, _id);
   }
 };
