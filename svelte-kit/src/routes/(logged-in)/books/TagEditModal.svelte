@@ -40,7 +40,7 @@
     {/if}
 
     {#if editingTag}
-      <EditTag {colors} bind:deleteShowing tag={editingTag} onCancelEdit={cancelEdit} />
+      <EditTag {colors} bind:deleteShowing tag={editingTag} onComplete={onHide} onCancelEdit={cancelEdit} />
     {/if}
   </Stack>
 </Modal>
