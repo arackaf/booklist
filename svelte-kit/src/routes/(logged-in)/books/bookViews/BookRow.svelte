@@ -68,7 +68,7 @@
   {/if}
   <td>
     <div style="width: 60px; min-height: 75px;">
-      <BookCover url={book.smallImage} preview={book.smallImagePreview} />
+      <BookCover size="small" url={book.smallImage} preview={book.smallImagePreview} />
     </div>
   </td>
   <td>

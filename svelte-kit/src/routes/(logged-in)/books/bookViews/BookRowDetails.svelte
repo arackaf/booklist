@@ -64,7 +64,7 @@
                       <tr>
                         <td>
                           {#if book.smallImage}
-                            <BookCover preview={book.smallImagePreview} url={book.smallImage} />
+                            <BookCover size="small" preview={book.smallImagePreview} url={book.smallImage} />
                           {/if}
                         </td>
                         <td>

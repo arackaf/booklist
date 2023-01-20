@@ -3,6 +3,7 @@
 
   export let url: string | null = null;
   export let preview: string | PreviewPacket | null;
+  export let size: "mobile" | "small" | "medium";
 
   $: previewString = preview == null ? "" : typeof preview === "string" ? preview : preview.b64;
   $: sizingStyle = preview != null && typeof preview === "object" ? `width:${preview.w}px;height:${preview.h}px` : "";
@@ -12,7 +13,13 @@
   {#if previewString}
     <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
   {/if}
-  <img alt="Book cover" src={url} class="image" />
+  {#if url}
+    <img alt="Book cover" src={url} class="image" />
+  {:else}
+    <div class="no-cover-{size}">
+      <div>No Cover</div>
+    </div>
+  {/if}
 </div>
 
 <style>

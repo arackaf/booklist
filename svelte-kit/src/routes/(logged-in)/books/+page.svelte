@@ -25,8 +25,6 @@
 </script>
 
 <script lang="ts">
-  import "$lib/components/bookCoverWC/component";
-
   import { onMount, setContext } from "svelte";
   import { page } from "$app/stores";
 
