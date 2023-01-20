@@ -18,7 +18,6 @@ export type SubjectEditFields = {
   backgroundColor: string;
 };
 
-export const updateSingleBook = runSingleUpdate.bind(null, "books");
 export const updateMultipleBooks = runMultiUpdate.bind(null, "books");
 
 export const deleteBookById = deleteById.bind(null, "books");
@@ -47,11 +46,11 @@ export function insertObject(collection: string, userId: string, document: objec
   });
 }
 
-export function runSingleUpdate(collection: string, userId: string, filter: object, update: object) {
+export function updateById(collection: string, userId: string, _id: string, update: object) {
   userId = userId || "";
 
   return runRequest("updateOne", collection, {
-    filter: { ...filter, userId },
+    filter: { _id: { $oid: _id }, userId },
     update
   }).catch(err => {
     console.log({ err });

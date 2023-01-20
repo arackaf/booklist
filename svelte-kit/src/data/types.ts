@@ -26,6 +26,8 @@ export type Tag = {
   backgroundColor: string;
 };
 
+export type TagEditFields = Omit<Tag, "_id">;
+
 export type PreviewPacket = { w: number; h: number; b64: string };
 
 export type BookSubjectStack = { subjects: string[]; count: number };
