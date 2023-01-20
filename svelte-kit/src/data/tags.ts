@@ -1,4 +1,4 @@
-import { deleteById, insertObject, queryTags, runSingleUpdate } from "./dbUtils";
+import { deleteById, insertObject, queryTags, updateById } from "./dbUtils";
 import type { Hash, Tag, TagEditFields } from "./types";
 
 export const allTags = async (userId: string = "") => {
@@ -39,18 +39,13 @@ const insertSingleTag = async (userId: string, subject: TagEditFields) => {
 };
 
 const updateSingleTag = async (userId: string, _id: string, updates: TagEditFields) => {
-  return runSingleUpdate(
-    "tags",
-    userId,
-    { _id: { $oid: _id } },
-    {
-      $set: {
-        name: updates.name,
-        textColor: updates.textColor,
-        backgroundColor: updates.backgroundColor
-      }
+  return updateById("tags", userId, _id, {
+    $set: {
+      name: updates.name,
+      textColor: updates.textColor,
+      backgroundColor: updates.backgroundColor
     }
-  );
+  });
 };
 
 export const deleteSingleTag = deleteById.bind(null, "tags");
