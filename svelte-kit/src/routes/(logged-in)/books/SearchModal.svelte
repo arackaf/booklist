@@ -77,8 +77,12 @@
   };
 
   const onFormData = (evt: any) => {
-    //closeModal();
     const searchParams: URLSearchParams = evt.formData;
+
+    if (searchParams.get("sort") === "_id-desc") {
+      searchParams.delete("sort");
+    }
+
     sanitize(searchParams);
   };
 </script>
