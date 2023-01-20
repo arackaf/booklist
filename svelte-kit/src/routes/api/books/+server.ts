@@ -18,12 +18,14 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const author = url.searchParams.get("author") || "";
   const sortString = url.searchParams.get("sort") || "";
   const tags = url.searchParams.getAll("tags");
+  const subjects = url.searchParams.getAll("subjects");
 
   const packet: BookSearch = {
     author,
     search,
     publisher,
-    tags
+    tags,
+    subjects
   };
 
   if (sortString) {

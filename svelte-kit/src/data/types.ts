@@ -64,8 +64,9 @@ export type BookSearch = {
   search: string;
   publisher: string;
   author: string;
-  sort?: BookSortValue;
   tags: string[];
+  subjects: string[];
+  sort?: BookSortValue;
 };
 
 type EditorialReview = {

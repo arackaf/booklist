@@ -27,7 +27,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, publisher, author, tags, sort } = searchPacket;
+  const { search, publisher, author, tags, subjects, sort } = searchPacket;
   const $match: any = { userId };
 
   if (search) {
@@ -41,6 +41,9 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   }
   if (tags.length) {
     $match.tags = { $in: tags };
+  }
+  if (subjects.length) {
+    $match.subjects = { $in: subjects };
   }
 
   console.log({ tags });
