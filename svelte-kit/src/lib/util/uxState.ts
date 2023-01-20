@@ -1,17 +1,9 @@
 import { ONE_YEAR_SECONDS } from "./constants";
 
-export type GRID_VIEW = "tbl";
-export type BASIC_LIST_VIEW = "mbl";
-export type COVERS_LIST = "cov";
-
-export const GRID_VIEW = "tbl";
-export const BASIC_LIST_VIEW = "mbl";
-export const COVERS_LIST = "cov";
-
 export type UxState = {
   theme: string;
   wbg: string;
-  bkVw: string;
+  bkVw?: string;
   desktopRequested: string;
 };
 
@@ -62,12 +54,6 @@ const parseUxState = (state: string): UxState => {
     return result;
   }, {} as any);
 
-  Object.keys(defaultUxState()).forEach(k => {
-    if (typeof result[k] !== "string") {
-      throw "Bad parse;";
-    }
-  });
-
   return result as UxState;
 };
 
@@ -75,7 +61,6 @@ const defaultUxState = (): UxState => {
   return {
     theme: "scheme1",
     wbg: "0",
-    bkVw: GRID_VIEW,
     desktopRequested: "0"
   };
 };

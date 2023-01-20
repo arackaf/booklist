@@ -26,16 +26,15 @@
     };
   };
 
-  const uiViewChange = () => {
-    return async () => {
-      invalidate("");
-    };
+  const uiViewChange = ({ data }: any) => {
+    overrideBookView(data.get("view"));
+    return async () => {};
   };
 
   const isPublic = false;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, onBooksUpdated } = booksModuleContext;
+  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, overrideBookView } = booksModuleContext;
 
   $: selectedBooksIds = Object.keys($selectedBooksLookup);
   $: selectedBooksCount = selectedBooksIds.length;

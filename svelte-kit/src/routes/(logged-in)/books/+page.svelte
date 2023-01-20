@@ -56,10 +56,15 @@
   import { selectedBooksLookup, selectionState } from "./state/selectionState";
 
   import type { PageData } from "./$types";
+  import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
   export let data: PageData;
 
-  $: ({ colors, subjects, tags, showMobile } = data);
+  $: ({ colors, subjects, bookView, tags, showMobile } = data);
+  let bookViewOverride: string | null = null;
+  const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
+
+  $: bookViewToUse = bookViewOverride || bookView;
 
   onMount(() => {
     const div = document.createElement("div");
@@ -135,7 +140,8 @@
     editBook,
     editBooksSubjects,
     editBooksTags,
-    onBooksUpdated
+    onBooksUpdated,
+    overrideBookView
   };
   setContext("books-module-context", booksModuleContext);
 
@@ -160,10 +166,12 @@
           </div>
         {:else}
           <div>
-            {#if showMobile}
+            {#if bookViewToUse == BASIC_LIST_VIEW}
               <h1>MOBILE</h1>
-            {:else}
+            {:else if bookViewToUse === GRID_VIEW}
               <GridView books={$books} subjects={allSubjects} tags={allTags} />
+            {:else}
+              <h1>COVERS</h1>
             {/if}
 
             <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
