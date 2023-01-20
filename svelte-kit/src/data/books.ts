@@ -1,5 +1,6 @@
 import { queryBooks, updateMultipleBooks, deleteBookById, updateById } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
+import escapeRegexp from "escape-string-regexp";
 
 const bookFields = [
   "_id",
@@ -26,11 +27,22 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, sort } = searchPacket;
+  const { search, publisher, author, sort } = searchPacket;
+  const $match: any = { userId };
+
+  if (search) {
+    $match.title = { $regex: escapeRegexp(search), $options: "i" };
+  }
+  if (publisher) {
+    $match.publisher = { $regex: escapeRegexp(publisher), $options: "i" };
+  }
+  if (author) {
+    $match.authors = { $regex: escapeRegexp(author), $options: "i" };
+  }
 
   return queryBooks({
     pipeline: [
-      { $match: { title: { $regex: search || "", $options: "i" }, userId } },
+      { $match },
       { $project: bookProjections },
       { $addFields: { dateAdded: { $toDate: "$_id" } } },
       { $limit: 50 },

@@ -62,6 +62,8 @@ type BookSortValue = Partial<{
 
 export type BookSearch = Partial<{
   search: string;
+  publisher: string;
+  author: string;
   sort: BookSortValue;
 }>;
 

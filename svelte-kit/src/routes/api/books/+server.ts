@@ -14,10 +14,14 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   });
 
   const search = url.searchParams.get("search") || "";
+  const publisher = url.searchParams.get("publisher") || "";
+  const author = url.searchParams.get("author") || "";
   const sortString = url.searchParams.get("sort") || "";
 
   const packet: BookSearch = {
-    search
+    author,
+    search,
+    publisher
   };
 
   if (sortString) {
