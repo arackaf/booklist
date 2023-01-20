@@ -15,7 +15,6 @@
   import Button from "$lib/components/buttons/Button.svelte";
 
   export let tag: Tag;
-  export let allTags: Tag[];
   export let colors: Color[];
 
   export let onCancelEdit: () => void;
@@ -97,74 +96,99 @@
 {:else}
   <FlexRow>
     {#if !deleteShowing}
-      <FlexRow>
-        <div class="col-xs-12 col-lg-6">
-          <div class="form-group">
-            <label>Name</label>
-            <input bind:this={inputEl} bind:value={editingTag.name} class={cn("form-control", { error: missingName })} />
-            {#if missingName}<span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Tags need names! </span> <br />{/if}
-            <div
-              class="label label-default"
-              style="background-color: {editingTag.backgroundColor}; color: {editingTag.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
-            >
-              {editingTag.name.trim() || "<label preview>"}
+      <form method="POST" action="?/saveTag" use:enhance={runSave}>
+        <FlexRow>
+          <input type="hidden" name="_id" value={editingTag._id} />
+          <div class="col-xs-12 col-lg-6">
+            <div class="form-group">
+              <label>Name</label>
+              <input
+                bind:this={inputEl}
+                bind:value={editingTag.name}
+                name="name"
+                placeholder="Tag name"
+                class={cn("form-control", { error: missingName })}
+              />
+              {#if missingName}
+                <span style="margin-top: 5px; display: inline-block;" class="label label-danger">Tags need names!</span>
+                <br />
+              {/if}
+              <div
+                class="label label-default"
+                style="background-color: {editingTag.backgroundColor}; color: {editingTag.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
+              >
+                {editingTag.name.trim() || "<label preview>"}
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-xs-12 col-lg-6" />
-        <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
-            <label>Label Color</label>
-            <ColorsPalette currentColor={editingTag.backgroundColor} {colors} onColorChosen={color => (editingTag.backgroundColor = color)} />
-            <CustomColorPicker
-              labelStyle="margin-left: 3px"
-              onColorChosen={color => (editingTag.backgroundColor = color)}
-              currentColor={editingTag.backgroundColor}
-            />
+          <div class="col-xs-12 col-lg-6" />
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Label Color</label>
+              <ColorsPalette
+                currentColor={editingTag.backgroundColor}
+                colors={colors.map(c => c.backgroundColor)}
+                onColorChosen={color => (editingTag.backgroundColor = color)}
+              />
+              <CustomColorPicker
+                labelStyle="margin-left: 3px"
+                onColorChosen={color => (editingTag.backgroundColor = color)}
+                currentColor={editingTag.backgroundColor}
+              />
+              <input type="hidden" name="backgroundColor" value={editingTag.backgroundColor} />
+            </div>
           </div>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
-            <label>Text Color</label>
-            <ColorsPalette currentColor={editingTag.textColor} colors={textColors} onColorChosen={color => (editingTag.textColor = color)} />
-            <CustomColorPicker
-              labelStyle="margin-left: 3px"
-              onColorChosen={color => (editingTag.textColor = color)}
-              currentColor={editingTag.backgroundColor}
-            />
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Text Color</label>
+              <ColorsPalette currentColor={editingTag.textColor} colors={textColors} onColorChosen={color => (editingTag.textColor = color)} />
+              <CustomColorPicker
+                labelStyle="margin-left: 3px"
+                onColorChosen={color => (editingTag.textColor = color)}
+                currentColor={editingTag.backgroundColor}
+              />
+              <input type="hidden" name="textColor" value={editingTag.textColor} />
+            </div>
           </div>
-        </div>
-        <div class="col-xs-12">
-          <FlowItems pushLast={true}>
-            <Button disabled={updateState.running} preset="primary-xs" onClick={runSave}>
-              Save
-              <i class={`far fa-fw ${updateState.running ? "fa-spinner fa-spin" : "fa-save"}`} />
-            </Button>
-            <Button disabled={updateState.running} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
-            {#if editingTag._id}
-              <Button disabled={updateState.running} preset="danger-xs" onClick={() => (deleteShowing = true)}>
-                Delete
-                {originalName}
-                <i class="far fa-fw fa-trash" />
+          <div class="col-xs-12">
+            <FlowItems pushLast={true}>
+              <Button disabled={saving} preset="primary-xs">
+                Save
+                <i class={`far fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
               </Button>
-            {/if}
-          </FlowItems>
-        </div>
-      </FlexRow>
-    {:else}
-      <div class="col-xs-12">
-        <Stack>
-          <div class="alert alert-danger alert-slim" style="align-self: flex-start">
-            <FlowItems tighter={true}><span>Delete {originalName}?</span></FlowItems>
+              <Button disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+              {#if editingTag._id}
+                <Button disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+                  Delete
+                  {originalName}
+                  <i class="fal fa-fw fa-trash-alt" />
+                </Button>
+              {/if}
+            </FlowItems>
           </div>
-          <FlowItems>
-            <Button disabled={deleteState.running} onClick={deleteIt} preset="danger-xs">
-              {#if deleteState.running}<span> Deleting <i class="far fa-spinner fa-spin" /> </span>{:else}"Delete it!"{/if}
-            </Button>
-            <Button disabled={deleteState.running} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
-          </FlowItems>
-        </Stack>
-      </div>
+        </FlexRow>
+      </form>
+    {:else}
+      <form method="POST" action="?/deleteTag" use:enhance={runDelete}>
+        <input type="hidden" name="_id" value={editingTag._id} />
+        <div class="col-xs-12">
+          <Stack>
+            <div class="alert alert-danger alert-slim" style="align-self: flex-start">
+              <FlowItems tighter={true}><span>Delete {originalName}?</span></FlowItems>
+            </div>
+            <FlowItems>
+              <Button disabled={deleting} preset="danger-xs">
+                {#if deleting}
+                  <span> Deleting <i class="far fa-spinner fa-spin" /></span>
+                {:else}
+                  <span>Delete it!</span>
+                {/if}
+              </Button>
+              <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+            </FlowItems>
+          </Stack>
+        </div>
+      </form>
     {/if}
   </FlexRow>
 {/if}

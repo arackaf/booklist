@@ -202,7 +202,7 @@
 
         <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
 
-        <TagEditModal tags={allTags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+        <TagEditModal {colors} tags={allTags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
       </div>
     </div>
   </div>

@@ -1,16 +1,18 @@
 <script lang="ts">
+  import type { Color, Tag } from "$data/types";
+
   import Button from "$lib/components/buttons/Button.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
 
-  // import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
+  import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
-  import type { Tag } from "$data/types";
 
   export let isOpen = false;
   export let onHide = () => {};
 
+  export let colors: Color[];
   export let tags: Tag[];
 
   let editingTag: Tag | null = null;
@@ -37,8 +39,8 @@
       </FlowItems>
     {/if}
 
-    <!-- {#if editingTag} -->
-    <!-- <EditTag bind:deleteShowing tag={editingTag} onCancelEdit={cancelEdit} /> -->
-    <!-- {/if} -->
+    {#if editingTag}
+      <EditTag {colors} bind:deleteShowing tag={editingTag} onCancelEdit={cancelEdit} />
+    {/if}
   </Stack>
 </Modal>

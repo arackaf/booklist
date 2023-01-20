@@ -1,4 +1,7 @@
 import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook } from "$data/books";
+import type { Tag } from "$data/types";
+import { saveTag, deleteSingleTag } from "$data/tags";
+
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { ONE_YEAR_SECONDS } from "$lib/util/constants";
 import { toJson } from "$lib/util/formDataHelpers";
@@ -101,5 +104,30 @@ export const actions = {
     await deleteBook(session.userId, _id);
 
     return { success: true };
+  },
+  async saveTag({ request, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
+    const formData: URLSearchParams = await request.formData();
+
+    const fields = toJson(formData, {
+      strings: ["_id", "name", "backgroundColor", "textColor"]
+    }) as Tag;
+
+    await saveTag(session.userId, fields._id, fields);
+  },
+  async deleteTag({ request, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
+    const formData: URLSearchParams = await request.formData();
+    const _id = formData.get("_id")!;
+
+    await deleteSingleTag(session.userId, _id);
   }
 };
