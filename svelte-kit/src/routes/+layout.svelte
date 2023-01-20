@@ -23,7 +23,7 @@
         document.body.classList.remove(`scheme${i}`);
       }
 
-      if (whiteBg) {
+      if (whiteBg === "1") {
         document.body.classList.add("white-bg");
       }
       document.body.classList.add(theme);
@@ -41,7 +41,7 @@
   });
 </script>
 
-<div class={`app-container ${theme}`} class:white-bg={whiteBg}>
+<div class={`app-container ${theme}`} class:white-bg={whiteBg === "1"}>
   <div id="app">
     <MainNavigation />
     <main>
