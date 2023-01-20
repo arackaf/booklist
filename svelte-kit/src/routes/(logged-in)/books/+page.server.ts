@@ -3,7 +3,6 @@ import type { Tag } from "$data/types";
 import { saveTag, deleteSingleTag } from "$data/tags";
 
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
-import { ONE_YEAR_SECONDS } from "$lib/util/constants";
 import { toJson } from "$lib/util/formDataHelpers";
 import { updateUxState } from "$lib/util/uxState";
 
