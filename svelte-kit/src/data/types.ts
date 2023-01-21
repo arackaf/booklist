@@ -1,3 +1,5 @@
+import type { Readable } from "svelte/store";
+
 export type Subject = {
   _id: string;
   name: string;
@@ -95,3 +97,5 @@ export type Color = {
   backgroundColor: string;
   order: number;
 };
+
+export type UnwrapReadable<T> = T extends Readable<infer U> ? U : never;

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Subject, Tag, UnwrapReadable } from "$data/types";
+
   import Button from "$lib/components/buttons/Button.svelte";
 
   import Modal from "$lib/components/ui/Modal.svelte";
@@ -14,8 +16,7 @@
 
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-
-  import type { Subject, Tag } from "$data/types";
+  import { get } from "svelte/store";
 
   export let isOpen = false;
   export let onHide = () => {};
@@ -23,23 +24,23 @@
   export let allTags: Tag[];
   export let allSubjects: Subject[];
 
+  let localSearchValues: UnwrapReadable<typeof searchState> = {} as any;
+
   let subjects = [] as any[];
   let tags = [] as any[];
+  let noSubjects: boolean;
 
   $: {
     if (isOpen) {
-      syncSubjectsAndTags();
+      syncSearchState();
     }
   }
-  function syncSubjectsAndTags() {
-    subjects = $searchState.subjects;
-    tags = $searchState.tags;
+  function syncSearchState() {
+    localSearchValues = { ...get(searchState) };
+    subjects = localSearchValues.subjects;
+    tags = localSearchValues.tags;
+    noSubjects = localSearchValues.noSubjects;
   }
-
-  let noSubjectsFilter = false;
-  const setNoSubjectsFilter = (evt: any) => {
-    noSubjectsFilter = evt.target.checked;
-  };
 
   const selectSubject = (subject: any) => (subjects = subjects.concat(subject._id));
   const selectTag = (tag: any) => (tags = tags.concat(tag._id));
@@ -57,6 +58,11 @@
       searchParams.delete("isRead");
     }
 
+    if (searchParams.get("no-subjects") === "true") {
+      searchParams.delete("subjects");
+      searchParams.delete("child-subjects");
+    }
+
     sanitize(searchParams);
   };
 </script>
@@ -67,19 +73,19 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_title">Title</label>
-          <input id="book_search_title" name="search" value={$searchState.search} placeholder="Search title" class="form-control" />
+          <input id="book_search_title" name="search" value={localSearchValues.search} placeholder="Search title" class="form-control" />
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_pub">Publisher</label>
-          <input id="book_search_pub" name="publisher" value={$searchState.publisher} placeholder="Publisher" class="form-control" />
+          <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
         </div>
       </div>
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_auth">Author</label>
-          <input id="book_search_auth" name="author" value={$searchState.author} placeholder="Author" class="form-control" />
+          <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
         </div>
       </div>
       <Stack class="col-xs-6">
@@ -87,15 +93,15 @@
           <label for="__" class="form-label">Is Read?</label>
           <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={$searchState.isRead === ""} name="isRead" id="isReadE" value="off" />
+              <input type="radio" checked={localSearchValues.isRead === ""} name="isRead" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={$searchState.isRead === "true"} name="isRead" id="isReadY" value="true" />
+              <input type="radio" checked={localSearchValues.isRead === "true"} name="isRead" id="isReadY" value="true" />
               <label for="isReadY">Yes</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={$searchState.isRead === "false"} name="isRead" id="isReadN" value="false" />
+              <input type="radio" checked={localSearchValues.isRead === "false"} name="isRead" id="isReadN" value="false" />
               <label for="isReadN">No</label>
             </FlowItems>
           </FlowItems>
@@ -104,7 +110,7 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book_search_sort">Sort</label>
-          <select id="book_search_sort" name="sort" value={$searchState.sortPacket} class="form-control">
+          <select id="book_search_sort" name="sort" value={localSearchValues.sortPacket} class="form-control">
             <option value="title-asc">Title A-Z</option>
             <option value="title-desc">Title Z-A</option>
             <option value="pages-asc">Pages, Low</option>
@@ -123,7 +129,7 @@
         <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
       </div>
 
-      {#if !noSubjectsFilter}
+      {#if !noSubjects}
         <div class="col-sm-3 col-xs-12">
           <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
         </div>
@@ -133,7 +139,7 @@
 
         <div class="col-xs-12">
           <label class="checkbox">
-            <input type="checkbox" name="child-subjects" value="true" checked={false} />
+            <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
             Also search child subjects
           </label>
         </div>
@@ -141,7 +147,7 @@
 
       <div class="col-xs-12">
         <label class="checkbox">
-          <input type="checkbox" name="no-subjects" value="true" checked={!!noSubjectsFilter} on:change={setNoSubjectsFilter} />
+          <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
           Search books with no subjects set
         </label>
       </div>
@@ -150,8 +156,5 @@
     <div class="margin-top-med">
       <Button text="Filter" preset="primary">Search</Button>
     </div>
-    <!-- <StandardModalFooter>
-      <ActionButton text="Filter" preset="primary" onClick={updateFilters} />
-    </StandardModalFooter> -->
   </form>
 </Modal>
