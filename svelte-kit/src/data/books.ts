@@ -27,7 +27,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, publisher, author, tags, searchChildSubjects, subjects, isRead, sort } = searchPacket;
+  const { search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort } = searchPacket;
   const $match: any = { userId };
   let $lookup: any = null;
 
@@ -52,22 +52,26 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (tags.length) {
     $match.tags = { $in: tags };
   }
-  if (subjects.length && !searchChildSubjects) {
-    $match.subjects = { $in: subjects };
-  }
-  if (subjects.length && searchChildSubjects) {
-    $lookup = {
-      from: "subjects",
-      let: { subjectsArray: "$subjects" },
-      pipeline: [
-        { $addFields: { subjectIdString: { $toString: "$_id" } } },
-        //
-        { $match: { $expr: { $in: ["$subjectIdString", "$$subjectsArray"] } } }
-      ],
-      as: "subjectObjects"
-    };
+  if (noSubjects) {
+    requiredOrs.push([{ subjects: [] }, { subjects: { $exists: false } }]);
+  } else {
+    if (subjects.length && !searchChildSubjects) {
+      $match.subjects = { $in: subjects };
+    }
+    if (subjects.length && searchChildSubjects) {
+      $lookup = {
+        from: "subjects",
+        let: { subjectsArray: "$subjects" },
+        pipeline: [
+          { $addFields: { subjectIdString: { $toString: "$_id" } } },
+          //
+          { $match: { $expr: { $in: ["$subjectIdString", "$$subjectsArray"] } } }
+        ],
+        as: "subjectObjects"
+      };
 
-    requiredOrs.push([{ subjects: { $in: subjects } }, { "subjectObjects.path": { $regex: subjects.map(_id => `,${_id},`).join("|") } }]);
+      requiredOrs.push([{ subjects: { $in: subjects } }, { "subjectObjects.path": { $regex: subjects.map(_id => `,${_id},`).join("|") } }]);
+    }
   }
   if (requiredOrs.length) {
     $match.$and = requiredOrs.map(orArray => ({ $or: orArray }));

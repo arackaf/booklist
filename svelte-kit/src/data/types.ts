@@ -68,6 +68,7 @@ export type BookSearch = {
   tags: string[];
   subjects: string[];
   searchChildSubjects: true | undefined;
+  noSubjects: boolean;
   sort?: BookSortValue;
 };
 

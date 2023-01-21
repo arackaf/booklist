@@ -181,7 +181,7 @@
 
       <div class="col-xs-12">
         <label class="checkbox">
-          <input type="checkbox" checked={!!noSubjectsFilter} on:change={setNoSubjectsFilter} />
+          <input type="checkbox" name="no-subjects" value="true" checked={!!noSubjectsFilter} on:change={setNoSubjectsFilter} />
           Search books with no subjects set
         </label>
       </div>
