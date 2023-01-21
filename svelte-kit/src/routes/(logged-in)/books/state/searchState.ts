@@ -1,6 +1,18 @@
 import { page } from "$app/stores";
 import { derived } from "svelte/store";
 
+type SortValue = keyof typeof sortDisplayLookup;
+export const sortDisplayLookup = {
+  "title-asc": "Title A-Z",
+  "title-desc": "Title Z-A",
+  "pages-asc": "Pages, Low",
+  "pages-desc": "Pages, High",
+  "_id-asc": "Added, Earliest",
+  "_id-desc": "Added, Most Recent"
+};
+
+export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal];
+
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;
   const subjects = searchParams.getAll("subjects") ?? [];
@@ -8,7 +20,8 @@ export const searchState = derived(page, $page => {
   const childSubjects = searchParams.get("child-subjects");
   const noSubjects = searchParams.get("no-subjects") === "true";
 
-  const sortString = searchParams.get("sort") ?? "_id-desc";
+  const sort = searchParams.get("sort");
+  const sortString = sort ?? "_id-desc";
   const [sortField, sortDirection] = sortString.split("-");
 
   return {
@@ -24,7 +37,8 @@ export const searchState = derived(page, $page => {
     tagsLookup: new Set(tags),
     selectedSubjects: [],
     selectedTags: [],
-    sortPacket: `${sortField}-${sortDirection}`,
+    sort,
+    sortPacket: `${sortField}-${sortDirection}` as SortValue,
     sortField,
     sortDirection
   };
@@ -60,6 +74,8 @@ export const changeFilter = derived(page, $page => {
     withoutIsRead: urlWithoutFilter($page.url, "is-read"),
     withoutPublisher: urlWithoutFilter($page.url, "publisher"),
     withoutNoSubjects: urlWithoutFilter($page.url, "no-subjects"),
+    withoutSort: urlWithoutFilter($page.url, "sort"),
+
     withSort(value: string) {
       urlWithFilter($page.url, "sort", value);
     }

@@ -1,9 +1,8 @@
 <script lang="ts">
   import { writable } from "svelte/store";
 
-  // import { currentSearch } from '../booksSearchState';
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
-  import { searchState, changeFilter } from "../state/searchState";
+  import { searchState, changeFilter, getSortDisplay } from "../state/searchState";
 
   const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
   //import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';
@@ -32,10 +31,7 @@
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `"${$searchState.search}"` }} href={$changeFilter.withoutSearch} />
   {/if}
   {#if $searchState.isRead == "true" || $searchState.isRead == "false"}
-    <RemovableLabelDisplay
-      extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
-      href={$changeFilter.withoutIsRead}
-    >
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} href={$changeFilter.withoutIsRead}>
       <span>
         {#if $searchState.isRead == "true"}Is Read <i class="far fa-check" />{:else}Not Read{/if}
       </span>
@@ -64,5 +60,12 @@
   {/each}
   {#if $currentSearch.activeFilterCount > 1}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />
+  {/if}
+  {#if $searchState.sort}
+    <RemovableLabelDisplay
+      extraStyles={filterDisplayStyles}
+      item={{ name: `Sort: ${getSortDisplay($searchState.sortPacket)}` }}
+      href={$changeFilter.withoutSort}
+    />
   {/if}
 </div>

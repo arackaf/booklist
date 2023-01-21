@@ -8,7 +8,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
 
-  import { searchState } from "./state/searchState";
+  import { searchState, sortDisplayLookup } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -111,12 +111,9 @@
         <div class="form-group">
           <label for="book_search_sort">Sort</label>
           <select id="book_search_sort" name="sort" value={localSearchValues.sortPacket} class="form-control">
-            <option value="title-asc">Title A-Z</option>
-            <option value="title-desc">Title Z-A</option>
-            <option value="pages-asc">Pages, Low</option>
-            <option value="pages-desc">Pages, High</option>
-            <option value="_id-asc">Created, Earliest</option>
-            <option value="_id-desc">Created, Most Recent</option>
+            {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
+              <option value={sortVal}>{display}</option>
+            {/each}
           </select>
         </div>
       </div>
