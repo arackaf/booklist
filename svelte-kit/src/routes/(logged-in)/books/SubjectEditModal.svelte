@@ -55,7 +55,7 @@
     {/if}
 
     {#if editingSubject}
-      <EditSubject {colors} allSubjects={subjects} bind:deleteShowing subject={editingSubject} onComplete={onHide} onCancelEdit={cancelEdit} />
+      <EditSubject {colors} allSubjects={subjects} bind:deleteShowing subject={editingSubject} onComplete={cancelEdit} onCancelEdit={cancelEdit} />
     {/if}
   </Stack>
 </Modal>
