@@ -19,13 +19,15 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const sortString = url.searchParams.get("sort") || "";
   const tags = url.searchParams.getAll("tags");
   const subjects = url.searchParams.getAll("subjects");
+  const searchChildSubjects = url.searchParams.get("child-subjects") ? true : undefined;
 
   const packet: BookSearch = {
     author,
     search,
     publisher,
     tags,
-    subjects
+    subjects,
+    searchChildSubjects
   };
 
   if (sortString) {

@@ -159,7 +159,7 @@
 
         <div class="col-xs-12">
           <label class="checkbox">
-            <input type="checkbox" bind:this={childSubEl} checked={false} />
+            <input type="checkbox" name="child-subjects" value="true" bind:this={childSubEl} checked={false} />
             Also search child subjects
           </label>
         </div>

@@ -66,6 +66,7 @@ export type BookSearch = {
   author: string;
   tags: string[];
   subjects: string[];
+  searchChildSubjects: true | undefined;
   sort?: BookSortValue;
 };
 

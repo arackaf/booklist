@@ -27,8 +27,9 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, publisher, author, tags, subjects, sort } = searchPacket;
+  const { search, publisher, author, tags, searchChildSubjects, subjects, sort } = searchPacket;
   const $match: any = { userId };
+  let $lookup: any = null;
 
   if (search) {
     $match.title = { $regex: escapeRegexp(search), $options: "i" };
@@ -42,20 +43,35 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (tags.length) {
     $match.tags = { $in: tags };
   }
-  if (subjects.length) {
+  if (subjects.length && !searchChildSubjects) {
     $match.subjects = { $in: subjects };
+  }
+  if (subjects.length && searchChildSubjects) {
+    $lookup = {
+      from: "subjects",
+      let: { subjectsArray: "$subjects" },
+      pipeline: [
+        { $addFields: { subjectIdString: { $toString: "$_id" } } },
+        //
+        { $match: { $expr: { $in: ["$subjectIdString", "$$subjectsArray"] } } }
+      ],
+      as: "subjectObjects"
+    };
+
+    $match.$or = [{ subjects: { $in: subjects } }, { "subjectObjects.path": { $regex: subjects.map(_id => `,${_id},`).join("|") } }];
   }
 
   console.log({ tags });
 
   return queryBooks({
     pipeline: [
+      $lookup ? { $lookup } : null,
       { $match },
-      { $project: bookProjections },
+      { $project: { ...bookProjections, subjectObjects: 1 } },
       { $addFields: { dateAdded: { $toDate: "$_id" } } },
       { $limit: 50 },
       { $sort: sort ?? { _id: -1 } }
-    ]
+    ].filter(x => x)
   })
     .then(books => {
       const httpEnd = +new Date();
