@@ -57,7 +57,9 @@ export const changeFilter = derived(page, $page => {
   return {
     withoutSearch: urlWithoutFilter($page.url, "search"),
     withoutAuthor: urlWithoutFilter($page.url, "author"),
+    withoutIsRead: urlWithoutFilter($page.url, "is-read"),
     withoutPublisher: urlWithoutFilter($page.url, "publisher"),
+    withoutNoSubjects: urlWithoutFilter($page.url, "no-subjects"),
     withSort(value: string) {
       urlWithFilter($page.url, "sort", value);
     }

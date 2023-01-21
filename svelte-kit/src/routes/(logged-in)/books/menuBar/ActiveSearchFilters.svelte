@@ -1,7 +1,6 @@
 <script lang="ts">
   import { writable } from "svelte/store";
 
-  // import { appState } from 'app/state/appState';
   // import { currentSearch } from '../booksSearchState';
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { searchState, changeFilter } from "../state/searchState";
@@ -32,15 +31,13 @@
   {#if $searchState.search}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `"${$searchState.search}"` }} href={$changeFilter.withoutSearch} />
   {/if}
-  {#if $currentSearch.isRead == "1" || $currentSearch.isRead == "0"}
+  {#if $searchState.isRead == "true" || $searchState.isRead == "false"}
     <RemovableLabelDisplay
       extraStyles="flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px"
-      doRemove={() => removeFilters("isRead")}
+      href={$changeFilter.withoutIsRead}
     >
       <span>
-        {#if $currentSearch.isRead == "1"}Is Read{:else}Not Read{/if}
-        &nbsp;
-        {#if $currentSearch.isRead == "1"}<i class="far fa-check" />{/if}
+        {#if $searchState.isRead == "true"}Is Read <i class="far fa-check" />{:else}Not Read{/if}
       </span>
     </RemovableLabelDisplay>
   {/if}
@@ -55,8 +52,8 @@
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `Author: "${$searchState.author}"` }} href={$changeFilter.withoutAuthor} />
   {/if}
 
-  {#if $currentSearch.noSubjects}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `No subjects` }} doRemove={() => removeFilters("noSubjects")} />
+  {#if $searchState.noSubjects}
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `No subjects` }} href={$changeFilter.withoutNoSubjects} />
   {/if}
 
   {#each $currentSearch.selectedSubjects as s}
