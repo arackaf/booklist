@@ -16,6 +16,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const search = url.searchParams.get("search") || "";
   const publisher = url.searchParams.get("publisher") || "";
   const author = url.searchParams.get("author") || "";
+  const isRead = url.searchParams.get("isRead") || "";
   const sortString = url.searchParams.get("sort") || "";
   const tags = url.searchParams.getAll("tags");
   const subjects = url.searchParams.getAll("subjects");
@@ -27,7 +28,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     publisher,
     tags,
     subjects,
-    searchChildSubjects
+    searchChildSubjects,
+    isRead: isRead === "" ? void 0 : isRead === "true"
   };
 
   if (sortString) {

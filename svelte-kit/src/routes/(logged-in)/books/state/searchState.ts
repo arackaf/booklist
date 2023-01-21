@@ -13,6 +13,7 @@ export const searchState = derived(page, $page => {
     search: searchParams.get("search") ?? "",
     author: searchParams.get("author") ?? "",
     publisher: searchParams.get("publisher") ?? "",
+    isRead: searchParams.get("isRead") ?? "",
     subjects,
     subjectsLookup: new Set(subjects),
     tags,

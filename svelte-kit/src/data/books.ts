@@ -27,9 +27,11 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, publisher, author, tags, searchChildSubjects, subjects, sort } = searchPacket;
+  const { search, publisher, author, tags, searchChildSubjects, subjects, isRead, sort } = searchPacket;
   const $match: any = { userId };
   let $lookup: any = null;
+
+  const requiredOrs = [] as any[];
 
   if (search) {
     $match.title = { $regex: escapeRegexp(search), $options: "i" };
@@ -39,6 +41,13 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   }
   if (author) {
     $match.authors = { $regex: escapeRegexp(author), $options: "i" };
+  }
+  if (isRead != null) {
+    if (isRead) {
+      $match.isRead = true;
+    } else {
+      requiredOrs.push([{ isRead: false }, { isRead: { $exists: false } }]);
+    }
   }
   if (tags.length) {
     $match.tags = { $in: tags };
@@ -58,7 +67,10 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       as: "subjectObjects"
     };
 
-    $match.$or = [{ subjects: { $in: subjects } }, { "subjectObjects.path": { $regex: subjects.map(_id => `,${_id},`).join("|") } }];
+    requiredOrs.push([{ subjects: { $in: subjects } }, { "subjectObjects.path": { $regex: subjects.map(_id => `,${_id},`).join("|") } }]);
+  }
+  if (requiredOrs.length) {
+    $match.$and = requiredOrs.map(orArray => ({ $or: orArray }));
   }
 
   console.log({ tags });

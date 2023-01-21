@@ -39,6 +39,16 @@
   let subjects = [] as any[]; //$currentSearch.subjectIds;
   let tags = [] as any[]; //$currentSearch.tagIds;
 
+  $: {
+    if (isOpen) {
+      syncSubjectsAndTags();
+    }
+  }
+  function syncSubjectsAndTags() {
+    subjects = $searchState.subjects;
+    tags = $searchState.tags;
+  }
+
   let noSubjectsFilter = false; // = !!$currentSearch.noSubjects;
   const setNoSubjectsFilter = (evt: any) => {
     noSubjectsFilter = evt.target.checked;
@@ -83,6 +93,10 @@
       searchParams.delete("sort");
     }
 
+    if (searchParams.get("isRead") === "off") {
+      searchParams.delete("isRead");
+    }
+
     sanitize(searchParams);
   };
 </script>
@@ -113,15 +127,15 @@
           <label for="__" class="form-label">Is Read?</label>
           <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={false} bind:this={isReadE} name="isRead" id="isReadE" />
+              <input type="radio" checked={$searchState.isRead === ""} bind:this={isReadE} name="isRead" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={false} name="isRead" id="isReadY" />
+              <input type="radio" checked={$searchState.isRead === "true"} name="isRead" id="isReadY" value="true" />
               <label for="isReadY">Yes</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={false} bind:this={isRead0} name="isRead" id="isReadN" />
+              <input type="radio" checked={$searchState.isRead === "false"} bind:this={isRead0} name="isRead" id="isReadN" value="false" />
               <label for="isReadN">No</label>
             </FlowItems>
           </FlowItems>

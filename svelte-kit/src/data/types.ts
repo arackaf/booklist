@@ -64,6 +64,7 @@ export type BookSearch = {
   search: string;
   publisher: string;
   author: string;
+  isRead?: boolean;
   tags: string[];
   subjects: string[];
   searchChildSubjects: true | undefined;
