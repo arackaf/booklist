@@ -622,8 +622,24 @@ button.btn-xs:focus {
 .btn-group input:focus {
   box-shadow: 0 0 2px var(--primary-7);
 }
+div.radio input {
+  position: relative;
+  width: 15px;
+  height: 15px;
+}
 div.radio input:focus {
-  box-shadow: 0 0 8px var(--primary-7);
+  background-color: transparent;
+
+  &::before {
+    content: "";
+    box-shadow: 0 0 8px var(--primary-7);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 15px;
+  }
 }
 
 button::-moz-focus-inner {
