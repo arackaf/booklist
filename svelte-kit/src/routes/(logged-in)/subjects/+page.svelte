@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Subject } from "$data/types";
+
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { flip } from "svelte/animate";
@@ -19,7 +21,7 @@
   $: rootSubjects = stackAndGetTopLevelSubjects(subjects);
 
   let editModalOpen = false;
-  let editingSubject = { name: "" };
+  let editingSubject: Subject = { _id: "", name: "", backgroundColor: "", textColor: "", path: null };
   const closeEditModal = () => (editModalOpen = false);
   const editSubject = (subject: any) => {
     editingSubject = subject;
