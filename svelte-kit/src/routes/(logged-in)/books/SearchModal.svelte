@@ -54,8 +54,8 @@
       searchParams.delete("sort");
     }
 
-    if (searchParams.get("isRead") === "off") {
-      searchParams.delete("isRead");
+    if (searchParams.get("is-read") === "off") {
+      searchParams.delete("is-read");
     }
 
     if (searchParams.get("no-subjects") === "true") {
@@ -93,15 +93,15 @@
           <label for="__" class="form-label">Is Read?</label>
           <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={localSearchValues.isRead === ""} name="isRead" id="isReadE" value="off" />
+              <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={localSearchValues.isRead === "true"} name="isRead" id="isReadY" value="true" />
+              <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
               <label for="isReadY">Yes</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={localSearchValues.isRead === "false"} name="isRead" id="isReadN" value="false" />
+              <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
               <label for="isReadN">No</label>
             </FlowItems>
           </FlowItems>
